@@ -9,13 +9,8 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
-import { formatPopularityCount } from '../hooks/useDrillSections';
-import { getCategoryMeta } from '../data/categoryMeta';
 import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
-import { TemplateListCard } from './TemplateListCard';
-
-const getCategoryLabel = (categoryId: string) =>
-  getCategoryMeta(categoryId).label;
+import { HabitTemplateCard } from '../components/HabitTemplateCard';
 
 interface SeeAllViewProps {
   importedTemplateIds: Set<string>;
@@ -35,7 +30,10 @@ export function SeeAllView({
   templates,
 }: SeeAllViewProps) {
   const { colors } = useThemeColors();
-  const sortedTemplates = sortTemplatesByImportState(templates, importedTemplateIds);
+  const sortedTemplates = sortTemplatesByImportState(
+    templates,
+    importedTemplateIds
+  );
   const habitCountLabel = `${sortedTemplates.length} habit${sortedTemplates.length === 1 ? '' : 's'}`;
 
   return (
@@ -61,15 +59,13 @@ export function SeeAllView({
               .duration(durations.enter)
               .easing(enterEasing)}
           >
-            <TemplateListCard
-              getCategoryLabel={getCategoryLabel}
-              importedTemplateIds={importedTemplateIds}
-              importingTemplateId={importingTemplateId}
+            <HabitTemplateCard
+              descriptionLines={3}
+              isImported={importedTemplateIds.has(item._id)}
+              isImporting={importingTemplateId === item._id}
               item={item}
-              popularityCount={formatPopularityCount(item.popularityScore)}
-              searchQuery=''
-              onImport={(_templateId) => onImport(item)}
-              onPreview={(_template) => onPreview(item)}
+              onImport={onImport}
+              onPreview={onPreview}
             />
           </Animated.View>
         )}

@@ -71,6 +71,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       <TemplateModals
         importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
+        previewInitialAnchor={p.previewInitialAnchor}
         previewTemplate={p.previewTemplate}
         showCustomizeModal={p.showCustomizeModal}
         showFullsizePreview={p.showFullsizePreview}

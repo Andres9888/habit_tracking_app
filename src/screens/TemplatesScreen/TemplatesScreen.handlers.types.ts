@@ -6,7 +6,11 @@ import type { FlatList } from 'react-native';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import type { TemplateToastData } from '../../components/TemplateAddedToast';
 import type { Category, SortOption } from '../templates/constants';
-import type { TemplateCustomizations, ViewMode } from './TemplatesScreen.types';
+import type {
+  TemplateCustomizations,
+  TemplatePreviewAnchor,
+  ViewMode,
+} from './TemplatesScreen.types';
 
 export interface UseTemplateHandlersOptions {
   flatListRef: React.RefObject<FlatList<Doc<'templates'>> | null>;
@@ -19,9 +23,7 @@ export interface UseTemplateHandlersOptions {
   previewTemplate: Doc<'templates'> | null;
   seedTemplates: (args: Record<string, never>) => Promise<unknown>;
   setExpandedCategories: React.Dispatch<React.SetStateAction<Set<string>>>;
-  setFeedbackHabitId: React.Dispatch<
-    React.SetStateAction<Id<'habits'> | null>
-  >;
+  setFeedbackHabitId: React.Dispatch<React.SetStateAction<Id<'habits'> | null>>;
   setFeedbackVariant: React.Dispatch<
     React.SetStateAction<'success' | 'already_exists' | null>
   >;
@@ -30,6 +32,9 @@ export interface UseTemplateHandlersOptions {
     React.SetStateAction<Id<'templates'> | null>
   >;
   setIsSeeding: React.Dispatch<React.SetStateAction<boolean>>;
+  setPreviewInitialAnchor: React.Dispatch<
+    React.SetStateAction<TemplatePreviewAnchor>
+  >;
   setPreviewTemplate: React.Dispatch<
     React.SetStateAction<Doc<'templates'> | null>
   >;

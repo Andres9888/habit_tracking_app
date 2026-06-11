@@ -5,7 +5,7 @@
 import { FlatList, StyleSheet } from 'react-native';
 import { spacing } from '../../../theme/spacing';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { MinimalTemplateRow } from '../components/MinimalTemplateRow';
+import { HabitTemplateCard } from '../components/HabitTemplateCard';
 
 interface CatalogFilteredListProps {
   importedTemplateIds: Set<string>;
@@ -22,7 +22,8 @@ export function CatalogFilteredList(p: CatalogFilteredListProps) {
       keyExtractor={(item) => item._id}
       contentContainerStyle={s.list}
       renderItem={({ item }) => (
-        <MinimalTemplateRow
+        <HabitTemplateCard
+          descriptionLines={3}
           isImported={p.importedTemplateIds.has(item._id)}
           isImporting={p.importingTemplateId === item._id}
           item={item}

@@ -7,7 +7,7 @@ import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
-import { getTemplateMetaLabel } from '../MinimalTemplateRow';
+import { getTemplateMetaLabel } from '../HabitTemplateCard';
 import { styles as s } from './FeaturedPickCard.styles';
 
 interface FeaturedPickCardProps {

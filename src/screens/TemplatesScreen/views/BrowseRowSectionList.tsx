@@ -6,9 +6,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography } from '../../../theme/typography';
+import { fontWeights, typography } from '../../../theme/typography';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { MinimalTemplateRow } from '../components/MinimalTemplateRow';
+import { HabitTemplateCard } from '../components/HabitTemplateCard';
 import { SectionOverline } from '../components/SectionOverline';
 import type { BrowseRowSection } from '../hooks/useMainBrowseData';
 import { stagger } from './MainBrowseView.helpers';
@@ -54,7 +54,7 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
           />
           <View>
             {section.templates.map((item, rowIndex) => (
-              <MinimalTemplateRow
+              <HabitTemplateCard
                 key={item._id}
                 elevated={
                   section.key === 'popular' && rowIndex === 0 ? true : undefined
@@ -74,5 +74,9 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
 }
 
 const s = StyleSheet.create({
-  seeAll: { ...typography.bodySmall },
+  seeAll: {
+    ...typography.bodySmall,
+    fontWeight: fontWeights.semibold,
+    lineHeight: 16,
+  },
 });

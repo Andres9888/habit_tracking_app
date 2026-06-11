@@ -7,7 +7,6 @@ import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { GoalCollection } from '../../data/goalCollections';
 import { getImportedStateColors } from '../../utils/importedStateColors';
-import { ScienceDoorPill } from '../ScienceDoorPill';
 import { stepStyles as s } from './PrescriptionStepRow.styles';
 
 interface PrescriptionStepRowProps {
@@ -69,7 +68,6 @@ export function PrescriptionStepRow({
           >
             {reason}
           </Text>
-          <ScienceDoorPill template={template} onPress={onPreview} />
         </View>
       </View>
       <View

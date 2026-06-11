@@ -6,7 +6,7 @@
 import { Pressable, Text } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { getScienceDoorLabel } from '../MinimalTemplateRow/templateMeta';
+import { getScienceDoorLabel } from '../HabitTemplateCard';
 import { styles as s } from './ScienceDoorPill.styles';
 
 interface ScienceDoorPillProps {

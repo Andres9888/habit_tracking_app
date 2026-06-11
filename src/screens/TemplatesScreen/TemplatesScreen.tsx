@@ -194,12 +194,17 @@ function TemplatesScreenContent({
       <>
         {subView}
         <TemplatesScreenModals
+          importedTemplateIds={state.importedTemplateIds}
           importingTemplateId={state.importingTemplateId}
+          previewInitialAnchor={state.previewInitialAnchor}
           previewTemplate={state.previewTemplate}
           showCustomizeModal={state.showCustomizeModal}
+          showFullsizePreview={state.showFullsizePreview}
           showPaywall={state.showPaywall}
           onCloseCustomize={() => state.setShowCustomizeModal(false)}
+          onCloseFullsize={() => state.setShowFullsizePreview(false)}
           onClosePaywall={() => state.setShowPaywall(false)}
+          onCustomize={handlers.handleCustomizeFromPreview}
           onDirectImport={handlers.handleDirectImport}
           onImport={handlers.handleTemplateImport}
           packConfirmPack={packConfirm.selectedPack}
@@ -255,12 +260,17 @@ function TemplatesScreenContent({
       isSearchActive={state.isSearchActive}
       modals={
         <TemplatesScreenModals
+          importedTemplateIds={state.importedTemplateIds}
           importingTemplateId={state.importingTemplateId}
+          previewInitialAnchor={state.previewInitialAnchor}
           previewTemplate={state.previewTemplate}
           showCustomizeModal={state.showCustomizeModal}
+          showFullsizePreview={state.showFullsizePreview}
           showPaywall={state.showPaywall}
           onCloseCustomize={() => state.setShowCustomizeModal(false)}
+          onCloseFullsize={() => state.setShowFullsizePreview(false)}
           onClosePaywall={() => state.setShowPaywall(false)}
+          onCustomize={handlers.handleCustomizeFromPreview}
           onDirectImport={handlers.handleDirectImport}
           onImport={handlers.handleTemplateImport}
           packConfirmPack={packConfirm.selectedPack}

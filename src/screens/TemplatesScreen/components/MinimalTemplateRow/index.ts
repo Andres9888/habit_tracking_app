@@ -1,2 +1,7 @@
-export { MinimalTemplateRow } from './MinimalTemplateRow';
-export { getTemplateMetaLabel } from './templateMeta';
+/** @deprecated Use HabitTemplateCard */
+export { HabitTemplateCard as MinimalTemplateRow } from '../HabitTemplateCard';
+export {
+  getScienceDoorLabel,
+  getShortCitation,
+  getTemplateMetaLabel,
+} from '../HabitTemplateCard';

@@ -53,6 +53,7 @@ export function useTemplatesScreenProps() {
     setImportedTemplateIds: state.setImportedTemplateIds,
     setImportingTemplateId: state.setImportingTemplateId,
     setIsSeeding: state.setIsSeeding,
+    setPreviewInitialAnchor: state.setPreviewInitialAnchor,
     setPreviewTemplate: state.setPreviewTemplate,
     setSearchQuery: state.setSearchQuery,
     setSelectedCategory: state.setSelectedCategory,
@@ -82,7 +83,9 @@ export function useTemplatesScreenProps() {
   const getCategoryLabel = (categoryId: string) => {
     if (categoryId === 'quick') return 'Quick';
     if (categoryId === 'high-roi') return 'High ROI';
-    return data.categories?.find((c) => c.id === categoryId)?.label || categoryId;
+    return (
+      data.categories?.find((c) => c.id === categoryId)?.label || categoryId
+    );
   };
 
   const handleTabPress = (tab: BrowseTab) => {

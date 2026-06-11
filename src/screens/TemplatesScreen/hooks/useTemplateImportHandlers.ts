@@ -3,15 +3,19 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import { useImportFeedback } from './useImportFeedback';
+import { usePreviewHandlers } from './usePreviewHandlers';
+import { useImportResultHandler } from './useImportResultHandler';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { guardImport, showAlreadyImported, showError, showSuccess } =
     useImportFeedback(o);
+  const { handleCustomizeFromPreview, handleTemplatePreview } =
+    usePreviewHandlers(o);
 
   useEffect(
     () => () => {
@@ -20,52 +24,12 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     []
   );
 
-  const handleTemplatePreview = useCallback(
-    (t: Doc<'templates'>) => {
-      o.setPreviewTemplate(t);
-      o.setShowCustomizeModal(true);
-      o.setShowFullsizePreview(false);
-    },
-    [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
-  );
-
-  const handleCustomizeFromPreview = useCallback(
-    (t: Doc<'templates'>) => {
-      o.setPreviewTemplate(t);
-      o.setShowCustomizeModal(true);
-      o.setShowFullsizePreview(false);
-    },
-    [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
-  );
-
-  const handleImportResult = useCallback(
-    (
-      res: {
-        alreadyExists?: boolean;
-        habitId?: Id<'habits'>;
-        success?: boolean;
-      },
-      templateId: Id<'templates'>
-    ) => {
-      if (res.alreadyExists) {
-        o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        if (res.habitId) showAlreadyImported(res.habitId);
-        else showError();
-        return true;
-      }
-      if (res.success && res.habitId) {
-        o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        showSuccess(res.habitId);
-        return true;
-      }
-      if (res.success) {
-        showError();
-        return false;
-      }
-      return false;
-    },
-    [o.setImportedTemplateIds, showAlreadyImported, showSuccess]
-  );
+  const handleImportResult = useImportResultHandler({
+    setImportedTemplateIds: o.setImportedTemplateIds,
+    showAlreadyImported,
+    showError,
+    showSuccess,
+  });
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {

@@ -6,7 +6,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { MinimalTemplateRow } from '../components/MinimalTemplateRow';
+import { HabitTemplateCard } from '../components/HabitTemplateCard';
 import { PrescriptionCard } from '../components/PrescriptionCard';
 import { SectionOverline } from '../components/SectionOverline';
 import type { GoalCollection } from '../data/goalCollections';
@@ -52,8 +52,9 @@ export function GoalBrowseBranch(p: GoalBrowseBranchProps) {
       />
       <View>
         {p.goalTemplates.map((item) => (
-          <MinimalTemplateRow
+          <HabitTemplateCard
             key={item._id}
+            descriptionLines={3}
             isImported={p.importedTemplateIds.has(item._id)}
             isImporting={p.importingTemplateId === item._id}
             item={item}

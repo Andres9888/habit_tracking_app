@@ -23,8 +23,8 @@ jest.mock('../../../../theme/ThemeContext', () => ({
   }),
 }));
 
-jest.mock('../TemplateListCard', () => ({
-  TemplateListCard: () => null,
+jest.mock('../../components/HabitTemplateCard', () => ({
+  HabitTemplateCard: () => null,
 }));
 
 jest.mock('../../data/categoryMeta', () => ({

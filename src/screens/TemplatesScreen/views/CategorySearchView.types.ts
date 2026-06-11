@@ -8,6 +8,7 @@ import type { Category, SortOption } from '../../templates/constants';
 import type {
   CategoryDoc,
   TemplateCustomizations,
+  TemplatePreviewAnchor,
   ViewMode,
 } from '../TemplatesScreen.types';
 
@@ -21,7 +22,10 @@ export interface CategorySearchHandlers {
     templateId: Id<'templates'>,
     customizations?: TemplateCustomizations
   ) => Promise<void>;
-  handleTemplatePreview: (template: Doc<'templates'>) => void;
+  handleTemplatePreview: (
+    template: Doc<'templates'>,
+    anchor?: TemplatePreviewAnchor
+  ) => void;
 }
 
 export interface CategorySearchViewProps {
@@ -33,6 +37,7 @@ export interface CategorySearchViewProps {
   hasActiveFilters: boolean;
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  previewInitialAnchor: TemplatePreviewAnchor;
   previewTemplate: Doc<'templates'> | null;
   searchQuery: string;
   selectedCategory: Category;

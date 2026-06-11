@@ -1,5 +1,5 @@
 /**
- * Meta label for minimal browse rows, e.g. "7 min · Daily".
+ * Meta label for habit template cards, e.g. "7 min · Daily".
  */
 
 import type { Doc } from '../../../../../convex/_generated/dataModel';
@@ -17,11 +17,6 @@ export function getTemplateMetaLabel(template: Doc<'templates'>): string {
 
 const MAX_CITATION_LENGTH = 26;
 
-/**
- * Short citation for browse rows, e.g. "Goyal et al. (2014)".
- * Seed references follow "Author (Year) - Title"; anything that doesn't
- * fit the short form falls back to a generic label.
- */
 export function getShortCitation(template: Doc<'templates'>): string | null {
   const reference = template.scientificReference?.trim();
   if (!reference) return null;
@@ -32,7 +27,6 @@ export function getShortCitation(template: Doc<'templates'>): string | null {
   return 'Research-backed';
 }
 
-/** Label for the tappable science-door pill on browse rows. */
 export function getScienceDoorLabel(template: Doc<'templates'>): string {
   const citation = getShortCitation(template);
   if (citation && citation !== 'Research-backed') {

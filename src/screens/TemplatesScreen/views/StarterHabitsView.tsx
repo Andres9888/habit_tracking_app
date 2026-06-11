@@ -9,12 +9,7 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
-import { getCategoryMeta } from '../data/categoryMeta';
-import { TemplateListCard } from './TemplateListCard';
-import { formatPopularityCount } from '../hooks/useDrillSections';
-
-const getCategoryLabel = (categoryId: string) =>
-  getCategoryMeta(categoryId).label;
+import { HabitTemplateCard } from '../components/HabitTemplateCard';
 
 interface StarterHabitsViewProps {
   importedTemplateIds: Set<string>;
@@ -52,13 +47,11 @@ export function StarterHabitsView({
               .duration(durations.enter)
               .easing(enterEasing)}
           >
-            <TemplateListCard
-              getCategoryLabel={getCategoryLabel}
-              importedTemplateIds={importedTemplateIds}
-              importingTemplateId={importingTemplateId}
+            <HabitTemplateCard
+              descriptionLines={3}
+              isImported={importedTemplateIds.has(item._id)}
+              isImporting={importingTemplateId === item._id}
               item={item}
-              popularityCount={formatPopularityCount(item.popularityScore)}
-              searchQuery=''
               onImport={() => onImport(item)}
               onPreview={() => onPreview(item)}
             />

@@ -30,6 +30,14 @@ export interface ScrollMetrics {
   layoutHeight: number;
 }
 
+/** Scroll target when opening the fullsize habit preview. */
+export type TemplatePreviewAnchor = 'top' | 'science';
+
+export type OnTemplatePreview = (
+  template: Doc<'templates'>,
+  anchor?: TemplatePreviewAnchor
+) => void;
+
 // Template import customizations
 export interface TemplateCustomizations {
   daysOfWeek?: number[];
