@@ -32,6 +32,12 @@ const sizeClasses = {
   sm: { box: 'w-4 h-4', text: 'text-[10px]' },
 };
 
+const sizeHitSlop = {
+  lg: undefined,
+  md: undefined,
+  sm: { bottom: 14, left: 14, right: 14, top: 14 },
+};
+
 const variantClasses = {
   danger: '',
   neutral: '',
@@ -71,6 +77,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
       accessibilityState={{ checked: isActive, disabled }}
       className='self-start'
       disabled={disabled}
+      hitSlop={sizeHitSlop[size]}
       style={style}
       onPress={handlePress}
     >
