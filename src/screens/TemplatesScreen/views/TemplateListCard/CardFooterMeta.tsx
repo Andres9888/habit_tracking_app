@@ -29,7 +29,10 @@ export function CardFooterMeta({
   popularityCount,
   template,
 }: CardFooterMetaProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const popularityPillBg = isDark ? colors.status.streakLight : '#FFF7ED';
+  const popularityPillBorder = isDark ? colors.status.streakText : '#FED7AA';
+  const popularityPillText = isDark ? colors.status.streakText : '#C2410C';
   const growthMeta = getGrowthTypeMeta(growthType);
 
   return (
@@ -81,8 +84,16 @@ export function CardFooterMeta({
           </View>
         ) : null}
         {popularityCount ? (
-          <View style={styles.popularityPill}>
-            <Text style={[styles.metaLabel, { color: '#C2410C' }]}>
+          <View
+            style={[
+              styles.popularityPill,
+              {
+                backgroundColor: popularityPillBg,
+                borderColor: popularityPillBorder,
+              },
+            ]}
+          >
+            <Text style={[styles.metaLabel, { color: popularityPillText }]}>
               🔥 {popularityCount} added
             </Text>
           </View>

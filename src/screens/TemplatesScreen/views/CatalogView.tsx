@@ -98,6 +98,6 @@ export function CatalogView(p: CatalogViewProps) {
 
 const s = StyleSheet.create({
   container: { flex: 1 },
-  list: { paddingBottom: spacing['2xl'] },
+  list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
   searchWrap: { paddingHorizontal: spacing.base, paddingTop: spacing.xs },
 });

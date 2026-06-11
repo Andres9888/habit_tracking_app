@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consistency pass — spacing fix · dark mode · one row anatomy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+        /* dark tokens (darkColors.ts) */
+        --dbg: #111827;
+        --dcard: #1f2937;
+        --dborder: #374151;
+        --dtext: #f9fafb;
+        --dtext2: #9ca3af;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 920px;
+        line-height: 1.5;
+      }
+      h2.sect {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 600;
+        margin: 34px 0 12px;
+      }
+
+      .lane {
+        display: flex;
+        gap: 30px;
+        overflow-x: auto;
+        align-items: flex-start;
+      }
+      .col-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        border-radius: 999px;
+        padding: 5px 13px;
+        display: inline-block;
+      }
+      .col-label.old {
+        color: #9a3412;
+        background: #ffedd5;
+      }
+      .col-label.new {
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+      }
+      .col-label.dark {
+        color: #93c5fd;
+        background: #1e3a5f;
+      }
+
+      .phone {
+        width: 340px;
+        background: var(--bg);
+        border-radius: 34px;
+        border: 8px solid #2d2a26;
+        box-shadow: 0 16px 40px rgba(45, 42, 38, 0.26);
+        overflow: hidden;
+      }
+      .phone.dark {
+        background: var(--dbg);
+      }
+      .statusbar {
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 18px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .dark .statusbar {
+        color: var(--dtext);
+      }
+
+      .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5),
+          rgba(254, 215, 170, 0.28) 52%,
+          #f5f1ed 100%
+        );
+        padding: 13px 14px;
+        border-radius: 0 0 20px 20px;
+        position: relative;
+      }
+      .dark .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(245, 158, 11, 0.16),
+          rgba(245, 158, 11, 0.05) 55%,
+          #111827 100%
+        );
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1.22;
+        padding-right: 26px;
+      }
+      .dark .hero h1 {
+        color: var(--dtext);
+      }
+      .hero .sub {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 4px;
+      }
+      .dark .hero .sub {
+        color: var(--dtext2);
+      }
+      .chips {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        margin-top: 11px;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 9px 11px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.07);
+      }
+      .chip.wide {
+        grid-column: 1/-1;
+        justify-content: center;
+      }
+      .dark .chip {
+        background: var(--dcard);
+        border-color: var(--dborder);
+        color: var(--dtext);
+        box-shadow: none;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 12px;
+        color: var(--text-3);
+        font-size: 12px;
+        margin-top: 10px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.06);
+      }
+      .dark .search {
+        background: var(--dcard);
+        border-color: var(--dborder);
+        color: var(--dtext2);
+        box-shadow: none;
+      }
+
+      .overline {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 14px 14px 7px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .dark .overline {
+        color: var(--dtext2);
+      }
+      .overline a {
+        font-size: 11px;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 9px 10px;
+        margin: 0 14px 6px;
+      }
+      .dark .row {
+        background: var(--dcard);
+        border-color: var(--dborder);
+      }
+      .row .emoji {
+        width: 38px;
+        height: 38px;
+        flex: none;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 12.5px;
+        font-weight: 600;
+      }
+      .dark .row h4 {
+        color: var(--dtext);
+      }
+      .row p {
+        font-size: 11px;
+        color: var(--text-2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .dark .row p {
+        color: var(--dtext2);
+      }
+      .row .meta {
+        display: flex;
+        gap: 5px;
+        margin-top: 3px;
+        align-items: center;
+      }
+      .pill {
+        font-size: 9.5px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 2px 7px;
+      }
+      .dark .pill {
+        background: #2b3544;
+        color: var(--dtext2);
+      }
+      .scipill {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 9.5px;
+        font-weight: 700;
+        color: #1d4ed8;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 999px;
+        padding: 2px 7px;
+      }
+      .dark .scipill {
+        color: #93c5fd;
+        background: rgba(59, 130, 246, 0.15);
+        border-color: rgba(147, 197, 253, 0.35);
+      }
+      .btn-add {
+        flex: none;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+        border: none;
+        border-radius: 999px;
+        padding: 6px 11px;
+      }
+      .dark .btn-add {
+        color: #6ee7b7;
+        background: rgba(5, 150, 105, 0.22);
+      }
+
+      /* spacing diagram */
+      .gap-marker {
+        position: relative;
+        border-left: 2px dashed #d97706;
+        margin-left: 170px;
+      }
+      .gap-marker span {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        font-weight: 700;
+        color: #d97706;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 6px;
+        padding: 2px 7px;
+        white-space: nowrap;
+      }
+      .gap-old {
+        height: 40px;
+      }
+      .gap-new {
+        height: 12px;
+      }
+      .gap-new span {
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+        border-color: #a7f3d0;
+      }
+
+      .annot {
+        width: 340px;
+        margin-top: 12px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+      }
+      .annot ul {
+        margin: 3px 0 0 15px;
+      }
+      .annot li {
+        margin-bottom: 3px;
+      }
+
+      /* anatomy board */
+      .board {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px;
+        max-width: 1100px;
+      }
+      .board .spec {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+      }
+      .board .spec div {
+        font-size: 12px;
+        color: var(--text-2);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 8px 12px;
+      }
+      .board .spec b {
+        color: var(--text);
+      }
+      .cards {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .cardwrap {
+        width: 250px;
+      }
+      .cardwrap .lbl {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+      }
+      .acard {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .acard .accentbar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #8b5cf6;
+        border-radius: 16px 0 0 16px;
+      }
+      .acard .emoji {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        background: rgba(139, 92, 246, 0.13);
+      }
+      .acard h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-top: 8px;
+      }
+      .acard p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+      .acard .meta {
+        display: flex;
+        gap: 6px;
+        margin-top: 7px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .nested {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 9px 10px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 8px;
+      }
+      .nested .emoji {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        font-size: 18px;
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">Habit Library — consistency pass (C0 mock)</p>
+    <h1 class="page-title">Spacing fix · dark mode · one row anatomy</h1>
+    <p class="page-sub">
+      Three boards: the search-bar padding fix with real pixel math, the landing
+      page with the token sweep in light AND dark (dark is currently broken in
+      the app), and the single card/row spec applied to all four card types.
+    </p>
+
+    <h2 class="sect">1 · Search-bar spacing — before / after</h2>
+    <div class="lane">
+      <div>
+        <span class="col-label old">Today — 28px of stacked padding</span>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="hero" style="padding-bottom: 16px">
+            <h1>What do you want to change?</h1>
+            <div class="sub">
+              Pick a struggle — we'll give you a proven way in.
+            </div>
+            <div class="chips">
+              <span class="chip">⚡ More energy</span
+              ><span class="chip">😴 Sleep better</span>
+              <span class="chip">🧘 Stress less</span
+              ><span class="chip">🎯 Focus deeper</span>
+              <span class="chip wide">💪 Get healthier</span>
+            </div>
+            <div class="search">🔍&ensp;Or search any habit…</div>
+          </div>
+          <div class="gap-marker gap-old">
+            <span
+              >gap 12 + heroPad 16 + scrollPad 12 = 28px dead + overline</span
+            >
+          </div>
+          <div class="overline">Popular right now <a>See all</a></div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+              🧘
+            </div>
+            <div class="body">
+              <h4>13-Minute Focus Meditation</h4>
+              <p>Guided breath-anchor practice</p>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+      </div>
+      <div>
+        <span class="col-label new"
+          >Fixed — 12px, same rhythm as other screens</span
+        >
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="hero" style="padding-bottom: 8px">
+            <h1>What do you want to change?</h1>
+            <div class="sub">
+              Pick a struggle — we'll give you a proven way in.
+            </div>
+            <div class="chips">
+              <span class="chip">⚡ More energy</span
+              ><span class="chip">😴 Sleep better</span>
+              <span class="chip">🧘 Stress less</span
+              ><span class="chip">🎯 Focus deeper</span>
+              <span class="chip wide">💪 Get healthier</span>
+            </div>
+            <div class="search">🔍&ensp;Or search any habit…</div>
+          </div>
+          <div class="gap-marker gap-new">
+            <span>heroPad 8 + scrollPad 4 = 12px</span>
+          </div>
+          <div class="overline">Popular right now <a>See all</a></div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+              🧘
+            </div>
+            <div class="body">
+              <h4>13-Minute Focus Meditation</h4>
+              <p>Guided breath-anchor practice</p>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(244, 63, 94, 0.12)">
+              🧠
+            </div>
+            <div class="body">
+              <h4>30-Minute Brain-Boosting Cardio</h4>
+              <p>Dr. Suzuki's focus prescription</p>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+        <div class="annot">
+          <h3>The fix (C1)</h3>
+          <ul>
+            <li>
+              Hero paddingBottom 16 → <b>8</b>; scroll paddingTop 12 → <b>4</b>.
+            </li>
+            <li>
+              16px reclaimed — one extra row visible, page feels connected, not
+              split in two.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sect">
+      2 · Token sweep — the same landing in light and dark (dark is broken
+      today)
+    </h2>
+    <div class="lane">
+      <div>
+        <span class="col-label new"
+          >Light — unchanged look, now all tokens</span
+        >
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="hero" style="padding-bottom: 8px">
+            <h1>What do you want to change?</h1>
+            <div class="chips" style="margin-top: 10px">
+              <span class="chip">⚡ More energy</span
+              ><span class="chip">😴 Sleep better</span>
+              <span class="chip">🧘 Stress less</span
+              ><span class="chip">🎯 Focus deeper</span>
+            </div>
+            <div class="search">🔍&ensp;Or search any habit…</div>
+          </div>
+          <div class="overline">Popular right now <a>See all</a></div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+              🧘
+            </div>
+            <div class="body">
+              <h4>13-Minute Focus Meditation</h4>
+              <p>Guided breath-anchor practice</p>
+              <div class="meta">
+                <span class="pill">10 min · Daily</span
+                ><span class="scipill">🔬 Basso (2019) ›</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div class="row" style="background: #f0fdf6; border-color: #a7f3d0">
+            <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+              💧
+            </div>
+            <div class="body">
+              <h4>Hydration First</h4>
+              <p>Water before coffee</p>
+              <div class="meta"><span class="pill">1 min · Morning</span></div>
+            </div>
+            <button class="btn-add" style="background: transparent">
+              ✓ Added
+            </button>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+      </div>
+      <div>
+        <span class="col-label dark">Dark — first time it actually works</span>
+        <div class="phone dark">
+          <div class="statusbar"><span>9:41</span><span>▮▮▮</span></div>
+          <div class="hero" style="padding-bottom: 8px">
+            <h1>What do you want to change?</h1>
+            <div class="chips" style="margin-top: 10px">
+              <span class="chip">⚡ More energy</span
+              ><span class="chip">😴 Sleep better</span>
+              <span class="chip">🧘 Stress less</span
+              ><span class="chip">🎯 Focus deeper</span>
+            </div>
+            <div class="search">🔍&ensp;Or search any habit…</div>
+          </div>
+          <div class="overline">
+            Popular right now <a style="color: #6ee7b7">See all</a>
+          </div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(5, 150, 105, 0.22)">
+              🧘
+            </div>
+            <div class="body">
+              <h4>13-Minute Focus Meditation</h4>
+              <p>Guided breath-anchor practice</p>
+              <div class="meta">
+                <span class="pill">10 min · Daily</span
+                ><span class="scipill">🔬 Basso (2019) ›</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div
+            class="row"
+            style="
+              background: rgba(5, 150, 105, 0.12);
+              border-color: rgba(110, 231, 183, 0.3);
+            "
+          >
+            <div class="emoji" style="background: rgba(59, 130, 246, 0.2)">
+              💧
+            </div>
+            <div class="body">
+              <h4>Hydration First</h4>
+              <p>Water before coffee</p>
+              <div class="meta"><span class="pill">1 min · Morning</span></div>
+            </div>
+            <button class="btn-add" style="background: transparent">
+              ✓ Added
+            </button>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+        <div class="annot">
+          <h3>The sweep (C2) — ~25 hardcoded colors → tokens</h3>
+          <ul>
+            <li>
+              Search bar #FFFFFF → colors.card · hero gradient gets a deep-amber
+              dark variant.
+            </li>
+            <li>
+              Imported-green pasted as raw hex in 3 components → one shared
+              helper, dark-aware.
+            </li>
+            <li>
+              ScienceDoorPill, PrescriptionCard browns/whites, TemplateListCard
+              badge pastels → isDark variants.
+            </li>
+            <li>
+              Goal collections' unused darkBgColor/darkTextColor fields finally
+              drive the prescription card.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sect">
+      3 · One row anatomy — the spec, applied to all four card types
+    </h2>
+    <div class="board">
+      <div class="spec">
+        <div>
+          <b>Outer cards:</b> radius 16 · 1px colors.border · shadows.card
+        </div>
+        <div><b>Nested rows:</b> radius 12 (prescription steps: 14→12)</div>
+        <div><b>Icon boxes:</b> radius 12 everywhere (step row 11→12)</div>
+        <div>
+          <b>Science:</b> ScienceDoorPill everywhere (TrendingCard's inline
+          badge replaced)
+        </div>
+        <div>
+          <b>Overlines:</b> typography.overline everywhere ("YOUR WAY IN"
+          hand-rolled clone replaced)
+        </div>
+        <div>
+          <b>Titles:</b> serif heading1 on ALL library pages
+          (GoalHero/CategoryHero lose the app's only sans titles)
+        </div>
+      </div>
+      <div class="cards">
+        <div class="cardwrap">
+          <div class="lbl">MinimalTemplateRow</div>
+          <div
+            class="acard"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              border-radius: 16px;
+            "
+          >
+            <div class="emoji" style="margin: 0">📖</div>
+            <div style="flex: 1">
+              <h4 style="margin: 0">Read 10 Pages</h4>
+              <p>A book habit that compounds</p>
+              <div class="meta">
+                <span class="pill">15 min · Daily</span
+                ><span class="scipill">🔬 Why it works ›</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+        </div>
+        <div class="cardwrap">
+          <div class="lbl">TrendingCard (carousel)</div>
+          <div class="acard" style="width: 185px">
+            <div class="accentbar"></div>
+            <div class="emoji">📖</div>
+            <h4>Read 10 Pages</h4>
+            <p>A book habit that compounds fast.</p>
+            <div class="meta">
+              <span class="pill">Daily</span
+              ><span class="scipill">🔬 Why it works ›</span>
+            </div>
+            <div
+              class="meta"
+              style="
+                margin-top: 9px;
+                justify-content: space-between;
+                display: flex;
+              "
+            >
+              <span
+                style="
+                  font-size: 11px;
+                  color: var(--primary-deep);
+                  font-weight: 600;
+                "
+                >1.2K tracking</span
+              ><span class="btn-add" style="border-radius: 999px">+</span>
+            </div>
+          </div>
+        </div>
+        <div class="cardwrap" style="width: 300px">
+          <div class="lbl">PrescriptionCard (normalized)</div>
+          <div
+            class="acard"
+            style="
+              border-radius: 16px;
+              background: linear-gradient(180deg, #eff6ff, #fff 70%);
+              border-color: #bfdbfe;
+            "
+          >
+            <div
+              style="
+                font-size: 10px;
+                font-weight: 600;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: #1e3a5f;
+              "
+            >
+              Your way in
+            </div>
+            <h4
+              style="
+                font-family: var(--serif);
+                font-size: 15px;
+                margin-top: 3px;
+              "
+            >
+              Start with a wind-down, not a wake-up
+            </h4>
+            <div class="nested">
+              <div class="emoji">📵</div>
+              <div style="flex: 1">
+                <h4 style="margin: 0; font-size: 12.5px">Screens Off by 10</h4>
+                <div class="meta">
+                  <span class="scipill">🔬 Chang (2015) ›</span>
+                </div>
+              </div>
+              <span
+                style="
+                  font-size: 9.5px;
+                  font-weight: 700;
+                  color: #1e3a5f;
+                  background: #eff6ff;
+                  border-radius: 999px;
+                  padding: 3px 7px;
+                "
+                >Step 1</span
+              >
+            </div>
+            <div class="nested">
+              <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                📖
+              </div>
+              <div style="flex: 1">
+                <h4 style="margin: 0; font-size: 12.5px">Read Before Bed</h4>
+                <div class="meta">
+                  <span class="scipill">🔬 Why it works ›</span>
+                </div>
+              </div>
+              <span
+                style="
+                  font-size: 9.5px;
+                  font-weight: 700;
+                  color: #1e3a5f;
+                  background: #eff6ff;
+                  border-radius: 999px;
+                  padding: 3px 7px;
+                "
+                >Step 2</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="cardwrap">
+          <div class="lbl">TemplateListCard (goal/catalog rows)</div>
+          <div class="acard" style="border-radius: 16px">
+            <div style="display: flex; gap: 10px; align-items: flex-start">
+              <div class="emoji" style="margin: 0">🧘</div>
+              <div style="flex: 1">
+                <h4 style="margin: 0">5-Minute Meditation</h4>
+                <p>
+                  Five minutes of breathing lowers cortisol and activates your
+                  parasympathetic system.
+                </p>
+                <div class="meta">
+                  <span class="pill">5 min · Daily</span
+                  ><span class="scipill">🔬 Goyal (2014) ›</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

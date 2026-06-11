@@ -10,6 +10,7 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
 import { ScienceDoorPill } from '../ScienceDoorPill';
 import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
+import { getImportedStateColors } from '../../utils/importedStateColors';
 import { getTemplateMetaLabel } from './templateMeta';
 import { styles as s } from './MinimalTemplateRow.styles';
 
@@ -30,7 +31,8 @@ export function MinimalTemplateRow({
   onImport,
   onPreview,
 }: MinimalTemplateRowProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const importedColors = getImportedStateColors(isDark);
   const metaLabel = getTemplateMetaLabel(item);
 
   return (
@@ -41,8 +43,10 @@ export function MinimalTemplateRow({
         s.row,
         elevated && shadows.card,
         {
-          backgroundColor: isImported ? '#F0FDF6' : colors.card,
-          borderColor: isImported ? '#A7F3D0' : colors.border,
+          backgroundColor: isImported
+            ? importedColors.backgroundColor
+            : colors.card,
+          borderColor: isImported ? importedColors.borderColor : colors.border,
           opacity: isImporting ? 0.72 : 1,
         },
       ]}

@@ -62,6 +62,7 @@ export function CategoryRow({
             isImporting={importingTemplateId === item._id}
             name={item.name}
             popularityScore={item.popularityScore ?? 0}
+            template={item}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}
           />

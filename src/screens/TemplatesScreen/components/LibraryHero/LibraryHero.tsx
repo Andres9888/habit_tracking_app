@@ -84,13 +84,13 @@ const s = StyleSheet.create({
     borderBottomRightRadius: borderRadius.xl,
     gap: spacing.md,
     overflow: 'hidden',
-    paddingBottom: spacing.base,
+    paddingBottom: spacing.sm,
     paddingHorizontal: spacing.base,
     position: 'relative',
   },
   subtitle: {
     ...typography.bodySmall,
-    marginTop: spacing.sm - 2,
+    marginTop: spacing.xs,
     paddingRight: spacing['2xl'],
   },
   title: {

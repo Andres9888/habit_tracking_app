@@ -5,6 +5,7 @@
 
 import { Pressable, Text } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { getScienceDoorLabel } from '../MinimalTemplateRow/templateMeta';
 import { styles as s } from './ScienceDoorPill.styles';
 
@@ -14,6 +15,7 @@ interface ScienceDoorPillProps {
 }
 
 export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
+  const { colors } = useThemeColors();
   const label = getScienceDoorLabel(template);
 
   return (
@@ -21,13 +23,22 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
       accessibilityLabel={`Why ${template.name} works`}
       accessibilityRole='button'
       hitSlop={4}
-      style={s.pill}
+      style={[
+        s.pill,
+        {
+          backgroundColor: colors.status.infoLight,
+          borderColor: colors.status.infoText,
+        },
+      ]}
       onPress={(event) => {
         event.stopPropagation();
         onPress(template);
       }}
     >
-      <Text numberOfLines={1} style={s.label}>
+      <Text
+        numberOfLines={1}
+        style={[s.label, { color: colors.status.infoText }]}
+      >
         {label}
       </Text>
     </Pressable>

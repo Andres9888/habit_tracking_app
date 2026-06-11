@@ -35,7 +35,7 @@ export function SearchBar({
       style={[
         styles.searchBar,
         shadows.subtle,
-        { backgroundColor: '#FFFFFF', borderColor: colors.border },
+        { backgroundColor: colors.card, borderColor: colors.border },
       ]}
     >
       <Search

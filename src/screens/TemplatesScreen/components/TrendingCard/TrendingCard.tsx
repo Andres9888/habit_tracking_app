@@ -6,6 +6,7 @@
 
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { ScienceDoorPill } from '../ScienceDoorPill';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
 import { s } from './TrendingCard.styles';
@@ -24,6 +25,7 @@ export function TrendingCard({
   onPress,
   popularityPrefix,
   popularityScore,
+  template,
 }: TrendingCardProps) {
   const { colors } = useThemeColors();
 
@@ -76,16 +78,7 @@ export function TrendingCard({
           {frequency}
         </Text>
         {hasResearch ? (
-          <View
-            style={[
-              s.scienceBadge,
-              { backgroundColor: colors.status.warningLight },
-            ]}
-          >
-            <Text style={[s.scienceText, { color: colors.status.warningText }]}>
-              🔬 Science-backed
-            </Text>
-          </View>
+          <ScienceDoorPill template={template} onPress={() => onPress()} />
         ) : null}
       </View>
 

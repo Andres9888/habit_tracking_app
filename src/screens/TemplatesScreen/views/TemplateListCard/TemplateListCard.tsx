@@ -7,6 +7,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../../theme/typography';
+import { getImportedStateColors } from '../../utils/importedStateColors';
 import type { TemplateListCardProps } from './TemplateListCard.types';
 import { getMatchReason } from './getMatchReason';
 import { styles } from './TemplateListCard.styles';
@@ -24,11 +25,16 @@ export function TemplateListCard({
   onImport,
   onPreview,
 }: TemplateListCardProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const importedColors = getImportedStateColors(isDark);
   const isImporting = importingTemplateId === item._id;
   const isImported = importedTemplateIds.has(item._id);
   const categoryLabel = getCategoryLabel(item.category);
   const matchReason = getMatchReason(item, searchQuery, getCategoryLabel);
+  const topPickBorderColor = isDark ? colors.status.warning : '#FCD34D';
+  const topPickBadgeBg = isDark ? colors.status.warningLight : '#FBBF24';
+  const topPickBadgeBorder = isDark ? colors.status.warningText : '#F59E0B';
+  const topPickBadgeText = isDark ? colors.status.warningText : '#78350F';
 
   return (
     <Pressable
@@ -38,11 +44,13 @@ export function TemplateListCard({
         styles.card,
         isTopPick && styles.topPickAccent,
         {
-          backgroundColor: isImported ? '#F0FDF6' : colors.card,
+          backgroundColor: isImported
+            ? importedColors.backgroundColor
+            : colors.card,
           borderColor: isImported
-            ? '#A7F3D0'
+            ? importedColors.borderColor
             : isTopPick
-              ? '#FCD34D'
+              ? topPickBorderColor
               : colors.border,
           opacity: isImporting ? 0.72 : 1,
         },
@@ -60,11 +68,19 @@ export function TemplateListCard({
         </View>
         <View style={styles.contentColumn}>
           {isTopPick ? (
-            <View style={styles.topPickBadge}>
+            <View
+              style={[
+                styles.topPickBadge,
+                {
+                  backgroundColor: topPickBadgeBg,
+                  borderColor: topPickBadgeBorder,
+                },
+              ]}
+            >
               <Text
                 style={{
                   ...typography.caption,
-                  color: '#78350F',
+                  color: topPickBadgeText,
                   fontWeight: fontWeights.bold,
                   letterSpacing: 0.3,
                 }}

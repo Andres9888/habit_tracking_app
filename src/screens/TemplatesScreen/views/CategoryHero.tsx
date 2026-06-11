@@ -4,14 +4,14 @@
  * the category's own bgColor, icon, label, and subtitle.
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { fontWeights, typography } from '../../../theme/typography';
+import { spacing } from '../../../theme/spacing';
 import type { CategoryMeta } from '../data/categoryMeta.types';
+import { styles as s } from './CategoryHero.styles';
 
 interface CategoryHeroProps {
   habitCount: number;
@@ -42,7 +42,11 @@ export function CategoryHero({ habitCount, meta, onBack }: CategoryHeroProps) {
         style={s.backBtn}
         onPress={onBack}
       >
-        <ChevronLeft color={meta.textColor} size={iconSizes.medium} strokeWidth={2.5} />
+        <ChevronLeft
+          color={meta.textColor}
+          size={iconSizes.medium}
+          strokeWidth={2.5}
+        />
         <Text style={[s.backLabel, { color: meta.textColor }]}>Library</Text>
       </Pressable>
 
@@ -80,44 +84,3 @@ export function CategoryHero({ habitCount, meta, onBack }: CategoryHeroProps) {
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  backBtn: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.xs,
-    marginBottom: spacing.md,
-  },
-  backLabel: { ...typography.body, fontWeight: fontWeights.semibold },
-  badgeRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.sm,
-    marginTop: spacing.xs,
-  },
-  content: { alignItems: 'flex-start', flexDirection: 'row', gap: spacing.md },
-  countBadge: {
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
-  countText: { ...typography.caption, fontWeight: fontWeights.semibold },
-  hero: {
-    borderBottomWidth: 1,
-    paddingBottom: spacing.md,
-    paddingHorizontal: spacing.base,
-  },
-  iconText: { fontSize: 26 },
-  iconWrap: {
-    alignItems: 'center',
-    borderRadius: borderRadius.medium,
-    height: 52,
-    justifyContent: 'center',
-    width: 52,
-  },
-  subtitle: { ...typography.bodySmall, marginTop: 2 },
-  textBlock: { flex: 1 },
-  title: { ...typography.heading2, letterSpacing: -0.4 },
-});

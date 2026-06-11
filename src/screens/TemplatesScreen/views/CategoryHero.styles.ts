@@ -1,5 +1,5 @@
 /**
- * Styles for GoalHero.
+ * Styles for CategoryHero.
  */
 
 import { StyleSheet } from 'react-native';

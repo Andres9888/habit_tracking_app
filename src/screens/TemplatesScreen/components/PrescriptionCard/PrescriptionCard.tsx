@@ -4,6 +4,7 @@
 
 import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { GoalCollection } from '../../data/goalCollections';
 import type { ResolvedPrescription } from '../../hooks/usePrescription';
 import { PrescriptionStepRow } from './PrescriptionStepRow';
@@ -24,7 +25,9 @@ export function PrescriptionCard({
   onImport,
   onPreview,
 }: PrescriptionCardProps) {
+  const { colors, isDark } = useThemeColors();
   const { importedStepCount, steps } = prescription;
+  const goalTextColor = isDark ? goal.darkTextColor : goal.textColor;
   const nextStep =
     steps.find((step) => !importedTemplateIds.has(step.template._id)) ??
     steps[0];
@@ -44,17 +47,21 @@ export function PrescriptionCard({
       style={[
         s.card,
         {
-          backgroundColor: goal.bgColor,
-          borderColor: `${goal.textColor}33`,
+          backgroundColor: isDark ? goal.darkBgColor : goal.bgColor,
+          borderColor: `${goalTextColor}33`,
         },
       ]}
     >
       <View style={s.head}>
-        <Text style={[s.overline, { color: goal.textColor }]}>YOUR WAY IN</Text>
-        <Text style={[s.insight, { color: goal.textColor }]}>
+        <Text style={[s.overline, { color: goalTextColor }]}>YOUR WAY IN</Text>
+        <Text style={[s.insight, { color: goalTextColor }]}>
           {prescription.insight}
         </Text>
-        {hasImported ? null : <Text style={s.why}>{prescription.why}</Text>}
+        {hasImported ? null : (
+          <Text style={[s.why, { color: colors.text.secondary }]}>
+            {prescription.why}
+          </Text>
+        )}
       </View>
 
       {steps.map((step) => (
@@ -70,15 +77,17 @@ export function PrescriptionCard({
       ))}
 
       <View style={s.footer}>
-        <Text style={s.footerNote}>{footerNote}</Text>
+        <Text style={[s.footerNote, { color: colors.text.tertiary }]}>
+          {footerNote}
+        </Text>
         {!allImported && nextStep ? (
           <Pressable
             accessibilityLabel={ctaLabel}
             accessibilityRole='button'
-            style={s.cta}
+            style={[s.cta, { backgroundColor: colors.primary[600] }]}
             onPress={() => onImport(nextStep.template)}
           >
-            <Text style={s.ctaText}>{ctaLabel}</Text>
+            <Text style={[s.ctaText, { color: '#FFFFFF' }]}>{ctaLabel}</Text>
           </Pressable>
         ) : null}
       </View>

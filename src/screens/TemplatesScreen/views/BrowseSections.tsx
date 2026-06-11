@@ -46,7 +46,7 @@ export function BrowseSections(p: BrowseSectionsProps) {
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         paddingBottom: spacing['2xl'],
-        paddingTop: spacing.md,
+        paddingTop: spacing.xs,
       }}
     >
       {showStarterList ? (
