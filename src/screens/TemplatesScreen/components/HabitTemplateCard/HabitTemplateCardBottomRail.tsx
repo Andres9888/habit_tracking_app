@@ -47,7 +47,9 @@ export function HabitTemplateCardBottomRail({
         onPressIn={() => setPressed(true)}
         onPressOut={() => setPressed(false)}
         onPress={(event) => {
-          event.stopPropagation();
+          // Keep the parent card press from also firing on web; the event
+          // can be undefined on native, so never assume it exists.
+          event?.stopPropagation?.();
           onPreview(item, 'science');
         }}
       >

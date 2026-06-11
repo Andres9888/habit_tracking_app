@@ -84,7 +84,7 @@ const s = StyleSheet.create({
     borderBottomRightRadius: borderRadius.xl,
     gap: spacing.md,
     overflow: 'hidden',
-    paddingBottom: 0,
+    paddingBottom: spacing.base,
     paddingHorizontal: spacing.base,
     position: 'relative',
   },

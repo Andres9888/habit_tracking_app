@@ -58,7 +58,7 @@ export function ListCardAddButton({
         animatedStyle,
       ]}
       onPress={(event) => {
-        event.stopPropagation();
+        event?.stopPropagation?.();
         void triggerHaptic('selection');
         onImport();
       }}

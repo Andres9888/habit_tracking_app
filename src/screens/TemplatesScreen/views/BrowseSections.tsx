@@ -31,7 +31,7 @@ export function BrowseSections(p: BrowseSectionsProps) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: spacing['2xl'],
-          paddingTop: spacing.xs,
+          paddingTop: spacing.sm,
         }}
         onContentSizeChange={scrollHint.handleContentSizeChange}
         onLayout={scrollHint.handleLayout}

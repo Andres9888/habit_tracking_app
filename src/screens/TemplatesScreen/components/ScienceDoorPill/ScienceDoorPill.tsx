@@ -31,7 +31,7 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
         },
       ]}
       onPress={(event) => {
-        event.stopPropagation();
+        event?.stopPropagation?.();
         onPress(template);
       }}
     >
