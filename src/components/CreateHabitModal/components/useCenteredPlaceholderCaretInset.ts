@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { TextLayoutEvent } from 'react-native';
 import {
   buildHabitNameInputTextStyle,
@@ -25,10 +25,6 @@ export function useCenteredPlaceholderCaretInset(
   const isEmpty = habitName.length === 0;
   const isPlaceholderCaretReady = fieldWidth > 0 && placeholderTextWidth > 0;
 
-  useEffect(() => {
-    setPlaceholderTextWidth(0);
-  }, [placeholder]);
-
   const inputTextStyle = useMemo(
     () => buildHabitNameInputTextStyle(caretInset, isEmpty),
     [caretInset, isEmpty]
@@ -45,7 +41,6 @@ export function useCenteredPlaceholderCaretInset(
     fieldWidth,
     inputTextStyle,
     isPlaceholderCaretReady,
-    measurePlaceholder: isEmpty && placeholder.length > 0,
     onFieldLayout: (width: number) => setFieldWidth(width),
     onPlaceholderTextLayout,
     placeholder,
