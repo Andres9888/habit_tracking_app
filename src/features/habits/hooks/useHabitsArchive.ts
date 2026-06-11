@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
@@ -15,9 +15,14 @@ export interface UseHabitsArchiveResult {
 export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
   const archiveHabitMutation = useMutation(api.habits.archive);
 
+  // Latest-ref: habits gets a new identity on every toggle; reading it through
+  // a ref keeps handleArchive stable so memo'd habit cards don't re-render.
+  const habitsRef = useRef(habits);
+  habitsRef.current = habits;
+
   const handleArchive = useCallback(
     async (habitId: Id<'habits'>) => {
-      const habit = habits.find((h) => h._id === habitId);
+      const habit = habitsRef.current.find((h) => h._id === habitId);
       const habitName = habit?.name ?? 'Habit';
 
       // Apply optimistic update immediately
@@ -38,7 +43,7 @@ export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
         showGenericError(ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED);
       }
     },
-    [archiveHabitMutation, habits]
+    [archiveHabitMutation]
   );
 
   return {

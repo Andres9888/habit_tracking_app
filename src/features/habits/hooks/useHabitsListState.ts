@@ -307,9 +307,30 @@ export function useHabitsListState(): HabitsListState {
     { isOnline }
   );
 
+  // Latest-ref mirrors: these values get new identities on every toggle
+  // (they derive from the optimistic store), which would otherwise give
+  // toggleHabit a new identity each render and bust the memo() boundary
+  // on every habit card. The callback reads .current instead.
+  const toggleDepsRef = useRef({
+    baseToggleHabit,
+    getHabitStatus,
+    habitsById,
+    isCompleted,
+    predictedStrengths,
+  });
+  toggleDepsRef.current = {
+    baseToggleHabit,
+    getHabitStatus,
+    habitsById,
+    isCompleted,
+    predictedStrengths,
+  };
+
   // Wrap toggleHabit to also play completion sound
   const toggleHabit = useCallback(
     async (args: { habitId: Habit['_id']; date: string }) => {
+      const { baseToggleHabit, getHabitStatus, habitsById, isCompleted, predictedStrengths } =
+        toggleDepsRef.current;
       // Check if this will mark as completed (not already completed)
       const currentlyCompleted = isCompleted(args.habitId, args.date);
       const habit = habitsById.get(args.habitId);
@@ -375,14 +396,7 @@ export function useHabitsListState(): HabitsListState {
 
       return result;
     },
-    [
-      baseToggleHabit,
-      getHabitStatus,
-      habitsById,
-      isCompleted,
-      playCompletionSound,
-      predictedStrengths,
-    ]
+    [playCompletionSound]
   );
 
   // Stable content padding reference to avoid object re-creation every render

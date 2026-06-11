@@ -74,13 +74,9 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
 
   return (
     <Animated.View style={isToday ? getTodayGlowStyle(borderRadius) : undefined}>
-      <Reanimated.View
-        style={[
-          outerFrame,
-          completed && !missed ? cellStyle : null,
-          shadowStyle,
-        ]}
-      >
+      {/* cellStyle stays attached in every state: detaching an animated style
+          leaves its natively-set props stale, so the worklet owns the reset. */}
+      <Reanimated.View style={[outerFrame, cellStyle, shadowStyle]}>
         <AnimatedPressable
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { Alert } from 'react-native';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
@@ -11,9 +11,14 @@ import { logInteraction } from '../../../lib/analytics/interactions';
 export function useHabitDelete(habits: Habit[]) {
   const removeHabit = useMutation(api.habits.remove);
 
+  // Latest-ref: habits gets a new identity on every toggle; reading it through
+  // a ref keeps handleDelete stable so memo'd habit cards don't re-render.
+  const habitsRef = useRef(habits);
+  habitsRef.current = habits;
+
   const handleDelete = useCallback(
     (habitId: Id<'habits'>) => {
-      const habit = habits.find((h) => h._id === habitId);
+      const habit = habitsRef.current.find((h) => h._id === habitId);
       const habitName = habit?.name ?? 'Habit';
 
       triggerHaptic('heavy');
@@ -43,7 +48,7 @@ export function useHabitDelete(habits: Habit[]) {
         { cancelable: true }
       );
     },
-    [habits, removeHabit]
+    [removeHabit]
   );
 
   return { handleDelete };
