@@ -13,8 +13,10 @@ export const styles = StyleSheet.create({
   },
   description: {
     ...typography.caption,
+    fontSize: 12.5,
     fontWeight: fontWeights.regular,
-    marginTop: 1,
+    lineHeight: 18,
+    marginTop: 3,
   },
   icon: {
     alignItems: 'center',
@@ -30,7 +32,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: spacing.sm,
-    marginTop: spacing.xs,
+    marginTop: spacing.sm - 1,
   },
   name: {
     ...typography.body,
@@ -52,9 +54,9 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: 'row',
     gap: spacing.md,
-    marginBottom: spacing.sm,
+    marginBottom: spacing.sm + 1,
     marginHorizontal: spacing.base,
-    padding: spacing.md,
+    padding: spacing.md + 2,
   },
   science: {
     ...typography.caption,

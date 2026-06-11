@@ -67,7 +67,11 @@ export function ListCardAddButton({
         <ActivityIndicator color={colors.text.inverse} size='small' />
       ) : isImported ? (
         <>
-          <Check color={colors.primary[700]} size={iconSizes.small} strokeWidth={3} />
+          <Check
+            color={colors.primary[700]}
+            size={iconSizes.small}
+            strokeWidth={3}
+          />
           <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
         </>
       ) : (

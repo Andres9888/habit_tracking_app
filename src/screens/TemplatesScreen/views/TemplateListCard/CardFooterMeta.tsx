@@ -1,12 +1,10 @@
 /**
- * Meta pills row (frequency, category, popularity) and science door.
+ * Meta pills row (frequency, category, popularity).
  */
 
 import { Text, View } from 'react-native';
-import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { getGrowthTypeMeta, type GrowthType } from '@/utils/growthTypeMeta';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { ScienceDoorPill } from '../../components/ScienceDoorPill';
 import { CardMatchRow } from './CardMatchRow';
 import { styles } from './TemplateListCard.styles';
 
@@ -15,9 +13,7 @@ interface CardFooterMetaProps {
   frequency: string | undefined;
   growthType?: GrowthType;
   matchReason: string | null;
-  onPreview: (template: Doc<'templates'>) => void;
   popularityCount?: string | null;
-  template: Doc<'templates'>;
 }
 
 export function CardFooterMeta({
@@ -25,9 +21,7 @@ export function CardFooterMeta({
   frequency,
   growthType,
   matchReason,
-  onPreview,
   popularityCount,
-  template,
 }: CardFooterMetaProps) {
   const { colors, isDark } = useThemeColors();
   const popularityPillBg = isDark ? colors.status.streakLight : '#FFF7ED';
@@ -98,7 +92,6 @@ export function CardFooterMeta({
             </Text>
           </View>
         ) : null}
-        <ScienceDoorPill template={template} onPress={onPreview} />
       </View>
       {matchReason ? <CardMatchRow matchReason={matchReason} /> : null}
     </>

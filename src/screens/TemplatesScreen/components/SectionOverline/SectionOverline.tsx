@@ -10,15 +10,21 @@ import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
 
 interface SectionOverlineProps {
+  /** Drop the top margin — for the first section under a hero/header. */
+  flush?: boolean;
   rightSlot?: ReactNode;
   title: string;
 }
 
-export function SectionOverline({ rightSlot, title }: SectionOverlineProps) {
+export function SectionOverline({
+  flush = false,
+  rightSlot,
+  title,
+}: SectionOverlineProps) {
   const { colors } = useThemeColors();
 
   return (
-    <View style={s.row}>
+    <View style={[s.row, flush && s.flush]}>
       <Text style={[s.label, { color: colors.text.tertiary }]}>{title}</Text>
       {rightSlot ? <View style={s.right}>{rightSlot}</View> : null}
     </View>
@@ -26,6 +32,9 @@ export function SectionOverline({ rightSlot, title }: SectionOverlineProps) {
 }
 
 const s = StyleSheet.create({
+  flush: {
+    marginTop: 0,
+  },
   label: {
     ...typography.overline,
   },

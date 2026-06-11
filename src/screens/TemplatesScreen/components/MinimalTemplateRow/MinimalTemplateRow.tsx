@@ -9,7 +9,6 @@ import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
 import { DetailsChevron } from '../DetailsChevron';
-import { ScienceDoorPill } from '../ScienceDoorPill';
 import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
 import { getImportedStateColors } from '../../utils/importedStateColors';
 import { getTemplateMetaLabel } from './templateMeta';
@@ -69,7 +68,7 @@ export function MinimalTemplateRow({
           {item.name}
         </Text>
         <Text
-          numberOfLines={1}
+          numberOfLines={2}
           style={[s.description, { color: colors.text.secondary }]}
         >
           {item.description}
@@ -90,7 +89,6 @@ export function MinimalTemplateRow({
               </Text>
             </View>
           ) : null}
-          <ScienceDoorPill template={item} onPress={onPreview} />
         </View>
       </View>
       <DetailsChevron />

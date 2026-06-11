@@ -49,15 +49,15 @@ export const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  contentColumn: { flex: 1, gap: spacing.xs },
+  contentColumn: { flex: 1, gap: spacing.xs + 2 },
   description: { ...typography.bodySmall },
   iconText: { fontSize: 22 },
   iconWrapper: {
     alignItems: 'center',
     borderRadius: borderRadius.medium,
-    height: 42,
+    height: 44,
     justifyContent: 'center',
-    width: 42,
+    width: 44,
   },
   matchRow: {
     alignItems: 'center',

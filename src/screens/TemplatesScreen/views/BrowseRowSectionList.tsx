@@ -34,6 +34,7 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
           entering={stagger(p.staggerOffset + sectionIndex)}
         >
           <SectionOverline
+            flush={sectionIndex === 0}
             title={section.title}
             rightSlot={
               section.key === 'popular' ? (
