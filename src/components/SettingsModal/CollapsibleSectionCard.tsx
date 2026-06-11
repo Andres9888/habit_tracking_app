@@ -18,18 +18,23 @@ interface Props {
 }
 
 export function CollapsibleSectionCard({
-  title, subtitle, icon, children, highContrastMode = false,
-  isExpanded = true, onToggle, cardStyle,
+  title,
+  subtitle,
+  icon,
+  children,
+  highContrastMode = false,
+  isExpanded = true,
+  onToggle,
+  cardStyle,
 }: Props) {
   const accordion = useSettingsSectionAccordion({ isExpanded });
 
   const handleToggle = useCallback(() => {
     onToggle?.();
-    accordion.animateToggle(!isExpanded);
-  }, [onToggle, accordion.animateToggle, isExpanded]);
+  }, [onToggle]);
 
   return (
-    <View className="overflow-hidden rounded-2xl" style={cardStyle}>
+    <View className='overflow-hidden rounded-2xl' style={cardStyle}>
       <SettingsSectionHeader
         chevronStyle={accordion.chevronAnimatedStyle}
         highContrastMode={highContrastMode}

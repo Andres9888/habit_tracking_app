@@ -24,30 +24,30 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
 
-  const { animateToggle, chevronAnimatedStyle, contentAnimatedStyle } =
-    useExpandAnimation({
-      defaultExpanded: false,
-      reduceMotion,
-      contentHeight,
-      hasContentMeasured,
-    });
+  const { chevronAnimatedStyle, contentAnimatedStyle } = useExpandAnimation({
+    contentHeight,
+    defaultExpanded: expanded,
+    hasContentMeasured,
+    reduceMotion,
+  });
 
-  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    if (height > 0) {
-      setContentHeight(height);
+  const handleContentLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { height } = event.nativeEvent.layout;
+      if (height <= 0) return;
+      if (hasContentMeasured && !expanded) return;
+      setContentHeight((prev) => (prev === height ? prev : height));
       setHasContentMeasured(true);
-    }
-  }, []);
+    },
+    [expanded, hasContentMeasured]
+  );
 
   const activeMode: AlgorithmMode = selected;
   const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
 
   const toggle = () => {
     void Haptics.selectionAsync();
-    const next = !expanded;
-    setExpanded(next);
-    animateToggle(next);
+    setExpanded((prev) => !prev);
   };
 
   return (

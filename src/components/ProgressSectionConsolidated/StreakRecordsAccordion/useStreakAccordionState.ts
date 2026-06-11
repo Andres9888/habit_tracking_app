@@ -30,28 +30,28 @@ export function useStreakAccordionState({
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
 
   const pulseAnimatedStyle = usePulseAnimation({ currentStreak, reduceMotion });
-  const { animateToggle, contentAnimatedStyle, chevronAnimatedStyle } =
-    useExpandAnimation({
-      contentHeight,
-      defaultExpanded,
-      hasContentMeasured,
-      reduceMotion,
-    });
+  const { chevronAnimatedStyle, contentAnimatedStyle } = useExpandAnimation({
+    contentHeight,
+    defaultExpanded: isExpanded,
+    hasContentMeasured,
+    reduceMotion,
+  });
 
-  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    if (height > 0) {
-      setContentHeight(height);
+  const handleContentLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { height } = event.nativeEvent.layout;
+      if (height <= 0) return;
+      if (hasContentMeasured && !isExpanded) return;
+      setContentHeight((prev) => (prev === height ? prev : height));
       setHasContentMeasured(true);
-    }
-  }, []);
+    },
+    [hasContentMeasured, isExpanded]
+  );
 
   const handleToggle = useCallback(() => {
     triggerSelection();
-    const newExpanded = !isExpanded;
-    setIsExpanded(newExpanded);
-    animateToggle(newExpanded);
-  }, [isExpanded, triggerSelection, animateToggle]);
+    setIsExpanded((prev) => !prev);
+  }, [triggerSelection]);
 
   const top3Records = useMemo(() => streakRecords.slice(0, 3), [streakRecords]);
   const hasRecords = top3Records.length > 0;

@@ -1,14 +1,20 @@
 /** Shared expand/collapse animation hook for accordion components */
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import {
+  Extrapolation,
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   withTiming,
   interpolate,
 } from 'react-native-reanimated';
-import { durations, enterEasing, springs } from '@/theme/animations';
+import {
+  durations,
+  enterEasing,
+  exitEasing,
+  springs,
+} from '@/theme/animations';
 
 interface UseExpandAnimationProps {
   defaultExpanded: boolean;
@@ -23,66 +29,56 @@ export function useExpandAnimation({
   reduceMotion,
   contentHeight,
   hasContentMeasured,
-  motion = 'spring',
+  motion = 'timing',
 }: UseExpandAnimationProps) {
-  const expandProgress = useSharedValue(defaultExpanded ? 1 : 0);
-  const chevronRotation = useSharedValue(defaultExpanded ? 180 : 0);
-  const isUserToggle = useRef(false);
+  const progress = useSharedValue(defaultExpanded ? 1 : 0);
 
-  // Sync shared values when defaultExpanded changes externally (e.g. async preference load)
   useEffect(() => {
-    if (isUserToggle.current) {
-      isUserToggle.current = false;
+    const target = defaultExpanded ? 1 : 0;
+
+    if (reduceMotion) {
+      progress.value = target;
       return;
     }
-    expandProgress.value = defaultExpanded ? 1 : 0;
-    chevronRotation.value = defaultExpanded ? 180 : 0;
-  }, [defaultExpanded, expandProgress, chevronRotation]);
 
-  const animateToggle = useCallback(
-    (newExpanded: boolean) => {
-      isUserToggle.current = true;
-      const targetValue = newExpanded ? 1 : 0;
-      const chevronTarget = newExpanded ? 180 : 0;
+    if (motion === 'timing') {
+      progress.value = withTiming(target, {
+        duration: defaultExpanded ? durations.enter : durations.transition,
+        easing: defaultExpanded ? enterEasing : exitEasing,
+      });
+      return;
+    }
 
-      if (reduceMotion) {
-        expandProgress.value = targetValue;
-        chevronRotation.value = chevronTarget;
-        return;
-      }
-
-      if (motion === 'timing') {
-        const config = {
-          duration: durations.enter,
-          easing: enterEasing,
-        };
-        expandProgress.value = withTiming(targetValue, config);
-        chevronRotation.value = withTiming(chevronTarget, config);
-        return;
-      }
-
-      expandProgress.value = withSpring(targetValue, springs.gentle);
-      chevronRotation.value = withSpring(chevronTarget, springs.gentle);
-    },
-    [reduceMotion, motion, expandProgress, chevronRotation]
-  );
+    progress.value = withSpring(target, springs.gentle);
+  }, [defaultExpanded, motion, progress, reduceMotion]);
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      expandProgress.value,
+    const clampedHeight = interpolate(
+      progress.value,
       [0, 1],
-      [0, contentHeight]
+      [0, contentHeight],
+      Extrapolation.CLAMP
     );
+
     return {
-      height: hasContentMeasured ? height : defaultExpanded ? 'auto' : 0,
-      opacity: expandProgress.value,
+      height: !hasContentMeasured && defaultExpanded ? 'auto' : clampedHeight,
+      opacity: interpolate(progress.value, [0, 1], [0, 1], Extrapolation.CLAMP),
       overflow: 'hidden',
     };
   });
 
   const chevronAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${Math.round(chevronRotation.value)}deg` }],
+    transform: [
+      {
+        rotate: `${interpolate(
+          progress.value,
+          [0, 1],
+          [0, 180],
+          Extrapolation.CLAMP
+        )}deg`,
+      },
+    ],
   }));
 
-  return { animateToggle, chevronAnimatedStyle, contentAnimatedStyle };
+  return { chevronAnimatedStyle, contentAnimatedStyle };
 }
