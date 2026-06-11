@@ -83,3 +83,7 @@ dev-debug.log
 node_modules
 
 Plans/
+
+# Debug artifacts (audit phase 5)
+har.json
+tmp-*

@@ -40,12 +40,32 @@ function isSensitiveKey(key: string): boolean {
   return SENSITIVE_KEY_PATTERNS.some((pattern) => lower.includes(pattern));
 }
 
-/** Return a shallow copy of `record` with sensitive keys redacted. */
+/**
+ * Value shapes that look like secrets regardless of their key name:
+ * bearer tokens, JWTs, Stripe/Clerk-style prefixed keys, and long
+ * unbroken hex/base64 blobs. Key-name matching alone misses secrets
+ * passed under innocuous keys (e.g. `{ value: 'sk_live_…' }`).
+ */
+const SENSITIVE_VALUE_PATTERNS: RegExp[] = [
+  /\bBearer\s+[\w.~+/-]+=*/i,
+  /\beyJ[\w-]{10,}\.[\w-]{5,}\.[\w-]{5,}\b/, // JWT
+  /\b(?:sk|pk|rk|whsec|appl)_(?:live_|test_)?[\w-]{8,}\b/i, // prefixed API keys
+  /\b[0-9a-f]{32,}\b/i, // long hex blob
+];
+
+function scrubValue(value: unknown): unknown {
+  if (typeof value !== 'string') return value;
+  return SENSITIVE_VALUE_PATTERNS.some((pattern) => pattern.test(value))
+    ? '[redacted]'
+    : value;
+}
+
+/** Return a shallow copy of `record` with sensitive keys and values redacted. */
 function scrubRecord(record: UnknownRecord | undefined): UnknownRecord | undefined {
   if (!record) return record;
   const safe: UnknownRecord = {};
   for (const key of Object.keys(record)) {
-    safe[key] = isSensitiveKey(key) ? '[redacted]' : record[key];
+    safe[key] = isSensitiveKey(key) ? '[redacted]' : scrubValue(record[key]);
   }
   return safe;
 }

@@ -4,6 +4,11 @@
  */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
+import {
+  requireValid,
+  validateIdentifier,
+  validateTimeFormat,
+} from '../lib/inputValidation';
 import { normalizeDarkMode, normalizeHabitSortMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
@@ -97,13 +102,25 @@ export const update = mutation({
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .first();
 
-    const normalizedArgs =
-      args.darkMode === undefined
-        ? args
-        : {
-            ...args,
-            darkMode: normalizeDarkMode(args.darkMode),
-          };
+    // Defense-in-depth: the v.string() validators above accept any string;
+    // enforce format + length before persisting free-text fields.
+    const streakReminderTime = requireValid(
+      validateTimeFormat(args.streakReminderTime, 'Streak reminder time'),
+      args.streakReminderTime
+    );
+    const appIcon = requireValid(
+      validateIdentifier(args.appIcon, 64, 'App icon'),
+      args.appIcon
+    );
+
+    const normalizedArgs = {
+      ...args,
+      ...(args.streakReminderTime === undefined ? {} : { streakReminderTime }),
+      ...(args.appIcon === undefined ? {} : { appIcon }),
+      ...(args.darkMode === undefined
+        ? {}
+        : { darkMode: normalizeDarkMode(args.darkMode) }),
+    };
 
     if (!existing) {
       await ctx.db.insert('userSettings', {
