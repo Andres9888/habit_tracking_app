@@ -1,4 +1,4 @@
-/** ProfileHeroCard — centered avatar, name, and stats (Habit It-inspired) */
+/** ProfileHeroCard — centered avatar, name, and stats with layered depth */
 import { Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -8,7 +8,7 @@ import { typography, fontWeights } from '../../theme/typography';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
 import { ProfileStatsRow } from './ProfileStatsRow';
-import { UserAvatar } from './UserAvatar';
+import { ProfileHeroAvatar } from './components/ProfileHeroAvatar';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
 import { useProfileStats } from './useProfileStats';
@@ -46,21 +46,10 @@ export function ProfileHeroCard({
               size={iconSizes.medium}
             />
           </View>
-          <UserAvatar
+          <ProfileHeroAvatar
             imageUrl={imageUrl}
             initial={initial}
-            palette={{
-              avatarBg: themeColors.primary[100],
-              avatarBorderColor: themeColors.border,
-              avatarBorderWidth: 2,
-              avatarTextColor: themeColors.primary[700],
-              gradientColors: [
-                themeColors.primary[700],
-                themeColors.primary[600],
-              ],
-            }}
-            size={72}
-            useGradient
+            themeColors={themeColors}
           />
           <View className='mt-3 flex-row items-center' style={{ gap: 6 }}>
             <Text

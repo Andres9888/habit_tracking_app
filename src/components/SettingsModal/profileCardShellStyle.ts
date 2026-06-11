@@ -9,10 +9,13 @@ export function getProfileCardShellStyle(
 ) {
   return {
     backgroundColor: themeColors.card,
-    borderColor: highContrastMode ? themeColors.border : undefined,
-    borderWidth: highContrastMode ? 1 : 0,
+    borderColor: highContrastMode ? themeColors.border : themeColors.border,
+    borderWidth: 1,
     ...(highContrastMode
       ? { elevation: 0, shadowColor: 'transparent' }
-      : shadows.card),
+      : {
+          ...shadows.floatingActionButton,
+          shadowOpacity: 0.07,
+        }),
   };
 }

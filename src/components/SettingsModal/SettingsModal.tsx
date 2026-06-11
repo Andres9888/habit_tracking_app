@@ -1,94 +1,36 @@
-/* eslint-disable max-lines, max-lines-per-function */
 /**
  * SettingsModal Component
  */
 
 import React, { useCallback } from 'react';
-import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ErrorBoundary, ScreenErrorFallback } from '../ErrorBoundary';
-import ArchivedHabitsModal from '../ArchivedHabitsModal';
+import { ErrorBoundary } from '../ErrorBoundary';
 import Modal from '../Modal';
-import { SettingsModalSkeleton } from '../SkeletonLoader';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
 import { getSettingsColors } from './colors';
-import { SettingsHeader } from './SettingsHeader';
-import { AccountPage } from './AccountPage';
-import { SettingsContent } from './SettingsContent';
-import { SortPicker } from './SortPicker';
+import { SettingsModalFallback } from './components/SettingsModalFallback';
+import { SettingsMainView } from './components/SettingsMainView';
+import { fullScreenModalStyle } from './SettingsContent.constants';
 import { useThemeColors } from '../../theme/ThemeContext';
-import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsModalProps } from './types';
 
-const fullScreenModalStyle = {
-  borderTopLeftRadius: 0,
-  borderTopRightRadius: 0,
-};
-
-function SettingsModalContent({
-  completionSoundEnabled = false,
-  completionSoundType = 'chime',
-  dayShape = 'square',
-  habitCompletionIcon = 'chain',
-  isHighContrastActive = false,
-  onChangeCompletionSoundEnabled = () => {},
-  onChangeCompletionSoundType = () => {},
-  onChangeDayShape = () => {},
-  onChangeHabitCompletionIcon = () => {},
-  onChangeStickyCalendarHeader = () => {},
-  onClose,
-  visible,
-  streakRemindersEnabled = false,
-  streakReminderTime = '20:00',
-  stickyCalendarHeader = false,
-  isPremium = false,
-  isLoading = false,
-  onToggleStreakReminders = () => {},
-  onChangeStreakReminderTime = () => {},
-  onPremiumUpsell,
-  onExportHabitsData = () => {},
-  archivedHabitsCount = 0,
-  settingsDocument,
-}: SettingsModalProps) {
-  const {
-    compactView,
-    setCompactView,
-    darkModePreference,
-    setDarkModePreference,
-    highContrastMode,
-    setHighContrastMode,
-    habitSortMode,
-    showGradientFill,
-    setShowGradientFill,
-    showStreakConnections,
-    setShowStreakConnections,
-    setHabitSortMode,
-    view,
-    setView,
-    handleClose,
-  } = useSettingsModalLogic({
-    onClose,
-    settingsDocument,
-    visible,
+function SettingsModalContent(props: SettingsModalProps) {
+  const logic = useSettingsModalLogic({
+    onClose: props.onClose,
+    settingsDocument: props.settingsDocument,
+    visible: props.visible,
   });
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
-  const colors = getSettingsColors(isHighContrastActive, isDark);
-
-  const handleSortSelect = useCallback(
-    (mode: HabitSortMode) => {
-      void setHabitSortMode(mode);
-    },
-    [setHabitSortMode]
-  );
+  const colors = getSettingsColors(props.isHighContrastActive ?? false, isDark);
 
   const handleRequestClose = useCallback(() => {
-    if (view !== 'settings') {
-      setView('settings');
+    if (logic.view !== 'settings') {
+      logic.setView('settings');
       return;
     }
-    onClose();
-  }, [onClose, setView, view]);
+    props.onClose();
+  }, [logic, props.onClose]);
 
   return (
     <Modal
@@ -96,87 +38,49 @@ function SettingsModalContent({
       disableGestureClose
       backdropOpacity={0}
       variant='fullScreen'
-      visible={visible}
+      visible={props.visible}
       onClose={handleRequestClose}
       style={fullScreenModalStyle}
     >
-      {view === 'archived' ? (
-        <View className='flex-1' style={{ backgroundColor: colors.background }}>
-          <ArchivedHabitsModal
-            onBack={() => setView('settings')}
-            onClose={handleClose}
-          />
-        </View>
-      ) : null}
-
-      {view === 'account' ? (
-        <View className='flex-1' style={{ backgroundColor: colors.background }}>
-          <AccountPage
-            highContrastMode={isHighContrastActive}
-            isPremium={isPremium}
-            onBack={() => setView('settings')}
-            onClose={handleClose}
-            onPremiumUpsell={onPremiumUpsell}
-          />
-        </View>
-      ) : null}
-
-      {view === 'sort' ? (
-        <SortPicker
-          currentMode={habitSortMode as HabitSortMode}
-          onBack={() => setView('settings')}
-          onSelect={handleSortSelect}
-        />
-      ) : null}
-
-      {view === 'settings' ? (
-        <View className='flex-1' style={{ backgroundColor: colors.background }}>
-          {isLoading ? (
-            <SettingsModalSkeleton />
-          ) : (
-            <>
-              <SettingsHeader colors={colors} onClose={handleClose} />
-              <SettingsContent
-                archivedHabitsCount={archivedHabitsCount}
-                bottomInset={insets.bottom}
-                colors={colors}
-                compactView={compactView}
-                onChangeCompactView={setCompactView}
-                completionSoundEnabled={completionSoundEnabled}
-                completionSoundType={completionSoundType}
-                darkModePreference={darkModePreference}
-                onChangeDarkModePreference={setDarkModePreference}
-                highContrastEnabled={highContrastMode}
-                onChangeHighContrast={setHighContrastMode}
-                dayShape={dayShape}
-                habitCompletionIcon={habitCompletionIcon}
-                habitSortMode={habitSortMode}
-                isHighContrastActive={isHighContrastActive}
-                isPremium={isPremium}
-                showGradientFill={showGradientFill}
-                showStreakConnections={showStreakConnections}
-                stickyCalendarHeader={stickyCalendarHeader}
-                streakRemindersEnabled={streakRemindersEnabled}
-                streakReminderTime={streakReminderTime}
-                onChangeCompletionSoundEnabled={onChangeCompletionSoundEnabled}
-                onChangeCompletionSoundType={onChangeCompletionSoundType}
-                onChangeDayShape={onChangeDayShape}
-                onChangeHabitCompletionIcon={onChangeHabitCompletionIcon}
-                onChangeShowGradientFill={setShowGradientFill}
-                onChangeShowStreakConnections={setShowStreakConnections}
-                onChangeStickyCalendarHeader={onChangeStickyCalendarHeader}
-                onChangeStreakReminderTime={onChangeStreakReminderTime}
-                onOpenAccount={() => setView('account')}
-                onOpenArchivedHabits={() => setView('archived')}
-                onExportHabitsData={onExportHabitsData}
-                onOpenSortPicker={() => setView('sort')}
-                onPremiumUpsell={onPremiumUpsell}
-                onToggleStreakReminders={onToggleStreakReminders}
-              />
-            </>
-          )}
-        </View>
-      ) : null}
+      <SettingsMainView
+        archivedHabitsCount={props.archivedHabitsCount ?? 0}
+        colors={colors}
+        compactView={logic.compactView}
+        completionSoundEnabled={props.completionSoundEnabled}
+        completionSoundType={props.completionSoundType}
+        dayShape={props.dayShape}
+        habitCompletionIcon={props.habitCompletionIcon}
+        handleClose={logic.handleClose}
+        highContrastMode={logic.highContrastMode}
+        habitSortMode={logic.habitSortMode}
+        insets={insets}
+        isHighContrastActive={props.isHighContrastActive ?? false}
+        isLoading={props.isLoading ?? false}
+        isPremium={props.isPremium ?? false}
+        setCompactView={logic.setCompactView}
+        setDarkModePreference={logic.setDarkModePreference}
+        setHighContrastMode={logic.setHighContrastMode}
+        setHabitSortMode={logic.setHabitSortMode}
+        setShowGradientFill={logic.setShowGradientFill}
+        setShowStreakConnections={logic.setShowStreakConnections}
+        setView={logic.setView}
+        showGradientFill={logic.showGradientFill}
+        showStreakConnections={logic.showStreakConnections}
+        stickyCalendarHeader={props.stickyCalendarHeader}
+        streakRemindersEnabled={props.streakRemindersEnabled}
+        streakReminderTime={props.streakReminderTime}
+        darkModePreference={logic.darkModePreference}
+        onChangeCompletionSoundEnabled={props.onChangeCompletionSoundEnabled}
+        onChangeCompletionSoundType={props.onChangeCompletionSoundType}
+        onChangeDayShape={props.onChangeDayShape}
+        onChangeHabitCompletionIcon={props.onChangeHabitCompletionIcon}
+        onChangeStickyCalendarHeader={props.onChangeStickyCalendarHeader}
+        onChangeStreakReminderTime={props.onChangeStreakReminderTime}
+        onExportHabitsData={props.onExportHabitsData}
+        onPremiumUpsell={props.onPremiumUpsell}
+        onToggleStreakReminders={props.onToggleStreakReminders}
+        view={logic.view}
+      />
     </Modal>
   );
 }
@@ -185,22 +89,10 @@ export default function SettingsModal(props: SettingsModalProps) {
   return (
     <ErrorBoundary
       fallback={
-        <Modal
-          disableBackdropClose
-          disableGestureClose
-          backdropOpacity={0}
-          variant='fullScreen'
+        <SettingsModalFallback
           visible={props.visible}
           onClose={props.onClose}
-          style={fullScreenModalStyle}
-        >
-          <ScreenErrorFallback
-            error={null}
-            screenName='Settings'
-            onGoBack={props.onClose}
-            onRetry={() => {}}
-          />
-        </Modal>
+        />
       }
     >
       <SettingsModalContent {...props} />

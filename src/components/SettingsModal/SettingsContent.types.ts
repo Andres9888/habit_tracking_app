@@ -37,7 +37,9 @@ export interface SettingsContentProps {
   archivedHabitsCount?: number;
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;
-  onOpenSortPicker: () => void;
+  onChangeHabitSortMode: (
+    mode: import('../../features/habits/types').HabitSortMode
+  ) => void;
   onExportHabitsData?: () => void | Promise<void>;
   showGradientFill: boolean;
   // Streak reminders

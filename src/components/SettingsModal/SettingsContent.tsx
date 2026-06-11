@@ -1,60 +1,18 @@
-/* eslint-disable max-lines, max-lines-per-function */
 /** SettingsContent - Settings layout: Account → Appearance → Behavior → Notifications → Support → About */
-import {
-  ArrowUpDown,
-  BellRing,
-  BookOpen,
-  Calendar,
-  Download,
-  FolderOpen,
-  Heart,
-  Info,
-  Palette,
-  SlidersHorizontal,
-  Volume2,
-} from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
-import { durations, enterEasing } from '@/theme/animations';
-import Constants from 'expo-constants';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, {
-  FadeInDown,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { ProfileHeroCard } from './ProfileHeroCard';
-import { SettingsRow } from './SettingsRow';
-import { SettingsSection } from './SettingsSection';
-import { SoundPicker } from './SoundPicker';
-import { StreakRemindersSection } from './StreakRemindersSection';
 import { useAccountActions } from './useAccountActions';
-import { AppActions, AppearanceSection, AboutLegalSection } from './sections';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { SORT_LABEL_MAP } from './SortPicker.constants';
-import type { HabitSortMode } from '../../features/habits/types';
 import type { SettingsContentProps } from './types';
-import {
-  useSettingsSectionStates,
-  SECTION_IDS,
-} from './useSettingsSectionStates';
+import { useSettingsSectionStates } from './useSettingsSectionStates';
+import { SCROLL_STYLES } from './SettingsContent.constants';
+import { SettingsSectionList } from './components/SettingsSectionList';
 
-const STAGGER = durations.stagger; // 60ms per design system
-const MAX_STAGGER_ITEMS = 6;
-const anim = (index: number) =>
-  FadeInDown.delay(Math.min(index, MAX_STAGGER_ITEMS) * STAGGER)
-    .duration(durations.enter)
-    .easing(enterEasing);
-
-const SCROLL_STYLES = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    position: 'relative',
-  },
-});
-
-/** Section header icon color — dark enough to anchor the hierarchy */
 const useSectionIconColor = () => {
   const { colors: themeColors } = useThemeColors();
   return themeColors.text.primary;
@@ -62,7 +20,7 @@ const useSectionIconColor = () => {
 
 export function SettingsContent(p: SettingsContentProps) {
   const { colors, isHighContrastActive: hc } = p;
-  const { colors: themeColors, settings: settingsIcons } = useThemeColors();
+  const { colors: themeColors } = useThemeColors();
   const sectionIconColor = useSectionIconColor();
   const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
   const scrollY = useSharedValue(0);
@@ -77,8 +35,6 @@ export function SettingsContent(p: SettingsContentProps) {
 
   const actions = useAccountActions();
   const { sectionStates, toggleSection } = useSettingsSectionStates();
-
-  const iconSize = iconSizes.small;
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -99,193 +55,20 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <View className='gap-5'>
-          <Animated.View entering={anim(0)}>
-            <ProfileHeroCard
-              highContrastMode={hc}
-              isPremium={p.isPremium}
-              onPress={p.onOpenAccount}
-            />
-          </Animated.View>
-
-          {/* Appearance Section */}
-          <Animated.View entering={anim(1)}>
-            <AppearanceSection
-              compactView={p.compactView}
-              darkModePreference={p.darkModePreference}
-              dayShape={p.dayShape}
-              habitCompletionIcon={p.habitCompletionIcon}
-              highContrastEnabled={p.highContrastEnabled}
-              highContrastMode={hc}
-              icon={<Palette color={sectionIconColor} size={iconSize} />}
-              isExpanded={sectionStates.appearance}
-              showGradientFill={p.showGradientFill}
-              showStreakConnections={p.showStreakConnections}
-              onChangeCompactView={p.onChangeCompactView}
-              onChangeDarkModePreference={p.onChangeDarkModePreference}
-              onChangeDayShape={p.onChangeDayShape}
-              onChangeHabitCompletionIcon={p.onChangeHabitCompletionIcon}
-              onChangeHighContrast={p.onChangeHighContrast}
-              onChangeShowGradientFill={p.onChangeShowGradientFill}
-              onChangeShowStreakConnections={p.onChangeShowStreakConnections}
-              onToggleSection={() => toggleSection(SECTION_IDS.appearance)}
-            />
-          </Animated.View>
-
-          {/* Behavior Section */}
-          <Animated.View entering={anim(2)}>
-            <SettingsSection
-              collapsible
-              highContrastMode={hc}
-              icon={
-                <SlidersHorizontal color={sectionIconColor} size={iconSize} />
-              }
-              isExpanded={sectionStates.behavior}
-              title='Behavior'
-              onToggle={() => toggleSection(SECTION_IDS.behavior)}
-            >
-              <SettingsRow
-                hapticStyle='selection'
-                highContrastMode={hc}
-                icon={
-                  <ArrowUpDown
-                    color={settingsIcons.sort.icon}
-                    size={iconSize}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.sort.bg}
-                label='Sort order'
-                subtitle='How habits are ordered'
-                type='selection'
-                value={
-                  SORT_LABEL_MAP[p.habitSortMode as HabitSortMode] ?? 'Custom'
-                }
-                onPress={p.onOpenSortPicker}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Volume2 color={settingsIcons.sound.icon} size={iconSize} />
-                }
-                iconBackgroundColor={settingsIcons.sound.bg}
-                label='Completion sound'
-                subtitle='Play sound when checking off'
-                showBorder={!p.completionSoundEnabled}
-                type='toggle'
-                value={p.completionSoundEnabled}
-                onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
-              />
-              <SoundPicker
-                selected={p.completionSoundType}
-                visible={p.completionSoundEnabled}
-                onSelect={(v) => void p.onChangeCompletionSoundType(v)}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Calendar
-                    color={settingsIcons.calendarHeader.icon}
-                    size={iconSize}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.calendarHeader.bg}
-                label='Sticky month header'
-                subtitle='Month stays visible while scrolling'
-                type='toggle'
-                value={p.stickyCalendarHeader}
-                onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
-              />
-            </SettingsSection>
-          </Animated.View>
-
-          {/* Habit Management Section */}
-          <Animated.View entering={anim(3)}>
-            <SettingsSection
-              collapsible
-              highContrastMode={hc}
-              icon={<FolderOpen color={sectionIconColor} size={iconSize} />}
-              isExpanded={sectionStates.habitManagement}
-              title='Habit Management'
-              onToggle={() => toggleSection(SECTION_IDS.habitManagement)}
-            >
-              <SettingsRow
-                badge={p.archivedHabitsCount}
-                highContrastMode={hc}
-                icon={
-                  <BookOpen
-                    color={settingsIcons.archive.icon}
-                    size={iconSize}
-                  />
-                }
-                iconBackgroundColor={settingsIcons.archive.bg}
-                label='Archived habits'
-                subtitle='View and restore hidden habits'
-                type='navigation'
-                onPress={p.onOpenArchivedHabits}
-              />
-              <SettingsRow
-                highContrastMode={hc}
-                icon={
-                  <Download color={settingsIcons.export.icon} size={iconSize} />
-                }
-                iconBackgroundColor={settingsIcons.export.bg}
-                label='Export habits data'
-                showBorder={false}
-                subtitle='Download as CSV or JSON'
-                type='navigation'
-                onPress={p.onExportHabitsData}
-              />
-            </SettingsSection>
-          </Animated.View>
-
-          {/* Notifications Section */}
-          <Animated.View entering={anim(4)}>
-            <StreakRemindersSection
-              collapsible
-              enabled={p.streakRemindersEnabled}
-              highContrastMode={hc}
-              icon={<BellRing color={sectionIconColor} size={iconSize} />}
-              isExpanded={sectionStates.notifications}
-              isPremium={p.isPremium}
-              reminderTime={p.streakReminderTime}
-              onChangeTime={p.onChangeStreakReminderTime}
-              onPremiumUpsell={p.onPremiumUpsell}
-              onToggle={p.onToggleStreakReminders}
-              onToggleSection={() => toggleSection(SECTION_IDS.notifications)}
-            />
-          </Animated.View>
-
-          {/* Support Section */}
-          <Animated.View entering={anim(5)}>
-            <AppActions
-              collapsible
-              highContrast={hc}
-              icon={<Heart color={sectionIconColor} size={iconSize} />}
-              isExpanded={sectionStates.support}
-              onFeedback={actions.handleFeedback}
-              onRate={actions.handleRateApp}
-              onShare={actions.handleShare}
-              onToggleSection={() => toggleSection(SECTION_IDS.support)}
-              onWhatsNew={actions.handleWhatsNew}
-            />
-          </Animated.View>
-
-          {/* About + Legal */}
-          <Animated.View entering={anim(6)}>
-            <AboutLegalSection
-              buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
-              collapsible
-              highContrast={hc}
-              icon={<Info color={sectionIconColor} size={iconSize} />}
-              isExpanded={sectionStates.about}
-              version={Constants.expoConfig?.version ?? '1.0.0'}
-              onPrivacy={actions.openPrivacy}
-              onTerms={actions.openTerms}
-              onToggleSection={() => toggleSection(SECTION_IDS.about)}
-            />
-          </Animated.View>
+          <SettingsSectionList
+            {...p}
+            sectionIconColor={sectionIconColor}
+            sectionStates={sectionStates}
+            toggleSection={toggleSection}
+            onFeedback={actions.handleFeedback}
+            onPrivacy={actions.openPrivacy}
+            onRate={actions.handleRateApp}
+            onShare={actions.handleShare}
+            onTerms={actions.openTerms}
+            onWhatsNew={actions.handleWhatsNew}
+          />
         </View>
       </Animated.ScrollView>
-
       <FeedbackModal
         visible={actions.showFeedbackModal}
         onClose={actions.closeFeedback}

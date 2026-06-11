@@ -3,10 +3,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import type { SettingsModalSettingsDocument } from './types';
 import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
-import {
-  sanitizeSettingsPayload,
-} from '../../lib/settings/sanitizeSettingsPayload';
+import { sanitizeSettingsPayload } from '../../lib/settings/sanitizeSettingsPayload';
 import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
+import {
+  createSettingsUpdaters,
+  normalizeDarkModePreference,
+  type DarkModePreference,
+} from './SettingsModal.settingsUpdaters';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
@@ -14,21 +17,12 @@ interface UseSettingsModalLogicProps {
   settingsDocument?: SettingsModalSettingsDocument;
 }
 
-type DarkModePreference = 'system' | 'light' | 'dark';
-
-const normalizeDarkModePreference = (value: unknown): DarkModePreference => {
-  if (value === 'dark' || value === 'light' || value === 'system') return value;
-  if (value === true) return 'dark';
-  if (value === false) return 'light';
-  return 'system';
-};
-
 export const useSettingsModalLogic = ({
   onClose,
   settingsDocument,
   visible,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'sort' | 'account'>(
+  const [view, setView] = useState<'settings' | 'archived' | 'account'>(
     'settings'
   );
   const settings = settingsDocument;
@@ -41,8 +35,7 @@ export const useSettingsModalLogic = ({
   const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
   const [compactView, setCompactViewState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
-  const [showStreakConnections, setShowStreakConnectionsState] =
-    useState(true);
+  const [showStreakConnections, setShowStreakConnectionsState] = useState(true);
 
   useEffect(() => {
     if (settings) {
@@ -56,11 +49,8 @@ export const useSettingsModalLogic = ({
     }
   }, [settings]);
 
-  // Reset view to 'settings' whenever the modal opens
   useEffect(() => {
-    if (visible) {
-      setView('settings');
-    }
+    if (visible) setView('settings');
   }, [visible]);
 
   const handleClose = useCallback(() => {
@@ -82,39 +72,17 @@ export const useSettingsModalLogic = ({
     [settings, updateSettings]
   );
 
-  const setDarkModePreference = async (value: DarkModePreference) => {
-    setDarkModeState(value);
-    await update({ darkMode: value });
-  };
-  const setReduceMotion = async (value: boolean) => {
-    setReduceMotionState(value);
-    await update({ reduceMotion: value });
-  };
-  const setHighContrastMode = async (value: boolean) => {
-    setHighContrastModeState(value);
-    await update({ highContrastMode: value });
-  };
-  const setUseDyslexicFont = async (value: boolean) => {
-    setUseDyslexicFontState(value);
-    await update({ useDyslexicFont: value });
-  };
-  const setCompactView = async (value: boolean) => {
-    setCompactViewState(value);
-    await update({ compactView: value });
-  };
-  const setShowGradientFill = async (value: boolean) => {
-    setShowGradientFillState(value);
-    await update({ showGradientFill: value });
-  };
-  const setShowStreakConnections = async (value: boolean) => {
-    setShowStreakConnectionsState(value);
-    await update({ showStreakConnections: value });
-  };
+  const updaters = createSettingsUpdaters(update, {
+    setCompactViewState,
+    setDarkModeState,
+    setHighContrastModeState,
+    setReduceMotionState,
+    setShowGradientFillState,
+    setShowStreakConnectionsState,
+    setUseDyslexicFontState,
+  });
 
   const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
-  const setHabitSortMode = async (value: string) => {
-    await update({ habitSortMode: value });
-  };
 
   return {
     compactView,
@@ -123,14 +91,14 @@ export const useSettingsModalLogic = ({
     handleClose,
     highContrastMode,
     reduceMotion,
-    setCompactView,
-    setDarkModePreference,
-    setHabitSortMode,
-    setHighContrastMode,
-    setReduceMotion,
-    setShowGradientFill,
-    setShowStreakConnections,
-    setUseDyslexicFont,
+    setCompactView: updaters.setCompactView,
+    setDarkModePreference: updaters.setDarkModePreference,
+    setHabitSortMode: updaters.setHabitSortMode,
+    setHighContrastMode: updaters.setHighContrastMode,
+    setReduceMotion: updaters.setReduceMotion,
+    setShowGradientFill: updaters.setShowGradientFill,
+    setShowStreakConnections: updaters.setShowStreakConnections,
+    setUseDyslexicFont: updaters.setUseDyslexicFont,
     setView,
     showGradientFill,
     showStreakConnections,
