@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { safeSetBoolean } from '@/utils/storage';
 
+import { FEATURE_FLAGS } from '../../constants/featureFlags';
 import { ONBOARDING_V2_COMPLETE_KEY } from './storageKeys';
 
 /**
@@ -17,7 +18,17 @@ export function useOnboardingV2Complete(isSignedIn: boolean) {
   const [complete, setComplete] = useState<boolean | null>(null);
 
   useEffect(() => {
-    setComplete(isSignedIn ? false : null);
+    if (!isSignedIn) {
+      setComplete(null);
+      return;
+    }
+
+    if (!FEATURE_FLAGS.ONBOARDING_V2_ENABLED) {
+      setComplete(true);
+      return;
+    }
+
+    setComplete(false);
   }, [isSignedIn]);
 
   const markComplete = useCallback(() => {

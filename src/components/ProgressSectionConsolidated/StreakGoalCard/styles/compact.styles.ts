@@ -43,7 +43,7 @@ export function createCompactStyles(colors: SemanticColors) {
       flexDirection: 'row',
       gap: 6,
     },
-    badgeText: { fontSize: 14 },
+    badgeText: { fontSize: typography.bodySmall.fontSize },
     heroCard: {
       marginBottom: 14,
     },
@@ -54,7 +54,7 @@ export function createCompactStyles(colors: SemanticColors) {
     },
     heroMetaText: {
       color: colors.text.secondary,
-      fontSize: 10,
+      fontSize: typography.tabBar.fontSize,
     },
     heroProgressBar: {
       backgroundColor: colors.border,
@@ -70,7 +70,7 @@ export function createCompactStyles(colors: SemanticColors) {
     },
     heroRemaining: {
       color: staticColors.streak[500],
-      fontSize: 11,
+      fontSize: typography.overline.fontSize,
       fontWeight: fontWeights.semibold,
     },
     heroRight: { flex: 1 },
@@ -82,13 +82,13 @@ export function createCompactStyles(colors: SemanticColors) {
     },
     heroStatDenom: {
       color: colors.text.tertiary,
-      fontSize: 12,
+      fontSize: typography.overline.fontSize,
       fontWeight: fontWeights.regular,
     },
     heroStatValue: {
       color: colors.text.primary,
       fontFamily: fontFamilies.monospace,
-      fontSize: 20,
+      fontSize: typography.heading3.fontSize,
       fontWeight: fontWeights.bold,
     },
     milestonesCard: {
@@ -122,17 +122,17 @@ export function createCompactStyles(colors: SemanticColors) {
     nextDays: {
       color: staticColors.streak[500],
       fontFamily: fontFamilies.monospace,
-      fontSize: 20,
+      fontSize: typography.heading3.fontSize,
       fontWeight: fontWeights.bold,
     },
     nextDaysLabel: {
       color: staticColors.streak[500],
-      fontSize: 9,
+      fontSize: typography.tabBar.fontSize,
       textAlign: 'right',
     },
     nextLabel: {
       color: staticColors.streak[500],
-      fontSize: 11,
+      fontSize: typography.overline.fontSize,
       fontWeight: fontWeights.semibold,
       letterSpacing: 0.5,
       textTransform: 'uppercase',
@@ -140,7 +140,7 @@ export function createCompactStyles(colors: SemanticColors) {
     nextName: {
       color: colors.text.primary,
       fontFamily: fontFamilies.primary.display,
-      fontSize: 17,
+      fontSize: typography.body.fontSize,
       fontWeight: fontWeights.bold,
       marginTop: 2,
     },
@@ -148,7 +148,7 @@ export function createCompactStyles(colors: SemanticColors) {
     ringSmallText: {
       color: colors.text.primary,
       fontFamily: fontFamilies.monospace,
-      fontSize: 16,
+      fontSize: typography.monospace.fontSize,
       fontWeight: fontWeights.bold,
       position: 'absolute',
     },

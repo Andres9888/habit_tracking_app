@@ -80,7 +80,7 @@ export function HabitDetailTabs({
         style={{ backgroundColor: containerBgColor }}
       >
         <Animated.View
-          className='absolute bottom-1 top-1 rounded-lg shadow-sm'
+          className='absolute bottom-1 top-1 rounded-lg'
           style={[
             pillStyle,
             {

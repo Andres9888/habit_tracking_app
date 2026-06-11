@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const evidenceStyles = StyleSheet.create({
   bottomZone: {
@@ -24,7 +24,7 @@ export const evidenceStyles = StyleSheet.create({
   paperText: {
     color: colors.gray[600],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13.5,
+    fontSize: typography.caption.fontSize,
     fontStyle: 'italic',
     lineHeight: 20,
   },
@@ -43,7 +43,7 @@ export const evidenceStyles = StyleSheet.create({
   pillText: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 11,
+    fontSize: typography.overline.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: 1.4,
     textTransform: 'uppercase',
@@ -61,7 +61,7 @@ export const evidenceStyles = StyleSheet.create({
   sourceText: {
     color: colors.gray[800],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 15,
+    fontSize: typography.bodySmall.fontSize,
     fontWeight: fontWeights.semibold,
     marginBottom: 4,
   },
@@ -71,7 +71,7 @@ export const evidenceStyles = StyleSheet.create({
   whyOverline: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 11,
+    fontSize: typography.overline.fontSize,
     fontWeight: fontWeights.bold,
     letterSpacing: 1.6,
     marginBottom: spacing.lg,

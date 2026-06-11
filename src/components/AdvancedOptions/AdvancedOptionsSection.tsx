@@ -52,7 +52,6 @@ export function AdvancedOptionsSection({
   const [openSheet, setOpenSheet] = useState<SheetKey>(null);
   const [fullPickerVisible, setFullPickerVisible] = useState(false);
   const {
-    animateToggle,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,
@@ -76,7 +75,6 @@ export function AdvancedOptionsSection({
 
   const toggle = () => {
     void Haptics.selectionAsync();
-    animateToggle(!expanded);
     setExpanded((v) => !v);
   };
 
@@ -249,7 +247,7 @@ export function AdvancedOptionsSection({
               <AdvancedOptionRow
                 isFirst
                 accessibilityHint='Opens strength curve picker'
-                description='How strength builds — and resets when you miss days.'
+                description='How strength grows — and what a missed day costs.'
                 icon={
                   <AlgoIcon
                     color={colors.primary[700]}
@@ -303,7 +301,7 @@ export function AdvancedOptionsSection({
       />
 
       <AdvancedSheet
-        subtitle='How strength builds — and resets when you miss days.'
+        subtitle='How strength grows — and what a missed day costs.'
         title='Strength Curve'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}

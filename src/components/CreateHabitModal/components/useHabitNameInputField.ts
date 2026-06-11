@@ -12,15 +12,15 @@ export function useHabitNameInputField(
   const inputRef = useHabitNameInputFocus(autoFocus);
   const [isFocused, setIsFocused] = useState(false);
   const caretState = useCenteredPlaceholderCaretInset(habitName, placeholder);
-  const shouldReplaceNativeCaret =
-    isFocused && habitName.length === 0 && placeholder.length > 0;
+  const shouldHideNativeCaret =
+    habitName.length === 0 && placeholder.length > 0;
   const showPlaceholderCaret =
-    shouldReplaceNativeCaret && caretState.isPlaceholderCaretReady;
+    isFocused && shouldHideNativeCaret && caretState.isPlaceholderCaretReady;
 
   return {
     inputRef,
     caretState,
-    shouldReplaceNativeCaret,
+    shouldHideNativeCaret,
     showPlaceholderCaret,
     handleBlur: () => {
       setIsFocused(false);

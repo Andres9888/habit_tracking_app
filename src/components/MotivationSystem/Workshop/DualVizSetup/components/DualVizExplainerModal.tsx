@@ -6,6 +6,7 @@
 import React from 'react';
 import { Text, Pressable, Modal } from 'react-native';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
+import { shadows } from '../../../../../theme/spacing';
 import type { DualVizExplainerModalProps } from '../DualVizSetup.types';
 import { ExplainerHeader } from './ExplainerHeader';
 import { ExplainerKeyInsight } from './ExplainerKeyInsight';
@@ -35,8 +36,8 @@ export function DualVizExplainerModal({
         <Pressable
           accessibilityLabel='Visualization protocol explanation'
           accessibilityRole='none'
-          className='w-full max-w-sm rounded-2xl p-5 shadow-xl'
-          style={{ backgroundColor: colors.surface }}
+          className='w-full max-w-sm rounded-2xl p-5'
+          style={[{ backgroundColor: colors.surface }, shadows.modal]}
           onPress={(e) => e.stopPropagation()}
         >
           <ExplainerHeader onClose={onClose} />

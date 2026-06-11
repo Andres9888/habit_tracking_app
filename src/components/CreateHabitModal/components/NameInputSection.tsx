@@ -37,6 +37,9 @@ export function NameInputSection({
     showNameError,
     colors.border
   );
+  // "e.g." prefix + disabled-tier color keep the suggestion from reading as a
+  // typed value (it sat next to "Give your habit a name" looking filled).
+  const hintText = placeholder ? `e.g. ${placeholder}` : '';
 
   return (
     <View
@@ -56,8 +59,8 @@ export function NameInputSection({
         backgroundColor={isDark ? colors.card : '#FFFFFF'}
         borderStyle={focusedInputStyle}
         habitName={habitName}
-        hintColor={colors.text.tertiary}
-        placeholder={placeholder}
+        hintColor={colors.gray[300]}
+        placeholder={hintText}
         textColor={colors.text.primary}
         onBlur={() => {
           setIsFocused(false);

@@ -11,24 +11,23 @@ import { HabitChange } from './types';
 export function calculateHabitChanges(
   habit: { _id: Id<'habits'>; name: string; icon?: string },
   trackings: Doc<'tracking'>[],
-  oneWeekAgo: Date,
-  twoWeeksAgo: Date,
+  oneWeekAgoKey: string,
+  twoWeeksAgoKey: string,
   currentStreak: number
 ): HabitChange {
-  const thisWeekCompletions = trackings.filter((t) => {
-    const date = new Date(t.date);
-    return t.habitId === habit._id && t.completed && date >= oneWeekAgo;
-  }).length;
+  // Tracking dates are YYYY-MM-DD calendar-day keys; compare lexicographically
+  // (same pattern as streakUtils) instead of parsing into Date instants.
+  const thisWeekCompletions = trackings.filter(
+    (t) => t.habitId === habit._id && t.completed && t.date >= oneWeekAgoKey
+  ).length;
 
-  const lastWeekCompletions = trackings.filter((t) => {
-    const date = new Date(t.date);
-    return (
+  const lastWeekCompletions = trackings.filter(
+    (t) =>
       t.habitId === habit._id &&
       t.completed &&
-      date < oneWeekAgo &&
-      date >= twoWeeksAgo
-    );
-  }).length;
+      t.date < oneWeekAgoKey &&
+      t.date >= twoWeeksAgoKey
+  ).length;
 
   const change = thisWeekCompletions - lastWeekCompletions;
   const percentageChange =

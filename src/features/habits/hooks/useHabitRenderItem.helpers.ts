@@ -77,35 +77,35 @@ export function getRenderItemDependencies(args: UseHabitRenderItemArgs) {
   ];
 }
 
-const weekStatusCache = new WeakMap<
-  UseHabitRenderItemArgs['getHabitStatus'],
-  Map<string, HabitStatus[]>
+// Keyed per habit and compared by content so the returned array keeps a
+// stable identity across renders — even when getHabitStatus itself is
+// recreated (it is on every toggle). A stable identity is what lets the
+// memo() boundary on HabitRenderContent hold for untouched habits.
+const weekStatusCache = new Map<
+  string,
+  { key: string; statuses: HabitStatus[] }
 >();
-
-function buildWeekStatusCacheKey(habitId: string, weekDateStrings: string[]) {
-  return `${habitId}|${weekDateStrings.join(',')}`;
-}
 
 function getWeekStatusForHabit(
   habitId: string,
   weekDateStrings: string[],
   getHabitStatus: UseHabitRenderItemArgs['getHabitStatus']
 ): HabitStatus[] {
-  let getterCache = weekStatusCache.get(getHabitStatus);
-  if (!getterCache) {
-    getterCache = new Map();
-    weekStatusCache.set(getHabitStatus, getterCache);
-  }
-
-  const cacheKey = buildWeekStatusCacheKey(habitId, weekDateStrings);
-  const cached = getterCache.get(cacheKey);
-  if (cached) {
-    return cached;
-  }
-
+  const key = weekDateStrings.join(',');
   const computed = weekDateStrings.map((dateString) =>
     getHabitStatus(habitId, dateString)
   );
-  getterCache.set(cacheKey, computed);
+
+  const cached = weekStatusCache.get(habitId);
+  if (
+    cached &&
+    cached.key === key &&
+    cached.statuses.length === computed.length &&
+    cached.statuses.every((status, i) => status === computed[i])
+  ) {
+    return cached.statuses;
+  }
+
+  weekStatusCache.set(habitId, { key, statuses: computed });
   return computed;
 }

@@ -16,6 +16,7 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 import { milestoneColors } from '../../../theme/colors';
 import { streakStyles } from '../HabitCard.streakStyles';
 import { springs } from '@/theme/animations';
+import { HapticPatterns } from '../../../utils/haptics';
 
 // Dark-mode amber tints derived from milestone palette
 const DARK_AMBER_BG = `${milestoneColors.amber}26`; // amber at 15% opacity
@@ -38,7 +39,9 @@ function AnimatedStreakText({ children, streak }: { children: React.ReactNode; s
   const prevStreak = useRef(streak);
 
   useEffect(() => {
+    const isIncrement = streak > prevStreak.current;
     if (prevStreak.current !== streak && streak > 0) {
+      if (isIncrement) void HapticPatterns.streak();
       // Bounce: overshoot then settle
       scale.value = withSequence(
         withSpring(1.15, BOUNCE_SPRING),

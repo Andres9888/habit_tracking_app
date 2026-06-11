@@ -29,6 +29,7 @@ import {
 } from './constants';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 export interface CompletionCheckmarkProps {
   /** Whether the checkmark should be visible */
@@ -99,7 +100,7 @@ export function CompletionCheckmark({
         },
       ]}
     >
-      <View className='h-5 w-5 items-center justify-center rounded-full shadow-sm' style={{ backgroundColor: colors.status.success }}>
+      <View className='h-5 w-5 items-center justify-center rounded-full' style={[{ backgroundColor: colors.status.success }, shadows.card]}>
         <Check className='text-white' size={iconSizes.micro} strokeWidth={3} />
       </View>
     </Animated.View>

@@ -1,7 +1,8 @@
-import { Modal, View } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ErrorBoundary from '../../../../components/ErrorBoundary';
+import Modal from '../../../../components/Modal';
 import { ModalCloseButton } from '../../../../components/ui/ModalCloseButton';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -35,13 +36,16 @@ export function TemplatesModalSection({
 
   return (
     <Modal
-      accessibilityViewIsModal
-      animationType='slide'
-      presentationStyle='overFullScreen'
-      statusBarTranslucent
-      transparent
+      disableBackdropClose
+      disableGestureClose
+      backdropOpacity={0}
+      variant='fullScreen'
       visible={showTemplatesScreen}
-      onRequestClose={handleClose}
+      onClose={handleClose}
+      style={{
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+      }}
     >
       <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>

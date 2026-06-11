@@ -5,13 +5,47 @@
  */
 
 import { query } from './_generated/server';
+import type { Doc, Id } from './_generated/dataModel';
 import { getDateString, getDaysAgo } from './analytics/index';
+
+/**
+ * Pure computation of 30-day trend data from already-fetched habits/tracking.
+ * Shared by get30DayTrend and getAnalyticsDashboard.
+ */
+export function computeTrend(
+  activeHabits: Array<{ _id: Id<'habits'> }>,
+  trackings: Doc<'tracking'>[]
+) {
+  const habitIds = new Set(activeHabits.map((h) => h._id));
+  const trendData: Array<{ date: string; averageStrength: number }> = [];
+
+  for (let i = 29; i >= 0; i--) {
+    const date = getDaysAgo(i);
+    const dateStr = getDateString(date);
+
+    const dayCompletions = trackings.filter(
+      (t) => t.date === dateStr && t.completed && habitIds.has(t.habitId)
+    );
+
+    const completionRate =
+      activeHabits.length > 0
+        ? (dayCompletions.length / activeHabits.length) * 100
+        : 0;
+
+    trendData.push({
+      averageStrength: completionRate,
+      date: dateStr,
+    });
+  }
+
+  return trendData;
+}
 
 /**
  * Get 30-day trend data for line chart
  *
- * PERF: Fixed N+1 query pattern — now uses single user-level tracking query
- * instead of one query per habit. Reduces DB operations from O(N) to O(1).
+ * PERF: Single user-level tracking query, bounded to the 30-day window so
+ * payload size does not grow with account age.
  */
 export const get30DayTrend = query({
   args: {},
@@ -28,37 +62,18 @@ export const get30DayTrend = query({
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
     const habitIds = new Set(activeHabits.map((h) => h._id));
 
-    // PERF: Single query for all user's tracking records instead of N queries
+    // PERF: bound the index range to the 30-day window
+    const thirtyDaysAgoStr = getDateString(getDaysAgo(29));
     const allTrackings = await ctx.db
       .query('tracking')
-      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
+      .withIndex('by_user_and_date', (q) =>
+        q.eq('userId', identity.subject).gte('date', thirtyDaysAgoStr)
+      )
       .collect();
 
     // Filter to only active habits
     const trackings = allTrackings.filter((t) => habitIds.has(t.habitId));
 
-    // Build trend data for last 30 days
-    const trendData: Array<{ date: string; averageStrength: number }> = [];
-
-    for (let i = 29; i >= 0; i--) {
-      const date = getDaysAgo(i);
-      const dateStr = getDateString(date);
-
-      const dayCompletions = trackings.filter(
-        (t) => t.date === dateStr && t.completed && habitIds.has(t.habitId)
-      );
-
-      const completionRate =
-        activeHabits.length > 0
-          ? (dayCompletions.length / activeHabits.length) * 100
-          : 0;
-
-      trendData.push({
-        averageStrength: completionRate,
-        date: dateStr,
-      });
-    }
-
-    return trendData;
+    return computeTrend(activeHabits, trackings);
   },
 });

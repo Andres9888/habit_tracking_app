@@ -1,6 +1,6 @@
 /** AdvancedAlgorithmDisclosure — Collapsible card wrapping the algorithm picker for per-habit screens. */
 import { useCallback, useState } from 'react';
-import { Pressable, Text, View, type LayoutChangeEvent } from 'react-native';
+import { Text, View, type LayoutChangeEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -8,6 +8,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AdvancedAlgorithmBody } from './AdvancedAlgorithmBody';
 import { ALGORITHM_COPY, type AlgorithmMode } from './algorithmCopy';
 
@@ -23,30 +24,30 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const [contentHeight, setContentHeight] = useState(0);
   const [hasContentMeasured, setHasContentMeasured] = useState(false);
 
-  const { animateToggle, chevronAnimatedStyle, contentAnimatedStyle } =
-    useExpandAnimation({
-      defaultExpanded: false,
-      reduceMotion,
-      contentHeight,
-      hasContentMeasured,
-    });
+  const { chevronAnimatedStyle, contentAnimatedStyle } = useExpandAnimation({
+    contentHeight,
+    defaultExpanded: expanded,
+    hasContentMeasured,
+    reduceMotion,
+  });
 
-  const handleContentLayout = useCallback((event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    if (height > 0) {
-      setContentHeight(height);
+  const handleContentLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { height } = event.nativeEvent.layout;
+      if (height <= 0) return;
+      if (hasContentMeasured && !expanded) return;
+      setContentHeight((prev) => (prev === height ? prev : height));
       setHasContentMeasured(true);
-    }
-  }, []);
+    },
+    [expanded, hasContentMeasured]
+  );
 
   const activeMode: AlgorithmMode = selected;
   const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
 
   const toggle = () => {
     void Haptics.selectionAsync();
-    const next = !expanded;
-    setExpanded(next);
-    animateToggle(next);
+    setExpanded((prev) => !prev);
   };
 
   return (
@@ -58,7 +59,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
         backgroundColor: colors.card,
       }}
     >
-      <Pressable
+      <AnimatedPressable
         accessibilityRole='button'
         accessibilityState={{ expanded }}
         className='flex-row items-center justify-between p-4'
@@ -92,7 +93,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
             strokeWidth={2}
           />
         </Animated.View>
-      </Pressable>
+      </AnimatedPressable>
       <Animated.View
         accessibilityElementsHidden={!expanded}
         importantForAccessibility={expanded ? 'auto' : 'no-hide-descendants'}

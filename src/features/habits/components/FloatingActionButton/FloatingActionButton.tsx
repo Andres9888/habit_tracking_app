@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { Animated, Pressable } from 'react-native';
 import { colors } from '../../../../theme/colors';
+import { shadows } from '../../../../theme/spacing';
 import { useFocusRing } from '../../../../utils/accessibility';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useFABAnimations } from './useFABAnimations';
@@ -50,9 +51,9 @@ export function FloatingActionButton({
       accessibilityLabel='Add habit'
       accessibilityRole='button'
       testID='home-create-habit-fab'
-      className='h-14 w-14 items-center justify-center rounded-full shadow-lg'
+      className='h-14 w-14 items-center justify-center rounded-full'
       {...focusHandlers}
-      style={[{ backgroundColor: colors.primary[600] }, animatedStyle, focusStyle]}
+      style={[{ backgroundColor: colors.primary[600] }, animatedStyle, focusStyle, shadows.floatingActionButton]}
       onPress={handlePress}
     >
       <Animated.View

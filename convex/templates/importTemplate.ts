@@ -11,6 +11,7 @@ import {
   MAX_HABIT_NAME_LENGTH,
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
+import { validateDaysOfWeek } from '../habits/validation';
 
 /**
  * Mutation: Import a template to create a new habit
@@ -50,6 +51,8 @@ export const importTemplate = mutation({
     if (!template) {
       throw new Error('Template not found');
     }
+
+    validateDaysOfWeek(args.customizations?.daysOfWeek);
 
     // Duplicate prevention: check if user already imported this template
     const existing = await ctx.db

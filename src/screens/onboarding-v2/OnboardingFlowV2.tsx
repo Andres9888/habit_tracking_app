@@ -1,7 +1,8 @@
 import { ActivityIndicator, View } from 'react-native';
-import Animated, { FadeInUp, useReducedMotion } from 'react-native-reanimated';
+import Animated, { FadeInDown, useReducedMotion } from 'react-native-reanimated';
 
 import { ScreenErrorBoundary } from '@/components/ErrorBoundary';
+import { durations, enterEasing } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepFrame } from './components/StepFrame';
@@ -40,7 +41,7 @@ function OnboardingFlowV2Content({ onComplete }: OnboardingFlowV2Props) {
   const isLastStep = state.currentStepIndex === state.totalSteps - 1;
   const entering = reduceMotion
     ? undefined
-    : FadeInUp.duration(260).springify().damping(18);
+    : FadeInDown.duration(durations.enter).easing(enterEasing);
 
   const handleNext = () => {
     if (isLastStep) {

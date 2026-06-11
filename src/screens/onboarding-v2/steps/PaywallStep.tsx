@@ -12,7 +12,9 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
   const { colors } = useThemeColors();
   const [paywallVisible, setPaywallVisible] = useState(false);
 
-  useTemplateAutoImport(answers.pickedTemplateIds);
+  const { failedCount, retry } = useTemplateAutoImport(
+    answers.pickedTemplateIds
+  );
 
   const finishAndExit = () => {
     setPaywallVisible(false);
@@ -47,6 +49,29 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
         </View>
       </View>
       <View style={{ paddingTop: 12 }}>
+        {failedCount > 0 && (
+          <View
+            style={{
+              alignItems: 'center',
+              flexDirection: 'row',
+              gap: 8,
+              justifyContent: 'center',
+              paddingBottom: 12,
+            }}
+          >
+            <Text style={{ color: colors.text.secondary, fontSize: 13 }}>
+              {failedCount === 1
+                ? "A starter habit didn't import."
+                : `${failedCount} starter habits didn't import.`}
+            </Text>
+            <Text
+              onPress={retry}
+              style={{ color: colors.primary[600], fontSize: 13, padding: 4 }}
+            >
+              Retry
+            </Text>
+          </View>
+        )}
         <PrimaryCTA
           label="See pricing"
           onPress={() => setPaywallVisible(true)}

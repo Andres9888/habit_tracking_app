@@ -8,6 +8,7 @@
  */
 
 import {
+  cancelAnimation,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -17,7 +18,6 @@ import {
 } from 'react-native-reanimated';
 import { SPRING_CONFIGS } from '../../../../utils/animations/helpers';
 import { HapticPatterns } from '../../../../utils/haptics';
-import { springs } from '@/theme/animations';
 
 export type { CelebrationAnimStyles } from './useCelebrationAnimations';
 
@@ -25,7 +25,7 @@ const ICON_SCALE = 0.96;
 const FAB_SCALE = 0.94;
 const FAB_LIFT = -2;
 const SPRING = SPRING_CONFIGS.snappy;
-const BOUNCE = springs.pop;
+const RING_PULSE_MIN = 0.97;
 
 const fireTapHaptic = () => HapticPatterns.tap();
 const fireToggleHaptic = () => HapticPatterns.toggle();
@@ -54,6 +54,15 @@ export function useBarAnimations() {
   const addStyle = useAnimatedStyle(() => ({
     transform: [{ scale: addScale.value }, { translateY: addLift.value }],
   }));
+  const resetAddPress = () => {
+    'worklet';
+    cancelAnimation(addScale);
+    cancelAnimation(addLift);
+    cancelAnimation(ringPulse);
+    addScale.value = 1;
+    addLift.value = 0;
+    ringPulse.value = 1;
+  };
 
   return {
     addStyle,
@@ -68,7 +77,7 @@ export function useBarAnimations() {
       addScale.value = withSpring(1, SPRING);
       addLift.value = withSpring(0, SPRING);
       ringPulse.value = withSequence(
-        withSpring(1.05, BOUNCE),
+        withSpring(RING_PULSE_MIN, SPRING),
         withSpring(1, SPRING)
       );
     },
@@ -97,6 +106,7 @@ export function useBarAnimations() {
       'worklet';
       templatesScale.value = withSpring(1, SPRING);
     },
+    resetAddPress,
     ringPulse,
     settingsStyle,
     templatesStyle,

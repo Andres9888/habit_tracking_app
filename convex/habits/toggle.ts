@@ -31,7 +31,7 @@ export const toggleHabit = mutation({
       throw new Error('Unauthenticated: Must be logged in to toggle habits');
     if (!isValidDateFormat(args.date))
       throw new Error('Invalid date format; expected YYYY-MM-DD');
-    if (isFutureDate(args.date))
+    if (isFutureDate(args.date, args.timezone))
       throw new Error('Cannot track habits for future dates');
 
     // SR-2026-04-17-09: throttle toggle spam per user.

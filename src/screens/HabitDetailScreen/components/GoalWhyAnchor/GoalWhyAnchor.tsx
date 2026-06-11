@@ -5,10 +5,12 @@
 import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { durations } from '../../../../theme/animations';
-// Parchment is a static (non-theme-aware) palette — dark-mode parchment is not
-// unlocked yet, so this intentionally reads from the static colors module.
-import { colors } from '../../../../theme/colors';
-import { typography, fontFamilies, fontWeights } from '../../../../theme/typography';
+import { useThemeColors } from '../../../../theme';
+import {
+  typography,
+  fontFamilies,
+  fontWeights,
+} from '../../../../theme/typography';
 import type { Habit } from '../../../../features/habits/types';
 import { useResolveWhy } from './GoalWhyAnchor.hooks';
 
@@ -22,6 +24,7 @@ const WHY_QUOTE_SIZE = 15;
 const WHY_QUOTE_LINE = 21;
 
 export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
+  const { colors } = useThemeColors();
   const resolved = useResolveWhy(habit);
   if (resolved === null) return null;
 
@@ -30,16 +33,18 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
       accessibilityLabel={`${resolved.label}: ${resolved.value}`}
       accessibilityRole='summary'
       className='mx-0 mb-3 flex-row items-start gap-3 rounded-2xl px-4 py-3.5'
-      entering={FadeInDown.duration(durations.enter).easing(Easing.out(Easing.cubic))}
+      entering={FadeInDown.duration(durations.enter).easing(
+        Easing.out(Easing.cubic)
+      )}
       style={{
-        backgroundColor: colors.parchment.bg,
-        borderColor: colors.parchment.border,
+        backgroundColor: colors.background,
+        borderColor: colors.border,
         borderWidth: 1,
       }}
     >
       <View
         className='h-9 w-9 items-center justify-center rounded-lg'
-        style={{ backgroundColor: colors.parchment.surface }}
+        style={{ backgroundColor: colors.card }}
       >
         <Text style={{ fontSize: WHY_ICON_SIZE }}>{resolved.icon}</Text>
       </View>
@@ -47,7 +52,7 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
         <Text
           style={{
             ...typography.caption,
-            color: colors.parchment.text,
+            color: colors.text.tertiary,
             fontWeight: fontWeights.bold,
             letterSpacing: 0.6,
             textTransform: 'uppercase',
@@ -59,7 +64,7 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
           className='mt-0.5'
           style={{
             ...typography.bodySmall,
-            color: colors.parchment.textStrong,
+            color: colors.text.primary,
             fontFamily: fontFamilies.primary.display,
             fontSize: WHY_QUOTE_SIZE,
             fontStyle: 'italic',

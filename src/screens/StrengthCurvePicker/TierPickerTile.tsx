@@ -8,6 +8,7 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { TierCopy } from './StrengthCurvePicker.copy';
 import type { ModeStyle } from './strengthCurveModeStyles';
@@ -38,10 +39,10 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
         onSelect(mode);
       }}
       onPressIn={() => {
-        if (!reduceMotion) pressScale.value = withSpring(0.96, { damping: 14, stiffness: 360 });
+        if (!reduceMotion) pressScale.value = withSpring(0.96, springs.responsive);
       }}
       onPressOut={() => {
-        if (!reduceMotion) pressScale.value = withSpring(1, { damping: 14, stiffness: 360 });
+        if (!reduceMotion) pressScale.value = withSpring(1, springs.responsive);
       }}
     >
       <Animated.View

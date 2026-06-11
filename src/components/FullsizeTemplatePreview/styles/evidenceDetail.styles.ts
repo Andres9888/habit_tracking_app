@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { fontFamilies } from '@/theme/typography';
+import { fontFamilies, typography } from '@/theme/typography';
 
 const PLAY_ICON_SIZE = 56;
 const TIP_HALO_SIZE = 26;
@@ -47,7 +47,7 @@ export const evidenceDetailStyles = StyleSheet.create({
     color: colors.gray[800],
     flex: 1,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 17,
+    fontSize: typography.body.fontSize,
     lineHeight: 28,
   },
   videoCard: {

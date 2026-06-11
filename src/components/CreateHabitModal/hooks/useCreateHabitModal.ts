@@ -4,11 +4,12 @@ import { useHabitForm } from './useHabitForm';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
+import { showCreateError } from '../../../utils/errorAlerts';
 import {
-  useDeferredFormResetOnClose,
   useHabitData,
   useModalCleanup,
 } from './useCreateHabitModalEffects';
+import { EXIT_DURATIONS } from '../../Modal/Modal.constants';
 
 export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { visible, onClose, habitToEdit } = props;
@@ -17,12 +18,6 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
   const { triggerSuccess } = useHapticFeedback();
   const { handleEdit, handleCreate: createNewHabit } = useCreateHabitHandlers();
   const isSaving = useRef(false);
-
-  useDeferredFormResetOnClose({
-    isEditMode,
-    resetForm: form.resetForm,
-    visible,
-  });
 
   const habitData = useHabitData({
     dayPhase: form.dayPhase,
@@ -56,14 +51,17 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       const data = { ...habitData, hasReminders };
 
       if (isEditMode && habitToEdit) {
-        // Edit mode: await mutation before closing
         await handleEdit({ ...data, habitToEdit });
         cleanup();
       } else {
-        // Create mode: close immediately, fire mutation in background
         cleanup();
-        // Error already logged inside useCreateHabitHandlers
-        void createNewHabit(data).catch(() => {});
+        setTimeout(form.resetForm, EXIT_DURATIONS.fullScreen);
+        // On failure the optimistic habit rolls back, so tell the user why
+        // and offer a retry instead of letting it vanish silently.
+        const runCreate = () => {
+          void createNewHabit(data).catch(() => showCreateError(runCreate));
+        };
+        runCreate();
       }
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);
@@ -80,6 +78,7 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
     handleEdit,
     createNewHabit,
     cleanup,
+    form.resetForm,
   ]);
 
   return { form, handleCreate, isEditMode };

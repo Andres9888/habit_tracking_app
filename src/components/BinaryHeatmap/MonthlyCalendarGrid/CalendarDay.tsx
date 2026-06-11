@@ -1,6 +1,7 @@
 /**
  * CalendarDay — individual day cell for the monthly calendar grid.
- * Completed days use either a soft tint (default) or solid habit-color fill (detail).
+ * Completed days use either a soft tint (default) or solid habit-color fill
+ * (detail). Today-pending is a bare 2px habit-color ring with accent text.
  */
 
 import React, { memo } from 'react';
@@ -8,13 +9,11 @@ import { View, Text, Pressable } from 'react-native';
 import type { DayData } from './types';
 import { styles } from './styles';
 import { fontWeights } from '@/theme/typography';
-
-interface CalendarDayColors {
-  inverse: string;
-  muted: string;
-  primary: string;
-  tertiary: string;
-}
+import {
+  getDayAccessibility,
+  getTextColor,
+  type CalendarDayColors,
+} from './CalendarDay.helpers';
 
 interface CalendarDayProps {
   day: DayData;
@@ -24,18 +23,6 @@ interface CalendarDayProps {
   useSolidCompletedFill?: boolean;
   isToggling?: boolean;
   onPress: (dateString: string, isCompleted: boolean) => void;
-}
-
-function getTextColor(
-  day: DayData,
-  c: CalendarDayColors,
-  showCompleted: boolean,
-  useSolid: boolean
-): string {
-  if (showCompleted && useSolid) return c.inverse;
-  if (!day?.isCurrentMonth) return c.muted;
-  if (day?.isFuture) return c.tertiary;
-  return c.primary;
 }
 
 export const CalendarDay = memo(function CalendarDay({
@@ -59,17 +46,18 @@ export const CalendarDay = memo(function CalendarDay({
   );
   const cellBg = showCompleted ? completedBg : undefined;
   const todayPending = isToday && !showCompleted;
+  const a11y = getDayAccessibility(day, showCompleted, showMissed, isToday);
+  const textColor = getTextColor(day, textColors, {
+    habitColor,
+    showCompleted,
+    todayPending,
+    useSolid: useSolidCompletedFill,
+  });
 
   return (
     <Pressable
-      accessibilityLabel={`Day ${day?.dayNumber ?? ''}${showCompleted ? ', completed' : showMissed ? ', missed' : ''}${isToday ? ', today' : ''}`}
-      accessibilityHint={
-        day?.isFuture
-          ? 'Not available'
-          : showCompleted
-            ? 'Press to mark as incomplete'
-            : 'Press to mark as complete'
-      }
+      accessibilityHint={a11y.hint}
+      accessibilityLabel={a11y.label}
       accessibilityRole='button'
       accessibilityState={{ disabled: isDisabled, selected: showCompleted }}
       disabled={isDisabled}
@@ -80,26 +68,13 @@ export const CalendarDay = memo(function CalendarDay({
         style={[
           styles.dayCell,
           cellBg ? { backgroundColor: cellBg } : undefined,
-          todayPending && {
-            backgroundColor: `${habitColor}1A`,
-            borderColor: habitColor,
-            borderWidth: 2,
-          },
-          isToday &&
-            showCompleted && { borderColor: habitColor, borderWidth: 2 },
+          isToday && { borderColor: habitColor, borderWidth: 2 },
         ]}
       >
         <Text
           style={[
             styles.dayText,
-            {
-              color: getTextColor(
-                day,
-                textColors,
-                showCompleted,
-                useSolidCompletedFill
-              ),
-            },
+            { color: textColor },
             isToday && styles.todayText,
             showCompleted && { fontWeight: fontWeights.semibold },
           ]}

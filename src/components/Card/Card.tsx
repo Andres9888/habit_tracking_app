@@ -2,6 +2,7 @@ import React from 'react';
 import { View, ViewProps, type StyleProp, type ViewStyle } from 'react-native';
 import clsx from 'clsx';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { shadows } from '../../theme/spacing';
 
 export interface CardProps extends ViewProps {
   style?: StyleProp<ViewStyle>;
@@ -15,9 +16,10 @@ export function Card({
   const { colors } = useThemeColors();
   return (
     <View
-      className={clsx('rounded-2xl border shadow-sm', className)}
+      className={clsx('rounded-2xl border', className)}
       style={[
         { backgroundColor: colors.card, borderColor: colors.cardBorder },
+        shadows.card,
         style,
       ]}
       {...props}

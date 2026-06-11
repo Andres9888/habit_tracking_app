@@ -44,6 +44,7 @@ export function EnhancedReminderSelector(
     onTimeChange = noopTimeChange,
     presets = DEFAULT_PRESETS,
     showNextReminder = true,
+    snapDefaultToPresetOnEnable = false,
   } = props ?? {};
   const reduceMotion = useReduceMotion();
 
@@ -58,7 +59,13 @@ export function EnhancedReminderSelector(
     handleCustomTimeConfirm,
     handleToggle,
     permissionDenied,
-  } = useReminderSelector({ onTimeChange, onToggle, presets, reminderTime });
+  } = useReminderSelector({
+    onTimeChange,
+    onToggle,
+    presets,
+    reminderTime,
+    snapDefaultToPresetOnEnable,
+  });
 
   return (
     <View className='mb-6' testID='enhanced-reminder-selector'>

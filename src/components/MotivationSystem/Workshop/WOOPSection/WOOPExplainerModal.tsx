@@ -9,6 +9,7 @@ import { Target, X } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { shadows } from '../../../../theme/spacing';
 import { WOOP_STEPS } from './WOOPExplainerModal.constants';
 
 interface WOOPExplainerModalProps {
@@ -35,8 +36,8 @@ export function WOOPExplainerModal({
         onPress={onClose}
       >
         <Pressable
-          className='w-full max-w-sm rounded-2xl p-5 shadow-xl'
-          style={{ backgroundColor: colors.surface }}
+          className='w-full max-w-sm rounded-2xl p-5'
+          style={[{ backgroundColor: colors.surface }, shadows.modal]}
           onPress={(e) => e.stopPropagation()}
         >
           <View className='mb-4 flex-row items-start justify-between'>

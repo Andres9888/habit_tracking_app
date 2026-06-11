@@ -6,6 +6,7 @@
 import { Pressable, Text, View } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
+import { shadows } from '../../theme/spacing';
 
 interface LoadingTimeoutCardProps {
   onRetry: () => void;
@@ -16,8 +17,8 @@ export function LoadingTimeoutCard({ onRetry }: LoadingTimeoutCardProps) {
 
   return (
     <View
-      className='mx-6 mt-2 items-center rounded-2xl border p-6 shadow-md'
-      style={{ backgroundColor: colors.card, borderColor: colors.border }}
+      className='mx-6 mt-2 items-center rounded-2xl border p-6'
+      style={[{ backgroundColor: colors.card, borderColor: colors.border }, shadows.floatingActionButton]}
     >
       <Text
         className="mb-2 text-center font-['DMSans'] text-base font-semibold"

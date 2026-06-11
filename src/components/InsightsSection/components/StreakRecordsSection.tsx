@@ -10,6 +10,7 @@ import { Trophy } from 'lucide-react-native';
 import type { StreakRecordsSectionProps } from '../InsightsSection.types';
 import { TOP_STREAK_MEDAL_COUNT } from '../InsightsSection.constants';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 const MEDAL_EMOJIS = ['🥇', '🥈', '🥉'];
@@ -31,7 +32,7 @@ export function StreakRecordsSection({
   const topRecords = streakRecords.slice(0, TOP_STREAK_MEDAL_COUNT);
 
   return (
-    <View className='overflow-hidden rounded-2xl shadow-sm' style={{ shadowColor: colors.border }}>
+    <View className='overflow-hidden rounded-2xl' style={shadows.card}>
       <LinearGradient
         className='absolute inset-0'
         colors={['rgba(245, 243, 255, 0.3)', colors.card, 'rgba(239, 246, 255, 0.3)']}

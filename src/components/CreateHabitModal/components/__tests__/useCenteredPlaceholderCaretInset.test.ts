@@ -1,7 +1,9 @@
+import { act, renderHook } from '@testing-library/react-native';
 import {
   getCenteredPlaceholderCaretInset,
   HABIT_NAME_INPUT_HORIZONTAL_PADDING,
   HABIT_NAME_PLACEHOLDER_CARET_GAP,
+  useCenteredPlaceholderCaretInset,
 } from '../useCenteredPlaceholderCaretInset';
 
 describe('getCenteredPlaceholderCaretInset', () => {
@@ -24,5 +26,36 @@ describe('getCenteredPlaceholderCaretInset', () => {
     expect(getCenteredPlaceholderCaretInset(360, 500)).toBe(
       HABIT_NAME_INPUT_HORIZONTAL_PADDING
     );
+  });
+});
+
+describe('useCenteredPlaceholderCaretInset', () => {
+  it('keeps isPlaceholderCaretReady true across placeholder rotation', () => {
+    const { result, rerender } = renderHook(
+      ({ habitName, placeholder }) =>
+        useCenteredPlaceholderCaretInset(habitName, placeholder),
+      {
+        initialProps: {
+          habitName: '',
+          placeholder: 'e.g. Weekly Teaching',
+        },
+      }
+    );
+
+    act(() => {
+      result.current.onFieldLayout(360);
+      result.current.onPlaceholderTextLayout({
+        nativeEvent: { lines: [{ width: 160 }] },
+      } as never);
+    });
+
+    expect(result.current.isPlaceholderCaretReady).toBe(true);
+
+    rerender({
+      habitName: '',
+      placeholder: 'e.g. Daily Meditation',
+    });
+
+    expect(result.current.isPlaceholderCaretReady).toBe(true);
   });
 });

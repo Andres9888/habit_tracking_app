@@ -9,7 +9,7 @@ import {
   resolveAlgorithmMode,
 } from '../habitStrength';
 import { updateHabitArgs } from './types';
-import { validateHabitUpdateFields } from './validation';
+import { validateDaysOfWeek, validateHabitUpdateFields } from './validation';
 
 export const update = mutation({
   args: updateHabitArgs,
@@ -33,6 +33,7 @@ export const update = mutation({
 
     // SEC-003: Input validation
     const validated = validateHabitUpdateFields(updates);
+    validateDaysOfWeek(updates.daysOfWeek);
 
     // Merge strategy: non-string fields (booleans, arrays, numbers) in updateHabitArgs
     // are type-checked by Convex's `v` validators but bypass validateHabitUpdateFields

@@ -59,7 +59,18 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
       return new Response('Invalid signature', { status: 401 });
     }
 
-    const payload = JSON.parse(body);
+    // Malformed JSON is a permanent client error: return 400 so RevenueCat
+    // does not retry it forever (5xx responses are retried indefinitely).
+    let payload;
+    try {
+      payload = JSON.parse(body);
+    } catch {
+      console.error('[RevenueCat] Malformed JSON webhook body');
+      return Response.json(
+        { error: 'Invalid JSON' },
+        { headers: { 'Content-Type': 'application/json' }, status: 400 }
+      );
+    }
     const event = payload.event;
     const eventType = event?.type;
     // app_user_id is nested inside the event object, NOT at the payload root

@@ -30,7 +30,7 @@ export const heroStyles = StyleSheet.create({
     paddingTop: 12,
   },
   startSmallSparkle: {
-    fontSize: 14,
+    fontSize: typography.bodySmall.fontSize,
     lineHeight: 22,
   },
   startSmallText: {
