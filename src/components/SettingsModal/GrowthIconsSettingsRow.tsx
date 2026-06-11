@@ -37,7 +37,7 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
   // Treat a stored value that matches DEFAULT as "unset" so the picker's
   // Reset affordance hides after a reset.
   const pickerValue = useMemo(() => {
-    if (!currentValue) return undefined;
+    if (!currentValue) return;
     const matchesDefault = STRENGTH_LEVEL_KEYS.every(
       (k) => currentValue[k] === DEFAULT_PROGRESS_EMOJIS[k]
     );

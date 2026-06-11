@@ -8,11 +8,13 @@ import { ChainDayItem } from '../HabitChainVisualizer/ChainDayItem';
 import type { CompletionIcon, DayShape } from '../HabitChainVisualizer/types';
 
 /** A representative week: a four-day streak building strength, then rest days. */
+export const PREVIEW_STRENGTH_PERCENT = 92;
+
 const DAYS = [
   { completed: true, strength: 35 },
   { completed: true, strength: 55 },
   { completed: true, strength: 75 },
-  { completed: true, strength: 92 },
+  { completed: true, strength: PREVIEW_STRENGTH_PERCENT },
   { completed: false, strength: 0 },
   { completed: false, strength: 0 },
   { completed: false, strength: 0 },
@@ -49,9 +51,7 @@ export function CalendarPreviewWeek(p: Props) {
           shape={p.dayShape}
           shouldReduceMotion={reduceMotion}
           showConnector={Boolean(
-            p.showStreakConnections &&
-              d.completed &&
-              DAYS[i + 1]?.completed
+            p.showStreakConnections && d.completed && DAYS[i + 1]?.completed
           )}
           strengthPercent={d.strength}
           onBurstComplete={() => {}}

@@ -9,9 +9,12 @@ import { useAnimatedStyle } from 'react-native-reanimated';
 import { fontWeights, typography } from '@/theme/typography';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import type { CompletionIcon, DayShape } from '../HabitChainVisualizer/types';
-import { CalendarPreviewWeek } from './CalendarPreviewWeek';
+import {
+  CalendarPreviewWeek,
+  PREVIEW_STRENGTH_PERCENT,
+} from './CalendarPreviewWeek';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { getSettingsRowColors } from './SettingsRow.colors';
+import { getSettingsRowColors } from './SettingsRow';
 
 const LABEL_STYLE = {
   ...typography.caption,
@@ -44,7 +47,10 @@ export function CalendarPreview(p: Props) {
   const { colors, isDark } = useThemeColors();
   const border = getSettingsRowColors(p.highContrastMode, isDark).border;
   const accent = colors.primary[500];
-  const fillStyle = useAnimatedStyle(() => ({ width: '78%' }));
+  const fillStyle = useAnimatedStyle(() => ({
+    // StrengthFillBackground requires an animated style prop — value derived from preview data
+    width: `${PREVIEW_STRENGTH_PERCENT}%`,
+  }));
 
   return (
     <View

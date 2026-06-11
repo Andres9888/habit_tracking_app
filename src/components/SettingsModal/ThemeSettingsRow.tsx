@@ -22,8 +22,8 @@ export function ThemeSettingsRow({
   return (
     <SettingsRow
       highContrastMode={highContrastMode}
-      icon={<Moon color={settings.circle.icon} size={iconSizes.small} />}
-      iconBackgroundColor={settings.circle.bg}
+      icon={<Moon color={settings.checkbox.icon} size={iconSizes.small} />}
+      iconBackgroundColor={settings.checkbox.bg}
       label='Theme'
       rightAccessory={
         <ThemePicker selected={selected} onSelect={(v) => void onSelect(v)} />

@@ -26,15 +26,18 @@ export function DayMarkerShapeSettingsRow({
       highContrastMode={highContrastMode}
       icon={
         selected === 'circle' ? (
-          <Circle color={settings.circle.icon} size={iconSize} />
+          <Circle color={settings.dayMarker.icon} size={iconSize} />
         ) : (
-          <Square color={settings.circle.icon} size={iconSize} />
+          <Square color={settings.dayMarker.icon} size={iconSize} />
         )
       }
-      iconBackgroundColor={settings.circle.bg}
+      iconBackgroundColor={settings.dayMarker.bg}
       label='Day marker shape'
       rightAccessory={
-        <DayShapePicker selected={selected} onSelect={(v) => void onSelect(v)} />
+        <DayShapePicker
+          selected={selected}
+          onSelect={(v) => void onSelect(v)}
+        />
       }
       type='info'
     />
