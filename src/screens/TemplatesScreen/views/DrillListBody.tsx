@@ -63,8 +63,8 @@ export function DrillListBody({
           isImporting={importingTemplateId === item.template._id}
           isTopPick={item.isTopPick}
           item={item.template}
-          onImport={() => onImport(item.template)}
-          onPreview={() => onPreview(item.template)}
+          onImport={onImport}
+          onPreview={onPreview}
         />
       </Animated.View>
     );

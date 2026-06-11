@@ -47,24 +47,26 @@ export const useEntranceAnimations = ({
         iconScale.value = 1;
         closeButtonOpacity.value = 1;
       } else {
+        // Fast entrance: the page should feel instant — long staggers read
+        // as the app being slow, especially from the View details link.
         backdropOpacity.value = withTiming(0.5, {
-          duration: 350,
+          duration: 180,
           easing: Easing.out(Easing.cubic),
         });
         contentTranslateY.value = withTiming(0, {
-          duration: 400,
+          duration: 220,
           easing: Easing.out(Easing.cubic),
         });
         contentOpacity.value = withTiming(1, {
-          duration: 400,
+          duration: 200,
           easing: Easing.out(Easing.cubic),
         });
         closeButtonOpacity.value = withDelay(
-          200,
-          withTiming(1, { duration: 300, easing: Easing.out(Easing.cubic) })
+          80,
+          withTiming(1, { duration: 180, easing: Easing.out(Easing.cubic) })
         );
-        iconScale.value = withDelay(250, withSpring(1, Springs.micro));
-        iconGlowScale.value = withDelay(400, withSpring(1.12, Springs.pulse));
+        iconScale.value = withDelay(80, withSpring(1, Springs.micro));
+        iconGlowScale.value = withDelay(180, withSpring(1.12, Springs.pulse));
       }
     }
   }, [visible, template, reducedMotion]);

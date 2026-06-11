@@ -96,7 +96,6 @@ export function ScrollableContent({
           <DescriptionSection
             description={template?.description ?? ''}
             iconColor={iconColor}
-            startSmallVersion={template?.startSmallVersion}
           />
           <View ref={scienceRef} onLayout={scrollToScience}>
             <ScienceEvidenceSection iconColor={iconColor} template={template} />

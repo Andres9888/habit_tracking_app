@@ -4,6 +4,7 @@
  * Two press targets: card body → preview, add button → direct import.
  */
 
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ScienceDoorPill } from '../ScienceDoorPill';
@@ -12,7 +13,7 @@ import { formatPopularity } from './formatPopularity';
 import { s } from './TrendingCard.styles';
 import type { TrendingCardProps } from './TrendingCard.types';
 
-export function TrendingCard({
+function TrendingCardComponent({
   description,
   frequency,
   hasResearch,
@@ -93,3 +94,5 @@ export function TrendingCard({
     </Pressable>
   );
 }
+
+export const TrendingCard = memo(TrendingCardComponent);

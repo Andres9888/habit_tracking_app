@@ -2,6 +2,7 @@
  * Bottom rail — meta pill and View details link.
  */
 
+import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
@@ -22,6 +23,9 @@ export function HabitTemplateCardBottomRail({
   onPreview,
 }: HabitTemplateCardBottomRailProps) {
   const { colors, isDark } = useThemeColors();
+  // Instant press feedback — without it the preview-open work reads as lag.
+  // State-based: function-form Pressable styles silently drop in this app.
+  const [pressed, setPressed] = useState(false);
   const metaLabel = getTemplateMetaLabel(item);
   const dividerColor = isDark ? colors.border : colors.gray[50];
 
@@ -39,6 +43,9 @@ export function HabitTemplateCardBottomRail({
         accessibilityLabel={`View details for ${item.name}`}
         accessibilityRole='button'
         hitSlop={8}
+        style={{ opacity: pressed ? 0.45 : 1 }}
+        onPressIn={() => setPressed(true)}
+        onPressOut={() => setPressed(false)}
         onPress={(event) => {
           event.stopPropagation();
           onPreview(item, 'science');

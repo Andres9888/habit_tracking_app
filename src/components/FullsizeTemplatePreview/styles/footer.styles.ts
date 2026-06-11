@@ -13,21 +13,9 @@ import {
 } from '../../../theme/typography';
 
 export const footerStyles = StyleSheet.create({
-  commitMicroline: {
-    color: colors.text.secondary,
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.caption.fontSize,
-    textAlign: 'center',
-  },
   customizeLink: {
     alignItems: 'center',
     paddingVertical: 12,
-  },
-  secondaryRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: 24,
-    justifyContent: 'center',
   },
   customizeLinkText: {
     color: colors.gray[500],

@@ -2,6 +2,7 @@
  * HabitTemplateCard — drill-style card for browse, drill, and catalog lists.
  */
 
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -27,7 +28,7 @@ export interface HabitTemplateCardProps {
   ) => void;
 }
 
-export function HabitTemplateCard({
+function HabitTemplateCardComponent({
   descriptionLines = 2,
   elevated = false,
   isImported,
@@ -102,3 +103,5 @@ export function HabitTemplateCard({
     </Pressable>
   );
 }
+
+export const HabitTemplateCard = memo(HabitTemplateCardComponent);
