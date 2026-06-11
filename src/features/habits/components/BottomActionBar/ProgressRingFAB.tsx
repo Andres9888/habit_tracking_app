@@ -13,7 +13,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import {
   CIRCUMFERENCE, DARK_FAB_SHADOW, FAB_BORDER_DARK,
-  FAB_BORDER_LIGHT, GLOW_SHADOW_BASE, RADIUS,
+  FAB_BORDER_LIGHT, FAB_SIZE, GLOW_SHADOW_BASE, RADIUS,
   RING_SIZE, STROKE_WIDTH, fabRingStyles as s,
 } from './ProgressRingFAB.styles';
 import type { ProgressRingFABProps } from './types';
@@ -36,14 +36,11 @@ export function ProgressRingFAB(props: ProgressRingFABProps) {
   const glow = props.isAllDone
     ? { ...GLOW_SHADOW_BASE, shadowColor: colors.primary[500] }
     : undefined;
-  const fabBg = {
-    backgroundColor: colors.primary[600],
-    borderColor: isDark ? FAB_BORDER_DARK : FAB_BORDER_LIGHT,
-  };
+  const fabShadow = isDark ? DARK_FAB_SHADOW : undefined;
 
   return (
     <View style={s.container}>
-      <Animated.View style={[s.ringWrapper, glow, ringPulseStyle]}>
+      <Animated.View style={[s.ringWrapper, fabShadow, glow, ringPulseStyle]}>
         <Svg
           height={RING_SIZE}
           width={RING_SIZE}
@@ -68,12 +65,20 @@ export function ProgressRingFAB(props: ProgressRingFABProps) {
             strokeLinecap='round'
             strokeWidth={STROKE_WIDTH}
           />
+          <Circle
+            cx={RING_SIZE / 2}
+            cy={RING_SIZE / 2}
+            fill={colors.primary[600]}
+            r={FAB_SIZE / 2 - 1}
+            stroke={isDark ? FAB_BORDER_DARK : FAB_BORDER_LIGHT}
+            strokeWidth={2}
+          />
         </Svg>
         <View style={s.ringOverlay}>
           <Pressable
             accessibilityLabel='Add new habit'
             accessibilityRole='button'
-            style={[s.fabButton, fabBg, isDark ? DARK_FAB_SHADOW : undefined]}
+            style={s.fabButton}
             onPress={props.onPress}
             onPressIn={props.onPressIn}
             onPressOut={props.onPressOut}
