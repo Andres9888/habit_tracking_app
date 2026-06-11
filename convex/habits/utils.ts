@@ -105,11 +105,17 @@ export function isValidDateFormat(date: string): boolean {
 }
 
 /**
- * Check if a date is in the future
- * Allows a 24-hour grace period to handle timezone differences
- * (e.g., user in PST sees Feb 2nd while server in UTC sees Feb 1st)
+ * Check if a date is in the future.
+ *
+ * When the user's IANA timezone is provided, "today" is computed in that
+ * timezone and compared as a date key — exact, no grace needed. Without a
+ * timezone, falls back to server-local midnight with a 24-hour grace period,
+ * which under-covers users far behind UTC (legacy behavior).
  */
-export function isFutureDate(dateStr: string): boolean {
+export function isFutureDate(dateStr: string, timezone?: string): boolean {
+  if (timezone) {
+    return dateStr > getTodayForTimezone(timezone);
+  }
   const [yearStr, monthStr, dayStr] = dateStr.split('-');
   const inputDate = new Date(
     Number(yearStr),

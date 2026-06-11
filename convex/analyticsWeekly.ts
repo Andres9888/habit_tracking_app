@@ -38,6 +38,7 @@ export const getWeeklyInsights = query({
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    const oneWeekAgoKey = oneWeekAgo.toISOString().slice(0, 10);
 
     // Bound the query to the comparison window so per-user payload size
     // does not grow unbounded with account age.
@@ -54,8 +55,8 @@ export const getWeeklyInsights = query({
       return calculateHabitChanges(
         habit,
         trackings,
-        oneWeekAgo,
-        twoWeeksAgo,
+        oneWeekAgoKey,
+        twoWeeksAgoKey,
         habit.currentStreak ?? 0
       );
     });
