@@ -11,8 +11,11 @@ const UNDO_RETENTION_MS = 15 * 60 * 1000;
 
 interface RemovedHabitPayload {
   habit: {
+    accessibilityAtPause?: number;
+    bestStreak?: number;
     color?: string;
     createdAt: number;
+    currentStreak?: number;
     cueAfterBehavior?: string;
     cueLocation?: string;
     cueTime?: string;
@@ -24,13 +27,18 @@ interface RemovedHabitPayload {
     icon?: string;
     iconColor?: string;
     identity?: string;
+    lastCompletedDate?: string;
     name: string;
     notes?: string;
+    paused?: boolean;
+    pausedAt?: number;
     preferredTime?: string;
     remindersEnabled?: boolean;
+    resumedAt?: number;
     reminderSound?: string;
     reminderTime?: string;
     strength?: number;
+    strengthAtPause?: number;
     strengthLevel?: string;
     tags?: string[];
     vizFailureBody?: string;
@@ -95,8 +103,11 @@ export const remove = mutation({
 
     const deletedHabitPayload: RemovedHabitPayload = {
       habit: {
+        accessibilityAtPause: habit.accessibilityAtPause,
+        bestStreak: habit.bestStreak,
         color: habit.color,
         createdAt: habit.createdAt,
+        currentStreak: habit.currentStreak,
         cueAfterBehavior: habit.cueAfterBehavior,
         cueLocation: habit.cueLocation,
         cueTime: habit.cueTime,
@@ -108,13 +119,18 @@ export const remove = mutation({
         icon: habit.icon,
         iconColor: habit.iconColor,
         identity: habit.identity,
+        lastCompletedDate: habit.lastCompletedDate,
         name: habit.name,
         notes: habit.notes,
+        paused: habit.paused,
+        pausedAt: habit.pausedAt,
         preferredTime: habit.preferredTime,
         remindersEnabled: habit.remindersEnabled,
+        resumedAt: habit.resumedAt,
         reminderSound: habit.reminderSound,
         reminderTime: habit.reminderTime,
         strength: habit.strength,
+        strengthAtPause: habit.strengthAtPause,
         strengthLevel: habit.strengthLevel,
         tags: habit.tags,
         vizFailureBody: habit.vizFailureBody,

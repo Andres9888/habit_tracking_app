@@ -1,5 +1,6 @@
 /** Batch Remove — permanently delete multiple habits and their tracking data */
 import { v } from 'convex/values';
+import { internal } from '../_generated/api';
 import { mutation } from '../_generated/server';
 
 export const batchRemove = mutation({
@@ -17,16 +18,16 @@ export const batchRemove = mutation({
         throw new Error('Not authorized to delete this habit');
       }
 
-      // Delete all tracking records for this habit
-      const records = await ctx.db
-        .query('tracking')
-        .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
-        .collect();
-      for (const record of records) {
-        await ctx.db.delete(record._id);
-      }
-
+      // Delete the habit immediately (removes it from the UI); its tracking
+      // records drain asynchronously in bounded chunks so large histories
+      // cannot breach Convex's per-transaction write limits. Orphaned tracking
+      // is invisible to queries, which all filter by live habit ids.
       await ctx.db.delete(habitId);
+      await ctx.scheduler.runAfter(
+        0,
+        internal.habits.deleteTrackingChunk.deleteTrackingChunk,
+        { habitId }
+      );
       deletedCount++;
     }
 
