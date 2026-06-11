@@ -1,12 +1,12 @@
 /**
  * ProblemChips — the library intake. Five struggle-framed chips
  * ("Sleep better", "Stress less") that answer the hero's question.
- * Tapping one routes to that goal's habits.
+ * Each chip wears its goal's palette so the pills read clearly on
+ * the warm hero gradient. Tapping one routes to that goal's habits.
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 import {
   GOAL_COLLECTIONS,
@@ -18,8 +18,6 @@ interface ProblemChipsProps {
 }
 
 export function ProblemChips({ onSelectGoal }: ProblemChipsProps) {
-  const { colors } = useThemeColors();
-
   return (
     <View style={s.wrap}>
       {GOAL_COLLECTIONS.map((goal) => (
@@ -29,16 +27,13 @@ export function ProblemChips({ onSelectGoal }: ProblemChipsProps) {
           accessibilityRole='button'
           style={({ pressed }) => [
             s.chip,
-            { borderColor: colors.border },
-            pressed && {
-              backgroundColor: goal.bgColor,
-              borderColor: goal.textColor,
-            },
+            { backgroundColor: goal.bgColor },
+            pressed && { borderColor: goal.textColor },
           ]}
           onPress={() => onSelectGoal(goal)}
         >
           <Text style={s.emoji}>{goal.emoji}</Text>
-          <Text style={[s.label, { color: colors.text.primary }]}>
+          <Text style={[s.label, { color: goal.textColor }]}>
             {goal.problemLabel}
           </Text>
         </Pressable>
@@ -49,17 +44,24 @@ export function ProblemChips({ onSelectGoal }: ProblemChipsProps) {
 
 const s = StyleSheet.create({
   chip: {
+    ...shadows.subtle,
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.88)',
+    borderColor: 'rgba(0,0,0,0.07)',
     borderRadius: borderRadius.full,
-    borderWidth: 1.5,
+    borderWidth: 1,
     flexDirection: 'row',
-    gap: spacing.xs + 2,
-    paddingHorizontal: spacing.md + 1,
-    paddingVertical: spacing.sm + 2,
+    gap: 7,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
-  emoji: { fontSize: 15 },
-  label: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
+  emoji: {
+    fontSize: 15,
+    lineHeight: 19,
+  },
+  label: {
+    ...typography.bodySmall,
+    fontWeight: fontWeights.semibold,
+  },
   wrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',

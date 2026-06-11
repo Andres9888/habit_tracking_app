@@ -78,7 +78,6 @@ const s = StyleSheet.create({
   subtitle: {
     ...typography.bodySmall,
     marginTop: spacing.xs,
-    maxWidth: 300,
   },
   title: {
     ...typography.heading1,
