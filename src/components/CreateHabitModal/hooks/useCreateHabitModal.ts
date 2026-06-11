@@ -4,6 +4,7 @@ import { useHabitForm } from './useHabitForm';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
+import { showCreateError } from '../../../utils/errorAlerts';
 import {
   useHabitData,
   useModalCleanup,
@@ -55,7 +56,12 @@ export const useCreateHabitModal = (props: CreateHabitModalProps) => {
       } else {
         cleanup();
         setTimeout(form.resetForm, EXIT_DURATIONS.fullScreen);
-        void createNewHabit(data).catch(() => {});
+        // On failure the optimistic habit rolls back, so tell the user why
+        // and offer a retry instead of letting it vanish silently.
+        const runCreate = () => {
+          void createNewHabit(data).catch(() => showCreateError(runCreate));
+        };
+        runCreate();
       }
     } catch (error) {
       if (__DEV__) console.error('Failed to save habit:', error);

@@ -21,7 +21,9 @@ Priority: HIGH. Trust-destroying failures the user never sees. No data-model cha
 
 **Fix:** Route the failure into a user-visible toast/alert (reuse the existing `showGenericError`/toast utility used elsewhere). Remove the empty `.catch(() => {})`; handle the rejection where the optimistic rollback happens so the message and the visual rollback are consistent.
 
-## 2.3 Celebration revert-timer cleanup missing in one branch (LOW)
+## 2.3 Celebration revert-timer cleanup missing in one branch (LOW) — RESOLVED AS NON-ISSUE 2026-06-12
+
+> Re-verified during implementation: React always runs the previous effect's cleanup before re-running the effect, so the `isAllDone=true` run's `clearTimeout` fires on every toggle. No leak exists; no change made.
 
 **File:** `src/features/habits/components/BottomActionBar/useCelebrationAnimations.ts:~58`
 
