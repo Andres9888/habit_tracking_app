@@ -1,18 +1,18 @@
 /**
  * ChartCurve Component
  *
- * Renders the gradient fill area and animated curve line.
+ * Renders the flat fill area and animated curve line.
  */
 
 import React from 'react';
 
 import Animated from 'react-native-reanimated';
-import { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
+import { Path } from 'react-native-svg';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 interface ChartCurveProps {
-  /** SVG path for gradient fill area */
+  /** SVG path for the fill area */
   fillPathD: string;
   /** SVG path for the curve line */
   pathD: string;
@@ -25,7 +25,7 @@ interface ChartCurveProps {
 }
 
 /**
- * Renders the gradient-filled area and animated bezier curve.
+ * Renders the flat-filled area and animated bezier curve.
  */
 export const ChartCurve = React.memo(function ChartCurve({
   fillPathD,
@@ -36,16 +36,8 @@ export const ChartCurve = React.memo(function ChartCurve({
 }: ChartCurveProps) {
   return (
     <>
-      <Defs>
-        {/* Gradient fill under the curve */}
-        <LinearGradient id='areaGradient' x1='0' x2='0' y1='0' y2='1'>
-          <Stop offset='0%' stopColor={chartColor} stopOpacity={0.25} />
-          <Stop offset='100%' stopColor={chartColor} stopOpacity={0.02} />
-        </LinearGradient>
-      </Defs>
-
-      {/* Gradient fill area */}
-      <Path d={fillPathD} fill='url(#areaGradient)' />
+      {/* Flat fill area */}
+      <Path d={fillPathD} fill={chartColor} fillOpacity={0.08} />
 
       {/* Main curve line with draw animation */}
       <AnimatedPath
