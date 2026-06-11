@@ -13,7 +13,7 @@
  */
 
 import { memo, useCallback, useMemo } from 'react';
-import { Platform, View, type StyleProp, type ViewStyle } from 'react-native';
+import { View, type StyleProp, type ViewStyle } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
@@ -26,8 +26,6 @@ import { StickyHeaderContext } from '../../../../components/CalendarTimeline/Sti
 import { useStickyHeader } from './useStickyHeader';
 import type { Habit } from '../../types';
 import type { HabitsListContentProps } from './HabitsList.types';
-
-const REMOVE_CLIPPED_SUBVIEWS = Platform.OS === 'android';
 
 const HeaderWrapper = memo(function HeaderWrapper({
   children,
@@ -84,6 +82,7 @@ export function HabitsListContent({
       renderHabitRow({
         habitRowOpacity: state.habitRowOpacity,
         habitRowTranslateY: state.habitRowTranslateY,
+        initialEntranceDoneRef: state.initialEntranceDoneRef,
         item: p.item,
         justCreatedHabitId: state.justCreatedHabitId,
         renderItem,
@@ -92,6 +91,7 @@ export function HabitsListContent({
     [
       state.habitRowOpacity,
       state.habitRowTranslateY,
+      state.initialEntranceDoneRef,
       state.justCreatedHabitId,
       renderItem,
     ]
@@ -119,14 +119,14 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
-            initialNumToRender={8}
+            initialNumToRender={12}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={6}
-            removeClippedSubviews={REMOVE_CLIPPED_SUBVIEWS}
+            maxToRenderPerBatch={16}
+            removeClippedSubviews={false}
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            windowSize={7}
+            windowSize={21}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);
