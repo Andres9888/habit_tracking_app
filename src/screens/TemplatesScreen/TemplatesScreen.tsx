@@ -7,7 +7,6 @@
 import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import { BrowseCategoriesLink } from './components/BrowseCategoriesLink';
 import { useGroupedTemplates } from './components/ExploreAllSection';
 import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
@@ -24,6 +23,8 @@ import {
 } from './data/goalCollections';
 import { filterStarterTemplates } from './data/starterHabits';
 import { sortTemplatesByImportState } from './utils/sortTemplatesByImportState';
+
+const CATEGORY_INDEX_LIMIT = 6;
 
 interface TemplatesScreenContentProps {
   onCloseLibrary?: () => void;
@@ -81,35 +82,16 @@ function TemplatesScreenContent({
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
-  const habitCountsByGoalId = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const goal of GOAL_COLLECTIONS) {
-      counts[goal.id] =
-        data.allTemplates?.filter((t) => goal.categories.includes(t.category))
-          .length ?? 0;
-    }
-    return counts;
-  }, [data.allTemplates]);
-  const startedCountsByGoalId = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const goal of GOAL_COLLECTIONS) {
-      counts[goal.id] =
-        data.allTemplates?.filter(
-          (t) =>
-            goal.categories.includes(t.category) &&
-            state.importedTemplateIds.has(t._id)
-        ).length ?? 0;
-    }
-    return counts;
-  }, [data.allTemplates, state.importedTemplateIds]);
-  const featuredStarterTemplates = useMemo(() => {
-    const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
-    if (!featured || !data.allTemplates) return [];
-    return [...data.allTemplates]
-      .filter((t) => featured.categories.includes(t.category))
-      .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
-      .slice(0, 3);
-  }, [data.allTemplates, featuredGoalId]);
+  const categoryIndex = useMemo(
+    () =>
+      mainBrowseData.categoryList.slice(0, CATEGORY_INDEX_LIMIT).map((c) => ({
+        categoryId: c.categoryId,
+        count: c.count,
+        icon: c.icon,
+        label: c.label,
+      })),
+    [mainBrowseData.categoryList]
+  );
 
   const handleImport = (template: Doc<'templates'>) => {
     state.setPreviewTemplate(template);
@@ -126,9 +108,6 @@ function TemplatesScreenContent({
   };
   const handleOpenStarters = () => {
     void viewNav.openStarters();
-  };
-  const handleOpenCategories = () => {
-    void viewNav.openCategories();
   };
   const handleBrowseByGoal = useCallback(() => {
     const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
@@ -191,23 +170,9 @@ function TemplatesScreenContent({
     );
   }
 
-  const handleSelectChipCategory = (categoryId: string | null) => {
-    state.setSearchQuery('');
-    state.setSelectedCategory(
-      (categoryId ?? 'all') as typeof state.selectedCategory
-    );
-  };
-
   return (
     <MainBrowseView
-      browseCategoriesLink={
-        <BrowseCategoriesLink
-          categoryCount={groups.length}
-          onPress={handleOpenCategories}
-        />
-      }
-      featuredGoalId={featuredGoalId}
-      featuredStarterTemplates={featuredStarterTemplates}
+      categoryIndex={categoryIndex}
       feedbackOverlays={
         <FeedbackOverlays
           feedbackHabitId={state.feedbackHabitId}
@@ -224,7 +189,6 @@ function TemplatesScreenContent({
           onViewHabit={handleViewHabit}
         />
       }
-      habitCountsByGoalId={habitCountsByGoalId}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
       isSearchActive={state.isSearchActive}
@@ -247,13 +211,12 @@ function TemplatesScreenContent({
       onBrowseByGoal={handleBrowseByGoal}
       onGoalSelect={handleGoalSelect}
       onImport={handleImport}
+      onOpenCategory={viewNav.openCategory}
       onPreview={handlers.handleTemplatePreview}
       onSearchChange={state.setSearchQuery}
       onSearchClear={() => state.setSearchQuery('')}
       onSeeAll={handleSeeAll}
-      onSelectCategory={handleSelectChipCategory}
       onStartHerePress={handleOpenStarters}
-      quickFilterCategories={mainBrowseData.quickFilterCategories}
       rowSections={mainBrowseData.browseRowSections}
       searchQuery={state.searchQuery}
       searchResultsSection={
@@ -278,8 +241,8 @@ function TemplatesScreenContent({
         />
       }
       selectedCategory={state.selectedCategory}
-      startedCountsByGoalId={startedCountsByGoalId}
       starterTemplates={starterTemplates}
+      totalHabitCount={data.allTemplates?.length ?? 0}
       userHabitCount={data.userHabitCount}
     />
   );

@@ -27,6 +27,6 @@ export function buildBrowseRowSections({
   const quickStart = popularTemplates.slice(0, QUICK_START_LIMIT);
   if (quickStart.length === 0) return [];
   return [
-    { key: 'popular', templates: quickStart, title: 'Or just start — one tap' },
+    { key: 'popular', templates: quickStart, title: 'Popular right now' },
   ];
 }

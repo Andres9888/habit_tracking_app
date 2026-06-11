@@ -1,39 +1,40 @@
 /**
  * BrowseSections — scroll content for MainBrowseView's non-filtered branch.
- * Workflow V3: transformation-first goal grid on top (warm, emotional
- * choice), then a minimal one-tap quick-start row section (fast path).
+ * The Guide layout: the hero asks the question (chips live there); below
+ * it the page stays short — popular one-tap rows, a compact category
+ * index, and one endcap link into the full catalog.
  */
 
-import type { ReactNode } from 'react';
 import { ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
+import {
+  CategoryIndexGrid,
+  type CategoryIndexItem,
+} from '../components/CategoryIndexGrid';
+import { LibraryEndcap } from '../components/LibraryEndcap';
+import { SectionOverline } from '../components/SectionOverline';
 import { StartHereCard } from '../components/StartHereCard';
 import { StarterHabitList } from '../components/StarterHabitList';
-import type { GoalCollection } from '../data/goalCollections';
 import type { BrowseRowSection } from '../hooks/useMainBrowseData';
 import { BrowseRowSectionList } from './BrowseRowSectionList';
 import { stagger } from './MainBrowseView.helpers';
 
 interface BrowseSectionsProps {
-  browseCategoriesLink: ReactNode;
-  featuredGoalId: string;
-  featuredStarterTemplates: Doc<'templates'>[];
-  habitCountsByGoalId: Record<string, number>;
+  categoryIndex: CategoryIndexItem[];
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isFirstTimeUser: boolean;
   onBrowseByGoal: () => void;
-  onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
+  onOpenCategory: (categoryId: string) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSeeAll: () => void;
   onStartHerePress: () => void;
   rowSections: BrowseRowSection[];
-  startedCountsByGoalId: Record<string, number>;
   starterTemplates: Doc<'templates'>[];
+  totalHabitCount: number;
 }
 
 export function BrowseSections(p: BrowseSectionsProps) {
@@ -65,33 +66,32 @@ export function BrowseSections(p: BrowseSectionsProps) {
               <StartHereCard onPress={p.onStartHerePress} />
             </Animated.View>
           ) : null}
-          <Animated.View entering={stagger(2)}>
-            <GoalCollectionGrid
-              featuredGoalId={p.featuredGoalId}
-              featuredStarterTemplates={p.featuredStarterTemplates}
-              habitCountsByGoalId={p.habitCountsByGoalId}
-              startedCountsByGoalId={p.startedCountsByGoalId}
-              onPreviewStarter={p.onPreview}
-              onSelectGoal={p.onGoalSelect}
-            />
-          </Animated.View>
           <BrowseRowSectionList
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
             sections={p.rowSections}
-            staggerOffset={3}
+            staggerOffset={2}
             onImport={p.onImport}
             onPreview={p.onPreview}
             onSeeAll={p.onSeeAll}
           />
+          {p.categoryIndex.length > 0 ? (
+            <Animated.View entering={stagger(3)}>
+              <SectionOverline title='By category' />
+              <CategoryIndexGrid
+                categories={p.categoryIndex}
+                onSelectCategory={p.onOpenCategory}
+              />
+            </Animated.View>
+          ) : null}
+          <Animated.View entering={stagger(4)}>
+            <LibraryEndcap
+              totalHabitCount={p.totalHabitCount}
+              onPress={p.onSeeAll}
+            />
+          </Animated.View>
         </>
       )}
-
-      <Animated.View
-        entering={stagger(showStarterList ? 3 : 3 + p.rowSections.length)}
-      >
-        {p.browseCategoriesLink}
-      </Animated.View>
     </ScrollView>
   );
 }

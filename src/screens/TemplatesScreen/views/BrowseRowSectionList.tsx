@@ -45,7 +45,7 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
                   onPress={p.onSeeAll}
                 >
                   <Text style={[s.seeAll, { color: colors.primary[600] }]}>
-                    Browse all
+                    See all
                   </Text>
                 </Pressable>
               ) : undefined
