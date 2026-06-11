@@ -25,11 +25,7 @@ export function ProblemChips({ onSelectGoal }: ProblemChipsProps) {
           key={goal.id}
           accessibilityLabel={`${goal.problemLabel}: ${goal.promise}`}
           accessibilityRole='button'
-          style={({ pressed }) => [
-            s.chip,
-            { backgroundColor: goal.bgColor },
-            pressed && { borderColor: goal.textColor },
-          ]}
+          style={[s.chip, { backgroundColor: goal.bgColor }]}
           onPress={() => onSelectGoal(goal)}
         >
           <Text style={s.emoji}>{goal.emoji}</Text>
