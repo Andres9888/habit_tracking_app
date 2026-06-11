@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Keyboard,
   TextInput,
@@ -37,14 +38,19 @@ export function HabitNameInputField({
   onFocus,
 }: HabitNameInputFieldProps) {
   const inputRef = useHabitNameInputFocus(autoFocus);
+  const [isFocused, setIsFocused] = useState(false);
   const {
-    fieldWidth,
+    caretInset,
     inputTextStyle,
-    measurePlaceholder,
+    isPlaceholderCaretReady,
     onFieldLayout,
     onPlaceholderTextLayout,
     placeholder: measuredPlaceholder,
   } = useCenteredPlaceholderCaretInset(habitName, placeholder);
+  const shouldHideNativeCaret =
+    habitName.length === 0 && placeholder.length > 0;
+  const showPlaceholderCaret =
+    isFocused && shouldHideNativeCaret && isPlaceholderCaretReady;
 
   return (
     <View
@@ -60,6 +66,7 @@ export function HabitNameInputField({
           accessibilityHint={placeholder || undefined}
           accessibilityLabel='Habit name'
           className='w-full px-0 py-4 text-2xl font-semibold'
+          caretHidden={shouldHideNativeCaret}
           maxLength={50}
           placeholder=''
           returnKeyType='done'
@@ -70,19 +77,29 @@ export function HabitNameInputField({
             ...inputTextStyle,
           }}
           value={habitName}
-          onBlur={onBlur}
+          onBlur={() => {
+            setIsFocused(false);
+            onBlur();
+          }}
           onChangeText={onChangeText}
-          onFocus={onFocus}
+          onFocus={() => {
+            setIsFocused(true);
+            onFocus();
+          }}
           onSubmitEditing={Keyboard.dismiss}
         />
+        {showPlaceholderCaret ? (
+          <View
+            pointerEvents='none'
+            className='absolute top-4 h-8 w-0.5 rounded-full'
+            style={{ backgroundColor: '#6D8DFF', left: caretInset }}
+          />
+        ) : null}
       </Animated.View>
-      {measurePlaceholder ? (
-        <HabitNamePlaceholderMeasurer
-          fieldWidth={fieldWidth}
-          text={measuredPlaceholder}
-          onTextLayout={onPlaceholderTextLayout}
-        />
-      ) : null}
+      <HabitNamePlaceholderMeasurer
+        text={measuredPlaceholder}
+        onTextLayout={onPlaceholderTextLayout}
+      />
       <HabitNamePlaceholderOverlay
         hintColor={hintColor}
         text={placeholder}
