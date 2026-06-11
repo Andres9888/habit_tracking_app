@@ -8,6 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
+import { DetailsChevron } from '../DetailsChevron';
 import { ScienceDoorPill } from '../ScienceDoorPill';
 import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
 import { getImportedStateColors } from '../../utils/importedStateColors';
@@ -92,6 +93,7 @@ export function MinimalTemplateRow({
           <ScienceDoorPill template={item} onPress={onPreview} />
         </View>
       </View>
+      <DetailsChevron />
       <ListCardAddButton
         isImported={isImported}
         isImporting={isImporting}

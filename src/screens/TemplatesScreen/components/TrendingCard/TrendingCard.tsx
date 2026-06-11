@@ -45,10 +45,6 @@ export function TrendingCard({
       onPress={onPress}
     >
       <View
-        pointerEvents='none'
-        style={[s.tintOverlay, { backgroundColor: `${iconColor}0A` }]}
-      />
-      <View
         style={[
           s.accent,
           {

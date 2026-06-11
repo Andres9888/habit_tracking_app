@@ -9,6 +9,7 @@ import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../../theme/typography';
 import { getImportedStateColors } from '../../utils/importedStateColors';
 import type { TemplateListCardProps } from './TemplateListCard.types';
+import { DetailsChevron } from '../../components/DetailsChevron';
 import { getMatchReason } from './getMatchReason';
 import { styles } from './TemplateListCard.styles';
 import { CardFooterMeta } from './CardFooterMeta';
@@ -96,6 +97,7 @@ export function TemplateListCard({
             >
               {item.name}
             </Text>
+            <DetailsChevron />
             <ListCardAddButton
               isImported={isImported}
               isImporting={isImporting}
