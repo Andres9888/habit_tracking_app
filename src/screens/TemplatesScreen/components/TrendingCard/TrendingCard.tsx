@@ -42,6 +42,18 @@ export function TrendingCard({
       ]}
       onPress={onPress}
     >
+      <View
+        pointerEvents='none'
+        style={[s.tintOverlay, { backgroundColor: `${iconColor}0A` }]}
+      />
+      <View
+        style={[
+          s.accent,
+          {
+            backgroundColor: isImported ? colors.primary[500] : iconColor,
+          },
+        ]}
+      />
       <View style={[s.iconBox, { backgroundColor: `${iconColor}25` }]}>
         <Text style={s.iconEmoji}>{icon}</Text>
       </View>
@@ -70,9 +82,7 @@ export function TrendingCard({
               { backgroundColor: colors.status.warningLight },
             ]}
           >
-            <Text
-              style={[s.scienceText, { color: colors.status.warningText }]}
-            >
+            <Text style={[s.scienceText, { color: colors.status.warningText }]}>
               🔬 Science-backed
             </Text>
           </View>
