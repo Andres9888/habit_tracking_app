@@ -5,12 +5,13 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { Animated, Text, TextInput, View } from 'react-native';
+import { Animated, Text, View } from 'react-native';
+import type { TextInput } from 'react-native';
 import { useHabitNamePlaceholder } from '../../hooks/useHabitNamePlaceholder';
 import { colors } from '@/theme/colors';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { shadows } from '@/theme/spacing';
-import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { ThemedTextInput } from '@/components/ui/TextInput';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
@@ -64,7 +65,7 @@ export const HeroNameInput = ({
       </Animated.Text>
 
       <View className='relative'>
-        <TextInput
+        <ThemedTextInput
           ref={inputRef}
           blurOnSubmit
           accessibilityHint='Enter the name of your new habit'
@@ -80,10 +81,7 @@ export const HeroNameInput = ({
             color: themeColors.text.primary,
           }, shadows.card]}
           value={value}
-          {...buildTextInputHintProps(
-            isPlaceholderReady ? habitNamePlaceholder : '',
-            '#a8a29e'
-          )}
+          placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}
           onChangeText={onChange}
         />
 
