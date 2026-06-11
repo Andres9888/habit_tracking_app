@@ -87,3 +87,4 @@ Plans/
 # Debug artifacts (audit phase 5)
 har.json
 tmp-*
+${HOME}/
