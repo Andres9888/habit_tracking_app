@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 import type { YourProgressCardProps } from '../types';
 import {
@@ -66,8 +67,8 @@ export function YourProgressCard({
     <View
       accessibilityLabel={label}
       accessibilityRole='summary'
-      className='overflow-hidden rounded-2xl shadow-sm'
-      style={{ shadowColor: themeColors.border }}
+      className='overflow-hidden rounded-2xl'
+      style={shadows.card}
     >
       <LinearGradient
         className='absolute inset-0'

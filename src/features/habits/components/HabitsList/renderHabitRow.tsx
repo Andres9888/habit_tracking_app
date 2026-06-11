@@ -12,9 +12,10 @@
 
 import React from 'react';
 import { Animated } from 'react-native';
-import Reanimated, { FadeOutRight } from 'react-native-reanimated';
+import Reanimated, { FadeInDown, FadeOutRight } from 'react-native-reanimated';
 import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import type { Habit } from '../../types';
+import { durations, enterEasing } from '@/theme/animations';
 
 interface RenderHabitRowOptions {
   item: Habit;
@@ -38,9 +39,14 @@ export function renderHabitRow(opts: RenderHabitRowOptions) {
   } = opts;
 
   const isNewlyCreated = item._id === justCreatedHabitId;
+  const index = renderParams.getIndex() ?? 0;
+  const enterAnimation = FadeInDown
+    .duration(durations.enter)
+    .easing(enterEasing)
+    .delay(Math.min(index, 4) * durations.stagger);
 
   return (
-    <Reanimated.View exiting={EXIT_ANIMATION}>
+    <Reanimated.View entering={enterAnimation} exiting={EXIT_ANIMATION}>
       <Animated.View
         style={
           isNewlyCreated

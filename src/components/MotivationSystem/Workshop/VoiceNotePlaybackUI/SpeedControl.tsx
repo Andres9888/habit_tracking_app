@@ -11,6 +11,7 @@ import {
   PLAYBACK_SPEEDS,
 } from '../../../../hooks/useAudioPlayback';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { shadows } from '../../../../theme/spacing';
 import type { SpeedControlProps } from './types';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -49,7 +50,7 @@ export function SpeedControl({
         </Text>
       </Pressable>
 
-      {isOpen ? <View className='absolute bottom-full right-0 mb-1 rounded-lg p-1 shadow-lg' style={{ backgroundColor: colors.card }}>
+      {isOpen ? <View className='absolute bottom-full right-0 mb-1 rounded-lg p-1' style={[{ backgroundColor: colors.card }, shadows.floatingActionButton]}>
           {PLAYBACK_SPEEDS.map((speed) => (
             <Pressable
               key={speed}

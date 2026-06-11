@@ -6,7 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { fontFamilies, fontWeights } from '@/theme/typography';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const actionPillsStyles = StyleSheet.create({
   filled: {
@@ -26,7 +26,7 @@ export const actionPillsStyles = StyleSheet.create({
   filledText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   outline: {
@@ -44,7 +44,7 @@ export const actionPillsStyles = StyleSheet.create({
   outlineText: {
     color: colors.primary[700],
     fontFamily: fontFamilies.primary.text,
-    fontSize: 13,
+    fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
   },
   row: {

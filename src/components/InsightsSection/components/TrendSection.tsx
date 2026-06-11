@@ -10,6 +10,7 @@ import { TrendingUp, TrendingDown } from 'lucide-react-native';
 import type { TrendSectionProps } from '../InsightsSection.types';
 import { TrendChangeBadge } from './TrendChangeBadge';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 export function TrendSection({ trend }: TrendSectionProps) {
@@ -17,7 +18,7 @@ export function TrendSection({ trend }: TrendSectionProps) {
   const TrendIcon = trend.change >= 0 ? TrendingUp : TrendingDown;
 
   return (
-    <View className='overflow-hidden rounded-2xl shadow-sm' style={{ shadowColor: colors.border }}>
+    <View className='overflow-hidden rounded-2xl' style={shadows.card}>
       <LinearGradient
         className='absolute inset-0'
         colors={['rgba(245, 243, 255, 0.3)', colors.card, 'rgba(239, 246, 255, 0.3)']}
