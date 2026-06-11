@@ -6,6 +6,7 @@
 
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
@@ -24,9 +25,10 @@ export function LibraryHero({
   searchQuery,
 }: LibraryHeroProps) {
   const { colors } = useThemeColors();
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={s.hero}>
+    <View style={[s.hero, { paddingTop: insets.top + spacing.md }]}>
       <HeroBackdrop />
       <Animated.View entering={FadeInDown.delay(80).duration(280)}>
         <Text
@@ -63,7 +65,6 @@ const s = StyleSheet.create({
     overflow: 'hidden',
     paddingBottom: spacing.base,
     paddingHorizontal: spacing.base,
-    paddingTop: spacing.xl,
     position: 'relative',
   },
   subtitle: {
