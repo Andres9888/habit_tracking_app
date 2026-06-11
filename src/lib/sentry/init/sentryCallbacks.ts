@@ -60,6 +60,28 @@ function scrubValue(value: unknown): unknown {
     : value;
 }
 
+/**
+ * Global twins of the value patterns for in-place substring replacement.
+ * Kept separate because a /g regex is stateful under .test() (lastIndex),
+ * which would make scrubValue's checks flaky.
+ */
+const SENSITIVE_VALUE_PATTERNS_GLOBAL = SENSITIVE_VALUE_PATTERNS.map(
+  (pattern) => new RegExp(pattern.source, `${pattern.flags}g`)
+);
+
+/**
+ * Redact secret-shaped substrings inside free text (error messages), keeping
+ * the rest of the message intact — whole-value redaction would destroy the
+ * debugging signal that exception messages carry.
+ */
+function scrubText(text: string): string {
+  let result = text;
+  for (const pattern of SENSITIVE_VALUE_PATTERNS_GLOBAL) {
+    result = result.replace(pattern, '[redacted]');
+  }
+  return result;
+}
+
 /** Return a shallow copy of `record` with sensitive keys and values redacted. */
 function scrubRecord(record: UnknownRecord | undefined): UnknownRecord | undefined {
   if (!record) return record;
@@ -103,6 +125,27 @@ export function createBeforeSend(config: SentryConfig) {
       event.request.headers = scrubRecord(
         event.request.headers as UnknownRecord
       ) as Record<string, string>;
+    }
+
+    if (event.request?.data) {
+      event.request.data =
+        typeof event.request.data === 'string'
+          ? scrubText(event.request.data)
+          : scrubRecord(event.request.data as UnknownRecord);
+    }
+
+    // Error messages are the most common secret channel — a thrown
+    // `Error('auth failed for Bearer …')` lands here, not in breadcrumbs.
+    if (event.message) {
+      event.message = scrubText(event.message);
+    }
+
+    if (event.exception?.values) {
+      for (const exception of event.exception.values) {
+        if (typeof exception.value === 'string') {
+          exception.value = scrubText(exception.value);
+        }
+      }
     }
 
     return event;

@@ -35,6 +35,34 @@ describe('createBeforeSend redaction', () => {
     });
   });
 
+  it('scrubs secrets inside error messages while keeping the rest', () => {
+    const result = send({
+      message: 'auth failed for Bearer abc.def.ghi at step 3',
+    });
+    expect(result?.message).toBe('auth failed for [redacted] at step 3');
+  });
+
+  it('scrubs secrets inside exception values', () => {
+    const result = send({
+      exception: {
+        values: [{ type: 'Error', value: 'HTTP 401 using sk_live_abcdefgh12345678 key' }],
+      },
+    } as Partial<ErrorEvent>);
+    expect(result?.exception?.values?.[0].value).toBe(
+      'HTTP 401 using [redacted] key'
+    );
+  });
+
+  it('scrubs request data records and strings', () => {
+    const result = send({
+      request: { data: { password: 'x', note: 'ok' } },
+    } as Partial<ErrorEvent>);
+    expect(result?.request?.data).toEqual({
+      password: '[redacted]',
+      note: 'ok',
+    });
+  });
+
   it('scrubs breadcrumb data values', () => {
     const result = send({
       breadcrumbs: [
