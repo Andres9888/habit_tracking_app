@@ -8,7 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
-import { getTemplateMetaLabel } from './templateMeta';
+import { getShortCitation, getTemplateMetaLabel } from './templateMeta';
 import { styles as s } from './MinimalTemplateRow.styles';
 
 interface MinimalTemplateRowProps {
@@ -28,6 +28,7 @@ export function MinimalTemplateRow({
 }: MinimalTemplateRowProps) {
   const { colors } = useThemeColors();
   const metaLabel = getTemplateMetaLabel(item);
+  const citation = getShortCitation(item);
 
   return (
     <Pressable
@@ -80,9 +81,12 @@ export function MinimalTemplateRow({
               </Text>
             </View>
           ) : null}
-          {item.scientificReference ? (
-            <Text style={[s.science, { color: colors.text.tertiary }]}>
-              🔬 research-backed
+          {citation ? (
+            <Text
+              numberOfLines={1}
+              style={[s.science, { color: colors.text.tertiary }]}
+            >
+              🔬 {citation}
             </Text>
           ) : null}
         </View>

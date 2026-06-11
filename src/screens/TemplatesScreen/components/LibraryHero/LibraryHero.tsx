@@ -6,10 +6,8 @@
 
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Sun } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
-import { iconSizes } from '../../../../theme/iconSizes';
 import { typography } from '../../../../theme/typography';
 import { ProblemChips } from '../ProblemChips';
 import { SearchBar } from '../SearchBar';
@@ -18,7 +16,6 @@ import type { LibraryHeroProps } from './LibraryHero.types';
 
 const HERO_TITLE = 'What do you want to change?';
 const HERO_SUBTITLE = 'Pick a struggle — we’ll give you a proven way in.';
-const SUN_COLOR = 'rgb(251, 146, 60)';
 
 export function LibraryHero({
   onSearchChange,
@@ -31,12 +28,6 @@ export function LibraryHero({
   return (
     <View style={s.hero}>
       <HeroBackdrop />
-      <Animated.View
-        entering={FadeInDown.delay(0).duration(240)}
-        style={s.topRow}
-      >
-        <Sun color={SUN_COLOR} size={iconSizes.medium} strokeWidth={2.2} />
-      </Animated.View>
       <Animated.View entering={FadeInDown.delay(80).duration(280)}>
         <Text
           accessibilityRole='header'
@@ -70,22 +61,20 @@ const s = StyleSheet.create({
     borderBottomRightRadius: borderRadius.xl,
     gap: spacing.md,
     overflow: 'hidden',
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.base,
     paddingHorizontal: spacing.base,
-    paddingTop: spacing.md,
+    paddingTop: spacing.xl,
     position: 'relative',
   },
   subtitle: {
     ...typography.bodySmall,
-    marginTop: spacing.xs,
+    marginTop: spacing.sm - 2,
+    // Keep clear of the parent's floating close button.
+    paddingRight: spacing['2xl'],
   },
   title: {
     ...typography.heading1,
-  },
-  topRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    minHeight: iconSizes.medium,
+    fontSize: 26,
+    lineHeight: 33,
   },
 });

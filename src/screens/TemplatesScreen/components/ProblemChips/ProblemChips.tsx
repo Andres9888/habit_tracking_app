@@ -6,6 +6,7 @@
  */
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 import {
@@ -18,6 +19,8 @@ interface ProblemChipsProps {
 }
 
 export function ProblemChips({ onSelectGoal }: ProblemChipsProps) {
+  const { colors } = useThemeColors();
+
   return (
     <View style={s.wrap}>
       {GOAL_COLLECTIONS.map((goal) => (
@@ -25,11 +28,14 @@ export function ProblemChips({ onSelectGoal }: ProblemChipsProps) {
           key={goal.id}
           accessibilityLabel={`${goal.problemLabel}: ${goal.promise}`}
           accessibilityRole='button'
-          style={[s.chip, { backgroundColor: goal.bgColor }]}
+          style={[
+            s.chip,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
           onPress={() => onSelectGoal(goal)}
         >
           <Text style={s.emoji}>{goal.emoji}</Text>
-          <Text style={[s.label, { color: goal.textColor }]}>
+          <Text style={[s.label, { color: colors.text.primary }]}>
             {goal.problemLabel}
           </Text>
         </Pressable>
@@ -42,7 +48,6 @@ const s = StyleSheet.create({
   chip: {
     ...shadows.subtle,
     alignItems: 'center',
-    borderColor: 'rgba(0,0,0,0.07)',
     borderRadius: borderRadius.full,
     borderWidth: 1,
     flexDirection: 'row',
