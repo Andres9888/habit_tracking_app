@@ -6,11 +6,49 @@
 
 import { v } from 'convex/values';
 import { query, internalMutation } from './_generated/server';
+import type { Doc } from './_generated/dataModel';
 import {
   calculateHabitChanges,
   categorizeHabitChanges,
   calculateWeekOverWeekChange,
 } from './analytics/weeklyHelpers';
+
+/**
+ * Pure computation of weekly insights from already-fetched habits/tracking.
+ * Shared by getWeeklyInsights and getAnalyticsDashboard. Tracking outside the
+ * two-week window is ignored, so a wider superset (e.g. 90 days) is fine.
+ */
+export function computeWeeklyInsights(
+  activeHabits: Doc<'habits'>[],
+  trackings: Doc<'tracking'>[]
+) {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  const twoWeeksAgo = new Date();
+  twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+  const oneWeekAgoKey = oneWeekAgo.toISOString().slice(0, 10);
+  const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
+
+  // Calculate changes for each habit (pure computation, no DB calls)
+  const habitChanges = activeHabits.map((habit) => {
+    return calculateHabitChanges(
+      habit,
+      trackings,
+      oneWeekAgoKey,
+      twoWeeksAgoKey,
+      habit.currentStreak ?? 0
+    );
+  });
+
+  const categories = categorizeHabitChanges(habitChanges);
+  const totals = calculateWeekOverWeekChange(habitChanges);
+
+  return {
+    ...categories,
+    ...totals,
+    generatedAt: new Date().toISOString(),
+  };
+}
 
 /**
  * Get weekly insights
@@ -34,14 +72,10 @@ export const getWeeklyInsights = query({
       .collect();
     const activeHabits = habits.filter((h) => !h.archived && !h.paused);
 
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const twoWeeksAgo = new Date();
-    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-    const oneWeekAgoKey = oneWeekAgo.toISOString().slice(0, 10);
-
     // Bound the query to the comparison window so per-user payload size
     // does not grow unbounded with account age.
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
     const twoWeeksAgoKey = twoWeeksAgo.toISOString().slice(0, 10);
     const trackings = await ctx.db
       .query('tracking')
@@ -50,25 +84,7 @@ export const getWeeklyInsights = query({
       )
       .collect();
 
-    // Calculate changes for each habit (pure computation, no DB calls)
-    const habitChanges = activeHabits.map((habit) => {
-      return calculateHabitChanges(
-        habit,
-        trackings,
-        oneWeekAgoKey,
-        twoWeeksAgoKey,
-        habit.currentStreak ?? 0
-      );
-    });
-
-    const categories = categorizeHabitChanges(habitChanges);
-    const totals = calculateWeekOverWeekChange(habitChanges);
-
-    return {
-      ...categories,
-      ...totals,
-      generatedAt: new Date().toISOString(),
-    };
+    return computeWeeklyInsights(activeHabits, trackings);
   },
 });
 

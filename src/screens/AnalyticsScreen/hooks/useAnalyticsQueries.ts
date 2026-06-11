@@ -1,17 +1,17 @@
 /**
  * Analytics Queries Hook
+ *
+ * PERF: Subscribes to the single combined dashboard query instead of five
+ * separate queries that each re-loaded habits + tracking server-side.
  */
 
 import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 
 export const useAnalyticsQueries = () => {
-  // Fetch analytics data from Convex
-  const overviewStats = useQuery(api.analytics.getOverviewStats);
-  const strengthDistribution = useQuery(api.analytics.getStrengthDistribution);
-  const trendData = useQuery(api.analytics.get30DayTrend);
-  const complianceData = useQuery(api.analytics.getComplianceData);
-  const weeklyInsightsRaw = useQuery(api.analytics.getWeeklyInsights);
+  const dashboard = useQuery(api.analytics.getAnalyticsDashboard);
+
+  const weeklyInsightsRaw = dashboard?.weeklyInsights;
   const weeklyInsights = (
     weeklyInsightsRaw && 'weekOverWeekChange' in weeklyInsightsRaw
       ? weeklyInsightsRaw
@@ -20,13 +20,13 @@ export const useAnalyticsQueries = () => {
     | import('../../../components/WeeklyInsightsCard').WeeklyInsights
     | undefined;
 
-  const isLoading = !overviewStats;
+  const isLoading = !dashboard?.overviewStats;
 
   return {
-    overviewStats,
-    strengthDistribution,
-    trendData,
-    complianceData,
+    overviewStats: dashboard?.overviewStats,
+    strengthDistribution: dashboard?.strengthDistribution,
+    trendData: dashboard?.trendData,
+    complianceData: dashboard?.complianceData,
     weeklyInsights: weeklyInsights ?? undefined,
     isLoading,
   };
