@@ -33,11 +33,9 @@ export const fabRingStyles = StyleSheet.create({
   fabButton: {
     alignItems: 'center',
     borderRadius: FAB_SIZE / 2,
-    borderWidth: 2,
     height: FAB_SIZE,
     justifyContent: 'center',
     width: FAB_SIZE,
-    ...shadows.floatingActionButton,
   },
   iconAbsolute: {
     position: 'absolute' as const,
@@ -57,5 +55,6 @@ export const fabRingStyles = StyleSheet.create({
     height: RING_SIZE,
     justifyContent: 'center',
     width: RING_SIZE,
+    ...shadows.floatingActionButton,
   },
 });
