@@ -1,12 +1,13 @@
 /**
- * Meta pills row (frequency, category, popularity) and search match row.
+ * Meta pills row (frequency, category, popularity) and science door.
  */
 
 import { Text, View } from 'react-native';
-import { Search } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
+import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { getGrowthTypeMeta, type GrowthType } from '@/utils/growthTypeMeta';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { ScienceDoorPill } from '../../components/ScienceDoorPill';
+import { CardMatchRow } from './CardMatchRow';
 import { styles } from './TemplateListCard.styles';
 
 interface CardFooterMetaProps {
@@ -14,7 +15,9 @@ interface CardFooterMetaProps {
   frequency: string | undefined;
   growthType?: GrowthType;
   matchReason: string | null;
+  onPreview: (template: Doc<'templates'>) => void;
   popularityCount?: string | null;
+  template: Doc<'templates'>;
 }
 
 export function CardFooterMeta({
@@ -22,7 +25,9 @@ export function CardFooterMeta({
   frequency,
   growthType,
   matchReason,
+  onPreview,
   popularityCount,
+  template,
 }: CardFooterMetaProps) {
   const { colors } = useThemeColors();
   const growthMeta = getGrowthTypeMeta(growthType);
@@ -34,7 +39,10 @@ export function CardFooterMeta({
           <View
             style={[
               styles.metaPill,
-              { backgroundColor: growthMeta.pillBg, borderColor: growthMeta.pillBg },
+              {
+                backgroundColor: growthMeta.pillBg,
+                borderColor: growthMeta.pillBg,
+              },
             ]}
           >
             <Text style={[styles.metaLabel, { color: growthMeta.pillFg }]}>
@@ -79,21 +87,9 @@ export function CardFooterMeta({
             </Text>
           </View>
         ) : null}
+        <ScienceDoorPill template={template} onPress={onPreview} />
       </View>
-
-      {matchReason ? (
-        <View
-          style={[
-            styles.matchRow,
-            { backgroundColor: `${colors.primary[600]}10` },
-          ]}
-        >
-          <Search color={colors.primary[700]} size={iconSizes.micro} strokeWidth={2.5} />
-          <Text style={[styles.matchText, { color: colors.primary[700] }]}>
-            {matchReason}
-          </Text>
-        </View>
-      ) : null}
+      {matchReason ? <CardMatchRow matchReason={matchReason} /> : null}
     </>
   );
 }

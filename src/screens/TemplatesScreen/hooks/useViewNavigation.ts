@@ -1,22 +1,18 @@
 /**
  * View navigation state machine for Templates screen
  *
- * Manages transitions between: main | seeAll | category | search
+ * Manages transitions between: main | catalog | category | search
  * Uses Reanimated shared values for 280ms slide animations.
  */
 
 import { useCallback, useState } from 'react';
-import {
-  Easing,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const SLIDE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
 
 export type TemplateViewState =
   | { type: 'main' }
-  | { type: 'seeAll' }
+  | { type: 'catalog'; initialCategoryId?: string }
   | { type: 'starters' }
   | { type: 'categories' }
   | { type: 'category'; categoryId: string }
@@ -43,7 +39,7 @@ export function useViewNavigation() {
   );
 
   const openSeeAll = useCallback(() => {
-    setActiveView({ type: 'seeAll' });
+    setActiveView({ type: 'catalog' });
     animateIn();
   }, [animateIn]);
 
@@ -59,7 +55,7 @@ export function useViewNavigation() {
 
   const openCategory = useCallback(
     (categoryId: string) => {
-      setActiveView({ type: 'category', categoryId });
+      setActiveView({ type: 'catalog', initialCategoryId: categoryId });
       animateIn();
     },
     [animateIn]

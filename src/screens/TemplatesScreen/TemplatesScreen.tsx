@@ -22,6 +22,8 @@ import {
   type GoalCollection,
 } from './data/goalCollections';
 import { filterStarterTemplates } from './data/starterHabits';
+import { usePrescription, getGoalTemplates } from './hooks/usePrescription';
+import { useSelectedGoal } from './hooks/useSelectedGoal';
 import { sortTemplatesByImportState } from './utils/sortTemplatesByImportState';
 
 const CATEGORY_INDEX_LIMIT = 6;
@@ -37,6 +39,7 @@ function TemplatesScreenContent({
 }: TemplatesScreenContentProps) {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
+  const { selectedGoalId, setSelectedGoalId } = useSelectedGoal();
   const { groups } = useGroupedTemplates(data.allTemplates);
   const categoryGridItems = useMemo(
     () => buildCategoryGridItems(groups),
@@ -73,12 +76,61 @@ function TemplatesScreenContent({
     handleDismissFeedback();
   }, [handleDismissFeedback, onViewHabit, state.feedbackHabitId]);
 
+  const prescription = usePrescription(
+    selectedGoalId,
+    data.allTemplates,
+    state.importedTemplateIds
+  );
+
+  const goalTemplates = useMemo(
+    () =>
+      selectedGoalId
+        ? getGoalTemplates(
+            selectedGoalId,
+            data.allTemplates,
+            state.importedTemplateIds
+          )
+        : [],
+    [data.allTemplates, selectedGoalId, state.importedTemplateIds]
+  );
+
+  const importedStepCounts = useMemo(() => {
+    if (!selectedGoalId || !prescription) return {};
+    return { [selectedGoalId]: prescription.importedStepCount };
+  }, [prescription, selectedGoalId]);
+
+  const selectedGoal = useMemo(
+    () => GOAL_COLLECTIONS.find((g) => g.id === selectedGoalId) ?? null,
+    [selectedGoalId]
+  );
+
+  const heroCopy = useMemo(() => {
+    if (!selectedGoal || !prescription || prescription.importedStepCount < 1) {
+      return { subtitle: undefined, title: undefined };
+    }
+    const firstImported = prescription.steps.find((step) =>
+      state.importedTemplateIds.has(step.template._id)
+    );
+    const habitName = firstImported?.template.name ?? 'your habit';
+    return {
+      title: `Your ${selectedGoal.problemLabel.toLowerCase()} path`,
+      subtitle: `🌱 Keep going with ${habitName} — the first week matters most.`,
+    };
+  }, [prescription, selectedGoal, state.importedTemplateIds]);
+
   const handleGoalSelect = useCallback(
     (goal: GoalCollection) => {
       state.setSearchQuery('');
-      viewNav.openGoal(goal.id);
+      setSelectedGoalId(selectedGoalId === goal.id ? null : goal.id);
     },
-    [state, viewNav]
+    [selectedGoalId, setSelectedGoalId, state]
+  );
+
+  const handleOpenGoal = useCallback(
+    (goalId: string) => {
+      viewNav.openGoal(goalId);
+    },
+    [viewNav]
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
@@ -111,8 +163,11 @@ function TemplatesScreenContent({
   };
   const handleBrowseByGoal = useCallback(() => {
     const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
-    if (featured) handleGoalSelect(featured);
-  }, [featuredGoalId, handleGoalSelect]);
+    if (featured) {
+      state.setSearchQuery('');
+      setSelectedGoalId(featured.id);
+    }
+  }, [featuredGoalId, setSelectedGoalId, state]);
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -173,6 +228,12 @@ function TemplatesScreenContent({
   return (
     <MainBrowseView
       categoryIndex={categoryIndex}
+      goalTemplates={goalTemplates}
+      heroSubtitle={heroCopy.subtitle}
+      heroTitle={heroCopy.title}
+      importedStepCounts={importedStepCounts}
+      prescription={prescription}
+      selectedGoalId={selectedGoalId}
       feedbackOverlays={
         <FeedbackOverlays
           feedbackHabitId={state.feedbackHabitId}
@@ -212,6 +273,7 @@ function TemplatesScreenContent({
       onGoalSelect={handleGoalSelect}
       onImport={handleImport}
       onOpenCategory={viewNav.openCategory}
+      onOpenGoal={handleOpenGoal}
       onPreview={handlers.handleTemplatePreview}
       onSearchChange={state.setSearchQuery}
       onSearchClear={() => state.setSearchQuery('')}

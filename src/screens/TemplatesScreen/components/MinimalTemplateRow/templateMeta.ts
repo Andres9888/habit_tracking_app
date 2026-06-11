@@ -31,3 +31,12 @@ export function getShortCitation(template: Doc<'templates'>): string | null {
   }
   return 'Research-backed';
 }
+
+/** Label for the tappable science-door pill on browse rows. */
+export function getScienceDoorLabel(template: Doc<'templates'>): string {
+  const citation = getShortCitation(template);
+  if (citation && citation !== 'Research-backed') {
+    return `🔬 ${citation} ›`;
+  }
+  return '🔬 Why it works ›';
+}

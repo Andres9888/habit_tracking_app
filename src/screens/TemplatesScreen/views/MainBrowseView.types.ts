@@ -6,11 +6,16 @@ import type { ReactNode } from 'react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { CategoryIndexItem } from '../components/CategoryIndexGrid';
 import type { GoalCollection } from '../data/goalCollections';
+import type { ResolvedPrescription } from '../hooks/usePrescription';
 import type { BrowseRowSection } from '../hooks/useMainBrowseData';
 
 export interface MainBrowseViewProps {
   categoryIndex: CategoryIndexItem[];
   feedbackOverlays: ReactNode;
+  goalTemplates: Doc<'templates'>[];
+  heroSubtitle?: string;
+  heroTitle?: string;
+  importedStepCounts: Record<string, number>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isSearchActive: boolean;
@@ -19,15 +24,18 @@ export interface MainBrowseViewProps {
   onGoalSelect: (goal: GoalCollection) => void;
   onImport: (template: Doc<'templates'>) => void;
   onOpenCategory: (categoryId: string) => void;
+  onOpenGoal: (goalId: string) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSeeAll: () => void;
   onStartHerePress: () => void;
+  prescription: ResolvedPrescription | null;
   rowSections: BrowseRowSection[];
   searchQuery: string;
   searchResultsSection: ReactNode;
   selectedCategory: string;
+  selectedGoalId: string | null;
   starterTemplates: Doc<'templates'>[];
   totalHabitCount: number;
   userHabitCount: number;

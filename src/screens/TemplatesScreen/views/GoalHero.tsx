@@ -13,22 +13,13 @@ import { spacing } from '../../../theme/spacing';
 import type { GoalCollection } from '../data/goalCollections';
 import { styles as s } from './GoalHero.styles';
 
-const PATH_MECHANICS_NOTE =
-  'How paths work: start with one habit. Add the next once it sticks.';
-
 interface GoalHeroProps {
   goal: GoalCollection;
   habitCount: number;
   onBack: () => void;
-  showPathNote?: boolean;
 }
 
-export function GoalHero({
-  goal,
-  habitCount,
-  onBack,
-  showPathNote = false,
-}: GoalHeroProps) {
+export function GoalHero({ goal, habitCount, onBack }: GoalHeroProps) {
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   const countLabel = `📋 ${habitCount} ${habitCount === 1 ? 'habit' : 'habits'}`;
@@ -88,13 +79,6 @@ export function GoalHero({
           </View>
         </View>
       </View>
-      {showPathNote ? (
-        <View style={s.pathNote}>
-          <Text style={[s.pathNoteText, { color: goal.textColor }]}>
-            {PATH_MECHANICS_NOTE}
-          </Text>
-        </View>
-      ) : null}
     </View>
   );
 }

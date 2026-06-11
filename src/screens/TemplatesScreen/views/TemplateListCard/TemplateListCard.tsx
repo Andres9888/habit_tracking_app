@@ -99,6 +99,8 @@ export function TemplateListCard({
             growthType={item.growthType}
             matchReason={matchReason}
             popularityCount={popularityCount}
+            template={item}
+            onPreview={onPreview}
           />
         </View>
       </View>

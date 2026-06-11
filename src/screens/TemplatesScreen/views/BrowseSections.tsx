@@ -1,44 +1,45 @@
 /**
  * BrowseSections — scroll content for MainBrowseView's non-filtered branch.
- * The Guide layout: the hero asks the question (chips live there); below
- * it the page stays short — popular one-tap rows, a compact category
- * index, and one endcap link into the full catalog.
  */
 
 import { ScrollView } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { spacing } from '../../../theme/spacing';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import {
-  CategoryIndexGrid,
-  type CategoryIndexItem,
-} from '../components/CategoryIndexGrid';
-import { LibraryEndcap } from '../components/LibraryEndcap';
-import { SectionOverline } from '../components/SectionOverline';
-import { StartHereCard } from '../components/StartHereCard';
+import { type CategoryIndexItem } from '../components/CategoryIndexGrid';
 import { StarterHabitList } from '../components/StarterHabitList';
+import { GOAL_COLLECTIONS } from '../data/goalCollections';
+import type { ResolvedPrescription } from '../hooks/usePrescription';
 import type { BrowseRowSection } from '../hooks/useMainBrowseData';
-import { BrowseRowSectionList } from './BrowseRowSectionList';
+import { DefaultBrowseBranch } from './DefaultBrowseBranch';
+import { GoalBrowseBranch } from './GoalBrowseBranch';
 import { stagger } from './MainBrowseView.helpers';
 
 interface BrowseSectionsProps {
   categoryIndex: CategoryIndexItem[];
+  goalTemplates: Doc<'templates'>[];
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isFirstTimeUser: boolean;
   onBrowseByGoal: () => void;
   onImport: (template: Doc<'templates'>) => void;
   onOpenCategory: (categoryId: string) => void;
+  onOpenGoal: (goalId: string) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSeeAll: () => void;
   onStartHerePress: () => void;
+  prescription: ResolvedPrescription | null;
   rowSections: BrowseRowSection[];
+  selectedGoalId: string | null;
   starterTemplates: Doc<'templates'>[];
   totalHabitCount: number;
 }
 
 export function BrowseSections(p: BrowseSectionsProps) {
   const showStarterList = p.isFirstTimeUser && p.starterTemplates.length > 0;
+  const selectedGoal = p.selectedGoalId
+    ? GOAL_COLLECTIONS.find((g) => g.id === p.selectedGoalId)
+    : null;
 
   return (
     <ScrollView
@@ -59,38 +60,33 @@ export function BrowseSections(p: BrowseSectionsProps) {
             onPreview={p.onPreview}
           />
         </Animated.View>
-      ) : (
-        <>
-          {p.isFirstTimeUser ? (
-            <Animated.View entering={stagger(2)}>
-              <StartHereCard onPress={p.onStartHerePress} />
-            </Animated.View>
-          ) : null}
-          <BrowseRowSectionList
+      ) : selectedGoal && p.prescription ? (
+        <Animated.View entering={stagger(2)}>
+          <GoalBrowseBranch
+            goal={selectedGoal}
+            goalTemplates={p.goalTemplates}
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
-            sections={p.rowSections}
-            staggerOffset={2}
+            prescription={p.prescription}
             onImport={p.onImport}
+            onOpenGoal={p.onOpenGoal}
             onPreview={p.onPreview}
-            onSeeAll={p.onSeeAll}
           />
-          {p.categoryIndex.length > 0 ? (
-            <Animated.View entering={stagger(3)}>
-              <SectionOverline title='By category' />
-              <CategoryIndexGrid
-                categories={p.categoryIndex}
-                onSelectCategory={p.onOpenCategory}
-              />
-            </Animated.View>
-          ) : null}
-          <Animated.View entering={stagger(4)}>
-            <LibraryEndcap
-              totalHabitCount={p.totalHabitCount}
-              onPress={p.onSeeAll}
-            />
-          </Animated.View>
-        </>
+        </Animated.View>
+      ) : (
+        <DefaultBrowseBranch
+          categoryIndex={p.categoryIndex}
+          importedTemplateIds={p.importedTemplateIds}
+          importingTemplateId={p.importingTemplateId}
+          isFirstTimeUser={p.isFirstTimeUser}
+          rowSections={p.rowSections}
+          totalHabitCount={p.totalHabitCount}
+          onImport={p.onImport}
+          onOpenCategory={p.onOpenCategory}
+          onPreview={p.onPreview}
+          onSeeAll={p.onSeeAll}
+          onStartHerePress={p.onStartHerePress}
+        />
       )}
     </ScrollView>
   );

@@ -6,6 +6,7 @@ import { TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import { iconSizes } from '@/theme/iconSizes';
@@ -33,7 +34,8 @@ export function SearchBar({
       testID='templates-search-bar'
       style={[
         styles.searchBar,
-        { backgroundColor: colors.card, borderColor: colors.border },
+        shadows.subtle,
+        { backgroundColor: '#FFFFFF', borderColor: colors.border },
       ]}
     >
       <Search

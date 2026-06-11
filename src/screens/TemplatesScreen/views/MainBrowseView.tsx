@@ -16,11 +16,17 @@ export function MainBrowseView(p: MainBrowseViewProps) {
   const isCategoryFilterActive = p.selectedCategory !== 'all';
   const showFilteredResults = p.isSearchActive || isCategoryFilterActive;
   const isFirstTimeUser = p.userHabitCount <= 1;
+  const isCompressed = p.selectedGoalId !== null;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <LibraryHero
+        heroSubtitle={p.heroSubtitle}
+        heroTitle={p.heroTitle}
+        importedStepCounts={p.importedStepCounts}
+        isCompressed={isCompressed}
         searchQuery={p.searchQuery}
+        selectedGoalId={p.selectedGoalId}
         onSearchChange={p.onSearchChange}
         onSearchClear={p.onSearchClear}
         onSelectGoal={p.onGoalSelect}
@@ -43,23 +49,25 @@ export function MainBrowseView(p: MainBrowseViewProps) {
         >
           <BrowseSections
             categoryIndex={p.categoryIndex}
+            goalTemplates={p.goalTemplates}
             importedTemplateIds={p.importedTemplateIds}
             importingTemplateId={p.importingTemplateId}
             isFirstTimeUser={isFirstTimeUser}
+            prescription={p.prescription}
+            rowSections={p.rowSections}
+            selectedGoalId={p.selectedGoalId}
+            starterTemplates={p.starterTemplates}
+            totalHabitCount={p.totalHabitCount}
             onBrowseByGoal={p.onBrowseByGoal}
             onImport={p.onImport}
             onOpenCategory={p.onOpenCategory}
+            onOpenGoal={p.onOpenGoal}
             onPreview={p.onPreview}
             onSeeAll={p.onSeeAll}
             onStartHerePress={p.onStartHerePress}
-            rowSections={p.rowSections}
-            starterTemplates={p.starterTemplates}
-            totalHabitCount={p.totalHabitCount}
           />
         </Animated.View>
       )}
-      {p.modals}
-      {p.feedbackOverlays}
     </View>
   );
 }

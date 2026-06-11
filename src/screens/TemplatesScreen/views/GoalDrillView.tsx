@@ -1,15 +1,14 @@
 /**
  * GoalDrillView - Slide-in view showing templates across all of a goal's
- * categories. Fixes prior behavior where tapping a multi-category goal
- * only drilled into categories[0].
+ * categories with detailed browse (filter chips + TemplateListCard rows).
  */
 
 import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { GoalCollection } from '../data/goalCollections';
+import { DrillListBody } from './DrillListBody';
 import { GoalHero } from './GoalHero';
-import { GoalPathBody } from './GoalPathBody';
 
 interface GoalDrillViewProps {
   goal: GoalCollection;
@@ -37,13 +36,13 @@ export function GoalDrillView({
       testID='templates-goal-view'
       style={[s.container, { backgroundColor: colors.background }]}
     >
-      <GoalHero
-        goal={goal}
-        habitCount={templates.length}
-        showPathNote
-        onBack={onBack}
-      />
-      <GoalPathBody
+      <GoalHero goal={goal} habitCount={templates.length} onBack={onBack} />
+      <DrillListBody
+        chipColors={{
+          bgColor: goal.bgColor,
+          borderColor: goal.textColor,
+          textColor: goal.textColor,
+        }}
         importedTemplateIds={importedTemplateIds}
         importingTemplateId={importingTemplateId}
         templates={templates}

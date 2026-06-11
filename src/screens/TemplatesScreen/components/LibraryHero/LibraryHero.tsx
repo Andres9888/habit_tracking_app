@@ -1,11 +1,10 @@
 /**
  * LibraryHero — the Guide intake. Warm gradient header that opens with
- * a question ("What do you want to change?"), struggle chips as the
- * answer, and search as the escape hatch.
+ * a question, struggle chips as the answer, and search as the escape hatch.
  */
 
 import { StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
@@ -15,17 +14,24 @@ import { SearchBar } from '../SearchBar';
 import { HeroBackdrop } from './components/HeroBackdrop';
 import type { LibraryHeroProps } from './LibraryHero.types';
 
-const HERO_TITLE = 'What do you want to change?';
-const HERO_SUBTITLE = 'Pick a struggle — we’ll give you a proven way in.';
+const DEFAULT_TITLE = 'What do you want to change?';
+const DEFAULT_SUBTITLE = 'Pick a struggle — we’ll give you a proven way in.';
 
 export function LibraryHero({
+  heroSubtitle,
+  heroTitle,
+  importedStepCounts,
+  isCompressed = false,
   onSearchChange,
   onSearchClear,
   onSelectGoal,
   searchQuery,
+  selectedGoalId,
 }: LibraryHeroProps) {
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
+  const title = heroTitle ?? DEFAULT_TITLE;
+  const subtitle = heroSubtitle ?? DEFAULT_SUBTITLE;
 
   return (
     <View style={[s.hero, { paddingTop: insets.top + spacing.md }]}>
@@ -36,23 +42,38 @@ export function LibraryHero({
           numberOfLines={2}
           style={[s.title, { color: colors.text.primary }]}
         >
-          {HERO_TITLE}
+          {title}
         </Text>
-        <Text style={[s.subtitle, { color: colors.text.secondary }]}>
-          {HERO_SUBTITLE}
-        </Text>
+        {isCompressed ? null : (
+          <Animated.Text
+            entering={FadeInDown.duration(200)}
+            exiting={FadeOut.duration(160)}
+            style={[s.subtitle, { color: colors.text.secondary }]}
+          >
+            {subtitle}
+          </Animated.Text>
+        )}
       </Animated.View>
       <Animated.View entering={FadeInDown.delay(160).duration(280)}>
-        <ProblemChips onSelectGoal={onSelectGoal} />
-      </Animated.View>
-      <Animated.View entering={FadeInDown.delay(240).duration(280)}>
-        <SearchBar
-          inputHint='Or search any habit…'
-          value={searchQuery}
-          onChangeText={onSearchChange}
-          onClear={onSearchClear}
+        <ProblemChips
+          importedStepCounts={importedStepCounts}
+          selectedGoalId={selectedGoalId}
+          onSelectGoal={onSelectGoal}
         />
       </Animated.View>
+      {isCompressed ? null : (
+        <Animated.View
+          entering={FadeInDown.delay(240).duration(280)}
+          exiting={FadeOut.duration(160)}
+        >
+          <SearchBar
+            inputHint='Or search any habit…'
+            value={searchQuery}
+            onChangeText={onSearchChange}
+            onClear={onSearchClear}
+          />
+        </Animated.View>
+      )}
     </View>
   );
 }
@@ -70,12 +91,12 @@ const s = StyleSheet.create({
   subtitle: {
     ...typography.bodySmall,
     marginTop: spacing.sm - 2,
-    // Keep clear of the parent's floating close button.
     paddingRight: spacing['2xl'],
   },
   title: {
     ...typography.heading1,
     fontSize: 26,
     lineHeight: 33,
+    paddingRight: spacing['2xl'],
   },
 });

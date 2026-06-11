@@ -1,13 +1,18 @@
 import type { GoalCollection } from '../../data/goalCollections';
 
+export interface HeroCopyProps {
+  subtitle: string;
+  title: string;
+}
+
 export interface LibraryHeroProps {
+  heroSubtitle?: string;
+  heroTitle?: string;
+  importedStepCounts?: Record<string, number>;
+  isCompressed?: boolean;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSelectGoal: (goal: GoalCollection) => void;
   searchQuery: string;
-}
-
-export interface HeroCopyProps {
-  subtitle: string;
-  title: string;
+  selectedGoalId: string | null;
 }

@@ -52,9 +52,12 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
             }
           />
           <View>
-            {section.templates.map((item) => (
+            {section.templates.map((item, rowIndex) => (
               <MinimalTemplateRow
                 key={item._id}
+                elevated={
+                  section.key === 'popular' && rowIndex === 0 ? true : undefined
+                }
                 isImported={p.importedTemplateIds.has(item._id)}
                 isImporting={p.importingTemplateId === item._id}
                 item={item}

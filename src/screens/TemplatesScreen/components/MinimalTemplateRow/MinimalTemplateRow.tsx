@@ -7,11 +7,14 @@
 import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { shadows } from '../../../../theme/spacing';
+import { ScienceDoorPill } from '../ScienceDoorPill';
 import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
-import { getShortCitation, getTemplateMetaLabel } from './templateMeta';
+import { getTemplateMetaLabel } from './templateMeta';
 import { styles as s } from './MinimalTemplateRow.styles';
 
 interface MinimalTemplateRowProps {
+  elevated?: boolean;
   isImported: boolean;
   isImporting: boolean;
   item: Doc<'templates'>;
@@ -20,6 +23,7 @@ interface MinimalTemplateRowProps {
 }
 
 export function MinimalTemplateRow({
+  elevated = false,
   isImported,
   isImporting,
   item,
@@ -28,7 +32,6 @@ export function MinimalTemplateRow({
 }: MinimalTemplateRowProps) {
   const { colors } = useThemeColors();
   const metaLabel = getTemplateMetaLabel(item);
-  const citation = getShortCitation(item);
 
   return (
     <Pressable
@@ -36,6 +39,7 @@ export function MinimalTemplateRow({
       accessibilityRole='button'
       style={[
         s.row,
+        elevated && shadows.card,
         {
           backgroundColor: isImported ? '#F0FDF6' : colors.card,
           borderColor: isImported ? '#A7F3D0' : colors.border,
@@ -54,7 +58,7 @@ export function MinimalTemplateRow({
       </View>
       <View style={s.body}>
         <Text
-          numberOfLines={1}
+          numberOfLines={2}
           style={[s.name, { color: colors.text.primary }]}
         >
           {item.name}
@@ -81,14 +85,7 @@ export function MinimalTemplateRow({
               </Text>
             </View>
           ) : null}
-          {citation ? (
-            <Text
-              numberOfLines={1}
-              style={[s.science, { color: colors.text.tertiary }]}
-            >
-              🔬 {citation}
-            </Text>
-          ) : null}
+          <ScienceDoorPill template={item} onPress={onPreview} />
         </View>
       </View>
       <ListCardAddButton
