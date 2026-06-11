@@ -2,7 +2,7 @@
  * ToggleRow - Row with bell icon, label, and switch
  */
 
-import { Switch, Text, View } from 'react-native';
+import { Pressable, Switch, Text, View } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
@@ -20,7 +20,9 @@ export function ToggleRow(props?: ToggleRowProps) {
   const { colors } = useThemeColors();
 
   return (
-    <View
+    <Pressable
+      // Whole row toggles — the bare Switch alone is below the 44pt target.
+      accessible={false}
       className='flex-row items-center justify-between rounded-2xl border px-4 py-4'
       style={[
         shadows.subtle,
@@ -29,6 +31,7 @@ export function ToggleRow(props?: ToggleRowProps) {
           backgroundColor: colors.card,
         },
       ]}
+      onPress={() => onToggle(!enabled)}
     >
       <View className='flex-row items-center gap-3'>
         <View
@@ -55,6 +58,6 @@ export function ToggleRow(props?: ToggleRowProps) {
         value={enabled}
         onValueChange={onToggle}
       />
-    </View>
+    </Pressable>
   );
 }

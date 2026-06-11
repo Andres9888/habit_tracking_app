@@ -2,11 +2,13 @@
  * Hook for EnhancedReminderSelector logic
  */
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { AccessibilityInfo, Keyboard, Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import { formatReminderTime } from '../../../../utils/notifications';
+import { getNearestPresetTime, isUntouchedDefaultTime } from './reminderDefaults';
+import { useReminderSelection } from './useReminderSelection';
 import type { ReminderPreset } from './types';
 
 interface UseReminderSelectorParams {
@@ -14,6 +16,7 @@ interface UseReminderSelectorParams {
   presets: ReminderPreset[];
   onTimeChange: (time: Date) => void;
   onToggle: (enabled: boolean) => void;
+  snapDefaultToPresetOnEnable?: boolean;
 }
 
 export function useReminderSelector({
@@ -21,30 +24,22 @@ export function useReminderSelector({
   presets,
   onTimeChange,
   onToggle,
+  snapDefaultToPresetOnEnable = false,
 }: UseReminderSelectorParams) {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [permissionDenied, setPermissionDenied] = useState(false);
   const { triggerSelection } = useHapticFeedback();
+  // Guards the snap-to-preset on enable: an explicit pick must never be overridden.
+  const hasUserSetTime = useRef(false);
 
-  const selectedPreset = useMemo(() => {
-    const hour = reminderTime.getHours();
-    const minute = reminderTime.getMinutes();
-    return (
-      presets.find((p) => p.hour === hour && p.minute === minute)?.id || null
-    );
-  }, [reminderTime, presets]);
-
-  const isCustomTime = selectedPreset === null;
-
-  const customTimeLabel = useMemo(() => {
-    if (!isCustomTime) return 'Custom time...';
-    return formatReminderTime(reminderTime);
-  }, [isCustomTime, reminderTime]);
+  const { customTimeLabel, isCustomTime, selectedPreset } =
+    useReminderSelection(reminderTime, presets);
 
   const handlePresetSelect = useCallback(
     (preset: ReminderPreset) => {
       Keyboard.dismiss();
       triggerSelection();
+      hasUserSetTime.current = true;
       const newTime = new Date();
       newTime.setHours(preset.hour, preset.minute, 0, 0);
       onTimeChange(newTime);
@@ -64,6 +59,7 @@ export function useReminderSelector({
   const handleCustomTimeConfirm = useCallback(
     (time: Date) => {
       triggerSelection();
+      hasUserSetTime.current = true;
       onTimeChange(time);
       setShowTimePicker(false);
       const formattedTime = formatReminderTime(time);
@@ -80,6 +76,17 @@ export function useReminderSelector({
       triggerSelection();
       onToggle(value);
 
+      // Create flow, first enable with the seeded fallback time: snap to the
+      // nearest preset so the shown time has a visible origin in the presets.
+      if (
+        value &&
+        snapDefaultToPresetOnEnable &&
+        !hasUserSetTime.current &&
+        isUntouchedDefaultTime(reminderTime)
+      ) {
+        onTimeChange(getNearestPresetTime(presets));
+      }
+
       if (value && Platform.OS !== 'web') {
         const { status } = await Notifications.getPermissionsAsync();
         setPermissionDenied(status !== 'granted');
@@ -91,7 +98,7 @@ export function useReminderSelector({
         value ? 'Reminders enabled' : 'Reminders disabled'
       );
     },
-    [onToggle, triggerSelection]
+    [onToggle, onTimeChange, presets, reminderTime, snapDefaultToPresetOnEnable, triggerSelection]
   );
 
   return {

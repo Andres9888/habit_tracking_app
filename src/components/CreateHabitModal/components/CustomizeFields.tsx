@@ -30,6 +30,8 @@ interface CustomizeFieldsProps {
   reminderTime: Date;
   onReminderToggle: (enabled: boolean) => void;
   onReminderTimeChange: (time: Date) => void;
+  /** Create-flow only — see EnhancedReminderSelectorProps. */
+  snapReminderDefaultToPreset?: boolean;
   reminderSectionRef?: RefObject<ViewType | null>;
 }
 
@@ -46,6 +48,7 @@ export function CustomizeFields({
   reminderTime,
   onReminderToggle,
   onReminderTimeChange,
+  snapReminderDefaultToPreset = false,
   reminderSectionRef,
 }: CustomizeFieldsProps) {
   const { colors: themeColors } = useThemeColors();
@@ -80,6 +83,7 @@ export function CustomizeFields({
         <EnhancedReminderSelector
           enabled={reminderEnabled}
           reminderTime={reminderTime}
+          snapDefaultToPresetOnEnable={snapReminderDefaultToPreset}
           onTimeChange={onReminderTimeChange}
           onToggle={onReminderToggle}
         />

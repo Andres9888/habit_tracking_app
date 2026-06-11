@@ -36,6 +36,12 @@ export interface HabitFormBodyProps {
   onReminderToggle: (enabled: boolean) => void;
   /** Called when reminder time changes (preset or custom selection) */
   onReminderTimeChange: (time: Date) => void;
+  /**
+   * Create-flow only: snap the seeded fallback reminder time to the nearest
+   * preset on first enable. Edit must omit this — its incoming time is a
+   * real saved value, and the safe default is false.
+   */
+  snapReminderDefaultToPreset?: boolean;
   autoFocus?: boolean;
   /** Whether to show validation error for empty habit name */
   showNameError?: boolean;

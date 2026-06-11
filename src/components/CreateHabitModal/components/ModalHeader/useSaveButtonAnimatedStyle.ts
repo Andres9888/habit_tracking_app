@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import {
+  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -7,10 +8,22 @@ import {
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { createHabitMotion } from '../../createHabitMotion';
 
-const DISABLED_OPACITY = 0.35;
+export interface SaveButtonPalette {
+  disabledBg: string;
+  enabledBg: string;
+  disabledLabel: string;
+  enabledLabel: string;
+}
 
-/** Smooth opacity + scale when create/save becomes available. */
-export function useSaveButtonAnimatedStyle(canSave: boolean) {
+/**
+ * Animates between a neutral "visibly present but inactive" state and the
+ * solid primary state. The disabled state keeps full opacity — a washed-out
+ * primary fill was unreadable against the cream surface.
+ */
+export function useSaveButtonAnimatedStyle(
+  canSave: boolean,
+  palette: SaveButtonPalette
+) {
   const reduceMotion = useReduceMotion();
   const progress = useSharedValue(canSave ? 1 : 0);
 
@@ -22,8 +35,22 @@ export function useSaveButtonAnimatedStyle(canSave: boolean) {
     progress.value = reduceMotion ? target : withTiming(target, timing);
   }, [canSave, progress, reduceMotion]);
 
-  return useAnimatedStyle(() => ({
-    opacity: DISABLED_OPACITY + progress.value * (1 - DISABLED_OPACITY),
+  const containerStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      [palette.disabledBg, palette.enabledBg]
+    ),
     transform: [{ scale: 0.97 + progress.value * 0.03 }],
   }));
+
+  const labelStyle = useAnimatedStyle(() => ({
+    color: interpolateColor(
+      progress.value,
+      [0, 1],
+      [palette.disabledLabel, palette.enabledLabel]
+    ),
+  }));
+
+  return { containerStyle, labelStyle };
 }

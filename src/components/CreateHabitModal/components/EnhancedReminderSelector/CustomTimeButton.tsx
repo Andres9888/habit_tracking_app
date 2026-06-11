@@ -44,7 +44,7 @@ function CustomTimeButtonComponent({
       ) : (
         <>
           <Text className='text-sm font-medium' style={{ color: colors.status.success }}>
-            Pick a different time
+            or pick a custom time
           </Text>
           <Text className='ml-1' style={{ color: colors.status.success }}>→</Text>
         </>
