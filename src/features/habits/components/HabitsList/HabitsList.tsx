@@ -39,6 +39,7 @@ export function HabitsList(props: HabitsListProps) {
     onCreateHabitRequest,
     onSettingsChange: modals.onSettingsChange,
     state: {
+      initialEntranceDoneRef: state.initialEntranceDoneRef,
       justCreatedHabitId: state.justCreatedHabitId,
       setJustCreatedHabitId: state.setJustCreatedHabitId,
       setShouldTriggerHabitEntrance: state.setShouldTriggerHabitEntrance,
