@@ -27,16 +27,21 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
   const hasGoal = goalDuration > 0;
   // Warm near-white card surface — same surface as the home HabitCard
   // (colors.light.surfaceMuted). Keep the theme card token in dark mode.
-  const cardStyle = { ...shadows.card, backgroundColor: isDark ? colors.card : palette.light.surfaceMuted };
+  const cardStyle = {
+    ...shadows.card,
+    backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
+    borderColor: colors.border,
+    borderWidth: 1,
+  };
 
   if (!hasGoal) {
     return (
       <Animated.View
-        className='overflow-hidden rounded-2xl shadow-sm'
+        className='overflow-hidden rounded-2xl'
         entering={FadeIn.duration(180)}
         style={cardStyle}
       >
-        <View className='p-5'>
+        <View className='p-4'>
           <ErrorBoundary>
             <GoalTabEmptyState habitId={habit._id} />
           </ErrorBoundary>
@@ -51,22 +56,24 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-2xl shadow-sm'
+      className='overflow-hidden rounded-2xl'
       entering={FadeIn.duration(180)}
       style={cardStyle}
     >
-      <View className='p-5'>
+      <View className='p-4'>
         <View className='mb-4 flex-row items-center justify-between'>
           <Text style={{ ...typography.heading3, color: colors.text.primary }}>
             {title}
           </Text>
-          <Pressable accessibilityRole='button' onPress={() => setAdjustOpen(true)}>
+          <Pressable
+            accessibilityRole='button'
+            onPress={() => setAdjustOpen(true)}
+          >
             <Text
               style={{
                 ...typography.bodySmall,
-                color: colors.text.secondary,
+                color: colors.primary[700],
                 fontWeight: fontWeights.semibold,
-                textDecorationLine: 'underline',
               }}
             >
               Adjust

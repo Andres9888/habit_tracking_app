@@ -7,8 +7,9 @@ import Animated from 'react-native-reanimated';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
 import { borderRadius } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
+import { fontWeights, typography } from '../../../theme/typography';
 import { useStreakGoalAnimation } from './SimpleStreakGoalHero.hooks';
+import { StreakGoalNumeral } from './StreakGoalNumeral';
 
 interface SimpleStreakGoalHeroProps {
   currentStreak: number;
@@ -16,9 +17,6 @@ interface SimpleStreakGoalHeroProps {
   habitColor: string;
 }
 
-/** Oversized hero numeral — intentionally larger than any typography token. */
-const STREAK_NUMBER_SIZE = 72;
-const STREAK_NUMBER_LINE = 76;
 const PROGRESS_BAR_HEIGHT = 10;
 
 export function SimpleStreakGoalHero({
@@ -39,51 +37,14 @@ export function SimpleStreakGoalHero({
 
   return (
     <View>
-      <View className='items-center'>
-        <Text
-          style={{
-            ...typography.caption,
-            color: colors.text.secondary,
-            fontWeight: fontWeights.bold,
-            letterSpacing: 1.6,
-            textTransform: 'uppercase',
-          }}
-        >
-          Current streak
-        </Text>
-        <Text
-          style={{
-            color: colors.text.primary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: STREAK_NUMBER_SIZE,
-            fontWeight: fontWeights.semibold,
-            letterSpacing: -2,
-            lineHeight: STREAK_NUMBER_LINE,
-            marginTop: 6,
-          }}
-        >
-          {currentStreak}
-        </Text>
-        <Text
-          style={{
-            ...typography.body,
-            color: colors.text.secondary,
-            marginTop: 8,
-          }}
-        >
-          of{' '}
-          <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
-            {goalLabel}
-          </Text>
-        </Text>
-      </View>
+      <StreakGoalNumeral currentStreak={currentStreak} goalLabel={goalLabel} />
 
       <View className='mt-5'>
         <View
           accessibilityRole='progressbar'
           accessibilityValue={{ max: 100, min: 0, now: overallPercent }}
           style={{
-            backgroundColor: colors.gray[200],
+            backgroundColor: colors.gray[100],
             borderRadius: borderRadius.full,
             height: PROGRESS_BAR_HEIGHT,
             overflow: 'hidden',
@@ -95,13 +56,23 @@ export function SimpleStreakGoalHero({
         </View>
         <View className='mt-2 flex-row justify-between'>
           <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-            <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
+            <Text
+              style={{
+                color: colors.text.primary,
+                fontWeight: fontWeights.semibold,
+              }}
+            >
               {percentText}%
             </Text>{' '}
             complete
           </Text>
           <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-            <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
+            <Text
+              style={{
+                color: colors.text.primary,
+                fontWeight: fontWeights.semibold,
+              }}
+            >
               {daysText}
             </Text>{' '}
             to go
