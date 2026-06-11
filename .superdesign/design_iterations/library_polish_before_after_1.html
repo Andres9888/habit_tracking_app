@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library polish — before / after</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 860px;
+        line-height: 1.5;
+      }
+
+      .lane {
+        display: flex;
+        align-items: flex-start;
+        gap: 40px;
+        overflow-x: auto;
+        padding: 26px 0 10px;
+      }
+      .stepcol {
+        flex: none;
+        width: 379px;
+        display: flex;
+        flex-direction: column;
+      }
+      .col-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        border-radius: 999px;
+        padding: 5px 13px;
+        align-self: flex-start;
+      }
+      .col-label.before {
+        color: #9a3412;
+        background: #ffedd5;
+      }
+      .col-label.after {
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+      }
+
+      .phone {
+        width: 375px;
+        background: var(--bg);
+        border-radius: 32px;
+        border: 8px solid #2d2a26;
+        box-shadow: 0 18px 44px rgba(45, 42, 38, 0.28);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .statusbar {
+        height: 34px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .overline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 18px 16px 9px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 9px;
+        white-space: nowrap;
+      }
+      .sci {
+        font-size: 11px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--primary);
+        border: none;
+        border-radius: 999px;
+        padding: 8px 14px;
+        cursor: pointer;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 11px 12px;
+        margin: 0 16px 8px;
+      }
+      .row .emoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 14.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 4px;
+      }
+
+      .hero {
+        position: relative;
+        border-radius: 0 0 24px 24px;
+      }
+      .hero .close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: var(--text-2);
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 14px;
+        color: var(--text-3);
+        font-size: 13.5px;
+      }
+
+      /* BEFORE hero */
+      .hero.before {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.35) 0%,
+          #f5f1ed 85%
+        );
+        padding: 8px 16px 12px;
+      }
+      .hero.before h1 {
+        font-family: var(--sans);
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+      }
+      .hero.before .sub {
+        font-size: 12.5px;
+        color: var(--text-2);
+        margin-top: 3px;
+      }
+      .chips-before {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      .chips-before .chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 999px;
+        padding: 9px 14px;
+        border: 1px solid rgba(0, 0, 0, 0.07);
+      }
+
+      /* AFTER hero */
+      .hero.after {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5) 0%,
+          rgba(254, 215, 170, 0.28) 52%,
+          #f5f1ed 100%
+        );
+        padding: 26px 16px 16px;
+      }
+      .hero.after h1 {
+        font-family: var(--serif);
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.35px;
+        line-height: 1.25;
+      }
+      .hero.after .sub {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 5px;
+        padding-right: 44px;
+      }
+      .chips-after {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin: 14px 0;
+      }
+      .chips-after .chip {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.07);
+      }
+
+      .annot {
+        width: 375px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .annot ul {
+        margin: 4px 0 0 16px;
+      }
+      .annot li {
+        margin-bottom: 4px;
+      }
+      .bad {
+        color: #9a3412;
+        font-weight: 600;
+      }
+      .good {
+        color: var(--primary-deep);
+        font-weight: 600;
+      }
+
+      .note {
+        margin-top: 24px;
+        max-width: 860px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+        font-size: 13px;
+        line-height: 1.65;
+        color: var(--text-2);
+      }
+      .note h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">Library landing — polish pass</p>
+    <h1 class="page-title">Before / after: what just changed</h1>
+    <p class="page-sub">
+      Left replicates your last screenshot. Right is what's now committed
+      (<code>3ec04464e</code>) — reload Metro in the main repo to see it live.
+    </p>
+
+    <div class="lane">
+      <!-- ════ BEFORE ════ -->
+      <div class="stepcol">
+        <div class="col-label before">Before — your screenshot</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="hero before">
+            <div class="close">✕</div>
+            <h1>What do you want to change?</h1>
+            <div class="sub">
+              Pick a struggle — we'll give you a proven way in.
+            </div>
+            <div class="chips-before">
+              <span class="chip" style="background: #fef3c7; color: #78350f"
+                >⚡ More energy</span
+              >
+              <span class="chip" style="background: #eff6ff; color: #1e3a5f"
+                >😴 Sleep better</span
+              >
+              <span class="chip" style="background: #f0fdf4; color: #14532d"
+                >🧘 Stress less</span
+              >
+              <span class="chip" style="background: #faf5ff; color: #581c87"
+                >🎯 Focus deeper</span
+              >
+              <span class="chip" style="background: #fff1f2; color: #881337"
+                >💪 Get healthier</span
+              >
+            </div>
+            <div class="search">🔍&ensp;Or search any habit…</div>
+          </div>
+          <div class="overline">Popular right now <a>See all</a></div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(244, 63, 94, 0.12)">
+              🧠
+            </div>
+            <div class="body">
+              <h4>30-Minute Brain-Boosting C…</h4>
+              <p>Dr. Wendy Suzuki's prescription for a…</p>
+              <div class="meta">
+                <span class="pill">30 min · Weekly</span
+                ><span class="sci">🔬 research-backed</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+              🧘
+            </div>
+            <div class="body">
+              <h4>13-Minute Focus Meditation</h4>
+              <p>Do the 13-minute guided breath-anc…</p>
+              <div class="meta">
+                <span class="pill">10 min · Daily</span
+                ><span class="sci">🔬 research-backed</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+        <div class="annot">
+          <h3>What read as un-premium</h3>
+          <ul>
+            <li>
+              <span class="bad">Title in bold system sans</span> — Literata was
+              never bundled in the app; the serif the design system promises has
+              never actually rendered, anywhere.
+            </li>
+            <li>
+              <span class="bad">Cramped top</span> — title pressed against the
+              status bar; sun icon hidden behind the ✕.
+            </li>
+            <li>
+              <span class="bad">Five pastel chip colors</span> — palette noise
+              before the user has chosen anything.
+            </li>
+            <li>
+              <span class="bad">"🔬 research-backed"</span> — generic lowercase
+              label, same on every row, says nothing.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ════ AFTER ════ -->
+      <div class="stepcol">
+        <div class="col-label after">After — committed</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="hero after">
+            <div class="close">✕</div>
+            <h1>What do you want to change?</h1>
+            <div class="sub">
+              Pick a struggle — we'll give you a proven way in.
+            </div>
+            <div class="chips-after">
+              <span class="chip">⚡ More energy</span>
+              <span class="chip">😴 Sleep better</span>
+              <span class="chip">🧘 Stress less</span>
+              <span class="chip">🎯 Focus deeper</span>
+              <span class="chip">💪 Get healthier</span>
+            </div>
+            <div class="search">🔍&ensp;Or search any habit…</div>
+          </div>
+          <div class="overline">Popular right now <a>See all</a></div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(244, 63, 94, 0.12)">
+              🧠
+            </div>
+            <div class="body">
+              <h4>30-Minute Brain-Boosting C…</h4>
+              <p>Dr. Wendy Suzuki's prescription for a…</p>
+              <div class="meta">
+                <span class="pill">30 min · Weekly</span
+                ><span class="sci">🔬 Suzuki et al. (2021)</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div class="row">
+            <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+              🧘
+            </div>
+            <div class="body">
+              <h4>13-Minute Focus Meditation</h4>
+              <p>Do the 13-minute guided breath-anc…</p>
+              <div class="meta">
+                <span class="pill">10 min · Daily</span
+                ><span class="sci">🔬 Basso et al. (2019)</span>
+              </div>
+            </div>
+            <button class="btn-add">+ Add</button>
+          </div>
+          <div style="height: 14px"></div>
+        </div>
+        <div class="annot">
+          <h3>The four changes</h3>
+          <ul>
+            <li>
+              <span class="good">Real Literata serif, 26px</span> — font now
+              bundled and loaded at app root, so it upgrades every serif title
+              in the app (paywall, onboarding, Make-It-Stick), not just this
+              page.
+            </li>
+            <li>
+              <span class="good">Breathing room</span> — taller hero top
+              padding; sun removed (it was invisible anyway); subtitle stays
+              clear of the ✕.
+            </li>
+            <li>
+              <span class="good">Calm white pill chips</span> — one consistent
+              treatment with border + subtle shadow; goal colors saved for the
+              goal pages where they mean something.
+            </li>
+            <li>
+              <span class="good">Real citations per row</span> — "Suzuki et al.
+              (2021)" parsed from each template's reference, generic fallback
+              only when it doesn't fit.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <h3>Why the font matters most</h3>
+      The mocks always rendered Literata (loaded from Google Fonts in the
+      browser), but the app never could — the font file simply wasn't shipped.
+      So every comparison of "app vs mock" had the app typographically
+      handicapped from the start. With the font actually loading, the serif/sans
+      pairing the whole design system is built on finally exists on device.
+    </div>
+  </body>
+</html>

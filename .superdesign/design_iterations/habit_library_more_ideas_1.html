@@ -1,0 +1,943 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library — further improvement ideas, visualized</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+        /* dark tokens */
+        --dbg: #1c1916;
+        --dsurface: #262220;
+        --dborder: #3a3531;
+        --dtext: #f0ece7;
+        --dtext2: #a89f97;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 920px;
+        line-height: 1.5;
+      }
+
+      .lane {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px;
+        overflow-x: auto;
+        padding: 26px 0 10px;
+      }
+      .stepcol {
+        flex: none;
+        width: 372px;
+        display: flex;
+        flex-direction: column;
+      }
+      .col-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary-deep);
+        margin-bottom: 10px;
+        background: var(--primary-tint);
+        border-radius: 999px;
+        padding: 5px 13px;
+        align-self: flex-start;
+      }
+
+      .phone {
+        width: 360px;
+        height: 760px;
+        background: var(--bg);
+        border-radius: 38px;
+        border: 8px solid #2d2a26;
+        box-shadow: 0 18px 44px rgba(45, 42, 38, 0.28);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .phone.dark {
+        background: var(--dbg);
+      }
+      .statusbar {
+        height: 34px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .overline {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 16px 15px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 8px;
+        white-space: nowrap;
+      }
+      .sci {
+        font-size: 10.5px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .chev {
+        flex: none;
+        font-size: 15px;
+        font-weight: 600;
+        color: #c9c2ba;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+        border: none;
+        border-radius: 999px;
+        padding: 7px 12px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 10px 11px;
+        margin: 0 15px 7px;
+      }
+      .row .emoji {
+        width: 40px;
+        height: 40px;
+        flex: none;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .row p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+      }
+
+      .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5),
+          rgba(254, 215, 170, 0.28) 52%,
+          #f5f1ed 100%
+        );
+        padding: 16px 15px 13px;
+        border-radius: 0 0 22px 22px;
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: 23px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        line-height: 1.22;
+      }
+      .hero .sub {
+        font-size: 12.5px;
+        color: var(--text-2);
+        margin-top: 4px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text);
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 13px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.07);
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 13px;
+        color: var(--text-3);
+        font-size: 12.5px;
+        margin-top: 11px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.06);
+      }
+
+      /* dark variants */
+      .dark .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(245, 158, 11, 0.22),
+          rgba(245, 158, 11, 0.08) 52%,
+          var(--dbg) 100%
+        );
+      }
+      .dark .hero h1 {
+        color: var(--dtext);
+      }
+      .dark .hero .sub {
+        color: var(--dtext2);
+      }
+      .dark .chip {
+        background: var(--dsurface);
+        border-color: var(--dborder);
+        color: var(--dtext);
+        box-shadow: none;
+      }
+      .dark .search {
+        background: var(--dsurface);
+        border-color: var(--dborder);
+        color: var(--dtext2);
+        box-shadow: none;
+      }
+      .dark .overline {
+        color: var(--dtext2);
+      }
+      .dark .row {
+        background: var(--dsurface);
+        border-color: var(--dborder);
+      }
+      .dark .row h4 {
+        color: var(--dtext);
+      }
+      .dark .row p {
+        color: var(--dtext2);
+      }
+      .dark .pill {
+        background: #322d29;
+        color: var(--dtext2);
+      }
+      .dark .sci {
+        color: var(--dtext2);
+      }
+      .dark .statusbar {
+        color: var(--dtext);
+      }
+
+      /* skeleton */
+      .skel {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 10px 11px;
+        margin: 0 15px 7px;
+      }
+      .sk {
+        background: linear-gradient(90deg, #eee9e3, #f7f3ee, #eee9e3);
+        border-radius: 8px;
+      }
+      .sk.icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        flex: none;
+      }
+      .sk.l1 {
+        width: 60%;
+        height: 13px;
+      }
+      .sk.l2 {
+        width: 85%;
+        height: 10px;
+        margin-top: 6px;
+      }
+      .sk.btn {
+        width: 58px;
+        height: 28px;
+        border-radius: 999px;
+        flex: none;
+      }
+
+      .annot {
+        width: 360px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px 15px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+      }
+      .annot .why {
+        display: block;
+        margin-top: 6px;
+      }
+      .annot .why b {
+        color: var(--primary-deep);
+      }
+      .annot ul {
+        margin: 3px 0 0 15px;
+      }
+      .annot li {
+        margin-bottom: 3px;
+      }
+
+      /* instrumentation panel */
+      .panel {
+        width: 360px;
+        background: #2d2a26;
+        color: #f0ece7;
+        border-radius: 22px;
+        padding: 20px;
+        box-shadow: 0 18px 44px rgba(45, 42, 38, 0.28);
+      }
+      .panel h2 {
+        font-family: var(--serif);
+        font-size: 19px;
+        font-weight: 700;
+      }
+      .panel .ev {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: #393430;
+        border-radius: 10px;
+        padding: 9px 11px;
+        margin-top: 9px;
+        font-size: 12px;
+      }
+      .panel .ev code {
+        font-family: 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        color: #6ee7b7;
+      }
+      .panel .ev .src {
+        margin-left: auto;
+        font-size: 10.5px;
+        color: #a89f97;
+      }
+      .panel .funnel {
+        margin-top: 16px;
+      }
+      .panel .frow {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 7px;
+      }
+      .panel .frow .bar {
+        height: 18px;
+        border-radius: 5px;
+        background: #059669;
+      }
+      .panel .frow span {
+        font-size: 11px;
+        color: #cfc8c0;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">Habit Library — further improvements</p>
+    <h1 class="page-title">
+      Four more ideas, and why each one earns its place
+    </h1>
+    <p class="page-sub">
+      Beyond the approved plan (prescription · catalog · polish). Each frame
+      shows the idea in place; the "why" under it is the argument.
+    </p>
+
+    <div class="lane">
+      <!-- ════ 1. LIVING LANDING ════ -->
+      <div class="stepcol">
+        <div class="col-label">Idea 1 · The page knows what time it is</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:47 PM</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div
+              class="hero"
+              style="
+                background: linear-gradient(
+                  180deg,
+                  rgba(99, 102, 241, 0.18),
+                  rgba(99, 102, 241, 0.06) 52%,
+                  #f5f1ed 100%
+                );
+              "
+            >
+              <h1>What do you want to change?</h1>
+              <div class="sub">
+                Pick a struggle — we'll give you a proven way in.
+              </div>
+              <div class="chips">
+                <span class="chip">😴 Sleep better</span>
+                <span class="chip">🧘 Stress less</span>
+                <span class="chip" style="opacity: 0.65">+ 3 more</span>
+              </div>
+              <div class="search">🔍&ensp;Or search any habit…</div>
+            </div>
+
+            <div class="overline">Popular tonight <a>See all</a></div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                📵
+              </div>
+              <div class="body">
+                <h4>Screens Off by 10</h4>
+                <p>Power down before your body tries to</p>
+                <div class="meta">
+                  <span class="pill">0 min · Evening</span
+                  ><span class="sci">🔬 Chang (2015)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                🙏
+              </div>
+              <div class="body">
+                <h4>Gratitude Journal</h4>
+                <p>Three things before bed</p>
+                <div class="meta">
+                  <span class="pill">3 min · Evening</span
+                  ><span class="sci">🔬 Emmons (2003)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+
+            <div class="overline">Builds on your Morning Run</div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                🧊
+              </div>
+              <div class="body">
+                <h4>Post-Run Cold Shower</h4>
+                <p>Recovery pairing — same trigger, same morning</p>
+                <div class="meta">
+                  <span class="pill">2 min · Morning</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+
+            <div class="overline">Under 2 minutes</div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                🛏️
+              </div>
+              <div class="body">
+                <h4>Make Your Bed</h4>
+                <p>One small win to start the day</p>
+                <div class="meta"><span class="pill">1 min</span></div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Time-aware shelves + pairing + tiny wins</h3>
+          <ul>
+            <li>
+              "Popular tonight" at 9 PM (wind-downs); "Popular this morning" at
+              7 AM. Sort tweak on existing <b>preferredTime</b> data; even the
+              hero tint can shift cooler at night.
+            </li>
+            <li>
+              "Builds on your Morning Run" uses the existing
+              <b>habitPairings</b> data once the user has habits.
+            </li>
+            <li>
+              "Under 2 minutes" from <b>estimatedMinutes</b> — tiny habits
+              convert best.
+            </li>
+          </ul>
+          <span class="why"
+            ><b>Why:</b> a static page is visited twice; a page that reflects
+            your day and your habits gets opened habitually. Pure retention,
+            near-zero new data.</span
+          >
+        </div>
+      </div>
+
+      <!-- ════ 2. DARK MODE ════ -->
+      <div class="stepcol">
+        <div class="col-label">Idea 2 · Dark mode actually works</div>
+        <div class="phone dark">
+          <div class="statusbar"><span>9:47 PM</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero">
+              <h1>What do you want to change?</h1>
+              <div class="sub">
+                Pick a struggle — we'll give you a proven way in.
+              </div>
+              <div class="chips">
+                <span class="chip">⚡ More energy</span>
+                <span class="chip">😴 Sleep better</span>
+                <span class="chip">🧘 Stress less</span>
+                <span class="chip">🎯 Focus deeper</span>
+              </div>
+              <div class="search">🔍&ensp;Or search any habit…</div>
+            </div>
+            <div class="overline">Popular right now <a>See all</a></div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(5, 150, 105, 0.2)">
+                🧘
+              </div>
+              <div class="body">
+                <h4>13-Minute Focus Meditation</h4>
+                <p>Guided breath-anchor practice</p>
+                <div class="meta">
+                  <span class="pill">10 min · Daily</span
+                  ><span class="sci">🔬 Basso et al. (2019)</span>
+                </div>
+              </div>
+              <span class="chev" style="color: #57504a">›</span
+              ><button
+                class="btn-add"
+                style="background: rgba(5, 150, 105, 0.22); color: #6ee7b7"
+              >
+                + Add
+              </button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(244, 63, 94, 0.2)">
+                🚫
+              </div>
+              <div class="body">
+                <h4>No Added Sugar</h4>
+                <p>Eliminate added sugars from diet</p>
+                <div class="meta">
+                  <span class="pill">25 min · Daily</span
+                  ><span class="sci">🔬 Yang et al. (2014)</span>
+                </div>
+              </div>
+              <span class="chev" style="color: #57504a">›</span
+              ><button
+                class="btn-add"
+                style="background: rgba(5, 150, 105, 0.22); color: #6ee7b7"
+              >
+                + Add
+              </button>
+            </div>
+            <div class="overline">By category</div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 7px;
+                padding: 0 15px;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 7px;
+                  background: var(--dsurface);
+                  border: 1px solid var(--dborder);
+                  border-radius: 11px;
+                  padding: 9px 11px;
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: var(--dtext);
+                "
+              >
+                🌅 Morning
+                <span
+                  style="
+                    font-size: 10.5px;
+                    font-weight: 500;
+                    color: var(--dtext2);
+                    margin-left: auto;
+                  "
+                  >14</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 7px;
+                  background: var(--dsurface);
+                  border: 1px solid var(--dborder);
+                  border-radius: 11px;
+                  padding: 9px 11px;
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: var(--dtext);
+                "
+              >
+                😴 Sleep
+                <span
+                  style="
+                    font-size: 10.5px;
+                    font-weight: 500;
+                    color: var(--dtext2);
+                    margin-left: auto;
+                  "
+                  >17</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>The new surfaces are hardcoded light today</h3>
+          <ul>
+            <li>
+              HeroBackdrop's gradient ends at literal <b>#F5F1ED</b>;
+              chips/prescription use light palettes directly.
+            </li>
+            <li>
+              Goal collections already carry unused
+              <b>darkBgColor / darkTextColor</b> fields — the system was
+              designed for this.
+            </li>
+            <li>
+              Audit scope: hero gradient, chips, prescription card, category
+              tiles, endcap.
+            </li>
+          </ul>
+          <span class="why"
+            ><b>Why:</b> correctness, not delight — dark-mode users see a broken
+            page right now. And a sleep-focused app is used at night.</span
+          >
+        </div>
+      </div>
+
+      <!-- ════ 3. SEARCH BY PROBLEM + LOADING ════ -->
+      <div class="stepcol">
+        <div class="col-label">Idea 3 · Search speaks problem language</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero" style="padding-bottom: 10px">
+              <h1 style="font-size: 21px">What do you want to change?</h1>
+              <div
+                class="search"
+                style="background: #fff; border-color: var(--primary)"
+              >
+                🔍&ensp;<span style="color: var(--text)">can't sleep</span
+                ><span style="margin-left: auto; color: var(--text-3)">✕</span>
+              </div>
+            </div>
+
+            <div
+              style="
+                margin: 12px 15px 0;
+                border-radius: 14px;
+                border: 1.5px solid #bfdbfe;
+                background: #eff6ff;
+                padding: 11px 13px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              "
+            >
+              <span style="font-size: 20px">😴</span>
+              <div style="flex: 1">
+                <div style="font-size: 13px; font-weight: 700; color: #1e3a5f">
+                  Sounds like: Sleep better
+                </div>
+                <div style="font-size: 11px; color: #1e3a5f; opacity: 0.75">
+                  See the proven way in →
+                </div>
+              </div>
+            </div>
+
+            <div class="overline">Matching habits</div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                📵
+              </div>
+              <div class="body">
+                <h4>Screens Off by 10</h4>
+                <p>Blue light delays melatonin ~90 min</p>
+                <div class="meta">
+                  <span class="pill">0 min · Evening</span
+                  ><span class="sci">🔬 Chang (2015)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                ☕
+              </div>
+              <div class="body">
+                <h4>Caffeine Cutoff at 2pm</h4>
+                <p>Half-life of caffeine is ~6 hours</p>
+                <div class="meta">
+                  <span class="pill">0 min · Daily</span
+                  ><span class="sci">🔬 Drake (2013)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+
+            <div class="overline" style="margin-top: 14px">
+              While templates load — skeleton, not blank
+            </div>
+            <div class="skel">
+              <div class="sk icon"></div>
+              <div style="flex: 1">
+                <div class="sk l1"></div>
+                <div class="sk l2"></div>
+              </div>
+              <div class="sk btn"></div>
+            </div>
+            <div class="skel">
+              <div class="sk icon"></div>
+              <div style="flex: 1">
+                <div class="sk l1"></div>
+                <div class="sk l2"></div>
+              </div>
+              <div class="sk btn"></div>
+            </div>
+            <div class="skel" style="opacity: 0.6">
+              <div class="sk icon"></div>
+              <div style="flex: 1">
+                <div class="sk l1"></div>
+                <div class="sk l2"></div>
+              </div>
+              <div class="sk btn"></div>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Problem phrases → goals; skeletons on cold open</h3>
+          <ul>
+            <li>
+              "can't sleep", "always tired", "stressed out" — a small static
+              synonym map routes problem language to the matching goal chip +
+              its habits. Today these return <b>zero results</b>.
+            </li>
+            <li>
+              Skeleton rows replace the blank flash while
+              <b>api.templates.list</b> resolves.
+            </li>
+          </ul>
+          <span class="why"
+            ><b>Why:</b> the hero asks "what do you want to change?" — then
+            search refuses to understand the answer. This makes search match the
+            page's own promise.</span
+          >
+        </div>
+      </div>
+
+      <!-- ════ 4. INSTRUMENTATION ════ -->
+      <div class="stepcol">
+        <div class="col-label">Idea 4 · Measure which surface earns adds</div>
+        <div class="panel">
+          <h2>Add-rate instrumentation</h2>
+          <div
+            style="
+              font-size: 12px;
+              color: #cfc8c0;
+              margin-top: 6px;
+              line-height: 1.5;
+            "
+          >
+            One analytics event at every import, tagged with the surface it came
+            from:
+          </div>
+          <div class="ev">
+            <code>template_added</code
+            ><span class="src">source: popular_row</span>
+          </div>
+          <div class="ev">
+            <code>template_added</code
+            ><span class="src">source: prescription_step</span>
+          </div>
+          <div class="ev">
+            <code>template_added</code
+            ><span class="src">source: details_start_small</span>
+          </div>
+          <div class="ev">
+            <code>template_added</code
+            ><span class="src">source: catalog_shelf</span>
+          </div>
+          <div class="ev">
+            <code>chip_selected</code
+            ><span class="src">goal: sleep-better</span>
+          </div>
+          <div class="ev">
+            <code>details_opened</code
+            ><span class="src">from: prescription</span>
+          </div>
+
+          <div class="funnel">
+            <div
+              style="
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: #a89f97;
+              "
+            >
+              What it answers (example)
+            </div>
+            <div class="frow">
+              <div class="bar" style="width: 160px"></div>
+              <span>library opens</span>
+            </div>
+            <div class="frow">
+              <div class="bar" style="width: 104px"></div>
+              <span>chip taps · 65%</span>
+            </div>
+            <div class="frow">
+              <div class="bar" style="width: 58px"></div>
+              <span>adds · 36%</span>
+            </div>
+            <div class="frow">
+              <div class="bar" style="width: 34px; background: #f59e0b"></div>
+              <span>day-7 retained · 21%</span>
+            </div>
+          </div>
+          <div
+            style="
+              font-size: 11.5px;
+              color: #a89f97;
+              margin-top: 14px;
+              line-height: 1.55;
+            "
+          >
+            Does the prescription out-convert the popular rows? Do start-small
+            adds retain better at day 7 than full-size adds? Today every design
+            debate — including ours — is settled by taste.
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Not a screen — a decision engine</h3>
+          <ul>
+            <li>
+              ~6 events, one enum field each; piggybacks whatever analytics the
+              app already ships.
+            </li>
+            <li>
+              Costs an afternoon; pays on every future iteration of this page.
+            </li>
+          </ul>
+          <span class="why"
+            ><b>Why:</b> single-tier monetization = activation × retention is
+            the whole business. We've redesigned this page three times on taste;
+            the fourth time should be on data.</span
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
