@@ -2,10 +2,13 @@
  * ScrollableContent - Scrollable area with hero, description, evidence section
  */
 
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
-import Animated, { type useAnimatedScrollHandler } from 'react-native-reanimated';
+import Animated, {
+  type useAnimatedScrollHandler,
+} from 'react-native-reanimated';
 import { colors } from '@/theme/colors';
+import type { TemplatePreviewAnchor } from '@/screens/TemplatesScreen/TemplatesScreen.types';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
 import { ScienceEvidenceSection } from './ScienceEvidenceSection';
@@ -18,11 +21,11 @@ interface ScrollableContentProps {
   iconColor: string;
   iconAnimatedStyle: ViewStyle;
   iconGlowStyle: ViewStyle;
-  /** Background color for the scroll-view's top overscroll bounce zone (matches header tint). */
+  initialAnchor?: TemplatePreviewAnchor;
   overscrollTint?: string;
-  /** Reanimated scroll handler — emits scrollY to drive header tint fade. */
+  reducedMotion?: boolean;
   scrollHandler?: ReturnType<typeof useAnimatedScrollHandler>;
-  /** Fires when the hero block lays out — used to compute the tint fade threshold. */
+  visible?: boolean;
   onHeroLayout?: (event: LayoutChangeEvent) => void;
 }
 
@@ -31,12 +34,48 @@ export function ScrollableContent({
   iconColor,
   iconAnimatedStyle,
   iconGlowStyle,
+  initialAnchor = 'top',
   overscrollTint,
+  reducedMotion = false,
   scrollHandler,
+  visible = true,
   onHeroLayout,
 }: ScrollableContentProps) {
+  const scrollRef = useRef<Animated.ScrollView>(null);
+  const contentRef = useRef<View>(null);
+  const scienceRef = useRef<View>(null);
+  const hasScrolledRef = useRef(false);
+
+  useEffect(() => {
+    hasScrolledRef.current = false;
+  }, [template?._id, initialAnchor, visible]);
+
+  const scrollToScience = useCallback(() => {
+    if (
+      !visible ||
+      initialAnchor !== 'science' ||
+      hasScrolledRef.current ||
+      !scienceRef.current ||
+      !contentRef.current
+    ) {
+      return;
+    }
+
+    scienceRef.current.measureLayout(
+      contentRef.current,
+      (_x, y) => {
+        // Jump, don't animate: the modal entrance already provides the
+        // transition, and an animated catch-up scroll reads as lag.
+        scrollRef.current?.scrollTo({ animated: false, y });
+        hasScrolledRef.current = true;
+      },
+      () => {}
+    );
+  }, [initialAnchor, reducedMotion, visible]);
+
   return (
     <Animated.ScrollView
+      ref={scrollRef}
       bounces
       contentContainerStyle={layoutStyles.contentContainer}
       scrollEventThrottle={16}
@@ -44,22 +83,25 @@ export function ScrollableContent({
       style={overscrollTint ? { backgroundColor: overscrollTint } : undefined}
       onScroll={scrollHandler}
     >
-      <View onLayout={onHeroLayout}>
-        <HeroSection
-          iconAnimatedStyle={iconAnimatedStyle}
-          iconColor={iconColor}
-          iconGlowStyle={iconGlowStyle}
-          template={template}
-        />
-      </View>
-      <View style={{ backgroundColor: colors.gray[50] }}>
-        <DescriptionSection
-          description={template?.description ?? ''}
-          iconColor={iconColor}
-          startSmallVersion={template?.startSmallVersion}
-        />
-        <ScienceEvidenceSection iconColor={iconColor} template={template} />
-        <View style={layoutStyles.bottomSpacer} />
+      <View ref={contentRef}>
+        <View onLayout={onHeroLayout}>
+          <HeroSection
+            iconAnimatedStyle={iconAnimatedStyle}
+            iconColor={iconColor}
+            iconGlowStyle={iconGlowStyle}
+            template={template}
+          />
+        </View>
+        <View style={{ backgroundColor: colors.gray[50] }}>
+          <DescriptionSection
+            description={template?.description ?? ''}
+            iconColor={iconColor}
+          />
+          <View ref={scienceRef} onLayout={scrollToScience}>
+            <ScienceEvidenceSection iconColor={iconColor} template={template} />
+          </View>
+          <View style={layoutStyles.bottomSpacer} />
+        </View>
       </View>
     </Animated.ScrollView>
   );

@@ -4,27 +4,35 @@
 
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateToastData } from '../../../components/TemplateAddedToast';
-import type { TemplateCustomizations } from '../TemplatesScreen.types';
+import type {
+  TemplateCustomizations,
+  TemplatePreviewAnchor,
+} from '../TemplatesScreen.types';
 
 export type ImportFn = (args: {
   templateId: Id<'templates'>;
   customizations?: TemplateCustomizations;
-}) => Promise<{ success: boolean; alreadyExists?: boolean; habitId?: Id<'habits'> }>;
+}) => Promise<{
+  success: boolean;
+  alreadyExists?: boolean;
+  habitId?: Id<'habits'>;
+}>;
 
 export interface UseTemplateImportHandlersOptions {
   importTemplate: ImportFn;
   previewTemplate: Doc<'templates'> | null;
   isPremiumUser: boolean;
   onShowPaywall?: () => void;
-  setFeedbackHabitId: React.Dispatch<
-    React.SetStateAction<Id<'habits'> | null>
-  >;
+  setFeedbackHabitId: React.Dispatch<React.SetStateAction<Id<'habits'> | null>>;
   setFeedbackVariant: React.Dispatch<
     React.SetStateAction<'success' | 'already_exists' | null>
   >;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setImportingTemplateId: React.Dispatch<
     React.SetStateAction<Id<'templates'> | null>
+  >;
+  setPreviewInitialAnchor: React.Dispatch<
+    React.SetStateAction<TemplatePreviewAnchor>
   >;
   setPreviewTemplate: React.Dispatch<
     React.SetStateAction<Doc<'templates'> | null>
@@ -36,6 +44,7 @@ export interface UseTemplateImportHandlersOptions {
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
   userHabitCount: number;
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;
+  setToastOnAction: React.Dispatch<React.SetStateAction<(() => void) | null>>;
   setToastTemplateData: React.Dispatch<
     React.SetStateAction<TemplateToastData | null>
   >;

@@ -41,7 +41,7 @@ export const evidenceDetailStyles = StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row',
     gap: 14,
-    marginBottom: spacing.base,
+    marginBottom: spacing.lg,
   },
   tipText: {
     color: colors.gray[800],

@@ -67,6 +67,7 @@ export function PopularSection({
             name={item.name}
             popularityPrefix={index < 3 ? '🔥' : undefined}
             popularityScore={item.popularityScore ?? 0}
+            template={item}
             onImport={() => onImport(item)}
             onPress={() => onPreview(item)}
           />

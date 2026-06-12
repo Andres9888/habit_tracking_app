@@ -1,27 +1,18 @@
 /**
  * View navigation state machine for Templates screen
  *
- * Manages transitions between: main | seeAll | category | search
+ * Manages transitions between: main | catalog
  * Uses Reanimated shared values for 280ms slide animations.
  */
 
 import { useCallback, useState } from 'react';
-import {
-  Easing,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
 
 const SLIDE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
 
 export type TemplateViewState =
   | { type: 'main' }
-  | { type: 'seeAll' }
-  | { type: 'starters' }
-  | { type: 'categories' }
-  | { type: 'category'; categoryId: string }
-  | { type: 'goal'; goalId: string }
-  | { type: 'search' };
+  | { type: 'catalog'; initialCategoryId?: string };
 
 export function useViewNavigation() {
   const [activeView, setActiveView] = useState<TemplateViewState>({
@@ -42,59 +33,22 @@ export function useViewNavigation() {
     [slideProgress]
   );
 
-  const openSeeAll = useCallback(() => {
-    setActiveView({ type: 'seeAll' });
-    animateIn();
-  }, [animateIn]);
-
-  const openStarters = useCallback(() => {
-    setActiveView({ type: 'starters' });
-    animateIn();
-  }, [animateIn]);
-
-  const openCategories = useCallback(() => {
-    setActiveView({ type: 'categories' });
-    animateIn();
-  }, [animateIn]);
-
-  const openCategory = useCallback(
-    (categoryId: string) => {
-      setActiveView({ type: 'category', categoryId });
+  const openCatalog = useCallback(
+    (initialCategoryId?: string) => {
+      setActiveView({ type: 'catalog', initialCategoryId });
       animateIn();
     },
     [animateIn]
   );
-
-  const openGoal = useCallback(
-    (goalId: string) => {
-      setActiveView({ type: 'goal', goalId });
-      animateIn();
-    },
-    [animateIn]
-  );
-
-  const openSearch = useCallback(() => {
-    setActiveView({ type: 'search' });
-  }, []);
 
   const goBack = useCallback(() => {
     animateOut(() => setActiveView({ type: 'main' }));
   }, [animateOut]);
 
-  const closeSearch = useCallback(() => {
-    setActiveView({ type: 'main' });
-  }, []);
-
   return {
     activeView,
-    closeSearch,
     goBack,
-    openCategory,
-    openGoal,
-    openSearch,
-    openCategories,
-    openSeeAll,
-    openStarters,
+    openCatalog,
     slideProgress,
   };
 }

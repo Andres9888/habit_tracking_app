@@ -3,15 +3,21 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import type { Doc, Id } from '../../../../convex/_generated/dataModel';
-import type { TemplateCustomizations } from '../TemplatesScreen.types';
+import type { Id } from '../../../../convex/_generated/dataModel';
 import { useImportFeedback } from './useImportFeedback';
+import { useImportRetryRefs } from './useImportRetryRefs';
+import { usePreviewHandlers } from './usePreviewHandlers';
+import { useImportResultHandler } from './useImportResultHandler';
+import { useTemplateImportAction } from './useTemplateImportAction';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { directImportRef, templateImportRef } = useImportRetryRefs();
   const { guardImport, showAlreadyImported, showError, showSuccess } =
     useImportFeedback(o);
+  const { handleCustomizeFromPreview, handleTemplatePreview } =
+    usePreviewHandlers(o);
 
   useEffect(
     () => () => {
@@ -20,52 +26,12 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     []
   );
 
-  const handleTemplatePreview = useCallback(
-    (t: Doc<'templates'>) => {
-      o.setPreviewTemplate(t);
-      o.setShowCustomizeModal(true);
-      o.setShowFullsizePreview(false);
-    },
-    [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
-  );
-
-  const handleCustomizeFromPreview = useCallback(
-    (t: Doc<'templates'>) => {
-      o.setPreviewTemplate(t);
-      o.setShowCustomizeModal(true);
-      o.setShowFullsizePreview(false);
-    },
-    [o.setPreviewTemplate, o.setShowCustomizeModal, o.setShowFullsizePreview]
-  );
-
-  const handleImportResult = useCallback(
-    (
-      res: {
-        alreadyExists?: boolean;
-        habitId?: Id<'habits'>;
-        success?: boolean;
-      },
-      templateId: Id<'templates'>
-    ) => {
-      if (res.alreadyExists) {
-        o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        if (res.habitId) showAlreadyImported(res.habitId);
-        else showError();
-        return true;
-      }
-      if (res.success && res.habitId) {
-        o.setImportedTemplateIds((p) => new Set(p).add(templateId));
-        showSuccess(res.habitId);
-        return true;
-      }
-      if (res.success) {
-        showError();
-        return false;
-      }
-      return false;
-    },
-    [o.setImportedTemplateIds, showAlreadyImported, showSuccess]
-  );
+  const handleImportResult = useImportResultHandler({
+    setImportedTemplateIds: o.setImportedTemplateIds,
+    showAlreadyImported,
+    showError,
+    showSuccess,
+  });
 
   const handleDirectImport = useCallback(
     async (id: Id<'templates'>) => {
@@ -81,12 +47,13 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
           );
         }
       } catch {
-        showError();
+        showError(() => void directImportRef.current(id));
       } finally {
         o.setImportingTemplateId(null);
       }
     },
     [
+      directImportRef,
       guardImport,
       handleImportResult,
       o.importTemplate,
@@ -96,35 +63,18 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
     ]
   );
 
-  const handleTemplateImport = useCallback(
-    async (id: Id<'templates'>, c?: TemplateCustomizations) => {
-      if (guardImport()) {
-        o.setShowCustomizeModal(false);
-        return;
-      }
-      try {
-        o.setImportingTemplateId(id);
-        const args = { ...(c ? { customizations: c } : {}), templateId: id };
-        const res = await o.importTemplate(args);
-        if (handleImportResult(res, id)) {
-          o.setShowCustomizeModal(false);
-        }
-      } catch {
-        o.setShowCustomizeModal(false);
-        showError();
-      } finally {
-        o.setImportingTemplateId(null);
-      }
-    },
-    [
-      guardImport,
-      handleImportResult,
-      o.importTemplate,
-      o.setImportingTemplateId,
-      o.setShowCustomizeModal,
-      showError,
-    ]
-  );
+  const handleTemplateImport = useTemplateImportAction({
+    guardImport,
+    handleImportResult,
+    importTemplate: o.importTemplate,
+    setImportingTemplateId: o.setImportingTemplateId,
+    setShowCustomizeModal: o.setShowCustomizeModal,
+    showError,
+    templateImportRef,
+  });
+
+  directImportRef.current = handleDirectImport;
+  templateImportRef.current = handleTemplateImport;
 
   return {
     handleCustomizeFromPreview,

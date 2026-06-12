@@ -95,7 +95,7 @@ export function ToastActions({
   onAction,
   onDismiss,
 }: ToastActionsProps) {
-  if (variant === 'undo' && onAction) {
+  if ((variant === 'undo' || variant === 'error') && onAction) {
     return (
       <ActionButton
         label={actionLabel}

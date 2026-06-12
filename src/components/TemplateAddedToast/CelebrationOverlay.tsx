@@ -56,7 +56,13 @@ export function CelebrationOverlay({
             </Animated.Text>
           </Animated.View>
           <Animated.View style={[s.checkBadge, anim.badgeStyle]}>
-            <Text style={{ color: palette.text.inverse, fontSize: 16, fontWeight: fontWeights.bold }}>
+            <Text
+              style={{
+                color: palette.text.inverse,
+                fontSize: 16,
+                fontWeight: fontWeights.bold,
+              }}
+            >
               ✓
             </Text>
           </Animated.View>
@@ -65,7 +71,7 @@ export function CelebrationOverlay({
           {templateData.name} Added!
         </Animated.Text>
         <Animated.Text style={[s.subtitle, anim.subtitleStyle]}>
-          Your first habit is set up. Let&apos;s build a streak!
+          Your habit is set up. Let&apos;s build a streak!
         </Animated.Text>
         <Animated.View style={[s.actions, anim.actionsStyle]}>
           <Pressable
@@ -74,7 +80,7 @@ export function CelebrationOverlay({
             style={[s.primaryBtn, { backgroundColor: color }]}
             onPress={onGoToHabits}
           >
-            <Text style={s.primaryBtnText}>Go to My Habits →</Text>
+            <Text style={s.primaryBtnText}>Go to my habits →</Text>
           </Pressable>
           <Pressable
             accessibilityLabel='Add another habit'
@@ -82,7 +88,7 @@ export function CelebrationOverlay({
             style={s.actionSecondary}
             onPress={onAddAnother}
           >
-            <Text style={s.actionSecondaryText}>Add Another Habit</Text>
+            <Text style={s.actionSecondaryText}>Add another habit</Text>
           </Pressable>
         </Animated.View>
       </LinearGradient>

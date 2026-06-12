@@ -5,8 +5,12 @@
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme/colors';
-import { shadows, borderRadius } from '../../../theme/spacing'
-import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
+import { shadows, borderRadius } from '../../../theme/spacing';
+import {
+  typography,
+  fontFamilies,
+  fontWeights,
+} from '../../../theme/typography';
 
 export const footerStyles = StyleSheet.create({
   customizeLink: {
@@ -40,6 +44,11 @@ export const footerStyles = StyleSheet.create({
     height: 56,
     justifyContent: 'center',
     shadowOpacity: 0.15,
+  },
+  importButtonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
   importButtonText: {
     color: colors.text.inverse,

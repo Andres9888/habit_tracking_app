@@ -4,16 +4,21 @@
  * Two press targets: card body → preview, add button → direct import.
  */
 
-import { Pressable, Text, View } from 'react-native';
+import { memo } from 'react';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { getTemplateMetaLabel } from '../HabitTemplateCard/templateMeta';
+import { getImportedStateColors } from '../../utils/importedStateColors';
+import { ScienceDoorPill } from '../ScienceDoorPill';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
 import { s } from './TrendingCard.styles';
 import type { TrendingCardProps } from './TrendingCard.types';
 
-export function TrendingCard({
+function TrendingCardComponent({
   description,
-  frequency,
   hasResearch,
   icon,
   iconColor,
@@ -24,24 +29,40 @@ export function TrendingCard({
   onPress,
   popularityPrefix,
   popularityScore,
+  template,
 }: TrendingCardProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const importedColors = getImportedStateColors(isDark);
+  const metaLabel = getTemplateMetaLabel(template);
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint='Opens the habit preview'
       accessibilityLabel={`Preview ${name} habit`}
       accessibilityRole='button'
       style={[
         s.card,
         {
-          backgroundColor: colors.card,
-          borderColor: colors.border,
-          opacity: isImported ? 0.55 : 1,
+          backgroundColor: isImported
+            ? importedColors.backgroundColor
+            : colors.card,
+          borderColor: isImported ? importedColors.borderColor : colors.border,
+          opacity: isImporting ? 0.72 : 1,
         },
       ]}
-      onPress={onPress}
+      onPress={() => {
+        void triggerHaptic('tap');
+        onPress();
+      }}
     >
+      <View
+        style={[
+          s.accent,
+          {
+            backgroundColor: isImported ? colors.primary[500] : iconColor,
+          },
+        ]}
+      />
       <View style={[s.iconBox, { backgroundColor: `${iconColor}25` }]}>
         <Text style={s.iconEmoji}>{icon}</Text>
       </View>
@@ -60,22 +81,13 @@ export function TrendingCard({
       ) : null}
 
       <View style={s.metaRow}>
-        <Text style={[s.frequency, { color: colors.text.tertiary }]}>
-          {frequency}
-        </Text>
+        {metaLabel ? (
+          <Text style={[s.frequency, { color: colors.text.tertiary }]}>
+            {metaLabel}
+          </Text>
+        ) : null}
         {hasResearch ? (
-          <View
-            style={[
-              s.scienceBadge,
-              { backgroundColor: colors.status.warningLight },
-            ]}
-          >
-            <Text
-              style={[s.scienceText, { color: colors.status.warningText }]}
-            >
-              🔬 Science-backed
-            </Text>
-          </View>
+          <ScienceDoorPill template={template} onPress={() => onPress()} />
         ) : null}
       </View>
 
@@ -91,6 +103,8 @@ export function TrendingCard({
           onImport={onImport}
         />
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
+
+export const TrendingCard = memo(TrendingCardComponent);

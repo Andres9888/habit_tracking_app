@@ -1,12 +1,11 @@
 /**
- * Meta pills row (frequency, category, popularity) and search match row.
+ * Meta pills row (frequency, category, popularity).
  */
 
 import { Text, View } from 'react-native';
-import { Search } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import { getGrowthTypeMeta, type GrowthType } from '@/utils/growthTypeMeta';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { CardMatchRow } from './CardMatchRow';
 import { styles } from './TemplateListCard.styles';
 
 interface CardFooterMetaProps {
@@ -24,7 +23,10 @@ export function CardFooterMeta({
   matchReason,
   popularityCount,
 }: CardFooterMetaProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const popularityPillBg = isDark ? colors.status.streakLight : '#FFF7ED';
+  const popularityPillBorder = isDark ? colors.status.streakText : '#FED7AA';
+  const popularityPillText = isDark ? colors.status.streakText : '#C2410C';
   const growthMeta = getGrowthTypeMeta(growthType);
 
   return (
@@ -34,7 +36,10 @@ export function CardFooterMeta({
           <View
             style={[
               styles.metaPill,
-              { backgroundColor: growthMeta.pillBg, borderColor: growthMeta.pillBg },
+              {
+                backgroundColor: growthMeta.pillBg,
+                borderColor: growthMeta.pillBg,
+              },
             ]}
           >
             <Text style={[styles.metaLabel, { color: growthMeta.pillFg }]}>
@@ -73,27 +78,22 @@ export function CardFooterMeta({
           </View>
         ) : null}
         {popularityCount ? (
-          <View style={styles.popularityPill}>
-            <Text style={[styles.metaLabel, { color: '#C2410C' }]}>
+          <View
+            style={[
+              styles.popularityPill,
+              {
+                backgroundColor: popularityPillBg,
+                borderColor: popularityPillBorder,
+              },
+            ]}
+          >
+            <Text style={[styles.metaLabel, { color: popularityPillText }]}>
               🔥 {popularityCount} added
             </Text>
           </View>
         ) : null}
       </View>
-
-      {matchReason ? (
-        <View
-          style={[
-            styles.matchRow,
-            { backgroundColor: `${colors.primary[600]}10` },
-          ]}
-        >
-          <Search color={colors.primary[700]} size={iconSizes.micro} strokeWidth={2.5} />
-          <Text style={[styles.matchText, { color: colors.primary[700] }]}>
-            {matchReason}
-          </Text>
-        </View>
-      ) : null}
+      {matchReason ? <CardMatchRow matchReason={matchReason} /> : null}
     </>
   );
 }

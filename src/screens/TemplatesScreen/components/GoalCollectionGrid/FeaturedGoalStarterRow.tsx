@@ -19,7 +19,7 @@ export function FeaturedGoalStarterRow({
   onPreview,
   templates,
 }: FeaturedGoalStarterRowProps) {
-  if (!templates.length) return null;
+  if (templates.length === 0) return null;
   return (
     <View style={s.row}>
       {templates.map((template) => (

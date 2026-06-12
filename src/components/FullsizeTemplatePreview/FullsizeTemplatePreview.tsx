@@ -23,6 +23,7 @@ import type { FullsizeTemplatePreviewProps } from './FullsizeTemplatePreview.typ
 function FullsizeTemplatePreviewComponent({
   template,
   visible,
+  initialAnchor = 'top',
   onClose,
   onBack,
   onImport,
@@ -33,7 +34,11 @@ function FullsizeTemplatePreviewComponent({
   const insets = useSafeAreaInsets();
   const reducedMotion = useReduceMotion();
 
-  const shouldRender = useDeferredUnmount({ duration: 280, reducedMotion, visible });
+  const shouldRender = useDeferredUnmount({
+    duration: 280,
+    reducedMotion,
+    visible,
+  });
   const lastTemplateRef = useRef(template);
   if (template) lastTemplateRef.current = template;
   const effectiveTemplate = visible ? template : lastTemplateRef.current;
@@ -92,9 +97,12 @@ function FullsizeTemplatePreviewComponent({
         iconColor={iconColor}
         importButtonScale={importButtonScale}
         insets={insets}
+        initialAnchor={initialAnchor}
         isImported={isImported}
         isImporting={isImporting}
+        reducedMotion={reducedMotion}
         template={effectiveTemplate}
+        visible={visible}
       />
     </Modal>
   );

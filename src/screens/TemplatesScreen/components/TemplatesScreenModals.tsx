@@ -6,13 +6,24 @@ import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { PackConfirmSheet } from '../../../components/PackConfirmSheet';
 import { PaywallSheet } from '../../../components/PaywallSheet';
 import type { PremiumPack } from '../data/premiumPacks';
-import type { TemplateCustomizations } from '../TemplatesScreen.types';
+import type {
+  TemplateCustomizations,
+  TemplatePreviewAnchor,
+} from '../TemplatesScreen.types';
 import { TemplateModals } from './TemplateModals';
 
 interface TemplatesScreenModalsProps {
+  importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
+  previewInitialAnchor: TemplatePreviewAnchor;
+  previewTemplate: Doc<'templates'> | null;
+  showCustomizeModal: boolean;
+  showFullsizePreview: boolean;
+  showPaywall: boolean;
   onCloseCustomize: () => void;
+  onCloseFullsize: () => void;
   onClosePaywall: () => void;
+  onCustomize: (template: Doc<'templates'>) => void;
   onDirectImport: (templateId: Id<'templates'>) => Promise<void>;
   onImport: (
     templateId: Id<'templates'>,
@@ -22,19 +33,21 @@ interface TemplatesScreenModalsProps {
   packConfirmVisible: boolean;
   onPackCancel: () => void;
   onPackConfirm: () => void;
-  previewTemplate: Doc<'templates'> | null;
-  showCustomizeModal: boolean;
-  showPaywall: boolean;
 }
 
 export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
   return (
     <>
       <TemplateModals
+        importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
+        previewInitialAnchor={p.previewInitialAnchor}
         previewTemplate={p.previewTemplate}
         showCustomizeModal={p.showCustomizeModal}
+        showFullsizePreview={p.showFullsizePreview}
         onCloseCustomize={p.onCloseCustomize}
+        onCloseFullsize={p.onCloseFullsize}
+        onCustomize={p.onCustomize}
         onDirectImport={p.onDirectImport}
         onImport={p.onImport}
       />

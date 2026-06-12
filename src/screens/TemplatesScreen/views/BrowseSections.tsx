@@ -2,94 +2,84 @@
  * BrowseSections — scroll content for MainBrowseView's non-filtered branch.
  */
 
-import type { ReactNode } from 'react';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { spacing } from '../../../theme/spacing';
-import type { Doc } from '../../../../convex/_generated/dataModel';
-import { GoalCollectionGrid } from '../components/GoalCollectionGrid';
-import { PopularSection } from '../components/PopularSection';
-import { StartHereCard } from '../components/StartHereCard';
-import { StarterHabitList } from '../components/StarterHabitList';
-import type { GoalCollection } from '../data/goalCollections';
-import { stagger } from './MainBrowseView.helpers';
-
-interface BrowseSectionsProps {
-  browseCategoriesLink: ReactNode;
-  featuredBadgeLabel?: string;
-  featuredGoalId: string;
-  featuredStarterTemplates: Doc<'templates'>[];
-  habitCountsByGoalId: Record<string, number>;
-  importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
-  isFirstTimeUser: boolean;
-  onBrowseByGoal: () => void;
-  onGoalSelect: (goal: GoalCollection) => void;
-  onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
-  onSeeAll: () => void;
-  onStartHerePress: () => void;
-  popularTemplates: Doc<'templates'>[];
-  starterTemplates: Doc<'templates'>[];
-}
+import { ScrollHint } from '../components/ScrollHint';
+import { GOAL_COLLECTIONS } from '../data/goalCollections';
+import { useBrowseScrollHint } from '../hooks/useBrowseScrollHint';
+import { DefaultBrowseBranch } from './DefaultBrowseBranch';
+import { GoalBrowseBranch } from './GoalBrowseBranch';
+import { bodyEnter, bodyExit } from './MainBrowseView.helpers';
+import type { BrowseSectionsProps } from './BrowseSections.types';
 
 export function BrowseSections(p: BrowseSectionsProps) {
-  const showStarterList = p.isFirstTimeUser && p.starterTemplates.length > 0;
+  const reducedMotion = useReduceMotion();
+  const scrollHint = useBrowseScrollHint();
+  const selectedGoal = p.selectedGoalId
+    ? GOAL_COLLECTIONS.find((g) => g.id === p.selectedGoalId)
+    : null;
+  const showDefaultHint = !(selectedGoal && p.prescription);
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        paddingBottom: spacing['2xl'],
-        paddingTop: spacing.md,
-      }}
-    >
-      {showStarterList ? (
-        <Animated.View entering={stagger(2)}>
-          <StarterHabitList
-            importedTemplateIds={p.importedTemplateIds}
-            importingTemplateId={p.importingTemplateId}
-            templates={p.starterTemplates}
-            onBrowseByGoal={p.onBrowseByGoal}
-            onImport={p.onImport}
-            onPreview={p.onPreview}
-          />
-        </Animated.View>
-      ) : p.isFirstTimeUser ? (
-        <Animated.View entering={stagger(2)}>
-          <StartHereCard onPress={p.onStartHerePress} />
-        </Animated.View>
+    <View style={{ flex: 1 }}>
+      <Animated.ScrollView
+        keyboardDismissMode='on-drag'
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: spacing['2xl'],
+          paddingTop: spacing.sm,
+        }}
+        onContentSizeChange={scrollHint.handleContentSizeChange}
+        onLayout={scrollHint.handleLayout}
+        onScroll={scrollHint.scrollHandler}
+      >
+        {selectedGoal && p.prescription ? (
+          <Animated.View
+            key='goal-branch'
+            entering={bodyEnter}
+            exiting={bodyExit}
+          >
+            <GoalBrowseBranch
+              goal={selectedGoal}
+              goalTemplates={p.goalTemplates}
+              importedTemplateIds={p.importedTemplateIds}
+              importingTemplateId={p.importingTemplateId}
+              prescription={p.prescription}
+              onGoalListImport={p.onPopularImport}
+              onImport={p.onPrescriptionImport}
+              onPreview={p.onPreview}
+            />
+          </Animated.View>
+        ) : (
+          <Animated.View
+            key='default-branch'
+            entering={bodyEnter}
+            exiting={bodyExit}
+          >
+            <DefaultBrowseBranch
+              categoryIndex={p.categoryIndex}
+              importedTemplateIds={p.importedTemplateIds}
+              importingTemplateId={p.importingTemplateId}
+              rowSections={p.rowSections}
+              totalHabitCount={p.totalHabitCount}
+              onImport={p.onPopularImport}
+              onOpenCategory={p.onOpenCategory}
+              onPreview={p.onPreview}
+              onSeeAll={p.onSeeAll}
+            />
+          </Animated.View>
+        )}
+      </Animated.ScrollView>
+      {showDefaultHint ? (
+        <ScrollHint
+          reducedMotion={reducedMotion}
+          scrollY={scrollHint.scrollY}
+          visible={scrollHint.showHint}
+        />
       ) : null}
-
-      {!showStarterList ? (
-        <Animated.View entering={stagger(p.isFirstTimeUser ? 3 : 2)}>
-          <GoalCollectionGrid
-            featuredBadgeLabel={p.featuredBadgeLabel}
-            featuredGoalId={p.featuredGoalId}
-            featuredStarterTemplates={p.featuredStarterTemplates}
-            habitCountsByGoalId={p.habitCountsByGoalId}
-            onPreviewStarter={p.onPreview}
-            onSelectGoal={p.onGoalSelect}
-          />
-        </Animated.View>
-      ) : null}
-
-      {!showStarterList ? (
-        <Animated.View entering={stagger(p.isFirstTimeUser ? 4 : 3)}>
-          <PopularSection
-            importedTemplateIds={p.importedTemplateIds}
-            importingTemplateId={p.importingTemplateId}
-            templates={p.popularTemplates}
-            onImport={p.onImport}
-            onPreview={p.onPreview}
-            onSeeAll={p.onSeeAll}
-          />
-        </Animated.View>
-      ) : null}
-
-      <Animated.View entering={stagger(showStarterList ? 3 : p.isFirstTimeUser ? 5 : 4)}>
-        {p.browseCategoriesLink}
-      </Animated.View>
-    </ScrollView>
+    </View>
   );
 }

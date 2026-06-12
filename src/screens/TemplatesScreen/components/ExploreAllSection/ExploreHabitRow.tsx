@@ -23,7 +23,11 @@ interface ExploreHabitRowProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export function ExploreHabitRow({
-  importedTemplateIds, importingTemplateId, item, onImport, onPreview,
+  importedTemplateIds,
+  importingTemplateId,
+  item,
+  onImport,
+  onPreview,
 }: ExploreHabitRowProps) {
   const { colors } = useThemeColors();
   const isImporting = importingTemplateId === item._id;
@@ -35,18 +39,27 @@ export function ExploreHabitRow({
     <Pressable
       accessibilityLabel={`${item.name} habit`}
       accessibilityRole='button'
-      style={[s.row, { backgroundColor: colors.card, borderColor: colors.border }]}
+      style={[
+        s.row,
+        { backgroundColor: colors.card, borderColor: colors.border },
+      ]}
       onPress={() => onPreview(item)}
     >
       <View style={[s.iconBox, { backgroundColor: iconBg }]}>
         <Text style={s.emoji}>{item.icon}</Text>
       </View>
       <View style={s.info}>
-        <Text numberOfLines={1} style={[s.name, { color: colors.text.primary }]}>
+        <Text
+          numberOfLines={1}
+          style={[s.name, { color: colors.text.primary }]}
+        >
           {item.name}
         </Text>
         {item.description ? (
-          <Text numberOfLines={1} style={[s.desc, { color: colors.text.secondary }]}>
+          <Text
+            numberOfLines={1}
+            style={[s.desc, { color: colors.text.secondary }]}
+          >
             {item.description}
           </Text>
         ) : null}
@@ -58,29 +71,53 @@ export function ExploreHabitRow({
           ) : null}
           {item.scientificReference ? (
             <>
-              <View style={[s.dot, { backgroundColor: colors.text.tertiary }]} />
+              <View
+                style={[s.dot, { backgroundColor: colors.text.tertiary }]}
+              />
               <View style={[s.badge, { backgroundColor: colors.primary[100] }]}>
-                <Text style={[s.badgeText, { color: colors.primary[700] }]}>Science</Text>
+                <Text style={[s.badgeText, { color: colors.primary[700] }]}>
+                  Science
+                </Text>
               </View>
             </>
           ) : null}
         </View>
       </View>
       <AnimatedPressable
-        accessibilityLabel={isImported ? `${item.name} added` : `Add ${item.name}`}
+        accessibilityLabel={
+          isImported ? `${item.name} added` : `Add ${item.name}`
+        }
         accessibilityRole='button'
         disabled={isImported || isImporting}
-        style={[s.addBtn, {
-          backgroundColor: isImported ? colors.primary[100] : colors.primary[600],
-        }, animStyle]}
-        onPress={(e) => { e.stopPropagation(); void triggerHaptic('selection'); onImport(item); }}
+        style={[
+          s.addBtn,
+          {
+            backgroundColor: isImported
+              ? colors.primary[100]
+              : colors.primary[600],
+          },
+          animStyle,
+        ]}
+        onPress={(e) => {
+          e?.stopPropagation?.();
+          void triggerHaptic('selection');
+          onImport(item);
+        }}
       >
         {isImporting ? (
           <ActivityIndicator color={colors.text.inverse} size='small' />
         ) : isImported ? (
-          <Check color={colors.primary[700]} size={iconSizes.small} strokeWidth={3} />
+          <Check
+            color={colors.primary[700]}
+            size={iconSizes.small}
+            strokeWidth={3}
+          />
         ) : (
-          <Plus color={colors.text.inverse} size={iconSizes.medium} strokeWidth={2.5} />
+          <Plus
+            color={colors.text.inverse}
+            size={iconSizes.medium}
+            strokeWidth={2.5}
+          />
         )}
       </AnimatedPressable>
     </Pressable>

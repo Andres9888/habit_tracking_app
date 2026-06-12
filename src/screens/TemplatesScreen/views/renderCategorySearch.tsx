@@ -10,7 +10,13 @@ type RenderParams = Pick<
   'data' | 'filteredTemplates' | 'getCategoryLabel' | 'handlers' | 'state'
 >;
 
-export function renderCategorySearch({ data, filteredTemplates, getCategoryLabel, handlers, state }: RenderParams) {
+export function renderCategorySearch({
+  data,
+  filteredTemplates,
+  getCategoryLabel,
+  handlers,
+  state,
+}: RenderParams) {
   return (
     <CategorySearchView
       categories={data.categories}
@@ -21,6 +27,7 @@ export function renderCategorySearch({ data, filteredTemplates, getCategoryLabel
       hasActiveFilters={state.hasActiveFilters}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
+      previewInitialAnchor={state.previewInitialAnchor}
       previewTemplate={state.previewTemplate}
       searchQuery={state.searchQuery}
       selectedCategory={state.selectedCategory}
@@ -37,6 +44,7 @@ export function renderCategorySearch({ data, filteredTemplates, getCategoryLabel
       showToast={state.showToast}
       sortOption={state.sortOption}
       toastMessage={state.toastMessage}
+      toastOnAction={state.toastOnAction}
       toastTemplateData={state.toastTemplateData}
     />
   );

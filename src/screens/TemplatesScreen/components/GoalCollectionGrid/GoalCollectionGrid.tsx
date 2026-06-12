@@ -8,7 +8,10 @@
 import React from 'react';
 import { ScrollView, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { GOAL_COLLECTIONS, type GoalCollection } from '../../data/goalCollections';
+import {
+  GOAL_COLLECTIONS,
+  type GoalCollection,
+} from '../../data/goalCollections';
 import { FeaturedGoalCard } from './FeaturedGoalCard';
 import { GoalCard } from './GoalCard';
 import { s } from './GoalCollectionGrid.styles';
@@ -20,6 +23,7 @@ interface GoalCollectionGridProps {
   habitCountsByGoalId: Record<string, number>;
   onPreviewStarter: (template: Doc<'templates'>) => void;
   onSelectGoal: (goal: GoalCollection) => void;
+  startedCountsByGoalId?: Record<string, number>;
 }
 
 export function GoalCollectionGrid({
@@ -29,6 +33,7 @@ export function GoalCollectionGrid({
   habitCountsByGoalId,
   onPreviewStarter,
   onSelectGoal,
+  startedCountsByGoalId = {},
 }: GoalCollectionGridProps) {
   const featured =
     GOAL_COLLECTIONS.find((goal) => goal.id === featuredGoalId) ??
@@ -55,6 +60,7 @@ export function GoalCollectionGrid({
             key={goal.id}
             goal={goal}
             habitCount={habitCountsByGoalId[goal.id] ?? 0}
+            startedCount={startedCountsByGoalId[goal.id] ?? 0}
             onPress={() => onSelectGoal(goal)}
           />
         ))}

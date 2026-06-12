@@ -75,6 +75,7 @@ export const evidenceStyles = StyleSheet.create({
     fontWeight: fontWeights.bold,
     letterSpacing: 1.6,
     marginBottom: spacing.lg,
+    marginTop: spacing.lg,
     textTransform: 'uppercase',
   },
 });

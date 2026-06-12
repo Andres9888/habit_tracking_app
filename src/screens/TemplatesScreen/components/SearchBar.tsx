@@ -2,10 +2,12 @@
  * Search bar component for templates
  */
 
-import { TextInput, View } from 'react-native';
+import { useRef } from 'react';
+import { Keyboard, TextInput, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import { iconSizes } from '@/theme/iconSizes';
@@ -27,12 +29,19 @@ export function SearchBar({
 }: SearchBarProps) {
   const { colors } = useThemeColors();
   const placeholderColor = colors.text.tertiary;
+  const inputRef = useRef<TextInput>(null);
+
+  const handleClear = () => {
+    inputRef.current?.blur();
+    onClear();
+  };
 
   return (
     <View
       testID='templates-search-bar'
       style={[
         styles.searchBar,
+        shadows.subtle,
         { backgroundColor: colors.card, borderColor: colors.border },
       ]}
     >
@@ -42,6 +51,7 @@ export function SearchBar({
         strokeWidth={2.5}
       />
       <TextInput
+        ref={inputRef}
         autoFocus={autoFocus}
         accessibilityLabel='Search habit library'
         returnKeyType='search'
@@ -57,13 +67,14 @@ export function SearchBar({
         value={value}
         {...buildTextInputHintProps(inputHint, placeholderColor)}
         onChangeText={onChangeText}
+        onSubmitEditing={() => Keyboard.dismiss()}
       />
       {value ? (
         <AnimatedPressable
           testID='templates-search-clear'
           accessibilityLabel='Clear search'
           accessibilityRole='button'
-          onPress={onClear}
+          onPress={handleClear}
         >
           <X
             color={placeholderColor}

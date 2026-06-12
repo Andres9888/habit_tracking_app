@@ -1,0 +1,1 @@
+export { MakeItStickSheet } from './MakeItStickSheet';

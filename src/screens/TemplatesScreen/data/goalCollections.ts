@@ -7,6 +7,8 @@ export interface GoalCollection {
   id: string;
   emoji: string;
   label: string;
+  /** Struggle-framed label for the library intake chips ("Sleep better"). */
+  problemLabel: string;
   promise: string;
   categories: string[];
   bgColor: string;
@@ -20,6 +22,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'more-energy',
     emoji: '⚡',
     label: 'Wake up energized',
+    problemLabel: 'More energy',
     promise: 'Morning routines that keep you sharp all day',
     categories: ['morning_routine', 'health_fitness'],
     bgColor: '#FEF3C7',
@@ -31,6 +34,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'sleep-better',
     emoji: '😴',
     label: 'Sleep deeper',
+    problemLabel: 'Sleep better',
     promise: 'Wind down, rest fully, wake refreshed',
     categories: ['sleep', 'recovery', 'breathing'],
     bgColor: '#EFF6FF',
@@ -42,6 +46,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'less-stress',
     emoji: '🧘',
     label: 'Stress less',
+    problemLabel: 'Stress less',
     promise: 'Calm your mind and regulate your system',
     categories: ['mindfulness', 'breathing', 'mental_health'],
     bgColor: '#F0FDF4',
@@ -53,6 +58,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'be-productive',
     emoji: '🎯',
     label: 'Focus deeper',
+    problemLabel: 'Focus deeper',
     promise: 'Beat distraction and do deeper work',
     categories: ['productivity', 'learning'],
     bgColor: '#FAF5FF',
@@ -64,6 +70,7 @@ export const GOAL_COLLECTIONS: GoalCollection[] = [
     id: 'get-healthier',
     emoji: '💪',
     label: 'Get healthier',
+    problemLabel: 'Get healthier',
     promise: 'Lasting habits for a longer life',
     categories: ['health_fitness', 'longevity'],
     bgColor: '#FFF1F2',

@@ -4,8 +4,10 @@
  */
 
 import React from 'react';
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Linking, Text, View } from 'react-native';
 import { FileText, Play } from 'lucide-react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 
 import { colors } from '@/theme';
 import { iconSizes } from '@/theme/iconSizes';
@@ -25,28 +27,42 @@ export function ScienceActionPills({ template }: ScienceActionPillsProps) {
   return (
     <View style={s.row}>
       {youtubeLink ? (
-        <Pressable
-          accessibilityLabel="Watch the science explained on YouTube"
-          accessibilityRole="link"
+        <AnimatedPressable
+          accessibilityLabel='Watch the science explained on YouTube'
+          accessibilityRole='link'
           hitSlop={6}
           style={s.filled}
-          onPress={() => void Linking.openURL(youtubeLink)}
+          onPress={() => {
+            void triggerHaptic('tap');
+            void Linking.openURL(youtubeLink);
+          }}
         >
-          <Play color={colors.text.inverse} fill={colors.text.inverse} size={iconSizes.small} />
+          <Play
+            color={colors.text.inverse}
+            fill={colors.text.inverse}
+            size={iconSizes.small}
+          />
           <Text style={s.filledText}>Watch</Text>
-        </Pressable>
+        </AnimatedPressable>
       ) : null}
       {scientificLink ? (
-        <Pressable
-          accessibilityLabel="Read the research paper"
-          accessibilityRole="link"
+        <AnimatedPressable
+          accessibilityLabel='Read the research paper'
+          accessibilityRole='link'
           hitSlop={6}
           style={s.outline}
-          onPress={() => void Linking.openURL(scientificLink)}
+          onPress={() => {
+            void triggerHaptic('tap');
+            void Linking.openURL(scientificLink);
+          }}
         >
-          <FileText color={colors.primary[700]} size={iconSizes.small} strokeWidth={2} />
+          <FileText
+            color={colors.primary[700]}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
           <Text style={s.outlineText}>Read paper</Text>
-        </Pressable>
+        </AnimatedPressable>
       ) : null}
     </View>
   );

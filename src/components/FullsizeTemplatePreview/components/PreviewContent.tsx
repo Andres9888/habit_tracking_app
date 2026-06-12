@@ -20,9 +20,12 @@ export function PreviewContent({
   iconColor,
   importButtonScale,
   insets,
+  initialAnchor = 'top',
   isImported,
   isImporting,
+  reducedMotion,
   template,
+  visible,
 }: PreviewContentProps) {
   const headerTint = buildHeroGradient(iconColor)[0];
   const { scrollHandler, onHeroLayout, animatedBgStyle } =
@@ -46,9 +49,12 @@ export function PreviewContent({
         iconAnimatedStyle={animatedStyles.iconAnimatedStyle}
         iconColor={iconColor}
         iconGlowStyle={animatedStyles.iconGlowStyle}
+        initialAnchor={initialAnchor}
         overscrollTint={headerTint}
+        reducedMotion={reducedMotion}
         scrollHandler={scrollHandler}
         template={template}
+        visible={visible}
         onHeroLayout={onHeroLayout}
       />
       <FooterSection
