@@ -7,21 +7,15 @@ import { ThemePicker } from './ThemePicker';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface Props {
-  highContrastMode: boolean;
   selected: DarkModePreference;
   onSelect: (preference: DarkModePreference) => void | Promise<void>;
 }
 
-export function ThemeSettingsRow({
-  highContrastMode,
-  selected,
-  onSelect,
-}: Props) {
+export function ThemeSettingsRow({ selected, onSelect }: Props) {
   const { settings } = useThemeColors();
 
   return (
     <SettingsRow
-      highContrastMode={highContrastMode}
       icon={<Moon color={settings.checkbox.icon} size={iconSizes.small} />}
       iconBackgroundColor={settings.checkbox.bg}
       label='Theme'

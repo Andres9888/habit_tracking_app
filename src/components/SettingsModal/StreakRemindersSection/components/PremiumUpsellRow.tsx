@@ -1,6 +1,7 @@
 import { Text, View } from 'react-native';
 import { Pressable } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
+import * as Haptics from 'expo-haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface PremiumUpsellRowProps {
@@ -14,11 +15,16 @@ export function PremiumUpsellRow({
 }: PremiumUpsellRowProps) {
   const { colors: themeColors } = useThemeColors();
 
+  const handlePress = () => {
+    void Haptics.selectionAsync();
+    onPremiumUpsell?.();
+  };
+
   return (
     <Pressable
       accessibilityLabel='Learn about custom reminder times per habit'
       accessibilityRole='button'
-      onPress={onPremiumUpsell}
+      onPress={handlePress}
     >
       <View
         className='px-3.5 py-3'

@@ -13,7 +13,6 @@ export interface SettingsRowProps {
   /** Custom right-side content — replaces the default type-based accessory */
   rightAccessory?: ReactNode;
   showBorder?: boolean;
-  highContrastMode?: boolean;
   /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
   hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
 }

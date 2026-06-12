@@ -2,7 +2,6 @@
 import { Platform } from 'react-native';
 import { Bell } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { highContrastColors } from '@/theme/highContrastColors';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -35,24 +34,18 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const insetBackground = isDark
     ? 'rgba(255,255,255,0.03)'
     : 'rgba(0,0,0,0.02)';
-  const insetBorder = props.highContrastMode
-    ? highContrastColors.border
-    : themeColors.border;
-  const insetCardBackground = props.highContrastMode
-    ? highContrastColors.background
-    : themeColors.surface;
+  const insetBorder = themeColors.border;
+  const insetCardBackground = themeColors.surface;
 
   return (
     <SettingsSection
       collapsible={props.collapsible}
-      highContrastMode={props.highContrastMode}
       icon={props.icon}
       isExpanded={props.isExpanded}
       title='Notifications'
       onToggle={props.onToggleSection}
     >
       <SettingsRow
-        highContrastMode={props.highContrastMode}
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}
         label='Streak Reminders'
@@ -64,7 +57,6 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
       />
       <ReminderInsetCard
         enabled={props.enabled}
-        highContrastMode={props.highContrastMode}
         insetBackground={insetBackground}
         insetBorder={insetBorder}
         insetCardBackground={insetCardBackground}

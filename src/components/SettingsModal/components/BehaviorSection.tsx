@@ -15,7 +15,6 @@ import type { HabitSortMode } from '../../../features/habits/types';
 import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface BehaviorSectionProps {
-  highContrastMode: boolean;
   sectionIconColor: string;
   isExpanded: boolean;
   onToggleSection: () => void;
@@ -39,14 +38,12 @@ export function BehaviorSection(p: BehaviorSectionProps) {
   return (
     <SettingsSection
       collapsible
-      highContrastMode={p.highContrastMode}
       icon={<SlidersHorizontal color={p.sectionIconColor} size={iconSize} />}
       isExpanded={p.isExpanded}
       title='Behavior'
       onToggle={p.onToggleSection}
     >
       <SettingsRow
-        highContrastMode={p.highContrastMode}
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
         iconBackgroundColor={icons.sort.bg}
         label='Sort order'
@@ -59,7 +56,6 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         onSelect={p.onChangeHabitSortMode}
       />
       <SettingsRow
-        highContrastMode={p.highContrastMode}
         icon={<Volume2 color={icons.sound.icon} size={iconSize} />}
         iconBackgroundColor={icons.sound.bg}
         label='Completion sound'
@@ -75,7 +71,6 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         onSelect={(v) => void p.onChangeCompletionSoundType(v)}
       />
       <SettingsRow
-        highContrastMode={p.highContrastMode}
         icon={<Calendar color={icons.calendarHeader.icon} size={iconSize} />}
         iconBackgroundColor={icons.calendarHeader.bg}
         label='Sticky month header'
@@ -86,7 +81,6 @@ export function BehaviorSection(p: BehaviorSectionProps) {
       />
       <HabitDataRows
         archivedHabitsCount={p.archivedHabitsCount}
-        highContrastMode={p.highContrastMode}
         onExportHabitsData={p.onExportHabitsData}
         onOpenArchivedHabits={p.onOpenArchivedHabits}
       />

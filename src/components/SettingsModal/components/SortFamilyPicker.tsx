@@ -38,7 +38,7 @@ export function SortFamilyPicker({
   return (
     <View
       accessibilityRole='radiogroup'
-      className='flex-1 flex-row rounded-xl p-[3px]'
+      className='flex-row rounded-xl p-[3px]'
       style={{ backgroundColor: containerBg, gap: 2 }}
     >
       {SORT_FAMILIES.map(({ key, label }) => {
@@ -62,6 +62,9 @@ export function SortFamilyPicker({
               />
             ) : (
               <Text
+                adjustsFontSizeToFit
+                minimumFontScale={0.85}
+                numberOfLines={1}
                 style={{
                   ...typography.caption,
                   color: on ? accent : colors.text.secondary,

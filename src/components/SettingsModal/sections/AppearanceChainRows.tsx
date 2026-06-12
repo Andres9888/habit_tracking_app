@@ -5,7 +5,6 @@ import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
-  highContrastMode: boolean;
   showGradientFill: boolean;
   onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
   showStreakConnections: boolean;
@@ -18,7 +17,6 @@ export function AppearanceChainRows(p: Props) {
   return (
     <>
       <SettingsRow
-        highContrastMode={p.highContrastMode}
         icon={
           <Droplets color={settings.gradient.icon} size={iconSizes.small} />
         }
@@ -30,7 +28,6 @@ export function AppearanceChainRows(p: Props) {
         onToggle={(v) => void p.onChangeShowGradientFill(v)}
       />
       <SettingsRow
-        highContrastMode={p.highContrastMode}
         icon={<Link2 color={settings.checkbox.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.checkbox.bg}
         label='Streak connections'

@@ -7,7 +7,6 @@ import { AppActions, AboutLegalSection } from '../sections';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 
 interface SecondarySectionsProps {
-  highContrastMode: boolean;
   sectionIconColor: string;
   onFeedback: () => void;
   onRate: () => void;
@@ -24,7 +23,6 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
     <>
       <Animated.View entering={sectionEnterAnim(4)}>
         <AppActions
-          highContrast={p.highContrastMode}
           icon={<Heart color={p.sectionIconColor} size={iconSize} />}
           onFeedback={p.onFeedback}
           onRate={p.onRate}
@@ -35,7 +33,6 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
       <Animated.View entering={sectionEnterAnim(5)}>
         <AboutLegalSection
           buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
-          highContrast={p.highContrastMode}
           icon={<Info color={p.sectionIconColor} size={iconSize} />}
           version={Constants.expoConfig?.version ?? '1.0.0'}
           onPrivacy={p.onPrivacy}

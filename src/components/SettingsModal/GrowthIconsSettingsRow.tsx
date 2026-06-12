@@ -23,11 +23,7 @@ import { ProgressEmojiPicker } from '../ProgressEmojiPicker';
 
 import { SettingsRow } from './SettingsRow';
 
-interface Props {
-  highContrastMode: boolean;
-}
-
-export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
+export function GrowthIconsSettingsRow() {
   const { settings: settingsIcons } = useThemeColors();
   const settings = useQuery(api.settings.get);
   const currentValue = settings?.progressEmojis;
@@ -72,7 +68,6 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
   return (
     <View>
       <SettingsRow
-        highContrastMode={highContrastMode}
         icon={
           <Sparkles
             color={settingsIcons.gradient.icon}
@@ -88,7 +83,7 @@ export function GrowthIconsSettingsRow({ highContrastMode }: Props) {
         customPreset={customPreset}
         expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
         fallback={DEFAULT_PROGRESS_EMOJIS}
-        toggleRowStyle={{ paddingLeft: 72, paddingRight: 16 }}
+        toggleRowStyle={{ paddingLeft: 16, paddingRight: 16 }}
         value={pickerValue}
         onChange={handleChange}
       />

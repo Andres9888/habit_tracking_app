@@ -10,6 +10,25 @@ export const SORT_FAMILIES: { key: SortFamily; label: string }[] = [
   { key: 'streak', label: 'Streak' },
 ];
 
+type SortableFamily = Exclude<SortFamily, 'manual'>;
+
+export const SORT_DIRECTION_LABELS: Record<
+  SortableFamily,
+  { asc: string; desc: string }
+> = {
+  name: { asc: 'A → Z', desc: 'Z → A' },
+  strength: { asc: 'Weakest first', desc: 'Strongest first' },
+  streak: { asc: 'Shortest first', desc: 'Longest first' },
+};
+
+export function getSortDirectionLabel(
+  family: SortFamily,
+  ascending: boolean
+): string | null {
+  if (family === 'manual') return null;
+  return SORT_DIRECTION_LABELS[family][ascending ? 'asc' : 'desc'];
+}
+
 export function getSortFamily(mode: HabitSortMode): SortFamily {
   if (mode === 'manual') return 'manual';
   if (mode.startsWith('name')) return 'name';

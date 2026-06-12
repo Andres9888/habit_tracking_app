@@ -22,7 +22,7 @@ function SettingsModalContent(props: SettingsModalProps) {
   });
   const insets = useSafeAreaInsets();
   const { isDark } = useThemeColors();
-  const colors = getSettingsColors(props.isHighContrastActive ?? false, isDark);
+  const colors = getSettingsColors(isDark);
 
   const handleRequestClose = useCallback(() => {
     if (logic.view !== 'settings') {
@@ -51,15 +51,12 @@ function SettingsModalContent(props: SettingsModalProps) {
         dayShape={props.dayShape}
         habitCompletionIcon={props.habitCompletionIcon}
         handleClose={logic.handleClose}
-        highContrastMode={logic.highContrastMode}
         habitSortMode={logic.habitSortMode}
         insets={insets}
-        isHighContrastActive={props.isHighContrastActive ?? false}
         isLoading={props.isLoading ?? false}
         isPremium={props.isPremium ?? false}
         setCompactView={logic.setCompactView}
         setDarkModePreference={logic.setDarkModePreference}
-        setHighContrastMode={logic.setHighContrastMode}
         setHabitSortMode={logic.setHabitSortMode}
         setShowGradientFill={logic.setShowGradientFill}
         setShowStreakConnections={logic.setShowStreakConnections}
@@ -80,6 +77,7 @@ function SettingsModalContent(props: SettingsModalProps) {
         onPremiumUpsell={props.onPremiumUpsell}
         onToggleStreakReminders={props.onToggleStreakReminders}
         view={logic.view}
+        viewDirection={logic.viewDirection}
       />
     </Modal>
   );

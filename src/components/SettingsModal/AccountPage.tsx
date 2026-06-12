@@ -1,7 +1,11 @@
 /** AccountPage — Sub-page for profile, premium, sign out, and delete account */
 import { View } from 'react-native';
+import type { ReactNode } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import Animated, {
+  FadeInDown,
+  useReducedMotion,
+} from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
@@ -11,33 +15,53 @@ import { useAccountActions } from './useAccountActions';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface AccountPageProps {
-  highContrastMode: boolean;
   isPremium: boolean;
   onBack: () => void;
   onClose: () => void;
   onPremiumUpsell?: () => void;
 }
 
-const anim = (index: number) => FadeInDown.delay(index * durations.stagger).duration(durations.enter).easing(enterEasing);
+const anim = (index: number) =>
+  FadeInDown.delay(index * durations.stagger)
+    .duration(durations.enter)
+    .easing(enterEasing);
+
+function AccountSection({
+  index,
+  reduceMotion,
+  children,
+}: {
+  index: number;
+  reduceMotion: boolean;
+  children: ReactNode;
+}) {
+  if (reduceMotion) return children;
+  return <Animated.View entering={anim(index)}>{children}</Animated.View>;
+}
 
 export function AccountPage({
-  highContrastMode,
   isPremium,
   onBack,
   onClose,
   onPremiumUpsell,
 }: AccountPageProps) {
   const insets = useSafeAreaInsets();
+  const reduceMotion = useReducedMotion();
   const { colors: themeColors } = useThemeColors();
   const actions = useAccountActions();
   const bottomPadding = Math.max((insets.bottom ?? 0) + 16, 24);
 
   return (
-    <View className='flex-1' style={{ backgroundColor: themeColors.background }}>
+    <View
+      className='flex-1'
+      style={{ backgroundColor: themeColors.background }}
+    >
       <View style={{ backgroundColor: themeColors.background }}>
         <ScreenHeader
           leftAction='back'
-          rightAction={<ModalCloseButton label='Close settings' onClose={onClose} />}
+          rightAction={
+            <ModalCloseButton label='Close settings' onClose={onClose} />
+          }
           title='Account'
           onBack={onBack}
         />
@@ -48,18 +72,24 @@ export function AccountPage({
         showsVerticalScrollIndicator={false}
       >
         <View className='gap-5'>
-          <Animated.View entering={anim(0)}>
-            <ProfileCard highContrastMode={highContrastMode} isPremium={isPremium} />
-          </Animated.View>
-          <Animated.View entering={anim(1)}>
-            <PremiumStatus highContrast={highContrastMode} isPremium={isPremium} onUpgrade={onPremiumUpsell} />
-          </Animated.View>
-          <Animated.View entering={anim(2)}>
-            <SignOutCard highContrastMode={highContrastMode} isLoading={actions.isSigningOut} onSignOut={actions.handleSignOut} />
-          </Animated.View>
-          <Animated.View entering={anim(3)}>
-            <DeleteAccountButton highContrastMode={highContrastMode} isDeletingAccount={actions.isDeletingAccount} onDeleteAccount={actions.handleDeleteAccount} />
-          </Animated.View>
+          <AccountSection index={0} reduceMotion={reduceMotion}>
+            <ProfileCard isPremium={isPremium} />
+          </AccountSection>
+          <AccountSection index={1} reduceMotion={reduceMotion}>
+            <PremiumStatus isPremium={isPremium} onUpgrade={onPremiumUpsell} />
+          </AccountSection>
+          <AccountSection index={2} reduceMotion={reduceMotion}>
+            <SignOutCard
+              isLoading={actions.isSigningOut}
+              onSignOut={actions.handleSignOut}
+            />
+          </AccountSection>
+          <AccountSection index={3} reduceMotion={reduceMotion}>
+            <DeleteAccountButton
+              isDeletingAccount={actions.isDeletingAccount}
+              onDeleteAccount={actions.handleDeleteAccount}
+            />
+          </AccountSection>
         </View>
       </Animated.ScrollView>
     </View>

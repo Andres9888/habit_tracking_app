@@ -19,7 +19,6 @@ const useSectionIconColor = () => {
 };
 
 export function SettingsContent(p: SettingsContentProps) {
-  const { colors, isHighContrastActive: hc } = p;
   const { colors: themeColors } = useThemeColors();
   const sectionIconColor = useSectionIconColor();
   const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
@@ -49,9 +48,7 @@ export function SettingsContent(p: SettingsContentProps) {
         contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
-        style={{
-          backgroundColor: hc ? colors.background : themeColors.background,
-        }}
+        style={{ backgroundColor: themeColors.background }}
         onScroll={scrollHandler}
       >
         <View className='gap-5'>

@@ -7,20 +7,18 @@ type ModalLogic = ReturnType<typeof useSettingsModalLogic>;
 
 export interface SettingsMainViewProps {
   view: ModalLogic['view'];
+  viewDirection: ModalLogic['viewDirection'];
   setView: ModalLogic['setView'];
   handleClose: () => void;
   colors: SettingsColors;
   insets: EdgeInsets;
   isLoading: boolean;
-  isHighContrastActive: boolean;
   isPremium: boolean;
   archivedHabitsCount: number;
   compactView: boolean;
   setCompactView: ModalLogic['setCompactView'];
   darkModePreference: ModalLogic['darkModePreference'];
   setDarkModePreference: ModalLogic['setDarkModePreference'];
-  highContrastMode: ModalLogic['highContrastMode'];
-  setHighContrastMode: ModalLogic['setHighContrastMode'];
   habitSortMode: ModalLogic['habitSortMode'];
   setHabitSortMode: ModalLogic['setHabitSortMode'];
   showGradientFill: ModalLogic['showGradientFill'];

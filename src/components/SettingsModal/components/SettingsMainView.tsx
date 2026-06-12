@@ -1,4 +1,6 @@
 import { View } from 'react-native';
+import type { ReactNode } from 'react';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
 import ArchivedHabitsModal from '../../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../../SkeletonLoader';
 import { SettingsHeader } from '../SettingsHeader';
@@ -6,52 +8,48 @@ import { AccountPage } from '../AccountPage';
 import { SettingsContent } from '../SettingsContent';
 import type { HabitSortMode } from '../../../features/habits/types';
 import { buildSettingsContentProps } from './SettingsMainView.helpers';
+import { getSettingsViewEntering } from './SettingsMainView.animations';
 import type { SettingsMainViewProps } from './SettingsMainView.types';
 
 export function SettingsMainView(props: SettingsMainViewProps) {
+  const reduceMotion = useReducedMotion();
   const handleSortSelect = (mode: HabitSortMode) => {
     void props.setHabitSortMode(mode);
   };
 
-  if (props.view === 'archived') {
-    return (
-      <View
-        className='flex-1'
-        style={{ backgroundColor: props.colors.background }}
-      >
+  const entering = getSettingsViewEntering(
+    props.view,
+    props.viewDirection,
+    reduceMotion
+  );
+
+  const backgroundStyle = { backgroundColor: props.colors.background };
+
+  let content: ReactNode = null;
+
+  switch (props.view) {
+    case 'archived': {
+      content = (
         <ArchivedHabitsModal
           onBack={() => props.setView('settings')}
           onClose={props.handleClose}
         />
-      </View>
-    );
-  }
-
-  if (props.view === 'account') {
-    return (
-      <View
-        className='flex-1'
-        style={{ backgroundColor: props.colors.background }}
-      >
+      );
+      break;
+    }
+    case 'account': {
+      content = (
         <AccountPage
-          highContrastMode={props.isHighContrastActive}
           isPremium={props.isPremium}
           onBack={() => props.setView('settings')}
           onClose={props.handleClose}
           onPremiumUpsell={props.onPremiumUpsell}
         />
-      </View>
-    );
-  }
-
-  if (props.view !== 'settings') return null;
-
-  return (
-    <View
-      className='flex-1'
-      style={{ backgroundColor: props.colors.background }}
-    >
-      {props.isLoading ? (
+      );
+      break;
+    }
+    case 'settings': {
+      content = props.isLoading ? (
         <SettingsModalSkeleton />
       ) : (
         <>
@@ -60,7 +58,24 @@ export function SettingsMainView(props: SettingsMainViewProps) {
             {...buildSettingsContentProps(props, handleSortSelect)}
           />
         </>
-      )}
+      );
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+
+  return (
+    <View className='flex-1' style={backgroundStyle}>
+      <Animated.View
+        key={props.view}
+        className='flex-1'
+        entering={entering}
+        style={backgroundStyle}
+      >
+        {content}
+      </Animated.View>
     </View>
   );
 }

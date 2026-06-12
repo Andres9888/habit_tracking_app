@@ -1,9 +1,8 @@
 import { Switch, Text, View } from 'react-native';
-import Animated, { ZoomIn } from 'react-native-reanimated';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { durations, enterEasing } from '@/theme/animations';
+import { SettingsCountBadge } from '../../SettingsCountBadge';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
@@ -13,7 +12,6 @@ interface RowAccessoryProps {
   badge?: number;
   label: string;
   colors: SettingsRowColors;
-  themeColors: { surface: string; text: { secondary: string } };
   onToggle: (v: boolean) => void;
 }
 
@@ -23,7 +21,6 @@ export function RowAccessory({
   badge,
   label,
   colors,
-  themeColors,
   onToggle,
 }: RowAccessoryProps) {
   if (type === 'toggle') {
@@ -86,21 +83,7 @@ export function RowAccessory({
     return (
       <View className='flex-row items-center gap-2'>
         {badge != null && badge > 0 ? (
-          <Animated.View
-            className='min-w-[22px] items-center justify-center rounded-full px-1.5 py-0.5'
-            entering={ZoomIn.duration(durations.enter).easing(enterEasing)}
-            style={{ backgroundColor: themeColors.surface }}
-          >
-            <Text
-              style={{
-                ...typography.tabBar,
-                fontWeight: fontWeights.bold,
-                color: themeColors.text.secondary,
-              }}
-            >
-              {badge}
-            </Text>
-          </Animated.View>
+          <SettingsCountBadge count={badge} />
         ) : null}
         <ChevronRight
           color={colors.chevron}

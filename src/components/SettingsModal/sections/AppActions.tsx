@@ -6,7 +6,6 @@ import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
-  highContrast: boolean;
   icon?: ReactNode;
   onRate: () => void;
   onShare: () => void;
@@ -18,7 +17,6 @@ interface Props {
 }
 
 export function AppActions({
-  highContrast,
   icon,
   onRate,
   onShare,
@@ -31,9 +29,14 @@ export function AppActions({
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection collapsible={collapsible} highContrastMode={highContrast} icon={icon} isExpanded={isExpanded} title='Support' onToggle={onToggleSection}>
+    <SettingsSection
+      collapsible={collapsible}
+      icon={icon}
+      isExpanded={isExpanded}
+      title='Support'
+      onToggle={onToggleSection}
+    >
       <SettingsRow
-        highContrastMode={highContrast}
         icon={<Star color={settings.star.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.star.bg}
         label='Rate Chain Day'
@@ -41,7 +44,6 @@ export function AppActions({
         onPress={onRate}
       />
       <SettingsRow
-        highContrastMode={highContrast}
         icon={<Share2 color={settings.share.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.share.bg}
         label='Share with Friends'
@@ -49,16 +51,21 @@ export function AppActions({
         onPress={onShare}
       />
       <SettingsRow
-        highContrastMode={highContrast}
-        icon={<MessageSquare color={settings.feedback.icon} size={iconSizes.small} />}
+        icon={
+          <MessageSquare
+            color={settings.feedback.icon}
+            size={iconSizes.small}
+          />
+        }
         iconBackgroundColor={settings.feedback.bg}
         label='Send Feedback'
         type='navigation'
         onPress={onFeedback}
       />
       <SettingsRow
-        highContrastMode={highContrast}
-        icon={<Sparkles color={settings.whatsNew.icon} size={iconSizes.small} />}
+        icon={
+          <Sparkles color={settings.whatsNew.icon} size={iconSizes.small} />
+        }
         iconBackgroundColor={settings.whatsNew.bg}
         label="What's New"
         showBorder={false}

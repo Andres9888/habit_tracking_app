@@ -8,15 +8,11 @@ import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { handleManageSubscription } from './PremiumStatus.helpers';
 
-interface PremiumActiveCardProps {
-  highContrast: boolean;
-}
-
-export function PremiumActiveCard({ highContrast }: PremiumActiveCardProps) {
+export function PremiumActiveCard() {
   const { colors: themeColors, settings } = useThemeColors();
 
   return (
-    <SettingsSection highContrastMode={highContrast} title='Premium'>
+    <SettingsSection title='Premium'>
       <View className='flex-row items-center px-4 py-4'>
         <View
           className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
@@ -63,7 +59,6 @@ export function PremiumActiveCard({ highContrast }: PremiumActiveCardProps) {
         </View>
       </View>
       <SettingsRow
-        highContrastMode={highContrast}
         icon={
           <Settings color={settings.manageSub.icon} size={iconSizes.small} />
         }

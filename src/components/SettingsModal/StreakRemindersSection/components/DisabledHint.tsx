@@ -21,7 +21,7 @@ export function DisabledHint({
 
   return (
     <Animated.View
-      className='px-4 pb-3'
+      className='px-4 py-3'
       pointerEvents={pointerEvents}
       style={hintStyle}
       onLayout={onLayout}

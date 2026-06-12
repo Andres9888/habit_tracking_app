@@ -29,7 +29,6 @@ export function SettingsSectionList(p: SettingsSectionListProps) {
         toggleSection={p.toggleSection}
       />
       <SettingsSecondarySections
-        highContrastMode={p.isHighContrastActive}
         sectionIconColor={p.sectionIconColor}
         onFeedback={p.onFeedback}
         onPrivacy={p.onPrivacy}

@@ -12,14 +12,14 @@ import {
   getTodayGlowStyle,
   getBackgroundColor,
   getBorderColor,
+  getOuterFrame,
+  MISSED_BG,
+  MISSED_BORDER,
 } from './habitDayToggleStyles';
 import { HabitDayToggleContent } from './HabitDayToggleContent';
 import { getMaterialTier } from './materialTier';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-const MISSED_BG = '#FEF2F2';
-const MISSED_BORDER = '#DC2626';
 
 export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   accentColor,
@@ -29,7 +29,6 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   completed,
   strengthPercent,
   disabled,
-  highContrastMode,
   isToday,
   missed = false,
   onPress,
@@ -44,12 +43,11 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const tier = getMaterialTier(strength);
   const tierAnim = useAnimatedTier(strength);
   const borderRadius = shape === 'circle' ? 22 : 10;
-  const tierBackground = getBackgroundColor(completed, accentColor, highContrastMode, tier);
-  const tierBorder = getBorderColor(completed, isToday, accentColor, highContrastMode, tier);
+  const tierBackground = getBackgroundColor(completed, accentColor, tier);
+  const tierBorder = getBorderColor(completed, isToday, accentColor, tier);
   const staticBackground = missed ? MISSED_BG : tierBackground;
   const staticBorder = missed ? MISSED_BORDER : tierBorder;
-  const borderWidth = missed || !completed || tier.name === 'legendary' ? 2 : 0;
-  const showCompletedShadow = completed && !missed && !highContrastMode;
+  const showCompletedShadow = completed && !missed;
 
   const { cellStyle, shadowStyle } = useHabitDayToggleTierStyles({
     tierAnim,
@@ -62,18 +60,19 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     staticBorder,
   });
 
-  const outerFrame = {
-    backgroundColor: staticBackground,
+  const outerFrame = getOuterFrame({
     borderRadius,
-    borderColor: staticBorder,
-    borderStyle: (missed ? 'dashed' : 'solid') as 'dashed' | 'solid',
-    borderWidth,
-    height: 44,
-    width: 44,
-  };
+    completed,
+    missed,
+    staticBackground,
+    staticBorder,
+    tierName: tier.name,
+  });
 
   return (
-    <Animated.View style={isToday ? getTodayGlowStyle(borderRadius) : undefined}>
+    <Animated.View
+      style={isToday ? getTodayGlowStyle(borderRadius) : undefined}
+    >
       {/* cellStyle stays attached in every state: detaching an animated style
           leaves its natively-set props stale, so the worklet owns the reset. */}
       <Reanimated.View style={[outerFrame, cellStyle, shadowStyle]}>

@@ -3,19 +3,12 @@ import type { lightColors } from '../../theme/darkColors';
 
 type ThemePalette = typeof lightColors;
 
-export function getProfileCardShellStyle(
-  highContrastMode: boolean,
-  themeColors: ThemePalette
-) {
+export function getProfileCardShellStyle(themeColors: ThemePalette) {
   return {
     backgroundColor: themeColors.card,
-    borderColor: highContrastMode ? themeColors.border : themeColors.border,
+    borderColor: themeColors.border,
     borderWidth: 1,
-    ...(highContrastMode
-      ? { elevation: 0, shadowColor: 'transparent' }
-      : {
-          ...shadows.floatingActionButton,
-          shadowOpacity: 0.07,
-        }),
+    ...shadows.floatingActionButton,
+    shadowOpacity: 0.07,
   };
 }

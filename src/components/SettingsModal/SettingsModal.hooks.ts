@@ -5,11 +5,8 @@ import type { SettingsModalSettingsDocument } from './types';
 import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
 import { sanitizeSettingsPayload } from '../../lib/settings/sanitizeSettingsPayload';
 import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
-import {
-  createSettingsUpdaters,
-  normalizeDarkModePreference,
-  type DarkModePreference,
-} from './SettingsModal.settingsUpdaters';
+import { createSettingsUpdaters } from './SettingsModal.settingsUpdaters';
+import { useSettingsLocalPrefs } from './useSettingsLocalPrefs';
 
 interface UseSettingsModalLogicProps {
   visible: boolean;
@@ -22,36 +19,27 @@ export const useSettingsModalLogic = ({
   settingsDocument,
   visible,
 }: UseSettingsModalLogicProps) => {
-  const [view, setView] = useState<'settings' | 'archived' | 'account'>(
+  const [view, setViewState] = useState<'settings' | 'archived' | 'account'>(
     'settings'
   );
+  const [viewDirection, setViewDirection] = useState<
+    'forward' | 'back' | 'none'
+  >('none');
   const settings = settingsDocument;
   const updateSettings = useMutation(api.settings.update);
-
-  const [darkModePreference, setDarkModeState] =
-    useState<DarkModePreference>('system');
-  const [reduceMotion, setReduceMotionState] = useState(false);
-  const [highContrastMode, setHighContrastModeState] = useState(false);
-  const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
-  const [compactView, setCompactViewState] = useState(false);
-  const [showGradientFill, setShowGradientFillState] = useState(true);
-  const [showStreakConnections, setShowStreakConnectionsState] = useState(true);
+  const localPrefs = useSettingsLocalPrefs(settings);
 
   useEffect(() => {
-    if (settings) {
-      setDarkModeState(normalizeDarkModePreference(settings.darkMode));
-      setReduceMotionState(settings.reduceMotion);
-      setHighContrastModeState(settings.highContrastMode);
-      setUseDyslexicFontState(settings.useDyslexicFont);
-      setCompactViewState(settings.compactView ?? false);
-      setShowGradientFillState(settings.showGradientFill ?? true);
-      setShowStreakConnectionsState(settings.showStreakConnections ?? true);
+    if (visible) {
+      setViewState('settings');
+      setViewDirection('none');
     }
-  }, [settings]);
-
-  useEffect(() => {
-    if (visible) setView('settings');
   }, [visible]);
+
+  const setView = useCallback((next: 'settings' | 'archived' | 'account') => {
+    setViewDirection(next === 'settings' ? 'back' : 'forward');
+    setViewState(next);
+  }, []);
 
   const handleClose = useCallback(() => {
     onClose();
@@ -73,36 +61,34 @@ export const useSettingsModalLogic = ({
   );
 
   const updaters = createSettingsUpdaters(update, {
-    setCompactViewState,
-    setDarkModeState,
-    setHighContrastModeState,
-    setReduceMotionState,
-    setShowGradientFillState,
-    setShowStreakConnectionsState,
-    setUseDyslexicFontState,
+    setCompactViewState: localPrefs.setCompactViewState,
+    setDarkModeState: localPrefs.setDarkModeState,
+    setReduceMotionState: localPrefs.setReduceMotionState,
+    setShowGradientFillState: localPrefs.setShowGradientFillState,
+    setShowStreakConnectionsState: localPrefs.setShowStreakConnectionsState,
+    setUseDyslexicFontState: localPrefs.setUseDyslexicFontState,
   });
 
   const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
 
   return {
-    compactView,
-    darkModePreference,
+    compactView: localPrefs.compactView,
+    darkModePreference: localPrefs.darkModePreference,
     habitSortMode,
     handleClose,
-    highContrastMode,
-    reduceMotion,
+    reduceMotion: localPrefs.reduceMotion,
     setCompactView: updaters.setCompactView,
     setDarkModePreference: updaters.setDarkModePreference,
     setHabitSortMode: updaters.setHabitSortMode,
-    setHighContrastMode: updaters.setHighContrastMode,
     setReduceMotion: updaters.setReduceMotion,
     setShowGradientFill: updaters.setShowGradientFill,
     setShowStreakConnections: updaters.setShowStreakConnections,
     setUseDyslexicFont: updaters.setUseDyslexicFont,
     setView,
-    showGradientFill,
-    showStreakConnections,
-    useDyslexicFont,
+    showGradientFill: localPrefs.showGradientFill,
+    showStreakConnections: localPrefs.showStreakConnections,
+    useDyslexicFont: localPrefs.useDyslexicFont,
     view,
+    viewDirection,
   };
 };

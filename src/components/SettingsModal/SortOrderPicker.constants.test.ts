@@ -1,7 +1,9 @@
 import {
   getSortFamily,
+  getSortDirectionLabel,
   isAscending,
   modeFromFamily,
+  SORT_DIRECTION_LABELS,
   toggleDirection,
 } from './SortOrderPicker.constants';
 import type { HabitSortMode } from '../../features/habits/types';
@@ -55,5 +57,20 @@ describe('SortOrderPicker.constants', () => {
     expect(toggleDirection('name_asc')).toBe('name_desc');
     expect(toggleDirection('strength_desc')).toBe('strength_asc');
     expect(toggleDirection('manual')).toBe('manual');
+  });
+
+  it('maps context-aware direction labels per family', () => {
+    expect(SORT_DIRECTION_LABELS.name).toEqual({ asc: 'A → Z', desc: 'Z → A' });
+    expect(SORT_DIRECTION_LABELS.strength).toEqual({
+      asc: 'Weakest first',
+      desc: 'Strongest first',
+    });
+    expect(SORT_DIRECTION_LABELS.streak).toEqual({
+      asc: 'Shortest first',
+      desc: 'Longest first',
+    });
+    expect(getSortDirectionLabel('manual', true)).toBeNull();
+    expect(getSortDirectionLabel('name', true)).toBe('A → Z');
+    expect(getSortDirectionLabel('strength', false)).toBe('Strongest first');
   });
 });

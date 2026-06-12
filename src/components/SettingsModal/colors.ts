@@ -3,19 +3,6 @@ import { colors } from '@/theme/colors';
 
 import type { SettingsColors } from './types';
 
-const highContrastAccent = colors.warning;
-
-export const HIGH_CONTRAST_COLORS: SettingsColors = {
-  accent: highContrastAccent,
-  background: darkColors.background,
-  card: darkColors.card,
-  cardBorder: darkColors.border,
-  headerText: darkColors.text.primary,
-  icon: highContrastAccent,
-  mutedText: highContrastAccent,
-  versionText: highContrastAccent,
-};
-
 export const DEFAULT_COLORS: SettingsColors = {
   accent: colors.text.primary,
   background: colors.light.background,
@@ -38,11 +25,7 @@ export const DARK_COLORS: SettingsColors = {
   versionText: darkColors.text.secondary,
 };
 
-export function getSettingsColors(
-  isHighContrast: boolean,
-  isDark: boolean = false
-): SettingsColors {
-  if (isHighContrast) return HIGH_CONTRAST_COLORS;
+export function getSettingsColors(isDark: boolean = false): SettingsColors {
   if (isDark) return DARK_COLORS;
   return DEFAULT_COLORS;
 }

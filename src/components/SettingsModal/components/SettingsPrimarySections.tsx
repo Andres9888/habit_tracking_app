@@ -21,16 +21,11 @@ interface PrimarySectionsProps extends SettingsContentProps {
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {
   const iconSize = iconSizes.small;
-  const hc = p.isHighContrastActive;
 
   return (
     <>
       <Animated.View entering={sectionEnterAnim(0)}>
-        <ProfileHeroCard
-          highContrastMode={hc}
-          isPremium={p.isPremium}
-          onPress={p.onOpenAccount}
-        />
+        <ProfileHeroCard isPremium={p.isPremium} onPress={p.onOpenAccount} />
       </Animated.View>
       <Animated.View entering={sectionEnterAnim(1)}>
         <AppearanceSection
@@ -38,8 +33,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           darkModePreference={p.darkModePreference}
           dayShape={p.dayShape}
           habitCompletionIcon={p.habitCompletionIcon}
-          highContrastEnabled={p.highContrastEnabled}
-          highContrastMode={hc}
           icon={<Palette color={p.sectionIconColor} size={iconSize} />}
           isExpanded={p.sectionStates.appearance}
           showGradientFill={p.showGradientFill}
@@ -48,7 +41,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeDarkModePreference={p.onChangeDarkModePreference}
           onChangeDayShape={p.onChangeDayShape}
           onChangeHabitCompletionIcon={p.onChangeHabitCompletionIcon}
-          onChangeHighContrast={p.onChangeHighContrast}
           onChangeShowGradientFill={p.onChangeShowGradientFill}
           onChangeShowStreakConnections={p.onChangeShowStreakConnections}
           onToggleSection={() => p.toggleSection(SECTION_IDS.appearance)}
@@ -60,7 +52,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           completionSoundEnabled={p.completionSoundEnabled}
           completionSoundType={p.completionSoundType}
           habitSortMode={p.habitSortMode}
-          highContrastMode={hc}
           isExpanded={p.sectionStates.behavior}
           sectionIconColor={p.sectionIconColor}
           stickyCalendarHeader={p.stickyCalendarHeader}
@@ -77,7 +68,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
         <StreakRemindersSection
           collapsible
           enabled={p.streakRemindersEnabled}
-          highContrastMode={hc}
           icon={<BellRing color={p.sectionIconColor} size={iconSize} />}
           isExpanded={p.sectionStates.notifications}
           isPremium={p.isPremium}

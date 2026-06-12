@@ -59,11 +59,10 @@ export function SoundPicker({ visible, selected, onSelect }: SoundPickerProps) {
       style={contentAnimatedStyle}
     >
       <View
-        className='flex-row items-center border-b px-4 py-2.5'
+        className='border-b px-4 py-2.5'
         style={{ borderColor: colors.border, backgroundColor: trayBg }}
         onLayout={handleLayout}
       >
-        <View className='mr-4 w-10' />
         <SoundPickerOptions
           isDark={isDark}
           secondaryColor={colors.text.secondary}

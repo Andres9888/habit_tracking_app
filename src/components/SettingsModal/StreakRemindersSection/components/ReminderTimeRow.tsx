@@ -1,41 +1,38 @@
 import { ChevronRight, Clock } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { highContrastColors } from '@/theme/highContrastColors';
+import * as Haptics from 'expo-haptics';
 import { Text, View } from 'react-native';
 import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { formatDisplayTime } from '../../timeHelpers';
 
 interface ReminderTimeRowProps {
-  highContrastMode: boolean;
   reminderTime: string;
   onToggleTimePicker: () => void;
 }
 
 export function ReminderTimeRow({
-  highContrastMode,
   reminderTime,
   onToggleTimePicker,
 }: ReminderTimeRowProps) {
   const { colors: themeColors, settings } = useThemeColors();
 
+  const handlePress = () => {
+    void Haptics.selectionAsync();
+    onToggleTimePicker();
+  };
+
   return (
     <AnimatedPressable
       accessibilityLabel='Reminder time'
       accessibilityRole='button'
-      onPress={onToggleTimePicker}
+      onPress={handlePress}
     >
       <View className='flex-row items-center px-3.5 py-3' style={{ gap: 12 }}>
         <View
           className='h-10 w-10 items-center justify-center rounded-xl'
-          style={{
-            backgroundColor: settings.clock.bg,
-            borderColor: highContrastMode
-              ? highContrastColors.accent
-              : 'transparent',
-            borderWidth: highContrastMode ? 2 : 0,
-          }}
+          style={{ backgroundColor: settings.clock.bg }}
         >
           <Clock color={settings.clock.icon} size={iconSizes.small} />
         </View>

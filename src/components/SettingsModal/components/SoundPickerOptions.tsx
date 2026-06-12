@@ -31,14 +31,17 @@ export function SoundPickerOptions({
   const { accent, selectedBg, containerBg } = getSegmentedControlColors(isDark);
 
   return (
-    <View className='flex-1 flex-row items-center gap-2'>
+    <View
+      accessibilityRole='radiogroup'
+      className='flex-row items-center gap-2'
+    >
       {OPTIONS.map(({ key, label, Icon }) => {
         const on = key === selected;
         return (
           <Pressable
             key={key}
             accessibilityLabel={`${label} sound`}
-            accessibilityRole='button'
+            accessibilityRole='radio'
             accessibilityState={{ selected: on }}
             className='flex-1 flex-row items-center justify-center gap-1.5 rounded-xl py-2'
             style={{ backgroundColor: on ? selectedBg : containerBg }}
@@ -50,6 +53,9 @@ export function SoundPickerOptions({
               strokeWidth={on ? 2.5 : 2}
             />
             <Text
+              adjustsFontSizeToFit
+              minimumFontScale={0.85}
+              numberOfLines={1}
               style={{
                 ...typography.caption,
                 color: on ? accent : secondaryColor,

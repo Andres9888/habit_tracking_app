@@ -8,22 +8,16 @@ import { useThemeColors } from '../../theme/ThemeContext';
 type DayShape = 'circle' | 'square';
 
 interface Props {
-  highContrastMode: boolean;
   selected: DayShape;
   onSelect: (shape: DayShape) => void | Promise<void>;
 }
 
-export function DayMarkerShapeSettingsRow({
-  highContrastMode,
-  selected,
-  onSelect,
-}: Props) {
+export function DayMarkerShapeSettingsRow({ selected, onSelect }: Props) {
   const { settings } = useThemeColors();
   const iconSize = iconSizes.small;
 
   return (
     <SettingsRow
-      highContrastMode={highContrastMode}
       icon={
         selected === 'circle' ? (
           <Circle color={settings.dayMarker.icon} size={iconSize} />

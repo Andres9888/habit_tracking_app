@@ -25,7 +25,6 @@ interface Props {
   dayShape: DayShape;
   completionIcon: CompletionIcon;
   showStreakConnections: boolean;
-  highContrastMode: boolean;
 }
 
 export function CalendarPreviewWeek(p: Props) {
@@ -45,7 +44,6 @@ export function CalendarPreviewWeek(p: Props) {
           completionIcon={p.completionIcon}
           dateString={`preview-${i}`}
           disabled={false}
-          highContrastMode={p.highContrastMode}
           isToday={false}
           missed={false}
           shape={p.dayShape}

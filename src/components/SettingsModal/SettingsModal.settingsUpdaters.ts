@@ -5,7 +5,6 @@ export function createSettingsUpdaters(
   setters: {
     setDarkModeState: (v: DarkModePreference) => void;
     setReduceMotionState: (v: boolean) => void;
-    setHighContrastModeState: (v: boolean) => void;
     setUseDyslexicFontState: (v: boolean) => void;
     setCompactViewState: (v: boolean) => void;
     setShowGradientFillState: (v: boolean) => void;
@@ -20,10 +19,6 @@ export function createSettingsUpdaters(
     setDarkModePreference: async (value: DarkModePreference) => {
       setters.setDarkModeState(value);
       await update({ darkMode: value });
-    },
-    setHighContrastMode: async (value: boolean) => {
-      setters.setHighContrastModeState(value);
-      await update({ highContrastMode: value });
     },
     setHabitSortMode: async (value: string) => {
       await update({ habitSortMode: value });

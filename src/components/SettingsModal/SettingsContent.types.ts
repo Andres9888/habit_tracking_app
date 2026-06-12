@@ -7,7 +7,6 @@ import type { SettingsColors } from './types';
 
 export interface SettingsContentProps {
   colors: SettingsColors;
-  isHighContrastActive: boolean;
   bottomInset?: number;
   compactView: boolean;
   onChangeCompactView: (value: boolean) => void | Promise<void>;
@@ -31,9 +30,6 @@ export interface SettingsContentProps {
   onChangeDarkModePreference: (
     value: DarkModePreference
   ) => void | Promise<void>;
-  /** Optimistic high-contrast setting value (drives the switch position) */
-  highContrastEnabled: boolean;
-  onChangeHighContrast: (value: boolean) => void | Promise<void>;
   archivedHabitsCount?: number;
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;

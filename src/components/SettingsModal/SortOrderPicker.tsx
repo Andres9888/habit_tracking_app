@@ -1,7 +1,7 @@
-/** SortOrderPicker — inline family segmented control + direction chip */
+/** SortOrderPicker — inline family segmented control + direction picker */
 import { View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { SortDirectionChip } from './components/SortDirectionChip';
+import { SortDirectionPicker } from './components/SortDirectionPicker';
 import { SortFamilyPicker } from './components/SortFamilyPicker';
 import type { HabitSortMode } from '../../features/habits/types';
 
@@ -19,11 +19,8 @@ export function SortOrderPicker({ selected, onSelect }: SortOrderPickerProps) {
       className='border-b px-4 py-2.5'
       style={{ borderColor: colors.border, backgroundColor: trayBg }}
     >
-      <View className='flex-row items-center'>
-        <View className='mr-4 w-10' />
-        <SortFamilyPicker selected={selected} onSelect={onSelect} />
-      </View>
-      <SortDirectionChip selected={selected} onSelect={onSelect} />
+      <SortFamilyPicker selected={selected} onSelect={onSelect} />
+      <SortDirectionPicker selected={selected} onSelect={onSelect} />
     </View>
   );
 }

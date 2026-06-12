@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 /**
  * Settings Convex queries and mutations
  */
@@ -9,8 +8,9 @@ import {
   validateIdentifier,
   validateTimeFormat,
 } from '../lib/inputValidation';
-import { normalizeDarkMode, normalizeHabitSortMode } from './normalizers';
+import { normalizeDarkMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
+import { toSettingsResponse } from './getResponse';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
 
 export const get = query({
@@ -29,60 +29,7 @@ export const get = query({
     }
     // SEC-001: No fallback — return defaults if no user-specific settings exist
 
-    return {
-      appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
-      catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
-      celebrationsEnabled:
-        settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,
-      compactView: settings?.compactView ?? DEFAULT_SETTINGS.compactView,
-      completionSoundEnabled:
-        settings?.completionSoundEnabled ??
-        DEFAULT_SETTINGS.completionSoundEnabled,
-      completionSoundType:
-        settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType,
-      darkMode: normalizeDarkMode(settings?.darkMode),
-      dayShape: settings?.dayShape ?? DEFAULT_SETTINGS.dayShape,
-      habitCompletionIcon:
-        settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon,
-      habitSortMode: normalizeHabitSortMode(
-        settings?.habitSortMode,
-        settings?.sortHabitsAlphabetically
-      ),
-      hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
-      highContrastMode:
-        settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
-      progressEmojis: settings?.progressEmojis,
-      customProgressEmojis: settings?.customProgressEmojis,
-      reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
-      showCalendarView:
-        settings?.showCalendarView ?? DEFAULT_SETTINGS.showCalendarView,
-      showCharacterScreen:
-        settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen,
-      showConsistency:
-        settings?.showConsistency ?? DEFAULT_SETTINGS.showConsistency,
-      showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
-      showGradientFill:
-        settings?.showGradientFill ?? DEFAULT_SETTINGS.showGradientFill,
-      showStreakConnections:
-        settings?.showStreakConnections ??
-        DEFAULT_SETTINGS.showStreakConnections,
-      showMotivationalMessages:
-        settings?.showMotivationalMessages ??
-        DEFAULT_SETTINGS.showMotivationalMessages,
-      stickyCalendarHeader:
-        settings?.stickyCalendarHeader ?? DEFAULT_SETTINGS.stickyCalendarHeader,
-      showStreaks: settings?.showStreaks ?? DEFAULT_SETTINGS.showStreaks,
-      showWeekCompletionBar:
-        settings?.showWeekCompletionBar ??
-        DEFAULT_SETTINGS.showWeekCompletionBar,
-      streakRemindersEnabled:
-        settings?.streakRemindersEnabled ??
-        DEFAULT_SETTINGS.streakRemindersEnabled,
-      streakReminderTime:
-        settings?.streakReminderTime ?? DEFAULT_SETTINGS.streakReminderTime,
-      useDyslexicFont:
-        settings?.useDyslexicFont ?? DEFAULT_SETTINGS.useDyslexicFont,
-    };
+    return toSettingsResponse(settings);
   },
   returns: settingsReturnValidator,
 });

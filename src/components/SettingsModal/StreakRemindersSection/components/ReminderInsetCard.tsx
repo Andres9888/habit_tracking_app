@@ -1,7 +1,6 @@
 import { Platform, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { componentSpacing, spacing } from '@/theme/spacing';
 import { ReminderTimeRow } from './ReminderTimeRow';
 import { PremiumUpsellRow } from './PremiumUpsellRow';
 import { timeStringToDate } from '../../timeHelpers';
@@ -10,7 +9,6 @@ interface ReminderInsetCardProps {
   insetBackground: string;
   insetBorder: string;
   insetCardBackground: string;
-  highContrastMode: boolean;
   reminderTime: string;
   isPremium: boolean;
   showTimePicker: boolean;
@@ -29,33 +27,25 @@ interface ReminderInsetCardProps {
 }
 
 export function ReminderInsetCard(p: ReminderInsetCardProps) {
-  const insetPad = componentSpacing.avatar.size + spacing.base;
-
   return (
     <Animated.View
       pointerEvents={p.enabled ? 'auto' : 'none'}
       style={p.insetExpandStyle}
     >
       <View
-        style={{
-          backgroundColor: p.insetBackground,
-          paddingBottom: 10,
-          paddingLeft: insetPad,
-          paddingRight: 10,
-          paddingTop: 8,
-        }}
+        className='pb-2.5 pl-14 pr-2.5 pt-2'
+        style={{ backgroundColor: p.insetBackground }}
       >
         <View
           className='overflow-hidden rounded-2xl'
           style={{
             backgroundColor: p.insetCardBackground,
             borderColor: p.insetBorder,
-            borderWidth: p.highContrastMode ? 1 : 0,
+            borderWidth: 0,
           }}
           onLayout={p.onInsetLayout}
         >
           <ReminderTimeRow
-            highContrastMode={p.highContrastMode}
             reminderTime={p.reminderTime}
             onToggleTimePicker={p.onToggleTimePicker}
           />
@@ -66,12 +56,8 @@ export function ReminderInsetCard(p: ReminderInsetCardProps) {
             style={p.pickerExpandStyle}
           >
             <View
-              style={{
-                borderTopColor: p.insetBorder,
-                borderTopWidth: 1,
-                paddingBottom: 8,
-                paddingHorizontal: 8,
-              }}
+              className='border-t px-3.5 pb-3'
+              style={{ borderTopColor: p.insetBorder }}
               onLayout={p.onPickerLayout}
             >
               {Platform.OS === 'ios' ? (

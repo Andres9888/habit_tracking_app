@@ -64,7 +64,6 @@ const baseProps: HabitDayToggleProps = {
   completed: false,
   completionIcon: 'chain',
   disabled: false,
-  highContrastMode: false,
   isToday: false,
   missed: false,
   onPress: () => {},
@@ -99,14 +98,5 @@ describe('HabitDayToggle cellStyle attachment', () => {
     const styles = findCellFrameStyles(toJSON() as JsonNode);
 
     expect(entriesWithBackground(styles, '#FEF2F2').length).toBe(2);
-  });
-
-  it('keeps the animated cellStyle attached in high-contrast mode', () => {
-    const { toJSON } = render(
-      <HabitDayToggle {...baseProps} highContrastMode />
-    );
-    const styles = findCellFrameStyles(toJSON() as JsonNode);
-
-    expect(entriesWithBackground(styles, '#000000').length).toBe(2);
   });
 });

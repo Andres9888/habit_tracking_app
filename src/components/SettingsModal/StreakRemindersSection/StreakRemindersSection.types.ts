@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 
 export interface StreakRemindersSectionProps {
-  highContrastMode: boolean;
   enabled: boolean;
   reminderTime: string;
   isPremium: boolean;

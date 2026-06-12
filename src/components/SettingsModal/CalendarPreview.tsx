@@ -39,13 +39,12 @@ interface Props {
   completionIcon: CompletionIcon;
   showGradientFill: boolean;
   showStreakConnections: boolean;
-  highContrastMode: boolean;
   compact: boolean;
 }
 
 export function CalendarPreview(p: Props) {
   const { colors, isDark } = useThemeColors();
-  const border = getSettingsRowColors(p.highContrastMode, isDark).border;
+  const border = getSettingsRowColors(isDark).border;
   const accent = colors.primary[500];
   const fillStyle = useAnimatedStyle(() => ({
     // StrengthFillBackground requires an animated style prop — value derived from preview data
@@ -86,7 +85,6 @@ export function CalendarPreview(p: Props) {
           accentColor={accent}
           completionIcon={p.completionIcon}
           dayShape={p.dayShape}
-          highContrastMode={p.highContrastMode}
           showStreakConnections={p.showStreakConnections}
         />
       </View>

@@ -65,7 +65,6 @@ export interface DraggableHabitProps {
   entranceDelay?: number;
   entranceVariant?: HabitCardEntranceVariant;
   habit: Habit;
-  highContrastMode?: boolean;
   isCompactMode?: boolean;
   isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;

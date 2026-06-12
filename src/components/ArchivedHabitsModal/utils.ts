@@ -1,9 +1,8 @@
 import type { StrengthInfo } from './types';
+import { durations } from '@/theme/animations';
 
-// Animation constants
-export const CARD_ANIMATION_DURATION = 300; // 300ms per card
-export const CARD_ANIMATION_STAGGER = 50; // 50ms stagger between cards
-export const EXIT_ANIMATION_DURATION = 300;
+export const CARD_ANIMATION_DURATION = durations.enter;
+export const EXIT_ANIMATION_DURATION = durations.transition;
 
 /**
  * Get strength level info based on percentage
