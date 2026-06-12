@@ -5,7 +5,6 @@ export interface SettingsModalSettingsDocument {
   compactView?: boolean;
   darkMode?: unknown;
   reduceMotion?: boolean;
-  highContrastMode?: boolean;
   useDyslexicFont?: boolean;
   showGradientFill?: boolean;
   showStreakConnections?: boolean;
@@ -26,13 +25,14 @@ export interface SettingsModalProps {
   ) => void | Promise<void>;
   onChangeCelebrationsEnabled?: (value: boolean) => void | Promise<void>;
   onChangeCompletionSoundEnabled?: (value: boolean) => void | Promise<void>;
-  onChangeCompletionSoundType?: (value: CompletionSoundType) => void | Promise<void>;
+  onChangeCompletionSoundType?: (
+    value: CompletionSoundType
+  ) => void | Promise<void>;
   onChangeCompact?: (value: boolean) => void | Promise<void>;
   showHabitStrengthPercentage?: boolean;
   onChangeShowHabitStrengthPercentage?: (
     value: boolean
   ) => void | Promise<void>;
-  isHighContrastActive?: boolean;
   isCompact?: boolean;
   onOpenHapticTest?: () => void;
   onClose: () => void;

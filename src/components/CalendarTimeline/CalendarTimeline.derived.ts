@@ -17,7 +17,6 @@ export function useDerivedState(
   completionByDay: Record<string, DayCompletionStatus>,
   isFuture: (d: Date) => boolean,
   isToday: (d: Date) => boolean,
-  highContrastMode: boolean,
   isDark: boolean
 ) {
   const getStatus = useCompletionStatus(completionByDay, isFuture);
@@ -46,16 +45,12 @@ export function useDerivedState(
       ? `${format(firstDate, 'MMM d')} – ${format(lastDate, 'MMM d')}`
       : '';
   const currentDate = dates.find((d) => isToday(d)) ?? lastDate;
-  const connectorColor = highContrastMode
-    ? STREAK_CONNECTOR.highContrast
-    : isDark
-      ? STREAK_CONNECTOR.dark
-      : STREAK_CONNECTOR.light;
-  const ghostConnectorColor = highContrastMode
-    ? STREAK_CONNECTOR.ghostHighContrast
-    : isDark
-      ? STREAK_CONNECTOR.ghostDark
-      : STREAK_CONNECTOR.ghostLight;
+  const connectorColor = isDark
+    ? STREAK_CONNECTOR.dark
+    : STREAK_CONNECTOR.light;
+  const ghostConnectorColor = isDark
+    ? STREAK_CONNECTOR.ghostDark
+    : STREAK_CONNECTOR.ghostLight;
 
   return {
     calendarOpen,
@@ -76,7 +71,6 @@ export function useDerivedState(
 export function useCalendarTimelineSetup(
   dates: Date[],
   completionByDay: Record<string, DayCompletionStatus>,
-  highContrastMode: boolean,
   reduceMotion: boolean,
   canNavigateForward: boolean,
   onPreviousWeek?: () => void,
@@ -84,7 +78,7 @@ export function useCalendarTimelineSetup(
 ) {
   const { isToday, isFuture } = useCalendarTimelineLogic();
   const { isDark } = useThemeColors();
-  const { augmentedColors } = useTimelineColors(highContrastMode, isDark);
+  const { augmentedColors } = useTimelineColors(isDark);
   const swipeOpts = { canNavigateForward, onNextWeek, onPreviousWeek };
   const panGesture = useTimelineSwipe(swipeOpts);
   const headerPanGesture = useTimelineSwipe(swipeOpts);
@@ -94,7 +88,6 @@ export function useCalendarTimelineSetup(
     completionByDay,
     isFuture,
     isToday,
-    highContrastMode,
     isDark
   );
 

@@ -1,4 +1,3 @@
-import { highContrastColors } from '@/theme/highContrastColors';
 import type { lightColors } from '@/theme/darkColors';
 
 type ThemePalette = typeof lightColors;
@@ -12,22 +11,10 @@ export interface ProfileStatColorSet {
   lifetimeCompletions: string;
 }
 
-/** Theme-aware colors for the profile stats strip (light, dark, high contrast). */
+/** Theme-aware colors for the profile stats strip. */
 export function getProfileStatColors(
-  colors: ThemePalette,
-  highContrastMode: boolean
+  colors: ThemePalette
 ): ProfileStatColorSet {
-  if (highContrastMode) {
-    return {
-      activeHabits: colors.status.streakText,
-      borderTop: highContrastColors.border,
-      divider: highContrastColors.border,
-      flawlessDays: colors.status.successText,
-      label: colors.text.secondary,
-      lifetimeCompletions: colors.status.infoText,
-    };
-  }
-
   return {
     activeHabits: colors.status.streak,
     borderTop: colors.border,

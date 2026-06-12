@@ -73,7 +73,6 @@ export interface HabitSettings {
   habitCompletionIcon: 'chain' | 'checkbox';
   habitSortMode: HabitSortMode;
   hasPremium: boolean;
-  highContrastMode: boolean;
   reduceMotion: boolean;
   showCalendarView: boolean;
   showCharacterScreen: boolean;

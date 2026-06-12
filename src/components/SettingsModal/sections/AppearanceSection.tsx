@@ -13,7 +13,6 @@ export function AppearanceSection(p: AppearanceSectionProps) {
   return (
     <SettingsSection
       collapsible
-      highContrastMode={p.highContrastMode}
       icon={p.icon}
       isExpanded={p.isExpanded}
       title='Appearance'
@@ -23,39 +22,31 @@ export function AppearanceSection(p: AppearanceSectionProps) {
         compact={p.compactView}
         completionIcon={p.habitCompletionIcon}
         dayShape={p.dayShape}
-        highContrastMode={p.highContrastMode}
         showGradientFill={p.showGradientFill}
         showStreakConnections={p.showStreakConnections}
       />
       <ThemeSettingsRow
-        highContrastMode={p.highContrastMode}
         selected={p.darkModePreference}
         onSelect={p.onChangeDarkModePreference}
       />
       <DayMarkerShapeSettingsRow
-        highContrastMode={p.highContrastMode}
         selected={p.dayShape}
         onSelect={p.onChangeDayShape}
       />
       <AppearanceChainRows
-        highContrastMode={p.highContrastMode}
         showGradientFill={p.showGradientFill}
         showStreakConnections={p.showStreakConnections}
         onChangeShowGradientFill={p.onChangeShowGradientFill}
         onChangeShowStreakConnections={p.onChangeShowStreakConnections}
       />
       <CompletionIconSettingsRow
-        highContrastMode={p.highContrastMode}
         selected={p.habitCompletionIcon}
         onSelect={p.onChangeHabitCompletionIcon}
       />
-      <GrowthIconsSettingsRow highContrastMode={p.highContrastMode} />
+      <GrowthIconsSettingsRow />
       <AppearanceDisplayRows
         compactView={p.compactView}
-        highContrastEnabled={p.highContrastEnabled}
-        highContrastMode={p.highContrastMode}
         onChangeCompactView={p.onChangeCompactView}
-        onChangeHighContrast={p.onChangeHighContrast}
       />
     </SettingsSection>
   );

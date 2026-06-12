@@ -15,19 +15,10 @@ import { shadows } from '../../theme/spacing';
 
 import { getCalendarTimelineColors } from './theme';
 
-export const DEFAULT_COLORS: CalendarColors = getCalendarTimelineColors(
-  false,
-  false
-);
-export const HIGH_CONTRAST_COLORS: CalendarColors = getCalendarTimelineColors(
-  true,
-  false
-);
+export const DEFAULT_COLORS: CalendarColors = getCalendarTimelineColors(false);
 
-export const getColors = (
-  highContrastMode: boolean,
-  isDark = false
-): CalendarColors => getCalendarTimelineColors(highContrastMode, isDark);
+export const getColors = (isDark = false): CalendarColors =>
+  getCalendarTimelineColors(isDark);
 
 /** Completion dot sizes (theme-independent) */
 export const COMPLETION_DOT_SIZES: Record<CompletionStatus, number> = {
@@ -86,10 +77,8 @@ export const STREAK_CONNECTOR = {
   topOffset: 14 + 2 + 22 - 2,
   light: 'rgb(16, 185, 129)',
   dark: 'rgb(52, 211, 153)',
-  highContrast: 'rgb(250, 204, 21)',
   ghostLight: 'rgba(16, 185, 129, 0.15)',
   ghostDark: 'rgba(52, 211, 153, 0.12)',
-  ghostHighContrast: 'rgba(250, 204, 21, 0.15)',
   glowLight: 'rgba(16, 185, 129, 0.45)',
   glowDark: 'rgba(52, 211, 153, 0.40)',
 };

@@ -8,22 +8,16 @@ import { useThemeColors } from '../../theme/ThemeContext';
 type CompletionIcon = 'chain' | 'checkbox';
 
 interface Props {
-  highContrastMode: boolean;
   selected: CompletionIcon;
   onSelect: (icon: CompletionIcon) => void | Promise<void>;
 }
 
-export function CompletionIconSettingsRow({
-  highContrastMode,
-  selected,
-  onSelect,
-}: Props) {
+export function CompletionIconSettingsRow({ selected, onSelect }: Props) {
   const { settings } = useThemeColors();
   const iconSize = iconSizes.small;
 
   return (
     <SettingsRow
-      highContrastMode={highContrastMode}
       icon={
         selected === 'checkbox' ? (
           <Check color={settings.checkbox.icon} size={iconSize} />

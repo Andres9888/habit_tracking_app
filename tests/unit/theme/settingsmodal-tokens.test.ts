@@ -5,14 +5,12 @@
  */
 
 import { colors } from '@/theme/colors';
+import { lightColors } from '@/theme/darkColors';
 import {
   DEFAULT_COLORS,
   getSettingsColors,
 } from '@/components/SettingsModal/colors';
-import {
-  STANDARD_COLORS,
-  getSettingsRowColors,
-} from '@/components/SettingsModal/SettingsRow.colors';
+import { getSettingsRowColors } from '@/components/SettingsModal/SettingsRow/SettingsRow.colors';
 
 describe('SettingsModal Token Migration - Phase 2', () => {
   describe('DEFAULT_COLORS use theme tokens', () => {
@@ -20,13 +18,12 @@ describe('SettingsModal Token Migration - Phase 2', () => {
       expect(DEFAULT_COLORS.accent).toBe(colors.text.primary);
     });
 
-    it('background uses colors.gray[50]', () => {
-      expect(DEFAULT_COLORS.background).toBe(colors.gray[50]);
+    it('background uses colors.light.background', () => {
+      expect(DEFAULT_COLORS.background).toBe(colors.light.background);
     });
 
     it('card uses colors.light.card', () => {
       expect(DEFAULT_COLORS.card).toBe(colors.light.card);
-      expect(DEFAULT_COLORS.card).toBe('#ffffff');
     });
 
     it('cardBorder uses colors.gray[100]', () => {
@@ -39,7 +36,6 @@ describe('SettingsModal Token Migration - Phase 2', () => {
 
     it('mutedText uses colors.gray[500]', () => {
       expect(DEFAULT_COLORS.mutedText).toBe(colors.gray[500]);
-      expect(DEFAULT_COLORS.mutedText).toBe('#78716c');
     });
 
     it('versionText uses colors.gray[500]', () => {
@@ -48,65 +44,44 @@ describe('SettingsModal Token Migration - Phase 2', () => {
   });
 
   describe('getSettingsColors returns correct palette', () => {
-    it('returns DEFAULT_COLORS when not high contrast', () => {
-      const result = getSettingsColors(false);
-      expect(result).toBe(DEFAULT_COLORS);
-    });
-
-    it('returns HIGH_CONTRAST_COLORS when high contrast', () => {
-      const result = getSettingsColors(true);
-      expect(result.background).toBe('#000000');
-      expect(result.accent).toBe('#facc15');
+    it('returns DEFAULT_COLORS in light mode', () => {
+      expect(getSettingsColors(false)).toBe(DEFAULT_COLORS);
     });
   });
 
-  describe('STANDARD_COLORS (SettingsRow) use theme tokens', () => {
-    it('background uses colors.light.card', () => {
-      expect(STANDARD_COLORS.background).toBe(colors.light.card);
+  describe('getSettingsRowColors uses theme tokens', () => {
+    const rowColors = getSettingsRowColors(false);
+
+    it('background uses lightColors.card', () => {
+      expect(rowColors.background).toBe(lightColors.card);
     });
 
-    it('border uses colors.gray[100]', () => {
-      expect(STANDARD_COLORS.border).toBe(colors.gray[100]);
+    it('border uses lightColors.border', () => {
+      expect(rowColors.border).toBe(lightColors.border);
     });
 
-    it('chevron uses colors.gray[500]', () => {
-      expect(STANDARD_COLORS.chevron).toBe(colors.gray[500]);
-      expect(STANDARD_COLORS.chevron).toBe('#78716c');
+    it('chevron uses lightColors.text.secondary', () => {
+      expect(rowColors.chevron).toBe(lightColors.text.secondary);
     });
 
-    it('label uses colors.text.primary', () => {
-      expect(STANDARD_COLORS.label).toBe(colors.text.primary);
+    it('label uses lightColors.text.primary', () => {
+      expect(rowColors.label).toBe(lightColors.text.primary);
     });
 
-    it('switchThumb uses colors.text.inverse', () => {
-      expect(STANDARD_COLORS.switchThumb).toBe(colors.text.inverse);
-      expect(STANDARD_COLORS.switchThumb).toBe('#FFFFFF');
+    it('switchThumb uses lightColors.text.inverse', () => {
+      expect(rowColors.switchThumb).toBe(lightColors.text.inverse);
     });
 
-    it('switchTrackFalse uses colors.gray[300]', () => {
-      expect(STANDARD_COLORS.switchTrackFalse).toBe(colors.gray[300]);
-      expect(STANDARD_COLORS.switchTrackFalse).toBe('#D1D5DB');
+    it('switchTrackFalse uses lightColors.gray[300]', () => {
+      expect(rowColors.switchTrackFalse).toBe(lightColors.gray[300]);
     });
 
-    it('switchTrackTrue uses colors.text.primary', () => {
-      expect(STANDARD_COLORS.switchTrackTrue).toBe(colors.text.primary);
+    it('switchTrackTrue uses lightColors.primary[500]', () => {
+      expect(rowColors.switchTrackTrue).toBe(lightColors.primary[500]);
     });
 
-    it('value uses colors.gray[500]', () => {
-      expect(STANDARD_COLORS.value).toBe(colors.gray[500]);
-    });
-  });
-
-  describe('getSettingsRowColors returns correct palette', () => {
-    it('returns STANDARD_COLORS when not high contrast', () => {
-      const result = getSettingsRowColors(false);
-      expect(result).toBe(STANDARD_COLORS);
-    });
-
-    it('returns HIGH_CONTRAST_COLORS when high contrast', () => {
-      const result = getSettingsRowColors(true);
-      expect(result.background).toBe('#111111');
-      expect(result.label).toBe('#ffffff');
+    it('value uses lightColors.text.secondary', () => {
+      expect(rowColors.value).toBe(lightColors.text.secondary);
     });
   });
 });

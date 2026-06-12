@@ -28,7 +28,6 @@ interface CardHeaderProps {
   colors: CardColors;
   emoji: string;
   habit: Habit;
-  highContrastMode: boolean;
   iconPulse: SharedValue<number>;
   isCompactMode?: boolean;
   isPaused: boolean;
@@ -43,7 +42,6 @@ export function CardHeader({
   colors,
   emoji,
   habit,
-  highContrastMode,
   iconPulse,
   isCompactMode,
   isPaused,
@@ -55,11 +53,7 @@ export function CardHeader({
     transform: [{ scale: iconPulse.value }],
   }));
   const { colors: themeColors } = useThemeColors();
-  const iconBg = getIconBackground(
-    accentColor,
-    highContrastMode,
-    colors.iconContainer
-  );
+  const iconBg = getIconBackground(accentColor);
   const iconSize = getCardIconSize(isCompactMode);
   const showBestStreak =
     !isCompactMode &&
@@ -75,7 +69,7 @@ export function CardHeader({
           <View
             className='items-center justify-center rounded-xl'
             style={[
-              getIconContainerStyle(iconBg, accentColor, highContrastMode),
+              getIconContainerStyle(iconBg, accentColor),
               { height: iconSize, width: iconSize },
             ]}
           >
@@ -85,7 +79,7 @@ export function CardHeader({
       }
       col5={
         <ChevronRight
-          color={getChevronColor(highContrastMode)}
+          color={getChevronColor()}
           size={isCompactMode ? iconSizes.small : iconSizes.medium}
           strokeWidth={2}
         />

@@ -1,4 +1,4 @@
-/** useSettingsSectionStates - Centralized expand/collapse state for all settings sections */
+/** useSettingsSectionStates - Centralized expand/collapse state for accordion sections */
 
 import { useState, useCallback, useEffect } from 'react';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
@@ -8,24 +8,38 @@ import {
 } from '@/utils/settingsSectionPreferences';
 
 export const SECTION_IDS = {
-  about: 'about',
   appearance: 'appearance',
   behavior: 'behavior',
-  habitManagement: 'habitManagement',
   notifications: 'notifications',
-  support: 'support',
 } as const;
 
 type SectionId = (typeof SECTION_IDS)[keyof typeof SECTION_IDS];
 
 const ALL_EXPANDED: Record<SectionId, boolean> = {
-  [SECTION_IDS.about]: true,
   [SECTION_IDS.appearance]: true,
   [SECTION_IDS.behavior]: true,
-  [SECTION_IDS.habitManagement]: true,
   [SECTION_IDS.notifications]: true,
-  [SECTION_IDS.support]: true,
 };
+
+/** Map legacy persisted keys onto current section IDs */
+export function migrateSectionPrefs(
+  prefs: Record<string, { isExpanded: boolean }>
+): Record<SectionId, boolean> {
+  const loaded = { ...ALL_EXPANDED };
+
+  for (const [key, value] of Object.entries(prefs)) {
+    if (key in loaded) {
+      loaded[key as SectionId] = value.isExpanded;
+    }
+  }
+
+  // habitManagement folded into behavior — honor its collapsed state
+  if ('habitManagement' in prefs && !('behavior' in prefs)) {
+    loaded.behavior = prefs.habitManagement.isExpanded;
+  }
+
+  return loaded;
+}
 
 export function useSettingsSectionStates() {
   const [sectionStates, setSectionStates] =
@@ -34,13 +48,7 @@ export function useSettingsSectionStates() {
 
   useEffect(() => {
     void getSettingsSectionPreferences().then((prefs) => {
-      const loaded = { ...ALL_EXPANDED };
-      for (const [key, value] of Object.entries(prefs)) {
-        if (key in loaded) {
-          loaded[key as SectionId] = value.isExpanded;
-        }
-      }
-      setSectionStates(loaded);
+      setSectionStates(migrateSectionPrefs(prefs));
     });
   }, []);
 

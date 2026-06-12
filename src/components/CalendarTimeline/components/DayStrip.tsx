@@ -3,40 +3,8 @@ import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { createAnimatedComponent } from 'react-native-reanimated';
 
-import type {
-  CalendarColors,
-  CompletionStatus,
-  DayCompletionStatus,
-} from '../CalendarTimeline.types';
 import { DayCell } from './DayCell';
-
-interface DayStripProps {
-  dates: Date[];
-  completionCounts: DayCompletionStatus[];
-  completionStatuses: CompletionStatus[];
-  augmentedColors: CalendarColors & {
-    borderWidth?: number;
-    highContrastBorder?: string;
-  };
-  hasCompletionData: boolean;
-  connectorColor: string;
-  reduceMotion: boolean;
-  completionIcon?: 'chain' | 'checkbox';
-  ghostConnectorColor: string;
-  currentStreak?: number;
-  strengthPercent?: number;
-  disableFutureDayPress: boolean;
-  isDayPressEnabled: boolean;
-  isToday: (d: Date) => boolean;
-  isFuture: (d: Date) => boolean;
-  onDayPress?: (date: Date) => void;
-  panGesture: ReturnType<
-    typeof import('react-native-gesture-handler').Gesture.Pan
-  >;
-  weekTransitionStyle: ReturnType<
-    typeof import('react-native-reanimated').useAnimatedStyle
-  >;
-}
+import type { DayStripProps } from './DayStrip.types';
 
 const AnimatedView = (() => {
   const fallback = createAnimatedComponent(View);

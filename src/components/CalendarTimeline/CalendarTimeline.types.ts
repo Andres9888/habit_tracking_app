@@ -16,7 +16,6 @@ export interface CalendarTimelineProps {
   /** Whether forward navigation is allowed */
   canNavigateForward?: boolean;
   /** Enables the high contrast theme */
-  highContrastMode?: boolean;
   /** Currently selected date (reserved for future interactive states) */
   selectedDate?: Date;
   /** Callback when a date is selected (reserved for future interactive states) */

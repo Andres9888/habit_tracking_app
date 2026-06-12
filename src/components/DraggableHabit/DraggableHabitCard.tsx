@@ -39,13 +39,9 @@ export type { DraggableHabitCardProps } from './DraggableHabitCard.types';
 
 function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
   const effectiveAccentColor = getEffectiveAccentColor(props.accentColor);
-  const borderAccentColor = getBorderAccentColor(
-    props.highContrastMode,
-    props.accentColor
-  );
+  const borderAccentColor = getBorderAccentColor(props.accentColor);
   const staticCardStyle = buildStaticCardStyle({
     colors: props.colors,
-    highContrastMode: props.highContrastMode,
     isWeekComplete: props.isWeekComplete,
   });
 

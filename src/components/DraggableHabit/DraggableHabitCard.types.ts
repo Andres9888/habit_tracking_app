@@ -51,7 +51,6 @@ export interface DraggableHabitCardProps {
   handleLongPress: () => void;
   handlePressIn: () => void;
   handlePressOut: () => void;
-  highContrastMode: boolean;
   highlightGlow: SharedValue<number>;
   iconPulse: SharedValue<number>;
   isCompactMode?: boolean;

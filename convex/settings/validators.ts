@@ -29,7 +29,6 @@ export const settingsReturnValidator = v.object({
     v.literal('streak_desc')
   ),
   hasPremium: v.boolean(),
-  highContrastMode: v.boolean(),
   progressEmojis: v.optional(progressEmojisValidator),
   customProgressEmojis: v.optional(progressEmojisValidator),
   reduceMotion: v.boolean(),
@@ -81,7 +80,6 @@ export const updateArgsValidator = {
     )
   ),
   hasPremium: v.optional(v.boolean()),
-  highContrastMode: v.optional(v.boolean()),
   progressEmojis: v.optional(progressEmojisValidator),
   customProgressEmojis: v.optional(progressEmojisValidator),
   reduceMotion: v.optional(v.boolean()),
