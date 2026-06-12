@@ -17,7 +17,7 @@
     "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.chainday.app",
+      "bundleIdentifier": "org.name.DailyHabits",
       "buildNumber": "16",
       "usesAppleSignIn": true,
       "infoPlist": {

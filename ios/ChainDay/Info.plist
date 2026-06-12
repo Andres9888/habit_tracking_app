@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>habit-tracker</string>
-          <string>com.chainday.app</string>
+          <string>org.name.DailyHabits</string>
         </array>
       </dict>
     </array>
