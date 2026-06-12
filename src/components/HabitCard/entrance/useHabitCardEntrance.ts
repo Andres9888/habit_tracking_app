@@ -23,7 +23,9 @@ export function useHabitCardEntrance({
   const reduceMotion = useReduceMotion();
   const hasTriggered = useRef(false);
 
-  const values = useEntranceAnimationValues();
+  // No entrance will play (or it would be instant anyway) — mount visible
+  // so the card never spends frames at opacity 0 waiting for an effect.
+  const values = useEntranceAnimationValues(!autoTrigger || reduceMotion);
 
   const { resetAnimation, setInstantVisible, triggerEntrance } =
     useEntranceHandlers({

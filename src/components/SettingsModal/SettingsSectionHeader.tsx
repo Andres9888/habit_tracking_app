@@ -1,15 +1,15 @@
 /** SettingsSectionHeader - Pressable header with animated chevron for collapsible sections */
 
 import { ReactNode } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { ChevronDown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { highContrastColors } from '@/theme/highContrastColors';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 
 interface SettingsSectionHeaderProps {
   title: string;
@@ -18,7 +18,6 @@ interface SettingsSectionHeaderProps {
   isExpanded: boolean;
   chevronStyle: AnimatedStyle<ViewStyle>;
   onToggle: () => void;
-  highContrastMode?: boolean;
 }
 
 export function SettingsSectionHeader({
@@ -28,22 +27,19 @@ export function SettingsSectionHeader({
   isExpanded,
   chevronStyle,
   onToggle,
-  highContrastMode = false,
 }: SettingsSectionHeaderProps) {
   const { colors: themeColors } = useThemeColors();
 
-  const titleColor = highContrastMode ? highContrastColors.accent : themeColors.text.primary;
-
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint={`Double tap to ${isExpanded ? 'collapse' : 'expand'} ${title} settings`}
-      accessibilityRole="button"
+      accessibilityRole='button'
       accessibilityState={{ expanded: isExpanded }}
-      className="flex-row items-center justify-between px-4 py-3"
+      className='flex-row items-center justify-between px-4 py-3'
       onPress={onToggle}
     >
-      <View className="flex-row items-center">
-        <View className="mr-4 w-10 items-center justify-center">
+      <View className='flex-row items-center'>
+        <View className='mr-4 w-10 items-center justify-center'>
           {icon ?? null}
         </View>
         <Text
@@ -52,14 +48,14 @@ export function SettingsSectionHeader({
             fontSize: 15,
             fontWeight: fontWeights.bold,
             letterSpacing: -0.2,
-            color: titleColor,
+            color: themeColors.text.primary,
           }}
         >
           {title}
         </Text>
         {subtitle ? (
           <Text
-            className="ml-2 rounded-full px-2 py-0.5"
+            className='ml-2 rounded-full px-2 py-0.5'
             style={{
               ...typography.tabBar,
               fontWeight: fontWeights.semibold,
@@ -74,10 +70,10 @@ export function SettingsSectionHeader({
       </View>
       <Animated.View style={chevronStyle}>
         <ChevronDown
-          color={highContrastMode ? highContrastColors.accent : themeColors.text.secondary}
+          color={themeColors.text.secondary}
           size={iconSizes.small}
         />
       </Animated.View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react-native';
 import type { JourneyStatsSectionProps } from '../InsightsSection.types';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { iconSizes } from '@/theme/iconSizes';
 
 export function JourneyStatsSection({
@@ -24,7 +25,7 @@ export function JourneyStatsSection({
   const { colors } = useThemeColors();
 
   return (
-    <View className='overflow-hidden rounded-2xl shadow-sm' style={{ shadowColor: colors.border }}>
+    <View className='overflow-hidden rounded-2xl' style={shadows.card}>
       <LinearGradient
         className='absolute inset-0'
         colors={['rgba(245, 243, 255, 0.3)', colors.card, 'rgba(239, 246, 255, 0.3)']}

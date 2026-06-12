@@ -31,7 +31,7 @@ export function ListCardAddButton({
 
   useEffect(() => {
     if (isImported) {
-      scale.value = withSpring(1.03, springs.responsive);
+      scale.value = withSpring(1.08, springs.responsive);
       const timeout = setTimeout(() => {
         scale.value = withSpring(1, springs.responsive);
       }, 120);
@@ -58,7 +58,7 @@ export function ListCardAddButton({
         animatedStyle,
       ]}
       onPress={(event) => {
-        event.stopPropagation();
+        event?.stopPropagation?.();
         void triggerHaptic('selection');
         onImport();
       }}
@@ -67,7 +67,11 @@ export function ListCardAddButton({
         <ActivityIndicator color={colors.text.inverse} size='small' />
       ) : isImported ? (
         <>
-          <Check color={colors.primary[700]} size={iconSizes.small} strokeWidth={3} />
+          <Check
+            color={colors.primary[700]}
+            size={iconSizes.small}
+            strokeWidth={3}
+          />
           <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
         </>
       ) : (

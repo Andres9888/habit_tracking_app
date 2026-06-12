@@ -3,14 +3,15 @@ import {
   useSharedValue,
   useAnimatedStyle,
   withDelay,
-  withSpring,
   withTiming,
-  Easing,
   cancelAnimation,
   type SharedValue,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
-import { CARD_ANIMATION_DURATION, CARD_ANIMATION_STAGGER } from '../utils';
+import { durations, enterEasing } from '@/theme/animations';
+import {
+  MAX_STAGGER_ITEMS,
+  STAGGER,
+} from '../../SettingsModal/SettingsContent.constants';
 
 interface UseCardAnimatedStylesParams {
   index: number;
@@ -30,7 +31,7 @@ export const useCardAnimatedStyles = ({
   reducedMotion,
 }: UseCardAnimatedStylesParams) => {
   const cardOpacity = useSharedValue(reducedMotion ? 1 : 0);
-  const cardTranslateY = useSharedValue(reducedMotion ? 0 : 20);
+  const cardTranslateY = useSharedValue(reducedMotion ? 0 : 12);
   const cardTranslateX = useSharedValue(0);
   const cardScale = useSharedValue(1);
   const successScale = useSharedValue(0);
@@ -42,19 +43,11 @@ export const useCardAnimatedStyles = ({
       return;
     }
 
-    const delay = index * CARD_ANIMATION_STAGGER;
+    const delay = Math.min(index, MAX_STAGGER_ITEMS) * STAGGER;
+    const timing = { duration: durations.enter, easing: enterEasing };
 
-    cardOpacity.value = withDelay(
-      delay,
-      withTiming(1, {
-        duration: CARD_ANIMATION_DURATION,
-        easing: Easing.out(Easing.cubic),
-      })
-    );
-    cardTranslateY.value = withDelay(
-      delay,
-      withSpring(0, springs.standard)
-    );
+    cardOpacity.value = withDelay(delay, withTiming(1, timing));
+    cardTranslateY.value = withDelay(delay, withTiming(0, timing));
 
     return () => {
       cancelAnimation(cardOpacity);

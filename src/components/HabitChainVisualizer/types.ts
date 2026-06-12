@@ -20,7 +20,6 @@ export interface HabitDayToggleProps {
   completed: boolean;
   strengthPercent?: number;
   disabled: boolean;
-  highContrastMode: boolean;
   isToday: boolean;
   missed?: boolean;
   onPress: () => void;
@@ -33,7 +32,6 @@ export interface HabitChainVisualizerProps {
   completionIcon?: CompletionIcon;
   strengthPercent?: number;
   habitId: Id<'habits'>;
-  highContrastMode?: boolean;
   isConnectedToNextWeek?: boolean;
   isConnectedToPreviousWeek?: boolean;
   onToggle: (args: { habitId: Id<'habits'>; date: string }) => void;

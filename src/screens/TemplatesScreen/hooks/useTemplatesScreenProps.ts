@@ -16,6 +16,7 @@ import {
   useTemplatesByCategory,
   useTemplatesData,
 } from '../useTemplatesData';
+import { getCategoryLabel as resolveCategoryLabel } from '../utils/getCategoryLabel';
 import { useMainBrowseData } from './useMainBrowseData';
 import { usePackConfirm } from './usePackConfirm';
 import { useViewNavigation } from './useViewNavigation';
@@ -53,6 +54,7 @@ export function useTemplatesScreenProps() {
     setImportedTemplateIds: state.setImportedTemplateIds,
     setImportingTemplateId: state.setImportingTemplateId,
     setIsSeeding: state.setIsSeeding,
+    setPreviewInitialAnchor: state.setPreviewInitialAnchor,
     setPreviewTemplate: state.setPreviewTemplate,
     setSearchQuery: state.setSearchQuery,
     setSelectedCategory: state.setSelectedCategory,
@@ -63,6 +65,7 @@ export function useTemplatesScreenProps() {
     setShowToast: state.setShowToast,
     setSortOption: state.setSortOption,
     setToastMessage: state.setToastMessage,
+    setToastOnAction: state.setToastOnAction,
     setToastTemplateData: state.setToastTemplateData,
     setViewMode: state.setViewMode,
     userHabitCount: data.userHabitCount,
@@ -79,11 +82,8 @@ export function useTemplatesScreenProps() {
     userHabitCount: data.userHabitCount,
   });
 
-  const getCategoryLabel = (categoryId: string) => {
-    if (categoryId === 'quick') return 'Quick';
-    if (categoryId === 'high-roi') return 'High ROI';
-    return data.categories?.find((c) => c.id === categoryId)?.label || categoryId;
-  };
+  const getCategoryLabel = (categoryId: string) =>
+    resolveCategoryLabel(categoryId, data.categories);
 
   const handleTabPress = (tab: BrowseTab) => {
     state.setBrowseTab(tab);

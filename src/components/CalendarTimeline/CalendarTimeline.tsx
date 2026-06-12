@@ -12,7 +12,6 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   onPreviousWeek,
   onNextWeek,
   canNavigateForward = true,
-  highContrastMode = false,
   completionByDay = {},
   reduceMotion = false,
   onDayPress,
@@ -29,7 +28,6 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   const tl = useCalendarTimelineSetup(
     dates,
     completionByDay,
-    highContrastMode,
     reduceMotion,
     canNavigateForward,
     onPreviousWeek,

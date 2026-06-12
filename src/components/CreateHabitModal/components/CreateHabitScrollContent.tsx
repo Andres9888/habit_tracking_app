@@ -72,6 +72,7 @@ export function CreateHabitScrollContent({
               selectedColor={form.selectedColor}
               selectedEmoji={form.selectedEmoji}
               showNameError={showNameError}
+              snapReminderDefaultToPreset
               streakGoal={form.streakGoal}
               strengthAlgorithm={form.strengthAlgorithm}
               onAdvancedExpand={() =>

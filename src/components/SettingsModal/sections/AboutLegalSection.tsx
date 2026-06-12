@@ -7,7 +7,6 @@ import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
-  highContrast: boolean;
   icon?: ReactNode;
   version: string;
   buildNumber: string;
@@ -19,7 +18,6 @@ interface Props {
 }
 
 export function AboutLegalSection({
-  highContrast,
   icon,
   version,
   buildNumber,
@@ -32,9 +30,14 @@ export function AboutLegalSection({
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection collapsible={collapsible} highContrastMode={highContrast} icon={icon} isExpanded={isExpanded} title='About' onToggle={onToggleSection}>
+    <SettingsSection
+      collapsible={collapsible}
+      icon={icon}
+      isExpanded={isExpanded}
+      title='About'
+      onToggle={onToggleSection}
+    >
       <SettingsRow
-        highContrastMode={highContrast}
         icon={<Shield color={settings.legal.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.legal.bg}
         label='Privacy Policy'
@@ -42,7 +45,6 @@ export function AboutLegalSection({
         onPress={onPrivacy}
       />
       <SettingsRow
-        highContrastMode={highContrast}
         icon={<FileText color={settings.legal.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.legal.bg}
         label='Terms of Service'
@@ -50,7 +52,6 @@ export function AboutLegalSection({
         onPress={onTerms}
       />
       <SettingsRow
-        highContrastMode={highContrast}
         icon={<Info color={settings.info.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.info.bg}
         label='Version'

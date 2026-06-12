@@ -1,6 +1,6 @@
 /** AdvancedAlgorithmDisclosure — Collapsible card wrapping the algorithm picker for per-habit screens. */
 import { useCallback, useState } from 'react';
-import { Pressable, Text, View, type LayoutChangeEvent } from 'react-native';
+import { Text, View, type LayoutChangeEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
@@ -8,6 +8,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { useExpandAnimation } from '@/hooks/useExpandAnimation';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { AdvancedAlgorithmBody } from './AdvancedAlgorithmBody';
 import { ALGORITHM_COPY, type AlgorithmMode } from './algorithmCopy';
 
@@ -58,7 +59,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
         backgroundColor: colors.card,
       }}
     >
-      <Pressable
+      <AnimatedPressable
         accessibilityRole='button'
         accessibilityState={{ expanded }}
         className='flex-row items-center justify-between p-4'
@@ -92,7 +93,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
             strokeWidth={2}
           />
         </Animated.View>
-      </Pressable>
+      </AnimatedPressable>
       <Animated.View
         accessibilityElementsHidden={!expanded}
         importantForAccessibility={expanded ? 'auto' : 'no-hide-descendants'}

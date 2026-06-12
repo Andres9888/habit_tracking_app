@@ -247,7 +247,7 @@ export function AdvancedOptionsSection({
               <AdvancedOptionRow
                 isFirst
                 accessibilityHint='Opens strength curve picker'
-                description='How strength builds — and resets when you miss days.'
+                description='How strength grows — and what a missed day costs.'
                 icon={
                   <AlgoIcon
                     color={colors.primary[700]}
@@ -301,7 +301,7 @@ export function AdvancedOptionsSection({
       />
 
       <AdvancedSheet
-        subtitle='How strength builds — and resets when you miss days.'
+        subtitle='How strength grows — and what a missed day costs.'
         title='Strength Curve'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}

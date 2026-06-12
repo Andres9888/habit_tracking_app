@@ -7,7 +7,7 @@ import { FlatList, View } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { styles } from '../../templates/templatesScreenStyles';
 import { ScrollShadows, TemplatesListEmpty } from '../components';
-import { formatPopularityCount } from '../hooks/useDrillSections';
+import { formatPopularityCount } from '../utils/formatPopularityCount';
 import { useScrollShadows } from '../useScrollShadows';
 import { TemplateListCard } from './TemplateListCard';
 import type { ViewMode } from '../TemplatesScreen.types';
@@ -73,6 +73,7 @@ export function TemplatesList(props: TemplatesListProps) {
     <View style={styles.listWrapper}>
       <FlatList
         ref={flatListRef}
+        keyboardDismissMode='on-drag'
         contentContainerStyle={styles.listContent}
         data={filteredTemplates}
         initialNumToRender={8}

@@ -5,6 +5,7 @@
 import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -61,8 +62,8 @@ export function StatCard({
       accessibilityHint={accessibilityHint}
       accessibilityLabel={`${label}: ${targetValue}${suffix}`}
       accessibilityRole='button'
-      className='flex-1 items-center rounded-xl p-3 shadow-sm'
-      style={[animatedStyle, { backgroundColor: themeColors.card, shadowColor: themeColors.border }]}
+      className='flex-1 items-center rounded-xl p-3'
+      style={[animatedStyle, { backgroundColor: themeColors.card }, shadows.card]}
       onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

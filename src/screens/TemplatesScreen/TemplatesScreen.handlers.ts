@@ -28,6 +28,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
     setFeedbackVariant: opts.setFeedbackVariant,
     setImportedTemplateIds: opts.setImportedTemplateIds,
     setImportingTemplateId: opts.setImportingTemplateId,
+    setPreviewInitialAnchor: opts.setPreviewInitialAnchor,
     setPreviewTemplate: opts.setPreviewTemplate,
     setSessionImportCount: opts.setSessionImportCount,
     setShowCelebration: opts.setShowCelebration,
@@ -35,6 +36,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
     setShowFullsizePreview: opts.setShowFullsizePreview,
     setShowToast: opts.setShowToast,
     setToastMessage: opts.setToastMessage,
+    setToastOnAction: opts.setToastOnAction,
     setToastTemplateData: opts.setToastTemplateData,
     userHabitCount: opts.userHabitCount,
   });

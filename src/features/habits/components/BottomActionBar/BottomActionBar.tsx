@@ -77,7 +77,10 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               progress={progress}
               ringPulse={anim.ringPulse}
               totalHabits={props.totalHabits}
-              onPress={props.onAddHabit}
+              onPress={() => {
+                anim.resetAddPress();
+                props.onAddHabit();
+              }}
               onPressIn={anim.onAddPressIn}
               onPressOut={anim.onAddPressOut}
             />

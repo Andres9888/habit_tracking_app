@@ -2,6 +2,8 @@
  * Type definitions for TrendingCard component
  */
 
+import type { Doc } from '../../../../../convex/_generated/dataModel';
+
 export interface TrendingCardProps {
   /** Short description of the habit */
   description?: string;
@@ -27,6 +29,8 @@ export interface TrendingCardProps {
   popularityPrefix?: string;
   /** Number of users who added this template */
   popularityScore: number;
+  /** Full template doc — required for ScienceDoorPill */
+  template: Doc<'templates'>;
 }
 
 export interface AddButtonProps {

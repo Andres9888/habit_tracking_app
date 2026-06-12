@@ -29,7 +29,7 @@ import { EnhancedReminderSelector } from '../../../components/CreateHabitModal/c
 import { HABIT_COLORS } from '../../../components/CreateHabitModal/constants';
 import { AdvancedOptionsSection } from '../../../components/AdvancedOptions';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { borderRadius } from '../../../theme/spacing';
+import { borderRadius, shadows } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 import { spacing } from '@/theme/spacing';
 import { useTemplatePreview } from './useTemplatePreview';
@@ -98,11 +98,12 @@ export default function TemplatePreviewModal({
         </Pressable>
         <GestureDetector gesture={panGesture}>
           <Animated.View
-            className='overflow-hidden rounded-t-3xl shadow-2xl'
+            className='overflow-hidden rounded-t-3xl'
             style={[
               localStyles.sheet,
               sheetStyle,
               { backgroundColor: colors.surface },
+              shadows.alert,
             ]}
           >
             <KeyboardAvoidingView

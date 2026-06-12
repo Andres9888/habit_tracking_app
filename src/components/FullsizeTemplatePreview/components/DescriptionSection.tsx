@@ -9,13 +9,11 @@ import { heroStyles } from '../styles';
 
 interface DescriptionSectionProps {
   description: string;
-  startSmallVersion?: string;
   iconColor?: string;
 }
 
 export function DescriptionSection({
   description,
-  startSmallVersion,
   iconColor,
 }: DescriptionSectionProps) {
   const theme = useAppTheme();

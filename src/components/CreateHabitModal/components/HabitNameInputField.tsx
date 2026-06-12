@@ -21,7 +21,7 @@ export function HabitNameInputField({
   const {
     inputRef,
     caretState,
-    shouldReplaceNativeCaret,
+    shouldHideNativeCaret,
     showPlaceholderCaret,
     handleBlur,
     handleFocus,
@@ -49,7 +49,7 @@ export function HabitNameInputField({
           accessibilityHint={placeholder || undefined}
           accessibilityLabel='Habit name'
           className='w-full px-0 py-4 text-2xl font-semibold'
-          caretHidden={shouldReplaceNativeCaret}
+          caretHidden={shouldHideNativeCaret}
           maxLength={50}
           placeholder=''
           returnKeyType='done'
@@ -69,13 +69,10 @@ export function HabitNameInputField({
           <HabitNamePlaceholderCaret left={caretState.caretInset} />
         ) : null}
       </Animated.View>
-      {caretState.measurePlaceholder ? (
-        <HabitNamePlaceholderMeasurer
-          fieldWidth={caretState.fieldWidth}
-          text={caretState.placeholder}
-          onTextLayout={caretState.onPlaceholderTextLayout}
-        />
-      ) : null}
+      <HabitNamePlaceholderMeasurer
+        text={caretState.placeholder}
+        onTextLayout={caretState.onPlaceholderTextLayout}
+      />
       <HabitNamePlaceholderOverlay
         hintColor={hintColor}
         text={placeholder}

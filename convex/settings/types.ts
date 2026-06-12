@@ -32,8 +32,6 @@ export const DEFAULT_SETTINGS = {
   habitCompletionIcon: 'chain' as const,
   habitSortMode: 'manual' as HabitSortMode,
   hasPremium: true,
-  // Forced to light - dark mode not yet implemented
-  highContrastMode: false,
   reduceMotion: false,
   showCalendarView: true,
   showCharacterScreen: true,

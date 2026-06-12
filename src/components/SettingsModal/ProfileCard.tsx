@@ -14,10 +14,9 @@ import { useProfileStats } from './useProfileStats';
 
 interface ProfileCardProps {
   isPremium: boolean;
-  highContrastMode: boolean;
 }
 
-export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
+export function ProfileCard({ isPremium }: ProfileCardProps) {
   const { colors: themeColors } = useThemeColors();
   const { email, initial, name } = useProfileDisplayName();
   const { isLoading: statsLoading, stats } = useProfileStats();
@@ -27,7 +26,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
   return (
     <View
       className='overflow-hidden rounded-2xl'
-      style={getProfileCardShellStyle(highContrastMode, themeColors)}
+      style={getProfileCardShellStyle(themeColors)}
     >
       <View className='items-center px-4 pb-1 pt-5' style={{ gap: spacing.md }}>
         <EditableUserAvatar
@@ -37,7 +36,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           palette={{
             avatarBg: themeColors.primary[700],
             avatarBorderColor: themeColors.border,
-            avatarBorderWidth: highContrastMode ? 1 : 0,
+            avatarBorderWidth: 0,
             avatarTextColor: themeColors.text.inverse,
             gradientColors: [
               themeColors.primary[700],
@@ -45,7 +44,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
             ],
           }}
           size={72}
-          useGradient={!highContrastMode}
+          useGradient
           onPress={openPhotoPicker}
         />
         <View className='items-center'>
@@ -68,11 +67,7 @@ export function ProfileCard({ isPremium, highContrastMode }: ProfileCardProps) {
           {isPremium ? <ProfilePremiumBadge /> : null}
         </View>
       </View>
-      <ProfileStatsRow
-        highContrastMode={highContrastMode}
-        isLoading={statsLoading}
-        stats={stats}
-      />
+      <ProfileStatsRow isLoading={statsLoading} stats={stats} />
     </View>
   );
 }

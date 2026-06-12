@@ -49,6 +49,7 @@ import type * as habits_batchArchive from "../habits/batchArchive.js";
 import type * as habits_batchRemove from "../habits/batchRemove.js";
 import type * as habits_cleanupLegacyGoalFields from "../habits/cleanupLegacyGoalFields.js";
 import type * as habits_create from "../habits/create.js";
+import type * as habits_deleteTrackingChunk from "../habits/deleteTrackingChunk.js";
 import type * as habits_get from "../habits/get.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
@@ -150,6 +151,7 @@ declare const fullApi: ApiFromModules<{
   "habits/batchRemove": typeof habits_batchRemove;
   "habits/cleanupLegacyGoalFields": typeof habits_cleanupLegacyGoalFields;
   "habits/create": typeof habits_create;
+  "habits/deleteTrackingChunk": typeof habits_deleteTrackingChunk;
   "habits/get": typeof habits_get;
   "habits/getTracking": typeof habits_getTracking;
   "habits/list": typeof habits_list;

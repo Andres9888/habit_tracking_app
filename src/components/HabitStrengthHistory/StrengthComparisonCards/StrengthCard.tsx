@@ -6,6 +6,7 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 
 import { getStrengthColors, getStrengthLabel } from '../strengthUtils';
 import { getLabelText } from './utils';
@@ -28,7 +29,7 @@ export function StrengthCard({
   const labelText = getLabelText(label);
 
   const containerClass = isHighlighted
-    ? 'border-2 shadow-sm'
+    ? 'border-2'
     : '';
 
   return (
@@ -38,7 +39,7 @@ export function StrengthCard({
       accessibilityRole='none'
       className={`flex-1 items-center rounded-xl p-3 ${containerClass}`}
       entering={FadeIn.delay(animationDelay).duration(400)}
-      style={{ backgroundColor: isHighlighted ? themeColors.card : themeColors.background, borderColor: isHighlighted ? themeColors.status.success : undefined }}
+      style={[{ backgroundColor: isHighlighted ? themeColors.card : themeColors.background, borderColor: isHighlighted ? themeColors.status.success : undefined }, isHighlighted ? shadows.card : undefined]}
     >
       <ProgressRing
         ringColor={colors.ring}

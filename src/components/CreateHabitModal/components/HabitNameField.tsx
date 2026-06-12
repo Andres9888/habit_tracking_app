@@ -1,10 +1,10 @@
 import { memo, useCallback, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
 import STRINGS from '../../../constants/strings';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
-import { buildTextInputHintProps } from '@/utils/textInputHintProps';
+import { ThemedTextInput } from '@/components/ui/TextInput';
 import {
   MAX_LENGTH,
   MAX_CHARS,
@@ -14,7 +14,7 @@ import {
 } from './HabitNameField.constants';
 import { useHabitNameFieldAnimation } from './useHabitNameFieldAnimation';
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+const AnimatedTextInput = Animated.createAnimatedComponent(ThemedTextInput);
 
 const HabitNameFieldComponent = ({
   value,
@@ -58,7 +58,7 @@ const HabitNameFieldComponent = ({
         returnKeyType='done'
         style={[animatedInputStyle, { color: themeColors.text.primary }]}
         value={value}
-        {...buildTextInputHintProps(STRINGS.CREATE_HABIT.namePrompt, '#a8a29e')}
+        placeholder={STRINGS.CREATE_HABIT.namePrompt}
         onBlur={handleBlur}
         onChangeText={onChange}
         onFocus={handleFocus}

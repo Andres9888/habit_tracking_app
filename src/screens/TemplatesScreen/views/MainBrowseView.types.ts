@@ -1,41 +1,38 @@
 /**
- * Props for MainBrowseView (goal-first redesign)
+ * Props for MainBrowseView (The Guide: intake hero + short browse page)
  */
 
 import type { ReactNode } from 'react';
-import type { ViewStyle } from 'react-native';
-import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import type { ChipCategory } from '../components/QuickFilterChips';
+import type { CategoryIndexItem } from '../components/CategoryIndexGrid';
 import type { GoalCollection } from '../data/goalCollections';
+import type { ResolvedPrescription } from '../hooks/usePrescription';
+import type { BrowseRowSection } from '../hooks/useMainBrowseData';
 
 export interface MainBrowseViewProps {
-  browseCategoriesLink: ReactNode;
-  featuredBadgeLabel?: string;
-  featuredGoalId: string;
-  featuredStarterTemplates: Doc<'templates'>[];
+  categoryIndex: CategoryIndexItem[];
   feedbackOverlays: ReactNode;
-  habitCountsByGoalId: Record<string, number>;
+  goalTemplates: Doc<'templates'>[];
+  heroSubtitle?: string;
+  heroTitle?: string;
+  importedStepCounts: Record<string, number>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isSearchActive: boolean;
   modals: ReactNode;
-  onBrowseByGoal: () => void;
   onGoalSelect: (goal: GoalCollection) => void;
-  onImport: (template: Doc<'templates'>) => void;
+  onOpenCategory: (categoryId: string) => void;
+  onPopularImport: (template: Doc<'templates'>) => void;
+  onPrescriptionImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSeeAll: () => void;
-  onSelectCategory: (categoryId: string | null) => void;
-  onStartHerePress: () => void;
-  popularTemplates: Doc<'templates'>[];
-  quickFilterCategories: ChipCategory[];
-  searchAnimatedStyle: AnimatedStyle<ViewStyle>;
+  prescription: ResolvedPrescription | null;
+  rowSections: BrowseRowSection[];
   searchQuery: string;
   searchResultsSection: ReactNode;
   selectedCategory: string;
-  sessionImportCount: number;
-  starterTemplates: Doc<'templates'>[];
-  userHabitCount: number;
+  selectedGoalId: string | null;
+  totalHabitCount: number;
 }

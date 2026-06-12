@@ -2,7 +2,6 @@
  * CalendarTimeline Theme
  *
  * Centralized color configurations for calendar timeline variants.
- * Supports both standard and high-contrast modes.
  */
 
 import { colors } from '@/theme/colors';
@@ -59,31 +58,14 @@ const DARK_COLORS: CalendarTimelineColors = {
 };
 
 /**
- * High contrast color scheme (accessibility)
- */
-const HIGH_CONTRAST_COLORS: CalendarTimelineColors = {
-  currentDayBackground: '#facc15',
-  currentDayText: '#000000',
-  dayBackground: '#000000',
-  dayBorder: '#facc15',
-  dayText: '#ffffff',
-  icon: '#facc15',
-  primaryText: '#ffffff',
-  secondaryText: '#facc15',
-};
-
-/**
  * Get color theme based on mode settings
  *
- * @param highContrastMode - Whether high contrast mode is enabled
  * @param isDark - Whether dark mode is active
  * @returns Color theme object
  */
 export function getCalendarTimelineColors(
-  highContrastMode: boolean,
   isDark = false
 ): CalendarTimelineColors {
-  if (highContrastMode) return HIGH_CONTRAST_COLORS;
   return isDark ? DARK_COLORS : STANDARD_COLORS;
 }
 
@@ -100,6 +82,5 @@ export const getDatePillColors = (isDark: boolean) => ({
  */
 export const CALENDAR_THEMES = {
   dark: DARK_COLORS,
-  highContrast: HIGH_CONTRAST_COLORS,
   standard: STANDARD_COLORS,
 } as const;

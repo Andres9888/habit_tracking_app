@@ -146,6 +146,23 @@ export function validateHabitFields(args: HabitArgs): ValidatedHabitFields {
 }
 
 /**
+ * Validate weekly-schedule day indices (0 = Sunday … 6 = Saturday).
+ * The `v.array(v.number())` arg validator accepts any numbers; this enforces
+ * the domain invariant at every write path (create, update, template import).
+ */
+export function validateDaysOfWeek(days: number[] | undefined): void {
+  if (days === undefined) return;
+  if (days.length > 7) {
+    throw new Error('daysOfWeek cannot contain more than 7 entries');
+  }
+  for (const day of days) {
+    if (!Number.isInteger(day) || day < 0 || day > 6) {
+      throw new Error('daysOfWeek entries must be integers between 0 and 6');
+    }
+  }
+}
+
+/**
  * Validate habit update fields (all optional).
  */
 export function validateHabitUpdateFields(

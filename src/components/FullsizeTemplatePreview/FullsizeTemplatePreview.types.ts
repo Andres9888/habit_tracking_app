@@ -4,6 +4,7 @@
 
 import type { SharedValue } from 'react-native-reanimated';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import type { TemplatePreviewAnchor } from '../../screens/TemplatesScreen/TemplatesScreen.types';
 
 /** Props for the main FullsizeTemplatePreview component */
 export interface FullsizeTemplatePreviewProps {
@@ -11,6 +12,8 @@ export interface FullsizeTemplatePreviewProps {
   template: Doc<'templates'> | null;
   /** Modal visibility */
   visible: boolean;
+  /** Scroll target on open */
+  initialAnchor?: TemplatePreviewAnchor;
   /** Close handler — called when the X button is tapped */
   onClose: () => void;
   /** Optional back handler — when provided, a back button is rendered in the header */

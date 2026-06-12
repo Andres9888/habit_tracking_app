@@ -13,9 +13,19 @@ interface GoalCardProps {
   goal: GoalCollection;
   habitCount: number;
   onPress: () => void;
+  startedCount?: number;
 }
 
-export function GoalCard({ goal, habitCount, onPress }: GoalCardProps) {
+export function GoalCard({
+  goal,
+  habitCount,
+  onPress,
+  startedCount = 0,
+}: GoalCardProps) {
+  const metaLabel =
+    startedCount > 0
+      ? `${startedCount} of ${habitCount} started`
+      : `${habitCount} ${habitCount === 1 ? 'habit' : 'habits'}`;
   return (
     <Pressable
       accessibilityLabel={`${goal.label}: ${goal.promise}`}
@@ -26,19 +36,18 @@ export function GoalCard({ goal, habitCount, onPress }: GoalCardProps) {
       <View>
         <Text style={s.emoji}>{goal.emoji}</Text>
         <Text style={[s.label, { color: goal.textColor }]}>{goal.label}</Text>
-        <Text
-          numberOfLines={2}
-          style={[s.promise, { color: goal.textColor }]}
-        >
+        <Text numberOfLines={2} style={[s.promise, { color: goal.textColor }]}>
           {goal.promise}
         </Text>
       </View>
       <View style={s.cardBottomRow}>
-        <Text style={[s.meta, { color: goal.textColor }]}>
-          {habitCount} {habitCount === 1 ? 'habit' : 'habits'}
-        </Text>
+        <Text style={[s.meta, { color: goal.textColor }]}>{metaLabel}</Text>
         <View style={s.arrow}>
-          <ChevronRight color={goal.textColor} size={iconSizes.small} strokeWidth={2.5} />
+          <ChevronRight
+            color={goal.textColor}
+            size={iconSizes.small}
+            strokeWidth={2.5}
+          />
         </View>
       </View>
     </Pressable>

@@ -25,6 +25,12 @@ export interface EnhancedReminderSelectorProps {
   presets?: ReminderPreset[];
   /** Whether to show the next reminder badge (default: true) */
   showNextReminder?: boolean;
+  /**
+   * Create-flow only: when enabling with the seeded fallback time (never
+   * chosen by the user), snap to the nearest preset. Must stay false on
+   * edit/prefill paths where the incoming time is a real saved value.
+   */
+  snapDefaultToPresetOnEnable?: boolean;
 }
 
 export interface PresetButtonProps {

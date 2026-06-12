@@ -7,6 +7,7 @@
  * automatically.
  */
 
+import type { MutableRefObject } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { HabitsListState } from '../../hooks/useHabitsApp';
 import type { HabitsModalsState } from '../../hooks/types';
@@ -54,5 +55,6 @@ export interface UseHabitsListHandlersOptions {
     setJustCreatedHabitId: (id: Id<'habits'> | null) => void;
     shouldTriggerHabitEntrance: boolean;
     setShouldTriggerHabitEntrance: (value: boolean) => void;
+    initialEntranceDoneRef: MutableRefObject<boolean>;
   };
 }

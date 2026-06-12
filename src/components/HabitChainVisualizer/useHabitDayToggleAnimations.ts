@@ -1,6 +1,17 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
 
+const HYDRATION_WINDOW_MS = 1500;
+
+const forceValue = (animatedValue: Animated.Value, value: number) => {
+  animatedValue.setValue(value);
+  Animated.timing(animatedValue, {
+    duration: 0,
+    toValue: value,
+    useNativeDriver: true,
+  }).start();
+};
+
 interface UseHabitDayToggleAnimationsParams {
   completed: boolean;
   isToday: boolean;
@@ -18,6 +29,7 @@ export const useHabitDayToggleAnimations = ({
   // Warm amber "forge" flash that fades out on the false → true transition.
   const forgeFlash = useRef(new Animated.Value(0)).current;
   const prevCompletedRef = useRef<boolean | null>(null);
+  const mountTimeRef = useRef(Date.now());
 
   // Combine scale values using Animated.multiply
   const combinedScale = useMemo(
@@ -32,15 +44,8 @@ export const useHabitDayToggleAnimations = ({
   useLayoutEffect(() => {
     if (prevCompletedRef.current === null) {
       const initialValue = completed ? 1 : 0;
-      completion.setValue(initialValue);
-      forgeFlash.setValue(0);
-      // Force a native-side commit so the compositor reflects the value
-      // even if the JS setValue didn't propagate (known native-driver desync).
-      Animated.timing(completion, {
-        duration: 0,
-        toValue: initialValue,
-        useNativeDriver: true,
-      }).start();
+      forceValue(completion, initialValue);
+      forceValue(forgeFlash, 0);
     }
   }, [completed, completion, forgeFlash]);
 
@@ -64,8 +69,12 @@ export const useHabitDayToggleAnimations = ({
     let forgeFlashAnimation: Animated.CompositeAnimation | null = null;
     let forgeFlashSafetyTimer: ReturnType<typeof setTimeout> | null = null;
 
-    // Forge flash fires only on the false → true transition.
-    if (completed) {
+    // Forge flash fires only on user-driven false → true transitions.
+    // Skip during initial hydration when completion data arrives shortly after mount.
+    const isPastHydrationWindow =
+      Date.now() - mountTimeRef.current > HYDRATION_WINDOW_MS;
+
+    if (completed && isPastHydrationWindow) {
       forgeFlash.setValue(1);
       forgeFlashAnimation = Animated.timing(forgeFlash, {
         duration: 500,
@@ -75,7 +84,7 @@ export const useHabitDayToggleAnimations = ({
       });
       forgeFlashAnimation.start(({ finished }) => {
         if (!finished && !cancelled) {
-          forgeFlash.setValue(0);
+          forceValue(forgeFlash, 0);
         }
       });
       // Safety net: if the native-driver animation silently fails or the
@@ -83,11 +92,11 @@ export const useHabitDayToggleAnimations = ({
       // stay painted on the cell (600ms > 500ms animation duration).
       forgeFlashSafetyTimer = setTimeout(() => {
         if (!cancelled) {
-          forgeFlash.setValue(0);
+          forceValue(forgeFlash, 0);
         }
       }, 600);
     } else {
-      forgeFlash.setValue(0);
+      forceValue(forgeFlash, 0);
     }
 
     // Value changed - animate the transition
@@ -141,7 +150,7 @@ export const useHabitDayToggleAnimations = ({
       if (forgeFlashAnimation !== null) {
         forgeFlashAnimation.stop();
       }
-      forgeFlash.setValue(0);
+      forceValue(forgeFlash, 0);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [completed]);

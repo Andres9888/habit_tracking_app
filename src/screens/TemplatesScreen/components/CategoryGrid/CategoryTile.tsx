@@ -2,7 +2,9 @@
  * CategoryTile - Single category tile in the grid
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
@@ -30,33 +32,45 @@ export function CategoryTile({
 }: CategoryTileProps) {
   const { colors } = useThemeColors();
   return (
-    <Pressable
+    <AnimatedPressable
       testID={`templates-category-tile-${index}`}
       accessibilityLabel={`${label} category, ${count} ${count === 1 ? 'habit' : 'habits'}`}
       accessibilityRole='button'
+      hitSlop={0}
       style={[s.tile, { backgroundColor: bgColor }]}
-      onPress={onPress}
+      onPress={() => {
+        void triggerHaptic('tap');
+        onPress();
+      }}
     >
       <View style={s.row}>
         <Text style={s.icon}>{icon}</Text>
       </View>
       <Text style={[s.label, { color: textColor }]}>{label}</Text>
-      <Text style={[s.count, { color: colors.text.tertiary }]}>{count} {count === 1 ? 'habit' : 'habits'}</Text>
-      {previewEmojis.length > 0 ? <View style={s.previewRow}>
+      <Text style={[s.count, { color: colors.text.tertiary }]}>
+        {count} {count === 1 ? 'habit' : 'habits'}
+      </Text>
+      {previewEmojis.length > 0 ? (
+        <View style={s.previewRow}>
           {previewEmojis.map((emoji, i) => (
             <Text key={i} style={s.previewEmoji}>
               {emoji}
             </Text>
           ))}
-        </View> : null}
-    </Pressable>
+        </View>
+      ) : null}
+    </AnimatedPressable>
   );
 }
 
 const s = StyleSheet.create({
   count: { ...typography.caption, marginTop: spacing.xs },
   icon: { fontSize: 28 },
-  label: { ...typography.bodySmall, fontWeight: fontWeights.semibold, marginTop: spacing.sm },
+  label: {
+    ...typography.bodySmall,
+    fontWeight: fontWeights.semibold,
+    marginTop: spacing.sm,
+  },
   previewEmoji: { fontSize: typography.bodySmall.fontSize, opacity: 0.6 },
   previewRow: {
     flexDirection: 'row',

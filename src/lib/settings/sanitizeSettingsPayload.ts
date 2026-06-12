@@ -59,10 +59,6 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.hasPremium = source.hasPremium;
   }
 
-  if (isValidBoolean(source.highContrastMode)) {
-    output.highContrastMode = source.highContrastMode;
-  }
-
   if (isValidBoolean(source.reduceMotion)) {
     output.reduceMotion = source.reduceMotion;
   }

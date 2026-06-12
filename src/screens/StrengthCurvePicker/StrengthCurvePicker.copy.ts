@@ -29,6 +29,7 @@ export interface TierCopy {
   dipPercent: string;
   detailHeading: string;
   description: string;
+  ctaSubtitle: string;
   exampleChips: readonly string[];
 }
 
@@ -46,8 +47,8 @@ export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
     fillPercent: '+5.6%',
     dipPercent: '−3%',
     detailHeading: 'Simple habit',
-    description:
-      'A quick action that takes seconds. Forms fast and forgives slips.',
+    description: 'Takes seconds a day. Forms fast and forgives slips.',
+    ctaSubtitle: 'Day 1 → automatic in ~2.5 weeks',
     exampleChips: ['💧 Drink water', '🪥 Floss', '💊 Vitamins', '🌅 Make bed'],
   },
   balanced: {
@@ -64,7 +65,8 @@ export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
     dipPercent: '−5%',
     detailHeading: 'Regular habit',
     description:
-      'A daily action that takes 5–15 minutes. Forms steadily and bounces back from honest setbacks.',
+      "5–15 minutes a day. Builds steadily — honest slips don't erase your progress.",
+    ctaSubtitle: 'Day 1 → automatic in ~9 weeks',
     exampleChips: ['📖 Read 10 min', '🚶 Daily walk', '🧘 Meditate', '✏️ Journal'],
   },
   strict: {
@@ -80,8 +82,8 @@ export const TIER_COPY: Record<AlgorithmMode, TierCopy> = {
     fillPercent: '+0.8%',
     dipPercent: '−8%',
     detailHeading: 'Complex habit',
-    description:
-      'A big commitment that takes 30+ minutes. Months to build, but the habit goes deeper.',
+    description: '30+ minutes a day. Months to build, but the habit goes deeper.',
+    ctaSubtitle: 'Day 1 → automatic in ~4 months',
     exampleChips: ['🏃 Run 5K', '✍️ Write daily', '💪 Workout', '🧘 30-min meditate'],
   },
 };

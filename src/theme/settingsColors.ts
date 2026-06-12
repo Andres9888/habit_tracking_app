@@ -5,7 +5,7 @@
  * These colors are theme-aware and adapt to light/dark mode.
  *
  * Organized by settings section:
- * - Preferences: checkbox, circle, gradient, sound, calendarHeader
+ * - Preferences: checkbox, dayMarker, gradient, sound, calendarHeader
  * - Data: sort, archive
  * - Notifications: bell, clock, premiumTime
  * - Account: user, signOut, deleteAccount
@@ -39,7 +39,7 @@ const buildSettingsColors = (
   // Preferences
   checkbox: base,
   compact: base,
-  circle: base,
+  dayMarker: base,
   gradient: base,
   sound: base,
   calendarHeader: base,
@@ -88,7 +88,7 @@ export interface SettingsColors {
   // Preferences
   checkbox: IconColor;
   compact: IconColor;
-  circle: IconColor;
+  dayMarker: IconColor;
   gradient: IconColor;
   sound: IconColor;
   calendarHeader: IconColor;

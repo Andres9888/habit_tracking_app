@@ -1,8 +1,5 @@
-/**
- * Category/Search view mode - shows filtered template list
- */
-
-import { Pressable, View } from 'react-native';
+/** Category/search view mode — filtered template list. */
+import { View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
 import {
@@ -13,6 +10,7 @@ import {
 } from '../components';
 import type { CategorySearchViewProps } from './CategorySearchView.types';
 import { FeedbackOverlays } from './FeedbackOverlays';
+import { SortOptionsBackdrop } from './SortOptionsBackdrop';
 import { TemplatesList } from './TemplatesList';
 
 export function CategorySearchView(p: CategorySearchViewProps) {
@@ -71,6 +69,7 @@ export function CategorySearchView(p: CategorySearchViewProps) {
       <TemplateModals
         importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
+        previewInitialAnchor={p.previewInitialAnchor}
         previewTemplate={p.previewTemplate}
         showCustomizeModal={p.showCustomizeModal}
         showFullsizePreview={p.showFullsizePreview}
@@ -81,21 +80,22 @@ export function CategorySearchView(p: CategorySearchViewProps) {
         onImport={h.handleTemplateImport}
       />
       <FeedbackOverlays
+        feedbackVariant={null}
+        sessionImportCount={0}
         showCelebration={p.showCelebration}
         showToast={p.showToast}
         toastMessage={p.toastMessage}
+        toastOnAction={p.toastOnAction}
         toastTemplateData={p.toastTemplateData}
+        onAddAnother={() => p.setShowToast(false)}
         onDismissCelebration={() => p.setShowCelebration(false)}
         onDismissToast={() => p.setShowToast(false)}
+        onViewHabit={() => p.setShowToast(false)}
       />
-      {p.showSortOptions ? (
-        <Pressable
-          accessibilityLabel='Close sort options'
-          accessibilityRole='button'
-          style={styles.dropdownBackdrop}
-          onPress={() => p.setShowSortOptions(false)}
-        />
-      ) : null}
+      <SortOptionsBackdrop
+        visible={p.showSortOptions}
+        onClose={() => p.setShowSortOptions(false)}
+      />
     </View>
   );
 }

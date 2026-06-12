@@ -2,6 +2,7 @@ import { Animated, Text, View } from 'react-native';
 import { BookOpen, ChevronRight } from 'lucide-react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import STRINGS from '../../../constants/strings';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -29,13 +30,13 @@ export const TemplateHero = ({
     <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
-      className='mb-6 mt-2 flex-row items-center rounded-3xl bg-[#E8EDFF] px-[18px] py-4 shadow-lg shadow-black/10'
-      style={{ elevation: 3 }}
+      className='mb-6 mt-2 flex-row items-center rounded-3xl bg-[#E8EDFF] px-[18px] py-4'
+      style={[{ elevation: 3 }, shadows.floatingActionButton]}
       onPress={onPress}
     >
       <View
-        className='mr-4 h-11 w-11 items-center justify-center rounded-full bg-white shadow-md shadow-black/10'
-        style={{ elevation: 2 }}
+        className='mr-4 h-11 w-11 items-center justify-center rounded-full bg-white'
+        style={[{ elevation: 2 }, shadows.floatingActionButton]}
       >
         <BookOpen color='#111827' size={iconSizes.medium} strokeWidth={2} />
       </View>

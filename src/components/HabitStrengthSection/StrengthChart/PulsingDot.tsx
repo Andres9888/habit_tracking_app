@@ -1,17 +1,17 @@
 /**
  * PulsingDot Component
  *
- * Animated dot that pulses at the current chart position.
+ * Static endpoint dot at the current chart position (motion rule: no
+ * decorative infinite loops). Name/props kept so StrengthChart is unchanged.
  */
 
 import React from 'react';
 
-import Animated from 'react-native-reanimated';
 import { Circle } from 'react-native-svg';
 
-import { DOT_RADIUS } from '../constants';
+import { useThemeColors } from '@/theme/ThemeContext';
 
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+import { DOT_RADIUS } from '../constants';
 
 interface PulsingDotProps {
   /** X coordinate */
@@ -20,35 +20,31 @@ interface PulsingDotProps {
   cy: number;
   /** Dot fill color */
   color: string;
-  /** Animated props from useAnimatedProps */
-  animatedDotProps: object;
+  /** Unused; kept for call-site compatibility */
+  animatedDotProps?: object;
 }
 
 /**
- * Renders an animated pulsing dot with a solid center.
+ * Renders a static endpoint dot with a card-color halo.
  */
 export const PulsingDot = React.memo(function PulsingDot({
   cx,
   cy,
   color,
-  animatedDotProps,
 }: PulsingDotProps) {
+  const { colors } = useThemeColors();
   // Guard against NaN coordinates - default to 0
   const safeCx = typeof cx === 'number' && !Number.isNaN(cx) ? cx : 0;
   const safeCy = typeof cy === 'number' && !Number.isNaN(cy) ? cy : 0;
 
   return (
-    <>
-      {/* Pulsing outer dot */}
-      <AnimatedCircle
-        animatedProps={animatedDotProps}
-        cx={safeCx}
-        cy={safeCy}
-        fill={color}
-      />
-
-      {/* Solid dot center */}
-      <Circle cx={safeCx} cy={safeCy} fill={color} r={DOT_RADIUS} />
-    </>
+    <Circle
+      cx={safeCx}
+      cy={safeCy}
+      fill={color}
+      r={DOT_RADIUS}
+      stroke={colors.card}
+      strokeWidth={2}
+    />
   );
 });

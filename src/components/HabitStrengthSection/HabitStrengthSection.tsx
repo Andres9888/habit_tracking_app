@@ -9,7 +9,7 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { durations } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -17,17 +17,16 @@ import { colors as palette } from '@/theme/colors';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { shadows } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
 import { StrengthProgressBar } from '../StrengthProgressBar';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { getStrengthJourney } from './journey';
 import { MilestoneTrack } from './MilestoneTrack';
+import { SectionHeader } from './SectionHeader';
 import { StrengthChart } from './StrengthChart';
 import { StrengthEmptyState } from './StrengthEmptyState';
 import { StrengthHero } from './StrengthHero';
 import { StrengthSkeleton } from './StrengthSkeleton';
 import { StrengthStatsRow } from './StrengthStatsRow';
-import { TimeRangeToggle } from './TimeRangeToggle';
 import { TrendMessage } from './TrendMessage';
 import type { HabitStrengthSectionProps } from './types';
 
@@ -56,33 +55,40 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 
   if (isCalculating) return <StrengthSkeleton />;
 
-  if (isEmpty) return <StrengthEmptyState startingEmoji={progressEmojis.starting} />;
+  if (isEmpty)
+    return <StrengthEmptyState startingEmoji={progressEmojis.starting} />;
 
   return (
     <Animated.View
-      className='overflow-hidden rounded-2xl shadow-sm'
-      entering={reduceMotion ? undefined : FadeInDown.duration(durations.enter).delay(100).easing(Easing.out(Easing.cubic))}
+      className='overflow-hidden rounded-2xl'
+      entering={
+        reduceMotion
+          ? undefined
+          : FadeInDown.duration(durations.enter)
+              .delay(100)
+              .easing(Easing.out(Easing.cubic))
+      }
       style={{
         ...shadows.card,
         // Warm near-white card surface — the same surface the home HabitCard
         // uses (colors.light.surfaceMuted). Keep the theme card token in dark.
         backgroundColor: isDark ? themeColors.card : palette.light.surfaceMuted,
+        borderColor: themeColors.border,
+        borderWidth: 1,
       }}
     >
-      <View className='p-5'>
-        <View className='mb-4 flex-row items-center justify-between'>
-          <Text style={{ ...typography.heading3, color: themeColors.text.primary }}>
-            Habit Strength
-          </Text>
-          <TimeRangeToggle value={timeRange} onChange={setTimeRange} />
-        </View>
+      <View className='p-4'>
+        <SectionHeader value={timeRange} onChange={setTimeRange} />
 
         <View className='mb-5'>
           <StrengthHero journey={journey} strength={currentStrength} />
         </View>
 
         <View className='mb-4'>
-          <MilestoneTrack currentIndex={journey.index} levels={journey.levels} />
+          <MilestoneTrack
+            currentIndex={journey.index}
+            levels={journey.levels}
+          />
         </View>
 
         <View className='mb-5'>
@@ -96,7 +102,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           />
         </View>
 
-        <View className='-mx-5 mb-3'>
+        <View className='-mx-4 mb-3'>
           <StrengthChart
             color={stageColor}
             currentStrength={currentStrength}

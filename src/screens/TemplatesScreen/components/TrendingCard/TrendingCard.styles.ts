@@ -15,12 +15,28 @@ const ICON_BOX = 48;
 const ADD_BUTTON_SIZE = 44;
 
 export const s = StyleSheet.create({
+  // Feb-2026 carousel accent system (MiniTemplateCard heritage): 4px
+  // habit-colored bar on the left edge + faint same-color wash.
+  accent: {
+    borderBottomLeftRadius: borderRadius.large,
+    borderTopLeftRadius: borderRadius.large,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: 4,
+  },
   card: {
     ...shadows.card,
     borderRadius: borderRadius.large,
     borderWidth: 1.5,
+    overflow: 'hidden',
     padding: spacing.sm,
+    paddingLeft: spacing.sm + 6,
     width: CARD_WIDTH,
+  },
+  tintOverlay: {
+    ...StyleSheet.absoluteFillObject,
   },
   iconBox: {
     alignItems: 'center',

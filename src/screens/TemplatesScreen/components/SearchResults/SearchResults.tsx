@@ -5,15 +5,14 @@
  * MainBrowseView below the sticky SearchBar, so the bar never remounts.
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import type { Doc, Id } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { spacing } from '../../../../theme/spacing';
-import { fontWeights, typography } from '../../../../theme/typography';
 import type { SortOption } from '../../../templates/constants';
-import { styles } from '../../../templates/templatesScreenStyles';
+import { styles as templateStyles } from '../../../templates/templatesScreenStyles';
 import { TemplatesList } from '../../views/TemplatesList';
 import { FilterControls } from '../FilterControls';
+import { styles as s } from './styles';
 
 interface SearchResultsProps {
   filteredTemplates: Doc<'templates'>[];
@@ -38,11 +37,12 @@ export function SearchResults(p: SearchResultsProps) {
   const count = p.filteredTemplates.length;
   const label = count === 1 ? 'habit' : 'habits';
   const trimmedQuery = p.searchQuery.trim();
+  const showSearchEmptyState = count === 0 && trimmedQuery.length > 0;
   const headerText = trimmedQuery
-    ? `${count} ${label} for "${trimmedQuery}"`
-    : p.selectedCategory !== 'all'
-      ? `${count} ${label} · ${p.getCategoryLabel(p.selectedCategory)}`
-      : `${count} ${label}`;
+    ? `${count} ${label} for “${trimmedQuery}”`
+    : p.selectedCategory === 'all'
+      ? `${count} ${label}`
+      : `${count} ${label} · ${p.getCategoryLabel(p.selectedCategory)}`;
 
   return (
     <View style={s.wrap}>
@@ -57,42 +57,38 @@ export function SearchResults(p: SearchResultsProps) {
           onToggleSortOptions={p.onToggleSortOptions}
         />
       </View>
-      <TemplatesList
-        effectiveViewMode='search'
-        filteredTemplates={p.filteredTemplates}
-        getCategoryLabel={p.getCategoryLabel}
-        hasActiveFilters={p.hasActiveFilters}
-        importedTemplateIds={p.importedTemplateIds}
-        importingTemplateId={p.importingTemplateId}
-        searchQuery={p.searchQuery}
-        selectedCategory={p.selectedCategory}
-        onImport={p.onImport}
-        onPreview={p.onPreview}
-        onResetFilters={p.onResetFilters}
-      />
+      {showSearchEmptyState ? (
+        <View style={[s.empty, { borderColor: colors.border }]}>
+          <Text style={[s.emptyTitle, { color: colors.text.primary }]}>
+            No habits match “{trimmedQuery}”
+          </Text>
+          <Text style={[s.emptyDescription, { color: colors.text.secondary }]}>
+            Try a different word, or browse by category below.
+          </Text>
+        </View>
+      ) : (
+        <TemplatesList
+          effectiveViewMode='search'
+          filteredTemplates={p.filteredTemplates}
+          getCategoryLabel={p.getCategoryLabel}
+          hasActiveFilters={p.hasActiveFilters}
+          importedTemplateIds={p.importedTemplateIds}
+          importingTemplateId={p.importingTemplateId}
+          searchQuery={p.searchQuery}
+          selectedCategory={p.selectedCategory}
+          onImport={p.onImport}
+          onPreview={p.onPreview}
+          onResetFilters={p.onResetFilters}
+        />
+      )}
       {p.showSortOptions ? (
         <Pressable
           accessibilityLabel='Close sort options'
           accessibilityRole='button'
-          style={styles.dropdownBackdrop}
+          style={templateStyles.dropdownBackdrop}
           onPress={() => p.setShowSortOptions(false)}
         />
       ) : null}
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  count: { ...typography.bodySmall, flex: 1 },
-  countNumber: { fontWeight: fontWeights.bold },
-  countQuery: { fontWeight: fontWeights.semibold },
-  resultHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-    paddingBottom: spacing.sm,
-    paddingHorizontal: spacing.base,
-    paddingTop: spacing.sm,
-  },
-  wrap: { flex: 1 },
-});

@@ -1,22 +1,18 @@
 /** DetailCompleteButton - Full-width complete-today toggle under the hero. */
 import { Check } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
-import { springs } from '../../../theme/animations';
+import { Pressable, View } from 'react-native';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { durations } from '../../../theme/animations';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 import { useThemeColors } from '../../../theme';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { useDetailCompleteButtonAnimation } from './DetailCompleteButton.hooks';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /** Button-only dimensions with no shared token equivalent. */
 const INDICATOR_SIZE = 24;
-const PRESS_SCALE = 0.98;
 
 interface DetailCompleteButtonProps {
   disabled?: boolean;
@@ -30,21 +26,15 @@ export function DetailCompleteButton({
   onPress,
 }: DetailCompleteButtonProps) {
   const { colors } = useThemeColors();
-  const scale = useSharedValue(1);
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
+  const reduceMotion = useReduceMotion();
+  const { checkStyle, circleStyle, containerStyle, filledCircleStyle, pressHandlers } =
+    useDetailCompleteButtonAnimation(isCompletedToday, {
+      primaryBg: colors.text.primary,
+      successBg: colors.status.success,
+    });
 
-  const indicator = {
-    alignItems: 'center' as const,
-    borderRadius: borderRadius.full,
-    height: INDICATOR_SIZE,
-    justifyContent: 'center' as const,
-    width: INDICATOR_SIZE,
-    ...(isCompletedToday
-      ? { backgroundColor: colors.text.inverse }
-      : { borderColor: colors.text.inverse, borderWidth: 2, opacity: 0.7 }),
-  };
+  const labelEnter = reduceMotion ? undefined : FadeIn.duration(durations.quick);
+  const labelExit = reduceMotion ? undefined : FadeOut.duration(durations.quick);
 
   return (
     <AnimatedPressable
@@ -57,11 +47,8 @@ export function DetailCompleteButton({
       className='flex-row items-center justify-center'
       disabled={disabled}
       style={[
-        animatedStyle,
+        containerStyle,
         {
-          backgroundColor: isCompletedToday
-            ? colors.status.success
-            : colors.text.primary,
           borderRadius: borderRadius.large,
           gap: spacing.sm + spacing.xs,
           marginHorizontal: spacing.base + spacing.xs,
@@ -71,19 +58,54 @@ export function DetailCompleteButton({
         },
       ]}
       onPress={onPress}
-      onPressIn={() => {
-        scale.value = withTiming(PRESS_SCALE, { duration: 80 });
-      }}
-      onPressOut={() => {
-        scale.value = withSpring(1, springs.button);
-      }}
+      onPressIn={pressHandlers.onPressIn}
+      onPressOut={pressHandlers.onPressOut}
     >
-      <View style={indicator}>
-        {isCompletedToday ? (
-          <Check color={colors.status.success} size={15} strokeWidth={3.5} />
-        ) : null}
+      <View
+        style={{
+          alignItems: 'center',
+          height: INDICATOR_SIZE,
+          justifyContent: 'center',
+          width: INDICATOR_SIZE,
+        }}
+      >
+        <Animated.View
+          style={[
+            circleStyle,
+            {
+              borderColor: colors.text.inverse,
+              borderRadius: borderRadius.full,
+              borderWidth: 2,
+              height: INDICATOR_SIZE,
+              opacity: 0.7,
+              position: 'absolute',
+              width: INDICATOR_SIZE,
+            },
+          ]}
+        />
+        <Animated.View
+          style={[
+            filledCircleStyle,
+            {
+              alignItems: 'center',
+              backgroundColor: colors.text.inverse,
+              borderRadius: borderRadius.full,
+              height: INDICATOR_SIZE,
+              justifyContent: 'center',
+              position: 'absolute',
+              width: INDICATOR_SIZE,
+            },
+          ]}
+        >
+          <Animated.View style={checkStyle}>
+            <Check color={colors.status.success} size={15} strokeWidth={3.5} />
+          </Animated.View>
+        </Animated.View>
       </View>
-      <Text
+      <Animated.Text
+        key={isCompletedToday ? 'done' : 'pending'}
+        entering={labelEnter}
+        exiting={labelExit}
         style={{
           ...typography.body,
           color: colors.text.inverse,
@@ -91,7 +113,7 @@ export function DetailCompleteButton({
         }}
       >
         {isCompletedToday ? 'Completed Today' : 'Complete Today'}
-      </Text>
+      </Animated.Text>
     </AnimatedPressable>
   );
 }

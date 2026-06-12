@@ -1,32 +1,17 @@
 /**
  * @module colorUtils
  *
- * Color derivation for habit cards. Handles high-contrast mode,
- * icon backgrounds, streak badge colors, and accent fallbacks.
+ * Color derivation for habit cards. Handles icon backgrounds,
+ * streak badge colors, and accent fallbacks.
  */
 
-import { colors as themeTokens } from '@/theme/colors';
 import type { CardColors } from './types';
 
 /** Fallback accent when no habit-specific color is set (violet-500). */
 const DEFAULT_ACCENT_COLOR = '#8b5cf6';
 
-/**
- * Return the full {@link CardColors} token set based on accessibility mode.
- * High-contrast mode uses a dark background with yellow accents for WCAG AAA.
- */
-export function getCardColors(highContrastMode: boolean): CardColors {
-  if (highContrastMode) {
-    return {
-      border: '#facc15',
-      cardBackground: '#111111',
-      iconContainer: '#facc15',
-      primaryText: themeTokens.text.inverse,
-      streakText: '#facc15',
-      strengthBackground: '#10b981',
-    };
-  }
-
+/** Return the full {@link CardColors} token set. */
+export function getCardColors(): CardColors {
   return {
     border: '#f5f5f4', // stone-100 - subtle border
     cardBackground: '#ffffff', // Pure white for better contrast against beige bg
@@ -38,13 +23,7 @@ export function getCardColors(highContrastMode: boolean): CardColors {
 }
 
 /** Map an accent color to a soft pastel background for the icon container. */
-export function getIconBackground(
-  accentColor: string,
-  highContrastMode: boolean,
-  iconContainer: string | undefined
-): string {
-  if (highContrastMode) return iconContainer ?? '#facc15';
-
+export function getIconBackground(accentColor: string): string {
   const colorMap: Record<string, string> = {
     '#0891b2': 'rgba(207, 250, 254, 0.85)', // cyan-100
     '#059669': 'rgba(209, 250, 229, 0.85)', // emerald-100
@@ -74,11 +53,7 @@ export function getEffectiveAccentColor(
   return accentColor || DEFAULT_ACCENT_COLOR;
 }
 
-/** Get the left accent border color (yellow in high-contrast, accent otherwise). */
-export function getBorderAccentColor(
-  highContrastMode: boolean,
-  accentColor: string | undefined
-): string {
-  if (highContrastMode) return '#facc15';
+/** Get the left accent border color from the habit accent. */
+export function getBorderAccentColor(accentColor: string | undefined): string {
   return getEffectiveAccentColor(accentColor);
 }

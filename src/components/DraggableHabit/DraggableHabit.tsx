@@ -54,7 +54,6 @@ function DraggableHabit(props: DraggableHabitProps) {
     entranceDelay = 0,
     entranceVariant = 'widthExpansion',
     habit,
-    highContrastMode = false,
     isCompactMode = false,
     isConnectedToNextWeek = false,
     isConnectedToPreviousWeek = false,
@@ -87,7 +86,6 @@ function DraggableHabit(props: DraggableHabitProps) {
   // 1. Derive visual state (colors, emoji, record detection)
   const state = useDraggableHabitState({
     habit,
-    highContrastMode,
     previousStreak,
     streak,
     weekStatus,
@@ -148,7 +146,6 @@ function DraggableHabit(props: DraggableHabitProps) {
       entranceCardStyle={entrance.cardStyle}
       entranceContentStyle={entrance.contentStyle}
       habit={habit}
-      highContrastMode={highContrastMode}
       isCompactMode={isCompactMode}
       isConnectedToNextWeek={isConnectedToNextWeek}
       isConnectedToPreviousWeek={isConnectedToPreviousWeek}

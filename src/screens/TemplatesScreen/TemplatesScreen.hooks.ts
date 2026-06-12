@@ -5,10 +5,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import type { TemplateToastData } from '../../components/TemplateAddedToast';
 import type { Category, SortOption } from '../templates/constants';
 import { useExpandedCategories } from './hooks/useExpandedCategories';
-import type { BrowseTab, ViewMode } from './TemplatesScreen.types';
+import { useFeedbackState } from './hooks/useFeedbackState';
+import { useImportedTemplateIdsSync } from './hooks/useImportedTemplateIdsSync';
+import type {
+  BrowseTab,
+  TemplatePreviewAnchor,
+  ViewMode,
+} from './TemplatesScreen.types';
 
 interface UseTemplatesScreenStateOptions {
   categories: { id: string }[] | undefined;
@@ -31,33 +36,12 @@ export function useTemplatesScreenState({
   const [previewTemplate, setPreviewTemplate] =
     useState<Doc<'templates'> | null>(null);
   const [showFullsizePreview, setShowFullsizePreview] = useState(false);
+  const [previewInitialAnchor, setPreviewInitialAnchor] =
+    useState<TemplatePreviewAnchor>('top');
   const [showCustomizeModal, setShowCustomizeModal] = useState(false);
-  const [importedTemplateIds, setImportedTemplateIds] = useState<Set<string>>(
-    new Set()
-  );
-  const syncedRef = useRef(false);
-  useEffect(() => {
-    if (initialImportedIds && initialImportedIds.size > 0 && !syncedRef.current) {
-      syncedRef.current = true;
-      setImportedTemplateIds((prev) => {
-        const merged = new Set(prev);
-        for (const id of initialImportedIds) merged.add(id);
-        return merged;
-      });
-    }
-  }, [initialImportedIds]);
-  const [showToast, setShowToast] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
-  const [toastTemplateData, setToastTemplateData] =
-    useState<TemplateToastData | null>(null);
-  const [feedbackHabitId, setFeedbackHabitId] = useState<Id<'habits'> | null>(
-    null
-  );
-  const [feedbackVariant, setFeedbackVariant] = useState<
-    'success' | 'already_exists' | null
-  >(null);
-  const [sessionImportCount, setSessionImportCount] = useState(0);
+  const { importedTemplateIds, setImportedTemplateIds } =
+    useImportedTemplateIdsSync(initialImportedIds);
+  const feedback = useFeedbackState();
   const [importingTemplateId, setImportingTemplateId] =
     useState<Id<'templates'> | null>(null);
   const [showSortOptions, setShowSortOptions] = useState(false);
@@ -83,8 +67,7 @@ export function useTemplatesScreenState({
     debouncedSearchQuery,
     effectiveViewMode,
     expandedCategories,
-    feedbackHabitId,
-    feedbackVariant,
+    ...feedback,
     flatListRef,
     hasActiveFilters,
     importedTemplateIds,
@@ -92,40 +75,30 @@ export function useTemplatesScreenState({
     isSearchActive,
     isSearching,
     isSeeding,
+    previewInitialAnchor,
     previewTemplate,
     searchQuery,
     selectedCategory,
-    sessionImportCount,
     setBrowseTab,
-    setShowCelebration,
     setExpandedCategories,
-    setFeedbackHabitId,
-    setFeedbackVariant,
     setImportedTemplateIds,
     setImportingTemplateId,
     setIsSeeding,
+    setPreviewInitialAnchor,
     setPreviewTemplate,
     setSearchQuery,
     setSelectedCategory,
-    setSessionImportCount,
     setShowCustomizeModal,
     setShowFullsizePreview,
     setShowPaywall,
     setShowSortOptions,
-    setShowToast,
     setSortOption,
-    setToastMessage,
-    setToastTemplateData,
     setViewMode,
-    showCelebration,
     showCustomizeModal,
     showFullsizePreview,
     showPaywall,
     showSortOptions,
-    showToast,
     sortOption,
-    toastMessage,
-    toastTemplateData,
     viewMode,
   };
 }

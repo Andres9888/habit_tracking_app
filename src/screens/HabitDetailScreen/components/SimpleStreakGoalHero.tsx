@@ -3,12 +3,15 @@
  * Replaces the milestone-heavy StreakGoalCard inside the Goal tab.
  */
 import { Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
-import { borderRadius } from '../../../theme/spacing';
+import { durations, enterEasing } from '../../../theme/animations';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
+import { fontWeights, typography } from '../../../theme/typography';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useStreakGoalAnimation } from './SimpleStreakGoalHero.hooks';
+import { StreakGoalNumeral } from './StreakGoalNumeral';
 
 interface SimpleStreakGoalHeroProps {
   currentStreak: number;
@@ -16,9 +19,6 @@ interface SimpleStreakGoalHeroProps {
   habitColor: string;
 }
 
-/** Oversized hero numeral — intentionally larger than any typography token. */
-const STREAK_NUMBER_SIZE = 72;
-const STREAK_NUMBER_LINE = 76;
 const PROGRESS_BAR_HEIGHT = 10;
 
 export function SimpleStreakGoalHero({
@@ -27,63 +27,33 @@ export function SimpleStreakGoalHero({
   habitColor,
 }: SimpleStreakGoalHeroProps) {
   const { colors } = useThemeColors();
+  const reduceMotion = useReduceMotion();
   const { overallPercent, daysRemaining } = useStreakGoalData(
     currentStreak,
     streakGoal
   );
-  const { barStyle, percentText, daysText } = useStreakGoalAnimation(
-    overallPercent,
-    daysRemaining
-  );
+  const { barStyle, daysText, isGoalReached, percentText, showLabels, streakText } =
+    useStreakGoalAnimation(
+      overallPercent,
+      daysRemaining,
+      currentStreak,
+      streakGoal
+    );
   const goalLabel = `${streakGoal} ${streakGoal === 1 ? 'day' : 'days'}`;
+  const labelEnter = reduceMotion
+    ? undefined
+    : FadeIn.duration(durations.standard).delay(durations.progress).easing(enterEasing);
 
   return (
     <View>
-      <View className='items-center'>
-        <Text
-          style={{
-            ...typography.caption,
-            color: colors.text.secondary,
-            fontWeight: fontWeights.bold,
-            letterSpacing: 1.6,
-            textTransform: 'uppercase',
-          }}
-        >
-          Current streak
-        </Text>
-        <Text
-          style={{
-            color: colors.text.primary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: STREAK_NUMBER_SIZE,
-            fontWeight: fontWeights.semibold,
-            letterSpacing: -2,
-            lineHeight: STREAK_NUMBER_LINE,
-            marginTop: 6,
-          }}
-        >
-          {currentStreak}
-        </Text>
-        <Text
-          style={{
-            ...typography.body,
-            color: colors.text.secondary,
-            marginTop: 8,
-          }}
-        >
-          of{' '}
-          <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
-            {goalLabel}
-          </Text>
-        </Text>
-      </View>
+      <StreakGoalNumeral animatedStreak={streakText} goalLabel={goalLabel} />
 
       <View className='mt-5'>
         <View
           accessibilityRole='progressbar'
           accessibilityValue={{ max: 100, min: 0, now: overallPercent }}
           style={{
-            backgroundColor: colors.gray[200],
+            backgroundColor: colors.gray[100],
             borderRadius: borderRadius.full,
             height: PROGRESS_BAR_HEIGHT,
             overflow: 'hidden',
@@ -93,20 +63,44 @@ export function SimpleStreakGoalHero({
             style={[{ backgroundColor: habitColor, height: '100%' }, barStyle]}
           />
         </View>
-        <View className='mt-2 flex-row justify-between'>
-          <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-            <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
-              {percentText}%
-            </Text>{' '}
-            complete
+        {isGoalReached ? (
+          <Text
+            style={{
+              ...typography.bodySmall,
+              color: colors.status.success,
+              fontWeight: fontWeights.semibold,
+              marginTop: spacing.sm,
+              textAlign: 'center',
+            }}
+          >
+            Goal reached — extend it?
           </Text>
-          <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-            <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
-              {daysText}
-            </Text>{' '}
-            to go
-          </Text>
-        </View>
+        ) : showLabels ? (
+          <Animated.View className='mt-2 flex-row justify-between' entering={labelEnter}>
+            <Text style={{ ...typography.caption, color: colors.text.secondary }}>
+              <Text
+                style={{
+                  color: colors.text.primary,
+                  fontWeight: fontWeights.semibold,
+                }}
+              >
+                {percentText}%
+              </Text>{' '}
+              complete
+            </Text>
+            <Text style={{ ...typography.caption, color: colors.text.secondary }}>
+              <Text
+                style={{
+                  color: colors.text.primary,
+                  fontWeight: fontWeights.semibold,
+                }}
+              >
+                {daysText}
+              </Text>{' '}
+              {daysText === 1 ? 'day' : 'days'} to go
+            </Text>
+          </Animated.View>
+        ) : null}
       </View>
     </View>
   );

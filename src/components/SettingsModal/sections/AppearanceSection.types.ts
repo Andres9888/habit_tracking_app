@@ -3,11 +3,6 @@ import type { ReactNode } from 'react';
 import type { DarkModePreference } from '../../../../convex/settings/types';
 
 export interface AppearanceSectionProps {
-  /** Active palette signal — round-trips through the parent's Convex query */
-  highContrastMode: boolean;
-  /** Optimistic setting value driving the High contrast switch position */
-  highContrastEnabled: boolean;
-  onChangeHighContrast: (value: boolean) => void | Promise<void>;
   darkModePreference: DarkModePreference;
   onChangeDarkModePreference: (
     value: DarkModePreference
