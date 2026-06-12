@@ -23,6 +23,7 @@ export function useHabitsListState() {
     useState(false);
 
   const seenHabitIdsRef = useRef<Set<string>>(new Set());
+  const initialEntranceDoneRef = useRef(false);
 
   // Animation values
   const headerOpacity = useRef(new Animated.Value(1)).current;
@@ -52,6 +53,7 @@ export function useHabitsListState() {
     handleHabitEntranceComplete,
     headerOpacity,
     headerTranslateY,
+    initialEntranceDoneRef,
     justCreatedHabitId,
     seenHabitIdsRef,
     setJustCreatedHabitId,

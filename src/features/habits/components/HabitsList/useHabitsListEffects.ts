@@ -2,7 +2,7 @@
  * HabitsList Effects - Side effect hooks for HabitsList
  */
 
-import { useEffect } from 'react';
+import { useEffect, type MutableRefObject } from 'react';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import {
   ENTRANCE_ANIMATION_DELAY_MS,
@@ -18,6 +18,7 @@ interface UseHabitsListEffectsOptions {
   shouldTriggerHabitEntrance: boolean;
   setShouldTriggerHabitEntrance: (value: boolean) => void;
   habitsLength: number;
+  initialEntranceDoneRef: MutableRefObject<boolean>;
 }
 
 /**
@@ -32,6 +33,7 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
     shouldTriggerHabitEntrance,
     setShouldTriggerHabitEntrance,
     habitsLength,
+    initialEntranceDoneRef,
   } = options;
 
   // Clear "just created" highlight after a delay
@@ -51,4 +53,9 @@ export function useHabitsListEffects(options: UseHabitsListEffectsOptions) {
     shouldTriggerHabitEntrance,
     setShouldTriggerHabitEntrance,
   ]);
+
+  // After the first commit with rows, later virtualization mounts skip entering
+  useEffect(() => {
+    if (habitsLength > 0) initialEntranceDoneRef.current = true;
+  }, [habitsLength, initialEntranceDoneRef]);
 }
