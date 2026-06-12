@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Complete Button + Goal Adjust: Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5F0; --card:#FFFFFF; --ink:#1C1B18; --muted:#8A8578;
+  --green:#4D7C5F; --green-deep:#3D6850; --green-soft:#E8F0EA;
+  --primary:#2B2A26; --line:#E7E3DA; --error:#DC2626; --error-soft:rgba(220,38,38,.1);
+  --shadow-card:0 1px 2px rgba(28,27,24,.05),0 4px 16px rgba(28,27,24,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);padding:48px 24px 96px}
+.wrap{max-width:1060px;margin:0 auto}
+h1{font-family:'Literata',serif;font-size:34px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);margin-top:8px;max-width:720px;line-height:1.55;font-size:15px}
+.section{margin-top:64px}
+.section h2{font-family:'Literata',serif;font-size:22px;font-weight:600;display:flex;align-items:center;gap:12px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-family:'Inter';font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+@media(max-width:760px){.pair{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow-card);position:relative}
+.panel.after{border-color:#CFDCD3;background:linear-gradient(180deg,#FFFFFF 0%,#FBFDFB 100%)}
+.tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px;display:inline-block;margin-bottom:18px}
+.tag.before{background:#F0EDE6;color:#9A937F}
+.tag.after{background:var(--green-soft);color:var(--green-deep)}
+.stage{min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.replay{margin-top:18px;width:100%;padding:10px;border:1px solid var(--line);background:#FAF9F5;border-radius:12px;font:600 13px 'Inter';color:var(--ink);cursor:pointer;transition:background .15s}
+.replay:hover{background:#F1EFE7}
+.replay-row{display:flex;gap:8px;margin-top:18px}
+.replay-row .replay{margin-top:0}
+.why{margin-top:20px;background:#FCFBF7;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.6;color:#4A463C}
+.why b{color:var(--ink)}
+.note{font-size:12px;color:var(--muted);text-align:center;max-width:320px;line-height:1.45}
+.timing{font-family:ui-monospace,monospace;font-size:11px;color:#B45309;background:#FEF3C7;padding:3px 8px;border-radius:6px;margin-top:4px}
+
+/* ---- Complete button ---- */
+.cbtn{width:280px;height:56px;border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font:600 16px 'Inter';color:#fff;background:var(--primary);position:relative;overflow:hidden;box-shadow:var(--shadow-card);transform-origin:center}
+.cbtn .lbl{position:relative;z-index:2}
+.cbtn .icon{width:22px;height:22px;flex:none;position:relative;z-index:2}
+.cbtn .icon svg{position:absolute;inset:0}
+.cbtn .bgfill{position:absolute;inset:0;background:var(--green);opacity:0;z-index:0}
+.cbtn .circle,.cbtn .check{transition:none}
+.cbtn .check{opacity:0}
+.cbtn .lbl .l2{position:absolute;inset:0;opacity:0}
+.cbtn .lbl .l1{opacity:1}
+
+/* Before — Round 1 shipped: double-scale check + celebration pulse + 200ms fade */
+.cbtn.b .bgfill{transition:opacity .2s ease}
+.cbtn.b.done .bgfill{opacity:1}
+.cbtn.b.done{
+  animation:celebratePulse .7s cubic-bezier(.34,1.56,.64,1) .15s;
+}
+@keyframes celebratePulse{
+  0%{transform:scale(1)}
+  35%{transform:scale(1.04)}
+  55%{transform:scale(.98)}
+  75%{transform:scale(1.02)}
+  100%{transform:scale(1)}
+}
+.cbtn.b.done .circle{opacity:0;transition:opacity .2s ease}
+.cbtn.b.done .check{
+  display:block;
+  animation:blurryCheck .65s cubic-bezier(.34,1.8,.64,1) .1s forwards;
+}
+@keyframes blurryCheck{
+  0%{opacity:0;transform:scale(0);filter:blur(3px)}
+  25%{opacity:.5;transform:scale(.08);filter:blur(2.5px)}
+  60%{opacity:.85;transform:scale(.55);filter:blur(1px)}
+  100%{opacity:1;transform:scale(1);filter:blur(0)}
+}
+.cbtn.b.done .lbl .l1{opacity:0;transition:opacity .15s ease}
+.cbtn.b.done .lbl .l2{opacity:1;transition:opacity .15s ease .12s}
+
+/* After — Round 2 fix: circle-only 0.6→1, button spring, 150ms fade, no pulse */
+.cbtn.a .bgfill{transition:opacity .15s ease}
+.cbtn.a.done .bgfill{opacity:1}
+.cbtn.a.done .circle{opacity:0;transition:opacity .15s ease}
+.cbtn.a.done .check{
+  display:block;
+  animation:crispCheck .22s cubic-bezier(.22,1,.36,1) .08s forwards;
+}
+@keyframes crispCheck{
+  from{opacity:0;transform:scale(.6)}
+  to{opacity:1;transform:scale(1)}
+}
+.cbtn.a.done .lbl .l1{opacity:0;transition:opacity .15s ease}
+.cbtn.a.done .lbl .l2{opacity:1;transition:opacity .15s ease .08s}
+
+/* ---- Goal Adjust sheet ---- */
+.sheet{width:100%;max-width:320px;background:#fff;border:1px solid var(--line);border-radius:20px 20px 0 0;padding:16px 18px 20px;box-shadow:var(--shadow-card)}
+.sheet .handle{width:40px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 14px}
+.sheet h3{font-family:'Literata',serif;font-size:18px;font-weight:600;text-align:center}
+.sheet .sub2{font-size:12px;color:var(--muted);text-align:center;margin:4px 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px;min-height:76px}
+.chip{
+  padding:8px 16px;border-radius:99px;background:#fff;font:500 13px 'Inter';
+  cursor:pointer;color:#6B6560;border:1px solid var(--line);
+  position:relative;
+}
+.chip .dot{
+  position:absolute;top:-3px;right:-3px;width:6px;height:6px;border-radius:50%;
+  background:var(--green);display:none;
+}
+.chip.rec .dot{display:block}
+.chip.rec{border-width:1.5px}
+.chip.sel{background:rgba(77,124,95,.1);border-color:var(--green);color:var(--green-deep);font-weight:700}
+.chip.sel.rec{border-width:1.5px}
+
+/* Before chips — dead press, instant swap, jiggle on recommended */
+.chips.b .chip:not(.sel).rec{border-width:1.5px}
+.chips.b .chip.sel:not(.rec){border-width:1px}
+.chips.b .chip:active{opacity:.7}
+
+/* After chips — press scale + eased selection + constant border */
+.chips.a .chip{border-width:1.5px;transition:transform .08s ease,background .15s ease,border-color .15s ease,color .15s ease}
+.chips.a .chip:active{transform:scale(.96)}
+.chips.a.saving .chip{opacity:.45;pointer-events:none}
+
+.remove{
+  width:100%;padding:12px;border-radius:12px;text-align:center;
+  font:600 13px 'Inter';color:var(--error);cursor:pointer;background:transparent;border:none;
+}
+.remove.b:active{opacity:.6}
+.remove.a{transition:transform .08s ease,background .15s ease,opacity .15s ease}
+.remove.a:active:not(:disabled){transform:scale(.96)}
+.remove.a.confirm{background:var(--error-soft)}
+.remove.a:disabled{opacity:.6;cursor:not-allowed}
+.save{
+  width:100%;padding:12px;border-radius:12px;text-align:center;margin-bottom:8px;
+  font:600 14px 'Inter';color:#fff;background:var(--primary);border:none;
+}
+.save.saving{opacity:.7}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Complete Button + Goal Adjust — Round 2 polish</h1>
+  <p class="sub">Before / after mock for the Round 2 plan. <b>Before</b> panels simulate what landed in Round 1 (over-animated button, dead Goal Adjust chips). <b>After</b> panels show the tightened completion moment and polished sheet. Click elements or replay buttons to run each interaction.</p>
+
+  <!-- 1 -->
+  <div class="section">
+    <h2><span class="num">1</span>Complete button — fix blur + shorten motion</h2>
+    <div class="pair">
+      <div class="panel">
+        <span class="tag before">Before — Round 1 shipped</span>
+        <div class="stage">
+          <button class="cbtn b" id="btnBefore">
+            <span class="bgfill"></span>
+            <span class="icon">
+              <svg class="circle" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="9" fill="#fff" stroke="none" opacity=".18"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>
+            </span>
+            <span class="lbl"><span class="l1">Complete Today</span><span class="l2">Completed Today</span></span>
+          </button>
+          <span class="note">Double scale on check (0→1 × 0→1) · springs.celebration bounce · whole-button pulse · ~600ms+ settle</span>
+          <span class="timing">check reads soft/blurry mid-animation</span>
+        </div>
+        <button class="replay" onclick="toggleComplete('btnBefore')">Toggle completion</button>
+      </div>
+      <div class="panel after">
+        <span class="tag after">After — crisp &amp; fast</span>
+        <div class="stage">
+          <button class="cbtn a" id="btnAfter">
+            <span class="bgfill"></span>
+            <span class="icon">
+              <svg class="circle" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="9" fill="#fff" stroke="none" opacity=".18"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>
+            </span>
+            <span class="lbl"><span class="l1">Complete Today</span><span class="l2">Completed Today</span></span>
+          </button>
+          <span class="note">Circle-only scale 0.6→1 · springs.button · 150ms color fade · no celebration pulse · ≤ ~250ms total</span>
+          <span class="timing" style="background:#DCFCE7;color:#166534">SVG stays near full raster size → sharp check</span>
+        </div>
+        <button class="replay" onclick="toggleComplete('btnAfter')">Toggle completion</button>
+      </div>
+    </div>
+    <div class="why"><b>Why:</b> users tap Complete every day — a long bouncy animation becomes friction by day three. Removing the pulse and fixing double-scale keeps the reward but respects flow. Crisp = premium.</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <h2><span class="num">2</span>Goal Adjust sheet — chip + remove polish</h2>
+    <div class="pair">
+      <div class="panel">
+        <span class="tag before">Before — dead chips, bare remove</span>
+        <div class="stage">
+          <div class="sheet">
+            <div class="handle"></div>
+            <h3>Adjust your goal</h3>
+            <div class="sub2">Currently: 66-day streak</div>
+            <div class="chips b" id="chipsBefore">
+              <button class="chip" data-days="21" onclick="selectChip('chipsBefore',21)">21d</button>
+              <button class="chip rec sel" data-days="66" onclick="selectChip('chipsBefore',66)">66d<span class="dot"></span></button>
+              <button class="chip" data-days="100" onclick="selectChip('chipsBefore',100)">100d</button>
+              <button class="chip" data-days="365" onclick="selectChip('chipsBefore',365)">1yr</button>
+            </div>
+            <button class="save">Set 66-day goal</button>
+            <button class="remove b" id="removeBefore" onclick="toggleRemove('removeBefore')">Remove goal</button>
+          </div>
+          <span class="note">No press scale · selection snaps instantly · recommended chip jumps row (1.5px vs 1px border) · confirm is text-only</span>
+        </div>
+        <div class="replay-row">
+          <button class="replay" onclick="selectChip('chipsBefore',100)">Select 100d (watch jiggle)</button>
+          <button class="replay" onclick="toggleRemove('removeBefore')">Remove confirm</button>
+        </div>
+      </div>
+      <div class="panel after">
+        <span class="tag after">After — shared press language</span>
+        <div class="stage">
+          <div class="sheet">
+            <div class="handle"></div>
+            <h3>Adjust your goal</h3>
+            <div class="sub2">Currently: 66-day streak</div>
+            <div class="chips a" id="chipsAfter">
+              <button class="chip" data-days="21" onclick="selectChip('chipsAfter',21)">21d</button>
+              <button class="chip rec sel" data-days="66" onclick="selectChip('chipsAfter',66)">66d<span class="dot"></span></button>
+              <button class="chip" data-days="100" onclick="selectChip('chipsAfter',100)">100d</button>
+              <button class="chip" data-days="365" onclick="selectChip('chipsAfter',365)">1yr</button>
+            </div>
+            <button class="save" id="saveAfter">Set 66-day goal</button>
+            <button class="remove a" id="removeAfter" onclick="toggleRemove('removeAfter')">Remove goal</button>
+          </div>
+          <span class="note">Press-scale on chips · 150ms selection ease · constant 1.5px borders · confirm gets destructive tint · chips lock while saving</span>
+        </div>
+        <div class="replay-row">
+          <button class="replay" onclick="selectChip('chipsAfter',100)">Select 100d (no jiggle)</button>
+          <button class="replay" onclick="toggleRemove('removeAfter')">Remove confirm</button>
+          <button class="replay" onclick="simulateSaving()">Simulate saving</button>
+        </div>
+      </div>
+    </div>
+    <div class="why"><b>Why:</b> chips are the primary input here — dead chips make selection feel uncertain. A destructive remove needs unmistakable confirm affordance, and locking chips during save prevents mid-mutation races.</div>
+  </div>
+</div>
+
+<script>
+function toggleComplete(id){
+  const btn = document.getElementById(id);
+  const wasDone = btn.classList.contains('done');
+  btn.classList.remove('done');
+  void btn.offsetWidth;
+  if(!wasDone) btn.classList.add('done');
+  else {
+    btn.querySelector('.check').style.animation = 'none';
+    btn.querySelector('.check').style.opacity = '0';
+    btn.querySelector('.check').style.transform = 'scale(0)';
+    btn.querySelector('.bgfill').style.opacity = '0';
+    btn.querySelector('.lbl .l1').style.opacity = '1';
+    btn.querySelector('.lbl .l2').style.opacity = '0';
+  }
+}
+
+function selectChip(containerId, days){
+  const wrap = document.getElementById(containerId);
+  wrap.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('sel', Number(c.dataset.days) === days);
+  });
+  const label = days === 365 ? '1-year' : `${days}-day`;
+  const saveBtn = containerId === 'chipsAfter'
+    ? document.getElementById('saveAfter')
+    : wrap.closest('.sheet').querySelector('.save');
+  if(saveBtn) saveBtn.textContent = `Set ${label} goal`;
+}
+
+function toggleRemove(id){
+  const btn = document.getElementById(id);
+  const confirming = btn.classList.toggle('confirm');
+  btn.textContent = confirming ? 'Tap again to confirm' : 'Remove goal';
+  if(id === 'removeAfter'){
+    btn.setAttribute('aria-label', confirming ? 'Tap again to confirm goal removal' : 'Remove goal');
+  }
+}
+
+let savingTimer;
+function simulateSaving(){
+  const chips = document.getElementById('chipsAfter');
+  const save = document.getElementById('saveAfter');
+  const remove = document.getElementById('removeAfter');
+  chips.classList.add('saving');
+  save.classList.add('saving');
+  save.textContent = 'Saving…';
+  remove.disabled = true;
+  clearTimeout(savingTimer);
+  savingTimer = setTimeout(()=>{
+    chips.classList.remove('saving');
+    save.classList.remove('saving');
+    save.textContent = `Set ${document.querySelector('#chipsAfter .chip.sel').dataset.days === '365' ? '1-year' : document.querySelector('#chipsAfter .chip.sel').dataset.days + '-day'} goal`;
+    remove.disabled = false;
+  }, 1800);
+}
+</script>
+</body>
+</html>

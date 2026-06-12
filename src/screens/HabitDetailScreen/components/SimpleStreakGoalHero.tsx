@@ -3,11 +3,13 @@
  * Replaces the milestone-heavy StreakGoalCard inside the Goal tab.
  */
 import { Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
-import { borderRadius } from '../../../theme/spacing';
+import { durations, enterEasing } from '../../../theme/animations';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../theme/typography';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useStreakGoalAnimation } from './SimpleStreakGoalHero.hooks';
 import { StreakGoalNumeral } from './StreakGoalNumeral';
 
@@ -25,19 +27,26 @@ export function SimpleStreakGoalHero({
   habitColor,
 }: SimpleStreakGoalHeroProps) {
   const { colors } = useThemeColors();
+  const reduceMotion = useReduceMotion();
   const { overallPercent, daysRemaining } = useStreakGoalData(
     currentStreak,
     streakGoal
   );
-  const { barStyle, percentText, daysText } = useStreakGoalAnimation(
-    overallPercent,
-    daysRemaining
-  );
+  const { barStyle, daysText, isGoalReached, percentText, showLabels, streakText } =
+    useStreakGoalAnimation(
+      overallPercent,
+      daysRemaining,
+      currentStreak,
+      streakGoal
+    );
   const goalLabel = `${streakGoal} ${streakGoal === 1 ? 'day' : 'days'}`;
+  const labelEnter = reduceMotion
+    ? undefined
+    : FadeIn.duration(durations.standard).delay(durations.progress).easing(enterEasing);
 
   return (
     <View>
-      <StreakGoalNumeral currentStreak={currentStreak} goalLabel={goalLabel} />
+      <StreakGoalNumeral animatedStreak={streakText} goalLabel={goalLabel} />
 
       <View className='mt-5'>
         <View
@@ -54,30 +63,44 @@ export function SimpleStreakGoalHero({
             style={[{ backgroundColor: habitColor, height: '100%' }, barStyle]}
           />
         </View>
-        <View className='mt-2 flex-row justify-between'>
-          <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-            <Text
-              style={{
-                color: colors.text.primary,
-                fontWeight: fontWeights.semibold,
-              }}
-            >
-              {percentText}%
-            </Text>{' '}
-            complete
+        {isGoalReached ? (
+          <Text
+            style={{
+              ...typography.bodySmall,
+              color: colors.status.success,
+              fontWeight: fontWeights.semibold,
+              marginTop: spacing.sm,
+              textAlign: 'center',
+            }}
+          >
+            Goal reached — extend it?
           </Text>
-          <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-            <Text
-              style={{
-                color: colors.text.primary,
-                fontWeight: fontWeights.semibold,
-              }}
-            >
-              {daysText}
-            </Text>{' '}
-            to go
-          </Text>
-        </View>
+        ) : showLabels ? (
+          <Animated.View className='mt-2 flex-row justify-between' entering={labelEnter}>
+            <Text style={{ ...typography.caption, color: colors.text.secondary }}>
+              <Text
+                style={{
+                  color: colors.text.primary,
+                  fontWeight: fontWeights.semibold,
+                }}
+              >
+                {percentText}%
+              </Text>{' '}
+              complete
+            </Text>
+            <Text style={{ ...typography.caption, color: colors.text.secondary }}>
+              <Text
+                style={{
+                  color: colors.text.primary,
+                  fontWeight: fontWeights.semibold,
+                }}
+              >
+                {daysText}
+              </Text>{' '}
+              {daysText === 1 ? 'day' : 'days'} to go
+            </Text>
+          </Animated.View>
+        ) : null}
       </View>
     </View>
   );

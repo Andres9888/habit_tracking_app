@@ -10,9 +10,9 @@
  */
 
 import { useCallback, useRef } from 'react';
-import * as Haptics from 'expo-haptics';
 import { Alert, AccessibilityInfo } from 'react-native';
 import type { Id } from '../../../convex/_generated/dataModel';
+import { triggerHaptic } from '../../utils/haptics';
 import { useToggleHabitWithTimezone } from '../../hooks/useToggleHabitWithTimezone';
 import type { Habit } from './HabitDetailScreen.types';
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
@@ -63,11 +63,7 @@ export const useCalendarHandlers = ({
 
       togglingRef.current = true;
       setIsTogglingCalendar(true);
-      void Haptics.impactAsync(
-        wasCompleted
-          ? Haptics.ImpactFeedbackStyle.Light
-          : Haptics.ImpactFeedbackStyle.Medium
-      );
+      void triggerHaptic(wasCompleted ? 'toggle' : 'success');
 
       const dateFormatted = new Date(date).toLocaleDateString('en-US', {
         weekday: 'long',

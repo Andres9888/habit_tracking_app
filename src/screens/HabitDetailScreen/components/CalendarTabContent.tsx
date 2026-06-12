@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import { View } from 'react-native';
 import { parseISO, startOfMonth } from 'date-fns';
 import Animated, { FadeIn } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 import { MonthlyCalendarGrid } from '../../../components/BinaryHeatmap';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import type { Habit } from '../../../features/habits/types';
@@ -35,7 +36,7 @@ export function CalendarTabContent({
   }, []);
 
   return (
-    <Animated.View entering={FadeIn.duration(180)}>
+    <Animated.View entering={FadeIn.duration(durations.standard).easing(enterEasing)}>
       <ErrorBoundary>
         <YearHeatmapSection
           completedDates={completedDates}

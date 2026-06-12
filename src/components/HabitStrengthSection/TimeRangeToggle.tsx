@@ -14,7 +14,7 @@
  */
 
 import React, { useCallback, useEffect } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useThemeColors } from '@/theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
@@ -28,6 +28,7 @@ import { shadows } from '@/theme/spacing';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { TIME_RANGE_OPTIONS } from './constants';
+import { TimeRangeSegment } from './TimeRangeSegment';
 import type { TimeRange, TimeRangeToggleProps } from './types';
 
 const AnimatedView = Animated.createAnimatedComponent(View);
@@ -107,33 +108,18 @@ export const TimeRangeToggle = React.memo(function TimeRangeToggle({
       />
 
       {/* Toggle options */}
-      {TIME_RANGE_OPTIONS.map((option) => {
-        const isSelected = option.value === value;
-
-        return (
-          <Pressable
-            key={option.value}
-            accessibilityLabel={`${option.label} time range`}
-            accessibilityRole='tab'
-            accessibilityState={{ selected: isSelected }}
-            className='items-center justify-center'
-            hitSlop={{ top: 8, bottom: 8 }}
-            style={{ height: 28, width: segmentWidth }}
-            onPress={() => handlePress(option.value)}
-          >
-            <Text
-              className='text-xs font-semibold'
-              style={{
-                color: isSelected
-                  ? themeColors.text.primary
-                  : themeColors.text.secondary,
-              }}
-            >
-              {option.label}
-            </Text>
-          </Pressable>
-        );
-      })}
+      {TIME_RANGE_OPTIONS.map((option) => (
+        <TimeRangeSegment
+          key={option.value}
+          isSelected={option.value === value}
+          label={option.label}
+          segmentWidth={segmentWidth}
+          textPrimary={themeColors.text.primary}
+          textSecondary={themeColors.text.secondary}
+          value={option.value}
+          onPress={handlePress}
+        />
+      ))}
     </View>
   );
 });
