@@ -43,7 +43,7 @@ export const get = query({
         settings?.habitSortMode,
         settings?.sortHabitsAlphabetically
       ),
-      hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
+      hasPremium: true,
       highContrastMode:
         settings?.highContrastMode ?? DEFAULT_SETTINGS.highContrastMode,
       progressEmojis: settings?.progressEmojis,

@@ -31,7 +31,7 @@ export const DEFAULT_SETTINGS = {
   dayShape: 'square' as const,
   habitCompletionIcon: 'chain' as const,
   habitSortMode: 'manual' as HabitSortMode,
-  hasPremium: false,
+  hasPremium: true,
   // Forced to light - dark mode not yet implemented
   highContrastMode: false,
   reduceMotion: false,

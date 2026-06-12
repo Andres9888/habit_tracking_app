@@ -21,12 +21,10 @@ export async function hasPremiumAccess(
   ctx: QueryCtx,
   userId: string
 ): Promise<boolean> {
-  const settings = await ctx.db
-    .query('userSettings')
-    .withIndex('by_userId', (q) => q.eq('userId', userId))
-    .first();
-
-  return settings?.hasPremium ?? false;
+  // Temporary premium bypass while the paywall is removed.
+  void ctx;
+  void userId;
+  return true;
 }
 
 /**

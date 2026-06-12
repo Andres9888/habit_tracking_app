@@ -6,7 +6,6 @@
 
 import type { PropsWithChildren } from 'react';
 
-import { PurchasesProvider } from '../components/providers/Purchases.provider';
 import { NetworkStatusProvider } from '../contexts/NetworkStatusContext/NetworkStatusProvider';
 import { SyncStatusProvider } from '../contexts/SyncStatusContext/SyncStatusProvider';
 import { StreakMilestoneProvider } from '../components/StreakMilestoneCelebration';
@@ -17,9 +16,7 @@ export function LazyProviders({ children }: PropsWithChildren) {
     <NetworkStatusProvider>
       <OfflineProvider>
         <SyncStatusProvider>
-          <PurchasesProvider>
-            <StreakMilestoneProvider>{children}</StreakMilestoneProvider>
-          </PurchasesProvider>
+          <StreakMilestoneProvider>{children}</StreakMilestoneProvider>
         </SyncStatusProvider>
       </OfflineProvider>
     </NetworkStatusProvider>
