@@ -36,6 +36,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
     setShowFullsizePreview: opts.setShowFullsizePreview,
     setShowToast: opts.setShowToast,
     setToastMessage: opts.setToastMessage,
+    setToastOnAction: opts.setToastOnAction,
     setToastTemplateData: opts.setToastTemplateData,
     userHabitCount: opts.userHabitCount,
   });

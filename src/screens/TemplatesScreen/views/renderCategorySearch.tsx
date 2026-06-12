@@ -44,6 +44,7 @@ export function renderCategorySearch({
       showToast={state.showToast}
       sortOption={state.sortOption}
       toastMessage={state.toastMessage}
+      toastOnAction={state.toastOnAction}
       toastTemplateData={state.toastTemplateData}
     />
   );

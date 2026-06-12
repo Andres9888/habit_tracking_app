@@ -19,6 +19,7 @@ export function CatalogFilteredList(p: CatalogFilteredListProps) {
   return (
     <FlatList
       data={p.templates}
+      keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
       contentContainerStyle={s.list}
       renderItem={({ item }) => (

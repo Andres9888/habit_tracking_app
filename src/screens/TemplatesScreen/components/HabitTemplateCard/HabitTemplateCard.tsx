@@ -1,9 +1,7 @@
-/**
- * HabitTemplateCard — drill-style card for browse, drill, and catalog lists.
- */
-
 import { memo } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { shadows } from '../../../../theme/spacing';
@@ -29,7 +27,7 @@ export interface HabitTemplateCardProps {
 }
 
 function HabitTemplateCardComponent({
-  descriptionLines = 2,
+  descriptionLines = 3,
   elevated = false,
   isImported,
   isImporting,
@@ -40,40 +38,35 @@ function HabitTemplateCardComponent({
 }: HabitTemplateCardProps) {
   const { colors, isDark } = useThemeColors();
   const importedColors = getImportedStateColors(isDark);
+  const statusColors = colors.status;
   const topPickBorderColor = isDark
-    ? colors.status.warning
-    : colors.status.warningLight;
+    ? statusColors.warning
+    : statusColors.warningLight;
+  const iconColor = item.iconColor || colors.primary[600];
+  const backgroundColor = isImported
+    ? importedColors.backgroundColor
+    : colors.card;
+  const borderColor = isImported
+    ? importedColors.borderColor
+    : isTopPick
+      ? topPickBorderColor
+      : colors.border;
+  const opacity = isImporting ? 0.72 : 1;
+  const cardStyle = { backgroundColor, borderColor, opacity };
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`${item.name} habit`}
       accessibilityRole='button'
-      style={[
-        s.card,
-        shadows.subtle,
-        elevated && shadows.card,
-        {
-          backgroundColor: isImported
-            ? importedColors.backgroundColor
-            : colors.card,
-          borderColor: isImported
-            ? importedColors.borderColor
-            : isTopPick
-              ? topPickBorderColor
-              : colors.border,
-          opacity: isImporting ? 0.72 : 1,
-        },
-      ]}
-      onPress={() => onPreview(item)}
+      style={[s.card, shadows.subtle, elevated && shadows.card, cardStyle]}
+      onPress={() => {
+        void triggerHaptic('tap');
+        onPreview(item);
+      }}
     >
       {isTopPick ? <HabitTemplateCardTopPick /> : null}
       <View style={s.topRow}>
-        <View
-          style={[
-            s.icon,
-            { backgroundColor: `${item.iconColor || colors.primary[600]}26` },
-          ]}
-        >
+        <View style={[s.icon, { backgroundColor: `${iconColor}26` }]}>
           <Text style={s.iconText}>{item.icon}</Text>
         </View>
         <View style={s.body}>
@@ -100,7 +93,7 @@ function HabitTemplateCardComponent({
         </View>
       </View>
       <HabitTemplateCardBottomRail item={item} onPreview={onPreview} />
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

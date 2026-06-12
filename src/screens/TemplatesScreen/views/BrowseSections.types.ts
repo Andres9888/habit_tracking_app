@@ -8,17 +8,13 @@ export interface BrowseSectionsProps {
   goalTemplates: Doc<'templates'>[];
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
-  isFirstTimeUser: boolean;
-  onBrowseByGoal: () => void;
-  onImport: (template: Doc<'templates'>) => void;
   onOpenCategory: (categoryId: string) => void;
-  onOpenGoal: (goalId: string) => void;
+  onPopularImport: (template: Doc<'templates'>) => void;
+  onPrescriptionImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSeeAll: () => void;
-  onStartHerePress: () => void;
   prescription: ResolvedPrescription | null;
   rowSections: BrowseRowSection[];
   selectedGoalId: string | null;
-  starterTemplates: Doc<'templates'>[];
   totalHabitCount: number;
 }

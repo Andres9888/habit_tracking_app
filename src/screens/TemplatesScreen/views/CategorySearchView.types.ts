@@ -54,5 +54,6 @@ export interface CategorySearchViewProps {
   showToast: boolean;
   sortOption: SortOption;
   toastMessage: string;
+  toastOnAction: (() => void) | null;
   toastTemplateData: TemplateToastData | null;
 }

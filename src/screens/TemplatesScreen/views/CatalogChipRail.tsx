@@ -2,8 +2,10 @@
  * CatalogChipRail — sticky horizontal category filter chips.
  */
 
-import { Pressable, ScrollView, Text } from 'react-native';
+import { useEffect, useRef } from 'react';
+import { ScrollView, type LayoutChangeEvent } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { CatalogFilterChip } from './CatalogFilterChip';
 import { styles as s } from './CatalogChipRail.styles';
 
 export const CATALOG_ALL_ID = 'all';
@@ -20,67 +22,60 @@ interface CatalogChipRailProps {
   onSelectCategory: (categoryId: string) => void;
 }
 
+type ChipLayout = { width: number; x: number };
+
 export function CatalogChipRail({
   categories,
   selectedCategoryId,
   onSelectCategory,
 }: CatalogChipRailProps) {
   const { colors } = useThemeColors();
-  const allSelected = selectedCategoryId === CATALOG_ALL_ID;
+  const scrollRef = useRef<ScrollView>(null);
+  const chipLayouts = useRef<Record<string, ChipLayout>>({});
+
+  const handleChipLayout =
+    (chipId: string) =>
+    ({ nativeEvent }: LayoutChangeEvent) => {
+      chipLayouts.current[chipId] = {
+        x: nativeEvent.layout.x,
+        width: nativeEvent.layout.width,
+      };
+    };
+
+  useEffect(() => {
+    const layout = chipLayouts.current[selectedCategoryId];
+    if (!layout || !scrollRef.current) return;
+    scrollRef.current.scrollTo({
+      animated: true,
+      x: Math.max(0, layout.x - 12),
+    });
+  }, [selectedCategoryId]);
 
   return (
     <ScrollView
+      ref={scrollRef}
       horizontal
       showsHorizontalScrollIndicator={false}
       style={[s.rail, { borderBottomColor: colors.border }]}
       contentContainerStyle={s.content}
     >
-      <Pressable
-        accessibilityRole='button'
-        accessibilityState={{ selected: allSelected }}
-        style={[
-          s.chip,
-          { backgroundColor: colors.card, borderColor: colors.border },
-          allSelected ? s.chipSelected : null,
-        ]}
-        onPress={() => onSelectCategory(CATALOG_ALL_ID)}
-      >
-        <Text
-          style={[
-            s.chipLabel,
-            { color: colors.text.secondary },
-            allSelected ? s.chipLabelSelected : null,
-          ]}
-        >
-          All
-        </Text>
-      </Pressable>
-      {categories.map((category) => {
-        const isSelected = selectedCategoryId === category.categoryId;
-        return (
-          <Pressable
-            key={category.categoryId}
-            accessibilityRole='button'
-            accessibilityState={{ selected: isSelected }}
-            style={[
-              s.chip,
-              { backgroundColor: colors.card, borderColor: colors.border },
-              isSelected ? s.chipSelected : null,
-            ]}
-            onPress={() => onSelectCategory(category.categoryId)}
-          >
-            <Text
-              style={[
-                s.chipLabel,
-                { color: colors.text.secondary },
-                isSelected ? s.chipLabelSelected : null,
-              ]}
-            >
-              {category.icon} {category.label}
-            </Text>
-          </Pressable>
-        );
-      })}
+      <CatalogFilterChip
+        chipId={CATALOG_ALL_ID}
+        isSelected={selectedCategoryId === CATALOG_ALL_ID}
+        label='All'
+        onLayout={handleChipLayout}
+        onSelect={onSelectCategory}
+      />
+      {categories.map((category) => (
+        <CatalogFilterChip
+          key={category.categoryId}
+          chipId={category.categoryId}
+          isSelected={selectedCategoryId === category.categoryId}
+          label={`${category.icon} ${category.label}`}
+          onLayout={handleChipLayout}
+          onSelect={onSelectCategory}
+        />
+      ))}
     </ScrollView>
   );
 }

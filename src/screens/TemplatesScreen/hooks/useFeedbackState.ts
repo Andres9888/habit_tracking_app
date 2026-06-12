@@ -13,6 +13,7 @@ export function useFeedbackState() {
   const [toastMessage, setToastMessage] = useState('');
   const [toastTemplateData, setToastTemplateData] =
     useState<TemplateToastData | null>(null);
+  const [toastOnAction, setToastOnAction] = useState<(() => void) | null>(null);
   const [feedbackHabitId, setFeedbackHabitId] = useState<Id<'habits'> | null>(
     null
   );
@@ -31,10 +32,12 @@ export function useFeedbackState() {
     setShowCelebration,
     setShowToast,
     setToastMessage,
+    setToastOnAction,
     setToastTemplateData,
     showCelebration,
     showToast,
     toastMessage,
+    toastOnAction,
     toastTemplateData,
   };
 }

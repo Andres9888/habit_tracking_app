@@ -3,7 +3,9 @@
  * ("Open the full library · 84 habits ›").
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
@@ -18,11 +20,13 @@ export function LibraryEndcap({
   totalHabitCount,
 }: LibraryEndcapProps) {
   const { colors } = useThemeColors();
-  const countSuffix = totalHabitCount > 0 ? ` · ${totalHabitCount} habits` : '';
+  const countLabel = totalHabitCount === 1 ? 'habit' : 'habits';
+  const countSuffix =
+    totalHabitCount > 0 ? ` · ${totalHabitCount} ${countLabel}` : '';
 
   return (
     <View style={s.wrap}>
-      <Pressable
+      <AnimatedPressable
         accessibilityLabel='Open the full habit library'
         accessibilityRole='button'
         style={[
@@ -32,12 +36,15 @@ export function LibraryEndcap({
             borderColor: colors.primary[300],
           },
         ]}
-        onPress={onPress}
+        onPress={() => {
+          void triggerHaptic('tap');
+          onPress();
+        }}
       >
         <Text style={[s.text, { color: colors.primary[700] }]}>
           Open the full library{countSuffix} ›
         </Text>
-      </Pressable>
+      </AnimatedPressable>
     </View>
   );
 }

@@ -5,8 +5,12 @@
  */
 
 import { memo } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { getTemplateMetaLabel } from '../HabitTemplateCard/templateMeta';
+import { getImportedStateColors } from '../../utils/importedStateColors';
 import { ScienceDoorPill } from '../ScienceDoorPill';
 import { AddButton } from './AddButton';
 import { formatPopularity } from './formatPopularity';
@@ -15,7 +19,6 @@ import type { TrendingCardProps } from './TrendingCard.types';
 
 function TrendingCardComponent({
   description,
-  frequency,
   hasResearch,
   icon,
   iconColor,
@@ -28,22 +31,29 @@ function TrendingCardComponent({
   popularityScore,
   template,
 }: TrendingCardProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
+  const importedColors = getImportedStateColors(isDark);
+  const metaLabel = getTemplateMetaLabel(template);
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityHint='Opens the habit preview'
       accessibilityLabel={`Preview ${name} habit`}
       accessibilityRole='button'
       style={[
         s.card,
         {
-          backgroundColor: colors.card,
-          borderColor: colors.border,
-          opacity: isImported ? 0.55 : 1,
+          backgroundColor: isImported
+            ? importedColors.backgroundColor
+            : colors.card,
+          borderColor: isImported ? importedColors.borderColor : colors.border,
+          opacity: isImporting ? 0.72 : 1,
         },
       ]}
-      onPress={onPress}
+      onPress={() => {
+        void triggerHaptic('tap');
+        onPress();
+      }}
     >
       <View
         style={[
@@ -71,9 +81,11 @@ function TrendingCardComponent({
       ) : null}
 
       <View style={s.metaRow}>
-        <Text style={[s.frequency, { color: colors.text.tertiary }]}>
-          {frequency}
-        </Text>
+        {metaLabel ? (
+          <Text style={[s.frequency, { color: colors.text.tertiary }]}>
+            {metaLabel}
+          </Text>
+        ) : null}
         {hasResearch ? (
           <ScienceDoorPill template={template} onPress={() => onPress()} />
         ) : null}
@@ -91,7 +103,7 @@ function TrendingCardComponent({
           onImport={onImport}
         />
       </View>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

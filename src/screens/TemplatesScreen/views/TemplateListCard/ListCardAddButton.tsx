@@ -31,7 +31,7 @@ export function ListCardAddButton({
 
   useEffect(() => {
     if (isImported) {
-      scale.value = withSpring(1.03, springs.responsive);
+      scale.value = withSpring(1.08, springs.responsive);
       const timeout = setTimeout(() => {
         scale.value = withSpring(1, springs.responsive);
       }, 120);

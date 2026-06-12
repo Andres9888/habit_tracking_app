@@ -3,7 +3,13 @@
  * for the Make-It-Stick sheet.
  */
 
-import { Pressable, StyleSheet, Text } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
@@ -29,9 +35,18 @@ export function StickActions({ onLockIn, onSkip, saving }: StickActionsProps) {
         ]}
         onPress={onLockIn}
       >
-        <Text style={[s.ctaText, { color: colors.text.inverse }]}>
-          {saving ? 'Saving…' : 'Lock it in'}
-        </Text>
+        {saving ? (
+          <View style={s.ctaContent}>
+            <ActivityIndicator color={colors.text.inverse} size='small' />
+            <Text style={[s.ctaText, { color: colors.text.inverse }]}>
+              Saving…
+            </Text>
+          </View>
+        ) : (
+          <Text style={[s.ctaText, { color: colors.text.inverse }]}>
+            Lock it in
+          </Text>
+        )}
       </Pressable>
       <Pressable
         accessibilityLabel='Skip for now'
@@ -54,6 +69,11 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: spacing.base,
     marginTop: spacing.base,
+  },
+  ctaContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
   },
   ctaText: {
     ...typography.button,

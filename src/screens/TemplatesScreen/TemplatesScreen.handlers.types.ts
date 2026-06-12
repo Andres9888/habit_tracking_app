@@ -49,6 +49,7 @@ export interface UseTemplateHandlersOptions {
   userHabitCount: number;
   setSortOption: React.Dispatch<React.SetStateAction<SortOption>>;
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;
+  setToastOnAction: React.Dispatch<React.SetStateAction<(() => void) | null>>;
   setToastTemplateData: React.Dispatch<
     React.SetStateAction<TemplateToastData | null>
   >;

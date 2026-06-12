@@ -50,7 +50,7 @@ export function HabitTemplateCardBottomRail({
           // Keep the parent card press from also firing on web; the event
           // can be undefined on native, so never assume it exists.
           event?.stopPropagation?.();
-          onPreview(item, 'science');
+          onPreview(item);
         }}
       >
         <Text style={[s.viewDetails, { color: colors.primary[700] }]}>

@@ -3,10 +3,8 @@
  * (overline header + single-column template rows) with stagger entrances.
  */
 
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useThemeColors } from '../../../theme/ThemeContext';
-import { fontWeights, typography } from '../../../theme/typography';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { HabitTemplateCard } from '../components/HabitTemplateCard';
 import { SectionOverline } from '../components/SectionOverline';
@@ -18,14 +16,11 @@ interface BrowseRowSectionListProps {
   importingTemplateId: string | null;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
-  onSeeAll: () => void;
   sections: BrowseRowSection[];
   staggerOffset: number;
 }
 
 export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
-  const { colors } = useThemeColors();
-
   return (
     <>
       {p.sections.map((section, sectionIndex) => (
@@ -33,25 +28,7 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
           key={section.key}
           entering={stagger(p.staggerOffset + sectionIndex)}
         >
-          <SectionOverline
-            flush={sectionIndex === 0}
-            title={section.title}
-            rightSlot={
-              section.key === 'popular' ? (
-                <Pressable
-                  accessibilityLabel='Browse all habits'
-                  accessibilityRole='button'
-                  hitSlop={8}
-                  testID='templates-trending-see-all'
-                  onPress={p.onSeeAll}
-                >
-                  <Text style={[s.seeAll, { color: colors.primary[600] }]}>
-                    See all
-                  </Text>
-                </Pressable>
-              ) : undefined
-            }
-          />
+          <SectionOverline flush={sectionIndex === 0} title={section.title} />
           <View>
             {section.templates.map((item, rowIndex) => (
               <HabitTemplateCard
@@ -72,11 +49,3 @@ export function BrowseRowSectionList(p: BrowseRowSectionListProps) {
     </>
   );
 }
-
-const s = StyleSheet.create({
-  seeAll: {
-    ...typography.bodySmall,
-    fontWeight: fontWeights.semibold,
-    lineHeight: 16,
-  },
-});

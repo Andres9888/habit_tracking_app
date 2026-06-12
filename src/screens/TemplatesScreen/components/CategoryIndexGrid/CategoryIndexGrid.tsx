@@ -29,29 +29,33 @@ export function CategoryIndexGrid({
 
   return (
     <View style={s.grid}>
-      {categories.map((category) => (
-        <Pressable
-          key={category.categoryId}
-          accessibilityLabel={`${category.label}, ${category.count} habits`}
-          accessibilityRole='button'
-          style={[
-            s.tile,
-            { backgroundColor: colors.card, borderColor: colors.border },
-          ]}
-          onPress={() => onSelectCategory(category.categoryId)}
-        >
-          <Text style={s.icon}>{category.icon}</Text>
-          <Text
-            numberOfLines={1}
-            style={[s.label, { color: colors.text.primary }]}
+      {categories.map((category) => {
+        const countLabel = category.count === 1 ? 'habit' : 'habits';
+
+        return (
+          <Pressable
+            key={category.categoryId}
+            accessibilityLabel={`${category.label}, ${category.count} ${countLabel}`}
+            accessibilityRole='button'
+            style={[
+              s.tile,
+              { backgroundColor: colors.card, borderColor: colors.border },
+            ]}
+            onPress={() => onSelectCategory(category.categoryId)}
           >
-            {category.label}
-          </Text>
-          <Text style={[s.count, { color: colors.text.tertiary }]}>
-            {category.count}
-          </Text>
-        </Pressable>
-      ))}
+            <Text style={s.icon}>{category.icon}</Text>
+            <Text
+              numberOfLines={1}
+              style={[s.label, { color: colors.text.primary }]}
+            >
+              {category.label}
+            </Text>
+            <Text style={[s.count, { color: colors.text.tertiary }]}>
+              {category.count}
+            </Text>
+          </Pressable>
+        );
+      })}
     </View>
   );
 }

@@ -20,23 +20,19 @@ export interface MainBrowseViewProps {
   importingTemplateId: string | null;
   isSearchActive: boolean;
   modals: ReactNode;
-  onBrowseByGoal: () => void;
   onGoalSelect: (goal: GoalCollection) => void;
-  onImport: (template: Doc<'templates'>) => void;
   onOpenCategory: (categoryId: string) => void;
-  onOpenGoal: (goalId: string) => void;
+  onPopularImport: (template: Doc<'templates'>) => void;
+  onPrescriptionImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;
   onSeeAll: () => void;
-  onStartHerePress: () => void;
   prescription: ResolvedPrescription | null;
   rowSections: BrowseRowSection[];
   searchQuery: string;
   searchResultsSection: ReactNode;
   selectedCategory: string;
   selectedGoalId: string | null;
-  starterTemplates: Doc<'templates'>[];
   totalHabitCount: number;
-  userHabitCount: number;
 }

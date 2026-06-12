@@ -17,10 +17,12 @@ interface FeedbackOverlaysProps {
   showCelebration: boolean;
   showToast: boolean;
   toastMessage: string;
+  toastOnAction?: (() => void) | null;
   toastTemplateData: TemplateToastData | null;
   onAddAnother: () => void;
   onDismissCelebration: () => void;
   onDismissToast: () => void;
+  onSaveError?: () => void;
   onViewHabit: () => void;
 }
 
@@ -32,6 +34,7 @@ export function FeedbackOverlays(p: FeedbackOverlaysProps) {
         template={p.feedbackTemplate ?? null}
         visible={p.showCelebration}
         onDone={p.onDismissCelebration}
+        onSaveError={p.onSaveError}
       />
       {p.toastTemplateData ? (
         <TemplateAddedToast
@@ -45,10 +48,12 @@ export function FeedbackOverlays(p: FeedbackOverlaysProps) {
         />
       ) : (
         <Toast
+          actionLabel='Retry'
           duration={5000}
           message={p.toastMessage ?? ''}
           variant='error'
           visible={p.showToast}
+          onAction={p.toastOnAction ?? undefined}
           onDismiss={p.onDismissToast}
         />
       )}

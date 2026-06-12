@@ -15,6 +15,7 @@ type FeedbackOptions = Pick<
   | 'setShowCelebration'
   | 'setShowToast'
   | 'setToastMessage'
+  | 'setToastOnAction'
   | 'setToastTemplateData'
   | 'userHabitCount'
 >;
@@ -38,6 +39,7 @@ export function useImportFeedback(o: FeedbackOptions) {
 
       o.setFeedbackHabitId(habitId);
       o.setFeedbackVariant(variant);
+      o.setToastOnAction(null);
       o.setToastTemplateData(data);
       if (variant === 'success') {
         o.setSessionImportCount((count) => count + 1);
@@ -62,6 +64,7 @@ export function useImportFeedback(o: FeedbackOptions) {
       o.setShowCelebration,
       o.setShowToast,
       o.setToastMessage,
+      o.setToastOnAction,
       o.setToastTemplateData,
     ]
   );
@@ -76,19 +79,24 @@ export function useImportFeedback(o: FeedbackOptions) {
     [showImportFeedback]
   );
 
-  const showError = useCallback(() => {
-    o.setFeedbackHabitId(null);
-    o.setFeedbackVariant(null);
-    o.setToastTemplateData(null);
-    o.setShowToast(true);
-    o.setToastMessage('Failed to import template. Please try again.');
-  }, [
-    o.setFeedbackHabitId,
-    o.setFeedbackVariant,
-    o.setShowToast,
-    o.setToastMessage,
-    o.setToastTemplateData,
-  ]);
+  const showError = useCallback(
+    (onRetry?: () => void) => {
+      o.setFeedbackHabitId(null);
+      o.setFeedbackVariant(null);
+      o.setToastTemplateData(null);
+      o.setToastOnAction(onRetry ? () => onRetry : null);
+      o.setShowToast(true);
+      o.setToastMessage('Failed to import template. Please try again.');
+    },
+    [
+      o.setFeedbackHabitId,
+      o.setFeedbackVariant,
+      o.setShowToast,
+      o.setToastMessage,
+      o.setToastOnAction,
+      o.setToastTemplateData,
+    ]
+  );
 
   const guardImport = useCallback(() => false, []);
 

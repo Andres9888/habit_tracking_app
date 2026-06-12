@@ -15,7 +15,7 @@ interface ImportResult {
 interface UseImportResultHandlerOptions {
   setImportedTemplateIds: (update: (prev: Set<string>) => Set<string>) => void;
   showAlreadyImported: (habitId: Id<'habits'>) => void;
-  showError: () => void;
+  showError: (onRetry?: () => void) => void;
   showSuccess: (habitId: Id<'habits'>) => void;
 }
 

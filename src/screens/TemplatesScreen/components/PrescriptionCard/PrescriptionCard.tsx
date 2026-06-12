@@ -3,8 +3,10 @@
  */
 
 import { Pressable, Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { durations, enterEasing } from '../../../../theme/animations';
 import type { GoalCollection } from '../../data/goalCollections';
 import type { ResolvedPrescription } from '../../hooks/usePrescription';
 import { PrescriptionStepRow } from './PrescriptionStepRow';
@@ -43,7 +45,8 @@ export function PrescriptionCard({
     : 'Works best together — starting with one is fine.';
 
   return (
-    <View
+    <Animated.View
+      entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
       style={[
         s.card,
         {
@@ -91,6 +94,6 @@ export function PrescriptionCard({
           </Pressable>
         ) : null}
       </View>
-    </View>
+    </Animated.View>
   );
 }

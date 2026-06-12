@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Pressable, Text } from 'react-native';
+import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
@@ -68,9 +68,14 @@ export function FooterPrimaryAction(p: FooterPrimaryActionProps) {
       onPress={p.onImport}
       {...p.createPressHandlers(p.importButtonScale)}
     >
-      <Text style={footerStyles.importButtonText}>
-        {p.isImporting ? 'Adding…' : p.importLabel}
-      </Text>
+      {p.isImporting ? (
+        <View style={footerStyles.importButtonContent}>
+          <ActivityIndicator color={colors.text.inverse} size='small' />
+          <Text style={footerStyles.importButtonText}>Adding…</Text>
+        </View>
+      ) : (
+        <Text style={footerStyles.importButtonText}>{p.importLabel}</Text>
+      )}
     </AnimatedPressable>
   );
 }

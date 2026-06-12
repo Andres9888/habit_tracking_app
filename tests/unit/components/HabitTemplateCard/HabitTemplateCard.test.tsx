@@ -13,7 +13,7 @@ const template = {
 } as never;
 
 describe('HabitTemplateCard View details', () => {
-  it('opens details with the science anchor', () => {
+  it('opens details at the top', () => {
     const onPreview = jest.fn();
     const { getByLabelText } = render(
       <HabitTemplateCard
@@ -27,7 +27,7 @@ describe('HabitTemplateCard View details', () => {
     fireEvent.press(
       getByLabelText('View details for 13-Minute Focus Meditation')
     );
-    expect(onPreview).toHaveBeenCalledWith(template, 'science');
+    expect(onPreview).toHaveBeenCalledWith(template);
   });
 
   it('opens preview on card body press', () => {

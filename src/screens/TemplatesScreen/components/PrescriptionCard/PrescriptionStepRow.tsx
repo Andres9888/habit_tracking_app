@@ -2,7 +2,9 @@
  * PrescriptionStepRow — one sequenced habit inside the prescription card.
  */
 
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { GoalCollection } from '../../data/goalCollections';
@@ -32,7 +34,7 @@ export function PrescriptionStepRow({
   const stepLabel = isImported ? '✓ Added' : `Step ${stepNumber}`;
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`${template.name}, ${stepLabel}`}
       accessibilityRole='button'
       style={[
@@ -44,7 +46,10 @@ export function PrescriptionStepRow({
           borderColor: isImported ? importedColors.borderColor : colors.border,
         },
       ]}
-      onPress={() => onPreview(template)}
+      onPress={() => {
+        void triggerHaptic('selection');
+        onPreview(template);
+      }}
     >
       <View
         style={[
@@ -94,6 +99,6 @@ export function PrescriptionStepRow({
         </Text>
       </View>
       <Text style={[s.chevron, { color: colors.text.tertiary }]}>›</Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

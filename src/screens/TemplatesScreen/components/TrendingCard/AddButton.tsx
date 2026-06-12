@@ -10,6 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
+import { triggerHaptic } from '@/utils/haptics';
 import { Check, Plus } from 'lucide-react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { addButtonStyles as abs } from './TrendingCard.styles';
@@ -53,10 +54,16 @@ export function AddButton({
       hitSlop={4}
       style={[
         abs.button,
-        isImported ? [abs.imported, { backgroundColor: colors.card }] : [abs.default, { backgroundColor: colors.primary[600] }],
+        isImported
+          ? [abs.imported, { backgroundColor: colors.card }]
+          : [abs.default, { backgroundColor: colors.primary[600] }],
         animatedStyle,
       ]}
-      onPress={onImport}
+      onPress={(event) => {
+        event?.stopPropagation?.();
+        void triggerHaptic('selection');
+        onImport();
+      }}
     >
       {isImporting ? (
         <ActivityIndicator color={colors.text.inverse} size={iconSize} />

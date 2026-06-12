@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
   chip: {
     ...shadows.subtle,
     alignItems: 'center',
-    borderRadius: 13,
+    borderRadius: borderRadius.medium,
     borderWidth: 1.5,
     flexDirection: 'row',
     gap: 8,

@@ -40,6 +40,8 @@ export function CatalogView(p: CatalogViewProps) {
   });
   const showShelves = selectedCategoryId === CATALOG_ALL_ID;
   const importingId = p.importingTemplateId as Id<'templates'> | null;
+  const totalCount = p.allTemplates.length;
+  const totalLabel = totalCount === 1 ? 'habit' : 'habits';
 
   const renderShelf = ({ item }: { item: CategoryGroup }) => (
     <CategoryRow
@@ -59,7 +61,7 @@ export function CatalogView(p: CatalogViewProps) {
     >
       <ScreenHeader
         subtitle='Search or browse by category'
-        title={`All habits · ${p.allTemplates.length}`}
+        title={`All habits · ${totalCount} ${totalLabel}`}
         onBack={p.onBack}
       />
       <View style={s.searchWrap}>
@@ -78,6 +80,7 @@ export function CatalogView(p: CatalogViewProps) {
       {showShelves ? (
         <FlatList
           data={groups}
+          keyboardDismissMode='on-drag'
           keyExtractor={(item) => item.category}
           contentContainerStyle={s.list}
           renderItem={renderShelf}

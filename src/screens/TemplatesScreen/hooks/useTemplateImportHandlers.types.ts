@@ -44,6 +44,7 @@ export interface UseTemplateImportHandlersOptions {
   setShowToast: React.Dispatch<React.SetStateAction<boolean>>;
   userHabitCount: number;
   setToastMessage: React.Dispatch<React.SetStateAction<string>>;
+  setToastOnAction: React.Dispatch<React.SetStateAction<(() => void) | null>>;
   setToastTemplateData: React.Dispatch<
     React.SetStateAction<TemplateToastData | null>
   >;

@@ -45,6 +45,11 @@ export const footerStyles = StyleSheet.create({
     justifyContent: 'center',
     shadowOpacity: 0.15,
   },
+  importButtonContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
   importButtonText: {
     color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,

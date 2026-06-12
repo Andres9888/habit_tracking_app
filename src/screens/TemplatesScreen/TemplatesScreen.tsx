@@ -7,7 +7,6 @@
 import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import { useGroupedTemplates } from './components/ExploreAllSection';
 import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals } from './components';
@@ -15,15 +14,13 @@ import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
 import { renderSubView } from './views/renderSubView';
-import { buildCategoryGridItems } from './views/CategoriesGridView';
-import {
-  GOAL_COLLECTIONS,
-  getFeaturedGoalId,
-  type GoalCollection,
-} from './data/goalCollections';
-import { filterStarterTemplates } from './data/starterHabits';
+import { GOAL_COLLECTIONS, type GoalCollection } from './data/goalCollections';
 import { usePrescription, getGoalTemplates } from './hooks/usePrescription';
 import { useSelectedGoal } from './hooks/useSelectedGoal';
+import {
+  trackLibraryEvent,
+  type TemplateImportSource,
+} from './utils/libraryAnalytics';
 import { sortTemplatesByImportState } from './utils/sortTemplatesByImportState';
 
 const CATEGORY_INDEX_LIMIT = 6;
@@ -40,15 +37,6 @@ function TemplatesScreenContent({
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
   const { selectedGoalId, setSelectedGoalId } = useSelectedGoal();
-  const { groups } = useGroupedTemplates(data.allTemplates);
-  const categoryGridItems = useMemo(
-    () => buildCategoryGridItems(groups),
-    [groups]
-  );
-  const starterTemplates = useMemo(
-    () => filterStarterTemplates(data.allTemplates),
-    [data.allTemplates]
-  );
   const sortedFilteredTemplates = useMemo(
     () =>
       sortTemplatesByImportState(
@@ -63,6 +51,14 @@ function TemplatesScreenContent({
     state.setShowCelebration(false);
     state.setFeedbackHabitId(null);
     state.setFeedbackVariant(null);
+    state.setToastOnAction(null);
+  }, [state]);
+
+  const handleSaveError = useCallback(() => {
+    state.setToastTemplateData(null);
+    state.setToastOnAction(null);
+    state.setToastMessage("Couldn't save your cue. Try again.");
+    state.setShowToast(true);
   }, [state]);
 
   const handleAddAnother = useCallback(() => {
@@ -121,19 +117,17 @@ function TemplatesScreenContent({
   const handleGoalSelect = useCallback(
     (goal: GoalCollection) => {
       state.setSearchQuery('');
-      setSelectedGoalId(selectedGoalId === goal.id ? null : goal.id);
+      const nextId = selectedGoalId === goal.id ? null : goal.id;
+      if (nextId) {
+        trackLibraryEvent({ type: 'chip_selected', goalId: nextId });
+      } else {
+        trackLibraryEvent({ type: 'chip_deselected', goalId: goal.id });
+      }
+      setSelectedGoalId(nextId);
     },
     [selectedGoalId, setSelectedGoalId, state]
   );
 
-  const handleOpenGoal = useCallback(
-    (goalId: string) => {
-      viewNav.openGoal(goalId);
-    },
-    [viewNav]
-  );
-
-  const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
   const categoryIndex = useMemo(
     () =>
       mainBrowseData.categoryList.slice(0, CATEGORY_INDEX_LIMIT).map((c) => ({
@@ -145,10 +139,44 @@ function TemplatesScreenContent({
     [mainBrowseData.categoryList]
   );
 
-  const handleImport = (template: Doc<'templates'>) => {
-    state.setPreviewTemplate(template);
-    void handlers.handleDirectImport(template._id);
-  };
+  const makeImportHandler = useCallback(
+    (source: TemplateImportSource) => (template: Doc<'templates'>) => {
+      trackLibraryEvent({
+        type: 'template_added',
+        templateId: template._id,
+        source,
+      });
+      state.setPreviewTemplate(template);
+      void handlers.handleDirectImport(template._id);
+    },
+    [handlers, state]
+  );
+
+  const handlePopularImport = useMemo(
+    () => makeImportHandler('popular'),
+    [makeImportHandler]
+  );
+  const handlePrescriptionImport = useMemo(
+    () => makeImportHandler('prescription'),
+    [makeImportHandler]
+  );
+  const handleCatalogImport = useMemo(
+    () => makeImportHandler('catalog'),
+    [makeImportHandler]
+  );
+
+  const handleDetailsDirectImport = useCallback(
+    async (id: Id<'templates'>) => {
+      trackLibraryEvent({
+        type: 'template_added',
+        templateId: id,
+        source: 'details',
+      });
+      await handlers.handleDirectImport(id);
+    },
+    [handlers]
+  );
+
   const handleSeedTemplates = () => {
     void handlers.handleSeedTemplates();
   };
@@ -156,18 +184,14 @@ function TemplatesScreenContent({
     void packConfirm.handleConfirm();
   };
   const handleSeeAll = () => {
-    void viewNav.openSeeAll();
+    viewNav.openCatalog();
   };
-  const handleOpenStarters = () => {
-    void viewNav.openStarters();
-  };
-  const handleBrowseByGoal = useCallback(() => {
-    const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
-    if (featured) {
-      state.setSearchQuery('');
-      setSelectedGoalId(featured.id);
-    }
-  }, [featuredGoalId, setSelectedGoalId, state]);
+  const handleOpenCategory = useCallback(
+    (categoryId: string) => {
+      viewNav.openCatalog(categoryId);
+    },
+    [viewNav]
+  );
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
@@ -181,12 +205,10 @@ function TemplatesScreenContent({
   const subView = renderSubView({
     activeView: viewNav.activeView,
     allTemplates: data.allTemplates,
-    categoryGridItems,
     importedTemplateIds: state.importedTemplateIds,
     importingTemplateId: state.importingTemplateId,
     onBack: viewNav.goBack,
-    onImport: handleImport,
-    onOpenCategory: viewNav.openCategory,
+    onImport: handleCatalogImport,
     onPreview: handlers.handleTemplatePreview,
   });
   if (subView) {
@@ -205,7 +227,7 @@ function TemplatesScreenContent({
           onCloseFullsize={() => state.setShowFullsizePreview(false)}
           onClosePaywall={() => state.setShowPaywall(false)}
           onCustomize={handlers.handleCustomizeFromPreview}
-          onDirectImport={handlers.handleDirectImport}
+          onDirectImport={handleDetailsDirectImport}
           onImport={handlers.handleTemplateImport}
           packConfirmPack={packConfirm.selectedPack}
           packConfirmVisible={!!packConfirm.selectedPack}
@@ -220,10 +242,12 @@ function TemplatesScreenContent({
           showCelebration={state.showCelebration}
           showToast={state.showToast}
           toastMessage={state.toastMessage}
+          toastOnAction={state.toastOnAction}
           toastTemplateData={state.toastTemplateData}
           onAddAnother={handleAddAnother}
           onDismissCelebration={handleDismissFeedback}
           onDismissToast={handleDismissFeedback}
+          onSaveError={handleSaveError}
           onViewHabit={handleViewHabit}
         />
       </>
@@ -248,10 +272,12 @@ function TemplatesScreenContent({
           showCelebration={state.showCelebration}
           showToast={state.showToast}
           toastMessage={state.toastMessage}
+          toastOnAction={state.toastOnAction}
           toastTemplateData={state.toastTemplateData}
           onAddAnother={handleAddAnother}
           onDismissCelebration={handleDismissFeedback}
           onDismissToast={handleDismissFeedback}
+          onSaveError={handleSaveError}
           onViewHabit={handleViewHabit}
         />
       }
@@ -271,7 +297,7 @@ function TemplatesScreenContent({
           onCloseFullsize={() => state.setShowFullsizePreview(false)}
           onClosePaywall={() => state.setShowPaywall(false)}
           onCustomize={handlers.handleCustomizeFromPreview}
-          onDirectImport={handlers.handleDirectImport}
+          onDirectImport={handleDetailsDirectImport}
           onImport={handlers.handleTemplateImport}
           packConfirmPack={packConfirm.selectedPack}
           packConfirmVisible={!!packConfirm.selectedPack}
@@ -279,16 +305,14 @@ function TemplatesScreenContent({
           onPackConfirm={handlePackConfirm}
         />
       }
-      onBrowseByGoal={handleBrowseByGoal}
       onGoalSelect={handleGoalSelect}
-      onImport={handleImport}
-      onOpenCategory={viewNav.openCategory}
-      onOpenGoal={handleOpenGoal}
+      onOpenCategory={handleOpenCategory}
+      onPopularImport={handlePopularImport}
+      onPrescriptionImport={handlePrescriptionImport}
       onPreview={handlers.handleTemplatePreview}
       onSearchChange={state.setSearchQuery}
       onSearchClear={() => state.setSearchQuery('')}
       onSeeAll={handleSeeAll}
-      onStartHerePress={handleOpenStarters}
       rowSections={mainBrowseData.browseRowSections}
       searchQuery={state.searchQuery}
       searchResultsSection={
@@ -313,9 +337,7 @@ function TemplatesScreenContent({
         />
       }
       selectedCategory={state.selectedCategory}
-      starterTemplates={starterTemplates}
       totalHabitCount={data.allTemplates?.length ?? 0}
-      userHabitCount={data.userHabitCount}
     />
   );
 }

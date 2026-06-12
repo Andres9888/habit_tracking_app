@@ -1,9 +1,4 @@
-/**
- * MakeItStickSheet — post-add education at peak motivation.
- * Celebrates the first habit, then installs stickiness mechanics:
- * cue anchoring (persisted to the habit), the 66-day expectation,
- * and an identity line. Fully skippable; replaces CelebrationOverlay.
- */
+/** Post-add education: cue anchoring, 66-day expectation, identity line. */
 
 import { useEffect, useMemo, useState } from 'react';
 import { ScrollView, Text } from 'react-native';
@@ -11,11 +6,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, { FadeIn, FadeInDown } from 'react-native-reanimated';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SectionOverline } from '../../screens/TemplatesScreen/components/SectionOverline';
 import { CelebrationBand } from './components/CelebrationBand';
 import { CueChips } from './components/CueChips';
 import { ExpectationCard } from './components/ExpectationCard';
+import { IdentityVote } from './components/IdentityVote';
 import { StickActions } from './components/StickActions';
 import { buildCueOptions, buildRecapLabel } from './MakeItStickSheet.helpers';
 import { styles as s } from './MakeItStickSheet.styles';
@@ -24,6 +21,7 @@ import type { MakeItStickSheetProps } from './MakeItStickSheet.types';
 export function MakeItStickSheet({
   habitId,
   onDone,
+  onSaveError,
   template,
   visible,
 }: MakeItStickSheetProps) {
@@ -54,11 +52,13 @@ export function MakeItStickSheet({
         });
       }
     } catch {
-      // Cue persistence is best-effort — the habit itself already exists.
-    } finally {
       setSaving(false);
-      onDone();
+      onSaveError?.();
+      return;
     }
+    void triggerHaptic('success');
+    setSaving(false);
+    onDone();
   };
 
   return (
@@ -94,9 +94,7 @@ export function MakeItStickSheet({
           />
           <ExpectationCard />
           {template.suggestedIdentity ? (
-            <Text style={[s.identity, { color: colors.text.primary }]}>
-              Every rep is a vote for: “{template.suggestedIdentity}”
-            </Text>
+            <IdentityVote identity={template.suggestedIdentity} />
           ) : null}
           <StickActions
             saving={saving}

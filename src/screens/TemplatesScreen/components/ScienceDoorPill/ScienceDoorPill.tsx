@@ -3,7 +3,9 @@
  * The labeled door to the science card on the preview page.
  */
 
-import { Pressable, Text } from 'react-native';
+import { Text } from 'react-native';
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { triggerHaptic } from '@/utils/haptics';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { getScienceDoorLabel } from '../HabitTemplateCard';
@@ -19,7 +21,7 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
   const label = getScienceDoorLabel(template);
 
   return (
-    <Pressable
+    <AnimatedPressable
       accessibilityLabel={`Why ${template.name} works`}
       accessibilityRole='button'
       hitSlop={4}
@@ -32,6 +34,7 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
       ]}
       onPress={(event) => {
         event?.stopPropagation?.();
+        void triggerHaptic('selection');
         onPress(template);
       }}
     >
@@ -41,6 +44,6 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
       >
         {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
