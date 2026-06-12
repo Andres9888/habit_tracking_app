@@ -439,7 +439,6 @@ const applicationTables = {
     ),
 
     hasPremium: v.optional(v.boolean()),
-    highContrastMode: v.optional(v.boolean()),
     // Global default for the 5-stage growth emoji set, overridable per habit.
     progressEmojis: v.optional(progressEmojisValidator),
     // User's saved "Custom" preset — auto-stored when slots are edited in

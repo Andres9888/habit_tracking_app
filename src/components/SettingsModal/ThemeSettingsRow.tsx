@@ -7,23 +7,17 @@ import { ThemePicker } from './ThemePicker';
 import { useThemeColors } from '../../theme/ThemeContext';
 
 interface Props {
-  highContrastMode: boolean;
   selected: DarkModePreference;
   onSelect: (preference: DarkModePreference) => void | Promise<void>;
 }
 
-export function ThemeSettingsRow({
-  highContrastMode,
-  selected,
-  onSelect,
-}: Props) {
+export function ThemeSettingsRow({ selected, onSelect }: Props) {
   const { settings } = useThemeColors();
 
   return (
     <SettingsRow
-      highContrastMode={highContrastMode}
-      icon={<Moon color={settings.circle.icon} size={iconSizes.small} />}
-      iconBackgroundColor={settings.circle.bg}
+      icon={<Moon color={settings.checkbox.icon} size={iconSizes.small} />}
+      iconBackgroundColor={settings.checkbox.bg}
       label='Theme'
       rightAccessory={
         <ThemePicker selected={selected} onSelect={(v) => void onSelect(v)} />

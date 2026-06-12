@@ -33,10 +33,7 @@ interface DayCellContentProps {
   completed: number;
   total: number;
   hasCompletionData: boolean;
-  colors: CalendarColors & {
-    borderWidth?: number;
-    highContrastBorder?: string;
-  };
+  colors: CalendarColors;
   completionIcon?: 'chain' | 'checkbox';
   monthPrefix?: string;
   reduceMotion: boolean;

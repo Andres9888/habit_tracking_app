@@ -22,7 +22,6 @@ interface ChainDayListProps {
   celebrationsEnabled: boolean;
   completionIcon: CompletionIcon;
   strengthPercent: number;
-  highContrastMode: boolean;
   shape: DayShape;
   shouldReduceMotion: boolean;
   showConnectors: boolean;
@@ -72,7 +71,6 @@ function ChainDayListComponent(props: ChainDayListProps) {
             strengthPercent={props.strengthPercent}
             dateString={dateString}
             disabled={disabled}
-            highContrastMode={props.highContrastMode}
             isToday={props.isToday(index)}
             missed={props.isStreakBreak(index)}
             shape={props.shape}

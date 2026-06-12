@@ -7,21 +7,11 @@ import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface SignOutCardProps {
   isLoading: boolean;
-  highContrastMode: boolean;
   onSignOut: () => void;
 }
 
-export function SignOutCard({
-  isLoading,
-  highContrastMode,
-  onSignOut,
-}: SignOutCardProps) {
+export function SignOutCard({ isLoading, onSignOut }: SignOutCardProps) {
   const { colors: themeColors } = useThemeColors();
-
-  const cardBg = highContrastMode ? themeColors.gray[900] : themeColors.card;
-  const borderColor = highContrastMode
-    ? themeColors.gray[700]
-    : themeColors.border;
 
   return (
     <AnimatedPressable
@@ -32,17 +22,19 @@ export function SignOutCard({
       <View
         className='overflow-hidden rounded-2xl'
         style={{
-          backgroundColor: cardBg,
-          borderColor,
+          backgroundColor: themeColors.card,
+          borderColor: themeColors.border,
           borderWidth: 1,
-          ...(highContrastMode
-            ? { elevation: 0, shadowColor: 'transparent' }
-            : shadows.card),
+          ...shadows.card,
         }}
       >
         <View className='items-center py-4'>
           <Text
-            style={{ ...typography.body, fontWeight: fontWeights.semibold, color: themeColors.status.error }}
+            style={{
+              ...typography.body,
+              fontWeight: fontWeights.semibold,
+              color: themeColors.status.error,
+            }}
           >
             {isLoading ? 'Signing out...' : 'Sign Out'}
           </Text>

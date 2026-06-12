@@ -27,7 +27,7 @@ export function ProgressEmojiSlotRow({
       onPress={() => onPress(stageKey)}
     >
       <View className='flex-row items-center gap-3'>
-        <Text style={{ fontSize: 28 }}>{emoji}</Text>
+        <Text style={{ fontSize: 22 }}>{emoji}</Text>
         <Text
           style={{
             ...typography.body,

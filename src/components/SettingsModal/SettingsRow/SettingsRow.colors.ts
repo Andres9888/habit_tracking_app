@@ -3,7 +3,6 @@
  */
 
 import { darkColors, lightColors } from '@/theme/darkColors';
-import { highContrastColors } from '@/theme/highContrastColors';
 
 export interface SettingsRowColors {
   background: string;
@@ -15,17 +14,6 @@ export interface SettingsRowColors {
   switchTrackTrue: string;
   value: string;
 }
-
-export const HIGH_CONTRAST_COLORS: SettingsRowColors = {
-  background: highContrastColors.background,
-  border: highContrastColors.border,
-  chevron: highContrastColors.accent,
-  label: '#ffffff',
-  switchThumb: '#000000',
-  switchTrackFalse: '#525252',
-  switchTrackTrue: highContrastColors.accent,
-  value: highContrastColors.accent,
-};
 
 const buildStandardColors = (isDark: boolean): SettingsRowColors => {
   const semantic = isDark ? darkColors : lightColors;
@@ -43,9 +31,7 @@ const buildStandardColors = (isDark: boolean): SettingsRowColors => {
 };
 
 export function getSettingsRowColors(
-  highContrastMode: boolean,
   isDark: boolean = false
 ): SettingsRowColors {
-  if (highContrastMode) return HIGH_CONTRAST_COLORS;
   return buildStandardColors(isDark);
 }

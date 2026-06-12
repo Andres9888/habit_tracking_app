@@ -4,16 +4,15 @@ import { Platform, TextStyle, ViewStyle } from 'react-native';
 import { colors } from '@/theme';
 import { getCardIconSize } from './cardLayout.constants';
 
-/** Build the icon container style with accent-tinted shadow and high-contrast border. */
+/** Build the icon container style with accent-tinted shadow. */
 export function getIconContainerStyle(
   iconBg: string,
-  accentColor: string,
-  highContrastMode: boolean
+  accentColor: string
 ): ViewStyle {
   return {
     backgroundColor: iconBg,
-    borderColor: highContrastMode ? colors.gray[900] : 'rgba(0,0,0,0.04)',
-    borderWidth: highContrastMode ? 2 : 1,
+    borderColor: 'rgba(0,0,0,0.04)',
+    borderWidth: 1,
     shadowColor: accentColor,
     shadowOffset: { height: 0, width: 0 },
     shadowOpacity: 0.15,
@@ -55,6 +54,6 @@ export function getTitleTextStyle(isCompactMode?: boolean): TextStyle {
   };
 }
 
-export function getChevronColor(highContrastMode: boolean): string {
-  return highContrastMode ? colors.streak[300] : colors.gray[300];
+export function getChevronColor(): string {
+  return colors.gray[300];
 }

@@ -9,19 +9,17 @@ import { getProfileStatColors } from './getProfileStatColors';
 import type { ProfileStats } from './profileStats.types';
 
 interface ProfileStatsRowProps {
-  highContrastMode?: boolean;
   isLoading?: boolean;
   stats: ProfileStats;
 }
 
 export function ProfileStatsRow({
-  highContrastMode = false,
   isLoading = false,
   stats,
 }: ProfileStatsRowProps) {
   const { colors: themeColors } = useThemeColors();
   const reduceMotion = useReducedMotion();
-  const palette = getProfileStatColors(themeColors, highContrastMode);
+  const palette = getProfileStatColors(themeColors);
 
   const content = (
     <View

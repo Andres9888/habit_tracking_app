@@ -34,18 +34,10 @@ export const useCalendarTimelineLogic = () => {
   return { isFuture, isToday };
 };
 
-/** Derives themed colors and augmented colors for the timeline (borderless) */
-export function useTimelineColors(highContrastMode: boolean, isDark: boolean) {
-  const colors = getColors(highContrastMode, isDark);
-  return useMemo(() => {
-    const hc = highContrastMode;
-    const augmentedColors = {
-      ...colors,
-      borderWidth: hc ? 2 : 0,
-      highContrastBorder: hc ? colors.dayBorder : undefined,
-    };
-    return { augmentedColors, colors };
-  }, [colors, highContrastMode]);
+/** Derives themed colors for the timeline */
+export function useTimelineColors(isDark: boolean) {
+  const colors = getColors(isDark);
+  return useMemo(() => ({ augmentedColors: colors, colors }), [colors]);
 }
 
 const SLIDE_OFFSET = 16;

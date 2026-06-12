@@ -91,26 +91,4 @@ describe('DraggableHabit card structure', () => {
     const treeString = JSON.stringify(tree);
     expect(treeString).toContain('#db2777');
   });
-
-  it('uses yellow accent color in high contrast mode', () => {
-    const { toJSON } = render(
-      <DraggableHabit
-        celebrationsEnabled={false}
-        habit={buildHabit({ iconColor: '#7c3aed' })}
-        highContrastMode={true}
-        reduceMotionPreference={true}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
-        streak={0}
-        toggleHabit={jest.fn()}
-      />
-    );
-
-    const tree = toJSON();
-    expect(tree).toBeTruthy();
-
-    // High contrast mode uses yellow (#facc15) for visibility
-    const treeString = JSON.stringify(tree);
-    expect(treeString).toContain('#facc15');
-  });
 });

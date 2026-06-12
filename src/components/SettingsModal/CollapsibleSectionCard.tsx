@@ -11,7 +11,6 @@ interface Props {
   subtitle?: string;
   icon?: ReactNode;
   children: ReactNode;
-  highContrastMode?: boolean;
   isExpanded?: boolean;
   onToggle?: () => void;
   cardStyle: ViewStyle;
@@ -22,7 +21,6 @@ export function CollapsibleSectionCard({
   subtitle,
   icon,
   children,
-  highContrastMode = false,
   isExpanded = true,
   onToggle,
   cardStyle,
@@ -37,7 +35,6 @@ export function CollapsibleSectionCard({
     <View className='overflow-hidden rounded-2xl' style={cardStyle}>
       <SettingsSectionHeader
         chevronStyle={accordion.chevronAnimatedStyle}
-        highContrastMode={highContrastMode}
         icon={icon}
         isExpanded={isExpanded}
         subtitle={subtitle}

@@ -95,28 +95,6 @@ describe('DraggableHabit color accent border', () => {
     const treeString = JSON.stringify(tree);
     expect(treeString).toContain('#db2777');
   });
-
-  it('uses yellow accent in high contrast mode for visibility', () => {
-    const { toJSON } = render(
-      <DraggableHabit
-        celebrationsEnabled={false}
-        habit={buildHabit({ iconColor: '#7c3aed' })}
-        highContrastMode={true}
-        reduceMotionPreference={true}
-        streak={0}
-        toggleHabit={jest.fn()}
-        weekDateStrings={weekDateStrings}
-        weekStatus={weekStatus}
-      />
-    );
-
-    const tree = toJSON();
-    expect(tree).toBeTruthy();
-
-    // High contrast mode uses yellow (#facc15) for maximum visibility
-    const treeString = JSON.stringify(tree);
-    expect(treeString).toContain('#facc15');
-  });
 });
 
 describe('DraggableHabit swipe to archive', () => {

@@ -44,7 +44,6 @@ export function CardContent(props: CardContentProps) {
           colors={props.colors}
           emoji={props.emoji}
           habit={props.habit}
-          highContrastMode={props.highContrastMode}
           iconPulse={props.iconPulse}
           isCompactMode={compact}
           isPaused={props.isPaused}
@@ -91,7 +90,6 @@ export function CardContent(props: CardContentProps) {
           completionIcon={props.completionIcon}
           strengthPercent={props.strengthPercent}
           habitId={props.habit._id}
-          highContrastMode={props.highContrastMode}
           isConnectedToNextWeek={props.isConnectedToNextWeek}
           isConnectedToPreviousWeek={props.isConnectedToPreviousWeek}
           reduceMotionPreference={props.reduceMotionPreference}

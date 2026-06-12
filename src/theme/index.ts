@@ -547,19 +547,27 @@ const mergeThemeCustomTokens = (
   },
   iconSizes: {
     ...extendedTheme.custom.iconSizes,
-    ...normalizeTokenOverrides<AppTheme['custom']['iconSizes']>(override?.iconSizes),
+    ...normalizeTokenOverrides<AppTheme['custom']['iconSizes']>(
+      override?.iconSizes
+    ),
   },
   shadows: {
     ...extendedTheme.custom.shadows,
-    ...normalizeTokenOverrides<AppTheme['custom']['shadows']>(override?.shadows),
+    ...normalizeTokenOverrides<AppTheme['custom']['shadows']>(
+      override?.shadows
+    ),
   },
   spacing: {
     ...extendedTheme.custom.spacing,
-    ...normalizeTokenOverrides<AppTheme['custom']['spacing']>(override?.spacing),
+    ...normalizeTokenOverrides<AppTheme['custom']['spacing']>(
+      override?.spacing
+    ),
   },
   typography: {
     ...extendedTheme.custom.typography,
-    ...normalizeTokenOverrides<AppTheme['custom']['typography']>(override?.typography),
+    ...normalizeTokenOverrides<AppTheme['custom']['typography']>(
+      override?.typography
+    ),
   },
 });
 
@@ -603,4 +611,3 @@ export { iconSizes } from './iconSizes';
 export { ThemeColorProvider, useThemeColors } from './ThemeContext';
 export { darkColors, lightColors } from './darkColors';
 export type { SemanticColors } from './darkColors';
-export { highContrastColors } from './highContrastColors';

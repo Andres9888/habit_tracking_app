@@ -15,10 +15,7 @@ interface GetDayCellStylesParams {
   isPartial: boolean;
   isUpcoming: boolean;
   isDark: boolean;
-  colors: CalendarColors & {
-    borderWidth?: number;
-    highContrastBorder?: string;
-  };
+  colors: CalendarColors;
 }
 
 interface DayCellComputedStyles {
@@ -66,8 +63,6 @@ export function getDayCellStyles({
     return {
       container: {
         backgroundColor: colors.dayBackground,
-        borderColor: colors.highContrastBorder ?? 'transparent',
-        borderWidth: colors.borderWidth ?? 0,
         opacity: 0.4,
       },
       text: getFutureDateTextColor(isDark),
@@ -89,8 +84,8 @@ export function getDayCellStyles({
   return {
     container: {
       backgroundColor: colors.dayBackground,
-      borderColor: colors.highContrastBorder ?? emptyBorder,
-      borderWidth: colors.borderWidth ?? 1,
+      borderColor: emptyBorder,
+      borderWidth: 1,
     },
     text: colors.dayText,
   };

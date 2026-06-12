@@ -3,49 +3,30 @@ import { Text, View } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { highContrastColors } from '@/theme/highContrastColors';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { shadows } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
-  highContrastMode?: boolean;
   isDeletingAccount: boolean;
   onDeleteAccount: () => void;
 }
 
 export function DeleteAccountButton({
-  highContrastMode = false,
   isDeletingAccount,
   onDeleteAccount,
 }: Props) {
   const { colors: themeColors, isDark } = useThemeColors();
-  const labelColor = highContrastMode
-    ? themeColors.status.error
-    : themeColors.status.errorText;
-  const sectionLabelColor = highContrastMode
-    ? highContrastColors.accent
-    : themeColors.text.tertiary;
-  const cardBackground = highContrastMode
-    ? highContrastColors.background
-    : isDark
-      ? 'rgba(248,113,113,0.08)'
-      : '#f7f2ee';
-  const borderColor = highContrastMode
-    ? highContrastColors.border
-    : isDark
-      ? 'rgba(248,113,113,0.16)'
-      : 'rgba(181,48,48,0.14)';
-  const iconBackground = highContrastMode
-    ? '#1f1f1f'
-    : themeColors.status.errorLight;
-  const iconColor = themeColors.status.error;
+  const cardBackground = isDark ? 'rgba(248,113,113,0.08)' : '#f7f2ee';
+  const borderColor = isDark
+    ? 'rgba(248,113,113,0.16)'
+    : 'rgba(181,48,48,0.14)';
 
   return (
     <View className='gap-2'>
       <Text
         className='px-4'
-        style={{ ...typography.overline, color: sectionLabelColor }}
+        style={{ ...typography.overline, color: themeColors.text.tertiary }}
       >
         Danger Zone
       </Text>
@@ -59,29 +40,36 @@ export function DeleteAccountButton({
           style={{
             backgroundColor: cardBackground,
             borderColor,
-            ...(highContrastMode
-              ? { elevation: 0, shadowColor: 'transparent' }
-              : shadows.card),
+            ...shadows.card,
           }}
         >
           <View className='flex-row items-center px-4 py-4' style={{ gap: 16 }}>
             <View
               className='items-center justify-center rounded-xl'
               style={{
-                backgroundColor: iconBackground,
+                backgroundColor: themeColors.status.errorLight,
                 height: 40,
                 width: 40,
               }}
             >
-              <Trash2 color={iconColor} size={iconSizes.small} />
+              <Trash2 color={themeColors.status.error} size={iconSizes.small} />
             </View>
             <View className='flex-1'>
-              <Text style={{ ...typography.body, fontWeight: fontWeights.semibold, color: labelColor }}>
+              <Text
+                style={{
+                  ...typography.body,
+                  fontWeight: fontWeights.semibold,
+                  color: themeColors.status.errorText,
+                }}
+              >
                 {isDeletingAccount ? 'Deleting account...' : 'Delete account'}
               </Text>
               <Text
                 className='mt-1'
-                style={{ ...typography.caption, color: themeColors.text.secondary }}
+                style={{
+                  ...typography.caption,
+                  color: themeColors.text.secondary,
+                }}
               >
                 Permanently remove your account and all Chain Day data
               </Text>

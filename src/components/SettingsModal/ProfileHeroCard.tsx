@@ -1,4 +1,4 @@
-/** ProfileHeroCard — centered avatar, name, and stats (Habit It-inspired) */
+/** ProfileHeroCard — centered avatar, name, and stats with layered depth */
 import { Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -8,22 +8,17 @@ import { typography, fontWeights } from '../../theme/typography';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
 import { ProfileStatsRow } from './ProfileStatsRow';
-import { UserAvatar } from './UserAvatar';
+import { ProfileHeroAvatar } from './components/ProfileHeroAvatar';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
 import { useProfileStats } from './useProfileStats';
 
 interface ProfileHeroCardProps {
-  highContrastMode: boolean;
   isPremium: boolean;
   onPress: () => void;
 }
 
-export function ProfileHeroCard({
-  highContrastMode,
-  isPremium,
-  onPress,
-}: ProfileHeroCardProps) {
+export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
   const { colors: themeColors } = useThemeColors();
   const { initial, name } = useProfileDisplayName();
   const { isLoading: statsLoading, stats } = useProfileStats();
@@ -33,11 +28,12 @@ export function ProfileHeroCard({
     <AnimatedPressable
       accessibilityLabel='Account settings'
       accessibilityRole='button'
+      animationConfig={{ hapticStyle: 'light' }}
       onPress={onPress}
     >
       <View
         className='overflow-hidden rounded-2xl'
-        style={getProfileCardShellStyle(highContrastMode, themeColors)}
+        style={getProfileCardShellStyle(themeColors)}
       >
         <View className='items-center px-4 pb-1 pt-5'>
           <View className='absolute right-3 top-3'>
@@ -46,21 +42,10 @@ export function ProfileHeroCard({
               size={iconSizes.medium}
             />
           </View>
-          <UserAvatar
+          <ProfileHeroAvatar
             imageUrl={imageUrl}
             initial={initial}
-            palette={{
-              avatarBg: themeColors.primary[100],
-              avatarBorderColor: themeColors.border,
-              avatarBorderWidth: 2,
-              avatarTextColor: themeColors.primary[700],
-              gradientColors: [
-                themeColors.primary[700],
-                themeColors.primary[600],
-              ],
-            }}
-            size={72}
-            useGradient
+            themeColors={themeColors}
           />
           <View className='mt-3 flex-row items-center' style={{ gap: 6 }}>
             <Text
@@ -75,11 +60,7 @@ export function ProfileHeroCard({
             {isPremium ? <ProfilePremiumBadge variant='compact' /> : null}
           </View>
         </View>
-        <ProfileStatsRow
-          highContrastMode={highContrastMode}
-          isLoading={statsLoading}
-          stats={stats}
-        />
+        <ProfileStatsRow isLoading={statsLoading} stats={stats} />
       </View>
     </AnimatedPressable>
   );
