@@ -56,6 +56,7 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
           <GoalPresetChip
             key={days}
             days={days}
+            disabled={saving}
             recommended={days === RECOMMENDED}
             selected={days === selected}
             onPress={() => {

@@ -2,11 +2,19 @@
  * GoalPresetChip — Single preset day-count chip for streak goal picker.
  */
 import { Pressable, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { useThemeColors, withAlpha } from '../../../theme';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography, fontWeights } from '../../../theme/typography';
+import { useGoalPresetChipAnimation } from './GoalPresetChip.hooks';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const CHIP_BORDER_WIDTH = 1.5;
 
 interface GoalPresetChipProps {
   days: number;
+  disabled?: boolean;
   selected: boolean;
   recommended: boolean;
   onPress: () => void;
@@ -14,27 +22,41 @@ interface GoalPresetChipProps {
 
 export function GoalPresetChip({
   days,
+  disabled = false,
   selected,
   recommended,
   onPress,
 }: GoalPresetChipProps) {
   const { colors } = useThemeColors();
+  const { animatedStyle: pressStyle, pressHandlers } = useDetailPressAnimation();
+  const selectionStyle = useGoalPresetChipAnimation(selected, {
+    borderDefault: colors.border,
+    borderSelected: colors.primary[600],
+    fillDefault: colors.card,
+    fillSelected: withAlpha(colors.primary[600], 0.1),
+  });
+  const label = days === 365 ? '1yr' : `${days}d`;
+
   return (
-    <Pressable
+    <AnimatedPressable
+      accessibilityLabel={`${label}${recommended ? ', recommended' : ''}`}
       accessibilityRole='button'
-      accessibilityState={{ selected }}
-      className='rounded-full px-4 py-2'
-      style={{
-        backgroundColor: selected
-          ? withAlpha(colors.primary[600], 0.1)
-          : colors.card,
-        borderColor: selected ? colors.primary[600] : colors.border,
-        // Keep the recommended chip's border width constant (selected or not) so
-        // toggling it in/out of selection doesn't change row height — RN counts
-        // border in an element's laid-out box, and the row hugs its tallest chip.
-        borderWidth: recommended ? 1.5 : 1,
-      }}
+      accessibilityState={{ disabled, selected }}
+      disabled={disabled}
+      style={[
+        pressStyle,
+        selectionStyle,
+        {
+          borderRadius: borderRadius.full,
+          borderWidth: CHIP_BORDER_WIDTH,
+          opacity: disabled ? 0.45 : 1,
+          paddingHorizontal: spacing.base,
+          paddingVertical: spacing.sm,
+        },
+      ]}
       onPress={onPress}
+      onPressIn={disabled ? undefined : pressHandlers.onPressIn}
+      onPressOut={disabled ? undefined : pressHandlers.onPressOut}
     >
       <Text
         style={{
@@ -43,8 +65,8 @@ export function GoalPresetChip({
           fontWeight: selected ? fontWeights.bold : fontWeights.medium,
         }}
       >
-        {days === 365 ? '1yr' : `${days}d`}
+        {label}
       </Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }

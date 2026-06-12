@@ -7,14 +7,18 @@ import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import type { Habit } from '../../../features/habits/types';
+import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { colors as palette } from '../../../theme/colors';
-import { shadows } from '../../../theme/spacing';
+import { durations, enterEasing } from '../../../theme/animations';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import { GoalAdjustSheet } from './GoalAdjustSheet';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
 import { GoalWhyAnchor } from './GoalWhyAnchor';
 import { SimpleStreakGoalHero } from './SimpleStreakGoalHero';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface GoalTabContentProps {
   habit: Habit;
@@ -23,10 +27,12 @@ interface GoalTabContentProps {
 export function GoalTabContent({ habit }: GoalTabContentProps) {
   const { colors, isDark } = useThemeColors();
   const [adjustOpen, setAdjustOpen] = useState(false);
+  const { animatedStyle, pressHandlers } = useDetailPressAnimation();
   const goalDuration = habit.goalDuration ?? 0;
   const hasGoal = goalDuration > 0;
-  // Warm near-white card surface — same surface as the home HabitCard
-  // (colors.light.surfaceMuted). Keep the theme card token in dark mode.
+  const currentStreak = habit.currentStreak ?? 0;
+  const isGoalReached = hasGoal && currentStreak >= goalDuration;
+  const tabEnter = FadeIn.duration(durations.standard).easing(enterEasing);
   const cardStyle = {
     ...shadows.card,
     backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
@@ -38,7 +44,7 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
     return (
       <Animated.View
         className='overflow-hidden rounded-2xl'
-        entering={FadeIn.duration(180)}
+        entering={tabEnter}
         style={cardStyle}
       >
         <View className='p-4'>
@@ -50,14 +56,13 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
     );
   }
 
-  const currentStreak = habit.currentStreak ?? 0;
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
   const title = `Aiming for ${goalDuration} ${goalDuration === 1 ? 'day' : 'days'}`;
 
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl'
-      entering={FadeIn.duration(180)}
+      entering={tabEnter}
       style={cardStyle}
     >
       <View className='p-4'>
@@ -65,20 +70,33 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
           <Text style={{ ...typography.heading3, color: colors.text.primary }}>
             {title}
           </Text>
-          <Pressable
+          <AnimatedPressable
             accessibilityRole='button'
+            style={[
+              animatedStyle,
+              isGoalReached
+                ? {
+                    backgroundColor: colors.primary[700],
+                    borderRadius: borderRadius.full,
+                    paddingHorizontal: spacing.md,
+                    paddingVertical: spacing.xs + 2,
+                  }
+                : undefined,
+            ]}
             onPress={() => setAdjustOpen(true)}
+            onPressIn={pressHandlers.onPressIn}
+            onPressOut={pressHandlers.onPressOut}
           >
             <Text
               style={{
                 ...typography.bodySmall,
-                color: colors.primary[700],
+                color: isGoalReached ? colors.text.inverse : colors.primary[700],
                 fontWeight: fontWeights.semibold,
               }}
             >
               Adjust
             </Text>
-          </Pressable>
+          </AnimatedPressable>
         </View>
 
         <ErrorBoundary>

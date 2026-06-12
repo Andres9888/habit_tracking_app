@@ -12,12 +12,12 @@ const STREAK_NUMBER_SIZE = 72;
 const STREAK_NUMBER_LINE = 76;
 
 interface StreakGoalNumeralProps {
-  currentStreak: number;
+  animatedStreak: number;
   goalLabel: string;
 }
 
 export function StreakGoalNumeral({
-  currentStreak,
+  animatedStreak,
   goalLabel,
 }: StreakGoalNumeralProps) {
   const { colors } = useThemeColors();
@@ -45,7 +45,7 @@ export function StreakGoalNumeral({
           marginTop: 6,
         }}
       >
-        {currentStreak}
+        {animatedStreak}
       </Text>
       <Text
         style={{

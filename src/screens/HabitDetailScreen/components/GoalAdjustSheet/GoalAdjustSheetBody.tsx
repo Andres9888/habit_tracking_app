@@ -3,12 +3,17 @@
  * preset grid, Save, Remove). Chrome/animation lives in GoalAdjustSheet.
  */
 import { Pressable, Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { Button } from '../../../../components/Button';
-import { spacing } from '../../../../theme/spacing';
+import { useDetailPressAnimation } from '../../../../hooks/useDetailPressAnimation';
+import { withAlpha } from '../../../../theme';
+import { borderRadius, componentSpacing, spacing } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { typography, fontFamilies, fontWeights } from '../../../../theme/typography';
 import { GoalPresetChip } from '../GoalPresetChip';
 import type { useGoalAdjust } from './GoalAdjustSheet.hooks';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 const PRESETS = [7, 21, 30, 66, 100, 365];
 const RECOMMENDED = 66;
@@ -21,13 +26,20 @@ interface GoalAdjustSheetBodyProps {
 
 export function GoalAdjustSheetBody({ currentGoal, goal }: GoalAdjustSheetBodyProps) {
   const { colors } = useThemeColors();
+  const { animatedStyle, pressHandlers } = useDetailPressAnimation();
   const { confirmRemove, handleRemove, handleSelect, handleUpdate, saving, selected } = goal;
 
   return (
     <>
       <View
-        className='mx-auto mb-4 h-1 w-10 rounded-full'
-        style={{ backgroundColor: colors.border }}
+        style={{
+          alignSelf: 'center',
+          backgroundColor: colors.border,
+          borderRadius: borderRadius.full,
+          height: spacing.xs,
+          marginBottom: spacing.base,
+          width: componentSpacing.avatar.size,
+        }}
       />
       <Text
         className='text-center'
@@ -46,6 +58,7 @@ export function GoalAdjustSheetBody({ currentGoal, goal }: GoalAdjustSheetBodyPr
           <GoalPresetChip
             key={days}
             days={days}
+            disabled={saving}
             recommended={days === RECOMMENDED}
             selected={days === selected}
             onPress={() => handleSelect(days)}
@@ -63,18 +76,37 @@ export function GoalAdjustSheetBody({ currentGoal, goal }: GoalAdjustSheetBodyPr
       >
         {`Set ${labelFor(selected)} goal`}
       </Button>
-      <Pressable
+      <AnimatedPressable
+        accessibilityLabel={
+          confirmRemove ? 'Tap again to confirm goal removal' : 'Remove goal'
+        }
         accessibilityRole='button'
-        className='items-center rounded-xl px-6 py-3'
+        accessibilityState={{ disabled: saving }}
         disabled={saving}
+        style={[
+          animatedStyle,
+          {
+            alignItems: 'center',
+            backgroundColor: confirmRemove
+              ? withAlpha(colors.status.error, 0.1)
+              : 'transparent',
+            borderRadius: borderRadius.medium,
+            opacity: saving ? 0.6 : 1,
+            paddingHorizontal: spacing.lg,
+            paddingVertical: spacing.md,
+          },
+        ]}
         onPress={() => void handleRemove()}
+        onPressIn={pressHandlers.onPressIn}
+        onPressOut={pressHandlers.onPressOut}
       >
         <Text
+          accessibilityLiveRegion='polite'
           style={{ ...typography.bodySmall, color: colors.status.error, fontWeight: fontWeights.semibold }}
         >
           {confirmRemove ? 'Tap again to confirm' : 'Remove goal'}
         </Text>
-      </Pressable>
+      </AnimatedPressable>
     </>
   );
 }

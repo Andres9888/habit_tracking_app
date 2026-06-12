@@ -3,7 +3,8 @@
  * Equal-width (flex: 1), weight- and color-driven active state.
  */
 
-import { Text } from 'react-native';
+import { Pressable, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import {
   Activity,
   CalendarDays,
@@ -11,7 +12,7 @@ import {
   type LucideIcon,
 } from 'lucide-react-native';
 import { useThemeColors } from '@/theme';
-import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { useDetailPressAnimation } from '@/hooks/useDetailPressAnimation';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 
@@ -34,6 +35,8 @@ interface DetailViewTabButtonProps {
   onPress: (view: DetailView) => void;
 }
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
 export function DetailViewTabButton({
   activeView,
   label,
@@ -41,6 +44,7 @@ export function DetailViewTabButton({
   onPress,
 }: DetailViewTabButtonProps) {
   const { colors } = useThemeColors();
+  const { animatedStyle, pressHandlers } = useDetailPressAnimation();
   const isActive = activeView === view;
   const Icon = ICONS[view];
   const color = isActive ? colors.text.primary : colors.text.tertiary;
@@ -50,16 +54,21 @@ export function DetailViewTabButton({
       accessibilityRole='tab'
       accessibilityState={{ selected: isActive }}
       hitSlop={4}
-      style={{
-        alignItems: 'center',
-        flex: 1,
-        flexDirection: 'row',
-        gap: ICON_LABEL_GAP,
-        justifyContent: 'center',
-        paddingVertical: TAB_PADDING_V,
-        zIndex: 1,
-      }}
+      style={[
+        animatedStyle,
+        {
+          alignItems: 'center',
+          flex: 1,
+          flexDirection: 'row',
+          gap: ICON_LABEL_GAP,
+          justifyContent: 'center',
+          paddingVertical: TAB_PADDING_V,
+          zIndex: 1,
+        },
+      ]}
       onPress={() => onPress(view)}
+      onPressIn={pressHandlers.onPressIn}
+      onPressOut={pressHandlers.onPressOut}
     >
       <Icon color={color} size={iconSizes.small} strokeWidth={2.1} />
       <Text

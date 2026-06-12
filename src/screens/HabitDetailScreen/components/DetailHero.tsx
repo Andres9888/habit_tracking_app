@@ -12,6 +12,7 @@ import {
 import type { Habit } from '../HabitDetailScreen.types';
 import { getHabitDisplayName } from './DetailHero.utils';
 import { DetailHeroIcon } from './DetailHeroIcon';
+import { DetailHeroStatValue } from './DetailHeroStatValue';
 
 interface DetailHeroProps {
   daysTracking?: number;
@@ -73,11 +74,19 @@ export function DetailHero({
         className='w-full flex-row items-center'
         style={{ marginTop: spacing.base }}
       >
-        <StatColumn
-          label='streak'
-          value={habit.currentStreak ?? 0}
-          {...statProps}
-        />
+        <View className='flex-1 items-center'>
+          <DetailHeroStatValue value={habit.currentStreak ?? 0} />
+          <Text
+            style={{
+              ...typography.caption,
+              color: statProps.labelColor,
+              fontSize: typography.overline.fontSize,
+              marginTop: 2,
+            }}
+          >
+            streak
+          </Text>
+        </View>
         <StatHairline />
         <StatColumn label='best' value={habit.bestStreak ?? 0} {...statProps} />
         <StatHairline />
