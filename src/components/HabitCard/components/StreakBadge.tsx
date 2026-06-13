@@ -123,8 +123,9 @@ export const StreakBadge = memo(function StreakBadge({ currentStreak, bestStreak
         </View>
       </AnimatedStreakText>
 
-      {/* Best Streak Badge - Shows when approaching or at personal record */}
-      {bestStreak > 0 && currentStreak >= bestStreak - 2 ? <View
+      {/* Best Streak Badge — gated to genuine record moments (at/above the all-time
+          best, and at least a week) so it isn't near-permanent chrome on the card. */}
+      {bestStreak >= 7 && currentStreak >= bestStreak ? <View
           style={[
             streakStyles.bestStreakBadge,
             {
