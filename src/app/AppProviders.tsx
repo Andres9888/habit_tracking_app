@@ -5,6 +5,7 @@ import { Component } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Pressable, Text, View } from 'react-native';
+import { ReducedMotionConfig, ReduceMotion } from 'react-native-reanimated';
 
 import { colors as palette } from '../theme/colors';
 import {
@@ -155,6 +156,9 @@ export function AppProviders({ children }: PropsWithChildren) {
 
   return (
     <StartupErrorBoundary>
+      {/* Honor the OS "Reduce Motion" flag by default across all Reanimated
+          animations; components override per-instance only to force motion. */}
+      <ReducedMotionConfig mode={ReduceMotion.System} />
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
           <ClerkProvider publishableKey={clerkKey} tokenCache={tokenCache}>

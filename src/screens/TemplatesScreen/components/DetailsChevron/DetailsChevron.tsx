@@ -14,7 +14,7 @@ export function DetailsChevron() {
     <ChevronRight
       color={colors.text.tertiary}
       size={iconSizes.small}
-      strokeWidth={2.25}
+      strokeWidth={2.5}
     />
   );
 }
