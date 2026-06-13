@@ -55,7 +55,7 @@ export const ReminderSection = ({
           <Text className='text-base font-semibold' style={{ color: themeColors.text.primary }}>Remind me</Text>
           <Text
             className='text-sm'
-            style={{ color: remindersEnabled ? '#22C55E' : '#a8a29e' }}
+            style={{ color: remindersEnabled ? themeColors.status.success : '#a8a29e' }}
           >
             {formatReminderTime(reminderTime)}
           </Text>
@@ -69,7 +69,7 @@ export const ReminderSection = ({
           accessibilityState={{ checked: remindersEnabled }}
           ios_backgroundColor='#E5E5E5'
           thumbColor={themeColors.text.inverse}
-          trackColor={{ false: '#E5E5E5', true: '#22C55E' }}
+          trackColor={{ false: '#E5E5E5', true: themeColors.status.success }}
           value={remindersEnabled}
           onValueChange={(val) => {
             triggerSelection();

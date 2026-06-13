@@ -59,7 +59,7 @@ const DateSelectorComponent: React.FC<DateSelectorProps> = ({
           hitSlop={{ bottom: 8, left: 8, right: 8, top: 8 }}
           onPress={onNextWeek}
         >
-          <ChevronRight color='#1c1917' size={iconSizes.small} strokeWidth={2} />
+          <ChevronRight color={themeColors.text.primary} size={iconSizes.small} strokeWidth={2} />
         </Pressable>
       </View>
 

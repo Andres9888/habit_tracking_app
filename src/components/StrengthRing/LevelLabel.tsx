@@ -4,6 +4,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 
+import { colors } from '@/theme/colors';
 import type { LevelInfo } from './StrengthRing.types';
 import { styles } from './StrengthRing.styles';
 
@@ -35,7 +36,7 @@ export const LevelLabel = React.memo(function LevelLabel({
           style={[
             styles.changeText,
             {
-              color: weeklyChange > 0 ? '#22c55e' : '#ef4444',
+              color: weeklyChange > 0 ? colors.success : colors.error,
               fontSize: fontSize * 0.65,
             },
           ]}
