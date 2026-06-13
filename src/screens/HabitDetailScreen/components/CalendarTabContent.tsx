@@ -15,7 +15,7 @@ interface CalendarTabContentProps {
   completedDates: Set<string>;
   habit: Habit;
   habitColor: string;
-  isToggling?: boolean;
+  pendingToggleDate?: string | null;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -23,7 +23,7 @@ export function CalendarTabContent({
   completedDates,
   habit,
   habitColor,
-  isToggling = false,
+  pendingToggleDate = null,
   onDayPress,
 }: CalendarTabContentProps) {
   const [currentMonth, setCurrentMonth] = useState(() =>
@@ -56,7 +56,7 @@ export function CalendarTabContent({
             habitColor={habitColor}
             habitCreatedAt={habit.createdAt}
             habitId={habit._id}
-            isToggling={isToggling}
+            pendingToggleDate={pendingToggleDate}
             showStreakInInsights={false}
             useSolidCompletedFill
             onCurrentMonthChange={setCurrentMonth}

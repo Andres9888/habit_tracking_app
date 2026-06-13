@@ -43,13 +43,12 @@ function HabitDetailScreenContent({
   });
   const calendarHandlers = useCalendarHandlers({
     habit,
-    isTogglingCalendar: screenState.isTogglingCalendar,
     onArchive,
     onClose,
     onDelete,
-    setIsTogglingCalendar: screenState.setIsTogglingCalendar,
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
+    setPendingToggleDate: screenState.setPendingToggleDate,
   });
   const handleEdit = () => {
     if (habit) onEdit?.(habit);
@@ -111,7 +110,7 @@ function HabitDetailScreenContent({
                   daysTracking={screenState.daysTracking}
                   habit={habit}
                   isCompletedToday={screenState.isCompletedToday}
-                  isTogglingCalendar={screenState.isTogglingCalendar}
+                  pendingToggleDate={screenState.pendingToggleDate}
                   totalCompletions={screenState.totalCompletions}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onPinnedChange={handlePinnedChange}

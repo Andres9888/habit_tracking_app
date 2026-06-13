@@ -29,6 +29,6 @@ export interface MonthlyCalendarGridProps {
   useSolidCompletedFill?: boolean;
   /** Hide streak stat in insight strip (hero already shows streak). */
   showStreakInInsights?: boolean;
-  isToggling?: boolean;
+  pendingToggleDate?: string | null;
   onDayPress?: (date: string, completed: boolean) => void;
 }

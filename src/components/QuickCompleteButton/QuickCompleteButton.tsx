@@ -87,7 +87,7 @@ export function QuickCompleteButton({
           className='text-base font-semibold'
           style={{ color: localCompleted ? colors.status.successText : colors.text.inverse }}
         >
-          {localCompleted ? 'Done for Today' : 'Complete Today'}
+          {localCompleted ? 'Done for Today' : 'Mark as done'}
         </Text>
       </AnimatedPressable>
     </View>

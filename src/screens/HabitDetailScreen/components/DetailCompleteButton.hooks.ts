@@ -1,24 +1,23 @@
-/**
- * DetailCompleteButton animation — color cross-fade and check draw-in.
- */
-import { useEffect } from 'react';
+/** DetailCompleteButton — calm fade: outlined → solid, check scale only. */
+import { useEffect, useRef } from 'react';
 import {
   interpolate,
   interpolateColor,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
-  withTiming,
 } from 'react-native-reanimated';
-import { durations, springs } from '../../../theme/animations';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
+import { runCompleteButtonTransition } from './runCompleteButtonTransition';
 
 const CHECK_SCALE_MIN = 0.6;
+const OUTLINE_BG = 'transparent';
 
 interface CompleteButtonPalette {
-  primaryBg: string;
+  inverseText: string;
   successBg: string;
+  successBorder: string;
+  successText: string;
 }
 
 export function useDetailCompleteButtonAnimation(
@@ -29,33 +28,45 @@ export function useDetailCompleteButtonAnimation(
   const { pressHandlers, scale: pressScale } = useDetailPressAnimation();
   const completionProgress = useSharedValue(isCompletedToday ? 1 : 0);
   const checkScale = useSharedValue(isCompletedToday ? 1 : 0);
+  const isMountRef = useRef(true);
 
   useEffect(() => {
-    const target = isCompletedToday ? 1 : 0;
-    completionProgress.value = reduceMotion
-      ? target
-      : withTiming(target, { duration: durations.quick });
-
-    if (target === 1) {
-      checkScale.value = 0;
-      checkScale.value = reduceMotion ? 1 : withSpring(1, springs.button);
-    } else {
-      checkScale.value = reduceMotion
-        ? 0
-        : withTiming(0, { duration: durations.quick });
-    }
+    const isMountTransition = isMountRef.current;
+    isMountRef.current = false;
+    runCompleteButtonTransition({
+      checkScale,
+      completionProgress,
+      isCompletedToday,
+      isMountTransition,
+      reduceMotion,
+    });
   }, [isCompletedToday, reduceMotion, completionProgress, checkScale]);
 
   const containerStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
       completionProgress.value,
       [0, 1],
-      [palette.primaryBg, palette.successBg]
+      [OUTLINE_BG, palette.successBg]
     ),
+    borderColor: palette.successBorder,
+    borderWidth: 2,
     transform: [{ scale: pressScale.value }],
   }));
 
+  const labelStyle = useAnimatedStyle(() => ({
+    color: interpolateColor(
+      completionProgress.value,
+      [0, 1],
+      [palette.successText, palette.inverseText]
+    ),
+  }));
+
   const circleStyle = useAnimatedStyle(() => ({
+    borderColor: interpolateColor(
+      completionProgress.value,
+      [0, 1],
+      [palette.successBorder, palette.inverseText]
+    ),
     opacity: interpolate(completionProgress.value, [0, 0.4], [1, 0], 'clamp'),
   }));
 
@@ -77,6 +88,7 @@ export function useDetailCompleteButtonAnimation(
     circleStyle,
     containerStyle,
     filledCircleStyle,
+    labelStyle,
     pressHandlers,
   };
 }

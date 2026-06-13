@@ -20,24 +20,22 @@ import { useSwipeActions } from './useSwipeActions';
 
 interface UseCalendarHandlersProps {
   habit: Habit | null;
-  isTogglingCalendar: boolean;
   onArchive?: (habitId: Id<'habits'>) => void;
   onClose: () => void;
   onDelete?: (habitId: Id<'habits'>) => void;
-  setIsTogglingCalendar: (toggling: boolean) => void;
   setPendingArchive: (pending: boolean) => void;
   setPendingDelete: (pending: boolean) => void;
+  setPendingToggleDate: (date: string | null) => void;
 }
 
 export const useCalendarHandlers = ({
   habit,
-  isTogglingCalendar,
   onArchive,
   onClose,
   onDelete,
-  setIsTogglingCalendar,
   setPendingArchive,
   setPendingDelete,
+  setPendingToggleDate,
 }: UseCalendarHandlersProps) => {
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const togglingRef = useRef(false);
@@ -62,7 +60,7 @@ export const useCalendarHandlers = ({
       if (inputDate > todayDate) return;
 
       togglingRef.current = true;
-      setIsTogglingCalendar(true);
+      setPendingToggleDate(date);
       void triggerHaptic(wasCompleted ? 'toggle' : 'success');
 
       const dateFormatted = new Date(date).toLocaleDateString('en-US', {
@@ -86,15 +84,10 @@ export const useCalendarHandlers = ({
         })
         .finally(() => {
           togglingRef.current = false;
-          setIsTogglingCalendar(false);
+          setPendingToggleDate(null);
         });
     },
-    [
-      habit?._id,
-      habit?.name,
-      toggleHabitMutation,
-      setIsTogglingCalendar,
-    ]
+    [habit?._id, habit?.name, toggleHabitMutation, setPendingToggleDate]
   );
 
   return {

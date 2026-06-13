@@ -38,12 +38,12 @@ export interface UseHabitDetailScreenStateReturn {
   completedDates: Set<string>;
   daysTracking: number;
   isCompletedToday: boolean;
-  isTogglingCalendar: boolean;
   pendingArchive: boolean;
   pendingDelete: boolean;
-  setIsTogglingCalendar: (toggling: boolean) => void;
+  pendingToggleDate: string | null;
   setPendingArchive: (pending: boolean) => void;
   setPendingDelete: (pending: boolean) => void;
+  setPendingToggleDate: (date: string | null) => void;
   strengthPercent: number;
   today: string;
   totalCompletions: number;
