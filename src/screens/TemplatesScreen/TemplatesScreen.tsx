@@ -9,7 +9,7 @@ import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import { SearchResults } from './components/SearchResults';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
-import { TemplatesScreenModals } from './components';
+import { TemplatesScreenModals, TemplatesLoadingState } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
@@ -192,6 +192,10 @@ function TemplatesScreenContent({
     },
     [viewNav]
   );
+
+  if (data.isLoading && !data.allTemplates?.length) {
+    return <TemplatesLoadingState />;
+  }
 
   if (!data.isLoading && !data.allTemplates?.length) {
     return (
