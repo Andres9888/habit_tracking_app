@@ -1,11 +1,11 @@
 /**
- * CatalogView — unified browse page with search, category chips, and shelves.
- * Shelves reuse CategoryRow + TrendingCard (existing Netflix carousel).
+ * CatalogView — unified browse page with search, category chips, and a
+ * vertical category-grouped list (CatalogSectionList) for the "All" view.
  */
 
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
@@ -13,7 +13,7 @@ import { SearchBar } from '../components/SearchBar';
 import { useCatalogViewData } from '../hooks/useCatalogViewData';
 import { CATALOG_ALL_ID, CatalogChipRail } from './CatalogChipRail';
 import { CatalogFilteredBranch } from './CatalogFilteredBranch';
-import { CatalogShelvesList } from './CatalogShelvesList';
+import { CatalogSectionList } from './CatalogSectionList';
 
 interface CatalogViewProps {
   allTemplates: Doc<'templates'>[];
@@ -38,7 +38,6 @@ export function CatalogView(p: CatalogViewProps) {
     selectedCategoryId,
   });
   const showShelves = selectedCategoryId === CATALOG_ALL_ID;
-  const importingId = p.importingTemplateId as Id<'templates'> | null;
   const totalCount = p.allTemplates.length;
   const totalLabel = totalCount === 1 ? 'habit' : 'habits';
 
@@ -66,13 +65,12 @@ export function CatalogView(p: CatalogViewProps) {
         onSelectCategory={setSelectedCategoryId}
       />
       {showShelves ? (
-        <CatalogShelvesList
+        <CatalogSectionList
           groups={groups}
           importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={importingId}
+          importingTemplateId={p.importingTemplateId}
           onImport={p.onImport}
           onPreview={p.onPreview}
-          onSeeAll={setSelectedCategoryId}
         />
       ) : (
         <CatalogFilteredBranch
