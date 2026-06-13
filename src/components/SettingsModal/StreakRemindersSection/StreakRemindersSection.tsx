@@ -38,13 +38,7 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const insetCardBackground = themeColors.surface;
 
   return (
-    <SettingsSection
-      collapsible={props.collapsible}
-      icon={props.icon}
-      isExpanded={props.isExpanded}
-      title='Notifications'
-      onToggle={props.onToggleSection}
-    >
+    <SettingsSection icon={props.icon} title='Notifications'>
       <SettingsRow
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}

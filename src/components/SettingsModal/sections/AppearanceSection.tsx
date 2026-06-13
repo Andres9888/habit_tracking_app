@@ -11,13 +11,7 @@ import type { AppearanceSectionProps } from './AppearanceSection.types';
 
 export function AppearanceSection(p: AppearanceSectionProps) {
   return (
-    <SettingsSection
-      collapsible
-      icon={p.icon}
-      isExpanded={p.isExpanded}
-      title='Appearance'
-      onToggle={p.onToggleSection}
-    >
+    <SettingsSection icon={p.icon} title='Appearance'>
       <CalendarPreview
         compact={p.compactView}
         completionIcon={p.habitCompletionIcon}

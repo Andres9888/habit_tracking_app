@@ -1,7 +1,7 @@
-/** StaticSectionLabel - Non-collapsible section title label */
+/** StaticSectionLabel - iOS grouped-list section label: serif title + trailing green glyph */
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-import { typography, fontWeights } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface StaticSectionLabelProps {
@@ -18,21 +18,21 @@ export function StaticSectionLabel({
   const { colors: themeColors } = useThemeColors();
 
   return (
-    <View className='flex-row items-center px-4'>
-      <View className='mr-4 w-10 items-center justify-center'>
-        {icon ?? null}
-      </View>
+    <View className='flex-row items-center px-2' style={{ gap: 7 }}>
       <Text
         style={{
-          fontFamily: typography.heading3.fontFamily,
-          fontSize: 15,
-          fontWeight: fontWeights.bold,
-          letterSpacing: -0.2,
+          fontFamily: fontFamilies.serif,
+          fontSize: 15.5,
+          fontWeight: fontWeights.semibold,
+          letterSpacing: -0.1,
           color: themeColors.text.primary,
         }}
       >
         {title}
       </Text>
+      {icon ? (
+        <View className='items-center justify-center'>{icon}</View>
+      ) : null}
       {subtitle ? (
         <Text
           className='ml-2 rounded-full px-2 py-0.5'

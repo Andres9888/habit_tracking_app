@@ -11,9 +11,6 @@ interface Props {
   onShare: () => void;
   onFeedback: () => void;
   onWhatsNew: () => void;
-  collapsible?: boolean;
-  isExpanded?: boolean;
-  onToggleSection?: () => void;
 }
 
 export function AppActions({
@@ -22,20 +19,11 @@ export function AppActions({
   onShare,
   onFeedback,
   onWhatsNew,
-  collapsible,
-  isExpanded,
-  onToggleSection,
 }: Props) {
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection
-      collapsible={collapsible}
-      icon={icon}
-      isExpanded={isExpanded}
-      title='Support'
-      onToggle={onToggleSection}
-    >
+    <SettingsSection icon={icon} title='Support'>
       <SettingsRow
         icon={<Star color={settings.star.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.star.bg}

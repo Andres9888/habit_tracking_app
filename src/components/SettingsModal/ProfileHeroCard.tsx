@@ -19,7 +19,7 @@ interface ProfileHeroCardProps {
 }
 
 export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
   const { initial, name } = useProfileDisplayName();
   const { isLoading: statsLoading, stats } = useProfileStats();
   const { imageUrl } = useProfileDisplayImage();
@@ -33,7 +33,7 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
     >
       <View
         className='overflow-hidden rounded-2xl'
-        style={getProfileCardShellStyle(themeColors)}
+        style={getProfileCardShellStyle(themeColors, isDark)}
       >
         <View className='items-center px-4 pb-1 pt-5'>
           <View className='absolute right-3 top-3'>

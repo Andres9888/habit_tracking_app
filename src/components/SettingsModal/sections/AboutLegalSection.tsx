@@ -12,9 +12,6 @@ interface Props {
   buildNumber: string;
   onPrivacy: () => void;
   onTerms: () => void;
-  collapsible?: boolean;
-  isExpanded?: boolean;
-  onToggleSection?: () => void;
 }
 
 export function AboutLegalSection({
@@ -23,20 +20,11 @@ export function AboutLegalSection({
   buildNumber,
   onPrivacy,
   onTerms,
-  collapsible,
-  isExpanded,
-  onToggleSection,
 }: Props) {
   const { settings } = useThemeColors();
 
   return (
-    <SettingsSection
-      collapsible={collapsible}
-      icon={icon}
-      isExpanded={isExpanded}
-      title='About'
-      onToggle={onToggleSection}
-    >
+    <SettingsSection icon={icon} title='About'>
       <SettingsRow
         icon={<Shield color={settings.legal.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.legal.bg}
