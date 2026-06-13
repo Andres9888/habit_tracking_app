@@ -7,16 +7,10 @@ import { StreakRemindersSection } from '../StreakRemindersSection';
 import { AppearanceSection } from '../sections';
 import { BehaviorSection } from './BehaviorSection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
-import { SECTION_IDS } from '../useSettingsSectionStates';
 import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface PrimarySectionsProps extends SettingsContentProps {
   sectionIconColor: string;
-  sectionStates: Record<
-    (typeof SECTION_IDS)[keyof typeof SECTION_IDS],
-    boolean
-  >;
-  toggleSection: (id: (typeof SECTION_IDS)[keyof typeof SECTION_IDS]) => void;
 }
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {
@@ -34,7 +28,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           dayShape={p.dayShape}
           habitCompletionIcon={p.habitCompletionIcon}
           icon={<Palette color={p.sectionIconColor} size={iconSize} />}
-          isExpanded={p.sectionStates.appearance}
           showGradientFill={p.showGradientFill}
           showStreakConnections={p.showStreakConnections}
           onChangeCompactView={p.onChangeCompactView}
@@ -43,7 +36,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeHabitCompletionIcon={p.onChangeHabitCompletionIcon}
           onChangeShowGradientFill={p.onChangeShowGradientFill}
           onChangeShowStreakConnections={p.onChangeShowStreakConnections}
-          onToggleSection={() => p.toggleSection(SECTION_IDS.appearance)}
         />
       </Animated.View>
       <Animated.View entering={sectionEnterAnim(2)}>
@@ -52,7 +44,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           completionSoundEnabled={p.completionSoundEnabled}
           completionSoundType={p.completionSoundType}
           habitSortMode={p.habitSortMode}
-          isExpanded={p.sectionStates.behavior}
           sectionIconColor={p.sectionIconColor}
           stickyCalendarHeader={p.stickyCalendarHeader}
           onChangeCompletionSoundEnabled={p.onChangeCompletionSoundEnabled}
@@ -61,21 +52,17 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeStickyCalendarHeader={p.onChangeStickyCalendarHeader}
           onExportHabitsData={p.onExportHabitsData}
           onOpenArchivedHabits={p.onOpenArchivedHabits}
-          onToggleSection={() => p.toggleSection(SECTION_IDS.behavior)}
         />
       </Animated.View>
       <Animated.View entering={sectionEnterAnim(3)}>
         <StreakRemindersSection
-          collapsible
           enabled={p.streakRemindersEnabled}
           icon={<BellRing color={p.sectionIconColor} size={iconSize} />}
-          isExpanded={p.sectionStates.notifications}
           isPremium={p.isPremium}
           reminderTime={p.streakReminderTime}
           onChangeTime={p.onChangeStreakReminderTime}
           onPremiumUpsell={p.onPremiumUpsell}
           onToggle={p.onToggleStreakReminders}
-          onToggleSection={() => p.toggleSection(SECTION_IDS.notifications)}
         />
       </Animated.View>
     </>

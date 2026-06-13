@@ -16,8 +16,6 @@ import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface BehaviorSectionProps {
   sectionIconColor: string;
-  isExpanded: boolean;
-  onToggleSection: () => void;
   habitSortMode: string;
   onChangeHabitSortMode: (mode: HabitSortMode) => void;
   completionSoundEnabled: boolean;
@@ -37,11 +35,8 @@ export function BehaviorSection(p: BehaviorSectionProps) {
 
   return (
     <SettingsSection
-      collapsible
       icon={<SlidersHorizontal color={p.sectionIconColor} size={iconSize} />}
-      isExpanded={p.isExpanded}
       title='Behavior'
-      onToggle={p.onToggleSection}
     >
       <SettingsRow
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}

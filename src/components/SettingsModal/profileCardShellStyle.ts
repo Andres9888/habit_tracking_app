@@ -1,11 +1,13 @@
 import { shadows } from '../../theme/spacing';
-import type { lightColors } from '../../theme/darkColors';
+import type { SemanticColors } from '../../theme/darkColors';
+import { getRaisedSurface } from './raisedSurface';
 
-type ThemePalette = typeof lightColors;
-
-export function getProfileCardShellStyle(themeColors: ThemePalette) {
+export function getProfileCardShellStyle(
+  themeColors: SemanticColors,
+  isDark = false
+) {
   return {
-    backgroundColor: themeColors.card,
+    backgroundColor: getRaisedSurface(isDark),
     borderColor: themeColors.border,
     borderWidth: 1,
     ...shadows.floatingActionButton,

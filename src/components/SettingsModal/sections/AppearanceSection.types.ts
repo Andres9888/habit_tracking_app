@@ -20,6 +20,4 @@ export interface AppearanceSectionProps {
     value: 'chain' | 'checkbox'
   ) => void | Promise<void>;
   icon?: ReactNode;
-  isExpanded?: boolean;
-  onToggleSection?: () => void;
 }

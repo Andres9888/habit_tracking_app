@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chain Day · Settings · Editorial Premium</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  /* ============ GLOBAL ============ */
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  :root {
+    /* LIGHT */
+    --l-bg:#F5F1ED;
+    --l-card:#FAF8F5;          /* lifted card for depth */
+    --l-card-sunken:#EDEAE5;
+    --l-border:#DDD8D2;
+    --l-text-primary:#2D2A26;
+    --l-text-secondary:#6B6560;
+    --l-text-tertiary:#9A938C;
+    --l-tile-bg:#E2F1EA;
+    --l-tile-icon:#047857;
+    --l-accent:#059669;
+    --l-toggle-on:#10B981;
+    --l-toggle-off:#C4BFB7;
+    --l-danger-icon:#B53030;
+    --l-danger-bg:#FEE2E2;
+
+    /* DARK */
+    --d-bg:#111827;
+    --d-card:#1F2937;
+    --d-card-sunken:#1A2230;
+    --d-border:#374151;
+    --d-text-primary:#F9FAFB;
+    --d-text-secondary:#9CA3AF;
+    --d-text-tertiary:#6B7280;
+    --d-tile-bg:rgba(52,211,153,0.14);
+    --d-tile-icon:#34D399;
+    --d-accent:#34D399;
+    --d-toggle-on:#34D399;
+    --d-toggle-off:#4B5563;
+
+    --radius-card:16px;
+    --radius-tile:12px;
+  }
+
+  body {
+    font-family:'DM Sans', sans-serif;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, #efe7dc 0%, transparent 55%),
+      radial-gradient(1000px 700px at 95% 110%, #e9e1d6 0%, transparent 50%),
+      #E8E0D6;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:48px 24px 72px;
+    color:#2D2A26;
+  }
+
+  .page-head { text-align:center; margin-bottom:38px; }
+  .page-head .kicker {
+    font-family:'DM Sans'; font-size:12px; font-weight:600; letter-spacing:.18em;
+    text-transform:uppercase; color:#9A8E7E;
+  }
+  .page-head h1 {
+    font-family:'Literata'; font-weight:600; font-size:30px; color:#2D2A26;
+    margin-top:6px; letter-spacing:-.01em;
+  }
+  .page-head p { font-size:14px; color:#867b6e; margin-top:6px; }
+
+  .stage {
+    display:flex; gap:56px; align-items:flex-start; flex-wrap:wrap; justify-content:center;
+  }
+  .frame-wrap { display:flex; flex-direction:column; align-items:center; gap:18px; }
+  .frame-label {
+    font-family:'DM Sans'; font-size:12px; font-weight:600; letter-spacing:.16em;
+    text-transform:uppercase; color:#9A8E7E;
+    display:flex; align-items:center; gap:8px;
+  }
+  .frame-label .dot { width:8px; height:8px; border-radius:50%; }
+  .frame-label.light .dot { background:#059669; }
+  .frame-label.dark .dot { background:#34D399; }
+
+  /* ============ PHONE FRAME ============ */
+  .phone {
+    width:390px; height:844px; border-radius:54px;
+    padding:13px;
+    background:linear-gradient(160deg,#3a3a3c,#1c1c1e 60%);
+    box-shadow:
+      0 50px 90px -30px rgba(35,28,20,0.55),
+      0 24px 50px -24px rgba(35,28,20,0.4),
+      inset 0 0 0 2px rgba(255,255,255,0.06);
+    position:relative;
+  }
+  .screen {
+    width:100%; height:100%; border-radius:42px; overflow:hidden;
+    position:relative;
+  }
+  .screen-scroll {
+    width:100%; height:100%; overflow-y:auto; overflow-x:hidden;
+    -ms-overflow-style:none; scrollbar-width:none;
+    position:relative;
+  }
+  .screen-scroll::-webkit-scrollbar { display:none; }
+
+  /* ============ STATUS BAR ============ */
+  .statusbar {
+    position:sticky; top:0; z-index:40;
+    height:54px; display:flex; align-items:center; justify-content:space-between;
+    padding:0 28px 0 32px;
+    font-family:'DM Sans'; font-weight:600; font-size:15px;
+  }
+  .statusbar .time { letter-spacing:.02em; }
+  .statusbar .indicators { display:flex; align-items:center; gap:7px; }
+  .statusbar svg { width:17px; height:17px; }
+  .island {
+    position:absolute; top:11px; left:50%; transform:translateX(-50%);
+    width:120px; height:34px; border-radius:20px; background:#000; z-index:50;
+  }
+
+  /* ============ HEADER / TITLE ============ */
+  .topbar {
+    position:sticky; top:54px; z-index:30;
+    padding:6px 22px 14px;
+    backdrop-filter:saturate(140%) blur(14px);
+  }
+  .topbar-row { display:flex; align-items:center; justify-content:space-between; }
+  .topbar .kicker {
+    font-family:'DM Sans'; font-size:11px; font-weight:600; letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .topbar h1 {
+    font-family:'Literata'; font-weight:600; font-size:30px; letter-spacing:-.015em;
+    line-height:1.05; margin-top:1px;
+  }
+  .close-btn {
+    width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .close-btn svg { width:18px; height:18px; }
+
+  /* search */
+  .search {
+    margin-top:14px; height:42px; border-radius:13px;
+    display:flex; align-items:center; gap:10px; padding:0 14px;
+    font-family:'DM Sans'; font-size:15px;
+  }
+  .search svg { width:17px; height:17px; }
+
+  /* ============ SCROLL BODY ============ */
+  .body { padding:6px 22px 40px; }
+
+  /* section header */
+  .section-head {
+    display:flex; align-items:center; justify-content:space-between;
+    margin:26px 4px 11px;
+  }
+  .section-head h2 {
+    font-family:'Literata'; font-weight:600; font-size:16px; letter-spacing:.01em;
+  }
+  .section-head .glyph { width:20px; height:20px; }
+  .section-head .glyph svg { width:18px; height:18px; }
+
+  /* card */
+  .card {
+    border-radius:var(--radius-card);
+    overflow:hidden;
+  }
+
+  /* row */
+  .row {
+    display:flex; align-items:center; gap:14px;
+    padding:13px 16px; position:relative;
+  }
+  .row + .row::before {
+    content:''; position:absolute; top:0; left:62px; right:0; height:1px;
+  }
+  .tile {
+    width:40px; height:40px; border-radius:var(--radius-tile);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .tile svg { width:20px; height:20px; }
+  .row-main { flex:1; min-width:0; }
+  .row-label {
+    font-family:'DM Sans'; font-weight:600; font-size:17px; line-height:1.25;
+    letter-spacing:-.01em;
+  }
+  .row-sub {
+    font-family:'DM Sans'; font-weight:400; font-size:13px; margin-top:2px;
+    line-height:1.3;
+  }
+  .row-acc { display:flex; align-items:center; gap:7px; flex-shrink:0; }
+  .row-value { font-family:'DM Sans'; font-weight:500; font-size:15px; }
+  .row-acc .chev { width:18px; height:18px; opacity:.55; }
+  .row-acc .ext { width:16px; height:16px; opacity:.55; }
+
+  /* badge */
+  .badge {
+    min-width:22px; height:22px; padding:0 7px; border-radius:11px;
+    font-family:'DM Sans'; font-weight:600; font-size:12px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* toggle */
+  .toggle {
+    width:50px; height:30px; border-radius:15px; position:relative; flex-shrink:0;
+    transition:background .2s;
+  }
+  .toggle .thumb {
+    position:absolute; top:2px; left:2px; width:26px; height:26px; border-radius:50%;
+    background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.22), 0 1px 1px rgba(0,0,0,.12);
+    transition:left .2s;
+  }
+  .toggle.on .thumb { left:22px; }
+
+  /* segmented control */
+  .segmented {
+    display:flex; padding:3px; border-radius:11px; gap:2px;
+  }
+  .segmented .seg {
+    font-family:'DM Sans'; font-weight:600; font-size:13px;
+    padding:6px 13px; border-radius:8px; line-height:1;
+  }
+
+  /* shape picker */
+  .shapepicker { display:flex; gap:7px; align-items:center; }
+  .shape-opt {
+    width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  }
+  .shape-opt .sq { width:15px; height:15px; border-radius:4px; }
+  .shape-opt .ci { width:15px; height:15px; border-radius:50%; }
+  .shape-opt .rd { width:15px; height:9px; border-radius:5px; }
+
+  /* emoji row value */
+  .emoji-strip { font-size:16px; letter-spacing:1px; }
+
+  /* nested reminder row (child) */
+  .nested {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px 12px 62px; position:relative;
+  }
+  .nested::before {
+    content:''; position:absolute; top:0; left:62px; right:0; height:1px;
+  }
+  .nested .nlabel { font-family:'DM Sans'; font-weight:500; font-size:15px; display:flex; align-items:center; gap:8px; }
+  .nested .nlabel .corner { width:16px; height:16px; opacity:.5; }
+  .nested .nval { display:flex; align-items:center; gap:6px; font-family:'DM Sans'; font-weight:500; font-size:15px; }
+  .nested .nval .chev { width:17px; height:17px; opacity:.5; }
+
+  /* ============ PROFILE HERO ============ */
+  .hero {
+    border-radius:22px; padding:22px 20px 6px; margin-top:8px; position:relative;
+    overflow:hidden;
+  }
+  .hero-top { display:flex; align-items:center; gap:16px; }
+  .avatar {
+    width:64px; height:64px; border-radius:50%; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Literata'; font-weight:600; font-size:28px;
+    position:relative;
+  }
+  .avatar .ring {
+    position:absolute; inset:-4px; border-radius:50%; pointer-events:none;
+  }
+  .hero-id { flex:1; min-width:0; }
+  .hero-name {
+    font-family:'Literata'; font-weight:600; font-size:25px; letter-spacing:-.01em;
+    display:flex; align-items:center; gap:9px; line-height:1.1;
+  }
+  .pro-badge {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 9px 3px 7px; border-radius:20px;
+    font-family:'DM Sans'; font-weight:700; font-size:10.5px; letter-spacing:.08em;
+  }
+  .pro-badge svg { width:12px; height:12px; }
+  .hero-mail { font-family:'DM Sans'; font-size:13.5px; margin-top:4px; }
+  .hero-chev { width:20px; height:20px; opacity:.45; flex-shrink:0; }
+
+  .hero-stats {
+    display:flex; margin-top:18px; padding-top:16px; position:relative;
+  }
+  .hero-stats::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  }
+  .stat { flex:1; text-align:center; padding:2px 4px 14px; position:relative; }
+  .stat + .stat::before {
+    content:''; position:absolute; left:0; top:6px; bottom:18px; width:1px;
+  }
+  .stat .sicon { display:flex; align-items:center; justify-content:center; gap:5px; }
+  .stat .sicon svg { width:13px; height:13px; }
+  .stat .sval { font-family:'DM Sans'; font-weight:700; font-size:21px; line-height:1.1; }
+  .stat .slabel {
+    font-family:'DM Sans'; font-weight:500; font-size:10.5px; letter-spacing:.02em;
+    margin-top:3px; line-height:1.2;
+  }
+
+  /* ============ APPEARANCE SHOWCASE (calendar) ============ */
+  .showcase {
+    border-radius:22px; padding:18px 18px 20px; margin-top:8px; position:relative;
+    overflow:hidden;
+  }
+  .showcase-head {
+    display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+  }
+  .showcase-head .sc-title {
+    font-family:'Literata'; font-weight:500; font-size:14px; letter-spacing:.01em;
+  }
+  .showcase-head .sc-tag {
+    font-family:'DM Sans'; font-weight:600; font-size:10px; letter-spacing:.1em;
+    text-transform:uppercase; padding:3px 8px; border-radius:8px;
+  }
+  .cal-dow {
+    display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-bottom:8px;
+  }
+  .cal-dow span {
+    text-align:center; font-family:'DM Sans'; font-weight:600; font-size:10px;
+    letter-spacing:.04em;
+  }
+  .cal-grid {
+    display:grid; grid-template-columns:repeat(7,1fr); gap:6px; position:relative;
+  }
+  .cell {
+    aspect-ratio:1; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .cell svg { width:13px; height:13px; }
+  .cell.muted { /* not completed */ }
+  /* chain connector horizontal */
+  .chain {
+    position:absolute; height:3px; border-radius:2px; z-index:1;
+    top:50%; transform:translateY(-50%);
+  }
+
+  /* footer */
+  .footer {
+    text-align:center; padding:30px 0 10px; font-family:'DM Sans';
+    font-size:11.5px; font-weight:500; letter-spacing:.04em;
+  }
+  .footer .heart { display:inline-block; }
+
+  /* ===================================================================
+     LIGHT THEME SCOPE
+     =================================================================== */
+  .t-light .screen-scroll { background:var(--l-bg); color:var(--l-text-primary); }
+  .t-light .statusbar { color:var(--l-text-primary); }
+  .t-light .topbar { background:rgba(245,241,237,0.82); }
+  .t-light .topbar .kicker { color:var(--l-text-tertiary); }
+  .t-light .topbar h1 { color:var(--l-text-primary); }
+  .t-light .close-btn { background:#E6E0D9; color:var(--l-text-secondary); }
+  .t-light .search {
+    background:#EAE4DC; color:var(--l-text-tertiary);
+    box-shadow:inset 0 1px 2px rgba(45,42,38,0.05);
+  }
+  .t-light .search svg { color:var(--l-text-tertiary); }
+
+  .t-light .section-head h2 { color:var(--l-text-primary); }
+  .t-light .section-head .glyph svg { color:var(--l-tile-icon); }
+
+  .t-light .card {
+    background:var(--l-card);
+    border:1px solid var(--l-border);
+    box-shadow:0 10px 26px -18px rgba(45,42,38,0.32), 0 2px 6px -3px rgba(45,42,38,0.10);
+  }
+  .t-light .row + .row::before { background:var(--l-border); }
+  .t-light .tile { background:var(--l-tile-bg); color:var(--l-tile-icon); box-shadow:inset 0 0 0 1px rgba(4,120,87,0.07); }
+  .t-light .tile.danger { background:var(--l-danger-bg); color:var(--l-danger-icon); box-shadow:inset 0 0 0 1px rgba(181,48,48,0.08); }
+  .t-light .row-label { color:var(--l-text-primary); }
+  .t-light .row-sub { color:var(--l-text-secondary); }
+  .t-light .row-value { color:var(--l-text-secondary); }
+  .t-light .row-acc .chev, .t-light .row-acc .ext { color:var(--l-text-tertiary); }
+
+  .t-light .badge { background:#E2F1EA; color:var(--l-accent); }
+  .t-light .toggle { background:var(--l-toggle-off); }
+  .t-light .toggle.on { background:var(--l-toggle-on); }
+
+  .t-light .segmented { background:#E6E0D8; }
+  .t-light .segmented .seg { color:var(--l-text-secondary); }
+  .t-light .segmented .seg.active {
+    background:var(--l-card); color:var(--l-text-primary);
+    box-shadow:0 1px 3px rgba(45,42,38,0.18);
+  }
+
+  .t-light .shape-opt .sq, .t-light .shape-opt .ci, .t-light .shape-opt .rd { background:#CFC8BF; }
+  .t-light .shape-opt.active .sq, .t-light .shape-opt.active .ci, .t-light .shape-opt.active .rd { background:var(--l-accent); }
+
+  .t-light .nested::before { background:var(--l-border); }
+  .t-light .nested .nlabel { color:var(--l-text-primary); }
+  .t-light .nested .nlabel .corner { color:var(--l-text-tertiary); }
+  .t-light .nested .nval { color:var(--l-text-secondary); }
+
+  /* light hero */
+  .t-light .hero {
+    background:linear-gradient(165deg,#FFFFFF 0%, #FAF6F0 100%);
+    border:1px solid var(--l-border);
+    box-shadow:0 18px 40px -22px rgba(45,42,38,0.38), 0 3px 10px -4px rgba(45,42,38,0.12);
+  }
+  .t-light .avatar {
+    background:linear-gradient(150deg,#0C7C5C,#0a5f47); color:#F2FBF7;
+    box-shadow:0 6px 16px -6px rgba(4,120,87,0.5);
+  }
+  .t-light .avatar .ring { box-shadow:0 0 0 2px rgba(255,255,255,.9), 0 0 0 3px rgba(5,150,105,.28); }
+  .t-light .hero-name { color:var(--l-text-primary); }
+  .t-light .pro-badge { background:linear-gradient(120deg,#F5E6BE,#E9CF8C); color:#6E5417; box-shadow:inset 0 0 0 1px rgba(110,84,23,.18); }
+  .t-light .pro-badge svg { color:#A4801F; }
+  .t-light .hero-mail { color:var(--l-text-secondary); }
+  .t-light .hero-chev { color:var(--l-text-tertiary); }
+  .t-light .hero-stats::before { background:var(--l-border); }
+  .t-light .stat + .stat::before { background:var(--l-border); }
+  .t-light .stat .sicon svg { color:var(--l-accent); }
+  .t-light .stat .sval { color:var(--l-accent); }
+  .t-light .stat .slabel { color:var(--l-text-tertiary); }
+
+  /* light showcase */
+  .t-light .showcase {
+    background:linear-gradient(165deg,#FFFFFF, #F6F1EA);
+    border:1px solid var(--l-border);
+    box-shadow:0 16px 36px -22px rgba(45,42,38,0.34), 0 2px 8px -4px rgba(45,42,38,0.10);
+  }
+  .t-light .showcase-head .sc-title { color:var(--l-text-primary); }
+  .t-light .showcase-head .sc-tag { background:#E2F1EA; color:var(--l-accent); }
+  .t-light .cal-dow span { color:var(--l-text-tertiary); }
+  .t-light .cell.muted { background:#ECE5DC; }
+  .t-light .cell.done { background:linear-gradient(160deg,#10B981,#059669); color:#fff; box-shadow:0 3px 8px -3px rgba(5,150,105,.5); }
+  .t-light .cell.today { box-shadow:inset 0 0 0 2px var(--l-accent); }
+  .t-light .chain { background:linear-gradient(90deg,#10B981,#059669); }
+
+  .t-light .footer { color:var(--l-text-tertiary); }
+  .t-light .footer .heart { color:#C77; }
+
+  /* ===================================================================
+     DARK THEME SCOPE
+     =================================================================== */
+  .t-dark .screen-scroll { background:var(--d-bg); color:var(--d-text-primary); }
+  .t-dark .statusbar { color:var(--d-text-primary); }
+  .t-dark .topbar { background:rgba(17,24,39,0.82); }
+  .t-dark .topbar .kicker { color:var(--d-text-tertiary); }
+  .t-dark .topbar h1 { color:var(--d-text-primary); }
+  .t-dark .close-btn { background:#2A3342; color:var(--d-text-secondary); }
+  .t-dark .search {
+    background:#1A2230; color:var(--d-text-tertiary);
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .t-dark .search svg { color:var(--d-text-tertiary); }
+
+  .t-dark .section-head h2 { color:var(--d-text-primary); }
+  .t-dark .section-head .glyph svg { color:var(--d-tile-icon); }
+
+  .t-dark .card {
+    background:var(--d-card);
+    border:1px solid var(--d-border);
+    box-shadow:0 14px 30px -18px rgba(0,0,0,0.6), 0 2px 6px -3px rgba(0,0,0,0.5);
+  }
+  .t-dark .row + .row::before { background:var(--d-border); }
+  .t-dark .tile { background:var(--d-tile-bg); color:var(--d-tile-icon); box-shadow:inset 0 0 0 1px rgba(52,211,153,0.10); }
+  .t-dark .tile.danger { background:rgba(181,48,48,0.18); color:#F87171; }
+  .t-dark .row-label { color:var(--d-text-primary); }
+  .t-dark .row-sub { color:var(--d-text-secondary); }
+  .t-dark .row-value { color:var(--d-text-secondary); }
+  .t-dark .row-acc .chev, .t-dark .row-acc .ext { color:var(--d-text-tertiary); }
+
+  .t-dark .badge { background:rgba(52,211,153,0.16); color:var(--d-accent); }
+  .t-dark .toggle { background:var(--d-toggle-off); }
+  .t-dark .toggle.on { background:var(--d-toggle-on); }
+
+  .t-dark .segmented { background:#161E2B; }
+  .t-dark .segmented .seg { color:var(--d-text-secondary); }
+  .t-dark .segmented .seg.active {
+    background:#374151; color:var(--d-text-primary);
+    box-shadow:0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  .t-dark .shape-opt .sq, .t-dark .shape-opt .ci, .t-dark .shape-opt .rd { background:#4B5563; }
+  .t-dark .shape-opt.active .sq, .t-dark .shape-opt.active .ci, .t-dark .shape-opt.active .rd { background:var(--d-accent); }
+
+  .t-dark .nested::before { background:var(--d-border); }
+  .t-dark .nested .nlabel { color:var(--d-text-primary); }
+  .t-dark .nested .nlabel .corner { color:var(--d-text-tertiary); }
+  .t-dark .nested .nval { color:var(--d-text-secondary); }
+
+  /* dark hero */
+  .t-dark .hero {
+    background:linear-gradient(165deg,#202A3A 0%, #1A2230 100%);
+    border:1px solid var(--d-border);
+    box-shadow:0 22px 44px -24px rgba(0,0,0,0.7), 0 3px 10px -4px rgba(0,0,0,0.5);
+  }
+  .t-dark .avatar {
+    background:linear-gradient(150deg,#0F7A5C,#0c5b44); color:#D7F6EB;
+    box-shadow:0 6px 16px -6px rgba(16,185,129,0.4);
+  }
+  .t-dark .avatar .ring { box-shadow:0 0 0 2px rgba(31,41,55,1), 0 0 0 3px rgba(52,211,153,.4); }
+  .t-dark .hero-name { color:var(--d-text-primary); }
+  .t-dark .pro-badge { background:linear-gradient(120deg,#4A3E1D,#6B5825); color:#F3E2A6; box-shadow:inset 0 0 0 1px rgba(243,226,166,.2); }
+  .t-dark .pro-badge svg { color:#E8C969; }
+  .t-dark .hero-mail { color:var(--d-text-secondary); }
+  .t-dark .hero-chev { color:var(--d-text-tertiary); }
+  .t-dark .hero-stats::before { background:var(--d-border); }
+  .t-dark .stat + .stat::before { background:var(--d-border); }
+  .t-dark .stat .sicon svg { color:var(--d-accent); }
+  .t-dark .stat .sval { color:var(--d-accent); }
+  .t-dark .stat .slabel { color:var(--d-text-tertiary); }
+
+  /* dark showcase */
+  .t-dark .showcase {
+    background:linear-gradient(165deg,#202A3A, #19212F);
+    border:1px solid var(--d-border);
+    box-shadow:0 20px 40px -24px rgba(0,0,0,0.7), 0 2px 8px -4px rgba(0,0,0,0.5);
+  }
+  .t-dark .showcase-head .sc-title { color:var(--d-text-primary); }
+  .t-dark .showcase-head .sc-tag { background:rgba(52,211,153,0.16); color:var(--d-accent); }
+  .t-dark .cal-dow span { color:var(--d-text-tertiary); }
+  .t-dark .cell.muted { background:#252F3F; }
+  .t-dark .cell.done { background:linear-gradient(160deg,#34D399,#10B981); color:#06281D; box-shadow:0 3px 8px -3px rgba(16,185,129,.5); }
+  .t-dark .cell.today { box-shadow:inset 0 0 0 2px var(--d-accent); }
+  .t-dark .chain { background:linear-gradient(90deg,#34D399,#10B981); }
+
+  .t-dark .footer { color:var(--d-text-tertiary); }
+  .t-dark .footer .heart { color:#E89; }
+
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <div class="kicker">Chain Day · React Native</div>
+    <h1>Settings — Editorial Premium</h1>
+    <p>Variant C · Light &amp; Dark · 390px iPhone</p>
+  </div>
+
+  <div class="stage" id="stage"></div>
+
+<script>
+  /* ===========================================================
+     SINGLE TEMPLATE — rendered twice (light + dark).
+     Icons differ slightly in stroke but markup identical.
+     =========================================================== */
+  function screenHTML() {
+    return `
+    <div class="island"></div>
+    <div class="screen">
+      <div class="screen-scroll">
+
+        <!-- STATUS BAR -->
+        <div class="statusbar">
+          <div class="time">9:41</div>
+          <div class="indicators">
+            <i data-lucide="signal"></i>
+            <i data-lucide="wifi"></i>
+            <i data-lucide="battery-full"></i>
+          </div>
+        </div>
+
+        <!-- HEADER -->
+        <div class="topbar">
+          <div class="topbar-row">
+            <div>
+              <div class="kicker">CHAIN DAY</div>
+              <h1>Settings</h1>
+            </div>
+            <button class="close-btn"><i data-lucide="x"></i></button>
+          </div>
+          <div class="search">
+            <i data-lucide="search"></i>
+            <span>Search settings</span>
+          </div>
+        </div>
+
+        <div class="body">
+
+          <!-- PROFILE HERO -->
+          <div class="hero">
+            <div class="hero-top">
+              <div class="avatar"><span class="ring"></span>A</div>
+              <div class="hero-id">
+                <div class="hero-name">
+                  Andres
+                  <span class="pro-badge"><i data-lucide="crown"></i>PRO</span>
+                </div>
+                <div class="hero-mail">Manage account &amp; subscription</div>
+              </div>
+              <i data-lucide="chevron-right" class="hero-chev"></i>
+            </div>
+            <div class="hero-stats">
+              <div class="stat">
+                <div class="sicon"><i data-lucide="activity"></i></div>
+                <div class="sval">7</div>
+                <div class="slabel">Active Habits</div>
+              </div>
+              <div class="stat">
+                <div class="sicon"><i data-lucide="star"></i></div>
+                <div class="sval">42</div>
+                <div class="slabel">Flawless Days</div>
+              </div>
+              <div class="stat">
+                <div class="sicon"><i data-lucide="check-circle-2"></i></div>
+                <div class="sval">318</div>
+                <div class="slabel">Lifetime Completions</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- APPEARANCE -->
+          <div class="section-head">
+            <h2>Appearance</h2>
+            <span class="glyph"><i data-lucide="palette"></i></span>
+          </div>
+
+          <!-- showcase calendar -->
+          <div class="showcase">
+            <div class="showcase-head">
+              <div class="sc-title">Your chain, this fortnight</div>
+              <div class="sc-tag">Live preview</div>
+            </div>
+            <div class="cal-dow">
+              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+            </div>
+            <div class="cal-grid">
+              <!-- week 1: chain mon-fri done, weekend muted -->
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done"><i data-lucide="check"></i></div>
+              <div class="cell muted"></div>
+              <div class="cell muted"></div>
+              <!-- week 2: mon-thu done (today), fri-sun upcoming -->
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done"><i data-lucide="check"></i><span class="chain" style="left:80%;right:-20%;"></span></div>
+              <div class="cell done today"><i data-lucide="check"></i></div>
+              <div class="cell muted"></div>
+              <div class="cell muted"></div>
+              <div class="cell muted"></div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px;">
+            <!-- Theme segmented -->
+            <div class="row">
+              <div class="tile"><i data-lucide="moon"></i></div>
+              <div class="row-main"><div class="row-label">Theme</div></div>
+              <div class="row-acc">
+                <div class="segmented">
+                  <div class="seg">Light</div>
+                  <div class="seg">Dark</div>
+                  <div class="seg active">System</div>
+                </div>
+              </div>
+            </div>
+            <!-- Day marker shape -->
+            <div class="row">
+              <div class="tile"><i data-lucide="square"></i></div>
+              <div class="row-main"><div class="row-label">Day marker shape</div></div>
+              <div class="row-acc">
+                <div class="shapepicker">
+                  <div class="shape-opt active"><span class="sq"></span></div>
+                  <div class="shape-opt"><span class="ci"></span></div>
+                  <div class="shape-opt"><span class="rd"></span></div>
+                </div>
+              </div>
+            </div>
+            <!-- Gradient streak fill -->
+            <div class="row">
+              <div class="tile"><i data-lucide="paintbucket"></i></div>
+              <div class="row-main">
+                <div class="row-label">Gradient streak fill</div>
+                <div class="row-sub">Color fills active streak cells</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"><span class="thumb"></span></div></div>
+            </div>
+            <!-- Streak connections -->
+            <div class="row">
+              <div class="tile"><i data-lucide="link"></i></div>
+              <div class="row-main">
+                <div class="row-label">Streak connections</div>
+                <div class="row-sub">Link completed days into a chain on the calendar</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"><span class="thumb"></span></div></div>
+            </div>
+            <!-- Completion icon -->
+            <div class="row">
+              <div class="tile"><i data-lucide="check-check"></i></div>
+              <div class="row-main"><div class="row-label">Completion icon</div></div>
+              <div class="row-acc"><span class="row-value">Check</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <!-- Default growth icons -->
+            <div class="row">
+              <div class="tile"><i data-lucide="sprout"></i></div>
+              <div class="row-main">
+                <div class="row-label">Default growth icons</div>
+                <div class="row-sub">Pick the 5 emojis used for every habit by default</div>
+              </div>
+              <div class="row-acc"><span class="emoji-strip">🌱🌿☘️🪴🌳</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <!-- Compact habit cards -->
+            <div class="row">
+              <div class="tile"><i data-lucide="rows-3"></i></div>
+              <div class="row-main">
+                <div class="row-label">Compact habit cards</div>
+                <div class="row-sub">Fit more on screen</div>
+              </div>
+              <div class="row-acc"><div class="toggle"><span class="thumb"></span></div></div>
+            </div>
+          </div>
+
+          <!-- BEHAVIOR -->
+          <div class="section-head">
+            <h2>Behavior</h2>
+            <span class="glyph"><i data-lucide="sliders-horizontal"></i></span>
+          </div>
+          <div class="card">
+            <div class="row">
+              <div class="tile"><i data-lucide="arrow-up-down"></i></div>
+              <div class="row-main">
+                <div class="row-label">Sort order</div>
+                <div class="row-sub">How habits are ordered</div>
+              </div>
+              <div class="row-acc"><span class="row-value">Manual</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="volume-2"></i></div>
+              <div class="row-main">
+                <div class="row-label">Completion sound</div>
+                <div class="row-sub">Play sound when checking off</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"><span class="thumb"></span></div></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="pin"></i></div>
+              <div class="row-main">
+                <div class="row-label">Sticky month header</div>
+                <div class="row-sub">Month stays visible while scrolling</div>
+              </div>
+              <div class="row-acc"><div class="toggle"><span class="thumb"></span></div></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="archive"></i></div>
+              <div class="row-main">
+                <div class="row-label">Archived habits</div>
+                <div class="row-sub">View and restore hidden habits</div>
+              </div>
+              <div class="row-acc"><span class="badge">3</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="download"></i></div>
+              <div class="row-main">
+                <div class="row-label">Export habits data</div>
+                <div class="row-sub">Download as CSV or JSON</div>
+              </div>
+              <div class="row-acc"><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+
+          <!-- NOTIFICATIONS -->
+          <div class="section-head">
+            <h2>Notifications</h2>
+            <span class="glyph"><i data-lucide="bell-ring"></i></span>
+          </div>
+          <div class="card">
+            <div class="row">
+              <div class="tile"><i data-lucide="flame"></i></div>
+              <div class="row-main">
+                <div class="row-label">Streak Reminders</div>
+                <div class="row-sub">Get nudged before an active streak slips</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"><span class="thumb"></span></div></div>
+            </div>
+            <!-- nested child reminder time -->
+            <div class="nested">
+              <div class="nlabel"><i data-lucide="corner-down-right" class="corner"></i>Reminder time</div>
+              <div class="nval"><span>8:00 PM</span><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+
+          <!-- SUPPORT -->
+          <div class="section-head">
+            <h2>Support</h2>
+            <span class="glyph"><i data-lucide="heart"></i></span>
+          </div>
+          <div class="card">
+            <div class="row">
+              <div class="tile"><i data-lucide="star"></i></div>
+              <div class="row-main"><div class="row-label">Rate Chain Day</div></div>
+              <div class="row-acc"><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="share-2"></i></div>
+              <div class="row-main"><div class="row-label">Share with Friends</div></div>
+              <div class="row-acc"><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="message-circle"></i></div>
+              <div class="row-main"><div class="row-label">Send Feedback</div></div>
+              <div class="row-acc"><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="sparkles"></i></div>
+              <div class="row-main"><div class="row-label">What's New</div></div>
+              <div class="row-acc"><i data-lucide="chevron-right" class="chev"></i></div>
+            </div>
+          </div>
+
+          <!-- ABOUT -->
+          <div class="section-head">
+            <h2>About</h2>
+            <span class="glyph"><i data-lucide="info"></i></span>
+          </div>
+          <div class="card">
+            <div class="row">
+              <div class="tile"><i data-lucide="shield-check"></i></div>
+              <div class="row-main"><div class="row-label">Privacy Policy</div></div>
+              <div class="row-acc"><i data-lucide="external-link" class="ext"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="scroll-text"></i></div>
+              <div class="row-main"><div class="row-label">Terms of Service</div></div>
+              <div class="row-acc"><i data-lucide="external-link" class="ext"></i></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="tag"></i></div>
+              <div class="row-main"><div class="row-label">Version</div></div>
+              <div class="row-acc"><span class="row-value">1.0.0 (1)</span></div>
+            </div>
+          </div>
+
+          <div class="footer">Made with <span class="heart">♥</span> · Chain Day 1.0.0</div>
+
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const stage = document.getElementById('stage');
+
+  function buildFrame(theme, labelText) {
+    const wrap = document.createElement('div');
+    wrap.className = 'frame-wrap';
+    wrap.innerHTML = `
+      <div class="frame-label ${theme}"><span class="dot"></span>${labelText}</div>
+      <div class="phone t-${theme}">${screenHTML()}</div>`;
+    return wrap;
+  }
+
+  stage.appendChild(buildFrame('light', 'Light · Parchment'));
+  stage.appendChild(buildFrame('dark', 'Dark · Slate'));
+
+  lucide.createIcons();
+</script>
+</body>
+</html>
