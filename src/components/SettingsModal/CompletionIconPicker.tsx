@@ -2,7 +2,7 @@
 import { Pressable, View } from 'react-native';
 import { Check, Link2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getSegmentedControlColors } from './SegmentedControl.colors';
 
@@ -27,7 +27,7 @@ export function CompletionIconPicker({
 
   const handleSelect = (key: CompletionIcon) => {
     if (key === selected) return;
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     onSelect(key);
   };
 

@@ -2,8 +2,8 @@
 import { Pressable, View } from 'react-native';
 import { Moon, Smartphone, Sun } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import * as Haptics from 'expo-haptics';
 import type { DarkModePreference } from '../../../convex/settings/types';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getSegmentedControlColors } from './SegmentedControl.colors';
 
@@ -25,7 +25,7 @@ export function ThemePicker({ selected, onSelect }: ThemePickerProps) {
 
   const handleSelect = (key: DarkModePreference) => {
     if (key === selected) return;
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     onSelect(key);
   };
 

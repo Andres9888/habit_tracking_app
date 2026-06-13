@@ -5,7 +5,7 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import type { SettingsRowProps } from './SettingsRow.types';
 
 export function useSettingsRowPulse(isDark: boolean) {
@@ -32,25 +32,20 @@ export function useSettingsRowHandlers(
   triggerPulse: () => void
 ) {
   const handleToggle = (v: boolean) => {
-    void Haptics.impactAsync(
-      v ? Haptics.ImpactFeedbackStyle.Medium : Haptics.ImpactFeedbackStyle.Light
-    );
+    void triggerHaptic(v ? 'toggle' : 'tap');
     triggerPulse();
     props.onToggle?.(v);
   };
 
   const handleNavPress = () => {
     const style = props.hapticStyle ?? 'light';
-    if (style === 'selection') {
-      void Haptics.selectionAsync();
-    } else {
-      const map = {
-        light: Haptics.ImpactFeedbackStyle.Light,
-        medium: Haptics.ImpactFeedbackStyle.Medium,
-        heavy: Haptics.ImpactFeedbackStyle.Heavy,
-      } as const;
-      void Haptics.impactAsync(map[style]);
-    }
+    const map = {
+      selection: 'selection',
+      light: 'tap',
+      medium: 'toggle',
+      heavy: 'heavy',
+    } as const;
+    void triggerHaptic(map[style]);
     props.onPress?.();
   };
 

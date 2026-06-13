@@ -4,7 +4,7 @@
 
 import { useCallback, useRef } from 'react';
 import { Audio } from 'expo-av';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import type { CompletionSoundType } from '../../../convex/settings/types';
 
 /* eslint-disable @typescript-eslint/no-require-imports */
@@ -40,7 +40,7 @@ export function useSoundPreview(onSelect: (type: CompletionSoundType) => void) {
 
   const handleSelect = useCallback(
     (type: CompletionSoundType) => {
-      void Haptics.selectionAsync();
+      void triggerHaptic('selection');
       void preview(type);
       onSelect(type);
     },

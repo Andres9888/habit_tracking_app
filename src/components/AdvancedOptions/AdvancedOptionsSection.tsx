@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, Sprout, Target } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { ALGORITHM_COPY } from '@/components/AlgorithmPicker';
 import {
   useUserCustomProgressEmojis,
@@ -74,7 +74,7 @@ export function AdvancedOptionsSection({
   }, [expanded, reduceMotion]);
 
   const toggle = () => {
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     setExpanded((v) => !v);
   };
 

@@ -5,8 +5,8 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import * as Haptics from 'expo-haptics';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
+import { triggerHaptic } from '@/utils/haptics';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -35,7 +35,7 @@ export function TierPickerTile({ mode, tier, style, isSelected, onSelect, scale 
       accessibilityState={{ selected: isSelected }}
       style={{ width: '100%' }}
       onPress={() => {
-        if (!isSelected) void Haptics.selectionAsync();
+        if (!isSelected) void triggerHaptic('selection');
         onSelect(mode);
       }}
       onPressIn={() => {

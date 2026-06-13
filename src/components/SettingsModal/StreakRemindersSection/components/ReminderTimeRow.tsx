@@ -1,7 +1,7 @@
 import { ChevronRight, Clock } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { Text, View } from 'react-native';
 import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -19,7 +19,7 @@ export function ReminderTimeRow({
   const { colors: themeColors, settings } = useThemeColors();
 
   const handlePress = () => {
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     onToggleTimePicker();
   };
 

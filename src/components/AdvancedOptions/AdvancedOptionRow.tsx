@@ -1,7 +1,7 @@
 /** Advanced Options row: whole row is the tap target; pressed state washes the row + tints the hint. */
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
 import { AdvancedOptionEditAffordance } from './AdvancedOptionEditAffordance';
@@ -30,7 +30,7 @@ export function AdvancedOptionRow({
   const { colors } = useThemeColors();
 
   const handlePress = () => {
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     onPress();
   };
 
