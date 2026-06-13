@@ -2,7 +2,7 @@ import { Text } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { springs } from '../../../theme/animations';
+import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
 
@@ -18,9 +18,7 @@ interface ProgressTextProps {
   total: number;
 }
 
-const DONE_ENTER = ZoomIn.springify()
-  .damping(springs.celebration.damping)
-  .stiffness(springs.celebration.stiffness);
+const DONE_ENTER = ZoomIn.duration(durations.moderate).easing(enterEasing);
 
 /** Progress text with celebration micro-animation on "All done!" */
 export function ProgressText({ completed, total }: ProgressTextProps) {
