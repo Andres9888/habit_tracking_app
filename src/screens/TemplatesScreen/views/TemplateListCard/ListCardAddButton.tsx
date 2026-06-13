@@ -31,6 +31,7 @@ export function ListCardAddButton({
 
   useEffect(() => {
     if (isImported) {
+      void triggerHaptic('success');
       scale.value = withSpring(1.08, springs.responsive);
       const timeout = setTimeout(() => {
         scale.value = withSpring(1, springs.responsive);

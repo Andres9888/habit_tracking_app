@@ -2,14 +2,18 @@
  * Shared animation helpers for MainBrowseView and BrowseSections.
  */
 
-import { Easing, FadeInDown, FadeOutUp } from 'react-native-reanimated';
-import { durations } from '../../../theme/animations';
+import { FadeInDown, FadeOutUp } from 'react-native-reanimated';
+import {
+  durations,
+  enterEasing,
+  exitEasing,
+} from '../../../theme/animations';
 
 export function stagger(index: number) {
   return FadeInDown.delay(index * durations.stagger)
     .duration(durations.enter)
-    .easing(Easing.out(Easing.cubic));
+    .easing(enterEasing);
 }
 
-export const bodyEnter = FadeInDown.duration(180);
-export const bodyExit = FadeOutUp.duration(120);
+export const bodyEnter = FadeInDown.duration(durations.enter).easing(enterEasing);
+export const bodyExit = FadeOutUp.duration(durations.quick).easing(exitEasing);

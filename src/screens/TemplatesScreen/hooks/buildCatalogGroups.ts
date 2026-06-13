@@ -4,7 +4,7 @@
 
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
-import { getCategoryMeta } from '../data/categoryMeta';
+import { CATEGORY_META, getCategoryMeta } from '../data/categoryMeta';
 import { getCategoryPriority } from '../data/categoryPriority';
 import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
 
@@ -24,7 +24,10 @@ export function buildCatalogGroups(
 
   for (const template of allTemplates) {
     if (query && !matchesSearch(template, query)) continue;
-    const category = template.category || 'uncategorized';
+    // Collapse unknown categories into one bucket so the chip rail shows a
+    // single "Other" chip instead of one per unrecognized category id.
+    const raw = template.category || 'uncategorized';
+    const category = CATEGORY_META[raw] ? raw : 'uncategorized';
     const existing = map.get(category);
     if (existing) existing.push(template);
     else map.set(category, [template]);

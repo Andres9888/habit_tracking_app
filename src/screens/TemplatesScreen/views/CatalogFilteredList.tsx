@@ -3,9 +3,14 @@
  */
 
 import { FlatList, StyleSheet } from 'react-native';
-import { spacing } from '../../../theme/spacing';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { durations, enterEasing } from '../../../theme/animations';
+import { spacing } from '../../../theme/spacing';
 import { HabitTemplateCard } from '../components/HabitTemplateCard';
+
+const MAX_STAGGER_INDEX = 4;
 
 interface CatalogFilteredListProps {
   importedTemplateIds: Set<string>;
@@ -16,22 +21,35 @@ interface CatalogFilteredListProps {
 }
 
 export function CatalogFilteredList(p: CatalogFilteredListProps) {
+  const reduceMotion = useReduceMotion();
+
   return (
     <FlatList
       data={p.templates}
       keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
       contentContainerStyle={s.list}
-      renderItem={({ item }) => (
-        <HabitTemplateCard
-          descriptionLines={3}
-          isImported={p.importedTemplateIds.has(item._id)}
-          isImporting={p.importingTemplateId === item._id}
-          item={item}
-          onImport={p.onImport}
-          onPreview={p.onPreview}
-        />
-      )}
+      renderItem={({ index, item }) => {
+        const entering =
+          !reduceMotion && index <= MAX_STAGGER_INDEX
+            ? FadeInDown.delay(Math.min(index, MAX_STAGGER_INDEX) * durations.stagger)
+                .duration(durations.enter)
+                .easing(enterEasing)
+            : undefined;
+
+        return (
+          <Animated.View entering={entering}>
+            <HabitTemplateCard
+              descriptionLines={3}
+              isImported={p.importedTemplateIds.has(item._id)}
+              isImporting={p.importingTemplateId === item._id}
+              item={item}
+              onImport={p.onImport}
+              onPreview={p.onPreview}
+            />
+          </Animated.View>
+        );
+      }}
       showsVerticalScrollIndicator={false}
     />
   );

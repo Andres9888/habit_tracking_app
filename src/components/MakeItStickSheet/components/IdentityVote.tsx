@@ -1,5 +1,5 @@
 import { Text } from 'react-native';
-import { useThemeColors } from '../../theme/ThemeContext';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles as s } from '../MakeItStickSheet.styles';
 
 interface IdentityVoteProps {

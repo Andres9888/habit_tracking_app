@@ -3,12 +3,14 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { withAlpha } from '@/theme/colors/alpha';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { borderRadius as themeRadius } from '@/theme/spacing';
 
 export const hero = StyleSheet.create({
   badge: {
-    backgroundColor: 'rgba(255,255,255,0.55)',
+    backgroundColor: withAlpha(colors.text.inverse, 0.55),
     borderRadius: themeRadius.full,
     fontSize: 9,
     fontWeight: fontWeights.bold,

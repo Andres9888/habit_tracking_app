@@ -28,12 +28,14 @@ interface Params {
   visible: boolean;
   duration: number;
   onDismiss?: () => void;
+  variant?: 'success' | 'already_exists';
 }
 
 export function useTemplateAddedToastAnimations({
   visible,
   duration,
   onDismiss,
+  variant = 'success',
 }: Params) {
   const translateY = useSharedValue(120);
   const opacity = useSharedValue(0);
@@ -68,7 +70,9 @@ export function useTemplateAddedToastAnimations({
 
   useEffect(() => {
     if (visible) {
-      haptic.triggerSuccess();
+      if (variant === 'already_exists') {
+        haptic.triggerLightImpact();
+      }
       translateY.value = withSpring(0, SPRING_BOUNCY);
       opacity.value = withTiming(1, { duration: 250 });
       scale.value = withSequence(
@@ -98,6 +102,7 @@ export function useTemplateAddedToastAnimations({
     iconScale,
     handleDismiss,
     haptic,
+    variant,
   ]);
 
   const swipeDismiss = useCallback(() => handleDismiss(true), [handleDismiss]);

@@ -1,5 +1,5 @@
 /**
- * Shared category ordering — drives QuickFilterChips and CategoryRowsSection.
+ * Shared category ordering — drives CategoryRowsSection.
  */
 
 export const CATEGORY_PRIORITY = [

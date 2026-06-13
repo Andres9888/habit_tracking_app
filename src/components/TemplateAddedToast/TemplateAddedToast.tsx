@@ -33,7 +33,7 @@ export function TemplateAddedToast({
   const viewHabit = onViewHabit ?? onViewHabits;
 
   const { toastStyle, iconStyle, handleDismiss, panGesture } =
-    useTemplateAddedToastAnimations({ duration, onDismiss, visible });
+    useTemplateAddedToastAnimations({ duration, onDismiss, variant, visible });
 
   if (!visible || !templateData) return null;
 
@@ -66,7 +66,6 @@ export function TemplateAddedToast({
             style={[
               styles.toast,
               {
-                backgroundColor: '#1a1a2e',
                 borderLeftColor: color,
                 borderLeftWidth: 4,
                 ...theme.custom.shadows.card,

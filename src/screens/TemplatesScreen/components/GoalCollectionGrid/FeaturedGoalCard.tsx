@@ -8,6 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import type { GoalCollection } from '../../data/goalCollections';
+import { colors } from '@/theme/colors';
 import { s } from './GoalCollectionGrid.styles';
 import { hero } from './FeaturedGoalCard.styles';
 import { FeaturedGoalStarterRow } from './FeaturedGoalStarterRow';
@@ -71,10 +72,10 @@ export function FeaturedGoalCard({
           onPreview={onPreviewStarter}
         />
         <View style={[hero.cta, { backgroundColor: goal.textColor }]}>
-          <Text style={[hero.ctaPrimary, { color: '#FFFFFF' }]}>
+          <Text style={[hero.ctaPrimary, { color: colors.text.inverse }]}>
             {ctaLabel} →
           </Text>
-          <Text style={[hero.ctaCount, { color: '#FFFFFF' }]}>
+          <Text style={[hero.ctaCount, { color: colors.text.inverse }]}>
             · {countLabel}
           </Text>
         </View>

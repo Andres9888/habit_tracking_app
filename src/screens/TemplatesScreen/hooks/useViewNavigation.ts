@@ -2,13 +2,14 @@
  * View navigation state machine for Templates screen
  *
  * Manages transitions between: main | catalog
- * Uses Reanimated shared values for 280ms slide animations.
+ * Uses Reanimated shared values for slide animations.
  */
 
 import { useCallback, useState } from 'react';
-import { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { durations, enterEasing } from '@/theme/animations';
 
-const SLIDE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
+const SLIDE_CONFIG = { duration: durations.enter, easing: enterEasing };
 
 export type TemplateViewState =
   | { type: 'main' }
@@ -28,7 +29,7 @@ export function useViewNavigation() {
   const animateOut = useCallback(
     (onComplete: () => void) => {
       slideProgress.value = withTiming(1, SLIDE_CONFIG);
-      setTimeout(onComplete, 280);
+      setTimeout(onComplete, SLIDE_CONFIG.duration);
     },
     [slideProgress]
   );

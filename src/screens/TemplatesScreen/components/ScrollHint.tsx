@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet, Text, View } from 'react-native';
+import { ChevronDown } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   Extrapolation,
@@ -51,8 +52,13 @@ export function ScrollHint({
             { backgroundColor: chipBg, borderColor: colors.border },
           ]}
         >
+          <ChevronDown
+            color={colors.text.secondary}
+            size={14}
+            strokeWidth={2.5}
+          />
           <Text style={[s.chipText, { color: colors.text.secondary }]}>
-            ⌄ More below
+            More below
           </Text>
         </View>
       </LinearGradient>
@@ -64,6 +70,8 @@ const s = StyleSheet.create({
   chip: {
     alignItems: 'center',
     borderRadius: borderRadius.full,
+    flexDirection: 'row',
+    gap: spacing.xs,
     borderWidth: 1,
     elevation: 2,
     paddingHorizontal: spacing.md + 1,
