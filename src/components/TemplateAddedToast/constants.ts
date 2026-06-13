@@ -3,6 +3,7 @@
  */
 
 import { springs } from '@/theme/animations';
+import { colors } from '@/theme/colors';
 
 /** Threshold for swipe to dismiss (pixels) */
 export const DISMISS_THRESHOLD = 50;
@@ -14,7 +15,7 @@ export const VELOCITY_THRESHOLD = 500;
 export const DEFAULT_DURATION = 8000;
 
 /** Fallback color when template has no iconColor */
-export const FALLBACK_COLOR = '#22c55e';
+export const FALLBACK_COLOR = colors.primary[500];
 
 /** Icon badge size */
 export const ICON_BADGE_SIZE = 40;

@@ -45,7 +45,7 @@ const QuickPickCardComponent = ({
         className='mr-3 overflow-hidden rounded-2xl bg-white p-3'
         style={[
           {
-            borderColor: isSelected ? '#22C55E' : '#e7e5e4', // #e7e5e4 = stone-200
+            borderColor: isSelected ? themeColors.status.success : '#e7e5e4', // #e7e5e4 = stone-200
             borderWidth: 2,
             minWidth: 100,
             transform: [{ scale: scaleAnim }],

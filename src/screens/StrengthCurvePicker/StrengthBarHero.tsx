@@ -1,6 +1,7 @@
 /** StrengthBarHero — V5 giant bar with milestones, animated fill. */
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { borderRadius } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useEffect } from 'react';
@@ -120,7 +121,7 @@ export function StrengthBarHero({
         style={{
           height: 28 * scale,
           backgroundColor: empty,
-          borderRadius: 999,
+          borderRadius: borderRadius.full,
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -132,7 +133,7 @@ export function StrengthBarHero({
               left: 0,
               top: 0,
               bottom: 0,
-              borderRadius: 999,
+              borderRadius: borderRadius.full,
               overflow: 'hidden',
             },
             fillStyle,

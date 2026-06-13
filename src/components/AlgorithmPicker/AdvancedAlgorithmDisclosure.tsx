@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { Text, View, type LayoutChangeEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { ChevronDown, SlidersHorizontal } from 'lucide-react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
@@ -46,7 +46,7 @@ export function AdvancedAlgorithmDisclosure({ selected, onSelect }: Props) {
   const subtitle = `Using ${ALGORITHM_COPY[activeMode].name}`;
 
   const toggle = () => {
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     setExpanded((prev) => !prev);
   };
 

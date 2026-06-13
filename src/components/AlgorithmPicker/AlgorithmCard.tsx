@@ -1,7 +1,7 @@
 /** AlgorithmCard — Labeled algorithm option with icon, description, and formation-time chip. */
 import { Clock } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '@/theme/ThemeContext';
 import type { AlgorithmCopyEntry } from './algorithmCopy';
@@ -28,7 +28,7 @@ export function AlgorithmCard({
 
   const handlePress = () => {
     if (!onPress) return;
-    if (!selected) void Haptics.selectionAsync();
+    if (!selected) void triggerHaptic('selection');
     onPress();
   };
 

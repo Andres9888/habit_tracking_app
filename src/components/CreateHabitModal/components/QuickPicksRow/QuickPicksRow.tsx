@@ -68,7 +68,7 @@ const QuickPicksRowComponent = ({
             accessibilityRole='button'
             onPress={handleBrowseAll}
           >
-            <Text className='text-sm font-medium text-[#22C55E]'>
+            <Text className='text-sm font-medium' style={{ color: themeColors.status.success }}>
               Browse all →
             </Text>
           </Pressable> : null}

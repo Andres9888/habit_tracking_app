@@ -2,7 +2,7 @@
 import { Pressable, View } from 'react-native';
 import { Circle, Square } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getSegmentedControlColors } from './SegmentedControl.colors';
 
@@ -24,7 +24,7 @@ export function DayShapePicker({ selected, onSelect }: DayShapePickerProps) {
 
   const handleSelect = (key: DayShape) => {
     if (key === selected) return;
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     onSelect(key);
   };
 

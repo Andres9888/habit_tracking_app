@@ -348,6 +348,23 @@ export default tseslint.config(
       ]
     }
   },
+  // Haptics guard: route all haptic feedback through the wrapper so reduce-motion
+  // and the global enabled/intensity settings apply. The wrapper itself is exempt.
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: [
+      ...sourceIgnores,
+      '**/utils/haptics/**',
+    ],
+    rules: {
+      'no-restricted-imports': ['warn', {
+        paths: [{
+          name: 'expo-haptics',
+          message: 'Use triggerHaptic / useHaptics / HapticPatterns from @/utils/haptics instead of raw expo-haptics, so reduce-motion and intensity settings apply.',
+        }],
+      }],
+    }
+  },
   // === Design-System Lint Guards — ratcheted (error) ===
   // Violations have been eliminated; these rules now hard-fail to prevent regression.
   // NOTE: ESLint flat config merges rules per-file and the last matching block wins.

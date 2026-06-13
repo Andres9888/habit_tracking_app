@@ -58,7 +58,7 @@ function HabitCardComponent(props: HabitCardProps) {
           <Animated.View
             accessible
             accessibilityHint='Tap to toggle completion. Swipe left to reveal edit and delete actions.'
-            accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}`}
+            accessibilityLabel={`${name} habit, ${Math.round(strength)}% strength${habit.completed ? ', completed' : ''}${atRisk ? ', at risk' : ''}`}
             accessibilityRole='button'
             accessibilityState={{ checked: habit.completed, disabled }}
             testID='home-habit-toggle'
