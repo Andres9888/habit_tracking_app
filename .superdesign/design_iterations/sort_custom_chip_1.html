@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sort Custom Chip Variants</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f0f1a !important; }
+
+    .phone-frame {
+      width: 340px;
+      background: #f5f1ed;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    .phone-frame.dark {
+      background: #111827;
+    }
+    .label-badge {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+
+    /* Segmented control tokens — mirrors SegmentedControl.colors.ts */
+    .seg-container-light { background: rgba(0, 0, 0, 0.05); }
+    .seg-selected-light { background: rgba(5, 150, 105, 0.12); }
+    .seg-accent-light { color: #047857; }
+    .seg-muted-light { color: #6B6560; }
+
+    .seg-container-dark { background: rgba(255, 255, 255, 0.06); }
+    .seg-selected-dark { background: rgba(52, 211, 153, 0.18); }
+    .seg-accent-dark { color: #A7F3D0; }
+    .seg-muted-dark { color: #9CA3AF; }
+
+    .sort-tray-light {
+      background: rgba(0, 0, 0, 0.02);
+      border-bottom: 1px solid #ddd8d2;
+    }
+    .sort-tray-dark {
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid #374151;
+    }
+
+    .chip {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 8px 4px;
+      min-width: 0;
+      gap: 4px;
+    }
+    .chip-label {
+      font-size: 13px;
+      letter-spacing: 0.12px;
+      line-height: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .chip-label.selected { font-weight: 600; }
+    .chip-label.unselected { font-weight: 400; }
+
+    .state-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .state-label.light { color: #6B6560; }
+    .state-label.dark { color: #9CA3AF; }
+
+    .direction-row {
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-10">
+
+  <div class="text-center max-w-3xl">
+    <h1 class="text-3xl font-bold text-white mb-3">Custom Chip Treatments</h1>
+    <p class="text-stone-400 text-sm leading-relaxed">
+      Settings → Behavior → Sort order. The first chip is <strong class="text-stone-300">Custom</strong> (manual sort).
+      Today it shows a <code class="text-emerald-400/80">GripVertical</code> dots icon while the other three use text labels.
+      Pick a variant — each frame shows Custom <em>selected</em> (no direction row) and Custom <em>unselected</em> (Strength selected, direction row visible).
+    </p>
+  </div>
+
+  <!-- Light mode row -->
+  <div class="w-full max-w-[1500px]">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-stone-500 mb-8 text-center">Light mode</h2>
+    <div class="flex flex-wrap justify-center gap-12">
+
+      <!-- 1: Text only -->
+      <div class="relative pt-8">
+        <div class="label-badge bg-emerald-700 text-white">1 — TEXT ONLY</div>
+        <div class="phone-frame" id="v1-light"></div>
+        <p class="text-center text-stone-500 mt-5 text-xs max-w-[300px] mx-auto">Matches Name / Strength / Streak — simplest consistency play.</p>
+      </div>
+
+      <!-- 2: Current baseline -->
+      <div class="relative pt-8">
+        <div class="label-badge bg-stone-600 text-white">2 — CURRENT (GRIP DOTS)</div>
+        <div class="phone-frame" id="v2-light"></div>
+        <p class="text-center text-stone-500 mt-5 text-xs max-w-[300px] mx-auto">Production today — icon-only, no label. Reads as drag handle, not sort mode.</p>
+      </div>
+
+      <!-- 3: Icon + text -->
+      <div class="relative pt-8">
+        <div class="label-badge bg-violet-600 text-white">3 — ICON + TEXT</div>
+        <div class="phone-frame" id="v3-light"></div>
+        <p class="text-center text-stone-500 mt-5 text-xs max-w-[300px] mx-auto">Keeps drag affordance but adds readable label. Tight at flex-1 width.</p>
+      </div>
+
+      <!-- 4: Alternative icon -->
+      <div class="relative pt-8">
+        <div class="label-badge bg-amber-600 text-white">4 — ALT ICON (↕)</div>
+        <div class="phone-frame" id="v4-light"></div>
+        <p class="text-center text-stone-500 mt-5 text-xs max-w-[300px] mx-auto">arrow-up-down instead of dot column — still icon-only but less "reorder handle".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark mode row -->
+  <div class="w-full max-w-[1500px] mt-6">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-stone-500 mb-8 text-center">Dark mode</h2>
+    <div class="flex flex-wrap justify-center gap-12">
+      <div class="relative pt-8">
+        <div class="label-badge bg-emerald-700 text-white">1 — TEXT ONLY</div>
+        <div class="phone-frame dark" id="v1-dark"></div>
+      </div>
+      <div class="relative pt-8">
+        <div class="label-badge bg-stone-600 text-white">2 — CURRENT</div>
+        <div class="phone-frame dark" id="v2-dark"></div>
+      </div>
+      <div class="relative pt-8">
+        <div class="label-badge bg-violet-600 text-white">3 — ICON + TEXT</div>
+        <div class="phone-frame dark" id="v3-dark"></div>
+      </div>
+      <div class="relative pt-8">
+        <div class="label-badge bg-amber-600 text-white">4 — ALT ICON</div>
+        <div class="phone-frame dark" id="v4-dark"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-stone-600 text-xs text-center pb-8">
+    Mock: <code class="text-stone-500">.superdesign/design_iterations/sort_custom_chip_1.html</code>
+    · Reply with variant number (1–4) to implement
+  </p>
+
+  <script>
+    const FAMILIES = [
+      { key: 'manual', label: 'Custom' },
+      { key: 'name', label: 'Name' },
+      { key: 'strength', label: 'Strength' },
+      { key: 'streak', label: 'Streak' },
+    ];
+
+    function renderCustomChip(variant, selected, theme) {
+      const on = selected === 'manual';
+      const accent = theme === 'dark' ? 'seg-accent-dark' : 'seg-accent-light';
+      const muted = theme === 'dark' ? 'seg-muted-dark' : 'seg-muted-light';
+      const selectedBg = theme === 'dark' ? 'seg-selected-dark' : 'seg-selected-light';
+      const color = on ? accent : muted;
+      const weight = on ? 'selected' : 'unselected';
+      const bg = on ? selectedBg : 'transparent';
+      const stroke = on ? 2.5 : 2;
+
+      if (variant === 1) {
+        return `<div class="chip ${selectedBg === bg ? selectedBg : ''}" style="background:${on ? (theme === 'dark' ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)') : 'transparent'}">
+          <span class="chip-label ${weight} ${color}">Custom</span>
+        </div>`;
+      }
+      if (variant === 2) {
+        return `<div class="chip" style="background:${on ? (theme === 'dark' ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)') : 'transparent'}">
+          <i data-lucide="grip-vertical" class="w-4 h-4 ${color}" style="stroke-width:${stroke}"></i>
+        </div>`;
+      }
+      if (variant === 3) {
+        return `<div class="chip" style="background:${on ? (theme === 'dark' ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)') : 'transparent'}">
+          <i data-lucide="grip-vertical" class="w-3.5 h-3.5 shrink-0 ${color}" style="stroke-width:${stroke}"></i>
+          <span class="chip-label ${weight} ${color}">Custom</span>
+        </div>`;
+      }
+      if (variant === 4) {
+        return `<div class="chip" style="background:${on ? (theme === 'dark' ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)') : 'transparent'}">
+          <i data-lucide="arrow-up-down" class="w-4 h-4 ${color}" style="stroke-width:${stroke}"></i>
+        </div>`;
+      }
+    }
+
+    function renderFamilyPicker(variant, selectedFamily, theme) {
+      const container = theme === 'dark' ? 'seg-container-dark' : 'seg-container-light';
+      const accent = theme === 'dark' ? 'seg-accent-dark' : 'seg-accent-light';
+      const muted = theme === 'dark' ? 'seg-muted-dark' : 'seg-muted-light';
+      const selectedBgStyle = theme === 'dark' ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)';
+
+      const chips = FAMILIES.map(({ key, label }) => {
+        if (key === 'manual') return renderCustomChip(variant, selectedFamily, theme);
+        const on = key === selectedFamily;
+        const color = on ? accent : muted;
+        const weight = on ? 'selected' : 'unselected';
+        return `<div class="chip" style="background:${on ? selectedBgStyle : 'transparent'}">
+          <span class="chip-label ${weight} ${color}">${label}</span>
+        </div>`;
+      }).join('');
+
+      return `<div class="flex rounded-xl p-[3px] gap-0.5 ${container}">${chips}</div>`;
+    }
+
+    function renderDirectionPicker(theme) {
+      const container = theme === 'dark' ? 'seg-container-dark' : 'seg-container-light';
+      const accent = theme === 'dark' ? 'seg-accent-dark' : 'seg-accent-light';
+      const muted = theme === 'dark' ? 'seg-muted-dark' : 'seg-muted-light';
+      const selectedBgStyle = theme === 'dark' ? 'rgba(52,211,153,0.18)' : 'rgba(5,150,105,0.12)';
+
+      return `<div class="direction-row">
+        <div class="flex rounded-xl p-[3px] gap-0.5 ${container}">
+          <div class="chip" style="background:transparent">
+            <i data-lucide="arrow-up" class="w-4 h-4 ${muted}" style="stroke-width:2"></i>
+            <span class="chip-label unselected ${muted}">Weakest first</span>
+          </div>
+          <div class="chip" style="background:${selectedBgStyle}">
+            <i data-lucide="arrow-down" class="w-4 h-4 ${accent}" style="stroke-width:2.5"></i>
+            <span class="chip-label selected ${accent}">Strongest first</span>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function renderSortTray(variant, selectedFamily, theme) {
+      const tray = theme === 'dark' ? 'sort-tray-dark' : 'sort-tray-light';
+      const showDirection = selectedFamily !== 'manual';
+      return `<div class="px-4 py-2.5 ${tray}">
+        ${renderFamilyPicker(variant, selectedFamily, theme)}
+        ${showDirection ? renderDirectionPicker(theme) : ''}
+      </div>`;
+    }
+
+    function renderSettingsContext(variant, theme) {
+      const textPrimary = theme === 'dark' ? 'text-gray-100' : 'text-[#2d2a26]';
+      const textSecondary = theme === 'dark' ? 'text-gray-400' : 'text-[#6B6560]';
+      const border = theme === 'dark' ? 'border-gray-700' : 'border-[#ddd8d2]';
+      const cardBg = theme === 'dark' ? 'bg-gray-800' : 'bg-[#edeae5]';
+      const iconBg = theme === 'dark' ? 'bg-teal-900/40' : 'bg-[#e2f1ea]';
+      const iconColor = theme === 'dark' ? 'text-teal-300' : 'text-[#00695C]';
+
+      return `
+        <div class="p-4">
+          <div class="${cardBg} rounded-2xl overflow-hidden shadow-lg">
+            <div class="flex items-center gap-2 px-4 py-3 border-b ${border}">
+              <i data-lucide="sliders-horizontal" class="w-4 h-4 ${textSecondary}"></i>
+              <span class="text-sm font-semibold ${textPrimary}">Behavior</span>
+              <span class="ml-auto text-xs ${textSecondary}">⌃</span>
+            </div>
+            <div class="flex items-start gap-3 px-4 py-3 border-b ${border}">
+              <div class="w-8 h-8 rounded-lg ${iconBg} flex items-center justify-center shrink-0 mt-0.5">
+                <i data-lucide="arrow-up-down" class="w-4 h-4 ${iconColor}"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[15px] font-medium ${textPrimary}">Sort order</div>
+                <div class="text-[13px] ${textSecondary} mt-0.5">How habits are ordered</div>
+              </div>
+            </div>
+            ${renderSortTray(variant, 'manual', theme)}
+            <div class="flex items-center gap-3 px-4 py-3 opacity-40">
+              <div class="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center shrink-0">
+                <i data-lucide="volume-2" class="w-4 h-4 text-orange-700"></i>
+              </div>
+              <div class="text-[15px] font-medium ${textPrimary}">Completion sound</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFrame(variant, theme, containerId) {
+      const stateLabelClass = theme === 'dark' ? 'state-label dark' : 'state-label light';
+      const divider = theme === 'dark' ? 'border-gray-700' : 'border-[#ddd8d2]';
+
+      const html = `
+        ${renderSettingsContext(variant, theme)}
+        <div class="px-4 pb-4 border-t ${divider} pt-3">
+          <div class="${stateLabelClass}">Custom selected · no direction row</div>
+          ${renderSortTray(variant, 'manual', theme)}
+        </div>
+        <div class="px-4 pb-5">
+          <div class="${stateLabelClass}">Custom unselected · Strength ↓</div>
+          ${renderSortTray(variant, 'strength', theme)}
+        </div>
+      `;
+
+      document.getElementById(containerId).innerHTML = html;
+    }
+
+    [1, 2, 3, 4].forEach(v => {
+      renderFrame(v, 'light', `v${v}-light`);
+      renderFrame(v, 'dark', `v${v}-dark`);
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
