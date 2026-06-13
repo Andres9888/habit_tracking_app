@@ -297,7 +297,6 @@ const applicationTables = {
       v.literal('mental_health'),
       v.literal('recovery'),
       v.literal('breathing'),
-      v.literal('relationships'),
       v.literal('environmental_design'),
       v.literal('subtraction')
     ),
@@ -439,6 +438,7 @@ const applicationTables = {
     ),
 
     hasPremium: v.optional(v.boolean()),
+    highContrastMode: v.optional(v.boolean()),
     // Global default for the 5-stage growth emoji set, overridable per habit.
     progressEmojis: v.optional(progressEmojisValidator),
     // User's saved "Custom" preset — auto-stored when slots are edited in

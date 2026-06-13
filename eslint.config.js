@@ -286,6 +286,8 @@ export default tseslint.config(
       '**/emojiKeywords/habitNameMap.ts',
       '**/emojiKeywords/keywords.ts',
       '**/templatesDataSeed.ts',
+      '**/templates/curatedEnrichment.ts',
+      '**/templates/curatedSeedTemplates.ts',
       '**/SmartSuggestions/suggestions.data.ts', // Curated habit suggestions array
       '**/templates/youtubeLinks.data.ts', // YouTube links mapping for 280+ habit templates
       '**/TipQuickActionsSheet/quickActionsByType.ts', // Quick action configurations

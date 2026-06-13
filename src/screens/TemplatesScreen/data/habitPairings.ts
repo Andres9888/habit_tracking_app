@@ -65,10 +65,6 @@ export const CATEGORY_PAIRINGS: Record<string, HabitPairing[]> = {
     { targetCategory: 'sleep', reason: 'Sleep is the ultimate recovery tool' },
     { targetCategory: 'breathing', reason: 'Breathwork activates parasympathetic recovery' },
   ],
-  relationships: [
-    { targetCategory: 'social', reason: 'Strong relationships need consistent attention' },
-    { targetCategory: 'mindfulness', reason: 'Be more present with people you love' },
-  ],
   sleep: [
     { targetCategory: 'breathing', reason: 'Regulate your nervous system before bed' },
     { targetCategory: 'mindfulness', reason: 'Quiet your mind for deeper sleep' },

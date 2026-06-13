@@ -10,7 +10,6 @@ const CATEGORY_DEFAULTS: Record<string, number> = {
   productivity: 5,
   sleep: 5,
   social: 5,
-  relationships: 5,
   recovery: 5,
   creativity: 5,
   financial: 5,
