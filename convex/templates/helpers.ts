@@ -3,6 +3,7 @@
  */
 import type { MutationCtx } from '../_generated/server';
 import type { TemplateInsert } from './types';
+import { PRUNED_TEMPLATE_NAMES } from './curatedRemovals';
 
 /**
  * Insert a template if it doesn't already exist
@@ -11,6 +12,8 @@ export const insertTemplateIfMissing = async (
   ctx: MutationCtx,
   template: TemplateInsert
 ) => {
+  if (PRUNED_TEMPLATE_NAMES.has(normalizeTemplateName(template.name))) return;
+
   const existing = await ctx.db
     .query('templates')
     .filter((q) => q.eq(q.field('name'), template.name))

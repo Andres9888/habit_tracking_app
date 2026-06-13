@@ -13,15 +13,6 @@ const FALLBACK_CATEGORIES: CategoryFilter[] = [
   { icon: '✨', id: 'all', label: 'All' },
 ];
 
-// Categories that exist in the schema + seed data but aren't yet in
-// CATEGORY_META (which also carries chip colors). Promote to CATEGORY_META
-// when someone makes a deliberate color call for them.
-const EXTRA_LABELS: Record<string, Pick<CategoryFilter, 'icon' | 'label'>> = {
-  environmental_design: { icon: '🏠', label: 'Environment' },
-  relationships: { icon: '💑', label: 'Relationships' },
-  subtraction: { icon: '➖', label: 'Less Is More' },
-};
-
 function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
   if (!templates || templates.length === 0) {
     return FALLBACK_CATEGORIES;
@@ -34,17 +25,16 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
   const normalized = uniqueCategories.map((category) => {
     const id = category as string;
     const canonical = CATEGORY_META[id];
-    const extra = EXTRA_LABELS[id];
     const metadata = canonical
       ? { icon: canonical.icon, label: canonical.label }
-      : (extra ?? {
+      : {
           icon: '📌',
           label:
             typeof category === 'string'
               ? category.charAt(0).toUpperCase() +
                 category.slice(1).replaceAll('_', ' ')
               : 'Template',
-        });
+        };
 
     return {
       ...metadata,
