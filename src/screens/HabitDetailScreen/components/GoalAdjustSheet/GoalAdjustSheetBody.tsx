@@ -2,27 +2,38 @@
  * GoalAdjustSheetBody — inner content for GoalAdjustSheet (handle, title,
  * preset grid, Save, Remove). Chrome/animation lives in GoalAdjustSheet.
  */
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { Button } from '../../../../components/Button';
-import { withAlpha } from '../../../../theme';
-import { borderRadius, componentSpacing, spacing } from '../../../../theme/spacing';
+import { componentSpacing, borderRadius, spacing } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../../theme/typography';
+import { GoalCtaLabel } from '../GoalCtaLabel';
+import { readableHabitAccent } from '../goalColorUtils';
 import { GoalPresetChip } from '../GoalPresetChip';
-import type { useGoalAdjust } from './GoalAdjustSheet.hooks';
-
-const PRESETS = [7, 21, 30, 66, 100, 365];
-const RECOMMENDED = 66;
-const labelFor = (d: number) => (d === 365 ? '1-year' : `${d}-day`);
+import { GoalAdjustProgressSummary } from './GoalAdjustProgressSummary';
+import { GoalContextLine } from './GoalContextLine';
+import { GOAL_PRESETS, goalLabelFor, RECOMMENDED_GOAL, type useGoalAdjust } from './GoalAdjustSheet.hooks';
 
 interface GoalAdjustSheetBodyProps {
   currentGoal: number;
+  currentStreak: number;
   goal: ReturnType<typeof useGoalAdjust>;
+  habitColor: string;
 }
 
-export function GoalAdjustSheetBody({ currentGoal, goal }: GoalAdjustSheetBodyProps) {
+export function GoalAdjustSheetBody({
+  currentGoal,
+  currentStreak,
+  goal,
+  habitColor,
+}: GoalAdjustSheetBodyProps) {
   const { colors } = useThemeColors();
   const { confirmRemove, handleRemove, handleSelect, handleUpdate, saving, selected } = goal;
+  const ctaColor = readableHabitAccent(
+    habitColor,
+    colors.text.inverse,
+    colors.primary[700]
+  );
 
   return (
     <>
@@ -42,53 +53,55 @@ export function GoalAdjustSheetBody({ currentGoal, goal }: GoalAdjustSheetBodyPr
       >
         Adjust your goal
       </Text>
-      <Text
-        className='mb-4 mt-1 text-center'
-        style={{ ...typography.caption, color: colors.text.secondary }}
-      >
-        Currently: {currentGoal > 0 ? `${labelFor(currentGoal)} streak` : 'none'}
-      </Text>
-      <View className='mb-5 flex-row flex-wrap justify-center gap-2'>
-        {PRESETS.map((days) => (
-          <GoalPresetChip
-            key={days}
-            days={days}
-            disabled={saving}
-            recommended={days === RECOMMENDED}
-            selected={days === selected}
-            onPress={() => handleSelect(days)}
-          />
+      <GoalAdjustProgressSummary
+        currentGoal={currentGoal}
+        currentStreak={currentStreak}
+        habitColor={habitColor}
+      />
+      <View className='mb-3.5 flex-row flex-wrap' style={{ marginHorizontal: -spacing.xs / 2 }}>
+        {GOAL_PRESETS.map((days) => (
+          <View key={days} style={{ marginBottom: spacing.sm, paddingHorizontal: spacing.xs / 2, width: '33.333%' }}>
+            <GoalPresetChip
+              days={days}
+              disabled={saving}
+              habitColor={habitColor}
+              recommended={days === RECOMMENDED_GOAL}
+              selected={days === selected}
+              variant='grid'
+              onPress={() => handleSelect(days)}
+            />
+          </View>
         ))}
       </View>
+      <GoalContextLine
+        currentStreak={currentStreak}
+        habitColor={habitColor}
+        selected={selected}
+      />
       <Button
         accessibilityLabel='Save goal'
         disabled={saving}
         fullWidth
         loading={saving}
-        style={{ marginBottom: spacing.sm }}
+        style={{ backgroundColor: ctaColor, marginBottom: spacing.xs }}
         variant='primary'
         onPress={() => void handleUpdate()}
       >
-        {`Set ${labelFor(selected)} goal`}
+        <GoalCtaLabel label={`Set ${goalLabelFor(selected)} goal`} trigger={selected} />
       </Button>
-      <Button
+      <Pressable
         accessibilityLabel={
           confirmRemove ? 'Tap again to confirm goal removal' : 'Remove goal'
         }
+        accessibilityRole='button'
         disabled={saving}
-        fullWidth
-        variant='secondary'
-        style={{
-          backgroundColor: confirmRemove
-            ? withAlpha(colors.status.error, 0.1)
-            : 'transparent',
-          borderColor: withAlpha(colors.status.error, 0.4),
-        }}
-        textStyle={{ color: colors.status.error, fontWeight: fontWeights.semibold }}
+        style={{ alignItems: 'center', opacity: saving ? 0.45 : 1, paddingVertical: spacing.sm }}
         onPress={() => void handleRemove()}
       >
-        {confirmRemove ? 'Tap again to confirm' : 'Remove goal'}
-      </Button>
+        <Text style={{ ...typography.bodySmall, color: colors.status.error, fontWeight: fontWeights.medium }}>
+          {confirmRemove ? 'Tap again to confirm' : 'Remove goal'}
+        </Text>
+      </Pressable>
     </>
   );
 }

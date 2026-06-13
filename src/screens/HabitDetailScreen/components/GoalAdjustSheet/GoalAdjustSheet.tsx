@@ -19,12 +19,14 @@ import { GoalAdjustSheetBody } from './GoalAdjustSheetBody';
 interface GoalAdjustSheetProps {
   habitId: Id<'habits'>;
   currentGoal: number;
+  currentStreak: number;
+  habitColor: string;
   visible: boolean;
   onClose: () => void;
 }
 
 export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
-  const { currentGoal, visible, onClose } = props;
+  const { currentGoal, currentStreak, habitColor, visible, onClose } = props;
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
   const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss({
@@ -56,7 +58,12 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
               { backgroundColor: colors.card, paddingBottom: insets.bottom + 28, ...shadows.modal },
             ]}
           >
-            <GoalAdjustSheetBody currentGoal={currentGoal} goal={goal} />
+            <GoalAdjustSheetBody
+              currentGoal={currentGoal}
+              currentStreak={currentStreak}
+              goal={goal}
+              habitColor={habitColor}
+            />
           </Animated.View>
         </GestureDetector>
       </View>

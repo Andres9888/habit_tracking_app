@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Goal screen — aligned</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:ital,opsz,wght@0,7..72,500;0,7..72,600;0,7..72,700;1,7..72,500&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    /* Light tokens (from src/theme/colors/core.ts) */
+    --bg: #F5F1ED;            /* background / gray100 */
+    --card: #EDEAE5;          /* card / surface (L1) */
+    --surface-muted: #FAF8F5; /* surfaceMuted / gray50 */
+    --border: #DDD8D2;        /* border / gray200 */
+    --text: #2D2A26;          /* text.primary */
+    --text-2: #6B6560;        /* text.secondary */
+    --text-3: #6E6660;        /* text.tertiary */
+    --green-600: #059669;     /* primary.600 — brand */
+    --green-700: #047857;     /* primary.700 */
+    --warn: #9A5504;
+    --warn-bg: #FEF3CD;
+    --error: #B53030;
+    /* Representative HABIT color (teal — like the Practice-Spanish habit) */
+    --habit: #0E7490;
+    --habit-tint: rgba(14,116,144,0.10);
+    --shadow-card: 0 2px 8px rgba(45,42,38,0.06);
+    --shadow-modal: 0 8px 24px rgba(45,42,38,0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #2A2724;
+    color: #fff;
+    padding: 40px 24px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page-title { text-align: center; max-width: 760px; margin: 0 auto 8px; }
+  .page-title h1 { font-family: 'Literata', serif; font-weight: 700; font-size: 28px; letter-spacing: -0.4px; }
+  .page-title p { color: #B8B2AC; font-size: 15px; margin-top: 8px; line-height: 1.5; }
+
+  /* before/after strip */
+  .ba { max-width: 760px; margin: 28px auto 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ba-card { background: #34302C; border: 1px solid #443F3A; border-radius: 14px; padding: 18px 20px; }
+  .ba-card h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #948D86; margin-bottom: 14px; }
+  .ba-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .ba-row:last-child { margin-bottom: 0; }
+  .ba-lbl { width: 64px; font-size: 12px; color: #B8B2AC; }
+  .ba-bar { flex: 1; height: 10px; border-radius: 999px; background: #221F1C; overflow: hidden; }
+  .ba-fill { height: 100%; border-radius: 999px; width: 62%; }
+  .ba-x { color: #E0857A; font-size: 12px; font-weight: 600; }
+  .ba-ok { color: #6FCF97; font-size: 12px; font-weight: 600; }
+
+  .stage { display: flex; flex-wrap: wrap; gap: 40px 28px; justify-content: center; align-items: flex-start; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .col-cap { font-size: 13px; color: #B8B2AC; font-weight: 600; letter-spacing: 0.3px; }
+
+  /* phone */
+  .phone {
+    width: 340px; border-radius: 40px; padding: 14px;
+    background: #0c0c0d; box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  }
+  .screen { border-radius: 28px; overflow: hidden; position: relative; }
+  .screen.light { background: var(--bg); }
+  .screen.dark { background: #111827; }
+  .statusbar { height: 36px; display:flex; align-items:center; justify-content:space-between; padding: 0 22px; font-size: 13px; font-weight: 600; }
+  .light .statusbar { color: #2D2A26; }
+  .dark .statusbar { color: #F9FAFB; }
+  .body { padding: 12px 16px 22px; }
+
+  /* ---- GOAL TAB CARD ---- */
+  .gcard {
+    border-radius: 16px; border: 1px solid var(--border);
+    background: var(--surface-muted); box-shadow: var(--shadow-card);
+    padding: 16px;
+  }
+  .dark .gcard { background: #1F2937; border-color: #374151; }
+
+  /* why anchor */
+  .why { display: flex; gap: 12px; align-items: flex-start; border-radius: 16px; border: 1px solid var(--border); background: var(--bg); padding: 14px; margin-bottom: 12px; }
+  .dark .why { background: #111827; border-color: #374151; }
+  .why-ic { width: 36px; height: 36px; border-radius: 10px; background: var(--card); display:flex; align-items:center; justify-content:center; font-size: 18px; flex-shrink:0; }
+  .dark .why-ic { background: #374151; }
+  .why-label { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-3); }
+  .dark .why-label { color: #9CA3AF; }
+  .why-quote { font-family: 'Literata', serif; font-style: italic; font-size: 15px; line-height: 21px; color: var(--text); margin-top: 2px; }
+  .dark .why-quote { color: #F9FAFB; }
+
+  .gtop { display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+  .gtitle { font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; }
+  .dark .gtitle { color: #F9FAFB; }
+  /* NEW unified Adjust button — habit color, one consistent style */
+  .adjust { display:flex; align-items:center; gap:5px; padding: 7px 13px; border-radius: 999px; background: var(--habit-tint); }
+  .adjust span { font-size: 14px; font-weight: 600; color: var(--habit); }
+  .adjust i { width: 14px; height: 14px; color: var(--habit); }
+
+  /* streak numeral */
+  .numeral { text-align:center; padding: 6px 0 2px; }
+  .numeral .n { font-family: 'Literata', serif; font-weight: 700; font-size: 52px; line-height: 1; color: var(--text); letter-spacing: -1px; }
+  .dark .numeral .n { color: #F9FAFB; }
+  .numeral .of { font-size: 14px; color: var(--text-2); margin-top: 6px; }
+  .dark .numeral .of { color: #9CA3AF; }
+
+  .bar { height: 10px; border-radius: 999px; overflow: hidden; margin-top: 18px; }
+  .bar.on-card { background: var(--bg); }            /* track on the card = gray100 */
+  .dark .bar.on-card { background: #111827; }
+  .bar.on-panel { background: var(--border); }        /* track on recessed panel = border */
+  .dark .bar.on-panel { background: #374151; }
+  .fill { height: 100%; border-radius: 999px; background: var(--habit); }
+  .barlabels { display:flex; justify-content:space-between; margin-top: 8px; }
+  .barlabels span { font-size: 13px; color: var(--text-2); }
+  .dark .barlabels span { color: #9CA3AF; }
+  .barlabels b { color: var(--text); font-weight: 600; }
+  .dark .barlabels b { color: #F9FAFB; }
+
+  /* ---- ADJUST SHEET ---- */
+  .scrim { position:absolute; inset:0; background: rgba(0,0,0,0.42); }
+  .sheet {
+    position:absolute; left:0; right:0; bottom:0;
+    background: var(--card); border-top-left-radius: 24px; border-top-right-radius: 24px;
+    padding: 12px 20px 26px; box-shadow: var(--shadow-modal);
+  }
+  .dark .sheet { background: #1F2937; }
+  .handle { width: 40px; height: 4px; border-radius: 999px; background: var(--border); margin: 0 auto 16px; }
+  .dark .handle { background: #374151; }
+  .sheet-title { text-align:center; font-size: 20px; font-weight: 700; color: var(--text); }
+  .dark .sheet-title { color: #F9FAFB; }
+
+  .summary { margin: 14px 0 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-muted); padding: 14px 14px; }
+  .dark .summary { background: #111827; border-color: #374151; }
+  .summary-top { display:flex; align-items:baseline; justify-content:space-between; }
+  .summary-top .big { font-size: 20px; font-weight: 700; color: var(--text); }
+  .dark .summary-top .big { color: #F9FAFB; }
+  .summary-top .big .sub { font-size: 14px; font-weight: 500; color: var(--text-2); }
+  .dark .summary-top .big .sub { color: #9CA3AF; }
+  .summary-top .togo { font-size: 13px; font-weight: 500; color: var(--text-2); }
+  .dark .summary-top .togo { color: #9CA3AF; }
+
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .chip { border: 1.5px solid var(--border); border-radius: 12px; background: var(--surface-muted); padding: 10px 4px 8px; text-align:center; }
+  .dark .chip { background: #111827; border-color: #374151; }
+  .chip .d { font-size: 14px; font-weight: 500; color: var(--text-2); }
+  .dark .chip .d { color: #9CA3AF; }
+  .chip .spacer { height: 12px; margin-top: 4px; }
+  .chip.sel { border-color: var(--habit); background: var(--habit-tint); }
+  .chip.sel .d { color: var(--habit); font-weight: 700; }
+  .chip .rec { font-size: 9px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: var(--habit); margin-top: 4px; }
+
+  .context { display:flex; border-left: 3px solid var(--habit); background: var(--surface-muted); border-radius: 12px; padding: 10px 12px; margin-bottom: 16px; }
+  .dark .context { background: #111827; }
+  .context p { font-size: 14px; line-height: 20px; color: var(--text-2); }
+  .dark .context p { color: #9CA3AF; }
+  .context b { color: var(--text); font-weight: 600; }
+  .dark .context b { color: #F9FAFB; }
+
+  /* CTA — habit color filled (honoring "habit color everywhere") */
+  .cta { width: 100%; height: 50px; border: none; border-radius: 12px; background: var(--habit); color: #fff; font-family: 'DM Sans'; font-size: 17px; font-weight: 600; cursor: pointer; }
+  .remove { display:block; width:100%; text-align:center; padding: 12px 0 2px; background:none; border:none; color: var(--error); font-size: 14px; font-weight: 500; font-family:'DM Sans'; cursor:pointer; }
+
+  .note { max-width: 760px; margin: 40px auto 0; background:#34302C; border:1px solid #443F3A; border-radius: 14px; padding: 20px 24px; }
+  .note h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color:#948D86; margin-bottom: 12px; }
+  .note ul { list-style:none; display:flex; flex-direction:column; gap: 10px; }
+  .note li { font-size: 14px; color:#D8D2CC; line-height:1.5; padding-left: 22px; position:relative; }
+  .note li::before { content:''; position:absolute; left:0; top:6px; width:10px; height:10px; border-radius:3px; background: var(--habit); }
+  .note li.kept::before { background:#6B6560; }
+  .swatch { display:inline-block; width:11px; height:11px; border-radius:3px; vertical-align:middle; margin:0 3px; }
+</style>
+</head>
+<body>
+  <div class="page-title">
+    <h1>Goal screen — aligned</h1>
+    <p>One accent across the whole goal experience. The streak progress is the <b style="color:#5FC7E0">habit color</b> in the Goal tab <em>and</em> the Adjust sheet — matching how Calendar (completed days) and Strength (ring &amp; chart) already use the habit color. Built on the app's real tokens.</p>
+  </div>
+
+  <!-- BEFORE / AFTER -->
+  <div class="ba">
+    <div class="ba-card">
+      <h3>Before — same metric, two colors</h3>
+      <div class="ba-row"><span class="ba-lbl">Goal tab</span><div class="ba-bar"><div class="ba-fill" style="background:#0E7490"></div></div></div>
+      <div class="ba-row"><span class="ba-lbl">Adjust sheet</span><div class="ba-bar"><div class="ba-fill" style="background:#059669"></div></div></div>
+      <div class="ba-row"><span class="ba-lbl"></span><span class="ba-x">✕ teal in the tab, green in the sheet</span></div>
+    </div>
+    <div class="ba-card">
+      <h3>After — one accent (habit color)</h3>
+      <div class="ba-row"><span class="ba-lbl">Goal tab</span><div class="ba-bar"><div class="ba-fill" style="background:#0E7490"></div></div></div>
+      <div class="ba-row"><span class="ba-lbl">Adjust sheet</span><div class="ba-bar"><div class="ba-fill" style="background:#0E7490"></div></div></div>
+      <div class="ba-row"><span class="ba-lbl"></span><span class="ba-ok">✓ consistent across tab + sheet</span></div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <!-- ===== LIGHT ===== -->
+    <div class="col">
+      <div class="col-cap">Goal tab — light</div>
+      <div class="phone"><div class="screen light">
+        <div class="statusbar"><span>9:41</span><span>􀙇 􀋟 􀛨</span></div>
+        <div class="body">
+          <div class="gcard">
+            <div class="why">
+              <div class="why-ic">🌍</div>
+              <div>
+                <div class="why-label">Your why</div>
+                <div class="why-quote">“So I can travel through South America without a phrasebook.”</div>
+              </div>
+            </div>
+            <div class="gtop">
+              <div class="gtitle">Aiming for 66 days</div>
+              <div class="adjust"><i data-lucide="pencil"></i><span>Adjust</span></div>
+            </div>
+            <div class="numeral">
+              <div class="n">41</div>
+              <div class="of">of 66 days</div>
+            </div>
+            <div class="bar on-card"><div class="fill" style="width:62%"></div></div>
+            <div class="barlabels"><span><b>62%</b> complete</span><span><b>25</b> days to go</span></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="col">
+      <div class="col-cap">Adjust sheet — light</div>
+      <div class="phone"><div class="screen light" style="min-height:560px">
+        <div class="statusbar"><span>9:41</span><span>􀙇 􀋟 􀛨</span></div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="summary">
+            <div class="summary-top">
+              <div class="big">41 <span class="sub">/ 66 days</span></div>
+              <div class="togo">25 to go</div>
+            </div>
+            <div class="bar on-panel" style="margin-top:12px"><div class="fill" style="width:62%"></div></div>
+          </div>
+          <div class="grid">
+            <div class="chip"><div class="d">7d</div><div class="spacer"></div></div>
+            <div class="chip"><div class="d">21d</div><div class="spacer"></div></div>
+            <div class="chip"><div class="d">30d</div><div class="spacer"></div></div>
+            <div class="chip sel"><div class="d">66d</div><div class="rec">Recommended</div></div>
+            <div class="chip"><div class="d">100d</div><div class="spacer"></div></div>
+            <div class="chip"><div class="d">1yr</div><div class="spacer"></div></div>
+          </div>
+          <div class="context"><p><b>Science-backed habit window.</b> You're 41 days in — 25 to go at this goal.</p></div>
+          <button class="cta">Set 66-day goal</button>
+          <button class="remove">Remove goal</button>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ===== DARK ===== -->
+    <div class="col">
+      <div class="col-cap">Goal tab — dark</div>
+      <div class="phone"><div class="screen dark">
+        <div class="statusbar"><span>9:41</span><span>􀙇 􀋟 􀛨</span></div>
+        <div class="body">
+          <div class="gcard">
+            <div class="why">
+              <div class="why-ic">🌍</div>
+              <div>
+                <div class="why-label">Your why</div>
+                <div class="why-quote">“So I can travel through South America without a phrasebook.”</div>
+              </div>
+            </div>
+            <div class="gtop">
+              <div class="gtitle">Aiming for 66 days</div>
+              <div class="adjust" style="background:rgba(34,165,192,0.16)"><i data-lucide="pencil" style="color:#22A5C0"></i><span style="color:#22A5C0">Adjust</span></div>
+            </div>
+            <div class="numeral">
+              <div class="n">41</div>
+              <div class="of">of 66 days</div>
+            </div>
+            <div class="bar on-card"><div class="fill" style="width:62%;background:#22A5C0"></div></div>
+            <div class="barlabels"><span><b>62%</b> complete</span><span><b>25</b> days to go</span></div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <div class="col">
+      <div class="col-cap">Adjust sheet — dark</div>
+      <div class="phone"><div class="screen dark" style="min-height:560px">
+        <div class="statusbar"><span>9:41</span><span>􀙇 􀋟 􀛨</span></div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="summary">
+            <div class="summary-top">
+              <div class="big">41 <span class="sub">/ 66 days</span></div>
+              <div class="togo">25 to go</div>
+            </div>
+            <div class="bar on-panel" style="margin-top:12px"><div class="fill" style="width:62%;background:#22A5C0"></div></div>
+          </div>
+          <div class="grid">
+            <div class="chip"><div class="d">7d</div><div class="spacer"></div></div>
+            <div class="chip"><div class="d">21d</div><div class="spacer"></div></div>
+            <div class="chip"><div class="d">30d</div><div class="spacer"></div></div>
+            <div class="chip sel" style="border-color:#22A5C0;background:rgba(34,165,192,0.16)"><div class="d" style="color:#22A5C0">66d</div><div class="rec" style="color:#22A5C0">Recommended</div></div>
+            <div class="chip"><div class="d">100d</div><div class="spacer"></div></div>
+            <div class="chip"><div class="d">1yr</div><div class="spacer"></div></div>
+          </div>
+          <div class="context" style="border-left-color:#22A5C0"><p><b>Science-backed habit window.</b> You're 41 days in — 25 to go at this goal.</p></div>
+          <button class="cta" style="background:#22A5C0">Set 66-day goal</button>
+          <button class="remove" style="color:#F87171">Remove goal</button>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <h3>What changes</h3>
+    <ul>
+      <li>Streak progress bar uses the <b>habit color</b> in both the tab and the sheet (was teal vs green).<span class="swatch" style="background:#0E7490"></span></li>
+      <li>Selected preset chip + "Recommended" badge + context-line accent → habit color (was <span class="swatch" style="background:#059669"></span>green primary[600] / primary[700] mix).</li>
+      <li>"Adjust" is now one consistent habit-color button (was green text that morphed into a pill only when the goal was reached).</li>
+      <li>"Set goal" CTA shown in habit color to fully unify — <em>or</em> we keep it the app's brand green<span class="swatch" style="background:#059669"></span> primary button. Your call.</li>
+      <li class="kept"><b>Unchanged:</b> card chrome (already matches Strength), 3×2 grid layout, progress summary, context line, quiet red "Remove goal" link, sheet shell + swipe-dismiss.</li>
+    </ul>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

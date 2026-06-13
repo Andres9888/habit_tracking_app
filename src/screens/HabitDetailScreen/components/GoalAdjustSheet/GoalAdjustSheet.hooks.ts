@@ -7,6 +7,13 @@ import { api } from '../../../../../convex/_generated/api';
 import type { Id } from '../../../../../convex/_generated/dataModel';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 
+export const GOAL_PRESETS = [7, 21, 30, 66, 100, 365] as const;
+export const RECOMMENDED_GOAL = 66;
+
+export function goalLabelFor(days: number): string {
+  return days === 365 ? '1-year' : `${days}-day`;
+}
+
 interface UseGoalAdjustArgs {
   habitId: Id<'habits'>;
   currentGoal: number;
