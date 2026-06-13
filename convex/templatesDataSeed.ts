@@ -7,6 +7,7 @@ import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import type { Id } from './_generated/dataModel';
+import { PRUNED_TEMPLATE_NAMES } from './templates/curatedRemovals';
 
 // Frequency constants
 const FREQUENCY_DAILY = 'daily';
@@ -26,7 +27,6 @@ type TemplateInsert = {
     | 'morning_routine'
     | 'productivity'
     | 'recovery'
-    | 'relationships'
     | 'sleep'
     | 'social'
     | 'subtraction'
@@ -51,6 +51,8 @@ const _insertTemplateIfMissing = async (
   ctx: MutationCtx,
   template: TemplateInsert
 ) => {
+  if (PRUNED_TEMPLATE_NAMES.has(normalizeTemplateName(template.name))) return;
+
   const existing = await ctx.db
     .query('templates')
     .filter((q) => q.eq(q.field('name'), template.name))
@@ -131,7 +133,6 @@ export const list = query({
         v.literal('mental_health'),
         v.literal('recovery'),
         v.literal('breathing'),
-        v.literal('relationships'),
         v.literal('environmental_design'),
         v.literal('subtraction')
       )
@@ -173,6 +174,11 @@ export const seedTemplates = internalMutation({
     let _skippedCount = 0;
 
     const insertWithTracking = async (template: TemplateInsert) => {
+      if (PRUNED_TEMPLATE_NAMES.has(normalizeTemplateName(template.name))) {
+        _skippedCount++;
+        return false;
+      }
+
       const existing = await ctx.db
         .query('templates')
         .filter((q) => q.eq(q.field('name'), template.name))
@@ -2077,6 +2083,11 @@ export const seedAdditionalTemplates = internalMutation({
     let _skippedCount = 0;
 
     const insertWithTracking = async (template: TemplateInsert) => {
+      if (PRUNED_TEMPLATE_NAMES.has(normalizeTemplateName(template.name))) {
+        _skippedCount++;
+        return false;
+      }
+
       const existing = await ctx.db
         .query('templates')
         .filter((q) => q.eq(q.field('name'), template.name))
@@ -2977,6 +2988,11 @@ export const seedNewScienceTemplates = internalMutation({
 
     const insertWithTracking = async (template: TemplateInsert) => {
       const templateNameKey = normalizeTemplateName(template.name);
+      if (PRUNED_TEMPLATE_NAMES.has(templateNameKey)) {
+        _skippedCount++;
+        skippedNames.push(template.name);
+        return false;
+      }
       if (existingTemplateNameKeys.has(templateNameKey)) {
         _skippedCount++;
         skippedNames.push(template.name);
@@ -3800,7 +3816,7 @@ export const seedScienceTemplates = internalMutation({
     // 🧬 LONGEVITY - Evidence-based habits for healthspan extension
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3817,7 +3833,7 @@ export const seedScienceTemplates = internalMutation({
         'Attia (2023) - Outlive: The Science and Art of Longevity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3834,7 +3850,7 @@ export const seedScienceTemplates = internalMutation({
         'Leong et al. (2015) - Prognostic value of grip strength: findings from the PURE study',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3851,7 +3867,7 @@ export const seedScienceTemplates = internalMutation({
         'Brito et al. (2014) - Ability to sit and rise from the floor as a predictor of all-cause mortality',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3867,7 +3883,7 @@ export const seedScienceTemplates = internalMutation({
         'Boreham et al. (2005) - Stair climbing and cardiovascular disease risk',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3884,7 +3900,7 @@ export const seedScienceTemplates = internalMutation({
         'Araujo et al. (2022) - Successful 10-second one-legged stance performance predicts survival',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3900,7 +3916,7 @@ export const seedScienceTemplates = internalMutation({
         'Studenski et al. (2011) - Gait speed and survival in older adults',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3916,7 +3932,7 @@ export const seedScienceTemplates = internalMutation({
         'Srikanthan & Karlamangla (2014) - Muscle mass index as a predictor of longevity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3932,7 +3948,7 @@ export const seedScienceTemplates = internalMutation({
         'Attia (2023) - Centenarian Decathlon: functional movement goals',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3948,7 +3964,7 @@ export const seedScienceTemplates = internalMutation({
         'Layman et al. (2015) - Dietary protein distribution positively influences 24-h muscle protein synthesis',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'longevity',
       createdAt: now,
       description:
@@ -3968,7 +3984,7 @@ export const seedScienceTemplates = internalMutation({
     // 🧠 MENTAL HEALTH - Evidence-based psychological wellness
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -3985,7 +4001,7 @@ export const seedScienceTemplates = internalMutation({
         'Neff (2011) - Self-Compassion: The Proven Power of Being Kind to Yourself',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4001,7 +4017,7 @@ export const seedScienceTemplates = internalMutation({
         'Hayes (2004) - ACT: Acceptance and Commitment Therapy',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4018,7 +4034,7 @@ export const seedScienceTemplates = internalMutation({
         'Pennebaker (1997) - Writing about emotional experiences as a therapeutic process',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4034,7 +4050,7 @@ export const seedScienceTemplates = internalMutation({
         'Cuijpers et al. (2007) - Behavioral activation treatments of depression: A meta-analysis',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4050,7 +4066,7 @@ export const seedScienceTemplates = internalMutation({
         'Cohen & Sherman (2014) - The psychology of change: Self-affirmation and social psychological intervention',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4066,7 +4082,7 @@ export const seedScienceTemplates = internalMutation({
         'Borkovec et al. (1990) - Stimulus control treatment for worry',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4082,7 +4098,7 @@ export const seedScienceTemplates = internalMutation({
         'Lewinsohn (1974) - A behavioral approach to depression',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4098,7 +4114,7 @@ export const seedScienceTemplates = internalMutation({
         'Kross & Ayduk (2011) - Self-distancing and adaptive self-reflection',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4114,7 +4130,7 @@ export const seedScienceTemplates = internalMutation({
         'Lieberman et al. (2007) - Putting feelings into words: Affect labeling disrupts amygdala activity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'mental_health',
       createdAt: now,
       description:
@@ -4134,7 +4150,7 @@ export const seedScienceTemplates = internalMutation({
     // 🔄 RECOVERY - Optimal rest and regeneration
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4150,7 +4166,7 @@ export const seedScienceTemplates = internalMutation({
         'Roenneberg (2012) - Internal Time: Chronotypes and Social Jet Lag',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4167,7 +4183,7 @@ export const seedScienceTemplates = internalMutation({
         'Buijze et al. (2016) - Cold shower effects on sickness absence',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4183,7 +4199,7 @@ export const seedScienceTemplates = internalMutation({
         'Ackerley et al. (2015) - Positive effects of a weighted blanket on insomnia',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4199,7 +4215,7 @@ export const seedScienceTemplates = internalMutation({
         'Huberman (2022) - Evening light viewing for circadian regulation',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4215,7 +4231,7 @@ export const seedScienceTemplates = internalMutation({
         'Cheatham et al. (2015) - Effects of self-myofascial release: A systematic review',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4231,7 +4247,7 @@ export const seedScienceTemplates = internalMutation({
         'Milner & Cote (2009) - Benefits of napping in healthy adults',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4247,7 +4263,7 @@ export const seedScienceTemplates = internalMutation({
         'Messineo et al. (2017) - Broadband sound improves sleep onset latency',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4263,7 +4279,7 @@ export const seedScienceTemplates = internalMutation({
         'Laukkanen et al. (2015) - Sauna bathing and cardiovascular disease risk',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4280,7 +4296,7 @@ export const seedScienceTemplates = internalMutation({
         'Hamblin (2017) - Mechanisms and applications of the anti-inflammatory effects of photobiomodulation',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4296,7 +4312,7 @@ export const seedScienceTemplates = internalMutation({
         'Huberman Lab (2021) - NSDR for learning and recovery',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: now,
       description:
@@ -4317,7 +4333,7 @@ export const seedScienceTemplates = internalMutation({
     // 🌬️ BREATHING - Respiratory techniques for performance & calm
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4334,7 +4350,7 @@ export const seedScienceTemplates = internalMutation({
         'Zaccaro et al. (2018) - How breath-control can change your life',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4351,7 +4367,7 @@ export const seedScienceTemplates = internalMutation({
         'Balban et al. (2023) - Brief structured respiration practices enhance mood',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4367,7 +4383,7 @@ export const seedScienceTemplates = internalMutation({
         'Nestor (2020) - Breath: The New Science of a Lost Art',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4383,7 +4399,7 @@ export const seedScienceTemplates = internalMutation({
         'Weitzberg & Lundberg (2002) - Humming greatly increases nasal nitric oxide',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4398,7 +4414,7 @@ export const seedScienceTemplates = internalMutation({
       scientificReference: 'Malshe (2011) - Pranayama and CO2 tolerance',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4414,7 +4430,7 @@ export const seedScienceTemplates = internalMutation({
         'Weil (2015) - Breathing: The Master Key to Self-Healing',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4431,7 +4447,7 @@ export const seedScienceTemplates = internalMutation({
         'Kox et al. (2014) - Voluntary activation of the innate immune response',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4447,7 +4463,7 @@ export const seedScienceTemplates = internalMutation({
         'Telles et al. (2011) - Effect of yoga breathing on cognitive function',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4463,7 +4479,7 @@ export const seedScienceTemplates = internalMutation({
         'Lehrer & Gevirtz (2014) - Heart rate variability biofeedback',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'breathing',
       createdAt: now,
       description:
@@ -4483,7 +4499,7 @@ export const seedScienceTemplates = internalMutation({
     // 🏃 Additional HEALTH & FITNESS templates
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -4500,7 +4516,7 @@ export const seedScienceTemplates = internalMutation({
         'Reynolds et al. (2022) - Post-meal walking reduces glucose excursions',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -4516,7 +4532,7 @@ export const seedScienceTemplates = internalMutation({
         'Cha et al. (2016) - Effects of backward walking on balance and knee pain',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -4533,7 +4549,7 @@ export const seedScienceTemplates = internalMutation({
         'Stamatakis et al. (2022) - Vigorous intermittent lifestyle physical activity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -4550,7 +4566,7 @@ export const seedScienceTemplates = internalMutation({
         'Johnston et al. (2004) - Vinegar improves insulin sensitivity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -4566,7 +4582,7 @@ export const seedScienceTemplates = internalMutation({
         'Robertson et al. (2005) - Resistant starch improves insulin sensitivity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'health_fitness',
       createdAt: now,
       description:
@@ -4586,7 +4602,7 @@ export const seedScienceTemplates = internalMutation({
     // 🤝 Additional SOCIAL templates
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'social',
       createdAt: now,
       description:
@@ -4602,7 +4618,7 @@ export const seedScienceTemplates = internalMutation({
         'Gable et al. (2004) - What do you do when things go right?',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'social',
       createdAt: now,
       description:
@@ -4618,7 +4634,7 @@ export const seedScienceTemplates = internalMutation({
         'Brown (2012) - Daring Greatly: Vulnerability and courage',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'social',
       createdAt: now,
       description:
@@ -4634,7 +4650,7 @@ export const seedScienceTemplates = internalMutation({
         'Akechi et al. (2013) - Eye contact and oxytocin response',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'social',
       createdAt: now,
       description:
@@ -4654,7 +4670,7 @@ export const seedScienceTemplates = internalMutation({
     // 🧠 Additional PRODUCTIVITY templates
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'productivity',
       createdAt: now,
       description:
@@ -4670,7 +4686,7 @@ export const seedScienceTemplates = internalMutation({
         'Peretz Lavie (1985) - Ultradian rhythms in cognitive performance',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'productivity',
       createdAt: now,
       description:
@@ -4686,7 +4702,7 @@ export const seedScienceTemplates = internalMutation({
         'Newport (2019) - Digital Minimalism: Choosing a Focused Life',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'productivity',
       createdAt: now,
       description:
@@ -4702,7 +4718,7 @@ export const seedScienceTemplates = internalMutation({
         'Alter (2017) - Irresistible: The Rise of Addictive Technology',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'productivity',
       createdAt: now,
       description:
@@ -4723,7 +4739,7 @@ export const seedScienceTemplates = internalMutation({
     // 📚 Additional LEARNING templates
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'learning',
       createdAt: now,
       description:
@@ -4739,7 +4755,7 @@ export const seedScienceTemplates = internalMutation({
         'Cohen (2000) - Cross-education and neural plasticity',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'learning',
       createdAt: now,
       description:
@@ -4756,7 +4772,7 @@ export const seedScienceTemplates = internalMutation({
         'Jaeggi et al. (2008) - Improving fluid intelligence with training on working memory',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'learning',
       createdAt: now,
       description:
@@ -4772,7 +4788,7 @@ export const seedScienceTemplates = internalMutation({
         'Ebbinghaus (1885) - Memory: Forgetting curve and spacing effect',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'learning',
       createdAt: now,
       description:
@@ -4792,7 +4808,7 @@ export const seedScienceTemplates = internalMutation({
     // 🌅 Additional MORNING ROUTINE templates
     // ═══════════════════════════════════════════════════════════════
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -4808,7 +4824,7 @@ export const seedScienceTemplates = internalMutation({
         'Shapiro (1989) - EMDR and bilateral stimulation effects',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -4824,7 +4840,7 @@ export const seedScienceTemplates = internalMutation({
         'Clear (2018) - Atomic Habits: Implementation intentions',
     });
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -4861,6 +4877,12 @@ export const seedUniqueTemplates = internalMutation({
     const skippedNames: string[] = [];
 
     const insertWithTracking = async (template: TemplateInsert) => {
+      if (PRUNED_TEMPLATE_NAMES.has(normalizeTemplateName(template.name))) {
+        _skippedCount++;
+        skippedNames.push(template.name);
+        return false;
+      }
+
       const existing = await ctx.db
         .query('templates')
         .filter((q) => q.eq(q.field('name'), template.name))
@@ -5908,6 +5930,11 @@ export const seedResearchBackedTemplates = internalMutation({
 
     const insertWithTracking = async (template: TemplateInsert) => {
       const templateNameKey = normalizeTemplateName(template.name);
+      if (PRUNED_TEMPLATE_NAMES.has(templateNameKey)) {
+        _skippedCount++;
+        skippedNames.push(template.name);
+        return false;
+      }
       if (existingTemplateNameKeys.has(templateNameKey)) {
         _skippedCount++;
         skippedNames.push(template.name);
@@ -5926,7 +5953,7 @@ export const seedResearchBackedTemplates = internalMutation({
     // ═══════════════════════════════════════════════════════════════
 
     await insertWithTracking({
-      category: 'relationships',
+      category: 'social',
       createdAt: now,
       description:
         'Have a 20-minute stress-reducing conversation with your partner at the end of the day. Gottman research on 3,000+ couples shows dedicating ~6 hours/week to small consistent moments dramatically improves relationship quality.',
@@ -5948,7 +5975,7 @@ export const seedResearchBackedTemplates = internalMutation({
     });
 
     await insertWithTracking({
-      category: 'relationships',
+      category: 'social',
       createdAt: now,
       description:
         'Express genuine appreciation to your partner at least once daily. Gottman research shows stable couples maintain a 5:1 ratio of positive to negative interactions — this predicts relationship stability with 90%+ accuracy.',
@@ -5970,7 +5997,7 @@ export const seedResearchBackedTemplates = internalMutation({
     });
 
     await insertWithTracking({
-      category: 'relationships',
+      category: 'social',
       createdAt: now,
       description:
         'Ask your partner one meaningful question about their inner world. Gottman calls this "Love Maps" — couples with detailed knowledge of each other\'s world are 60% more likely to report relationship satisfaction.',
@@ -5992,7 +6019,7 @@ export const seedResearchBackedTemplates = internalMutation({
     });
 
     await insertWithTracking({
-      category: 'relationships',
+      category: 'social',
       createdAt: now,
       description:
         'Share a kiss lasting at least 6 seconds with your partner daily. Long enough to activate bonding neurochemistry (oxytocin release). Recommended by Gottman as a daily ritual of connection.',
@@ -6014,7 +6041,7 @@ export const seedResearchBackedTemplates = internalMutation({
     });
 
     await insertWithTracking({
-      category: 'relationships',
+      category: 'social',
       createdAt: now,
       description:
         'Maintain at least one weekly recurring social commitment (dinner with friends, sports league, coffee date). Pre-scheduled events prevent the loneliness drift that happens when socializing depends on spontaneous plans.',
@@ -6918,7 +6945,7 @@ export const insertRedLightTherapyTemplate = internalMutation({
       return { inserted: false, reason: 'already exists' as const };
     }
 
-    await ctx.db.insert('templates', {
+    await _insertTemplateIfMissing(ctx, {
       category: 'recovery',
       createdAt: Date.now(),
       description:

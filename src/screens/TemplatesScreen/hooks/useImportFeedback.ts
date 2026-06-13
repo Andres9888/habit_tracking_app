@@ -3,6 +3,7 @@
  */
 
 import { useCallback, useRef } from 'react';
+import { colors } from '@/theme/colors';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
@@ -34,7 +35,7 @@ export function useImportFeedback(o: FeedbackOptions) {
     ) => {
       const t = templateOverride ?? previewRef.current;
       const data = t
-        ? { color: t.iconColor ?? '#22c55e', icon: t.icon ?? '✓', name: t.name }
+        ? { color: t.iconColor ?? colors.primary[500], icon: t.icon ?? '✓', name: t.name }
         : null;
 
       o.setFeedbackHabitId(habitId);

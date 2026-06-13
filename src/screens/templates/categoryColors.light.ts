@@ -16,7 +16,6 @@ export const CATEGORY_COLORS: CategoryColorMap = {
   morning_routine: { bg: '#FEF3C7', bgSelected: '#F59E0B', border: '#FDE68A', text: '#9A5504' },
   productivity: { bg: '#DBEAFE', bgSelected: '#3B82F6', border: '#BFDBFE', text: '#2563EB' },
   recovery: { bg: '#FCE7F3', bgSelected: '#EC4899', border: '#FBCFE8', text: '#DB2777' },
-  relationships: { bg: '#FFF1F2', bgSelected: '#F43F5E', border: '#FFE4E6', text: '#BE123C' },
   sleep: { bg: '#E0E7FF', bgSelected: '#1E3A8A', border: '#C7D2FE', text: '#1E40AF' },
   social: { bg: '#FFE4E6', bgSelected: '#F43F5E', border: '#FECDD3', text: '#E11D48' },
   subtraction: { bg: '#F5F3FF', bgSelected: '#7C3AED', border: '#DDD6FE', text: '#6D28D9' },

@@ -286,6 +286,8 @@ export default tseslint.config(
       '**/emojiKeywords/habitNameMap.ts',
       '**/emojiKeywords/keywords.ts',
       '**/templatesDataSeed.ts',
+      '**/templates/curatedEnrichment.ts',
+      '**/templates/curatedSeedTemplates.ts',
       '**/SmartSuggestions/suggestions.data.ts', // Curated habit suggestions array
       '**/templates/youtubeLinks.data.ts', // YouTube links mapping for 280+ habit templates
       '**/TipQuickActionsSheet/quickActionsByType.ts', // Quick action configurations
@@ -344,6 +346,23 @@ export default tseslint.config(
           message: "Use color tokens from @/theme/colors instead of raw hex values"
         },
       ]
+    }
+  },
+  // Haptics guard: route all haptic feedback through the wrapper so reduce-motion
+  // and the global enabled/intensity settings apply. The wrapper itself is exempt.
+  {
+    files: ['**/*.{ts,tsx}'],
+    ignores: [
+      ...sourceIgnores,
+      '**/utils/haptics/**',
+    ],
+    rules: {
+      'no-restricted-imports': ['warn', {
+        paths: [{
+          name: 'expo-haptics',
+          message: 'Use triggerHaptic / useHaptics / HapticPatterns from @/utils/haptics instead of raw expo-haptics, so reduce-motion and intensity settings apply.',
+        }],
+      }],
     }
   },
   // === Design-System Lint Guards — ratcheted (error) ===

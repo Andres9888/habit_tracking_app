@@ -221,6 +221,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 Title <Text style={styles.required}>*</Text>
               </Text>
               <TextInput
+                accessibilityLabel='Feedback title'
                 style={styles.input}
                 value={title}
                 {...buildTextInputHintProps(
@@ -241,6 +242,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 Description <Text style={styles.required}>*</Text>
               </Text>
               <TextInput
+                accessibilityLabel='Feedback description'
                 style={[styles.input, styles.textArea]}
                 value={description}
                 {...buildTextInputHintProps(
@@ -263,6 +265,7 @@ export function FeedbackModal({ visible, onClose }: FeedbackModalProps) {
                 Email (optional, for follow-up)
               </Text>
               <TextInput
+                accessibilityLabel='Email for follow-up (optional)'
                 style={styles.input}
                 value={email}
                 {...buildTextInputHintProps(

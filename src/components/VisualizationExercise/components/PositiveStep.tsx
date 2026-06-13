@@ -66,6 +66,7 @@ export function PositiveStep({
           Describe your positive vision:
         </Text>
         <TextInput
+          accessibilityLabel='Describe your positive vision'
           multiline
           className='flex-1 rounded-2xl border p-4 text-base'
           style={{ minHeight: 150, textAlignVertical: 'top', borderColor: colors.border, backgroundColor: colors.card, color: colors.text.primary }}

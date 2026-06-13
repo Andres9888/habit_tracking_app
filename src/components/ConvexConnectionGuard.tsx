@@ -6,10 +6,11 @@
  */
 
 import React, { useEffect, useState, type PropsWithChildren } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useThemeColors } from '../theme/ThemeContext';
+import { borderRadius, componentSpacing } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
 export function ConvexConnectionGuard({ children }: PropsWithChildren) {
@@ -67,7 +68,31 @@ export function ConvexConnectionGuard({ children }: PropsWithChildren) {
           Unable to connect to the server. Please check your internet connection
           and try again.
         </Text>
-        <ActivityIndicator color={colors.accent} size='large' />
+        <Pressable
+          accessibilityLabel='Try connecting again'
+          accessibilityRole='button'
+          hitSlop={8}
+          style={{
+            alignItems: 'center',
+            backgroundColor: colors.primary[600],
+            borderRadius: borderRadius.button,
+            height: componentSpacing.button.height,
+            justifyContent: 'center',
+            paddingHorizontal: componentSpacing.button.paddingHorizontal,
+          }}
+          onPress={() => setShowError(false)}
+        >
+          <Text
+            style={{
+              color: colors.text.inverse,
+              fontFamily: fontFamilies.primary.text,
+              fontSize: typography.button.fontSize,
+              fontWeight: fontWeights.semibold,
+            }}
+          >
+            Try again
+          </Text>
+        </Pressable>
       </View>
     );
   }

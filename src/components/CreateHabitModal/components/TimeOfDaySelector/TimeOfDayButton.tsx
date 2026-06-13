@@ -57,8 +57,8 @@ export const TimeOfDayButton = ({
         className='items-center justify-center rounded-xl px-3 py-3'
         style={[
           {
-            backgroundColor: isSelected ? '#22C55E' : '#fafaf9',
-            borderColor: isSelected ? '#16A34A' : '#e7e5e4',
+            backgroundColor: isSelected ? themeTokens.primary[500] : '#fafaf9',
+            borderColor: isSelected ? themeTokens.primary[600] : '#e7e5e4',
             borderWidth: 1.5,
             transform: [{ scale: scaleAnim }],
           },

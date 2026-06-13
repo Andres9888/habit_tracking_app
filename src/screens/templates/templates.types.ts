@@ -27,7 +27,6 @@ export type Category =
   | 'productivity'
   | 'quick'
   | 'recovery'
-  | 'relationships'
   | 'sleep'
   | 'social'
   | 'subtraction';

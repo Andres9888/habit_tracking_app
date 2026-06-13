@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import { Pressable } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
-import * as Haptics from 'expo-haptics';
+import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface PremiumUpsellRowProps {
@@ -16,7 +16,7 @@ export function PremiumUpsellRow({
   const { colors: themeColors } = useThemeColors();
 
   const handlePress = () => {
-    void Haptics.selectionAsync();
+    void triggerHaptic('selection');
     onPremiumUpsell?.();
   };
 
