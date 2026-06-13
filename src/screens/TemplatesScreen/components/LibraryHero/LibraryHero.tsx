@@ -3,19 +3,20 @@
  * a question, struggle chips as the answer, and search as the escape hatch.
  */
 
-import { StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+import { Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
+import { spacing } from '../../../../theme/spacing';
 import { ProblemChips } from '../ProblemChips';
 import { SearchBar } from '../SearchBar';
+import { useLibraryHeroAnimations } from './LibraryHero.animations';
+import { libraryHeroStyles as s } from './LibraryHero.styles';
 import { HeroBackdrop } from './components/HeroBackdrop';
 import type { LibraryHeroProps } from './LibraryHero.types';
 
 const DEFAULT_TITLE = 'What do you want to change?';
-const DEFAULT_SUBTITLE = 'Pick a struggle — we’ll give you a proven way in.';
+const DEFAULT_SUBTITLE = "Pick a struggle — we'll give you a proven way in.";
 
 export function LibraryHero({
   heroSubtitle,
@@ -30,13 +31,14 @@ export function LibraryHero({
 }: LibraryHeroProps) {
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
+  const animations = useLibraryHeroAnimations();
   const title = heroTitle ?? DEFAULT_TITLE;
   const subtitle = heroSubtitle ?? DEFAULT_SUBTITLE;
 
   return (
     <View style={[s.hero, { paddingTop: insets.top + spacing.md }]}>
       <HeroBackdrop />
-      <Animated.View entering={FadeInDown.delay(80).duration(280)}>
+      <Animated.View entering={animations.titleEnter} layout={animations.layout}>
         <Text
           accessibilityRole='header'
           numberOfLines={2}
@@ -46,15 +48,16 @@ export function LibraryHero({
         </Text>
         {isCompressed ? null : (
           <Animated.Text
-            entering={FadeInDown.duration(200)}
-            exiting={FadeOut.duration(160)}
+            entering={animations.subtitleEnter}
+            exiting={animations.subtitleExit}
+            layout={animations.layout}
             style={[s.subtitle, { color: colors.text.secondary }]}
           >
             {subtitle}
           </Animated.Text>
         )}
       </Animated.View>
-      <Animated.View entering={FadeInDown.delay(160).duration(280)}>
+      <Animated.View entering={animations.chipsEnter} layout={animations.layout}>
         <ProblemChips
           importedStepCounts={importedStepCounts}
           selectedGoalId={selectedGoalId}
@@ -63,8 +66,9 @@ export function LibraryHero({
       </Animated.View>
       {isCompressed ? null : (
         <Animated.View
-          entering={FadeInDown.delay(240).duration(280)}
-          exiting={FadeOut.duration(160)}
+          entering={animations.searchEnter}
+          exiting={animations.searchExit}
+          layout={animations.layout}
         >
           <SearchBar
             inputHint='Or search any habit…'
@@ -77,26 +81,3 @@ export function LibraryHero({
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  hero: {
-    borderBottomLeftRadius: borderRadius.xl,
-    borderBottomRightRadius: borderRadius.xl,
-    gap: spacing.md,
-    overflow: 'hidden',
-    paddingBottom: spacing.base,
-    paddingHorizontal: spacing.base,
-    position: 'relative',
-  },
-  subtitle: {
-    ...typography.bodySmall,
-    marginTop: spacing.xs,
-    paddingRight: spacing['2xl'],
-  },
-  title: {
-    ...typography.heading1,
-    fontSize: 26,
-    lineHeight: 33,
-    paddingRight: spacing['2xl'],
-  },
-});

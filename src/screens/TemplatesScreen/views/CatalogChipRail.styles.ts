@@ -26,5 +26,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.base,
     paddingVertical: spacing.sm,
   },
-  rail: { borderBottomWidth: 1, flexShrink: 0 },
+  // flexGrow: 0 overrides ScrollView's default flexGrow: 1, which otherwise
+  // stretches the rail to absorb free vertical space in the catalog column.
+  rail: { borderBottomWidth: 1, flexGrow: 0, flexShrink: 0 },
 });

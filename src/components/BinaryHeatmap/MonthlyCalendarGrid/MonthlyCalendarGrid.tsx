@@ -25,7 +25,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   onCurrentMonthChange,
   useSolidCompletedFill = false,
   showStreakInInsights = true,
-  isToggling = false,
+  pendingToggleDate = null,
   onDayPress,
 }: MonthlyCalendarGridProps) {
   const { colors, isDark } = useThemeColors();
@@ -36,7 +36,6 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     goToPreviousMonth,
     monthSwipeGesture,
   } = useMonthGridNavigation(controlledMonth, onCurrentMonthChange);
-
   const { weeks } = useCalendarDays({
     completedDates,
     currentMonth,
@@ -45,32 +44,24 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   const insights = useMonthInsights(completedDates, currentMonth);
   const settings = useQuery(api.settings.get);
   const showConnections = settings?.showStreakConnections ?? true;
-
-  const cardColor = isDark ? colors.card : palette.light.surfaceMuted;
+  const monthKey = format(currentMonth, 'yyyy-MM');
+  const cardBg = isDark ? colors.card : palette.light.surfaceMuted;
   const completedBg = useMemo(
     () =>
-      useSolidCompletedFill ? habitColor : completedTint(habitColor, cardColor),
-    [useSolidCompletedFill, habitColor, cardColor]
+      useSolidCompletedFill ? habitColor : completedTint(habitColor, cardBg),
+    [useSolidCompletedFill, habitColor, cardBg]
   );
-
   const handleDayPress = useCallback(
     (dateString: string, completed: boolean) => {
-      if (isToggling) return;
+      if (pendingToggleDate) return;
       onDayPress?.(dateString, completed);
     },
-    [isToggling, onDayPress]
+    [pendingToggleDate, onDayPress]
   );
 
   return (
     <View
-      style={[
-        styles.container,
-        {
-          backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
-          borderColor: colors.border,
-          opacity: isToggling ? 0.65 : 1,
-        },
-      ]}
+      style={[styles.container, { backgroundColor: cardBg, borderColor: colors.border }]}
     >
       <MonthNavigation
         currentMonth={currentMonth}
@@ -80,13 +71,12 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
       <GestureDetector gesture={monthSwipeGesture}>
         <View collapsable={false}>
           <WeekdayHeaderRow labelColor={colors.text.tertiary} />
-
           <AnimatedWeeksGrid
             completedBg={completedBg}
             direction={slideDirection}
             habitColor={habitColor}
-            isToggling={isToggling}
-            monthKey={format(currentMonth, 'yyyy-MM')}
+            monthKey={monthKey}
+            pendingToggleDate={pendingToggleDate}
             showConnections={showConnections}
             textColors={{
               inverse: colors.text.inverse,
@@ -100,8 +90,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           />
         </View>
       </GestureDetector>
-
-      <MonthInsightStrip {...insights} showStreak={showStreakInInsights} />
+      <MonthInsightStrip {...insights} monthKey={monthKey} showStreak={showStreakInInsights} />
     </View>
   );
 });

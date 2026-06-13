@@ -20,7 +20,7 @@ interface HabitDetailContentProps {
   daysTracking?: number;
   habit: Habit;
   isCompletedToday: boolean;
-  isTogglingCalendar?: boolean;
+  pendingToggleDate?: string | null;
   totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
   onPinnedChange?: (pinned: boolean) => void;
@@ -31,7 +31,7 @@ export function HabitDetailContent({
   daysTracking,
   habit,
   isCompletedToday,
-  isTogglingCalendar = false,
+  pendingToggleDate = null,
   totalCompletions,
   onDayPress,
   onPinnedChange,
@@ -63,7 +63,7 @@ export function HabitDetailContent({
         daysTracking={daysTracking}
         habit={habit}
         isCompletedToday={isCompletedToday}
-        isToggling={isTogglingCalendar}
+        isToggling={pendingToggleDate !== null}
         totalCompletions={totalCompletions}
         onDayPress={onDayPress}
       />
@@ -77,7 +77,7 @@ export function HabitDetailContent({
           completedDates={completedDates}
           habit={habit}
           habitColor={habitColor}
-          isToggling={isTogglingCalendar}
+          pendingToggleDate={pendingToggleDate}
           onDayPress={onDayPress}
         />
       </View>

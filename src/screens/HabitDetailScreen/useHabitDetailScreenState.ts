@@ -26,8 +26,10 @@ export const useHabitDetailScreenState = ({
   const [pendingDelete, setPendingDelete] = useState(false);
   const [pendingArchive, setPendingArchive] = useState(false);
 
-  // Calendar toggling state
-  const [isTogglingCalendar, setIsTogglingCalendar] = useState(false);
+  // Calendar toggling state — date of the cell awaiting mutation response
+  const [pendingToggleDate, setPendingToggleDate] = useState<string | null>(
+    null
+  );
 
   // Today's date
   const today = useMemo(() => getLocalDateString(), []);
@@ -76,10 +78,10 @@ export const useHabitDetailScreenState = ({
     completedDates,
     daysTracking,
     isCompletedToday,
-    isTogglingCalendar,
     pendingArchive,
     pendingDelete,
-    setIsTogglingCalendar,
+    pendingToggleDate,
+    setPendingToggleDate,
     setPendingArchive,
     setPendingDelete,
     strengthPercent,

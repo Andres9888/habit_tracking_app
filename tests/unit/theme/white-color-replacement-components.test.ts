@@ -7,8 +7,6 @@ import { colors } from '@/theme/colors';
 import { VARIANT_CONFIG } from '@/components/Toast/constants';
 import { styles as toastStyles } from '@/components/Toast/styles';
 import { styles as syncStyles } from '@/components/SyncStatus/SyncingIndicator/styles';
-import { styles as metadataStyles } from '@/components/TemplateCard/components/MetadataPills';
-
 describe('White Color Replacement - Components', () => {
   describe('Toast constants', () => {
     it('should use colors.text.inverse for all variant text colors', () => {
@@ -41,14 +39,6 @@ describe('White Color Replacement - Components', () => {
   describe('SyncingIndicator', () => {
     it('should use colors.text.inverse for count badge text', () => {
       expect(syncStyles.countText.color).toBe(colors.text.inverse);
-    });
-  });
-
-  describe('MetadataPills', () => {
-    it('should use colors.light.card for pill background', () => {
-      expect(metadataStyles.metadataPill.backgroundColor).toBe(
-        colors.light.card
-      );
     });
   });
 

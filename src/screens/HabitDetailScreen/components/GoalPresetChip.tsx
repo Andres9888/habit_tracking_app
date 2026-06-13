@@ -1,7 +1,7 @@
 /**
  * GoalPresetChip — Single preset day-count chip for streak goal picker.
  */
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { useThemeColors, withAlpha } from '../../../theme';
@@ -38,35 +38,54 @@ export function GoalPresetChip({
   const label = days === 365 ? '1yr' : `${days}d`;
 
   return (
-    <AnimatedPressable
-      accessibilityLabel={`${label}${recommended ? ', recommended' : ''}`}
-      accessibilityRole='button'
-      accessibilityState={{ disabled, selected }}
-      disabled={disabled}
-      style={[
-        pressStyle,
-        selectionStyle,
-        {
-          borderRadius: borderRadius.full,
-          borderWidth: CHIP_BORDER_WIDTH,
-          opacity: disabled ? 0.45 : 1,
-          paddingHorizontal: spacing.base,
-          paddingVertical: spacing.sm,
-        },
-      ]}
-      onPress={onPress}
-      onPressIn={disabled ? undefined : pressHandlers.onPressIn}
-      onPressOut={disabled ? undefined : pressHandlers.onPressOut}
-    >
-      <Text
-        style={{
-          ...typography.bodySmall,
-          color: selected ? colors.primary[700] : colors.text.secondary,
-          fontWeight: selected ? fontWeights.bold : fontWeights.medium,
-        }}
+    <View style={{ marginTop: recommended ? spacing.sm : 0, position: 'relative' }}>
+      {recommended ? (
+        <Text
+          style={{
+            ...typography.caption,
+            color: colors.status.success,
+            fontSize: 9,
+            fontWeight: fontWeights.bold,
+            left: 0,
+            position: 'absolute',
+            right: 0,
+            textAlign: 'center',
+            top: -spacing.sm,
+          }}
+        >
+          Recommended
+        </Text>
+      ) : null}
+      <AnimatedPressable
+        accessibilityLabel={`${label}${recommended ? ', recommended' : ''}`}
+        accessibilityRole='button'
+        accessibilityState={{ disabled, selected }}
+        disabled={disabled}
+        style={[
+          pressStyle,
+          selectionStyle,
+          {
+            borderRadius: borderRadius.full,
+            borderWidth: CHIP_BORDER_WIDTH,
+            opacity: disabled ? 0.45 : 1,
+            paddingHorizontal: spacing.base,
+            paddingVertical: spacing.sm,
+          },
+        ]}
+        onPress={onPress}
+        onPressIn={disabled ? undefined : pressHandlers.onPressIn}
+        onPressOut={disabled ? undefined : pressHandlers.onPressOut}
       >
-        {label}
-      </Text>
-    </AnimatedPressable>
+        <Text
+          style={{
+            ...typography.bodySmall,
+            color: selected ? colors.primary[700] : colors.text.secondary,
+            fontWeight: selected ? fontWeights.bold : fontWeights.medium,
+          }}
+        >
+          {label}
+        </Text>
+      </AnimatedPressable>
+    </View>
   );
 }

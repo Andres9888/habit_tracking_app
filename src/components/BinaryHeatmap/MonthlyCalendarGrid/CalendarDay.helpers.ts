@@ -15,6 +15,29 @@ interface TextColorOptions {
   useSolid: boolean;
 }
 
+export function getTextColorEndpoints(
+  day: DayData,
+  c: CalendarDayColors,
+  habitColor: string,
+  todayPending: boolean,
+  useSolid: boolean
+): { complete: string; incomplete: string } {
+  return {
+    complete: getTextColor(day, c, {
+      habitColor,
+      showCompleted: true,
+      todayPending: false,
+      useSolid,
+    }),
+    incomplete: getTextColor(day, c, {
+      habitColor,
+      showCompleted: false,
+      todayPending,
+      useSolid,
+    }),
+  };
+}
+
 export function getTextColor(
   day: DayData,
   c: CalendarDayColors,

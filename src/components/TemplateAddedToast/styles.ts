@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '@/theme/colors';
+import { colors, overlays } from '@/theme/colors';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontWeights } from '@/theme/typography';
 import { ICON_BADGE_SIZE } from './constants';
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
   },
   actionPill: {
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: overlays.glassLight,
     borderRadius: borderRadius.medium,
     flexDirection: 'row',
     gap: 4,
@@ -71,6 +71,7 @@ export const styles = StyleSheet.create({
   },
   toast: {
     alignItems: 'center',
+    backgroundColor: colors.gray[900],
     borderRadius: borderRadius.card,
     flexDirection: 'row',
     gap: 12,

@@ -8,8 +8,11 @@
  * the shared tint), so it adds the chain back without reintroducing clutter.
  */
 
-import React, { memo } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { memo, useEffect, useState } from 'react';
+import { StyleSheet } from 'react-native';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { durations, enterEasing } from '@/theme/animations';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import type { DayData } from './types';
 
 const CELL_SIZE = 36;
@@ -30,31 +33,50 @@ export const ChainConnectors = memo(function ChainConnectors({
   completedBg,
   rowWidth,
 }: ChainConnectorsProps) {
+  const reduceMotion = useReduceMotion();
+  const [animationsEnabled, setAnimationsEnabled] = useState(false);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setAnimationsEnabled(true));
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
   if (rowWidth <= 0) return null;
 
   const pitch = rowWidth / 7;
-  const bridges: number[] = [];
+  const bridges: Array<{ index: number; key: string }> = [];
   for (let i = 0; i < 6; i++) {
-    if (isLinkable(week[i]) && isLinkable(week[i + 1])) bridges.push(i);
+    if (isLinkable(week[i]) && isLinkable(week[i + 1])) {
+      bridges.push({
+        index: i,
+        key: `${week[i]?.dateString ?? i}-${week[i + 1]?.dateString ?? i + 1}`,
+      });
+    }
   }
   if (bridges.length === 0) return null;
 
+  const entering =
+    animationsEnabled && !reduceMotion
+      ? FadeIn.duration(durations.reveal).easing(enterEasing)
+      : undefined;
+
   return (
-    <View pointerEvents='none' style={styles.overlay}>
-      {bridges.map((i) => (
-        <View
-          key={`bridge-${i}`}
+    <Animated.View pointerEvents='none' style={styles.overlay}>
+      {bridges.map(({ index, key }) => (
+        <Animated.View
+          key={key}
+          entering={entering}
           style={{
             backgroundColor: completedBg,
             height: CELL_SIZE,
-            left: (i + 0.5) * pitch,
+            left: (index + 0.5) * pitch,
             position: 'absolute',
             top: 2,
             width: pitch,
           }}
         />
       ))}
-    </View>
+    </Animated.View>
   );
 });
 

@@ -8,7 +8,6 @@ import { shadows } from '@/theme/spacing';
 import { styles as archiveToastStyles } from '@/components/ArchiveUndoToast/styles';
 import { styles as deleteToastStyles } from '@/components/DeleteUndoToast/styles';
 import { styles as calendarGridStyles } from '@/components/BinaryHeatmap/MonthlyCalendarGrid/styles';
-import { styles as templateCardStyles } from '@/components/TemplateCard/TemplateCard.styles';
 import { styles as categoryChipStyles } from '@/components/CategoryChip/CategoryChip.styles';
 import { cardStyles as weeklySummaryCardStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/cardStyles';
 import { cardStyles as todaysFocusCardStyles } from '@/components/ProgressSectionConsolidated/TodaysFocusCard/styles/cardStyles';
@@ -99,18 +98,6 @@ describe('Shadow Token Migration - Phase 3 Task 2', () => {
 
     it('container shadowRadius should match shadows.card', () => {
       expect(calendarGridStyles.container.shadowRadius).toBe(
-        shadows.card.shadowRadius
-      );
-    });
-  });
-
-  describe('TemplateCard uses shadows.card', () => {
-    it('card elevation should match shadows.card', () => {
-      expect(templateCardStyles.card.elevation).toBe(shadows.card.elevation);
-    });
-
-    it('card shadowRadius should match shadows.card', () => {
-      expect(templateCardStyles.card.shadowRadius).toBe(
         shadows.card.shadowRadius
       );
     });

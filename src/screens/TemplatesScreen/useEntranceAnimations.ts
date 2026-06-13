@@ -4,15 +4,15 @@
 
 import { useEffect } from 'react';
 import {
-  Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { durations, enterEasing } from '@/theme/animations';
 
-const TRANSLATE_CONFIG = { duration: 280, easing: Easing.out(Easing.cubic) };
-const FADE_CONFIG = { duration: 150, easing: Easing.out(Easing.cubic) };
-const CONTENT_FADE = { duration: 180, easing: Easing.out(Easing.cubic) };
+const TRANSLATE_CONFIG = { duration: durations.enter, easing: enterEasing };
+const FADE_CONFIG = { duration: durations.quick, easing: enterEasing };
+const CONTENT_FADE = { duration: durations.reveal, easing: enterEasing };
 
 interface UseEntranceAnimationsOptions {
   reducedMotion: boolean;

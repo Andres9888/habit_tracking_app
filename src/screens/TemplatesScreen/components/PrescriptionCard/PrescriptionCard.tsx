@@ -2,14 +2,17 @@
  * PrescriptionCard — "Your way in" sequenced path for a selected goal.
  */
 
-import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
+import { Text, View } from 'react-native';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
+import { useReduceMotion } from '../../../../hooks/useReduceMotion';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { durations, enterEasing } from '../../../../theme/animations';
 import type { GoalCollection } from '../../data/goalCollections';
 import type { ResolvedPrescription } from '../../hooks/usePrescription';
+import { PrescriptionFooter } from './PrescriptionFooter';
 import { PrescriptionStepRow } from './PrescriptionStepRow';
+import { getPrescriptionCopy } from './prescriptionCopy';
 import { styles as s } from './PrescriptionCard.styles';
 
 interface PrescriptionCardProps {
@@ -28,25 +31,22 @@ export function PrescriptionCard({
   onPreview,
 }: PrescriptionCardProps) {
   const { colors, isDark } = useThemeColors();
-  const { importedStepCount, steps } = prescription;
+  const reduceMotion = useReduceMotion();
+  const { steps } = prescription;
+  const { allImported, ctaLabel, footerNote, hasImported, nextStep } =
+    getPrescriptionCopy(prescription, importedTemplateIds);
   const goalTextColor = isDark ? goal.darkTextColor : goal.textColor;
-  const nextStep =
-    steps.find((step) => !importedTemplateIds.has(step.template._id)) ??
-    steps[0];
-  const hasImported = importedStepCount > 0;
-  const allImported = importedStepCount >= steps.length;
-  const ctaLabel = allImported
-    ? 'Browse more habits'
-    : hasImported
-      ? 'Add step 2 →'
-      : 'Start step 1 →';
-  const footerNote = hasImported
-    ? 'Most people add step 2 in week two. No rush.'
-    : 'Works best together — starting with one is fine.';
+  const entering = reduceMotion
+    ? undefined
+    : FadeInDown.duration(durations.enter).easing(enterEasing);
+  const exiting = reduceMotion
+    ? undefined
+    : FadeOut.duration(durations.quick);
 
   return (
     <Animated.View
-      entering={FadeInDown.duration(durations.enter).easing(enterEasing)}
+      entering={entering}
+      exiting={exiting}
       style={[
         s.card,
         {
@@ -79,21 +79,13 @@ export function PrescriptionCard({
         />
       ))}
 
-      <View style={s.footer}>
-        <Text style={[s.footerNote, { color: colors.text.tertiary }]}>
-          {footerNote}
-        </Text>
-        {!allImported && nextStep ? (
-          <Pressable
-            accessibilityLabel={ctaLabel}
-            accessibilityRole='button'
-            style={[s.cta, { backgroundColor: colors.primary[600] }]}
-            onPress={() => onImport(nextStep.template)}
-          >
-            <Text style={[s.ctaText, { color: '#FFFFFF' }]}>{ctaLabel}</Text>
-          </Pressable>
-        ) : null}
-      </View>
+      <PrescriptionFooter
+        allImported={allImported}
+        ctaLabel={ctaLabel}
+        footerNote={footerNote}
+        nextStep={nextStep}
+        onImport={onImport}
+      />
     </Animated.View>
   );
 }

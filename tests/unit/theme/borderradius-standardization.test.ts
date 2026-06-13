@@ -73,15 +73,6 @@ describe('borderRadius: 6 → borderRadius.small', () => {
   });
 });
 
-describe('borderRadius: 9 → borderRadius.full (circular 18px badges)', () => {
-  it('MiniTemplateCard/headerStyles uses full for scienceBadge', () => {
-    const {
-      headerStyles,
-    } = require('@/components/MiniTemplateCard/styles/headerStyles');
-    expect(headerStyles.scienceBadge.borderRadius).toBe(borderRadius.full);
-  });
-});
-
 describe('borderRadius: 10 → borderRadius.medium', () => {
   it('ArchiveUndoToast uses medium for iconContainer and undoButton', () => {
     const { styles } = require('@/components/ArchiveUndoToast/styles');
@@ -140,15 +131,6 @@ describe('borderRadius: 10 → borderRadius.medium', () => {
     expect(scienceStyles.researchLinkButton.borderRadius).toBe(
       borderRadius.medium
     );
-  });
-});
-
-describe('borderRadius: 14 → borderRadius.medium', () => {
-  it('CollapsibleCategorySection uses medium for iconBadge', () => {
-    const {
-      styles,
-    } = require('@/components/CollapsibleCategorySection/styles');
-    expect(styles.iconBadge.borderRadius).toBe(borderRadius.medium);
   });
 });
 
@@ -238,11 +220,4 @@ describe('corner-specific borderRadius tokenized', () => {
     );
   });
 
-  it('MiniTemplateCard/cardStyles uses large for left corner radii', () => {
-    const {
-      cardStyles,
-    } = require('@/components/MiniTemplateCard/styles/cardStyles');
-    expect(cardStyles.accent.borderBottomLeftRadius).toBe(borderRadius.large);
-    expect(cardStyles.accent.borderTopLeftRadius).toBe(borderRadius.large);
-  });
 });

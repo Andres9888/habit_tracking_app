@@ -4,12 +4,11 @@
  * FlatList of TrendingCards (matching PopularSection's card pattern).
  */
 
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { spacing } from '../../../../theme/spacing';
-import { typography } from '../../../../theme/typography';
 import { getCategoryMeta } from '../../data/categoryMeta';
 import { SectionHeader } from '../SectionHeader';
+import { SeeAllButton } from '../SectionHeader/SeeAllButton';
 import { TrendingCard } from '../TrendingCard';
 import type { CategoryRowProps } from './CategoryRowsSection.types';
 
@@ -23,7 +22,6 @@ export function CategoryRow({
   onPreview,
   onSeeAll,
 }: CategoryRowProps) {
-  const { colors } = useThemeColors();
   const items = group.templates.slice(0, ROW_LIMIT);
   const subtitle = getCategoryMeta(group.category).subtitle;
 
@@ -33,16 +31,11 @@ export function CategoryRow({
         title={`${group.icon} ${group.label}`}
         subtitle={subtitle}
         rightSlot={
-          <Pressable
+          <SeeAllButton
             accessibilityLabel={`See all ${group.label} habits`}
-            accessibilityRole='button'
-            hitSlop={8}
+            label='See all →'
             onPress={onSeeAll}
-          >
-            <Text style={[s.seeAll, { color: colors.primary[600] }]}>
-              See all →
-            </Text>
-          </Pressable>
+          />
         }
       />
       <FlatList
@@ -75,5 +68,4 @@ export function CategoryRow({
 const s = StyleSheet.create({
   container: { marginTop: spacing.lg },
   list: { gap: spacing.md, paddingHorizontal: spacing.base },
-  seeAll: { ...typography.bodySmall, fontWeight: '600' },
 });

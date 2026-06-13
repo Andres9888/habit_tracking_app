@@ -8,18 +8,23 @@
 
 import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { StatColumn, StatHairline } from '@/components/ui';
 import { useThemeColors } from '@/theme';
+import { durations, enterEasing } from '@/theme/animations';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import type { MonthInsights } from './useMonthInsights';
 
 export const MonthInsightStrip = memo(function MonthInsightStrip({
   currentStreak,
   bestRun,
+  monthKey,
   strongestDay,
   monthRate,
   showStreak = true,
-}: MonthInsights & { showStreak?: boolean }) {
+}: MonthInsights & { monthKey: string; showStreak?: boolean }) {
   const { colors } = useThemeColors();
+  const reduceMotion = useReduceMotion();
 
   const items = [
     ...(showStreak ? [{ label: 'streak', value: String(currentStreak) }] : []),
@@ -28,24 +33,34 @@ export const MonthInsightStrip = memo(function MonthInsightStrip({
     { label: 'best run', value: String(bestRun) },
   ];
 
+  const entering = reduceMotion
+    ? undefined
+    : FadeInDown.withInitialValues({ transform: [{ translateY: 4 }] })
+        .duration(durations.reveal)
+        .easing(enterEasing);
+
   return (
     <View style={[styles.row, { borderTopColor: colors.border }]}>
-      {items.map((item, i) => (
-        <React.Fragment key={item.label}>
-          <StatColumn label={item.label} size='compact' value={item.value} />
-          {i < items.length - 1 ? <StatHairline /> : null}
-        </React.Fragment>
-      ))}
+      <Animated.View key={monthKey} entering={entering} style={styles.statsRow}>
+        {items.map((item, i) => (
+          <React.Fragment key={item.label}>
+            <StatColumn label={item.label} size='compact' value={item.value} />
+            {i < items.length - 1 ? <StatHairline /> : null}
+          </React.Fragment>
+        ))}
+      </Animated.View>
     </View>
   );
 });
 
 const styles = StyleSheet.create({
   row: {
-    alignItems: 'center',
     borderTopWidth: 1,
-    flexDirection: 'row',
     marginTop: 14,
     paddingTop: 14,
+  },
+  statsRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });

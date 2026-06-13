@@ -2,7 +2,7 @@
  * GoalBrowseBranch — prescription card + goal habit rows when a chip is selected.
  */
 
-import { View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { HabitTemplateCard } from '../components/HabitTemplateCard';
 import { PrescriptionCard } from '../components/PrescriptionCard';
@@ -25,6 +25,7 @@ export function GoalBrowseBranch(p: GoalBrowseBranchProps) {
   return (
     <>
       <PrescriptionCard
+        key={p.goal.id}
         goal={p.goal}
         importedTemplateIds={p.importedTemplateIds}
         prescription={p.prescription}
@@ -34,7 +35,7 @@ export function GoalBrowseBranch(p: GoalBrowseBranchProps) {
       <SectionOverline
         title={`All ${p.goal.problemLabel.toLowerCase()} habits · ${p.goalTemplates.length}`}
       />
-      <View>
+      <Animated.View key={`${p.goal.id}-templates`}>
         {p.goalTemplates.map((item) => (
           <HabitTemplateCard
             key={item._id}
@@ -45,7 +46,7 @@ export function GoalBrowseBranch(p: GoalBrowseBranchProps) {
             onPreview={p.onPreview}
           />
         ))}
-      </View>
+      </Animated.View>
     </>
   );
 }

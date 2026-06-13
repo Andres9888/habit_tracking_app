@@ -3,6 +3,8 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { colors } from '@/theme/colors';
+import { withAlpha } from '@/theme/colors/alpha';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
@@ -35,7 +37,7 @@ export const s = StyleSheet.create({
   emoji: { fontSize: 30, lineHeight: 32 },
   emojiFeatured: { fontSize: 42, lineHeight: 44 },
   featuredBadge: {
-    backgroundColor: 'rgba(255,255,255,0.55)',
+    backgroundColor: withAlpha(colors.text.inverse, 0.55),
     borderRadius: borderRadius.full,
     fontSize: 9,
     fontWeight: fontWeights.bold,

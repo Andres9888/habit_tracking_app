@@ -4,17 +4,16 @@
  */
 
 import { useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
-import { CategoryRow } from '../components/CategoryRowsSection/CategoryRow';
-import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
 import { SearchBar } from '../components/SearchBar';
 import { useCatalogViewData } from '../hooks/useCatalogViewData';
 import { CATALOG_ALL_ID, CatalogChipRail } from './CatalogChipRail';
-import { CatalogFilteredList } from './CatalogFilteredList';
+import { CatalogFilteredBranch } from './CatalogFilteredBranch';
+import { CatalogShelvesList } from './CatalogShelvesList';
 
 interface CatalogViewProps {
   allTemplates: Doc<'templates'>[];
@@ -43,17 +42,6 @@ export function CatalogView(p: CatalogViewProps) {
   const totalCount = p.allTemplates.length;
   const totalLabel = totalCount === 1 ? 'habit' : 'habits';
 
-  const renderShelf = ({ item }: { item: CategoryGroup }) => (
-    <CategoryRow
-      group={item}
-      importedTemplateIds={p.importedTemplateIds}
-      importingTemplateId={importingId}
-      onImport={p.onImport}
-      onPreview={p.onPreview}
-      onSeeAll={() => setSelectedCategoryId(item.category)}
-    />
-  );
-
   return (
     <View
       testID='templates-catalog-view'
@@ -78,18 +66,19 @@ export function CatalogView(p: CatalogViewProps) {
         onSelectCategory={setSelectedCategoryId}
       />
       {showShelves ? (
-        <FlatList
-          data={groups}
-          keyboardDismissMode='on-drag'
-          keyExtractor={(item) => item.category}
-          contentContainerStyle={s.list}
-          renderItem={renderShelf}
-          showsVerticalScrollIndicator={false}
+        <CatalogShelvesList
+          groups={groups}
+          importedTemplateIds={p.importedTemplateIds}
+          importingTemplateId={importingId}
+          onImport={p.onImport}
+          onPreview={p.onPreview}
+          onSeeAll={setSelectedCategoryId}
         />
       ) : (
-        <CatalogFilteredList
+        <CatalogFilteredBranch
           importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
+          selectedCategoryId={selectedCategoryId}
           templates={filteredTemplates}
           onImport={p.onImport}
           onPreview={p.onPreview}
@@ -101,6 +90,5 @@ export function CatalogView(p: CatalogViewProps) {
 
 const s = StyleSheet.create({
   container: { flex: 1 },
-  list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
   searchWrap: { paddingHorizontal: spacing.base, paddingTop: spacing.xs },
 });
