@@ -12,10 +12,12 @@ import { colors as palette } from '../../../theme/colors';
 import { durations, enterEasing } from '../../../theme/animations';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { withAlpha } from '../../../theme';
 import { typography, fontWeights } from '../../../theme/typography';
 import { GoalAdjustSheet } from './GoalAdjustSheet';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
 import { GoalWhyAnchor } from './GoalWhyAnchor';
+import { readableHabitAccent } from './goalColorUtils';
 import { SimpleStreakGoalHero } from './SimpleStreakGoalHero';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -31,7 +33,6 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
   const goalDuration = habit.goalDuration ?? 0;
   const hasGoal = goalDuration > 0;
   const currentStreak = habit.currentStreak ?? 0;
-  const isGoalReached = hasGoal && currentStreak >= goalDuration;
   const tabEnter = FadeIn.duration(durations.standard).easing(enterEasing);
   const cardStyle = {
     ...shadows.card,
@@ -57,6 +58,11 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
   }
 
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+  const controlAccent = readableHabitAccent(
+    habitColor,
+    colors.card,
+    colors.primary[700]
+  );
   const title = `Aiming for ${goalDuration} ${goalDuration === 1 ? 'day' : 'days'}`;
 
   return (
@@ -74,14 +80,12 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
             accessibilityRole='button'
             style={[
               animatedStyle,
-              isGoalReached
-                ? {
-                    backgroundColor: colors.primary[700],
-                    borderRadius: borderRadius.full,
-                    paddingHorizontal: spacing.md,
-                    paddingVertical: spacing.xs + 2,
-                  }
-                : undefined,
+              {
+                backgroundColor: withAlpha(controlAccent, 0.1),
+                borderRadius: borderRadius.full,
+                paddingHorizontal: spacing.md,
+                paddingVertical: spacing.xs + 2,
+              },
             ]}
             onPress={() => setAdjustOpen(true)}
             onPressIn={pressHandlers.onPressIn}
@@ -90,7 +94,7 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
             <Text
               style={{
                 ...typography.bodySmall,
-                color: isGoalReached ? colors.text.inverse : colors.primary[700],
+                color: controlAccent,
                 fontWeight: fontWeights.semibold,
               }}
             >
@@ -108,6 +112,8 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
           />
           <GoalAdjustSheet
             currentGoal={goalDuration}
+            currentStreak={currentStreak}
+            habitColor={habitColor}
             habitId={habit._id}
             visible={adjustOpen}
             onClose={() => setAdjustOpen(false)}
