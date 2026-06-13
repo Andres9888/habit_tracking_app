@@ -32,6 +32,17 @@ export function CatalogChipRail({
   const { colors } = useThemeColors();
   const scrollRef = useRef<ScrollView>(null);
   const chipLayouts = useRef<Record<string, ChipLayout>>({});
+  const pendingScrollId = useRef<string | null>(null);
+
+  const scrollToChip = (chipId: string) => {
+    const layout = chipLayouts.current[chipId];
+    if (!layout || !scrollRef.current) return false;
+    scrollRef.current.scrollTo({
+      animated: true,
+      x: Math.max(0, layout.x - 12),
+    });
+    return true;
+  };
 
   const handleChipLayout =
     (chipId: string) =>
@@ -40,15 +51,20 @@ export function CatalogChipRail({
         x: nativeEvent.layout.x,
         width: nativeEvent.layout.width,
       };
+      // A selected chip can lay out after the scroll effect ran (e.g. when an
+      // off-screen category is opened from another screen). Honor the pending
+      // scroll once its layout is finally measured.
+      if (pendingScrollId.current === chipId && scrollToChip(chipId)) {
+        pendingScrollId.current = null;
+      }
     };
 
   useEffect(() => {
-    const layout = chipLayouts.current[selectedCategoryId];
-    if (!layout || !scrollRef.current) return;
-    scrollRef.current.scrollTo({
-      animated: true,
-      x: Math.max(0, layout.x - 12),
-    });
+    // Scroll now if the chip is already measured; otherwise defer until its
+    // onLayout fires.
+    pendingScrollId.current = scrollToChip(selectedCategoryId)
+      ? null
+      : selectedCategoryId;
   }, [selectedCategoryId]);
 
   return (
