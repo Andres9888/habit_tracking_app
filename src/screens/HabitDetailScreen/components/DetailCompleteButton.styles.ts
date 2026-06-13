@@ -6,25 +6,12 @@ import { borderRadius, spacing } from '../../../theme/spacing';
 export const INDICATOR_SIZE = 24;
 
 export const styles = StyleSheet.create({
-  burstRing: {
-    borderRadius: borderRadius.full,
-    borderWidth: 2,
-    height: INDICATOR_SIZE,
-    position: 'absolute',
-    width: INDICATOR_SIZE,
-  },
   container: {
     borderRadius: borderRadius.large,
     gap: spacing.sm + spacing.xs,
     marginHorizontal: spacing.base + spacing.xs,
     marginTop: spacing.base,
     paddingVertical: spacing.base - 2,
-    // Layered depth so the bar reads as a raised, pressable button.
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.18,
-    shadowRadius: 10,
   },
   filledCircle: {
     alignItems: 'center',

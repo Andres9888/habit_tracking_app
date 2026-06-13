@@ -1,6 +1,6 @@
 /** DetailCompleteButton - Full-width complete-today toggle under the hero. */
 import { Check } from 'lucide-react-native';
-import { Pressable, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { durations } from '../../../theme/animations';
 import { fontWeights, typography } from '../../../theme/typography';
@@ -10,6 +10,7 @@ import { useDetailCompleteButtonAnimation } from './DetailCompleteButton.hooks';
 import { styles } from './DetailCompleteButton.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 interface DetailCompleteButtonProps {
   disabled?: boolean;
@@ -25,26 +26,29 @@ export function DetailCompleteButton({
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const {
-    burstStyle,
     checkStyle,
     circleStyle,
     containerStyle,
     filledCircleStyle,
+    labelStyle,
     pressHandlers,
   } = useDetailCompleteButtonAnimation(isCompletedToday, {
-    primaryBg: colors.text.primary,
+    inverseText: colors.text.inverse,
     successBg: colors.status.success,
+    successBorder: colors.status.success,
+    successText: colors.status.success,
   });
 
   const labelEnter = reduceMotion ? undefined : FadeIn.duration(durations.quick);
   const labelExit = reduceMotion ? undefined : FadeOut.duration(durations.quick);
+  const label = isCompletedToday ? 'Done for Today' : 'Mark as done';
 
   return (
     <AnimatedPressable
       accessibilityLabel={
         isCompletedToday
-          ? 'Completed today, tap to undo'
-          : 'Mark complete for today'
+          ? 'Done for today, tap to undo'
+          : 'Mark as done for today'
       }
       accessibilityRole='button'
       className='flex-row items-center justify-center'
@@ -55,12 +59,7 @@ export function DetailCompleteButton({
       onPressOut={pressHandlers.onPressOut}
     >
       <View style={styles.indicatorWrap}>
-        <Animated.View
-          style={[burstStyle, styles.burstRing, { borderColor: colors.text.inverse }]}
-        />
-        <Animated.View
-          style={[circleStyle, styles.ring, { borderColor: colors.text.inverse }]}
-        />
+        <Animated.View style={[circleStyle, styles.ring]} />
         <Animated.View
           style={[
             filledCircleStyle,
@@ -73,18 +72,18 @@ export function DetailCompleteButton({
           </Animated.View>
         </Animated.View>
       </View>
-      <Animated.Text
+      <AnimatedText
         key={isCompletedToday ? 'done' : 'pending'}
         entering={labelEnter}
         exiting={labelExit}
-        style={{
-          ...typography.body,
-          color: colors.text.inverse,
-          fontWeight: fontWeights.semibold,
-        }}
+        style={[
+          typography.body,
+          labelStyle,
+          { fontWeight: fontWeights.semibold },
+        ]}
       >
-        {isCompletedToday ? 'Completed Today' : 'Complete Today'}
-      </Animated.Text>
+        {label}
+      </AnimatedText>
     </AnimatedPressable>
   );
 }

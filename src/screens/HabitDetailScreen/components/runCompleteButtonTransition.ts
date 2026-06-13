@@ -1,18 +1,11 @@
-/** DetailCompleteButton state-transition animation runner. */
+/** DetailCompleteButton state-transition animation runner (calm fade — no burst/pop). */
 import {
   type SharedValue,
-  withSequence,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { durations, enterEasing, springs } from '../../../theme/animations';
-
-/** Subtle full-button lift on completion. */
-const BUTTON_POP_SCALE = 1.03;
+import { durations, enterEasing, exitEasing } from '../../../theme/animations';
 
 interface CompleteButtonTransitionParams {
-  burstProgress: SharedValue<number>;
-  buttonPop: SharedValue<number>;
   checkScale: SharedValue<number>;
   completionProgress: SharedValue<number>;
   isCompletedToday: boolean;
@@ -21,8 +14,6 @@ interface CompleteButtonTransitionParams {
 }
 
 export function runCompleteButtonTransition({
-  burstProgress,
-  buttonPop,
   checkScale,
   completionProgress,
   isCompletedToday,
@@ -34,8 +25,6 @@ export function runCompleteButtonTransition({
   if (reduceMotion || isMountTransition) {
     completionProgress.value = target;
     checkScale.value = target;
-    buttonPop.value = 1;
-    burstProgress.value = 0;
     return;
   }
 
@@ -44,21 +33,8 @@ export function runCompleteButtonTransition({
     easing: enterEasing,
   });
 
-  if (isCompletedToday) {
-    checkScale.value = 0;
-    checkScale.value = withSpring(1, springs.celebration);
-    buttonPop.value = withSequence(
-      withSpring(BUTTON_POP_SCALE, springs.pulse),
-      withSpring(1, springs.settle)
-    );
-    burstProgress.value = 0;
-    burstProgress.value = withTiming(1, {
-      duration: durations.emphasis,
-      easing: enterEasing,
-    });
-  } else {
-    checkScale.value = withTiming(0, { duration: durations.quick });
-    buttonPop.value = 1;
-    burstProgress.value = 0;
-  }
+  checkScale.value = withTiming(target, {
+    duration: durations.quick,
+    easing: isCompletedToday ? enterEasing : exitEasing,
+  });
 }

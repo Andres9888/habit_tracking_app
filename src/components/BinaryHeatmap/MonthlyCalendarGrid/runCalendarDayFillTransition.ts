@@ -2,13 +2,12 @@ import {
   runOnJS,
   type SharedValue,
   withSequence,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { durations, enterEasing, exitEasing, springs } from '@/theme/animations';
+import { durations, enterEasing, exitEasing } from '@/theme/animations';
 
-/** Punchy but contained — ~4px growth on a 36px cell. */
-const COMPLETE_POP_SCALE = 1.12;
+/** Soft press feedback — no bounce pop. */
+const SETTLE_SCALE = 0.97;
 
 interface FillTransitionParams {
   cellPop: SharedValue<number>;
@@ -39,16 +38,14 @@ export function runCalendarDayFillTransition({
       cellPop.value = 1;
       return;
     }
-    fillScale.value = 0;
-    fillScale.value = withSpring(1, springs.celebration);
-    // Timing (not spring) so interpolateColor never overshoots past the endpoint.
+    fillScale.value = 1;
     fillProgress.value = withTiming(1, {
-      duration: durations.standard,
+      duration: durations.quick,
       easing: enterEasing,
     });
     cellPop.value = withSequence(
-      withSpring(COMPLETE_POP_SCALE, springs.pop),
-      withSpring(1, springs.settle)
+      withTiming(SETTLE_SCALE, { duration: durations.instant }),
+      withTiming(1, { duration: durations.reveal, easing: enterEasing })
     );
     return;
   }
