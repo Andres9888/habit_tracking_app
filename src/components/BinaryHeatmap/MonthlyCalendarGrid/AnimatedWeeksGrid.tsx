@@ -1,6 +1,7 @@
 import React, { memo, useState, useCallback } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
+import { springs } from '@/theme/animations';
 import { CalendarDay } from './CalendarDay';
 import { ChainConnectors } from './ChainConnectors';
 import { styles } from './styles';
@@ -48,12 +49,12 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
     direction === 'left'
       ? SlideInRight.withInitialValues({ originX: 24, opacity: 0 })
           .springify()
-          .damping(28)
-          .stiffness(180)
+          .damping(springs.settle.damping)
+          .stiffness(springs.settle.stiffness)
       : SlideInLeft.withInitialValues({ originX: -24, opacity: 0 })
           .springify()
-          .damping(28)
-          .stiffness(180);
+          .damping(springs.settle.damping)
+          .stiffness(springs.settle.stiffness);
 
   return (
     <View style={styles.weeksContainer} onLayout={onLayout}>
