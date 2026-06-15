@@ -9,13 +9,13 @@ import { useAccountActions } from './useAccountActions';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
-import { useSettingsSectionStates } from './useSettingsSectionStates';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
 
 const useSectionIconColor = () => {
-  const { colors: themeColors } = useThemeColors();
-  return themeColors.text.primary;
+  const { settings } = useThemeColors();
+  // Uniform soft-green brand tint for every section glyph (#047857 / #34D399).
+  return settings.user.icon;
 };
 
 export function SettingsContent(p: SettingsContentProps) {
@@ -33,7 +33,6 @@ export function SettingsContent(p: SettingsContentProps) {
   }));
 
   const actions = useAccountActions();
-  const { sectionStates, toggleSection } = useSettingsSectionStates();
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -55,8 +54,6 @@ export function SettingsContent(p: SettingsContentProps) {
           <SettingsSectionList
             {...p}
             sectionIconColor={sectionIconColor}
-            sectionStates={sectionStates}
-            toggleSection={toggleSection}
             onFeedback={actions.handleFeedback}
             onPrivacy={actions.openPrivacy}
             onRate={actions.handleRateApp}

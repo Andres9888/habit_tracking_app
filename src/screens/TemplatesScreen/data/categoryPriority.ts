@@ -1,5 +1,5 @@
 /**
- * Shared category ordering — drives CategoryRowsSection.
+ * Shared category ordering — drives catalog category grouping.
  */
 
 export const CATEGORY_PRIORITY = [

@@ -5,6 +5,7 @@ import { shadows } from '@/theme';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { StaticSectionLabel } from './StaticSectionLabel';
 import { CollapsibleSectionCard } from './CollapsibleSectionCard';
+import { getRaisedSurface } from './raisedSurface';
 
 interface Props {
   title: string;
@@ -25,10 +26,10 @@ export function SettingsSection({
   isExpanded = true,
   onToggle,
 }: Props) {
-  const { colors: themeColors } = useThemeColors();
+  const { colors: themeColors, isDark } = useThemeColors();
 
   const cardStyle = {
-    backgroundColor: themeColors.card,
+    backgroundColor: getRaisedSurface(isDark),
     borderColor: themeColors.border,
     borderWidth: 1,
     ...shadows.card,
