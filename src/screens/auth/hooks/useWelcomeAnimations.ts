@@ -20,13 +20,11 @@ export function useWelcomeAnimations() {
   const titleTranslateY = useSharedValue(15);
   const subtitleOpacity = useSharedValue(0);
   const subtitleTranslateY = useSharedValue(15);
-  const valuePropsOpacity = useSharedValue(0);
-  const valuePropsTranslateY = useSharedValue(15);
   const buttonsOpacity = useSharedValue(0);
   const buttonsTranslateY = useSharedValue(15);
 
   useEffect(() => {
-    // Stagger: 0, 60, 120, 180, 240ms
+    // Stagger: 0, 60, 120, 180ms
     iconOpacity.value = withSpring(1, springs.standard);
     iconScale.value = withSpring(1, springs.standard);
 
@@ -42,21 +40,12 @@ export function useWelcomeAnimations() {
       withSpring(0, springs.standard)
     );
 
-    valuePropsOpacity.value = withDelay(
-      STAGGER * 3,
-      withSpring(1, springs.standard)
-    );
-    valuePropsTranslateY.value = withDelay(
-      STAGGER * 3,
-      withSpring(0, springs.standard)
-    );
-
     buttonsOpacity.value = withDelay(
-      STAGGER * 4,
+      STAGGER * 3,
       withSpring(1, springs.standard)
     );
     buttonsTranslateY.value = withDelay(
-      STAGGER * 4,
+      STAGGER * 3,
       withSpring(0, springs.standard)
     );
   }, [
@@ -68,8 +57,6 @@ export function useWelcomeAnimations() {
     subtitleTranslateY,
     titleOpacity,
     titleTranslateY,
-    valuePropsOpacity,
-    valuePropsTranslateY,
   ]);
 
   const iconStyle = useAnimatedStyle(() => ({
@@ -87,11 +74,6 @@ export function useWelcomeAnimations() {
     transform: [{ translateY: subtitleTranslateY.value }],
   }));
 
-  const valuePropsStyle = useAnimatedStyle(() => ({
-    opacity: valuePropsOpacity.value,
-    transform: [{ translateY: valuePropsTranslateY.value }],
-  }));
-
   const buttonsStyle = useAnimatedStyle(() => ({
     opacity: buttonsOpacity.value,
     transform: [{ translateY: buttonsTranslateY.value }],
@@ -102,6 +84,5 @@ export function useWelcomeAnimations() {
     iconStyle,
     subtitleStyle,
     titleStyle,
-    valuePropsStyle,
   };
 }
