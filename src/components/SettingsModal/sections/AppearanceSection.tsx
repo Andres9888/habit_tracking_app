@@ -11,7 +11,7 @@ import type { AppearanceSectionProps } from './AppearanceSection.types';
 
 export function AppearanceSection(p: AppearanceSectionProps) {
   return (
-    <SettingsSection icon={p.icon} title='Appearance'>
+    <SettingsSection icon={p.icon} title='Look & Feel'>
       <CalendarPreview
         compact={p.compactView}
         completionIcon={p.habitCompletionIcon}
