@@ -13,7 +13,7 @@ import { View, Text, StyleSheet, type ViewStyle } from 'react-native';
 import { Lock, Flame, Sparkles } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { LinearGradient } from 'expo-linear-gradient';
-import { shadows, borderRadius } from '../theme/spacing'
+import { shadows, borderRadius } from '../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '../theme/typography';
 import { colors } from '../theme/colors';
 
@@ -37,21 +37,31 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
   if (variant === 'new') {
     return (
       <View style={[styles.badge, styles.newBadge]}>
-        <Sparkles color={colors.secondary[500]} size={iconSizes.micro} strokeWidth={2.5} />
-        <Text style={[styles.badgeText, { color: colors.secondary[500] }]}>New</Text>
+        <Sparkles
+          color={colors.secondary[500]}
+          size={iconSizes.micro}
+          strokeWidth={2.5}
+        />
+        <Text style={[styles.badgeText, { color: colors.secondary[500] }]}>
+          New
+        </Text>
       </View>
     );
   }
 
-  // Pro badge with violet gradient (premium color)
+  // Pro badge with amber gradient (unified premium color)
   return (
     <LinearGradient
-      colors={['#8b5cf6', '#7c3aed']}
-      end={{ x: 1, y: 1 }}
+      colors={['#D97706', '#B45309']}
+      end={{ x: 0, y: 1 }}
       start={{ x: 0, y: 0 }}
       style={[styles.badge, styles.proBadge, style]}
     >
-      <Lock color={colors.text.inverse} size={iconSizes.micro} strokeWidth={2.5} />
+      <Lock
+        color={colors.text.inverse}
+        size={iconSizes.micro}
+        strokeWidth={2.5}
+      />
       <Text style={[styles.badgeText, styles.proBadgeText]}>PRO</Text>
     </LinearGradient>
   );

@@ -14,7 +14,7 @@ export function CardLockHeader({ meta }: CardLockHeaderProps) {
   return (
     <LinearGradient
       className='flex-row items-center gap-3 px-4 py-3'
-      colors={['#8b5cf6', '#7c3aed']}
+      colors={['#D97706', '#B45309']}
       end={{ x: 1, y: 0 }}
       start={{ x: 0, y: 0 }}
     >
@@ -23,9 +23,11 @@ export function CardLockHeader({ meta }: CardLockHeaderProps) {
       </View>
       <View className='flex-1'>
         <Text className='text-base font-bold text-white'>{meta.title}</Text>
-        {meta.freeLimit ? <Text className='text-xs' style={{ color: 'rgba(255,255,255,0.8)' }}>
+        {meta.freeLimit ? (
+          <Text className='text-xs' style={{ color: 'rgba(255,255,255,0.8)' }}>
             Free: {meta.freeLimit}
-          </Text> : null}
+          </Text>
+        ) : null}
       </View>
       <View className='flex-row items-center gap-1'>
         <Text className='text-sm font-medium text-white'>Upgrade</Text>

@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PRO Badge — Before / After</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;0,7..72,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #faf8f5;
+        --card: #ffffff;
+        --ink: #1c1a17;
+        --muted: #7a736b;
+        --line: #ece7e0;
+        /* amber premium tokens (from app: status.warningLight / warningText / warning) */
+        --amber-bg: #fef3c7;
+        --amber-text: #92400e;
+        --amber-strong: #d97706;
+        --amber-deep: #b45309;
+        --green: #047857;
+        --violet-a: #8b5cf6;
+        --violet-b: #7c3aed;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background:
+          radial-gradient(
+            1200px 600px at 50% -10%,
+            #fffdf8 0%,
+            transparent 60%
+          ),
+          var(--bg);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--ink);
+        padding: 48px 24px 80px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 30px;
+        letter-spacing: -0.01em;
+      }
+      .sub {
+        color: var(--muted);
+        margin-top: 6px;
+        font-size: 15px;
+        max-width: 640px;
+        line-height: 1.5;
+      }
+      .kicker {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--amber-deep);
+        margin: 48px 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .kicker::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--line);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 18px;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow:
+          0 1px 2px rgba(28, 26, 23, 0.04),
+          0 8px 24px -16px rgba(28, 26, 23, 0.18);
+      }
+      .panel .label {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 3px 7px;
+        border-radius: 6px;
+      }
+      .tag-now {
+        background: #f1eee9;
+        color: #8a8178;
+      }
+      .tag-new {
+        background: var(--amber-bg);
+        color: var(--amber-text);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* name row context */
+      .nameblock {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .name {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 19px;
+      }
+
+      /* ---- badge styles ---- */
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        font-family: 'DM Sans', sans-serif;
+      }
+      .badge svg {
+        width: 11px;
+        height: 11px;
+      }
+      .b-text {
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        line-height: 1;
+      }
+
+      /* CURRENT (shipped) */
+      .v-current {
+        gap: 4px;
+        background: var(--amber-bg);
+        color: var(--amber-text);
+        padding: 3px 8px;
+        border-radius: 8px;
+      }
+
+      /* A — depth: soft top-light gradient + hairline border + tiny shadow */
+      .v-depth {
+        gap: 5px;
+        padding: 4px 9px;
+        border-radius: 9px;
+        background: linear-gradient(180deg, #fff6dc 0%, #fcebb6 100%);
+        color: var(--amber-text);
+        border: 1px solid rgba(180, 83, 9, 0.22);
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.7) inset,
+          0 2px 5px -2px rgba(180, 83, 9, 0.45);
+      }
+
+      /* B — solid amber, inverse text (bolder, more "status") */
+      .v-solid {
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: linear-gradient(
+          180deg,
+          var(--amber-strong) 0%,
+          var(--amber-deep) 100%
+        );
+        color: #fffcf2;
+        box-shadow:
+          0 2px 6px -2px rgba(180, 83, 9, 0.55),
+          0 1px 0 rgba(255, 255, 255, 0.35) inset;
+      }
+      .v-solid svg {
+        stroke: #fffcf2;
+      }
+
+      /* C — outline / quiet: parchment with amber ring */
+      .v-outline {
+        gap: 5px;
+        padding: 3px 9px;
+        border-radius: 999px;
+        background: #fffdf6;
+        color: var(--amber-deep);
+        border: 1.5px solid var(--amber-strong);
+      }
+
+      /* D — minimal mark: crown + thin text, no pill */
+      .v-mark {
+        gap: 5px;
+        color: var(--amber-deep);
+        padding: 2px 2px;
+      }
+      .v-mark .b-text {
+        font-weight: 700;
+        letter-spacing: 0.1em;
+      }
+
+      /* applied surfaces */
+      .template {
+        position: relative;
+        width: 100%;
+        height: 148px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #10654a 0%, #0c7a57 100%);
+        display: flex;
+        align-items: flex-end;
+        padding: 14px;
+        color: #fff;
+      }
+      .template .t-title {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 17px;
+      }
+      .corner {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+      }
+
+      .paywall {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 0;
+        overflow: hidden;
+        background: var(--card);
+      }
+      .paywall .ph {
+        background: linear-gradient(160deg, #fff6dc 0%, #fbe7ae 100%);
+        padding: 22px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+        border-bottom: 1px solid rgba(180, 83, 9, 0.15);
+      }
+      .crown-disc {
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(circle at 35% 30%, #ffe9a8, #e8a21f);
+        box-shadow:
+          0 6px 16px -6px rgba(180, 83, 9, 0.6),
+          0 1px 0 rgba(255, 255, 255, 0.6) inset;
+      }
+      .crown-disc svg {
+        width: 26px;
+        height: 26px;
+        stroke: #7a3d04;
+      }
+      .paywall .ph h3 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 20px;
+        color: #5c3206;
+      }
+      .paywall .ph p {
+        font-size: 13px;
+        color: #8a5a12;
+      }
+      .paywall .pb {
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .feat {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: var(--ink);
+      }
+      .feat svg {
+        width: 16px;
+        height: 16px;
+        stroke: var(--green);
+      }
+
+      .lockchip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 10px;
+        background: var(--amber-bg);
+        color: var(--amber-text);
+        font-weight: 600;
+        font-size: 13px;
+        border: 1px solid rgba(180, 83, 9, 0.16);
+      }
+      .lockchip svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 10px;
+        line-height: 1.5;
+      }
+      .vlabel {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 12px;
+        text-align: center;
+        font-weight: 600;
+      }
+      .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 46px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>PRO Badge — premium mark</h1>
+      <p class="sub">
+        Left/top is what ships today. Below are refined takes on the same warm
+        amber-crown idea, then the same style applied where the app currently
+        uses the violet lock badge — so the premium language reads as one
+        system.
+      </p>
+
+      <!-- BEFORE -->
+      <div class="kicker">Before · shipped</div>
+      <div class="grid">
+        <div class="panel">
+          <div class="label">
+            Profile card <span class="tag tag-now">Now</span>
+          </div>
+          <div class="nameblock">
+            <span class="name">Andres Gutierrez</span>
+            <span class="badge v-current"
+              ><i data-lucide="crown"></i><span class="b-text">PRO</span></span
+            >
+          </div>
+          <p class="note">
+            Flat parchment pill, dark-amber crown + text. Reads fine but sits
+            flat against the white card.
+          </p>
+        </div>
+        <div class="panel">
+          <div class="label">
+            Premium elsewhere today <span class="tag tag-now">Now</span>
+          </div>
+          <div class="center" style="gap: 14px">
+            <span
+              class="badge"
+              style="
+                gap: 5px;
+                padding: 4px 9px;
+                border-radius: 8px;
+                background: linear-gradient(
+                  135deg,
+                  var(--violet-a),
+                  var(--violet-b)
+                );
+                color: #fff;
+                box-shadow: 0 4px 10px -4px rgba(124, 58, 237, 0.6);
+              "
+              ><i data-lucide="lock" style="stroke: #fff"></i
+              ><span class="b-text">PRO</span></span
+            >
+          </div>
+          <p class="note">
+            Template cards, paywall &amp; feature locks use a violet gradient +
+            lock — a different visual language from the amber badge.
+          </p>
+        </div>
+      </div>
+
+      <!-- AFTER: refined -->
+      <div class="kicker">After · refined amber takes</div>
+      <div class="grid">
+        <div class="panel">
+          <div class="label">
+            A · Depth <span class="tag tag-new">New</span>
+          </div>
+          <div class="center">
+            <span class="badge v-depth"
+              ><i data-lucide="crown"></i><span class="b-text">PRO</span></span
+            >
+          </div>
+          <div class="vlabel">Soft top-light + hairline + micro shadow</div>
+        </div>
+        <div class="panel">
+          <div class="label">
+            B · Solid <span class="tag tag-new">New</span>
+          </div>
+          <div class="center">
+            <span class="badge v-solid"
+              ><i data-lucide="crown"></i><span class="b-text">PRO</span></span
+            >
+          </div>
+          <div class="vlabel">Filled amber, inverse text — most prominent</div>
+        </div>
+        <div class="panel">
+          <div class="label">
+            C · Outline <span class="tag tag-new">New</span>
+          </div>
+          <div class="center">
+            <span class="badge v-outline"
+              ><i data-lucide="crown"></i><span class="b-text">PRO</span></span
+            >
+          </div>
+          <div class="vlabel">Quiet ring, parchment fill</div>
+        </div>
+        <div class="panel">
+          <div class="label">D · Mark <span class="tag tag-new">New</span></div>
+          <div class="center">
+            <span class="badge v-mark"
+              ><i data-lucide="crown"></i><span class="b-text">PRO</span></span
+            >
+          </div>
+          <div class="vlabel">No pill — crown + spaced text</div>
+        </div>
+      </div>
+
+      <!-- AFTER: in context -->
+      <div class="kicker">After · A (Depth) in the profile row</div>
+      <div class="grid">
+        <div class="panel">
+          <div class="label">
+            Profile card <span class="tag tag-new">New</span>
+          </div>
+          <div class="nameblock">
+            <span class="name">Andres Gutierrez</span>
+            <span class="badge v-depth"
+              ><i data-lucide="crown"></i><span class="b-text">PRO</span></span
+            >
+          </div>
+          <p class="note">
+            Same footprint, now lifts off the card with warmth and depth.
+          </p>
+        </div>
+      </div>
+
+      <!-- AFTER: shipped system -->
+      <div class="kicker">After · the shipped system (violet eliminated)</div>
+      <p class="sub" style="margin-bottom: 14px">
+        Two roles, no violet:
+        <b style="color: var(--amber-deep)">amber crown/lock</b> = the "you have
+        / you're missing PRO" markers (badges, inline &amp; overlay locks,
+        settings upsell). <b style="color: var(--green)">Brand green</b> =
+        full-screen paywall heroes (2 of 3 were already green — the violet one
+        joined them).
+      </p>
+      <div class="grid">
+        <div class="panel">
+          <div class="label">
+            Template corner badge <span class="tag tag-new">Amber</span>
+          </div>
+          <div class="template">
+            <span class="badge v-solid corner"
+              ><i data-lucide="lock"></i><span class="b-text">PRO</span></span
+            >
+            <span class="t-title">Morning Routine</span>
+          </div>
+          <p class="note">Amber solid replaces the violet lock badge.</p>
+        </div>
+
+        <div class="panel">
+          <div class="label">
+            Feature locks (card / inline / overlay)
+            <span class="tag tag-new">Amber</span>
+          </div>
+          <div class="center" style="gap: 12px; flex-wrap: wrap">
+            <span class="badge v-solid"
+              ><i data-lucide="lock"></i><span class="b-text">PRO</span></span
+            >
+            <span class="lockchip"><i data-lucide="crown"></i> Upgrade</span>
+          </div>
+          <p class="note">Crown header + lock chips, all amber.</p>
+        </div>
+
+        <div
+          class="panel"
+          style="
+            padding: 0;
+            border: none;
+            box-shadow: none;
+            background: transparent;
+          "
+        >
+          <div class="paywall" style="border-color: var(--line)">
+            <div
+              class="ph"
+              style="
+                background: linear-gradient(160deg, #0c7a57, #047857);
+                border-bottom: none;
+              "
+            >
+              <div
+                class="crown-disc"
+                style="background: rgba(255, 255, 255, 0.18); box-shadow: none"
+              >
+                <i data-lucide="sparkles" style="stroke: #fff"></i>
+              </div>
+              <h3 style="color: #fff; font-family: 'Literata', serif">
+                Unlock Premium
+              </h3>
+              <p style="color: rgba(255, 255, 255, 0.8)">
+                Full-screen sell stays brand green.
+              </p>
+            </div>
+            <div class="pb">
+              <div class="feat">
+                <i data-lucide="check"></i> Unlimited habits
+              </div>
+              <div class="feat">
+                <i data-lucide="check"></i> Advanced stats &amp; trends
+              </div>
+              <div class="feat">
+                <i data-lucide="check"></i> All themes &amp; markers
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

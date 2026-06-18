@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Settings · 3 Polish Directions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --bg: #f5f1ed;
+        --card: #faf8f5;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --tile-bg: #e2f1ea;
+        --tile-icon: #047857;
+        --accent: #059669;
+        --toggle-on: #10b981;
+        --toggle-off: #c4bfb7;
+        --danger-icon: #b53030;
+        --danger-bg: #fee2e2;
+        --divider: rgba(45, 42, 38, 0.07);
+        --card-shadow:
+          0 1px 2px rgba(45, 42, 38, 0.04), 0 6px 18px rgba(45, 42, 38, 0.06);
+        --card-inner: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        --hero-shadow:
+          0 1px 2px rgba(45, 42, 38, 0.05), 0 10px 30px rgba(45, 42, 38, 0.08);
+      }
+
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          sans-serif;
+        background: #0b0b0d;
+        color: #fff;
+        padding: 36px 28px 64px;
+        min-height: 100vh;
+      }
+      .page-head {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .page-head h1 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 24px;
+        letter-spacing: -0.3px;
+      }
+      .page-head p {
+        color: #9a958d;
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .rack {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .col-tag {
+        text-align: center;
+        max-width: 390px;
+      }
+      .col-tag .name {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 18px;
+      }
+      .col-tag .name .chip {
+        font-family: 'DM Sans';
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #0b0b0d;
+        background: #10b981;
+        padding: 2px 7px;
+        border-radius: 6px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .col-tag .desc {
+        color: #9a958d;
+        font-size: 12px;
+        margin-top: 6px;
+        line-height: 1.45;
+      }
+
+      /* phone */
+      .phone {
+        width: 390px;
+        height: 760px;
+        border-radius: 50px;
+        position: relative;
+        background: #1b1b1f;
+        padding: 10px;
+        box-shadow:
+          0 0 0 2px #2c2c30,
+          0 0 0 10px #131316,
+          0 40px 90px rgba(0, 0, 0, 0.6);
+        flex-shrink: 0;
+      }
+      .screen {
+        width: 100%;
+        height: 100%;
+        border-radius: 40px;
+        overflow: hidden;
+        background: var(--bg);
+        position: relative;
+      }
+      .island {
+        position: absolute;
+        top: 11px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 112px;
+        height: 31px;
+        background: #000;
+        border-radius: 18px;
+        z-index: 40;
+      }
+      .scroll {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .status-bar {
+        height: 46px;
+        padding: 0 28px 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .status-time {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-primary);
+        margin-top: 4px;
+      }
+      .status-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .status-right svg {
+        width: 16px;
+        height: 16px;
+        color: var(--text-primary);
+      }
+      .battery {
+        width: 23px;
+        height: 11px;
+        border: 1.4px solid var(--text-primary);
+        border-radius: 3px;
+        position: relative;
+      }
+      .battery::before {
+        content: '';
+        position: absolute;
+        left: 1.4px;
+        top: 1.4px;
+        bottom: 1.4px;
+        width: 62%;
+        background: var(--text-primary);
+        border-radius: 1px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 25;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 20px 12px;
+        background: linear-gradient(
+          to bottom,
+          var(--bg) 72%,
+          rgba(245, 241, 237, 0)
+        );
+      }
+      .screen-title {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 28px;
+        letter-spacing: -0.4px;
+        color: var(--text-primary);
+      }
+      .close-btn {
+        width: 31px;
+        height: 31px;
+        border-radius: 50%;
+        background: rgba(4, 120, 87, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .close-btn svg {
+        width: 16px;
+        height: 16px;
+        color: var(--accent);
+        stroke-width: 2.4;
+      }
+      .content {
+        padding: 0 18px 50px;
+      }
+
+      /* hero */
+      .hero {
+        background: var(--card);
+        border-radius: 20px;
+        padding: 22px 20px 4px;
+        margin-bottom: 24px;
+        box-shadow: var(--hero-shadow), var(--card-inner);
+        position: relative;
+      }
+      .hero-chevron {
+        position: absolute;
+        top: 20px;
+        right: 18px;
+        color: var(--text-tertiary);
+        opacity: 0.55;
+      }
+      .hero-chevron svg {
+        width: 20px;
+        height: 20px;
+      }
+      .hero-top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: radial-gradient(
+          120% 120% at 30% 20%,
+          #f4fbf7 0%,
+          #e2f1ea 55%,
+          #cfe7db 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 31px;
+        color: var(--tile-icon);
+        box-shadow:
+          inset 0 1px 2px rgba(255, 255, 255, 0.9),
+          0 4px 12px rgba(4, 120, 87, 0.14),
+          0 0 0 4px rgba(255, 255, 255, 0.55);
+        margin-bottom: 12px;
+      }
+      .name-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 3px;
+      }
+      .hero-name {
+        font-weight: 600;
+        font-size: 20px;
+        color: var(--text-primary);
+        letter-spacing: -0.2px;
+      }
+      .pro-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px 3px 7px;
+        border-radius: 8px;
+        background: rgba(4, 120, 87, 0.08);
+        border: 1px solid rgba(4, 120, 87, 0.16);
+      }
+      .pro-badge svg {
+        width: 11px;
+        height: 11px;
+        color: var(--tile-icon);
+      }
+      .pro-badge span {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.7px;
+        color: var(--tile-icon);
+        text-transform: uppercase;
+      }
+      .hero-sub {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 18px;
+      }
+      .stats {
+        display: flex;
+        border-top: 1px solid var(--divider);
+        padding: 16px 0;
+      }
+      .stat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        position: relative;
+      }
+      .stat + .stat::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 1px;
+        background: var(--divider);
+      }
+      .stat-icon {
+        color: var(--text-tertiary);
+        opacity: 0.7;
+      }
+      .stat-icon svg {
+        width: 15px;
+        height: 15px;
+      }
+      .stat-value {
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--accent);
+        letter-spacing: -0.3px;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-align: center;
+      }
+
+      /* section label + card */
+      .section-head {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 16px;
+        letter-spacing: -0.1px;
+        color: var(--text-primary);
+        padding: 0 6px 9px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--card-shadow), var(--card-inner);
+        overflow: hidden;
+        margin-bottom: 22px;
+      }
+
+      /* row */
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 13px 16px;
+        position: relative;
+      }
+      .row.col2 {
+        align-items: flex-start;
+      }
+      .row + .row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 69px;
+        right: 0;
+        height: 1px;
+        background: var(--divider);
+      }
+      .tile {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--tile-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.6);
+      }
+      .tile svg {
+        width: 20px;
+        height: 20px;
+        color: var(--tile-icon);
+        stroke-width: 2;
+      }
+      .row-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .row-label {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-primary);
+        letter-spacing: -0.1px;
+        line-height: 1.25;
+      }
+      .row-sub {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        margin-top: 2px;
+        line-height: 1.3;
+      }
+      .row-acc {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
+      }
+      .value-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      .chevron {
+        color: var(--text-tertiary);
+        opacity: 0.7;
+      }
+      .chevron svg {
+        width: 18px;
+        height: 18px;
+      }
+      .ext-link svg {
+        width: 16px;
+        height: 16px;
+        color: var(--text-tertiary);
+        opacity: 0.7;
+      }
+      .badge {
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 11px;
+        background: rgba(4, 120, 87, 0.12);
+        color: var(--tile-icon);
+        font-size: 12.5px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .emoji-set {
+        font-size: 17px;
+        letter-spacing: 1px;
+      }
+
+      /* toggle */
+      .toggle {
+        width: 50px;
+        height: 30px;
+        border-radius: 15px;
+        background: var(--toggle-off);
+        position: relative;
+        flex-shrink: 0;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.03);
+      }
+      .toggle.on {
+        background: var(--toggle-on);
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+        transition: transform 0.25s cubic-bezier(0.34, 1.4, 0.5, 1);
+      }
+      .toggle.on::after {
+        transform: translateX(20px);
+      }
+
+      /* segmented */
+      .segmented {
+        display: flex;
+        background: rgba(45, 42, 38, 0.05);
+        border-radius: 9px;
+        padding: 2px;
+        gap: 2px;
+      }
+      .seg {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        padding: 5px 11px;
+        border-radius: 7px;
+      }
+      .seg.active {
+        background: var(--card);
+        color: var(--text-primary);
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.12);
+      }
+
+      /* shape pick */
+      .shape-pick {
+        display: flex;
+        gap: 6px;
+      }
+      .shape {
+        width: 22px;
+        height: 22px;
+        border: 1.6px solid var(--border);
+        background: rgba(4, 120, 87, 0.05);
+      }
+      .shape.sq {
+        border-radius: 5px;
+      }
+      .shape.ro {
+        border-radius: 50%;
+      }
+      .shape.active {
+        border-color: var(--tile-icon);
+        background: var(--tile-bg);
+        box-shadow: 0 0 0 2px rgba(4, 120, 87, 0.12);
+      }
+
+      /* compact calendar preview */
+      .cal-preview {
+        margin: 6px 16px 4px;
+        background: var(--bg);
+        border: 1px solid var(--divider);
+        border-radius: 14px;
+        padding: 13px 13px 14px;
+        box-shadow: inset 0 1px 2px rgba(45, 42, 38, 0.03);
+      }
+      .cal-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 9px;
+      }
+      .cal-title {
+        font-family: 'Literata', serif;
+        font-weight: 500;
+        font-size: 12.5px;
+        color: var(--text-secondary);
+      }
+      .cal-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        color: var(--tile-icon);
+        text-transform: uppercase;
+      }
+      .cal-live .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--toggle-on);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.45;
+        }
+      }
+      .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+      }
+      .cell {
+        aspect-ratio: 1;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        background: rgba(45, 42, 38, 0.04);
+      }
+      .cell.done {
+        background: linear-gradient(155deg, #10b981 0%, #059669 100%);
+        color: #fff;
+        box-shadow: 0 2px 5px rgba(5, 150, 105, 0.28);
+      }
+      .cell.today {
+        border: 1.6px solid var(--tile-icon);
+        color: var(--tile-icon);
+        background: var(--tile-bg);
+      }
+
+      /* nested */
+      .nested {
+        margin: 0 16px 0 69px;
+        border-top: 1px solid var(--divider);
+      }
+      .nested .row {
+        padding: 12px 0;
+      }
+      .nested .row::before {
+        display: none;
+      }
+      .nested-corner {
+        color: var(--text-tertiary);
+        opacity: 0.5;
+      }
+      .nested-corner svg {
+        width: 15px;
+        height: 15px;
+      }
+
+      /* premium upsell card */
+      .upsell {
+        margin: 0 16px 22px;
+        border-radius: 16px;
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(150deg, #0f3d2e 0%, #0b2c22 100%);
+        box-shadow: 0 10px 30px rgba(11, 44, 34, 0.35);
+      }
+      .upsell h4 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 17px;
+        color: #eaf6f0;
+        margin-bottom: 5px;
+      }
+      .upsell p {
+        font-size: 12.5px;
+        color: #9fc9b6;
+        line-height: 1.4;
+        margin-bottom: 13px;
+      }
+      .upsell .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #10b981;
+        color: #06281d;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 8px 14px;
+        border-radius: 10px;
+      }
+      .upsell .cta svg {
+        width: 15px;
+        height: 15px;
+      }
+      .upsell .crown {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        color: rgba(255, 255, 255, 0.14);
+      }
+      .upsell .crown svg {
+        width: 54px;
+        height: 54px;
+      }
+
+      .footer-note {
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--text-tertiary);
+        margin-top: 6px;
+        opacity: 0.8;
+      }
+      .footer-note strong {
+        font-family: 'Literata', serif;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      /* ============================================================= */
+      /* DIRECTION B — EDITORIAL : serif kickers, airy, lifted, rich   */
+      /* ============================================================= */
+      .dir-editorial .content {
+        padding: 0 20px 50px;
+      }
+      .dir-editorial .section-head {
+        font-family: 'DM Sans';
+        font-weight: 700;
+        font-size: 11px;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        color: var(--tile-icon);
+        padding: 0 8px 11px;
+      }
+      .dir-editorial .card {
+        border-radius: 18px;
+        box-shadow: var(--hero-shadow), var(--card-inner);
+        margin-bottom: 28px;
+      }
+      .dir-editorial .row {
+        padding: 16px 18px;
+      }
+      .dir-editorial .row + .row::before {
+        left: 74px;
+      }
+      .dir-editorial .row-label {
+        font-size: 16.5px;
+      }
+      .dir-editorial .tile {
+        background: transparent;
+        box-shadow: none;
+        border: 1.5px solid rgba(4, 120, 87, 0.22);
+        border-radius: 13px;
+      }
+      .dir-editorial .hero {
+        padding: 26px 22px 6px;
+        border-radius: 24px;
+      }
+      .dir-editorial .avatar {
+        width: 80px;
+        height: 80px;
+        font-size: 35px;
+      }
+      .dir-editorial .hero-name {
+        font-family: 'Literata', serif;
+        font-size: 23px;
+        font-weight: 600;
+      }
+      .dir-editorial .stat-value {
+        font-family: 'Literata', serif;
+        font-size: 22px;
+      }
+      .dir-editorial .screen-title {
+        font-size: 32px;
+      }
+
+      /* ============================================================= */
+      /* DIRECTION C — GROUPED / iOS-FLAT : inset, dense, monochrome    */
+      /* ============================================================= */
+      .dir-grouped .content {
+        padding: 0 14px 50px;
+      }
+      .dir-grouped .section-head {
+        font-family: 'DM Sans';
+        font-weight: 600;
+        font-size: 12px;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+        padding: 14px 14px 7px;
+      }
+      .dir-grouped .card {
+        border-radius: 13px;
+        box-shadow: none;
+        border: 1px solid var(--border);
+        background: #fbf9f6;
+        margin-bottom: 14px;
+      }
+      .dir-grouped .hero {
+        border-radius: 13px;
+        box-shadow: none;
+        border: 1px solid var(--border);
+        background: #fbf9f6;
+        margin-bottom: 18px;
+      }
+      .dir-grouped .row {
+        padding: 10px 14px;
+        gap: 11px;
+      }
+      .dir-grouped .row + .row::before {
+        left: 55px;
+      }
+      .dir-grouped .row-label {
+        font-size: 15.5px;
+        font-weight: 500;
+      }
+      .dir-grouped .row-sub {
+        font-size: 12px;
+      }
+      .dir-grouped .tile {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: rgba(4, 120, 87, 0.1);
+        box-shadow: none;
+      }
+      .dir-grouped .tile svg {
+        width: 17px;
+        height: 17px;
+      }
+      .dir-grouped .tile.danger {
+        background: rgba(181, 48, 48, 0.1);
+      }
+      .dir-grouped .avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 26px;
+        box-shadow:
+          inset 0 1px 2px rgba(255, 255, 255, 0.9),
+          0 0 0 3px rgba(255, 255, 255, 0.5);
+      }
+      .dir-grouped .toggle {
+        width: 46px;
+        height: 28px;
+      }
+      .dir-grouped .toggle::after {
+        width: 24px;
+        height: 24px;
+      }
+      .dir-grouped .toggle.on::after {
+        transform: translateX(18px);
+      }
+      .dir-grouped .upsell {
+        border-radius: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Settings — three polish directions</h1>
+      <p>
+        Same content &amp; tokens. Pick a direction (or mix moves across them).
+      </p>
+    </div>
+
+    <div class="rack">
+      <div class="col">
+        <div class="col-tag">
+          <div class="name">A · Calm <span class="chip">refine</span></div>
+          <div class="desc">
+            Today's look, tightened. Always-open serif-labelled cards, soft
+            single shadow, green tiles, label-aligned dividers. The safe,
+            shippable pass.
+          </div>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll dir-calm" data-dir="calm"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="col-tag">
+          <div class="name">
+            B · Editorial <span class="chip">distinct</span>
+          </div>
+          <div class="desc">
+            Leans into Literata. Uppercase green kickers, airy rows, lifted
+            cards, outlined icon tiles, serif name &amp; stats. A premium
+            magazine feel.
+          </div>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll dir-editorial" data-dir="editorial"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="col-tag">
+          <div class="name">C · Grouped <span class="chip">utility</span></div>
+          <div class="desc">
+            iOS-flat inset lists. Denser rows, hairline borders (no shadow),
+            small monochrome icons, system-style uppercase labels. Calm utility.
+          </div>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll dir-grouped" data-dir="grouped"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ---- shared content rendered identically into all three frames ----
+      function chev() {
+        return '<span class="chevron"><i data-lucide="chevron-right"></i></span>';
+      }
+      function toggle(on) {
+        return '<div class="toggle' + (on ? ' on' : '') + '"></div>';
+      }
+
+      function rowHTML(r) {
+        var acc = r.acc || '';
+        var sub = r.sub ? '<div class="row-sub">' + r.sub + '</div>' : '';
+        var danger = r.danger ? ' danger' : '';
+        return (
+          '<div class="row' +
+          (r.sub ? ' col2' : '') +
+          '">' +
+          '<div class="tile' +
+          danger +
+          '"><i data-lucide="' +
+          r.icon +
+          '"></i></div>' +
+          '<div class="row-text"><div class="row-label">' +
+          r.label +
+          '</div>' +
+          sub +
+          '</div>' +
+          '<div class="row-acc">' +
+          acc +
+          '</div></div>'
+        );
+      }
+      function cardHTML(rows) {
+        return '<div class="card">' + rows.map(rowHTML).join('') + '</div>';
+      }
+      function head(t) {
+        return '<div class="section-head">' + t + '</div>';
+      }
+
+      function calPreview() {
+        var cells = '';
+        var done = {
+          1: 1,
+          2: 1,
+          3: 1,
+          4: 1,
+          5: 1,
+          7: 1,
+          8: 1,
+          9: 1,
+          10: 1,
+          13: 1,
+          14: 1,
+          15: 1,
+          16: 1,
+          17: 1,
+        };
+        for (var d = 1; d <= 21; d++) {
+          var cls = d === 18 ? 'today' : done[d] ? 'done' : '';
+          cells += '<div class="cell ' + cls + '">' + d + '</div>';
+        }
+        return (
+          '<div class="cal-preview"><div class="cal-head">' +
+          '<span class="cal-title">Calendar preview</span>' +
+          '<span class="cal-live"><span class="dot"></span>Live</span></div>' +
+          '<div class="cal-grid">' +
+          cells +
+          '</div></div>'
+        );
+      }
+
+      function appearanceCard() {
+        return (
+          '<div class="card">' +
+          calPreview() +
+          rowHTML({
+            icon: 'moon',
+            label: 'Theme',
+            acc: '<div class="segmented"><div class="seg">Light</div><div class="seg">Dark</div><div class="seg active">System</div></div>',
+          }) +
+          rowHTML({
+            icon: 'shapes',
+            label: 'Day marker shape',
+            acc: '<div class="shape-pick"><div class="shape sq active"></div><div class="shape ro"></div></div>',
+          }) +
+          rowHTML({
+            icon: 'paintbrush',
+            label: 'Gradient streak fill',
+            sub: 'Color fills active streak cells',
+            acc: toggle(true),
+          }) +
+          rowHTML({
+            icon: 'link',
+            label: 'Streak connections',
+            sub: 'Link completed days into a chain',
+            acc: toggle(true),
+          }) +
+          rowHTML({
+            icon: 'check',
+            label: 'Completion icon',
+            acc: '<span class="value-text">Check</span>' + chev(),
+          }) +
+          rowHTML({
+            icon: 'sprout',
+            label: 'Default growth icons',
+            sub: '5 emojis used for every habit',
+            acc: '<span class="emoji-set">🌱🌿☘️🪴🌳</span>' + chev(),
+          }) +
+          rowHTML({
+            icon: 'layout-grid',
+            label: 'Compact habit cards',
+            sub: 'Fit more on screen',
+            acc: toggle(false),
+          }) +
+          '</div>'
+        );
+      }
+
+      function upsellHTML() {
+        return (
+          '<div class="upsell"><span class="crown"><i data-lucide="crown"></i></span>' +
+          '<h4>Chain Day Premium</h4>' +
+          '<p>Custom reminder times, unlimited habits, and richer stats — for the long game.</p>' +
+          '<span class="cta"><i data-lucide="sparkles"></i>Upgrade</span></div>'
+        );
+      }
+
+      function render(root) {
+        var html = '';
+        // status + topbar
+        html +=
+          '<div class="status-bar"><div class="status-time">9:41</div>' +
+          '<div class="status-right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><div class="battery"></div></div></div>';
+        html +=
+          '<div class="topbar"><div class="screen-title">Settings</div>' +
+          '<div class="close-btn"><i data-lucide="x"></i></div></div>';
+        html += '<div class="content">';
+
+        // hero
+        html +=
+          '<div class="hero"><div class="hero-chevron"><i data-lucide="chevron-right"></i></div>' +
+          '<div class="hero-top"><div class="avatar">A</div>' +
+          '<div class="name-row"><span class="hero-name">Andres</span>' +
+          '<span class="pro-badge"><i data-lucide="crown"></i><span>Pro</span></span></div>' +
+          '<div class="hero-sub">Manage account &amp; subscription</div></div>' +
+          '<div class="stats">' +
+          '<div class="stat"><span class="stat-icon"><i data-lucide="activity"></i></span><span class="stat-value">7</span><span class="stat-label">Active</span></div>' +
+          '<div class="stat"><span class="stat-icon"><i data-lucide="star"></i></span><span class="stat-value">42</span><span class="stat-label">Flawless days</span></div>' +
+          '<div class="stat"><span class="stat-icon"><i data-lucide="check-circle-2"></i></span><span class="stat-value">318</span><span class="stat-label">Completions</span></div>' +
+          '</div></div>';
+
+        // Appearance
+        html += head('Appearance') + appearanceCard();
+
+        // Behavior
+        html +=
+          head('Behavior') +
+          cardHTML([
+            {
+              icon: 'arrow-up-down',
+              label: 'Sort order',
+              sub: 'How habits are ordered',
+              acc: '<span class="value-text">Manual</span>' + chev(),
+            },
+            {
+              icon: 'volume-2',
+              label: 'Completion sound',
+              sub: 'Play sound when checking off',
+              acc: toggle(true),
+            },
+            {
+              icon: 'archive',
+              label: 'Archived habits',
+              sub: 'View and restore hidden habits',
+              acc: '<span class="badge">3</span>' + chev(),
+            },
+            {
+              icon: 'download',
+              label: 'Export habits data',
+              sub: 'Download as CSV or JSON',
+              acc: chev(),
+            },
+          ]);
+
+        // Notifications + nested reminder
+        html +=
+          head('Notifications') +
+          '<div class="card">' +
+          rowHTML({
+            icon: 'alarm-clock',
+            label: 'Streak Reminders',
+            sub: 'Get nudged before a streak slips',
+            acc: toggle(true),
+          }) +
+          '<div class="nested"><div class="row">' +
+          '<span class="nested-corner"><i data-lucide="corner-down-right"></i></span>' +
+          '<div class="row-text"><div class="row-label" style="font-size:15px;">Reminder time</div></div>' +
+          '<div class="row-acc" style="margin-left:auto;"><span class="value-text">8:00 PM</span>' +
+          chev() +
+          '</div>' +
+          '</div></div></div>';
+
+        // Support
+        html +=
+          head('Support') +
+          cardHTML([
+            { icon: 'star', label: 'Rate Chain Day', acc: chev() },
+            { icon: 'share-2', label: 'Share with Friends', acc: chev() },
+            { icon: 'message-circle', label: 'Send Feedback', acc: chev() },
+          ]);
+
+        // About
+        html +=
+          head('About') +
+          cardHTML([
+            {
+              icon: 'shield-check',
+              label: 'Privacy Policy',
+              acc: '<span class="ext-link"><i data-lucide="external-link"></i></span>',
+            },
+            {
+              icon: 'file-text',
+              label: 'Terms of Service',
+              acc: '<span class="ext-link"><i data-lucide="external-link"></i></span>',
+            },
+            {
+              icon: 'info',
+              label: 'Version',
+              acc: '<span class="value-text">1.0.0 (1)</span>',
+            },
+          ]);
+
+        html +=
+          '<div class="footer-note"><strong>Chain Day</strong> · Built for the long game</div>';
+        html += '</div>';
+        root.innerHTML = html;
+      }
+
+      document.querySelectorAll('.scroll[data-dir]').forEach(render);
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

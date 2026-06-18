@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings header — Before / After</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      :root {
+        --bg: #f4f0eb;
+        --card: #fbfaf8;
+        --border: #e7e2db;
+        --text-primary: #23201c;
+        --text-secondary: #7a746c;
+        --text-tertiary: #9a938a;
+        --tile-bg: #e2f1ea;
+        --tile-icon: #047857;
+        --accent: #059669;
+        --amber-bg: #fcefc7;
+        --amber-text: #8a5a12;
+        --stat-orange: #d97706;
+        --stat-green: #059669;
+        --stat-blue: #2563eb;
+        --divider: rgba(35, 32, 28, 0.07);
+        --card-shadow:
+          0 1px 2px rgba(35, 32, 28, 0.03), 0 8px 22px rgba(35, 32, 28, 0.05);
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #0b0b0d;
+        color: #fff;
+        padding: 34px 24px 60px;
+      }
+      .page-head {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+      .page-head h1 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 22px;
+      }
+      .page-head p {
+        color: #9a958d;
+        font-size: 12.5px;
+        margin-top: 6px;
+      }
+      .rack {
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .col .name {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 17px;
+      }
+      .col .name .chip {
+        font-family: 'DM Sans';
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 6px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .chip.now {
+        background: #3a3a3f;
+        color: #cfcac2;
+      }
+      .chip.new {
+        background: #10b981;
+        color: #06281d;
+      }
+
+      .phone {
+        width: 360px;
+        height: 620px;
+        border-radius: 46px;
+        position: relative;
+        background: #1b1b1f;
+        padding: 10px;
+        box-shadow:
+          0 0 0 2px #2c2c30,
+          0 0 0 10px #131316,
+          0 30px 70px rgba(0, 0, 0, 0.55);
+      }
+      .screen {
+        width: 100%;
+        height: 100%;
+        border-radius: 37px;
+        overflow: hidden;
+        background: var(--bg);
+        position: relative;
+      }
+      .island {
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 104px;
+        height: 29px;
+        background: #000;
+        border-radius: 17px;
+        z-index: 40;
+      }
+      .scroll {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+      }
+      .scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .status-bar {
+        height: 44px;
+        padding: 0 26px 0 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .status-time {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-primary);
+        margin-top: 3px;
+      }
+      .status-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 3px;
+      }
+      .status-right svg {
+        width: 15px;
+        height: 15px;
+        color: var(--text-primary);
+      }
+      .battery {
+        width: 22px;
+        height: 11px;
+        border: 1.4px solid var(--text-primary);
+        border-radius: 3px;
+        position: relative;
+      }
+      .battery::before {
+        content: '';
+        position: absolute;
+        left: 1.4px;
+        top: 1.4px;
+        bottom: 1.4px;
+        width: 62%;
+        background: var(--text-primary);
+        border-radius: 1px;
+      }
+
+      .content {
+        padding: 0 16px 30px;
+      }
+      .close-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(35, 32, 28, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .close-circle svg {
+        width: 18px;
+        height: 18px;
+        color: var(--text-secondary);
+        stroke-width: 2.2;
+      }
+
+      /* BEFORE header — left kicker + big serif title */
+      .hdr-before {
+        padding: 8px 20px 14px;
+      }
+      .hdr-before .row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+      }
+      .kicker {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 2.4px;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+      .big-title {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 30px;
+        letter-spacing: -0.4px;
+        color: var(--text-primary);
+        margin-top: 2px;
+      }
+
+      /* AFTER header — centered serif + circular X */
+      .hdr-after {
+        padding: 8px 18px 14px;
+      }
+      .hdr-after .row {
+        display: flex;
+        align-items: center;
+      }
+      .hdr-after .spacer {
+        width: 40px;
+      }
+      .center-title {
+        flex: 1;
+        text-align: center;
+        font-family: 'Literata', serif;
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.35px;
+        color: var(--text-primary);
+      }
+
+      .ann {
+        outline: 2px dashed #10b981;
+        outline-offset: 3px;
+        border-radius: 8px;
+      }
+
+      /* profile card */
+      .profile {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        padding: 20px 16px 2px;
+        margin-bottom: 18px;
+        position: relative;
+      }
+      .pchev {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        color: var(--text-tertiary);
+      }
+      .pchev svg {
+        width: 19px;
+        height: 19px;
+      }
+      .av-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .avatar {
+        width: 66px;
+        height: 66px;
+        border-radius: 50%;
+        position: relative;
+        background:
+          url('https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=180&q=80')
+            center/cover,
+          #cfe7db;
+        box-shadow:
+          0 0 0 4px rgba(255, 255, 255, 0.9),
+          0 4px 12px rgba(35, 32, 28, 0.14);
+      }
+      .cam {
+        position: absolute;
+        right: -2px;
+        bottom: -2px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #3a3530;
+        border: 2.5px solid var(--card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cam svg {
+        width: 11px;
+        height: 11px;
+        color: #fff;
+      }
+      .pname {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 21px;
+        color: var(--text-primary);
+        margin-top: 12px;
+      }
+      .pemail {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+      }
+      .pro {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 8px;
+        background: var(--amber-bg);
+        margin-top: 10px;
+      }
+      .pro svg {
+        width: 11px;
+        height: 11px;
+        color: var(--amber-text);
+      }
+      .pro span {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: var(--amber-text);
+      }
+      .stats {
+        display: flex;
+        border-top: 1px solid var(--divider);
+        margin-top: 16px;
+        padding: 16px 0;
+      }
+      .stat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        position: relative;
+      }
+      .stat + .stat::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 5px;
+        bottom: 5px;
+        width: 1px;
+        background: var(--divider);
+      }
+      .stat svg {
+        width: 17px;
+        height: 17px;
+      }
+      .sval {
+        font-weight: 700;
+        font-size: 22px;
+        letter-spacing: -0.4px;
+      }
+      .slbl {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-align: center;
+      }
+      .s1 .sval,
+      .s1 svg {
+        color: var(--stat-orange);
+      }
+      .s2 .sval,
+      .s2 svg {
+        color: var(--stat-green);
+      }
+      .s3 .sval,
+      .s3 svg {
+        color: var(--stat-blue);
+      }
+
+      .sec {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text-primary);
+        padding: 0 4px 8px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+      }
+      .r {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 13px 14px;
+        position: relative;
+      }
+      .r + .r::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 58px;
+        right: 0;
+        height: 1px;
+        background: var(--divider);
+      }
+      .tile {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--tile-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .tile svg {
+        width: 18px;
+        height: 18px;
+        color: var(--tile-icon);
+      }
+      .rl {
+        flex: 1;
+        font-weight: 600;
+        font-size: 15.5px;
+        color: var(--text-primary);
+      }
+      .toggle {
+        width: 46px;
+        height: 28px;
+        border-radius: 14px;
+        background: var(--accent);
+        position: relative;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 20px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+      }
+      .callout {
+        max-width: 840px;
+        margin: 34px auto 0;
+        background: #161618;
+        border: 1px solid #2a2a2e;
+        border-radius: 14px;
+        padding: 18px 22px;
+      }
+      .callout h3 {
+        font-family: 'Literata', serif;
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      .callout p {
+        color: #cfcac2;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .callout b {
+        color: #f3efe9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>What I changed — the Settings header</h1>
+      <p>
+        Same page body. Only the header differs (dashed green = the change).
+      </p>
+    </div>
+
+    <div class="rack">
+      <div class="col">
+        <div class="name">
+          Before <span class="chip now">was shipping</span>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll" id="before"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="name">After <span class="chip new">now</span></div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll" id="after"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <h3>The one change</h3>
+      <p>
+        <b>Before:</b> a left-aligned 30px serif "Settings" with a small
+        uppercase <b>"CHAIN DAY"</b> kicker above it, close button floating
+        top-right.<br />
+        <b>After:</b> a <b>centered</b> serif "Settings" (22px) with a
+        <b>circular X</b> on the right and an empty balanced left side — the
+        exact same <code>ScreenHeader</code> your <b>Account</b> screen uses.
+        Kicker removed. Everything below is unchanged.
+      </p>
+    </div>
+
+    <script>
+      function statusBar() {
+        return (
+          '<div class="status-bar"><div class="status-time">9:41</div>' +
+          '<div class="status-right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><div class="battery"></div></div></div>'
+        );
+      }
+      function body() {
+        var h = '<div class="content">';
+        h +=
+          '<div class="profile"><div class="pchev"><i data-lucide="chevron-right"></i></div>' +
+          '<div class="av-wrap"><div class="avatar"><div class="cam"><i data-lucide="camera"></i></div></div>' +
+          '<div class="pname">Andres Gutierrez</div><div class="pemail">andres9888@gmail.com</div>' +
+          '<div class="pro"><i data-lucide="crown"></i><span>PRO</span></div></div>' +
+          '<div class="stats">' +
+          '<div class="stat s1"><i data-lucide="activity"></i><span class="sval">37</span><span class="slbl">Active Habits</span></div>' +
+          '<div class="stat s2"><i data-lucide="star"></i><span class="sval">0</span><span class="slbl">Flawless Days</span></div>' +
+          '<div class="stat s3"><i data-lucide="check-circle-2"></i><span class="sval">677</span><span class="slbl">Lifetime</span></div>' +
+          '</div></div>';
+        h +=
+          '<div class="sec">Appearance</div><div class="card">' +
+          '<div class="r"><div class="tile"><i data-lucide="moon"></i></div><div class="rl">Theme</div></div>' +
+          '<div class="r"><div class="tile"><i data-lucide="droplets"></i></div><div class="rl">Gradient streak fill</div><div class="toggle"></div></div>' +
+          '<div class="r"><div class="tile"><i data-lucide="link-2"></i></div><div class="rl">Streak connections</div><div class="toggle"></div></div>' +
+          '</div>';
+        h += '</div>';
+        return h;
+      }
+
+      document.getElementById('before').innerHTML =
+        statusBar() +
+        '<div class="hdr-before ann"><div class="row"><div><div class="kicker">Chain Day</div><div class="big-title">Settings</div></div>' +
+        '<div class="close-circle"><i data-lucide="x"></i></div></div></div>' +
+        body();
+
+      document.getElementById('after').innerHTML =
+        statusBar() +
+        '<div class="hdr-after ann"><div class="row"><div class="spacer"></div>' +
+        '<div class="center-title">Settings</div>' +
+        '<div class="close-circle"><i data-lucide="x"></i></div></div></div>' +
+        body();
+
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

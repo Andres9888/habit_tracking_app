@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Settings · Before / After (Calm)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --bg: #f5f1ed;
+        --card-before: #edeae5; /* shipped raised surface (slightly recessed tone) */
+        --card-after: #faf8f5; /* Calm: lighter fill so cards actually float */
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --tile-bg: #e2f1ea;
+        --tile-icon: #047857;
+        --accent: #059669;
+        --toggle-on: #059669;
+        --toggle-off: #d1d5db;
+        /* shipped stat colors (three saturated hues) */
+        --stat-streak: #d97706;
+        --stat-success: #059669;
+        --stat-info: #2563eb;
+        --warn-bg: #fef3c7;
+        --warn-text: #92400e;
+        --divider: rgba(45, 42, 38, 0.07);
+        /* shipped: TWO shadow systems + border */
+        --shadow-hero-before: 0 4px 16px rgba(45, 42, 38, 0.07);
+        --shadow-card-before: 0 2px 8px rgba(45, 42, 38, 0.06);
+        /* Calm: ONE soft shadow everywhere, no border */
+        --shadow-after:
+          0 1px 2px rgba(45, 42, 38, 0.04), 0 6px 18px rgba(45, 42, 38, 0.06);
+        --inner-after: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          sans-serif;
+        background: #0b0b0d;
+        color: #fff;
+        padding: 36px 28px 60px;
+        min-height: 100vh;
+      }
+      .page-head {
+        text-align: center;
+        margin-bottom: 14px;
+      }
+      .page-head h1 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 24px;
+        letter-spacing: -0.3px;
+      }
+      .page-head p {
+        color: #9a958d;
+        font-size: 13px;
+        margin-top: 6px;
+      }
+
+      .rack {
+        display: flex;
+        gap: 56px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-top: 22px;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .col-tag {
+        text-align: center;
+      }
+      .col-tag .name {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 17px;
+      }
+      .col-tag .name .chip {
+        font-family: 'DM Sans';
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 6px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+      .chip.now {
+        background: #3a3a3f;
+        color: #cfcac2;
+      }
+      .chip.calm {
+        background: #10b981;
+        color: #06281d;
+      }
+
+      /* phone */
+      .phone {
+        width: 380px;
+        height: 760px;
+        border-radius: 50px;
+        position: relative;
+        background: #1b1b1f;
+        padding: 10px;
+        box-shadow:
+          0 0 0 2px #2c2c30,
+          0 0 0 10px #131316,
+          0 40px 90px rgba(0, 0, 0, 0.6);
+        flex-shrink: 0;
+      }
+      .screen {
+        width: 100%;
+        height: 100%;
+        border-radius: 40px;
+        overflow: hidden;
+        background: var(--bg);
+        position: relative;
+      }
+      .island {
+        position: absolute;
+        top: 11px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 112px;
+        height: 31px;
+        background: #000;
+        border-radius: 18px;
+        z-index: 40;
+      }
+      .scroll {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .status-bar {
+        height: 46px;
+        padding: 0 28px 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .status-time {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text-primary);
+        margin-top: 4px;
+      }
+      .status-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .status-right svg {
+        width: 16px;
+        height: 16px;
+        color: var(--text-primary);
+      }
+      .battery {
+        width: 23px;
+        height: 11px;
+        border: 1.4px solid var(--text-primary);
+        border-radius: 3px;
+        position: relative;
+      }
+      .battery::before {
+        content: '';
+        position: absolute;
+        left: 1.4px;
+        top: 1.4px;
+        bottom: 1.4px;
+        width: 62%;
+        background: var(--text-primary);
+        border-radius: 1px;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 25;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 20px 12px;
+        background: linear-gradient(
+          to bottom,
+          var(--bg) 72%,
+          rgba(245, 241, 237, 0)
+        );
+      }
+      .screen-title {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 28px;
+        letter-spacing: -0.4px;
+        color: var(--text-primary);
+      }
+      .close-btn {
+        width: 31px;
+        height: 31px;
+        border-radius: 50%;
+        background: rgba(4, 120, 87, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .close-btn svg {
+        width: 16px;
+        height: 16px;
+        color: var(--accent);
+        stroke-width: 2.4;
+      }
+      .content {
+        padding: 0 18px 50px;
+      }
+
+      /* hero */
+      .hero {
+        border-radius: 16px;
+        padding: 20px 16px 0;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      .hero-chevron {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        color: var(--text-tertiary);
+        opacity: 0.6;
+      }
+      .hero-chevron svg {
+        width: 20px;
+        height: 20px;
+      }
+      .hero-top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .avatar {
+        width: 66px;
+        height: 66px;
+        border-radius: 50%;
+        background: radial-gradient(
+          120% 120% at 30% 20%,
+          #f4fbf7 0%,
+          #e2f1ea 55%,
+          #cfe7db 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 29px;
+        color: var(--tile-icon);
+        box-shadow:
+          inset 0 1px 2px rgba(255, 255, 255, 0.9),
+          0 4px 12px rgba(4, 120, 87, 0.14),
+          0 0 0 4px rgba(255, 255, 255, 0.55);
+      }
+      .name-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .hero-name {
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--text-primary);
+        letter-spacing: -0.2px;
+      }
+      .pro-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        padding: 2px 6px;
+        border-radius: 6px;
+        background: var(--warn-bg);
+      }
+      .pro-badge svg {
+        width: 11px;
+        height: 11px;
+        color: var(--warn-text);
+      }
+      .pro-badge span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        color: var(--warn-text);
+      }
+      .stats {
+        display: flex;
+        padding: 16px 8px;
+        margin-top: 16px;
+        border-top: 1px solid var(--divider);
+      }
+      .stat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        position: relative;
+      }
+      .stat + .stat::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 4px;
+        bottom: 4px;
+        width: 1px;
+        background: var(--divider);
+      }
+      .stat-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+      .stat-value {
+        font-weight: 700;
+        font-size: 20px;
+        letter-spacing: -0.3px;
+        line-height: 1;
+      }
+      .stat-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-align: center;
+      }
+
+      /* section label: serif title + small green icon to the RIGHT (matches shipped) */
+      .section-head {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 0 8px 8px;
+      }
+      .section-head .sh-title {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 15.5px;
+        letter-spacing: -0.1px;
+        color: var(--text-primary);
+      }
+      .section-head .sh-icon {
+        display: flex;
+      }
+      .section-head .sh-icon svg {
+        width: 18px;
+        height: 18px;
+        color: var(--accent);
+      }
+      .card {
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+
+      /* row */
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px;
+        position: relative;
+      }
+      .row.col2 {
+        align-items: flex-start;
+      }
+      .tile {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--tile-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .tile svg {
+        width: 20px;
+        height: 20px;
+        color: var(--tile-icon);
+        stroke-width: 2;
+      }
+      .row-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .row-label {
+        font-weight: 600;
+        font-size: 17px;
+        color: var(--text-primary);
+        letter-spacing: -0.1px;
+        line-height: 1.2;
+      }
+      .row-sub {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+        line-height: 1.3;
+      }
+      .row-acc {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .value-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      .chevron {
+        color: var(--text-secondary);
+      }
+      .chevron svg {
+        width: 20px;
+        height: 20px;
+      }
+      .ext-link svg {
+        width: 18px;
+        height: 18px;
+        color: var(--text-secondary);
+      }
+      .badge {
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 11px;
+        background: var(--tile-bg);
+        color: var(--tile-icon);
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .emoji-set {
+        font-size: 17px;
+        letter-spacing: 1px;
+      }
+
+      /* toggle */
+      .toggle {
+        width: 50px;
+        height: 30px;
+        border-radius: 15px;
+        background: var(--toggle-off);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .toggle.on {
+        background: var(--toggle-on);
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+      }
+      .toggle.on::after {
+        transform: translateX(20px);
+      }
+
+      /* icon-only segmented theme picker (matches shipped) */
+      .segmented {
+        display: flex;
+        background: rgba(45, 42, 38, 0.05);
+        border-radius: 12px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .seg {
+        width: 40px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .seg svg {
+        width: 20px;
+        height: 20px;
+        color: var(--text-secondary);
+        stroke-width: 2;
+      }
+      .seg.active {
+        background: rgba(5, 150, 105, 0.12);
+      }
+      .seg.active svg {
+        color: #047857;
+        stroke-width: 2.5;
+      }
+
+      /* shape pick */
+      .shape-pick {
+        display: flex;
+        background: rgba(45, 42, 38, 0.05);
+        border-radius: 12px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .shape {
+        width: 40px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .shape i {
+        width: 18px;
+        height: 18px;
+        display: block;
+        border: 2px solid var(--text-secondary);
+      }
+      .shape.sq i {
+        border-radius: 4px;
+      }
+      .shape.ro i {
+        border-radius: 50%;
+      }
+      .shape.active {
+        background: rgba(5, 150, 105, 0.12);
+      }
+      .shape.active i {
+        border-color: #047857;
+      }
+
+      /* calendar preview (single-week, matches shipped CalendarPreviewWeek) */
+      .cal-preview {
+        padding: 14px 0 16px;
+      }
+      .cal-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin: 0 16px 12px;
+      }
+      .cal-card {
+        margin: 0 8px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        padding: 12px 8px;
+        background: var(--bg);
+      }
+      .cal-week {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+      }
+      .cal-cell {
+        aspect-ratio: 1;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        background: rgba(45, 42, 38, 0.05);
+      }
+      .cal-cell.done {
+        background: linear-gradient(155deg, #10b981 0%, #059669 100%);
+        color: #fff;
+      }
+      .cal-cell.today {
+        border: 1.6px solid var(--tile-icon);
+        color: var(--tile-icon);
+        background: var(--tile-bg);
+      }
+
+      .footer-note {
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--text-tertiary);
+        margin-top: 6px;
+        opacity: 0.8;
+      }
+      .footer-note strong {
+        font-family: 'Literata', serif;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      /* ===================== BEFORE (shipped today) ===================== */
+      .before .hero {
+        background: var(--card-before);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-hero-before);
+      }
+      .before .card {
+        background: var(--card-before);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-card-before);
+      }
+      .before .cal-card {
+        background: var(--card-before);
+      }
+      /* full-width dividers, edge to edge */
+      .before .row + .row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--border);
+      }
+      .before .cal-preview {
+        border-bottom: 1px solid var(--border);
+      }
+      /* three saturated stat colors */
+      .before .stat:nth-child(1) .stat-value,
+      .before .stat:nth-child(1) .stat-icon svg {
+        color: var(--stat-streak);
+      }
+      .before .stat:nth-child(2) .stat-value,
+      .before .stat:nth-child(2) .stat-icon svg {
+        color: var(--stat-success);
+      }
+      .before .stat:nth-child(3) .stat-value,
+      .before .stat:nth-child(3) .stat-icon svg {
+        color: var(--stat-info);
+      }
+
+      /* ===================== AFTER (Calm) ===================== */
+      .after .hero {
+        background: var(--card-after);
+        box-shadow: var(--shadow-after), var(--inner-after);
+      }
+      .after .card {
+        background: var(--card-after);
+        box-shadow: var(--shadow-after), var(--inner-after);
+      }
+      .after .cal-card {
+        background: var(--bg);
+      }
+      /* dividers inset to align under the label (icon floats free) */
+      .after .row + .row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 72px;
+        right: 0;
+        height: 1px;
+        background: var(--divider);
+      }
+      .after .cal-preview {
+        border-bottom: 1px solid var(--divider);
+      }
+      /* tighter row rhythm */
+      .after .row {
+        padding: 13px 16px;
+        gap: 13px;
+      }
+      .after .row-label {
+        font-size: 16px;
+      }
+      .after .row-sub {
+        font-size: 12.5px;
+        margin-top: 2px;
+      }
+      /* cohesive premium stats: ONE green accent, Literata serif numbers */
+      .after .stat-value {
+        font-family: 'Literata', serif;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .after .stat-icon svg {
+        color: var(--text-tertiary);
+        opacity: 0.7;
+      }
+      .after .stats {
+        padding: 14px 8px;
+      }
+
+      /* ---- legend ---- */
+      .legend {
+        max-width: 880px;
+        margin: 40px auto 0;
+        background: #161618;
+        border: 1px solid #2a2a2e;
+        border-radius: 16px;
+        padding: 22px 26px;
+      }
+      .legend h3 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 14px;
+        color: #f3efe9;
+      }
+      .legend ul {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 28px;
+      }
+      .legend li {
+        font-size: 13px;
+        color: #cfcac2;
+        line-height: 1.5;
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+      }
+      .legend .n {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 6px;
+        background: #10b981;
+        color: #06281d;
+        font-weight: 700;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+      }
+      .legend b {
+        color: #f3efe9;
+        font-weight: 600;
+      }
+      .legend .muted {
+        color: #8a857d;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Settings — before &amp; after</h1>
+      <p>
+        Direction A · Calm — micro-polish only. Nothing moves or disappears.
+      </p>
+    </div>
+
+    <div class="rack">
+      <div class="col">
+        <div class="col-tag">
+          <div class="name">
+            Before <span class="chip now">shipping now</span>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll before" data-mode="before"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="col-tag">
+          <div class="name">After <span class="chip calm">Calm</span></div>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="island"></div>
+            <div class="scroll after" data-mode="after"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <h3>What changed (and what didn't)</h3>
+      <ul>
+        <li>
+          <span class="n">1</span
+          ><span
+            ><b>Stat numbers unified &amp; serif.</b> Three saturated hues
+            (orange / green / blue) → one muted green in Literata. Cohesive,
+            premium. <span class="muted">Most visible change.</span></span
+          >
+        </li>
+        <li>
+          <span class="n">2</span
+          ><span
+            ><b>Dividers inset to the label.</b> Full-width edge-to-edge lines →
+            start where the text starts, so the icon column reads as
+            deliberate.</span
+          >
+        </li>
+        <li>
+          <span class="n">3</span
+          ><span
+            ><b>One shadow system.</b> Today cards carry a border <i>and</i> two
+            different shadow weights; Calm uses a single soft shadow (no border)
+            so hero + sections share one depth language.</span
+          >
+        </li>
+        <li>
+          <span class="n">4</span
+          ><span
+            ><b>Cards actually float.</b> Surface goes from a slightly-recessed
+            tone to a lighter fill, so elevation reads naturally against the
+            canvas.</span
+          >
+        </li>
+        <li>
+          <span class="n">5</span
+          ><span
+            ><b>Tighter row rhythm.</b> 16px → 13px vertical padding. Calmer,
+            more scannable list without feeling cramped.</span
+          >
+        </li>
+        <li>
+          <span class="n">✓</span
+          ><span class="muted"
+            ><b>Unchanged:</b> green icon tiles, serif section headers with the
+            right-aligned icon, amber PRO badge, calendar preview, every row
+            &amp; control. Low-risk to ship.</span
+          >
+        </li>
+      </ul>
+    </div>
+
+    <script>
+      function chev() {
+        return '<span class="chevron"><i data-lucide="chevron-right"></i></span>';
+      }
+      function toggle(on) {
+        return '<div class="toggle' + (on ? ' on' : '') + '"></div>';
+      }
+      function rowHTML(r) {
+        var sub = r.sub ? '<div class="row-sub">' + r.sub + '</div>' : '';
+        return (
+          '<div class="row' +
+          (r.sub ? ' col2' : '') +
+          '">' +
+          '<div class="tile"><i data-lucide="' +
+          r.icon +
+          '"></i></div>' +
+          '<div class="row-text"><div class="row-label">' +
+          r.label +
+          '</div>' +
+          sub +
+          '</div>' +
+          '<div class="row-acc">' +
+          (r.acc || '') +
+          '</div></div>'
+        );
+      }
+      function cardHTML(rows) {
+        return '<div class="card">' + rows.map(rowHTML).join('') + '</div>';
+      }
+      function head(t, icon) {
+        return (
+          '<div class="section-head"><span class="sh-title">' +
+          t +
+          '</span>' +
+          '<span class="sh-icon"><i data-lucide="' +
+          icon +
+          '"></i></span></div>'
+        );
+      }
+
+      function calPreview() {
+        var done = { 1: 1, 2: 1, 4: 1, 5: 1 };
+        var cells = '';
+        ['M', 'T', 'W', 'T', 'F', 'S', 'S'].forEach(function (_, i) {
+          var d = i + 1;
+          var cls = d === 6 ? 'today' : done[d] ? 'done' : '';
+          cells += '<div class="cal-cell ' + cls + '">' + d + '</div>';
+        });
+        return (
+          '<div class="cal-preview"><div class="cal-label">Preview</div>' +
+          '<div class="cal-card"><div class="cal-week">' +
+          cells +
+          '</div></div></div>'
+        );
+      }
+      function themeSeg() {
+        return (
+          '<div class="segmented">' +
+          '<div class="seg"><i data-lucide="sun"></i></div>' +
+          '<div class="seg"><i data-lucide="moon"></i></div>' +
+          '<div class="seg active"><i data-lucide="smartphone"></i></div></div>'
+        );
+      }
+      function shapeSeg() {
+        return '<div class="shape-pick"><div class="shape ro active"><i></i></div><div class="shape sq"><i></i></div></div>';
+      }
+
+      function appearanceCard() {
+        return (
+          '<div class="card">' +
+          calPreview() +
+          rowHTML({ icon: 'moon', label: 'Theme', acc: themeSeg() }) +
+          rowHTML({
+            icon: 'circle',
+            label: 'Day marker shape',
+            acc: shapeSeg(),
+          }) +
+          rowHTML({
+            icon: 'droplets',
+            label: 'Gradient streak fill',
+            sub: 'Color fills active streak cells',
+            acc: toggle(true),
+          }) +
+          rowHTML({
+            icon: 'link-2',
+            label: 'Streak connections',
+            sub: 'Link completed days into a chain on the calendar',
+            acc: toggle(true),
+          }) +
+          rowHTML({
+            icon: 'sparkles',
+            label: 'Default growth icons',
+            sub: 'Pick the 5 emojis used for every habit by default',
+            acc: '<span class="emoji-set">🌱🌿☘️🪴🌳</span>',
+          }) +
+          rowHTML({
+            icon: 'rows-3',
+            label: 'Compact habit cards',
+            sub: 'Fit more on screen',
+            acc: toggle(false),
+          }) +
+          '</div>'
+        );
+      }
+
+      function render(root) {
+        var html = '';
+        html +=
+          '<div class="status-bar"><div class="status-time">9:41</div>' +
+          '<div class="status-right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><div class="battery"></div></div></div>';
+        html +=
+          '<div class="topbar"><div class="screen-title">Settings</div>' +
+          '<div class="close-btn"><i data-lucide="x"></i></div></div>';
+        html += '<div class="content">';
+
+        // hero
+        html +=
+          '<div class="hero"><div class="hero-chevron"><i data-lucide="chevron-right"></i></div>' +
+          '<div class="hero-top"><div class="avatar">A</div>' +
+          '<div class="name-row"><span class="hero-name">Andres</span>' +
+          '<span class="pro-badge"><i data-lucide="crown"></i><span>PRO</span></span></div></div>' +
+          '<div class="stats">' +
+          '<div class="stat"><span class="stat-icon"><i data-lucide="activity"></i></span><span class="stat-value">7</span><span class="stat-label">Active Habits</span></div>' +
+          '<div class="stat"><span class="stat-icon"><i data-lucide="star"></i></span><span class="stat-value">42</span><span class="stat-label">Flawless Days</span></div>' +
+          '<div class="stat"><span class="stat-icon"><i data-lucide="check-circle-2"></i></span><span class="stat-value">318</span><span class="stat-label">Lifetime Completions</span></div>' +
+          '</div></div>';
+
+        html += head('Appearance', 'palette') + appearanceCard();
+
+        html +=
+          head('Behavior', 'sliders-horizontal') +
+          cardHTML([
+            {
+              icon: 'arrow-up-down',
+              label: 'Sort order',
+              sub: 'How habits are ordered',
+              acc: '<span class="value-text">Manual</span>' + chev(),
+            },
+            {
+              icon: 'volume-2',
+              label: 'Completion sound',
+              sub: 'Play sound when checking off',
+              acc: toggle(true),
+            },
+            {
+              icon: 'calendar',
+              label: 'Sticky month header',
+              sub: 'Month stays visible while scrolling',
+              acc: toggle(false),
+            },
+            {
+              icon: 'book-open',
+              label: 'Archived habits',
+              sub: 'View and restore hidden habits',
+              acc: '<span class="badge">3</span>' + chev(),
+            },
+            {
+              icon: 'download',
+              label: 'Export habits data',
+              sub: 'Download as CSV or JSON',
+              acc: chev(),
+            },
+          ]);
+
+        html +=
+          head('Notifications', 'bell-ring') +
+          cardHTML([
+            {
+              icon: 'bell',
+              label: 'Streak Reminders',
+              sub: 'Get nudged before an active streak slips',
+              acc: toggle(true),
+            },
+          ]);
+
+        html +=
+          head('Support', 'heart') +
+          cardHTML([
+            { icon: 'star', label: 'Rate Chain Day', acc: chev() },
+            { icon: 'share-2', label: 'Share with Friends', acc: chev() },
+            { icon: 'message-square', label: 'Send Feedback', acc: chev() },
+            { icon: 'sparkles', label: "What's New", acc: chev() },
+          ]);
+
+        html +=
+          head('About', 'info') +
+          cardHTML([
+            {
+              icon: 'shield',
+              label: 'Privacy Policy',
+              acc: '<span class="ext-link"><i data-lucide="chevron-right"></i></span>',
+            },
+            {
+              icon: 'file-text',
+              label: 'Terms of Service',
+              acc: '<span class="ext-link"><i data-lucide="chevron-right"></i></span>',
+            },
+            {
+              icon: 'info',
+              label: 'Version',
+              acc: '<span class="value-text">1.0.0 (1)</span>',
+            },
+          ]);
+
+        html +=
+          '<div class="footer-note"><strong>Chain Day</strong> · Built for the long game</div>';
+        html += '</div>';
+        root.innerHTML = html;
+      }
+
+      document.querySelectorAll('.scroll[data-mode]').forEach(render);
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

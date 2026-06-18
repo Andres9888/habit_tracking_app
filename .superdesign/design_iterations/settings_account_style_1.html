@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Settings (Account-screen language)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      :root {
+        --bg: #f4f0eb; /* warm canvas, matches screenshot */
+        --card: #fbfaf8; /* near-white warm card */
+        --border: #e7e2db; /* soft hairline */
+        --text-primary: #23201c;
+        --text-secondary: #7a746c;
+        --text-tertiary: #9a938a;
+        --tile-bg: #e2f1ea;
+        --tile-icon: #047857;
+        --danger-bg: #fce4e4;
+        --danger-icon: #c0392b;
+        --danger-text: #c0392b;
+        --accent: #059669;
+        --toggle-on: #059669;
+        --toggle-off: #d6d1c9;
+        /* multicolor stats — the look you like */
+        --stat-orange: #d97706;
+        --stat-green: #059669;
+        --stat-blue: #2563eb;
+        --amber-bg: #fcefc7;
+        --amber-text: #8a5a12;
+        --green-pill-bg: #dcefe4;
+        --green-pill-text: #0b7a4b;
+        --divider: rgba(35, 32, 28, 0.07);
+        --card-shadow:
+          0 1px 2px rgba(35, 32, 28, 0.03), 0 8px 22px rgba(35, 32, 28, 0.05);
+      }
+
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          sans-serif;
+        background: #0b0b0d;
+        color: #fff;
+        padding: 36px 24px 60px;
+        min-height: 100vh;
+      }
+      .page-head {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .page-head h1 {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 22px;
+      }
+      .page-head p {
+        color: #9a958d;
+        font-size: 12.5px;
+        margin-top: 6px;
+      }
+
+      .phone {
+        width: 390px;
+        height: 844px;
+        border-radius: 54px;
+        position: relative;
+        margin: 0 auto;
+        background: #1b1b1f;
+        padding: 11px;
+        box-shadow:
+          0 0 0 2px #2c2c30,
+          0 0 0 11px #131316,
+          0 40px 90px rgba(0, 0, 0, 0.6);
+      }
+      .screen {
+        width: 100%;
+        height: 100%;
+        border-radius: 44px;
+        overflow: hidden;
+        background: var(--bg);
+        position: relative;
+      }
+      .island {
+        position: absolute;
+        top: 13px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 122px;
+        height: 35px;
+        background: #000;
+        border-radius: 20px;
+        z-index: 40;
+      }
+      .scroll {
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      .status-bar {
+        height: 52px;
+        padding: 0 30px 0 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .status-time {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text-primary);
+        margin-top: 2px;
+      }
+      .status-right {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 2px;
+      }
+      .status-right svg {
+        width: 17px;
+        height: 17px;
+        color: var(--text-primary);
+      }
+      .battery {
+        width: 24px;
+        height: 12px;
+        border: 1.4px solid var(--text-primary);
+        border-radius: 3px;
+        position: relative;
+      }
+      .battery::before {
+        content: '';
+        position: absolute;
+        left: 1.4px;
+        top: 1.4px;
+        bottom: 1.4px;
+        width: 62%;
+        background: var(--text-primary);
+        border-radius: 1px;
+      }
+
+      /* centered serif title + circular X (the screenshot header) */
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 25;
+        display: grid;
+        grid-template-columns: 40px 1fr 40px;
+        align-items: center;
+        padding: 6px 18px 14px;
+        background: linear-gradient(
+          to bottom,
+          var(--bg) 76%,
+          rgba(244, 240, 235, 0)
+        );
+      }
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: rgba(35, 32, 28, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .icon-btn svg {
+        width: 18px;
+        height: 18px;
+        color: var(--text-secondary);
+        stroke-width: 2.2;
+      }
+      .screen-title {
+        text-align: center;
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 22px;
+        letter-spacing: -0.2px;
+        color: var(--text-primary);
+      }
+
+      .content {
+        padding: 0 18px 56px;
+      }
+
+      /* ── profile card (matches screenshot) ── */
+      .profile {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: var(--card-shadow);
+        padding: 22px 18px 4px;
+        margin-bottom: 26px;
+        position: relative;
+      }
+      .profile-chevron {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        color: var(--text-tertiary);
+      }
+      .profile-chevron svg {
+        width: 20px;
+        height: 20px;
+      }
+      .avatar-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .avatar {
+        width: 74px;
+        height: 74px;
+        border-radius: 50%;
+        position: relative;
+        background:
+          url('https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=200&q=80')
+            center/cover,
+          #cfe7db;
+        box-shadow:
+          0 0 0 4px rgba(255, 255, 255, 0.9),
+          0 4px 12px rgba(35, 32, 28, 0.14);
+      }
+      .cam-badge {
+        position: absolute;
+        right: -2px;
+        bottom: -2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #3a3530;
+        border: 2.5px solid var(--card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cam-badge svg {
+        width: 12px;
+        height: 12px;
+        color: #fff;
+      }
+      .p-name {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 23px;
+        color: var(--text-primary);
+        margin-top: 14px;
+        letter-spacing: -0.3px;
+      }
+      .p-email {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+      }
+      .pro-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 8px;
+        background: var(--amber-bg);
+        margin-top: 11px;
+      }
+      .pro-pill svg {
+        width: 12px;
+        height: 12px;
+        color: var(--amber-text);
+      }
+      .pro-pill span {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        color: var(--amber-text);
+      }
+
+      .stats {
+        display: flex;
+        border-top: 1px solid var(--divider);
+        margin-top: 18px;
+        padding: 18px 0;
+      }
+      .stat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        position: relative;
+      }
+      .stat + .stat::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 6px;
+        bottom: 6px;
+        width: 1px;
+        background: var(--divider);
+      }
+      .stat-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .stat-val {
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: -0.5px;
+        line-height: 1;
+      }
+      .stat-lbl {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-align: center;
+        line-height: 1.25;
+      }
+      .stat.s-orange .stat-val,
+      .stat.s-orange .stat-icon svg {
+        color: var(--stat-orange);
+      }
+      .stat.s-green .stat-val,
+      .stat.s-green .stat-icon svg {
+        color: var(--stat-green);
+      }
+      .stat.s-blue .stat-val,
+      .stat.s-blue .stat-icon svg {
+        color: var(--stat-blue);
+      }
+
+      /* ── section label (sans, bold, dark — like "Premium"/"DANGER ZONE") ── */
+      .sec-label {
+        font-family: 'Literata', serif;
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-primary);
+        padding: 0 6px 10px;
+        letter-spacing: -0.1px;
+      }
+      .sec-label.danger {
+        font-family: 'DM Sans';
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--text-tertiary);
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+        margin-bottom: 24px;
+      }
+
+      /* ── row ── */
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px 16px;
+        position: relative;
+      }
+      .row.col2 {
+        align-items: flex-start;
+      }
+      .row + .row::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 62px;
+        right: 0;
+        height: 1px;
+        background: var(--divider);
+      }
+      .tile {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: var(--tile-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .tile svg {
+        width: 19px;
+        height: 19px;
+        color: var(--tile-icon);
+        stroke-width: 2;
+      }
+      .tile.danger {
+        background: var(--danger-bg);
+      }
+      .tile.danger svg {
+        color: var(--danger-icon);
+      }
+      .row-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .row-label {
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--text-primary);
+        letter-spacing: -0.1px;
+        line-height: 1.25;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .row-label.danger {
+        color: var(--danger-text);
+      }
+      .row-sub {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        margin-top: 3px;
+        line-height: 1.35;
+      }
+      .row-acc {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
+      }
+      .value-text {
+        font-size: 14.5px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+      .chevron svg {
+        width: 19px;
+        height: 19px;
+        color: var(--text-tertiary);
+      }
+      .ext svg {
+        width: 17px;
+        height: 17px;
+        color: var(--text-tertiary);
+      }
+      .active-pill {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        color: var(--green-pill-text);
+        background: var(--green-pill-bg);
+        padding: 2px 7px;
+        border-radius: 6px;
+        text-transform: uppercase;
+      }
+      .badge {
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 11px;
+        background: var(--tile-bg);
+        color: var(--tile-icon);
+        font-size: 12.5px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .emoji-set {
+        font-size: 17px;
+        letter-spacing: 1px;
+      }
+
+      /* sign out card */
+      .signout {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        box-shadow: var(--card-shadow);
+        padding: 16px;
+        text-align: center;
+        margin-bottom: 26px;
+      }
+      .signout span {
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--danger-text);
+      }
+
+      /* toggle */
+      .toggle {
+        width: 50px;
+        height: 30px;
+        border-radius: 15px;
+        background: var(--toggle-off);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .toggle.on {
+        background: var(--toggle-on);
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+      }
+      .toggle.on::after {
+        transform: translateX(20px);
+      }
+
+      /* segmented (icon-only theme) */
+      .segmented {
+        display: flex;
+        background: rgba(35, 32, 28, 0.05);
+        border-radius: 11px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .seg {
+        width: 38px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .seg svg {
+        width: 19px;
+        height: 19px;
+        color: var(--text-secondary);
+      }
+      .seg.active {
+        background: rgba(5, 150, 105, 0.12);
+      }
+      .seg.active svg {
+        color: #047857;
+      }
+
+      .footer {
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--text-tertiary);
+        margin-top: 4px;
+      }
+      .footer strong {
+        font-family: 'Literata', serif;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Settings — in your Account-screen language</h1>
+      <p>
+        Centered serif title · circular X · clean cards · multicolor stats kept
+      </p>
+    </div>
+
+    <div class="phone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="scroll" id="root"></div>
+      </div>
+    </div>
+
+    <script>
+      function chev() {
+        return '<span class="chevron"><i data-lucide="chevron-right"></i></span>';
+      }
+      function toggle(on) {
+        return '<div class="toggle' + (on ? ' on' : '') + '"></div>';
+      }
+      function rowHTML(r) {
+        var sub = r.sub ? '<div class="row-sub">' + r.sub + '</div>' : '';
+        var d = r.danger ? ' danger' : '';
+        return (
+          '<div class="row' +
+          (r.sub ? ' col2' : '') +
+          '">' +
+          '<div class="tile' +
+          d +
+          '"><i data-lucide="' +
+          r.icon +
+          '"></i></div>' +
+          '<div class="row-text"><div class="row-label' +
+          d +
+          '">' +
+          r.label +
+          (r.pill ? ' <span class="active-pill">' + r.pill + '</span>' : '') +
+          '</div>' +
+          sub +
+          '</div>' +
+          '<div class="row-acc">' +
+          (r.acc || '') +
+          '</div></div>'
+        );
+      }
+      function card(rows) {
+        return '<div class="card">' + rows.map(rowHTML).join('') + '</div>';
+      }
+      function lbl(t, cls) {
+        return (
+          '<div class="sec-label' + (cls ? ' ' + cls : '') + '">' + t + '</div>'
+        );
+      }
+      function themeSeg() {
+        return '<div class="segmented"><div class="seg"><i data-lucide="sun"></i></div><div class="seg"><i data-lucide="moon"></i></div><div class="seg active"><i data-lucide="smartphone"></i></div></div>';
+      }
+
+      var html = '';
+      html +=
+        '<div class="status-bar"><div class="status-time">9:41</div>' +
+        '<div class="status-right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><div class="battery"></div></div></div>';
+
+      // centered header
+      html +=
+        '<div class="topbar"><span></span><div class="screen-title">Settings</div>' +
+        '<div class="icon-btn" style="justify-self:end;"><i data-lucide="x"></i></div></div>';
+
+      html += '<div class="content">';
+
+      // profile card (mirrors the screenshot)
+      html +=
+        '<div class="profile"><div class="profile-chevron"><i data-lucide="chevron-right"></i></div>' +
+        '<div class="avatar-wrap">' +
+        '<div class="avatar"><div class="cam-badge"><i data-lucide="camera"></i></div></div>' +
+        '<div class="p-name">Andres Gutierrez</div>' +
+        '<div class="p-email">andres9888@gmail.com</div>' +
+        '<div class="pro-pill"><i data-lucide="crown"></i><span>PRO</span></div>' +
+        '</div>' +
+        '<div class="stats">' +
+        '<div class="stat s-orange"><span class="stat-icon"><i data-lucide="activity"></i></span><span class="stat-val">37</span><span class="stat-lbl">Active Habits</span></div>' +
+        '<div class="stat s-green"><span class="stat-icon"><i data-lucide="star"></i></span><span class="stat-val">0</span><span class="stat-lbl">Flawless Days</span></div>' +
+        '<div class="stat s-blue"><span class="stat-icon"><i data-lucide="check-circle-2"></i></span><span class="stat-val">677</span><span class="stat-lbl">Lifetime Completions</span></div>' +
+        '</div></div>';
+
+      // Appearance
+      html +=
+        lbl('Appearance') +
+        card([
+          { icon: 'moon', label: 'Theme', acc: themeSeg() },
+          {
+            icon: 'droplets',
+            label: 'Gradient streak fill',
+            sub: 'Color fills active streak cells',
+            acc: toggle(true),
+          },
+          {
+            icon: 'link-2',
+            label: 'Streak connections',
+            sub: 'Link completed days into a chain',
+            acc: toggle(true),
+          },
+          {
+            icon: 'sparkles',
+            label: 'Default growth icons',
+            sub: '5 emojis used for every habit',
+            acc: '<span class="emoji-set">🌱🌿☘️🪴🌳</span>',
+          },
+          {
+            icon: 'rows-3',
+            label: 'Compact habit cards',
+            sub: 'Fit more on screen',
+            acc: toggle(false),
+          },
+        ]);
+
+      // Behavior
+      html +=
+        lbl('Behavior') +
+        card([
+          {
+            icon: 'arrow-up-down',
+            label: 'Sort order',
+            sub: 'How habits are ordered',
+            acc: '<span class="value-text">Manual</span>' + chev(),
+          },
+          {
+            icon: 'volume-2',
+            label: 'Completion sound',
+            sub: 'Play sound when checking off',
+            acc: toggle(true),
+          },
+          {
+            icon: 'book-open',
+            label: 'Archived habits',
+            sub: 'View and restore hidden habits',
+            acc: '<span class="badge">3</span>' + chev(),
+          },
+          {
+            icon: 'download',
+            label: 'Export habits data',
+            sub: 'Download as CSV or JSON',
+            acc: chev(),
+          },
+        ]);
+
+      // Notifications
+      html +=
+        lbl('Notifications') +
+        card([
+          {
+            icon: 'bell',
+            label: 'Streak Reminders',
+            sub: 'Get nudged before an active streak slips',
+            acc: toggle(true),
+          },
+        ]);
+
+      // Premium (mirrors screenshot Premium section)
+      html +=
+        lbl('Premium') +
+        card([
+          {
+            icon: 'crown',
+            label: 'Premium',
+            pill: 'Active',
+            sub: 'All features unlocked',
+          },
+          { icon: 'settings', label: 'Manage Subscription', acc: chev() },
+        ]);
+
+      // Support
+      html +=
+        lbl('Support') +
+        card([
+          { icon: 'star', label: 'Rate Chain Day', acc: chev() },
+          { icon: 'share-2', label: 'Share with Friends', acc: chev() },
+          { icon: 'message-square', label: 'Send Feedback', acc: chev() },
+        ]);
+
+      // About
+      html +=
+        lbl('About') +
+        card([
+          {
+            icon: 'shield',
+            label: 'Privacy Policy',
+            acc: '<span class="ext"><i data-lucide="external-link"></i></span>',
+          },
+          {
+            icon: 'file-text',
+            label: 'Terms of Service',
+            acc: '<span class="ext"><i data-lucide="external-link"></i></span>',
+          },
+          {
+            icon: 'info',
+            label: 'Version',
+            acc: '<span class="value-text">1.0.0 (1)</span>',
+          },
+        ]);
+
+      // Sign out + danger (mirrors screenshot)
+      html += '<div class="signout"><span>Sign Out</span></div>';
+      html +=
+        lbl('Danger Zone', 'danger') +
+        card([
+          {
+            icon: 'trash-2',
+            label: 'Delete account',
+            sub: 'Permanently remove your account and all Chain Day data',
+            danger: true,
+          },
+        ]);
+
+      html +=
+        '<div class="footer"><strong>Chain Day</strong> · Built for the long game</div>';
+      html += '</div>';
+
+      document.getElementById('root').innerHTML = html;
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

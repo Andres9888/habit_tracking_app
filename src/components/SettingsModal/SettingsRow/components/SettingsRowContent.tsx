@@ -2,6 +2,7 @@ import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { typography, fontWeights } from '@/theme/typography';
 import { RowAccessory } from './RowAccessory';
+import { SettingsRowDivider } from './SettingsRowDivider';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
@@ -41,10 +42,10 @@ export function SettingsRowContent({
   return (
     <View
       accessible={isInteractiveInfo ? false : undefined}
-      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4 py-4 ${showBorder ? 'border-b' : ''}`}
+      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4`}
       style={{
         backgroundColor: colors.background,
-        borderColor: showBorder ? colors.border : undefined,
+        paddingVertical: 13,
         overflow: 'hidden',
       }}
     >
@@ -95,6 +96,7 @@ export function SettingsRowContent({
           onToggle={onToggle}
         />
       )}
+      {showBorder ? <SettingsRowDivider color={colors.border} /> : null}
     </View>
   );
 }

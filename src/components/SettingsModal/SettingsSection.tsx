@@ -26,13 +26,13 @@ export function SettingsSection({
   isExpanded = true,
   onToggle,
 }: Props) {
-  const { colors: themeColors, isDark } = useThemeColors();
+  const { isDark } = useThemeColors();
 
+  // Calm: one soft shadow shared with the profile hero; borderless float.
   const cardStyle = {
     backgroundColor: getRaisedSurface(isDark),
-    borderColor: themeColors.border,
-    borderWidth: 1,
-    ...shadows.card,
+    ...shadows.floatingActionButton,
+    shadowOpacity: 0.06,
   };
 
   if (collapsible) {

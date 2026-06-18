@@ -31,7 +31,7 @@ export function PremiumUpsellContent({
           style={{
             ...typography.body,
             fontWeight: fontWeights.bold,
-            color: isDark ? '#E0E7FF' : palette.text.inverse,
+            color: isDark ? '#FDE68A' : palette.text.inverse,
           }}
         >
           Upgrade to Premium
@@ -40,7 +40,7 @@ export function PremiumUpsellContent({
           className='mt-0.5'
           style={{
             ...typography.caption,
-            color: isDark ? 'rgba(224,231,255,0.6)' : overlays.subTextOnHero,
+            color: isDark ? 'rgba(253,230,138,0.6)' : overlays.subTextOnHero,
           }}
         >
           Unlock sounds, reminders & more
@@ -55,7 +55,7 @@ export function PremiumUpsellContent({
             ...typography.caption,
             fontWeight: fontWeights.bold,
             color: isDark
-              ? themeColors.status.premiumText
+              ? themeColors.status.warningText
               : palette.text.inverse,
           }}
         >

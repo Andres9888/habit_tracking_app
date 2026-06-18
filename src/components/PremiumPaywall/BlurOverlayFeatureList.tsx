@@ -23,10 +23,7 @@ export function AnalyticsFeatureList() {
           className='mb-3 flex-row items-start rounded-xl bg-white/10 p-4'
         >
           <View className='mr-4 h-10 w-10 items-center justify-center rounded-xl bg-white/10'>
-            <feature.icon
-              color={colors.premium?.[600] ?? '#8b5cf6'}
-              size={iconSizes.large}
-            />
+            <feature.icon color='#34D399' size={iconSizes.large} />
           </View>
           <View className='mr-2 flex-1'>
             <Text className='mb-0.5 text-base font-semibold text-white'>

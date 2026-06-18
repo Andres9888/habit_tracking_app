@@ -13,11 +13,11 @@ export function handleManageSubscription() {
   }
 }
 
-/** Premium gradient uses custom indigo/violet tones on a non-semantic surface */
+/** Premium upsell gradient — warm amber tones matching the PRO badge language */
 export function getUpsellGradient(
   isDark: boolean
 ): readonly [string, string, string] {
   return isDark
-    ? (['#2e1f5e', '#1e1b4b', '#312e81'] as const)
-    : (['#8b5cf6', '#6366f1', '#818cf8'] as const);
+    ? (['#4A340A', '#3A2806', '#4A340A'] as const)
+    : (['#F59E0B', '#D97706', '#B45309'] as const);
 }

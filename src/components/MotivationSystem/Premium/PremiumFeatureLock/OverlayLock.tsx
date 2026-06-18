@@ -60,9 +60,15 @@ export function OverlayLock({
       testID={testID}
     >
       <View className='mb-4 items-center'>
-        <View className='absolute h-16 w-16 rounded-full' style={{ backgroundColor: colors.status.premiumLight }} />
-        <View className='h-14 w-14 items-center justify-center rounded-full' style={{ backgroundColor: colors.status.premiumLight }}>
-          <Lock color={colors.status.premiumText} size={iconSizes.xl} />
+        <View
+          className='absolute h-16 w-16 rounded-full'
+          style={{ backgroundColor: colors.status.warningLight }}
+        />
+        <View
+          className='h-14 w-14 items-center justify-center rounded-full'
+          style={{ backgroundColor: colors.status.warningLight }}
+        >
+          <Lock color={colors.status.warningText} size={iconSizes.xl} />
         </View>
       </View>
 
@@ -73,12 +79,18 @@ export function OverlayLock({
         {meta.description}
       </Text>
 
-      {showScience ? <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-white/10 px-3 py-2'>
-          <Sparkles className='mt-0.5' color={colors.status.warning} size={iconSizes.small} />
+      {showScience ? (
+        <View className='mb-4 flex-row items-start gap-2 rounded-lg bg-white/10 px-3 py-2'>
+          <Sparkles
+            className='mt-0.5'
+            color={colors.status.warning}
+            size={iconSizes.small}
+          />
           <Text className='flex-1 text-xs italic text-white/70'>
             {meta.scienceBasis}
           </Text>
-        </View> : null}
+        </View>
+      ) : null}
 
       <Pressable
         accessibilityHint='Opens premium subscription options'
@@ -89,7 +101,7 @@ export function OverlayLock({
       >
         <LinearGradient
           className='flex-row items-center justify-center gap-2 rounded-xl px-6 py-3'
-          colors={['#8b5cf6', '#7c3aed']}
+          colors={['#D97706', '#B45309']}
           end={{ x: 1, y: 0 }}
           start={{ x: 0, y: 0 }}
         >
@@ -101,9 +113,11 @@ export function OverlayLock({
         </LinearGradient>
       </Pressable>
 
-      {meta.freeLimit ? <Text className='mt-2 text-center text-xs text-white/50'>
+      {meta.freeLimit ? (
+        <Text className='mt-2 text-center text-xs text-white/50'>
           Free tier: {meta.freeLimit}
-        </Text> : null}
+        </Text>
+      ) : null}
     </View>
   );
 }

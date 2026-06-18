@@ -3,14 +3,13 @@ import type { SemanticColors } from '../../theme/darkColors';
 import { getRaisedSurface } from './raisedSurface';
 
 export function getProfileCardShellStyle(
-  themeColors: SemanticColors,
+  _themeColors: SemanticColors,
   isDark = false
 ) {
+  // Calm: one soft shadow shared with section cards; borderless float.
   return {
     backgroundColor: getRaisedSurface(isDark),
-    borderColor: themeColors.border,
-    borderWidth: 1,
     ...shadows.floatingActionButton,
-    shadowOpacity: 0.07,
+    shadowOpacity: 0.06,
   };
 }
