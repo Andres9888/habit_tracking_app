@@ -35,9 +35,10 @@ function HabitDetailScreenContent({
 }: HabitDetailScreenProps) {
   const { colors } = useThemeColors();
   const screenState = useHabitDetailScreenState({
+    bestStreak: habit?.bestStreak ?? 0,
+    currentStreak: habit?.currentStreak ?? 0,
     habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
-    habitStrength: habit?.strength ?? 0,
     tracking,
     visible,
   });
@@ -108,7 +109,11 @@ function HabitDetailScreenContent({
                 <HabitDetailContent
                   completedDates={screenState.completedDates}
                   daysTracking={screenState.daysTracking}
-                  habit={habit}
+                  habit={{
+                    ...habit,
+                    bestStreak: screenState.bestStreak,
+                    currentStreak: screenState.currentStreak,
+                  }}
                   isCompletedToday={screenState.isCompletedToday}
                   pendingToggleDate={screenState.pendingToggleDate}
                   totalCompletions={screenState.totalCompletions}
