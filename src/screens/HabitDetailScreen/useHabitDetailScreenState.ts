@@ -6,19 +6,23 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
 import { useMemo, useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
+import { useOptimisticToggle } from '../../lib/optimistic/hooks/useOptimisticState';
+import { applyOptimisticToday } from './optimisticToday';
 
 interface UseHabitDetailScreenStateProps {
+  bestStreak: number;
+  currentStreak: number;
   habitCreatedAt: number | undefined;
   habitId: Id<'habits'> | undefined;
-  habitStrength: number;
   tracking: HabitTrackingEntry[];
   visible?: boolean;
 }
 
 export const useHabitDetailScreenState = ({
+  bestStreak,
+  currentStreak,
   habitCreatedAt,
   habitId,
-  habitStrength,
   tracking,
   visible: _visible,
 }: UseHabitDetailScreenStateProps) => {
@@ -55,7 +59,21 @@ export const useHabitDetailScreenState = ({
     return new Set(completedDatesKey.split(','));
   }, [completedDatesKey]);
 
-  const isCompletedToday = completedDates.has(today);
+  // Overlay any pending optimistic toggle for today so the hero (Done button,
+  // streak, total) reacts instantly like the calendar, then self-reconciles.
+  const optimisticToggle = useOptimisticToggle(
+    (habitId ?? '') as Id<'habits'>,
+    today
+  );
+  const optimistic = applyOptimisticToday(
+    {
+      bestStreak,
+      completedToday: completedDates.has(today),
+      currentStreak,
+      totalCompletions: completedDates.size,
+    },
+    optimisticToggle
+  );
 
   // Days tracking calculation
   const daysTracking = useMemo(() => {
@@ -67,25 +85,18 @@ export const useHabitDetailScreenState = ({
       : 0;
   }, [habitCreatedAt]);
 
-  const totalCompletions = useMemo(() => completedDates.size, [completedDates]);
-
-  const strengthPercent = useMemo(
-    () => Math.max(0, Math.min(100, habitStrength * 100)),
-    [habitStrength]
-  );
-
   return {
+    bestStreak: optimistic.bestStreak,
     completedDates,
+    currentStreak: optimistic.currentStreak,
     daysTracking,
-    isCompletedToday,
+    isCompletedToday: optimistic.isCompletedToday,
     pendingArchive,
     pendingDelete,
     pendingToggleDate,
     setPendingToggleDate,
     setPendingArchive,
     setPendingDelete,
-    strengthPercent,
-    today,
-    totalCompletions,
+    totalCompletions: optimistic.totalCompletions,
   };
 };

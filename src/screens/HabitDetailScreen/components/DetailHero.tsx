@@ -1,18 +1,15 @@
-/** DetailHero - Minimal centered: large icon, name, journey line, stat row. */
-import { Text, View } from 'react-native';
+/** DetailHero - Premium hero card: haloed icon, name, notable badge, journey line, stat band. */
+import { Text } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
-import { StatColumn, StatHairline } from '../../../components/ui';
 import { useThemeColors } from '../../../theme';
-import { spacing } from '../../../theme/spacing';
-import {
-  fontFamilies,
-  fontWeights,
-  typography,
-} from '../../../theme/typography';
+import { colors as palette } from '../../../theme/colors';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { getHabitDisplayName } from './DetailHero.utils';
+import { DetailHeroContext } from './DetailHeroContext';
 import { DetailHeroIcon } from './DetailHeroIcon';
-import { DetailHeroStatValue } from './DetailHeroStatValue';
+import { DetailHeroStats } from './DetailHeroStats';
 
 interface DetailHeroProps {
   daysTracking?: number;
@@ -31,12 +28,25 @@ export function DetailHero({
   isCompletedToday,
   totalCompletions,
 }: DetailHeroProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const habitName = getHabitDisplayName(habit);
-  const statProps = { labelColor: colors.text.secondary };
 
   return (
-    <Animated.View className='items-center px-5 pb-1 pt-2' entering={ENTERING}>
+    <Animated.View
+      className='items-center'
+      entering={ENTERING}
+      style={{
+        backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
+        borderColor: colors.border,
+        borderRadius: borderRadius.large,
+        borderWidth: 1,
+        marginHorizontal: spacing.base,
+        marginTop: spacing.sm,
+        paddingHorizontal: spacing.base,
+        paddingVertical: spacing.lg,
+        ...shadows.card,
+      }}
+    >
       {habit.icon ? (
         <DetailHeroIcon
           color={habit.color ?? habit.iconColor}
@@ -52,46 +62,36 @@ export function DetailHero({
         style={{
           color: colors.text.primary,
           fontFamily: fontFamilies.primary.display,
-          fontSize: typography.heading3.fontSize,
+          fontSize: 24,
           fontWeight: fontWeights.bold,
-          marginTop: spacing.md,
+          letterSpacing: -0.3,
+          marginTop: spacing.base,
         }}
       >
         {habitName}
       </Text>
 
+      <DetailHeroContext
+        bestStreak={habit.bestStreak ?? 0}
+        currentStreak={habit.currentStreak ?? 0}
+        goalDuration={habit.goalDuration ?? 0}
+      />
+
       <Text
         style={{
           ...typography.caption,
           color: colors.text.tertiary,
-          marginTop: spacing.xs,
+          marginTop: spacing.sm,
         }}
       >
         Day {daysTracking + 1} of your journey
       </Text>
 
-      <View
-        className='w-full flex-row items-center'
-        style={{ marginTop: spacing.base }}
-      >
-        <View className='flex-1 items-center'>
-          <DetailHeroStatValue value={habit.currentStreak ?? 0} />
-          <Text
-            style={{
-              ...typography.caption,
-              color: statProps.labelColor,
-              fontSize: typography.overline.fontSize,
-              marginTop: 2,
-            }}
-          >
-            streak
-          </Text>
-        </View>
-        <StatHairline />
-        <StatColumn label='best' value={habit.bestStreak ?? 0} {...statProps} />
-        <StatHairline />
-        <StatColumn label='total' value={totalCompletions} {...statProps} />
-      </View>
+      <DetailHeroStats
+        bestStreak={habit.bestStreak ?? 0}
+        currentStreak={habit.currentStreak ?? 0}
+        totalCompletions={totalCompletions}
+      />
     </Animated.View>
   );
 }
