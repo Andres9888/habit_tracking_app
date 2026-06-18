@@ -5,7 +5,7 @@ import Animated from 'react-native-reanimated';
 import { AccountHeaderCard } from '../AccountHeaderCard';
 import { StreakRemindersSection } from '../StreakRemindersSection';
 import { AppearanceSection } from '../sections';
-import { DataPrivacySection } from '../sections/DataPrivacySection';
+import { DataPrivacySection } from '../sections';
 import { BehaviorSection } from './BehaviorSection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 import type { SettingsContentProps } from '../SettingsContent.types';

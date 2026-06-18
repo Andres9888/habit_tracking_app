@@ -34,10 +34,10 @@ export function DataPrivacySection(p: DataPrivacySectionProps) {
           <Trash2 color={settings.deleteAccount.icon} size={iconSizes.small} />
         }
         iconBackgroundColor={settings.deleteAccount.bg}
-        label='Delete account'
+        label={p.isDeletingAccount ? 'Deleting account…' : 'Delete account'}
         showBorder={false}
         type='navigation'
-        onPress={p.onDeleteAccount}
+        onPress={p.isDeletingAccount ? undefined : p.onDeleteAccount}
       />
     </SettingsSection>
   );
