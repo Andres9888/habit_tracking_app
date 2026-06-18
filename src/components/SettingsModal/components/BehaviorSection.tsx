@@ -9,7 +9,6 @@ import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { SortOrderPicker } from '../SortOrderPicker';
 import { SoundPicker } from '../SoundPicker';
-import { HabitDataRows } from './HabitDataRows';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../../features/habits/types';
 import type { SettingsContentProps } from '../SettingsContent.types';
@@ -24,9 +23,6 @@ interface BehaviorSectionProps {
   onChangeCompletionSoundType: SettingsContentProps['onChangeCompletionSoundType'];
   stickyCalendarHeader: boolean;
   onChangeStickyCalendarHeader: SettingsContentProps['onChangeStickyCalendarHeader'];
-  archivedHabitsCount?: number;
-  onOpenArchivedHabits: () => void;
-  onExportHabitsData?: () => void | Promise<void>;
 }
 
 export function BehaviorSection(p: BehaviorSectionProps) {
@@ -36,7 +32,7 @@ export function BehaviorSection(p: BehaviorSectionProps) {
   return (
     <SettingsSection
       icon={<SlidersHorizontal color={p.sectionIconColor} size={iconSize} />}
-      title='Behavior'
+      title='Habits'
     >
       <SettingsRow
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
@@ -69,15 +65,11 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         icon={<Calendar color={icons.calendarHeader.icon} size={iconSize} />}
         iconBackgroundColor={icons.calendarHeader.bg}
         label='Sticky month header'
+        showBorder={false}
         subtitle='Month stays visible while scrolling'
         type='toggle'
         value={p.stickyCalendarHeader}
         onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
-      />
-      <HabitDataRows
-        archivedHabitsCount={p.archivedHabitsCount}
-        onExportHabitsData={p.onExportHabitsData}
-        onOpenArchivedHabits={p.onOpenArchivedHabits}
       />
     </SettingsSection>
   );

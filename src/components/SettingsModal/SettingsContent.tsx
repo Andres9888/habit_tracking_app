@@ -55,7 +55,9 @@ export function SettingsContent(p: SettingsContentProps) {
           <SettingsSectionList
             {...p}
             sectionIconColor={sectionIconColor}
+            isDeletingAccount={actions.isDeletingAccount}
             isSigningOut={actions.isSigningOut}
+            onDeleteAccount={actions.handleDeleteAccount}
             onFeedback={actions.handleFeedback}
             onManageSubscription={handleManageSubscription}
             onPrivacy={actions.openPrivacy}

@@ -5,6 +5,7 @@ import Animated from 'react-native-reanimated';
 import { AccountHeaderCard } from '../AccountHeaderCard';
 import { StreakRemindersSection } from '../StreakRemindersSection';
 import { AppearanceSection } from '../sections';
+import { DataPrivacySection } from '../sections/DataPrivacySection';
 import { BehaviorSection } from './BehaviorSection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 import type { SettingsContentProps } from '../SettingsContent.types';
@@ -14,6 +15,8 @@ interface PrimarySectionsProps extends SettingsContentProps {
   isSigningOut: boolean;
   onSignOut: () => void;
   onManageSubscription: () => void;
+  onDeleteAccount: () => void;
+  isDeletingAccount: boolean;
 }
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {
@@ -49,7 +52,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
       </Animated.View>
       <Animated.View entering={sectionEnterAnim(2)}>
         <BehaviorSection
-          archivedHabitsCount={p.archivedHabitsCount}
           completionSoundEnabled={p.completionSoundEnabled}
           completionSoundType={p.completionSoundType}
           habitSortMode={p.habitSortMode}
@@ -59,8 +61,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeCompletionSoundType={p.onChangeCompletionSoundType}
           onChangeHabitSortMode={p.onChangeHabitSortMode}
           onChangeStickyCalendarHeader={p.onChangeStickyCalendarHeader}
-          onExportHabitsData={p.onExportHabitsData}
-          onOpenArchivedHabits={p.onOpenArchivedHabits}
         />
       </Animated.View>
       <Animated.View entering={sectionEnterAnim(3)}>
@@ -72,6 +72,16 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeTime={p.onChangeStreakReminderTime}
           onPremiumUpsell={p.onPremiumUpsell}
           onToggle={p.onToggleStreakReminders}
+        />
+      </Animated.View>
+      <Animated.View entering={sectionEnterAnim(4)}>
+        <DataPrivacySection
+          archivedHabitsCount={p.archivedHabitsCount}
+          isDeletingAccount={p.isDeletingAccount}
+          sectionIconColor={p.sectionIconColor}
+          onDeleteAccount={p.onDeleteAccount}
+          onExportHabitsData={p.onExportHabitsData}
+          onOpenArchivedHabits={p.onOpenArchivedHabits}
         />
       </Animated.View>
     </>

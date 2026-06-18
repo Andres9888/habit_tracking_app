@@ -14,6 +14,8 @@ interface SettingsSectionListProps extends SettingsContentProps {
   isSigningOut: boolean;
   onSignOut: () => void;
   onManageSubscription: () => void;
+  onDeleteAccount: () => void;
+  isDeletingAccount: boolean;
 }
 
 export function SettingsSectionList(p: SettingsSectionListProps) {

@@ -10,7 +10,7 @@ import { durations, enterEasing } from '@/theme/animations';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { ProfileCard } from './ProfileCard';
-import { PremiumStatus, SignOutCard, DeleteAccountButton } from './sections';
+import { PremiumStatus, SignOutCard } from './sections';
 import { useAccountActions } from './useAccountActions';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -82,12 +82,6 @@ export function AccountPage({
             <SignOutCard
               isLoading={actions.isSigningOut}
               onSignOut={actions.handleSignOut}
-            />
-          </AccountSection>
-          <AccountSection index={3} reduceMotion={reduceMotion}>
-            <DeleteAccountButton
-              isDeletingAccount={actions.isDeletingAccount}
-              onDeleteAccount={actions.handleDeleteAccount}
             />
           </AccountSection>
         </View>
