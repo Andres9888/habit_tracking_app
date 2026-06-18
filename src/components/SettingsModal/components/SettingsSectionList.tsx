@@ -11,6 +11,9 @@ interface SettingsSectionListProps extends SettingsContentProps {
   onWhatsNew: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
+  isSigningOut: boolean;
+  onSignOut: () => void;
+  onManageSubscription: () => void;
 }
 
 export function SettingsSectionList(p: SettingsSectionListProps) {

@@ -6,6 +6,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useAccountActions } from './useAccountActions';
+import { handleManageSubscription } from './sections/PremiumStatus.helpers';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
@@ -54,10 +55,13 @@ export function SettingsContent(p: SettingsContentProps) {
           <SettingsSectionList
             {...p}
             sectionIconColor={sectionIconColor}
+            isSigningOut={actions.isSigningOut}
             onFeedback={actions.handleFeedback}
+            onManageSubscription={handleManageSubscription}
             onPrivacy={actions.openPrivacy}
             onRate={actions.handleRateApp}
             onShare={actions.handleShare}
+            onSignOut={actions.handleSignOut}
             onTerms={actions.openTerms}
             onWhatsNew={actions.handleWhatsNew}
           />

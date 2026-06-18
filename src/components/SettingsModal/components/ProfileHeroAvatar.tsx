@@ -11,14 +11,16 @@ interface ProfileHeroAvatarProps {
     card: string;
     primary: { 100: string; 600: string; 700: string; 400: string };
   };
+  size?: number;
 }
 
 export function ProfileHeroAvatar({
   imageUrl,
   initial,
   themeColors,
+  size = 72,
 }: ProfileHeroAvatarProps) {
-  const avatarSize = 72;
+  const avatarSize = size;
   const ringPadding = 2;
 
   return (

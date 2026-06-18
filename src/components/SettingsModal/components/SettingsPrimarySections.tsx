@@ -2,7 +2,7 @@
 import { BellRing, Palette } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import Animated from 'react-native-reanimated';
-import { ProfileHeroCard } from '../ProfileHeroCard';
+import { AccountHeaderCard } from '../AccountHeaderCard';
 import { StreakRemindersSection } from '../StreakRemindersSection';
 import { AppearanceSection } from '../sections';
 import { BehaviorSection } from './BehaviorSection';
@@ -11,6 +11,9 @@ import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface PrimarySectionsProps extends SettingsContentProps {
   sectionIconColor: string;
+  isSigningOut: boolean;
+  onSignOut: () => void;
+  onManageSubscription: () => void;
 }
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {
@@ -19,7 +22,13 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
   return (
     <>
       <Animated.View entering={sectionEnterAnim(0)}>
-        <ProfileHeroCard isPremium={p.isPremium} onPress={p.onOpenAccount} />
+        <AccountHeaderCard
+          isPremium={p.isPremium}
+          isSigningOut={p.isSigningOut}
+          onManageSubscription={p.onManageSubscription}
+          onOpenAccount={p.onOpenAccount}
+          onSignOut={p.onSignOut}
+        />
       </Animated.View>
       <Animated.View entering={sectionEnterAnim(1)}>
         <AppearanceSection
