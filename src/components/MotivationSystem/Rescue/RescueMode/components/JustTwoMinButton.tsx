@@ -83,8 +83,7 @@ export function JustTwoMinButton({
       {/* Glow effect - amber for urgency */}
       <Animated.View
         className='absolute -inset-2 rounded-2xl blur-xl'
-        style={{ backgroundColor: colors.status.warningLight }}
-        style={glowAnimatedStyle}
+        style={[{ backgroundColor: colors.status.warningLight }, glowAnimatedStyle]}
       />
       <Pressable
         accessibilityHint='Start with a tiny commitment to save your streak'

@@ -6,7 +6,6 @@
  * - Workshop: Components for the Motivation tab (setup)
  * - Activation: Components for pre-habit notification/modal
  * - Rescue: Components for streak-at-risk interventions
- * - Reward: Components for post-completion celebration
  */
 
 export * from './Workshop';
@@ -23,4 +22,3 @@ export {
   type VisualizationData as ActivationVisualizationData,
 } from './Activation';
 export * from './Rescue';
-export * from './Reward';
