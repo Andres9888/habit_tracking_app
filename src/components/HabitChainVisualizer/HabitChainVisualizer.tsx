@@ -44,7 +44,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         visible={
           showConnectors && isConnectedToPreviousWeek
             ? state.isCompleted(0)
-            : null
+            : false
         }
       />
       <ChainDayList
