@@ -70,7 +70,6 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
 
   return (
     <AnimatedPressable
-      ref={ref}
       accessibilityHint='Double tap to toggle this checkbox'
       accessibilityLabel={accessibilityLabel}
       accessibilityRole='checkbox'
@@ -82,6 +81,7 @@ export const Checkbox = React.forwardRef<View, CheckboxProps>(function Checkbox(
       onPress={handlePress}
     >
       <View
+        ref={ref}
         className={clsx(
           'items-center justify-center rounded border',
           sizeClasses[size].box,
