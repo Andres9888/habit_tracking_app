@@ -2,6 +2,7 @@
 import { SettingsPrimarySections } from './SettingsPrimarySections';
 import { SettingsSecondarySections } from './SettingsSecondarySections';
 import type { SettingsContentProps } from '../SettingsContent.types';
+import type { SettingsGroup } from '../search/settingsSearchRegistry';
 
 interface SettingsSectionListProps extends SettingsContentProps {
   sectionIconColor: string;
@@ -11,17 +12,19 @@ interface SettingsSectionListProps extends SettingsContentProps {
   onWhatsNew: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
-  isSigningOut: boolean;
-  onSignOut: () => void;
-  onManageSubscription: () => void;
   onDeleteAccount: () => void;
   isDeletingAccount: boolean;
+  onSectionLayout?: (group: SettingsGroup, y: number) => void;
 }
 
 export function SettingsSectionList(p: SettingsSectionListProps) {
   return (
     <>
-      <SettingsPrimarySections {...p} sectionIconColor={p.sectionIconColor} />
+      <SettingsPrimarySections
+        {...p}
+        sectionIconColor={p.sectionIconColor}
+        onSectionLayout={p.onSectionLayout}
+      />
       <SettingsSecondarySections
         sectionIconColor={p.sectionIconColor}
         onFeedback={p.onFeedback}
@@ -30,6 +33,7 @@ export function SettingsSectionList(p: SettingsSectionListProps) {
         onShare={p.onShare}
         onTerms={p.onTerms}
         onWhatsNew={p.onWhatsNew}
+        onSectionLayout={p.onSectionLayout}
       />
     </>
   );

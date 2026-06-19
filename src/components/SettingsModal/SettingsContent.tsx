@@ -1,4 +1,5 @@
-/** SettingsContent - Settings layout: Account → Appearance → Behavior → Notifications → Support → About */
+/** SettingsContent - Account header → search → grouped sections */
+import { useRef } from 'react';
 import { View } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -10,12 +11,15 @@ import { handleManageSubscription } from './sections/PremiumStatus.helpers';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
-import { SCROLL_STYLES } from './SettingsContent.constants';
+import { SCROLL_STYLES, sectionEnterAnim } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
+import { AccountHeaderCard } from './AccountHeaderCard';
+import { SettingsSearchField } from './search/SettingsSearchField';
+import { SettingsSearchResults } from './search/SettingsSearchResults';
+import { useSettingsSearch } from './search/useSettingsSearch';
 
 const useSectionIconColor = () => {
   const { settings } = useThemeColors();
-  // Uniform soft-green brand tint for every section glyph (#047857 / #34D399).
   return settings.user.icon;
 };
 
@@ -32,8 +36,12 @@ export function SettingsContent(p: SettingsContentProps) {
   const borderStyle = useAnimatedStyle(() => ({
     opacity: scrollY.value > 4 ? 1 : 0,
   }));
-
   const actions = useAccountActions();
+  // Animated.ScrollView exposes scrollTo; typed to the shape useSettingsSearch expects.
+  const scrollRef = useRef<{
+    scrollTo: (o: { y: number; animated: boolean }) => void;
+  } | null>(null);
+  const search = useSettingsSearch(scrollRef);
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -44,6 +52,7 @@ export function SettingsContent(p: SettingsContentProps) {
         ]}
       />
       <Animated.ScrollView
+        ref={scrollRef as any}
         className='flex-1 px-4'
         contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
         scrollEventThrottle={16}
@@ -52,21 +61,39 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <View className='gap-5'>
-          <SettingsSectionList
-            {...p}
-            sectionIconColor={sectionIconColor}
-            isDeletingAccount={actions.isDeletingAccount}
-            isSigningOut={actions.isSigningOut}
-            onDeleteAccount={actions.handleDeleteAccount}
-            onFeedback={actions.handleFeedback}
-            onManageSubscription={handleManageSubscription}
-            onPrivacy={actions.openPrivacy}
-            onRate={actions.handleRateApp}
-            onShare={actions.handleShare}
-            onSignOut={actions.handleSignOut}
-            onTerms={actions.openTerms}
-            onWhatsNew={actions.handleWhatsNew}
+          <Animated.View entering={sectionEnterAnim(0)}>
+            <AccountHeaderCard
+              isPremium={p.isPremium}
+              isSigningOut={actions.isSigningOut}
+              onManageSubscription={handleManageSubscription}
+              onOpenAccount={p.onOpenAccount}
+              onSignOut={actions.handleSignOut}
+            />
+          </Animated.View>
+          <SettingsSearchField
+            value={search.query}
+            onChangeText={search.setQuery}
           />
+          {search.query.trim().length > 0 ? (
+            <SettingsSearchResults
+              results={search.results}
+              onPickGroup={search.jumpToGroup}
+            />
+          ) : (
+            <SettingsSectionList
+              {...p}
+              sectionIconColor={sectionIconColor}
+              isDeletingAccount={actions.isDeletingAccount}
+              onDeleteAccount={actions.handleDeleteAccount}
+              onFeedback={actions.handleFeedback}
+              onPrivacy={actions.openPrivacy}
+              onRate={actions.handleRateApp}
+              onSectionLayout={search.registerSection}
+              onShare={actions.handleShare}
+              onTerms={actions.openTerms}
+              onWhatsNew={actions.handleWhatsNew}
+            />
+          )}
         </View>
       </Animated.ScrollView>
       <FeedbackModal

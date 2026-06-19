@@ -1,22 +1,20 @@
-/** Upper settings sections: profile through notifications */
+/** Upper settings sections: Look & Feel → Habits → Reminders → Data & Privacy */
 import { BellRing, Palette } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import Animated from 'react-native-reanimated';
-import { AccountHeaderCard } from '../AccountHeaderCard';
 import { StreakRemindersSection } from '../StreakRemindersSection';
 import { AppearanceSection } from '../sections';
 import { DataPrivacySection } from '../sections';
 import { BehaviorSection } from './BehaviorSection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 import type { SettingsContentProps } from '../SettingsContent.types';
+import type { SettingsGroup } from '../search/settingsSearchRegistry';
 
 interface PrimarySectionsProps extends SettingsContentProps {
   sectionIconColor: string;
-  isSigningOut: boolean;
-  onSignOut: () => void;
-  onManageSubscription: () => void;
   onDeleteAccount: () => void;
   isDeletingAccount: boolean;
+  onSectionLayout?: (group: SettingsGroup, y: number) => void;
 }
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {
@@ -24,16 +22,12 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
 
   return (
     <>
-      <Animated.View entering={sectionEnterAnim(0)}>
-        <AccountHeaderCard
-          isPremium={p.isPremium}
-          isSigningOut={p.isSigningOut}
-          onManageSubscription={p.onManageSubscription}
-          onOpenAccount={p.onOpenAccount}
-          onSignOut={p.onSignOut}
-        />
-      </Animated.View>
-      <Animated.View entering={sectionEnterAnim(1)}>
+      <Animated.View
+        entering={sectionEnterAnim(0)}
+        onLayout={(e) =>
+          p.onSectionLayout?.('Look & Feel', e.nativeEvent.layout.y)
+        }
+      >
         <AppearanceSection
           compactView={p.compactView}
           darkModePreference={p.darkModePreference}
@@ -50,7 +44,10 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeShowStreakConnections={p.onChangeShowStreakConnections}
         />
       </Animated.View>
-      <Animated.View entering={sectionEnterAnim(2)}>
+      <Animated.View
+        entering={sectionEnterAnim(1)}
+        onLayout={(e) => p.onSectionLayout?.('Habits', e.nativeEvent.layout.y)}
+      >
         <BehaviorSection
           completionSoundEnabled={p.completionSoundEnabled}
           completionSoundType={p.completionSoundType}
@@ -63,7 +60,12 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onChangeStickyCalendarHeader={p.onChangeStickyCalendarHeader}
         />
       </Animated.View>
-      <Animated.View entering={sectionEnterAnim(3)}>
+      <Animated.View
+        entering={sectionEnterAnim(2)}
+        onLayout={(e) =>
+          p.onSectionLayout?.('Reminders', e.nativeEvent.layout.y)
+        }
+      >
         <StreakRemindersSection
           enabled={p.streakRemindersEnabled}
           icon={<BellRing color={p.sectionIconColor} size={iconSize} />}
@@ -74,7 +76,12 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           onToggle={p.onToggleStreakReminders}
         />
       </Animated.View>
-      <Animated.View entering={sectionEnterAnim(4)}>
+      <Animated.View
+        entering={sectionEnterAnim(3)}
+        onLayout={(e) =>
+          p.onSectionLayout?.('Data & Privacy', e.nativeEvent.layout.y)
+        }
+      >
         <DataPrivacySection
           archivedHabitsCount={p.archivedHabitsCount}
           isDeletingAccount={p.isDeletingAccount}

@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 import Animated from 'react-native-reanimated';
 import { AboutSupportSection } from '../sections';
 import { sectionEnterAnim } from '../SettingsContent.constants';
+import type { SettingsGroup } from '../search/settingsSearchRegistry';
 
 interface SecondarySectionsProps {
   sectionIconColor: string;
@@ -12,11 +13,17 @@ interface SecondarySectionsProps {
   onWhatsNew: () => void;
   onPrivacy: () => void;
   onTerms: () => void;
+  onSectionLayout?: (group: SettingsGroup, y: number) => void;
 }
 
 export function SettingsSecondarySections(p: SecondarySectionsProps) {
   return (
-    <Animated.View entering={sectionEnterAnim(4)}>
+    <Animated.View
+      entering={sectionEnterAnim(4)}
+      onLayout={(e) =>
+        p.onSectionLayout?.('About & Support', e.nativeEvent.layout.y)
+      }
+    >
       <AboutSupportSection
         buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
         sectionIconColor={p.sectionIconColor}
