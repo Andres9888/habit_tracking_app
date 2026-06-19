@@ -5,7 +5,7 @@
  */
 
 import type { Id } from '../../../../../convex/_generated/dataModel';
-import type { OfflineOperation } from '../../queue';
+import type { OfflineOperation, ToggleCompletionPayload } from '../../queue';
 import type {
   CleanupOrphansEvent,
   CleanupOrphansEventType,
@@ -24,7 +24,7 @@ export function extractUniqueHabitIds(
 
   for (const op of operations) {
     if (op.type === 'toggleCompletion') {
-      habitIds.add(op.payload.habitId);
+      habitIds.add((op.payload as ToggleCompletionPayload).habitId);
     }
   }
 
@@ -41,7 +41,7 @@ export function groupOperationsByHabit(
 
   for (const op of operations) {
     if (op.type === 'toggleCompletion') {
-      const habitId = op.payload.habitId;
+      const habitId = (op.payload as ToggleCompletionPayload).habitId;
       const existing = grouped.get(habitId) || [];
       existing.push(op);
       grouped.set(habitId, existing);
