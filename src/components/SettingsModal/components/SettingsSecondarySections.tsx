@@ -1,9 +1,7 @@
-/** Lower settings sections: support and about (static labels) */
-import { Heart, Info } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
+/** Lower settings section: About & Support (static labels) */
 import Constants from 'expo-constants';
 import Animated from 'react-native-reanimated';
-import { AppActions, AboutLegalSection } from '../sections';
+import { AboutSupportSection } from '../sections';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 
 interface SecondarySectionsProps {
@@ -17,28 +15,19 @@ interface SecondarySectionsProps {
 }
 
 export function SettingsSecondarySections(p: SecondarySectionsProps) {
-  const iconSize = iconSizes.small;
-
   return (
-    <>
-      <Animated.View entering={sectionEnterAnim(4)}>
-        <AppActions
-          icon={<Heart color={p.sectionIconColor} size={iconSize} />}
-          onFeedback={p.onFeedback}
-          onRate={p.onRate}
-          onShare={p.onShare}
-          onWhatsNew={p.onWhatsNew}
-        />
-      </Animated.View>
-      <Animated.View entering={sectionEnterAnim(5)}>
-        <AboutLegalSection
-          buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
-          icon={<Info color={p.sectionIconColor} size={iconSize} />}
-          version={Constants.expoConfig?.version ?? '1.0.0'}
-          onPrivacy={p.onPrivacy}
-          onTerms={p.onTerms}
-        />
-      </Animated.View>
-    </>
+    <Animated.View entering={sectionEnterAnim(4)}>
+      <AboutSupportSection
+        buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
+        sectionIconColor={p.sectionIconColor}
+        version={Constants.expoConfig?.version ?? '1.0.0'}
+        onFeedback={p.onFeedback}
+        onPrivacy={p.onPrivacy}
+        onRate={p.onRate}
+        onShare={p.onShare}
+        onTerms={p.onTerms}
+        onWhatsNew={p.onWhatsNew}
+      />
+    </Animated.View>
   );
 }
