@@ -1,7 +1,6 @@
-/** SortOrderPicker — inline family segmented control + direction picker */
+/** SortOrderPicker — inline family segmented control */
 import { View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { SortDirectionPicker } from './components/SortDirectionPicker';
 import { SortFamilyPicker } from './components/SortFamilyPicker';
 import type { HabitSortMode } from '../../features/habits/types';
 
@@ -20,7 +19,6 @@ export function SortOrderPicker({ selected, onSelect }: SortOrderPickerProps) {
       style={{ borderColor: colors.border, backgroundColor: trayBg }}
     >
       <SortFamilyPicker selected={selected} onSelect={onSelect} />
-      <SortDirectionPicker selected={selected} onSelect={onSelect} />
     </View>
   );
 }

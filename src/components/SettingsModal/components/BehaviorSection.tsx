@@ -8,6 +8,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { SortOrderPicker } from '../SortOrderPicker';
+import { SortDirectionChip } from './SortDirectionChip';
 import { SoundPicker } from '../SoundPicker';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import type { HabitSortMode } from '../../../features/habits/types';
@@ -28,6 +29,7 @@ interface BehaviorSectionProps {
 export function BehaviorSection(p: BehaviorSectionProps) {
   const { settings: icons } = useThemeColors();
   const iconSize = iconSizes.small;
+  const mode = p.habitSortMode as HabitSortMode;
 
   return (
     <SettingsSection
@@ -38,14 +40,14 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
         iconBackgroundColor={icons.sort.bg}
         label='Sort order'
+        rightAccessory={
+          <SortDirectionChip mode={mode} onSelect={p.onChangeHabitSortMode} />
+        }
         showBorder={false}
         subtitle='How habits are ordered'
         type='info'
       />
-      <SortOrderPicker
-        selected={p.habitSortMode as HabitSortMode}
-        onSelect={p.onChangeHabitSortMode}
-      />
+      <SortOrderPicker selected={mode} onSelect={p.onChangeHabitSortMode} />
       <SettingsRow
         icon={<Volume2 color={icons.sound.icon} size={iconSize} />}
         iconBackgroundColor={icons.sound.bg}
