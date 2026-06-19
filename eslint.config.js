@@ -293,6 +293,7 @@ export default tseslint.config(
       '**/TipQuickActionsSheet/quickActionsByType.ts', // Quick action configurations
       '**/constants/habitEmojis.data.ts', // Static emoji category data arrays
       '**/constants/habitEmojis.ts', // Emoji category exports (mostly re-exports)
+      '**/SettingsModal/search/settingsSearchRegistry.ts', // Settings search index - static entry array
       // Schema files - database schema definitions (data contracts)
       '**/convex/schema.ts',
       // Example and debug files - development utilities
