@@ -1,5 +1,4 @@
 /** AboutSupportSection — Rate, Share, Feedback, What's New, Privacy, Terms, Version */
-import React from 'react';
 import {
   FileText,
   Info,

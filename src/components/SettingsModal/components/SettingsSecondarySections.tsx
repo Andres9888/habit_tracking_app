@@ -19,7 +19,7 @@ interface SecondarySectionsProps {
 export function SettingsSecondarySections(p: SecondarySectionsProps) {
   return (
     <Animated.View
-      entering={sectionEnterAnim(4)}
+      entering={sectionEnterAnim(5)}
       onLayout={(e) =>
         p.onSectionLayout?.('About & Support', e.nativeEvent.layout.y)
       }

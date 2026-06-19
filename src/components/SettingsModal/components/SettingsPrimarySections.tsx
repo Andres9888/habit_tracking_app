@@ -23,7 +23,7 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
   return (
     <>
       <Animated.View
-        entering={sectionEnterAnim(0)}
+        entering={sectionEnterAnim(1)}
         onLayout={(e) =>
           p.onSectionLayout?.('Look & Feel', e.nativeEvent.layout.y)
         }
@@ -45,7 +45,7 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
         />
       </Animated.View>
       <Animated.View
-        entering={sectionEnterAnim(1)}
+        entering={sectionEnterAnim(2)}
         onLayout={(e) => p.onSectionLayout?.('Habits', e.nativeEvent.layout.y)}
       >
         <BehaviorSection
@@ -61,7 +61,7 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
         />
       </Animated.View>
       <Animated.View
-        entering={sectionEnterAnim(2)}
+        entering={sectionEnterAnim(3)}
         onLayout={(e) =>
           p.onSectionLayout?.('Reminders', e.nativeEvent.layout.y)
         }
@@ -77,7 +77,7 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
         />
       </Animated.View>
       <Animated.View
-        entering={sectionEnterAnim(3)}
+        entering={sectionEnterAnim(4)}
         onLayout={(e) =>
           p.onSectionLayout?.('Data & Privacy', e.nativeEvent.layout.y)
         }

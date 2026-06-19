@@ -32,7 +32,9 @@ export function SortDirectionChip({ mode, onSelect }: SortDirectionChipProps) {
 
   return (
     <Pressable
-      accessibilityLabel={asc ? 'Sort ascending' : 'Sort descending'}
+      accessibilityLabel={
+        asc ? 'Switch to descending sort' : 'Switch to ascending sort'
+      }
       accessibilityRole='button'
       hitSlop={6}
       style={{

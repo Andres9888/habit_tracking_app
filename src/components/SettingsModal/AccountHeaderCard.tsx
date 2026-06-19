@@ -88,8 +88,8 @@ export function AccountHeaderCard(p: AccountHeaderCardProps) {
             </Pressable>
           </View>
         </View>
+        <ChevronRight color={themeColors.text.tertiary} size={20} />
       </AnimatedPressable>
-      <ChevronRight color={themeColors.text.tertiary} size={20} />
     </View>
   );
 }

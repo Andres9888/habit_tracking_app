@@ -28,7 +28,6 @@ export function SettingsSearchField({
         borderRadius: 12,
         paddingHorizontal: 12,
         paddingVertical: 9,
-        marginHorizontal: 16,
         marginBottom: 8,
         gap: 8,
       }}
