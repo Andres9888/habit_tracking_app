@@ -6,12 +6,12 @@
 
 import type {
   OfflineOperation,
+  OfflineOperationType,
   OfflineQueueState,
   OfflineQueueStats,
   QueueEventCallback,
   QueueOperationOptions,
   QueueOperationResult,
-  ToggleCompletionPayload,
 } from '../queue';
 import type { ErrorCategory } from '../types';
 import type { BatchStatusResult } from './optimized/types';
@@ -37,10 +37,10 @@ export interface OfflineQueueManagerAPI {
   getStats(): OfflineQueueStats;
 
   // Operations (implemented in operations.ts - T006)
-  /** Add a toggle completion operation to the queue */
-  enqueue(
-    type: 'toggleCompletion',
-    payload: ToggleCompletionPayload,
+  /** Add an operation to the queue */
+  enqueue<T extends OfflineOperationType>(
+    type: T,
+    payload: OfflineOperation<T>['payload'],
     options?: QueueOperationOptions
   ): QueueOperationResult;
 

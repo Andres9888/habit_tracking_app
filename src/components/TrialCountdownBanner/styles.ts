@@ -27,7 +27,6 @@ export function getBannerStyles(daysRemaining: number): BannerStyles {
         iconBg: '',
         iconColor: '#DC2626',
         text: '',
-        useTheme: 'error' as const,
       };
     }
     case 'medium': {
@@ -38,7 +37,6 @@ export function getBannerStyles(daysRemaining: number): BannerStyles {
         iconBg: '',
         iconColor: '#D97706',
         text: '',
-        useTheme: 'warning' as const,
       };
     }
     default: {

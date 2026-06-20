@@ -95,7 +95,6 @@ function HabitDetailScreenContent({
                       onPress={handleEdit}
                     />
                   }
-                  surfaceVisible={isTitlePinned}
                   title={getHabitDisplayName(habit)}
                   titleStyle={{
                     ...typography.body,

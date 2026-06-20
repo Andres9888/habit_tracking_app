@@ -3,6 +3,7 @@
  */
 
 import { useCallback } from 'react';
+import type { ErrorCategory } from '../types';
 import type { UseOfflineQueueReturn } from './types';
 
 type Manager = {
@@ -12,7 +13,7 @@ type Manager = {
     options?: Parameters<UseOfflineQueueReturn['enqueue']>[1]
   ) => ReturnType<UseOfflineQueueReturn['enqueue']>;
   markCompleted: (id: string) => boolean;
-  markFailed: (id: string, error: string, category?: string) => boolean;
+  markFailed: (id: string, error: string, category?: ErrorCategory) => boolean;
   clear: () => void;
   subscribe: (
     cb: Parameters<UseOfflineQueueReturn['subscribe']>[0]
@@ -34,7 +35,7 @@ export function useQueueActions(manager: Manager) {
   );
 
   const markFailed = useCallback(
-    (operationId: string, error: string, category?: string) =>
+    (operationId: string, error: string, category?: ErrorCategory) =>
       manager.markFailed(operationId, error, category),
     [manager]
   );

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Animated, Easing } from 'react-native';
 import { useHapticFeedback } from '../../../../hooks/useHapticFeedback';
-import { FAB, SCALE, RIPPLE_EFFECT } from '../../../../constants';
+import { FAB, SCALE, OPACITY, RIPPLE_EFFECT } from '../../../../constants';
 
 interface UseFABHandlersProps {
   openCreateHabitScreen: () => void;
@@ -64,7 +64,7 @@ export function useFABHandlers({
       Animated.timing(rippleOpacity, {
         duration: FAB.rippleOpacityDuration,
         easing: Easing.out(Easing.ease),
-        toValue: SCALE.transparent,
+        toValue: OPACITY.transparent,
         useNativeDriver: true,
       }),
     ]).start();

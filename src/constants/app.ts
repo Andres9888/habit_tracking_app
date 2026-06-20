@@ -88,8 +88,14 @@ export const DEFAULT_RECONNECT_DELAY_MS = 1000;
 /** Maximum email length (RFC 5321) */
 export const MAX_EMAIL_LENGTH = 254;
 
+/** Minimum habit name length (single characters are rejected as too short) */
+export const MIN_HABIT_NAME_LENGTH = 2;
+
 /** Maximum habit name length */
 export const MAX_HABIT_NAME_LENGTH = 100;
+
+/** Maximum number of habits rendered before truncating for performance */
+export const MAX_HABITS_RENDER_LIMIT = 500;
 
 /** Maximum length for long text fields */
 export const MAX_LONG_TEXT_LENGTH = 5000;

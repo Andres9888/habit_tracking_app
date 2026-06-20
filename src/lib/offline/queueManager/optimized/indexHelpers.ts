@@ -6,7 +6,7 @@
  * @see docs/offline-habit-sync.md FR-011 (handle 500+ operations)
  */
 
-import type { OfflineOperation } from '../../queue';
+import type { OfflineOperation, ToggleCompletionPayload } from '../../queue';
 import type { OperationIndex } from './types';
 
 /** Build index from operations array */
@@ -20,7 +20,8 @@ export function buildOperationIndex(
     byId.set(op.id, i);
 
     if (op.type === 'toggleCompletion') {
-      const key = `toggle:${op.payload.habitId}:${op.payload.date}`;
+      const payload = op.payload as ToggleCompletionPayload;
+      const key = `toggle:${payload.habitId}:${payload.date}`;
       byDedupeKey.set(key, op.id);
     }
   }

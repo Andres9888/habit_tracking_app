@@ -12,7 +12,7 @@ import Constants from 'expo-constants';
 import type { SentryConfig } from './types';
 import { DEFAULT_SENTRY_CONFIG } from './types';
 
-const nativeHandsetKey = ['and', 'roid'].join('');
+const nativeHandsetKey = ['and', 'roid'].join('') as 'android';
 
 /** Get the Sentry DSN from environment variables.
  * @returns The DSN string, or null if not configured

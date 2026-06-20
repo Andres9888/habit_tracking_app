@@ -6,7 +6,7 @@
 
 import { Audio } from 'expo-av';
 
-const nativeHandsetKey = ['and', 'roid'].join('');
+const nativeHandsetKey = ['and', 'roid'].join('') as 'android';
 
 /**
  * Recording quality preset optimized for voice notes
