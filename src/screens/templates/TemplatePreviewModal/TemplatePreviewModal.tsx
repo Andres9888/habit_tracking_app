@@ -29,6 +29,7 @@ import { EnhancedReminderSelector } from '../../../components/CreateHabitModal/c
 import { HABIT_COLORS } from '../../../components/CreateHabitModal/constants';
 import { AdvancedOptionsSection } from '../../../components/AdvancedOptions';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { colors as palette } from '../../../theme/colors';
 import { borderRadius, shadows } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 import { spacing } from '@/theme/spacing';
@@ -177,7 +178,9 @@ export default function TemplatePreviewModal({
                           style={{
                             lineHeight: 28,
                             color: colors.text.primary,
-                            backgroundColor: isDark ? colors.card : '#FFFFFF',
+                            backgroundColor: isDark
+                              ? colors.card
+                              : palette.light.surfaceMuted,
                             borderColor: isFocused
                               ? colors.primary[600]
                               : colors.border,

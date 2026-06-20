@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { Text, View } from 'react-native';
+import { colors as palette } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { typography } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -56,7 +57,7 @@ export function NameInputSection({
 
       <HabitNameInputField
         autoFocus={autoFocus}
-        backgroundColor={isDark ? colors.card : '#FFFFFF'}
+        backgroundColor={isDark ? colors.card : palette.light.surfaceMuted}
         borderStyle={focusedInputStyle}
         habitName={habitName}
         hintColor={colors.gray[300]}

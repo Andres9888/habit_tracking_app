@@ -8,7 +8,7 @@ import { colors } from '@/theme/colors';
 
 export const COLORS = {
   BORDER: colors.gray[200],
-  CARD_BG: '#ffffff',
+  CARD_BG: colors.light.surfaceMuted,
   TEXT_MUTED: colors.gray[300],
   TEXT_PRIMARY: colors.gray[900],
   TEXT_SECONDARY: colors.gray[500],

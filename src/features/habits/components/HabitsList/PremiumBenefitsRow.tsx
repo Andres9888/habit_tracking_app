@@ -7,6 +7,7 @@
 
 import { memo } from 'react';
 import { Text, View } from 'react-native';
+import { shadows } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { PREMIUM_BENEFITS } from './constants';
 
@@ -14,7 +15,10 @@ function PremiumBenefitsRowComponent() {
   const { colors } = useThemeColors();
 
   return (
-    <View className='gap-4 rounded-3xl border bg-white/90 p-5 shadow-[0px_16px_44px_rgba(120,90,50,0.06)]' style={{ borderColor: colors.status.warningLight }}>
+    <View
+      className='gap-4 rounded-3xl border bg-white/90 p-5'
+      style={{ ...shadows.modal, borderColor: colors.status.warningLight }}
+    >
       <Text className='text-sm font-medium uppercase tracking-[2px]' style={{ color: colors.status.warningText }}>
         Why members upgrade
       </Text>

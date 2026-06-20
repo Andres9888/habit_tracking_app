@@ -4,12 +4,13 @@
 
 import { StyleSheet } from 'react-native';
 
+import { colors } from '../../../theme/colors';
 import { borderRadius, shadows } from '../../../theme/spacing';
 
 export const cardStyles = StyleSheet.create({
   card: {
     ...shadows.card,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.light.surfaceMuted,
     borderRadius: borderRadius.card,
     overflow: 'hidden',
     shadowOpacity: 0.08,

@@ -46,7 +46,7 @@ export function PremiumBadge({ variant = 'pro', style }: PremiumBadgeProps) {
   // Pro badge with violet gradient (premium color)
   return (
     <LinearGradient
-      colors={['#8b5cf6', '#7c3aed']}
+      colors={[colors.premium[500], colors.premium[700]]}
       end={{ x: 1, y: 1 }}
       start={{ x: 0, y: 0 }}
       style={[styles.badge, styles.proBadge, style]}

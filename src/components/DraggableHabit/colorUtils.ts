@@ -5,6 +5,8 @@
  * streak badge colors, and accent fallbacks.
  */
 
+import { colors } from '@/theme/colors';
+
 import type { CardColors } from './types';
 
 /** Fallback accent when no habit-specific color is set (violet-500). */
@@ -14,7 +16,7 @@ const DEFAULT_ACCENT_COLOR = '#8b5cf6';
 export function getCardColors(): CardColors {
   return {
     border: '#f5f5f4', // stone-100 - subtle border
-    cardBackground: '#ffffff', // Pure white for better contrast against beige bg
+    cardBackground: colors.light.surfaceMuted, // warm card surface (L1 muted)
     iconContainer: undefined,
     primaryText: '#1c1917', // stone-900
     streakText: '#c2410c', // orange-700 for richer streak

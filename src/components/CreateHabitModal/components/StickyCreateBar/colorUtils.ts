@@ -2,8 +2,10 @@
  * Color Utilities for StickyCreateBar
  */
 
-// Default green color for the button when no color is selected
-export const DEFAULT_BUTTON_COLOR = '#22C55E';
+import { colors } from '@/theme/colors';
+
+// Default green color for the button when no color is selected (system CTA green)
+export const DEFAULT_BUTTON_COLOR = colors.primary[600];
 
 // Convert a number to a two-character hex string
 function toHex(n: number): string {
