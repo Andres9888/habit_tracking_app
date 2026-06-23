@@ -5,16 +5,13 @@ import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { checkReminderPermissions } from './useHabitReminders';
 import { useCreateHabitHandlers } from './useCreateHabitHandlers';
 import { showCreateError } from '../../../utils/errorAlerts';
-import {
-  useHabitData,
-  useModalCleanup,
-} from './useCreateHabitModalEffects';
+import { useHabitData, useModalCleanup } from './useCreateHabitModalEffects';
 import { EXIT_DURATIONS } from '../../Modal/Modal.constants';
 
 export const useCreateHabitModal = (props: CreateHabitModalProps) => {
-  const { visible, onClose, habitToEdit } = props;
+  const { visible, onClose, habitToEdit, initialName } = props;
   const isEditMode = !!habitToEdit;
-  const form = useHabitForm({ habitToEdit });
+  const form = useHabitForm({ habitToEdit, initialName });
   const { triggerSuccess } = useHapticFeedback();
   const { handleEdit, handleCreate: createNewHabit } = useCreateHabitHandlers();
   const isSaving = useRef(false);

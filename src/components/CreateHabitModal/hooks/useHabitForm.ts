@@ -17,10 +17,14 @@ import { validateHabitName } from '../../../utils/validation';
 
 interface UseHabitFormOptions {
   habitToEdit?: HabitDoc | null;
+  initialName?: string | null;
 }
 
-export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
-  const state = useHabitFormState({ habitToEdit });
+export const useHabitForm = ({
+  habitToEdit,
+  initialName,
+}: UseHabitFormOptions) => {
+  const state = useHabitFormState({ habitToEdit, initialName });
 
   // Habit name validation
   const habitNameValidation = useFieldValidation({

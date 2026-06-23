@@ -19,6 +19,8 @@ const RevenueCatPaywall = lazy(() =>
 
 interface HabitsAppOverlaysProps {
   modals: HabitsModalsState;
+  /** Pre-fills the create-habit form name when launched from a quick-start chip. */
+  createInitialName?: string | null;
   paywallVisible: boolean;
   onPaywallClose: () => void;
   onPaywallSuccess: () => void;
@@ -36,6 +38,7 @@ interface HabitsAppOverlaysProps {
 
 export function HabitsAppOverlays({
   modals,
+  createInitialName,
   paywallVisible,
   onPaywallClose,
   onPaywallSuccess,
@@ -51,7 +54,7 @@ export function HabitsAppOverlays({
   return (
     <>
       <WebToaster />
-      <HabitsModals state={modals} />
+      <HabitsModals createInitialName={createInitialName} state={modals} />
 
       <ArchiveUndoToast
         duration={TOAST_DURATION_MS}

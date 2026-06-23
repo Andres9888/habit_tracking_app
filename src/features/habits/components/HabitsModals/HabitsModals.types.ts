@@ -6,6 +6,8 @@ import type { HabitsModalsState } from '../../hooks/useHabitsApp';
 /** Props for the main HabitsModals orchestrator component */
 export interface HabitsModalsProps {
   state: HabitsModalsState;
+  /** Seeds the create-habit form name (set when opened from a quick-start chip). */
+  createInitialName?: string | null;
 }
 
 /** Props for the SettingsModalSection component */
@@ -26,6 +28,8 @@ export interface CreateHabitModalSectionProps {
   showCreateHabit: boolean;
   habitToEdit: HabitsModalsState['habitToEdit'];
   closeCreateHabit: () => void;
+  /** Pre-fills the habit name for a fresh (non-edit) creation. */
+  initialName?: string | null;
 }
 
 /** Props for the HapticTestModalSection component */

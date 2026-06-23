@@ -31,4 +31,9 @@ export interface CreateHabitModalProps {
   visible: boolean;
   onClose: () => void;
   habitToEdit?: HabitDoc | null;
+  /**
+   * Seeds the name field for a brand-new habit (e.g. from an empty-state
+   * quick-start chip). Ignored when `habitToEdit` is set.
+   */
+  initialName?: string | null;
 }

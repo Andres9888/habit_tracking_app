@@ -7,12 +7,14 @@
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { HabitsPageSkeleton } from '../../components/SkeletonLoader';
 import { EmptyState } from '../../components/EmptyState/EmptyState';
+import type { QuickStartTemplate } from '../../components/EmptyState/types';
+import { buildHabitName } from '../../components/CreateHabitModal/utils';
 import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
 import { SelectionActionBar } from './components/SelectionActionBar';
@@ -69,6 +71,20 @@ function HabitsAppContent() {
     triggerSelection,
   });
 
+  // Quick-start chips pass the chosen template; seed the create form with its
+  // name (e.g. "🧘 Meditate") so tapping a template doesn't open a blank form.
+  const [quickStartName, setQuickStartName] = useState<string | null>(null);
+  const handleQuickStart = useCallback(
+    (template: QuickStartTemplate) => {
+      setQuickStartName(buildHabitName(template.emoji, template.name));
+      handlers.handleCreateHabitRequest();
+    },
+    [handlers]
+  );
+  useEffect(() => {
+    if (!modals.showCreateHabit) setQuickStartName(null);
+  }, [modals.showCreateHabit]);
+
   const bottomBar = useBottomBarProps({
     handleCreateHabitRequest: handlers.handleCreateHabitRequest,
     modals,
@@ -101,7 +117,7 @@ function HabitsAppContent() {
             <EmptyState
               variant='noHabits'
               onCTA={handlers.handleCreateHabitRequest}
-              onQuickStart={handlers.handleCreateHabitRequest}
+              onQuickStart={handleQuickStart}
             />
           </Animated.View>
         ) : (
@@ -130,17 +146,19 @@ function HabitsAppContent() {
           </Animated.View>
         )}
         {selection.isSelectionMode ? (
-            <SelectionActionBar
-              selectedCount={selection.selectedCount}
-              onArchive={handleBatchArchivePress}
-              onCancel={handleExitSelectionMode}
-              onDelete={selectionActions.showDeleteConfirmation}
-            />
-          ) : (
-            <BottomActionBar {...bottomBar} />
-          )}
+          <SelectionActionBar
+            selectedCount={selection.selectedCount}
+            onArchive={handleBatchArchivePress}
+            onCancel={handleExitSelectionMode}
+            onDelete={selectionActions.showDeleteConfirmation}
+          />
+        ) : (
+          <BottomActionBar {...bottomBar} />
+        )}
 
-        {overlaysMounted ? <HabitsAppOverlays
+        {overlaysMounted ? (
+          <HabitsAppOverlays
+            createInitialName={quickStartName}
             batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
             batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
             confirmDeleteCount={selectionActions.deleteCount}
@@ -153,7 +171,8 @@ function HabitsAppContent() {
             onConfirmDeleteConfirm={handleConfirmBatchDelete}
             onPaywallClose={handlers.handlePaywallClose}
             onPaywallSuccess={handlers.handlePaywallSuccess}
-          /> : null}
+          />
+        ) : null}
       </View>
     </GestureHandlerRootView>
   );

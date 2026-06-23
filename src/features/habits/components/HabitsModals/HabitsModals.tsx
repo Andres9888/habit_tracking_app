@@ -16,7 +16,7 @@ import {
   getShareAndPauseProps,
 } from './HabitsModals.helpers';
 
-export function HabitsModals({ state }: HabitsModalsProps) {
+export function HabitsModals({ state, createInitialName }: HabitsModalsProps) {
   const shouldRenderVisualization = state.showVisualizationExercise;
   const shouldRenderActivation = state.showActivationModal;
 
@@ -29,6 +29,7 @@ export function HabitsModals({ state }: HabitsModalsProps) {
         <CreateHabitModalSection
           closeCreateHabit={state.closeCreateHabit}
           habitToEdit={state.habitToEdit}
+          initialName={createInitialName}
           showCreateHabit={state.showCreateHabit}
         />
       </ErrorBoundary>

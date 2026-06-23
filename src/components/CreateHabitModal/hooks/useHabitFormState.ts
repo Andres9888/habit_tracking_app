@@ -2,7 +2,7 @@
  * useHabitFormState - State management for habit form
  */
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
 import type { HabitDoc } from '../types';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
@@ -18,13 +18,14 @@ const DEFAULT_SOUND = 'Default';
 
 interface UseHabitFormStateOptions {
   habitToEdit?: HabitDoc | null;
+  initialName?: string | null;
 }
 
-export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
-  const parsed = useMemo(
-    () => parseHabitName(habitToEdit?.name ?? ''),
-    [habitToEdit?.name]
-  );
+export function useHabitFormState(options: UseHabitFormStateOptions) {
+  const { habitToEdit } = options;
+  // For a new habit, seed the name from the quick-start template; the existing
+  // habit's own name takes precedence in edit mode.
+  const parsed = parseHabitName(habitToEdit?.name ?? options.initialName ?? '');
 
   const [habitName, setHabitName] = useState(parsed.name);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
