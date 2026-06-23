@@ -154,7 +154,6 @@ export {
 
 export {
   useDraftStorage,
-  type DraftData,
   type UseDraftStorageReturn,
 } from './useDraftStorage';
 

@@ -4,7 +4,7 @@
 
 import { StyleSheet, TextStyle } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography } from '@/theme/typography';
+import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { spacing } from '@/theme/spacing';
 
 export function useWelcomeStyles() {
@@ -23,14 +23,17 @@ export function useWelcomeStyles() {
     heroSection: {
       alignItems: 'center',
       flex: 1,
-      gap: spacing.sm,
+      gap: spacing.base,
       justifyContent: 'center',
-      paddingBottom: spacing.sm,
+      paddingBottom: spacing.lg,
     },
     subtitle: {
-      ...typography.body,
       color: themeColors.text.secondary,
-      marginBottom: spacing.base,
+      fontFamily: fontFamilies.primary.display,
+      fontSize: 19,
+      fontWeight: fontWeights.regular,
+      letterSpacing: -0.2,
+      lineHeight: 26,
       textAlign: 'center',
     } as TextStyle,
     title: {
@@ -38,7 +41,6 @@ export function useWelcomeStyles() {
       color: themeColors.text.primary,
       textAlign: 'center',
     } as TextStyle,
-    valuePropsWrap: { marginTop: spacing.base, width: '100%' },
   });
 
   return {

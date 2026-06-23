@@ -37,7 +37,7 @@ import {
  * validateHabitName('A'.repeat(300))
  * // { isValid: false, sanitized: 'AAAA...', error: 'Habit name must be 200 characters or less' }
  */
-export function validateHabitName(name: string): {
+export function validateHabitName(name: string | undefined): {
   isValid: boolean;
   sanitized: string;
   error?: string;

@@ -58,9 +58,11 @@ export function useHabitModalHandlers(
     async (updates: Partial<HabitSettingsUpdate>) => {
       try {
         const baseSettings = (deps.settings ??
-          DEFAULT_SETTINGS) as Record<string, unknown>;
+          DEFAULT_SETTINGS) as unknown as Record<string, unknown>;
         await updateSettingsWithFallback(
-          deps.updateSettings as (args: Record<string, unknown>) => Promise<unknown>,
+          deps.updateSettings as unknown as (
+            args: Record<string, unknown>
+          ) => Promise<unknown>,
           {
             ...baseSettings,
             ...updates,

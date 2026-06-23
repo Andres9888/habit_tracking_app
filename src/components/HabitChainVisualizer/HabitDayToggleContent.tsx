@@ -15,7 +15,7 @@ interface Props {
   completed: boolean;
   forgeFlash: AnimatedType.Value;
   completion: AnimatedType.Value;
-  completionIcon: CompletionIcon | undefined;
+  completionIcon: CompletionIcon;
   iconColor: string;
 }
 

@@ -2,5 +2,5 @@
  * MonthlyCalendarGrid barrel export
  */
 
-export { MonthlyCalendarGrid, default } from './MonthlyCalendarGrid';
+export { MonthlyCalendarGrid } from './MonthlyCalendarGrid';
 export type { MonthlyCalendarGridProps, DayData } from './types';
