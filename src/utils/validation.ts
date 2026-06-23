@@ -35,7 +35,7 @@ import {
  *
  * @example
  * validateHabitName('A'.repeat(300))
- * // { isValid: false, sanitized: 'AAAA...', error: 'Habit name must be 200 characters or less' }
+ * // { isValid: false, sanitized: 'AAAA...', error: 'Habit name must be 100 characters or less' }
  */
 export function validateHabitName(name: string | undefined): {
   isValid: boolean;
@@ -251,9 +251,7 @@ export function safeParseNumber(
  * @param email - Email address to validate
  * @returns Validation result with isValid and optional error message
  */
-export function validateEmail(
-  email: string | undefined
-): {
+export function validateEmail(email: string | undefined): {
   isValid: boolean;
   error?: string;
 } {
@@ -282,9 +280,7 @@ export function validateEmail(
  * @param password - Password to validate
  * @returns Validation result with isValid and optional error message
  */
-export function validatePassword(
-  password: string | undefined
-): {
+export function validatePassword(password: string | undefined): {
   isValid: boolean;
   error?: string;
 } {

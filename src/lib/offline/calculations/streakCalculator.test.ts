@@ -447,10 +447,13 @@ describe('streakCalculator', () => {
         '2026-01-22',
       ]);
 
-      // Note: This function counts from most recent <= today backward
-      // If there's a gap from most recent to today, it still counts the streak
-      // This matches src/utils/streak.ts behavior
-      expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(3);
+      // The streak is only "current" if the most recent completion is today or
+      // yesterday (1-day grace period). The latest completion here (2026-01-22)
+      // is more than 1 day before todayDate (2026-01-30), so the streak has
+      // expired and the function returns 0. This matches the documented
+      // behavior of src/utils/streak.ts and server-side
+      // calculateStreakFromHistory (daysSinceLastCompletion > 1 => 0).
+      expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(0);
     });
 
     it('handles single isolated completion', () => {
