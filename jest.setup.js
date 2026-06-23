@@ -63,11 +63,35 @@ jest.mock('react-native-gesture-handler', () => {
     onUpdate: jest.fn().mockReturnThis(),
     onEnd: jest.fn().mockReturnThis(),
     onFinalize: jest.fn().mockReturnThis(),
+    onChange: jest.fn().mockReturnThis(),
+    onTouchesDown: jest.fn().mockReturnThis(),
+    onTouchesMove: jest.fn().mockReturnThis(),
+    onTouchesUp: jest.fn().mockReturnThis(),
+    onTouchesCancelled: jest.fn().mockReturnThis(),
     enabled: jest.fn().mockReturnThis(),
     minDistance: jest.fn().mockReturnThis(),
     minVelocity: jest.fn().mockReturnThis(),
+    // LongPress / Tap builder methods
+    minDuration: jest.fn().mockReturnThis(),
+    maxDistance: jest.fn().mockReturnThis(),
+    maxDuration: jest.fn().mockReturnThis(),
+    maxDelay: jest.fn().mockReturnThis(),
+    numberOfTaps: jest.fn().mockReturnThis(),
+    numberOfPointers: jest.fn().mockReturnThis(),
+    averageTouches: jest.fn().mockReturnThis(),
+    activateAfterLongPress: jest.fn().mockReturnThis(),
+    // Common configuration methods
+    hitSlop: jest.fn().mockReturnThis(),
+    shouldCancelWhenOutside: jest.fn().mockReturnThis(),
+    cancelsTouchesInView: jest.fn().mockReturnThis(),
+    manualActivation: jest.fn().mockReturnThis(),
+    // Cross-gesture relations
+    simultaneousWithExternalGesture: jest.fn().mockReturnThis(),
+    requireExternalGestureToFail: jest.fn().mockReturnThis(),
+    blocksExternalGesture: jest.fn().mockReturnThis(),
     runOnJS: jest.fn().mockReturnThis(),
     withRef: jest.fn().mockReturnThis(),
+    withTestId: jest.fn().mockReturnThis(),
   });
 
   return {
@@ -221,12 +245,53 @@ jest.mock(
 // Mock global.css import
 jest.mock('../global.css', () => ({}), { virtual: true });
 
-// Mock clsx for className combining
+// Mock clsx for className combining.
+// Export BOTH the default and the named `clsx` export so that consumers using
+// either `import clsx from 'clsx'` or `import { clsx } from 'clsx'` resolve to a
+// callable. (A bare-function module body breaks the named-import form.)
 jest.mock('clsx', () => {
-  return function clsx(...args) {
-    return args.flat().filter(Boolean).join(' ').trim();
+  const clsx = (...args) => args.flat().filter(Boolean).join(' ').trim();
+  return { __esModule: true, clsx, default: clsx };
+});
+
+// Mock react-native-safe-area-context so components that call
+// useSafeAreaInsets()/useSafeAreaFrame() render in unit tests without an
+// explicit <SafeAreaProvider> wrapper (the real module throws otherwise).
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  const inset = { top: 0, right: 0, bottom: 0, left: 0 };
+  const frame = { x: 0, y: 0, width: 390, height: 844 };
+  const passthrough = ({ children }) => children;
+  return {
+    __esModule: true,
+    SafeAreaProvider: passthrough,
+    SafeAreaConsumer: ({ children }) => children(inset),
+    SafeAreaView: ({ children }) => children,
+    SafeAreaInsetsContext: React.createContext(inset),
+    useSafeAreaInsets: () => inset,
+    useSafeAreaFrame: () => frame,
+    initialWindowMetrics: { insets: inset, frame },
+    withSafeAreaInsets: (Component) => Component,
   };
 });
+
+// Mock the StreakMilestone provider module so components that call
+// useStreakMilestone() (e.g. HabitCard via useStreakMilestoneIntegration) render
+// in unit tests without an explicit <StreakMilestoneProvider>. Only this module
+// is mocked — the celebration components, constants and useMilestoneCheck hook
+// (re-exported by the barrel from other files) remain the real implementations.
+jest.mock(
+  '@/components/StreakMilestoneCelebration/StreakMilestoneProvider',
+  () => {
+    const passthrough = ({ children }) => children;
+    return {
+      __esModule: true,
+      StreakMilestoneProvider: passthrough,
+      default: passthrough,
+      useStreakMilestone: () => ({ checkAndCelebrate: () => {} }),
+    };
+  }
+);
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
