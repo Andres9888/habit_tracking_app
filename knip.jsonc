@@ -43,12 +43,6 @@
     "specs/**",
     "superdesign/**",
     ".superdesign/**",
-    "bmad/**",
-    "src/screens/auth 2/**",
-    "src/screens/examples/**",
-    "src/screens/examples 2/**",
-    "src/components/CalendarTimeline/CalendarTimelineDebug.tsx",
-    "src/components/CalendarTimeline/CalendarTimelineWithEdgeFade.tsx",
-    "src/components/CalendarTimeline/CalendarTimelineWithPulse.tsx"
+    "bmad/**"
   ]
 }
