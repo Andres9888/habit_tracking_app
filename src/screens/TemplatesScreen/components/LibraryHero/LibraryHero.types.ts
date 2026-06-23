@@ -8,7 +8,6 @@ export interface HeroCopyProps {
 export interface LibraryHeroProps {
   heroSubtitle?: string;
   heroTitle?: string;
-  importedStepCounts?: Record<string, number>;
   isCompressed?: boolean;
   onSearchChange: (text: string) => void;
   onSearchClear: () => void;

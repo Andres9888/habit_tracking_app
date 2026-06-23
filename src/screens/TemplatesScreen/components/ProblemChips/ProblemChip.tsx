@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 import {
   interpolateColor,
   useAnimatedStyle,
@@ -15,7 +15,6 @@ import { styles as s } from './ProblemChips.styles';
 
 interface ProblemChipProps {
   goal: GoalCollection;
-  importedCount: number;
   isSelected: boolean;
   isWide: boolean;
   onSelectGoal: (goal: GoalCollection) => void;
@@ -23,7 +22,6 @@ interface ProblemChipProps {
 
 export function ProblemChip({
   goal,
-  importedCount,
   isSelected,
   isWide,
   onSelectGoal,
@@ -32,7 +30,6 @@ export function ProblemChip({
   const progress = useSharedValue(isSelected ? 1 : 0);
   const selectedBgColor = isDark ? goal.darkBgColor : goal.bgColor;
   const selectedTextColor = isDark ? goal.darkTextColor : goal.textColor;
-  const showProgress = isSelected && importedCount > 0;
 
   useEffect(() => {
     progress.value = withSpring(isSelected ? 1 : 0, springs.responsive);
@@ -60,7 +57,12 @@ export function ProblemChip({
       accessibilityRole='button'
       accessibilityState={{ selected: isSelected }}
       hitSlop={0}
-      style={[s.chip, isWide ? s.chipWide : s.chipHalf, animatedChipStyle]}
+      style={[
+        s.chip,
+        isWide ? s.chipWide : s.chipHalf,
+        isSelected ? s.chipSelected : null,
+        animatedChipStyle,
+      ]}
       onPress={() => {
         void triggerHaptic('selection');
         onSelectGoal(goal);
@@ -75,11 +77,6 @@ export function ProblemChip({
       >
         {goal.problemLabel}
       </Text>
-      {showProgress ? (
-        <View style={s.progressBadge}>
-          <Text style={s.progressText}>{importedCount} of 2</Text>
-        </View>
-      ) : null}
     </AnimatedPressable>
   );
 }

@@ -15,6 +15,12 @@ const HERO_GRADIENT_DARK = [
   '#111827',
 ] as const;
 
+// Soft top sheen — light catches the top edge for quiet depth (light mode only).
+const HERO_SHEEN_LIGHT = [
+  'rgba(255, 255, 255, 0.35)',
+  'rgba(255, 255, 255, 0)',
+] as const;
+
 export function HeroBackdrop() {
   const { isDark } = useThemeColors();
 
@@ -27,7 +33,15 @@ export function HeroBackdrop() {
         start={{ x: 0.5, y: 0 }}
         style={s.gradient}
       />
-      {/* TODO(Phase 1.5): Skip grain until the shared texture asset is ready. */}
+      {isDark ? null : (
+        <LinearGradient
+          colors={[...HERO_SHEEN_LIGHT]}
+          end={{ x: 0.5, y: 1 }}
+          locations={[0, 1]}
+          start={{ x: 0.5, y: 0 }}
+          style={s.sheen}
+        />
+      )}
     </View>
   );
 }
@@ -37,5 +51,12 @@ const s = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     borderBottomLeftRadius: borderRadius.xl,
     borderBottomRightRadius: borderRadius.xl,
+  },
+  sheen: {
+    height: '55%',
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
 });

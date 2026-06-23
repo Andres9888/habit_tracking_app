@@ -15,7 +15,6 @@ export interface MainBrowseViewProps {
   goalTemplates: Doc<'templates'>[];
   heroSubtitle?: string;
   heroTitle?: string;
-  importedStepCounts: Record<string, number>;
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
   isSearchActive: boolean;
