@@ -7,7 +7,7 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { ChainDayItem } from '../HabitChainVisualizer/ChainDayItem';
 import type { CompletionIcon, DayShape } from '../HabitChainVisualizer/types';
 
-/** A representative week: a four-day streak building strength, then rest days. */
+/** A representative span: a four-day streak building strength, then rest days. */
 export const PREVIEW_STRENGTH_PERCENT = 92;
 
 const DAYS = [
@@ -15,7 +15,6 @@ const DAYS = [
   { completed: true, strength: 55 },
   { completed: true, strength: 75 },
   { completed: true, strength: PREVIEW_STRENGTH_PERCENT },
-  { completed: false, strength: 0 },
   { completed: false, strength: 0 },
   { completed: false, strength: 0 },
 ];

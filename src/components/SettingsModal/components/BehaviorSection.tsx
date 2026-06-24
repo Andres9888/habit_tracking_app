@@ -11,6 +11,7 @@ import { SortOrderPicker } from '../SortOrderPicker';
 import { SoundPicker } from '../SoundPicker';
 import { HabitDataRows } from './HabitDataRows';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { rowMatchesQuery, useSettingsSearch } from '../search';
 import type { HabitSortMode } from '../../../features/habits/types';
 import type { SettingsContentProps } from '../SettingsContent.types';
 
@@ -26,17 +27,18 @@ interface BehaviorSectionProps {
   onChangeStickyCalendarHeader: SettingsContentProps['onChangeStickyCalendarHeader'];
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
-  onExportHabitsData?: () => void | Promise<void>;
+  onExportHabitsData?: SettingsContentProps['onExportHabitsData'];
 }
 
 export function BehaviorSection(p: BehaviorSectionProps) {
   const { settings: icons } = useThemeColors();
   const iconSize = iconSizes.small;
+  const { query } = useSettingsSearch();
 
   return (
     <SettingsSection
       icon={<SlidersHorizontal color={p.sectionIconColor} size={iconSize} />}
-      title='Behavior'
+      title='Habits'
     >
       <SettingsRow
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
@@ -46,10 +48,12 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         subtitle='How habits are ordered'
         type='info'
       />
-      <SortOrderPicker
-        selected={p.habitSortMode as HabitSortMode}
-        onSelect={p.onChangeHabitSortMode}
-      />
+      {rowMatchesQuery(query, 'Sort order') ? (
+        <SortOrderPicker
+          selected={p.habitSortMode as HabitSortMode}
+          onSelect={p.onChangeHabitSortMode}
+        />
+      ) : null}
       <SettingsRow
         icon={<Volume2 color={icons.sound.icon} size={iconSize} />}
         iconBackgroundColor={icons.sound.bg}
@@ -60,11 +64,13 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         value={p.completionSoundEnabled}
         onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
       />
-      <SoundPicker
-        selected={p.completionSoundType}
-        visible={p.completionSoundEnabled}
-        onSelect={(v) => void p.onChangeCompletionSoundType(v)}
-      />
+      {rowMatchesQuery(query, 'Completion sound') ? (
+        <SoundPicker
+          selected={p.completionSoundType}
+          visible={p.completionSoundEnabled}
+          onSelect={(v) => void p.onChangeCompletionSoundType(v)}
+        />
+      ) : null}
       <SettingsRow
         icon={<Calendar color={icons.calendarHeader.icon} size={iconSize} />}
         iconBackgroundColor={icons.calendarHeader.bg}

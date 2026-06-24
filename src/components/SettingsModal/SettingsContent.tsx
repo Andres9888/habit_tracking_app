@@ -1,16 +1,22 @@
-/** SettingsContent - Settings layout: Account → Appearance → Behavior → Notifications → Support → About */
+/** SettingsContent - Settings layout: Profile → Look & Feel → Habits → Reminders → Data & Privacy → About & Support */
 import { View } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import { useState } from 'react';
 import { useAccountActions } from './useAccountActions';
 import { FeedbackModal } from '../FeedbackModal';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
+import {
+  SettingsSearchProvider,
+  SettingsSearchEmpty,
+  anySectionMatches,
+} from './search';
 
 const useSectionIconColor = () => {
   const { settings } = useThemeColors();
@@ -33,6 +39,8 @@ export function SettingsContent(p: SettingsContentProps) {
   }));
 
   const actions = useAccountActions();
+  const [searchQuery, setSearchQuery] = useState('');
+  const showEmptyState = !anySectionMatches(searchQuery.trim().toLowerCase());
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -45,23 +53,33 @@ export function SettingsContent(p: SettingsContentProps) {
       <Animated.ScrollView
         className='flex-1 px-4'
         contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
+        keyboardShouldPersistTaps='handled'
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         style={{ backgroundColor: themeColors.background }}
         onScroll={scrollHandler}
       >
-        <View className='gap-5'>
-          <SettingsSectionList
-            {...p}
-            sectionIconColor={sectionIconColor}
-            onFeedback={actions.handleFeedback}
-            onPrivacy={actions.openPrivacy}
-            onRate={actions.handleRateApp}
-            onShare={actions.handleShare}
-            onTerms={actions.openTerms}
-            onWhatsNew={actions.handleWhatsNew}
-          />
-        </View>
+        <SettingsSearchProvider query={searchQuery}>
+          <View className='gap-5'>
+            <SettingsSectionList
+              {...p}
+              searchQuery={searchQuery}
+              sectionIconColor={sectionIconColor}
+              isDeletingAccount={actions.isDeletingAccount}
+              onChangeSearchQuery={setSearchQuery}
+              onDeleteAccount={actions.handleDeleteAccount}
+              onFeedback={actions.handleFeedback}
+              onPrivacy={actions.openPrivacy}
+              onRate={actions.handleRateApp}
+              onShare={actions.handleShare}
+              onTerms={actions.openTerms}
+              onWhatsNew={actions.handleWhatsNew}
+            />
+            {showEmptyState ? (
+              <SettingsSearchEmpty query={searchQuery} />
+            ) : null}
+          </View>
+        </SettingsSearchProvider>
       </Animated.ScrollView>
       <FeedbackModal
         visible={actions.showFeedbackModal}

@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
-import { typography, fontWeights } from '../../theme/typography';
+import { typography, fontFamilies, fontWeights } from '../../theme/typography';
 
 interface ProfileStatItemProps {
   color: string;
@@ -53,13 +53,16 @@ export function ProfileStatItem({
           </>
         ) : (
           <>
-            <Icon color={color} size={iconSizes.small} />
+            <Icon color={labelColor} size={iconSizes.small} />
             <Text
               className='mt-1'
               style={{
-                ...typography.heading3,
-                color,
+                fontFamily: fontFamilies.serif,
+                fontSize: 18,
+                lineHeight: 22,
                 fontWeight: fontWeights.bold,
+                fontVariant: ['tabular-nums'],
+                color,
               }}
             >
               {value}

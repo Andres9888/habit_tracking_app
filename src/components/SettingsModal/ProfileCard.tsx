@@ -1,8 +1,9 @@
-/** ProfileCard — User identity anchor at top of account page */
-import { Text, View } from 'react-native';
+/** ProfileCard — left-aligned account hero: identity + streak + edit, then stats */
+import { Pressable, Text, View } from 'react-native';
+import { Pencil } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { spacing } from '../../theme/spacing';
-import { typography } from '../../theme/typography';
+import { typography, fontWeights } from '../../theme/typography';
 import { EditableUserAvatar } from './EditableUserAvatar';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
@@ -28,7 +29,10 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
       className='overflow-hidden rounded-2xl'
       style={getProfileCardShellStyle(themeColors)}
     >
-      <View className='items-center px-4 pb-1 pt-5' style={{ gap: spacing.md }}>
+      <View
+        className='flex-row items-center px-4 pb-3 pt-4'
+        style={{ gap: 16 }}
+      >
         <EditableUserAvatar
           imageUrl={imageUrl}
           initial={initial}
@@ -43,29 +47,57 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
               themeColors.primary[600],
             ],
           }}
-          size={72}
+          size={64}
           useGradient
           onPress={openPhotoPicker}
         />
-        <View className='items-center'>
-          <Text
-            style={{ ...typography.heading3, color: themeColors.text.primary }}
-          >
-            {name}
-          </Text>
+        <View className='flex-1'>
+          <View className='flex-row items-center' style={{ gap: 6 }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                ...typography.heading3,
+                color: themeColors.text.primary,
+              }}
+            >
+              {name}
+            </Text>
+            {isPremium ? <ProfilePremiumBadge variant='compact' /> : null}
+          </View>
           {email ? (
             <Text
               className='mt-0.5'
+              numberOfLines={1}
               style={{
-                ...typography.caption,
+                ...typography.bodySmall,
                 color: themeColors.text.secondary,
               }}
             >
               {email}
             </Text>
           ) : null}
-          {isPremium ? <ProfilePremiumBadge /> : null}
+          <View className='mt-2 flex-row items-center' style={{ gap: 5 }}>
+            <Text style={{ fontSize: 13 }}>🔥</Text>
+            <Text
+              style={{
+                ...typography.bodySmall,
+                fontWeight: fontWeights.bold,
+                color: themeColors.status.streakText,
+              }}
+            >
+              {stats.currentStreak}-day streak
+            </Text>
+          </View>
         </View>
+        <Pressable
+          accessibilityLabel='Edit profile photo'
+          accessibilityRole='button'
+          className='self-start'
+          hitSlop={8}
+          onPress={openPhotoPicker}
+        >
+          <Pencil color={themeColors.text.tertiary} size={iconSizes.medium} />
+        </Pressable>
       </View>
       <ProfileStatsRow isLoading={statsLoading} stats={stats} />
     </View>

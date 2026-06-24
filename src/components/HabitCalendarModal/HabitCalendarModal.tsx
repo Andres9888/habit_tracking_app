@@ -61,7 +61,7 @@ export default function HabitCalendarModal({
         />
 
         <ScrollView
-          className='px-4'
+          className='px-5'
           showsVerticalScrollIndicator={false}
           stickyHeaderIndices={showStickyHeader ? [0] : []}
         >

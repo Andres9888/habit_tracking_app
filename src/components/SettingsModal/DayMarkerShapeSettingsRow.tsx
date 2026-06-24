@@ -25,6 +25,10 @@ export function DayMarkerShapeSettingsRow({ selected, onSelect }: Props) {
           <Square color={settings.dayMarker.icon} size={iconSize} />
         )
       }
+      help={{
+        title: 'Day marker shape',
+        body: 'Choose whether each day on your habit calendars is drawn as a circle or a square.',
+      }}
       iconBackgroundColor={settings.dayMarker.bg}
       label='Day marker shape'
       rightAccessory={

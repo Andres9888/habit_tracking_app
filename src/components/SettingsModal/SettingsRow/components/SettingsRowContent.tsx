@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { typography, fontWeights } from '@/theme/typography';
+import { airy } from '@/theme/airyScale';
 import { RowAccessory } from './RowAccessory';
+import { RowLabel } from './RowLabel';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
@@ -11,6 +12,7 @@ interface SettingsRowContentProps {
   iconBackgroundColor: SettingsRowProps['iconBackgroundColor'];
   isInteractiveInfo: boolean;
   label: SettingsRowProps['label'];
+  help: SettingsRowProps['help'];
   onToggle: () => void;
   pulseStyle: ReturnType<typeof Animated.useAnimatedStyle>;
   secondaryTextColor: string;
@@ -25,6 +27,7 @@ interface SettingsRowContentProps {
 export function SettingsRowContent({
   badge,
   colors,
+  help,
   icon,
   iconBackgroundColor,
   isInteractiveInfo,
@@ -46,45 +49,34 @@ export function SettingsRowContent({
         backgroundColor: colors.background,
         borderColor: showBorder ? colors.border : undefined,
         overflow: 'hidden',
+        paddingVertical: airy.rowPaddingV,
       }}
     >
       {type === 'toggle' ? <Animated.View style={pulseStyle} /> : null}
       <View
         accessible={isInteractiveInfo ? false : undefined}
-        className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
+        className='mr-4 items-center justify-center'
         importantForAccessibility={
           isInteractiveInfo ? 'no-hide-descendants' : undefined
         }
-        style={{ backgroundColor: iconBackgroundColor }}
+        style={{
+          backgroundColor: iconBackgroundColor,
+          width: airy.tileSize,
+          height: airy.tileSize,
+          borderRadius: airy.tileRadius,
+        }}
       >
         {icon}
       </View>
-      <View
-        accessible={isInteractiveInfo ? false : undefined}
-        className='flex-1'
-      >
-        <Text
-          accessibilityRole={isInteractiveInfo ? 'header' : undefined}
-          numberOfLines={type === 'toggle' || type === 'navigation' ? 2 : 1}
-          ellipsizeMode='tail'
-          style={{
-            ...typography.body,
-            fontWeight: fontWeights.semibold,
-            color: colors.label,
-          }}
-        >
-          {label}
-        </Text>
-        {subtitle ? (
-          <Text
-            className='mt-1'
-            numberOfLines={2}
-            style={{ ...typography.caption, color: secondaryTextColor }}
-          >
-            {subtitle}
-          </Text>
-        ) : null}
-      </View>
+      <RowLabel
+        help={help}
+        isInteractiveInfo={isInteractiveInfo}
+        label={label}
+        labelColor={colors.label}
+        secondaryTextColor={secondaryTextColor}
+        subtitle={subtitle}
+        type={type}
+      />
       {rightAccessory ?? (
         <RowAccessory
           badge={badge}

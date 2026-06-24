@@ -1,9 +1,12 @@
+/* eslint-disable max-lines -- design-token data file; inherently long like darkColors.ts */
 /**
  * Spacing System - Habit Tracking App
  * Frontend Redesign Spec 2026-02-14
  *
  * 8px Grid System — all values are multiples of 4px
  */
+
+import { airy } from './airyScale';
 
 /**
  * Base Spacing Scale
@@ -71,23 +74,23 @@ export const borderRadius = {
   /** Pill shape (avatar, icon buttons, pills) */
   full: 9999,
 
-  /** Cards, containers, inputs — 16px */
-  large: 16,
+  /** Cards, containers, inputs — 16px (airy: 24px) */
+  large: airy.cardRadius,
   /** Alias: cards */
-  card: 16,
+  card: airy.cardRadius,
 
-  /** Buttons, tags, interactive elements — 12px */
-  medium: 12,
+  /** Buttons, tags, interactive elements — 12px (airy: 14px) */
+  medium: airy.buttonRadius,
   /** Alias: buttons */
-  button: 12,
+  button: airy.buttonRadius,
 
-  /** Chips, badges, small elements — 8px */
-  small: 8,
+  /** Chips, badges, small elements — 8px (airy: 10px) */
+  small: airy.chipRadius,
   /** Alias: chips */
-  chip: 8,
+  chip: airy.chipRadius,
 
-  /** Modals, bottom sheets — 24px */
-  xl: 24,
+  /** Modals, bottom sheets — 24px (airy: 28px) */
+  xl: airy.modalRadius,
 
   /** Micro-rounding (progress bars, dots) — 4px */
   xs: 4,

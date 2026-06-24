@@ -1,59 +1,62 @@
-import React, { ReactNode } from 'react';
-import { Star, Share2, MessageSquare, Sparkles } from 'lucide-react-native';
+/** AboutSupportSection — Rate, Share, Feedback, What's New (Privacy/Terms/Version live in the footer) */
+import {
+  Heart,
+  MessageSquare,
+  Share2,
+  Sparkles,
+  Star,
+} from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface Props {
-  icon?: ReactNode;
+  sectionIconColor: string;
   onRate: () => void;
   onShare: () => void;
   onFeedback: () => void;
   onWhatsNew: () => void;
 }
 
-export function AppActions({
-  icon,
+export function AboutSupportSection({
+  sectionIconColor,
   onRate,
   onShare,
   onFeedback,
   onWhatsNew,
 }: Props) {
   const { settings } = useThemeColors();
+  const iconSize = iconSizes.small;
 
   return (
-    <SettingsSection icon={icon} title='Support'>
+    <SettingsSection
+      icon={<Heart color={sectionIconColor} size={iconSize} />}
+      title='Support'
+    >
       <SettingsRow
-        icon={<Star color={settings.star.icon} size={iconSizes.small} />}
+        icon={<Star color={settings.star.icon} size={iconSize} />}
         iconBackgroundColor={settings.star.bg}
         label='Rate Chain Day'
         type='navigation'
         onPress={onRate}
       />
       <SettingsRow
-        icon={<Share2 color={settings.share.icon} size={iconSizes.small} />}
+        icon={<Share2 color={settings.share.icon} size={iconSize} />}
         iconBackgroundColor={settings.share.bg}
         label='Share with Friends'
         type='navigation'
         onPress={onShare}
       />
       <SettingsRow
-        icon={
-          <MessageSquare
-            color={settings.feedback.icon}
-            size={iconSizes.small}
-          />
-        }
+        icon={<MessageSquare color={settings.feedback.icon} size={iconSize} />}
         iconBackgroundColor={settings.feedback.bg}
         label='Send Feedback'
         type='navigation'
         onPress={onFeedback}
       />
       <SettingsRow
-        icon={
-          <Sparkles color={settings.whatsNew.icon} size={iconSizes.small} />
-        }
+        icon={<Sparkles color={settings.whatsNew.icon} size={iconSize} />}
         iconBackgroundColor={settings.whatsNew.bg}
         label="What's New"
         showBorder={false}

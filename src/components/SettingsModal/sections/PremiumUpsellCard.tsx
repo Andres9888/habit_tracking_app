@@ -1,28 +1,20 @@
-/** PremiumUpsellCard — gradient conversion card for non-subscribers */
-import { StyleSheet, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+/** PremiumUpsellCard — gold conversion card for non-subscribers */
+import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { typography, fontWeights } from '@/theme/typography';
+import { airy } from '@/theme/airyScale';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { colors as palette } from '@/theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { usePremiumUpsellAnimations } from './PremiumStatus.hooks';
-import { getUpsellGradient } from './PremiumStatus.helpers';
 import { PremiumUpsellContent } from './PremiumUpsellContent';
 
 interface PremiumUpsellCardProps {
   onUpgrade?: () => void;
 }
 
-const styles = StyleSheet.create({
-  shimmerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
-});
+const GOLD_GRADIENT = ['#FDF3D2', '#F6E2A6'] as const;
 
 export function PremiumUpsellCard({ onUpgrade }: PremiumUpsellCardProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
-  const { shimmerStyle, badgePulseStyle } = usePremiumUpsellAnimations(true);
+  const { colors: themeColors } = useThemeColors();
 
   return (
     <View className='gap-2'>
@@ -40,37 +32,27 @@ export function PremiumUpsellCard({ onUpgrade }: PremiumUpsellCardProps) {
       </Text>
       <AnimatedPressable
         accessibilityHint='Opens premium upgrade screen'
-        accessibilityLabel='Upgrade to Premium'
+        accessibilityLabel='Go Premium'
         accessibilityRole='button'
         onPress={onUpgrade}
       >
         <LinearGradient
-          className='overflow-hidden rounded-2xl px-4 py-5'
-          colors={[...getUpsellGradient(isDark)]}
+          className='overflow-hidden rounded-2xl px-4 py-4'
+          colors={GOLD_GRADIENT}
           end={{ x: 1, y: 1 }}
           start={{ x: 0, y: 0 }}
           style={{
-            shadowColor: palette.premium[500],
-            shadowOffset: { height: 4, width: 0 },
-            shadowOpacity: isDark ? 0.15 : 0.3,
-            shadowRadius: 16,
-            elevation: 6,
+            borderColor: '#EAD08F',
+            borderRadius: airy.cardRadius,
+            borderWidth: 1,
+            shadowColor: '#7C5A08',
+            shadowOffset: { height: 2, width: 0 },
+            shadowOpacity: 0.16,
+            shadowRadius: 10,
+            elevation: 4,
           }}
         >
-          {/* Shimmer sweep overlay */}
-          <Animated.View style={[styles.shimmerOverlay, shimmerStyle]}>
-            {/* Intentional rgba for shimmer transparency effect */}
-            <LinearGradient
-              colors={['transparent', 'rgba(255,255,255,0.6)', 'transparent']}
-              end={{ x: 1, y: 0 }}
-              start={{ x: 0, y: 0 }}
-              style={{ width: 120, height: '100%' }}
-            />
-          </Animated.View>
-          <PremiumUpsellContent
-            badgePulseStyle={badgePulseStyle}
-            isDark={isDark}
-          />
+          <PremiumUpsellContent />
         </LinearGradient>
       </AnimatedPressable>
     </View>

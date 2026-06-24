@@ -1,6 +1,7 @@
 import { Switch, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
+import { airy } from '@/theme/airyScale';
 import { typography, fontWeights } from '@/theme/typography';
 import { SettingsCountBadge } from '../../SettingsCountBadge';
 import type { SettingsRowColors } from '../SettingsRow.colors';
@@ -28,6 +29,7 @@ export function RowAccessory({
       <Switch
         accessibilityLabel={label}
         ios_backgroundColor={colors.switchTrackFalse}
+        style={{ transform: [{ scale: airy.switchScale }] }}
         thumbColor={colors.switchThumb}
         trackColor={{
           false: colors.switchTrackFalse,

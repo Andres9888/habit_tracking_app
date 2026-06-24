@@ -71,19 +71,24 @@ module.exports = {
       },
       fontSize: {
         // Match typography.ts token scale for NativeWind className usage
-        'tab': ['10px', { lineHeight: '12px', fontWeight: '500' }],
-        'caption': ['13px', { lineHeight: '18px', fontWeight: '500' }],
+        tab: ['10px', { lineHeight: '12px', fontWeight: '500' }],
+        caption: ['13px', { lineHeight: '18px', fontWeight: '500' }],
         'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
-        'body': ['17px', { lineHeight: '24px', fontWeight: '400' }],
+        body: ['17px', { lineHeight: '24px', fontWeight: '400' }],
         'heading-3': ['20px', { lineHeight: '26px', fontWeight: '600' }],
         'heading-2': ['22px', { lineHeight: '28px', fontWeight: '600' }],
-        'display': ['34px', { lineHeight: '41px', fontWeight: '700' }],
+        display: ['34px', { lineHeight: '41px', fontWeight: '700' }],
       },
+      // Full airy: radii bumped app-wide (mirrors src/theme/airyScale.ts).
+      // Canonical = xl 12 / 2xl 16 / 3xl 24 / card 16.
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-        card: '16px',
+        card: '24px',
+        xl: '16px',
+        '2xl': '24px',
+        '3xl': '28px',
       },
     },
   },
