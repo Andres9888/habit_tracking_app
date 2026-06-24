@@ -22,7 +22,6 @@ export function MainBrowseView(p: MainBrowseViewProps) {
       <LibraryHero
         heroSubtitle={p.heroSubtitle}
         heroTitle={p.heroTitle}
-        importedStepCounts={p.importedStepCounts}
         isCompressed={isCompressed}
         searchQuery={p.searchQuery}
         selectedGoalId={p.selectedGoalId}

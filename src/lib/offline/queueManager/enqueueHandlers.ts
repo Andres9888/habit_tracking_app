@@ -1,5 +1,6 @@
 import type {
   OfflineOperation,
+  OfflineOperationType,
   OfflineQueueState,
   QueueEvent,
   QueueOperationResult,
@@ -42,10 +43,10 @@ export function handleReplace(
   return { operationId: existing.id, replaced: true, success: true };
 }
 
-export function handleNewOperation(
+export function handleNewOperation<T extends OfflineOperationType>(
   state: OfflineQueueState,
-  type: 'toggleCompletion',
-  payload: ToggleCompletionPayload,
+  type: T,
+  payload: OfflineOperation<T>['payload'],
   setState: StateSetter,
   notify: NotifyFn,
   emit: EmitFn,

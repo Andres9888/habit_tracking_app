@@ -46,7 +46,15 @@ export const styles = StyleSheet.create({
     width: 44,
   },
   iconText: { fontSize: 22 },
-  metaPillLabel: { ...typography.caption, fontSize: 11.5, lineHeight: 16 },
+  metaPillLabel: {
+    ...typography.caption,
+    borderRadius: borderRadius.full,
+    fontSize: 11.5,
+    lineHeight: 16,
+    overflow: 'hidden',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
+  },
   name: { ...typography.body, fontWeight: fontWeights.semibold },
   topPickBadge: {
     alignSelf: 'flex-start',

@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { typography, fontWeights } from '@/theme/typography';
 import { RowAccessory } from './RowAccessory';
 import type { SettingsRowColors } from '../SettingsRow.colors';
@@ -11,8 +11,8 @@ interface SettingsRowContentProps {
   iconBackgroundColor: SettingsRowProps['iconBackgroundColor'];
   isInteractiveInfo: boolean;
   label: SettingsRowProps['label'];
-  onToggle: () => void;
-  pulseStyle: ReturnType<typeof Animated.useAnimatedStyle>;
+  onToggle: (value: boolean) => void;
+  pulseStyle: ReturnType<typeof useAnimatedStyle>;
   secondaryTextColor: string;
   showBorder: boolean;
   subtitle?: SettingsRowProps['subtitle'];

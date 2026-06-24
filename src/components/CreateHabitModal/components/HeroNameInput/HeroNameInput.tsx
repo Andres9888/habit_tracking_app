@@ -70,7 +70,7 @@ export const HeroNameInput = ({
           blurOnSubmit
           accessibilityHint='Enter the name of your new habit'
           accessibilityLabel='Habit name input'
-          autoFocus={autoFocus ? isPlaceholderReady : null}
+          autoFocus={autoFocus ? isPlaceholderReady : false}
           className='h-16 rounded-2xl bg-white px-5 pr-16 text-lg font-medium'
           maxLength={MAX_LENGTH}
           returnKeyType='done'

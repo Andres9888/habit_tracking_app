@@ -90,11 +90,6 @@ function TemplatesScreenContent({
     [data.allTemplates, selectedGoalId, state.importedTemplateIds]
   );
 
-  const importedStepCounts = useMemo(() => {
-    if (!selectedGoalId || !prescription) return {};
-    return { [selectedGoalId]: prescription.importedStepCount };
-  }, [prescription, selectedGoalId]);
-
   const selectedGoal = useMemo(
     () => GOAL_COLLECTIONS.find((g) => g.id === selectedGoalId) ?? null,
     [selectedGoalId]
@@ -264,7 +259,6 @@ function TemplatesScreenContent({
       goalTemplates={goalTemplates}
       heroSubtitle={heroCopy.subtitle}
       heroTitle={heroCopy.title}
-      importedStepCounts={importedStepCounts}
       prescription={prescription}
       selectedGoalId={selectedGoalId}
       feedbackOverlays={

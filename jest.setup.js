@@ -161,6 +161,13 @@ jest.mock('expo-notifications', () => ({
   scheduleNotificationAsync: jest.fn(async () => 'mock-notification-id'),
   setNotificationChannelAsync: jest.fn(async () => null),
   setNotificationHandler: jest.fn(),
+  addNotificationResponseReceivedListener: jest.fn(() => ({
+    remove: jest.fn(),
+  })),
+  addNotificationReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+  removeNotificationSubscription: jest.fn(),
+  getLastNotificationResponseAsync: jest.fn(async () => null),
+  dismissAllNotificationsAsync: jest.fn(async () => {}),
 }));
 
 // Mock react-native-calendars (may not be installed)
@@ -254,6 +261,15 @@ jest.mock('react-native-reanimated', () => {
     addWhitelistedNativeProps: jest.fn(),
 
     // Animation functions
+    makeMutable: (initial) => ({ value: initial }),
+    getUseOfValueInStyleWarning: () => '',
+    ReduceMotion: { System: 'system', Always: 'always', Never: 'never' },
+    ReducedMotionConfig: () => null,
+    useAnimatedRef: () => ({ current: null }),
+    useAnimatedReaction: jest.fn(),
+    useScrollViewOffset: () => ({ value: 0 }),
+    measure: () => null,
+    scrollTo: jest.fn(),
     useSharedValue: (initial) => ({ value: initial }),
     useAnimatedStyle: (cb) => {
       const style = cb();
@@ -314,6 +330,10 @@ jest.mock('react-native-reanimated', () => {
         FadeOut: createChainableAnimation(),
         FadeOutDown: createChainableAnimation(),
         FadeOutUp: createChainableAnimation(),
+        FadeOutLeft: createChainableAnimation(),
+        FadeOutRight: createChainableAnimation(),
+        FadeInLeft: createChainableAnimation(),
+        FadeInRight: createChainableAnimation(),
         SlideInRight: createChainableAnimation(),
         SlideOutLeft: createChainableAnimation(),
         SlideInLeft: createChainableAnimation(),
@@ -370,6 +390,9 @@ jest.mock('react-native-reanimated', () => {
 
     // Additional hooks that may be missing
     useDerivedValue: (callback) => ({ value: callback() }),
+    useAnimatedProps: (callback) =>
+      typeof callback === 'function' ? callback() : {},
+    useFrameCallback: () => ({ setActive: jest.fn(), isActive: false }),
     useAnimatedScrollHandler: () => ({}),
     useAnimatedGestureHandler: () => ({}),
     useReducedMotion: () => false,
@@ -504,8 +527,15 @@ jest.mock('react-native-draggable-flatlist', () => {
     });
   };
 
+  const Decorator = ({ children }) => children;
+
   return {
     __esModule: true,
     default: DraggableFlatList,
+    ScaleDecorator: Decorator,
+    OpacityDecorator: Decorator,
+    ShadowDecorator: Decorator,
+    NestableScrollContainer: ({ children }) => children,
+    NestableDraggableFlatList: DraggableFlatList,
   };
 });

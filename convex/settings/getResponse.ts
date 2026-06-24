@@ -1,39 +1,11 @@
+import type { Doc } from '../_generated/dataModel';
 import { normalizeDarkMode, normalizeHabitSortMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 
-type StoredSettings =
-  | {
-      appIcon?: string;
-      catTheme?: boolean;
-      celebrationsEnabled?: boolean;
-      compactView?: boolean;
-      completionSoundEnabled?: boolean;
-      completionSoundType?: string;
-      darkMode?: string;
-      dayShape?: string;
-      habitCompletionIcon?: string;
-      habitSortMode?: string;
-      sortHabitsAlphabetically?: boolean;
-      hasPremium?: boolean;
-      progressEmojis?: string[];
-      customProgressEmojis?: string[];
-      reduceMotion?: boolean;
-      showCalendarView?: boolean;
-      showCharacterScreen?: boolean;
-      showConsistency?: boolean;
-      showEmojis?: boolean;
-      showGradientFill?: boolean;
-      showStreakConnections?: boolean;
-      showMotivationalMessages?: boolean;
-      stickyCalendarHeader?: boolean;
-      showStreaks?: boolean;
-      showWeekCompletionBar?: boolean;
-      streakRemindersEnabled?: boolean;
-      streakReminderTime?: string;
-      useDyslexicFont?: boolean;
-    }
-  | null
-  | undefined;
+// Derive the stored shape straight from the schema so this type can't drift
+// from the userSettings table (it previously hand-listed every field and went
+// stale: progressEmojis/darkMode/completionSoundType all diverged).
+type StoredSettings = Doc<'userSettings'> | null | undefined;
 
 export function toSettingsResponse(settings: StoredSettings) {
   return {

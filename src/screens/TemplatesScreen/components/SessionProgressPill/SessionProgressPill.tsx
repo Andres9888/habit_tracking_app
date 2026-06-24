@@ -23,8 +23,8 @@ export function SessionProgressPill({ count }: SessionProgressPillProps) {
       style={[
         s.pill,
         {
-          backgroundColor: colors.primary[50],
-          borderColor: colors.primary[200],
+          backgroundColor: colors.primary[100],
+          borderColor: colors.primary[300],
         },
       ]}
     >

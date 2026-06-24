@@ -13,6 +13,7 @@ import type {
   QueueOperationResult,
   ToggleCompletionPayload,
 } from '../queue';
+import type { ErrorCategory } from '../types';
 
 /**
  * Return type for the useOfflineQueue hook
@@ -40,7 +41,7 @@ export interface UseOfflineQueueReturn {
   markFailed: (
     operationId: string,
     error: string,
-    category?: string
+    category?: ErrorCategory
   ) => boolean;
   /** Clear all operations from the queue */
   clear: () => void;
@@ -69,7 +70,7 @@ export interface UseOfflineQueueOptions {
     markFailed: (
       operationId: string,
       error: string,
-      category?: string
+      category?: ErrorCategory
     ) => boolean;
     clear: () => void;
   };

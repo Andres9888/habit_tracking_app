@@ -10,7 +10,10 @@
 
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitCardEntranceVariant } from '../HabitCard/useHabitCardEntrance';
-import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
+import type {
+  ProgressEmojiSet,
+  PartialProgressEmojiSet,
+} from '../../utils/progressEmojis';
 
 /** Completion status for a single day in the week view. */
 export type HabitStatus = 'done' | 'missed' | 'planned';
@@ -47,7 +50,7 @@ export interface Habit {
   strengthUpdatedAt?: number;
   /** Highest streak ever achieved for this habit. */
   bestStreak?: number;
-  progressEmojis?: PartialProgressEmojiSet;
+  progressEmojis?: ProgressEmojiSet;
 }
 
 /**

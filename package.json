@@ -31,6 +31,7 @@
     "test:security": "jest --testPathPattern=security --coverage",
     "test:security:fast": "jest --testPathPattern=security --runInBand --coverage=false",
     "test:performance": "jest --testPathPattern=performance --coverage",
+    "test:scenarios": "jest -c tests/e2e-scenarios/jest.scenarios.config.cjs --forceExit",
     "perf:budget": "npm run test:performance && npm run lint:max-lines",
     "perf:bundle-check": "echo 'Run: find src app -name \"*.ts\" -o -name \"*.tsx\" | xargs wc -c | tail -1'",
     "audit:deps": "npm audit --audit-level=high",

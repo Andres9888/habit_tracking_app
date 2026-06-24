@@ -56,7 +56,6 @@ export function CalendarLegend() {
       {legendItems.map(({ label, indicatorColor, textColor }) => (
         <View
           key={label}
-          accessibilityRole='listitem'
           className='flex-row items-center gap-1.5'
         >
           <View

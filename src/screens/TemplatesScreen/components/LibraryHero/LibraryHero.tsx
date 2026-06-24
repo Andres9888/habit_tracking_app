@@ -21,7 +21,6 @@ const DEFAULT_SUBTITLE = "Pick a struggle — we'll give you a proven way in.";
 export function LibraryHero({
   heroSubtitle,
   heroTitle,
-  importedStepCounts,
   isCompressed = false,
   onSearchChange,
   onSearchClear,
@@ -59,7 +58,6 @@ export function LibraryHero({
       </Animated.View>
       <Animated.View entering={animations.chipsEnter} layout={animations.layout}>
         <ProblemChips
-          importedStepCounts={importedStepCounts}
           selectedGoalId={selectedGoalId}
           onSelectGoal={onSelectGoal}
         />

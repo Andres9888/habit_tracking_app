@@ -41,6 +41,9 @@ export interface ModalProps {
 
   /** Skip open/close entrance animations (instant show/hide) */
   skipAnimation?: boolean;
+
+  /** Flag the modal container as a modal for assistive tech (default: true) */
+  accessibilityViewIsModal?: boolean;
 }
 
 export interface ModalAnimationValues {

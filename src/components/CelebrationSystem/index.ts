@@ -50,11 +50,8 @@ export { ConfettiSystem } from './confetti/ConfettiSystem';
 export { useCelebration } from './hooks/useCelebration';
 
 // Types
-export type {
-  BurstType,
-  ConfettiSystemProps,
-  UseCelebrationOptions,
-} from './confetti/types';
+export type { BurstType, ConfettiSystemProps } from './confetti/types';
+export type { UseCelebrationOptions } from './hooks/useCelebration';
 
 // Re-export confetti internals for advanced usage
 export * from './confetti/index';

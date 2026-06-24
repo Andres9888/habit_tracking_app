@@ -2,7 +2,7 @@
  * HabitDetailTabs - Barrel Export
  */
 
-export { HabitDetailTabs, default } from './HabitDetailTabs';
+export { HabitDetailTabs } from './HabitDetailTabs';
 export { TabContent, TabSection } from './TabContent';
 export type {
   TabType,

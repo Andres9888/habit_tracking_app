@@ -29,6 +29,30 @@ export type TemplateCategory =
  */
 export type GrowthType = 'simple' | 'average' | 'complex';
 
+/** "What you'll feel" benefit row in the science drill-down. */
+export type BenefitDetail = {
+  icon: string;
+  title: string;
+  description: string;
+};
+
+/** "What to expect" progression node; `peak` marks the automaticity milestone. */
+export type TimelineEntry = {
+  when: string;
+  title: string;
+  description: string;
+  peak?: boolean;
+};
+
+/** A single cited research source in "The research". */
+export type ScienceSource = {
+  authors: string;
+  title: string;
+  journal: string;
+  year: string;
+  link?: string;
+};
+
 export type TemplateInsert = {
   benefits?: string[];
   category: TemplateCategory;
@@ -46,6 +70,15 @@ export type TemplateInsert = {
   startSmallVersion?: string;
   tips?: string[];
   youtubeLink?: string;
+  // Science drill-down (all optional)
+  tagline?: string;
+  lead?: string;
+  evidence?: string;
+  cadenceLabel?: string;
+  benefitDetails?: BenefitDetail[];
+  timeline?: TimelineEntry[];
+  howToStart?: string[];
+  sources?: ScienceSource[];
 };
 
 /**
