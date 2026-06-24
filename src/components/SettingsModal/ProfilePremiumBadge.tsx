@@ -7,10 +7,13 @@ import { typography, fontWeights } from '../../theme/typography';
 
 interface ProfilePremiumBadgeProps {
   variant?: 'compact' | 'standard';
+  /** Badge text — 'PRO' for an active subscription, 'Trial' during a free trial. */
+  label?: string;
 }
 
 export function ProfilePremiumBadge({
   variant = 'standard',
+  label = 'PRO',
 }: ProfilePremiumBadgeProps) {
   const { colors: themeColors } = useThemeColors();
   const isCompact = variant === 'compact';
@@ -32,7 +35,7 @@ export function ProfilePremiumBadge({
           fontWeight: fontWeights.bold,
         }}
       >
-        PRO
+        {label}
       </Text>
     </View>
   );

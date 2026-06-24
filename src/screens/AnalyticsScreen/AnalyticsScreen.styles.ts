@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import { colors } from '../../theme/colors';
 import { typography } from '../../theme/typography';
 import { borderRadius, spacing } from '../../theme/spacing';
+import { airy } from '../../theme/airyScale';
 
 export const styles = StyleSheet.create({
   container: {
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginHorizontal: spacing.lg,
-    marginTop: spacing.md,
+    marginTop: airy.sectionGap,
     paddingVertical: spacing.md,
   },
   exportButtonText: {
@@ -49,7 +50,7 @@ export const styles = StyleSheet.create({
   sectionTitle: {
     ...typography.heading3,
     color: colors.text.primary,
-    marginBottom: spacing.md,
+    marginBottom: airy.sectionGap,
   },
   statsGrid: {
     flexDirection: 'row',

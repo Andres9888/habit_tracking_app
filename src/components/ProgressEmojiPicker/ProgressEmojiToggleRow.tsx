@@ -38,36 +38,52 @@ export function ProgressEmojiToggleRow({
         className='flex-row items-center justify-between py-2'
         style={toggleRowStyle}
       >
-      <Pressable
-        accessibilityHint='Toggle growth icon customization panel'
-        accessibilityLabel='Growth icons'
-        accessibilityRole='button'
-        accessibilityState={{ expanded }}
-        className='flex-row items-center gap-1'
-        onPress={onToggle}
-      >
-        {STRENGTH_LEVEL_KEYS.map((k) => (
-          <Text key={k} style={{ fontSize: 22 }}>
-            {resolved[k]}
-          </Text>
-        ))}
-      </Pressable>
-      <Pressable
-        accessibilityLabel={expanded ? 'Collapse picker' : 'Customize growth icons'}
-        accessibilityRole='button'
-        hitSlop={8}
-        onPress={onToggle}
-      >
-        <Text
-          style={{
-            ...typography.bodySmall,
-            color: themeColors.primary[600],
-            fontWeight: fontWeights.semibold,
-          }}
+        <Pressable
+          accessibilityHint='Toggle growth icon customization panel'
+          accessibilityLabel='Growth icons'
+          accessibilityRole='button'
+          accessibilityState={{ expanded }}
+          className='flex-row items-center'
+          style={{ gap: 8 }}
+          onPress={onToggle}
         >
-          {expanded ? 'Done' : 'Customize'}
-        </Text>
-      </Pressable>
+          {STRENGTH_LEVEL_KEYS.map((k) => (
+            <View
+              key={k}
+              className='items-center justify-center'
+              style={{
+                backgroundColor: themeColors.gray[50],
+                borderColor: themeColors.border,
+                borderRadius: 12,
+                borderWidth: 1,
+                height: 34,
+                width: 34,
+              }}
+            >
+              <Text style={{ fontSize: 18, lineHeight: 22 }}>
+                {resolved[k]}
+              </Text>
+            </View>
+          ))}
+        </Pressable>
+        <Pressable
+          accessibilityLabel={
+            expanded ? 'Collapse picker' : 'Customize growth icons'
+          }
+          accessibilityRole='button'
+          hitSlop={8}
+          onPress={onToggle}
+        >
+          <Text
+            style={{
+              ...typography.bodySmall,
+              color: themeColors.primary[600],
+              fontWeight: fontWeights.semibold,
+            }}
+          >
+            {expanded ? 'Done' : 'Customize'}
+          </Text>
+        </Pressable>
       </View>
     </>
   );

@@ -1,0 +1,947 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chain Day — Airy Redesign · Before / After</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #ffffff;
+        --card: #faf8f5;
+        --border: #ddd8d2;
+        --divider: #f5f1ed;
+        --t1: #2d2a26;
+        --t2: #6b6560;
+        --t3: #6e6660;
+        --g100: #d1fae5;
+        --g600: #059669;
+        --g700: #047857;
+        --gtile: #e2f1ea;
+        --stone: #e9e4dd;
+        --stoneIcon: #6b6560;
+        --s100: #fef3cd;
+        --s700: #7d5907;
+        --sans: 'DM Sans', system-ui, sans-serif;
+        --serif: 'Literata', Georgia, serif;
+        --cardShadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+        --heroShadow: 0 4px 16px rgba(45, 42, 38, 0.07);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--sans);
+        background: #26231f;
+        color: #edeae5;
+        padding: 40px 28px 80px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .head {
+        max-width: 1180px;
+        margin: 0 auto 36px;
+      }
+      .kicker {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: #34d399;
+      }
+      h1 {
+        font-family: var(--serif);
+        font-size: 40px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        margin-top: 12px;
+        color: #faf8f5;
+      }
+      .sub {
+        font-size: 16px;
+        line-height: 1.55;
+        color: #b8b2aa;
+        margin-top: 14px;
+        max-width: 760px;
+      }
+      .legend {
+        display: flex;
+        gap: 18px;
+        margin-top: 18px;
+        flex-wrap: wrap;
+      }
+      .legend span {
+        font-size: 13px;
+        color: #b8b2aa;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 9px;
+      }
+      .grid {
+        max-width: 1180px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 56px;
+      }
+      .row {
+        display: flex;
+        gap: 48px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .col {
+        flex: 1;
+        min-width: 300px;
+      }
+      .sct {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 6px;
+      }
+      .sctnote {
+        font-size: 14px;
+        color: #9c968d;
+        margin-bottom: 22px;
+        line-height: 1.5;
+      }
+      .pair {
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+      }
+      .panel {
+        flex: 1;
+        min-width: 300px;
+      }
+      .lab {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        margin-bottom: 12px;
+      }
+      .lab.before {
+        color: #9c968d;
+      }
+      .lab.after {
+        color: #34d399;
+      }
+      .pill {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 9px;
+      }
+      .pill.b {
+        background: #3a3631;
+        color: #b8b2aa;
+      }
+      .pill.a {
+        background: rgba(52, 211, 153, 0.16);
+        color: #34d399;
+      }
+      /* phone */
+      .phone {
+        background: var(--bg);
+        border-radius: 34px;
+        padding: 18px 14px;
+        width: 100%;
+        box-shadow: 0 22px 50px rgba(0, 0, 0, 0.4);
+        border: 1px solid #3a3631;
+      }
+      .ph-title {
+        font-family: var(--serif);
+        font-weight: 700;
+        color: var(--t1);
+        padding: 4px 6px 14px;
+      }
+      /* ===== habit cards ===== */
+      .hc {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        display: flex;
+        overflow: hidden;
+      }
+      .hc-left {
+        width: 46%;
+        background: linear-gradient(120deg, #fbe7dd, #ffffff);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+      }
+      .hc-ic {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: #f6e0c8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+      }
+      .hc-name {
+        font-weight: 600;
+        color: var(--t1);
+      }
+      .hc-meta {
+        font-size: 12px;
+        color: var(--t2);
+      }
+      .hc-right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        padding: 0 6px;
+      }
+      .day {
+        width: 26px;
+        height: 26px;
+        border-radius: 13px;
+        border: 2px solid var(--border);
+      }
+      .day.on {
+        background: var(--g600);
+        border-color: var(--g600);
+      }
+      .day.gold {
+        border-color: #e8b94d;
+      }
+      /* ===== settings ===== */
+      .scard {
+        background: var(--card);
+        border: 1px solid var(--border);
+        box-shadow: var(--cardShadow);
+        overflow: hidden;
+      }
+      .hero {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 16px 12px;
+        position: relative;
+      }
+      .av {
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        background: var(--gtile);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--g700);
+        font-weight: 700;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .nm {
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--t1);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .badge {
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        background: var(--s100);
+        color: #9a5504;
+        padding: 2px 6px;
+        border-radius: 9px;
+      }
+      .streak {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        margin-top: 2px;
+      }
+      .streak b {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--s700);
+        line-height: 1;
+      }
+      .streak span {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--t2);
+      }
+      .ring {
+        margin-left: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+      .ringcap {
+        font-size: 10px;
+        color: var(--t2);
+      }
+      .srow {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-top: 1px solid var(--divider);
+      }
+      .stile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .lbl {
+        flex: 1;
+        font-weight: 600;
+        color: var(--t1);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .help {
+        width: 15px;
+        height: 15px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        color: var(--t3);
+        font-size: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sw {
+        border-radius: 14px;
+        background: var(--g600);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .sw i {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+      .chev {
+        color: var(--t3);
+      }
+      .trial {
+        background: var(--s100);
+        border: 1px solid rgba(125, 89, 7, 0.2);
+        box-shadow: var(--cardShadow);
+        padding: 16px;
+        margin-top: 14px;
+      }
+      .trial-h {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .crown {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        background: var(--s700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+      }
+      .trial-t {
+        font-weight: 700;
+        color: var(--t1);
+      }
+      .trial-s {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--s700);
+        margin-top: 1px;
+      }
+      .cta {
+        margin-top: 14px;
+        background: var(--g600);
+        color: #fff;
+        text-align: center;
+        font-weight: 700;
+        padding: 13px;
+        border-radius: 14px;
+      }
+      .seclbl {
+        font-family: var(--serif);
+        font-weight: 600;
+        letter-spacing: -0.1px;
+        color: var(--t1);
+        padding: 0 0 8px 6px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .delta {
+        font-size: 12px;
+        color: #9c968d;
+        margin-top: 14px;
+        line-height: 1.7;
+      }
+      .delta b {
+        color: #34d399;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="head">
+      <div class="kicker">Chain Day · Airy Redesign</div>
+      <h1>Before / After</h1>
+      <div class="sub">
+        The airy direction at a glance. Corner radius shifts app-wide; the home
+        cards and settings rows gain height + padding; buttons and screen titles
+        grow; and Settings picks up the new patterns — a weekly-consistency
+        ring, help icons, and the trial card. All driven by one flag
+        (<code>airyScale.ts</code>) — reversible.
+      </div>
+      <div class="legend">
+        <span
+          ><i class="dot" style="background: #9c968d"></i>Before — canonical
+          density</span
+        >
+        <span><i class="dot" style="background: #34d399"></i>After — airy</span>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- ============ HOME ============ -->
+      <div>
+        <div class="sct">1 · Home — habit cards</div>
+        <div class="sctnote">
+          Cards taller (88→110px) and rounder (16→24px) with more inner padding.
+          Same content, more breathing room.
+        </div>
+        <div class="pair">
+          <!-- BEFORE -->
+          <div class="panel">
+            <div class="lab before">
+              <span class="pill b">Before</span> radius 16 · height 88 · pad 16
+            </div>
+            <div class="phone">
+              <div class="ph-title" style="font-size: 22px">All habits</div>
+              <div style="display: flex; flex-direction: column; gap: 10px">
+                <div class="hc" style="border-radius: 16px; min-height: 88px">
+                  <div class="hc-left" style="padding: 14px 16px">
+                    <div class="hc-ic">🧘</div>
+                    <div class="hc-name" style="font-size: 16px">
+                      Meditation
+                    </div>
+                    <div class="hc-meta">5 min · Daily</div>
+                  </div>
+                  <div class="hc-right">
+                    <div class="day on"></div>
+                    <div class="day on"></div>
+                    <div class="day"></div>
+                    <div class="day gold"></div>
+                  </div>
+                </div>
+                <div class="hc" style="border-radius: 16px; min-height: 88px">
+                  <div
+                    class="hc-left"
+                    style="
+                      padding: 14px 16px;
+                      background: linear-gradient(120deg, #fbe0e0, #fff);
+                    "
+                  >
+                    <div class="hc-ic" style="background: #f3d2d2">📖</div>
+                    <div class="hc-name" style="font-size: 16px">
+                      Read 25 pages
+                    </div>
+                    <div class="hc-meta">Daily</div>
+                  </div>
+                  <div class="hc-right">
+                    <div class="day on"></div>
+                    <div class="day"></div>
+                    <div class="day"></div>
+                    <div class="day gold"></div>
+                  </div>
+                </div>
+                <div class="hc" style="border-radius: 16px; min-height: 88px">
+                  <div
+                    class="hc-left"
+                    style="
+                      padding: 14px 16px;
+                      background: linear-gradient(120deg, #ddeffb, #fff);
+                    "
+                  >
+                    <div class="hc-ic" style="background: #cde3f3">🎯</div>
+                    <div class="hc-name" style="font-size: 16px">Run 5K</div>
+                    <div class="hc-meta">Daily</div>
+                  </div>
+                  <div class="hc-right">
+                    <div class="day"></div>
+                    <div class="day"></div>
+                    <div class="day"></div>
+                    <div class="day gold"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- AFTER -->
+          <div class="panel">
+            <div class="lab after">
+              <span class="pill a">After</span> radius 24 · height 110 · pad 22
+            </div>
+            <div class="phone">
+              <div class="ph-title" style="font-size: 26px">All habits</div>
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div class="hc" style="border-radius: 24px; min-height: 110px">
+                  <div class="hc-left" style="padding: 22px">
+                    <div class="hc-ic">🧘</div>
+                    <div class="hc-name" style="font-size: 16px">
+                      Meditation
+                    </div>
+                    <div class="hc-meta">5 min · Daily</div>
+                  </div>
+                  <div class="hc-right">
+                    <div class="day on"></div>
+                    <div class="day on"></div>
+                    <div class="day"></div>
+                    <div class="day gold"></div>
+                  </div>
+                </div>
+                <div class="hc" style="border-radius: 24px; min-height: 110px">
+                  <div
+                    class="hc-left"
+                    style="
+                      padding: 22px;
+                      background: linear-gradient(120deg, #fbe0e0, #fff);
+                    "
+                  >
+                    <div class="hc-ic" style="background: #f3d2d2">📖</div>
+                    <div class="hc-name" style="font-size: 16px">
+                      Read 25 pages
+                    </div>
+                    <div class="hc-meta">Daily</div>
+                  </div>
+                  <div class="hc-right">
+                    <div class="day on"></div>
+                    <div class="day"></div>
+                    <div class="day"></div>
+                    <div class="day gold"></div>
+                  </div>
+                </div>
+                <div class="hc" style="border-radius: 24px; min-height: 110px">
+                  <div
+                    class="hc-left"
+                    style="
+                      padding: 22px;
+                      background: linear-gradient(120deg, #ddeffb, #fff);
+                    "
+                  >
+                    <div class="hc-ic" style="background: #cde3f3">🎯</div>
+                    <div class="hc-name" style="font-size: 16px">Run 5K</div>
+                    <div class="hc-meta">Daily</div>
+                  </div>
+                  <div class="hc-right">
+                    <div class="day"></div>
+                    <div class="day"></div>
+                    <div class="day"></div>
+                    <div class="day gold"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="delta">
+          Δ <b>radius 16 → 24</b> · <b>card height 88 → 110</b> ·
+          <b>inner padding 16 → 22</b> · row gap 10 → 12. Trade-off: ~1 fewer
+          card per screen.
+        </div>
+      </div>
+
+      <!-- ============ SETTINGS ============ -->
+      <div>
+        <div class="sct">2 · Settings — rows, controls + new patterns</div>
+        <div class="sctnote">
+          Bigger icon tiles (40→42) and taller rows (16→20px). After also gains
+          the weekly ring, help (?) icons, a bigger toggle, and the trial card.
+        </div>
+        <div class="pair">
+          <!-- BEFORE -->
+          <div class="panel">
+            <div class="lab before">
+              <span class="pill b">Before</span> tile 40 · row pad 16 · radius
+              16
+            </div>
+            <div class="phone">
+              <div class="ph-title" style="font-size: 22px">Settings</div>
+              <div class="scard" style="border-radius: 16px">
+                <div class="hero">
+                  <div class="av">A</div>
+                  <div>
+                    <div class="nm">Andres</div>
+                    <div class="streak"><b>47</b><span>day streak</span>🔥</div>
+                  </div>
+                </div>
+              </div>
+              <div class="seclbl" style="margin-top: 18px">Appearance</div>
+              <div class="scard" style="border-radius: 16px">
+                <div class="srow" style="border-top: none; padding: 16px">
+                  <div
+                    class="stile"
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 12px;
+                      background: var(--gtile);
+                      color: var(--g700);
+                    "
+                  >
+                    ◐
+                  </div>
+                  <div class="lbl">Gradient streak fill</div>
+                  <div class="sw" style="width: 38px; height: 23px">
+                    <i style="width: 19px; height: 19px"></i>
+                  </div>
+                </div>
+                <div class="srow" style="padding: 16px">
+                  <div
+                    class="stile"
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 12px;
+                      background: var(--gtile);
+                      color: var(--g700);
+                    "
+                  >
+                    ⬚
+                  </div>
+                  <div class="lbl">Day marker shape</div>
+                  <div class="chev">Circle ›</div>
+                </div>
+                <div class="srow" style="padding: 16px">
+                  <div
+                    class="stile"
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      border-radius: 12px;
+                      background: var(--gtile);
+                      color: var(--g700);
+                    "
+                  >
+                    📁
+                  </div>
+                  <div class="lbl">Archived habits</div>
+                  <div class="chev">3 ›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- AFTER -->
+          <div class="panel">
+            <div class="lab after">
+              <span class="pill a">After</span> tile 42 · row pad 20 · radius 24
+              · + patterns
+            </div>
+            <div class="phone">
+              <div class="ph-title" style="font-size: 26px">Settings</div>
+              <div
+                class="scard"
+                style="border-radius: 24px; box-shadow: var(--heroShadow)"
+              >
+                <div class="hero">
+                  <div class="av">A</div>
+                  <div style="flex: 1">
+                    <div class="nm">
+                      Andres <span class="badge">Trial</span>
+                    </div>
+                    <div class="streak"><b>47</b><span>day streak</span>🔥</div>
+                  </div>
+                  <div class="ring">
+                    <svg width="48" height="48" viewBox="0 0 48 48">
+                      <circle
+                        cx="24"
+                        cy="24"
+                        r="21.5"
+                        fill="none"
+                        stroke="#D1FAE5"
+                        stroke-width="5"
+                      />
+                      <circle
+                        cx="24"
+                        cy="24"
+                        r="21.5"
+                        fill="none"
+                        stroke="#059669"
+                        stroke-width="5"
+                        stroke-linecap="round"
+                        stroke-dasharray="135"
+                        stroke-dashoffset="19"
+                        transform="rotate(-90 24 24)"
+                      />
+                      <text
+                        x="24"
+                        y="25"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        font-family="DM Sans"
+                        font-size="12.5"
+                        font-weight="700"
+                        fill="#2D2A26"
+                      >
+                        86%
+                      </text>
+                    </svg>
+                    <div class="ringcap">this week</div>
+                  </div>
+                </div>
+              </div>
+              <!-- trial card -->
+              <div class="trial" style="border-radius: 24px">
+                <div class="trial-h">
+                  <div class="crown">👑</div>
+                  <div style="flex: 1">
+                    <div class="trial-t">Chain Day Pro</div>
+                    <div class="trial-s">5 days left in your free trial</div>
+                  </div>
+                </div>
+                <div class="cta">Upgrade — $6.99/mo</div>
+              </div>
+              <div class="seclbl" style="margin-top: 18px">Appearance</div>
+              <div class="scard" style="border-radius: 24px">
+                <div class="srow" style="border-top: none; padding: 20px 16px">
+                  <div
+                    class="stile"
+                    style="
+                      width: 42px;
+                      height: 42px;
+                      border-radius: 13px;
+                      background: var(--gtile);
+                      color: var(--g700);
+                    "
+                  >
+                    ◐
+                  </div>
+                  <div class="lbl">
+                    Gradient streak fill <span class="help">?</span>
+                  </div>
+                  <div class="sw" style="width: 42px; height: 25px">
+                    <i style="width: 21px; height: 21px"></i>
+                  </div>
+                </div>
+                <div class="srow" style="padding: 20px 16px">
+                  <div
+                    class="stile"
+                    style="
+                      width: 42px;
+                      height: 42px;
+                      border-radius: 13px;
+                      background: var(--gtile);
+                      color: var(--g700);
+                    "
+                  >
+                    ⬚
+                  </div>
+                  <div class="lbl">
+                    Day marker shape <span class="help">?</span>
+                  </div>
+                  <div class="chev">Circle ›</div>
+                </div>
+                <div class="srow" style="padding: 20px 16px">
+                  <div
+                    class="stile"
+                    style="
+                      width: 42px;
+                      height: 42px;
+                      border-radius: 13px;
+                      background: var(--stone);
+                      color: var(--stoneIcon);
+                    "
+                  >
+                    📁
+                  </div>
+                  <div class="lbl">Archived habits</div>
+                  <div class="chev">3 ›</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="delta">
+          Δ <b>tile 40 → 42</b> · <b>row padding 16 → 20</b> ·
+          <b>card radius 16 → 24</b> · <b>toggle +10%</b> · new:
+          <b>weekly ring</b>, <b>help (?) icons</b>, <b>trial card</b>,
+          neutral-stone nav tiles, <b>Trial</b> badge.
+        </div>
+      </div>
+
+      <!-- ============ GLOBAL ============ -->
+      <div>
+        <div class="sct">3 · Global — every screen</div>
+        <div class="sctnote">
+          Radius, buttons and titles shift everywhere via tokens — no per-screen
+          work needed.
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="lab before"><span class="pill b">Before</span></div>
+            <div
+              style="
+                background: var(--bg);
+                border-radius: 18px;
+                padding: 22px;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+              "
+            >
+              <div
+                style="
+                  font-family: var(--serif);
+                  font-size: 22px;
+                  font-weight: 700;
+                  color: var(--t1);
+                "
+              >
+                Screen title
+              </div>
+              <div
+                style="
+                  background: var(--surface);
+                  border: 1px solid var(--border);
+                  border-radius: 16px;
+                  padding: 16px;
+                  color: var(--t2);
+                  box-shadow: var(--cardShadow);
+                "
+              >
+                Card · radius 16
+              </div>
+              <div
+                style="
+                  background: var(--g600);
+                  color: #fff;
+                  height: 44px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: 700;
+                "
+              >
+                Button · 44px
+              </div>
+              <div style="display: flex; gap: 8px">
+                <span
+                  style="
+                    background: var(--gtile);
+                    color: var(--g700);
+                    font-size: 13px;
+                    font-weight: 600;
+                    padding: 7px 12px;
+                    border-radius: 8px;
+                  "
+                  >Chip · 8</span
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="lab after"><span class="pill a">After</span></div>
+            <div
+              style="
+                background: var(--bg);
+                border-radius: 24px;
+                padding: 22px;
+                display: flex;
+                flex-direction: column;
+                gap: 14px;
+              "
+            >
+              <div
+                style="
+                  font-family: var(--serif);
+                  font-size: 26px;
+                  font-weight: 700;
+                  color: var(--t1);
+                "
+              >
+                Screen title
+              </div>
+              <div
+                style="
+                  background: var(--surface);
+                  border: 1px solid var(--border);
+                  border-radius: 24px;
+                  padding: 16px;
+                  color: var(--t2);
+                  box-shadow: var(--cardShadow);
+                "
+              >
+                Card · radius 24
+              </div>
+              <div
+                style="
+                  background: var(--g600);
+                  color: #fff;
+                  height: 48px;
+                  border-radius: 14px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-weight: 700;
+                "
+              >
+                Button · 48px
+              </div>
+              <div style="display: flex; gap: 8px">
+                <span
+                  style="
+                    background: var(--gtile);
+                    color: var(--g700);
+                    font-size: 13px;
+                    font-weight: 600;
+                    padding: 7px 12px;
+                    border-radius: 10px;
+                  "
+                  >Chip · 10</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="delta">
+          Δ <b>card radius 16 → 24</b> ·
+          <b>button 44 → 48 + radius 12 → 14</b> · <b>title 22 → 26</b> ·
+          <b>chip 8 → 10</b> · modal 24 → 28. One token edit each; reaches every
+          screen.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

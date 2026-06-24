@@ -12,6 +12,8 @@ const EMPTY_STATS: ProfileStats = {
   activeHabits: 0,
   flawlessDays: 0,
   lifetimeCompletions: 0,
+  currentStreak: 0,
+  weeklyCompletionRate: 0,
 };
 
 export interface ProfileStatsState {

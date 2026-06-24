@@ -22,9 +22,11 @@ import {
 import { ProgressEmojiPicker } from '../ProgressEmojiPicker';
 
 import { SettingsRow } from './SettingsRow';
+import { rowMatchesQuery, useSettingsSearch } from './search';
 
 export function GrowthIconsSettingsRow() {
   const { settings: settingsIcons } = useThemeColors();
+  const { query } = useSettingsSearch();
   const settings = useQuery(api.settings.get);
   const currentValue = settings?.progressEmojis;
   const savedCustom = settings?.customProgressEmojis;
@@ -79,14 +81,16 @@ export function GrowthIconsSettingsRow() {
         subtitle='Pick the 5 emojis used for every habit by default'
         type='info'
       />
-      <ProgressEmojiPicker
-        customPreset={customPreset}
-        expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
-        fallback={DEFAULT_PROGRESS_EMOJIS}
-        toggleRowStyle={{ paddingLeft: 16, paddingRight: 16 }}
-        value={pickerValue}
-        onChange={handleChange}
-      />
+      {rowMatchesQuery(query, 'Default growth icons') ? (
+        <ProgressEmojiPicker
+          customPreset={customPreset}
+          expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
+          fallback={DEFAULT_PROGRESS_EMOJIS}
+          toggleRowStyle={{ paddingLeft: 16, paddingRight: 16 }}
+          value={pickerValue}
+          onChange={handleChange}
+        />
+      ) : null}
     </View>
   );
 }

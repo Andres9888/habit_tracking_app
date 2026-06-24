@@ -1,4 +1,6 @@
 import { getLocalDateString } from '../../utils/getLocalDateString';
+import { calculateWeekOverWeekTrend } from '../../utils/trendCalculations/weeklyTrend';
+import type { HabitTrackingEntry } from '../../features/habits/types';
 import type {
   ProfileHabitEntry,
   ProfileStats,
@@ -6,10 +8,14 @@ import type {
 } from './profileStats.types';
 
 function getHabitId(value: unknown): string | null {
-  return typeof value === 'string' || typeof value === 'number' ? String(value) : null;
+  return typeof value === 'string' || typeof value === 'number'
+    ? String(value)
+    : null;
 }
 
-export function getProfileTrackingStartDate(habits: ProfileHabitEntry[]): string {
+export function getProfileTrackingStartDate(
+  habits: ProfileHabitEntry[]
+): string {
   if (habits.length === 0) return getLocalDateString();
 
   let earliestCreatedAt = Number.POSITIVE_INFINITY;
@@ -25,7 +31,7 @@ export function getProfileTrackingStartDate(habits: ProfileHabitEntry[]): string
 
 export function buildProfileStats(
   habits: ProfileHabitEntry[],
-  tracking: ProfileTrackingEntry[],
+  tracking: ProfileTrackingEntry[]
 ): ProfileStats {
   const activeHabitIds = new Set<string>();
   for (const habit of habits) {
@@ -34,8 +40,21 @@ export function buildProfileStats(
   }
 
   const activeHabits = activeHabitIds.size;
+  const currentStreak =
+    habits.length === 0
+      ? 0
+      : Math.max(...habits.map((habit) => habit.currentStreak ?? 0));
+  const weeklyCompletionRate = calculateWeekOverWeekTrend(
+    tracking as unknown as HabitTrackingEntry[]
+  ).thisWeekRate;
   if (activeHabits === 0) {
-    return { activeHabits: 0, flawlessDays: 0, lifetimeCompletions: 0 };
+    return {
+      activeHabits: 0,
+      flawlessDays: 0,
+      lifetimeCompletions: 0,
+      currentStreak,
+      weeklyCompletionRate,
+    };
   }
 
   const completedByDate = new Map<string, Set<string>>();
@@ -60,5 +79,11 @@ export function buildProfileStats(
     if (completedHabits.size >= activeHabits) flawlessDays += 1;
   }
 
-  return { activeHabits, flawlessDays, lifetimeCompletions };
+  return {
+    activeHabits,
+    flawlessDays,
+    lifetimeCompletions,
+    currentStreak,
+    weeklyCompletionRate,
+  };
 }

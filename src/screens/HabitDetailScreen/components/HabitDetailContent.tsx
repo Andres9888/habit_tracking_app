@@ -70,7 +70,7 @@ export function HabitDetailContent({
       <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
 
       <View
-        className='mx-4 mt-3'
+        className='mx-5 mt-4'
         onLayout={makeSectionLayoutHandler('calendar')}
       >
         <CalendarTabContent
@@ -84,7 +84,7 @@ export function HabitDetailContent({
 
       {habit.createdAt ? (
         <View
-          className='mx-4 mt-4'
+          className='mx-5 mt-5'
           onLayout={makeSectionLayoutHandler('strength')}
         >
           <ErrorBoundary>
@@ -100,7 +100,7 @@ export function HabitDetailContent({
         </View>
       ) : null}
 
-      <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('goal')}>
+      <View className='mx-5 mt-5' onLayout={makeSectionLayoutHandler('goal')}>
         <GoalTabContent habit={habit} />
       </View>
     </ScrollView>

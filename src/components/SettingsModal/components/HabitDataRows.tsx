@@ -7,12 +7,15 @@ interface HabitDataRowsProps {
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   onExportHabitsData?: () => void | Promise<void>;
+  /** Show a divider below the Export row (set true when another row follows) */
+  showLastBorder?: boolean;
 }
 
 export function HabitDataRows({
   archivedHabitsCount,
   onOpenArchivedHabits,
   onExportHabitsData,
+  showLastBorder = false,
 }: HabitDataRowsProps) {
   const { settings } = useThemeColors();
   const iconSize = iconSizes.small;
@@ -32,7 +35,7 @@ export function HabitDataRows({
         icon={<Download color={settings.export.icon} size={iconSize} />}
         iconBackgroundColor={settings.export.bg}
         label='Export habits data'
-        showBorder={false}
+        showBorder={showLastBorder}
         subtitle='Download as CSV or JSON'
         type='navigation'
         onPress={() => void onExportHabitsData?.()}

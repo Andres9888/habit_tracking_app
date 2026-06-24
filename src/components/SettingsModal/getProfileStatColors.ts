@@ -13,12 +13,13 @@ export interface ProfileStatColorSet {
 export function getProfileStatColors(
   colors: SemanticColors
 ): ProfileStatColorSet {
+  // One neutral numeral voice — no rainbow competing with the gold streak hero.
   return {
-    activeHabits: colors.status.streak,
+    activeHabits: colors.text.primary,
     borderTop: colors.border,
     divider: colors.border,
-    flawlessDays: colors.status.success,
+    flawlessDays: colors.text.primary,
     label: colors.text.secondary,
-    lifetimeCompletions: colors.status.info,
+    lifetimeCompletions: colors.text.primary,
   };
 }

@@ -8,6 +8,7 @@ import {
 import { SettingsRowContent } from './components/SettingsRowContent';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useFocusRing } from '../../../utils/accessibility';
+import { useSettingsSearch, rowMatchesQuery } from '../search';
 import type { SettingsRowProps } from './SettingsRow.types';
 
 export function SettingsRow({
@@ -15,6 +16,7 @@ export function SettingsRow({
   iconBackgroundColor,
   label,
   subtitle,
+  help,
   type,
   value,
   badge,
@@ -32,6 +34,10 @@ export function SettingsRow({
     { hapticStyle, onPress, onToggle },
     triggerPulse
   );
+  const { query } = useSettingsSearch();
+
+  // Live search filter: hide rows whose label doesn't match the active query.
+  if (!rowMatchesQuery(query, label)) return null;
 
   const isInteractiveInfo = type === 'info' && !!rightAccessory;
 
@@ -39,6 +45,7 @@ export function SettingsRow({
     <SettingsRowContent
       badge={badge}
       colors={colors}
+      help={help}
       icon={icon}
       iconBackgroundColor={iconBackgroundColor}
       isInteractiveInfo={isInteractiveInfo}
@@ -47,7 +54,9 @@ export function SettingsRow({
       pulseStyle={pulseStyle}
       rightAccessory={rightAccessory}
       secondaryTextColor={themeColors.text.secondary}
-      showBorder={showBorder}
+      // While searching, drop inner dividers — the matched subset is dynamic,
+      // so a row's "last in section" border would otherwise orphan under it.
+      showBorder={query ? false : showBorder}
       subtitle={subtitle}
       type={type}
       value={value}
