@@ -20,7 +20,7 @@ export function BrowseSections(p: BrowseSectionsProps) {
   const selectedGoal = p.selectedGoalId
     ? GOAL_COLLECTIONS.find((g) => g.id === p.selectedGoalId)
     : null;
-  const showDefaultHint = !(selectedGoal && p.prescription);
+  const showDefaultHint = !selectedGoal;
 
   return (
     <View style={{ flex: 1 }}>
@@ -36,7 +36,7 @@ export function BrowseSections(p: BrowseSectionsProps) {
         onLayout={scrollHint.handleLayout}
         onScroll={scrollHint.scrollHandler}
       >
-        {selectedGoal && p.prescription ? (
+        {selectedGoal ? (
           <Animated.View
             key='goal-branch'
             entering={bodyEnter}
@@ -47,9 +47,7 @@ export function BrowseSections(p: BrowseSectionsProps) {
               goalTemplates={p.goalTemplates}
               importedTemplateIds={p.importedTemplateIds}
               importingTemplateId={p.importingTemplateId}
-              prescription={p.prescription}
               onGoalListImport={p.onPopularImport}
-              onImport={p.onPrescriptionImport}
               onPreview={p.onPreview}
             />
           </Animated.View>

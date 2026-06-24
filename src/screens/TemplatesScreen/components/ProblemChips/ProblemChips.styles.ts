@@ -23,6 +23,10 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     maxWidth: '100%',
   },
+  chipSelected: {
+    // Lift the chosen struggle above its neighbours once it's active.
+    ...shadows.card,
+  },
   emoji: {
     fontSize: 16,
     lineHeight: 20,
@@ -35,17 +39,5 @@ export const styles = StyleSheet.create({
   label: {
     ...typography.bodySmall,
     fontWeight: fontWeights.semibold,
-  },
-  progressBadge: {
-    backgroundColor: 'rgba(5,150,105,0.12)',
-    borderRadius: borderRadius.full,
-    marginLeft: 'auto',
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-  },
-  progressText: {
-    color: '#047857',
-    fontSize: 10.5,
-    fontWeight: fontWeights.bold,
   },
 });

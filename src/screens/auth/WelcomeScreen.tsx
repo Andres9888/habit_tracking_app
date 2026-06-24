@@ -10,9 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {
   AnimatedLogo,
   AuthError,
-  SocialProofBadge,
   SocialSignInButton,
-  ValueProps,
 } from './components';
 import { LegalFooter } from './components/LegalFooter';
 import { useOAuthSignIn } from './hooks/useOAuthSignIn';
@@ -31,7 +29,6 @@ function WelcomeScreenContent() {
     iconStyle,
     titleStyle,
     subtitleStyle,
-    valuePropsStyle,
     buttonsStyle,
   } = useWelcomeAnimations();
 
@@ -51,14 +48,8 @@ function WelcomeScreenContent() {
               Chain Day
             </Animated.Text>
             <Animated.Text style={[styles.subtitle, subtitleStyle]}>
-              One small thing, day after day.
+              Miss a day. Keep the chain.
             </Animated.Text>
-            <Animated.View style={[styles.valuePropsWrap, valuePropsStyle]}>
-              <ValueProps />
-            </Animated.View>
-            <Animated.View style={[styles.valuePropsWrap, valuePropsStyle]}>
-              <SocialProofBadge />
-            </Animated.View>
           </View>
 
           <Animated.View style={[styles.actionSection, buttonsStyle]}>

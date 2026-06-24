@@ -6,7 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
 
 interface CategoryTileProps {
@@ -84,6 +84,7 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
   },
   tile: {
+    ...shadows.subtle,
     borderRadius: borderRadius.medium,
     flex: 1,
     minHeight: 120,

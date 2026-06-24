@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
+import { colors as palette } from '@/theme';
 import { PhaseTag } from '../PhaseTag';
 import type { CardColors, Habit } from './types';
 import { getTitleColumnStyle, getTitleTextStyle } from './CardHeader.styles';
@@ -46,7 +47,7 @@ export function CardHeaderTitleBlock({
           {isPaused ? (
             <View
               className='rounded-full px-2 py-0.5'
-              style={{ backgroundColor: colors.premium[400] }}
+              style={{ backgroundColor: palette.premium[400] }}
             >
               <Text className='text-xs font-semibold text-white'>Paused</Text>
             </View>

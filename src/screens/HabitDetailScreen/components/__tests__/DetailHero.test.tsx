@@ -10,8 +10,16 @@ jest.mock('../../../../theme/ThemeContext', () => ({
     colors: {
       background: '#fff',
       border: '#e7e5e4',
+      card: '#f7f5f2',
+      cardBorder: '#e7e5e4',
       gray: { 50: '#fafaf9' },
-      status: { success: '#22c55e' },
+      status: {
+        success: '#22c55e',
+        successLight: '#dcfce7',
+        successText: '#166534',
+        streakLight: '#fef3c7',
+        streakText: '#92400e',
+      },
       text: {
         primary: '#1a1a1a',
         secondary: '#666',
@@ -101,5 +109,20 @@ describe('DetailHero', () => {
       <DetailHero habit={mockHabit} totalCompletions={89} />
     );
     expect(getByRole('header')).toBeTruthy();
+  });
+
+  it('surfaces an ongoing-streak badge', () => {
+    const { getByText } = render(
+      <DetailHero habit={mockHabit} totalCompletions={89} />
+    );
+    expect(getByText('5-day streak')).toBeTruthy();
+  });
+
+  it('surfaces a personal-best badge when current matches best', () => {
+    const recordHabit = { ...mockHabit, currentStreak: 21, bestStreak: 21 };
+    const { getByText } = render(
+      <DetailHero habit={recordHabit as never} totalCompletions={89} />
+    );
+    expect(getByText('Longest streak yet')).toBeTruthy();
   });
 });

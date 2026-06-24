@@ -37,6 +37,7 @@ export interface SizeConfig {
   height: number;
   paddingHorizontal: number;
   fontSize: number;
+  fontFamily: string;
   iconSize: number;
 }
 

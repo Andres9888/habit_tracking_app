@@ -1,6 +1,4 @@
-import type { lightColors } from '@/theme/darkColors';
-
-type ThemePalette = typeof lightColors;
+import type { SemanticColors } from '@/theme/darkColors';
 
 export interface ProfileStatColorSet {
   activeHabits: string;
@@ -13,7 +11,7 @@ export interface ProfileStatColorSet {
 
 /** Theme-aware colors for the profile stats strip. */
 export function getProfileStatColors(
-  colors: ThemePalette
+  colors: SemanticColors
 ): ProfileStatColorSet {
   // One neutral numeral voice — no rainbow competing with the gold streak hero.
   return {

@@ -24,8 +24,8 @@ interface CalendarTimelineWeekStripProps {
   monthName: string;
   onDayPress: CalendarTimelineProps['onDayPress'];
   onJumpToToday: CalendarTimelineProps['onJumpToToday'];
-  onNextWeek: () => void;
-  onPreviousWeek: () => void;
+  onNextWeek?: () => void;
+  onPreviousWeek?: () => void;
   reduceMotion: boolean;
   strengthPercent: number;
   tl: Setup;

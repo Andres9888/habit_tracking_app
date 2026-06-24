@@ -351,6 +351,51 @@ const applicationTables = {
 
     // Optional YouTube video link
     youtubeLink: v.optional(v.string()),
+
+    // ── Science drill-down (pre-add detail) — all optional, graceful fallback ──
+    // Short one-line hero subtitle shown under the name.
+    tagline: v.optional(v.string()),
+    // Literata "why it works" lead paragraph (richer than description).
+    lead: v.optional(v.string()),
+    // One cited statistic sentence backing the lead.
+    evidence: v.optional(v.string()),
+    // Suggested cadence label, e.g. "Daily · 5 min · after dinner".
+    cadenceLabel: v.optional(v.string()),
+    // "What you'll feel" — concrete benefits with an icon key + copy.
+    benefitDetails: v.optional(
+      v.array(
+        v.object({
+          icon: v.string(),
+          title: v.string(),
+          description: v.string(),
+        })
+      )
+    ),
+    // "What to expect" — progression timeline; peak marks the automaticity node.
+    timeline: v.optional(
+      v.array(
+        v.object({
+          when: v.string(),
+          title: v.string(),
+          description: v.string(),
+          peak: v.optional(v.boolean()),
+        })
+      )
+    ),
+    // "How to start" — ordered concrete steps (distinct from generic tips).
+    howToStart: v.optional(v.array(v.string())),
+    // "The research" — multiple cited sources.
+    sources: v.optional(
+      v.array(
+        v.object({
+          authors: v.string(),
+          title: v.string(),
+          journal: v.string(),
+          year: v.string(),
+          link: v.optional(v.string()),
+        })
+      )
+    ),
   })
     .index('by_category', ['category'])
     .index('by_createdAt', ['createdAt']),

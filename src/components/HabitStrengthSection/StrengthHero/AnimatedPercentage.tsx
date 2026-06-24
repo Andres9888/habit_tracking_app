@@ -47,7 +47,6 @@ export function AnimatedPercentage({ animatedValue }: AnimatedPercentageProps) {
         includeFontPadding: false,
         letterSpacing: -0.5,
         lineHeight: fontSize + 2,
-        minimumFontScale: 0.65,
         textAlign: 'center',
         width: RING_CENTER_TEXT_WIDTH,
       }}

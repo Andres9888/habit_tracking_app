@@ -28,12 +28,19 @@ export function HabitTemplateCardBottomRail({
   const [pressed, setPressed] = useState(false);
   const metaLabel = getTemplateMetaLabel(item);
   const dividerColor = isDark ? colors.border : colors.gray[50];
+  // Quiet filled pill — warm tonal overlay so the meta reads as a chip in both modes.
+  const metaPillBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(45,42,38,0.06)';
 
   return (
     <View style={s.bottomRail}>
       <View style={[s.divider, { backgroundColor: dividerColor }]} />
       {metaLabel ? (
-        <Text style={[s.metaPillLabel, { color: colors.text.secondary }]}>
+        <Text
+          style={[
+            s.metaPillLabel,
+            { backgroundColor: metaPillBg, color: colors.text.secondary },
+          ]}
+        >
           {metaLabel}
         </Text>
       ) : (

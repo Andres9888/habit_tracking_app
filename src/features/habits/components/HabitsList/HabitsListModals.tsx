@@ -6,6 +6,7 @@
  * 2. **DayHabitsBottomSheet** — iOS-style sheet for toggling habits on a tapped day.
  */
 
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import { DayHabitsBottomSheet } from '../../../../components/DayHabitsBottomSheet';
 import type { Habit, HabitStatus } from '../../types';
 import { UpgradePrompt } from './UpgradePrompt';
@@ -18,7 +19,7 @@ export interface HabitsListModalsProps {
   onCloseDaySheet: () => void;
   habits: Habit[];
   getHabitStatus: (habitId: string, dateString: string) => HabitStatus;
-  toggleHabit: (args: { habitId: string; date: string }) => Promise<unknown>;
+  toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => Promise<unknown>;
   reduceMotion: boolean;
 }
 

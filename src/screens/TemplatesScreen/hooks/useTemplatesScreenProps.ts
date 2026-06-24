@@ -72,9 +72,13 @@ export function useTemplatesScreenProps() {
   });
 
   const viewNav = useViewNavigation();
-  const packConfirm = usePackConfirm(data.isPremiumUser, () =>
-    state.setShowPaywall(true)
-  );
+  const packConfirm = usePackConfirm({
+    allTemplates: data.allTemplates,
+    importTemplate: data.importTemplate,
+    onComplete: (count) =>
+      state.setSessionImportCount((current) => current + count),
+    setImportedIds: state.setImportedTemplateIds,
+  });
   const mainBrowseData = useMainBrowseData({
     allTemplates: data.allTemplates,
     importedTemplateIds: state.importedTemplateIds,

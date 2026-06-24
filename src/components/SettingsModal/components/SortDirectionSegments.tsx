@@ -34,6 +34,8 @@ export function SortDirectionSegments({
   const { colors, isDark } = useThemeColors();
   const { accent, selectedBg, containerBg } = getSegmentedControlColors(isDark);
   const family = getSortFamily(selected);
+  // 'manual' sorting has no asc/desc direction, so there is nothing to render.
+  if (family === 'manual') return null;
   const ascending = isAscending(selected);
   const labels = SORT_DIRECTION_LABELS[family];
 

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { airy } from '@/theme/airyScale';
 import { RowAccessory } from './RowAccessory';
 import { RowLabel } from './RowLabel';
@@ -13,8 +13,8 @@ interface SettingsRowContentProps {
   isInteractiveInfo: boolean;
   label: SettingsRowProps['label'];
   help: SettingsRowProps['help'];
-  onToggle: () => void;
-  pulseStyle: ReturnType<typeof Animated.useAnimatedStyle>;
+  onToggle: (value: boolean) => void;
+  pulseStyle: ReturnType<typeof useAnimatedStyle>;
   secondaryTextColor: string;
   showBorder: boolean;
   subtitle?: SettingsRowProps['subtitle'];
