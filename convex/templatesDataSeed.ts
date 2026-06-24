@@ -45,6 +45,30 @@ type TemplateInsert = {
   startSmallVersion?: string;
   tips?: string[];
   youtubeLink?: string;
+  // Science drill-down (all optional)
+  tagline?: string;
+  lead?: string;
+  evidence?: string;
+  cadenceLabel?: string;
+  benefitDetails?: {
+    icon: string;
+    title: string;
+    description: string;
+  }[];
+  timeline?: {
+    when: string;
+    title: string;
+    description: string;
+    peak?: boolean;
+  }[];
+  howToStart?: string[];
+  sources?: {
+    authors: string;
+    title: string;
+    journal: string;
+    year: string;
+    link?: string;
+  }[];
 };
 
 const _insertTemplateIfMissing = async (
@@ -218,6 +242,86 @@ export const seedTemplates = internalMutation({
         'Same time each morning builds the habit faster',
       ],
       youtubeLink: 'https://www.youtube.com/watch?v=xLXF5aP4CtQ',
+      tagline: 'A short morning sit to start the day clear and calm.',
+      lead: 'Five quiet minutes after you wake nudges your nervous system out of reactivity and into focus — the same attention training that makes the rest of the day feel less scattered and more deliberate.',
+      evidence:
+        'A 2014 JAMA Internal Medicine review of 47 trials found mindfulness meditation produces small-to-moderate reductions in anxiety, depression, and stress.',
+      cadenceLabel: 'Daily · 5 min · after waking',
+      benefitDetails: [
+        {
+          icon: 'wave',
+          title: 'Calmer mind',
+          description: 'Consistent practice lowers everyday stress and anxiety.',
+        },
+        {
+          icon: 'target',
+          title: 'Sharper focus',
+          description: 'Gains in attention and working memory through the day.',
+        },
+        {
+          icon: 'leaf',
+          title: 'Steadier mood',
+          description: 'Less reactivity and better emotional regulation.',
+        },
+        {
+          icon: 'moon',
+          title: 'Better sleep',
+          description: 'Lower baseline arousal makes winding down easier at night.',
+        },
+      ],
+      timeline: [
+        {
+          when: 'First sit',
+          title: 'Body settles',
+          description:
+            'Breathing slows and the relaxation response begins within minutes.',
+        },
+        {
+          when: '~2 weeks',
+          title: 'Easier to focus',
+          description: 'Returning to the breath starts to feel more natural.',
+        },
+        {
+          when: '~6 weeks',
+          title: 'Less reactive',
+          description: 'A noticeable dip in day-to-day stress and rumination.',
+        },
+        {
+          when: '~66 days',
+          title: 'Runs on autopilot',
+          description: 'The median time for a daily behavior to feel automatic.',
+          peak: true,
+        },
+      ],
+      howToStart: [
+        'Sit somewhere quiet right after you wake.',
+        'Five minutes, eyes closed — just follow your breath.',
+        'Same time each morning. Consistency beats length.',
+      ],
+      sources: [
+        {
+          authors: 'Goyal M, et al.',
+          title:
+            'Meditation programs for psychological stress and well-being',
+          journal: 'JAMA Internal Medicine',
+          year: '2014',
+          link: 'https://jamanetwork.com/journals/jamainternalmedicine/fullarticle/1809754',
+        },
+        {
+          authors: 'Tang YY, Hölzel BK, Posner MI',
+          title: 'The neuroscience of mindfulness meditation',
+          journal: 'Nature Reviews Neuroscience',
+          year: '2015',
+          link: 'https://pubmed.ncbi.nlm.nih.gov/25783612/',
+        },
+        {
+          authors: 'Lally P, et al.',
+          title: 'How are habits formed: modelling habit formation',
+          journal: 'European Journal of Social Psychology',
+          year: '2010',
+          link: 'https://pubmed.ncbi.nlm.nih.gov/20397865/',
+        },
+      ],
     });
 
     await insertWithTracking({

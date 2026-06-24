@@ -11,7 +11,7 @@ import { colors } from '@/theme/colors';
 import type { TemplatePreviewAnchor } from '@/screens/TemplatesScreen/TemplatesScreen.types';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
-import { ScienceEvidenceSection } from './ScienceEvidenceSection';
+import { ScienceDrilldown } from './science/ScienceDrilldown';
 import { layoutStyles } from '../styles';
 import type { Template } from '../../../types/template';
 import type { ViewStyle } from 'react-native';
@@ -98,7 +98,7 @@ export function ScrollableContent({
             iconColor={iconColor}
           />
           <View ref={scienceRef} onLayout={scrollToScience}>
-            <ScienceEvidenceSection iconColor={iconColor} template={template} />
+            <ScienceDrilldown template={template} />
           </View>
           <View style={layoutStyles.bottomSpacer} />
         </View>

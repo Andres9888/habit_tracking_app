@@ -25,14 +25,6 @@ export const heroStyles = StyleSheet.create({
     lineHeight: 26,
     textAlign: 'center',
   },
-  decorativeCircle: {
-    borderRadius: borderRadius.full,
-    height: 160,
-    position: 'absolute',
-    right: -40,
-    top: -40,
-    width: 160,
-  },
   heroContent: {
     alignItems: 'center',
   },
@@ -94,6 +86,16 @@ export const heroStyles = StyleSheet.create({
     color: colors.gray[900],
     letterSpacing: -0.5,
     marginBottom: 16,
+    textAlign: 'center',
+  },
+  tagline: {
+    color: colors.gray[600],
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 15.5,
+    lineHeight: 21,
+    marginBottom: 16,
+    marginTop: -6,
+    maxWidth: 300,
     textAlign: 'center',
   },
 });
