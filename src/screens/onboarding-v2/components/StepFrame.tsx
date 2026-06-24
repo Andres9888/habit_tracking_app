@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { airy } from '@/theme/airyScale';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { ProgressBar } from './ProgressBar';
@@ -38,18 +39,20 @@ export function StepFrame({
               alignItems: 'center',
               flexDirection: 'row',
               justifyContent: 'space-between',
-              paddingHorizontal: 16,
+              paddingHorizontal: airy.screenPadH,
               paddingTop: insets.top + 8,
             }}
           >
             <Pressable
-              accessibilityLabel="Go back"
-              accessibilityRole="button"
+              accessibilityLabel='Go back'
+              accessibilityRole='button'
               hitSlop={12}
               onPress={onBack}
               style={{ opacity: canGoBack ? 1 : 0, padding: 8 }}
             >
-              <Text style={{ color: colors.text.secondary, fontSize: 16 }}>‹ Back</Text>
+              <Text style={{ color: colors.text.secondary, fontSize: 16 }}>
+                ‹ Back
+              </Text>
             </Pressable>
             <Text style={{ color: colors.text.secondary, fontSize: 13 }}>
               {currentStep} / {totalSteps}
@@ -59,9 +62,17 @@ export function StepFrame({
           <ProgressBar current={currentStep} total={totalSteps} />
         </>
       )}
-      <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 24 }}>{children}</View>
+      <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 24 }}>
+        {children}
+      </View>
       {footer ? (
-        <View style={{ paddingBottom: insets.bottom + 12, paddingHorizontal: 24, paddingTop: 12 }}>
+        <View
+          style={{
+            paddingBottom: insets.bottom + 12,
+            paddingHorizontal: 24,
+            paddingTop: 12,
+          }}
+        >
           {footer}
         </View>
       ) : null}

@@ -56,8 +56,9 @@ describe('SettingsModal', () => {
       <SettingsModal onClose={() => {}} visible />
     );
 
-    expect(getByText('Appearance')).toBeTruthy();
-    expect(getByText('Behavior')).toBeTruthy();
+    expect(getByText('Look & Feel')).toBeTruthy();
+    expect(getByText('Habits')).toBeTruthy();
+    expect(getByText('Data & Privacy')).toBeTruthy();
     expect(getByLabelText('Account settings')).toBeTruthy();
   });
 });

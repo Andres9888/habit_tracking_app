@@ -14,6 +14,7 @@ import { PausedEmptyState } from './PausedEmptyState';
 import { iconSizes } from '@/theme/iconSizes';
 import { fontFamilies } from '@/theme/typography';
 import { enterEasing } from '@/theme/animations';
+import { airy } from '@/theme/airyScale';
 
 interface PausedHabitsModalProps {
   onClose: () => void;
@@ -43,7 +44,10 @@ export default function PausedHabitsModal({
   );
 
   return (
-    <View className='flex-1' style={{ backgroundColor: themeColors.background }}>
+    <View
+      className='flex-1'
+      style={{ backgroundColor: themeColors.background }}
+    >
       <View style={{ paddingTop: insets.top + 8 }}>
         <Animated.View
           className='mb-6 flex-row items-center justify-between px-4'
@@ -56,11 +60,19 @@ export default function PausedHabitsModal({
             style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onBack}
           >
-            <ChevronLeft color={themeColors.text.secondary} size={iconSizes.large} strokeWidth={2} />
+            <ChevronLeft
+              color={themeColors.text.secondary}
+              size={iconSizes.large}
+              strokeWidth={2}
+            />
           </Pressable>
           <Text
             className='flex-1 text-center font-bold'
-            style={{ fontFamily: fontFamilies.primary.text, fontSize: 22, color: themeColors.text.primary }}
+            style={{
+              fontFamily: fontFamilies.primary.text,
+              fontSize: 22,
+              color: themeColors.text.primary,
+            }}
           >
             Paused Habits
           </Text>
@@ -71,13 +83,20 @@ export default function PausedHabitsModal({
             style={{ backgroundColor: themeColors.gray[100] }}
             onPress={onClose}
           >
-            <X color={themeColors.text.secondary} size={iconSizes.large} strokeWidth={2} />
+            <X
+              color={themeColors.text.secondary}
+              size={iconSizes.large}
+              strokeWidth={2}
+            />
           </Pressable>
         </Animated.View>
       </View>
       <FlatList
-        className='flex-1 px-4'
-        contentContainerStyle={{ gap: 12, paddingBottom: insets.bottom + 16 }}
+        className='flex-1 px-5'
+        contentContainerStyle={{
+          gap: airy.sectionGap,
+          paddingBottom: insets.bottom + 16,
+        }}
         data={pausedHabits}
         initialNumToRender={10}
         keyExtractor={keyExtractor}

@@ -10,6 +10,7 @@
 
 import { StyleSheet, TextStyle } from 'react-native';
 import { spacing, borderRadius, shadows } from '@/theme/spacing';
+import { airy } from '@/theme/airyScale';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 import { REDESIGN_COLORS } from './HabitCard.colors';
 import { statusStyles } from './HabitCard.statusStyles';
@@ -45,10 +46,14 @@ const coreStyles = StyleSheet.create({
   completedText: { opacity: 0.55, textDecorationLine: 'line-through' as const },
   container: {
     marginVertical: spacing.sm,
-    minHeight: 88,
+    minHeight: airy.habitCardMinHeight,
     position: 'relative',
   },
-  content: { flex: 1, justifyContent: 'center', padding: spacing.base },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: airy.habitCardPadding,
+  },
   disabled: { opacity: 0.5 },
   habitInfo: {
     alignItems: 'flex-start',

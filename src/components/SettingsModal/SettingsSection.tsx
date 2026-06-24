@@ -2,6 +2,7 @@
 import { ReactNode } from 'react';
 import { View } from 'react-native';
 import { shadows } from '@/theme';
+import { airy } from '@/theme/airyScale';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { StaticSectionLabel } from './StaticSectionLabel';
 import { CollapsibleSectionCard } from './CollapsibleSectionCard';
@@ -31,6 +32,7 @@ export function SettingsSection({
   const cardStyle = {
     backgroundColor: getRaisedSurface(isDark),
     borderColor: themeColors.border,
+    borderRadius: airy.cardRadius,
     borderWidth: 1,
     ...shadows.card,
   };

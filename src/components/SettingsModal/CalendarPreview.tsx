@@ -2,9 +2,11 @@
  * CalendarPreview — live preview of how the habit calendar renders, reflecting
  * the Appearance settings (day shape, completion icon, streak connections, and
  * the gradient strength fill). Reuses the real ChainDayItem + StrengthFillBackground
- * so the preview is pixel-identical to a habit card on the list.
+ * so the preview is pixel-identical to a habit card on the list. The chain sits
+ * full-bleed on a soft green wash (no framing white box).
  */
 import { Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useAnimatedStyle } from 'react-native-reanimated';
 import { fontWeights, typography } from '@/theme/typography';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
@@ -21,18 +23,16 @@ const LABEL_STYLE = {
   fontWeight: fontWeights.semibold,
   letterSpacing: 0.5,
   textTransform: 'uppercase' as const,
-  marginBottom: 12,
+  marginBottom: 11,
   marginHorizontal: 16,
 };
 
-const CARD_STYLE = {
-  position: 'relative' as const,
-  overflow: 'hidden' as const,
-  borderRadius: 16,
-  borderWidth: 1,
-  marginHorizontal: 8,
-  paddingHorizontal: 6,
-};
+const WASH_LIGHT = ['#E4F2EB', '#F1F8F4', '#E8F4EE'] as const;
+const WASH_DARK = [
+  'rgba(52,211,153,0.16)',
+  'rgba(52,211,153,0.06)',
+  'rgba(52,211,153,0.05)',
+] as const;
 
 interface Props {
   dayShape: DayShape;
@@ -52,27 +52,30 @@ export function CalendarPreview(p: Props) {
   }));
 
   return (
-    <View
+    <LinearGradient
       accessibilityLabel='Preview of how your habit calendar looks with the current appearance settings'
       accessibilityRole='image'
+      colors={isDark ? WASH_DARK : WASH_LIGHT}
+      end={{ x: 1, y: 1 }}
       pointerEvents='none'
+      start={{ x: 0, y: 0 }}
       style={{
-        paddingTop: 14,
-        paddingBottom: 16,
+        paddingTop: 12,
+        paddingBottom: 15,
         borderBottomWidth: 1,
         borderColor: border,
+        overflow: 'hidden',
       }}
     >
-      <Text style={[LABEL_STYLE, { color: accent }]}>Preview</Text>
+      <Text style={[LABEL_STYLE, { color: colors.primary[700] }]}>Preview</Text>
       <View
-        style={[
-          CARD_STYLE,
-          {
-            backgroundColor: colors.card,
-            borderColor: border,
-            paddingVertical: p.compact ? 9 : 14,
-          },
-        ]}
+        style={{
+          marginHorizontal: 8,
+          paddingHorizontal: 6,
+          paddingVertical: p.compact ? 6 : 10,
+          position: 'relative',
+          overflow: 'hidden',
+        }}
       >
         {p.showGradientFill ? (
           <StrengthFillBackground
@@ -88,6 +91,6 @@ export function CalendarPreview(p: Props) {
           showStreakConnections={p.showStreakConnections}
         />
       </View>
-    </View>
+    </LinearGradient>
   );
 }

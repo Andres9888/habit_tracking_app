@@ -7,18 +7,22 @@ import { SettingsSection } from '../SettingsSection';
 import { ThemeSettingsRow } from '../ThemeSettingsRow';
 import { AppearanceChainRows } from './AppearanceChainRows';
 import { AppearanceDisplayRows } from './AppearanceDisplayRows';
+import { useSettingsSearch } from '../search';
 import type { AppearanceSectionProps } from './AppearanceSection.types';
 
 export function AppearanceSection(p: AppearanceSectionProps) {
+  const { isSearching } = useSettingsSearch();
   return (
-    <SettingsSection icon={p.icon} title='Appearance'>
-      <CalendarPreview
-        compact={p.compactView}
-        completionIcon={p.habitCompletionIcon}
-        dayShape={p.dayShape}
-        showGradientFill={p.showGradientFill}
-        showStreakConnections={p.showStreakConnections}
-      />
+    <SettingsSection icon={p.icon} title='Look & Feel'>
+      {isSearching ? null : (
+        <CalendarPreview
+          compact={p.compactView}
+          completionIcon={p.habitCompletionIcon}
+          dayShape={p.dayShape}
+          showGradientFill={p.showGradientFill}
+          showStreakConnections={p.showStreakConnections}
+        />
+      )}
       <ThemeSettingsRow
         selected={p.darkModePreference}
         onSelect={p.onChangeDarkModePreference}

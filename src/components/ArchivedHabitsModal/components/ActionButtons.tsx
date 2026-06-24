@@ -13,8 +13,13 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({
-  habitName, isRestoring, showSuccess, hasReachedLimit,
-  successIconStyle, onRestorePress, onUpgradePress,
+  habitName,
+  isRestoring,
+  showSuccess,
+  hasReachedLimit,
+  successIconStyle,
+  onRestorePress,
+  onUpgradePress,
 }: ActionButtonsProps) {
   const { colors } = useThemeColors();
 
@@ -22,14 +27,20 @@ export function ActionButtons({
     return <LimitReachedResume onUpgradePress={onUpgradePress} />;
   }
 
-  const btnBg = showSuccess ? colors.primary[700] : colors.status.success;
-  const greenColor = colors.text.inverse;
+  // Calm secondary chip — soft green tile + green text (was a full-width
+  // saturated-green button). On success it fills solid for a clear confirm.
+  const chipBg = showSuccess ? colors.primary[600] : colors.primary[100];
+  const chipFg = showSuccess ? colors.text.inverse : colors.primary[700];
 
   return (
     <ResumeButton
-      btnBg={btnBg} greenColor={greenColor} habitName={habitName}
-      isRestoring={isRestoring} showSuccess={showSuccess}
-      successIconStyle={successIconStyle} onRestorePress={onRestorePress}
+      chipBg={chipBg}
+      chipFg={chipFg}
+      habitName={habitName}
+      isRestoring={isRestoring}
+      showSuccess={showSuccess}
+      successIconStyle={successIconStyle}
+      onRestorePress={onRestorePress}
     />
   );
 }

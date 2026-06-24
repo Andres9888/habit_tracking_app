@@ -1,67 +1,64 @@
-/** PremiumUpsellContent — icon, copy, and pulsing PRO badge inside the upsell card */
+/** PremiumUpsellContent — crown, copy, and Upgrade pill inside the gold upsell card */
 import { Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { Zap } from 'lucide-react-native';
+import { Crown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
-import { colors as palette, overlays } from '@/theme/colors';
-import { useThemeColors } from '../../../theme/ThemeContext';
 
-interface PremiumUpsellContentProps {
-  isDark: boolean;
-  badgePulseStyle: React.ComponentProps<typeof Animated.View>['style'];
-}
+// Gold-card-specific shades (burnished gold family).
+const GOLD = {
+  iconBox: '#FFFFFF',
+  crown: '#936A08',
+  title: '#5A4406',
+  subtitle: '#8A6A2A',
+  pill: '#936A08',
+};
 
-export function PremiumUpsellContent({
-  isDark,
-  badgePulseStyle,
-}: PremiumUpsellContentProps) {
-  const { colors: themeColors } = useThemeColors();
-
+export function PremiumUpsellContent() {
   return (
     <View className='flex-row items-center'>
       <View
-        className='mr-4 h-10 w-10 items-center justify-center rounded-xl'
-        style={{ backgroundColor: overlays.glassLight }}
+        className='mr-3.5 h-11 w-11 items-center justify-center rounded-xl'
+        style={{
+          backgroundColor: GOLD.iconBox,
+          shadowColor: '#7C5A08',
+          shadowOffset: { height: 1, width: 0 },
+          shadowOpacity: 0.18,
+          shadowRadius: 3,
+        }}
       >
-        <Zap color={palette.text.inverse} size={iconSizes.medium} />
+        <Crown color={GOLD.crown} size={iconSizes.medium} />
       </View>
       <View className='flex-1'>
         <Text
           style={{
-            ...typography.body,
-            fontWeight: fontWeights.bold,
-            color: isDark ? '#E0E7FF' : palette.text.inverse,
+            ...typography.heading3,
+            fontSize: 18,
+            color: GOLD.title,
           }}
         >
-          Upgrade to Premium
+          Go Premium
         </Text>
         <Text
           className='mt-0.5'
-          style={{
-            ...typography.caption,
-            color: isDark ? 'rgba(224,231,255,0.6)' : overlays.subTextOnHero,
-          }}
+          style={{ ...typography.bodySmall, color: GOLD.subtitle }}
         >
-          Unlock sounds, reminders & more
+          Sounds, reminders & unlimited habits
         </Text>
       </View>
-      <Animated.View
-        className='rounded-full px-3.5 py-1.5'
-        style={[{ backgroundColor: overlays.glassLight }, badgePulseStyle]}
+      <View
+        className='rounded-full px-4 py-2'
+        style={{ backgroundColor: GOLD.pill }}
       >
         <Text
           style={{
-            ...typography.caption,
+            ...typography.bodySmall,
             fontWeight: fontWeights.bold,
-            color: isDark
-              ? themeColors.status.premiumText
-              : palette.text.inverse,
+            color: '#FFFFFF',
           }}
         >
-          PRO
+          Upgrade
         </Text>
-      </Animated.View>
+      </View>
     </View>
   );
 }

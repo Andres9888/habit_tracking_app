@@ -1,16 +1,16 @@
-/** AccountPage — Sub-page for profile, premium, sign out, and delete account */
-import { View } from 'react-native';
-import type { ReactNode } from 'react';
+/** AccountPage — Sub-page: profile hero, premium, account actions, danger zone */
+import Constants from 'expo-constants';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Animated, {
-  FadeInDown,
-  useReducedMotion,
-} from 'react-native-reanimated';
-import { durations, enterEasing } from '@/theme/animations';
+import Animated, { useReducedMotion } from 'react-native-reanimated';
+import { typography } from '../../theme/typography';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
+import { AccountSection } from './AccountSection';
 import { ProfileCard } from './ProfileCard';
-import { PremiumStatus, SignOutCard, DeleteAccountButton } from './sections';
+import { PremiumStatus } from './sections';
+import { AccountActionsCard } from './sections/AccountActionsCard';
+import { AccountDangerCard } from './sections/AccountDangerCard';
 import { useAccountActions } from './useAccountActions';
 import { useThemeColors } from '../../theme/ThemeContext';
 
@@ -19,24 +19,6 @@ interface AccountPageProps {
   onBack: () => void;
   onClose: () => void;
   onPremiumUpsell?: () => void;
-}
-
-const anim = (index: number) =>
-  FadeInDown.delay(index * durations.stagger)
-    .duration(durations.enter)
-    .easing(enterEasing);
-
-function AccountSection({
-  index,
-  reduceMotion,
-  children,
-}: {
-  index: number;
-  reduceMotion: boolean;
-  children: ReactNode;
-}) {
-  if (reduceMotion) return children;
-  return <Animated.View entering={anim(index)}>{children}</Animated.View>;
 }
 
 export function AccountPage({
@@ -79,17 +61,23 @@ export function AccountPage({
             <PremiumStatus isPremium={isPremium} onUpgrade={onPremiumUpsell} />
           </AccountSection>
           <AccountSection index={2} reduceMotion={reduceMotion}>
-            <SignOutCard
-              isLoading={actions.isSigningOut}
+            <AccountActionsCard />
+          </AccountSection>
+          <AccountSection index={3} reduceMotion={reduceMotion}>
+            <AccountDangerCard
+              isDeletingAccount={actions.isDeletingAccount}
+              isSigningOut={actions.isSigningOut}
+              onDeleteAccount={actions.handleDeleteAccount}
               onSignOut={actions.handleSignOut}
             />
           </AccountSection>
-          <AccountSection index={3} reduceMotion={reduceMotion}>
-            <DeleteAccountButton
-              isDeletingAccount={actions.isDeletingAccount}
-              onDeleteAccount={actions.handleDeleteAccount}
-            />
-          </AccountSection>
+          <Text
+            className='pt-1 text-center'
+            style={{ ...typography.caption, color: themeColors.text.tertiary }}
+          >
+            Chain Day · Version {Constants.expoConfig?.version ?? '1.0.0'} (
+            {Constants.expoConfig?.ios?.buildNumber ?? '1'})
+          </Text>
         </View>
       </Animated.ScrollView>
     </View>

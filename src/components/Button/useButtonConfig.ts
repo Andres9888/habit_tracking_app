@@ -1,4 +1,5 @@
 import baseTheme, { useAppTheme } from '../../theme';
+import { airy } from '../../theme/airyScale';
 import { typography, fontFamilies } from '../../theme/typography';
 import type {
   ButtonSize,
@@ -52,7 +53,7 @@ export function useButtonConfig(
     medium: {
       fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: typography.body.fontSize,
-      height: mergedTheme.componentSpacing?.button?.height ?? 44,
+      height: airy.controlHeight,
       iconSize: 20,
       paddingHorizontal: mergedTheme.spacing?.lg ?? 16,
     },
@@ -67,12 +68,27 @@ export function useButtonConfig(
 
   const config = sizeConfigs[size] ?? sizeConfigs.medium;
   const variantColors = {
-    gray100: mergedTheme.colors?.gray?.[100] ?? fallbackColors?.gray?.[100] ?? '#FAF8F5',
-    gray700: mergedTheme.colors?.gray?.[700] ?? fallbackColors?.gray?.[700] ?? '#3D3833',
+    gray100:
+      mergedTheme.colors?.gray?.[100] ??
+      fallbackColors?.gray?.[100] ??
+      '#FAF8F5',
+    gray700:
+      mergedTheme.colors?.gray?.[700] ??
+      fallbackColors?.gray?.[700] ??
+      '#3D3833',
     inverseText: mergedTheme.colors?.text?.inverse ?? '#ffffff',
-    primary: mergedTheme.colors?.primary?.[500] ?? fallbackColors?.primary?.[500] ?? '#10B981',
-    primaryText: mergedTheme.colors?.primary?.[700] ?? fallbackColors?.primary?.[700] ?? '#047857',
+    primary:
+      mergedTheme.colors?.primary?.[500] ??
+      fallbackColors?.primary?.[500] ??
+      '#10B981',
+    primaryText:
+      mergedTheme.colors?.primary?.[700] ??
+      fallbackColors?.primary?.[700] ??
+      '#047857',
   };
 
-  return { config, variantStyles: getButtonVariantStyles(variant, config, variantColors) };
+  return {
+    config,
+    variantStyles: getButtonVariantStyles(variant, config, variantColors),
+  };
 }

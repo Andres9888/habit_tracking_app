@@ -5,6 +5,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { useSettingsSearch } from '../search';
 import { AndroidTimePickerDialog } from './components/AndroidTimePickerDialog';
 import { DisabledHint } from './components/DisabledHint';
 import { ReminderInsetCard } from './components/ReminderInsetCard';
@@ -17,6 +18,7 @@ import type { StreakRemindersSectionProps } from './StreakRemindersSection.types
 export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const { setShowTimePicker, showTimePicker } = useTimePickerState();
   const { colors: themeColors, isDark, settings } = useThemeColors();
+  const { isSearching } = useSettingsSearch();
   const animations = useStreakRemindersAnimations(
     props.enabled,
     showTimePicker
@@ -38,7 +40,7 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
   const insetCardBackground = themeColors.surface;
 
   return (
-    <SettingsSection icon={props.icon} title='Notifications'>
+    <SettingsSection icon={props.icon} title='Reminders'>
       <SettingsRow
         icon={<Bell color={settings.bell.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.bell.bg}
@@ -49,32 +51,36 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
         value={props.enabled}
         onToggle={(v) => void props.onToggle(v)}
       />
-      <ReminderInsetCard
-        enabled={props.enabled}
-        insetBackground={insetBackground}
-        insetBorder={insetBorder}
-        insetCardBackground={insetCardBackground}
-        insetExpandStyle={animations.insetExpand.contentAnimatedStyle}
-        isPremium={props.isPremium}
-        pickerExpandStyle={animations.pickerExpand.contentAnimatedStyle}
-        reminderTime={props.reminderTime}
-        showTimePicker={showTimePicker}
-        onInsetLayout={animations.handleInsetLayout}
-        onPickerLayout={animations.handlePickerLayout}
-        onPremiumUpsell={props.onPremiumUpsell}
-        onTimeChange={onTimeChange}
-        onToggleTimePicker={handleToggleTimePicker}
-      />
-      <DisabledHint
-        hintStyle={animations.hintExpand.contentAnimatedStyle}
-        pointerEvents={props.enabled ? 'none' : 'auto'}
-        onLayout={animations.handleHintLayout}
-      />
-      <AndroidTimePickerDialog
-        reminderTime={props.reminderTime}
-        visible={showTimePicker}
-        onChange={onTimeChange}
-      />
+      {isSearching ? null : (
+        <>
+          <ReminderInsetCard
+            enabled={props.enabled}
+            insetBackground={insetBackground}
+            insetBorder={insetBorder}
+            insetCardBackground={insetCardBackground}
+            insetExpandStyle={animations.insetExpand.contentAnimatedStyle}
+            isPremium={props.isPremium}
+            pickerExpandStyle={animations.pickerExpand.contentAnimatedStyle}
+            reminderTime={props.reminderTime}
+            showTimePicker={showTimePicker}
+            onInsetLayout={animations.handleInsetLayout}
+            onPickerLayout={animations.handlePickerLayout}
+            onPremiumUpsell={props.onPremiumUpsell}
+            onTimeChange={onTimeChange}
+            onToggleTimePicker={handleToggleTimePicker}
+          />
+          <DisabledHint
+            hintStyle={animations.hintExpand.contentAnimatedStyle}
+            pointerEvents={props.enabled ? 'none' : 'auto'}
+            onLayout={animations.handleHintLayout}
+          />
+          <AndroidTimePickerDialog
+            reminderTime={props.reminderTime}
+            visible={showTimePicker}
+            onChange={onTimeChange}
+          />
+        </>
+      )}
     </SettingsSection>
   );
 }

@@ -1,10 +1,18 @@
 import type { ReactNode } from 'react';
 
+/** Optional contextual help shown via a quiet (?) affordance beside the label. */
+export interface RowHelp {
+  title: string;
+  body: string;
+}
+
 export interface SettingsRowProps {
   icon: ReactNode;
   iconBackgroundColor: string;
   label: string;
   subtitle?: string;
+  /** When set, renders a tappable (?) icon after the label explaining the row. */
+  help?: RowHelp;
   type: 'toggle' | 'navigation' | 'selection' | 'info';
   value?: boolean | string;
   badge?: number;
