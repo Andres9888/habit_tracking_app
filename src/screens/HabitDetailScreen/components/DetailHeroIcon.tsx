@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { colors as palette, withAlpha } from '../../../theme/colors';
+import { borderRadius } from '../../../theme/spacing';
 import { springs } from '../../../theme/animations';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { iconShadow } from './DetailHeader.constants';
@@ -48,7 +49,7 @@ export function DetailHeroIcon({
         style={{
           ...iconShadow,
           backgroundColor: color || colors.primary[100],
-          borderRadius: 26,
+          borderRadius: borderRadius.large,
           height: ICON_TILE,
           width: ICON_TILE,
         }}

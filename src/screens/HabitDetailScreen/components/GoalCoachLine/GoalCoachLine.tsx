@@ -33,7 +33,7 @@ export function GoalCoachLine({
     <Animated.View
       accessibilityLabel={`Coach: ${coach.message}`}
       accessibilityRole='text'
-      className='mt-3 flex-row items-center gap-2.5 rounded-xl px-3.5 py-2.5'
+      className='mt-3 flex-row items-center gap-2.5 rounded-[14px] px-3.5 py-2.5'
       entering={FadeIn.duration(220)}
       style={{
         backgroundColor: palette.bg,

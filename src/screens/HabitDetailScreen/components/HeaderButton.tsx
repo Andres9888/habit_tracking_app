@@ -40,7 +40,7 @@ function toneColors(
       fg: colors.primary[700],
     };
   }
-  const neutral = isDark ? '#FFFFFF' : '#000000';
+  const neutral = colors.gray[900];
   return {
     bg: withAlpha(neutral, isDark ? 0.08 : 0.04),
     border: withAlpha(neutral, isDark ? 0.1 : 0.08),

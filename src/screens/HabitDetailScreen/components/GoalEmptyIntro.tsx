@@ -2,11 +2,7 @@
 import { Text, View } from 'react-native';
 import { Target } from 'lucide-react-native';
 import { useThemeColors, withAlpha } from '../../../theme';
-import {
-  typography,
-  fontFamilies,
-  fontWeights,
-} from '../../../theme/typography';
+import { typography, fontWeights } from '../../../theme/typography';
 
 const TARGET_ICON_SIZE = 30;
 
@@ -30,7 +26,6 @@ export function GoalEmptyIntro() {
         style={{
           ...typography.heading2,
           color: colors.text.primary,
-          fontFamily: fontFamilies.primary.display,
         }}
       >
         Set a streak goal

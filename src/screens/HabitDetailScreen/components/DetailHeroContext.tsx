@@ -11,11 +11,14 @@ export function DetailHeroContext(props: HeroContextInput) {
   const ctx = getHeroContext(props);
   if (!ctx) return null;
 
-  const isGoal = ctx.tone === 'goal';
-  const backgroundColor = isGoal
-    ? colors.status.successLight
-    : colors.status.streakLight;
-  const textColor = isGoal ? colors.status.successText : colors.status.streakText;
+  // Amber/gold for streaks and milestone celebrations; green only for goal progress.
+  const useStreakColor = ctx.tone !== 'goal' || ctx.milestone === true;
+  const backgroundColor = useStreakColor
+    ? colors.status.streakLight
+    : colors.status.successLight;
+  const textColor = useStreakColor
+    ? colors.status.streakText
+    : colors.status.successText;
 
   return (
     <Animated.View

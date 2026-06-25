@@ -84,10 +84,9 @@ export function GoalPresetChip({
       {recommended ? (
         <Text
           style={{
+            ...typography.tabBar,
             color: accent,
-            fontSize: 9,
             fontWeight: fontWeights.bold,
-            letterSpacing: 0.4,
             marginTop: spacing.xs,
             textTransform: 'uppercase',
           }}

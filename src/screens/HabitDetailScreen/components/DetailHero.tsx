@@ -40,7 +40,7 @@ export function DetailHero({
         borderColor: colors.border,
         borderRadius: borderRadius.large,
         borderWidth: 1,
-        marginHorizontal: spacing.base,
+        marginHorizontal: spacing.base + spacing.xs,
         marginTop: spacing.sm,
         paddingHorizontal: spacing.base,
         paddingVertical: spacing.lg,

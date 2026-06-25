@@ -60,7 +60,7 @@ export function DetailViewTabs({
       style={{
         backgroundColor: colors.background,
         paddingBottom: TRACK_PADDING_BOTTOM,
-        paddingHorizontal: spacing.base,
+        paddingHorizontal: spacing.base + spacing.xs,
         paddingTop: TRACK_PADDING_TOP,
       }}
     >
