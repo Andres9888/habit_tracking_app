@@ -6,6 +6,8 @@
  */
 
 import { useMemo } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { PREMIUM_PACKS } from '../data/premiumPacks';
 import { CATEGORY_META } from '../data/categoryMeta';
@@ -43,9 +45,12 @@ export function useMainBrowseData({
     );
   }, [allTemplates, importedTemplateIds]);
 
+  const savedTemplates = useQuery(api.savedTemplates.listSavedTemplates, {});
+
   const browseRowSections = useMemo(
-    () => buildBrowseRowSections({ allTemplates, popularTemplates }),
-    [allTemplates, popularTemplates]
+    () =>
+      buildBrowseRowSections({ allTemplates, popularTemplates, savedTemplates }),
+    [allTemplates, popularTemplates, savedTemplates]
   );
 
   const categoryList = useMemo(

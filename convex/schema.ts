@@ -413,6 +413,15 @@ const applicationTables = {
     .index('by_user', ['userId'])
     .index('by_user_template', ['userId', 'templateId']),
 
+  // Library templates a user has bookmarked to revisit / add later.
+  savedTemplates: defineTable({
+    savedAt: v.number(),
+    templateId: v.id('templates'),
+    userId: v.string(),
+  })
+    .index('by_user', ['userId'])
+    .index('by_user_template', ['userId', 'templateId']),
+
   tracking: defineTable({
     completed: v.boolean(),
     date: v.string(),

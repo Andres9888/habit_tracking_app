@@ -28,6 +28,7 @@ import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useTemplatesWarmup } from './hooks/useTemplatesWarmup';
+import { useDeepLinkOpensTemplates } from './hooks/useDeepLinkOpensTemplates';
 import { enterEasing } from '../../theme/animations';
 
 const ENTERING = FadeInDown.duration(280).easing(enterEasing);
@@ -48,6 +49,7 @@ function HabitsAppContent() {
 
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
+  useDeepLinkOpensTemplates(modals.openTemplatesScreen);
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({
     isEnabled: list.celebrationsEnabled,
     preference: list.reduceMotionPreference,

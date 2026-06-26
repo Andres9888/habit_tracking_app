@@ -7,6 +7,7 @@ export {
   list,
   listTemplateNames,
 } from './templates/queries';
+export { getBySlug } from './templates/getBySlug';
 
 export { importTemplate } from './templates/importTemplate';
 export { clearTemplates, dedupeTemplates } from './templates/clearAndDedupe';

@@ -17,6 +17,7 @@ import {
 import { ConvexClerkProvider, LazyProviders, SentryUserSync } from '../providers';
 import theme from '../theme';
 import { ThemeColorProvider } from '../theme/ThemeContext';
+import { PendingDeepLinkProvider } from './deeplink/PendingDeepLinkContext';
 
 const clerkKey = hasClerkPublishableKey ? clerkPublishableKey : '';
 
@@ -165,7 +166,9 @@ export function AppProviders({ children }: PropsWithChildren) {
             <SentryUserSync>
               <ConvexClerkProvider>
                 <ThemeColorProvider>
-                  <LazyProviders>{children}</LazyProviders>
+                  <LazyProviders>
+                    <PendingDeepLinkProvider>{children}</PendingDeepLinkProvider>
+                  </LazyProviders>
                 </ThemeColorProvider>
               </ConvexClerkProvider>
             </SentryUserSync>

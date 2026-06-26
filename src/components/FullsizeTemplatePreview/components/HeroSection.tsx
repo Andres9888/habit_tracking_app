@@ -1,78 +1,66 @@
 /**
  * Hero section for FullsizeTemplatePreview
- * Displays the template icon, name, and metadata pills
+ * Category-themed domed backdrop + accent halo, premium icon tile, Literata name,
+ * tagline, and neutral metadata pills. Theming comes from scienceTheme(template)
+ * so the hero, the Why-it-works card, and the header tint all share one accent.
  */
 
-import React from 'react';
-import { View, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useAppTheme } from '../../../theme';
+import React, { useState } from 'react';
+import { View, Text, Dimensions, type LayoutChangeEvent } from 'react-native';
+
+import { colors } from '@/theme';
+import { withAlpha } from '@/theme/colors/alpha';
 import { heroStyles } from '../styles';
+import { HeroBackdrop } from './hero/HeroBackdrop';
+import { HeroIconTile } from './hero/HeroIconTile';
 import { HeroMetaPills } from './HeroMetaPills';
-import { buildHeroGradient } from '../utils/heroGradient';
+import { scienceTheme } from './science/scienceTheme';
 import type { HeroSectionProps } from './HeroSection.types';
 
 export function HeroSection({
   template,
-  iconColor,
   iconAnimatedStyle,
   iconGlowStyle,
 }: HeroSectionProps) {
-  const theme = useAppTheme();
-  const baseGradient = buildHeroGradient(iconColor);
-  // First stop is transparent so the ScrollView's header-matching background
-  // shows through — prevents alpha-stacking that makes the hero top read
-  // darker than the ModalHeader.
-  const gradientColors: readonly [string, string, string] = [
-    'transparent',
-    baseGradient[1],
-    baseGradient[2],
-  ];
+  const t = scienceTheme(template);
+  const [size, setSize] = useState({
+    width: Dimensions.get('window').width,
+    height: 240,
+  });
+  const onLayout = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setSize((s) =>
+      s.width === width && s.height === height ? s : { width, height }
+    );
+  };
 
   return (
-    <LinearGradient
-      colors={gradientColors}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-      style={heroStyles.heroGradient}
-    >
+    <View style={heroStyles.heroGradient} onLayout={onLayout}>
+      <HeroBackdrop
+        accent={t.accent}
+        gradientStart={t.gradientStart}
+        gradientEnd={t.gradientEnd}
+        height={size.height}
+        width={size.width}
+      />
+      <View
+        style={[heroStyles.heroHairline, { backgroundColor: withAlpha(t.accent, 0.12) }]}
+      />
       <View style={heroStyles.heroContent}>
-        <Animated.View style={[heroStyles.iconWrapper, iconAnimatedStyle]}>
-          <Animated.View
-            style={[
-              heroStyles.iconGlow,
-              { backgroundColor: iconColor, shadowColor: iconColor },
-              iconGlowStyle,
-            ]}
-          />
-          <View
-            testID='templates-preview-icon'
-            style={[
-              heroStyles.iconContainer,
-              { backgroundColor: `${iconColor}20` },
-            ]}
-          >
-            <Text style={heroStyles.iconText}>{template?.icon ?? '✨'}</Text>
-          </View>
-        </Animated.View>
-
-        <Text
-          testID='templates-preview-name'
-          style={[
-            heroStyles.templateName,
-            { fontFamily: theme.custom.fontFamilies.primary.text },
-          ]}
-        >
+        <HeroIconTile
+          accent={t.accent}
+          icon={template?.icon ?? '✨'}
+          iconAnimatedStyle={iconAnimatedStyle}
+          iconGlowStyle={iconGlowStyle}
+        />
+        <Text testID='templates-preview-name' style={heroStyles.templateName}>
           {template?.name ?? 'Template'}
         </Text>
-
         {template?.tagline ? (
           <Text style={heroStyles.tagline}>{template.tagline}</Text>
         ) : null}
-
-        <HeroMetaPills iconColor={iconColor} template={template} />
+        <HeroMetaPills iconColor={colors.gray[500]} template={template} />
       </View>
-    </LinearGradient>
+    </View>
   );
 }

@@ -1,5 +1,6 @@
 /**
  * Hero metadata pills — frequency, category, duration, growth, popularity.
+ * The pill surface is neutral; `iconColor` tints only the lucide glyphs.
  */
 
 import React from 'react';
@@ -31,35 +32,24 @@ export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
   const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
   const popularity = template?.popularityScore ?? 0;
   const growthMeta = getGrowthTypeMeta(template?.growthType);
+  const sz = iconSizes.small;
 
   return (
     <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
-      <MetadataPill
-        icon={<Clock color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-        iconColor={iconColor}
-      >
+      <MetadataPill icon={<Clock color={iconColor} size={sz} strokeWidth={2} />}>
         {frequency}
       </MetadataPill>
-      <MetadataPill
-        icon={<Sparkles color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-        iconColor={iconColor}
-      >
+      <MetadataPill icon={<Sparkles color={iconColor} size={sz} strokeWidth={2} />}>
         {category}
       </MetadataPill>
-      <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
+      <MetadataPill>{`⏱️ ${duration}`}</MetadataPill>
       {growthMeta ? (
-        <MetadataPill
-          icon={<Sprout color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-          iconColor={iconColor}
-        >
+        <MetadataPill icon={<Sprout color={iconColor} size={sz} strokeWidth={2} />}>
           {`${growthMeta.label} · ~${growthMeta.days}d`}
         </MetadataPill>
       ) : null}
       {popularity > 0 ? (
-        <MetadataPill
-          icon={<Users color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-          iconColor={iconColor}
-        >
+        <MetadataPill icon={<Users color={iconColor} size={sz} strokeWidth={2} />}>
           {formatPopularity(popularity)}
         </MetadataPill>
       ) : null}

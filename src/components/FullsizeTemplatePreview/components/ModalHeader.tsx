@@ -1,27 +1,28 @@
 /**
- * Modal header for FullsizeTemplatePreview
- * Uses shared ModalCloseButton for consistent close button styling.
- * Optionally renders a circular back button on the left when `onBack` is provided.
+ * Top bar for FullsizeTemplatePreview — a screen-style header:
+ * back chevron (dismisses the preview) · centered "Habit Library" eyebrow ·
+ * bookmark + share actions. Background tint tracks scroll via animatedBgStyle.
  */
 
 import React from 'react';
 import { ChevronLeft } from 'lucide-react-native';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { colors } from '@/theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
+import { fontFamilies } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { layoutStyles } from '../styles';
-import { ModalCloseButton } from '../../ui/ModalCloseButton';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { HeaderActionCluster } from './header/HeaderActionCluster';
+import type { Template } from '../../../types/template';
 
 interface ModalHeaderProps {
   topInset: number;
   closeButtonAnimatedOpacityStyle: object;
-  onBack?: () => void;
+  template: Template;
   onClose: () => void;
+  onShare: () => void;
   tintColor?: string;
   /** Reanimated style applied to the outer container — overrides tintColor when scrolled. */
   animatedBgStyle?: object;
@@ -30,84 +31,72 @@ interface ModalHeaderProps {
 export function ModalHeader({
   topInset,
   closeButtonAnimatedOpacityStyle,
-  onBack,
+  template,
   onClose,
+  onShare,
   tintColor,
   animatedBgStyle,
 }: ModalHeaderProps) {
-  const { colors: themeColors, isDark } = useThemeColors();
-  const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
-
+  const { colors: themeColors } = useThemeColors();
   const handleBack = () => {
-    if (!onBack) return;
-    triggerHaptic('tap');
-    onBack();
+    void triggerHaptic('tap');
+    onClose();
   };
 
   return (
     <Animated.View
-      style={[
-        tintColor ? { backgroundColor: tintColor } : undefined,
-        animatedBgStyle,
-      ]}
+      style={[tintColor ? { backgroundColor: tintColor } : undefined, animatedBgStyle]}
     >
-      <View testID='templates-preview-handle' style={s.handleRow}>
-        <View style={s.handle} />
-      </View>
-      <Animated.View
-        testID='templates-preview-close'
-        style={[
-          layoutStyles.header,
-          s.headerRow,
-          { paddingTop: topInset > 0 ? topInset : 12 },
-          closeButtonAnimatedOpacityStyle,
-        ]}
-      >
-        {onBack ? (
-          <AnimatedPressable
-            accessibilityLabel='Back'
-            accessibilityRole='button'
-            testID='templates-preview-back'
-            style={[s.backButton, { backgroundColor: subtleBg }]}
-            onPress={handleBack}
-          >
-            <ChevronLeft
-              color={themeColors.text.secondary}
-              size={iconSizes.large}
-              strokeWidth={2.5}
-            />
-          </AnimatedPressable>
-        ) : (
-          <View />
-        )}
-        <ModalCloseButton
-          label='Close preview'
-          variant='subtle'
-          onClose={onClose}
-        />
+      <View style={{ height: topInset > 0 ? topInset : 12 }} />
+      <Animated.View style={[s.row, closeButtonAnimatedOpacityStyle]}>
+        <View pointerEvents='none' style={s.eyebrowWrap}>
+          <Text style={s.eyebrow}>Habit Library</Text>
+        </View>
+        <AnimatedPressable
+          accessibilityLabel='Back to library'
+          accessibilityRole='button'
+          testID='templates-preview-back'
+          style={s.iconBtn}
+          onPress={handleBack}
+        >
+          <ChevronLeft
+            color={themeColors.text.secondary}
+            size={iconSizes.large}
+            strokeWidth={2.4}
+          />
+        </AnimatedPressable>
+        <HeaderActionCluster template={template} onShare={onShare} />
       </Animated.View>
     </Animated.View>
   );
 }
 
 const s = StyleSheet.create({
-  backButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.full,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
+  eyebrow: {
+    color: colors.gray[400],
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
   },
-  handle: {
-    backgroundColor: colors.gray[300],
-    borderRadius: borderRadius.xs,
-    height: 4,
+  eyebrowWrap: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconBtn: {
+    alignItems: 'center',
+    height: 40,
+    justifyContent: 'center',
     width: 40,
   },
-  handleRow: { alignItems: 'center', paddingTop: 8 },
-  headerRow: {
+  row: {
     alignItems: 'center',
     flexDirection: 'row',
+    height: 44,
     justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    zIndex: 10,
   },
 });

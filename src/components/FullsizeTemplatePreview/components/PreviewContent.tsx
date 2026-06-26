@@ -2,14 +2,15 @@
  * PreviewContent - Main content area of the preview modal
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import Animated from 'react-native-reanimated';
 import { layoutStyles } from '../styles';
-import { buildHeroGradient } from '../utils/heroGradient';
+import { scienceTheme } from './science/scienceTheme';
 import { useHeaderTintAnimation } from '../hooks/useHeaderTintAnimation';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
 import { FooterSection } from './FooterSection';
+import { TemplateShareSheet } from './share/TemplateShareSheet';
 import type { PreviewContentProps } from './PreviewContent.types';
 
 export function PreviewContent({
@@ -27,9 +28,10 @@ export function PreviewContent({
   template,
   visible,
 }: PreviewContentProps) {
-  const headerTint = buildHeroGradient(iconColor)[0];
+  const headerTint = scienceTheme(template).gradientStart;
   const { scrollHandler, onHeroLayout, animatedBgStyle } =
     useHeaderTintAnimation(headerTint);
+  const [shareOpen, setShareOpen] = useState(false);
   return (
     <Animated.View
       testID='templates-preview-modal'
@@ -40,10 +42,11 @@ export function PreviewContent({
         closeButtonAnimatedOpacityStyle={
           animatedStyles.closeButtonAnimatedOpacityStyle
         }
+        template={template}
         tintColor={headerTint}
         topInset={insets.top}
-        onBack={handlers.handleBack}
         onClose={handlers.handleClose}
+        onShare={() => setShareOpen(true)}
       />
       <ScrollableContent
         iconAnimatedStyle={animatedStyles.iconAnimatedStyle}
@@ -72,6 +75,11 @@ export function PreviewContent({
         templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}
         onImport={handlers.handleImport}
+      />
+      <TemplateShareSheet
+        template={template}
+        visible={shareOpen}
+        onClose={() => setShareOpen(false)}
       />
     </Animated.View>
   );

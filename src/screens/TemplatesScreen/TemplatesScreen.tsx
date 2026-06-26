@@ -16,6 +16,7 @@ import { MainBrowseView } from './views/MainBrowseView';
 import { renderSubView } from './views/renderSubView';
 import { GOAL_COLLECTIONS, type GoalCollection } from './data/goalCollections';
 import { usePrescription, getGoalTemplates } from './hooks/usePrescription';
+import { useDeepLinkPreview } from './hooks/useDeepLinkPreview';
 import { useSelectedGoal } from './hooks/useSelectedGoal';
 import {
   trackLibraryEvent,
@@ -36,6 +37,7 @@ function TemplatesScreenContent({
 }: TemplatesScreenContentProps) {
   const props = useTemplatesScreenProps();
   const { data, handlers, mainBrowseData, packConfirm, state, viewNav } = props;
+  useDeepLinkPreview(handlers.handleTemplatePreview);
   const { selectedGoalId, setSelectedGoalId } = useSelectedGoal();
   const sortedFilteredTemplates = useMemo(
     () =>
