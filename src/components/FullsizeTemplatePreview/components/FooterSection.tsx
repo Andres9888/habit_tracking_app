@@ -4,8 +4,10 @@
  */
 
 import React from 'react';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from 'lucide-react-native';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import { footerStyles } from '../styles';
 import { FooterPrimaryAction } from './FooterPrimaryAction';
 import { FooterSecondaryActions } from './FooterSecondaryActions';
@@ -15,6 +17,7 @@ const IMPORT_LABEL = 'Add to my habits';
 
 export function FooterSection({
   templateName,
+  startSmallVersion,
   iconColor,
   isImporting,
   isImported,
@@ -29,6 +32,7 @@ export function FooterSection({
   onImport,
   onCustomize,
 }: FooterSectionProps) {
+  const { colors } = useThemeColors();
   return (
     <View style={footerStyles.footerGradientWrapper}>
       {/* Intentional rgba gradient — fades from transparent to gray[50] (#FAF8F5) */}
@@ -46,6 +50,19 @@ export function FooterSection({
             { paddingBottom: Math.max(bottomInset, 20) },
           ]}
         >
+          {startSmallVersion && !isImported ? (
+            <View style={footerStyles.startSmallRow}>
+              <Feather color={colors.status.streakText} size={14} strokeWidth={2} />
+              <Text numberOfLines={1} style={footerStyles.startSmallText}>
+                <Text
+                  style={[footerStyles.startSmallLabel, { color: colors.status.streakText }]}
+                >
+                  Start small:{' '}
+                </Text>
+                <Text style={{ color: colors.text.secondary }}>{startSmallVersion}</Text>
+              </Text>
+            </View>
+          ) : null}
           <FooterPrimaryAction
             checkmarkAnimatedStyle={checkmarkAnimatedStyle}
             createPressHandlers={createPressHandlers}

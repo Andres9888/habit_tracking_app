@@ -1,12 +1,13 @@
 /**
- * Bottom rail — meta pill and View details link.
+ * Bottom rail — meta pill + the 🔬 science door (SPEC_05). The door deep-links
+ * to the science section (initialAnchor='science'); the card body opens at top.
  */
 
-import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import type { TemplatePreviewAnchor } from '../../TemplatesScreen.types';
+import { ScienceDoorPill } from '../ScienceDoorPill/ScienceDoorPill';
 import { getTemplateMetaLabel } from './templateMeta';
 import { styles as s } from './HabitTemplateCard.styles';
 
@@ -23,9 +24,6 @@ export function HabitTemplateCardBottomRail({
   onPreview,
 }: HabitTemplateCardBottomRailProps) {
   const { colors, isDark } = useThemeColors();
-  // Instant press feedback — without it the preview-open work reads as lag.
-  // State-based: function-form Pressable styles silently drop in this app.
-  const [pressed, setPressed] = useState(false);
   const metaLabel = getTemplateMetaLabel(item);
   const dividerColor = isDark ? colors.border : colors.gray[50];
   // Quiet filled pill — warm tonal overlay so the meta reads as a chip in both modes.
@@ -46,24 +44,10 @@ export function HabitTemplateCardBottomRail({
       ) : (
         <View />
       )}
-      <Pressable
-        accessibilityLabel={`View details for ${item.name}`}
-        accessibilityRole='button'
-        hitSlop={8}
-        style={{ opacity: pressed ? 0.45 : 1 }}
-        onPressIn={() => setPressed(true)}
-        onPressOut={() => setPressed(false)}
-        onPress={(event) => {
-          // Keep the parent card press from also firing on web; the event
-          // can be undefined on native, so never assume it exists.
-          event?.stopPropagation?.();
-          onPreview(item);
-        }}
-      >
-        <Text style={[s.viewDetails, { color: colors.primary[700] }]}>
-          View details ›
-        </Text>
-      </Pressable>
+      <ScienceDoorPill
+        template={item}
+        onPress={(template) => onPreview(template, 'science')}
+      />
     </View>
   );
 }

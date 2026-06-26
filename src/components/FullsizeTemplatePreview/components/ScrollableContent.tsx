@@ -7,11 +7,9 @@ import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
   type useAnimatedScrollHandler,
 } from 'react-native-reanimated';
-import { colors } from '@/theme/colors';
 import type { TemplatePreviewAnchor } from '@/screens/TemplatesScreen/TemplatesScreen.types';
 import { HeroSection } from './HeroSection';
-import { DescriptionSection } from './DescriptionSection';
-import { ScienceDrilldown } from './science/ScienceDrilldown';
+import { PreviewScienceSection } from './PreviewScienceSection';
 import { layoutStyles } from '../styles';
 import type { Template } from '../../../types/template';
 import type { ViewStyle } from 'react-native';
@@ -92,16 +90,13 @@ export function ScrollableContent({
             template={template}
           />
         </View>
-        <View style={{ backgroundColor: colors.gray[50] }}>
-          <DescriptionSection
-            description={template?.description ?? ''}
-            iconColor={iconColor}
-          />
-          <View ref={scienceRef} onLayout={scrollToScience}>
-            <ScienceDrilldown template={template} />
-          </View>
-          <View style={layoutStyles.bottomSpacer} />
-        </View>
+        <PreviewScienceSection
+          iconColor={iconColor}
+          initialAnchor={initialAnchor}
+          scienceRef={scienceRef}
+          template={template}
+          onScienceLayout={scrollToScience}
+        />
       </View>
     </Animated.ScrollView>
   );

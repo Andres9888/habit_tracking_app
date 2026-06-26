@@ -16,9 +16,17 @@ import { ScienceVideoEmbed } from '../ScienceVideoEmbed';
 import { scienceTheme } from './scienceTheme';
 import type { Template } from '../../../../types/template';
 
-export function WhyItWorksCard({ template }: { template: Template }) {
+export function WhyItWorksCard({
+  template,
+  compact = false,
+}: {
+  template: Template;
+  compact?: boolean;
+}) {
   const t = scienceTheme(template);
-  const lead = template?.lead;
+  // Fall back to the description so a lightly-authored template still has a
+  // "why" body instead of a header with no text (SPEC_04 graceful fallback).
+  const lead = template?.lead ?? template?.description;
   const evidence = template?.evidence ?? template?.scientificReference;
   const paper = template?.scientificLink;
   return (
@@ -53,8 +61,8 @@ export function WhyItWorksCard({ template }: { template: Template }) {
       <View style={s.whyBody}>
         <Text style={[s.whyOverline, { color: t.accent }]}>Why it works</Text>
         {lead ? <Text style={s.whyLead}>{lead}</Text> : null}
-        {evidence ? <Text style={s.whyEvidence}>{evidence}</Text> : null}
-        {template?.youtubeLink ? (
+        {evidence && !compact ? <Text style={s.whyEvidence}>{evidence}</Text> : null}
+        {template?.youtubeLink && !compact ? (
           <View style={{ marginTop: 16 }}>
             <ScienceVideoEmbed template={template} />
           </View>

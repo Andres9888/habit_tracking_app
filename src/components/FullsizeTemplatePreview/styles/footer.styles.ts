@@ -74,4 +74,17 @@ export const footerStyles = StyleSheet.create({
     fontSize: typography.body.fontSize,
     fontWeight: fontWeights.bold,
   },
+  startSmallRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 6,
+    paddingLeft: 2,
+  },
+  startSmallText: {
+    ...typography.caption,
+    flex: 1,
+  },
+  startSmallLabel: {
+    fontWeight: fontWeights.bold,
+  },
 });

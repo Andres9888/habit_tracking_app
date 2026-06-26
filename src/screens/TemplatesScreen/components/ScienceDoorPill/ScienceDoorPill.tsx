@@ -1,11 +1,14 @@
 /**
- * ScienceDoorPill — tappable citation pill that opens habit details.
- * The labeled door to the science card on the preview page.
+ * ScienceDoorPill — tappable citation pill that opens the science detail.
+ * The labeled door to the "why it works" card; deep-links straight to the
+ * science section (SPEC_05). Tinted with the template's per-category accent.
  */
 
 import { Text } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { triggerHaptic } from '@/utils/haptics';
+import { scienceTheme } from '@/components/FullsizeTemplatePreview/components/science/scienceTheme';
+import { withAlpha } from '@/theme/colors/alpha';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { getScienceDoorLabel } from '../HabitTemplateCard';
@@ -17,8 +20,10 @@ interface ScienceDoorPillProps {
 }
 
 export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
-  const { colors } = useThemeColors();
+  const { colors, isDark } = useThemeColors();
   const label = getScienceDoorLabel(template);
+  // Per-category science accent in light; a legible green on dark surfaces.
+  const accent = isDark ? colors.primary[500] : scienceTheme(template).accent;
 
   return (
     <AnimatedPressable
@@ -28,8 +33,8 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
       style={[
         s.pill,
         {
-          backgroundColor: colors.status.infoLight,
-          borderColor: colors.status.infoText,
+          backgroundColor: withAlpha(accent, isDark ? 0.16 : 0.1),
+          borderColor: withAlpha(accent, isDark ? 0.32 : 0.24),
         },
       ]}
       onPress={(event) => {
@@ -38,10 +43,7 @@ export function ScienceDoorPill({ onPress, template }: ScienceDoorPillProps) {
         onPress(template);
       }}
     >
-      <Text
-        numberOfLines={1}
-        style={[s.label, { color: colors.status.infoText }]}
-      >
+      <Text numberOfLines={1} style={[s.label, { color: accent }]}>
         {label}
       </Text>
     </AnimatedPressable>

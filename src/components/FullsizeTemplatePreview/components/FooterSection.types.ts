@@ -9,6 +9,8 @@ import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
 export interface FooterSectionProps {
   templateName: string;
+  /** The "laughably easy" floor surfaced above the CTA (SPEC_03); hidden once imported. */
+  startSmallVersion?: string;
   iconColor: string;
   isImporting: boolean;
   isImported: boolean;
