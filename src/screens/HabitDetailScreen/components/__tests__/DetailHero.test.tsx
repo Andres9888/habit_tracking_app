@@ -17,6 +17,7 @@ jest.mock('../../../../theme/ThemeContext', () => ({
         success: '#22c55e',
         successLight: '#dcfce7',
         successText: '#166534',
+        streak: '#d97706',
         streakLight: '#fef3c7',
         streakText: '#92400e',
       },
@@ -58,16 +59,20 @@ describe('DetailHero', () => {
     expect(getByLabelText('Habit icon: 🏃')).toBeTruthy();
   });
 
-  it('renders inline streak, best, and total stats', () => {
+  it('leads with the streak numeral as the protagonist', () => {
     const { getByText } = render(
       <DetailHero habit={mockHabit} totalCompletions={89} />
     );
+    expect(getByText('Current streak')).toBeTruthy();
     expect(getByText('5')).toBeTruthy();
+  });
+
+  it('shows best streak and total as secondary stats', () => {
+    const { getByText } = render(
+      <DetailHero habit={mockHabit} totalCompletions={89} />
+    );
     expect(getByText('21')).toBeTruthy();
-    expect(getByText('89')).toBeTruthy();
-    expect(getByText('streak')).toBeTruthy();
-    expect(getByText('best')).toBeTruthy();
-    expect(getByText('total')).toBeTruthy();
+    expect(getByText(/89 total/)).toBeTruthy();
   });
 
   it('shows fallback name when habit has no name', () => {
@@ -94,14 +99,14 @@ describe('DetailHero', () => {
     const { getByText } = render(
       <DetailHero daysTracking={6} habit={mockHabit} totalCompletions={89} />
     );
-    expect(getByText('Day 7 of your journey')).toBeTruthy();
+    expect(getByText('Day 7 of your journey 🔗')).toBeTruthy();
   });
 
   it('defaults the journey line to day 1 without daysTracking', () => {
     const { getByText } = render(
       <DetailHero habit={mockHabit} totalCompletions={89} />
     );
-    expect(getByText('Day 1 of your journey')).toBeTruthy();
+    expect(getByText('Day 1 of your journey 🔗')).toBeTruthy();
   });
 
   it('has accessible header role on habit name', () => {
@@ -109,20 +114,5 @@ describe('DetailHero', () => {
       <DetailHero habit={mockHabit} totalCompletions={89} />
     );
     expect(getByRole('header')).toBeTruthy();
-  });
-
-  it('surfaces an ongoing-streak badge', () => {
-    const { getByText } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} />
-    );
-    expect(getByText('5-day streak')).toBeTruthy();
-  });
-
-  it('surfaces a personal-best badge when current matches best', () => {
-    const recordHabit = { ...mockHabit, currentStreak: 21, bestStreak: 21 };
-    const { getByText } = render(
-      <DetailHero habit={recordHabit as never} totalCompletions={89} />
-    );
-    expect(getByText('Longest streak yet')).toBeTruthy();
   });
 });

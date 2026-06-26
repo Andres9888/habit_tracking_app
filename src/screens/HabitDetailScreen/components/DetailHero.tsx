@@ -1,5 +1,9 @@
-/** DetailHero - Premium hero card: haloed icon, name, notable badge, journey line, stat band. */
-import { Text } from 'react-native';
+/**
+ * DetailHero - streak-forward hero (After redesign). The streak numeral is the
+ * protagonist: icon + name row, "CURRENT STREAK" kicker, big gold numeral 🔥,
+ * then best/total + journey line. Replaces the old 3-up stat band.
+ */
+import { Text, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { colors as palette } from '../../../theme/colors';
@@ -7,9 +11,6 @@ import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { getHabitDisplayName } from './DetailHero.utils';
-import { DetailHeroContext } from './DetailHeroContext';
-import { DetailHeroIcon } from './DetailHeroIcon';
-import { DetailHeroStats } from './DetailHeroStats';
 
 interface DetailHeroProps {
   daysTracking?: number;
@@ -25,11 +26,11 @@ const ENTERING = FadeInDown.duration(280)
 export function DetailHero({
   daysTracking = 0,
   habit,
-  isCompletedToday,
   totalCompletions,
 }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();
-  const habitName = getHabitDisplayName(habit);
+  const name = getHabitDisplayName(habit);
+  const streak = habit.currentStreak ?? 0;
 
   return (
     <Animated.View
@@ -47,35 +48,78 @@ export function DetailHero({
         ...shadows.card,
       }}
     >
-      {habit.icon ? (
-        <DetailHeroIcon
-          color={habit.color ?? habit.iconColor}
-          icon={habit.icon}
-          isCompletedToday={isCompletedToday}
-        />
-      ) : null}
+      <View className='flex-row items-center' style={{ gap: spacing.sm }}>
+        {habit.icon ? (
+          <View
+            accessibilityLabel={`Habit icon: ${habit.icon}`}
+            className='items-center justify-center'
+            style={{
+              backgroundColor: habit.color ?? colors.primary[100],
+              borderRadius: borderRadius.medium,
+              height: 44,
+              width: 44,
+            }}
+          >
+            <Text style={{ fontSize: 24 }}>{habit.icon}</Text>
+          </View>
+        ) : null}
+        <Text
+          accessibilityRole='header'
+          numberOfLines={1}
+          style={{
+            color: colors.text.primary,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: 22,
+            fontWeight: fontWeights.bold,
+            letterSpacing: -0.3,
+          }}
+        >
+          {name}
+        </Text>
+      </View>
 
       <Text
-        accessibilityLabel={`Habit: ${habitName}`}
-        accessibilityRole='header'
-        numberOfLines={1}
         style={{
-          color: colors.text.primary,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 24,
+          ...typography.caption,
+          color: colors.text.secondary,
+          fontSize: 11,
           fontWeight: fontWeights.bold,
-          letterSpacing: -0.3,
+          letterSpacing: 1.5,
           marginTop: spacing.base,
+          textTransform: 'uppercase',
         }}
       >
-        {habitName}
+        Current streak
       </Text>
 
-      <DetailHeroContext
-        bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
-        goalDuration={habit.goalDuration ?? 0}
-      />
+      <View className='flex-row items-baseline' style={{ gap: spacing.sm }}>
+        <Text
+          style={{
+            color: colors.status.streak,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: 60,
+            fontWeight: fontWeights.semibold,
+            letterSpacing: -2,
+          }}
+        >
+          {streak}
+        </Text>
+        <Text style={{ fontSize: 24 }}>🔥</Text>
+      </View>
+
+      <Text
+        style={{
+          ...typography.bodySmall,
+          color: colors.text.secondary,
+          marginTop: spacing.xs + 2,
+        }}
+      >
+        best{' '}
+        <Text style={{ color: colors.text.primary, fontWeight: fontWeights.bold }}>
+          {habit.bestStreak ?? 0}
+        </Text>{' '}
+        · {totalCompletions} total
+      </Text>
 
       <Text
         style={{
@@ -84,14 +128,8 @@ export function DetailHero({
           marginTop: spacing.sm,
         }}
       >
-        Day {daysTracking + 1} of your journey
+        Day {daysTracking + 1} of your journey 🔗
       </Text>
-
-      <DetailHeroStats
-        bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
-        totalCompletions={totalCompletions}
-      />
     </Animated.View>
   );
 }

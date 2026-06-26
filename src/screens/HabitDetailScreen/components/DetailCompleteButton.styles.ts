@@ -7,10 +7,9 @@ export const INDICATOR_SIZE = 24;
 
 export const styles = StyleSheet.create({
   container: {
+    // Fills the StickyCompleteBar capsule (its sole consumer owns positioning now).
     borderRadius: borderRadius.large,
     gap: spacing.sm + spacing.xs,
-    marginHorizontal: spacing.base + spacing.xs,
-    marginTop: spacing.base,
     paddingVertical: spacing.base - 2,
   },
   filledCircle: {

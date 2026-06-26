@@ -1,19 +1,20 @@
 /**
  * HabitDetailContent - Scrollspy layout: Hero → sticky tabs → Calendar + Strength + Goal stacked.
- * Tabs act as anchors, not gatekeepers. Every progress surface is visible in one scroll.
+ * Tabs act as anchors, not gatekeepers. Every progress surface is visible in one scroll,
+ * and the complete action stays pinned in the StickyCompleteBar so it never scrolls away.
  */
 import { useRef } from 'react';
 import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
-import ErrorBoundary from '../../../components/ErrorBoundary';
-import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import type { Habit } from '../../../features/habits/types';
-import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
-import { useThemeColors } from '../../../theme';
-import { CalendarTabContent } from './CalendarTabContent';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { DetailHeroSection } from './DetailHeroSection';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
-import { GoalTabContent } from './GoalTabContent';
+import { HabitDetailSections } from './HabitDetailSections';
+import { StickyCompleteBar } from './StickyCompleteBar';
 import { useDetailScrollSpy } from './useDetailScrollSpy';
+
+/** Clearance so the last scroll section never hides behind the pinned complete bar. */
+const STICKY_BAR_CLEARANCE = 132;
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
@@ -36,73 +37,49 @@ export function HabitDetailContent({
   onDayPress,
   onPinnedChange,
 }: HabitDetailContentProps) {
-  const { colors } = useThemeColors();
   const scrollRef = useRef<ScrollView>(null);
   const { activeView, handleScroll, handleSectionLayout, scrollToView } =
     useDetailScrollSpy(scrollRef, { onPinnedChange });
-  const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
-  const progressEmojis = useProgressEmojis(habit);
 
-  const makeSectionLayoutHandler =
+  const onSectionLayout =
     (view: DetailView) => (event: LayoutChangeEvent) => {
       handleSectionLayout(view, event.nativeEvent.layout.y);
     };
 
   return (
-    <ScrollView
-      ref={scrollRef}
-      bounces
-      className='flex-1'
-      contentContainerClassName='pb-16'
-      scrollEventThrottle={16}
-      showsVerticalScrollIndicator={false}
-      stickyHeaderIndices={[1]}
-      onScroll={handleScroll}
-    >
-      <DetailHeroSection
-        daysTracking={daysTracking}
-        habit={habit}
-        isCompletedToday={isCompletedToday}
-        isToggling={pendingToggleDate !== null}
-        totalCompletions={totalCompletions}
-        onDayPress={onDayPress}
-      />
-      <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
-
-      <View
-        className='mx-5 mt-4'
-        onLayout={makeSectionLayoutHandler('calendar')}
+    <View className='flex-1'>
+      <ScrollView
+        ref={scrollRef}
+        bounces
+        className='flex-1'
+        contentContainerStyle={{ paddingBottom: STICKY_BAR_CLEARANCE }}
+        scrollEventThrottle={16}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[1]}
+        onScroll={handleScroll}
       >
-        <CalendarTabContent
+        <DetailHeroSection
+          daysTracking={daysTracking}
+          habit={habit}
+          isCompletedToday={isCompletedToday}
+          totalCompletions={totalCompletions}
+        />
+        <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
+        <HabitDetailSections
           completedDates={completedDates}
           habit={habit}
-          habitColor={habitColor}
           pendingToggleDate={pendingToggleDate}
           onDayPress={onDayPress}
+          onSectionLayout={onSectionLayout}
         />
-      </View>
+      </ScrollView>
 
-      {habit.createdAt ? (
-        <View
-          className='mx-5 mt-5'
-          onLayout={makeSectionLayoutHandler('strength')}
-        >
-          <ErrorBoundary>
-            <HabitStrengthSection
-              completedDates={completedDates}
-              habitColor={habit.color ?? habit.iconColor}
-              habitCreatedAt={habit.createdAt}
-              habitId={habit._id}
-              habitStrength={habit.strength}
-              progressEmojis={progressEmojis}
-            />
-          </ErrorBoundary>
-        </View>
-      ) : null}
-
-      <View className='mx-5 mt-5' onLayout={makeSectionLayoutHandler('goal')}>
-        <GoalTabContent habit={habit} />
-      </View>
-    </ScrollView>
+      <StickyCompleteBar
+        currentStreak={habit.currentStreak ?? 0}
+        isCompletedToday={isCompletedToday}
+        isToggling={pendingToggleDate !== null}
+        onToggle={() => onDayPress(getLocalDateString(), isCompletedToday)}
+      />
+    </View>
   );
 }
