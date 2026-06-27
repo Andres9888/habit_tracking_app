@@ -94,9 +94,6 @@ export interface StrengthChartProps {
  * Props for the StrengthStatsRow component.
  */
 export interface StrengthStatsRowProps {
-  /** Change since habit creation */
-  sinceStart: number;
-
   /** Change in the last month */
   lastMonth: number;
 

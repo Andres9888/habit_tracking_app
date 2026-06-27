@@ -38,7 +38,7 @@ export function GoalEmptyIntro() {
           fontWeight: fontWeights.medium,
         }}
       >
-        Pick a target — we'll celebrate every milestone.
+        66 days is the science-backed sweet spot.
       </Text>
       <Text
         className='mb-6 text-center'
@@ -48,7 +48,7 @@ export function GoalEmptyIntro() {
           lineHeight: 18,
         }}
       >
-        66 days is the science-backed sweet spot.
+        Pick a target — we'll celebrate every milestone.
       </Text>
     </>
   );

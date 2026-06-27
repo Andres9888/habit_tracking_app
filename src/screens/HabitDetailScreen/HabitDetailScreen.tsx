@@ -37,7 +37,6 @@ function HabitDetailScreenContent({
   const screenState = useHabitDetailScreenState({
     bestStreak: habit?.bestStreak ?? 0,
     currentStreak: habit?.currentStreak ?? 0,
-    habitCreatedAt: habit?.createdAt,
     habitId: habit?._id,
     tracking,
     visible,
@@ -107,7 +106,6 @@ function HabitDetailScreenContent({
                 />
                 <HabitDetailContent
                   completedDates={screenState.completedDates}
-                  daysTracking={screenState.daysTracking}
                   habit={{
                     ...habit,
                     bestStreak: screenState.bestStreak,

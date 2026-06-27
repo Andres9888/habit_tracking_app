@@ -63,8 +63,6 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
     colors.card,
     colors.primary[700]
   );
-  const title = `Aiming for ${goalDuration} ${goalDuration === 1 ? 'day' : 'days'}`;
-
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl'
@@ -73,8 +71,8 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
     >
       <View className='p-4'>
         <View className='mb-4 flex-row items-center justify-between'>
-          <Text style={{ ...typography.heading3, color: colors.text.primary }}>
-            {title}
+          <Text style={{ ...typography.overline, color: controlAccent }}>
+            Streak goal
           </Text>
           <AnimatedPressable
             accessibilityRole='button'
@@ -106,9 +104,11 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
         <ErrorBoundary>
           <GoalWhyAnchor habit={habit} />
           <SimpleStreakGoalHero
+            bestStreak={habit.bestStreak ?? 0}
             currentStreak={currentStreak}
             habitColor={habitColor}
             streakGoal={goalDuration}
+            onExtend={() => setAdjustOpen(true)}
           />
           <GoalAdjustSheet
             currentGoal={goalDuration}

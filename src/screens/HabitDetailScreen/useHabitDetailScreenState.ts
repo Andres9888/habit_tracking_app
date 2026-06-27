@@ -12,7 +12,6 @@ import { applyOptimisticToday } from './optimisticToday';
 interface UseHabitDetailScreenStateProps {
   bestStreak: number;
   currentStreak: number;
-  habitCreatedAt: number | undefined;
   habitId: Id<'habits'> | undefined;
   tracking: HabitTrackingEntry[];
   visible?: boolean;
@@ -21,7 +20,6 @@ interface UseHabitDetailScreenStateProps {
 export const useHabitDetailScreenState = ({
   bestStreak,
   currentStreak,
-  habitCreatedAt,
   habitId,
   tracking,
   visible: _visible,
@@ -75,21 +73,10 @@ export const useHabitDetailScreenState = ({
     optimisticToggle
   );
 
-  // Days tracking calculation
-  const daysTracking = useMemo(() => {
-    return habitCreatedAt
-      ? Math.max(
-          0,
-          Math.floor((Date.now() - habitCreatedAt) / (1000 * 60 * 60 * 24))
-        )
-      : 0;
-  }, [habitCreatedAt]);
-
   return {
     bestStreak: optimistic.bestStreak,
     completedDates,
     currentStreak: optimistic.currentStreak,
-    daysTracking,
     isCompletedToday: optimistic.isCompletedToday,
     pendingArchive,
     pendingDelete,

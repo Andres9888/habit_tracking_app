@@ -9,7 +9,6 @@ interface YearHeatmapSectionProps {
   habitCreatedAt?: number;
   habitId: Id<'habits'>;
   currentStreak?: number;
-  onDayPress?: (date: string, completed: boolean) => void;
   onNavigateToMonth?: (date: string) => void;
 }
 
@@ -21,12 +20,12 @@ export function YearHeatmapSection({
   habitCreatedAt,
   habitId,
   currentStreak = 0,
-  onDayPress,
   onNavigateToMonth,
 }: YearHeatmapSectionProps) {
-  const handleHeatmapDayPress = (date: string, completed: boolean) => {
+  // Year cells INSPECT + navigate only — never toggle. A ~6px cell is too small
+  // to safely write a completion; all toggling happens on the month grid below.
+  const handleHeatmapDayPress = (date: string) => {
     onNavigateToMonth?.(date);
-    onDayPress?.(date, completed);
   };
 
   return (

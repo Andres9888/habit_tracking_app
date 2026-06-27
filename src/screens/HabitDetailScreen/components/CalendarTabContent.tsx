@@ -44,7 +44,6 @@ export function CalendarTabContent({
           habitColor={habitColor}
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
-          onDayPress={onDayPress}
           onNavigateToMonth={navigateToMonth}
         />
       </ErrorBoundary>

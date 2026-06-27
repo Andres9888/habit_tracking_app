@@ -4,9 +4,8 @@
  * The centered hero for the Strength section:
  * - Large progress ring with the animated percentage
  * - Level name (Starting / Building / Developing / Strong / Automatic)
- *
- * The "X% to <next level>" goal-gradient hint lives on the StrengthProgressBar
- * below, so the hero stays a clean, proud focal point.
+ * - The "X% to <next level>" goal-gradient hint, riding with the proud focal
+ *   point so the section tells the progress story in one place.
  *
  * @example
  * ```tsx
@@ -51,6 +50,14 @@ export const StrengthHero = React.memo(function StrengthHero({
       >
         {current.label}
       </Text>
+      {journey.next ? (
+        <Text
+          className='mt-1 text-xs'
+          style={{ color: colors.text.secondary }}
+        >
+          {journey.pctToNext}% to {journey.next.label}
+        </Text>
+      ) : null}
     </View>
   );
 });

@@ -36,7 +36,6 @@ export interface HabitDetailScreenProps {
 
 export interface UseHabitDetailScreenStateReturn {
   completedDates: Set<string>;
-  daysTracking: number;
   isCompletedToday: boolean;
   pendingArchive: boolean;
   pendingDelete: boolean;
