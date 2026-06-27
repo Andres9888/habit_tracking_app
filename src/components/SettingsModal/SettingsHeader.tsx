@@ -26,15 +26,15 @@ export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
       }}
     >
       <View className='flex-row items-end justify-between'>
-        <View style={{ gap: 2 }}>
+        <View style={{ gap: 3 }}>
           <Text
             style={{
               fontFamily: fontFamilies.primary.text,
               fontSize: 10.5,
-              fontWeight: fontWeights.semibold,
-              letterSpacing: 2.4,
+              fontWeight: fontWeights.bold,
+              letterSpacing: 2,
               textTransform: 'uppercase',
-              color: themeColors.text.tertiary,
+              color: themeColors.primary[700],
             }}
           >
             Chain Day
@@ -42,9 +42,10 @@ export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
           <Text
             style={{
               fontFamily: fontFamilies.serif,
-              fontSize: 30,
+              fontSize: 29,
               fontWeight: fontWeights.semibold,
-              letterSpacing: -0.4,
+              letterSpacing: -0.5,
+              lineHeight: 32,
               color: themeColors.text.primary,
             }}
           >

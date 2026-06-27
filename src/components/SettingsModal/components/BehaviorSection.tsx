@@ -1,9 +1,4 @@
-import {
-  ArrowUpDown,
-  Calendar,
-  SlidersHorizontal,
-  Volume2,
-} from 'lucide-react-native';
+import { ArrowUpDown, SlidersHorizontal, Volume2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
@@ -23,8 +18,6 @@ interface BehaviorSectionProps {
   completionSoundType: SettingsContentProps['completionSoundType'];
   onChangeCompletionSoundEnabled: SettingsContentProps['onChangeCompletionSoundEnabled'];
   onChangeCompletionSoundType: SettingsContentProps['onChangeCompletionSoundType'];
-  stickyCalendarHeader: boolean;
-  onChangeStickyCalendarHeader: SettingsContentProps['onChangeStickyCalendarHeader'];
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
   onExportHabitsData?: SettingsContentProps['onExportHabitsData'];
@@ -71,15 +64,6 @@ export function BehaviorSection(p: BehaviorSectionProps) {
           onSelect={(v) => void p.onChangeCompletionSoundType(v)}
         />
       ) : null}
-      <SettingsRow
-        icon={<Calendar color={icons.calendarHeader.icon} size={iconSize} />}
-        iconBackgroundColor={icons.calendarHeader.bg}
-        label='Sticky month header'
-        subtitle='Month stays visible while scrolling'
-        type='toggle'
-        value={p.stickyCalendarHeader}
-        onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
-      />
       <HabitDataRows
         archivedHabitsCount={p.archivedHabitsCount}
         onExportHabitsData={p.onExportHabitsData}

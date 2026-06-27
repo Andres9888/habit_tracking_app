@@ -5,6 +5,7 @@ import ArchivedHabitsModal from '../../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../../SkeletonLoader';
 import { SettingsHeader } from '../SettingsHeader';
 import { AccountPage } from '../AccountPage';
+import { CalendarLookPage } from '../CalendarLookPage';
 import { SettingsContent } from '../SettingsContent';
 import type { HabitSortMode } from '../../../features/habits/types';
 import { buildSettingsContentProps } from './SettingsMainView.helpers';
@@ -44,6 +45,30 @@ export function SettingsMainView(props: SettingsMainViewProps) {
           onBack={() => props.setView('settings')}
           onClose={props.handleClose}
           onPremiumUpsell={props.onPremiumUpsell}
+        />
+      );
+      break;
+    }
+    case 'calendar': {
+      content = (
+        <CalendarLookPage
+          compactView={props.compactView}
+          dayShape={props.dayShape ?? 'square'}
+          habitCompletionIcon={props.habitCompletionIcon ?? 'chain'}
+          showGradientFill={props.showGradientFill}
+          showStreakConnections={props.showStreakConnections}
+          stickyCalendarHeader={props.stickyCalendarHeader ?? false}
+          onBack={() => props.setView('settings')}
+          onChangeDayShape={props.onChangeDayShape ?? (() => {})}
+          onChangeHabitCompletionIcon={
+            props.onChangeHabitCompletionIcon ?? (() => {})
+          }
+          onChangeShowGradientFill={props.setShowGradientFill}
+          onChangeShowStreakConnections={props.setShowStreakConnections}
+          onChangeStickyCalendarHeader={
+            props.onChangeStickyCalendarHeader ?? (() => {})
+          }
+          onClose={props.handleClose}
         />
       );
       break;

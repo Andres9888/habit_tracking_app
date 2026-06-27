@@ -28,13 +28,17 @@ function ProgressEmojiPickerComponent({
   value,
   onChange,
   fallback,
-  label,
   toggleRowStyle,
   expandedPanelStyle,
   customPreset,
+  expanded: controlledExpanded,
+  onToggleExpanded,
 }: ProgressEmojiPickerProps) {
   const reduceMotion = useReduceMotion();
-  const [expanded, setExpanded] = useState(false);
+  const [internalExpanded, setInternalExpanded] = useState(false);
+  const expanded = controlledExpanded ?? internalExpanded;
+  const toggleExpanded =
+    onToggleExpanded ?? (() => setInternalExpanded((v) => !v));
   const [editingSlot, setEditingSlot] = useState<StrengthLevelKey | null>(null);
   const { animatedStyle, handleLayout } = useProgressPickerAnimation(
     expanded,
@@ -64,10 +68,9 @@ function ProgressEmojiPickerComponent({
     <View>
       <ProgressEmojiToggleRow
         expanded={expanded}
-        label={label}
         resolved={resolved}
         toggleRowStyle={toggleRowStyle}
-        onToggle={() => setExpanded((v) => !v)}
+        onToggle={toggleExpanded}
       />
 
       <Animated.View

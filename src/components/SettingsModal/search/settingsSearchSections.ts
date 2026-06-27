@@ -7,28 +7,23 @@ export type SettingsSectionKey =
   | 'appearance'
   | 'behavior'
   | 'reminders'
+  | 'accessibility'
   | 'support';
 
 export const SETTINGS_SEARCH_SECTIONS: Record<SettingsSectionKey, string[]> = {
+  // The calendar-look knobs (shape / fill / connections / completion icon) now
+  // live on the Calendar look sub-page; 'Calendar look' is their search entry.
   appearance: [
     'Theme',
-    'Day marker shape',
-    'Gradient streak fill',
-    'Streak connections',
-    'Completion icon',
+    'Calendar look',
     'Default growth icons',
     'Compact habit cards',
   ],
   // Habits now also owns the data rows (Archived / Export) that used to live in
-  // a separate Data & Privacy section. Delete account moved to the Account page.
-  behavior: [
-    'Sort order',
-    'Completion sound',
-    'Sticky month header',
-    'Archived habits',
-    'Export habits data',
-  ],
+  // a separate Data & Privacy section. Sticky header moved to Calendar look.
+  behavior: ['Sort order', 'Completion sound', 'Archived habits', 'Export habits data'],
   reminders: ['Streak Reminders'],
+  accessibility: ['Dyslexia-friendly font'],
   support: [
     'Rate Chain Day',
     'Share with Friends',

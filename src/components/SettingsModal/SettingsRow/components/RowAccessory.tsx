@@ -1,8 +1,8 @@
-import { Switch, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { airy } from '@/theme/airyScale';
 import { typography, fontWeights } from '@/theme/typography';
+import { AnimatedToggle } from './AnimatedToggle';
 import { SettingsCountBadge } from '../../SettingsCountBadge';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
@@ -26,15 +26,11 @@ export function RowAccessory({
 }: RowAccessoryProps) {
   if (type === 'toggle') {
     return (
-      <Switch
-        accessibilityLabel={label}
-        ios_backgroundColor={colors.switchTrackFalse}
-        style={{ transform: [{ scale: airy.switchScale }] }}
-        thumbColor={colors.switchThumb}
-        trackColor={{
-          false: colors.switchTrackFalse,
-          true: colors.switchTrackTrue,
-        }}
+      <AnimatedToggle
+        label={label}
+        thumb={colors.switchThumb}
+        trackOff={colors.switchTrackFalse}
+        trackOn={colors.switchTrackTrue}
         value={value as boolean}
         onValueChange={onToggle}
       />

@@ -23,7 +23,6 @@ export const airy = {
   tileSize: AIRY_SCALE ? 42 : 40,
   tileRadius: AIRY_SCALE ? 13 : 12,
   rowPaddingV: AIRY_SCALE ? 20 : 16,
-  switchScale: 1, // native — the 1.1 scale-up clipped toggles on wide screens
   // Home list stays DENSE (height/padding) — the daily glanceable surface.
   habitCardMinHeight: 88,
   habitCardPadding: 16,
