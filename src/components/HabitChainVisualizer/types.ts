@@ -19,6 +19,9 @@ export interface HabitDayToggleProps {
   completionIcon: CompletionIcon;
   completed: boolean;
   strengthPercent?: number;
+  /** The date this slot currently shows. Drives a no-animation reset when the
+   *  position-keyed slot is reused for a different date (week navigation). */
+  dateString: string;
   disabled: boolean;
   isToday: boolean;
   missed?: boolean;

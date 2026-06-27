@@ -24,7 +24,7 @@ interface ConnectorArmsProps {
   reduceMotion?: boolean;
 }
 
-export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
+const ConnectorArmsComponent: React.FC<ConnectorArmsProps> = ({
   connectLeft,
   connectRight,
   streakConnectorColor,
@@ -96,3 +96,5 @@ export const ConnectorArms: React.FC<ConnectorArmsProps> = ({
     </>
   );
 };
+
+export const ConnectorArms = React.memo(ConnectorArmsComponent);

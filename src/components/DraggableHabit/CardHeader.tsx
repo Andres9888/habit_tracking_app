@@ -36,7 +36,7 @@ interface CardHeaderProps {
   streak: number;
 }
 
-export function CardHeader({
+function CardHeaderComponent({
   accentColor,
   bestStreak,
   colors,
@@ -99,3 +99,5 @@ export function CardHeader({
     />
   );
 }
+
+export const CardHeader = React.memo(CardHeaderComponent);

@@ -15,11 +15,13 @@ const forceValue = (animatedValue: Animated.Value, value: number) => {
 interface UseHabitDayToggleAnimationsParams {
   completed: boolean;
   isToday: boolean;
+  dateString: string;
 }
 
 export const useHabitDayToggleAnimations = ({
   completed,
   isToday,
+  dateString,
 }: UseHabitDayToggleAnimationsParams) => {
   // Initialize animated values. We use refs to persist across renders.
   // The completion value controls icon opacity and scale.
@@ -29,6 +31,7 @@ export const useHabitDayToggleAnimations = ({
   // Warm amber "forge" flash that fades out on the false → true transition.
   const forgeFlash = useRef(new Animated.Value(0)).current;
   const prevCompletedRef = useRef<boolean | null>(null);
+  const prevDateRef = useRef<string | null>(null);
   const mountTimeRef = useRef(Date.now());
 
   // Combine scale values using Animated.multiply
@@ -38,16 +41,20 @@ export const useHabitDayToggleAnimations = ({
     []
   );
 
-  // Sync animated value immediately before paint to prevent flicker.
-  // This handles cases where the component renders with a completed state
-  // but the animated value was initialized before the final props arrived.
+  // Snap visuals to the current date's state immediately before paint — with no
+  // animation — on first mount AND whenever this position-keyed slot is reused
+  // for a different date (week navigation; the chain is keyed by position, not
+  // date, so instances persist across weeks). Updating prevCompletedRef here
+  // makes the toggle effect below treat the new date as its baseline, so it does
+  // not replay a completion / forge-flash animation while you navigate weeks.
   useLayoutEffect(() => {
-    if (prevCompletedRef.current === null) {
-      const initialValue = completed ? 1 : 0;
-      forceValue(completion, initialValue);
+    if (prevDateRef.current !== dateString) {
+      forceValue(completion, completed ? 1 : 0);
       forceValue(forgeFlash, 0);
+      prevCompletedRef.current = completed;
+      prevDateRef.current = dateString;
     }
-  }, [completed, completion, forgeFlash]);
+  }, [completed, dateString, completion, forgeFlash]);
 
   useEffect(() => {
     const prevCompleted = prevCompletedRef.current;

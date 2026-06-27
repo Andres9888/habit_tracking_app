@@ -52,7 +52,7 @@ function ChainDayListComponent(props: ChainDayListProps) {
           props.isCompleted(index + 1);
         return (
           <ChainDayItem
-            key={dateString}
+            key={index}
             accentColor={accent}
             accessibilityHint={
               disabled

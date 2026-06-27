@@ -68,6 +68,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
       completed={completed}
       completionIcon={completionIcon}
       strengthPercent={strengthPercent}
+      dateString={dateString}
       disabled={disabled}
       isToday={isToday}
       missed={missed}

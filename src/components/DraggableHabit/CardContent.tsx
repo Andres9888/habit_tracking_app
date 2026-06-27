@@ -9,7 +9,7 @@
  * 5. {@link WeekCompleteIndicator} — "✨ Perfect Week ✨" badge
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View } from 'react-native';
 import { HabitChainVisualizer } from '../HabitChainVisualizer';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -31,9 +31,9 @@ interface CardContentProps extends DraggableHabitCardProps {
 export function CardContent(props: CardContentProps) {
   const { colors: themeColors } = useThemeColors();
   const compact = props.isCompactMode;
-  const progressEmojis = resolveProgressEmojis(
-    props.habit.progressEmojis,
-    props.userProgressEmojis
+  const progressEmojis = useMemo(
+    () => resolveProgressEmojis(props.habit.progressEmojis, props.userProgressEmojis),
+    [props.habit.progressEmojis, props.userProgressEmojis]
   );
   return (
     <>

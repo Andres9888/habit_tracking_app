@@ -30,9 +30,11 @@ export const useDraggableHabitState = ({
 }: DraggableHabitStateOptions) => {
   const { emoji, name, accentColor } = useDraggableHabitLogic(habit);
 
+  // Week-independent state. Kept OFF the weekStatus dependency so that
+  // navigating the calendar week does not give `colors`/`strengthPercent` new
+  // identities — otherwise the memoized CardHeader/StrengthProgressBar would
+  // re-render on every week change even though nothing they show has changed.
   const derivedState = useMemo(() => {
-    const weekCompleteCount = weekStatus.filter((s) => s === 'done').length;
-    const isWeekComplete = weekCompleteCount === 7;
     const bestStreak = habit.bestStreak || 0;
     const isNewPersonalRecord =
       previousStreak !== undefined &&
@@ -45,15 +47,21 @@ export const useDraggableHabitState = ({
       bestStreak,
       colors,
       isNewPersonalRecord,
-      isWeekComplete,
       strengthPercent,
     };
-  }, [habit, previousStreak, streak, weekStatus]);
+  }, [habit, previousStreak, streak]);
+
+  // Only the perfect-week badge depends on the visible week.
+  const isWeekComplete = useMemo(
+    () => weekStatus.filter((s) => s === 'done').length === 7,
+    [weekStatus]
+  );
 
   return {
     accentColor,
     emoji,
     name,
+    isWeekComplete,
     ...derivedState,
   };
 };

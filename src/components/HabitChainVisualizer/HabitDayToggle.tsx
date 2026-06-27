@@ -28,6 +28,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   completionIcon,
   completed,
   strengthPercent,
+  dateString,
   disabled,
   isToday,
   missed = false,
@@ -35,7 +36,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   shape,
 }) => {
   const { completion, buttonScale, combinedScale, forgeFlash } =
-    useHabitDayToggleAnimations({ completed, isToday });
+    useHabitDayToggleAnimations({ completed, isToday, dateString });
   const { handlePressIn, handlePressOut, handlePress } =
     useHabitDayToggleHandlers({ buttonScale, completed, onPress });
 
