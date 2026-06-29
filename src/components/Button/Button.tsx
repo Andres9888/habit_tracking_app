@@ -33,6 +33,7 @@ export function Button({
   onPress,
   accessibilityLabel,
   accessibilityHint,
+  hitSlop,
   ...pressableProps
 }: ButtonProps) {
   const theme = useAppTheme();
@@ -55,6 +56,13 @@ export function Button({
 
   const disabledStyles: ViewStyle = disabled || loading ? { opacity: 0.5 } : {};
 
+  // Expand touch target to Apple HIG 44pt minimum for sub-44pt buttons
+  // (small size = 32pt, icon variant). Consumer-provided hitSlop wins.
+  const defaultHitSlop =
+    config.height < 44
+      ? { bottom: 8, left: 8, right: 8, top: 8 }
+      : undefined;
+
   return (
     <AnimatedPressable
       accessible
@@ -63,6 +71,7 @@ export function Button({
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: disabled || loading }}
       disabled={disabled || loading}
+      hitSlop={hitSlop ?? defaultHitSlop}
       {...focusHandlers}
       style={[
         animatedStyle,

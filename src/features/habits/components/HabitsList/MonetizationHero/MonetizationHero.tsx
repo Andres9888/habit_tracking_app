@@ -5,8 +5,6 @@ import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
 import { SHADOW_OPACITY } from '../../../../../constants';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
 export function MonetizationHero({
   freeHabitLimit, habitSlotsUsed, hasReachedHabitLimit, onUpgradePress, reduceMotion = false,
 }: MonetizationHeroProps) {
@@ -43,13 +41,14 @@ export function MonetizationHero({
         </Text>
       </View>
       <View className='flex-row items-center gap-3'>
-        <AnimatedPressable
-          accessibilityHint='Start your 7-day free trial'
-          accessibilityLabel='Upgrade to premium for unlimited habits'
-          accessibilityRole='button'
-          className='flex-1 items-center rounded-full px-5 py-3'
-          style={({ pressed }: { pressed: boolean }) => [
-            {
+        <Animated.View className='flex-1' style={ctaPulseStyle}>
+          <Pressable
+            accessibilityHint='Start your 7-day free trial'
+            accessibilityLabel='Upgrade to premium for unlimited habits'
+            accessibilityRole='button'
+            className='items-center rounded-full px-5 py-3'
+            hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
+            style={({ pressed }) => ({
               backgroundColor: colors.indigo[700],
               elevation: 6,
               opacity: pressed ? 0.8 : 1,
@@ -57,15 +56,14 @@ export function MonetizationHero({
               shadowOffset: { height: 8, width: 0 },
               shadowOpacity: 0.32,
               shadowRadius: 16,
-            },
-            ctaPulseStyle,
-          ]}
-          onPress={onUpgradePress}
-        >
-          <Text className='text-base font-semibold leading-[22px] tracking-wide text-white'>
-            Start Free Trial {'\u2192'}
-          </Text>
-        </AnimatedPressable>
+            })}
+            onPress={onUpgradePress}
+          >
+            <Text className='text-base font-semibold leading-[22px] tracking-wide text-white'>
+              Start Free Trial {'\u2192'}
+            </Text>
+          </Pressable>
+        </Animated.View>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
           <Animated.Text
             style={{ color: colors.indigo[200] }}

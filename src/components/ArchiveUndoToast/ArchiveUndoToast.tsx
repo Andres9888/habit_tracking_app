@@ -66,6 +66,7 @@ export function ArchiveUndoToast({
               <Pressable
                 accessibilityLabel='Undo archive'
                 accessibilityRole='button'
+                hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
                 style={({ pressed }) => [
                   styles.undoButton,
                   pressed && styles.undoButtonPressed,

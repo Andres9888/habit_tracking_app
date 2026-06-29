@@ -33,6 +33,7 @@ export function ToastContent({ itemName, onUndo }: ToastContentProps) {
       <Pressable
         accessibilityLabel='Undo delete'
         accessibilityRole='button'
+        hitSlop={{ bottom: 10, left: 10, right: 10, top: 10 }}
         style={({ pressed }) => [
           styles.undoButton,
           pressed && styles.undoButtonPressed,
