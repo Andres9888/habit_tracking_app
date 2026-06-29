@@ -2,6 +2,7 @@
 import { Pressable, Text, View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { shadows } from '@/theme/spacing';
 import { fontWeights, typography } from '@/theme/typography';
 import { StrengthCurveCtaSparkline } from './StrengthCurveCtaSparkline';
 import { TIER_COPY } from './StrengthCurvePicker.copy';
@@ -38,11 +39,7 @@ export function StrengthCurveCtaCard({ mode, onPress }: Props) {
           marginTop: 14,
           paddingHorizontal: 14,
           paddingVertical: 12,
-          shadowColor: '#1F1B16',
-          shadowOffset: { height: 3, width: 0 },
-          shadowOpacity: 0.05,
-          shadowRadius: 8,
-          elevation: 2,
+          ...shadows.card,
         }}
       >
         <View style={{ flex: 1, minHeight: 40, overflow: 'hidden', position: 'relative' }}>

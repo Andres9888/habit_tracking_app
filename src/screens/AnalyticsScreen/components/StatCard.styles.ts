@@ -3,7 +3,7 @@
  */
 import { StyleSheet } from 'react-native';
 import { typography } from '../../../theme/typography';
-import { borderRadius, spacing } from '../../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   skeletonSubtitle: {
@@ -24,15 +24,12 @@ export const styles = StyleSheet.create({
     width: 100,
   },
   statCard: {
+    ...shadows.card,
     borderRadius: borderRadius.card,
-    elevation: 3,
     flex: 1,
     margin: spacing.sm,
     minWidth: '45%',
     padding: spacing.lg,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
   },
   statCardEmoji: {
     fontSize: typography.heading1.fontSize,

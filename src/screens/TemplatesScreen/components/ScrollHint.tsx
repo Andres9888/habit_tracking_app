@@ -26,9 +26,9 @@ export function ScrollHint({
   scrollY,
   visible,
 }: ScrollHintProps) {
-  const { colors, isDark } = useThemeColors();
+  const { colors } = useThemeColors();
   const bg = colors.background;
-  const bgOpaque = bg + (isDark ? 'F5' : 'F5');
+  const bgOpaque = bg + 'F5';
   const bgTransparent = bg + '00';
   const chipBg = colors.card + 'E6';
 

@@ -97,7 +97,9 @@ export function SocialSignInButton({
       </View>
       <Text
         className='text-base font-semibold'
-        style={{ color: provider === 'google' ? colors.text.primary : '#FFFFFF' }}
+        // Google button bg is brand-fixed white in all themes, so its label must
+        // stay dark — theme text color would vanish (white-on-white) in dark mode.
+        style={{ color: provider === 'google' ? '#1F1F1F' : '#FFFFFF' }}
       >
         {isLoading ? 'Signing in...' : config.label}
       </Text>
