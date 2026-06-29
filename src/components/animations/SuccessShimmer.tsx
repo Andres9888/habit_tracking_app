@@ -12,6 +12,7 @@ import { StyleSheet } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  useReducedMotion,
   withTiming,
   withDelay,
   runOnJS,
@@ -33,9 +34,18 @@ interface SuccessShimmerProps {
 function SuccessShimmerComponent({ active, onComplete }: SuccessShimmerProps) {
   const translateX = useSharedValue(-120);
   const opacity = useSharedValue(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     if (active) {
+      // Respect reduced-motion: skip the sweep entirely, but still resolve
+      // so any completion-dependent parent state continues.
+      if (reduceMotion) {
+        opacity.value = 0;
+        onComplete?.();
+        return;
+      }
+
       // Reset
       translateX.value = -120;
       opacity.value = 0;
@@ -55,7 +65,7 @@ function SuccessShimmerComponent({ active, onComplete }: SuccessShimmerProps) {
         })
       );
     }
-  }, [active, translateX, opacity, onComplete]);
+  }, [active, translateX, opacity, onComplete, reduceMotion]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

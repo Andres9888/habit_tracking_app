@@ -8,6 +8,7 @@ import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
+import { HapticPatterns } from '../../../utils/haptics/patterns';
 import { actionStyles } from '../HabitCard.actionStyles';
 
 interface SwipeActionsProps {
@@ -56,6 +57,7 @@ export const SwipeActions = memo(function SwipeActions({
           { backgroundColor: theme.custom.colors.error },
         ]}
         onPress={() => {
+          void HapticPatterns.warning();
           translateX.value = withSpring(0);
           onDelete?.();
         }}
