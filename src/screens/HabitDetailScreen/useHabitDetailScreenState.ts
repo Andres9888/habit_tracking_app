@@ -1,17 +1,22 @@
 import { getLocalDateString } from '@/utils/getLocalDateString';
 /**
- * useHabitDetailScreenState - State management for the habit detail screen
+ * useHabitDetailScreenState - State management for the habit detail screen.
+ *
+ * Completion, streak, and totals are derived from the SAME merged source the
+ * habit card uses: server tracking overlaid with the shared optimistic store
+ * (`pendingToggles`). This keeps the detail in lock-step with the card and lets
+ * the calendar + hero react instantly to a toggle, then self-reconcile.
  */
 
 import { useMemo, useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
-import { useOptimisticToggle } from '../../lib/optimistic/hooks/useOptimisticState';
-import { applyOptimisticToday } from './optimisticToday';
+import { buildCompletedDatesByHabit } from '../../features/habits/hooks/useHabitsTracking.helpers';
+import { useOptimisticStore } from '../../lib/optimistic';
+import { computeCurrentStreakFromDates } from '../../utils/streak';
 
 interface UseHabitDetailScreenStateProps {
   bestStreak: number;
-  currentStreak: number;
   habitId: Id<'habits'> | undefined;
   tracking: HabitTrackingEntry[];
   visible?: boolean;
@@ -19,7 +24,6 @@ interface UseHabitDetailScreenStateProps {
 
 export const useHabitDetailScreenState = ({
   bestStreak,
-  currentStreak,
   habitId,
   tracking,
   visible: _visible,
@@ -33,23 +37,26 @@ export const useHabitDetailScreenState = ({
     null
   );
 
-  // Today's date
   const today = useMemo(() => getLocalDateString(), []);
+  const todayDate = useMemo(() => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }, []);
 
-  // Create a stable string key for completed dates to prevent unnecessary re-renders
-  // when tracking array reference changes but content is the same
+  const { pendingToggles } = useOptimisticStore();
+
+  // Stable string key so `completedDates` keeps a stable identity across
+  // unrelated store changes and in-modal month navigation (protects memoized
+  // calendar grids from churn).
   const completedDatesKey = useMemo(() => {
-    if (!habitId || !tracking || !Array.isArray(tracking)) return '';
-    const dates = tracking
-      .filter((entry) => entry && entry.habitId === habitId && entry.completed)
-      .map((entry) => entry.date)
-      .filter((date): date is string => typeof date === 'string');
-    if (dates.length === 0) return '';
-    return dates.sort().join(',');
-  }, [habitId, tracking]);
+    if (!habitId) return '';
+    const byHabit = buildCompletedDatesByHabit(tracking ?? [], pendingToggles);
+    const dates = byHabit.get(habitId);
+    if (!dates || dates.size === 0) return '';
+    return [...dates].sort().join(',');
+  }, [habitId, tracking, pendingToggles]);
 
-  // Completed dates set - only recalculates when the actual dates change
-  // Note: ''.split(',') returns [''] not [], so we must check for empty string first
   const completedDates = useMemo(() => {
     if (!completedDatesKey) {
       return new Set<string>();
@@ -57,33 +64,22 @@ export const useHabitDetailScreenState = ({
     return new Set(completedDatesKey.split(','));
   }, [completedDatesKey]);
 
-  // Overlay any pending optimistic toggle for today so the hero (Done button,
-  // streak, total) reacts instantly like the calendar, then self-reconciles.
-  const optimisticToggle = useOptimisticToggle(
-    (habitId ?? '') as Id<'habits'>,
-    today
-  );
-  const optimistic = applyOptimisticToday(
-    {
-      bestStreak,
-      completedToday: completedDates.has(today),
-      currentStreak,
-      totalCompletions: completedDates.size,
-    },
-    optimisticToggle
+  const currentStreak = useMemo(
+    () => computeCurrentStreakFromDates(completedDates, todayDate),
+    [completedDates, todayDate]
   );
 
   return {
-    bestStreak: optimistic.bestStreak,
+    bestStreak: Math.max(bestStreak, currentStreak),
     completedDates,
-    currentStreak: optimistic.currentStreak,
-    isCompletedToday: optimistic.isCompletedToday,
+    currentStreak,
+    isCompletedToday: completedDates.has(today),
     pendingArchive,
     pendingDelete,
     pendingToggleDate,
     setPendingToggleDate,
     setPendingArchive,
     setPendingDelete,
-    totalCompletions: optimistic.totalCompletions,
+    totalCompletions: completedDates.size,
   };
 };

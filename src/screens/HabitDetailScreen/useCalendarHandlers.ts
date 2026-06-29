@@ -26,6 +26,15 @@ interface UseCalendarHandlersProps {
   setPendingArchive: (pending: boolean) => void;
   setPendingDelete: (pending: boolean) => void;
   setPendingToggleDate: (date: string | null) => void;
+  /**
+   * Optimistic toggle from the modal host (writes the shared `pendingToggles`
+   * store) so the detail and the habit card stay in sync. Falls back to the raw
+   * timezone-aware mutation when absent (e.g. standalone tests).
+   */
+  toggleHabit?: (args: {
+    date: string;
+    habitId: Id<'habits'>;
+  }) => void | Promise<unknown>;
 }
 
 export const useCalendarHandlers = ({
@@ -36,8 +45,10 @@ export const useCalendarHandlers = ({
   setPendingArchive,
   setPendingDelete,
   setPendingToggleDate,
+  toggleHabit,
 }: UseCalendarHandlersProps) => {
-  const toggleHabitMutation = useToggleHabitWithTimezone();
+  const rawToggleMutation = useToggleHabitWithTimezone();
+  const toggleHabitMutation = toggleHabit ?? rawToggleMutation;
   const togglingRef = useRef(false);
 
   const swipeActions = useSwipeActions({
@@ -70,7 +81,7 @@ export const useCalendarHandlers = ({
       });
       const newState = wasCompleted ? 'marked incomplete' : 'marked complete';
 
-      void toggleHabitMutation({ date, habitId: habit._id })
+      void Promise.resolve(toggleHabitMutation({ date, habitId: habit._id }))
         .then(() => {
           const announcement = `${habit.name} on ${dateFormatted} ${newState}.`;
           if (__DEV__) console.log('A11y announcement:', announcement);

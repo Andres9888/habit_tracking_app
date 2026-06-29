@@ -30,13 +30,13 @@ function HabitDetailScreenContent({
   onClose,
   onDelete,
   onEdit,
+  toggleHabit,
   tracking = [],
   visible,
 }: HabitDetailScreenProps) {
   const { colors } = useThemeColors();
   const screenState = useHabitDetailScreenState({
     bestStreak: habit?.bestStreak ?? 0,
-    currentStreak: habit?.currentStreak ?? 0,
     habitId: habit?._id,
     tracking,
     visible,
@@ -49,6 +49,7 @@ function HabitDetailScreenContent({
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
     setPendingToggleDate: screenState.setPendingToggleDate,
+    toggleHabit,
   });
   const handleEdit = () => {
     if (habit) onEdit?.(habit);

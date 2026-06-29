@@ -1,7 +1,10 @@
 /* eslint-disable max-lines */
 
+import { useMemo } from 'react';
 import { Modal, View, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useOptimisticStore } from '../../lib/optimistic';
+import { applyPendingTogglesToTracking } from '../../features/habits/hooks/applyPendingTogglesToTracking';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { StatsCard } from './StatsCard';
 import { ActivityLog } from './ActivityLog';
@@ -27,18 +30,31 @@ export default function HabitCalendarModal({
   onOpenMotivationTab,
 }: HabitCalendarModalProps) {
   const { colors } = useThemeColors();
+  // Overlay the shared optimistic store so the modal's cells, today badge, and
+  // stats react instantly to a toggle and stay in sync with the card + detail.
+  const { pendingToggles } = useOptimisticStore();
+  const mergedTracking = useMemo(
+    () =>
+      applyPendingTogglesToTracking(tracking, pendingToggles, (id, date, completed) => ({
+        _creationTime: 0,
+        completed,
+        date,
+        habitId: id as Id<'habits'>,
+      })),
+    [tracking, pendingToggles]
+  );
   const state = useHabitCalendarModal({
     habit,
     onClose,
     onOpenMotivationTab,
     toggleHabit,
-    tracking,
+    tracking: mergedTracking,
   });
   const isStickyCalendarHeader = false;
   const showStickyHeader = Boolean(isStickyCalendarHeader);
   const calendarViewState = useHabitCalendarViewLogic({
-    habitId: habit?._id ?? tracking[0]?.habitId ?? ('' as Id<'habits'>),
-    tracking,
+    habitId: habit?._id ?? mergedTracking[0]?.habitId ?? ('' as Id<'habits'>),
+    tracking: mergedTracking,
   });
 
   if (!state.isValid || !habit) return null;
@@ -120,13 +136,13 @@ export default function HabitCalendarModal({
               habitId={habit._id}
               showHeader={!showStickyHeader}
               toggleHabit={toggleHabit}
-              tracking={tracking}
+              tracking={mergedTracking}
             />
           ) : (
             <HeatmapCalendar
               habitId={habit._id}
               monthsToShow={6}
-              tracking={tracking}
+              tracking={mergedTracking}
             />
           )}
 

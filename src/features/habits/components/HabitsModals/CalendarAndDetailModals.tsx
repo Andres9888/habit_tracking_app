@@ -87,6 +87,7 @@ export function CalendarAndDetailModals(props: CalendarAndDetailModalsProps) {
           }}
           onOpenCalendar={openHabitCalendar}
           onPause={openPauseModal}
+          toggleHabit={handleToggleHabit}
         />
       </ErrorBoundary>
     </>

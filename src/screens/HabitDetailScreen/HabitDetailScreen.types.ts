@@ -30,12 +30,19 @@ export interface HabitDetailScreenProps {
   onEdit?: (habit: Habit) => void;
   onOpenCalendar?: (habit: Habit) => void;
   onPause?: (habitId: Id<'habits'>) => void;
+  /** Optimistic toggle from the modal host; keeps detail + card in sync. */
+  toggleHabit?: (args: {
+    date: string;
+    habitId: Id<'habits'>;
+  }) => void | Promise<unknown>;
   tracking?: HabitTrackingEntry[];
   visible: boolean;
 }
 
 export interface UseHabitDetailScreenStateReturn {
+  bestStreak: number;
   completedDates: Set<string>;
+  currentStreak: number;
   isCompletedToday: boolean;
   pendingArchive: boolean;
   pendingDelete: boolean;
@@ -43,7 +50,5 @@ export interface UseHabitDetailScreenStateReturn {
   setPendingArchive: (pending: boolean) => void;
   setPendingDelete: (pending: boolean) => void;
   setPendingToggleDate: (date: string | null) => void;
-  strengthPercent: number;
-  today: string;
   totalCompletions: number;
 }
