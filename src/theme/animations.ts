@@ -72,6 +72,9 @@ export const durations = {
   /** Stagger delay per item (max 5 items) */
   stagger: 60,
 
+  /** Single step of a sparkle/icon wiggle (e.g. -5°→5°→0°) */
+  wiggle: 60,
+
   /** Toast auto-dismiss */
   toast: 5000,
 } as const;

@@ -17,6 +17,7 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 import { SPRING_CONFIGS } from '../../../../utils/animations/helpers';
+import { durations } from '../../../../theme/animations';
 import { HapticPatterns } from '../../../../utils/haptics';
 
 export type { CelebrationAnimStyles } from './useCelebrationAnimations';
@@ -96,9 +97,9 @@ export function useBarAnimations() {
       'worklet';
       templatesScale.value = withSpring(ICON_SCALE, SPRING);
       templatesRotate.value = withSequence(
-        withTiming(-5, { duration: 60 }),
-        withTiming(5, { duration: 60 }),
-        withTiming(0, { duration: 50 })
+        withTiming(-5, { duration: durations.wiggle }),
+        withTiming(5, { duration: durations.wiggle }),
+        withTiming(0, { duration: durations.wiggle })
       );
       runOnJS(fireTapHaptic)();
     },

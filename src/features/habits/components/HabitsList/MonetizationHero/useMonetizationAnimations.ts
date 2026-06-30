@@ -22,6 +22,11 @@ interface UseMonetizationAnimationsOptions {
   reduceMotion: boolean;
 }
 
+// Bespoke per-track timings for this hero (ms) — named to avoid magic numbers.
+const PROGRESS_FILL_MS = 420;
+const PULSE_HALF_CYCLE_MS = 720;
+const SHIMMER_HALF_CYCLE_MS = 960;
+
 export function useMonetizationAnimations({
   freeHabitLimit,
   habitSlotsUsed,
@@ -47,7 +52,7 @@ export function useMonetizationAnimations({
       return;
     }
     progress.value = withTiming(targetWidth, {
-      duration: 420,
+      duration: PROGRESS_FILL_MS,
       easing: Easing.out(Easing.cubic),
     });
   }, [progress, trackWidth, usageRatio, reduceMotion]);
@@ -61,11 +66,11 @@ export function useMonetizationAnimations({
     ctaPulse.value = withRepeat(
       withSequence(
         withTiming(1.04, {
-          duration: 720,
+          duration: PULSE_HALF_CYCLE_MS,
           easing: Easing.inOut(Easing.ease),
         }),
         withTiming(1, {
-          duration: 720,
+          duration: PULSE_HALF_CYCLE_MS,
           easing: Easing.inOut(Easing.ease),
         })
       ),
@@ -83,11 +88,11 @@ export function useMonetizationAnimations({
     shimmer.value = withRepeat(
       withSequence(
         withTiming(0.9, {
-          duration: 960,
+          duration: SHIMMER_HALF_CYCLE_MS,
           easing: Easing.inOut(Easing.ease),
         }),
         withTiming(0.4, {
-          duration: 960,
+          duration: SHIMMER_HALF_CYCLE_MS,
           easing: Easing.inOut(Easing.ease),
         })
       ),
