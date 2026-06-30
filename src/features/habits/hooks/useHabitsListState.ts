@@ -9,7 +9,14 @@
  */
 
 import { addDays, format, parse } from 'date-fns';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
@@ -355,10 +362,16 @@ export function useHabitsListState(): HabitsListState {
           updatedAt,
         };
 
-        setPredictedStrengths((previousPredictions) => {
-          const nextPredictions = new Map(previousPredictions);
-          nextPredictions.set(args.habitId, prediction);
-          return nextPredictions;
+        // The predicted-strength fill is a non-urgent, cosmetic update. Marking
+        // it as a transition keeps it off the tap's critical path so the urgent
+        // dot-flip (optimistic store) and open-detail navigation aren't blocked
+        // by the all-habits map + re-sort it triggers.
+        startTransition(() => {
+          setPredictedStrengths((previousPredictions) => {
+            const nextPredictions = new Map(previousPredictions);
+            nextPredictions.set(args.habitId, prediction);
+            return nextPredictions;
+          });
         });
 
         const timers = cleanupTimersRef.current;
@@ -369,18 +382,20 @@ export function useHabitsListState(): HabitsListState {
           args.habitId,
           setTimeout(() => {
             timers.delete(args.habitId);
-            setPredictedStrengths((previousPredictions) => {
-              const currentPrediction = previousPredictions.get(args.habitId);
-              if (
-                !currentPrediction ||
-                currentPrediction.updatedAt !== updatedAt
-              ) {
-                return previousPredictions;
-              }
+            startTransition(() => {
+              setPredictedStrengths((previousPredictions) => {
+                const currentPrediction = previousPredictions.get(args.habitId);
+                if (
+                  !currentPrediction ||
+                  currentPrediction.updatedAt !== updatedAt
+                ) {
+                  return previousPredictions;
+                }
 
-              const nextPredictions = new Map(previousPredictions);
-              nextPredictions.delete(args.habitId);
-              return nextPredictions;
+                const nextPredictions = new Map(previousPredictions);
+                nextPredictions.delete(args.habitId);
+                return nextPredictions;
+              });
             });
           }, STRENGTH_PREDICTION_TTL_MS)
         );

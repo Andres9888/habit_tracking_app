@@ -17,6 +17,7 @@ export type StoreListener = () => void;
 export interface OptimisticStoreAPI {
   subscribe(listener: StoreListener): () => void;
   getSnapshot(): OptimisticStore;
+  getPendingTogglesSnapshot(): Map<string, boolean>;
   addToggle(payload: ToggleOperationPayload): string;
   addArchive(payload: ArchiveOperationPayload): string;
   addReorder(payload: ReorderOperationPayload): string;

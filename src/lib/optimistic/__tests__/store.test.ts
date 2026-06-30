@@ -253,6 +253,33 @@ describe('OptimisticStore', () => {
     });
   });
 
+  describe('getPendingTogglesSnapshot (stable slice)', () => {
+    it('keeps a stable reference across unrelated ops, new reference on toggle', () => {
+      const before = optimisticStore.getPendingTogglesSnapshot();
+
+      // An archive op does not touch pendingToggles → reference must be stable,
+      // so `usePendingToggles` consumers don't re-render.
+      const archiveOp = optimisticStore.addArchive({
+        habitId: mockHabitId('slice_archive'),
+        habitName: 'Test',
+        toArchived: true,
+      });
+      expect(optimisticStore.getPendingTogglesSnapshot()).toBe(before);
+
+      // A toggle op changes pendingToggles → reference must change.
+      optimisticStore.addToggle({
+        habitId: mockHabitId('slice_toggle'),
+        date: '2026-01-22',
+        toCompleted: true,
+      });
+      const afterToggle = optimisticStore.getPendingTogglesSnapshot();
+      expect(afterToggle).not.toBe(before);
+      expect(afterToggle.get('slice_toggle:2026-01-22')).toBe(true);
+
+      optimisticStore.confirm(archiveOp);
+    });
+  });
+
   describe('Operation ID uniqueness', () => {
     it('should generate unique operation IDs', () => {
       const ids = new Set<string>();

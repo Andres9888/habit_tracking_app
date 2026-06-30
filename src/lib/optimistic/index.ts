@@ -25,6 +25,7 @@ export { optimisticStore } from './store';
 
 export {
   useOptimisticStore,
+  usePendingToggles,
   useHasPendingOperations,
   useOptimisticToggle,
   useOptimisticArchive,

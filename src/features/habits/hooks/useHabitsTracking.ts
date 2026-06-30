@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import { api } from '../../../../convex/_generated/api';
 import { useStableQuery } from '../../../lib/useStableQuery';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { useOptimisticStore } from '../../../lib/optimistic';
+import { usePendingToggles } from '../../../lib/optimistic';
 import type { HabitStatus } from '../types';
 import {
   buildCompletedDatesByHabit,
@@ -31,7 +31,7 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     [windowStart, windowEnd]
   );
   const tracking = useStableQuery(api.habits.getTracking, queryArgs) ?? [];
-  const { pendingToggles } = useOptimisticStore();
+  const pendingToggles = usePendingToggles();
   const completedDatesByHabit = useMemo(() => {
     return buildCompletedDatesByHabit(tracking, pendingToggles);
   }, [pendingToggles, tracking]);
