@@ -20,6 +20,7 @@ import {
   matchPresetId,
   PROGRESS_EMOJI_PRESETS,
   resolveProgressEmojis,
+  STRENGTH_LEVEL_KEYS,
 } from '@/utils/progressEmojis';
 import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { StrengthCurvePickerModal } from '@/screens/StrengthCurvePicker';
@@ -94,6 +95,7 @@ export function AdvancedOptionsSection({
       ? 'Custom'
       : (PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ??
         'Custom');
+  const emojiStrip = STRENGTH_LEVEL_KEYS.map((k) => resolvedEmojis[k]).join(' ');
   const streakSubtitle =
     streakGoal > 0 ? `${streakGoal}-day goal` : 'No goal set';
 
@@ -246,7 +248,7 @@ export function AdvancedOptionsSection({
               ) : null}
               <AdvancedOptionRow
                 isFirst
-                accessibilityHint='Opens strength curve picker'
+                accessibilityHint='Opens habit strength picker'
                 description='How strength grows — and what a missed day costs.'
                 icon={
                   <AlgoIcon
@@ -257,7 +259,7 @@ export function AdvancedOptionsSection({
                 }
                 iconBackground={colors.surface}
                 subtitle={algoSubtitle}
-                title='Strength Curve'
+                title='Habit Strength'
                 onPress={() => setOpenSheet('algorithm')}
               />
               <AdvancedOptionRow
@@ -269,7 +271,7 @@ export function AdvancedOptionsSection({
                   </Text>
                 }
                 iconBackground={colors.surface}
-                subtitle={`${presetLabel} · 5 stages`}
+                subtitle={`${presetLabel} · ${emojiStrip}`}
                 title='Growth Icons'
                 onPress={() => setOpenSheet('growth')}
               />
@@ -302,7 +304,7 @@ export function AdvancedOptionsSection({
 
       <AdvancedSheet
         subtitle='How strength grows — and what a missed day costs.'
-        title='Strength Curve'
+        title='Habit Strength'
         visible={openSheet === 'algorithm'}
         onClose={() => setOpenSheet(null)}
       >
