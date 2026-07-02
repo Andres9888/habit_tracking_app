@@ -64,7 +64,6 @@ export function PremiumActiveCard() {
         }
         iconBackgroundColor={settings.manageSub.bg}
         label='Manage Subscription'
-        showBorder={false}
         type='navigation'
         onPress={handleManageSubscription}
       />

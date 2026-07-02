@@ -17,7 +17,6 @@ export function AppearanceDisplayRows(p: Props) {
       icon={<Rows3 color={settings.compact.icon} size={iconSizes.small} />}
       iconBackgroundColor={settings.compact.bg}
       label='Compact habit cards'
-      showBorder={false}
       subtitle='Fit more on screen'
       type='toggle'
       value={p.compactView}

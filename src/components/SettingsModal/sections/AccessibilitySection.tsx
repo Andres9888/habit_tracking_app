@@ -21,7 +21,6 @@ export function AccessibilitySection(p: AccessibilitySectionProps) {
         icon={<Type color={settings.dayMarker.icon} size={iconSizes.small} />}
         iconBackgroundColor={settings.dayMarker.bg}
         label='Dyslexia-friendly font'
-        showBorder={false}
         subtitle='Use OpenDyslexic across the app'
         type='toggle'
         value={p.useDyslexicFont}

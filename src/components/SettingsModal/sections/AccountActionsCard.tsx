@@ -35,7 +35,6 @@ export function AccountActionsCard() {
         icon={<RotateCcw color={settings.neutral.icon} size={size} />}
         iconBackgroundColor={settings.neutral.bg}
         label={isRestoring ? 'Restoring…' : 'Restore purchases'}
-        showBorder={false}
         type='navigation'
         onPress={isRestoring ? undefined : handleRestore}
       />
