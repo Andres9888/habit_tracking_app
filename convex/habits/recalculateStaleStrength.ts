@@ -11,82 +11,49 @@ import { v } from 'convex/values';
 import { internal } from '../_generated/api';
 import { internalMutation } from '../_generated/server';
 import {
-  calculateMomentumStrengthSnapshot,
-  resolveAlgorithmMode,
-} from '../habitStrength';
-import { calculateStreakFromHistory } from '../streakUtils';
-import { getTodayForTimezone, maxDateKey } from './utils';
+  buildContinuationArgs,
+  resolveRecalculateStaleArgs,
+} from './recalcStaleArgs';
+import { recalculateHabitStrength } from './recalcStaleHelpers';
 
 const DEFAULT_STALE_MS = 23 * 60 * 60 * 1000;
 const DEFAULT_BATCH_SIZE = 100;
-const SCAN_MULTIPLIER = 4;
 
 export const recalculateStaleStrength = internalMutation({
   args: {
     batchSize: v.optional(v.number()),
-    cursor: v.optional(v.id('habits')),
+    cutoff: v.optional(v.number()),
+    cursor: v.optional(v.union(v.string(), v.null())),
     staleAfterMs: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const staleAfterMs = args.staleAfterMs ?? DEFAULT_STALE_MS;
-    const batchSize = args.batchSize ?? DEFAULT_BATCH_SIZE;
-    const cutoff = Date.now() - staleAfterMs;
-
-    const scanned = await ctx.db
-      .query('habits')
-      .take(batchSize * SCAN_MULTIPLIER);
-
-    const candidates = scanned.filter(
-      (habit) =>
-        !habit.archived &&
-        !habit.paused &&
-        !habit.pendingStrengthRecalcId &&
-        (habit.strengthUpdatedAt ?? 0) < cutoff
+    const { batchSize, cutoff, staleAfterMs } = resolveRecalculateStaleArgs(
+      args,
+      {
+        batchSize: DEFAULT_BATCH_SIZE,
+        cutoff: Date.now() - DEFAULT_STALE_MS,
+        staleAfterMs: DEFAULT_STALE_MS,
+      }
     );
 
-    const toProcess = candidates.slice(0, batchSize);
+    const pageResult = await ctx.db
+      .query('habits')
+      .withIndex('by_strengthUpdatedAt', (q) =>
+        q.lt('strengthUpdatedAt', cutoff)
+      )
+      .paginate({ cursor: args.cursor ?? null, numItems: batchSize });
+
+    const candidates = pageResult.page.filter(
+      (habit) =>
+        !habit.archived && !habit.paused && !habit.pendingStrengthRecalcId
+    );
+
     let processed = 0;
     let failed = 0;
 
-    for (const habit of toProcess) {
+    for (const habit of candidates) {
       try {
-        const tracking = await ctx.db
-          .query('tracking')
-          .withIndex('by_habit_and_date', (q) =>
-            q.eq('habitId', habit._id)
-          )
-          .collect();
-
-        let evaluationDateKey = getTodayForTimezone();
-        for (const record of tracking) {
-          evaluationDateKey = maxDateKey(evaluationDateKey, record.date);
-        }
-
-        const trackingForSnapshot = tracking.map((r) => ({
-          completed: r.completed,
-          date: r.date,
-        }));
-        const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
-        const snapshot = calculateMomentumStrengthSnapshot({
-          habitCreatedAt: habit.createdAt,
-          mode,
-          throughDate: evaluationDateKey,
-          tracking: trackingForSnapshot,
-        });
-        const streakData = calculateStreakFromHistory(
-          trackingForSnapshot,
-          evaluationDateKey,
-          { pausedAt: habit.pausedAt, resumedAt: habit.resumedAt }
-        );
-
-        await ctx.db.patch(habit._id, {
-          bestStreak: streakData.bestStreak,
-          currentStreak: streakData.currentStreak,
-          lastCompletedDate: streakData.lastCompletedDate,
-          strength: snapshot.strength,
-          strengthLevel: snapshot.strengthLevel,
-          strengthUpdatedAt: Date.now(),
-        });
+        await recalculateHabitStrength(ctx, habit);
         processed += 1;
       } catch (error) {
         failed += 1;
@@ -97,19 +64,28 @@ export const recalculateStaleStrength = internalMutation({
       }
     }
 
-    if (candidates.length > toProcess.length) {
+    const nextCursor = pageResult.isDone ? null : pageResult.continueCursor;
+    if (nextCursor) {
       await ctx.scheduler.runAfter(
         0,
         internal.habits.recalculateStaleStrength.recalculateStaleStrength,
-        { batchSize, staleAfterMs }
+        buildContinuationArgs({ batchSize, cutoff, staleAfterMs }, nextCursor)
       );
     }
 
-    return { failed, processed, remaining: candidates.length - toProcess.length };
+    return {
+      failed,
+      isDone: pageResult.isDone,
+      nextCursor,
+      processed,
+      rowsRead: pageResult.page.length,
+    };
   },
   returns: v.object({
     failed: v.number(),
+    isDone: v.boolean(),
+    nextCursor: v.union(v.string(), v.null()),
     processed: v.number(),
-    remaining: v.number(),
+    rowsRead: v.number(),
   }),
 });
