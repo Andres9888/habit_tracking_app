@@ -22,6 +22,10 @@ export interface OptimisticStoreAPI {
   addArchive(payload: ArchiveOperationPayload): string;
   addReorder(payload: ReorderOperationPayload): string;
   addPause(payload: PauseOperationPayload): string;
+  addArchiveWithId(id: string, payload: ArchiveOperationPayload): string;
+  addPauseWithId(id: string, payload: PauseOperationPayload): string;
+  addToggleWithId(id: string, payload: ToggleOperationPayload): string;
+  replaceOperationId(oldId: string, newId: string): void;
   confirm(operationId: string): void;
   fail(operationId: string, error: Error): void;
   reset(): void;

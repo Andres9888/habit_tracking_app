@@ -2,9 +2,8 @@
  * Resolve the active growth emoji set for a habit, layering
  * per-habit override → user default → built-in defaults.
  */
-import { useQuery } from 'convex/react';
-
 import { api } from '../../convex/_generated/api';
+import { useCachedQuery } from '../lib/queryCache';
 import {
   type PartialProgressEmojiSet,
   type ProgressEmojiSet,
@@ -14,7 +13,13 @@ import {
 export function useProgressEmojis(
   habit?: { progressEmojis?: PartialProgressEmojiSet } | null
 ): ProgressEmojiSet {
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   return resolveProgressEmojis(
     habit?.progressEmojis,
     settings?.progressEmojis ?? undefined
@@ -22,7 +27,13 @@ export function useProgressEmojis(
 }
 
 export function useUserDefaultProgressEmojis(): ProgressEmojiSet {
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   return resolveProgressEmojis(
     undefined,
     settings?.progressEmojis ?? undefined
@@ -30,6 +41,12 @@ export function useUserDefaultProgressEmojis(): ProgressEmojiSet {
 }
 
 export function useUserCustomProgressEmojis(): ProgressEmojiSet | undefined {
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   return settings?.customProgressEmojis ?? undefined;
 }

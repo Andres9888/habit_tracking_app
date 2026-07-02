@@ -2,6 +2,7 @@
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import { iconSizes } from '@/theme/iconSizes';
 import { fontWeights, typography } from '@/theme/typography';
+import { useQuery } from 'convex/react';
 import { Edit3 } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
@@ -10,6 +11,7 @@ import { ScreenHeader } from '../../components/ScreenHeader';
 import { useThemeColors } from '../../theme';
 import { overlays } from '../../theme/colors';
 import { shadows } from '../../theme/spacing';
+import { api } from '../../../convex/_generated/api';
 import {
   DetailLoadingState,
   getHabitDisplayName,
@@ -34,15 +36,20 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const { colors } = useThemeColors();
+  const fullHabit = useQuery(
+    api.habits.get,
+    visible && habit ? { habitId: habit._id } : 'skip'
+  );
+  const displayHabit = fullHabit ?? habit;
   const screenState = useHabitDetailScreenState({
-    bestStreak: habit?.bestStreak ?? 0,
-    currentStreak: habit?.currentStreak ?? 0,
-    habitId: habit?._id,
+    bestStreak: displayHabit?.bestStreak ?? 0,
+    currentStreak: displayHabit?.currentStreak ?? 0,
+    habitId: displayHabit?._id,
     tracking,
     visible,
   });
   const calendarHandlers = useCalendarHandlers({
-    habit,
+    habit: displayHabit,
     onArchive,
     onClose,
     onDelete,
@@ -51,7 +58,7 @@ function HabitDetailScreenContent({
     setPendingToggleDate: screenState.setPendingToggleDate,
   });
   const handleEdit = () => {
-    if (habit) onEdit?.(habit);
+    if (displayHabit) onEdit?.(displayHabit);
   };
   const [isTitlePinned, setIsTitlePinned] = useState(false);
   const handlePinnedChange = useCallback((pinned: boolean) => {
@@ -68,7 +75,7 @@ function HabitDetailScreenContent({
       visible={visible}
       onRequestClose={onClose}
     >
-      {habit ? (
+      {displayHabit ? (
         <>
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -94,7 +101,7 @@ function HabitDetailScreenContent({
                       onPress={handleEdit}
                     />
                   }
-                  title={getHabitDisplayName(habit)}
+                  title={getHabitDisplayName(displayHabit)}
                   titleStyle={{
                     ...typography.body,
                     fontWeight: fontWeights.semibold,
@@ -107,7 +114,7 @@ function HabitDetailScreenContent({
                 <HabitDetailContent
                   completedDates={screenState.completedDates}
                   habit={{
-                    ...habit,
+                    ...displayHabit,
                     bestStreak: screenState.bestStreak,
                     currentStreak: screenState.currentStreak,
                   }}
@@ -121,8 +128,8 @@ function HabitDetailScreenContent({
             </View>
           </KeyboardAvoidingView>
           <HabitDetailModals
-            habitId={habit._id}
-            habitName={habit.name}
+            habitId={displayHabit._id}
+            habitName={displayHabit.name}
             {...buildModalsProps(screenState, calendarHandlers)}
           />
         </>

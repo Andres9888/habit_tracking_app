@@ -7,8 +7,8 @@
 
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
-import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
+import { useCachedQuery } from '../lib/queryCache';
 import { darkColors, lightColors } from './darkColors';
 import { darkSettingsColors, lightSettingsColors } from './settingsColors';
 import type { SemanticColors } from './darkColors';
@@ -35,7 +35,13 @@ export function ThemeColorProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const systemScheme = useSystemColorScheme();
 
   const value = useMemo(() => {

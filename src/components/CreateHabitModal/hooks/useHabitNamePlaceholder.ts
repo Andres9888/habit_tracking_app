@@ -6,6 +6,7 @@ import {
   setHabitNamePlaceholderCursor,
 } from '@/utils/habitNamePlaceholderCursor';
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 
 export type HabitNamePlaceholderState = {
   isReady: boolean;
@@ -17,7 +18,13 @@ export function useHabitNamePlaceholder(
   active: boolean
 ): HabitNamePlaceholderState {
   const templates = useQuery(api.templates.list, {});
-  const habits = useQuery(api.habits.list);
+  const habits = useCachedQuery(
+    api.habits.list,
+    {},
+    {
+      entryName: 'habits.list',
+    }
+  );
   const importedIds = useQuery(api.templates.getImportedTemplateIds, {});
   const [state, setState] = useState<HabitNamePlaceholderState>({
     isReady: false,

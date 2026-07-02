@@ -66,6 +66,7 @@ export interface ReorderOperationPayload {
  */
 export interface PauseOperationPayload {
   habitId: Id<'habits'>;
+  habitName?: string;
   /** Whether pausing (true) or resuming (false) */
   toPaused: boolean;
 }

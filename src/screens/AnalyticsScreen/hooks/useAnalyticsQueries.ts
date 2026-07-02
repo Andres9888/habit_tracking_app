@@ -5,11 +5,21 @@
  * separate queries that each re-loaded habits + tracking server-side.
  */
 
-import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery, useCachedQuerySavedAt } from '../../../lib/queryCache';
 
 export const useAnalyticsQueries = () => {
-  const dashboard = useQuery(api.analytics.getAnalyticsDashboard);
+  const dashboard = useCachedQuery(
+    api.analytics.getAnalyticsDashboard,
+    {},
+    {
+      entryName: 'analytics.getAnalyticsDashboard',
+    }
+  );
+  const cacheSavedAt = useCachedQuerySavedAt(
+    'analytics.getAnalyticsDashboard',
+    {}
+  );
 
   const weeklyInsightsRaw = dashboard?.weeklyInsights;
   const weeklyInsights = (
@@ -28,6 +38,7 @@ export const useAnalyticsQueries = () => {
     trendData: dashboard?.trendData,
     complianceData: dashboard?.complianceData,
     weeklyInsights: weeklyInsights ?? undefined,
+    cacheSavedAt,
     isLoading,
   };
 };

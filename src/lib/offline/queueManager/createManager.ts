@@ -35,12 +35,13 @@ export function createOfflineQueueManager(
   const listeners = new Set<QueueStateListener>();
   const eventListeners = new Set<QueueEventCallback>();
 
-  const notifyStateChange = () => {
+  const notifyStateChange = (options?: { persist?: boolean }) => {
     state = { ...state, updatedAt: Date.now() };
     for (const listener of listeners) listener();
-    if (autoPersist) {
+    if (autoPersist && options?.persist !== false) {
       saveQueueState(state).catch((error) => {
-        if (__DEV__) console.error('[OfflineQueueManager] Persist failed:', error);
+        if (__DEV__)
+          console.error('[OfflineQueueManager] Persist failed:', error);
       });
     }
   };

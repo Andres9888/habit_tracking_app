@@ -4,11 +4,12 @@
  * Shows habit statistics, charts, and insights
  */
 import React, { useMemo } from 'react';
-import { ScrollView, RefreshControl } from 'react-native';
+import { ScrollView, RefreshControl, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { durations, enterEasing } from '../../theme/animations';
 import { colors } from '../../theme/colors';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { typography } from '../../theme/typography';
 import { PremiumPaywall } from '../../components/PremiumPaywall';
 import { AnalyticsScreenSkeleton } from '../../components/SkeletonLoader';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
@@ -37,6 +38,7 @@ function AnalyticsScreenContent() {
     trendData,
     complianceData,
     weeklyInsights,
+    cacheSavedAt,
     onRefresh,
     handleHabitPress,
     handleExportPress,
@@ -52,6 +54,17 @@ function AnalyticsScreenContent() {
     [overviewStats?.rankedHabits]
   );
   const hasNoHabits = overviewStats?.totalHabits === 0;
+  const cacheCaption = useMemo(() => {
+    if (!cacheSavedAt) return null;
+    const minutes = Math.max(
+      0,
+      Math.floor((Date.now() - cacheSavedAt) / 60_000)
+    );
+    if (minutes < 1) return 'Updated just now';
+    if (minutes < 60) return `Updated ${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    return `Updated ${hours}h ago`;
+  }, [cacheSavedAt]);
 
   // Show paywall modal if not premium user
   if (!isPremiumUser && showPaywall) {
@@ -82,22 +95,44 @@ function AnalyticsScreenContent() {
       }
       style={[styles.container, { backgroundColor: themeColors.background }]}
     >
-      <Animated.View entering={FadeInDown.delay(280).duration(durations.enter).easing(enterEasing)}>
+      <Animated.View
+        entering={FadeInDown.delay(280)
+          .duration(durations.enter)
+          .easing(enterEasing)}
+      >
         <ScreenHeader
           leftAction={null}
           subtitle='Track your habit journey'
           title='Analytics'
         />
+        {cacheCaption ? (
+          <Text
+            style={{
+              ...typography.caption,
+              color: themeColors.text.tertiary,
+              marginHorizontal: 20,
+              marginTop: -4,
+            }}
+          >
+            {cacheCaption}
+          </Text>
+        ) : null}
       </Animated.View>
 
       {hasNoHabits ? (
-        <Animated.View entering={FadeInDown.delay(340).duration(durations.enter).easing(enterEasing)}>
+        <Animated.View
+          entering={FadeInDown.delay(340)
+            .duration(durations.enter)
+            .easing(enterEasing)}
+        >
           <EmptyState />
         </Animated.View>
       ) : (
         <>
           <Animated.View
-            entering={FadeInDown.delay(340).duration(durations.enter).easing(enterEasing)}
+            entering={FadeInDown.delay(340)
+              .duration(durations.enter)
+              .easing(enterEasing)}
           >
             <OverviewStats
               isLoading={isLoading}
@@ -107,7 +142,9 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(400).duration(durations.enter).easing(enterEasing)}
+            entering={FadeInDown.delay(400)
+              .duration(durations.enter)
+              .easing(enterEasing)}
           >
             <ChartSections
               complianceData={complianceData}
@@ -118,7 +155,9 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(460).duration(durations.enter).easing(enterEasing)}
+            entering={FadeInDown.delay(460)
+              .duration(durations.enter)
+              .easing(enterEasing)}
           >
             <InsightsSections
               rankedHabits={rankedHabits}
@@ -128,7 +167,9 @@ function AnalyticsScreenContent() {
           </Animated.View>
 
           <Animated.View
-            entering={FadeInDown.delay(520).duration(durations.enter).easing(enterEasing)}
+            entering={FadeInDown.delay(520)
+              .duration(durations.enter)
+              .easing(enterEasing)}
           >
             <ExportButton onPress={() => void handleExportPress()} />
           </Animated.View>

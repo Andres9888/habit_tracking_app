@@ -13,7 +13,7 @@ import { createEnqueue } from './enqueue';
 
 type StateGetter = () => OfflineQueueState;
 type StateSetter = (state: OfflineQueueState) => void;
-type NotifyFn = () => void;
+type NotifyFn = (options?: { persist?: boolean }) => void;
 type EmitFn = (event: QueueEvent) => void;
 
 export function createOperations(
@@ -23,9 +23,9 @@ export function createOperations(
   emit: EmitFn
 ) {
   return {
-    clear(): void {
+    clear(options?: { persist?: boolean }): void {
       setState({ ...getState(), operations: [] });
-      notify();
+      notify(options);
       emit({
         stats: calculateStats(getState()),
         timestamp: Date.now(),

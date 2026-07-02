@@ -61,20 +61,25 @@ export function useOptimisticToggleMutation(
         toCompleted,
       };
 
-      // Always apply optimistic update for immediate UI feedback (FR-002: <200ms)
-      const operationId = optimisticStore.addToggle(payload);
-
       // If offline, queue immediately without attempting server call
       if (!isOnline) {
         const queueResult = getOfflineQueueManager().enqueue(
           'toggleCompletion',
           payload
         );
+        if (queueResult.success && queueResult.operationId) {
+          optimisticStore.addToggleWithId(queueResult.operationId, payload);
+        } else {
+          optimisticStore.addToggle(payload);
+        }
         return {
           offlineOperationId: queueResult.operationId,
           queued: queueResult.success,
         };
       }
+
+      // Online path still applies the optimistic update before awaiting network.
+      const operationId = optimisticStore.addToggle(payload);
 
       // Online path: try server mutation
       try {
@@ -89,6 +94,12 @@ export function useOptimisticToggleMutation(
             'toggleCompletion',
             payload
           );
+          if (queueResult.success && queueResult.operationId) {
+            optimisticStore.replaceOperationId(
+              operationId,
+              queueResult.operationId
+            );
+          }
           return {
             offlineOperationId: queueResult.operationId,
             queued: queueResult.success,

@@ -17,8 +17,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
 import type {
   Habit,
@@ -123,7 +124,13 @@ export function useHabitsListState(): HabitsListState {
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
-  const habitsQuery = useQuery(api.habits.list);
+  const habitsQuery = useCachedQuery(
+    api.habits.list,
+    {},
+    {
+      entryName: 'habits.list',
+    }
+  );
   // Validate and limit habits array for performance (guards against 100+ habits edge case)
   const habitsValidation = useMemo(
     () => validateHabitsArray(habitsQuery ?? []),
@@ -138,7 +145,13 @@ export function useHabitsListState(): HabitsListState {
     console.warn('[useHabitsListState]', habitsValidation.warning);
   }
 
-  const settingsQuery = useQuery(api.settings.get);
+  const settingsQuery = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const settings = (settingsQuery ?? undefined) as
     | HabitsListSettings
     | undefined;
@@ -336,8 +349,13 @@ export function useHabitsListState(): HabitsListState {
   // Wrap toggleHabit to also play completion sound
   const toggleHabit = useCallback(
     async (args: { habitId: Habit['_id']; date: string }) => {
-      const { baseToggleHabit, getHabitStatus, habitsById, isCompleted, predictedStrengths } =
-        toggleDepsRef.current;
+      const {
+        baseToggleHabit,
+        getHabitStatus,
+        habitsById,
+        isCompleted,
+        predictedStrengths,
+      } = toggleDepsRef.current;
       // Check if this will mark as completed (not already completed)
       const currentlyCompleted = isCompleted(args.habitId, args.date);
       const habit = habitsById.get(args.habitId);

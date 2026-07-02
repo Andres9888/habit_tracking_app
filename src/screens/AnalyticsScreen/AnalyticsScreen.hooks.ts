@@ -21,6 +21,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     trendData,
     complianceData,
     weeklyInsights,
+    cacheSavedAt,
     isLoading,
   } = useAnalyticsQueries();
 
@@ -77,6 +78,7 @@ export const useAnalyticsScreen = (): UseAnalyticsScreenReturn => {
     handleStartTrial,
     isLoading,
     isPremiumUser,
+    cacheSavedAt,
     onRefresh,
     overviewStats,
     refreshing,

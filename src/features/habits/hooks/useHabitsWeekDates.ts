@@ -1,9 +1,4 @@
-import {
-  addDays,
-  eachDayOfInterval,
-  format,
-  startOfDay,
-} from 'date-fns';
+import { addDays, eachDayOfInterval, format, startOfDay } from 'date-fns';
 import { useCallback, useMemo, useState, useTransition } from 'react';
 
 const PREDICTION_LOOKBACK_DAYS = 14;
@@ -14,8 +9,8 @@ export function useHabitsWeekDates() {
   const [weekAnchor, setWeekAnchor] = useState(today);
   // Week navigation re-renders the whole visible habits list. Mark those
   // updates as transitions so the swipe gesture + slide animation stay
-  // responsive; the new week paints a frame later (old data stays visible via
-  // useStableQuery, so no blank flash).
+  // responsive; the new week paints a frame later while cached query data
+  // keeps the previous window visible, so no blank flash.
   const [, startWeekTransition] = useTransition();
 
   const weekDates = useMemo(

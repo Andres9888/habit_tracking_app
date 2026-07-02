@@ -16,6 +16,7 @@ export type QueueEventType =
   | 'operation:removed'
   | 'operation:synced'
   | 'operation:failed'
+  | 'operation:failed-final'
   | 'queue:cleared'
   | 'queue:restored'
   | 'queue:batch_completed'

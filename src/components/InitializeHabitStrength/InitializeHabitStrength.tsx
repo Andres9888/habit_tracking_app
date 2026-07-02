@@ -5,8 +5,9 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import { InitializeHabitStrengthSkeleton } from '../SkeletonLoader';
 import { InitializeButton } from './InitializeButton';
 import { ResultDisplay } from './ResultDisplay';
@@ -24,7 +25,13 @@ export function InitializeHabitStrength() {
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const habits = useQuery(api.habits.list);
+  const habits = useCachedQuery(
+    api.habits.list,
+    {},
+    {
+      entryName: 'habits.list',
+    }
+  );
   const recalculate = useMutation(api.habitStrength.recalculateHabitStrength);
 
   const handleInitialize = async () => {
@@ -65,28 +72,60 @@ export function InitializeHabitStrength() {
   }
 
   return (
-    <View className='m-4 rounded-lg border p-4' style={{ borderColor: themeColors.status.info, backgroundColor: themeColors.status.infoLight }}>
-      <Text className='mb-2 text-lg font-bold' style={{ color: themeColors.status.infoText }}>
+    <View
+      className='m-4 rounded-lg border p-4'
+      style={{
+        borderColor: themeColors.status.info,
+        backgroundColor: themeColors.status.infoLight,
+      }}
+    >
+      <Text
+        className='mb-2 text-lg font-bold'
+        style={{ color: themeColors.status.infoText }}
+      >
         🚀 Initialize Habit Strength
       </Text>
-      <Text className='mb-3 text-sm' style={{ color: themeColors.status.infoText }}>
+      <Text
+        className='mb-3 text-sm'
+        style={{ color: themeColors.status.infoText }}
+      >
         Found {habits.length} habit{habits.length === 1 ? '' : 's'}.
       </Text>
 
-      {!result && !error ? <InitializeButton
+      {!result && !error ? (
+        <InitializeButton
           habitCount={habits.length}
           isInitializing={isInitializing}
           onPress={handleInitialize}
-        /> : null}
+        />
+      ) : null}
 
       {result ? <ResultDisplay result={result} /> : null}
 
-      {error ? <View className='mt-3 rounded-lg p-3' style={{ backgroundColor: themeColors.status.errorLight }}>
-          <Text className='font-semibold' style={{ color: themeColors.status.errorText }}>❌ Error</Text>
-          <Text className='mt-1 text-sm' style={{ color: themeColors.status.errorText }}>{error}</Text>
-        </View> : null}
+      {error ? (
+        <View
+          className='mt-3 rounded-lg p-3'
+          style={{ backgroundColor: themeColors.status.errorLight }}
+        >
+          <Text
+            className='font-semibold'
+            style={{ color: themeColors.status.errorText }}
+          >
+            ❌ Error
+          </Text>
+          <Text
+            className='mt-1 text-sm'
+            style={{ color: themeColors.status.errorText }}
+          >
+            {error}
+          </Text>
+        </View>
+      ) : null}
 
-      <Text className='mt-3 text-xs' style={{ color: themeColors.text.primary }}>
+      <Text
+        className='mt-3 text-xs'
+        style={{ color: themeColors.text.primary }}
+      >
         💡 Tip: After initialization, habit strength updates automatically.
       </Text>
     </View>
