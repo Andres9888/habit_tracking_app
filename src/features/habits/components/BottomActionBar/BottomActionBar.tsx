@@ -55,6 +55,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               accessibilityLabel='Open settings'
               accessibilityRole='button'
               hitSlop={iconButtonHitSlop}
+              testID='settings-button'
               style={styles.iconTouchArea}
               onPress={props.onOpenSettings}
               onPressIn={anim.onSettingsPressIn}
@@ -93,6 +94,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               accessibilityLabel='Get inspired with habit templates'
               accessibilityRole='button'
               hitSlop={iconButtonHitSlop}
+              testID='home-templates-button'
               style={styles.iconTouchArea}
               onPress={props.onOpenTemplates}
               onPressIn={anim.onTemplatesPressIn}

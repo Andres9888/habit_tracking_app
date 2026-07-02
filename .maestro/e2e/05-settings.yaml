@@ -1,0 +1,39 @@
+appId: com.chainday.app
+name: Settings
+tags:
+  - smoke
+  - regression
+onFlowComplete:
+  - takeScreenshot: e2e-05-settings-complete
+---
+- runFlow: _shared/open-settings.yaml
+- assertVisible: Settings
+- assertVisible: Theme
+- assertVisible: Streak Reminders
+- scrollUntilVisible:
+    element:
+      text: Archived habits
+    direction: DOWN
+    timeout: 5000
+- tapOn: Archived habits
+- extendedWaitUntil:
+    visible: Archived Habits
+    timeout: 5000
+- back
+- extendedWaitUntil:
+    visible: Settings
+    timeout: 5000
+- scrollUntilVisible:
+    element:
+      text: Export habits data
+    direction: DOWN
+    timeout: 5000
+- assertVisible: Export habits data
+- scrollUntilVisible:
+    element:
+      text: Send Feedback
+    direction: DOWN
+    timeout: 5000
+- assertVisible: Send Feedback
+- tapOn:
+    id: close-settings-modal

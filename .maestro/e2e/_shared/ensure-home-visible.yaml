@@ -1,0 +1,14 @@
+appId: com.chainday.app
+name: Shared - Ensure Home Visible
+tags:
+  - helper
+onFlowComplete:
+  - takeScreenshot: shared-ensure-home-visible-complete
+---
+- extendedWaitUntil:
+    visible: Today
+    timeout: 15000
+- assertVisible:
+    id: home-create-habit-fab
+- assertVisible:
+    id: settings-button

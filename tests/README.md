@@ -13,7 +13,14 @@ tests/
 ├── integration/              # Integration tests
 │   ├── features/            # Feature integration tests
 │   └── workflows/           # User workflow tests
-└── e2e/                     # End-to-end tests
+└── e2e/                     # Legacy Detox-shaped tests (not current runner)
+```
+
+Device-level E2E flows live in `.maestro/e2e/`.
+
+```
+.maestro/
+└── e2e/                     # Maestro device E2E flows
 ```
 
 ## Test Types
@@ -31,8 +38,18 @@ Tests for how different parts of the application work together.
 - **Features**: Test complete features (e.g., habit creation, streak tracking)
 - **Workflows**: Test multi-step user workflows
 
-### E2E Tests (`tests/e2e/`)
-End-to-end tests that simulate real user interactions.
+### Scenario Tests (`tests/e2e-scenarios/`)
+Headless whole-screen scenarios that render real screens through the provider
+stack with mocked backend/native modules.
+
+### Device E2E Tests (`.maestro/e2e/`)
+Maestro flows that simulate real user interactions on an installed iOS
+simulator or Android emulator. Use these for launch, navigation, gestures,
+offline/network state, native permissions, and release smoke checks.
+
+### Legacy E2E Tests (`tests/e2e/`)
+Older Detox-shaped tests retained for reference. Detox is not currently wired
+to `npm run test:e2e`; use Maestro instead.
 
 ## Running Tests
 
@@ -46,8 +63,14 @@ npm test -- tests/unit
 # Run integration tests only
 npm test -- tests/integration
 
-# Run e2e tests only
-npm test -- tests/e2e
+# Run headless scenario tests
+npm run test:scenarios
+
+# Run Maestro smoke tests on a prepared simulator/emulator
+npm run test:e2e:maestro:smoke
+
+# Run the default E2E gate
+npm run test:e2e
 
 # Run specific test file
 npm test -- tests/unit/components/Button.test.tsx

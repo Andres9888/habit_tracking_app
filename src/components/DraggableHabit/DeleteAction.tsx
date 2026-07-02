@@ -31,6 +31,7 @@ export function DeleteAction({ dragX, onPress }: DeleteActionProps) {
     <Pressable
       accessibilityLabel="Delete habit"
       accessibilityRole="button"
+      testID="delete-habit-action"
       onPress={onPress}
       style={{
         alignItems: 'center',

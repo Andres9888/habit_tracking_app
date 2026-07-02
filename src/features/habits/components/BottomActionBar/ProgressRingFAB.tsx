@@ -78,6 +78,7 @@ export function ProgressRingFAB(props: ProgressRingFABProps) {
           <Pressable
             accessibilityLabel='Add new habit'
             accessibilityRole='button'
+            testID='home-create-habit-fab'
             style={s.fabButton}
             onPress={props.onPress}
             onPressIn={props.onPressIn}

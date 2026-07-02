@@ -1,0 +1,41 @@
+appId: com.chainday.app
+name: Habits Core Loop
+tags:
+  - smoke
+  - regression
+onFlowComplete:
+  - takeScreenshot: e2e-02-habits-core-complete
+---
+- runFlow: _shared/launch-signed-in.yaml
+- assertVisible: Today
+- assertVisible:
+    id: habit-card
+- tapOn:
+    id: habit-card
+- extendedWaitUntil:
+    visible: Calendar
+    timeout: 5000
+- back
+- extendedWaitUntil:
+    visible: Today
+    timeout: 5000
+- tapOn:
+    id: home-create-habit-fab
+- extendedWaitUntil:
+    visible:
+      text: "(Create|New Habit|What habit)"
+    timeout: 8000
+- back
+- extendedWaitUntil:
+    visible: Today
+    timeout: 5000
+- tapOn:
+    id: settings-button
+- extendedWaitUntil:
+    visible: Settings
+    timeout: 5000
+- tapOn:
+    id: close-settings-modal
+- extendedWaitUntil:
+    visible: Today
+    timeout: 5000
