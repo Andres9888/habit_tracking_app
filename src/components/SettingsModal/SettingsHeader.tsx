@@ -52,7 +52,11 @@ export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
             Settings
           </Text>
         </View>
-        <ModalCloseButton label='Close settings' onClose={onClose} />
+        <ModalCloseButton
+          label='Close settings'
+          testID='close-settings-modal'
+          onClose={onClose}
+        />
       </View>
     </View>
   );
