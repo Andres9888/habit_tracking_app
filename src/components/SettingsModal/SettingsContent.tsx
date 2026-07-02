@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAccountActions } from './useAccountActions';
 import { FeedbackModal } from '../FeedbackModal';
+import { airy } from '../../theme/airyScale';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
@@ -54,7 +55,7 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <SettingsSearchProvider query=''>
-          <View className='gap-5'>
+          <View style={{ gap: airy.sectionGap }}>
             <SettingsSectionList
               {...p}
               sectionIconColor={sectionIconColor}

@@ -12,6 +12,7 @@ import { CalendarPreview } from './CalendarPreview';
 import { CompletionIconSettingsRow } from './CompletionIconSettingsRow';
 import { DayMarkerShapeSettingsRow } from './DayMarkerShapeSettingsRow';
 import { SettingsRow } from './SettingsRow';
+import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 import { AppearanceChainRows } from './sections/AppearanceChainRows';
 import { getRaisedSurface } from './raisedSurface';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -30,7 +31,10 @@ export function CalendarLookPage(p: CalendarLookPageProps) {
   };
 
   return (
-    <View className='flex-1' style={{ backgroundColor: themeColors.background }}>
+    <View
+      className='flex-1'
+      style={{ backgroundColor: themeColors.background }}
+    >
       <View style={{ backgroundColor: themeColors.background }}>
         <ScreenHeader
           leftAction='back'
@@ -47,42 +51,43 @@ export function CalendarLookPage(p: CalendarLookPageProps) {
         showsVerticalScrollIndicator={false}
       >
         <View className='overflow-hidden rounded-2xl' style={cardStyle}>
-          <CalendarPreview
-            compact={p.compactView}
-            completionIcon={p.habitCompletionIcon}
-            dayShape={p.dayShape}
-            showGradientFill={p.showGradientFill}
-            showStreakConnections={p.showStreakConnections}
-          />
-          <DayMarkerShapeSettingsRow
-            selected={p.dayShape}
-            onSelect={p.onChangeDayShape}
-          />
-          <AppearanceChainRows
-            showGradientFill={p.showGradientFill}
-            showStreakConnections={p.showStreakConnections}
-            onChangeShowGradientFill={p.onChangeShowGradientFill}
-            onChangeShowStreakConnections={p.onChangeShowStreakConnections}
-          />
-          <CompletionIconSettingsRow
-            selected={p.habitCompletionIcon}
-            onSelect={p.onChangeHabitCompletionIcon}
-          />
-          <SettingsRow
-            icon={
-              <Calendar
-                color={settings.calendarHeader.icon}
-                size={iconSizes.small}
-              />
-            }
-            iconBackgroundColor={settings.calendarHeader.bg}
-            label='Sticky month header'
-            showBorder={false}
-            subtitle='Month stays visible while scrolling'
-            type='toggle'
-            value={p.stickyCalendarHeader}
-            onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
-          />
+          <SettingsRowDividerProvider>
+            <CalendarPreview
+              compact={p.compactView}
+              completionIcon={p.habitCompletionIcon}
+              dayShape={p.dayShape}
+              showGradientFill={p.showGradientFill}
+              showStreakConnections={p.showStreakConnections}
+            />
+            <DayMarkerShapeSettingsRow
+              selected={p.dayShape}
+              onSelect={p.onChangeDayShape}
+            />
+            <AppearanceChainRows
+              showGradientFill={p.showGradientFill}
+              showStreakConnections={p.showStreakConnections}
+              onChangeShowGradientFill={p.onChangeShowGradientFill}
+              onChangeShowStreakConnections={p.onChangeShowStreakConnections}
+            />
+            <CompletionIconSettingsRow
+              selected={p.habitCompletionIcon}
+              onSelect={p.onChangeHabitCompletionIcon}
+            />
+            <SettingsRow
+              icon={
+                <Calendar
+                  color={settings.calendarHeader.icon}
+                  size={iconSizes.small}
+                />
+              }
+              iconBackgroundColor={settings.calendarHeader.bg}
+              label='Sticky month header'
+              subtitle='Month stays visible while scrolling'
+              type='toggle'
+              value={p.stickyCalendarHeader}
+              onToggle={(v) => void p.onChangeStickyCalendarHeader(v)}
+            />
+          </SettingsRowDividerProvider>
         </View>
       </Animated.ScrollView>
     </View>

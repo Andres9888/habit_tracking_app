@@ -27,7 +27,6 @@ export function DataPrivacySection(p: DataPrivacySectionProps) {
         archivedHabitsCount={p.archivedHabitsCount}
         onExportHabitsData={p.onExportHabitsData}
         onOpenArchivedHabits={p.onOpenArchivedHabits}
-        showLastBorder
       />
       <SettingsRow
         icon={
@@ -35,7 +34,6 @@ export function DataPrivacySection(p: DataPrivacySectionProps) {
         }
         iconBackgroundColor={settings.deleteAccount.bg}
         label={p.isDeletingAccount ? 'Deleting account…' : 'Delete account'}
-        showBorder={false}
         type='navigation'
         onPress={p.isDeletingAccount ? undefined : p.onDeleteAccount}
       />

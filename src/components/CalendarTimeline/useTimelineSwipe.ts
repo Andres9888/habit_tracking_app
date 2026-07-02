@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
-import { runOnJS } from 'react-native-reanimated';
 
 const HORIZONTAL_SWIPE_THRESHOLD = 44;
 const SWIPE_VELOCITY_THRESHOLD = 450;
@@ -43,8 +42,9 @@ export function useTimelineSwipe({
       Gesture.Pan()
         .activeOffsetX([-18, 18])
         .failOffsetY([-12, 12])
+        .runOnJS(true)
         .onEnd((event) => {
-          runOnJS(handleTimelineSwipe)(event.translationX, event.velocityX);
+          handleTimelineSwipe(event.translationX, event.velocityX);
         }),
     [handleTimelineSwipe]
   );

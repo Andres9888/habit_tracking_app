@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { SettingsSectionHeader } from './SettingsSectionHeader';
+import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 import { useSettingsSectionAccordion } from './useSettingsSectionAccordion';
 
 interface Props {
@@ -42,7 +43,9 @@ export function CollapsibleSectionCard({
         onToggle={handleToggle}
       />
       <Animated.View style={accordion.contentAnimatedStyle}>
-        <View onLayout={accordion.handleContentLayout}>{children}</View>
+        <View onLayout={accordion.handleContentLayout}>
+          <SettingsRowDividerProvider>{children}</SettingsRowDividerProvider>
+        </View>
       </Animated.View>
     </View>
   );

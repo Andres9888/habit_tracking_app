@@ -1,12 +1,10 @@
 /** RowLabel — settings-row label, optional (?) help affordance, and subtitle */
 import { View, Text } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
-import { SettingsRowHelp } from '../SettingsRowHelp';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
 interface RowLabelProps {
   label: SettingsRowProps['label'];
-  help: SettingsRowProps['help'];
   subtitle?: SettingsRowProps['subtitle'];
   isInteractiveInfo: boolean;
   labelColor: string;
@@ -16,7 +14,6 @@ interface RowLabelProps {
 
 export function RowLabel({
   label,
-  help,
   subtitle,
   isInteractiveInfo,
   labelColor,
@@ -39,7 +36,6 @@ export function RowLabel({
         >
           {label}
         </Text>
-        {help ? <SettingsRowHelp help={help} /> : null}
       </View>
       {subtitle ? (
         <Text
