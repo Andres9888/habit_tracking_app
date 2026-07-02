@@ -5,8 +5,6 @@ import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface SettingsSectionListProps extends SettingsContentProps {
   sectionIconColor: string;
-  searchQuery: string;
-  onChangeSearchQuery: (query: string) => void;
   onFeedback: () => void;
   onRate: () => void;
   onShare: () => void;
@@ -20,12 +18,7 @@ interface SettingsSectionListProps extends SettingsContentProps {
 export function SettingsSectionList(p: SettingsSectionListProps) {
   return (
     <>
-      <SettingsPrimarySections
-        {...p}
-        searchQuery={p.searchQuery}
-        sectionIconColor={p.sectionIconColor}
-        onChangeSearchQuery={p.onChangeSearchQuery}
-      />
+      <SettingsPrimarySections {...p} sectionIconColor={p.sectionIconColor} />
       <SettingsSecondarySections
         sectionIconColor={p.sectionIconColor}
         onFeedback={p.onFeedback}

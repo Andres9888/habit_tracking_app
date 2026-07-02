@@ -12,7 +12,12 @@ describe('getHeroContext', () => {
       bestStreak: 30,
       goalDuration: 30,
     });
-    expect(ctx).toEqual({ emoji: '🏆', text: 'Goal reached', tone: 'goal' });
+    expect(ctx).toEqual({
+      emoji: '🏆',
+      text: 'Goal reached',
+      tone: 'goal',
+      milestone: true,
+    });
   });
 
   it('flags a personal-best streak over goal progress', () => {

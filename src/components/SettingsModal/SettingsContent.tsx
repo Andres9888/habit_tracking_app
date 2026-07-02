@@ -5,18 +5,15 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { useState } from 'react';
 import { useAccountActions } from './useAccountActions';
 import { FeedbackModal } from '../FeedbackModal';
+import { airy } from '../../theme/airyScale';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
-import {
-  SettingsSearchProvider,
-  SettingsSearchEmpty,
-  anySectionMatches,
-} from './search';
+// Search field temporarily removed — filter plumbing retained (see SPEC_03).
+import { SettingsSearchProvider } from './search';
 
 const useSectionIconColor = () => {
   const { settings } = useThemeColors();
@@ -39,8 +36,6 @@ export function SettingsContent(p: SettingsContentProps) {
   }));
 
   const actions = useAccountActions();
-  const [searchQuery, setSearchQuery] = useState('');
-  const showEmptyState = !anySectionMatches(searchQuery.trim().toLowerCase());
 
   return (
     <View style={SCROLL_STYLES.wrapper}>
@@ -59,14 +54,12 @@ export function SettingsContent(p: SettingsContentProps) {
         style={{ backgroundColor: themeColors.background }}
         onScroll={scrollHandler}
       >
-        <SettingsSearchProvider query={searchQuery}>
-          <View className='gap-5'>
+        <SettingsSearchProvider query=''>
+          <View style={{ gap: airy.sectionGap }}>
             <SettingsSectionList
               {...p}
-              searchQuery={searchQuery}
               sectionIconColor={sectionIconColor}
               isDeletingAccount={actions.isDeletingAccount}
-              onChangeSearchQuery={setSearchQuery}
               onDeleteAccount={actions.handleDeleteAccount}
               onFeedback={actions.handleFeedback}
               onPrivacy={actions.openPrivacy}
@@ -75,9 +68,6 @@ export function SettingsContent(p: SettingsContentProps) {
               onTerms={actions.openTerms}
               onWhatsNew={actions.handleWhatsNew}
             />
-            {showEmptyState ? (
-              <SettingsSearchEmpty query={searchQuery} />
-            ) : null}
           </View>
         </SettingsSearchProvider>
       </Animated.ScrollView>

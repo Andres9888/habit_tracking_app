@@ -12,6 +12,8 @@ export interface HeroContext {
   emoji: string;
   text: string;
   tone: HeroContextTone;
+  /** True for milestone celebrations (e.g. goal reached) — rendered in amber/gold. */
+  milestone?: boolean;
 }
 
 export interface HeroContextInput {
@@ -30,7 +32,7 @@ export function getHeroContext({
   const hasGoal = goalDuration > 0;
 
   if (hasGoal && currentStreak >= goalDuration) {
-    return { emoji: '🏆', text: 'Goal reached', tone: 'goal' };
+    return { emoji: '🏆', text: 'Goal reached', tone: 'goal', milestone: true };
   }
 
   if (currentStreak >= MIN_STREAK && currentStreak >= bestStreak) {

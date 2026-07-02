@@ -75,7 +75,9 @@ function handleSyncFailure(
   const { callbacks } = options;
   const exhausted = result.item.retryContext.exhausted;
   const errorMsg = result.error?.message ?? 'Sync failed';
-  queueManager.markFailed(operation.id, errorMsg, result.error?.category);
+  queueManager.markFailed(operation.id, errorMsg, result.error?.category, {
+    final: exhausted,
+  });
 
   if (exhausted) {
     callbacks?.onFailure?.(operation, errorMsg);

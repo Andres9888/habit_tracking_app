@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import { getLocalDateString } from '../../utils/getLocalDateString';
 import {
   buildProfileStats,
@@ -22,15 +22,22 @@ export interface ProfileStatsState {
 }
 
 export function useProfileStats(): ProfileStatsState {
-  const habitsQuery = useQuery(api.habits.list);
+  const habitsQuery = useCachedQuery(
+    api.habits.list,
+    {},
+    {
+      entryName: 'habits.list',
+    }
+  );
   const habits = Array.isArray(habitsQuery) ? habitsQuery : [];
   const habitsLoading = habitsQuery === undefined;
 
   const startDate =
     habits.length > 0 ? getProfileTrackingStartDate(habits) : null;
-  const trackingQuery = useQuery(
+  const trackingQuery = useCachedQuery(
     api.habits.getTracking,
-    startDate ? { endDate: getLocalDateString(), startDate } : 'skip'
+    startDate ? { endDate: getLocalDateString(), startDate } : 'skip',
+    { entryName: 'habits.getTracking', fallbackToLatest: false }
   );
   const tracking = Array.isArray(trackingQuery) ? trackingQuery : [];
   const trackingLoading = startDate !== null && trackingQuery === undefined;

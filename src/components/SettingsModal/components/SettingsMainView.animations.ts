@@ -1,7 +1,7 @@
 import { FadeIn, SlideInLeft, SlideInRight } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 
-export type SettingsView = 'settings' | 'archived' | 'account';
+export type SettingsView = 'settings' | 'archived' | 'account' | 'calendar';
 export type ViewDirection = 'forward' | 'back' | 'none';
 
 export function getSettingsViewEntering(

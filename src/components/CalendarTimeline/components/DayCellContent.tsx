@@ -42,7 +42,7 @@ interface DayCellContentProps {
 }
 
 /** The visual content of a day cell — weekday label + SVG progress ring */
-export const DayCellContent: React.FC<DayCellContentProps> = ({
+const DayCellContentComponent: React.FC<DayCellContentProps> = ({
   weekday,
   dayNumber,
   index,
@@ -122,3 +122,5 @@ export const DayCellContent: React.FC<DayCellContentProps> = ({
     </Animated.View>
   );
 };
+
+export const DayCellContent = React.memo(DayCellContentComponent);

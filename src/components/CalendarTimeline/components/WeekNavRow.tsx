@@ -35,7 +35,7 @@ const EXIT_TIMING = { duration: durations.transition, easing: Easing.in(Easing.c
 const SLIDE_OFFSET = 16;
 
 /** Date row — centered date pill with optional "Today" pill on past weeks */
-export const WeekNavRow: React.FC<WeekNavRowProps> = ({
+const WeekNavRowComponent: React.FC<WeekNavRowProps> = ({
   monthName,
   dateSuffix,
   isViewingPast,
@@ -163,3 +163,5 @@ const s = StyleSheet.create({
   sideColumnRight: { alignItems: 'flex-end', flex: 1 },
   solidChip: { ...CHIP_BASE, gap: 4 },
 });
+
+export const WeekNavRow = React.memo(WeekNavRowComponent);

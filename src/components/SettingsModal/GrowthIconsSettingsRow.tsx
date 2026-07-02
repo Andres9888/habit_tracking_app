@@ -3,13 +3,14 @@
  * Writes directly to userSettings.progressEmojis via a Convex mutation.
  */
 import { Sparkles } from 'lucide-react-native';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 
 import { iconSizes } from '@/theme/iconSizes';
 
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import { useThemeColors } from '../../theme/ThemeContext';
 import {
   CUSTOM_PRESET_ID,
@@ -21,13 +22,22 @@ import {
 } from '../../utils/progressEmojis';
 import { ProgressEmojiPicker } from '../ProgressEmojiPicker';
 
+import { GrowthIconsCustomizeAction } from './GrowthIconsCustomizeAction';
 import { SettingsRow } from './SettingsRow';
 import { rowMatchesQuery, useSettingsSearch } from './search';
 
 export function GrowthIconsSettingsRow() {
   const { settings: settingsIcons } = useThemeColors();
   const { query } = useSettingsSearch();
-  const settings = useQuery(api.settings.get);
+  const [expanded, setExpanded] = useState(false);
+  const toggleExpanded = useCallback(() => setExpanded((v) => !v), []);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const currentValue = settings?.progressEmojis;
   const savedCustom = settings?.customProgressEmojis;
   const updateSettings = useMutation(api.settings.update);
@@ -78,17 +88,25 @@ export function GrowthIconsSettingsRow() {
         }
         iconBackgroundColor={settingsIcons.gradient.bg}
         label='Default growth icons'
-        subtitle='Pick the 5 emojis used for every habit by default'
+        rightAccessory={
+          <GrowthIconsCustomizeAction
+            expanded={expanded}
+            onToggle={toggleExpanded}
+          />
+        }
+        subtitle='Used for every new habit'
         type='info'
       />
       {rowMatchesQuery(query, 'Default growth icons') ? (
         <ProgressEmojiPicker
           customPreset={customPreset}
+          expanded={expanded}
           expandedPanelStyle={{ paddingLeft: 16, paddingRight: 16 }}
           fallback={DEFAULT_PROGRESS_EMOJIS}
           toggleRowStyle={{ paddingLeft: 16, paddingRight: 16 }}
           value={pickerValue}
           onChange={handleChange}
+          onToggleExpanded={toggleExpanded}
         />
       ) : null}
     </View>

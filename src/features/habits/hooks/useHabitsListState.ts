@@ -9,9 +9,17 @@
  */
 
 import { addDays, format, parse } from 'date-fns';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
 import type {
   Habit,
@@ -116,7 +124,13 @@ export function useHabitsListState(): HabitsListState {
   const toggleHabitMutation = useToggleHabitWithTimezone();
   const reorderHabits = useMutation(api.habits.reorderHabits);
 
-  const habitsQuery = useQuery(api.habits.list);
+  const habitsQuery = useCachedQuery(
+    api.habits.list,
+    {},
+    {
+      entryName: 'habits.list',
+    }
+  );
   // Validate and limit habits array for performance (guards against 100+ habits edge case)
   const habitsValidation = useMemo(
     () => validateHabitsArray(habitsQuery ?? []),
@@ -131,7 +145,13 @@ export function useHabitsListState(): HabitsListState {
     console.warn('[useHabitsListState]', habitsValidation.warning);
   }
 
-  const settingsQuery = useQuery(api.settings.get);
+  const settingsQuery = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const settings = (settingsQuery ?? undefined) as
     | HabitsListSettings
     | undefined;
@@ -329,8 +349,13 @@ export function useHabitsListState(): HabitsListState {
   // Wrap toggleHabit to also play completion sound
   const toggleHabit = useCallback(
     async (args: { habitId: Habit['_id']; date: string }) => {
-      const { baseToggleHabit, getHabitStatus, habitsById, isCompleted, predictedStrengths } =
-        toggleDepsRef.current;
+      const {
+        baseToggleHabit,
+        getHabitStatus,
+        habitsById,
+        isCompleted,
+        predictedStrengths,
+      } = toggleDepsRef.current;
       // Check if this will mark as completed (not already completed)
       const currentlyCompleted = isCompleted(args.habitId, args.date);
       const habit = habitsById.get(args.habitId);
@@ -355,10 +380,16 @@ export function useHabitsListState(): HabitsListState {
           updatedAt,
         };
 
-        setPredictedStrengths((previousPredictions) => {
-          const nextPredictions = new Map(previousPredictions);
-          nextPredictions.set(args.habitId, prediction);
-          return nextPredictions;
+        // The predicted-strength fill is a non-urgent, cosmetic update. Marking
+        // it as a transition keeps it off the tap's critical path so the urgent
+        // dot-flip (optimistic store) and open-detail navigation aren't blocked
+        // by the all-habits map + re-sort it triggers.
+        startTransition(() => {
+          setPredictedStrengths((previousPredictions) => {
+            const nextPredictions = new Map(previousPredictions);
+            nextPredictions.set(args.habitId, prediction);
+            return nextPredictions;
+          });
         });
 
         const timers = cleanupTimersRef.current;
@@ -369,18 +400,20 @@ export function useHabitsListState(): HabitsListState {
           args.habitId,
           setTimeout(() => {
             timers.delete(args.habitId);
-            setPredictedStrengths((previousPredictions) => {
-              const currentPrediction = previousPredictions.get(args.habitId);
-              if (
-                !currentPrediction ||
-                currentPrediction.updatedAt !== updatedAt
-              ) {
-                return previousPredictions;
-              }
+            startTransition(() => {
+              setPredictedStrengths((previousPredictions) => {
+                const currentPrediction = previousPredictions.get(args.habitId);
+                if (
+                  !currentPrediction ||
+                  currentPrediction.updatedAt !== updatedAt
+                ) {
+                  return previousPredictions;
+                }
 
-              const nextPredictions = new Map(previousPredictions);
-              nextPredictions.delete(args.habitId);
-              return nextPredictions;
+                const nextPredictions = new Map(previousPredictions);
+                nextPredictions.delete(args.habitId);
+                return nextPredictions;
+              });
             });
           }, STRENGTH_PREDICTION_TTL_MS)
         );

@@ -25,6 +25,8 @@ export interface SettingsMainViewProps {
   setShowGradientFill: ModalLogic['setShowGradientFill'];
   showStreakConnections: ModalLogic['showStreakConnections'];
   setShowStreakConnections: ModalLogic['setShowStreakConnections'];
+  useDyslexicFont: ModalLogic['useDyslexicFont'];
+  setUseDyslexicFont: ModalLogic['setUseDyslexicFont'];
   completionSoundEnabled: SettingsModalProps['completionSoundEnabled'];
   completionSoundType: SettingsModalProps['completionSoundType'];
   dayShape: SettingsModalProps['dayShape'];

@@ -5,6 +5,7 @@
 import { useMutation, useQuery } from 'convex/react';
 import { useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import type { CategoryFilter } from '../templates/templates.types';
 import type { Doc } from '../../../convex/_generated/dataModel';
 import { CATEGORY_META } from './data/categoryMeta';
@@ -47,8 +48,20 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
 
 export function useTemplatesData() {
   const allTemplates = useQuery(api.templates.list, {});
-  const userHabits = useQuery(api.habits.list);
-  const settings = useQuery(api.settings.get);
+  const userHabits = useCachedQuery(
+    api.habits.list,
+    {},
+    {
+      entryName: 'habits.list',
+    }
+  );
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const importedIds = useQuery(api.templates.getImportedTemplateIds, {});
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;

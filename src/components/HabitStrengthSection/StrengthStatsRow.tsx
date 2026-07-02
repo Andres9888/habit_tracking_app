@@ -1,9 +1,9 @@
 /**
  * StrengthStatsRow Component
  *
- * Three-column comparison metrics (since start / last month / last week)
- * in the shared detail-page stat idiom. Positive changes carry the single
- * green accent.
+ * Two-column comparison metrics (last month / last week) in the shared
+ * detail-page stat idiom. Positive changes carry the single green accent.
+ * ("since start" was dropped — it equalled the hero ring's current %.)
  */
 
 import React from 'react';
@@ -27,7 +27,6 @@ const safe = (value: number | undefined): number =>
  * StrengthStatsRow displays three comparison metrics in a row.
  */
 export const StrengthStatsRow = React.memo(function StrengthStatsRow({
-  sinceStart,
   lastMonth,
   lastWeek,
 }: StrengthStatsRowProps) {
@@ -35,11 +34,6 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
   const sectionColors = getThemeColors(themeColors);
 
   const items = [
-    {
-      label: 'since start',
-      raw: safe(sinceStart),
-      value: `${safe(sinceStart)}%`,
-    },
     {
       label: 'last month',
       raw: safe(lastMonth),
@@ -54,7 +48,7 @@ export const StrengthStatsRow = React.memo(function StrengthStatsRow({
 
   return (
     <View
-      accessibilityLabel={`Statistics: ${items[0].value} since start, ${items[1].value} last month, ${items[2].value} last week`}
+      accessibilityLabel={`Statistics: ${items[0].value} last month, ${items[1].value} last week`}
       className='flex-row items-center'
       style={{
         borderTopColor: themeColors.border,

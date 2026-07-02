@@ -19,9 +19,9 @@ export const useSettingsModalLogic = ({
   settingsDocument,
   visible,
 }: UseSettingsModalLogicProps) => {
-  const [view, setViewState] = useState<'settings' | 'archived' | 'account'>(
-    'settings'
-  );
+  const [view, setViewState] = useState<
+    'settings' | 'archived' | 'account' | 'calendar'
+  >('settings');
   const [viewDirection, setViewDirection] = useState<
     'forward' | 'back' | 'none'
   >('none');
@@ -36,10 +36,13 @@ export const useSettingsModalLogic = ({
     }
   }, [visible]);
 
-  const setView = useCallback((next: 'settings' | 'archived' | 'account') => {
-    setViewDirection(next === 'settings' ? 'back' : 'forward');
-    setViewState(next);
-  }, []);
+  const setView = useCallback(
+    (next: 'settings' | 'archived' | 'account' | 'calendar') => {
+      setViewDirection(next === 'settings' ? 'back' : 'forward');
+      setViewState(next);
+    },
+    []
+  );
 
   const handleClose = useCallback(() => {
     onClose();

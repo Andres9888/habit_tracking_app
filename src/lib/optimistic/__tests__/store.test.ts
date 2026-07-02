@@ -10,13 +10,12 @@ const mockHabitId = (id: string) => id as Id<'habits'>;
 
 describe('OptimisticStore', () => {
   beforeEach(() => {
-    // Reset store state by confirming/failing all operations
-    const snapshot = optimisticStore.getSnapshot();
-    for (const op of snapshot.operations.values()) {
-      if (op.state === 'pending') {
-        optimisticStore.confirm(op.id);
-      }
-    }
+    optimisticStore.reset();
+  });
+
+  afterEach(() => {
+    optimisticStore.reset();
+    jest.useRealTimers();
   });
 
   describe('Toggle operations', () => {
@@ -48,6 +47,7 @@ describe('OptimisticStore', () => {
     });
 
     it('should clear pending state on confirm', () => {
+      jest.useFakeTimers();
       const habitId = mockHabitId('habit_789');
       const date = '2026-01-20';
 
@@ -58,6 +58,7 @@ describe('OptimisticStore', () => {
       });
 
       optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(300);
 
       expect(optimisticStore.getPendingToggle(habitId, date)).toBeUndefined();
     });
@@ -117,6 +118,7 @@ describe('OptimisticStore', () => {
     });
 
     it('should clear archive state on confirm', () => {
+      jest.useFakeTimers();
       const habitId = mockHabitId('habit_confirm_archive');
 
       const operationId = optimisticStore.addArchive({
@@ -126,6 +128,7 @@ describe('OptimisticStore', () => {
       });
 
       optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(300);
 
       expect(optimisticStore.getPendingArchive(habitId)).toBeUndefined();
     });
@@ -154,6 +157,7 @@ describe('OptimisticStore', () => {
     });
 
     it('should clear reorder on confirm', () => {
+      jest.useFakeTimers();
       const habitIds = [mockHabitId('habit_x'), mockHabitId('habit_y')];
 
       const operationId = optimisticStore.addReorder({
@@ -162,6 +166,7 @@ describe('OptimisticStore', () => {
       });
 
       optimisticStore.confirm(operationId);
+      jest.advanceTimersByTime(300);
 
       expect(optimisticStore.getPendingReorder()).toBeNull();
     });
@@ -250,6 +255,33 @@ describe('OptimisticStore', () => {
       });
 
       expect(listener).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getPendingTogglesSnapshot (stable slice)', () => {
+    it('keeps a stable reference across unrelated ops, new reference on toggle', () => {
+      const before = optimisticStore.getPendingTogglesSnapshot();
+
+      // An archive op does not touch pendingToggles → reference must be stable,
+      // so `usePendingToggles` consumers don't re-render.
+      const archiveOp = optimisticStore.addArchive({
+        habitId: mockHabitId('slice_archive'),
+        habitName: 'Test',
+        toArchived: true,
+      });
+      expect(optimisticStore.getPendingTogglesSnapshot()).toBe(before);
+
+      // A toggle op changes pendingToggles → reference must change.
+      optimisticStore.addToggle({
+        habitId: mockHabitId('slice_toggle'),
+        date: '2026-01-22',
+        toCompleted: true,
+      });
+      const afterToggle = optimisticStore.getPendingTogglesSnapshot();
+      expect(afterToggle).not.toBe(before);
+      expect(afterToggle.get('slice_toggle:2026-01-22')).toBe(true);
+
+      optimisticStore.confirm(archiveOp);
     });
   });
 

@@ -12,11 +12,11 @@ interface SettingsRowContentProps {
   iconBackgroundColor: SettingsRowProps['iconBackgroundColor'];
   isInteractiveInfo: boolean;
   label: SettingsRowProps['label'];
-  help: SettingsRowProps['help'];
   onToggle: (value: boolean) => void;
   pulseStyle: ReturnType<typeof useAnimatedStyle>;
   secondaryTextColor: string;
-  showBorder: boolean;
+  showTopBorder: boolean;
+  showChevron?: boolean;
   subtitle?: SettingsRowProps['subtitle'];
   type: SettingsRowProps['type'];
   value: SettingsRowProps['value'];
@@ -27,7 +27,6 @@ interface SettingsRowContentProps {
 export function SettingsRowContent({
   badge,
   colors,
-  help,
   icon,
   iconBackgroundColor,
   isInteractiveInfo,
@@ -36,7 +35,8 @@ export function SettingsRowContent({
   pulseStyle,
   rightAccessory,
   secondaryTextColor,
-  showBorder,
+  showChevron,
+  showTopBorder,
   subtitle,
   type,
   value,
@@ -44,10 +44,10 @@ export function SettingsRowContent({
   return (
     <View
       accessible={isInteractiveInfo ? false : undefined}
-      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4 py-4 ${showBorder ? 'border-b' : ''}`}
+      className={`flex-row ${subtitle ? 'items-start' : 'items-center'} px-4 py-4 ${showTopBorder ? 'border-t' : ''}`}
       style={{
         backgroundColor: colors.background,
-        borderColor: showBorder ? colors.border : undefined,
+        borderColor: showTopBorder ? colors.border : undefined,
         overflow: 'hidden',
         paddingVertical: airy.rowPaddingV,
       }}
@@ -69,7 +69,6 @@ export function SettingsRowContent({
         {icon}
       </View>
       <RowLabel
-        help={help}
         isInteractiveInfo={isInteractiveInfo}
         label={label}
         labelColor={colors.label}
@@ -82,6 +81,7 @@ export function SettingsRowContent({
           badge={badge}
           colors={colors}
           label={label}
+          showChevron={showChevron}
           type={type}
           value={value}
           onToggle={onToggle}

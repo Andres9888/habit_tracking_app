@@ -67,6 +67,7 @@ export interface UseAnalyticsScreenReturn {
   trendData: TrendData[] | undefined;
   complianceData: HeatmapData[] | undefined;
   weeklyInsights: WeeklyInsights | undefined;
+  cacheSavedAt: number | undefined;
 
   // Handlers
   onRefresh: () => Promise<void>;

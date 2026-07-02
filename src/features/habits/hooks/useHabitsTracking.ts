@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 
 import { api } from '../../../../convex/_generated/api';
-import { useStableQuery } from '../../../lib/useStableQuery';
+import { useCachedQuery } from '../../../lib/queryCache';
 import type { Id } from '../../../../convex/_generated/dataModel';
-import { useOptimisticStore } from '../../../lib/optimistic';
+import { usePendingToggles } from '../../../lib/optimistic';
 import type { HabitStatus } from '../types';
 import {
   buildCompletedDatesByHabit,
@@ -13,20 +13,28 @@ import {
   getDateStatusInfo,
   normalizeToday,
 } from './useHabitsTracking.helpers';
+import { useTrackingWindow } from './useTrackingWindow';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   const stableToday = useMemo(
     () => normalizeToday(today),
     [today.getDate(), today.getFullYear(), today.getMonth()]
   );
-  const firstDateString = extendedDateStrings[0];
-  const lastDateString = extendedDateStrings.at(-1);
-  const queryArgs = useMemo(
-    () => buildTrackingQueryArgs(firstDateString, lastDateString),
-    [firstDateString, lastDateString]
+  // Query a stable buffered window instead of the shifting visible range, so
+  // week navigation within the buffer reuses the same subscription.
+  const { windowStart, windowEnd, windowDateStrings } = useTrackingWindow(
+    extendedDateStrings,
+    stableToday
   );
-  const tracking = useStableQuery(api.habits.getTracking, queryArgs) ?? [];
-  const { pendingToggles } = useOptimisticStore();
+  const queryArgs = useMemo(
+    () => buildTrackingQueryArgs(windowStart, windowEnd),
+    [windowStart, windowEnd]
+  );
+  const tracking =
+    useCachedQuery(api.habits.getTracking, queryArgs, {
+      entryName: 'habits.getTracking',
+    }) ?? [];
+  const pendingToggles = usePendingToggles();
   const completedDatesByHabit = useMemo(() => {
     return buildCompletedDatesByHabit(tracking, pendingToggles);
   }, [pendingToggles, tracking]);
@@ -38,9 +46,12 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     (habitId: string) => streakByHabit.get(habitId) ?? 0,
     [streakByHabit]
   );
+  // Build the status cache over the full stable window so getHabitStatus keeps
+  // a stable identity across in-window navigation (otherwise it churns on every
+  // week change, re-rendering the whole habits list a second time).
   const dateStatusCache = useMemo(
-    () => buildDateStatusCache(extendedDateStrings, stableToday),
-    [extendedDateStrings, stableToday]
+    () => buildDateStatusCache(windowDateStrings, stableToday),
+    [windowDateStrings, stableToday]
   );
 
   const getHabitStatus = useCallback(

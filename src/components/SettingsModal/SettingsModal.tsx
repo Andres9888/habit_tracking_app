@@ -60,9 +60,11 @@ function SettingsModalContent(props: SettingsModalProps) {
         setHabitSortMode={logic.setHabitSortMode}
         setShowGradientFill={logic.setShowGradientFill}
         setShowStreakConnections={logic.setShowStreakConnections}
+        setUseDyslexicFont={logic.setUseDyslexicFont}
         setView={logic.setView}
         showGradientFill={logic.showGradientFill}
         showStreakConnections={logic.showStreakConnections}
+        useDyslexicFont={logic.useDyslexicFont}
         stickyCalendarHeader={props.stickyCalendarHeader}
         streakRemindersEnabled={props.streakRemindersEnabled}
         streakReminderTime={props.streakReminderTime}

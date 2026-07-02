@@ -23,7 +23,7 @@ interface ConnectorArmProps {
   hasShimmer: boolean;
 }
 
-export const ConnectorArm: React.FC<ConnectorArmProps> = ({
+const ConnectorArmComponent: React.FC<ConnectorArmProps> = ({
   side,
   isGhost,
   colorStyle,
@@ -74,3 +74,5 @@ export const ConnectorArm: React.FC<ConnectorArmProps> = ({
     </Animated.View>
   );
 };
+
+export const ConnectorArm = React.memo(ConnectorArmComponent);

@@ -29,7 +29,7 @@ interface StrengthProgressBarProps {
   accentColor?: string;
 }
 
-export function StrengthProgressBar({
+function StrengthProgressBarComponent({
   strengthPercent,
   strengthEmojiAnimatedStyle,
   progressAnimatedStyle,
@@ -80,3 +80,5 @@ export function StrengthProgressBar({
     />
   );
 }
+
+export const StrengthProgressBar = React.memo(StrengthProgressBarComponent);

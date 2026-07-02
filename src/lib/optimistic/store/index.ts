@@ -10,6 +10,17 @@ import type { StoreListener, OptimisticStoreAPI } from './types';
 import { createOperations } from './operations';
 import { createStateManagement } from './stateManagement';
 
+const togglesEqual = (
+  a: ReadonlyMap<string, boolean>,
+  b: ReadonlyMap<string, boolean>
+): boolean => {
+  if (a.size !== b.size) return false;
+  for (const [key, value] of a) {
+    if (b.get(key) !== value) return false;
+  }
+  return true;
+};
+
 function createOptimisticStore(): OptimisticStoreAPI {
   const state: OptimisticStore = {
     operations: new Map(),
@@ -36,18 +47,34 @@ function createOptimisticStore(): OptimisticStoreAPI {
     pendingToggles: new Map(state.pendingToggles),
   });
 
+  // Stable, isolated snapshot of just `pendingToggles`. Most notifies (operation
+  // state changes, the 400ms operation-delete, and unrelated archive/pause/
+  // reorder ops) don't touch toggles — keeping this reference identical across
+  // those lets `usePendingToggles` skip re-rendering the whole habits list.
+  // pendingToggles only ever holds a handful of in-flight entries, so the
+  // shallow compare on each notify is negligible.
+  let togglesSnapshot: Map<string, boolean> = new Map(state.pendingToggles);
+
   const notify = () => {
     snapshot = buildSnapshot();
+    if (!togglesEqual(togglesSnapshot, state.pendingToggles)) {
+      togglesSnapshot = new Map(state.pendingToggles);
+    }
     for (const listener of listeners) listener();
   };
 
   const operations = createOperations(state, notify);
   const stateManagement = createStateManagement(state, notify);
   snapshot = buildSnapshot();
+  togglesSnapshot = new Map(state.pendingToggles);
 
   return {
     getSnapshot(): OptimisticStore {
       return snapshot;
+    },
+
+    getPendingTogglesSnapshot(): Map<string, boolean> {
+      return togglesSnapshot;
     },
 
     subscribe(listener: StoreListener): () => void {

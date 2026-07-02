@@ -1,10 +1,5 @@
-import {
-  addDays,
-  eachDayOfInterval,
-  format,
-  startOfDay,
-} from 'date-fns';
-import { useCallback, useMemo, useState } from 'react';
+import { addDays, eachDayOfInterval, format, startOfDay } from 'date-fns';
+import { useCallback, useMemo, useState, useTransition } from 'react';
 
 const PREDICTION_LOOKBACK_DAYS = 14;
 const CONNECTION_LOOKAHEAD_DAYS = 1;
@@ -12,6 +7,11 @@ const CONNECTION_LOOKAHEAD_DAYS = 1;
 export function useHabitsWeekDates() {
   const today = useMemo(() => startOfDay(new Date()), []);
   const [weekAnchor, setWeekAnchor] = useState(today);
+  // Week navigation re-renders the whole visible habits list. Mark those
+  // updates as transitions so the swipe gesture + slide animation stay
+  // responsive; the new week paints a frame later while cached query data
+  // keeps the previous window visible, so no blank flash.
+  const [, startWeekTransition] = useTransition();
 
   const weekDates = useMemo(
     () =>
@@ -43,19 +43,25 @@ export function useHabitsWeekDates() {
   );
 
   const handlePreviousWeek = useCallback(() => {
-    setWeekAnchor((prev) => addDays(prev, -5));
-  }, []);
+    startWeekTransition(() => {
+      setWeekAnchor((prev) => addDays(prev, -5));
+    });
+  }, [startWeekTransition]);
 
   const handleNextWeek = useCallback(() => {
-    setWeekAnchor((prev) => {
-      const nextAnchor = addDays(prev, 5);
-      return nextAnchor.getTime() > today.getTime() ? today : nextAnchor;
+    startWeekTransition(() => {
+      setWeekAnchor((prev) => {
+        const nextAnchor = addDays(prev, 5);
+        return nextAnchor.getTime() > today.getTime() ? today : nextAnchor;
+      });
     });
-  }, [today]);
+  }, [startWeekTransition, today]);
 
   const handleJumpToToday = useCallback(() => {
-    setWeekAnchor(today);
-  }, [today]);
+    startWeekTransition(() => {
+      setWeekAnchor(today);
+    });
+  }, [startWeekTransition, today]);
 
   return {
     canNavigateForward,

@@ -17,7 +17,6 @@ import { colors as palette } from '@/theme/colors';
 
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import { shadows } from '../../theme/spacing';
-import { StrengthProgressBar } from '../StrengthProgressBar';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { getStrengthJourney } from './journey';
 import { MilestoneTrack } from './MilestoneTrack';
@@ -84,21 +83,10 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           <StrengthHero journey={journey} strength={currentStrength} />
         </View>
 
-        <View className='mb-4'>
+        <View className='mb-5'>
           <MilestoneTrack
             currentIndex={journey.index}
             levels={journey.levels}
-          />
-        </View>
-
-        <View className='mb-5'>
-          <StrengthProgressBar
-            emojiOverrides={progressEmojis}
-            showLabel={false}
-            showNextLevel
-            showPercentage={false}
-            size='large'
-            strength={currentStrength}
           />
         </View>
 
@@ -116,7 +104,6 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
         <StrengthStatsRow
           lastMonth={extendedMetrics.deltaVsMonth}
           lastWeek={extendedMetrics.deltaVsWeek}
-          sinceStart={extendedMetrics.sinceStart}
         />
       </View>
     </Animated.View>

@@ -36,10 +36,10 @@ export const HeatmapHeader = memo(function HeatmapHeader({
       {showStat && eligibleDays > 0 ? (
         <View style={styles.headerStat}>
           <Text style={[styles.headerStatPct, { color: habitColor }]}>
-            {completionRate}%
+            {completions} days
           </Text>
           <Text style={[styles.headerStatCount, { color: colors.text.tertiary }]}>
-            {completions}/{eligibleDays} days
+            {completionRate}% complete
           </Text>
         </View>
       ) : null}

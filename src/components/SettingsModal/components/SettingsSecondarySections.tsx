@@ -21,7 +21,7 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
   return (
     <>
       {sectionHasMatch(query, 'support') ? (
-        <Animated.View entering={isSearching ? undefined : sectionEnterAnim(5)}>
+        <Animated.View entering={isSearching ? undefined : sectionEnterAnim(6)}>
           <AboutSupportSection
             sectionIconColor={p.sectionIconColor}
             onFeedback={p.onFeedback}
@@ -33,7 +33,7 @@ export function SettingsSecondarySections(p: SecondarySectionsProps) {
       ) : null}
       {/* About footer hidden during search to keep results tight */}
       {isSearching ? null : (
-        <Animated.View entering={sectionEnterAnim(6)}>
+        <Animated.View entering={sectionEnterAnim(7)}>
           <AboutFooter
             buildNumber={Constants.expoConfig?.ios?.buildNumber ?? '1'}
             version={Constants.expoConfig?.version ?? '1.0.0'}

@@ -34,7 +34,6 @@ export function AccountDangerCard({
         icon={<Trash2 color={settings.deleteAccount.icon} size={size} />}
         iconBackgroundColor={settings.deleteAccount.bg}
         label={isDeletingAccount ? 'Deleting account…' : 'Delete account'}
-        showBorder={false}
         type='navigation'
         onPress={isDeletingAccount ? undefined : onDeleteAccount}
       />

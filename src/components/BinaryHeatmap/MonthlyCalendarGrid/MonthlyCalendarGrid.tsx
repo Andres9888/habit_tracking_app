@@ -1,11 +1,11 @@
 import { useThemeColors } from '@/theme';
 import { colors as palette } from '@/theme/colors';
-import { useQuery } from 'convex/react';
 import { format } from 'date-fns';
 import { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
 import { completedTint } from './chainColors';
 import { MonthInsightStrip } from './MonthInsightStrip';
@@ -42,7 +42,13 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     habitCreatedAt,
   });
   const insights = useMonthInsights(completedDates, currentMonth);
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const showConnections = settings?.showStreakConnections ?? true;
   const monthKey = format(currentMonth, 'yyyy-MM');
   const cardBg = isDark ? colors.card : palette.light.surfaceMuted;
@@ -61,7 +67,10 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
 
   return (
     <View
-      style={[styles.container, { backgroundColor: cardBg, borderColor: colors.border }]}
+      style={[
+        styles.container,
+        { backgroundColor: cardBg, borderColor: colors.border },
+      ]}
     >
       <MonthNavigation
         currentMonth={currentMonth}
@@ -90,7 +99,11 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           />
         </View>
       </GestureDetector>
-      <MonthInsightStrip {...insights} monthKey={monthKey} showStreak={showStreakInInsights} />
+      <MonthInsightStrip
+        {...insights}
+        monthKey={monthKey}
+        showStreak={showStreakInInsights}
+      />
     </View>
   );
 });

@@ -4,9 +4,9 @@ import type { Habit } from '../../../features/habits/types';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { DetailCompleteButton } from './DetailCompleteButton';
 import { DetailHero } from './DetailHero';
+import { MilestoneBeat } from './MilestoneBeat';
 
 interface DetailHeroSectionProps {
-  daysTracking?: number;
   habit: Habit;
   isCompletedToday: boolean;
   isToggling: boolean;
@@ -15,7 +15,6 @@ interface DetailHeroSectionProps {
 }
 
 export function DetailHeroSection({
-  daysTracking,
   habit,
   isCompletedToday,
   isToggling,
@@ -25,7 +24,6 @@ export function DetailHeroSection({
   return (
     <View>
       <DetailHero
-        daysTracking={daysTracking}
         habit={habit}
         isCompletedToday={isCompletedToday}
         totalCompletions={totalCompletions}
@@ -34,6 +32,10 @@ export function DetailHeroSection({
         disabled={isToggling}
         isCompletedToday={isCompletedToday}
         onPress={() => onDayPress(getLocalDateString(), isCompletedToday)}
+      />
+      <MilestoneBeat
+        currentStreak={habit.currentStreak ?? 0}
+        isCompletedToday={isCompletedToday}
       />
     </View>
   );

@@ -54,7 +54,7 @@ export interface OfflineQueueManagerAPI {
   remove(operationId: string): boolean;
 
   /** Clear all operations from the queue */
-  clear(): void;
+  clear(options?: { persist?: boolean }): void;
 
   // Status updates (implemented in status.ts - T007)
   /** Mark an operation as syncing */
@@ -65,7 +65,8 @@ export interface OfflineQueueManagerAPI {
   markFailed(
     operationId: string,
     error: string,
-    category?: ErrorCategory
+    category?: ErrorCategory,
+    options?: { final?: boolean }
   ): boolean;
   /** Reset an operation to pending for retry */
   markPending(operationId: string): boolean;

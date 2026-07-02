@@ -17,7 +17,6 @@ import { useDetailScrollSpy } from './useDetailScrollSpy';
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
-  daysTracking?: number;
   habit: Habit;
   isCompletedToday: boolean;
   pendingToggleDate?: string | null;
@@ -28,7 +27,6 @@ interface HabitDetailContentProps {
 
 export function HabitDetailContent({
   completedDates,
-  daysTracking,
   habit,
   isCompletedToday,
   pendingToggleDate = null,
@@ -60,7 +58,6 @@ export function HabitDetailContent({
       onScroll={handleScroll}
     >
       <DetailHeroSection
-        daysTracking={daysTracking}
         habit={habit}
         isCompletedToday={isCompletedToday}
         isToggling={pendingToggleDate !== null}

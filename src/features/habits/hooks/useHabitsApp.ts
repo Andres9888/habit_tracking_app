@@ -35,10 +35,16 @@ export function useHabitsApp(): UseHabitsAppResult {
   useNotificationResponse(notificationHandlers);
 
   // Tapping a habit row opens the redesigned Habit Detail Screen.
-  return {
-    list: { ...list, handleHabitPress: modals.openHabitDetail },
-    modals,
-  };
+  // Memoised so the `handleHabitPress` override doesn't allocate a fresh `list`
+  // wrapper on every render — only when `list` or `openHabitDetail` change.
+  const { openHabitDetail } = modals;
+  return useMemo(
+    () => ({
+      list: { ...list, handleHabitPress: openHabitDetail },
+      modals,
+    }),
+    [list, openHabitDetail, modals]
+  );
 }
 
 export {

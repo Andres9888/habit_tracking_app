@@ -1,13 +1,14 @@
 /**
  * GoalPresetChip — Single preset day-count chip for streak goal picker.
  */
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { useThemeColors, withAlpha } from '../../../theme';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { typography, fontWeights } from '../../../theme/typography';
 import { readableHabitAccent } from './goalColorUtils';
+import { GoalRecommendedBadge } from './GoalRecommendedBadge';
 import { useGoalPresetChipAnimation } from './GoalPresetChip.hooks';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -81,22 +82,7 @@ export function GoalPresetChip({
       >
         {label}
       </Text>
-      {recommended ? (
-        <Text
-          style={{
-            color: accent,
-            fontSize: 9,
-            fontWeight: fontWeights.bold,
-            letterSpacing: 0.4,
-            marginTop: spacing.xs,
-            textTransform: 'uppercase',
-          }}
-        >
-          Recommended
-        </Text>
-      ) : isGrid ? (
-        <View style={{ height: 12, marginTop: spacing.xs }} />
-      ) : null}
+      <GoalRecommendedBadge accent={accent} recommended={recommended} />
     </AnimatedPressable>
   );
 }

@@ -7,6 +7,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 import { StaticSectionLabel } from './StaticSectionLabel';
 import { CollapsibleSectionCard } from './CollapsibleSectionCard';
 import { getRaisedSurface } from './raisedSurface';
+import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 
 interface Props {
   title: string;
@@ -56,7 +57,7 @@ export function SettingsSection({
     <View className='gap-2'>
       <StaticSectionLabel icon={icon} subtitle={subtitle} title={title} />
       <View className='overflow-hidden rounded-2xl' style={cardStyle}>
-        {children}
+        <SettingsRowDividerProvider>{children}</SettingsRowDividerProvider>
       </View>
     </View>
   );

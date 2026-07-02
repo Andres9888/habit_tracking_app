@@ -7,7 +7,9 @@
  *   3. Compound types — settings, share cards, reward toasts
  */
 
+import type { FunctionReturnType } from 'convex/server';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
+import { api } from '../../../convex/_generated/api';
 import type { CompletionSoundType } from '../../../convex/settings/types';
 import type { MilestoneAchievement } from '../../hooks/useMilestoneDetection';
 
@@ -15,8 +17,14 @@ import type { MilestoneAchievement } from '../../hooks/useMilestoneDetection';
 // 1. Core entities
 // ---------------------------------------------------------------------------
 
-/** A single habit document from the Convex `habits` table. */
-export type Habit = Doc<'habits'>;
+/** Habit shape used by the list-driven app shell. */
+export type ListHabit = FunctionReturnType<typeof api.habits.list>[number];
+
+/** Full habit document used by screens that fetch `habits.get` on demand. */
+export type FullHabit = Doc<'habits'>;
+
+/** A habit may be the slim list projection or a full on-demand document. */
+export type Habit = (ListHabit | FullHabit) & Partial<FullHabit>;
 
 /** Typed Convex ID for a habit. */
 export type HabitId = Id<'habits'>;

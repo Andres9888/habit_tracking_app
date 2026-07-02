@@ -16,20 +16,31 @@ import type {
  * Custom hook for CalendarTimeline component logic
  */
 export const useCalendarTimelineLogic = () => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Stable for the session: a fresh Date()/closures every render would bust the
+  // completionStatuses/completionCounts memos in useDerivedState on every render.
+  const todayTime = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return today.getTime();
+  }, []);
 
-  const isToday = (date: Date): boolean => {
-    const checkDate = new Date(date);
-    checkDate.setHours(0, 0, 0, 0);
-    return checkDate.getTime() === today.getTime();
-  };
+  const isToday = useCallback(
+    (date: Date): boolean => {
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate.getTime() === todayTime;
+    },
+    [todayTime]
+  );
 
-  const isFuture = (date: Date): boolean => {
-    const checkDate = new Date(date);
-    checkDate.setHours(0, 0, 0, 0);
-    return checkDate.getTime() > today.getTime();
-  };
+  const isFuture = useCallback(
+    (date: Date): boolean => {
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      return checkDate.getTime() > todayTime;
+    },
+    [todayTime]
+  );
 
   return { isFuture, isToday };
 };
@@ -40,13 +51,17 @@ export function useTimelineColors(isDark: boolean) {
   return useMemo(() => ({ augmentedColors: colors, colors }), [colors]);
 }
 
-const SLIDE_OFFSET = 16;
-const TRANSITION_EASING = { duration: 300, easing: Easing.out(Easing.cubic) };
+const SLIDE_OFFSET = 12;
+const TRANSITION_EASING = { duration: 160, easing: Easing.out(Easing.cubic) };
 
-/** Animates day cells entrance when the displayed week changes */
+/**
+ * Slides the day strip in when the displayed week changes. The new week is
+ * painted at full opacity immediately and only the slide animates — fading the
+ * strip from opacity 0 (the old behavior) made every navigation read as a slow
+ * "vanish then fade back in".
+ */
 export function useWeekTransition(dates: Date[], reduceMotion: boolean) {
   const translateX = useSharedValue(0);
-  const opacity = useSharedValue(1);
   const prevFirstIso = useRef<string | null>(null);
 
   useEffect(() => {
@@ -58,18 +73,12 @@ export function useWeekTransition(dates: Date[], reduceMotion: boolean) {
     ) {
       const forward = firstIso > prevFirstIso.current;
       translateX.value = forward ? SLIDE_OFFSET : -SLIDE_OFFSET;
-      opacity.value = 0;
       translateX.value = withTiming(0, TRANSITION_EASING);
-      opacity.value = withTiming(1, {
-        duration: 280,
-        easing: Easing.out(Easing.cubic),
-      });
     }
     prevFirstIso.current = firstIso;
-  }, [dates, reduceMotion, translateX, opacity]);
+  }, [dates, reduceMotion, translateX]);
 
   return useAnimatedStyle(() => ({
-    opacity: opacity.value,
     transform: [{ translateX: translateX.value }],
   }));
 }

@@ -48,7 +48,12 @@ export function createStatusUpdaters(
       return true;
     },
 
-    markFailed(operationId: string, error: string, category?: string): boolean {
+    markFailed(
+      operationId: string,
+      error: string,
+      category?: string,
+      options?: { final?: boolean }
+    ): boolean {
       const updated = updateOperation(operationId, (op) => ({
         ...op,
         lastAttemptAt: Date.now(),
@@ -64,7 +69,7 @@ export function createStatusUpdaters(
         operationId,
         stats: calculateStats(getState()),
         timestamp: Date.now(),
-        type: 'operation:failed',
+        type: options?.final ? 'operation:failed-final' : 'operation:failed',
       });
       return true;
     },

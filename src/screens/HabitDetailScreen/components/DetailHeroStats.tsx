@@ -19,6 +19,9 @@ export function DetailHeroStats({
 }: DetailHeroStatsProps) {
   const { colors } = useThemeColors();
   const labelColor = colors.text.secondary;
+  // When the current streak IS the all-time best, show a record marker instead
+  // of a digit identical to the streak column (avoids a twin-number glitch).
+  const isRecord = currentStreak >= 3 && currentStreak === bestStreak;
 
   return (
     <View
@@ -48,7 +51,16 @@ export function DetailHeroStats({
         </Text>
       </View>
       <StatHairline />
-      <StatColumn label='best' labelColor={labelColor} value={bestStreak} />
+      {isRecord ? (
+        <StatColumn
+          label='record'
+          labelColor={labelColor}
+          value='★'
+          valueColor={colors.status.streakText}
+        />
+      ) : (
+        <StatColumn label='best' labelColor={labelColor} value={bestStreak} />
+      )}
       <StatHairline />
       <StatColumn label='total' labelColor={labelColor} value={totalCompletions} />
     </View>

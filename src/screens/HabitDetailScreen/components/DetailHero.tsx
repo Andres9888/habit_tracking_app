@@ -4,7 +4,7 @@ import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { colors as palette } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 import type { Habit } from '../HabitDetailScreen.types';
 import { getHabitDisplayName } from './DetailHero.utils';
 import { DetailHeroContext } from './DetailHeroContext';
@@ -12,7 +12,6 @@ import { DetailHeroIcon } from './DetailHeroIcon';
 import { DetailHeroStats } from './DetailHeroStats';
 
 interface DetailHeroProps {
-  daysTracking?: number;
   habit: Habit;
   isCompletedToday?: boolean;
   totalCompletions: number;
@@ -23,7 +22,6 @@ const ENTERING = FadeInDown.duration(280)
   .easing(Easing.out(Easing.cubic));
 
 export function DetailHero({
-  daysTracking = 0,
   habit,
   isCompletedToday,
   totalCompletions,
@@ -40,7 +38,7 @@ export function DetailHero({
         borderColor: colors.border,
         borderRadius: borderRadius.large,
         borderWidth: 1,
-        marginHorizontal: spacing.base,
+        marginHorizontal: spacing.base + spacing.xs,
         marginTop: spacing.sm,
         paddingHorizontal: spacing.base,
         paddingVertical: spacing.lg,
@@ -76,16 +74,6 @@ export function DetailHero({
         currentStreak={habit.currentStreak ?? 0}
         goalDuration={habit.goalDuration ?? 0}
       />
-
-      <Text
-        style={{
-          ...typography.caption,
-          color: colors.text.tertiary,
-          marginTop: spacing.sm,
-        }}
-      >
-        Day {daysTracking + 1} of your journey
-      </Text>
 
       <DetailHeroStats
         bestStreak={habit.bestStreak ?? 0}

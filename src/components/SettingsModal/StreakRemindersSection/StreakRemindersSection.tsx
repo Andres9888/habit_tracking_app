@@ -46,7 +46,6 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
         iconBackgroundColor={settings.bell.bg}
         label='Streak Reminders'
         subtitle='Get nudged before an active streak slips'
-        showBorder={!props.enabled}
         type='toggle'
         value={props.enabled}
         onToggle={(v) => void props.onToggle(v)}

@@ -230,6 +230,25 @@ describe('OfflineQueueManager', () => {
 
       expect(manager.getState().operations).toHaveLength(0);
     });
+
+    it('can clear memory without persisting the empty queue', () => {
+      const AsyncStorage = require('@react-native-async-storage/async-storage');
+      const persistedManager = createOfflineQueueManager({ autoPersist: true });
+      const events: QueueEvent[] = [];
+      persistedManager.subscribe((event) => events.push(event));
+      persistedManager.enqueue('toggleCompletion', {
+        habitId: 'h1' as unknown,
+        date: '2026-01-30',
+        toCompleted: true,
+      });
+      AsyncStorage.setItem.mockClear();
+
+      persistedManager.clear({ persist: false });
+
+      expect(persistedManager.getState().operations).toHaveLength(0);
+      expect(events.at(-1)?.type).toBe('queue:cleared');
+      expect(AsyncStorage.setItem).not.toHaveBeenCalled();
+    });
   });
 
   describe('status transitions', () => {
@@ -415,6 +434,22 @@ describe('OfflineQueueManager', () => {
       expect(events[0].type).toBe('operation:failed');
     });
 
+    it('emits operation:failed-final for terminal markFailed', () => {
+      const result = manager.enqueue('toggleCompletion', {
+        habitId: 'h1' as unknown,
+        date: '2026-01-30',
+        toCompleted: true,
+      });
+
+      const events: QueueEvent[] = [];
+      manager.subscribe((e) => events.push(e));
+      manager.markFailed(result.operationId!, 'error', undefined, {
+        final: true,
+      });
+
+      expect(events[0].type).toBe('operation:failed-final');
+    });
+
     it('emits queue:cleared on clear', () => {
       manager.enqueue('toggleCompletion', {
         habitId: 'h1' as unknown,
@@ -469,10 +504,11 @@ describe('OfflineQueueManager', () => {
         updatedAt: Date.now(),
       });
 
-      // loadQueueState now checks pending key first (transaction recovery), then main key
-      // First call: pending key check (returns null - no pending transaction)
-      // Second call: main key (returns saved state)
+      // In tests secure storage falls back to AsyncStorage. Each storage read
+      // first checks a legacy key during migration, then reads the scoped key.
       AsyncStorage.getItem
+        .mockResolvedValueOnce(null)
+        .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(savedState);
 

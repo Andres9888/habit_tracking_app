@@ -16,34 +16,25 @@ export interface SettingsContentProps {
   onChangeCompletionSoundType: (
     value: CompletionSoundType
   ) => void | Promise<void>;
-  habitCompletionIcon: 'chain' | 'checkbox';
   habitSortMode: string;
-  dayShape: 'circle' | 'square';
-  onChangeHabitCompletionIcon: (
-    value: 'chain' | 'checkbox'
-  ) => void | Promise<void>;
-  onChangeDayShape: (value: 'circle' | 'square') => void | Promise<void>;
-  onChangeShowGradientFill: (value: boolean) => void | Promise<void>;
-  showStreakConnections: boolean;
-  onChangeShowStreakConnections: (value: boolean) => void | Promise<void>;
   darkModePreference: DarkModePreference;
   onChangeDarkModePreference: (
     value: DarkModePreference
   ) => void | Promise<void>;
   archivedHabitsCount?: number;
+  useDyslexicFont: boolean;
+  onChangeUseDyslexicFont: (value: boolean) => void | Promise<void>;
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;
+  onOpenCalendarLook: () => void;
   onChangeHabitSortMode: (
     mode: import('../../features/habits/types').HabitSortMode
   ) => void;
   onExportHabitsData?: () => void | Promise<void>;
-  showGradientFill: boolean;
   // Streak reminders
   streakRemindersEnabled: boolean;
-  stickyCalendarHeader: boolean;
   streakReminderTime: string;
   isPremium: boolean;
-  onChangeStickyCalendarHeader: (value: boolean) => void | Promise<void>;
   onToggleStreakReminders: (value: boolean) => void | Promise<void>;
   onChangeStreakReminderTime: (time: string) => void | Promise<void>;
   onPremiumUpsell?: () => void;

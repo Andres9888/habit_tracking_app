@@ -21,7 +21,11 @@
       "buildNumber": "16",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent."
+        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.",
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.expo.modules.backgroundtask.processing"
+        ],
+        "UIBackgroundModes": ["processing"]
       }
     },
     "android": {
@@ -74,7 +78,8 @@
       ],
       "@sentry/react-native",
       "./plugins/withPrivacyManifest.cjs",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-background-task"
     ],
     "owner": "andres9888"
   }

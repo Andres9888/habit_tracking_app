@@ -212,8 +212,8 @@ export const colors = {
   },
 
   /**
-   * Tone palettes — semantic encouragement tones for GoalCoachLine and
-   * similar contextual messaging. Each tone has bg/border/text triplet.
+   * Tone palettes — semantic encouragement tones for contextual messaging.
+   * Each tone has a bg/border/text triplet.
    */
   tone: {
     green: { bg: '#E7F6EE', border: '#A7D9BE', text: '#0F5E2C' }, // success / done

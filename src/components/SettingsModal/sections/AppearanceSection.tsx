@@ -1,45 +1,34 @@
-/** AppearanceSection — appearance settings with a live calendar preview */
-import { CalendarPreview } from '../CalendarPreview';
-import { CompletionIconSettingsRow } from '../CompletionIconSettingsRow';
-import { DayMarkerShapeSettingsRow } from '../DayMarkerShapeSettingsRow';
+/** AppearanceSection — Look & Feel: calendar-look entry, theme, growth, density */
+import { CalendarDays } from 'lucide-react-native';
+import { iconSizes } from '@/theme/iconSizes';
 import { GrowthIconsSettingsRow } from '../GrowthIconsSettingsRow';
+import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { ThemeSettingsRow } from '../ThemeSettingsRow';
-import { AppearanceChainRows } from './AppearanceChainRows';
 import { AppearanceDisplayRows } from './AppearanceDisplayRows';
-import { useSettingsSearch } from '../search';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { AppearanceSectionProps } from './AppearanceSection.types';
 
 export function AppearanceSection(p: AppearanceSectionProps) {
-  const { isSearching } = useSettingsSearch();
+  const { settings } = useThemeColors();
   return (
     <SettingsSection icon={p.icon} title='Look & Feel'>
-      {isSearching ? null : (
-        <CalendarPreview
-          compact={p.compactView}
-          completionIcon={p.habitCompletionIcon}
-          dayShape={p.dayShape}
-          showGradientFill={p.showGradientFill}
-          showStreakConnections={p.showStreakConnections}
-        />
-      )}
+      <SettingsRow
+        icon={
+          <CalendarDays
+            color={settings.dayMarker.icon}
+            size={iconSizes.small}
+          />
+        }
+        iconBackgroundColor={settings.dayMarker.bg}
+        label='Calendar look'
+        subtitle='Day shape, fill, chain style & preview'
+        type='navigation'
+        onPress={p.onOpenCalendarLook}
+      />
       <ThemeSettingsRow
         selected={p.darkModePreference}
         onSelect={p.onChangeDarkModePreference}
-      />
-      <DayMarkerShapeSettingsRow
-        selected={p.dayShape}
-        onSelect={p.onChangeDayShape}
-      />
-      <AppearanceChainRows
-        showGradientFill={p.showGradientFill}
-        showStreakConnections={p.showStreakConnections}
-        onChangeShowGradientFill={p.onChangeShowGradientFill}
-        onChangeShowStreakConnections={p.onChangeShowStreakConnections}
-      />
-      <CompletionIconSettingsRow
-        selected={p.habitCompletionIcon}
-        onSelect={p.onChangeHabitCompletionIcon}
       />
       <GrowthIconsSettingsRow />
       <AppearanceDisplayRows

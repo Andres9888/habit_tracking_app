@@ -43,7 +43,7 @@ export function GoalWhyAnchor({ habit }: GoalWhyAnchorProps) {
       }}
     >
       <View
-        className='h-9 w-9 items-center justify-center rounded-lg'
+        className='h-9 w-9 items-center justify-center rounded-[10px]'
         style={{ backgroundColor: colors.card }}
       >
         <Text style={{ fontSize: WHY_ICON_SIZE }}>{resolved.icon}</Text>

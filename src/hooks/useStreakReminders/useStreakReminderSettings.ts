@@ -5,12 +5,13 @@
  */
 
 import { useCallback, useState, useEffect } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { ensureNotificationPermissions } from '../../utils/notifications/permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
 import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
+import { useCachedQuery } from '../../lib/queryCache';
 
 const FIRST_HABIT_CREATED_KEY = '@chain_day:first_habit_created_at';
 const PERMISSION_REQUESTED_KEY = '@chain_day:notif_permission_requested';
@@ -49,7 +50,13 @@ export async function markFirstHabitCreated(): Promise<void> {
 }
 
 export function useStreakReminderSettings() {
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const updateSettings = useMutation(api.settings.update);
 
   const [enabled, setEnabledLocal] = useState(false);
@@ -88,7 +95,8 @@ export function useStreakReminderSettings() {
           streakRemindersEnabled: value,
         });
       } catch (error) {
-        if (__DEV__) console.error('Failed to update streak reminder setting:', error);
+        if (__DEV__)
+          console.error('Failed to update streak reminder setting:', error);
         setEnabledLocal(!value); // Revert on failure
       }
     },

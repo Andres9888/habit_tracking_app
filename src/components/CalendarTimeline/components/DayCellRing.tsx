@@ -53,7 +53,7 @@ interface DayCellRingProps {
   strengthPercent?: number;
 }
 
-export const DayCellRing: React.FC<DayCellRingProps> = ({
+const DayCellRingComponent: React.FC<DayCellRingProps> = ({
   dayNumber,
   completed,
   total,
@@ -238,3 +238,5 @@ export const DayCellRing: React.FC<DayCellRingProps> = ({
     </View>
   );
 };
+
+export const DayCellRing = React.memo(DayCellRingComponent);

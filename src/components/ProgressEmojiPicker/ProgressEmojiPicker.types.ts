@@ -17,14 +17,17 @@ export interface ProgressEmojiPickerProps {
   onChange: (next: ProgressEmojiSet | undefined) => void;
   /** Resolved set used for preview when value is undefined (fallback chain). */
   fallback: ProgressEmojiSet;
-  /** Optional caption above the preview row. */
-  label?: string;
   /** Style applied to the always-visible preview/toggle row. */
   toggleRowStyle?: StyleProp<ViewStyle>;
   /** Style applied to the expanded customization panel. */
   expandedPanelStyle?: StyleProp<ViewStyle>;
   /** User's saved "Custom" preset. When present, appears as a 6th chip. */
   customPreset?: ProgressEmojiPreset | null;
+  /** Controlled expanded state. When provided, the panel is driven by the
+   *  parent (e.g. a settings label row that owns the Customize/Done action). */
+  expanded?: boolean;
+  /** Toggles the controlled expanded state. Pair with `expanded`. */
+  onToggleExpanded?: () => void;
 }
 
 export interface ProgressEmojiSlotRowProps {
@@ -43,8 +46,6 @@ export interface ProgressEmojiToggleRowProps {
   onToggle: () => void;
   /** Style applied to the row container. */
   toggleRowStyle?: StyleProp<ViewStyle>;
-  /** Optional caption rendered above the row. */
-  label?: string;
 }
 
 export interface ProgressEmojiPanelProps {

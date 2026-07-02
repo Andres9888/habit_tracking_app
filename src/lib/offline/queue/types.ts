@@ -20,7 +20,7 @@ export type OfflineOperationStatus =
 /**
  * Types of operations that can be queued offline
  */
-export type OfflineOperationType = 
+export type OfflineOperationType =
   | 'toggleCompletion'
   | 'createHabit'
   | 'updateHabit'
@@ -58,6 +58,14 @@ export interface CreateHabitPayload {
   notes?: string;
   /** Optional preferred time */
   preferredTime?: string;
+  /** Optional frequency/cadence */
+  frequency?: string;
+  /** Optional weekly day selection */
+  daysOfWeek?: number[];
+  /** Optional streak goal */
+  goalDuration?: number;
+  /** Optional strength algorithm */
+  strengthAlgorithm?: 'forgiving' | 'balanced' | 'strict';
   /** Whether reminders are enabled */
   remindersEnabled?: boolean;
   /** Optional reminder time */
@@ -92,6 +100,8 @@ export interface UpdateHabitPayload {
 export interface ArchiveHabitPayload {
   /** ID of the habit being archived */
   habitId: Id<'habits'>;
+  /** Display name captured at enqueue time */
+  habitName?: string;
 }
 
 /**
@@ -100,6 +110,8 @@ export interface ArchiveHabitPayload {
 export interface PauseHabitPayload {
   /** ID of the habit being paused */
   habitId: Id<'habits'>;
+  /** Display name captured at enqueue time */
+  habitName?: string;
 }
 
 /**
@@ -113,7 +125,7 @@ export interface RemoveHabitPayload {
 /**
  * Union of all offline operation payloads
  */
-export type OfflineOperationPayload = 
+export type OfflineOperationPayload =
   | ToggleCompletionPayload
   | CreateHabitPayload
   | UpdateHabitPayload
@@ -140,16 +152,16 @@ export interface OfflineOperation<
   payload: T extends 'toggleCompletion'
     ? ToggleCompletionPayload
     : T extends 'createHabit'
-    ? CreateHabitPayload
-    : T extends 'updateHabit'
-    ? UpdateHabitPayload
-    : T extends 'archiveHabit'
-    ? ArchiveHabitPayload
-    : T extends 'pauseHabit'
-    ? PauseHabitPayload
-    : T extends 'removeHabit'
-    ? RemoveHabitPayload
-    : OfflineOperationPayload;
+      ? CreateHabitPayload
+      : T extends 'updateHabit'
+        ? UpdateHabitPayload
+        : T extends 'archiveHabit'
+          ? ArchiveHabitPayload
+          : T extends 'pauseHabit'
+            ? PauseHabitPayload
+            : T extends 'removeHabit'
+              ? RemoveHabitPayload
+              : OfflineOperationPayload;
 
   /** Current status of the operation */
   status: OfflineOperationStatus;

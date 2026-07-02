@@ -12,7 +12,7 @@ const AnimatedView = (() => {
 })();
 
 /** Renders the 7-day strip with streak connectors and swipe gesture */
-export const DayStrip: React.FC<DayStripProps> = ({
+const DayStripComponent: React.FC<DayStripProps> = ({
   dates,
   completionCounts,
   completionStatuses,
@@ -86,3 +86,5 @@ export const DayStrip: React.FC<DayStripProps> = ({
     </View>
   </GestureDetector>
 );
+
+export const DayStrip = React.memo(DayStripComponent);
