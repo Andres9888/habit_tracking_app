@@ -53,6 +53,7 @@ export function SwipeActions({ dragX, onArchive, onDelete }: SwipeActionsProps) 
       <Pressable
         accessibilityLabel="Archive habit"
         accessibilityRole="button"
+        testID="archive-habit-action"
         onPress={handleArchive}
         style={{
           alignItems: 'center',

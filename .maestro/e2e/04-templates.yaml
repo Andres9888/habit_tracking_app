@@ -1,0 +1,38 @@
+appId: com.chainday.app
+name: Templates Browse And Apply
+tags:
+  - smoke
+  - regression
+onFlowComplete:
+  - takeScreenshot: e2e-04-templates-complete
+---
+- runFlow: _shared/open-templates.yaml
+- assertVisible:
+    id: templates-search-bar
+- assertVisible:
+    text: "(Templates|Habit Library)"
+- tapOn:
+    id: templates-search-bar
+- inputText: walk
+- waitForAnimationToEnd
+- assertVisible:
+    text: "(walk|Walk|Walking|No habits found)"
+- tapOn:
+    id: templates-search-clear
+- waitForAnimationToEnd
+- assertVisible:
+    id: templates-trending-section
+- scrollUntilVisible:
+    element:
+      text: "Add .* habit"
+    direction: DOWN
+    timeout: 8000
+- tapOn:
+    text: "Add .* habit"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: templates-toast
+    timeout: 8000
+- assertVisible:
+    id: templates-toast-name

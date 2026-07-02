@@ -1,0 +1,32 @@
+appId: com.chainday.app
+name: Offline Sync
+tags:
+  - regression
+  - native
+onFlowComplete:
+  - takeScreenshot: e2e-06-offline-sync-complete
+---
+- runFlow: _shared/launch-signed-in.yaml
+- setAirplaneMode: enabled
+- extendedWaitUntil:
+    visible:
+      id: habits-offline-indicator
+    timeout: 15000
+- tapOn:
+    id: habit-card
+- extendedWaitUntil:
+    visible:
+      text: "(Mark as done|Done for Today)"
+    timeout: 5000
+- tapOn:
+    text: "(Mark as done|Done for Today)"
+- back
+- extendedWaitUntil:
+    visible:
+      id: habit-card-pending-sync-badge
+    timeout: 8000
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    visible:
+      text: "(Synced|Today)"
+    timeout: 20000

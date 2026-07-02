@@ -102,6 +102,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
         }
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
+        testID='habit-card'
         style={pressableStyle}
         onLongPress={
           props.showSelectionOverlay ? undefined : props.handleLongPress

@@ -18,6 +18,8 @@ interface ModalCloseButtonProps {
   onClose: () => void;
   /** Accessibility label override */
   label?: string;
+  /** Stable selector for device-level tests */
+  testID?: string;
   /** Icon size override (default 24 solid / 20 subtle) */
   iconSize?: number;
   /** Whether to trigger haptic feedback (default true) */
@@ -33,6 +35,7 @@ interface ModalCloseButtonProps {
 export function ModalCloseButton({
   onClose,
   label = 'Close',
+  testID,
   iconSize,
   haptic = true,
   variant = 'solid',
@@ -53,6 +56,7 @@ export function ModalCloseButton({
     <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole="button"
+      testID={testID}
       style={{
         height: 44,
         width: 44,

@@ -1,0 +1,24 @@
+appId: com.chainday.app
+name: Habit Detail
+tags:
+  - smoke
+  - regression
+onFlowComplete:
+  - takeScreenshot: e2e-03-habit-detail-complete
+---
+- runFlow: _shared/launch-signed-in.yaml
+- tapOn:
+    id: habit-card
+- extendedWaitUntil:
+    visible: Calendar
+    timeout: 5000
+- assertVisible: Strength
+- assertVisible: Goal
+- assertVisible:
+    text: "(Mark as done|Done for Today)"
+- tapOn:
+    text: "(Mark as done|Done for Today)"
+- waitForAnimationToEnd
+- assertVisible:
+    text: "(Mark as done|Done for Today)"
+- assertVisible: Edit habit
