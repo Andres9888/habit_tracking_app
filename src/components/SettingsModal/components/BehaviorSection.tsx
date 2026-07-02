@@ -3,6 +3,11 @@ import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { SortOrderPicker } from '../SortOrderPicker';
+import {
+  getSortDirectionLabel,
+  getSortFamily,
+  SORT_FAMILIES,
+} from '../SortOrderPicker.constants';
 import { SoundPicker } from '../SoundPicker';
 import { HabitDataRows } from './HabitDataRows';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -23,6 +28,18 @@ interface BehaviorSectionProps {
   onExportHabitsData?: SettingsContentProps['onExportHabitsData'];
 }
 
+const SOUND_LABELS = {
+  chime: 'Ding',
+  pop: 'Pop',
+  success: 'Rise',
+} as const;
+
+function getSortSummary(mode: HabitSortMode) {
+  const family = getSortFamily(mode);
+  const label = SORT_FAMILIES.find((item) => item.key === family)?.label;
+  return getSortDirectionLabel(family, mode.endsWith('_asc')) ?? label ?? mode;
+}
+
 export function BehaviorSection(p: BehaviorSectionProps) {
   const { settings: icons } = useThemeColors();
   const iconSize = iconSizes.small;
@@ -37,9 +54,10 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
         iconBackgroundColor={icons.sort.bg}
         label='Sort order'
-        showBorder={false}
+        showChevron
         subtitle='How habits are ordered'
         type='info'
+        value={getSortSummary(p.habitSortMode as HabitSortMode)}
       />
       {rowMatchesQuery(query, 'Sort order') ? (
         <SortOrderPicker
@@ -52,10 +70,13 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         iconBackgroundColor={icons.sound.bg}
         label='Completion sound'
         subtitle='Play sound when checking off'
-        showBorder={!p.completionSoundEnabled}
-        type='toggle'
-        value={p.completionSoundEnabled}
-        onToggle={(v) => void p.onChangeCompletionSoundEnabled(v)}
+        type='selection'
+        value={
+          p.completionSoundEnabled ? SOUND_LABELS[p.completionSoundType] : 'Off'
+        }
+        onPress={() =>
+          void p.onChangeCompletionSoundEnabled(!p.completionSoundEnabled)
+        }
       />
       {rowMatchesQuery(query, 'Completion sound') ? (
         <SoundPicker

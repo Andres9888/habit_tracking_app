@@ -59,7 +59,6 @@ export function AboutSupportSection({
         icon={<Sparkles color={settings.whatsNew.icon} size={iconSize} />}
         iconBackgroundColor={settings.whatsNew.bg}
         label="What's New"
-        showBorder={false}
         type='navigation'
         onPress={onWhatsNew}
       />

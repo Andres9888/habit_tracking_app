@@ -1,8 +1,7 @@
 import { Text, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { AnimatedToggle } from './AnimatedToggle';
+import { RowChevron } from './RowChevron';
 import { SettingsCountBadge } from '../../SettingsCountBadge';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
@@ -13,6 +12,7 @@ interface RowAccessoryProps {
   badge?: number;
   label: string;
   colors: SettingsRowColors;
+  showChevron?: boolean;
   onToggle: (v: boolean) => void;
 }
 
@@ -22,6 +22,7 @@ export function RowAccessory({
   badge,
   label,
   colors,
+  showChevron,
   onToggle,
 }: RowAccessoryProps) {
   if (type === 'toggle') {
@@ -49,17 +50,13 @@ export function RowAccessory({
         >
           {value as string}
         </Text>
-        <ChevronRight
-          color={colors.chevron}
-          size={iconSizes.small}
-          strokeWidth={2}
-        />
+        <RowChevron color={colors.chevron} />
       </View>
     );
   }
 
   if (type === 'info' && typeof value === 'string') {
-    return (
+    const valueText = (
       <Text
         className='ml-3'
         numberOfLines={1}
@@ -75,6 +72,17 @@ export function RowAccessory({
         {value}
       </Text>
     );
+
+    if (showChevron) {
+      return (
+        <View className='flex-row items-center gap-1'>
+          {valueText}
+          <RowChevron color={colors.chevron} />
+        </View>
+      );
+    }
+
+    return valueText;
   }
 
   if (type === 'navigation') {
@@ -83,11 +91,7 @@ export function RowAccessory({
         {badge != null && badge > 0 ? (
           <SettingsCountBadge count={badge} />
         ) : null}
-        <ChevronRight
-          color={colors.chevron}
-          size={iconSizes.small}
-          strokeWidth={2}
-        />
+        <RowChevron color={colors.chevron} />
       </View>
     );
   }

@@ -6,6 +6,7 @@ import {
   useSettingsRowPulse,
 } from './SettingsRow.hooks';
 import { SettingsRowContent } from './components/SettingsRowContent';
+import { useSettingsRowDivider } from './SettingsRowDivider.provider';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { useFocusRing } from '../../../utils/accessibility';
 import { useSettingsSearch, rowMatchesQuery } from '../search';
@@ -16,14 +17,13 @@ export function SettingsRow({
   iconBackgroundColor,
   label,
   subtitle,
-  help,
   type,
   value,
   badge,
   onPress,
   onToggle,
   rightAccessory,
-  showBorder = true,
+  showChevron,
   hapticStyle,
 }: SettingsRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
@@ -35,17 +35,18 @@ export function SettingsRow({
     triggerPulse
   );
   const { query } = useSettingsSearch();
+  const rowVisible = rowMatchesQuery(query, label);
+  const showTopBorder = useSettingsRowDivider(rowVisible);
 
   // Live search filter: hide rows whose label doesn't match the active query.
-  if (!rowMatchesQuery(query, label)) return null;
+  if (!rowVisible) return null;
 
-  const isInteractiveInfo = type === 'info' && !!rightAccessory;
-
+  const isInteractiveInfo =
+    type === 'info' && (!!rightAccessory || !!showChevron || !!onPress);
   const content = (
     <SettingsRowContent
       badge={badge}
       colors={colors}
-      help={help}
       icon={icon}
       iconBackgroundColor={iconBackgroundColor}
       isInteractiveInfo={isInteractiveInfo}
@@ -54,16 +55,15 @@ export function SettingsRow({
       pulseStyle={pulseStyle}
       rightAccessory={rightAccessory}
       secondaryTextColor={themeColors.text.secondary}
-      // While searching, drop inner dividers — the matched subset is dynamic,
-      // so a row's "last in section" border would otherwise orphan under it.
-      showBorder={query ? false : showBorder}
+      showChevron={showChevron}
+      showTopBorder={showTopBorder}
       subtitle={subtitle}
       type={type}
       value={value}
     />
   );
 
-  if (type === 'toggle' || type === 'info') return content;
+  if (type === 'toggle' || (type === 'info' && !onPress)) return content;
   return (
     <AnimatedPressable
       accessibilityLabel={label}

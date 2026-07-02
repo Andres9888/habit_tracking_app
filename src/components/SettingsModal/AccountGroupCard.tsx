@@ -5,6 +5,7 @@ import { shadows } from '@/theme';
 import { typography, fontWeights } from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getRaisedSurface } from './raisedSurface';
+import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 
 interface Props {
   title?: string;
@@ -39,7 +40,7 @@ export function AccountGroupCard({ title, children }: Props) {
           ...shadows.card,
         }}
       >
-        {children}
+        <SettingsRowDividerProvider>{children}</SettingsRowDividerProvider>
       </View>
     </View>
   );

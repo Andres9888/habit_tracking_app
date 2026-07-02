@@ -58,7 +58,8 @@ describe('SettingsModal', () => {
 
     expect(getByText('Look & Feel')).toBeTruthy();
     expect(getByText('Habits')).toBeTruthy();
-    expect(getByText('Data & Privacy')).toBeTruthy();
+    expect(getByText('Archived habits')).toBeTruthy();
+    expect(getByText('Export habits data')).toBeTruthy();
     expect(getByLabelText('Account settings')).toBeTruthy();
   });
 });
