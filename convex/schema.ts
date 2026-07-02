@@ -15,6 +15,7 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
 import { progressEmojisValidator } from './lib/progressEmojisValidator';
+import { templateCategoryValidator } from './templateCategories';
 
 // Subscription status type for type safety
 const subscriptionStatus = v.union(
@@ -220,7 +221,9 @@ const applicationTables = {
     // WOOP - Wish-Outcome-Obstacle-Plan (Oettingen, 2014)
     // Mental contrasting + implementation intentions = 2x goal achievement
     woopWish: v.optional(v.string()),
-  }).index('by_userId', ['userId']),
+  })
+    .index('by_strengthUpdatedAt', ['strengthUpdatedAt'])
+    .index('by_userId', ['userId']),
 
   deletedHabits: defineTable({
     createdAt: v.number(),
@@ -281,25 +284,7 @@ const applicationTables = {
 
   // Template Library (Phase 3 Feature)
   templates: defineTable({
-    category: v.union(
-      v.literal('morning_routine'),
-      v.literal('health_fitness'),
-      v.literal('productivity'),
-      v.literal('mindfulness'),
-      v.literal('andrew_huberman'),
-      v.literal('learning'),
-      v.literal('social'),
-      v.literal('financial'),
-      v.literal('creativity'),
-      v.literal('sleep'),
-      // New science-backed categories
-      v.literal('longevity'),
-      v.literal('mental_health'),
-      v.literal('recovery'),
-      v.literal('breathing'),
-      v.literal('environmental_design'),
-      v.literal('subtraction')
-    ),
+    category: templateCategoryValidator,
     // For sorting popular templates
     createdAt: v.number(),
 

@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
 import { api } from '../../../../convex/_generated/api';
-import { useStableQuery } from '../../../lib/useStableQuery';
+import { useCachedQuery } from '../../../lib/queryCache';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { usePendingToggles } from '../../../lib/optimistic';
 import type { HabitStatus } from '../types';
@@ -30,7 +30,10 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     () => buildTrackingQueryArgs(windowStart, windowEnd),
     [windowStart, windowEnd]
   );
-  const tracking = useStableQuery(api.habits.getTracking, queryArgs) ?? [];
+  const tracking =
+    useCachedQuery(api.habits.getTracking, queryArgs, {
+      entryName: 'habits.getTracking',
+    }) ?? [];
   const pendingToggles = usePendingToggles();
   const completedDatesByHabit = useMemo(() => {
     return buildCompletedDatesByHabit(tracking, pendingToggles);

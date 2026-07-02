@@ -5,11 +5,12 @@
 import { Sparkles } from 'lucide-react-native';
 import { useCallback, useMemo, useState } from 'react';
 import { View } from 'react-native';
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 
 import { iconSizes } from '@/theme/iconSizes';
 
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import { useThemeColors } from '../../theme/ThemeContext';
 import {
   CUSTOM_PRESET_ID,
@@ -30,7 +31,13 @@ export function GrowthIconsSettingsRow() {
   const { query } = useSettingsSearch();
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = useCallback(() => setExpanded((v) => !v), []);
-  const settings = useQuery(api.settings.get);
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    {
+      entryName: 'settings.get',
+    }
+  );
   const currentValue = settings?.progressEmojis;
   const savedCustom = settings?.customProgressEmojis;
   const updateSettings = useMutation(api.settings.update);

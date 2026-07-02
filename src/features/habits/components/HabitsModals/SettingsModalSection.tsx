@@ -1,10 +1,9 @@
 /* eslint-disable max-lines, max-lines-per-function */
-import { useCallback } from 'react';
+import { lazy, Suspense, useCallback } from 'react';
 import { Alert } from 'react-native';
 import { useConvex } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import SettingsModal from '../../../../components/SettingsModal';
 import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
 import { usePremium } from '../../../../hooks/usePremium';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
@@ -13,6 +12,10 @@ import type { SettingsModalSettingsDocument } from '../../../../components/Setti
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 type HabitDoc = Doc<'habits'>;
+
+const SettingsModal = lazy(
+  () => import('../../../../components/SettingsModal')
+);
 
 function mergeUniqueHabits(
   activeHabits: HabitDoc[],
@@ -143,45 +146,47 @@ export function SettingsModalSection({
   }, [runHabitsExport]);
 
   return (
-    <SettingsModal
-      archivedHabitsCount={archivedHabitsCount}
-      celebrationsEnabled={celebrationsEnabled}
-      completionSoundEnabled={settings?.completionSoundEnabled ?? false}
-      completionSoundType={settings?.completionSoundType ?? 'chime'}
-      dayShape={settings?.dayShape ?? 'square'}
-      habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
-      isPremium={isPremium}
-      settingsDocument={settings as SettingsModalSettingsDocument | undefined}
-      showCharacterScreen={settings?.showCharacterScreen ?? true}
-      showHabitStrengthPercentage={showHabitStrengthPercentage}
-      stickyCalendarHeader={settings?.stickyCalendarHeader ?? false}
-      streakRemindersEnabled={streakReminders.enabled}
-      streakReminderTime={streakReminders.reminderTime}
-      visible={showSettings}
-      onChangeCompletionSoundEnabled={(value) =>
-        onSettingsChange({ completionSoundEnabled: value })
-      }
-      onChangeCompletionSoundType={(value) =>
-        onSettingsChange({ completionSoundType: value })
-      }
-      onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
-      onChangeHabitCompletionIcon={(value) =>
-        onSettingsChange({ habitCompletionIcon: value })
-      }
-      onChangeShowCharacterScreen={(value) =>
-        onSettingsChange({ showCharacterScreen: value })
-      }
-      onChangeShowHabitStrengthPercentage={(value) =>
-        setShowHabitStrengthPercentage(value)
-      }
-      onChangeStickyCalendarHeader={(value) =>
-        onSettingsChange({ stickyCalendarHeader: value })
-      }
-      onChangeStreakReminderTime={streakReminders.setReminderTime}
-      onClose={closeSettings}
-      onExportHabitsData={handleExportHabitsData}
-      onOpenHapticTest={openHapticTest}
-      onToggleStreakReminders={streakReminders.setEnabled}
-    />
+    <Suspense fallback={null}>
+      <SettingsModal
+        archivedHabitsCount={archivedHabitsCount}
+        celebrationsEnabled={celebrationsEnabled}
+        completionSoundEnabled={settings?.completionSoundEnabled ?? false}
+        completionSoundType={settings?.completionSoundType ?? 'chime'}
+        dayShape={settings?.dayShape ?? 'square'}
+        habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
+        isPremium={isPremium}
+        settingsDocument={settings as SettingsModalSettingsDocument | undefined}
+        showCharacterScreen={settings?.showCharacterScreen ?? true}
+        showHabitStrengthPercentage={showHabitStrengthPercentage}
+        stickyCalendarHeader={settings?.stickyCalendarHeader ?? false}
+        streakRemindersEnabled={streakReminders.enabled}
+        streakReminderTime={streakReminders.reminderTime}
+        visible={showSettings}
+        onChangeCompletionSoundEnabled={(value) =>
+          onSettingsChange({ completionSoundEnabled: value })
+        }
+        onChangeCompletionSoundType={(value) =>
+          onSettingsChange({ completionSoundType: value })
+        }
+        onChangeDayShape={(value) => onSettingsChange({ dayShape: value })}
+        onChangeHabitCompletionIcon={(value) =>
+          onSettingsChange({ habitCompletionIcon: value })
+        }
+        onChangeShowCharacterScreen={(value) =>
+          onSettingsChange({ showCharacterScreen: value })
+        }
+        onChangeShowHabitStrengthPercentage={(value) =>
+          setShowHabitStrengthPercentage(value)
+        }
+        onChangeStickyCalendarHeader={(value) =>
+          onSettingsChange({ stickyCalendarHeader: value })
+        }
+        onChangeStreakReminderTime={streakReminders.setReminderTime}
+        onClose={closeSettings}
+        onExportHabitsData={handleExportHabitsData}
+        onOpenHapticTest={openHapticTest}
+        onToggleStreakReminders={streakReminders.setEnabled}
+      />
+    </Suspense>
   );
 }

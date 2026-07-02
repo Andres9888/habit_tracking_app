@@ -8,6 +8,7 @@ import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 
 // Re-export validators for convenience
 export { fullHabitValidator, trackingRecordValidator } from './validators';
+export { listHabitValidator } from './listHabitValidator';
 
 /** Create habit args validator */
 export const createHabitArgs = {

@@ -9,6 +9,7 @@ import { useAuth } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { convexClient } from '../lib/appConfig';
+import { setBackgroundSyncTokenProvider } from '../lib/offline/backgroundSync';
 
 const ConvexAuthContext = createContext({ isConvexReady: false });
 
@@ -35,7 +36,7 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
     }
 
     // Set auth token fetcher for Convex
-    convexClientInstance.setAuth(async () => {
+    const fetchConvexToken = async () => {
       try {
         const token = await getToken({ template: 'convex' });
         return token ?? null;
@@ -47,9 +48,14 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
           return null;
         }
       }
-    });
+    };
+
+    convexClientInstance.setAuth(fetchConvexToken);
+    setBackgroundSyncTokenProvider(fetchConvexToken);
 
     setIsConvexReady(true);
+
+    return () => setBackgroundSyncTokenProvider(null);
   }, [getToken, isSignedIn]);
 
   const value = useMemo(() => ({ isConvexReady }), [isConvexReady]);
@@ -60,7 +66,9 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
     }
 
     return (
-      <ConvexAuthContext.Provider value={value}>{children}</ConvexAuthContext.Provider>
+      <ConvexAuthContext.Provider value={value}>
+        {children}
+      </ConvexAuthContext.Provider>
     );
   }
 

@@ -1,15 +1,17 @@
 import { query } from './_generated/server';
+import { TEMPLATE_CATEGORIES } from './templateCategories';
+
+export const CATEGORY_FILTERS = [
+  { icon: '✨', id: 'all' as const, label: 'All' },
+  ...TEMPLATE_CATEGORIES,
+];
 
 /**
  * Fetch all available habit categories
- * Returns a list of category filters including 'All' and all unique categories from templates
+ * Returns a stable list of category filters with 'All' first.
  *
  * SEC-PUBLIC: This query is intentionally public to allow browsing
  * template categories before login. Derived from public template data.
- *
- * PERF NOTE: This query fetches all templates but only extracts categories.
- * Since template count is small (~200) and categories rarely change,
- * consider caching this on the client side for better performance.
  *
  * @returns Array of category objects with id, label, and icon
  * @example
@@ -20,59 +22,5 @@ import { query } from './_generated/server';
  */
 export const list = query({
   args: {},
-  handler: async (ctx) => {
-    // PERF: Use by_createdAt index to avoid full table scan
-    // We still need all templates to get unique categories, but index scan is faster
-    const templates = await ctx.db
-      .query('templates')
-      .withIndex('by_createdAt')
-      .collect();
-
-    // Early return if no templates exist
-    if (templates.length === 0) {
-      return [{ icon: '✨', id: 'all' as const, label: 'All' }];
-    }
-
-    // Extract unique categories from templates
-    const uniqueCategories = [
-      ...new Set(templates.map((template) => template.category)),
-    ].sort();
-
-    // Define category metadata (icon and label for each category)
-    const categoryMetadata: Record<string, { icon: string; label: string }> = {
-      andrew_huberman: { icon: '🔬', label: 'Huberman' },
-      breathing: { icon: '🌬️', label: 'Breathing' },
-      creativity: { icon: '🎨', label: 'Creativity' },
-      financial: { icon: '💰', label: 'Financial' },
-      health_fitness: { icon: '💪', label: 'Health' },
-      learning: { icon: '📚', label: 'Learning' },
-      longevity: { icon: '🧬', label: 'Longevity' },
-      mental_health: { icon: '🧠', label: 'Mental Health' },
-      mindfulness: { icon: '🧘', label: 'Mindfulness' },
-      morning_routine: { icon: '🌅', label: 'Morning' },
-      productivity: { icon: '🎯', label: 'Productivity' },
-      recovery: { icon: '🔄', label: 'Recovery' },
-      sleep: { icon: '😴', label: 'Sleep' },
-      social: { icon: '👥', label: 'Social' },
-    };
-
-    // Build category filters with alphabetical property ordering
-    const categories = uniqueCategories.map((categoryId) => {
-      const metadata = categoryMetadata[categoryId] || {
-        icon: '📌',
-        label:
-          categoryId.charAt(0).toUpperCase() +
-          categoryId.slice(1).replaceAll('_', ' '),
-      };
-
-      return {
-        icon: metadata.icon,
-        id: categoryId,
-        label: metadata.label,
-      };
-    });
-
-    // Always include 'All' as the first category (alphabetical properties)
-    return [{ icon: '✨', id: 'all' as const, label: 'All' }, ...categories];
-  },
+  handler: async () => CATEGORY_FILTERS,
 });
