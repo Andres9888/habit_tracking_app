@@ -7,23 +7,25 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAccountActions } from './useAccountActions';
 import { FeedbackModal } from '../FeedbackModal';
-import { airy } from '../../theme/airyScale';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
 // Search field temporarily removed — filter plumbing retained (see SPEC_03).
 import { SettingsSearchProvider } from './search';
+import { useSettingsScale } from './useSettingsScale';
 
 const useSectionIconColor = () => {
-  const { settings } = useThemeColors();
-  // Uniform soft-green brand tint for every section glyph (#047857 / #34D399).
-  return settings.user.icon;
+  const { colors } = useThemeColors();
+  // Section-header glyphs sit at text.tertiary (Settings Final mock) — the green
+  // is reserved for the "Chain Day" kicker, so section labels read as quiet gray.
+  return colors.text.tertiary;
 };
 
 export function SettingsContent(p: SettingsContentProps) {
   const { colors: themeColors } = useThemeColors();
   const sectionIconColor = useSectionIconColor();
+  const k = useSettingsScale();
   const bottomPadding = Math.max((p.bottomInset ?? 0) + 16, 24);
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler({
@@ -55,7 +57,7 @@ export function SettingsContent(p: SettingsContentProps) {
         onScroll={scrollHandler}
       >
         <SettingsSearchProvider query=''>
-          <View style={{ gap: airy.sectionGap }}>
+          <View style={{ gap: k(20) }}>
             <SettingsSectionList
               {...p}
               sectionIconColor={sectionIconColor}

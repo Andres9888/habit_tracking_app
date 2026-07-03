@@ -27,6 +27,25 @@ export function useSettingsRowPulse(isDark: boolean) {
   return { pulseStyle, triggerPulse };
 }
 
+export function useSettingsRowWash(isDark: boolean) {
+  const washOpacity = useSharedValue(0);
+  const washColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(45,42,38,0.05)';
+  const washStyle = useAnimatedStyle(() => ({
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: washColor,
+    opacity: washOpacity.value,
+  }));
+
+  const handlePressIn = () => {
+    washOpacity.value = withTiming(1, { duration: 180 });
+  };
+  const handlePressOut = () => {
+    washOpacity.value = withTiming(0, { duration: 180 });
+  };
+
+  return { washStyle, handlePressIn, handlePressOut };
+}
+
 export function useSettingsRowHandlers(
   props: Pick<SettingsRowProps, 'hapticStyle' | 'onPress' | 'onToggle'>,
   triggerPulse: () => void

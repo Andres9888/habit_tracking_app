@@ -1,6 +1,7 @@
 /** RowLabel — settings-row label, optional (?) help affordance, and subtitle */
 import { View, Text } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
+import { useSettingsScale } from '../../useSettingsScale';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
 interface RowLabelProps {
@@ -20,6 +21,7 @@ export function RowLabel({
   secondaryTextColor,
   type,
 }: RowLabelProps) {
+  const k = useSettingsScale();
   return (
     <View accessible={isInteractiveInfo ? false : undefined} className='flex-1'>
       <View className='flex-row items-center' style={{ gap: 6 }}>
@@ -29,6 +31,8 @@ export function RowLabel({
           ellipsizeMode='tail'
           style={{
             ...typography.body,
+            fontSize: k(15),
+            lineHeight: k(20),
             flexShrink: 1,
             fontWeight: fontWeights.semibold,
             color: labelColor,
@@ -41,7 +45,7 @@ export function RowLabel({
         <Text
           className='mt-1'
           numberOfLines={2}
-          style={{ ...typography.caption, color: secondaryTextColor }}
+          style={{ ...typography.caption, fontSize: k(12), lineHeight: k(16), color: secondaryTextColor }}
         >
           {subtitle}
         </Text>

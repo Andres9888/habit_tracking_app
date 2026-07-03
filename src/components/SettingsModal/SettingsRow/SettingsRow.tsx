@@ -4,6 +4,7 @@ import { getSettingsRowColors } from './SettingsRow.colors';
 import {
   useSettingsRowHandlers,
   useSettingsRowPulse,
+  useSettingsRowWash,
 } from './SettingsRow.hooks';
 import { SettingsRowContent } from './components/SettingsRowContent';
 import { useSettingsRowDivider } from './SettingsRowDivider.provider';
@@ -25,11 +26,14 @@ export function SettingsRow({
   rightAccessory,
   showChevron,
   hapticStyle,
+  toggleVariant,
 }: SettingsRowProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const colors = getSettingsRowColors(isDark);
   const { focusStyle, focusHandlers } = useFocusRing({ compact: true });
   const { pulseStyle, triggerPulse } = useSettingsRowPulse(isDark);
+  const { washStyle, handlePressIn, handlePressOut } =
+    useSettingsRowWash(isDark);
   const { handleNavPress, handleToggle } = useSettingsRowHandlers(
     { hapticStyle, onPress, onToggle },
     triggerPulse
@@ -43,6 +47,7 @@ export function SettingsRow({
 
   const isInteractiveInfo =
     type === 'info' && (!!rightAccessory || !!showChevron || !!onPress);
+  const isPressable = type !== 'toggle' && !(type === 'info' && !onPress);
   const content = (
     <SettingsRowContent
       badge={badge}
@@ -58,18 +63,23 @@ export function SettingsRow({
       showChevron={showChevron}
       showTopBorder={showTopBorder}
       subtitle={subtitle}
+      toggleVariant={toggleVariant}
       type={type}
       value={value}
+      washStyle={isPressable ? washStyle : undefined}
     />
   );
 
-  if (type === 'toggle' || (type === 'info' && !onPress)) return content;
+  if (!isPressable) return content;
   return (
     <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
+      disableAnimation
       style={focusStyle}
       onPress={handleNavPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       {...focusHandlers}
     >
       {content}

@@ -4,6 +4,7 @@ import type { LucideIcon } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { typography, fontFamilies, fontWeights } from '../../theme/typography';
+import { useSettingsScale } from './useSettingsScale';
 
 interface ProfileStatItemProps {
   color: string;
@@ -26,6 +27,7 @@ export function ProfileStatItem({
   showDivider = false,
   value,
 }: ProfileStatItemProps) {
+  const k = useSettingsScale();
   return (
     <View className='flex-1 flex-row items-center'>
       {showDivider ? (
@@ -53,13 +55,13 @@ export function ProfileStatItem({
           </>
         ) : (
           <>
-            <Icon color={labelColor} size={iconSizes.small} />
+            <Icon color={labelColor} size={k(iconSizes.micro + 3)} />
             <Text
               className='mt-1'
               style={{
                 fontFamily: fontFamilies.serif,
-                fontSize: 18,
-                lineHeight: 22,
+                fontSize: k(15.5),
+                lineHeight: k(20),
                 fontWeight: fontWeights.bold,
                 fontVariant: ['tabular-nums'],
                 color,
@@ -69,8 +71,15 @@ export function ProfileStatItem({
             </Text>
             <Text
               className='mt-0.5 text-center'
-              numberOfLines={2}
-              style={{ ...typography.caption, color: labelColor }}
+              numberOfLines={1}
+              style={{
+                ...typography.caption,
+                fontSize: k(10.5),
+                fontWeight: fontWeights.semibold,
+                letterSpacing: 0.6,
+                textTransform: 'uppercase',
+                color: labelColor,
+              }}
             >
               {label}
             </Text>

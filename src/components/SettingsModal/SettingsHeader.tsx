@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
+import { useSettingsScale } from './useSettingsScale';
 import type { SettingsColors } from './types';
 
 interface SettingsHeaderProps {
@@ -14,6 +15,7 @@ interface SettingsHeaderProps {
 export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
+  const k = useSettingsScale();
 
   return (
     <View
@@ -30,7 +32,7 @@ export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
           <Text
             style={{
               fontFamily: fontFamilies.primary.text,
-              fontSize: 10.5,
+              fontSize: k(10),
               fontWeight: fontWeights.bold,
               letterSpacing: 2,
               textTransform: 'uppercase',
@@ -42,10 +44,10 @@ export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
           <Text
             style={{
               fontFamily: fontFamilies.serif,
-              fontSize: 29,
+              fontSize: k(27),
               fontWeight: fontWeights.semibold,
               letterSpacing: -0.5,
-              lineHeight: 32,
+              lineHeight: k(30),
               color: themeColors.text.primary,
             }}
           >

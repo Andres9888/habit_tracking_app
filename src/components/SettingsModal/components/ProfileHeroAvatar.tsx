@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { borderRadius } from '@/theme/spacing';
 import { UserAvatar } from '../UserAvatar';
+import { useSettingsScale } from '../useSettingsScale';
 
 interface ProfileHeroAvatarProps {
   imageUrl?: string | null;
@@ -18,7 +19,8 @@ export function ProfileHeroAvatar({
   initial,
   themeColors,
 }: ProfileHeroAvatarProps) {
-  const avatarSize = 72;
+  const k = useSettingsScale();
+  const avatarSize = k(52);
   const ringPadding = 2;
 
   return (

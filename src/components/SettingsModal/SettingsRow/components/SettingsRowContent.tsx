@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { airy } from '@/theme/airyScale';
+import { useSettingsScale } from '../../useSettingsScale';
 import { RowAccessory } from './RowAccessory';
 import { RowLabel } from './RowLabel';
 import type { SettingsRowColors } from '../SettingsRow.colors';
@@ -14,6 +15,7 @@ interface SettingsRowContentProps {
   label: SettingsRowProps['label'];
   onToggle: (value: boolean) => void;
   pulseStyle: ReturnType<typeof useAnimatedStyle>;
+  washStyle?: ReturnType<typeof useAnimatedStyle>;
   secondaryTextColor: string;
   showTopBorder: boolean;
   showChevron?: boolean;
@@ -22,6 +24,7 @@ interface SettingsRowContentProps {
   value: SettingsRowProps['value'];
   badge: SettingsRowProps['badge'];
   rightAccessory: SettingsRowProps['rightAccessory'];
+  toggleVariant?: SettingsRowProps['toggleVariant'];
 }
 
 export function SettingsRowContent({
@@ -33,14 +36,17 @@ export function SettingsRowContent({
   label,
   onToggle,
   pulseStyle,
+  washStyle,
   rightAccessory,
   secondaryTextColor,
   showChevron,
   showTopBorder,
   subtitle,
   type,
+  toggleVariant,
   value,
 }: SettingsRowContentProps) {
+  const k = useSettingsScale();
   return (
     <View
       accessible={isInteractiveInfo ? false : undefined}
@@ -49,10 +55,11 @@ export function SettingsRowContent({
         backgroundColor: colors.background,
         borderColor: showTopBorder ? colors.border : undefined,
         overflow: 'hidden',
-        paddingVertical: airy.rowPaddingV,
+        paddingVertical: k(airy.rowPaddingV),
       }}
     >
       {type === 'toggle' ? <Animated.View style={pulseStyle} /> : null}
+      {washStyle ? <Animated.View style={washStyle} /> : null}
       <View
         accessible={isInteractiveInfo ? false : undefined}
         className='mr-4 items-center justify-center'
@@ -61,9 +68,9 @@ export function SettingsRowContent({
         }
         style={{
           backgroundColor: iconBackgroundColor,
-          width: airy.tileSize,
-          height: airy.tileSize,
-          borderRadius: airy.tileRadius,
+          width: k(airy.tileSize),
+          height: k(airy.tileSize),
+          borderRadius: k(airy.tileRadius),
         }}
       >
         {icon}
@@ -82,6 +89,7 @@ export function SettingsRowContent({
           colors={colors}
           label={label}
           showChevron={showChevron}
+          toggleVariant={toggleVariant}
           type={type}
           value={value}
           onToggle={onToggle}

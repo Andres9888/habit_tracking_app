@@ -1,7 +1,6 @@
 /** SettingsSection - Card container with optional collapsible accordion behavior */
 import { ReactNode } from 'react';
 import { View } from 'react-native';
-import { shadows } from '@/theme';
 import { airy } from '@/theme/airyScale';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { StaticSectionLabel } from './StaticSectionLabel';
@@ -32,10 +31,14 @@ export function SettingsSection({
 
   const cardStyle = {
     backgroundColor: getRaisedSurface(isDark),
-    borderColor: themeColors.border,
+    borderColor: isDark ? themeColors.border : 'rgba(45,42,38,0.07)',
     borderRadius: airy.cardRadius,
     borderWidth: 1,
-    ...shadows.card,
+    shadowColor: '#2D2A26',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: isDark ? 0.18 : 0.05,
+    shadowRadius: 9,
+    elevation: 2,
   };
 
   if (collapsible) {

@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { useSettingsScale } from './useSettingsScale';
 
 interface StaticSectionLabelProps {
   title: string;
@@ -16,13 +17,14 @@ export function StaticSectionLabel({
   icon,
 }: StaticSectionLabelProps) {
   const { colors: themeColors } = useThemeColors();
+  const k = useSettingsScale();
 
   return (
     <View className='flex-row items-center px-2' style={{ gap: 7 }}>
       <Text
         style={{
           fontFamily: fontFamilies.serif,
-          fontSize: 15.5,
+          fontSize: k(14),
           fontWeight: fontWeights.semibold,
           letterSpacing: -0.1,
           color: themeColors.text.primary,

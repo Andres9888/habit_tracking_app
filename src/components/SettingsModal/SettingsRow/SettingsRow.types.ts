@@ -16,4 +16,6 @@ export interface SettingsRowProps {
   showChevron?: boolean;
   /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
   hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
+  /** Toggle motion style. 'calm' (default): eased slide. 'spring': playful spring + thumb stretch — reserve for the one deliberately playful row (Streak Reminders). */
+  toggleVariant?: 'calm' | 'spring';
 }

@@ -23,7 +23,7 @@ export function ProfileStatsRow({
 
   const content = (
     <View
-      className='flex-row px-2 py-4'
+      className='flex-row px-2 py-3'
       style={{ borderTopColor: palette.borderTop, borderTopWidth: 1 }}
     >
       <ProfileStatItem
@@ -31,7 +31,7 @@ export function ProfileStatsRow({
         dividerColor={palette.divider}
         icon={Activity}
         isLoading={isLoading}
-        label='Active Habits'
+        label='Active'
         labelColor={palette.label}
         value={stats.activeHabits}
       />
@@ -40,7 +40,7 @@ export function ProfileStatsRow({
         dividerColor={palette.divider}
         icon={Star}
         isLoading={isLoading}
-        label='Flawless Days'
+        label='Flawless'
         labelColor={palette.label}
         showDivider
         value={stats.flawlessDays}
@@ -50,7 +50,7 @@ export function ProfileStatsRow({
         dividerColor={palette.divider}
         icon={CheckCircle2}
         isLoading={isLoading}
-        label='Lifetime Completions'
+        label='Lifetime'
         labelColor={palette.label}
         showDivider
         value={stats.lifetimeCompletions}

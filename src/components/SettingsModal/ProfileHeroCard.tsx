@@ -13,6 +13,7 @@ import { ProfileHeroIdentity } from './components/ProfileHeroIdentity';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
 import { useProfileStats } from './useProfileStats';
+import { useSettingsScale } from './useSettingsScale';
 
 interface ProfileHeroCardProps {
   isPremium: boolean;
@@ -24,6 +25,7 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
   const { initial, name } = useProfileDisplayName();
   const { isLoading: statsLoading, stats } = useProfileStats();
   const { imageUrl } = useProfileDisplayImage();
+  const k = useSettingsScale();
 
   return (
     <AnimatedPressable
@@ -47,7 +49,7 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
         </View>
         <View
           className='flex-row items-center px-4 pb-3 pt-4'
-          style={{ gap: 16 }}
+          style={{ gap: k(16) }}
         >
           <ProfileHeroAvatar
             imageUrl={imageUrl}
@@ -60,7 +62,7 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
             name={name}
           />
           {stats.activeHabits > 0 ? (
-            <View style={{ marginRight: 14 }}>
+            <View style={{ marginRight: k(14) }}>
               <WeeklyCompletionRing rate={stats.weeklyCompletionRate} />
             </View>
           ) : null}

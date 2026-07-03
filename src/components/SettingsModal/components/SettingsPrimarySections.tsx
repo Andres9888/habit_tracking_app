@@ -1,5 +1,6 @@
 /** Upper settings sections: profile → Pro card → Look & Feel → Reminders → Habits */
 import { Accessibility, BellRing, Palette } from 'lucide-react-native';
+import { View } from 'react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import Animated from 'react-native-reanimated';
 import { ProfileHeroCard } from '../ProfileHeroCard';
@@ -12,6 +13,7 @@ import {
 import { BehaviorSection } from './BehaviorSection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 import { sectionHasMatch, useSettingsSearch } from '../search';
+import { useSettingsScale } from '../useSettingsScale';
 import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface PrimarySectionsProps extends SettingsContentProps {
@@ -21,7 +23,8 @@ interface PrimarySectionsProps extends SettingsContentProps {
 }
 
 export function SettingsPrimarySections(p: PrimarySectionsProps) {
-  const iconSize = iconSizes.small;
+  const k = useSettingsScale();
+  const iconSize = k(iconSizes.small);
   const { query, isSearching } = useSettingsSearch();
   // While searching, drop the staggered entrance so sections don't re-animate
   // on every keystroke as matches change.
@@ -30,17 +33,19 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
 
   return (
     <>
-      <Animated.View entering={entering(0)}>
-        <ProfileHeroCard isPremium={p.isPremium} onPress={p.onOpenAccount} />
-      </Animated.View>
-      {isSearching ? null : (
-        <Animated.View entering={entering(1)}>
-          <ProSettingsCard
-            isPremium={p.isPremium}
-            onUpgrade={p.onPremiumUpsell}
-          />
+      <View style={{ gap: k(10) }}>
+        <Animated.View entering={entering(0)}>
+          <ProfileHeroCard isPremium={p.isPremium} onPress={p.onOpenAccount} />
         </Animated.View>
-      )}
+        {isSearching ? null : (
+          <Animated.View entering={entering(1)}>
+            <ProSettingsCard
+              isPremium={p.isPremium}
+              onUpgrade={p.onPremiumUpsell}
+            />
+          </Animated.View>
+        )}
+      </View>
       {sectionHasMatch(query, 'appearance') ? (
         <Animated.View entering={entering(2)}>
           <AppearanceSection

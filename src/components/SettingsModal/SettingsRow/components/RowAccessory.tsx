@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
+import { useSettingsScale } from '../../useSettingsScale';
 import { AnimatedToggle } from './AnimatedToggle';
 import { RowChevron } from './RowChevron';
 import { SettingsCountBadge } from '../../SettingsCountBadge';
@@ -14,6 +15,7 @@ interface RowAccessoryProps {
   colors: SettingsRowColors;
   showChevron?: boolean;
   onToggle: (v: boolean) => void;
+  toggleVariant?: SettingsRowProps['toggleVariant'];
 }
 
 export function RowAccessory({
@@ -24,7 +26,9 @@ export function RowAccessory({
   colors,
   showChevron,
   onToggle,
+  toggleVariant,
 }: RowAccessoryProps) {
+  const k = useSettingsScale();
   if (type === 'toggle') {
     return (
       <AnimatedToggle
@@ -33,6 +37,7 @@ export function RowAccessory({
         trackOff={colors.switchTrackFalse}
         trackOn={colors.switchTrackTrue}
         value={value as boolean}
+        variant={toggleVariant}
         onValueChange={onToggle}
       />
     );
@@ -44,6 +49,7 @@ export function RowAccessory({
         <Text
           style={{
             ...typography.body,
+            fontSize: k(14),
             fontWeight: fontWeights.medium,
             color: colors.value,
           }}
@@ -62,6 +68,7 @@ export function RowAccessory({
         numberOfLines={1}
         style={{
           ...typography.bodySmall,
+          fontSize: k(14),
           fontWeight: fontWeights.medium,
           color: colors.value,
           flexShrink: 1,

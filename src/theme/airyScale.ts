@@ -20,8 +20,8 @@ export const airy = {
   modalRadius: AIRY_SCALE ? 28 : 24,
   chipRadius: AIRY_SCALE ? 10 : 8,
   // Settings rows.
-  tileSize: AIRY_SCALE ? 42 : 40,
-  tileRadius: AIRY_SCALE ? 13 : 12,
+  tileSize: AIRY_SCALE ? 36 : 40,
+  tileRadius: AIRY_SCALE ? 11 : 12,
   rowPaddingV: AIRY_SCALE ? 20 : 16,
   // Home list stays DENSE (height/padding) — the daily glanceable surface.
   habitCardMinHeight: 88,

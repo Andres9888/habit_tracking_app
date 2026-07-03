@@ -4,6 +4,7 @@ import { usePremium } from '@/hooks/usePremium';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography, fontWeights } from '../../../theme/typography';
 import { ProfilePremiumBadge } from '../ProfilePremiumBadge';
+import { useSettingsScale } from '../useSettingsScale';
 
 interface ProfileHeroIdentityProps {
   isPremium: boolean;
@@ -24,6 +25,7 @@ export function ProfileHeroIdentity({
 }: ProfileHeroIdentityProps) {
   const { colors: themeColors } = useThemeColors();
   const { status } = usePremium();
+  const k = useSettingsScale();
   const badgeLabel = planBadgeLabel(status, isPremium);
 
   return (
@@ -32,6 +34,8 @@ export function ProfileHeroIdentity({
         <Text
           style={{
             ...typography.heading3,
+            fontSize: k(16),
+            lineHeight: k(20),
             color: themeColors.text.primary,
             fontWeight: fontWeights.bold,
           }}
@@ -46,8 +50,8 @@ export function ProfileHeroIdentity({
         <Text
           style={{
             ...typography.displayLarge,
-            fontSize: 30,
-            lineHeight: 32,
+            fontSize: k(27),
+            lineHeight: k(29),
             color: themeColors.status.streakText,
           }}
         >
@@ -56,13 +60,14 @@ export function ProfileHeroIdentity({
         <Text
           style={{
             ...typography.bodySmall,
+            fontSize: k(12.5),
             fontWeight: fontWeights.semibold,
             color: themeColors.text.secondary,
           }}
         >
           day streak
         </Text>
-        <Text style={{ fontSize: 15 }}>🔥</Text>
+        <Text style={{ fontSize: k(14) }}>🔥</Text>
       </View>
     </View>
   );

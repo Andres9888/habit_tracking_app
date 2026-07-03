@@ -11,8 +11,19 @@ import Animated, {
 import { durations } from '@/theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography, fontWeights } from '../../theme/typography';
+import { useSettingsScale } from './useSettingsScale';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+const OVERLAY = {
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  left: 0,
+  right: 0,
+  alignItems: 'center',
+  justifyContent: 'center',
+} as const;
 
 interface WeeklyCompletionRingProps {
   /** Completion rate 0–100. */
@@ -23,12 +34,14 @@ interface WeeklyCompletionRingProps {
 
 export function WeeklyCompletionRing({
   rate,
-  size = 48,
-  strokeWidth = 5,
+  size,
+  strokeWidth = 4.5,
 }: WeeklyCompletionRingProps) {
   const { colors: themeColors } = useThemeColors();
   const reduceMotion = useReducedMotion();
-  const radius = (size - strokeWidth) / 2;
+  const k = useSettingsScale();
+  const ringSize = size ?? k(44);
+  const radius = (ringSize - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const clamped = Math.max(0, Math.min(100, Math.round(rate)));
   const progress = useSharedValue(reduceMotion ? clamped : 0);
@@ -45,11 +58,11 @@ export function WeeklyCompletionRing({
 
   return (
     <View className='items-center' style={{ gap: 3 }}>
-      <View style={{ width: size, height: size }}>
-        <Svg height={size} width={size}>
+      <View style={{ width: ringSize, height: ringSize }}>
+        <Svg height={ringSize} width={ringSize}>
           <Circle
-            cx={size / 2}
-            cy={size / 2}
+            cx={ringSize / 2}
+            cy={ringSize / 2}
             fill='none'
             r={radius}
             stroke={themeColors.primary[100]}
@@ -57,10 +70,10 @@ export function WeeklyCompletionRing({
           />
           <AnimatedCircle
             animatedProps={animatedProps}
-            cx={size / 2}
-            cy={size / 2}
+            cx={ringSize / 2}
+            cy={ringSize / 2}
             fill='none'
-            origin={`${size / 2}, ${size / 2}`}
+            origin={`${ringSize / 2}, ${ringSize / 2}`}
             r={radius}
             rotation={-90}
             stroke={themeColors.primary[600]}
@@ -69,21 +82,11 @@ export function WeeklyCompletionRing({
             strokeWidth={strokeWidth}
           />
         </Svg>
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <View style={OVERLAY}>
           <Text
             style={{
               ...typography.caption,
-              fontSize: 12.5,
+              fontSize: k(12.5),
               fontWeight: fontWeights.bold,
               color: themeColors.text.primary,
             }}
@@ -95,7 +98,7 @@ export function WeeklyCompletionRing({
       <Text
         style={{
           ...typography.caption,
-          fontSize: 11,
+          fontSize: k(11),
           color: themeColors.text.secondary,
         }}
       >
