@@ -45,7 +45,12 @@ describe('createBeforeSend redaction', () => {
   it('scrubs secrets inside exception values', () => {
     const result = send({
       exception: {
-        values: [{ type: 'Error', value: 'HTTP 401 using sk_live_abcdefgh12345678 key' }],
+        values: [
+          {
+            type: 'Error',
+            value: 'HTTP 401 using sk_live_abcdefgh12345678 key',
+          },
+        ],
       },
     } as Partial<ErrorEvent>);
     expect(result?.exception?.values?.[0].value).toBe(
@@ -66,7 +71,13 @@ describe('createBeforeSend redaction', () => {
   it('scrubs breadcrumb data values', () => {
     const result = send({
       breadcrumbs: [
-        { data: { url: 'https://ok.example', token: 'x', v: 'pk_test_abcdef123456' } },
+        {
+          data: {
+            url: 'https://ok.example',
+            token: 'x',
+            v: 'pk_test_abcdef123456',
+          },
+        },
       ],
     });
     expect(result?.breadcrumbs?.[0].data).toEqual({
@@ -74,5 +85,29 @@ describe('createBeforeSend redaction', () => {
       token: '[redacted]',
       v: '[redacted]',
     });
+  });
+
+  it('redacts secrets nested inside objects and arrays', () => {
+    const result = send({
+      extra: {
+        user: { profile: { authToken: 'x', name: 'ok' } },
+        items: [{ secret: 'y' }, 'sk_live_abcdefgh12345678', 'plain'],
+      },
+    });
+    expect(result?.extra).toEqual({
+      user: { profile: { authToken: '[redacted]', name: 'ok' } },
+      items: [{ secret: '[redacted]' }, '[redacted]', 'plain'],
+    });
+  });
+
+  it('scrubs breadcrumb message text (not just data)', () => {
+    const result = send({
+      breadcrumbs: [
+        { message: 'GET https://api/x?token=abc using Bearer abc.def.ghi' },
+      ],
+    });
+    expect(result?.breadcrumbs?.[0].message).toBe(
+      'GET https://api/x?token=abc using [redacted]'
+    );
   });
 });

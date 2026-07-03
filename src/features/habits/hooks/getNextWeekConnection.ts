@@ -9,14 +9,23 @@ type StatusGetter = (habitId: string, dateString: string) => HabitStatus;
 
 const nextDateStringCache = new Map<string, string | null>();
 const connectionCache = new WeakMap<StatusGetter, Map<string, boolean>>();
+// The `null` (future-date) entries below depend on "today", so the cache is
+// only valid for a single calendar day. Drop it when the day rolls over,
+// otherwise a value cached as null before midnight stays stale afterward.
+let cacheDay = '';
 
 function getNextDateString(lastDateString: string): string | null {
+  const today = startOfDay(new Date());
+  const todayKey = format(today, 'yyyy-MM-dd');
+  if (todayKey !== cacheDay) {
+    nextDateStringCache.clear();
+    cacheDay = todayKey;
+  }
   const cached = nextDateStringCache.get(lastDateString);
   if (cached !== undefined) return cached;
   try {
     const lastDate = parse(lastDateString, 'yyyy-MM-dd', new Date());
     const nextDate = addDays(lastDate, 1);
-    const today = startOfDay(new Date());
     if (nextDate > today) {
       nextDateStringCache.set(lastDateString, null);
       return null;
