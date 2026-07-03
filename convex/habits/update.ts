@@ -8,6 +8,7 @@ import {
   calculateMomentumStrengthSnapshot,
   resolveAlgorithmMode,
 } from '../habitStrength';
+import { enforceRateLimit } from '../lib/rateLimit';
 import { updateHabitArgs } from './types';
 import { validateDaysOfWeek, validateHabitUpdateFields } from './validation';
 
@@ -30,6 +31,9 @@ export const update = mutation({
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to modify this habit');
     }
+
+    // SR: throttle habit updates per user (limit key was defined but unwired).
+    await enforceRateLimit(ctx, identity.subject, 'habit.update');
 
     // SEC-003: Input validation
     const validated = validateHabitUpdateFields(updates);
@@ -95,7 +99,9 @@ export const updateNotes = mutation({
     // SEC-001: Authentication check
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new Error('Unauthenticated: Must be logged in to update habit notes');
+      throw new Error(
+        'Unauthenticated: Must be logged in to update habit notes'
+      );
     }
 
     // SEC-001: Ownership verification
@@ -106,6 +112,9 @@ export const updateNotes = mutation({
     if (habit.userId !== identity.subject) {
       throw new Error('Not authorized to modify this habit');
     }
+
+    // SR: throttle habit updates per user (limit key was defined but unwired).
+    await enforceRateLimit(ctx, identity.subject, 'habit.update');
 
     // SEC-003: Input validation
     const validated = validateHabitUpdateFields({ notes: args.notes });

@@ -55,9 +55,11 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.completionSoundEnabled = source.completionSoundEnabled;
   }
 
-  if (isValidBoolean(source.hasPremium)) {
-    output.hasPremium = source.hasPremium;
-  }
+  // SEC: hasPremium is an entitlement field writable ONLY by the RevenueCat
+  // webhook. It is deliberately NOT forwarded here — the public settings.update
+  // mutation rejects it (see convex/settings/validators.ts). Keeping it in this
+  // client allowlist would also break updateSettingsWithFallback's retry path,
+  // since the sanitized fallback payload would still carry the rejected field.
 
   if (isValidBoolean(source.reduceMotion)) {
     output.reduceMotion = source.reduceMotion;

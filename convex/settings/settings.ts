@@ -8,6 +8,7 @@ import {
   validateIdentifier,
   validateTimeFormat,
 } from '../lib/inputValidation';
+import { enforceRateLimit } from '../lib/rateLimit';
 import { normalizeDarkMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { toSettingsResponse } from './getResponse';
@@ -42,6 +43,19 @@ export const update = mutation({
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to update settings');
     }
+
+    // SEC: defense-in-depth against premium self-grant. hasPremium is an
+    // entitlement field writable only by the RevenueCat webhook. It is already
+    // excluded from updateArgsValidator; this guard fires only if that
+    // exclusion is ever regressed, preventing a silent mass-assignment hole.
+    if ('hasPremium' in args) {
+      throw new Error(
+        'Forbidden: hasPremium cannot be set via settings.update'
+      );
+    }
+
+    // SR: throttle settings writes per user (defense against session abuse).
+    await enforceRateLimit(ctx, identity.subject, 'settings.update');
 
     // SEC-001: Find existing settings for this user
     const existing = await ctx.db

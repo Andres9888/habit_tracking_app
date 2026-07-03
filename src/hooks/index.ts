@@ -30,11 +30,6 @@ export {
 // ============================================================================
 
 export {
-  useCelebrationHaptics,
-  default as CelebrationHaptics,
-} from './useCelebrationHaptics';
-
-export {
   useHapticFeedback,
   default as HapticFeedback,
 } from './useHapticFeedback';
@@ -152,10 +147,7 @@ export {
   type UseUnsavedChangesGuardReturn,
 } from './useUnsavedChangesGuard';
 
-export {
-  useDraftStorage,
-  type UseDraftStorageReturn,
-} from './useDraftStorage';
+export { useDraftStorage, type UseDraftStorageReturn } from './useDraftStorage';
 
 // ============================================================================
 // UTILITIES

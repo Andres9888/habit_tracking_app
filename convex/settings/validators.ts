@@ -79,7 +79,11 @@ export const updateArgsValidator = {
       v.literal('streak_desc')
     )
   ),
-  hasPremium: v.optional(v.boolean()),
+  // SEC: hasPremium is an entitlement field — writable ONLY by the RevenueCat
+  // webhook (subscriptions.grantPremium/revokePremium). It is intentionally
+  // absent here so the public settings.update mutation cannot mass-assign it.
+  // Do NOT re-add it. It remains in settingsReturnValidator (read shape) and
+  // in schema.ts (storage).
   progressEmojis: v.optional(progressEmojisValidator),
   customProgressEmojis: v.optional(progressEmojisValidator),
   reduceMotion: v.optional(v.boolean()),
