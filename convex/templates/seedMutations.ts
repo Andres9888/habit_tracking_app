@@ -1,20 +1,21 @@
 import { internal } from '../_generated/api';
 import { internalMutation, mutation } from '../_generated/server';
-
-const requireAuthenticatedUser = async (
-  ctx: { auth: { getUserIdentity: () => Promise<unknown> } },
-  action: string
-) => {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    throw new Error(`Unauthenticated: Must be logged in to ${action}`);
-  }
-};
+import { enforceRateLimit } from '../lib/rateLimit';
 
 export const seedTemplates = mutation({
   args: {},
   handler: async (ctx) => {
-    await requireAuthenticatedUser(ctx, 'seed templates');
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to seed templates');
+    }
+
+    // SR: throttle seed triggers. The catalog is shared and seeding is
+    // idempotent (empty-check below), but this stops an authenticated client
+    // from spamming seed-job scheduling. Full internalization is deferred —
+    // the empty-state "load templates" button in TemplatesScreen calls this.
+    await enforceRateLimit(ctx, identity.subject, 'templates.seed');
+
     const existingTemplate = await ctx.db.query('templates').first();
     if (existingTemplate) return { queued: false };
 

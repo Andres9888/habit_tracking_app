@@ -8,6 +8,7 @@ import {
   validateIdentifier,
   validateTimeFormat,
 } from '../lib/inputValidation';
+import { enforceRateLimit } from '../lib/rateLimit';
 import { normalizeDarkMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { toSettingsResponse } from './getResponse';
@@ -52,6 +53,9 @@ export const update = mutation({
         'Forbidden: hasPremium cannot be set via settings.update'
       );
     }
+
+    // SR: throttle settings writes per user (defense against session abuse).
+    await enforceRateLimit(ctx, identity.subject, 'settings.update');
 
     // SEC-001: Find existing settings for this user
     const existing = await ctx.db
