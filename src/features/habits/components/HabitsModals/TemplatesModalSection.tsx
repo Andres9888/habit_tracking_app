@@ -1,17 +1,13 @@
-import { lazy, Suspense } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import Modal from '../../../../components/Modal';
 import { ModalCloseButton } from '../../../../components/ui/ModalCloseButton';
+import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
-
-const TemplatesScreen = lazy(
-  () => import('../../../../screens/TemplatesScreen')
-);
 
 /**
  * Templates modal section - displays templates screen in full-screen modal
@@ -53,12 +49,10 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>
-          <Suspense fallback={null}>
-            <TemplatesScreen
-              onCloseLibrary={handleClose}
-              onViewHabit={handleViewHabit}
-            />
-          </Suspense>
+          <TemplatesScreen
+            onCloseLibrary={handleClose}
+            onViewHabit={handleViewHabit}
+          />
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <ModalCloseButton

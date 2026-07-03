@@ -3,7 +3,9 @@ export type QueryCacheEntryName =
   | 'habits.getTracking'
   | 'habits.list'
   | 'habits.listArchived'
-  | 'settings.get';
+  | 'settings.get'
+  | 'templates.getImportedTemplateIds'
+  | 'templates.list';
 
 export type QueryCacheStorage = 'plain' | 'secure';
 

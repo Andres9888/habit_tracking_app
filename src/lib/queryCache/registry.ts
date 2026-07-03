@@ -20,6 +20,18 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     version: 1,
   },
   'settings.get': { name: 'settings.get', storage: 'secure', version: 1 },
+  'templates.getImportedTemplateIds': {
+    latestFallback: true,
+    name: 'templates.getImportedTemplateIds',
+    storage: 'plain',
+    version: 1,
+  },
+  'templates.list': {
+    latestFallback: true,
+    name: 'templates.list',
+    storage: 'plain',
+    version: 1,
+  },
 };
 
 export const queryCacheEntries = Object.values(DEFINITIONS);
