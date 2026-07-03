@@ -16,8 +16,9 @@ export const styles = StyleSheet.create({
   },
   chipLabelSelected: { color: '#FFFFFF' },
   chipSelected: {
-    backgroundColor: '#2D2A26',
-    borderColor: '#2D2A26',
+    // Forest-green selected state — matches the "Two Worlds" mock (primary[700]).
+    backgroundColor: '#047857',
+    borderColor: '#047857',
   },
   content: {
     alignItems: 'center',

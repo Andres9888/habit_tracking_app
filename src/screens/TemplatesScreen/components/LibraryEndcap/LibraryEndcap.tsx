@@ -32,8 +32,8 @@ export function LibraryEndcap({
         style={[
           s.endcap,
           {
-            backgroundColor: colors.primary[100],
-            borderColor: colors.primary[300],
+            backgroundColor: colors.card,
+            borderColor: colors.border,
           },
         ]}
         onPress={() => {
@@ -41,7 +41,7 @@ export function LibraryEndcap({
           onPress();
         }}
       >
-        <Text style={[s.text, { color: colors.primary[700] }]}>
+        <Text style={[s.text, { color: colors.text.secondary }]}>
           Open the full library{countSuffix} ›
         </Text>
       </AnimatedPressable>
