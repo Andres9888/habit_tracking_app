@@ -79,6 +79,8 @@ The `settings.update` mutation authenticates the caller (SEC-001) but does not r
 
 ## P2 — Harden the mutation surface + make the scanner usable (preventive)
 
+**Status: ✅ mostly done (2026-07-03).** (1) Entitlement-write guard shipped — `convex/subscriptions/entitlementWriteGuard.test.ts` scans the Convex tree and fails if `hasPremium` is written via `ctx.db.patch/insert` anywhere except the webhook helper; verified it catches an injected violation and doesn't false-positive on read shapes/defaults/schema. (3) Ownership audit **complete and clean** — all 10 habit/strength write mutations enforce `habit.userId !== identity.subject`; all id-taking read queries (stats, tracking, strength) enforce the same; only 1 HTTP endpoint (the webhook), fully secured; Clerk `auth.config.ts` correct. (2) deepsec enablement remains documented below, not automated.
+
 **Severity:** Preventive — no active vuln; closes the gap that let P0 exist and lets future scans actually run.
 
 **Scope:**
