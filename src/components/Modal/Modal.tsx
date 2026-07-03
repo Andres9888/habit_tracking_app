@@ -29,7 +29,8 @@ export function Modal({
   skipAnimation = false,
   accessibilityViewIsModal = true,
 }: ModalProps) {
-  const reduceMotion = skipAnimation || useReduceMotion(respectReduceMotion);
+  const reduceMotionPref = useReduceMotion(respectReduceMotion);
+  const reduceMotion = skipAnimation || reduceMotionPref;
   const [shouldRender, setShouldRender] = useState(visible);
 
   useEffect(() => {

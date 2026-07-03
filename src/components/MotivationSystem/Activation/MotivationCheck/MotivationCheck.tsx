@@ -28,6 +28,8 @@ export function MotivationCheck({
   className,
   compact = false,
 }: MotivationCheckProps) {
+  const { colors } = useThemeColors();
+
   if (compact) {
     return (
       <View className={clsx('flex-row items-center justify-around', className)}>
@@ -45,8 +47,6 @@ export function MotivationCheck({
       </View>
     );
   }
-
-  const { colors } = useThemeColors();
 
   return (
     <View className={clsx('rounded-2xl p-4', className)} style={{ backgroundColor: colors.status.premiumLight }}>

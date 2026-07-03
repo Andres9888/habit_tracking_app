@@ -16,9 +16,10 @@ export function useConfetti({ visible, reduceMotion }: UseConfettiProps) {
 
   useEffect(() => {
     if (visible && confettiRef.current && !reduceMotion) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         confettiRef.current?.start();
       }, ANIMATION_TIMING.CONFETTI_DELAY);
+      return () => clearTimeout(timer);
     }
   }, [visible, reduceMotion]);
 
