@@ -21,7 +21,6 @@ const MODAL_PRIORITIES = {
   editScreen: 900,
   templatesScreen: 900,
   visualizationExercise: 900,
-  activationModal: 950,
   quickActions: 500,
   sortSheet: 500,
   settings: 100,

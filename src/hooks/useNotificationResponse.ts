@@ -3,7 +3,7 @@
  * Handles notification tap responses
  *
  * Routes notification taps to the appropriate handler:
- * - Habit reminders → ActivationModal
+ * - Habit reminders → Habit Detail Screen
  */
 
 import { useEffect, useRef, useCallback } from 'react';

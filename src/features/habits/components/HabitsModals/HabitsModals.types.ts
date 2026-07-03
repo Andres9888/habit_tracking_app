@@ -97,15 +97,6 @@ export interface VisualizationModalSectionProps {
   closeVisualizationExercise: () => void;
 }
 
-/** Props for the ActivationModalSection component */
-export interface ActivationModalSectionProps {
-  activationModalHabit: HabitsModalsState['activationModalHabit'];
-  showActivationModal: boolean;
-  closeActivationModal: () => void;
-  toggleHabit: HabitsModalsState['toggleHabit'];
-  reduceMotionPreference: boolean;
-}
-
 /** Lazy-loaded ShareCardGenerator component type */
 export type ShareCardGeneratorComponent = ComponentType<{
   data: ShareCardData;

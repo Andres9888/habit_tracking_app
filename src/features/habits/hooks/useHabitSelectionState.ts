@@ -10,8 +10,6 @@ export interface HabitSelectionState {
   setHabitToEdit: (h: Habit | null) => void;
   quickActionsHabit: Habit | null;
   setQuickActionsHabit: (h: Habit | null) => void;
-  activationModalHabit: Habit | null;
-  setActivationModalHabit: (h: Habit | null) => void;
   habitDetailInitialTab: 'progress' | 'motivation' | 'manage';
   setHabitDetailInitialTab: (t: 'progress' | 'motivation' | 'manage') => void;
   shareCardData: ShareCardData | null;
@@ -29,8 +27,6 @@ export function useHabitSelectionState(): HabitSelectionState {
   const [quickActionsHabit, setQuickActionsHabit] = useState<Habit | null>(
     null
   );
-  const [activationModalHabit, setActivationModalHabit] =
-    useState<Habit | null>(null);
   const [habitDetailInitialTab, setHabitDetailInitialTab] = useState<
     'progress' | 'motivation' | 'manage'
   >('progress');
@@ -39,13 +35,11 @@ export function useHabitSelectionState(): HabitSelectionState {
   );
 
   return {
-    activationModalHabit,
     habitDetailInitialTab,
     habitToEdit,
     habitToPause,
     quickActionsHabit,
     selectedHabit,
-    setActivationModalHabit,
     setHabitDetailInitialTab,
     setHabitToEdit,
     setHabitToPause,

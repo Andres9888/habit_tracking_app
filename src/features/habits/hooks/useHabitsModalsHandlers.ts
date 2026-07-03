@@ -18,8 +18,6 @@ interface ModalsSetters {
   setShowQuickActions: (v: boolean) => void;
   setQuickActionsHabit: (h: Habit | null) => void;
   setShowVisualizationExercise: (v: boolean) => void;
-  setShowActivationModal: (v: boolean) => void;
-  setActivationModalHabit: (h: Habit | null) => void;
 }
 
 interface ModalsHandlersDeps {
@@ -60,11 +58,9 @@ export function useHabitsModalsHandlers(
 
   const secondaryHandlers = useSecondaryModalHandlers(
     {
-      setActivationModalHabit: setters.setActivationModalHabit,
       setQuickActionsHabit: setters.setQuickActionsHabit,
       setSelectedHabit: setters.setSelectedHabit,
       setShareCardData: setters.setShareCardData,
-      setShowActivationModal: setters.setShowActivationModal,
       setShowQuickActions: setters.setShowQuickActions,
       setShowShareCard: setters.setShowShareCard,
       setShowVisualizationExercise: setters.setShowVisualizationExercise,
