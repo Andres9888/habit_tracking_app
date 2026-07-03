@@ -295,12 +295,12 @@ describe('calculateMomentumStrengthSnapshot - day-by-day simulation', () => {
       tracking,
     });
 
-    // Day 1 completion: 0 -> 3.0
-    // Day 2 miss (1/7 shield): 3.0 * (1 - 0.018) = 2.946
-    // Day 3 miss (1/7 shield): 2.946 * (1 - 0.018) ≈ 2.8929
+    // Day 1 completion: 0 -> 3.0 (growthRate 0.03)
+    // Day 2 miss: 3.0 * (1 - 0.02) = 2.94 (balanced baseDecay 0.02)
+    // Day 3 miss: 2.94 * (1 - 0.02) = 2.8812
     expect(snapshot.daysProcessed).toBe(3);
     expect(snapshot.strength100).toBeLessThan(3);
-    expect(snapshot.strength100).toBeCloseTo(2.8929, 3);
+    expect(snapshot.strength100).toBeCloseTo(2.8812, 3);
   });
 
   it('should include backfilled tracking dates before habit creation', () => {
@@ -452,11 +452,11 @@ describe('calculateMomentumStrengthSnapshot - day-by-day simulation', () => {
         tracking,
       });
 
-      // Day 1: completion 0 -> 3.0
-      // Day 2: miss (1/7 shield) 3.0 * (1 - 0.018) = 2.946
-      // Day 3: completion 2.946 + (100 - 2.946) * 0.03 ≈ 5.8576
+      // Day 1: completion 0 -> 3.0 (growthRate 0.03)
+      // Day 2: miss 3.0 * (1 - 0.02) = 2.94 (balanced baseDecay 0.02)
+      // Day 3: completion 2.94 + (100 - 2.94) * 0.03 = 5.8518
       expect(snapshot.daysProcessed).toBe(3);
-      expect(snapshot.strength100).toBeCloseTo(5.8576, 2);
+      expect(snapshot.strength100).toBeCloseTo(5.8518, 2);
     });
   });
 });

@@ -35,13 +35,34 @@ npm run expo:ios
 
 Copy `.env.example` to `.env.local` and configure:
 
-- `EXPO_PUBLIC_CONVEX_URL` - Your Convex deployment URL
+- `EXPO_PUBLIC_CONVEX_URL` — Convex deployment URL (required)
+- `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_AUTH_DOMAIN` — Clerk auth
+- `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` — RevenueCat SDK
+- `REVENUECAT_WEBHOOK_SECRET` — verifies RevenueCat → Convex webhooks
+- `EXPO_PUBLIC_SENTRY_DSN` — Sentry error reporting
 
 ## Code Style
 
 - **TypeScript**: Strict mode enabled
 - **Formatting**: Prettier (run `npm run format` before committing)
 - **Linting**: ESLint (run `npm run lint` before committing)
+- **File length**: production files ≤100 lines (excl. blanks/comments) — see `docs/DECOMPOSITION_PATTERNS.md`; `npm run lint:max-lines` reports violations
+- **Dead code**: `npm run lint:dead` (knip)
+
+### File Naming Conventions
+
+| Kind                          | Convention                  | Example                                |
+| ----------------------------- | --------------------------- | -------------------------------------- |
+| Component file/dir            | `PascalCase`                | `HabitCard.tsx`, `HabitCard/`          |
+| Hook                          | `camelCase`, `use` prefix   | `useHabitCard.ts`                      |
+| Component types / hooks split | `*.types.ts` / `*.hooks.ts` | `HabitCard.types.ts`                   |
+| Convex module                 | `camelCase`                 | `analyticsWeekly.ts`                   |
+| Constants / utils             | `camelCase`                 | `featureFlags.ts`                      |
+| Config                        | dot-separated               | `jest.config.js`, `tailwind.config.js` |
+| Test                          | `*.test.ts(x)`              | `habitStrength.test.ts`                |
+
+New files should follow the convention for their kind; when in doubt, match the
+nearest sibling.
 
 ### Pre-commit Hooks
 
@@ -53,6 +74,9 @@ npm run prepare
 
 ## Testing
 
+**Framework:** Jest with `jest-expo`. Config in `jest.config.js`, global setup in
+`jest.setup.js`, shared mocks in `__mocks__/`.
+
 ```bash
 # Run all tests
 npm test
@@ -62,7 +86,32 @@ npm run test:coverage
 
 # Run tests in watch mode
 npm run test:watch
+
+# Run a single file / pattern
+npx jest convex/habitStrength.test.ts
 ```
+
+### Layout
+
+- `tests/unit/**` — unit tests (`convex/`, `components/`, `theme/`)
+- `tests/integration/**`, `tests/e2e/**`, `tests/e2e-scenarios/**`, `tests/performance/**`
+- `src/**/__tests__/**` and colocated `convex/*.test.ts` — near the code they cover
+- E2E device flows use Maestro (`.maestro/`)
+
+### Mocking
+
+- React Native / Reanimated / Expo native modules are mocked via `__mocks__/` and
+  `jest.setup.js` — expect some RN matchers to need these; don't test against real
+  native modules.
+- Convex functions are tested as **pure logic** (import and call directly, e.g.
+  `habitStrength.ts`), not through a running Convex server.
+
+### Writing good tests
+
+- Cover edge/error cases (invalid, out-of-range, empty), not just the happy path.
+- When asserting exact numeric output (e.g. strength), keep the expected value in
+  sync with the source constants — see the strength invariant in
+  [ARCHITECTURE.md](./ARCHITECTURE.md#backend-data-model--api-convex).
 
 ## Submitting Changes
 
