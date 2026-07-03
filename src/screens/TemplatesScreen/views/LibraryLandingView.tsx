@@ -6,11 +6,13 @@
 
 import { useMemo } from 'react';
 import { FlatList } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { Doc, Id } from '../../../../convex/_generated/dataModel';
 import { buildCategoryList } from '../hooks/buildCategoryList';
 import { LibraryEndcap } from '../components/LibraryEndcap';
 import { LibraryLandingHeader } from './LibraryLandingHeader';
 import { LibraryLandingRow } from './LibraryLandingRow';
+import { spacing } from '../../../theme/spacing';
 import { useLibraryLandingView } from './LibraryLandingView.hooks';
 import { s } from './LibraryLandingView.styles';
 
@@ -39,6 +41,7 @@ export function LibraryLandingView({
   searchQuery,
   totalHabitCount,
 }: LibraryLandingViewProps) {
+  const insets = useSafeAreaInsets();
   const categoryList = useMemo(
     () => buildCategoryList(allTemplates),
     [allTemplates]
@@ -54,7 +57,7 @@ export function LibraryLandingView({
 
   return (
     <FlatList
-      contentContainerStyle={s.list}
+      contentContainerStyle={[s.list, { paddingTop: insets.top + spacing.xs }]}
       data={visibleTemplates}
       keyExtractor={(item) => item._id}
       ListHeaderComponent={
