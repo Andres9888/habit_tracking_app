@@ -29,7 +29,9 @@ export function TemplateReadRow({
 }: TemplateReadRowProps) {
   const { colors } = useThemeColors();
   const isImported = importedTemplateIds.has(item._id);
-  const hasRead = Boolean(item.lead);
+  // Curated leads are sparse — fall back to the template description so the
+  // science read is available on every row (mock parity).
+  const hasRead = Boolean(item.lead || item.description);
   const {
     chevronAnimatedStyle,
     contentAnimatedStyle,

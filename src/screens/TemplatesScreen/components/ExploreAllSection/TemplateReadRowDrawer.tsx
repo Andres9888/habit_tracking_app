@@ -33,6 +33,12 @@ export function TemplateReadRowDrawer({
   // Tint the science affordance with the habit's own category accent (same
   // color as the row icon), matching the "Two Worlds" mock.
   const accent = item.iconColor || colors.primary[600];
+  // Curated lead/evidence are sparse — fall back to description and the
+  // start-small line so every drawer has a read.
+  const lead = item.lead || item.description;
+  const takeaway =
+    item.evidence ||
+    (item.startSmallVersion ? `Start small: ${item.startSmallVersion}` : null);
 
   return (
     <>
@@ -63,10 +69,10 @@ export function TemplateReadRowDrawer({
         style={contentAnimatedStyle}
       >
         <View style={s.drawerBody} onLayout={onContentLayout}>
-          <Text style={[s.drawerLead, { color: colors.text.secondary }]}>{item.lead}</Text>
-          {item.evidence ? (
+          <Text style={[s.drawerLead, { color: colors.text.secondary }]}>{lead}</Text>
+          {takeaway ? (
             <Text style={[s.drawerTakeaway, { color: colors.text.primary }]}>
-              {item.evidence}
+              {takeaway}
             </Text>
           ) : null}
           {citation ? (
