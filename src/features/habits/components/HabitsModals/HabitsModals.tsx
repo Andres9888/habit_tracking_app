@@ -1,5 +1,4 @@
 import ErrorBoundary from '../../../../components/ErrorBoundary';
-import { ActivationModalSection } from './ActivationModalSection';
 import { CalendarAndDetailModals } from './CalendarAndDetailModals';
 import { CreateHabitModalSection } from './CreateHabitModalSection';
 import { HapticTestModalSection } from './HapticTestModalSection';
@@ -18,7 +17,6 @@ import {
 
 export function HabitsModals({ state }: HabitsModalsProps) {
   const shouldRenderVisualization = state.showVisualizationExercise;
-  const shouldRenderActivation = state.showActivationModal;
 
   return (
     <>
@@ -60,17 +58,6 @@ export function HabitsModals({ state }: HabitsModalsProps) {
             closeVisualizationExercise={state.closeVisualizationExercise}
             selectedHabit={state.selectedHabit}
             showVisualizationExercise={state.showVisualizationExercise}
-          />
-        </ErrorBoundary>
-      ) : null}
-      {shouldRenderActivation ? (
-        <ErrorBoundary fallback={null}>
-          <ActivationModalSection
-            activationModalHabit={state.activationModalHabit}
-            closeActivationModal={state.closeActivationModal}
-            reduceMotionPreference={state.reduceMotionPreference}
-            showActivationModal={state.showActivationModal}
-            toggleHabit={state.toggleHabit}
           />
         </ErrorBoundary>
       ) : null}
