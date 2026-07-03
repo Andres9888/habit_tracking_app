@@ -91,3 +91,6 @@ ${HOME}/
 
 # deepsec scan workspace
 .deepsec/
+
+# Generated API docs (TypeDoc)
+docs/api/
