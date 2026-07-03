@@ -43,6 +43,16 @@ export const update = mutation({
       throw new Error('Unauthenticated: Must be logged in to update settings');
     }
 
+    // SEC: defense-in-depth against premium self-grant. hasPremium is an
+    // entitlement field writable only by the RevenueCat webhook. It is already
+    // excluded from updateArgsValidator; this guard fires only if that
+    // exclusion is ever regressed, preventing a silent mass-assignment hole.
+    if ('hasPremium' in args) {
+      throw new Error(
+        'Forbidden: hasPremium cannot be set via settings.update'
+      );
+    }
+
     // SEC-001: Find existing settings for this user
     const existing = await ctx.db
       .query('userSettings')
