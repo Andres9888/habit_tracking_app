@@ -1,7 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true, // Enable all strict type checking options
+    "strict": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
