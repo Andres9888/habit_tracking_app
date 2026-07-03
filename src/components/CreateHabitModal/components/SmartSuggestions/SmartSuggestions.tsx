@@ -25,12 +25,13 @@ export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
 
   useEffect(() => {
     setIsLoading(true);
+    let timer: ReturnType<typeof setTimeout> | undefined;
     Animated.timing(fadeAnim, {
       duration: Motion.duration.fast,
       toValue: 0.5,
       useNativeDriver: true,
     }).start(() => {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setIsLoading(false);
         Animated.timing(fadeAnim, {
           duration: Motion.duration.base,
@@ -38,8 +39,8 @@ export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
           useNativeDriver: true,
         }).start();
       }, 150);
-      return () => clearTimeout(timer);
     });
+    return () => clearTimeout(timer);
   }, [query, fadeAnim]);
 
   const label = useMemo(() => {
