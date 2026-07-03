@@ -1,6 +1,6 @@
 # Chain Day 🔗
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 [![Expo SDK](https://img.shields.io/badge/Expo%20SDK-54-blue)](https://expo.dev)
 [![React Native](https://img.shields.io/badge/React%20Native-0.81-blue)](https://reactnative.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org)

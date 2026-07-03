@@ -107,7 +107,6 @@
     "@eslint/js": "^9.21.0",
     "@expo/cli": "^54.0.23",
     "@factory/eslint-plugin": "^0.1.0",
-    "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "29.5.14",
     "@types/node": "^22.13.10",
