@@ -10,7 +10,6 @@
 import type { ProgressEmojiSet } from '@/utils/progressEmojis';
 
 import type { StrengthLabel, StrengthSnapshot } from '../HabitStrengthHistory/types';
-import type { StrengthJourney } from './journey';
 
 /**
  * Time range options for filtering strength history.
@@ -52,28 +51,6 @@ export interface HabitStrengthSectionProps {
 }
 
 /**
- * Props for the TimeRangeToggle component.
- */
-export interface TimeRangeToggleProps {
-  /** Currently selected time range */
-  value: TimeRange;
-
-  /** Callback when time range changes */
-  onChange: (value: TimeRange) => void;
-}
-
-/**
- * Props for the StrengthHero component.
- */
-export interface StrengthHeroProps {
-  /** Current strength percentage (0-100) */
-  strength: number;
-
-  /** Resolved journey with the user's chosen emojis and per-level colors */
-  journey: StrengthJourney;
-}
-
-/**
  * Props for the StrengthChart component.
  */
 export interface StrengthChartProps {
@@ -88,17 +65,6 @@ export interface StrengthChartProps {
 
   /** Optional custom color override */
   color?: string;
-}
-
-/**
- * Props for the StrengthStatsRow component.
- */
-export interface StrengthStatsRowProps {
-  /** Change in the last month */
-  lastMonth: number;
-
-  /** Change in the last week */
-  lastWeek: number;
 }
 
 /**

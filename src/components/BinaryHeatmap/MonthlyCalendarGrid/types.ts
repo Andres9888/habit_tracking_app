@@ -31,4 +31,7 @@ export interface MonthlyCalendarGridProps {
   showStreakInInsights?: boolean;
   pendingToggleDate?: string | null;
   onDayPress?: (date: string, completed: boolean) => void;
+  /** Suppress the own card background/border/shadow/padding when embedded
+   *  inside a parent card (e.g. the unified Habit Detail calendar card). */
+  bare?: boolean;
 }

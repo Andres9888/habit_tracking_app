@@ -1,11 +1,8 @@
 /**
  * Habit Strength Section
  *
- * A redesigned habit strength visualization with:
- * - Time range switcher (1M/1Y/All)
- * - Circular progress ring with animated fill
- * - Full-width timeline chart with bezier curves
- * - Comparison stats row
+ * Chart-led habit strength card: kicker + stage badge, timeline chart with
+ * bezier curve, and the 5-stop milestone track.
  *
  * @example
  * ```tsx
@@ -19,18 +16,12 @@
  */
 
 export { HabitStrengthSection, default } from './HabitStrengthSection';
-export { TimeRangeToggle } from './TimeRangeToggle';
-export { StrengthHero } from './StrengthHero';
 export { StrengthChart } from './StrengthChart';
-export { StrengthStatsRow } from './StrengthStatsRow';
 
 // Types
 export type {
   HabitStrengthSectionProps,
-  TimeRangeToggleProps,
-  StrengthHeroProps,
   StrengthChartProps,
-  StrengthStatsRowProps,
   TimeRange,
   ExtendedStrengthMetrics,
 } from './types';

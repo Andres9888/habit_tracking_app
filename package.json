@@ -156,5 +156,8 @@
     "*.{json,md,css,html,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

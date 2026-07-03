@@ -1,8 +1,6 @@
-/** DetailHeroSection - Hero plus Complete Today button, above the sticky tabs. */
+/** DetailHeroSection - Fused hero (icon/name/streak/total/complete bar) plus milestone beat. */
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
-import { getLocalDateString } from '../../../utils/getLocalDateString';
-import { DetailCompleteButton } from './DetailCompleteButton';
 import { DetailHero } from './DetailHero';
 import { MilestoneBeat } from './MilestoneBeat';
 
@@ -26,12 +24,9 @@ export function DetailHeroSection({
       <DetailHero
         habit={habit}
         isCompletedToday={isCompletedToday}
+        isToggling={isToggling}
         totalCompletions={totalCompletions}
-      />
-      <DetailCompleteButton
-        disabled={isToggling}
-        isCompletedToday={isCompletedToday}
-        onPress={() => onDayPress(getLocalDateString(), isCompletedToday)}
+        onDayPress={onDayPress}
       />
       <MilestoneBeat
         currentStreak={habit.currentStreak ?? 0}

@@ -27,6 +27,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   showStreakInInsights = true,
   pendingToggleDate = null,
   onDayPress,
+  bare = false,
 }: MonthlyCalendarGridProps) {
   const { colors, isDark } = useThemeColors();
   const {
@@ -68,8 +69,8 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   return (
     <View
       style={[
-        styles.container,
-        { backgroundColor: cardBg, borderColor: colors.border },
+        bare ? styles.bareContainer : styles.container,
+        bare ? null : { backgroundColor: cardBg, borderColor: colors.border },
       ]}
     >
       <MonthNavigation

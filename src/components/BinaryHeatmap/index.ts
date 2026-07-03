@@ -15,6 +15,7 @@ export { MonthLabelsRow } from './MonthLabelsRow';
 export { HeatmapTooltip } from './HeatmapTooltip';
 export { StatsRow } from './StatsRow';
 export { MonthlyCalendarGrid } from './MonthlyCalendarGrid';
+export { InlineHeatmapGrid } from './InlineHeatmapGrid';
 
 // Type exports
 export type {

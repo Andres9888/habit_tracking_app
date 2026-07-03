@@ -3,13 +3,11 @@
  * Replaces the milestone-heavy StreakGoalCard inside the Goal tab.
  */
 import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { useStreakGoalData } from '../../../components/ProgressSectionConsolidated/StreakGoalCard/StreakGoalCard.hooks';
-import { durations, enterEasing } from '../../../theme/animations';
 import { borderRadius, spacing } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../theme/typography';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useStreakGoalAnimation } from './SimpleStreakGoalHero.hooks';
 import { StreakGoalNumeral } from './StreakGoalNumeral';
 
@@ -23,7 +21,7 @@ interface SimpleStreakGoalHeroProps {
   onExtend?: () => void;
 }
 
-const PROGRESS_BAR_HEIGHT = 10;
+const PROGRESS_BAR_HEIGHT = 8;
 
 export function SimpleStreakGoalHero({
   bestStreak,
@@ -33,7 +31,6 @@ export function SimpleStreakGoalHero({
   onExtend,
 }: SimpleStreakGoalHeroProps) {
   const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
   // A returning user whose streak just broke — reframe day 1 instead of
   // letting the bare "0% complete" read as failure.
   const isBrokenStreak = currentStreak === 0 && bestStreak > 0;
@@ -41,23 +38,23 @@ export function SimpleStreakGoalHero({
     currentStreak,
     streakGoal
   );
-  const { barStyle, daysText, isGoalReached, percentText, showLabels, streakText } =
-    useStreakGoalAnimation(
-      overallPercent,
-      daysRemaining,
-      currentStreak,
-      streakGoal
-    );
+  const { barStyle, daysText, isGoalReached, streakText } = useStreakGoalAnimation(
+    overallPercent,
+    daysRemaining,
+    currentStreak,
+    streakGoal
+  );
   const goalLabel = `${streakGoal} ${streakGoal === 1 ? 'day' : 'days'}`;
-  const labelEnter = reduceMotion
-    ? undefined
-    : FadeIn.duration(durations.standard).delay(durations.progress).easing(enterEasing);
 
   return (
     <View>
-      <StreakGoalNumeral animatedStreak={streakText} goalLabel={goalLabel} />
+      <StreakGoalNumeral
+        animatedStreak={streakText}
+        daysRemaining={daysText}
+        goalLabel={goalLabel}
+      />
 
-      <View className='mt-5'>
+      <View className='mt-3'>
         <View
           accessibilityRole='progressbar'
           accessibilityValue={{ max: 100, min: 0, now: overallPercent }}
@@ -102,31 +99,6 @@ export function SimpleStreakGoalHero({
               🏆 Goal reached — extend it →
             </Text>
           </Pressable>
-        ) : showLabels ? (
-          <Animated.View className='mt-2 flex-row justify-between' entering={labelEnter}>
-            <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-              <Text
-                style={{
-                  color: colors.text.primary,
-                  fontWeight: fontWeights.semibold,
-                }}
-              >
-                {percentText}%
-              </Text>{' '}
-              complete
-            </Text>
-            <Text style={{ ...typography.caption, color: colors.text.secondary }}>
-              <Text
-                style={{
-                  color: colors.text.primary,
-                  fontWeight: fontWeights.semibold,
-                }}
-              >
-                {daysText}
-              </Text>{' '}
-              {daysText === 1 ? 'day' : 'days'} to go
-            </Text>
-          </Animated.View>
         ) : null}
       </View>
     </View>
