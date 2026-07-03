@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "index.ts",
+    "App.tsx",
+    "app.config.{js,ts}",
+    "convex/**/*.{ts,tsx}!",
+    "src/**/*.stories.{ts,tsx}"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "convex/**/*.{ts,tsx}"],
+  "ignore": [
+    "convex/_generated/**",
+    ".superdesign/**",
+    "**/*.test.{ts,tsx}",
+    "__tests__/**",
+    "tests/**"
+  ],
+  "ignoreDependencies": ["prettier-plugin-tailwindcss"],
+  "ignoreBinaries": ["task-master"]
+}
