@@ -51,15 +51,15 @@ changing data logic.
 
 ### Tables (`convex/schema.ts`)
 
-| Table                                                | Purpose                                       | Key fields                                                                                                  |
-| ---------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `habits`                                             | Core habit definitions                        | `createdAt`, `currentStreak`, `bestStreak`, `archived`, strength (`accessibility*`) and cue (`cue*`) fields |
-| `tracking`                                           | Per-day completion log                        | `habitId`, `date` (YYYY-MM-DD string), `completed`, `minutes`, `userId`                                     |
-| `deletedHabits`                                      | Soft-delete tombstones for undo/restore       | mirror of `habits`                                                                                          |
-| `users` / `userSettings`                             | Profile + per-user preferences                | `darkMode`, `dayShape`, `habitCompletionIcon`, sounds, theme                                                |
-| `subscriptions`                                      | RevenueCat entitlement state (webhook-driven) | `clerkId`, `status`, `planType`, `lastWebhookEventId` (idempotency)                                         |
-| `templates` / `templateUsage` / `templateCategories` | Prebuilt habit library + usage stats          | —                                                                                                           |
-| `rateLimits`                                         | Per-user/action rate limiting                 | —                                                                                                           |
+| Table                         | Purpose                                                                                                            | Key fields                                                                                                                                                     |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `habits`                      | Core habit definitions                                                                                             | `createdAt`, `currentStreak`, `bestStreak`, `archived`, strength (`strength*`) and cue (`cue*`) fields; `accessibility*` = dormant Memory Accessibility system |
+| `tracking`                    | Per-day completion log                                                                                             | `habitId`, `date` (YYYY-MM-DD string), `completed`, `minutes`, `userId`                                                                                        |
+| `deletedHabits`               | Soft-delete tombstones for undo/restore                                                                            | mirror of `habits`                                                                                                                                             |
+| `users` / `userSettings`      | Profile + per-user preferences                                                                                     | `darkMode`, `dayShape`, `habitCompletionIcon`, sounds, theme                                                                                                   |
+| `subscriptions`               | RevenueCat entitlement state (webhook-driven)                                                                      | `clerkId`, `status`, `planType`, `lastWebhookEventId` (idempotency)                                                                                            |
+| `templates` / `templateUsage` | Prebuilt habit library + usage stats (categories are validators/functions in `templateCategories.ts`, not a table) | —                                                                                                                                                              |
+| `rateLimits`                  | Per-user/action rate limiting                                                                                      | —                                                                                                                                                              |
 
 ### Function modules (`convex/*.ts`)
 

@@ -5,16 +5,19 @@
 ## Test Framework
 
 **Runner:**
+
 - Jest v29.7.0
 - Preset: `jest-expo` (React Native + Expo support)
 - Config: `jest.config.js` (root), `tests/e2e/jest.config.js` (end-to-end)
 
 **Assertion Library:**
+
 - Jest built-in matchers (included in v29+)
 - `@testing-library/react-native` v13.3.3 for component testing
-- `@testing-library/jest-native` v5.4.3 for custom matchers
+- Custom matchers built into `@testing-library/react-native` v12.4+ (deprecated `@testing-library/jest-native` removed Jul 2026)
 
 **Run Commands:**
+
 ```bash
 npm test                    # Run all tests (watches not specified in root package.json)
 npm run test:watch         # Watch mode for development
@@ -26,17 +29,20 @@ npm run test:performance   # Run performance tests only (--testPathPattern=perfo
 ## Test File Organization
 
 **Location:**
+
 - Co-located with source code: `src/components/HabitCard/__tests__/HabitCard.test.tsx`
 - Or in dedicated `tests/` directory: `tests/unit/convex/habits.toggle.test.ts`, `tests/unit/components/`
 - End-to-end tests: `tests/e2e/` with separate Jest config
 
 **Naming:**
+
 - Unit tests: `*.test.ts` or `*.test.tsx` (file being tested + `.test`)
 - Integration tests: `*.test.ts` (e.g., `habitStreakIntegration.test.ts`)
 - E2E tests: `*.test.ts` in `tests/e2e/`
 - Test utilities: `__tests__/` subfolder or `*.test.ts` alongside source
 
 **Structure:**
+
 ```
 tests/
 ├── unit/
@@ -58,6 +64,7 @@ tests/
 ## Test Structure
 
 **Suite Organization:**
+
 ```typescript
 /**
  * PackConfirmSheet migration tests
@@ -91,6 +98,7 @@ describe('PackConfirmSheet', () => {
 ```
 
 **Patterns:**
+
 - One `describe()` block per component or module
 - Group related tests in nested `describe()` blocks by feature
 - `beforeEach()` to reset mocks and state (always call `jest.clearAllMocks()`)
@@ -98,6 +106,7 @@ describe('PackConfirmSheet', () => {
 - Test setup in variables declared above `describe()` for reuse
 
 **Setup/Teardown:**
+
 ```typescript
 beforeEach(() => {
   jest.clearAllMocks();
@@ -115,6 +124,7 @@ afterEach(() => {
 **Framework:** Jest built-in `jest.mock()` and `jest.fn()`
 
 **Patterns:**
+
 ```typescript
 // Mock module entirely
 jest.mock('expo-network', () => ({
@@ -152,12 +162,14 @@ jest.mock('date-fns', () => ({
 ```
 
 **What to Mock:**
+
 - External APIs: Expo modules, Convex, Clerk, Sentry
 - Network requests: Mock `fetch()` or use MSW (if installed)
 - Third-party libraries with side effects: gesture handlers, animations
 - File system: `expo-secure-store`, `expo-notifications`
 
 **What NOT to Mock:**
+
 - React/React Native components (unless specifically testing integration)
 - Utility functions you wrote (test directly instead)
 - Date/time in logic tests (use `jest.useFakeTimers()` instead of mocking `Date`)
@@ -166,6 +178,7 @@ jest.mock('date-fns', () => ({
 ## Fixtures and Factories
 
 **Test Data:**
+
 ```typescript
 const TEST_PACK: PremiumPack = {
   backgroundGradient: ['#7C3AED', '#4F46E5'],
@@ -188,6 +201,7 @@ const defaultProps = {
 ```
 
 **Location:**
+
 - Fixtures defined at top of test file if used by single test suite
 - Shared fixtures in `tests/fixtures/` or `tests/unit/__fixtures__/`
 - Factory functions for generating realistic test data:
@@ -202,6 +216,7 @@ const defaultProps = {
 **Requirements:** No enforced minimum (tracked but not blocking)
 
 **View Coverage:**
+
 ```bash
 npm run test:coverage
 # Generates `coverage/` directory with HTML report
@@ -209,6 +224,7 @@ open coverage/lcov-report/index.html
 ```
 
 **Configuration (jest.config.js):**
+
 ```javascript
 collectCoverageFrom: [
   '**/*.{ts,tsx}',
@@ -223,18 +239,21 @@ collectCoverageFrom: [
 ## Test Types
 
 **Unit Tests:**
+
 - Scope: Single function, hook, or component
 - Approach: Mock all dependencies, test in isolation
 - Example: `habits.toggle.test.ts` tests date validation functions independently
 - Location: `tests/unit/`
 
 **Integration Tests:**
+
 - Scope: Multiple functions working together (e.g., habit strength calculation with streak recovery)
 - Approach: Use real implementations of related modules, mock external dependencies only
 - Example: `habitStreakIntegration.test.ts` tests habit toggle + streak recovery flow
 - Location: `tests/unit/` (named with `Integration` suffix or in `integration/` folder)
 
 **E2E Tests:**
+
 - Scope: Full app flow (login → create habit → track → view stats)
 - Approach: Run against live or stubbed backend, no mocks except external APIs
 - Example: Would test complete user journeys
@@ -244,6 +263,7 @@ collectCoverageFrom: [
 ## Common Patterns
 
 **Async Testing:**
+
 ```typescript
 describe('Date Validation', () => {
   beforeEach(() => {
@@ -267,6 +287,7 @@ describe('Date Validation', () => {
 ```
 
 **Error Testing:**
+
 ```typescript
 it('should reject toggle when user is not authenticated', () => {
   const identity = null;
@@ -283,6 +304,7 @@ it('should reject toggle when habit belongs to different user', () => {
 ```
 
 **Component Testing (React Testing Library):**
+
 ```typescript
 it('renders pack name and habit count', () => {
   const { getByText } = render(<PackConfirmSheet {...defaultProps} />);
@@ -298,6 +320,7 @@ it('calls onCancel when Cancel button is pressed', () => {
 ```
 
 **Snapshot Testing:**
+
 - Not used in this codebase (explicit expectations preferred)
 - If snapshots needed: store in `__snapshots__/` alongside test
 
@@ -306,6 +329,7 @@ it('calls onCancel when Cancel button is pressed', () => {
 File: `jest.setup.js` (root)
 
 **Comprehensive mocking for:**
+
 - Expo modules: `expo-notifications`, `expo-haptics`, `expo-network`, `expo-secure-store`
 - Gesture handler: `react-native-gesture-handler` (complex gesture API)
 - Animations: `react-native-reanimated` (shared value mocking, animation functions)
@@ -316,6 +340,7 @@ File: `jest.setup.js` (root)
 - Layout/lifecycle: Fake timers auto-supported by Jest
 
 **Critical mocks for RN animations:**
+
 ```javascript
 useSharedValue: (initial) => ({ value: initial }),
 useAnimatedStyle: (cb) => cb() || {},
@@ -334,6 +359,7 @@ interpolate: (value, inputRange, outputRange) => { /* linear interpolation */ },
 ## Known Issues & Gaps
 
 **Untested Areas:**
+
 1. Offline queue persistence and recovery (no integration tests)
 2. Sync orchestrator edge cases (network transitions)
 3. Theme token application in edge device sizes
@@ -341,10 +367,11 @@ interpolate: (value, inputRange, outputRange) => { /* linear interpolation */ },
 5. Error recovery flows (network reconnect, retry logic)
 
 **Test Maintenance:**
+
 - Review mock setup when Expo/React Native versions bump
 - `jest.setup.js` is the source of truth for mock implementations — updates there propagate to all tests
 - Broken tests often indicate outdated module mocking
 
 ---
 
-*Testing analysis: 2025-03-19*
+_Testing analysis: 2025-03-19_

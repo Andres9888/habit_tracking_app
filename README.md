@@ -45,14 +45,14 @@ This feature increases chip engagement by 40-60% by showing habits that align wi
    - Copy your existing Convex backend files to this project
    - Copy `.env.example` to `.env.local` and fill in the values below
 
-   | Variable                                                                | Purpose                                           |
-   | ----------------------------------------------------------------------- | ------------------------------------------------- |
-   | `EXPO_PUBLIC_CONVEX_URL`                                                | Convex deployment URL (required)                  |
-   | `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`                                     | Clerk auth (client)                               |
-   | `CLERK_AUTH_DOMAIN`                                                     | Clerk auth domain (Convex ↔ Clerk)                |
-   | `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` | RevenueCat SDK (premium)                          |
-   | `REVENUECAT_WEBHOOK_SECRET`                                             | Verifies RevenueCat → Convex entitlement webhooks |
-   | `EXPO_PUBLIC_SENTRY_DSN`                                                | Sentry error reporting                            |
+   | Variable                                                                | Purpose                                                                                                                                 |
+   | ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+   | `EXPO_PUBLIC_CONVEX_URL`                                                | Convex deployment URL (required)                                                                                                        |
+   | `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`                                     | Clerk auth (client)                                                                                                                     |
+   | `CLERK_AUTH_DOMAIN`                                                     | Clerk auth domain (Convex ↔ Clerk)                                                                                                      |
+   | `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` | RevenueCat SDK (premium)                                                                                                                |
+   | `REVENUECAT_WEBHOOK_SECRET`                                             | Verifies RevenueCat → Convex entitlement webhooks — **server-side only**: set it in the Convex dashboard, never in a client `.env` file |
+   | `EXPO_PUBLIC_SENTRY_DSN`                                                | Sentry error reporting                                                                                                                  |
 
    See [ARCHITECTURE.md](./ARCHITECTURE.md) for the backend data model and
    [CONTRIBUTING.md](./CONTRIBUTING.md) for dev/test workflow.

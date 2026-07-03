@@ -38,7 +38,7 @@ Copy `.env.example` to `.env.local` and configure:
 - `EXPO_PUBLIC_CONVEX_URL` — Convex deployment URL (required)
 - `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_AUTH_DOMAIN` — Clerk auth
 - `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` — RevenueCat SDK
-- `REVENUECAT_WEBHOOK_SECRET` — verifies RevenueCat → Convex webhooks
+- `REVENUECAT_WEBHOOK_SECRET` — verifies RevenueCat → Convex webhooks (**server-side only**: set in the Convex dashboard, never in a client `.env` file)
 - `EXPO_PUBLIC_SENTRY_DSN` — Sentry error reporting
 
 ## Code Style
