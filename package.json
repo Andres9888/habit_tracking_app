@@ -145,7 +145,8 @@
     "tar": "^7.5.10",
     "test-exclude": {
       "minimatch": "^5.1.6"
-    }
+    },
+    "ws": "^8.21.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
