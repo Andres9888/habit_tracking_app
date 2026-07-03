@@ -4,6 +4,7 @@ import { useThemeColors } from '../../../theme';
 import { colors as palette } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { MAX_FONT_SIZE_MULTIPLIER_STRICT } from '../../../utils/accessibility/textScaling';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { Habit } from '../HabitDetailScreen.types';
 import { DetailCompleteButton } from './DetailCompleteButton';
@@ -58,6 +59,9 @@ export function DetailHero({
           <Text
             accessibilityLabel={`Habit: ${habitName}`}
             accessibilityRole='header'
+            adjustsFontSizeToFit
+            maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
+            minimumFontScale={0.8}
             numberOfLines={1}
             style={{
               color: colors.text.primary,
@@ -78,6 +82,7 @@ export function DetailHero({
 
         <View style={{ alignItems: 'flex-end' }}>
           <Text
+            maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
             style={{
               color: colors.text.primary,
               fontFamily: fontFamilies.primary.display,
@@ -89,6 +94,7 @@ export function DetailHero({
             {totalCompletions}
           </Text>
           <Text
+            maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
             style={{
               color: colors.text.tertiary,
               fontSize: 10.5,

@@ -2,6 +2,7 @@
 import { Text } from 'react-native';
 import { useThemeColors } from '../../../theme';
 import { fontWeights, typography } from '../../../theme/typography';
+import { MAX_FONT_SIZE_MULTIPLIER_STRICT } from '../../../utils/accessibility/textScaling';
 import { getHeroContext, type HeroContextInput } from './DetailHeroContext.utils';
 
 interface DetailHeroContextProps extends HeroContextInput {
@@ -34,6 +35,9 @@ export function DetailHeroContext(props: DetailHeroContextProps) {
   return (
     <Text
       accessibilityRole='text'
+      adjustsFontSizeToFit
+      maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
+      minimumFontScale={0.85}
       numberOfLines={1}
       style={{
         ...typography.bodySmall,
