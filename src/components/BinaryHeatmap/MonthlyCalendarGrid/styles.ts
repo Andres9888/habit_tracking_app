@@ -21,6 +21,10 @@ export const styles = StyleSheet.create({
     padding: 16,
     width: '100%',
   },
+  bareContainer: {
+    alignSelf: 'stretch',
+    width: '100%',
+  },
   dayCell: {
     alignItems: 'center',
     borderRadius: borderRadius.small,

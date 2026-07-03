@@ -61,6 +61,7 @@ export const colors = {
   dark: {
     background: '#111827',
     card: '#374151',
+    cardElevated: '#374151', // No pure-white dark equivalent — same as card
     surface: '#1F2937',
   },
 
@@ -96,6 +97,7 @@ export const colors = {
   light: {
     background: '#F5F1ED', // Canvas (L0) — warm parchment
     card: '#EDEAE5', // Surface (L1) — subtle lift
+    cardElevated: '#FFFFFF', // Pure white card — Habit Detail hero/section cards
     gradientMid: '#F0EDE8', // Depth gradient midpoint
     surface: '#EDEAE5', // Elevated elements (L1)
     surfaceMuted: '#FAF8F5', // Subtle section differentiation

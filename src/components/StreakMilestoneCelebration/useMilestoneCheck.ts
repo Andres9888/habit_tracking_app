@@ -96,13 +96,14 @@ export function useMilestoneCheck({
 
       // Trigger success haptic feedback
       if (Platform.OS === 'ios' || Platform.OS === nativeHandsetPlatform) {
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           Haptics.notificationAsync(
             Haptics.NotificationFeedbackType.Success
           ).catch(() => {
             // Silently fail - haptics are non-critical
           });
         }, ANIMATION_TIMING.HAPTIC_DELAY);
+        return () => clearTimeout(timer);
       }
     }
   }, [currentStreak, previousStreak, shownMilestones]);

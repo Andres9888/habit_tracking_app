@@ -1,85 +1,115 @@
-/** DetailHero - Premium hero card: haloed icon, name, notable badge, journey line, stat band. */
-import { Text } from 'react-native';
-import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
+/** DetailHero - Fused hero card: icon/name/streak row, total, complete bar. */
+import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme';
 import { colors as palette } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { Habit } from '../HabitDetailScreen.types';
+import { DetailCompleteButton } from './DetailCompleteButton';
 import { getHabitDisplayName } from './DetailHero.utils';
 import { DetailHeroContext } from './DetailHeroContext';
 import { DetailHeroIcon } from './DetailHeroIcon';
-import { DetailHeroStats } from './DetailHeroStats';
 
 interface DetailHeroProps {
   habit: Habit;
   isCompletedToday?: boolean;
+  isToggling?: boolean;
   totalCompletions: number;
+  onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
-
-const ENTERING = FadeInDown.duration(280)
-  .delay(100)
-  .easing(Easing.out(Easing.cubic));
 
 export function DetailHero({
   habit,
-  isCompletedToday,
+  isCompletedToday = false,
+  isToggling = false,
   totalCompletions,
+  onDayPress,
 }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();
   const habitName = getHabitDisplayName(habit);
 
   return (
-    <Animated.View
-      className='items-center'
-      entering={ENTERING}
+    <View
+      className='overflow-hidden'
       style={{
-        backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
+        backgroundColor: isDark ? colors.card : palette.light.cardElevated,
         borderColor: colors.border,
         borderRadius: borderRadius.large,
         borderWidth: 1,
         marginHorizontal: spacing.base + spacing.xs,
         marginTop: spacing.sm,
-        paddingHorizontal: spacing.base,
-        paddingVertical: spacing.lg,
-        ...shadows.card,
+        ...shadows.subtle,
       }}
     >
-      {habit.icon ? (
-        <DetailHeroIcon
-          color={habit.color ?? habit.iconColor}
-          icon={habit.icon}
-          isCompletedToday={isCompletedToday}
-        />
-      ) : null}
-
-      <Text
-        accessibilityLabel={`Habit: ${habitName}`}
-        accessibilityRole='header'
-        numberOfLines={1}
-        style={{
-          color: colors.text.primary,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 24,
-          fontWeight: fontWeights.bold,
-          letterSpacing: -0.3,
-          marginTop: spacing.base,
-        }}
+      <View
+        className='flex-row items-center'
+        style={{ gap: spacing.md, padding: spacing.base }}
       >
-        {habitName}
-      </Text>
+        {habit.icon ? (
+          <DetailHeroIcon
+            color={habit.color ?? habit.iconColor}
+            icon={habit.icon}
+            isCompletedToday={isCompletedToday}
+          />
+        ) : null}
 
-      <DetailHeroContext
-        bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
-        goalDuration={habit.goalDuration ?? 0}
-      />
+        <View className='flex-1' style={{ minWidth: 0 }}>
+          <Text
+            accessibilityLabel={`Habit: ${habitName}`}
+            accessibilityRole='header'
+            numberOfLines={1}
+            style={{
+              color: colors.text.primary,
+              fontFamily: fontFamilies.primary.display,
+              fontSize: 19,
+              fontWeight: fontWeights.bold,
+              letterSpacing: -0.2,
+            }}
+          >
+            {habitName}
+          </Text>
+          <DetailHeroContext
+            bestStreak={habit.bestStreak ?? 0}
+            currentStreak={habit.currentStreak ?? 0}
+            goalDuration={habit.goalDuration ?? 0}
+          />
+        </View>
 
-      <DetailHeroStats
-        bestStreak={habit.bestStreak ?? 0}
-        currentStreak={habit.currentStreak ?? 0}
-        totalCompletions={totalCompletions}
-      />
-    </Animated.View>
+        <View style={{ alignItems: 'flex-end' }}>
+          <Text
+            style={{
+              color: colors.text.primary,
+              fontFamily: fontFamilies.primary.display,
+              fontSize: 22,
+              fontWeight: fontWeights.bold,
+              lineHeight: 22,
+            }}
+          >
+            {totalCompletions}
+          </Text>
+          <Text
+            style={{
+              color: colors.text.tertiary,
+              fontSize: 10.5,
+              fontWeight: fontWeights.semibold,
+              letterSpacing: 0.8,
+              marginTop: 2,
+              textTransform: 'uppercase',
+            }}
+          >
+            total
+          </Text>
+        </View>
+      </View>
+
+      <View style={{ paddingHorizontal: spacing.base, paddingBottom: spacing.base }}>
+        <DetailCompleteButton
+          disabled={isToggling}
+          isCompletedToday={isCompletedToday}
+          onPress={() => onDayPress(getLocalDateString(), isCompletedToday)}
+        />
+      </View>
+    </View>
   );
 }

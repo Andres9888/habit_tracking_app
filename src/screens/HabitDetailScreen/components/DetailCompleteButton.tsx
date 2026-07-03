@@ -1,9 +1,10 @@
-/** DetailCompleteButton - Full-width complete-today toggle under the hero. */
+/** DetailCompleteButton - Fused full-width complete-today pill inside the hero card. */
 import { Check } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { durations } from '../../../theme/animations';
 import { fontWeights, typography } from '../../../theme/typography';
+import { withAlpha } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useDetailCompleteButtonAnimation } from './DetailCompleteButton.hooks';
@@ -25,19 +26,14 @@ export function DetailCompleteButton({
 }: DetailCompleteButtonProps) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
-  const {
-    checkStyle,
-    circleStyle,
-    containerStyle,
-    filledCircleStyle,
-    labelStyle,
-    pressHandlers,
-  } = useDetailCompleteButtonAnimation(isCompletedToday, {
-    inverseText: colors.text.inverse,
-    successBg: colors.status.success,
-    successBorder: colors.status.success,
-    successText: colors.status.success,
-  });
+  const { checkStyle, containerStyle, labelStyle, pressHandlers } =
+    useDetailCompleteButtonAnimation(isCompletedToday, {
+      doneBg: colors.primary[100],
+      doneBorder: withAlpha(colors.primary[700], 0.25),
+      doneText: colors.primary[700],
+      filledBg: colors.primary[600],
+      filledText: colors.text.inverse,
+    });
 
   const labelEnter = reduceMotion ? undefined : FadeIn.duration(durations.quick);
   const labelExit = reduceMotion ? undefined : FadeOut.duration(durations.quick);
@@ -53,25 +49,20 @@ export function DetailCompleteButton({
       accessibilityRole='button'
       className='flex-row items-center justify-center'
       disabled={disabled}
-      style={[containerStyle, styles.container, { opacity: disabled ? 0.6 : 1 }]}
+      style={[
+        containerStyle,
+        styles.container,
+        { shadowColor: colors.primary[600], opacity: disabled ? 0.6 : 1 },
+      ]}
       onPress={onPress}
       onPressIn={pressHandlers.onPressIn}
       onPressOut={pressHandlers.onPressOut}
     >
-      <View style={styles.indicatorWrap}>
-        <Animated.View style={[circleStyle, styles.ring]} />
-        <Animated.View
-          style={[
-            filledCircleStyle,
-            styles.filledCircle,
-            { backgroundColor: colors.text.inverse },
-          ]}
-        >
-          <Animated.View style={checkStyle}>
-            <Check color={colors.status.success} size={15} strokeWidth={3.5} />
-          </Animated.View>
+      {isCompletedToday ? (
+        <Animated.View style={checkStyle}>
+          <Check color={colors.primary[700]} size={17} strokeWidth={2.6} />
         </Animated.View>
-      </View>
+      ) : null}
       <AnimatedText
         key={isCompletedToday ? 'done' : 'pending'}
         entering={labelEnter}

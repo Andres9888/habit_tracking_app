@@ -1,52 +1,49 @@
-/** DetailHeroContext - Small pill that surfaces the habit's most notable fact. */
-import { Text, View } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
+/** DetailHeroContext - One-line motivational note under the habit name. */
+import { Text } from 'react-native';
 import { useThemeColors } from '../../../theme';
-import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 import { getHeroContext, type HeroContextInput } from './DetailHeroContext.utils';
 
-export function DetailHeroContext(props: HeroContextInput) {
+interface DetailHeroContextProps extends HeroContextInput {
+  /** Appended as "· best N" to the plain ongoing-streak line only — the
+   *  goal/milestone lines already carry their own single clear note. */
+  bestStreak?: number;
+}
+
+export function DetailHeroContext(props: DetailHeroContextProps) {
   const { colors } = useThemeColors();
   const ctx = getHeroContext(props);
   if (!ctx) return null;
 
   // Amber/gold for streaks and milestone celebrations; green only for goal progress.
   const useStreakColor = ctx.tone !== 'goal' || ctx.milestone === true;
-  const backgroundColor = useStreakColor
-    ? colors.status.streakLight
-    : colors.status.successLight;
   const textColor = useStreakColor
     ? colors.status.streakText
-    : colors.status.successText;
+    : colors.status.success;
+  const currentStreak = props.currentStreak ?? 0;
+  const bestStreak = props.bestStreak ?? 0;
+  // Only the plain ongoing-streak line gets a "· best N" suffix — the
+  // personal-best line already says "Longest streak yet" (current === best),
+  // and goal/milestone lines carry their own single clear note.
+  const showBest =
+    ctx.tone === 'streak' &&
+    !ctx.milestone &&
+    bestStreak > 0 &&
+    currentStreak < bestStreak;
 
   return (
-    <Animated.View
-      accessibilityLabel={ctx.text}
+    <Text
       accessibilityRole='text'
-      entering={FadeIn.duration(220)}
+      numberOfLines={1}
       style={{
-        alignItems: 'center',
-        backgroundColor,
-        borderRadius: borderRadius.full,
-        flexDirection: 'row',
-        gap: 6,
-        marginTop: spacing.sm,
-        paddingHorizontal: spacing.md,
-        paddingVertical: 6,
+        ...typography.bodySmall,
+        color: textColor,
+        fontWeight: fontWeights.semibold,
+        marginTop: 2,
       }}
     >
-      <Text style={{ fontSize: 13 }}>{ctx.emoji}</Text>
-      <Text
-        style={{
-          ...typography.caption,
-          color: textColor,
-          fontWeight: fontWeights.semibold,
-          letterSpacing: 0,
-        }}
-      >
-        {ctx.text}
-      </Text>
-    </Animated.View>
+      {ctx.emoji} {ctx.text}
+      {showBest ? ` · best ${bestStreak}` : ''}
+    </Text>
   );
 }

@@ -1,4 +1,7 @@
-/** DetailCompleteButton — calm fade: outlined → solid, check scale only. */
+/**
+ * DetailCompleteButton — fused full-width pill.
+ * Incomplete: filled, elevated, loud CTA. Complete: light tinted, calm, check icon.
+ */
 import { useEffect, useRef } from 'react';
 import {
   interpolate,
@@ -10,14 +13,12 @@ import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { runCompleteButtonTransition } from './runCompleteButtonTransition';
 
-const CHECK_SCALE_MIN = 0.6;
-const OUTLINE_BG = 'transparent';
-
 interface CompleteButtonPalette {
-  inverseText: string;
-  successBg: string;
-  successBorder: string;
-  successText: string;
+  filledBg: string;
+  filledText: string;
+  doneBg: string;
+  doneBorder: string;
+  doneText: string;
 }
 
 export function useDetailCompleteButtonAnimation(
@@ -46,10 +47,11 @@ export function useDetailCompleteButtonAnimation(
     backgroundColor: interpolateColor(
       completionProgress.value,
       [0, 1],
-      [OUTLINE_BG, palette.successBg]
+      [palette.filledBg, palette.doneBg]
     ),
-    borderColor: palette.successBorder,
-    borderWidth: 2,
+    borderColor: palette.doneBorder,
+    borderWidth: interpolate(completionProgress.value, [0, 1], [0, 1]),
+    shadowOpacity: interpolate(completionProgress.value, [0, 1], [0.28, 0]),
     transform: [{ scale: pressScale.value }],
   }));
 
@@ -57,37 +59,18 @@ export function useDetailCompleteButtonAnimation(
     color: interpolateColor(
       completionProgress.value,
       [0, 1],
-      [palette.successText, palette.inverseText]
+      [palette.filledText, palette.doneText]
     ),
-  }));
-
-  const circleStyle = useAnimatedStyle(() => ({
-    borderColor: interpolateColor(
-      completionProgress.value,
-      [0, 1],
-      [palette.successBorder, palette.inverseText]
-    ),
-    opacity: interpolate(completionProgress.value, [0, 0.4], [1, 0], 'clamp'),
   }));
 
   const checkStyle = useAnimatedStyle(() => ({
     opacity: checkScale.value,
-  }));
-
-  const filledCircleStyle = useAnimatedStyle(() => ({
-    opacity: checkScale.value,
-    transform: [
-      {
-        scale: interpolate(checkScale.value, [0, 1], [CHECK_SCALE_MIN, 1]),
-      },
-    ],
+    transform: [{ scale: interpolate(checkScale.value, [0, 1], [0.6, 1]) }],
   }));
 
   return {
     checkStyle,
-    circleStyle,
     containerStyle,
-    filledCircleStyle,
     labelStyle,
     pressHandlers,
   };

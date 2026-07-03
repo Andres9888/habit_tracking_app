@@ -9,6 +9,7 @@ import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import type { Habit } from '../../../features/habits/types';
 import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../../theme';
+import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { CalendarTabContent } from './CalendarTabContent';
 import { DetailHeroSection } from './DetailHeroSection';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
@@ -39,6 +40,7 @@ export function HabitDetailContent({
   const { activeView, handleScroll, handleSectionLayout, scrollToView } =
     useDetailScrollSpy(scrollRef, { onPinnedChange });
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
+  const isTodayToggling = pendingToggleDate === getLocalDateString();
   const progressEmojis = useProgressEmojis(habit);
 
   const makeSectionLayoutHandler =
@@ -60,7 +62,7 @@ export function HabitDetailContent({
       <DetailHeroSection
         habit={habit}
         isCompletedToday={isCompletedToday}
-        isToggling={pendingToggleDate !== null}
+        isToggling={isTodayToggling}
         totalCompletions={totalCompletions}
         onDayPress={onDayPress}
       />

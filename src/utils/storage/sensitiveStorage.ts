@@ -50,8 +50,14 @@ async function isSecureStoreAvailable(): Promise<boolean> {
   return secureStoreAvailabilityPromise;
 }
 
-function encodeSecureKey(key: string): string {
-  return key.replaceAll(/[^A-Za-z0-9._-]/g, (character) => {
+// Injective: `_` is itself escaped (as `_5f_`), so the only source of the
+// `_<hex>_` shape in the output is an escape. Without this, a key containing a
+// literal `_20_` would collide with the encoding of a key containing a space
+// (both -> `a_20_b`), letting two distinct secrets share meta/chunks.
+// Exported for tests. In test mode the AsyncStorage fallback uses raw keys, so
+// injectivity can't be exercised behaviorally — it is asserted directly.
+export function encodeSecureKey(key: string): string {
+  return key.replaceAll(/[^A-Za-z0-9.-]/g, (character) => {
     const codePoint = character.codePointAt(0) ?? 0;
     return `_${codePoint.toString(16)}_`;
   });

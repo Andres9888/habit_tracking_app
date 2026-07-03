@@ -35,8 +35,8 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
   const currentStreak = habit.currentStreak ?? 0;
   const tabEnter = FadeIn.duration(durations.standard).easing(enterEasing);
   const cardStyle = {
-    ...shadows.card,
-    backgroundColor: isDark ? colors.card : palette.light.surfaceMuted,
+    ...shadows.subtle,
+    backgroundColor: isDark ? colors.card : palette.light.cardElevated,
     borderColor: colors.border,
     borderWidth: 1,
   };
@@ -70,7 +70,7 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
       style={cardStyle}
     >
       <View className='p-4'>
-        <View className='mb-4 flex-row items-center justify-between'>
+        <View className='mb-3 flex-row items-center justify-between'>
           <Text style={{ ...typography.overline, color: controlAccent }}>
             Streak goal
           </Text>

@@ -4,6 +4,7 @@ import { DetailCompleteButton } from '../DetailCompleteButton';
 jest.mock('../../../../theme/ThemeContext', () => ({
   useThemeColors: () => ({
     colors: {
+      primary: { 100: '#d1fae5', 600: '#059669', 700: '#047857' },
       status: { success: '#22c55e' },
       text: { inverse: '#fff', primary: '#1a1a1a' },
     },

@@ -88,3 +88,6 @@ Plans/
 har.json
 tmp-*
 ${HOME}/
+
+# deepsec scan workspace
+.deepsec/

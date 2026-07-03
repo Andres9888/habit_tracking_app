@@ -3,7 +3,7 @@ import * as SecureStore from 'expo-secure-store';
 export const tokenCache = {
   async getToken(key: string) {
     try {
-      return SecureStore.getItemAsync(key);
+      return await SecureStore.getItemAsync(key);
     } catch (error) {
       if (__DEV__) {
         console.warn('Failed to read token from secure store', error);
@@ -14,7 +14,7 @@ export const tokenCache = {
   },
   async saveToken(key: string, value: string) {
     try {
-      return SecureStore.setItemAsync(key, value);
+      return await SecureStore.setItemAsync(key, value);
     } catch (error) {
       if (__DEV__) {
         console.warn('Failed to save token to secure store', error);
