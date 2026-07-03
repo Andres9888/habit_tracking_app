@@ -15,6 +15,7 @@ This PR completes the offline resilience infrastructure for Chain Day, adding fu
 ### What Was Already Working ✅
 
 Chain Day already had solid offline infrastructure:
+
 - ✅ Network status detection (`NetworkStatusContext`)
 - ✅ Offline queue with AsyncStorage persistence
 - ✅ Optimistic updates for habit toggles
@@ -52,7 +53,7 @@ Chain Day already had solid offline infrastructure:
 export type OfflineOperationType = 'toggleCompletion';
 
 // After: All habit mutations
-export type OfflineOperationType = 
+export type OfflineOperationType =
   | 'toggleCompletion'
   | 'createHabit'
   | 'updateHabit'
@@ -62,6 +63,7 @@ export type OfflineOperationType =
 ```
 
 Added typed payload interfaces:
+
 - `CreateHabitPayload` (with `tempId` for optimistic creation)
 - `UpdateHabitPayload` (with coalescing support)
 - `ArchiveHabitPayload`
@@ -81,7 +83,7 @@ const {
   archiveHabit,
   pauseHabit,
   removeHabit,
-  isOnline
+  isOnline,
 } = useOfflineHabitMutations();
 
 // Automatically handles offline queueing
@@ -91,6 +93,7 @@ const result = await createHabit({ name: 'Morning Jog' });
 ```
 
 **Flow:**
+
 1. Check `isOnline` status
 2. If offline → queue immediately
 3. If online → try server mutation
@@ -121,6 +124,7 @@ Ensures exhaustiveness checking — TypeScript error if new operation type added
 ### 4. Conflict Resolution UI
 
 **Files:**
+
 - `src/components/SyncStatus/ConflictNotification.tsx`
 - `src/components/SyncStatus/ConflictToast.tsx`
 
@@ -151,9 +155,10 @@ Comprehensive tests for all offline operations:
 ✅ Operation coalescing (multiple updates → single sync)  
 ✅ FIFO ordering  
 ✅ Mixed operations (create → update → toggle)  
-✅ Queue stats tracking  
+✅ Queue stats tracking
 
 **Test Coverage:**
+
 - 18 test cases
 - All operation types
 - Edge cases (coalescing, prioritization, ordering)
@@ -240,12 +245,14 @@ ConflictNotification shows (if conflicts)
 ### For Developers
 
 **Before (habit creation):**
+
 ```typescript
 const createHabit = useMutation(api.habits.create);
 await createHabit({ name: 'New Habit' }); // ❌ Fails offline
 ```
 
 **After (habit creation):**
+
 ```typescript
 const { createHabit } = useOfflineHabitMutations();
 const result = await createHabit({ name: 'New Habit' }); // ✅ Works offline
@@ -262,6 +269,7 @@ if (result.queued) {
 ### No Breaking Changes
 
 All existing code continues to work. This PR **extends** functionality without breaking existing patterns:
+
 - `useHabitMutations` still works (for online-only flows)
 - `useOptimisticToggleMutation` unchanged
 - Queue manager API backward compatible
@@ -271,6 +279,7 @@ All existing code continues to work. This PR **extends** functionality without b
 ## 🚀 Performance Impact
 
 ### Bundle Size
+
 - **Added:** ~12 KB (minified + gzipped)
 - **Components:** ConflictNotification (~3 KB)
 - **Hooks:** useOfflineHabitMutations (~4 KB)
@@ -278,6 +287,7 @@ All existing code continues to work. This PR **extends** functionality without b
 - **Types:** ~3 KB
 
 ### Runtime Performance
+
 - **Queue operations:** O(1) enqueue, O(n) dequeue (n = queue size)
 - **Sync batching:** Max 50 operations per cycle (configurable)
 - **Memory:** Minimal (queue held in AsyncStorage, not RAM)
@@ -303,16 +313,19 @@ All existing code continues to work. This PR **extends** functionality without b
 ## 📸 Screenshots
 
 ### Offline Indicator (Already Exists)
+
 ```
 [📶 Offline] ← Shown at top of HabitsList
 ```
 
 ### Syncing Indicator (Already Exists)
+
 ```
 [🔄 Syncing 3 items...] ← Shown during sync
 ```
 
 ### NEW: Conflict Notification
+
 ```
 ┌────────────────────────────────────┐
 │ ⚠️ Sync Conflict Resolved          │
@@ -328,26 +341,31 @@ All existing code continues to work. This PR **extends** functionality without b
 ### User Stories
 
 **US1: Complete Habits While Offline**
+
 - ✅ User can toggle habits without internet
 - ✅ UI updates immediately (optimistic)
 - ✅ Changes sync when connectivity returns
 
 **US2: Create Habits While Offline** (NEW)
+
 - ✅ User can create habits without internet
 - ✅ Operation queued with temp ID
 - ✅ Syncs when connectivity returns
 
 **US3: Edit Habits While Offline** (NEW)
+
 - ✅ User can edit habits without internet
 - ✅ Multiple edits coalesce into one sync
 - ✅ Syncs when connectivity returns
 
 **US4: Manage Habits While Offline** (NEW)
+
 - ✅ User can archive/pause/remove habits offline
 - ✅ Operations queue correctly
 - ✅ Syncs when connectivity returns
 
 **US5: Conflict Resolution** (NEW)
+
 - ✅ User sees notification when conflicts occur
 - ✅ Server data wins (last-write-wins)
 - ✅ No data loss
@@ -381,16 +399,19 @@ All existing code continues to work. This PR **extends** functionality without b
 ## 📦 Deployment Notes
 
 ### Rollout Strategy
+
 1. **Phase 1:** Deploy to beta testers
 2. **Phase 2:** Monitor sync success rate
 3. **Phase 3:** Full rollout
 
 ### Monitoring
+
 - Track `sync:completed` events
 - Monitor conflict rate
 - Alert on high failure rate
 
 ### Rollback Plan
+
 - Feature flag: `OFFLINE_CRUD_ENABLED`
 - Can disable new operations, keep toggle support
 
@@ -399,12 +420,14 @@ All existing code continues to work. This PR **extends** functionality without b
 ## 🙏 Acknowledgments
 
 **Audit Methodology:**
+
 1. Code exploration (offline infrastructure)
 2. Gap analysis (missing functionality)
 3. Priority ranking (user impact)
 4. Implementation (typed, tested, documented)
 
 **Infrastructure Credit:**
+
 - Existing offline toggle system (excellent foundation)
 - Network status detection (robust)
 - Sync orchestrator (well-architected)

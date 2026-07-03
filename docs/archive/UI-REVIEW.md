@@ -9,14 +9,14 @@
 
 ## Pillar Scores
 
-| Pillar | Score | Key Finding |
-|--------|-------|-------------|
-| 1. Copywriting | 4/4 | Specific, action-oriented copy throughout; dynamic CTAs adapt to user input |
-| 2. Visuals | 3/4 | Strong hierarchy and icon usage; CharacterScreen mixes NativeWind className styling inconsistently |
-| 3. Color | 3/4 | Well-designed token system; 19 occurrences of off-palette font weights and hardcoded hex values outside theme |
-| 4. Typography | 2/4 | Theme system is excellent but widely bypassed; 15+ files use `fontSize` and `fontWeight` literals instead of `typography.*` tokens |
-| 5. Spacing | 3/4 | 8px grid token system is solid; 26+ files use raw pixel values for spacing outside theme tokens |
-| 6. Experience Design | 4/4 | Comprehensive loading skeletons, error boundaries on every screen, empty states, disabled states, and destructive action confirmations |
+| Pillar               | Score | Key Finding                                                                                                                            |
+| -------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Copywriting       | 4/4   | Specific, action-oriented copy throughout; dynamic CTAs adapt to user input                                                            |
+| 2. Visuals           | 3/4   | Strong hierarchy and icon usage; CharacterScreen mixes NativeWind className styling inconsistently                                     |
+| 3. Color             | 3/4   | Well-designed token system; 19 occurrences of off-palette font weights and hardcoded hex values outside theme                          |
+| 4. Typography        | 2/4   | Theme system is excellent but widely bypassed; 15+ files use `fontSize` and `fontWeight` literals instead of `typography.*` tokens     |
+| 5. Spacing           | 3/4   | 8px grid token system is solid; 26+ files use raw pixel values for spacing outside theme tokens                                        |
+| 6. Experience Design | 4/4   | Comprehensive loading skeletons, error boundaries on every screen, empty states, disabled states, and destructive action confirmations |
 
 **Overall: 19/24**
 
@@ -39,6 +39,7 @@
 Copy throughout the app is specific, purposeful, and user-centered. No generic "Submit," "OK," or "Cancel" labels found in production UI paths.
 
 **Strengths:**
+
 - Dynamic CTA in HabitsEmptyStateMinimal: `Add "${habitName}" →` adapts to user input (`constants.ts:100`)
 - Error state hint: "Enter a habit name first" is context-specific (`CtaButton.tsx:47`)
 - Onboarding CTA: "Let's Build Your First Habit →" is motivating and specific (`OnboardingScreen.tsx:139`)
@@ -47,6 +48,7 @@ Copy throughout the app is specific, purposeful, and user-centered. No generic "
 - Empty state for Analytics: "No Analytics Yet" with instructional step-by-step guidance — clear and actionable
 
 **Minor observations:**
+
 - Generic "Next" label on onboarding next-page button (`OnboardingScreen.tsx:154`) — low impact given it's a common navigation pattern
 - Error boundary fallback at `ScreenErrorFallback.tsx:109` uses "Something went wrong" — unavoidable generic phrasing for catch-all errors, acceptable given the retry/recovery actions provided
 
@@ -57,6 +59,7 @@ Copy throughout the app is specific, purposeful, and user-centered. No generic "
 Visual hierarchy is generally strong across all screens. The Warm Minimal aesthetic is well-expressed through the color palette and component structure.
 
 **Strengths:**
+
 - HabitCard uses a left-side accent bar (`HabitCard.tsx:86-94`) providing color-coded habit identity without cluttering the main content area
 - StrengthFillBackground creates a progressive visual fill that encodes habit progress in the card background — effective layered communication
 - BottomActionBar uses BlurView with a floating capsule design — clear focal point for primary action (`BottomActionBar.tsx:46`)
@@ -79,6 +82,7 @@ Visual hierarchy is generally strong across all screens. The Warm Minimal aesthe
 The color system is genuinely well-designed: semantic tokens, warm stone neutrals, WCAG AA compliance, and inverted dark mode palette. The `useThemeColors()` hook is consistently used for adaptive colors across all main screens.
 
 **Strengths:**
+
 - Both `darkColors` and `lightColors` implement `SemanticColors` interface — structural parity guaranteed (`darkColors.ts:222`)
 - `colors.primary[600]` (#059669) is correctly used only for primary actions and CTAs
 - Burnished gold (`streak.*`) is constrained to streak badges and progress indicators — correct ≤10% usage
@@ -105,6 +109,7 @@ The color system is genuinely well-designed: semantic tokens, warm stone neutral
 The theme's `typography.ts` defines an excellent 8-level type scale with Literata/DM Sans pairing. However, the scale is widely bypassed in component-level styles, creating an inconsistent typographic surface across screens.
 
 **Token scale (declared):**
+
 - `displayLarge`: 34px Literata Bold
 - `heading1`: 22px Literata Bold
 - `heading2`: 22px DM Sans Semibold
@@ -116,17 +121,17 @@ The theme's `typography.ts` defines an excellent 8-level type scale with Literat
 
 **Actual usage in components (departures from scale):**
 
-| File | Inline value | Nearest token | Gap |
-|------|-------------|---------------|-----|
-| `HeroSection.tsx:42-43` | 28px/800 | No token | Off-scale entirely |
-| `CtaButton.styles.ts:37-38` | 16px/700 | `monospace` (16px) | Wrong font + weight |
-| `HabitInput/inputStyles.ts:41-42` | 15px/500 | No token | Off-scale |
-| `Chip/Chip.tsx:81` | 13px (correct, but raw) | `caption` | Should reference token |
-| `SecondaryLinks.tsx:53-54` | 13px/400 | `caption` has weight 500 | Weight deviation |
-| `BatchDeleteConfirmModal.tsx:58` | 14px/600 | `bodySmall` has weight 400 | Weight deviation |
-| `FeaturedCollection.styles.ts:19` | 11px | No token (below `tabBar` at 10px) | Badge text below scale |
-| `SuccessContent.tsx:37-38` | 22px/600 | `heading2` (22px/semibold) | Should use token |
-| `CharacterCard.tsx` | `text-base/text-sm` (NativeWind classes) | `body`/`bodySmall` | Token bypass via className |
+| File                              | Inline value                             | Nearest token                     | Gap                        |
+| --------------------------------- | ---------------------------------------- | --------------------------------- | -------------------------- |
+| `HeroSection.tsx:42-43`           | 28px/800                                 | No token                          | Off-scale entirely         |
+| `CtaButton.styles.ts:37-38`       | 16px/700                                 | `monospace` (16px)                | Wrong font + weight        |
+| `HabitInput/inputStyles.ts:41-42` | 15px/500                                 | No token                          | Off-scale                  |
+| `Chip/Chip.tsx:81`                | 13px (correct, but raw)                  | `caption`                         | Should reference token     |
+| `SecondaryLinks.tsx:53-54`        | 13px/400                                 | `caption` has weight 500          | Weight deviation           |
+| `BatchDeleteConfirmModal.tsx:58`  | 14px/600                                 | `bodySmall` has weight 400        | Weight deviation           |
+| `FeaturedCollection.styles.ts:19` | 11px                                     | No token (below `tabBar` at 10px) | Badge text below scale     |
+| `SuccessContent.tsx:37-38`        | 22px/600                                 | `heading2` (22px/semibold)        | Should use token           |
+| `CharacterCard.tsx`               | `text-base/text-sm` (NativeWind classes) | `body`/`bodySmall`                | Token bypass via className |
 
 **Concerning pattern:** The `HabitsEmptyStateMinimal` module — the most-used first-time experience — contains at least 9 separate raw `fontSize` literals across its sub-components rather than using `typography.*` tokens. This is the critical user-facing path.
 
@@ -139,6 +144,7 @@ The theme's `typography.ts` defines an excellent 8-level type scale with Literat
 The spacing token system (`xs:4, sm:8, md:12, base:16, lg:24, xl:32, 2xl:48, 3xl:64`) is correctly defined and used in StyleSheet files for core components like HabitCard and BottomActionBar. However, many component-level files use raw pixel integers.
 
 **Strengths:**
+
 - `HabitCard.styles.ts` correctly uses `spacing.xs`, `spacing.sm`, `spacing.md`, `spacing.base` throughout
 - `FeaturedCollection.styles.ts` uses `spacing.lg` for padding and `spacing.base` for margins
 - `WelcomeScreen.styles.ts` uses `spacing` system tokens (32, 24, 16, 8) — all on-grid values
@@ -164,6 +170,7 @@ The spacing token system (`xs:4, sm:8, md:12, base:16, lg:24, xl:32, 2xl:48, 3xl
 The experience design layer is mature and comprehensive. State coverage across loading/error/empty/disabled/destructive scenarios is excellent.
 
 **Loading states:**
+
 - `HabitsPageSkeleton` for the habits list (`HabitsApp.tsx:94`)
 - `AnalyticsScreenSkeleton` for analytics (`AnalyticsScreen.tsx:67-69`)
 - `ChartLoadingSkeleton` for charts within analytics
@@ -173,6 +180,7 @@ The experience design layer is mature and comprehensive. State coverage across l
 - 534 loading/skeleton/isLoading references across TSX files confirms pervasive coverage
 
 **Error states:**
+
 - `ScreenErrorBoundary` wraps every screen: WelcomeScreen, OnboardingScreen, HabitsApp, AnalyticsScreen, CharacterScreen, TemplatesScreen (`verified across all 6 screens`)
 - `RetryableErrorView` provides user-facing error UI with retry actions
 - `ErrorMessage` component within HabitsEmptyStateMinimal for inline input errors
@@ -180,28 +188,33 @@ The experience design layer is mature and comprehensive. State coverage across l
 - 171 ErrorBoundary/error/catch references in TSX confirm broad coverage
 
 **Empty states:**
+
 - `HabitsEmptyStateMinimal`: Full interactive empty state with animated hero, time-aware chip suggestions, inline input, and success transition
 - `EmptyState` in AnalyticsScreen: Step-by-step guidance card
 - `TemplatesEmptyState` and `TemplatesListEmpty` for templates flow
 - Multiple domain-specific empty states: `EmptyInsightsState`, `EmptyStrengthState`, `EmptyVizState`, `PausedEmptyState`
 
 **Disabled states:**
+
 - Buttons correctly receive `disabled` prop based on loading/validation state (CtaButton, OnboardingScreen CTA)
 - HabitCard uses `disabled` prop with 0.5 opacity (`HabitCard.styles.ts:52`) and `accessibilityState={{ disabled }}`
 - 162 `disabled` references across TSX files
 
 **Destructive action confirmation:**
+
 - Batch delete has `confirmDeleteVisible` flow with separate confirmation modal (`HabitsApp.tsx:124-125`)
 - Batch archive has undo toast with countdown (`batchArchiveUndoVisible`)
 - Account deletion uses `Alert.alert` with confirmation step (`AccountSection.tsx:44`)
 - Habit deletion in edit screen uses `Alert.alert` pattern
 
 **Haptics and feedback:**
+
 - 7 haptic patterns via `useHapticFeedback` and `useHaptics`
 - Completion sounds integrated
 - `accessibilityLabel` + `accessibilityHint` + `accessibilityRole` on 1,234 instances across TSX files
 
 **Minor observations:**
+
 - `ScreenErrorFallback.tsx:109` displays "Something went wrong" — generic but acceptable for catch-all boundaries. The recovery flow includes specific retry actions and a "Go back" option.
 
 ---
@@ -215,6 +228,7 @@ shadcn initialized. No third-party registry blocks identified in components.json
 ## Files Audited
 
 **Theme System:**
+
 - `src/theme/index.ts`
 - `src/theme/colors/core.ts`
 - `src/theme/typography.ts`
@@ -225,6 +239,7 @@ shadcn initialized. No third-party registry blocks identified in components.json
 - `components.json`
 
 **Core Screens:**
+
 - `src/screens/auth/WelcomeScreen.tsx`
 - `src/screens/auth/WelcomeScreen.styles.ts`
 - `src/screens/onboarding/OnboardingScreen.tsx`
@@ -239,6 +254,7 @@ shadcn initialized. No third-party registry blocks identified in components.json
 - `src/screens/TemplatesScreen/components/FeaturedCollection/FeaturedCollection.styles.ts`
 
 **Key Components:**
+
 - `src/features/habits/components/HabitsEmptyStateMinimal/HabitsEmptyStateMinimal.tsx`
 - `src/features/habits/components/HabitsEmptyStateMinimal/constants.ts`
 - `src/features/habits/components/HabitsEmptyStateMinimal/CtaButton.tsx`
@@ -248,4 +264,5 @@ shadcn initialized. No third-party registry blocks identified in components.json
 - `src/features/habits/components/BottomActionBar/BottomActionBar.tsx`
 
 **Grep analysis across:**
+
 - All `src/**/*.tsx` files for font size, font weight, spacing, color, loading, error, disabled, and accessibility patterns

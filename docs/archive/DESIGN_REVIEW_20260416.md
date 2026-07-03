@@ -26,27 +26,27 @@ The design system is in **materially better shape than the 2026-04-05 audit**. P
 
 ## Verified Counts — Current HEAD vs 2026-04-05
 
-| Category | Metric | 2026-04-05 | 2026-04-16 | Δ |
-|----------|--------|-----------:|-----------:|---:|
-| Typography | Raw `fontSize: N` | 328 | 270 | -18% |
-| Typography | `typography.*` refs | 277 | 441 | +59% |
-| Typography | Raw `fontWeight: N` | 229 | 8 | **-96.5%** |
-| Typography | `fontWeights.*` refs | 56 | 306 | **+446%** |
-| Typography | `fontWeight: '800'` | 0 | 0 | clean |
-| Typography | `fontWeight: 'bold'` | 0 | 0 | clean |
-| Icons | Raw `size={N}` | 460 | 152 | **-67%** |
-| Icons | `iconSizes.*` refs | 0 | 305 | **+∞** |
-| Icons | `strokeWidth={2.25}` | 6 | 1 (+1 test) | -83% |
-| Icons | `strokeWidth={3}` | 17 | 16 | flat |
-| Color | `colors.*` refs | 2,029 | 2,233 | +10% |
-| Color | `useThemeColors` files | 467 | 502 | +7.5% |
-| Shadow | `shadows.*` refs | 77 | 85 | +10% |
-| Shadow | Inline shadow props | 427 | 424 | flat |
-| Radius | Raw `borderRadius: N` | ~180 | 192 | +7% |
-| Radius | `borderRadius.*` refs | 193 | 222 | +15% |
-| Radius | `borderRadius: 999` bug | 5 | 0 | **-100%** |
-| Spacing | `spacing.*`/`screenMargins.*`/`componentSpacing.*` | 419 | 499 | +19% |
-| Tailwind | `text-[Npx]` custom | 192 | 150 | -22% |
+| Category   | Metric                                             | 2026-04-05 |  2026-04-16 |          Δ |
+| ---------- | -------------------------------------------------- | ---------: | ----------: | ---------: |
+| Typography | Raw `fontSize: N`                                  |        328 |         270 |       -18% |
+| Typography | `typography.*` refs                                |        277 |         441 |       +59% |
+| Typography | Raw `fontWeight: N`                                |        229 |           8 | **-96.5%** |
+| Typography | `fontWeights.*` refs                               |         56 |         306 |  **+446%** |
+| Typography | `fontWeight: '800'`                                |          0 |           0 |      clean |
+| Typography | `fontWeight: 'bold'`                               |          0 |           0 |      clean |
+| Icons      | Raw `size={N}`                                     |        460 |         152 |   **-67%** |
+| Icons      | `iconSizes.*` refs                                 |          0 |         305 |     **+∞** |
+| Icons      | `strokeWidth={2.25}`                               |          6 | 1 (+1 test) |       -83% |
+| Icons      | `strokeWidth={3}`                                  |         17 |          16 |       flat |
+| Color      | `colors.*` refs                                    |      2,029 |       2,233 |       +10% |
+| Color      | `useThemeColors` files                             |        467 |         502 |      +7.5% |
+| Shadow     | `shadows.*` refs                                   |         77 |          85 |       +10% |
+| Shadow     | Inline shadow props                                |        427 |         424 |       flat |
+| Radius     | Raw `borderRadius: N`                              |       ~180 |         192 |        +7% |
+| Radius     | `borderRadius.*` refs                              |        193 |         222 |       +15% |
+| Radius     | `borderRadius: 999` bug                            |          5 |           0 |  **-100%** |
+| Spacing    | `spacing.*`/`screenMargins.*`/`componentSpacing.*` |        419 |         499 |       +19% |
+| Tailwind   | `text-[Npx]` custom                                |        192 |         150 |       -22% |
 
 **Counts are from direct `grep` on current HEAD. Source of truth, not transcribed.**
 
@@ -79,12 +79,14 @@ All now use `colors.warningLight`, `colors.streak[*]`, `colors.gray[*]`, `colors
 Prior grade: **F (0%)**. Current: **305 references** across the codebase. Raw `size={N}` dropped 67% (460 → 152).
 
 Most common remaining raw sizes (from `size={N}` breakdown):
+
 - `size={20}` — 43× (maps to `iconSizes.medium`)
 - `size={16}` — 30× (maps to `iconSizes.small`)
 - `size={24}` — 11× (maps to `iconSizes.large`)
 - `size={32}` — 7× (maps to `iconSizes.xl`)
 
 **Off-scale survivors** (not in token set `micro:10, small:16, medium:20, large:24, xl:32, xxl:48`):
+
 - `size={14}` — 24×
 - `size={18}` — 19×
 - `size={12}` — 13×
@@ -97,17 +99,18 @@ Most common remaining raw sizes (from `size={N}` breakdown):
 
 229 → 8 (-96.5%). The 8 remaining occurrences:
 
-| File | Lines | Status |
-|------|-------|--------|
-| `src/screens/HabitEditScreen/CustomizeSection.tsx` | 50, 66 | Spread `...typography.caption` then override weight — should reference `fontWeights.semibold` |
-| `src/screens/templates/TemplatePreviewModal/TemplatePreviewModal.tsx` | 191, 227 | Inline `'600'` — should be `fontWeights.semibold` |
-| `src/components/CelebrationSystem/examples/CelebrationExample.tsx` | 146, 172, 182, 196 | **Example file, not production code** — can be ignored or cleaned up |
+| File                                                                  | Lines              | Status                                                                                        |
+| --------------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------------- |
+| `src/screens/HabitEditScreen/CustomizeSection.tsx`                    | 50, 66             | Spread `...typography.caption` then override weight — should reference `fontWeights.semibold` |
+| `src/screens/templates/TemplatePreviewModal/TemplatePreviewModal.tsx` | 191, 227           | Inline `'600'` — should be `fontWeights.semibold`                                             |
+| `src/components/CelebrationSystem/examples/CelebrationExample.tsx`    | 146, 172, 182, 196 | **Example file, not production code** — can be ignored or cleaned up                          |
 
 Production-facing violations: **4 lines across 2 files**.
 
 ### 5. Tailwind config / theme alignment — FIXED
 
 Current `tailwind.config.js`:
+
 - `accent.DEFAULT: '#059669'` — matches theme `primary[600]` ✓
 - `card.DEFAULT: '#EDEAE5'` — matches theme `light.card` ✓
 - `borderRadius.card: '16px'` — matches theme `borderRadius.card: 16` ✓
@@ -126,13 +129,13 @@ Prior: 6 files. Current: 1 production occurrence (`src/components/SettingsModal/
 
 Down 18%, but still the largest remaining token-adoption gap. Top hotspots:
 
-| File | Raw `fontSize` count |
-|------|---------------------:|
-| `src/screens/CharacterScreen/components/CharacterCard.tsx` | 8 |
-| `src/screens/TemplatesScreen/components/StartHereCard/StartHereCard.tsx` | 5 |
-| `src/screens/templates/PostImportSetupSheet/SetupCard.tsx` | 5 |
-| `src/screens/templates/PostImportSetupSheet/PostImportSetupSheet.tsx` | 5 |
-| `src/screens/AnalyticsScreen/components/EmptyState.tsx` | 5 |
+| File                                                                     | Raw `fontSize` count |
+| ------------------------------------------------------------------------ | -------------------: |
+| `src/screens/CharacterScreen/components/CharacterCard.tsx`               |                    8 |
+| `src/screens/TemplatesScreen/components/StartHereCard/StartHereCard.tsx` |                    5 |
+| `src/screens/templates/PostImportSetupSheet/SetupCard.tsx`               |                    5 |
+| `src/screens/templates/PostImportSetupSheet/PostImportSetupSheet.tsx`    |                    5 |
+| `src/screens/AnalyticsScreen/components/EmptyState.tsx`                  |                    5 |
 
 **Pattern:** Recently-built screens (StartHereCard, PostImportSetupSheet, TemplateListCard) adopted raw values instead of tokens. CharacterCard is long-standing.
 
@@ -157,6 +160,7 @@ This is the lowest-adopted token category and has not moved since 2026-04-05. Th
 Two recent high-touch areas introduced some raw typography that should be migrated in a follow-up:
 
 **CalendarTimeline** (11 files with raw typography after recent strength-chain refactor):
+
 - `DayCellRing.styles.ts` — 10 raw typography occurrences (largest cluster)
 - `WeekNavRow.tsx` — 6
 - `ProgressText.tsx` — 4
@@ -164,6 +168,7 @@ Two recent high-touch areas introduced some raw typography that should be migrat
 - `MiniCalendarGrid.tsx` — 3
 
 **HabitCard** (5 files after recent 3-line description / chain connector work):
+
 - `HabitCard.streakStyles.ts` — 6
 - `HabitCard.statusStyles.ts` — 5
 - `HabitCard.styles.ts` — 3
@@ -190,6 +195,7 @@ Agent reported `src/components/CalendarTimeline/components/MiniCalendarGrid.help
 ## Regression Watch — None found
 
 None of the prior-audit wins have regressed. Specifically verified:
+
 - `fontWeight: '800'` — still 0
 - `fontWeight: 'bold'` — still 0
 - `padding: 20` (off-grid) — no new production instances
@@ -225,12 +231,13 @@ None of the prior-audit wins have regressed. Specifically verified:
 
 - All counts are from direct `grep` run in the main session, not transcribed from agent summaries. Where agents returned numbers that didn't match direct greps, the direct-grep counts were used.
 - Exclusion filter: `src/theme/**`, `__tests__/**`, `__mocks__/**`, `*.test.*`, `*.spec.*`.
-- Palette/data files (category colors, confetti configs, CharacterScreen constants) are *not* counted as hex violations — those are legitimate data.
+- Palette/data files (category colors, confetti configs, CharacterScreen constants) are _not_ counted as hex violations — those are legitimate data.
 - `grep` results for borderRadius / `iconSizes` / `strokeWidth={2.25}` include zero-match verification via exit code.
 
 ## Files referenced
 
 Prior audits:
+
 - `UI_CONSISTENCY_AUDIT.md` (2026-02-03)
 - `UI-REVIEW.md` (2026-03-19)
 - `DESIGN_CONSISTENCY_REVIEW.md` (2026-04-05)

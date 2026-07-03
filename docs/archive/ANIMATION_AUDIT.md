@@ -10,7 +10,6 @@
 1. **Animated.Value usage (JS thread)** - 70+ files using legacy `Animated.Value` instead of Reanimated `useSharedValue`
    - This runs animations on the JavaScript thread instead of the UI thread
    - Performance impact: Frame drops during complex animations
-   
 2. **useNativeDriver: false** - 2 instances explicitly disabling native driver
    - `src/features/habits/components/HabitsList/MonetizationHero/useMonetizationAnimations.ts` (line 37)
    - `src/components/DailyMomentumMeter/useAnimations.ts` (line 29)

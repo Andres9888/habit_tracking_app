@@ -11,14 +11,14 @@
 
 ## Overall Score: 22/24
 
-| Pillar | Mar 19 | Apr 5 | Now | Delta |
-|--------|--------|-------|-----|-------|
-| Copywriting | 3/4 | 4/4 | 4/4 | — |
-| Visuals | 3/4 | 3/4 | 3.5/4 | +0.5 |
-| Color | 2/4 | 3.5/4 | 3.75/4 | +0.25 |
-| Typography | 2/4 | 2.5/4 | 3.5/4 | +1.0 |
-| Spacing | 3/4 | 3/4 | 3/4 | — |
-| Experience Design | 4/4 | 4/4 | 4/4 | — |
+| Pillar            | Mar 19 | Apr 5 | Now    | Delta |
+| ----------------- | ------ | ----- | ------ | ----- |
+| Copywriting       | 3/4    | 4/4   | 4/4    | —     |
+| Visuals           | 3/4    | 3/4   | 3.5/4  | +0.5  |
+| Color             | 2/4    | 3.5/4 | 3.75/4 | +0.25 |
+| Typography        | 2/4    | 2.5/4 | 3.5/4  | +1.0  |
+| Spacing           | 3/4    | 3/4   | 3/4    | —     |
+| Experience Design | 4/4    | 4/4   | 4/4    | —     |
 
 **Trajectory (5 weeks):** 17/24 → 21/24 → 22/24. Typography saw the largest jump this cycle, driven by the designer-review polish pass (`1338c89c5`) and `fontWeight` token migration (`35ad6e2d1`).
 
@@ -28,23 +28,23 @@
 
 All counts use the same grep patterns as the Apr 5 audit (excl. `src/theme`, `__tests__`, `*.test.*`). Apples-to-apples.
 
-| Metric | Apr 5 | Apr 23 | Delta |
-|--------|-------|--------|-------|
-| `typography.*` references | 277 | **472** | +70% |
-| Raw `fontSize: N` | 328 | **304** | -7% |
-| `fontWeights.*` references | 56 | **363** | +548% |
-| Raw `fontWeight: 'N'` | 229 | **5** | -98% |
-| `useThemeColors` files | 467 | **530** | +13% |
-| `colors.*` references | ~2,029 | **2,328** | +15% |
-| Raw `#NNNNNN` hex (excl. legit sources) | 1,101 | **757** | -31% |
-| `iconSizes.*` references | **0** | **392** | +∞ |
-| Raw icon `size={N}` | 460 | **86** | -81% |
-| `shadows.*` references | 77 | **83** | +8% |
-| Inline shadow props | 427 | **447** | +5% |
-| `borderRadius.*` references | 193 | **328** | +70% |
-| Raw `borderRadius: N` | ~180 | **110** | -39% |
-| `spacing.*` references | 419 | **514** | +23% |
-| Custom `text-[Npx]` Tailwind | 192 | **155** | -19% |
+| Metric                                  | Apr 5  | Apr 23    | Delta |
+| --------------------------------------- | ------ | --------- | ----- |
+| `typography.*` references               | 277    | **472**   | +70%  |
+| Raw `fontSize: N`                       | 328    | **304**   | -7%   |
+| `fontWeights.*` references              | 56     | **363**   | +548% |
+| Raw `fontWeight: 'N'`                   | 229    | **5**     | -98%  |
+| `useThemeColors` files                  | 467    | **530**   | +13%  |
+| `colors.*` references                   | ~2,029 | **2,328** | +15%  |
+| Raw `#NNNNNN` hex (excl. legit sources) | 1,101  | **757**   | -31%  |
+| `iconSizes.*` references                | **0**  | **392**   | +∞    |
+| Raw icon `size={N}`                     | 460    | **86**    | -81%  |
+| `shadows.*` references                  | 77     | **83**    | +8%   |
+| Inline shadow props                     | 427    | **447**   | +5%   |
+| `borderRadius.*` references             | 193    | **328**   | +70%  |
+| Raw `borderRadius: N`                   | ~180   | **110**   | -39%  |
+| `spacing.*` references                  | 419    | **514**   | +23%  |
+| Custom `text-[Npx]` Tailwind            | 192    | **155**   | -19%  |
 
 **Headline:** `iconSizes` went from 0% to the dominant pattern in two weeks — the single biggest consistency win this cycle. `fontWeight` is effectively a solved problem (5 raw values, 4 of which are in a `CelebrationExample.tsx` example file and 1 in `HabitDetailScreen.tsx:100`).
 
@@ -58,16 +58,18 @@ Every finding from the Apr 5 audit has a status below. **Remediated / Partial / 
 
 - fontSize raw: 328 → 304 (small drop; still the top open item)
 - fontWeight raw: 229 → **5** (effectively solved)
-- typography.* adoption: 277 → 472 (+70%)
-- fontWeights.* adoption: 56 → 363 (+548%)
+- typography.\* adoption: 277 → 472 (+70%)
+- fontWeights.\* adoption: 56 → 363 (+548%)
 
 Named offenders from Apr 5 that are now **remediated**:
+
 - `src/components/ErrorBoundary/errorFallbackStyles.ts` — now imports `typography, fontWeights` (verified L10)
 - `src/components/NextHabitSuggestion/styles.ts` — now imports `fontWeights, typography` (verified L4)
 - `src/components/ProgressSectionConsolidated/TodaysFocusCard/styles/elementStyles.ts` — to verify, but fontWeight count dropped 98% so mechanically included
 - `src/components/BinaryHeatmap/MonthlyCalendarGrid/styles.ts` — likewise
 
 Still-open offenders:
+
 - `src/components/NextHabitSuggestion/styles.ts:49, 61` — `fontSize: 36, fontSize: 32` (large display sizes, no token match)
 - `src/components/ErrorBoundary/errorFallbackStyles.ts:32, 36` — `fontSize: 34 (emoji), fontSize: 13 (caption)` — caption should use `typography.caption.fontSize`
 - `src/screens/HabitDetailScreen/HabitDetailScreen.tsx:100` — `titleStyle={{ fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 22 }}` — **this is one of the 5 remaining raw `fontWeight` violations** and the only one in production code (the other 4 are in `CelebrationExample.tsx`)
@@ -85,6 +87,7 @@ Biggest single win of the cycle. Presumed driver: the designer polish pass (`133
 - `useThemeColors` files: 467 → 530 (+13%)
 
 Apr 5 violation list:
+
 - `SettingsModal/SortPicker.constants.ts` — **to verify** (not rescanned in this pass)
 - `SettingsModal/SettingsRow.colors.ts` — **to verify**
 - `ArchiveUndoToast/` — **to verify**
@@ -124,6 +127,7 @@ However, there is a **sibling finding** still open: **`borderRadius: 9999` appea
 ### 9. SyncStatus Uses Zero Theme Tokens — **MOSTLY REMEDIATED**
 
 All 5 SyncStatus files now use `colors.*` theme tokens:
+
 - `SyncStatus/PendingSyncBadge/styles.ts` — `colors.streak[100]`, `colors.streak[300]`, `colors.streak[500]`
 - `SyncStatus/SyncedToast/styles.ts` — `colors.primary[100]`, `colors.primary[300]`, `colors.success`
 - `SyncStatus/SyncingIndicator/styles.ts` — `colors.warningLight`, `colors.streak[100]`, `colors.streak[500]`, `colors.text.inverse`, `colors.warning`
@@ -131,6 +135,7 @@ All 5 SyncStatus files now use `colors.*` theme tokens:
 - `SyncStatus/OfflineIndicator/styles.ts` — `colors.gray[50/100/200/500]`
 
 **Two residual hex values remain** (severity: low):
+
 - `SyncStatus/OfflineIndicator/OfflineIndicator.tsx` — `const ICON_COLOR = '#a8a29e'; // stone-400`
 - `SyncStatus/SyncingIndicator/SyncingIndicator.tsx` — `const ICON_COLOR = '#d97706'; // amber-600`
 
@@ -160,6 +165,7 @@ Pattern introduced/spread during polish pass: using `borderRadius: 9999` instead
 **Impact:** Low visual risk (both render as full pill), but dilutes the token system and contradicts the same remediation just completed for `borderRadius: 999`.
 
 **Call sites (file:line):**
+
 - `src/screens/auth/components/SocialProofBadge/SocialProofBadge.tsx:54`
 - `src/screens/auth/components/SuccessOverlay/styles.ts:39`
 - `src/screens/auth/components/HeroAnimation/HeroAnimation.styles.ts:23`
@@ -184,6 +190,7 @@ Pattern introduced/spread during polish pass: using `borderRadius: 9999` instead
 Canonical springs (`src/theme/animations.ts`) standardize on `damping: 18, stiffness: 150`. Dozens of call sites use custom values, many still on the legacy `friction/tension` API:
 
 **Reanimated (damping/stiffness) deviations:**
+
 - `src/components/HabitCard/entrance/constants.ts:14` — `damping: 24`
 - `src/components/HabitCard/entrance/animations/widthExpansion.ts:49, 51` — `damping: 12, stiffness: 180`
 - `src/components/StrengthRing/useStrengthRingAnimation.ts:37, 40` — `damping: 15, stiffness: 100`
@@ -191,6 +198,7 @@ Canonical springs (`src/theme/animations.ts`) standardize on `damping: 18, stiff
 - `src/components/DraggableHabit/useStrengthAnimation.ts:67, 69` — `damping: 12, stiffness: 80`
 
 **Legacy `Animated.spring` friction/tension (should migrate to Reanimated + canonical spring):**
+
 - `src/components/CalendarTimeline/components/CompletionDot.tsx:29` — `friction: 5, tension: 200`
 - `src/components/HabitChainVisualizer/useHabitDayToggleHandlers.ts:20–55` — four spring configs with friction 20/6/8, tension 300
 - `src/components/HabitChainVisualizer/useHabitDayToggleAnimations.ts:69–70` — `friction: 6, tension: 300`
@@ -292,9 +300,11 @@ No regressions on the 4/4 Experience Design score.
 ### CCP-7. Onboarding CTAs — partial remediation of Mar 19 finding
 
 `src/screens/onboarding/OnboardingScreen.tsx:26` defines:
+
 ```
 const STEP_CTA_LABELS = ['See the Science →', 'Browse Templates →'];
 ```
+
 Used as `STEP_CTA_LABELS[currentIndex] ?? 'Next'` at line 159. Only steps 0 and 1 have specific CTAs — subsequent steps still fall back to **"Next"**. The Mar 19 finding was that every step should have step-specific forward momentum.
 
 Skip button: visible copy is still `Skip`; only the `accessibilityLabel` was updated. Mar 19 recommendation ("I'll explore later") not applied.
@@ -323,6 +333,7 @@ The design system is **well-defined and increasingly well-adopted**. Between Apr
 - SyncStatus module reached ~95% token adoption.
 
 **Open work (scored in companion `REMEDIATION_PLAN.md`):**
+
 - 304 raw `fontSize` (the last big typography cleanup)
 - 757 hardcoded hex values (long-tail, including 26 instances of `borderRadius: 9999` that should be `borderRadius.full`)
 - Shadow tokens (15% adoption — flat since Apr 5, prime next-cycle target)

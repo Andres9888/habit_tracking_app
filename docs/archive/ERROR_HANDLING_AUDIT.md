@@ -1,4 +1,5 @@
 # Error Handling Audit Report
+
 ## Chain Day Habit Tracking App
 
 **Date:** 2026-02-15
@@ -19,6 +20,7 @@
 ## ✅ What's Working Well
 
 ### 1. ErrorBoundary Components
+
 - **SentryErrorBoundary** wraps entire app in `App.tsx`
 - **ScreenErrorBoundary** used on:
   - ✅ HabitsApp (main screen)
@@ -29,11 +31,13 @@
   - ✅ Individual modals in CalendarAndDetailModals.tsx
 
 ### 2. Convex Mutations
+
 - All mutations properly throw errors with descriptive messages
 - Authentication checks in place
 - Input validation present
 
 ### 3. Intentional Silent Catches (Acceptable)
+
 - Haptics (non-critical UX enhancement)
 - Store review prompts (never break app for ratings)
 - Timezone fallbacks (graceful degradation)
@@ -96,11 +100,12 @@ const handleCreateHabit = useCallback(async () => {
 **File:** `src/features/habits/hooks/useHabitsArchive.ts`
 
 Both archive handlers catch errors but don't show user messages:
+
 ```typescript
 // Lines ~40: handleArchive
 try {
   await archiveHabit({ habitId });
-  // ...success  
+  // ...success
 } catch (error) {
   if (__DEV__) console.error('[useHabitsArchive] Archive failed:', error);
   // ❌ NO USER FEEDBACK!
@@ -121,6 +126,7 @@ try {
 ### 3. Missing ErrorBoundary on Auth Screens
 
 **Files:**
+
 - `src/screens/auth/SignInScreen.tsx`
 - `src/screens/auth/SignUpScreen.tsx`
 - `src/screens/auth/WelcomeScreen.tsx`
@@ -134,12 +140,14 @@ try {
 ### 4. Network Error Handling - Unclear
 
 **Need to verify:**
+
 - What happens when Convex mutations fail due to network?
 - Does the user see an error message?
 - Is there retry logic?
 - How does offline mode interact with error handling?
 
 **Files to check:**
+
 - `src/contexts/NetworkStatusContext/NetworkStatusProvider.tsx`
 - `src/providers/OfflineProvider/OfflineProvider.tsx`
 
@@ -150,6 +158,7 @@ try {
 ### Priority 1: Add Toast/Alert for Mutation Failures
 
 Create a reusable error handler utility:
+
 ```typescript
 // src/utils/errorHandling.ts
 export function showUserError(message: string, error?: Error) {
@@ -164,6 +173,7 @@ Update all mutation handlers to use it.
 ### Priority 2: Wrap Auth Screens in ErrorBoundary
 
 Add ScreenErrorBoundary to:
+
 - SignInScreen
 - SignUpScreen
 - WelcomeScreen
@@ -173,6 +183,7 @@ Add ScreenErrorBoundary to:
 ### Priority 3: Network Failure UX
 
 Ensure mutations show clear error when offline/Convex unreachable:
+
 - "Connection lost. Please try again."
 - Auto-retry options
 - Offline queue status
@@ -190,4 +201,3 @@ Add catch handlers to remaining async functions that interact with backend.
 3. Wrap remaining screens in ErrorBoundary
 4. Test network failure scenarios
 5. Verify Sentry integration for production errors
-

@@ -1,6 +1,7 @@
 # Habit Pause Feature - PR Summary
 
 ## Overview
+
 This PR implements a **Habit Pause** feature that allows users to temporarily pause habits (e.g., during vacation, illness, or breaks) without losing their streak or progress.
 
 ## Changes Made
@@ -8,17 +9,19 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
 ### Backend (Convex)
 
 #### Schema Updates
+
 - **No new schema fields** - The schema already contained `paused`, `pausedAt`, `resumedAt`, `pausedAtStrength`, `pausedAtAccessibility` fields
 - These fields are now actively used by the pause/resume system
 
 #### Queries
+
 1. **`habits.list`** - Modified to include paused habits alongside active habits
    - Paused habits are no longer filtered out at the query level
    - Frontend displays them with dimmed appearance and "Paused" badge
-   
 2. **`habits.listPaused`** - Existing query that returns only paused habits for a user
 
 #### Mutations
+
 1. **`habits.pause(habitId, timezone?)`**
    - Marks a habit as paused
    - Saves current state: `accessibility`, `strength`, `pausedAt` timestamp
@@ -32,6 +35,7 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
    - Recalculates streak to include post-pause completion
 
 #### Streak Calculation Updates
+
 - **`streakUtils/historyCalculation.ts`**
   - Added `PauseInfo` interface to track pause periods
   - Updated `calculateStreakFromHistory()` to accept optional `pauseInfo`
@@ -45,6 +49,7 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
 ### Frontend (React Native)
 
 #### Component Type Updates
+
 1. **`DraggableHabit/types.ts`**
    - Added `isPaused?: boolean` to `DraggableHabitProps`
    - Added `onPause?: (habitId: Id<'habits'>) => void`
@@ -56,6 +61,7 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
    - Added `onPause` and `onResume` callbacks
 
 #### New Components
+
 1. **`PauseAction.tsx`**
    - Swipe action component for pause/resume
    - Shows purple action for pause, green for resume
@@ -63,6 +69,7 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
    - Follows same pattern as `ArchiveAction`
 
 #### Modified Components
+
 1. **`CardHeader.tsx`**
    - Added `isPaused` prop
    - Displays "Paused" badge (purple pill) next to habit name
@@ -88,6 +95,7 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
    - Connects pause/resume handlers to DraggableHabit
 
 #### Hooks Updates
+
 1. **`useHabitMutations.ts`**
    - Added `resumeHabit` to mutation exports
    - Now supports both `pauseHabit` and `resumeHabit` mutations
@@ -95,6 +103,7 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
 ## User Experience
 
 ### Paused Habit Display
+
 - ✅ Dimmed appearance (60% opacity) to indicate inactive status
 - ✅ "Paused" badge on card header
 - ✅ Included in habit list (not hidden)
@@ -102,12 +111,14 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
 - ✅ Resume button displayed for paused habits
 
 ### Streak Preservation
+
 - ✅ Current streak frozen when habit is paused
 - ✅ Missed days during pause don't break streak
 - ✅ Streak resumes after habit is resumed
 - ✅ Best streak preserved across pause periods
 
 ### State Preservation
+
 - ✅ Habit strength saved before pausing
 - ✅ Habit accessibility saved before pausing
 - ✅ Restored when habit is resumed
@@ -139,18 +150,20 @@ This PR implements a **Habit Pause** feature that allows users to temporarily pa
 ## API Usage
 
 ### Client-Side Mutations
+
 ```typescript
 // Using useHabitMutations hook
 const { pauseHabit, resumeHabit } = useHabitMutations();
 
 // Pause a habit
-await pauseHabit({ habitId: "habit_123", timezone: "America/Denver" });
+await pauseHabit({ habitId: 'habit_123', timezone: 'America/Denver' });
 
 // Resume a habit
-await resumeHabit({ habitId: "habit_123", timezone: "America/Denver" });
+await resumeHabit({ habitId: 'habit_123', timezone: 'America/Denver' });
 ```
 
 ### Backend Queries
+
 ```typescript
 // List all habits (including paused)
 const habits = await useQuery(api.habits.list);
@@ -160,10 +173,12 @@ const pausedHabits = await useQuery(api.habits.listPaused);
 ```
 
 ## Breaking Changes
+
 - None. Existing functionality remains unchanged.
 - Paused habits are now included in the main list query but can be identified by `paused === true`
 
 ## Future Enhancements
+
 1. **Pause Until Date** - Allow users to set a resume date (pausedUntil)
 2. **Pause Notifications** - Notify user when pause period ends
 3. **Pause Analytics** - Track why habits are paused (vacation, sick, break, etc.)
@@ -171,6 +186,7 @@ const pausedHabits = await useQuery(api.habits.listPaused);
 5. **Auto-Resume** - Automatically resume on set date
 
 ## Credits
+
 Implemented by: **Claude (Opus)** with Haiku assistance
 
 ---

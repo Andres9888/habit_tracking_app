@@ -31,6 +31,7 @@ Low-risk, targeted, measurable.
 **Status:** Removed from Wave 0 — not dead code. Initial scoping (absolute-path grep only) missed that `src/screens/templates/templatesScreenStyles.ts` is a barrel re-exporting from `./styles`, and **12 files under `src/screens/TemplatesScreen/` consume that barrel** (SearchResults, SearchBar, TemplatesEmptyState, ScrollShadows, CategoryHeader, FilterControls, SortDropdown, TabBar, TemplatesListEmpty, MainBrowseView, CategorySearchView, TemplatesList).
 
 **Two additional consumers of `src/screens/templates/` exist:**
+
 - `src/components/CollapsibleCategorySection/CollapsibleCategorySection.tsx` imports `CATEGORY_COLORS`, `DEFAULT_CATEGORY_COLORS` from `templates/constants`
 - `src/screens/TemplatesScreen/*` (12 files) imports via `templates/templatesScreenStyles.ts` barrel
 
@@ -211,16 +212,16 @@ Wave 0 ──┬──→ Wave 1 ──┬──→ Wave 2 ──┬──→ Wa
 
 ## Overall Progress Targets
 
-| Metric | Apr 23 (now) | After W0 | After W1 | After W2 | After W3+W4 |
-|--------|-------------|---------|---------|---------|-------------|
-| Raw `fontSize: N` | 304 | 303 | ~280 | **<100** | <50 |
-| Raw `fontWeight: 'N'` | 5 (4 in examples) | **0 in prod** | 0 in prod | 0 total | 0 |
-| `iconSizes.*` adoption | 82% | 82% | **>95%** | >95% | >98% |
-| `borderRadius: 9999` | 26 | 17 (W0.3) | **0** (W1.1) | 0 | 0 |
-| `shadows.*` adoption | 15% | 15% | **35%** | 45% | 60%+ |
-| Non-canonical springs | ~30 | 30 | 30 | **<5** | 0 |
-| Raw hex (excl. legit) | 757 | 740 | 720 | **<600** | <400 |
-| Overall score | 22/24 | 22/24 | 22.5/24 | **23/24** | 24/24 |
+| Metric                 | Apr 23 (now)      | After W0      | After W1     | After W2  | After W3+W4 |
+| ---------------------- | ----------------- | ------------- | ------------ | --------- | ----------- |
+| Raw `fontSize: N`      | 304               | 303           | ~280         | **<100**  | <50         |
+| Raw `fontWeight: 'N'`  | 5 (4 in examples) | **0 in prod** | 0 in prod    | 0 total   | 0           |
+| `iconSizes.*` adoption | 82%               | 82%           | **>95%**     | >95%      | >98%        |
+| `borderRadius: 9999`   | 26                | 17 (W0.3)     | **0** (W1.1) | 0         | 0           |
+| `shadows.*` adoption   | 15%               | 15%           | **35%**      | 45%       | 60%+        |
+| Non-canonical springs  | ~30               | 30            | 30           | **<5**    | 0           |
+| Raw hex (excl. legit)  | 757               | 740           | 720          | **<600**  | <400        |
+| Overall score          | 22/24             | 22/24         | 22.5/24      | **23/24** | 24/24       |
 
 ---
 
