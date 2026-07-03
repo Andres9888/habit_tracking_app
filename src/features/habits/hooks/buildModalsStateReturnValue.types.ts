@@ -11,13 +11,10 @@ export interface HandlersReturn {
   onSettingsChange: (u: Record<string, unknown>) => Promise<void>;
   onDeleteHabit: (id: Id<'habits'>) => Promise<void>;
   openEditHabit: (h: Habit | null) => void;
-  closeActivationModal: () => void;
   openHabitCalendar: (h: Habit) => void;
   onShareMilestone: (d: ShareCardData) => void;
   openHabitDetail: (h: Habit, t?: 'progress' | 'motivation' | 'manage') => void;
-  openActivationModal: (h: Habit) => void;
   openPauseModal: (id: Id<'habits'>) => void;
-  openActivationModalById: (id: string) => void;
   openCreateHabitScreen: () => void;
   openQuickActions: (h: Habit) => void;
   openVisualizationExercise: (h: Habit) => void;

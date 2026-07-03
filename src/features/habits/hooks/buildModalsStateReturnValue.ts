@@ -23,7 +23,6 @@ export function buildModalsStateReturnValue(
   extra: ExtraState
 ): HabitsModalsState {
   return {
-    activationModalHabit: selection.activationModalHabit,
     archivedHabitsCount: extra.archivedHabitsCount,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
@@ -35,8 +34,6 @@ export function buildModalsStateReturnValue(
     closeQuickActions: handlers.closeQuickActions,
 
     closeShareCard: handlers.closeShareCard,
-
-    closeActivationModal: handlers.closeActivationModal,
 
     habitDetailInitialTab: selection.habitDetailInitialTab,
 
@@ -80,8 +77,6 @@ export function buildModalsStateReturnValue(
 
     closeHabitCalendar: () => visibility.setIsHabitCalendarOpen(false),
 
-    showActivationModal: visibility.showActivationModal,
-
     closeHabitDetail: () => visibility.setIsHabitDetailOpen(false),
 
     showCreateHabit: visibility.isCreateHabitOpen,
@@ -105,11 +100,7 @@ export function buildModalsStateReturnValue(
 
     showHapticTest: visibility.showHapticTest,
 
-    openActivationModal: handlers.openActivationModal,
-
     showPauseModal: visibility.showPauseModal,
-
-    openActivationModalById: handlers.openActivationModalById,
 
     showQuickActions: visibility.showQuickActions,
 

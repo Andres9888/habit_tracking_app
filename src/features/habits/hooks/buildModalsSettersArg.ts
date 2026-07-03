@@ -10,7 +10,6 @@ export function buildModalsSettersArg(
   s: HabitSelectionState
 ) {
   return {
-    setActivationModalHabit: s.setActivationModalHabit,
     setHabitDetailInitialTab: s.setHabitDetailInitialTab,
     setHabitToEdit: s.setHabitToEdit,
     setHabitToPause: s.setHabitToPause,
@@ -20,7 +19,6 @@ export function buildModalsSettersArg(
     setQuickActionsHabit: s.setQuickActionsHabit,
     setSelectedHabit: s.setSelectedHabit,
     setShareCardData: s.setShareCardData,
-    setShowActivationModal: v.setShowActivationModal,
     setShowEditScreen: v.setShowEditScreen,
     setShowPauseModal: v.setShowPauseModal,
     setShowQuickActions: v.setShowQuickActions,

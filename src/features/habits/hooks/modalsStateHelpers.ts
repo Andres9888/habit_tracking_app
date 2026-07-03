@@ -34,9 +34,4 @@ export function useSyncAllHabitStates(
   useHabitStateSync(habits, sel.habitToEdit, sel.setHabitToEdit);
   useHabitStateSync(habits, sel.habitToPause, sel.setHabitToPause);
   useHabitStateSync(habits, sel.quickActionsHabit, sel.setQuickActionsHabit);
-  useHabitStateSync(
-    habits,
-    sel.activationModalHabit,
-    sel.setActivationModalHabit
-  );
 }

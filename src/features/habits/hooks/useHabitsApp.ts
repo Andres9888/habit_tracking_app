@@ -22,22 +22,24 @@ export function useHabitsApp(): UseHabitsAppResult {
     showHabitStrengthPercentage: list.showHabitStrengthPercentage,
   });
 
-  // Route push-notification taps to the activation modal for the tapped habit.
-  const { openActivationModalById } = modals;
+  // Route push-notification taps to the tapped habit's Habit Detail Screen.
+  const { openHabitDetail } = modals;
   const notificationHandlers = useMemo(
     () => ({
       onHabitNotificationTap: (habitId: string) => {
-        openActivationModalById(habitId);
+        const habit = list.habits.find((h) => h._id === habitId);
+        if (habit) {
+          openHabitDetail(habit);
+        }
       },
     }),
-    [openActivationModalById]
+    [list.habits, openHabitDetail]
   );
   useNotificationResponse(notificationHandlers);
 
   // Tapping a habit row opens the redesigned Habit Detail Screen.
   // Memoised so the `handleHabitPress` override doesn't allocate a fresh `list`
   // wrapper on every render — only when `list` or `openHabitDetail` change.
-  const { openHabitDetail } = modals;
   return useMemo(
     () => ({
       list: { ...list, handleHabitPress: openHabitDetail },

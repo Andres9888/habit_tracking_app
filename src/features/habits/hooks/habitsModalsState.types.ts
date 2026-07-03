@@ -32,8 +32,6 @@ export interface HabitsModalsState {
   showTemplatesScreen: boolean;
   showQuickActions: boolean;
   showVisualizationExercise: boolean;
-  showActivationModal: boolean;
-  activationModalHabit: Habit | null;
   habitToEdit: Habit | null;
   habitToPause: Habit | null;
   selectedHabit: Habit | null;
@@ -68,9 +66,6 @@ export interface HabitsModalsState {
   closeQuickActions: () => void;
   openVisualizationExercise: (habit: Habit) => void;
   closeVisualizationExercise: () => void;
-  openActivationModal: (habit: Habit) => void;
-  openActivationModalById: (habitId: string) => void;
-  closeActivationModal: () => void;
   onSettingsChange: (updates: Partial<HabitSettingsUpdate>) => Promise<void>;
   onDeleteHabit: (habitId: Id<'habits'>) => Promise<void>;
   onShareMilestone: (data: ShareCardData) => void;
