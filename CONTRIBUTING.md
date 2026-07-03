@@ -13,7 +13,7 @@ Thank you for your interest in contributing to Chain Day! This document outlines
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+ (required — the metro config uses `Array.prototype.toReversed()`; `engines.node >= 20`)
 - npm or bun
 - Convex CLI (`npx convex dev`)
 - Expo CLI (for mobile development)
@@ -94,6 +94,30 @@ Open a GitHub Issue with the `enhancement` label. Describe:
 - Why it's useful
 - Any implementation ideas
 
+## Branch Protection & Merging
+
+`main` is protected — **do not commit directly to `main`.**
+
+- Branch off `main`, open a PR into `main`.
+- PRs require review and passing CI before merge.
+- Merges are squash-merges (`gh pr merge <n> --squash`).
+- Admin bypass is reserved for fixing pre-existing red CI that a PR does not
+  itself cause — never for skipping review of new logic.
+
+## Build & Deploy
+
+| Task                             | Command                               |
+| -------------------------------- | ------------------------------------- |
+| Build (JS bundle, all platforms) | `npm run build` (`expo export`)       |
+| Bundle analysis                  | `npm run analyze:bundle` (Expo Atlas) |
+| Backend deploy (Convex → prod)   | `npx convex deploy`                   |
+
+Merging to `main` does **not** auto-deploy the backend — `npx convex deploy`
+is explicit. App/native builds go through EAS. Backend API + auth/ownership/
+entitlement rules are documented in `docs/API.md`.
+
 ## License
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+This project is proprietary — see [`LICENSE`](./LICENSE). All rights reserved;
+no contributions are accepted from outside the copyright holder without prior
+written permission.
