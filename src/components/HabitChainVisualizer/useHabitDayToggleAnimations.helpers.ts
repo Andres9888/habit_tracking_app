@@ -1,11 +1,11 @@
-import { Animated, Easing } from 'react-native';
+import { Animated } from 'react-native';
 
-import { durations } from '@/theme/animations';
 import { Motion } from '@/constants/motion';
 
 // Not a motion token: the window that suppresses the forge flash while
-// initial completion data hydrates. Coincidentally equal to durations.breathing.
+// initial completion data hydrates. Coincidentally equal to Motion.duration.breathing.
 const HYDRATION_WINDOW_MS = 1500;
+const FORGE_FLASH_MS = 500;
 
 export function forceValue(animatedValue: Animated.Value, value: number) {
   animatedValue.setValue(value);
@@ -43,7 +43,7 @@ export function startForgeFlash({
 
   forgeFlash.setValue(1);
   const animation = Animated.timing(forgeFlash, {
-    duration: 500,
+    duration: FORGE_FLASH_MS,
     easing: Motion.easing.outCubic,
     toValue: 0,
     useNativeDriver: true,
@@ -56,11 +56,11 @@ export function startForgeFlash({
   });
   // Safety net: if the native-driver animation silently fails or the
   // callback is lost, force opacity to 0 so the amber overlay doesn't
-  // stay painted on the cell (600ms > 500ms animation duration).
+  // stay painted on the cell (fires 100ms after FORGE_FLASH_MS elapses).
   const safetyTimer = setTimeout(() => {
     cancelled = true;
     forceValue(forgeFlash, 0);
-  }, 600);
+  }, FORGE_FLASH_MS + 100);
 
   return { animation, safetyTimer };
 }
@@ -85,14 +85,14 @@ export function buildCompletionAnimation({
           useNativeDriver: true,
         }),
         Animated.timing(completion, {
-          duration: durations.transition,
+          duration: Motion.duration.emphasized,
           easing: Motion.easing.outCubic,
           toValue: 1,
           useNativeDriver: true,
         }),
       ])
     : Animated.timing(completion, {
-        duration: durations.quick,
+        duration: Motion.duration.base,
         easing: Motion.easing.inEase,
         toValue: 0,
         useNativeDriver: true,
@@ -104,8 +104,8 @@ export function buildBreathingAnimation(
 ): Animated.CompositeAnimation {
   const pulse = (toValue: number) =>
     Animated.timing(breathingPulse, {
-      duration: durations.breathing,
-      easing: Easing.inOut(Easing.ease),
+      duration: Motion.duration.breathing,
+      easing: Motion.easing.inOutEase,
       toValue,
       useNativeDriver: true,
     });
