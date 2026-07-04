@@ -1,9 +1,14 @@
 /**
  * useToastAnimations Hook
  *
- * Shared animation logic for the SyncStatus toast components
- * (SyncedToast, ConflictNotification).
- * Provides smooth fade-in/fade-out transitions with auto-dismiss timing.
+ * Shared fade-in/fade-out + auto-dismiss animation logic, used by
+ * SyncedToast and the general Toast component.
+ *
+ * Note: ConflictNotification does NOT use this hook — it intentionally
+ * animates with a different motion (durations.enter / translateY -20 vs
+ * this hook's 200/300ms / translateY -8). Unifying them would require
+ * parameterizing offset + durations here and would change ConflictNotification's
+ * feel, so the two are kept separate on purpose.
  */
 
 import { useEffect, useCallback, useRef } from 'react';
