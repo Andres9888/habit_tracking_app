@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { spacing, borderRadius } from '../../../../theme/spacing';
-import { typography, fontWeights } from '../../../../theme/typography';
+import { spacing, borderRadius } from '../../../theme/spacing';
+import { typography, fontWeights } from '../../../theme/typography';
 
 export const headerRowStyles = StyleSheet.create({
   avatarContainer: {

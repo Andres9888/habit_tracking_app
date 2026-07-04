@@ -8,10 +8,10 @@ import {
   useAnimatedStyle,
   withTiming,
   withDelay,
-  Easing,
   runOnJS,
 } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
+import { enterEasing, exitEasing } from '@/theme/animations';
 import {
   ANIMATION_DURATION,
   AUTO_DISMISS_DURATION,
@@ -30,11 +30,11 @@ function animateIn(
   // Fade in
   opacity.value = withTiming(1, {
     duration: ANIMATION_DURATION,
-    easing: Easing.out(Easing.cubic),
+    easing: enterEasing,
   });
   translateY.value = withTiming(0, {
     duration: ANIMATION_DURATION,
-    easing: Easing.out(Easing.cubic),
+    easing: enterEasing,
   });
 }
 
@@ -49,7 +49,7 @@ function animateAutoDismiss(
       0,
       {
         duration: ANIMATION_DURATION,
-        easing: Easing.in(Easing.cubic),
+        easing: exitEasing,
       },
       (finished) => {
         if (finished) {
@@ -62,7 +62,7 @@ function animateAutoDismiss(
     AUTO_DISMISS_DURATION,
     withTiming(-20, {
       duration: ANIMATION_DURATION,
-      easing: Easing.in(Easing.cubic),
+      easing: exitEasing,
     })
   );
 }

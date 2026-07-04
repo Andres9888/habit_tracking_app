@@ -1,17 +1,16 @@
-import { Easing } from 'react-native-reanimated';
-
 import { colors as palette } from '../../../theme/colors';
-import { durations } from '../../../theme/animations';
+import { durations, exitEasing } from '../../../theme/animations';
 import { borderRadius } from '../../../theme/spacing';
+import { SCALE } from '../../../constants/ui-values';
 
 export const PRESS = {
-  date: { pressScale: 0.97 },
-  today: { pressScale: 0.95 },
+  date: { pressScale: SCALE.pressLarge },
+  today: { pressScale: SCALE.pressMedium },
 } as const;
 export const ENTRANCE_DURATION = durations.enter;
 export const EXIT_TIMING = {
   duration: durations.transition,
-  easing: Easing.in(Easing.cubic),
+  easing: exitEasing,
 };
 export const SLIDE_OFFSET = 16;
 

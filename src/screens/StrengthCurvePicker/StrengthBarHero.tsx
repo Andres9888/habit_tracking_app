@@ -3,8 +3,8 @@ import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { View } from 'react-native';
 import { useStrengthBarFill } from './StrengthBarHero.hooks';
-import { StrengthBarMilestones } from './StrengthBarHeroParts/StrengthBarMilestones';
-import { StrengthBarTrack } from './StrengthBarHeroParts/StrengthBarTrack';
+import { StrengthBarMilestones } from './StrengthBarMilestones';
+import { StrengthBarTrack } from './StrengthBarTrack';
 import { MODE_STYLES } from './strengthCurveModeStyles';
 
 export function StrengthBarHero({

@@ -2,9 +2,9 @@ import { View, Text } from 'react-native';
 import { Trophy } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { AVATAR_GRADIENT, TROPHY_GRADIENT } from '../../constants';
-import type { CharacterData } from '../../types';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { AVATAR_GRADIENT, TROPHY_GRADIENT } from '../constants';
+import type { CharacterData } from '../types';
 import { headerRowStyles as styles } from './CharacterHeaderRow.styles';
 
 interface CharacterHeaderRowProps {

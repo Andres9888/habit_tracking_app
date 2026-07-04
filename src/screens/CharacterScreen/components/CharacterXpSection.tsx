@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { spacing, borderRadius } from '../../../../theme/spacing';
-import { typography, fontWeights } from '../../../../theme/typography';
-import { XP_GRADIENT } from '../../constants';
-import type { CharacterData } from '../../types';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing, borderRadius } from '../../../theme/spacing';
+import { typography, fontWeights } from '../../../theme/typography';
+import { XP_GRADIENT } from '../constants';
+import type { CharacterData } from '../types';
 
 interface CharacterXpSectionProps {
   data: CharacterData;

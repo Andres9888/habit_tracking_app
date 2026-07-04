@@ -4,7 +4,7 @@ import { Text, View } from 'react-native';
 import {
   STRENGTH_CURVE_PICKER_COPY,
   TIER_COPY,
-} from '../StrengthCurvePicker.copy';
+} from './StrengthCurvePicker.copy';
 
 export function StrengthBarMilestones({
   mode,

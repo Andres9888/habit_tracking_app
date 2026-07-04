@@ -4,9 +4,9 @@ import Animated from 'react-native-reanimated';
 import { ArrowRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 
-import { AnimatedPressable } from '../../../ui/AnimatedPressable';
-import { CHIP_BG, CHIP_TEXT, PRESS } from '../WeekNavRow.constants';
-import { s } from '../WeekNavRow.styles';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { CHIP_BG, CHIP_TEXT, PRESS } from './WeekNavRow.constants';
+import { s } from './WeekNavRow.styles';
 
 interface TodayPillProps {
   entranceStyle: StyleProp<ViewStyle>;
