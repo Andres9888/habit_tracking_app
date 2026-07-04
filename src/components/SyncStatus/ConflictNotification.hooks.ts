@@ -1,0 +1,117 @@
+/**
+ * ConflictNotification - Hooks
+ */
+
+import { useEffect, useState, useCallback } from 'react';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+  Easing,
+  runOnJS,
+} from 'react-native-reanimated';
+import {
+  ANIMATION_DURATION,
+  AUTO_DISMISS_DURATION,
+} from './ConflictNotification.constants';
+import type { UseConflictNotificationResult } from './ConflictNotification.types';
+
+interface UseConflictAnimationProps {
+  visible: boolean;
+  onDismiss?: () => void;
+}
+
+type SharedNumber = { value: number };
+
+function animateIn(opacity: SharedNumber, translateY: SharedNumber) {
+  // Fade in
+  opacity.value = withTiming(1, {
+    duration: ANIMATION_DURATION,
+    easing: Easing.out(Easing.cubic),
+  });
+  translateY.value = withTiming(0, {
+    duration: ANIMATION_DURATION,
+    easing: Easing.out(Easing.cubic),
+  });
+}
+
+function animateAutoDismiss(
+  opacity: SharedNumber,
+  translateY: SharedNumber,
+  onDismiss: () => void
+) {
+  opacity.value = withDelay(
+    AUTO_DISMISS_DURATION,
+    withTiming(
+      0,
+      {
+        duration: ANIMATION_DURATION,
+        easing: Easing.in(Easing.cubic),
+      },
+      (finished) => {
+        if (finished) {
+          runOnJS(onDismiss)();
+        }
+      }
+    )
+  );
+  translateY.value = withDelay(
+    AUTO_DISMISS_DURATION,
+    withTiming(-20, {
+      duration: ANIMATION_DURATION,
+      easing: Easing.in(Easing.cubic),
+    })
+  );
+}
+
+export function useConflictAnimation({
+  visible,
+  onDismiss,
+}: UseConflictAnimationProps) {
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(-20);
+
+  useEffect(() => {
+    if (visible) {
+      animateIn(opacity, translateY);
+      if (onDismiss) {
+        animateAutoDismiss(opacity, translateY, onDismiss);
+      }
+    } else {
+      opacity.value = 0;
+      translateY.value = -20;
+    }
+  }, [visible, opacity, translateY, onDismiss]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  return animatedStyle;
+}
+
+/**
+ * Hook to manage conflict notification state
+ */
+export function useConflictNotification(): UseConflictNotificationResult {
+  const [visible, setVisible] = useState(false);
+  const [conflictCount, setConflictCount] = useState(0);
+
+  const showConflict = useCallback((count: number) => {
+    setConflictCount(count);
+    setVisible(true);
+  }, []);
+
+  const dismiss = useCallback(() => {
+    setVisible(false);
+  }, []);
+
+  return {
+    visible,
+    conflictCount,
+    showConflict,
+    dismiss,
+  };
+}
