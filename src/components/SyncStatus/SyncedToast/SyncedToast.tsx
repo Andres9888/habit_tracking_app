@@ -15,7 +15,7 @@ import { Check } from 'lucide-react-native';
 
 import type { SyncedToastProps } from './types';
 import { styles, ICON_SIZE, ICON_COLOR } from './styles';
-import { useSyncedToastAnimations } from './useSyncedToastAnimations';
+import { useToastAnimations } from '../useToastAnimations';
 
 const DEFAULT_DURATION = 2000;
 
@@ -27,7 +27,7 @@ export function SyncedToast({
   style,
   testID = 'synced-toast',
 }: SyncedToastProps) {
-  const { animatedStyle, shouldRender } = useSyncedToastAnimations({
+  const { animatedStyle, shouldRender } = useToastAnimations({
     duration,
     onHidden: onDismiss,
     visible,
@@ -55,9 +55,11 @@ export function SyncedToast({
         <Check color={ICON_COLOR} size={ICON_SIZE} strokeWidth={2.5} />
       </Animated.View>
       <Text style={styles.text}>Synced</Text>
-      {showCount ? <Text style={styles.countText} testID={`${testID}-count`}>
+      {showCount ? (
+        <Text style={styles.countText} testID={`${testID}-count`}>
           ({syncedCount})
-        </Text> : null}
+        </Text>
+      ) : null}
     </Animated.View>
   );
 }
