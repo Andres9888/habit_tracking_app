@@ -6,7 +6,7 @@ import React from 'react';
 import { Keyboard, Pressable, ScrollView } from 'react-native';
 import { PreviewNameSection } from './PreviewNameSection';
 import { CustomizationSections } from './CustomizationSections';
-import type { PreviewSheetBodyProps } from '../TemplatePreviewModal.types';
+import type { PreviewSheetBodyProps } from '../types';
 
 // eslint-disable-next-line max-lines-per-function
 export function PreviewSheetBody({

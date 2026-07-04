@@ -4,16 +4,14 @@
 
 import React, { useState } from 'react';
 import { View, TextInput, Keyboard } from 'react-native';
-import Animated, {
-  Easing,
-  FadeInDown,
-  FadeInUp,
-} from 'react-native-reanimated';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { spacing } from '@/theme/spacing';
+import { durations, enterEasing } from '@/theme/animations';
+import { entrance } from '../constants';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { TemplatePreview } from '../TemplatePreview';
-import type { PreviewNameSectionProps } from '../TemplatePreviewModal.types';
+import type { PreviewNameSectionProps } from '../types';
 
 // eslint-disable-next-line max-lines-per-function
 export function PreviewNameSection({
@@ -34,9 +32,9 @@ export function PreviewNameSection({
     >
       <Animated.View
         className='mb-4'
-        entering={FadeInDown.duration(280)
+        entering={FadeInDown.duration(durations.enter)
           .delay(100)
-          .easing(Easing.out(Easing.cubic))}
+          .easing(enterEasing)}
       >
         <TemplatePreview
           customColor={customColor}
@@ -45,12 +43,7 @@ export function PreviewNameSection({
         />
       </Animated.View>
 
-      <Animated.View
-        className='w-full'
-        entering={FadeInUp.duration(280)
-          .delay(160)
-          .easing(Easing.out(Easing.cubic))}
-      >
+      <Animated.View className='w-full' entering={entrance(160)}>
         <TextInput
           accessibilityLabel='Habit name'
           className='w-full rounded-2xl border-2 px-5 py-4 text-center text-2xl font-medium'

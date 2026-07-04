@@ -90,3 +90,10 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
+
+/** Styles local to the TemplatePreviewModal bottom sheet shell */
+export const localStyles = StyleSheet.create({
+  dragHandle: { borderRadius: borderRadius.xs, height: 5, width: 36 },
+  dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
+  sheet: StyleSheet.absoluteFillObject,
+});

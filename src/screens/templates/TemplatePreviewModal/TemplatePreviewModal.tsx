@@ -15,7 +15,7 @@ import { spacing } from '@/theme/spacing';
 import { useTemplatePreview } from './useTemplatePreview';
 import { ImportHeader } from './ImportHeader';
 import { PreviewSheetBody } from './components/PreviewSheetBody';
-import { localStyles } from './TemplatePreviewModal.styles';
+import { localStyles } from './styles';
 import type { TemplatePreviewModalProps } from './types';
 
 // eslint-disable-next-line max-lines-per-function

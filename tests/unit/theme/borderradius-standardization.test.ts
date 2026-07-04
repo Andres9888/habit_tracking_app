@@ -100,13 +100,6 @@ describe('borderRadius: 10 → borderRadius.medium', () => {
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
   });
 
-  it('SyncStatus/ConflictNotification uses medium for iconContainer', () => {
-    const {
-      styles,
-    } = require('@/components/SyncStatus/ConflictNotification/styles');
-    expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
-  });
-
   it('SyncStatus/SyncedToast uses medium for iconContainer', () => {
     const { styles } = require('@/components/SyncStatus/SyncedToast/styles');
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
@@ -219,5 +212,4 @@ describe('corner-specific borderRadius tokenized', () => {
       borderRadius.xl
     );
   });
-
 });

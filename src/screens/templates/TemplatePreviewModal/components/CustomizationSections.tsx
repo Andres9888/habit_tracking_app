@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { Text } from 'react-native';
-import Animated, { Easing, FadeInUp } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { EmojiPicker } from '../../../../components/CreateHabitModal/components/EmojiPicker';
 import { ColorPickerSection } from '../../../../components/CreateHabitModal/components/ColorPickerSection';
 import { EnhancedReminderSelector } from '../../../../components/CreateHabitModal/components/EnhancedReminderSelector';
@@ -13,8 +13,8 @@ import { AdvancedOptionsSection } from '../../../../components/AdvancedOptions';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../../theme/typography';
 import { TemplateInfo } from '../TemplateInfo';
-import { entrance } from '../TemplatePreviewModal.constants';
-import type { CustomizationSectionsProps } from '../TemplatePreviewModal.types';
+import { entrance } from '../constants';
+import type { CustomizationSectionsProps } from '../types';
 
 // eslint-disable-next-line max-lines-per-function
 export function CustomizationSections({
@@ -46,12 +46,7 @@ export function CustomizationSections({
 
   return (
     <>
-      <Animated.View
-        className='px-6'
-        entering={FadeInUp.delay(280)
-          .duration(280)
-          .easing(Easing.out(Easing.cubic))}
-      >
+      <Animated.View className='px-6' entering={entrance(280)}>
         <Text className='mb-3 text-center uppercase' style={labelStyle}>
           Choose an icon
         </Text>

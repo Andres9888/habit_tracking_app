@@ -11,6 +11,7 @@ import {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
+import type { SharedValue } from 'react-native-reanimated';
 import {
   ANIMATION_DURATION,
   AUTO_DISMISS_DURATION,
@@ -22,9 +23,10 @@ interface UseConflictAnimationProps {
   onDismiss?: () => void;
 }
 
-type SharedNumber = { value: number };
-
-function animateIn(opacity: SharedNumber, translateY: SharedNumber) {
+function animateIn(
+  opacity: SharedValue<number>,
+  translateY: SharedValue<number>
+) {
   // Fade in
   opacity.value = withTiming(1, {
     duration: ANIMATION_DURATION,
@@ -37,8 +39,8 @@ function animateIn(opacity: SharedNumber, translateY: SharedNumber) {
 }
 
 function animateAutoDismiss(
-  opacity: SharedNumber,
-  translateY: SharedNumber,
+  opacity: SharedValue<number>,
+  translateY: SharedValue<number>,
   onDismiss: () => void
 ) {
   opacity.value = withDelay(
