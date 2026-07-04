@@ -1,7 +1,15 @@
 # SPEC: Readability Cleanup — Follow-ups
 
-**Status:** Ready for implementation. Phases 1–2 are independent and low-risk; Phase 3 items are optional/backlog and should each be confirmed before starting.
+**Status:** Phases 1–2 and the `@expo/cli` item are **done** (branch `readability-followups`). The two remaining Phase 3 items (knip unused exports, `@/*` alias migration) are large separate initiatives — see the revised notes below; do not bundle them here.
 **Origin:** Scoped 2026-07-04 from the code review of branch `codebase-readability-tips` (the dead-code sweep + 7-component decomposition, merged to `main` in commits `1dbf52d9`, `78b369b1`, `9d4028ab`, `62dc0f41`). Every file path and line reference below was verified against the tree at `62dc0f41`; re-grep if `main` has moved.
+
+## Progress (2026-07-04, follow-up branch)
+
+- **Phase 1 — done.** Motion values in ConflictNotification, WeekNavRow, and useHabitDayToggleAnimations now use `durations`/`enterEasing`/`exitEasing` (`@/theme/animations`) and `SCALE` (`@/constants/ui-values`). Two things were deliberately left inline (see Phase 1 note): the RN-`Animated` easings in `useHabitDayToggleAnimations.helpers` (RN's `Easing`, incompatible with the reanimated tokens) and `HYDRATION_WINDOW_MS` (a hydration window only coincidentally equal to 1500 ms).
+- **Phase 2 — done, via the lighter path, after evidence.** The full folder+barrel migration was **rejected**: the flat `X.tsx` + `X.hooks.ts` sibling pattern is already widespread (AnimatedHabitCard, PersonalBestsCard, SoundPicker, DetailCompleteButton, …), so wrapping the 7 components in folders would fight an established convention. The genuine wart was the three invented `*Parts/` folders (they exist nowhere else). Each was imported only by its own orchestrator, so its sub-components were moved up as **flat peers** of that orchestrator — the repo's dominant pattern — and their relative imports decremented one level. All three `*Parts/` folders are gone.
+- **`@expo/cli` — done.** Removed as a redundant devDependency (`expo` provides the CLI and depends on it transitively); the lockfile was also re-synced with the previously-declared-but-unlocked expo modules.
+- **knip unused exports — NOT done, and much larger than scoped.** A fresh `npx knip --exports` reports **1163** unused exports, not ~31: ~996 are `index.ts` barrel re-exports and ~122 are `default` exports. This is **not** a safe mechanical sweep — knip does not trace `React.lazy(() => import('./X'))` default-import usage, so removing a "unused" default export can break a lazy-loaded screen at runtime with a clean `tsc`. Treat as its own scoped initiative with per-export verification (grep for `lazy(`/dynamic imports and test usage before deleting each). Do not bulk-delete.
+- **`@/*` alias migration — not started** (unchanged; separate initiative).
 
 ---
 
