@@ -1,1 +1,0 @@
-export { SessionProgressPill } from './SessionProgressPill';

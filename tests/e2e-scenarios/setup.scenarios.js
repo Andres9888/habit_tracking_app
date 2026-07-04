@@ -151,12 +151,6 @@ jest.mock('react-native-purchases', () => ({
   LOG_LEVEL: { DEBUG: 'DEBUG', INFO: 'INFO', WARN: 'WARN', ERROR: 'ERROR' },
   PURCHASES_ERROR_CODE: {},
 }));
-jest.mock('react-native-purchases-ui', () => ({
-  __esModule: true,
-  default: { presentPaywall: jest.fn(async () => 'NOT_PRESENTED') },
-  PAYWALL_RESULT: { NOT_PRESENTED: 'NOT_PRESENTED', PURCHASED: 'PURCHASED' },
-}));
-
 // Purchases lib — the real usePremiumData polls isPurchasesAvailable() every
 // 500ms (up to 10×), scheduling long-lived timers that leak across tests and
 // destabilise later scenarios. Report "available + no entitlement" up front so

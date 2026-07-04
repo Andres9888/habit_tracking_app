@@ -68,6 +68,7 @@ const factoryFrontendRules = filterUnsupportedRules(factoryFrontend.rules);
 const factoryFrontendOverrides = (factoryFrontend.overrides ?? []).map(
   ({ files, rules }) => ({
     files,
+    plugins: { '@factory': factoryPlugin },
     rules: {
       ...filterUnsupportedRules(rules),
       ...factoryRuleOverrides,
@@ -331,39 +332,43 @@ export default tseslint.config(
   // Fix opportunistically as files are touched. Graduate to error once count → 0.
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: [
-      ...sourceIgnores,
-      '**/theme/**',
-    ],
+    ignores: [...sourceIgnores, '**/theme/**'],
     rules: {
-      'no-restricted-syntax': ['warn',
+      'no-restricted-syntax': [
+        'warn',
         {
           selector: "Property[key.name='fontSize'][value.type='Literal']",
-          message: "Use typography tokens from @/theme/typography instead of raw fontSize values"
+          message:
+            'Use typography tokens from @/theme/typography instead of raw fontSize values',
         },
         {
-          selector: "Literal[value=/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/]",
-          message: "Use color tokens from @/theme/colors instead of raw hex values"
+          selector:
+            'Literal[value=/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/]',
+          message:
+            'Use color tokens from @/theme/colors instead of raw hex values',
         },
-      ]
-    }
+      ],
+    },
   },
   // Haptics guard: route all haptic feedback through the wrapper so reduce-motion
   // and the global enabled/intensity settings apply. The wrapper itself is exempt.
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: [
-      ...sourceIgnores,
-      '**/utils/haptics/**',
-    ],
+    ignores: [...sourceIgnores, '**/utils/haptics/**'],
     rules: {
-      'no-restricted-imports': ['warn', {
-        paths: [{
-          name: 'expo-haptics',
-          message: 'Use triggerHaptic / useHaptics / HapticPatterns from @/utils/haptics instead of raw expo-haptics, so reduce-motion and intensity settings apply.',
-        }],
-      }],
-    }
+      'no-restricted-imports': [
+        'warn',
+        {
+          paths: [
+            {
+              name: 'expo-haptics',
+              message:
+                'Use triggerHaptic / useHaptics / HapticPatterns from @/utils/haptics instead of raw expo-haptics, so reduce-motion and intensity settings apply.',
+            },
+          ],
+        },
+      ],
+    },
   },
   // === Design-System Lint Guards — ratcheted (error) ===
   // Violations have been eliminated; these rules now hard-fail to prevent regression.
@@ -373,29 +378,33 @@ export default tseslint.config(
   // once a custom plugin supports per-selector severity (or violations reach zero).
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: [
-      ...sourceIgnores,
-      '**/theme/**',
-    ],
+    ignores: [...sourceIgnores, '**/theme/**'],
     rules: {
-      'no-restricted-syntax': ['error',
+      'no-restricted-syntax': [
+        'error',
         {
-          selector: "CallExpression[callee.type='MemberExpression'][callee.property.name='springify']",
-          message: "Use .easing(enterEasing) instead of .springify() for entrance animations. See src/theme/animations.ts"
+          selector:
+            "CallExpression[callee.type='MemberExpression'][callee.property.name='springify']",
+          message:
+            'Use .easing(enterEasing) instead of .springify() for entrance animations. See src/theme/animations.ts',
         },
         {
-          selector: "JSXAttribute[name.name='className'] Literal[value=/shadow-sm|shadow-md|shadow-lg|shadow-xl|shadow-2xl/]",
-          message: "Use theme shadow tokens (shadows.*) instead of Tailwind shadow-* classes. See src/theme/spacing.ts"
+          selector:
+            "JSXAttribute[name.name='className'] Literal[value=/shadow-sm|shadow-md|shadow-lg|shadow-xl|shadow-2xl/]",
+          message:
+            'Use theme shadow tokens (shadows.*) instead of Tailwind shadow-* classes. See src/theme/spacing.ts',
         },
         {
-          selector: "ObjectExpression:has(> Property[key.name='damping']):has(> Property[key.name='stiffness'])",
-          message: "Use spring presets from @/theme/animations (springs.*) instead of inline {damping, stiffness} configs"
+          selector:
+            "ObjectExpression:has(> Property[key.name='damping']):has(> Property[key.name='stiffness'])",
+          message:
+            'Use spring presets from @/theme/animations (springs.*) instead of inline {damping, stiffness} configs',
         },
         {
           selector: "Property[key.name='borderRadius'][value.value=9999]",
-          message: "Use borderRadius.full from theme instead of 9999"
+          message: 'Use borderRadius.full from theme instead of 9999',
         },
-      ]
-    }
+      ],
+    },
   }
 );

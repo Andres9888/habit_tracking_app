@@ -12,7 +12,6 @@ import { styles as categoryChipStyles } from '@/components/CategoryChip/Category
 import { cardStyles as weeklySummaryCardStyles } from '@/components/ProgressSectionConsolidated/WeeklySummaryStrip/cardStyles';
 import { cardStyles as todaysFocusCardStyles } from '@/components/ProgressSectionConsolidated/TodaysFocusCard/styles/cardStyles';
 import { elementStyles } from '@/components/ProgressSectionConsolidated/TodaysFocusCard/styles/elementStyles';
-import { styles as quickCompleteStyles } from '@/components/QuickCompleteButton/QuickCompleteButton.styles';
 import { sectionStyles } from '@/components/TemplateScienceModal/styles/section.styles';
 import { footerStyles as tsFooterStyles } from '@/components/TemplateScienceModal/styles/footer.styles';
 import { footerStyles as ftpFooterStyles } from '@/components/FullsizeTemplatePreview/styles/footer.styles';
@@ -44,7 +43,7 @@ describe('Shadow Token Migration - Phase 3 Task 2', () => {
         height: 6,
         width: 0,
       });
-      expect(shadows.floatingActionButton.shadowOpacity).toBe(0.10);
+      expect(shadows.floatingActionButton.shadowOpacity).toBe(0.1);
       expect(shadows.floatingActionButton.shadowRadius).toBe(20);
     });
 
@@ -154,20 +153,6 @@ describe('Shadow Token Migration - Phase 3 Task 2', () => {
 
     it('confettiParticle shadowOffset should match shadows.subtle', () => {
       expect(elementStyles.confettiParticle.shadowOffset).toEqual(
-        shadows.subtle.shadowOffset
-      );
-    });
-  });
-
-  describe('QuickCompleteButton confettiParticle uses shadows.subtle', () => {
-    it('confettiParticle elevation should match shadows.subtle', () => {
-      expect(quickCompleteStyles.confettiParticle.elevation).toBe(
-        shadows.subtle.elevation
-      );
-    });
-
-    it('confettiParticle shadowOffset should match shadows.subtle', () => {
-      expect(quickCompleteStyles.confettiParticle.shadowOffset).toEqual(
         shadows.subtle.shadowOffset
       );
     });

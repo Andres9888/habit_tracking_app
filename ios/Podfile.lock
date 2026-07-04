@@ -128,9 +128,6 @@ PODS:
     - libwebp/sharpyuv
   - PurchasesHybridCommon (17.28.0):
     - RevenueCat (= 5.55.1)
-  - PurchasesHybridCommonUI (17.28.0):
-    - PurchasesHybridCommon (= 17.28.0)
-    - RevenueCatUI (= 5.55.1)
   - RCTDeprecation (0.81.5)
   - RCTRequired (0.81.5)
   - RCTTypeSafety (0.81.5):
@@ -1876,8 +1873,6 @@ PODS:
     - ReactNativeDependencies
   - ReactNativeDependencies (0.81.5)
   - RevenueCat (5.55.1)
-  - RevenueCatUI (5.55.1):
-    - RevenueCat (= 5.55.1)
   - RNCAsyncStorage (2.2.0):
     - hermes-engine
     - RCTRequired
@@ -1944,9 +1939,6 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - RNPaywalls (9.7.1):
-    - PurchasesHybridCommonUI (= 17.28.0)
-    - React-Core
   - RNPurchases (9.7.1):
     - PurchasesHybridCommon (= 17.28.0)
     - React-Core
@@ -2279,7 +2271,6 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNPaywalls (from `../node_modules/react-native-purchases-ui`)
   - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
@@ -2294,9 +2285,7 @@ SPEC REPOS:
     - libdav1d
     - libwebp
     - PurchasesHybridCommon
-    - PurchasesHybridCommonUI
     - RevenueCat
-    - RevenueCatUI
     - SDWebImage
     - SDWebImageAVIFCoder
     - SDWebImageSVGCoder
@@ -2501,8 +2490,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNPaywalls:
-    :path: "../node_modules/react-native-purchases-ui"
   RNPurchases:
     :path: "../node_modules/react-native-purchases"
   RNReanimated:
@@ -2551,7 +2538,6 @@ SPEC CHECKSUMS:
   libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   PurchasesHybridCommon: c2f8f5fcd2e472c585fccd1ab2fe317a3dc1171e
-  PurchasesHybridCommonUI: 81113f049b6a618e06e38e6f1510c6c7654435f9
   RCTDeprecation: 943572d4be82d480a48f4884f670135ae30bf990
   RCTRequired: 8f3cfc90cc25cf6e420ddb3e7caaaabc57df6043
   RCTTypeSafety: 16a4144ca3f959583ab019b57d5633df10b5e97c
@@ -2620,11 +2606,9 @@ SPEC CHECKSUMS:
   ReactCommon: 08810150b1206cc44aecf5f6ae19af32f29151a8
   ReactNativeDependencies: 71ce9c28beb282aa720ea7b46980fff9669f428a
   RevenueCat: 347221fad5ab0ed5636546867deae2c32c64749f
-  RevenueCatUI: 5b8e20f13156e85efcfa1ad03d1aadc08cd9af2c
   RNCAsyncStorage: 3a4f5e2777dae1688b781a487923a08569e27fe4
   RNDateTimePicker: be0e44bcb9ed0607c7c5f47dbedd88cf091f6791
   RNGestureHandler: 2914750df066d89bf9d8f48a10ad5f0051108ac3
-  RNPaywalls: 8c86e83105695edda21839ed52a7e1ff7f66d34b
   RNPurchases: e265e2ed27349b567b91b89d8712aa8c9c57f5b0
   RNReanimated: e50d4b64a3948f46bdf479c70c90923214e90b5d
   RNSentry: 41979b419908128847ef662cc130a400b7576fa9

@@ -49,15 +49,6 @@ describe('borderRadius.small token migration', () => {
     });
   });
 
-  describe('StrengthHistoryChart.styles', () => {
-    it('should use borderRadius.small token', () => {
-      const {
-        styles,
-      } = require('../../../src/components/StrengthHistoryChart/StrengthHistoryChart.styles');
-      expect(styles.legendColor.borderRadius).toBe(borderRadius.small);
-    });
-  });
-
   describe('Toast/styles', () => {
     it('should use borderRadius tokens', () => {
       const { styles } = require('../../../src/components/Toast/styles');

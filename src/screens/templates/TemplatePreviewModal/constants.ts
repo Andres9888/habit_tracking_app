@@ -2,6 +2,9 @@
  * Constants for TemplatePreviewModal
  */
 
+import { FadeInUp } from 'react-native-reanimated';
+import { durations, enterEasing } from '@/theme/animations';
+
 /** Default fallback color when iconColor is missing or invalid */
 export const DEFAULT_ICON_COLOR = '#78716c';
 
@@ -21,3 +24,7 @@ export const ICON_COLORS = [
 export const safeColor = (color: string | undefined): string => {
   return color && color.trim() !== '' ? color : DEFAULT_ICON_COLOR;
 };
+
+/** Staggered entrance animation for sheet sections */
+export const entrance = (delay: number) =>
+  FadeInUp.delay(delay).duration(durations.enter).easing(enterEasing);

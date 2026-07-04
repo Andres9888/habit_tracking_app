@@ -55,10 +55,6 @@ jest.mock('../../../screens/HabitDetailScreen', () => ({
   default: () => null,
 }));
 
-jest.mock('../../../components/MilestoneCelebration', () => ({
-  MilestoneCelebration: () => null,
-}));
-
 jest.mock('../../../components/PauseHabitModal', () => ({
   __esModule: true,
   default: () => null,

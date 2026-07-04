@@ -1,1 +1,0 @@
-export { TrendingCard } from './TrendingCard';
