@@ -5,6 +5,7 @@ import ErrorBoundary from '../../../../components/ErrorBoundary';
 import Modal from '../../../../components/Modal';
 import { ModalCloseButton } from '../../../../components/ui/ModalCloseButton';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
+import { useWarmTemplatesCache } from '../../../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
@@ -21,6 +22,7 @@ export function TemplatesModalSection({
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
+  useWarmTemplatesCache();
 
   const handleClose = () => {
     trigger('tap');
