@@ -17,7 +17,7 @@ import { GitMerge } from 'lucide-react-native';
 
 import type { ConflictNotificationProps } from './types';
 import { styles, ICON_SIZE, ICON_COLOR } from './styles';
-import { useConflictNotificationAnimations } from './useConflictNotificationAnimations';
+import { useToastAnimations } from '../useToastAnimations';
 
 const DEFAULT_DURATION = 3000;
 
@@ -29,7 +29,7 @@ export function ConflictNotification({
   style,
   testID = 'conflict-notification',
 }: ConflictNotificationProps) {
-  const { animatedStyle, shouldRender } = useConflictNotificationAnimations({
+  const { animatedStyle, shouldRender } = useToastAnimations({
     duration,
     onHidden: onDismiss,
     visible,
@@ -57,9 +57,11 @@ export function ConflictNotification({
         <GitMerge color={ICON_COLOR} size={ICON_SIZE} strokeWidth={2.5} />
       </Animated.View>
       <Text style={styles.text}>Conflict resolved</Text>
-      {showCount ? <Text style={styles.countText} testID={`${testID}-count`}>
+      {showCount ? (
+        <Text style={styles.countText} testID={`${testID}-count`}>
           ({conflictCount})
-        </Text> : null}
+        </Text>
+      ) : null}
     </Animated.View>
   );
 }

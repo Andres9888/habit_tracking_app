@@ -1,7 +1,8 @@
 /**
- * useConflictNotificationAnimations Hook
+ * useToastAnimations Hook
  *
- * Handles animation logic for the ConflictNotification component.
+ * Shared animation logic for the SyncStatus toast components
+ * (SyncedToast, ConflictNotification).
  * Provides smooth fade-in/fade-out transitions with auto-dismiss timing.
  */
 
@@ -16,19 +17,25 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 
-import type {
-  UseConflictNotificationAnimationsOptions,
-  UseConflictNotificationAnimationsResult,
-} from './types';
+export interface UseToastAnimationsOptions {
+  visible: boolean;
+  duration: number;
+  onHidden?: () => void;
+}
+
+export interface UseToastAnimationsResult {
+  animatedStyle: { opacity: number; transform: { translateY: number }[] };
+  shouldRender: boolean;
+}
 
 const FADE_IN_DURATION = 200;
 const FADE_OUT_DURATION = 300;
 
-export function useConflictNotificationAnimations({
+export function useToastAnimations({
   visible,
   duration,
   onHidden,
-}: UseConflictNotificationAnimationsOptions): UseConflictNotificationAnimationsResult {
+}: UseToastAnimationsOptions): UseToastAnimationsResult {
   const opacity = useSharedValue(0);
   const translateY = useSharedValue(-8);
   const isAnimating = useRef(false);

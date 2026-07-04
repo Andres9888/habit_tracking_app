@@ -44,14 +44,3 @@ export interface UseConflictNotificationResult {
   /** Manually show the notification (for testing) */
   show: (count?: number) => void;
 }
-
-export interface UseConflictNotificationAnimationsOptions {
-  visible: boolean;
-  duration: number;
-  onHidden?: () => void;
-}
-
-export interface UseConflictNotificationAnimationsResult {
-  animatedStyle: { opacity: number; transform: { translateY: number }[] };
-  shouldRender: boolean;
-}
