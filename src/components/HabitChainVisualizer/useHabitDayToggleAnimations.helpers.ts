@@ -1,7 +1,10 @@
 import { Animated, Easing } from 'react-native';
 
 import { durations } from '@/theme/animations';
+import { Motion } from '@/constants/motion';
 
+// Not a motion token: the window that suppresses the forge flash while
+// initial completion data hydrates. Coincidentally equal to durations.breathing.
 const HYDRATION_WINDOW_MS = 1500;
 
 export function forceValue(animatedValue: Animated.Value, value: number) {
@@ -41,7 +44,7 @@ export function startForgeFlash({
   forgeFlash.setValue(1);
   const animation = Animated.timing(forgeFlash, {
     duration: 500,
-    easing: Easing.out(Easing.cubic),
+    easing: Motion.easing.outCubic,
     toValue: 0,
     useNativeDriver: true,
   });
@@ -83,14 +86,14 @@ export function buildCompletionAnimation({
         }),
         Animated.timing(completion, {
           duration: durations.transition,
-          easing: Easing.out(Easing.cubic),
+          easing: Motion.easing.outCubic,
           toValue: 1,
           useNativeDriver: true,
         }),
       ])
     : Animated.timing(completion, {
         duration: durations.quick,
-        easing: Easing.in(Easing.ease),
+        easing: Motion.easing.inEase,
         toValue: 0,
         useNativeDriver: true,
       });

@@ -11,12 +11,13 @@ import {
   runOnJS,
 } from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
-import { enterEasing, exitEasing } from '@/theme/animations';
-import {
-  ANIMATION_DURATION,
-  AUTO_DISMISS_DURATION,
-} from './ConflictNotification.constants';
+import { durations, enterEasing, exitEasing } from '@/theme/animations';
 import type { UseConflictNotificationResult } from './ConflictNotification.types';
+
+// Enter and exit fades share the enter duration by design; the auto-dismiss
+// delay is component-specific and not a shared motion token.
+const ANIMATION_DURATION = durations.enter;
+const AUTO_DISMISS_DURATION = 4000;
 
 interface UseConflictAnimationProps {
   visible: boolean;
