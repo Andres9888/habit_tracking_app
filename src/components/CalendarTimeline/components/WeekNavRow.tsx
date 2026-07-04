@@ -4,8 +4,8 @@ import Animated from 'react-native-reanimated';
 
 import { useWeekNavRowAnimation } from './WeekNavRow.hooks';
 import { s } from './WeekNavRow.styles';
-import { DatePill } from './WeekNavRowParts/DatePill';
-import { TodayPill } from './WeekNavRowParts/TodayPill';
+import { DatePill } from './DatePill';
+import { TodayPill } from './TodayPill';
 import type { WeekNavRowProps } from './WeekNavRow.types';
 
 /** Date row — centered date pill with optional "Today" pill on past weeks */

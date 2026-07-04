@@ -3,8 +3,8 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { durations, enterEasing } from '../../../theme/animations';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { cardStyles } from './CharacterCard.styles';
-import { CharacterHeaderRow } from './CharacterCardParts/CharacterHeaderRow';
-import { CharacterXpSection } from './CharacterCardParts/CharacterXpSection';
+import { CharacterHeaderRow } from './CharacterHeaderRow';
+import { CharacterXpSection } from './CharacterXpSection';
 import type { CharacterCardProps } from './CharacterCard.types';
 
 export function CharacterCard({ data }: CharacterCardProps) {

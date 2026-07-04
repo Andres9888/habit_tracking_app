@@ -3,12 +3,12 @@ import { View, Text } from 'react-native';
 import { Calendar, ChevronDown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 
-import { AnimatedPressable } from '../../../ui/AnimatedPressable';
-import { colors as palette } from '../../../../theme/colors';
-import { useThemeColors } from '../../../../theme/ThemeContext';
-import { getDatePillColors } from '../../theme';
-import { PRESS } from '../WeekNavRow.constants';
-import { s } from '../WeekNavRow.styles';
+import { AnimatedPressable } from '../../ui/AnimatedPressable';
+import { colors as palette } from '../../../theme/colors';
+import { useThemeColors } from '../../../theme/ThemeContext';
+import { getDatePillColors } from '../theme';
+import { PRESS } from './WeekNavRow.constants';
+import { s } from './WeekNavRow.styles';
 
 interface DatePillProps {
   monthName: string;
