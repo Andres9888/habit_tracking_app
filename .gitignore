@@ -97,6 +97,3 @@ docs/api/
 
 # Generated lint report (regenerate with npm run lint:max-lines-report)
 .eslint-max-lines-report.json
-
-# PAI hook artifact (literal dir accidentally created in repo root)
-${HOME}/
