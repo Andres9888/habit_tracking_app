@@ -1,5 +1,7 @@
 import { Animated, Easing } from 'react-native';
 
+import { durations } from '@/theme/animations';
+
 const HYDRATION_WINDOW_MS = 1500;
 
 export function forceValue(animatedValue: Animated.Value, value: number) {
@@ -80,14 +82,14 @@ export function buildCompletionAnimation({
           useNativeDriver: true,
         }),
         Animated.timing(completion, {
-          duration: 220,
+          duration: durations.transition,
           easing: Easing.out(Easing.cubic),
           toValue: 1,
           useNativeDriver: true,
         }),
       ])
     : Animated.timing(completion, {
-        duration: 150,
+        duration: durations.quick,
         easing: Easing.in(Easing.ease),
         toValue: 0,
         useNativeDriver: true,
@@ -97,20 +99,12 @@ export function buildCompletionAnimation({
 export function buildBreathingAnimation(
   breathingPulse: Animated.Value
 ): Animated.CompositeAnimation {
-  return Animated.loop(
-    Animated.sequence([
-      Animated.timing(breathingPulse, {
-        duration: 1500,
-        easing: Easing.inOut(Easing.ease),
-        toValue: 1.03,
-        useNativeDriver: true,
-      }),
-      Animated.timing(breathingPulse, {
-        duration: 1500,
-        easing: Easing.inOut(Easing.ease),
-        toValue: 1,
-        useNativeDriver: true,
-      }),
-    ])
-  );
+  const pulse = (toValue: number) =>
+    Animated.timing(breathingPulse, {
+      duration: durations.breathing,
+      easing: Easing.inOut(Easing.ease),
+      toValue,
+      useNativeDriver: true,
+    });
+  return Animated.loop(Animated.sequence([pulse(1.03), pulse(1)]));
 }
