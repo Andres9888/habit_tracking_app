@@ -1,3 +1,10 @@
+/**
+ * Metro resolves `react-native-url-polyfill/auto` to this file via the
+ * resolveRequest override in metro.config.cjs. Nothing imports it directly,
+ * so import-graph tools (knip) can't see it — it is registered as a knip
+ * `entry` in knip.json. Do NOT delete it as "unused": removing it breaks
+ * `expo export` / every native bundle.
+ */
 import { Platform } from 'react-native';
 import { setupURLPolyfill } from 'react-native-url-polyfill';
 

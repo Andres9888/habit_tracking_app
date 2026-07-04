@@ -27,8 +27,6 @@
     "__mocks__/**/*.{js,jsx,ts,tsx}"
   ],
   "ignore": [
-    "automaker/**",
-    "website/**",
     "docs/**",
     "dist/**",
     "coverage/**",
@@ -36,10 +34,8 @@
     "android/**",
     "ios/**",
     "assets/**",
-    "Substrate/**",
     "worktrees/**",
     "MEMORY/**",
-    "Auto Run Docs/**",
     "Plans/**",
     "specs/**",
     "superdesign/**",
