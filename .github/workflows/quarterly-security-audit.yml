@@ -756,7 +756,7 @@ jobs:
 
       - name: Create audit issue (if failures)
         if: needs.auth-audit.outputs.score < 70 || needs.data-audit.outputs.score < 70 || needs.api-audit.outputs.score < 70 || needs.dependency-audit.outputs.critical > 0
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         env:
           AUDIT_ID: ${{ needs.init-audit.outputs.audit_id }}
           QUARTER: ${{ needs.init-audit.outputs.quarter }}
