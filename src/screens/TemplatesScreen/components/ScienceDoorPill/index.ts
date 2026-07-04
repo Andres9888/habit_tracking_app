@@ -1,1 +1,0 @@
-export { ScienceDoorPill } from './ScienceDoorPill';

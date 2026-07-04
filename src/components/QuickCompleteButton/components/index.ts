@@ -1,1 +1,0 @@
-export { ConfettiBurst } from './ConfettiBurst';

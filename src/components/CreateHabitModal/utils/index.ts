@@ -1,1 +1,0 @@
-export { extractTemplateDetails } from './templateUtils';
