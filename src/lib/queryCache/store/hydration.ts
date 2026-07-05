@@ -13,6 +13,12 @@ export function markQueryCacheHydrated(): void {
   for (const listener of listeners) listener();
 }
 
+export function resetQueryCacheHydrated(): void {
+  if (!hydrated) return;
+  hydrated = false;
+  for (const listener of listeners) listener();
+}
+
 export function subscribeQueryCacheHydrated(listener: Listener): () => void {
   listeners.add(listener);
   return () => listeners.delete(listener);

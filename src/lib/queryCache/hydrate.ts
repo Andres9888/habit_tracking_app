@@ -7,6 +7,7 @@ import {
 } from './persistence/keys';
 import { readEntry } from './persistence/readEntry';
 import { cancelPendingWrites } from './persistence/writeEntry';
+import { resetQueryCacheHydrated } from './store/hydration';
 
 export async function hydrateQueryCache(scope: string | null): Promise<void> {
   const hydrated = await Promise.all(
@@ -36,6 +37,7 @@ export async function hydrateQueryCache(scope: string | null): Promise<void> {
 export function resetQueryCache(): void {
   cancelPendingWrites();
   queryCacheStore.reset();
+  resetQueryCacheHydrated();
 }
 
 export { getCacheEntry } from './registry';
