@@ -28,9 +28,14 @@ export function useHabitData(extendedDateStrings: string[]) {
     }
   );
 
-  // Use startDate/endDate range to reduce query arg payload (~4KB → ~50 bytes)
-  const startDate = safeDateStrings[0];
-  const endDate = safeDateStrings.at(-1);
+  // Use startDate/endDate range to reduce query arg payload (~4KB → ~50 bytes).
+  // Callers pass date lists in either direction (CharacterScreen's is
+  // newest-first), so order the endpoints before treating them as a range.
+  const firstDate = safeDateStrings[0];
+  const lastDate = safeDateStrings.at(-1);
+  const ascending = firstDate && lastDate ? firstDate <= lastDate : true;
+  const startDate = ascending ? firstDate : lastDate;
+  const endDate = ascending ? lastDate : firstDate;
 
   // Guard: Skip tracking query if no valid date range
   const trackingQuery = useCachedQuery(

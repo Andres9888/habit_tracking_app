@@ -17,7 +17,6 @@ import {
   useAnimatedStyle,
   withSpring,
   withTiming,
-  withDelay,
   Easing as ReanimatedEasing,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
@@ -50,18 +49,11 @@ export function useStrengthAnimation(
 
     // Animate the progress bar width
     const isIncreasing = strengthPercent > previousStrength;
-    if (reduceMotionPreference) {
-      progressWidth.value = strengthPercent;
-    } else if (isFirstRenderRef.current) {
+    if (reduceMotionPreference || isFirstRenderRef.current) {
+      // First render paints the final value instantly — animating from 0
+      // reads as a second style pass on cold start. Later changes animate.
       isFirstRenderRef.current = false;
-      progressWidth.value = 0;
-      progressWidth.value = withDelay(
-        200,
-        withTiming(strengthPercent, {
-          duration: 800,
-          easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
-        })
-      );
+      progressWidth.value = strengthPercent;
     } else if (isIncreasing) {
       // Satisfying spring animation when strength increases
       progressWidth.value = withSpring(strengthPercent, {
