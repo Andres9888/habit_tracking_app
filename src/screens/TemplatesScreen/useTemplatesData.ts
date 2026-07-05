@@ -2,7 +2,7 @@
  * Data fetching hooks for templates
  */
 
-import { useMutation, useQuery } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
@@ -47,7 +47,11 @@ function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
 }
 
 export function useTemplatesData() {
-  const allTemplates = useQuery(api.templates.list, {});
+  const allTemplates = useCachedQuery(
+    api.templates.list,
+    {},
+    { entryName: 'templates.list' }
+  );
   const userHabits = useCachedQuery(
     api.habits.list,
     {},
@@ -62,7 +66,11 @@ export function useTemplatesData() {
       entryName: 'settings.get',
     }
   );
-  const importedIds = useQuery(api.templates.getImportedTemplateIds, {});
+  const importedIds = useCachedQuery(
+    api.templates.getImportedTemplateIds,
+    {},
+    { entryName: 'templates.getImportedTemplateIds' }
+  );
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
   const isPremiumUser = settings?.hasPremium ?? false;

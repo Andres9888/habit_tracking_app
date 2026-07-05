@@ -41,14 +41,3 @@ export interface UseSyncedToastResult {
   /** Manually show the toast (for testing) */
   show: (count?: number) => void;
 }
-
-export interface UseSyncedToastAnimationsOptions {
-  visible: boolean;
-  duration: number;
-  onHidden?: () => void;
-}
-
-export interface UseSyncedToastAnimationsResult {
-  animatedStyle: { opacity: number; transform: { translateY: number }[] };
-  shouldRender: boolean;
-}

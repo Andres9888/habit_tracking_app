@@ -57,7 +57,7 @@ jobs:
         run: npm test -- --passWithNoTests --maxWorkers=2
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         if: always()
 
   # ============================================
@@ -130,7 +130,7 @@ jobs:
           fi
 
       - name: Upload security test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: security-test-results
@@ -275,7 +275,7 @@ jobs:
           echo "Performance baseline generated at performance-reports/baseline.json"
 
       - name: Upload performance test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: performance-test-results

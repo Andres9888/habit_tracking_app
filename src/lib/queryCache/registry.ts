@@ -20,6 +20,22 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     version: 1,
   },
   'settings.get': { name: 'settings.get', storage: 'secure', version: 1 },
+  // 'plain': only opaque template IDs (no habit content); keys are
+  // user-scoped and cleared on logout via clearQueryCacheForScope.
+  'templates.getImportedTemplateIds': {
+    latestFallback: true,
+    name: 'templates.getImportedTemplateIds',
+    storage: 'plain',
+    version: 1,
+  },
+  // 'plain': public catalog (~215KB) — Keychain-backed 'secure' storage
+  // would be a perf hazard for data that needs no protection.
+  'templates.list': {
+    latestFallback: true,
+    name: 'templates.list',
+    storage: 'plain',
+    version: 1,
+  },
 };
 
 export const queryCacheEntries = Object.values(DEFINITIONS);

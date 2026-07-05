@@ -15,6 +15,7 @@ import { durations, springs } from '@/theme/animations';
 export const Motion = {
   duration: {
     base: durations.quick,
+    breathing: durations.breathing,
     emphasized: durations.transition,
     enter: durations.enter,
     exit: durations.transition,
@@ -24,6 +25,7 @@ export const Motion = {
   easing: {
     inCubic: Easing.in(Easing.cubic),
     inEase: Easing.in(Easing.ease),
+    inOutEase: Easing.inOut(Easing.ease),
     outCubic: Easing.out(Easing.cubic),
     outEase: Easing.out(Easing.ease),
   },

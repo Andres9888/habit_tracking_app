@@ -12,7 +12,8 @@
     "jest.config.js",
     "jest.setup.js",
     "babel.config.cjs",
-    "metro.config.cjs"
+    "metro.config.cjs",
+    "src/lib/reactNativeUrlPolyfillAuto.js"
   ],
   "project": [
     "index.ts",
@@ -26,8 +27,6 @@
     "__mocks__/**/*.{js,jsx,ts,tsx}"
   ],
   "ignore": [
-    "automaker/**",
-    "website/**",
     "docs/**",
     "dist/**",
     "coverage/**",
@@ -35,20 +34,12 @@
     "android/**",
     "ios/**",
     "assets/**",
-    "Substrate/**",
     "worktrees/**",
     "MEMORY/**",
-    "Auto Run Docs/**",
     "Plans/**",
     "specs/**",
     "superdesign/**",
     ".superdesign/**",
-    "bmad/**",
-    "src/screens/auth 2/**",
-    "src/screens/examples/**",
-    "src/screens/examples 2/**",
-    "src/components/CalendarTimeline/CalendarTimelineDebug.tsx",
-    "src/components/CalendarTimeline/CalendarTimelineWithEdgeFade.tsx",
-    "src/components/CalendarTimeline/CalendarTimelineWithPulse.tsx"
+    "bmad/**"
   ]
 }
