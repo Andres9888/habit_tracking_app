@@ -14,8 +14,8 @@ export const TRACK_PADDING_BOTTOM = 12;
 
 export const TABS: Array<{ label: string; view: DetailView }> = [
   { label: 'Calendar', view: 'calendar' },
-  { label: 'Strength', view: 'strength' },
   { label: 'Goal', view: 'goal' },
+  { label: 'Strength', view: 'strength' },
 ];
 
 export const INDICATOR_TIMING = {

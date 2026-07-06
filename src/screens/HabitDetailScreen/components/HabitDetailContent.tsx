@@ -81,6 +81,10 @@ export function HabitDetailContent({
         />
       </View>
 
+      <View className='mx-5 mt-5' onLayout={makeSectionLayoutHandler('goal')}>
+        <GoalTabContent habit={habit} />
+      </View>
+
       {habit.createdAt ? (
         <View
           className='mx-5 mt-5'
@@ -98,10 +102,6 @@ export function HabitDetailContent({
           </ErrorBoundary>
         </View>
       ) : null}
-
-      <View className='mx-5 mt-5' onLayout={makeSectionLayoutHandler('goal')}>
-        <GoalTabContent habit={habit} />
-      </View>
     </ScrollView>
   );
 }
