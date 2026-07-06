@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View, Text } from 'react-native';
 import Animated, {
   interpolate,
@@ -79,16 +79,28 @@ const DayCellRingComponent: React.FC<DayCellRingProps> = ({
     isCurrentDay &&
     completionStatus !== 'complete' &&
     completionStatus !== 'future';
-  const fillScale = useSharedValue(isComplete && !reduceMotion ? 0 : 1);
-  const arcProgress = useSharedValue(reduceMotion ? progress : 0);
+  const fillScale = useSharedValue(1);
+  const arcProgress = useSharedValue(progress);
+  const isFirstRenderRef = useRef(true);
 
   useEffect(() => {
     if (reduceMotion) {
       fillScale.value = 1;
       arcProgress.value = progress;
+      isFirstRenderRef.current = false;
       return;
     }
-    if (isComplete) fillScale.value = withSpring(1, springs.gentle);
+
+    if (isFirstRenderRef.current) {
+      // First render paints the final value instantly — animating from 0
+      // reads as a second style pass on cold start. Later changes animate.
+      isFirstRenderRef.current = false;
+      fillScale.value = isComplete ? 1 : 0;
+      arcProgress.value = progress;
+      return;
+    }
+
+    fillScale.value = isComplete ? withSpring(1, springs.gentle) : 0;
     arcProgress.value = withTiming(progress, { duration: durations.progress });
   }, [isComplete, progress, reduceMotion, fillScale, arcProgress]);
 
