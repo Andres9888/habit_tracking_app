@@ -1,6 +1,7 @@
 import { queryCacheEntries } from './registry';
 import { queryCacheStore } from './store/state';
 import {
+  buildLatestArgsMemoryKey,
   buildLatestMemoryKey,
   buildLatestStorageKey,
   buildMemoryKey,
@@ -30,6 +31,11 @@ export async function hydrateQueryCache(scope: string | null): Promise<void> {
     }
     if (queryCacheStore.get(latestKey) === undefined) {
       queryCacheStore.set(latestKey, persisted.value, persisted.savedAt);
+      queryCacheStore.set(
+        buildLatestArgsMemoryKey(entry.name),
+        persisted.args,
+        persisted.savedAt
+      );
     }
   }
 }

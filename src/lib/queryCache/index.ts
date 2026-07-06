@@ -1,5 +1,6 @@
 export { hydrateQueryCache, resetQueryCache } from './hydrate';
-export { useCachedQuery, useCachedQuerySavedAt } from './hooks/useCachedQuery';
+export { useCachedQuery } from './hooks/useCachedQuery';
+export { useCachedQuerySavedAt } from './hooks/useCachedQuerySavedAt';
 export { useQueryCacheHydrated } from './hooks/useQueryCacheHydrated';
 export { clearQueryCacheForScope } from './persistence/clear';
 export { setQueryCacheScope } from './persistence/keys';

@@ -79,7 +79,7 @@ const DayCellRingComponent: React.FC<DayCellRingProps> = ({
     isCurrentDay &&
     completionStatus !== 'complete' &&
     completionStatus !== 'future';
-  const fillScale = useSharedValue(1);
+  const fillScale = useSharedValue(isComplete ? 1 : 0);
   const arcProgress = useSharedValue(progress);
   const isFirstRenderRef = useRef(true);
 

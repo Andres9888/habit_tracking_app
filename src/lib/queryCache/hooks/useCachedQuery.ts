@@ -1,18 +1,17 @@
 import { useQuery } from 'convex/react';
 import type { FunctionReference } from 'convex/server';
-import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
+import { useMemo, useRef, useSyncExternalStore } from 'react';
 
 import type { CachedQueryOptions } from '../types';
 import { getCacheEntry } from '../registry';
 import { queryCacheStore } from '../store/state';
 import {
+  buildLatestArgsMemoryKey,
   buildLatestMemoryKey,
-  buildLatestStorageKey,
   buildMemoryKey,
-  getQueryCacheScope,
   normalizeArgs,
 } from '../persistence/keys';
-import { scheduleEntryWrite } from '../persistence/writeEntry';
+import { usePersistCachedQuery } from './usePersistCachedQuery';
 
 function useLiveQuery<Query extends FunctionReference<'query'>>(
   query: Query,
@@ -23,6 +22,37 @@ function useLiveQuery<Query extends FunctionReference<'query'>>(
   )(query, args);
 }
 
+function useQueryCacheValue<T>(key: string): T | undefined {
+  return useSyncExternalStore(
+    (listener) => queryCacheStore.subscribe(key, listener),
+    () => queryCacheStore.get<T>(key),
+    () => queryCacheStore.get<T>(key)
+  );
+}
+
+function canUseLatestFallback(
+  options: CachedQueryOptions,
+  persistedArgs: unknown,
+  requestedArgs: unknown
+): boolean {
+  if (options.fallbackToLatest === false) return false;
+  return options.latestUsable?.(persistedArgs, requestedArgs) ?? true;
+}
+
+function getLatestFallback<T>(
+  latest: T | undefined,
+  fallbackToLatest: boolean | undefined,
+  options: CachedQueryOptions,
+  persistedArgs: unknown,
+  requestedArgs: unknown
+): T | undefined {
+  if (fallbackToLatest !== true) return undefined;
+  if (!canUseLatestFallback(options, persistedArgs, requestedArgs)) {
+    return undefined;
+  }
+  return latest;
+}
+
 export function useCachedQuery<Query extends FunctionReference<'query'>>(
   query: Query,
   args: Query['_args'] | 'skip',
@@ -30,6 +60,7 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
 ): Query['_returnType'] | undefined {
   const entry = getCacheEntry(options.entryName);
   const fallbackToLatest = options.fallbackToLatest ?? entry.latestFallback;
+  const writeLatest = options.writeLatest ?? options.fallbackToLatest ?? true;
   const argsKey = normalizeArgs(args);
   const stableArgs = useRef(args);
   if (normalizeArgs(stableArgs.current) !== argsKey) stableArgs.current = args;
@@ -39,62 +70,27 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
   );
   const live = useLiveQuery(query, stableArgs.current);
   const previousLive = useRef<Query['_returnType'] | undefined>(undefined);
-  const cached = useSyncExternalStore(
-    (listener) => queryCacheStore.subscribe(memoryKey, listener),
-    () => queryCacheStore.get<Query['_returnType']>(memoryKey),
-    () => queryCacheStore.get<Query['_returnType']>(memoryKey)
-  );
+  const cached = useQueryCacheValue<Query['_returnType']>(memoryKey);
   const latestKey = buildLatestMemoryKey(entry.name);
-  const latest = useSyncExternalStore(
-    (listener) => queryCacheStore.subscribe(latestKey, listener),
-    () => queryCacheStore.get<Query['_returnType']>(latestKey),
-    () => queryCacheStore.get<Query['_returnType']>(latestKey)
-  );
+  const latest = useQueryCacheValue<Query['_returnType']>(latestKey);
+  const latestArgs = useQueryCacheValue<unknown>(buildLatestArgsMemoryKey(entry.name));
 
-  useEffect(() => {
-    if (live === undefined) return;
-    previousLive.current = live;
-    const scope = getQueryCacheScope();
-    const savedAt = Date.now();
-    queryCacheStore.set(memoryKey, live, savedAt);
-    queryCacheStore.set(latestKey, live, savedAt);
-    scheduleEntryWrite(
-      entry,
-      buildLatestStorageKey(entry, scope),
-      stableArgs.current,
-      live,
-      scope
-    );
-  }, [argsKey, entry, latestKey, live, memoryKey]);
+  usePersistCachedQuery({
+    argsKey,
+    entry,
+    latestKey,
+    live,
+    memoryKey,
+    previousLive,
+    stableArgs,
+    writeLatest,
+  });
 
   if (args === 'skip') return undefined;
   if (live !== undefined) return live;
   if (previousLive.current !== undefined) return previousLive.current;
-  return cached ?? (fallbackToLatest ? latest : undefined);
-}
-
-export function useCachedQuerySavedAt(
-  entryName: CachedQueryOptions['entryName'],
-  args: unknown,
-  options: Pick<CachedQueryOptions, 'fallbackToLatest'> = {}
-): number | undefined {
-  const entry = getCacheEntry(entryName);
-  const fallbackToLatest = options.fallbackToLatest ?? entry.latestFallback;
-  const memoryKey = useMemo(
-    () => buildMemoryKey(entry.name, args),
-    [entry.name, args]
+  return (
+    cached ??
+    getLatestFallback(latest, fallbackToLatest, options, latestArgs, stableArgs.current)
   );
-  const latestKey = buildLatestMemoryKey(entry.name);
-  const savedAt = useSyncExternalStore(
-    (listener) => queryCacheStore.subscribe(memoryKey, listener),
-    () => queryCacheStore.getSavedAt(memoryKey),
-    () => queryCacheStore.getSavedAt(memoryKey)
-  );
-  const latestSavedAt = useSyncExternalStore(
-    (listener) => queryCacheStore.subscribe(latestKey, listener),
-    () => queryCacheStore.getSavedAt(latestKey),
-    () => queryCacheStore.getSavedAt(latestKey)
-  );
-
-  return savedAt ?? (fallbackToLatest ? latestSavedAt : undefined);
 }

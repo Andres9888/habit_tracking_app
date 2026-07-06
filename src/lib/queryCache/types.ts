@@ -26,4 +26,15 @@ export interface PersistedEntry<T = unknown> {
 export interface CachedQueryOptions {
   entryName: QueryCacheEntryName;
   fallbackToLatest?: boolean;
+  /**
+   * Write this subscriber's results to the shared `:latest` slot and disk.
+   * Defaults to true unless fallbackToLatest is explicitly false.
+   */
+  writeLatest?: boolean;
+  /**
+   * Guard for the `:latest` fallback: given the args the latest slot was
+   * written with and the args being requested, return false to reject the
+   * fallback (treat as no cache) instead of serving unrelated data.
+   */
+  latestUsable?: (persistedArgs: unknown, requestedArgs: unknown) => boolean;
 }
