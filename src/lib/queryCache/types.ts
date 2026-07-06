@@ -14,6 +14,12 @@ export interface CacheEntryDefinition {
   storage: QueryCacheStorage;
   version: number;
   latestFallback?: boolean;
+  /**
+   * Entry-level default for the `:latest` fallback guard. Applied to every
+   * subscriber of this entry unless a call site overrides it via
+   * CachedQueryOptions.latestUsable. See windowEndRecency.
+   */
+  latestUsable?: (persistedArgs: unknown, requestedArgs: unknown) => boolean;
 }
 
 export interface PersistedEntry<T = unknown> {

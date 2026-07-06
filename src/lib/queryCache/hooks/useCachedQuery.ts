@@ -30,24 +30,17 @@ function useQueryCacheValue<T>(key: string): T | undefined {
   );
 }
 
-function canUseLatestFallback(
-  options: CachedQueryOptions,
-  persistedArgs: unknown,
-  requestedArgs: unknown
-): boolean {
-  if (options.fallbackToLatest === false) return false;
-  return options.latestUsable?.(persistedArgs, requestedArgs) ?? true;
-}
+type LatestUsable = (persistedArgs: unknown, requestedArgs: unknown) => boolean;
 
 function getLatestFallback<T>(
   latest: T | undefined,
   fallbackToLatest: boolean | undefined,
-  options: CachedQueryOptions,
+  latestUsable: LatestUsable | undefined,
   persistedArgs: unknown,
   requestedArgs: unknown
 ): T | undefined {
-  if (fallbackToLatest !== true) return undefined;
-  if (!canUseLatestFallback(options, persistedArgs, requestedArgs)) {
+  if (!fallbackToLatest) return undefined;
+  if (latestUsable && !latestUsable(persistedArgs, requestedArgs)) {
     return undefined;
   }
   return latest;
@@ -60,6 +53,7 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
 ): Query['_returnType'] | undefined {
   const entry = getCacheEntry(options.entryName);
   const fallbackToLatest = options.fallbackToLatest ?? entry.latestFallback;
+  const latestUsable = options.latestUsable ?? entry.latestUsable;
   const writeLatest = options.writeLatest ?? options.fallbackToLatest ?? true;
   const argsKey = normalizeArgs(args);
   const stableArgs = useRef(args);
@@ -91,6 +85,12 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
   if (previousLive.current !== undefined) return previousLive.current;
   return (
     cached ??
-    getLatestFallback(latest, fallbackToLatest, options, latestArgs, stableArgs.current)
+    getLatestFallback(
+      latest,
+      fallbackToLatest,
+      latestUsable,
+      latestArgs,
+      stableArgs.current
+    )
   );
 }

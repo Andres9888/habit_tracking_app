@@ -3,7 +3,7 @@ import { useQuery } from 'convex/react';
 import type { FunctionReference } from 'convex/server';
 
 import { useCachedQuery } from '../useCachedQuery';
-import { isTrackingLatestUsable } from '../../../../features/habits/hooks/isTrackingLatestUsable';
+import { isWindowEndRecent } from '../../guards/windowEndRecency';
 import {
   buildLatestArgsMemoryKey,
   buildLatestMemoryKey,
@@ -58,6 +58,10 @@ describe('useCachedQuery', () => {
 
   it('uses the registry latest fallback by default', () => {
     queryCacheStore.set(buildLatestMemoryKey('habits.getTracking'), ['latest']);
+    queryCacheStore.set(buildLatestArgsMemoryKey('habits.getTracking'), {
+      endDate: '2026-07-07',
+      startDate: '2026-07-01',
+    });
 
     const { result } = renderHook(() =>
       useCachedQuery(
@@ -68,6 +72,28 @@ describe('useCachedQuery', () => {
     );
 
     expect(result.current).toEqual(['latest']);
+  });
+
+  it('applies the entry-level guard without a per-call latestUsable option', () => {
+    // The habits.getTracking registry entry sets isWindowEndRecent, so a
+    // poisoned slot is rejected even when no call site passes latestUsable.
+    queryCacheStore.set(buildLatestMemoryKey('habits.getTracking'), [
+      { completed: true, date: '2026-04-07', habitId: 'h1' },
+    ]);
+    queryCacheStore.set(buildLatestArgsMemoryKey('habits.getTracking'), {
+      endDate: '2026-04-06',
+      startDate: '2025-07-07',
+    });
+
+    const { result } = renderHook(() =>
+      useCachedQuery(
+        query,
+        { endDate: '2026-07-06', startDate: '2026-04-07' },
+        { entryName: 'habits.getTracking' }
+      )
+    );
+
+    expect(result.current).toBeUndefined();
   });
 
   it('does not publish latest for subscribers that opt out of latest fallback', async () => {
@@ -166,7 +192,7 @@ describe('useCachedQuery', () => {
         { endDate: '2026-07-06', startDate: '2026-04-07' },
         {
           entryName: 'habits.getTracking',
-          latestUsable: isTrackingLatestUsable,
+          latestUsable: isWindowEndRecent,
         }
       )
     );
@@ -188,7 +214,7 @@ describe('useCachedQuery', () => {
         { endDate: '2026-07-06', startDate: '2026-04-07' },
         {
           entryName: 'habits.getTracking',
-          latestUsable: isTrackingLatestUsable,
+          latestUsable: isWindowEndRecent,
         }
       )
     );
@@ -205,7 +231,7 @@ describe('useCachedQuery', () => {
         { endDate: '2026-07-06', startDate: '2026-04-07' },
         {
           entryName: 'habits.getTracking',
-          latestUsable: isTrackingLatestUsable,
+          latestUsable: isWindowEndRecent,
         }
       )
     );

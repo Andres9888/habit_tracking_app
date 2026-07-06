@@ -1,4 +1,3 @@
-import { isTrackingLatestUsable } from '../isTrackingLatestUsable';
 import {
   buildCompletedDatesByHabit,
   buildTrackingQueryArgs,
@@ -46,56 +45,5 @@ describe('buildCompletedDatesByHabit', () => {
 
     expect(map.get('h1')?.has('2026-07-06')).toBe(false);
     expect(map.get('h3')?.has('2026-07-06')).toBe(true);
-  });
-});
-
-describe('isTrackingLatestUsable', () => {
-  const requested = { endDate: '2026-07-06', startDate: '2026-04-07' };
-
-  it('rejects the device-confirmed poison window (ends 90 days early)', () => {
-    expect(
-      isTrackingLatestUsable(
-        { endDate: '2026-04-07', startDate: '2025-07-07' },
-        requested
-      )
-    ).toBe(false);
-  });
-
-  it('accepts a fresh window from a previous session', () => {
-    expect(
-      isTrackingLatestUsable(
-        { endDate: '2026-07-05', startDate: '2026-04-06' },
-        requested
-      )
-    ).toBe(true);
-  });
-
-  it('accepts a window at the staleness boundary (14 days)', () => {
-    expect(
-      isTrackingLatestUsable(
-        { endDate: '2026-06-22', startDate: '2026-03-24' },
-        requested
-      )
-    ).toBe(true);
-  });
-
-  it('rejects a window just past the staleness boundary', () => {
-    expect(
-      isTrackingLatestUsable(
-        { endDate: '2026-06-21', startDate: '2026-03-23' },
-        requested
-      )
-    ).toBe(false);
-  });
-
-  it('rejects unknown or legacy args shapes', () => {
-    expect(isTrackingLatestUsable(undefined, requested)).toBe(false);
-    expect(isTrackingLatestUsable({ dates: [] }, requested)).toBe(false);
-    expect(
-      isTrackingLatestUsable({ endDate: '2026-07-05' }, undefined)
-    ).toBe(false);
-    expect(
-      isTrackingLatestUsable({ endDate: 'not-a-date' }, requested)
-    ).toBe(false);
   });
 });

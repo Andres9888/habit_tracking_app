@@ -1,3 +1,4 @@
+import { isWindowEndRecent } from './guards/windowEndRecency';
 import type { CacheEntryDefinition, QueryCacheEntryName } from './types';
 
 const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
@@ -9,6 +10,7 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
   },
   'habits.getTracking': {
     latestFallback: true,
+    latestUsable: isWindowEndRecent,
     name: 'habits.getTracking',
     storage: 'plain',
     version: 1,

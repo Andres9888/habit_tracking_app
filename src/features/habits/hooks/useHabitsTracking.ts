@@ -13,7 +13,6 @@ import {
   getDateStatusInfo,
   normalizeToday,
 } from './useHabitsTracking.helpers';
-import { isTrackingLatestUsable } from './isTrackingLatestUsable';
 import { useTrackingWindow } from './useTrackingWindow';
 
 export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
@@ -34,7 +33,6 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
   const tracking =
     useCachedQuery(api.habits.getTracking, queryArgs, {
       entryName: 'habits.getTracking',
-      latestUsable: isTrackingLatestUsable,
     }) ?? [];
   const pendingToggles = usePendingToggles();
   const completedDatesByHabit = useMemo(() => {
