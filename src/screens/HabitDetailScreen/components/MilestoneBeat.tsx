@@ -10,22 +10,11 @@ import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
 import { fontWeights, typography } from '../../../theme/typography';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { milestoneMessage } from '../../../constants/milestones';
 
 interface MilestoneBeatProps {
   currentStreak: number;
   isCompletedToday: boolean;
-}
-
-const MILESTONE_MESSAGES: Record<number, string> = {
-  7: '🎉 7 days — the first week is the hardest. Done.',
-  30: '🎉 30 days — a full month of showing up.',
-  100: '🎉 100 days — this is who you are now.',
-  365: '🎉 One year. Extraordinary.',
-};
-
-/** Message for a streak milestone, or null when the streak isn't a milestone. */
-function milestoneMessage(streak: number): string | null {
-  return MILESTONE_MESSAGES[streak] ?? null;
 }
 
 export function MilestoneBeat({

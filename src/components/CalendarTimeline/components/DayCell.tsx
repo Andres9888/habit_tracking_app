@@ -1,9 +1,15 @@
 /* eslint-disable max-lines */
 import React, { memo } from 'react';
 import { View, Pressable } from 'react-native';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
 import { format } from 'date-fns';
 
 import type { DayCellProps } from '../CalendarTimeline.types';
+import { springs } from '@/theme/animations';
 import { useHaptics } from '@/utils/haptics';
 import {
   buildAccessibilityLabel,
@@ -54,6 +60,20 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   );
   const accessibilityHint = getAccessibilityHint(canPressDay, isDayDisabled);
   const { trigger } = useHaptics({ preference: reduceMotion });
+  const pressScale = useSharedValue(1);
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: pressScale.value }],
+  }));
+  const handlePressIn = () => {
+    if (!reduceMotion) {
+      pressScale.value = withSpring(0.9, springs.button);
+    }
+  };
+  const handlePressOut = () => {
+    if (!reduceMotion) {
+      pressScale.value = withSpring(1, springs.button);
+    }
+  };
   const handlePress = () => {
     trigger('tap');
     onDayPress?.(date);
@@ -116,11 +136,15 @@ const DayCellComponent: React.FC<DayCellProps> = ({
       disabled={isDayDisabled}
       style={{ opacity: isDayDisabled ? 0.5 : 1 }}
       onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
     >
       {({ pressed }) => (
         <>
           {arms}
-          <DayCellContent {...cp} pressed={pressed} />
+          <Animated.View className='w-full items-center' style={pressStyle}>
+            <DayCellContent {...cp} pressed={pressed} />
+          </Animated.View>
         </>
       )}
     </Pressable>

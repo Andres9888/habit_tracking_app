@@ -1,25 +1,24 @@
 import { Pressable, Text, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { colors } from '../../../../../theme/colors';
+import { durations, enterEasing } from '../../../../../theme/animations';
 import { useMonetizationAnimations } from './useMonetizationAnimations';
 import type { MonetizationHeroProps } from './MonetizationHero.types';
 import { SHADOW_OPACITY } from '../../../../../constants';
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
 export function MonetizationHero({
   freeHabitLimit, habitSlotsUsed, hasReachedHabitLimit, onUpgradePress, reduceMotion = false,
 }: MonetizationHeroProps) {
-  const { progressStyle, ctaPulseStyle, shimmerStyle, trackWidth, handleTrackLayout } =
+  const { progressStyle, trackWidth, handleTrackLayout } =
     useMonetizationAnimations({
       freeHabitLimit,
       habitSlotsUsed,
-      hasReachedHabitLimit,
       reduceMotion,
     });
 
   return (
-    <View
+    <Animated.View
+      entering={reduceMotion ? undefined : FadeIn.duration(durations.enter).easing(enterEasing)}
       className='overflow-hidden rounded-3xl p-6'
       style={{
         backgroundColor: colors.gray[900],
@@ -32,7 +31,7 @@ export function MonetizationHero({
     >
       <View className='gap-2'>
         <Text style={{ color: colors.indigo[300] }} className='text-sm font-medium uppercase tracking-[4px]'>
-          {'\u2728'} Try Premium Free
+          {'✨'} Try Premium Free
         </Text>
         <Text className='text-2xl font-semibold leading-[28px] tracking-tight text-white'>
           Ready for unlimited habits?
@@ -43,36 +42,33 @@ export function MonetizationHero({
         </Text>
       </View>
       <View className='flex-row items-center gap-3'>
-        <AnimatedPressable
+        <Pressable
           accessibilityHint='Start your 7-day free trial'
           accessibilityLabel='Upgrade to premium for unlimited habits'
           accessibilityRole='button'
           className='flex-1 items-center rounded-full px-5 py-3'
-          style={({ pressed }: { pressed: boolean }) => [
-            {
-              backgroundColor: colors.indigo[700],
-              elevation: 6,
-              opacity: pressed ? 0.8 : 1,
-              shadowColor: colors.indigo[900],
-              shadowOffset: { height: 8, width: 0 },
-              shadowOpacity: 0.32,
-              shadowRadius: 16,
-            },
-            ctaPulseStyle,
-          ]}
+          style={({ pressed }: { pressed: boolean }) => ({
+            backgroundColor: colors.indigo[700],
+            elevation: 6,
+            opacity: pressed ? 0.8 : 1,
+            shadowColor: colors.indigo[900],
+            shadowOffset: { height: 8, width: 0 },
+            shadowOpacity: 0.32,
+            shadowRadius: 16,
+          })}
           onPress={onUpgradePress}
         >
           <Text className='text-base font-semibold leading-[22px] tracking-wide text-white'>
-            Start Free Trial {'\u2192'}
+            Start Free Trial {'→'}
           </Text>
-        </AnimatedPressable>
+        </Pressable>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>
-          <Animated.Text
+          <Text
             style={{ color: colors.indigo[200] }}
             className='text-center text-sm font-semibold'
           >
             Keep 3 habits free
-          </Animated.Text>
+          </Text>
         </View>
       </View>
       <View className='gap-2 pt-2'>
@@ -96,6 +92,6 @@ export function MonetizationHero({
             : `${freeHabitLimit - habitSlotsUsed} free ${freeHabitLimit - habitSlotsUsed === 1 ? 'slot' : 'slots'} remaining. Premium unlocks unlimited habits.`}
         </Text>
       </View>
-    </View>
+    </Animated.View>
   );
 }

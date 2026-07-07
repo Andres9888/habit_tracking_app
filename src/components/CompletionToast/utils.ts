@@ -2,10 +2,16 @@
  * CompletionToast Utility Functions
  */
 
+import { milestoneMessage } from '../../constants/milestones';
+
 /**
- * Get streak message based on streak count
+ * Get streak message based on streak count. On round-number milestone streaks
+ * (7/30/100/365) returns the shared milestone copy so the today-screen toast
+ * echoes the detail-screen MilestoneBeat.
  */
 export function getStreakMessage(streak: number): string {
+  const milestone = milestoneMessage(streak);
+  if (milestone) return milestone;
   if (streak === 1) return '1 day streak';
   return `${streak} day streak`;
 }

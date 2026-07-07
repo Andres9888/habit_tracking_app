@@ -64,6 +64,7 @@ export const useHapticFeedback = ({
         triggerLightImpact: noop,
         triggerMediumImpact: noop,
         triggerSelection: noop,
+        triggerStreak: noop,
         triggerSuccess: noop,
         triggerWarning: noop,
       };
@@ -75,6 +76,7 @@ export const useHapticFeedback = ({
       triggerLightImpact: () => safeCall(HapticPatterns.tap),
       triggerMediumImpact: () => safeCall(HapticPatterns.toggle),
       triggerSelection: () => safeCall(HapticPatterns.selection),
+      triggerStreak: () => safeCall(HapticPatterns.streak),
       triggerSuccess: () => safeCall(HapticPatterns.success),
       triggerWarning: () => safeCall(HapticPatterns.warning),
     };

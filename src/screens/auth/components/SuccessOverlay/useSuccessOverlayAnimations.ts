@@ -7,7 +7,7 @@ import {
   withSpring,
   withTiming,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 export function useSuccessOverlayAnimations(
   visible: boolean,
@@ -27,20 +27,20 @@ export function useSuccessOverlayAnimations(
 
   useEffect(() => {
     if (visible) {
-      overlayOpacity.value = withTiming(1, { duration: 300 });
+      overlayOpacity.value = withTiming(1, { duration: durations.moderate });
 
       ringScale.value = withDelay(
         100,
         withSequence(
           withSpring(1.2, springs.bouncy),
-          withTiming(1.5, { duration: 400 })
+          withTiming(1.5, { duration: durations.emphasis })
         )
       );
       ringOpacity.value = withDelay(
         100,
         withSequence(
-          withTiming(0.5, { duration: 200 }),
-          withTiming(0, { duration: 400 })
+          withTiming(0.5, { duration: durations.standard }),
+          withTiming(0, { duration: durations.emphasis })
         )
       );
 
@@ -48,9 +48,9 @@ export function useSuccessOverlayAnimations(
         200,
         withSpring(1, springs.bouncy)
       );
-      checkmarkOpacity.value = withDelay(200, withTiming(1, { duration: 200 }));
+      checkmarkOpacity.value = withDelay(200, withTiming(1, { duration: durations.standard }));
 
-      textOpacity.value = withDelay(400, withTiming(1, { duration: 300 }));
+      textOpacity.value = withDelay(400, withTiming(1, { duration: durations.moderate }));
       textTranslateY.value = withDelay(
         400,
         withSpring(0, springs.gentle)

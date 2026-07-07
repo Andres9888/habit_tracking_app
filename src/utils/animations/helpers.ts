@@ -17,11 +17,14 @@ import {
   type WithTimingConfig,
   Easing,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 /**
  * Common spring configurations for consistent feel
  * Design system standard: damping: 18, mass: 1, stiffness: 150
+ *
+ * @deprecated Prefer importing `springs` from `@/theme/animations` directly.
+ * These aliases are retained for existing call sites only.
  */
 export const SPRING_CONFIGS = {
   /** Bouncy playful animation — celebrations only */
@@ -39,16 +42,20 @@ export const SPRING_CONFIGS = {
 
 /**
  * Common timing configurations
+ *
+ * @deprecated Prefer `durations` + `enterEasing`/`exitEasing` from
+ * `@/theme/animations` directly. Retained for existing call sites; `fast`/
+ * `normal` are token-backed, `slow` keeps its 500ms value pending a token.
  */
 export const TIMING_CONFIGS = {
   /** Quick fade in/out */
   fast: {
-    duration: 200,
+    duration: durations.standard,
     easing: Easing.out(Easing.ease),
   } as WithTimingConfig,
   /** Standard animation duration */
   normal: {
-    duration: 300,
+    duration: durations.moderate,
     easing: Easing.out(Easing.ease),
   } as WithTimingConfig,
   /** Slow, deliberate animation */
@@ -59,20 +66,23 @@ export const TIMING_CONFIGS = {
 } as const;
 
 /**
- * Standard animation delays for staggered entrance
+ * Standard animation delays for staggered entrance, derived from
+ * `durations.stagger` (60ms per step, max 5 items).
+ *
+ * @deprecated Prefer `durations.stagger` from `@/theme/animations` directly.
  */
 export const STAGGER_DELAYS = {
   /** First element in sequence */
   first: 0,
 
-  /** Fourth element (60ms × 3) */
-  fourth: 180,
+  /** Second element (stagger × 1) */
+  second: durations.stagger,
 
-  /** Second element (60ms × 1) */
-  second: 60,
+  /** Third element (stagger × 2) */
+  third: durations.stagger * 2,
 
-  /** Third element (60ms × 2) */
-  third: 120,
+  /** Fourth element (stagger × 3) */
+  fourth: durations.stagger * 3,
 } as const;
 
 /**

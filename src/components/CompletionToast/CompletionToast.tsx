@@ -11,6 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAppTheme } from '../../theme';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import { isMilestoneStreak } from '../../constants/milestones';
 import type { CompletionToastProps } from './types';
 import { styles } from './styles';
 import { COLORS } from './constants';
@@ -30,15 +31,21 @@ export function CompletionToast(props: CompletionToastProps) {
   } = props;
   const theme = useAppTheme();
   const insets = useSafeAreaInsets();
-  const { triggerLightImpact, triggerSuccess } = useHapticFeedback({});
+  const { triggerLightImpact, triggerStreak, triggerSuccess } =
+    useHapticFeedback({});
   const streakMessage = getStreakMessage(streak);
+  const isMilestone = isMilestoneStreak(streak);
 
-  // Haptic feedback when toast appears
+  // Haptic feedback when toast appears — a felt double-tap on milestone days.
   useEffect(() => {
     if (visible) {
-      triggerSuccess();
+      if (isMilestone) {
+        triggerStreak();
+      } else {
+        triggerSuccess();
+      }
     }
-  }, [visible, triggerSuccess]);
+  }, [visible, isMilestone, triggerStreak, triggerSuccess]);
 
   const { animatedStyle, handleDismiss, panGesture } =
     useCompletionToastAnimations({
@@ -79,7 +86,7 @@ export function CompletionToast(props: CompletionToastProps) {
             <View style={styles.content}>
               <Text style={styles.habitIcon}>{icon}</Text>
               <Text
-                numberOfLines={1}
+                numberOfLines={isMilestone ? 2 : 1}
                 style={[
                   theme.custom.typography.body,
                   styles.message,
@@ -87,7 +94,7 @@ export function CompletionToast(props: CompletionToastProps) {
                   { color: COLORS.white },
                 ]}
               >
-                {habitName} done!
+                {isMilestone ? streakMessage : `${habitName} done!`}
               </Text>
             </View>
             <StreakBadge streak={streak} onPress={handleBadgePress} />
