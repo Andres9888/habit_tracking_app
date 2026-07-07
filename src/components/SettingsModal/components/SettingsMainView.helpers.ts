@@ -11,7 +11,6 @@ export function buildSettingsContentProps(
   return {
     archivedHabitsCount: p.archivedHabitsCount,
     bottomInset: p.insets.bottom,
-    colors: p.colors,
     compactView: p.compactView,
     completionSoundEnabled: p.completionSoundEnabled ?? false,
     completionSoundType: p.completionSoundType ?? 'chime',

@@ -1,7 +1,6 @@
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type { useSettingsModalLogic } from '../SettingsModal.hooks';
 import type { SettingsModalProps } from '../types';
-import type { SettingsColors } from '../types';
 
 type ModalLogic = ReturnType<typeof useSettingsModalLogic>;
 
@@ -10,7 +9,6 @@ export interface SettingsMainViewProps {
   viewDirection: ModalLogic['viewDirection'];
   setView: ModalLogic['setView'];
   handleClose: () => void;
-  colors: SettingsColors;
   insets: EdgeInsets;
   isLoading: boolean;
   isPremium: boolean;

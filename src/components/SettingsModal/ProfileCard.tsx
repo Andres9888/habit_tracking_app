@@ -2,6 +2,7 @@
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography, fontWeights } from '../../theme/typography';
+import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { EditableUserAvatar } from './EditableUserAvatar';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
@@ -75,16 +76,22 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
             </Text>
           ) : null}
           <View className='mt-2 flex-row items-center' style={{ gap: 5 }}>
-            <Text style={{ fontSize: 13 }}>🔥</Text>
-            <Text
-              style={{
-                ...typography.bodySmall,
-                fontWeight: fontWeights.bold,
-                color: themeColors.status.streakText,
-              }}
-            >
-              {stats.currentStreak}-day streak
-            </Text>
+            {statsLoading ? (
+              <SkeletonLoader borderRadius={6} height={16} width={96} />
+            ) : (
+              <>
+                <Text style={{ fontSize: 13 }}>🔥</Text>
+                <Text
+                  style={{
+                    ...typography.bodySmall,
+                    fontWeight: fontWeights.bold,
+                    color: themeColors.status.streakText,
+                  }}
+                >
+                  {stats.currentStreak}-day streak
+                </Text>
+              </>
+            )}
           </View>
         </View>
       </View>

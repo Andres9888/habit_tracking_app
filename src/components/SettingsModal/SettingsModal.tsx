@@ -7,11 +7,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ErrorBoundary } from '../ErrorBoundary';
 import Modal from '../Modal';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
-import { getSettingsColors } from './colors';
 import { SettingsModalFallback } from './components/SettingsModalFallback';
 import { SettingsMainView } from './components/SettingsMainView';
 import { fullScreenModalStyle } from './SettingsContent.constants';
-import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsModalProps } from './types';
 
 function SettingsModalContent(props: SettingsModalProps) {
@@ -21,8 +19,6 @@ function SettingsModalContent(props: SettingsModalProps) {
     visible: props.visible,
   });
   const insets = useSafeAreaInsets();
-  const { isDark } = useThemeColors();
-  const colors = getSettingsColors(isDark);
 
   const handleRequestClose = useCallback(() => {
     if (logic.view !== 'settings') {
@@ -44,7 +40,6 @@ function SettingsModalContent(props: SettingsModalProps) {
     >
       <SettingsMainView
         archivedHabitsCount={props.archivedHabitsCount ?? 0}
-        colors={colors}
         compactView={logic.compactView}
         completionSoundEnabled={props.completionSoundEnabled}
         completionSoundType={props.completionSoundType}
