@@ -10,7 +10,6 @@ export function getProfileCardShellStyle(
     backgroundColor: getRaisedSurface(isDark),
     borderColor: themeColors.border,
     borderWidth: 1,
-    ...shadows.floatingActionButton,
-    shadowOpacity: 0.07,
+    ...shadows.card,
   };
 }

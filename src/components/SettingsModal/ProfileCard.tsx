@@ -1,7 +1,5 @@
 /** ProfileCard — left-aligned account hero: identity + streak + edit, then stats */
-import { Pressable, Text, View } from 'react-native';
-import { Pencil } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
+import { Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography, fontWeights } from '../../theme/typography';
 import { EditableUserAvatar } from './EditableUserAvatar';
@@ -89,15 +87,6 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
             </Text>
           </View>
         </View>
-        <Pressable
-          accessibilityLabel='Edit profile photo'
-          accessibilityRole='button'
-          className='self-start'
-          hitSlop={8}
-          onPress={openPhotoPicker}
-        >
-          <Pencil color={themeColors.text.tertiary} size={iconSizes.medium} />
-        </Pressable>
       </View>
       <ProfileStatsRow isLoading={statsLoading} stats={stats} />
     </View>
