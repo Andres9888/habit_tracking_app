@@ -68,15 +68,6 @@ describe('borderRadius.small token migration', () => {
     });
   });
 
-  describe('PremiumBadge', () => {
-    it('should use borderRadius.small token', () => {
-      // PremiumBadge uses StyleSheet.create within the component file
-      const PremiumBadge = require('../../../src/components/PremiumBadge');
-      // We can't directly test the styles object, but we can verify the import is present
-      expect(PremiumBadge).toBeDefined();
-    });
-  });
-
   describe('borderRadius token values', () => {
     it('should have expected values', () => {
       expect(borderRadius.small).toBe(8);

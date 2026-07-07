@@ -59,10 +59,6 @@ describe('White Color Replacement - Components', () => {
       expect(colors.text.inverse.toLowerCase()).toBe('#ffffff');
     });
 
-    it('PremiumBadge uses colors.text.inverse for pro text', () => {
-      expect(colors.text.inverse).toBe('#FFFFFF');
-    });
-
     it('CreateButton uses colors.text.inverse for check icon', () => {
       expect(colors.text.inverse).toBeDefined();
     });

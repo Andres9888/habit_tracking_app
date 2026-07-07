@@ -58,7 +58,7 @@ const localStyles = StyleSheet.create({
   dismissText: { color: colors.gray[500], fontFamily: fontFamilies.primary.text, fontSize: 17 },
   text: { color: colors.gray[800], flex: 1, fontFamily: fontFamilies.primary.text, fontSize: typography.caption.fontSize, fontWeight: fontWeights.medium },
   upgradeButton: {
-    backgroundColor: '#7c3aed',
+    backgroundColor: colors.primary[600],
     borderRadius: borderRadius.small,
     paddingHorizontal: 16,
     paddingVertical: 8,

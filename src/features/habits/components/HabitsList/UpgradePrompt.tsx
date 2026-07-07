@@ -79,8 +79,8 @@ export function UpgradePrompt({
             Track unlimited habits across all areas of your life. Premium
             members build stronger routines and stay consistent 2x longer.
           </Text>
-          <View className='items-center rounded-2xl px-4 py-3' style={{ backgroundColor: colors.status.premiumLight }}>
-            <Text className='text-center text-sm font-semibold' style={{ color: colors.status.premiumText }}>
+          <View className='items-center rounded-2xl px-4 py-3' style={{ backgroundColor: colors.status.successLight }}>
+            <Text className='text-center text-sm font-semibold' style={{ color: colors.status.successText }}>
               $0 for 7 days · Cancel anytime
             </Text>
           </View>
@@ -88,7 +88,7 @@ export function UpgradePrompt({
             accessibilityHint='Start your 7-day free trial'
             accessibilityLabel='Start 7-day free trial for premium'
             accessibilityRole='button'
-            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(109,40,217,0.25)]'
+            className='items-center rounded-full px-5 py-4 shadow-[0px_8px_16px_rgba(4,120,87,0.25)]'
             style={({ pressed }) => ({
               opacity: pressed ? OPACITY.strong : OPACITY.full,
               transform: [{ scale: pressed ? 0.96 : 1 }],
@@ -97,7 +97,7 @@ export function UpgradePrompt({
           >
             <LinearGradient
               className='absolute inset-0 rounded-full'
-              colors={[palette.premium[600], palette.indigo[600]]}
+              colors={[palette.primary[700], palette.primary[600]]}
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
             />
