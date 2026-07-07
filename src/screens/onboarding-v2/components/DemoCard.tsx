@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { DemoTemplate } from '../useDemoTemplates';
@@ -38,8 +39,8 @@ export function DemoCard({ template }: DemoCardProps) {
               alignSelf: 'flex-start',
               backgroundColor: colors.primary[100],
               borderRadius: 100,
-              marginBottom: 8,
-              paddingHorizontal: 8,
+              marginBottom: spacing.sm,
+              paddingHorizontal: spacing.sm,
               paddingVertical: 3,
             }}
           >
@@ -56,7 +57,7 @@ export function DemoCard({ template }: DemoCardProps) {
             fontSize: 17,
             fontWeight: '700',
             letterSpacing: -0.2,
-            marginBottom: 4,
+            marginBottom: spacing.xs,
           }}
         >
           {template.name}

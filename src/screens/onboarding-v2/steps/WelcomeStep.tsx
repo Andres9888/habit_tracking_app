@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepComponentProps } from '../types';
@@ -29,7 +30,7 @@ export function WelcomeStep({ onNext }: StepComponentProps) {
             Hey.
           </Text>
         </View>
-        <View style={{ alignItems: 'center', paddingBottom: 16 }}>
+        <View style={{ alignItems: 'center', paddingBottom: spacing.base }}>
           <Text
             style={{
               color: colors.text.tertiary,
@@ -46,7 +47,7 @@ export function WelcomeStep({ onNext }: StepComponentProps) {
               backgroundColor: colors.primary[600],
               borderRadius: 2,
               height: 3,
-              marginTop: 8,
+              marginTop: spacing.sm,
               opacity: 0.7,
               width: 36,
             }}

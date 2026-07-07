@@ -1,4 +1,5 @@
 import { ScrollView, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 
 import { HeroHeader } from '../components/HeroHeader';
 import { OptionRow } from '../components/OptionRow';
@@ -19,7 +20,7 @@ export function PainPointsStep({ answers, onAnswerChange, onNext }: StepComponen
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingBottom: spacing.base }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
@@ -38,7 +39,7 @@ export function PainPointsStep({ answers, onAnswerChange, onNext }: StepComponen
           ))}
         </View>
       </ScrollView>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA
           disabled={selected.length === 0}
           label="Continue"

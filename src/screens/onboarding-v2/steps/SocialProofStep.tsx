@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -11,7 +12,7 @@ export function SocialProofStep({ onNext }: StepComponentProps) {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingBottom: spacing.base }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
@@ -22,7 +23,7 @@ export function SocialProofStep({ onNext }: StepComponentProps) {
         <View
           style={{
             backgroundColor: colors.primary[100],
-            borderRadius: 14,
+            borderRadius: borderRadius.button,
             marginTop: 28,
             padding: 18,
           }}
@@ -42,14 +43,14 @@ export function SocialProofStep({ onNext }: StepComponentProps) {
               color: colors.text.secondary,
               fontSize: 14,
               lineHeight: 20,
-              marginTop: 8,
+              marginTop: spacing.sm,
             }}
           >
             Then removes the part that makes you quit when life happens.
           </Text>
         </View>
       </ScrollView>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA label="Continue" onPress={onNext} />
       </View>
     </View>

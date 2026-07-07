@@ -1,4 +1,5 @@
 import { Image, Pressable, Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepComponentProps } from '../types';
@@ -11,7 +12,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
 
   return (
     <Pressable accessibilityRole="button" onPress={onNext} style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: 24 }}>
+      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: spacing.lg }}>
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
           <Image
             accessibilityLabel="ChainDay icon"
@@ -54,7 +55,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
             Miss a day, the chain shows it. But your strength holds. Your tier holds. You don&rsquo;t start over.
           </Text>
         </View>
-        <View style={{ alignItems: 'center', paddingBottom: 16 }}>
+        <View style={{ alignItems: 'center', paddingBottom: spacing.base }}>
           <Text
             style={{
               color: colors.text.tertiary,

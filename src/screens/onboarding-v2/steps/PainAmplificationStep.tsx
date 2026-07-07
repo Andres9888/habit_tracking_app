@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -43,7 +44,7 @@ export function PainAmplificationStep({ answers, onAnswerChange, onNext }: StepC
             borderWidth: 1.5,
             marginTop: 28,
             minHeight: 220,
-            padding: 24,
+            padding: spacing.lg,
           }}
         >
           <Text
@@ -59,16 +60,16 @@ export function PainAmplificationStep({ answers, onAnswerChange, onNext }: StepC
           </Text>
         </View>
       </View>
-      <View style={{ flexDirection: 'row', gap: 10, paddingTop: 12 }}>
+      <View style={{ flexDirection: 'row', gap: 10, paddingTop: spacing.md }}>
         <Pressable
           accessibilityRole="button"
           onPress={() => respond(false)}
           style={{
             alignItems: 'center',
             backgroundColor: colors.border,
-            borderRadius: 14,
+            borderRadius: borderRadius.button,
             flex: 1,
-            padding: 16,
+            padding: spacing.base,
           }}
         >
           <Text style={{ color: colors.text.primary, fontSize: 15, fontWeight: '600' }}>
@@ -81,9 +82,9 @@ export function PainAmplificationStep({ answers, onAnswerChange, onNext }: StepC
           style={{
             alignItems: 'center',
             backgroundColor: colors.text.primary,
-            borderRadius: 14,
+            borderRadius: borderRadius.button,
             flex: 1,
-            padding: 16,
+            padding: spacing.base,
           }}
         >
           <Text style={{ color: colors.text.inverse, fontSize: 15, fontWeight: '600' }}>

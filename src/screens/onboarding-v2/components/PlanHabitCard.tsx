@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface PlanHabitCardProps {
@@ -24,10 +25,10 @@ export function PlanHabitCard({
         alignItems: 'center',
         backgroundColor: colors.surface,
         borderColor: colors.border,
-        borderRadius: 14,
+        borderRadius: borderRadius.button,
         borderWidth: 1,
         flexDirection: 'row',
-        gap: 12,
+        gap: spacing.md,
         marginBottom: 10,
         padding: 14,
       }}

@@ -1,4 +1,5 @@
 import { View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface ProgressBarProps {
@@ -18,8 +19,8 @@ export function ProgressBar({ current, total }: ProgressBarProps) {
         backgroundColor: colors.border,
         borderRadius: 2,
         height: 3,
-        marginHorizontal: 24,
-        marginTop: 8,
+        marginHorizontal: spacing.lg,
+        marginTop: spacing.sm,
         overflow: 'hidden',
       }}
     >

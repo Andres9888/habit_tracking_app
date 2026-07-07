@@ -1,5 +1,6 @@
 import { useAuth, useUser } from '@clerk/clerk-expo';
 import { Text, View } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -28,7 +29,7 @@ export function AccountCreationStep({ onNext }: StepComponentProps) {
             alignItems: 'center',
             backgroundColor: colors.surface,
             borderColor: colors.border,
-            borderRadius: 14,
+            borderRadius: borderRadius.button,
             borderWidth: 1,
             flexDirection: 'row',
             gap: 10,
@@ -49,7 +50,7 @@ export function AccountCreationStep({ onNext }: StepComponentProps) {
           </Text>
         </View>
       </View>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA label="Continue" onPress={onNext} />
       </View>
     </View>

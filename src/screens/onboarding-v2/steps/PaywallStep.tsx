@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { RevenueCatPaywall } from '@/components/RevenueCatPaywall';
@@ -48,15 +49,15 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
           ))}
         </View>
       </View>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         {failedCount > 0 && (
           <View
             style={{
               alignItems: 'center',
               flexDirection: 'row',
-              gap: 8,
+              gap: spacing.sm,
               justifyContent: 'center',
-              paddingBottom: 12,
+              paddingBottom: spacing.md,
             }}
           >
             <Text style={{ color: colors.text.secondary, fontSize: 13 }}>
@@ -66,7 +67,7 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
             </Text>
             <Text
               onPress={retry}
-              style={{ color: colors.primary[600], fontSize: 13, padding: 4 }}
+              style={{ color: colors.primary[600], fontSize: 13, padding: spacing.xs }}
             >
               Retry
             </Text>
@@ -77,10 +78,10 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
           onPress={() => setPaywallVisible(true)}
           variant="brand"
         />
-        <View style={{ alignItems: 'center', paddingTop: 12 }}>
+        <View style={{ alignItems: 'center', paddingTop: spacing.md }}>
           <Text
             onPress={finishAndExit}
-            style={{ color: colors.text.secondary, fontSize: 14, padding: 4 }}
+            style={{ color: colors.text.secondary, fontSize: 14, padding: spacing.xs }}
           >
             Continue without premium
           </Text>

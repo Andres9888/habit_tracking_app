@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -20,7 +21,7 @@ export function NameStep({ answers, onAnswerChange, onNext }: StepComponentProps
 
   return (
     <View style={{ flex: 1, justifyContent: 'space-between' }}>
-      <View style={{ paddingTop: 16 }}>
+      <View style={{ paddingTop: spacing.base }}>
         <HeroHeader
           headline="What should we call you?"
           sub="Your chain is going to know your name."
@@ -48,7 +49,7 @@ export function NameStep({ answers, onAnswerChange, onNext }: StepComponentProps
           value={value}
         />
       </View>
-      <View style={{ paddingBottom: 8 }}>
+      <View style={{ paddingBottom: spacing.sm }}>
         <PrimaryCTA
           disabled={!canContinue}
           label="Continue"

@@ -1,4 +1,5 @@
 import { ScrollView, Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -17,7 +18,7 @@ export function SolutionStep({ answers, onNext }: StepComponentProps) {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingBottom: spacing.base }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
@@ -46,7 +47,7 @@ export function SolutionStep({ answers, onNext }: StepComponentProps) {
             borderRadius: 12,
             flexDirection: 'row',
             gap: 10,
-            marginTop: 16,
+            marginTop: spacing.base,
             padding: 14,
           }}
         >
@@ -63,7 +64,7 @@ export function SolutionStep({ answers, onNext }: StepComponentProps) {
           </Text>
         </View>
       </ScrollView>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA label="Continue" onPress={onNext} />
       </View>
     </View>

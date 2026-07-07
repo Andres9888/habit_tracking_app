@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { HeroHeader } from '../components/HeroHeader';
@@ -16,7 +17,7 @@ export function ProcessingStep({ onNext }: StepComponentProps) {
   }, [onNext]);
 
   return (
-    <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', padding: 24 }}>
+    <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', padding: spacing.lg }}>
       <ActivityIndicator color={colors.primary[600]} size="large" />
       <View style={{ marginTop: 32 }}>
         <HeroHeader

@@ -1,4 +1,5 @@
 import { ScrollView, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 
 import { CategoryTile } from '../components/CategoryTile';
 import { HeroHeader } from '../components/HeroHeader';
@@ -24,7 +25,7 @@ export function CategoryPreferenceStep({ answers, onAnswerChange, onNext }: Step
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingBottom: spacing.base }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
@@ -48,7 +49,7 @@ export function CategoryPreferenceStep({ answers, onAnswerChange, onNext }: Step
           ))}
         </View>
       </ScrollView>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA
           disabled={selected.length === 0}
           label="Continue"

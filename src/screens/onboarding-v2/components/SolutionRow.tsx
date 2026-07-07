@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface SolutionRowProps {
@@ -24,7 +25,7 @@ export function SolutionRow({ fix, isFirst, pain }: SolutionRowProps) {
           color: colors.text.tertiary,
           fontSize: 12,
           lineHeight: 16,
-          marginBottom: 4,
+          marginBottom: spacing.xs,
         }}
       >
         You said: {pain}

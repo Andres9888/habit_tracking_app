@@ -2,6 +2,7 @@ import { useQuery } from 'convex/react';
 import * as Notifications from 'expo-notifications';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
@@ -43,7 +44,7 @@ export function NotificationPrimingStep({ answers, onNext }: StepComponentProps)
           sub={`For your ${joinNames(names)}. Nothing else. You can turn them off anytime in Settings.`}
         />
       </View>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA
           disabled={busy}
           label={busy ? 'One moment…' : 'Turn on reminders'}

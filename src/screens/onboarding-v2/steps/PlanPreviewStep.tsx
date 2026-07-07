@@ -1,5 +1,6 @@
 import { useQuery } from 'convex/react';
 import { ScrollView, Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
@@ -23,7 +24,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingBottom: spacing.base }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
@@ -47,7 +48,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
           style={{
             backgroundColor: colors.primary[100],
             borderRadius: 12,
-            marginTop: 8,
+            marginTop: spacing.sm,
             padding: 14,
           }}
         >
@@ -56,7 +57,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
           </Text>
         </View>
       </ScrollView>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA label="Keep going" onPress={onNext} />
       </View>
     </View>

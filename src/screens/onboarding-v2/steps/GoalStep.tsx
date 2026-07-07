@@ -1,4 +1,5 @@
 import { ScrollView, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 
 import { HeroHeader } from '../components/HeroHeader';
 import { OptionRow } from '../components/OptionRow';
@@ -16,7 +17,7 @@ export function GoalStep({ answers, onAnswerChange, onNext }: StepComponentProps
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 16 }}
+        contentContainerStyle={{ paddingBottom: spacing.base }}
         showsVerticalScrollIndicator={false}
         style={{ flex: 1 }}
       >
@@ -37,7 +38,7 @@ export function GoalStep({ answers, onAnswerChange, onNext }: StepComponentProps
           ))}
         </View>
       </ScrollView>
-      <View style={{ paddingTop: 12 }}>
+      <View style={{ paddingTop: spacing.md }}>
         <PrimaryCTA disabled={!selected} label="Continue" onPress={onNext} />
       </View>
     </View>

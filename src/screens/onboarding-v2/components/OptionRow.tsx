@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { borderRadius } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 interface OptionRowProps {
@@ -28,7 +29,7 @@ export function OptionRow({ icon, label, onPress, selected, sub }: OptionRowProp
         alignItems: 'center',
         backgroundColor: colors.surface,
         borderColor: selected ? colors.text.primary : colors.border,
-        borderRadius: 14,
+        borderRadius: borderRadius.button,
         borderWidth: 1.5,
         flexDirection: 'row',
         gap: 14,

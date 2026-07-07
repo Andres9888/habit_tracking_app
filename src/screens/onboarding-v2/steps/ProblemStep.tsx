@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { StepComponentProps } from '../types';
@@ -8,7 +9,7 @@ export function ProblemStep({ onNext }: StepComponentProps) {
 
   return (
     <Pressable accessibilityRole="button" onPress={onNext} style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: 24 }}>
+      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: spacing.lg }}>
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
           <View style={{ alignItems: 'center', marginBottom: 40 }}>
             <Text
@@ -22,7 +23,7 @@ export function ProblemStep({ onNext }: StepComponentProps) {
             >
               Streak
             </Text>
-            <View style={{ alignItems: 'center', marginTop: 8, position: 'relative' }}>
+            <View style={{ alignItems: 'center', marginTop: spacing.sm, position: 'relative' }}>
               <Text
                 style={{
                   color: colors.status.error,
@@ -74,7 +75,7 @@ export function ProblemStep({ onNext }: StepComponentProps) {
             That&rsquo;s how every other habit app works.
           </Text>
         </View>
-        <View style={{ alignItems: 'center', paddingBottom: 16 }}>
+        <View style={{ alignItems: 'center', paddingBottom: spacing.base }}>
           <Text
             style={{
               color: colors.text.tertiary,

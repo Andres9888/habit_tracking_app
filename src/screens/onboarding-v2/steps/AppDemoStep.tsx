@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { DemoCard } from '../components/DemoCard';
@@ -53,16 +54,16 @@ export function AppDemoStep({ answers, onAnswerChange, onNext }: StepComponentPr
           <DemoCard template={current} />
         </View>
       </View>
-      <View style={{ flexDirection: 'row', gap: 12, paddingTop: 12 }}>
+      <View style={{ flexDirection: 'row', gap: spacing.md, paddingTop: spacing.md }}>
         <Pressable
           accessibilityRole="button"
           onPress={() => respond(false)}
           style={{
             alignItems: 'center',
             backgroundColor: colors.border,
-            borderRadius: 14,
+            borderRadius: borderRadius.button,
             flex: 1,
-            padding: 16,
+            padding: spacing.base,
           }}
         >
           <Text style={{ color: colors.text.primary, fontSize: 15, fontWeight: '600' }}>Skip</Text>
@@ -73,9 +74,9 @@ export function AppDemoStep({ answers, onAnswerChange, onNext }: StepComponentPr
           style={{
             alignItems: 'center',
             backgroundColor: colors.primary[600],
-            borderRadius: 14,
+            borderRadius: borderRadius.button,
             flex: 1,
-            padding: 16,
+            padding: spacing.base,
           }}
         >
           <Text style={{ color: colors.text.inverse, fontSize: 15, fontWeight: '600' }}>Keep</Text>
