@@ -78,7 +78,7 @@ export function AppDemoStep({ answers, onAnswerChange, onNext }: StepComponentPr
             padding: 16,
           }}
         >
-          <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '600' }}>Keep</Text>
+          <Text style={{ color: colors.text.inverse, fontSize: 15, fontWeight: '600' }}>Keep</Text>
         </Pressable>
       </View>
     </View>

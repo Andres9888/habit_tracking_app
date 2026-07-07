@@ -25,7 +25,7 @@ export function ProblemStep({ onNext }: StepComponentProps) {
             <View style={{ alignItems: 'center', marginTop: 8, position: 'relative' }}>
               <Text
                 style={{
-                  color: '#C0392B',
+                  color: colors.status.error,
                   fontSize: 96,
                   fontWeight: '800',
                   letterSpacing: -4,
@@ -37,7 +37,7 @@ export function ProblemStep({ onNext }: StepComponentProps) {
               </Text>
               <View
                 style={{
-                  backgroundColor: '#C0392B',
+                  backgroundColor: colors.status.error,
                   borderRadius: 2,
                   height: 4,
                   position: 'absolute',

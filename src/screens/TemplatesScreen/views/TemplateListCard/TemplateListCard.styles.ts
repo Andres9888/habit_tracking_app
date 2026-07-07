@@ -23,14 +23,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xs,
   },
-  sciencePill: {
-    backgroundColor: '#E0F2FE',
-    borderColor: '#BAE6FD',
-    borderRadius: borderRadius.full,
-    borderWidth: 1,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
-  },
   topPickBadge: {
     alignSelf: 'flex-start',
     backgroundColor: '#FBBF24',

@@ -41,7 +41,7 @@ export function PrimaryCTA({
     >
       <Text
         style={{
-          color: '#FFFFFF',
+          color: colors.text.inverse,
           fontSize: 16,
           fontWeight: '600',
           letterSpacing: -0.1,

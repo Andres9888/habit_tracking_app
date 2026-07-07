@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Keyboard } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { colors as palette } from '@/theme/colors';
 import { spacing } from '@/theme/spacing';
 import { durations, enterEasing } from '@/theme/animations';
 import { entrance } from '../constants';
@@ -53,7 +54,7 @@ export function PreviewNameSection({
           style={{
             lineHeight: 28,
             color: colors.text.primary,
-            backgroundColor: isDark ? colors.card : '#FFFFFF',
+            backgroundColor: isDark ? colors.card : palette.light.cardElevated,
             borderColor: isFocused ? colors.primary[600] : colors.border,
           }}
           value={customName}

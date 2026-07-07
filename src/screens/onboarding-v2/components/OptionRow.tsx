@@ -69,7 +69,7 @@ export function OptionRow({ icon, label, onPress, selected, sub }: OptionRowProp
         }}
       >
         {selected ? (
-          <Text style={{ color: '#FFFFFF', fontSize: 14, fontWeight: '700' }}>✓</Text>
+          <Text style={{ color: colors.text.inverse, fontSize: 14, fontWeight: '700' }}>✓</Text>
         ) : null}
       </View>
     </Pressable>

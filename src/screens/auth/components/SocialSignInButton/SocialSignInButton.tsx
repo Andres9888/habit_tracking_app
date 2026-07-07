@@ -14,16 +14,23 @@ import { SocialSignInButtonProps } from './types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
+// Apple & Google brand guidelines mandate fixed black/white surfaces and
+// content colors — these hexes are intentional and must NOT be tokenized to
+// theme colors. `content: null` means theme-aware (uses colors.text.primary).
 const PROVIDER_CONFIG = {
   apple: {
     bgColor: 'bg-black',
     label: 'Continue with Apple',
     spinnerColor: '#FFFFFF',
+    surface: '#000000',
+    content: '#FFFFFF',
   },
   google: {
     bgColor: 'bg-white',
     label: 'Continue with Google',
     spinnerColor: '#44403c',
+    surface: '#FFFFFF',
+    content: null,
   },
 } as const;
 
@@ -76,8 +83,8 @@ export function SocialSignInButton({
       style={[
         animatedStyle,
         provider === 'google'
-          ? { borderColor: colors.border, backgroundColor: '#FFFFFF' }
-          : { borderColor: '#000000', backgroundColor: '#000000' },
+          ? { borderColor: colors.border, backgroundColor: config.surface }
+          : { borderColor: config.surface, backgroundColor: config.surface },
       ]}
       onPress={onPress}
       onPressIn={handlePressIn}
@@ -92,12 +99,12 @@ export function SocialSignInButton({
         ) : provider === 'google' ? (
           <GoogleLogo size={20} />
         ) : (
-          <AppleLogo color='#FFFFFF' size={20} />
+          <AppleLogo color={config.content ?? '#FFFFFF'} size={20} />
         )}
       </View>
       <Text
         className='text-base font-semibold'
-        style={{ color: provider === 'google' ? colors.text.primary : '#FFFFFF' }}
+        style={{ color: config.content ?? colors.text.primary }}
       >
         {isLoading ? 'Signing in...' : config.label}
       </Text>

@@ -5,6 +5,7 @@
 import { Text, View } from 'react-native';
 import { getGrowthTypeMeta, type GrowthType } from '@/utils/growthTypeMeta';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { getTemplatePillColors } from '../../utils/templatePillColors';
 import { CardMatchRow } from './CardMatchRow';
 import { styles } from './TemplateListCard.styles';
 
@@ -24,9 +25,7 @@ export function CardFooterMeta({
   popularityCount,
 }: CardFooterMetaProps) {
   const { colors, isDark } = useThemeColors();
-  const popularityPillBg = isDark ? colors.status.streakLight : '#FFF7ED';
-  const popularityPillBorder = isDark ? colors.status.streakText : '#FED7AA';
-  const popularityPillText = isDark ? colors.status.streakText : '#C2410C';
+  const { popularity } = getTemplatePillColors(colors, isDark);
   const growthMeta = getGrowthTypeMeta(growthType);
 
   return (
@@ -82,12 +81,12 @@ export function CardFooterMeta({
             style={[
               styles.popularityPill,
               {
-                backgroundColor: popularityPillBg,
-                borderColor: popularityPillBorder,
+                backgroundColor: popularity.bg,
+                borderColor: popularity.border,
               },
             ]}
           >
-            <Text style={[styles.metaLabel, { color: popularityPillText }]}>
+            <Text style={[styles.metaLabel, { color: popularity.text }]}>
               🔥 {popularityCount} added
             </Text>
           </View>

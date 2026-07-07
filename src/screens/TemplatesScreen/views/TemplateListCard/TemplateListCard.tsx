@@ -8,6 +8,7 @@ import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { fontWeights, typography } from '../../../../theme/typography';
 import { getImportedStateColors } from '../../utils/importedStateColors';
+import { getTemplatePillColors } from '../../utils/templatePillColors';
 import type { TemplateListCardProps } from './TemplateListCard.types';
 import { DetailsChevron } from '../../components/DetailsChevron';
 import { getMatchReason } from './getMatchReason';
@@ -32,10 +33,7 @@ export function TemplateListCard({
   const isImported = importedTemplateIds.has(item._id);
   const categoryLabel = getCategoryLabel(item.category);
   const matchReason = getMatchReason(item, searchQuery, getCategoryLabel);
-  const topPickBorderColor = isDark ? colors.status.warning : '#FCD34D';
-  const topPickBadgeBg = isDark ? colors.status.warningLight : '#FBBF24';
-  const topPickBadgeBorder = isDark ? colors.status.warningText : '#F59E0B';
-  const topPickBadgeText = isDark ? colors.status.warningText : '#78350F';
+  const { topPick } = getTemplatePillColors(colors, isDark);
 
   return (
     <Pressable
@@ -51,7 +49,7 @@ export function TemplateListCard({
           borderColor: isImported
             ? importedColors.borderColor
             : isTopPick
-              ? topPickBorderColor
+              ? topPick.accentBorder
               : colors.border,
           opacity: isImporting ? 0.72 : 1,
         },
@@ -73,15 +71,15 @@ export function TemplateListCard({
               style={[
                 styles.topPickBadge,
                 {
-                  backgroundColor: topPickBadgeBg,
-                  borderColor: topPickBadgeBorder,
+                  backgroundColor: topPick.badgeBg,
+                  borderColor: topPick.badgeBorder,
                 },
               ]}
             >
               <Text
                 style={{
                   ...typography.caption,
-                  color: topPickBadgeText,
+                  color: topPick.badgeText,
                   fontWeight: fontWeights.bold,
                   letterSpacing: 0.3,
                 }}

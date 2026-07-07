@@ -86,7 +86,7 @@ export function PainAmplificationStep({ answers, onAnswerChange, onNext }: StepC
             padding: 16,
           }}
         >
-          <Text style={{ color: '#FFFFFF', fontSize: 15, fontWeight: '600' }}>
+          <Text style={{ color: colors.text.inverse, fontSize: 15, fontWeight: '600' }}>
             That&rsquo;s me
           </Text>
         </Pressable>
