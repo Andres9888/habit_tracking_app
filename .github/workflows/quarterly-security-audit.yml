@@ -101,7 +101,7 @@ jobs:
       issues: ${{ steps.auth-check.outputs.issues }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -228,7 +228,7 @@ jobs:
       issues: ${{ steps.data-check.outputs.issues }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Audit data protection patterns
         id: data-check
@@ -325,7 +325,7 @@ jobs:
       issues: ${{ steps.api-check.outputs.issues }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Audit API security patterns
         id: api-check
@@ -425,7 +425,7 @@ jobs:
       score: ${{ steps.npm-audit.outputs.score }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -512,7 +512,7 @@ jobs:
       failed: ${{ steps.tests.outputs.failed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -576,7 +576,7 @@ jobs:
     if: always() && (inputs.generate_report == true || inputs.generate_report == '')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download all artifacts
         uses: actions/download-artifact@v8
