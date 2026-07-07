@@ -1,6 +1,8 @@
 import { Pressable, Text } from 'react-native';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+import { borderRadius, spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { onboardingTypography } from '../onboardingTypography';
 
 interface PrimaryCTAProps {
   disabled?: boolean;
@@ -34,16 +36,15 @@ export function PrimaryCTA({
       style={{
         alignItems: 'center',
         backgroundColor: base,
-        borderRadius: 14,
+        borderRadius: borderRadius.button,
         opacity: disabled ? 0.4 : 1,
-        padding: 16,
+        padding: spacing.base,
       }}
     >
       <Text
         style={{
+          ...onboardingTypography.ctaLabel,
           color: colors.text.inverse,
-          fontSize: 16,
-          fontWeight: '600',
           letterSpacing: -0.1,
         }}
       >

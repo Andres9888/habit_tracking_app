@@ -46,6 +46,13 @@ export const fontWeights = {
 /**
  * Type Scale (Design System: 34/22/17/13)
  * Display: 34, Title: 22, Body: 17, Caption: 13
+ *
+ * SERIF RULE (where Literata vs DM Sans applies):
+ * - Top-level screen / modal titles → `heading1` or `displayLarge` (Literata serif).
+ * - In-screen section headers → sans `heading2` / `heading3` (DM Sans).
+ * - Settings group labels → sans `overline` (intentional Variant B decision).
+ * Onboarding funnel headlines follow the top-level rule via
+ * `src/screens/onboarding-v2/onboardingTypography.ts`.
  */
 export const typography = {
   // Display Large (Onboarding headlines) — 34px Literata

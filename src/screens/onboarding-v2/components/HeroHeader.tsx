@@ -1,5 +1,7 @@
 import { Text, View } from 'react-native';
+import { spacing } from '@/theme/spacing';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { onboardingTypography } from '../onboardingTypography';
 
 interface HeroHeaderProps {
   eyebrow?: string;
@@ -15,12 +17,9 @@ export function HeroHeader({ eyebrow, headline, sub }: HeroHeaderProps) {
       {eyebrow ? (
         <Text
           style={{
+            ...onboardingTypography.eyebrow,
             color: colors.text.tertiary,
-            fontSize: 12,
-            fontWeight: '600',
-            letterSpacing: 1,
-            marginBottom: 8,
-            textTransform: 'uppercase',
+            marginBottom: spacing.sm,
           }}
         >
           {eyebrow}
@@ -28,11 +27,8 @@ export function HeroHeader({ eyebrow, headline, sub }: HeroHeaderProps) {
       ) : null}
       <Text
         style={{
+          ...onboardingTypography.heroHeadline,
           color: colors.text.primary,
-          fontSize: 28,
-          fontWeight: '800',
-          letterSpacing: -0.5,
-          lineHeight: 34,
         }}
       >
         {headline}
@@ -40,9 +36,8 @@ export function HeroHeader({ eyebrow, headline, sub }: HeroHeaderProps) {
       {sub ? (
         <Text
           style={{
+            ...onboardingTypography.bodyText,
             color: colors.text.secondary,
-            fontSize: 15,
-            lineHeight: 22,
             marginTop: 10,
           }}
         >
