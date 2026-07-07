@@ -58,10 +58,8 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
           <StreakRemindersSection
             enabled={p.streakRemindersEnabled}
             icon={<BellRing color={p.sectionIconColor} size={iconSize} />}
-            isPremium={p.isPremium}
             reminderTime={p.streakReminderTime}
             onChangeTime={p.onChangeStreakReminderTime}
-            onPremiumUpsell={p.onPremiumUpsell}
             onToggle={p.onToggleStreakReminders}
           />
         </Animated.View>

@@ -8,6 +8,7 @@ import { useThemeColors } from '@/theme/ThemeContext';
 import { useSettingsSearch } from '../search';
 import { AndroidTimePickerDialog } from './components/AndroidTimePickerDialog';
 import { DisabledHint } from './components/DisabledHint';
+import { PerHabitRemindersRow } from './components/PerHabitRemindersRow';
 import { ReminderInsetCard } from './components/ReminderInsetCard';
 import {
   useStreakRemindersAnimations,
@@ -58,13 +59,11 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
             insetBorder={insetBorder}
             insetCardBackground={insetCardBackground}
             insetExpandStyle={animations.insetExpand.contentAnimatedStyle}
-            isPremium={props.isPremium}
             pickerExpandStyle={animations.pickerExpand.contentAnimatedStyle}
             reminderTime={props.reminderTime}
             showTimePicker={showTimePicker}
             onInsetLayout={animations.handleInsetLayout}
             onPickerLayout={animations.handlePickerLayout}
-            onPremiumUpsell={props.onPremiumUpsell}
             onTimeChange={onTimeChange}
             onToggleTimePicker={handleToggleTimePicker}
           />
@@ -73,6 +72,7 @@ export function StreakRemindersSection(props: StreakRemindersSectionProps) {
             pointerEvents={props.enabled ? 'none' : 'auto'}
             onLayout={animations.handleHintLayout}
           />
+          <PerHabitRemindersRow />
           <AndroidTimePickerDialog
             reminderTime={props.reminderTime}
             visible={showTimePicker}

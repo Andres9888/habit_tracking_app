@@ -5,9 +5,11 @@ import type { SettingsMainViewProps } from './SettingsMainView.types';
 type ContentProps = Parameters<typeof SettingsContent>[0];
 
 export function buildSettingsContentProps(
-  p: SettingsMainViewProps,
-  handleSortSelect: (mode: HabitSortMode) => void
+  p: SettingsMainViewProps
 ): ContentProps {
+  const handleSortSelect = (mode: HabitSortMode) => {
+    void p.setHabitSortMode(mode);
+  };
   return {
     archivedHabitsCount: p.archivedHabitsCount,
     bottomInset: p.insets.bottom,

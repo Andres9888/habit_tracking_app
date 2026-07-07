@@ -12,11 +12,21 @@
 import { useMemo } from 'react';
 import { useHabitsListState } from './useHabitsListState';
 import { useHabitsModalsState } from './useHabitsModalsState';
+import { useStreakReminderScheduling } from './useStreakReminderScheduling';
 import { useNotificationResponse } from '../../../hooks/useNotificationResponse';
 import type { UseHabitsAppResult } from './types';
 
 export function useHabitsApp(): UseHabitsAppResult {
   const list = useHabitsListState();
+
+  // Keep streak-at-risk notifications in sync with today's completion state.
+  useStreakReminderScheduling({
+    getHabitStatus: list.getHabitStatus,
+    getStreak: list.getStreak,
+    habits: list.habits,
+    isPremium: list.isPremiumUser,
+  });
+
   const modals = useHabitsModalsState({
     habits: list.habits,
     showHabitStrengthPercentage: list.showHabitStrengthPercentage,

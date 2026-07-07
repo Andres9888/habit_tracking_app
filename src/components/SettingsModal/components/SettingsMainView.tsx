@@ -8,7 +8,6 @@ import { SettingsHeader } from '../SettingsHeader';
 import { AccountPage } from '../AccountPage';
 import { CalendarLookPage } from '../CalendarLookPage';
 import { SettingsContent } from '../SettingsContent';
-import type { HabitSortMode } from '../../../features/habits/types';
 import { buildSettingsContentProps } from './SettingsMainView.helpers';
 import { getSettingsViewEntering } from './SettingsMainView.animations';
 import type { SettingsMainViewProps } from './SettingsMainView.types';
@@ -16,9 +15,6 @@ import type { SettingsMainViewProps } from './SettingsMainView.types';
 export function SettingsMainView(props: SettingsMainViewProps) {
   const reduceMotion = useReducedMotion();
   const { colors: themeColors } = useThemeColors();
-  const handleSortSelect = (mode: HabitSortMode) => {
-    void props.setHabitSortMode(mode);
-  };
 
   const entering = getSettingsViewEntering(
     props.view,
@@ -81,9 +77,7 @@ export function SettingsMainView(props: SettingsMainViewProps) {
       ) : (
         <>
           <SettingsHeader onClose={props.handleClose} />
-          <SettingsContent
-            {...buildSettingsContentProps(props, handleSortSelect)}
-          />
+          <SettingsContent {...buildSettingsContentProps(props)} />
         </>
       );
       break;

@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings Improvements — Round 3</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f2ed;
+        --card: #faf8f5;
+        --surface: #edeae5;
+        --border: #e5e0d8;
+        --text: #1a1f1c;
+        --text2: #5c635e;
+        --text3: #8a918c;
+        --green: #047857;
+        --green-soft: #e4f2eb;
+        --red: #b4372f;
+        --red-soft: #f7e9e7;
+        --forest1: #0d2119;
+        --forest2: #173a2a;
+        --forest3: #10251d;
+        --serif: 'Literata', serif;
+        --sans: 'Inter', sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #22261f;
+        font-family: var(--sans);
+        color: var(--text);
+        padding: 40px 24px;
+      }
+      h1 {
+        color: #edeae5;
+        font-family: var(--serif);
+        font-size: 26px;
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      .sub {
+        color: #9aa096;
+        text-align: center;
+        font-size: 13.5px;
+        margin-bottom: 36px;
+      }
+      .row-panels {
+        display: flex;
+        gap: 28px;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .panel-label {
+        color: #c9cec4;
+        font-family: var(--serif);
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 4px 6px;
+      }
+      .panel-note {
+        color: #8b9186;
+        font-size: 12.5px;
+        margin: 0 0 12px 6px;
+        max-width: 340px;
+        line-height: 1.5;
+      }
+      .phone {
+        width: 352px;
+        background: var(--bg);
+        border-radius: 34px;
+        padding: 18px 16px 26px;
+        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
+      .sect-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px 6px;
+      }
+      .sect-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: var(--green-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+      }
+      .sect-title {
+        font-family: var(--serif);
+        font-size: 15.5px;
+        font-weight: 600;
+        letter-spacing: -0.1px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+      }
+      .row + .row,
+      .inset + .row,
+      .row + .inset {
+        border-top: 1px solid var(--border);
+      }
+      .row-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+      .row-main {
+        flex: 1;
+        min-width: 0;
+      }
+      .row-label {
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .row-sub {
+        font-size: 12.5px;
+        color: var(--text2);
+        margin-top: 2px;
+        line-height: 1.35;
+      }
+      .row-value {
+        font-size: 14px;
+        color: var(--text2);
+      }
+      .chev {
+        color: var(--text3);
+        font-size: 16px;
+      }
+      .toggle {
+        width: 46px;
+        height: 28px;
+        border-radius: 14px;
+        background: var(--green);
+        position: relative;
+        flex-shrink: 0;
+      }
+      .toggle::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+      .toggle.off {
+        background: #d5d0c8;
+      }
+      .toggle.off::after {
+        right: auto;
+        left: 2px;
+      }
+
+      .inset {
+        margin: 4px 12px 12px 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+      }
+      .inset .row {
+        padding: 12px 14px;
+      }
+
+      .pill {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        padding: 3px 8px;
+        border-radius: 99px;
+      }
+      .pill.count {
+        background: var(--green-soft);
+        color: var(--green);
+      }
+      .pill.off {
+        background: #ece8e1;
+        color: var(--text3);
+      }
+
+      .danger-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        color: var(--red);
+        padding: 14px 16px 4px;
+      }
+      .red {
+        color: var(--red);
+      }
+      .red-icon {
+        background: var(--red-soft);
+      }
+
+      .skel {
+        background: linear-gradient(
+          90deg,
+          #ece8e1 25%,
+          #f4f1eb 50%,
+          #ece8e1 75%
+        );
+        background-size: 200% 100%;
+        animation: sh 1.4s infinite;
+        border-radius: 6px;
+      }
+      @keyframes sh {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+
+      .stats {
+        display: flex;
+        padding: 12px 16px 14px;
+        border-top: 1px solid var(--border);
+      }
+      .stat {
+        flex: 1;
+        text-align: center;
+      }
+      .stat-num {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .stat-lbl {
+        font-size: 10.5px;
+        color: var(--text3);
+        margin-top: 2px;
+        letter-spacing: 0.2px;
+      }
+      .stat + .stat {
+        border-left: 1px solid var(--border);
+      }
+
+      .avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 32px;
+        background: linear-gradient(135deg, #065f46, #047857);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--serif);
+        font-size: 24px;
+        font-weight: 600;
+        position: relative;
+      }
+      .cam {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 22px;
+        height: 22px;
+        border-radius: 11px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+      }
+
+      .tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 2px 7px;
+        border-radius: 6px;
+        margin-left: 8px;
+        vertical-align: 2px;
+      }
+      .tag.new {
+        background: var(--green);
+        color: #fff;
+      }
+      .tag.fix {
+        background: #8a6d1f;
+        color: #fff;
+      }
+      .callout {
+        border: 1.5px dashed rgba(4, 120, 87, 0.55);
+        border-radius: 18px;
+        padding: 3px;
+        margin-bottom: 14px;
+      }
+      .callout > .card {
+        margin-bottom: 0;
+        border-radius: 14px;
+      }
+
+      .notes {
+        width: 352px;
+        background: #2a2f27;
+        border-radius: 20px;
+        padding: 20px 22px;
+        color: #d7dcd2;
+      }
+      .notes h3 {
+        font-family: var(--serif);
+        font-size: 15px;
+        color: #edeae5;
+        margin-bottom: 10px;
+      }
+      .notes ul {
+        list-style: none;
+      }
+      .notes li {
+        font-size: 12.5px;
+        line-height: 1.55;
+        padding: 7px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      }
+      .notes li:last-child {
+        border-bottom: 0;
+      }
+      .notes b {
+        color: #fff;
+        font-weight: 600;
+      }
+      .ok {
+        color: #7fc8a4;
+        font-weight: 700;
+        margin-right: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Settings — Round 3 Improvements</h1>
+    <div class="sub">
+      Reminders section made truthful &amp; functional · Account page danger
+      zone + skeletons · main-page token cleanup
+    </div>
+
+    <div class="row-panels">
+      <!-- PANEL 1: REMINDERS -->
+      <div>
+        <p class="panel-label">1 · Reminders section</p>
+        <p class="panel-note">
+          Toggle now actually schedules (dead scheduler gets mounted). Upsell
+          row replaced by an honest per-habit summary row — the feature already
+          exists in habit edit, free.
+        </p>
+        <div class="phone">
+          <div class="card">
+            <div class="sect-head">
+              <div class="sect-icon">🔔</div>
+              <div class="sect-title">Reminders</div>
+            </div>
+            <div class="row">
+              <div class="row-icon" style="background: var(--green-soft)">
+                🔔
+              </div>
+              <div class="row-main">
+                <div class="row-label">Streak Reminders</div>
+                <div class="row-sub">
+                  Get nudged before an active streak slips
+                </div>
+              </div>
+              <div class="toggle"></div>
+            </div>
+            <div class="inset">
+              <div class="row">
+                <div class="row-main">
+                  <div class="row-label" style="font-size: 14px">
+                    Remind me at
+                  </div>
+                </div>
+                <div class="row-value">8:00 PM</div>
+                <span class="chev">›</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="row-icon" style="background: var(--green-soft)">
+                ⏰
+              </div>
+              <div class="row-main">
+                <div class="row-label">
+                  Per-habit reminders
+                  <span class="tag new">REPLACES UPSELL</span>
+                </div>
+                <div class="row-sub">
+                  Each habit can have its own daily time — set it when editing a
+                  habit
+                </div>
+              </div>
+              <span class="pill count">3 HABITS</span>
+              <span class="chev">›</span>
+            </div>
+          </div>
+
+          <div class="notes" style="width: 100%; margin-top: 4px">
+            <h3>What changes under the hood</h3>
+            <ul>
+              <li>
+                <span class="ok">✚</span><b>Mount dead scheduler</b> — settings
+                toggle currently saves a flag and schedules nothing. Wire habit
+                streak data into <b>useStreakReminders</b> so it fires for real.
+              </li>
+              <li>
+                <span class="ok">✚</span><b>Custom time respected</b> — streak
+                nudge uses each habit's own reminder time when set, global 8 PM
+                otherwise.
+              </li>
+              <li>
+                <span class="ok">−</span><b>Delete "Learn more →" upsell</b> —
+                it paywalls a feature that's shipped and free. Summary row above
+                replaces it.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 2: ACCOUNT -->
+      <div>
+        <p class="panel-label">2 · Account page</p>
+        <p class="panel-note">
+          Danger zone gets its own labeled card with destructive treatment.
+          Stats shimmer instead of flashing 0/0/0. One avatar-edit affordance
+          (camera badge), pencil dropped.
+        </p>
+        <div class="phone">
+          <div class="card">
+            <div class="row" style="padding: 16px">
+              <div class="avatar">
+                A
+                <div class="cam">📷</div>
+              </div>
+              <div class="row-main" style="margin-left: 4px">
+                <div
+                  style="
+                    font-family: var(--serif);
+                    font-size: 18px;
+                    font-weight: 700;
+                  "
+                >
+                  Andres <span class="tag fix">PENCIL REMOVED</span>
+                </div>
+                <div class="row-sub">andres@example.com</div>
+                <div style="font-size: 13px; margin-top: 4px">
+                  🔥 <b>12-day streak</b>
+                </div>
+              </div>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <div
+                  class="skel"
+                  style="width: 34px; height: 20px; margin: 0 auto"
+                ></div>
+                <div class="stat-lbl">ACTIVE</div>
+              </div>
+              <div class="stat">
+                <div
+                  class="skel"
+                  style="width: 34px; height: 20px; margin: 0 auto"
+                ></div>
+                <div class="stat-lbl">FLAWLESS</div>
+              </div>
+              <div class="stat">
+                <div class="stat-num">412</div>
+                <div class="stat-lbl">LIFETIME</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="danger-label" style="color: var(--text3)">Account</div>
+            <div class="row">
+              <div class="row-icon" style="background: var(--green-soft)">
+                ✏️
+              </div>
+              <div class="row-main">
+                <div class="row-label">Edit profile</div>
+              </div>
+              <span class="chev">›</span>
+            </div>
+            <div class="row">
+              <div class="row-icon" style="background: var(--green-soft)">
+                ✉️
+              </div>
+              <div class="row-main"><div class="row-label">Email</div></div>
+              <div class="row-value">andres@example.com</div>
+            </div>
+            <div class="row">
+              <div class="row-icon" style="background: var(--green-soft)">
+                ↻
+              </div>
+              <div class="row-main">
+                <div class="row-label">Restore purchases</div>
+              </div>
+              <span class="chev">›</span>
+            </div>
+            <div class="row">
+              <div class="row-icon" style="background: #ece8e1">↪</div>
+              <div class="row-main"><div class="row-label">Sign out</div></div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <div class="card">
+              <div class="danger-label">Danger zone</div>
+              <div class="row">
+                <div class="row-icon red-icon">🗑</div>
+                <div class="row-main">
+                  <div class="row-label red">Delete account</div>
+                  <div class="row-sub">
+                    Permanently removes all habits and history
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL 3: MAIN PAGE CLEANUP -->
+      <div>
+        <p class="panel-label">3 · Main page cleanup (no visual redesign)</p>
+        <p class="panel-note">
+          Mechanical consistency fixes — page looks the same, tokens get honest.
+        </p>
+        <div class="notes">
+          <h3>Token &amp; dead-code fixes</h3>
+          <ul>
+            <li>
+              <span class="ok">✓</span><b>Shadow normalize</b> — ProfileHeroCard
+              one-off shadowOpacity 0.07 → shared <b>shadows.card</b> like every
+              sibling.
+            </li>
+            <li>
+              <span class="ok">✓</span><b>Header type unify</b> —
+              StaticSectionLabel 15.5px vs SettingsSectionHeader 15px → one
+              shared token.
+            </li>
+            <li>
+              <span class="ok">✓</span><b>Delete legacy colors.ts</b> + dormant
+              SettingsSearchField / SettingsSearchEmpty (context plumbing
+              stays).
+            </li>
+            <li>
+              <span class="ok">✓</span><b>Dedupe useRestorePurchases</b> — two
+              identical hooks (SettingsModal + PremiumPaywall) → one in
+              src/hooks.
+            </li>
+            <li>
+              <span class="ok">?</span><b>Inset surface</b> — ReminderInsetCard
+              slightly warmer than cards; verify on sim, only fix if it reads as
+              bug.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
