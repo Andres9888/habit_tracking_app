@@ -51,7 +51,13 @@ export const CalendarDayBody = memo(function CalendarDayBody({
             StyleSheet.absoluteFill,
             {
               backgroundColor: completedBg,
-              borderRadius: borderRadius.small,
+              // Today's cell has a 2px border; the fill is laid out inside
+              // it, so its radius must match the border's INNER curve
+              // (outer radius minus border width) or background-colored
+              // notches show at the corners.
+              borderRadius: isToday
+                ? borderRadius.small - 2
+                : borderRadius.small,
             },
           ]}
         />
