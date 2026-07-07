@@ -239,6 +239,81 @@ describe('useCachedQuery', () => {
     expect(result.current).toBeUndefined();
   });
 
+  it('preserves reference identity when live confirms content-equal cache', () => {
+    const args = { activeOnly: true };
+    const seeded = [{ _id: 'h1', name: 'Read' }];
+    queryCacheStore.set(buildMemoryKey('habits.list', args), seeded);
+    (useQuery as jest.Mock).mockReturnValue(undefined);
+
+    const { result, rerender } = renderHook(() =>
+      useCachedQuery(query, args, { entryName: 'habits.list' })
+    );
+    const firstPaint = result.current;
+    expect(firstPaint).toEqual(seeded);
+
+    // Convex delivers a fresh array instance with identical content.
+    (useQuery as jest.Mock).mockReturnValue([{ _id: 'h1', name: 'Read' }]);
+    rerender({});
+
+    expect(result.current).toBe(firstPaint);
+  });
+
+  it('returns the live reference when content actually differs', () => {
+    const args = { activeOnly: true };
+    queryCacheStore.set(buildMemoryKey('habits.list', args), [
+      { _id: 'h1', name: 'Read' },
+    ]);
+    const liveRows = [{ _id: 'h1', name: 'Meditate' }];
+    (useQuery as jest.Mock).mockReturnValue(liveRows);
+
+    const { result } = renderHook(() =>
+      useCachedQuery(query, args, { entryName: 'habits.list' })
+    );
+
+    expect(result.current).toBe(liveRows);
+  });
+
+  it('survives a skip -> real args flip (rules-of-hooks regression)', () => {
+    const args = { activeOnly: true };
+    const liveRows = [{ _id: 'h1', name: 'Read' }];
+    (useQuery as jest.Mock).mockImplementation((_q, a) =>
+      a === 'skip' ? undefined : liveRows
+    );
+
+    let skip = true;
+    const { result, rerender } = renderHook(() =>
+      useCachedQuery(query, skip ? 'skip' : args, { entryName: 'habits.list' })
+    );
+    expect(result.current).toBeUndefined();
+
+    skip = false;
+    rerender({});
+    expect(result.current).toBe(liveRows);
+  });
+
+  it('keeps the latest-fallback reference stable across content-equal pushes', () => {
+    const rows = [{ completed: true, date: '2026-07-05', habitId: 'h1' }];
+    queryCacheStore.set(buildLatestMemoryKey('habits.getTracking'), rows);
+    queryCacheStore.set(buildLatestArgsMemoryKey('habits.getTracking'), {
+      endDate: '2026-07-05',
+      startDate: '2026-04-06',
+    });
+    (useQuery as jest.Mock).mockReturnValue(undefined);
+
+    const { result, rerender } = renderHook(() =>
+      useCachedQuery(
+        query,
+        { endDate: '2026-07-06', startDate: '2026-04-07' },
+        { entryName: 'habits.getTracking', latestUsable: isWindowEndRecent }
+      )
+    );
+    const firstPaint = result.current;
+    expect(firstPaint).toBe(rows);
+
+    rerender({});
+    expect(result.current).toBe(firstPaint);
+  });
+
   it('does not notify subscribers for unrelated keys', () => {
     const target = jest.fn();
     const other = jest.fn();

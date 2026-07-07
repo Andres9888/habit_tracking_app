@@ -12,6 +12,8 @@ import {
   normalizeArgs,
 } from '../persistence/keys';
 import { usePersistCachedQuery } from './usePersistCachedQuery';
+import { resolveCachedValue } from './resolveCachedValue';
+import { useStableValue } from './useStableValue';
 
 function useLiveQuery<Query extends FunctionReference<'query'>>(
   query: Query,
@@ -28,22 +30,6 @@ function useQueryCacheValue<T>(key: string): T | undefined {
     () => queryCacheStore.get<T>(key),
     () => queryCacheStore.get<T>(key)
   );
-}
-
-type LatestUsable = (persistedArgs: unknown, requestedArgs: unknown) => boolean;
-
-function getLatestFallback<T>(
-  latest: T | undefined,
-  fallbackToLatest: boolean | undefined,
-  latestUsable: LatestUsable | undefined,
-  persistedArgs: unknown,
-  requestedArgs: unknown
-): T | undefined {
-  if (!fallbackToLatest) return undefined;
-  if (latestUsable && !latestUsable(persistedArgs, requestedArgs)) {
-    return undefined;
-  }
-  return latest;
 }
 
 export function useCachedQuery<Query extends FunctionReference<'query'>>(
@@ -80,17 +66,17 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
     writeLatest,
   });
 
-  if (args === 'skip') return undefined;
-  if (live !== undefined) return live;
-  if (previousLive.current !== undefined) return previousLive.current;
-  return (
-    cached ??
-    getLatestFallback(
-      latest,
+  return useStableValue(
+    resolveCachedValue({
+      args,
+      cached,
       fallbackToLatest,
-      latestUsable,
+      latest,
       latestArgs,
-      stableArgs.current
-    )
+      latestUsable,
+      live,
+      previousLive: previousLive.current,
+      requestedArgs: stableArgs.current,
+    })
   );
 }
