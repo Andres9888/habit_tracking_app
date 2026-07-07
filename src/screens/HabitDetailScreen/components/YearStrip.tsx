@@ -10,6 +10,7 @@ import {
   InlineHeatmapGrid,
 } from '../../../components/BinaryHeatmap';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 
 interface YearStripProps {
@@ -48,7 +49,7 @@ export function YearStrip({
         style={{
           ...typography.caption,
           color: colors.text.secondary,
-          marginTop: 7,
+          marginTop: spacing.sm,
           textAlign: 'center',
         }}
       >

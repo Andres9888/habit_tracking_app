@@ -7,7 +7,6 @@ import { MilestoneBeat } from './MilestoneBeat';
 interface DetailHeroSectionProps {
   habit: Habit;
   isCompletedToday: boolean;
-  isToggling: boolean;
   totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
@@ -15,7 +14,6 @@ interface DetailHeroSectionProps {
 export function DetailHeroSection({
   habit,
   isCompletedToday,
-  isToggling,
   totalCompletions,
   onDayPress,
 }: DetailHeroSectionProps) {
@@ -24,7 +22,6 @@ export function DetailHeroSection({
       <DetailHero
         habit={habit}
         isCompletedToday={isCompletedToday}
-        isToggling={isToggling}
         totalCompletions={totalCompletions}
         onDayPress={onDayPress}
       />

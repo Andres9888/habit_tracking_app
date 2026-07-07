@@ -19,7 +19,6 @@ interface CalendarTabContentProps {
   completedDates: Set<string>;
   habit: Habit;
   habitColor: string;
-  pendingToggleDate?: string | null;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -27,7 +26,6 @@ export function CalendarTabContent({
   completedDates,
   habit,
   habitColor,
-  pendingToggleDate = null,
   onDayPress,
 }: CalendarTabContentProps) {
   const { colors, isDark } = useThemeColors();
@@ -59,7 +57,6 @@ export function CalendarTabContent({
           habitColor={habitColor}
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
-          pendingToggleDate={pendingToggleDate}
           showStreakInInsights={false}
           useSolidCompletedFill
           onCurrentMonthChange={setCurrentMonth}

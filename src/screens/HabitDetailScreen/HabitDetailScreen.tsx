@@ -50,12 +50,12 @@ function HabitDetailScreenContent({
   });
   const calendarHandlers = useCalendarHandlers({
     habit: displayHabit,
+    isCompletedOn: screenState.isCompletedOn,
     onArchive,
     onClose,
     onDelete,
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
-    setPendingToggleDate: screenState.setPendingToggleDate,
   });
   const handleEdit = () => {
     if (displayHabit) onEdit?.(displayHabit);
@@ -119,7 +119,6 @@ function HabitDetailScreenContent({
                     currentStreak: screenState.currentStreak,
                   }}
                   isCompletedToday={screenState.isCompletedToday}
-                  pendingToggleDate={screenState.pendingToggleDate}
                   totalCompletions={screenState.totalCompletions}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onPinnedChange={handlePinnedChange}

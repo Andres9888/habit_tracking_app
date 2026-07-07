@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A2 — Optimistic Backfill · Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EFEAE2;
+    --surface: #FFFFFF;
+    --surface-muted: #FAF8F5;
+    --ink: #2B2822;
+    --ink-soft: #6B6355;
+    --ink-faint: #B7AF9F;
+    --green: #3F6F52;
+    --green-soft: #DCEBE1;
+    --amber: #B8860B;
+    --line: #E7E1D6;
+    --radius: 16px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 40px 24px 64px;
+  }
+  .page-head { max-width: 900px; margin: 0 auto 8px; text-align: center; }
+  .kicker {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--green); margin-bottom: 10px;
+  }
+  h1 { font-family: 'Literata', serif; font-weight: 600; font-size: 30px; letter-spacing: -0.01em; }
+  .page-sub { color: var(--ink-soft); font-size: 15px; margin-top: 10px; line-height: 1.5; }
+  .page-sub strong { color: var(--ink); font-weight: 600; }
+  .try-hint {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 999px;
+    padding: 8px 18px; font-size: 13px; font-weight: 600; color: var(--ink);
+    box-shadow: 0 1px 3px rgba(43,40,34,0.06);
+  }
+  .try-hint .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; transform: scale(1);} 50% { opacity: 0.4; transform: scale(0.8);} }
+
+  .stage {
+    display: flex; gap: 48px; justify-content: center; align-items: flex-start;
+    flex-wrap: wrap; margin-top: 36px;
+  }
+  .column { width: 360px; }
+  .col-label {
+    display: flex; align-items: center; gap: 10px; justify-content: center; margin-bottom: 16px;
+  }
+  .col-badge {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 999px;
+  }
+  .col-badge.before { background: #E5DFD3; color: var(--ink-soft); }
+  .col-badge.after  { background: var(--green); color: #fff; }
+  .col-note { font-size: 13px; color: var(--ink-soft); text-align: center; margin-bottom: 18px; line-height: 1.45; min-height: 38px;}
+
+  /* ── Phone ─────────────────────────── */
+  .phone {
+    background: var(--surface-muted);
+    border-radius: 40px; border: 1px solid var(--line);
+    box-shadow: 0 24px 48px -20px rgba(43,40,34,0.28), 0 4px 12px rgba(43,40,34,0.08);
+    padding: 14px 14px 22px; overflow: hidden;
+  }
+  .notch { width: 110px; height: 26px; background: var(--ink); border-radius: 14px; margin: 0 auto 12px; opacity: 0.92; }
+
+  /* Hero card */
+  .hero {
+    background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line);
+    box-shadow: 0 1px 3px rgba(43,40,34,0.05); padding: 16px; margin-bottom: 12px;
+  }
+  .hero-top { display: flex; align-items: center; gap: 12px; }
+  .hero-icon {
+    width: 46px; height: 46px; border-radius: 12px; background: var(--green-soft);
+    display: flex; align-items: center; justify-content: center; font-size: 23px; flex-shrink: 0;
+  }
+  .hero-name { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .hero-sub { font-size: 13px; color: var(--amber); font-weight: 600; margin-top: 3px; transition: opacity 0.2s; }
+  .hero-total { margin-left: auto; text-align: right; }
+  .hero-total .n { font-size: 24px; font-weight: 800; letter-spacing: -0.02em; transition: all 0.2s;}
+  .hero-total .l { font-size: 11px; color: var(--ink-faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+  .done-btn {
+    margin-top: 14px; height: 46px; border-radius: 999px; width: 100%;
+    background: var(--green); color: #fff; font-family: inherit;
+    font-size: 15px; font-weight: 700; border: none; cursor: default;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  /* Calendar card */
+  .cal {
+    background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line);
+    box-shadow: 0 1px 3px rgba(43,40,34,0.05); padding: 16px; position: relative;
+  }
+  .cal-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom: 12px; }
+  .cal-title { font-size: 14px; font-weight: 700; }
+  .cal-hint { font-size: 11px; color: var(--ink-faint); font-weight: 600; }
+  .dow { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; margin-bottom: 6px; }
+  .dow span { text-align: center; font-size: 10px; font-weight: 700; color: var(--ink-faint); text-transform: uppercase; }
+  .grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
+  .day {
+    aspect-ratio: 1; border-radius: 9px; background: #F2EEE6;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 600; color: var(--ink-soft);
+    cursor: pointer; user-select: none; position: relative;
+    transition: background 0.12s, color 0.12s, transform 0.12s;
+    border: 1px solid transparent;
+  }
+  .day.future { opacity: 0.35; cursor: default; }
+  .day.today { border-color: var(--green); font-weight: 800; color: var(--green); }
+  .day.done { background: var(--green); color: #fff; }
+  .day.done.today { color: #fff; }
+  .day.pop { animation: pop 0.26s ease-out; }
+  @keyframes pop { 0% { transform: scale(0.7);} 55% { transform: scale(1.12);} 100% { transform: scale(1);} }
+
+  /* BEFORE: pending spinner + blocked grid */
+  .day.pending { background: #EBE5D9; color: transparent; }
+  .day.pending::after {
+    content: ''; position: absolute; inset: 0; margin: auto;
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--ink-faint); border-top-color: var(--green);
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .cal.blocked .grid { opacity: 0.55; }
+  .cal.blocked .day { cursor: wait; }
+
+  .blocked-toast {
+    position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%) translateY(6px);
+    background: var(--ink); color: #fff; font-size: 11px; font-weight: 600;
+    padding: 6px 14px; border-radius: 999px; opacity: 0; pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s; white-space: nowrap;
+  }
+  .blocked-toast.show { opacity: 0.92; transform: translateX(-50%) translateY(0); }
+
+  /* AFTER: queued chip (offline demo) */
+  .net-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 12px; padding: 0 4px;
+  }
+  .net-label { font-size: 12px; font-weight: 600; color: var(--ink-soft); display: flex; gap: 7px; align-items: center; }
+  .net-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); transition: background 0.2s; }
+  .net-row.off .net-dot { background: #C0392B; }
+  .switch {
+    width: 42px; height: 25px; border-radius: 999px; background: var(--green);
+    position: relative; cursor: pointer; transition: background 0.2s; border: none; flex-shrink: 0;
+  }
+  .switch::after {
+    content: ''; position: absolute; top: 2.5px; left: 20px; width: 20px; height: 20px;
+    border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.25); transition: left 0.18s;
+  }
+  .switch.off { background: #C9C2B4; }
+  .switch.off::after { left: 2.5px; }
+  .queued-chip {
+    font-size: 10px; font-weight: 700; color: var(--amber); letter-spacing: 0.04em;
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .queued-chip.show { opacity: 1; }
+
+  /* Explainer bullets */
+  .facts { margin-top: 18px; display: flex; flex-direction: column; gap: 8px; }
+  .fact {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 14px; font-size: 13px; line-height: 1.45; color: var(--ink-soft);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .fact b { color: var(--ink); font-weight: 600; }
+  .fact .mark { font-size: 12px; flex-shrink: 0; }
+  .fact.bad .mark { color: #C0392B; }
+  .fact.good .mark { color: var(--green); }
+
+  .footer-note {
+    max-width: 760px; margin: 44px auto 0; text-align: center;
+    font-size: 13px; color: var(--ink-soft); line-height: 1.6;
+    border-top: 1px solid var(--line); padding-top: 20px;
+  }
+  .footer-note code { font-family: ui-monospace, monospace; font-size: 12px; background: var(--surface); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <div class="kicker">Habit Detail · A2 — the one deferred audit item</div>
+  <h1>Backfilling past days: before / after</h1>
+  <p class="page-sub">Same screen, same taps. <strong>Before</strong> waits for the server one day at a time. <strong>After</strong> paints instantly from the shared optimistic store — the same machinery the habit list already uses.</p>
+  <div class="try-hint"><span class="dot"></span> Live mock — tap past days in both calendars, fast</div>
+</div>
+
+<div class="stage">
+
+  <!-- ══════════ BEFORE ══════════ -->
+  <div class="column">
+    <div class="col-label"><span class="col-badge before">Before — today</span></div>
+    <div class="col-note">Each tap = spinner + ~900&thinsp;ms server wait. Grid locks; rapid taps are swallowed.</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hero">
+        <div class="hero-top">
+          <div class="hero-icon">🧘</div>
+          <div>
+            <div class="hero-name">Meditation</div>
+            <div class="hero-sub" id="b-streak">🔥 4-day streak</div>
+          </div>
+          <div class="hero-total"><div class="n" id="b-total">38</div><div class="l">total</div></div>
+        </div>
+        <div class="done-btn">✓ Done today</div>
+      </div>
+      <div class="cal" id="b-cal">
+        <div class="cal-head"><span class="cal-title">July 2026</span><span class="cal-hint">tap a past day</span></div>
+        <div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <div class="grid" id="b-grid"></div>
+        <div class="blocked-toast" id="b-toast">Waiting for server…</div>
+      </div>
+    </div>
+    <div class="facts">
+      <div class="fact bad"><span class="mark">✕</span><span><b>One toggle in flight</b> — <code style="font-size:11px">togglingRef</code> drops every tap until the server answers.</span></div>
+      <div class="fact bad"><span class="mark">✕</span><span><b>Streak &amp; total update late</b> — hero numbers wait for the round trip.</span></div>
+      <div class="fact bad"><span class="mark">✕</span><span><b>Offline = error alert</b> — no queue on this screen.</span></div>
+    </div>
+  </div>
+
+  <!-- ══════════ AFTER ══════════ -->
+  <div class="column">
+    <div class="col-label"><span class="col-badge after">After — A2 shipped</span></div>
+    <div class="col-note">Taps paint instantly, streak recomputes live, and offline just queues. Try toggling airplane mode below.</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="hero">
+        <div class="hero-top">
+          <div class="hero-icon">🧘</div>
+          <div>
+            <div class="hero-name">Meditation</div>
+            <div class="hero-sub" id="a-streak">🔥 4-day streak</div>
+          </div>
+          <div class="hero-total"><div class="n" id="a-total">38</div><div class="l">total</div></div>
+        </div>
+        <div class="done-btn">✓ Done today</div>
+      </div>
+      <div class="cal" id="a-cal">
+        <div class="cal-head"><span class="cal-title">July 2026</span><span class="cal-hint">tap several, fast</span></div>
+        <div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+        <div class="grid" id="a-grid"></div>
+      </div>
+      <div class="net-row" id="net-row">
+        <span class="net-label"><span class="net-dot"></span><span id="net-text">Online</span></span>
+        <span class="queued-chip" id="queued-chip">3 QUEUED · WILL SYNC</span>
+        <button class="switch" id="net-switch" title="Toggle offline"></button>
+      </div>
+    </div>
+    <div class="facts">
+      <div class="fact good"><span class="mark">✓</span><span><b>Instant paint, no serialization</b> — shared optimistic store keyed by <code style="font-size:11px">habitId:date</code>.</span></div>
+      <div class="fact good"><span class="mark">✓</span><span><b>Streak &amp; total recompute live</b> — client-side streak while a toggle is pending, server value otherwise.</span></div>
+      <div class="fact good"><span class="mark">✓</span><span><b>Offline works</b> — taps queue and flush when back online (free: the list's mutation hook already has it).</span></div>
+    </div>
+  </div>
+
+</div>
+
+<p class="footer-note">
+  Zero new UI. This is a plumbing change: detail calendar joins the shared optimistic store
+  (<code>useOptimisticToggleMutation</code> + <code>usePendingToggles</code>) — the last surface off that invariant.
+  Everything else on the screen stays as shipped in the June audit.
+</p>
+
+<script>
+  // July 2026: Jul 1 = Wednesday. Monday-first grid → 2 leading blanks. Today = Jul 7.
+  const TODAY = 7, DAYS = 31, LEAD = 2;
+  const initialDone = new Set([1, 2, 4, 5, 6, 7]); // streak of 4 (4,5,6,7)
+
+  function computeStreak(done) {
+    let s = 0, d = TODAY;
+    if (!done.has(d)) d--; // 1-day grace
+    while (d >= 1 && done.has(d)) { s++; d--; }
+    return s;
+  }
+
+  function buildGrid(gridEl, done, onTap) {
+    gridEl.innerHTML = '';
+    for (let i = 0; i < LEAD; i++) {
+      const b = document.createElement('div');
+      gridEl.appendChild(b);
+    }
+    for (let d = 1; d <= DAYS; d++) {
+      const c = document.createElement('div');
+      c.className = 'day';
+      c.textContent = d;
+      if (d === TODAY) c.classList.add('today');
+      if (d > TODAY) c.classList.add('future');
+      if (done.has(d)) c.classList.add('done');
+      if (d <= TODAY) c.addEventListener('pointerdown', () => onTap(d, c));
+      gridEl.appendChild(c);
+    }
+  }
+
+  function setStats(streakEl, totalEl, done, baseTotal) {
+    const s = computeStreak(done);
+    streakEl.textContent = s > 0 ? `🔥 ${s}-day streak` : 'Reset happens. Today is day 1 again.';
+    totalEl.textContent = baseTotal - 6 + done.size;
+  }
+
+  // ── BEFORE ──────────────────────────────
+  const bDone = new Set(initialDone);
+  const bGrid = document.getElementById('b-grid');
+  const bCal = document.getElementById('b-cal');
+  const bToast = document.getElementById('b-toast');
+  let bBusy = false, bToastTimer;
+
+  function bTap(d, cell) {
+    if (bBusy) {
+      bToast.classList.add('show');
+      clearTimeout(bToastTimer);
+      bToastTimer = setTimeout(() => bToast.classList.remove('show'), 900);
+      return;
+    }
+    bBusy = true;
+    bCal.classList.add('blocked');
+    const was = bDone.has(d);
+    cell.classList.remove('done');
+    cell.classList.add('pending');
+    setTimeout(() => { // server round trip
+      cell.classList.remove('pending');
+      if (was) bDone.delete(d); else bDone.add(d);
+      if (bDone.has(d)) cell.classList.add('done');
+      setStats(document.getElementById('b-streak'), document.getElementById('b-total'), bDone, 38);
+      bBusy = false;
+      bCal.classList.remove('blocked');
+    }, 900);
+  }
+  buildGrid(bGrid, bDone, bTap);
+  setStats(document.getElementById('b-streak'), document.getElementById('b-total'), bDone, 38);
+
+  // ── AFTER ──────────────────────────────
+  const aDone = new Set(initialDone);
+  const aGrid = document.getElementById('a-grid');
+  let online = true, queued = 0;
+  const netSwitch = document.getElementById('net-switch');
+  const netRow = document.getElementById('net-row');
+  const netText = document.getElementById('net-text');
+  const chip = document.getElementById('queued-chip');
+
+  function updateChip() {
+    if (!online && queued > 0) {
+      chip.textContent = `${queued} QUEUED · WILL SYNC`;
+      chip.classList.add('show');
+    } else {
+      chip.classList.remove('show');
+    }
+  }
+
+  netSwitch.addEventListener('click', () => {
+    online = !online;
+    netSwitch.classList.toggle('off', !online);
+    netRow.classList.toggle('off', !online);
+    netText.textContent = online ? 'Online' : 'Offline — airplane mode';
+    if (online && queued > 0) {
+      chip.textContent = 'SYNCED ✓';
+      chip.classList.add('show');
+      setTimeout(() => { queued = 0; updateChip(); }, 1400);
+    } else updateChip();
+  });
+
+  function aTap(d, cell) {
+    const was = aDone.has(d);
+    if (was) aDone.delete(d); else aDone.add(d);
+    cell.classList.toggle('done', aDone.has(d));
+    cell.classList.remove('pop'); void cell.offsetWidth; cell.classList.add('pop');
+    setStats(document.getElementById('a-streak'), document.getElementById('a-total'), aDone, 38);
+    if (!online) { queued++; updateChip(); }
+  }
+  buildGrid(aGrid, aDone, aTap);
+  setStats(document.getElementById('a-streak'), document.getElementById('a-total'), aDone, 38);
+</script>
+</body>
+</html>

@@ -3,11 +3,15 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
  * useHabitDetailScreenState - State management for the habit detail screen
  */
 
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { HabitTrackingEntry } from '../../features/habits/types';
-import { useOptimisticToggle } from '../../lib/optimistic/hooks/useOptimisticState';
-import { applyOptimisticToday } from './optimisticToday';
+import { usePendingToggles } from '../../lib/optimistic';
+import {
+  applyOptimisticStats,
+  hasPendingToggleForHabit,
+  mergeCompletedDates,
+} from './detailOptimistic';
 
 interface UseHabitDetailScreenStateProps {
   bestStreak: number;
@@ -28,11 +32,6 @@ export const useHabitDetailScreenState = ({
   const [pendingDelete, setPendingDelete] = useState(false);
   const [pendingArchive, setPendingArchive] = useState(false);
 
-  // Calendar toggling state — date of the cell awaiting mutation response
-  const [pendingToggleDate, setPendingToggleDate] = useState<string | null>(
-    null
-  );
-
   // Today's date
   const today = useMemo(() => getLocalDateString(), []);
 
@@ -48,42 +47,37 @@ export const useHabitDetailScreenState = ({
     return dates.sort().join(',');
   }, [habitId, tracking]);
 
-  // Completed dates set - only recalculates when the actual dates change
-  // Note: ''.split(',') returns [''] not [], so we must check for empty string first
-  const completedDates = useMemo(() => {
-    if (!completedDatesKey) {
-      return new Set<string>();
-    }
-    return new Set(completedDatesKey.split(','));
-  }, [completedDatesKey]);
-
-  // Overlay any pending optimistic toggle for today so the hero (Done button,
-  // streak, total) reacts instantly like the calendar, then self-reconciles.
-  const optimisticToggle = useOptimisticToggle(
-    (habitId ?? '') as Id<'habits'>,
-    today
+  // Merge the shared optimistic store's pending toggles (any date, any
+  // surface) into the server-derived set, so calendar cells and hero stats
+  // paint instantly and reconcile when the server confirms.
+  const pendingToggles = usePendingToggles();
+  const completedDates = useMemo(
+    () => mergeCompletedDates(completedDatesKey, pendingToggles, habitId ?? ''),
+    [completedDatesKey, habitId, pendingToggles]
   );
-  const optimistic = applyOptimisticToday(
-    {
-      bestStreak,
-      completedToday: completedDates.has(today),
-      currentStreak,
-      totalCompletions: completedDates.size,
-    },
-    optimisticToggle
+
+  const isCompletedOn = useCallback(
+    (date: string) => completedDates.has(date),
+    [completedDates]
+  );
+
+  const stats = applyOptimisticStats(
+    { bestStreak, currentStreak },
+    completedDates,
+    hasPendingToggleForHabit(pendingToggles, habitId ?? ''),
+    today
   );
 
   return {
-    bestStreak: optimistic.bestStreak,
+    bestStreak: stats.bestStreak,
     completedDates,
-    currentStreak: optimistic.currentStreak,
-    isCompletedToday: optimistic.isCompletedToday,
+    currentStreak: stats.currentStreak,
+    isCompletedOn,
+    isCompletedToday: stats.isCompletedToday,
     pendingArchive,
     pendingDelete,
-    pendingToggleDate,
-    setPendingToggleDate,
     setPendingArchive,
     setPendingDelete,
-    totalCompletions: optimistic.totalCompletions,
+    totalCompletions: stats.totalCompletions,
   };
 };

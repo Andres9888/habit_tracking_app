@@ -50,6 +50,11 @@ jest.mock('../../../convex/_generated/api', () => ({
   },
 }));
 
+// useCalendarHandlers calls useIsOnline, which throws without a provider
+jest.mock('../../contexts/NetworkStatusContext', () => ({
+  useIsOnline: () => true,
+}));
+
 // Mock icons
 jest.mock('lucide-react-native', () => {
   const MockIcon = ({ testID, ...props }: unknown) => null;
