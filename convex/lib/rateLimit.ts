@@ -23,6 +23,7 @@ export interface RateLimitConfig {
 
 /** Canonical limits per action. Tune here, not at call sites. */
 export const RATE_LIMITS = {
+  'habit.batch': { limit: 10, windowMs: 60_000 },
   'habit.create': { limit: 20, windowMs: 60_000 },
   'habit.toggle': { limit: 120, windowMs: 60_000 },
   'habit.update': { limit: 60, windowMs: 60_000 },

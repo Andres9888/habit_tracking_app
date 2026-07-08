@@ -149,9 +149,6 @@ function HabitEditScreenContent({
                       streakGoal={state.streakGoal}
                       strengthAlgorithm={state.strengthAlgorithm}
                       title='Edit your habit'
-                      onAdvancedExpand={() =>
-                        scrollViewRef.current?.scrollToEnd({ animated: true })
-                      }
                       onColorSelect={state.handleColorSelect}
                       onEmojiSelect={state.handleEmojiSelect}
                       onHabitNameChange={handleNameChange}

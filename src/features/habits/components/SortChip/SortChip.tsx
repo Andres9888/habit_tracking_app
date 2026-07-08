@@ -5,7 +5,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
-  withTiming,
   FadeInDown,
 } from 'react-native-reanimated';
 import { durations, enterEasing, springs } from '@/theme/animations';
@@ -67,13 +66,13 @@ export function SortChip({
   const handlePressIn = () => {
     triggerLightImpact();
     if (!reduceMotion) {
-      buttonScale.value = withTiming(0.98, { duration: 80 });
+      buttonScale.value = withSpring(0.98, springs.button);
     }
   };
 
   const handlePressOut = () => {
     if (!reduceMotion) {
-      buttonScale.value = withSpring(1, springs.sheet);
+      buttonScale.value = withSpring(1, springs.button);
     }
   };
 

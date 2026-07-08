@@ -1,9 +1,8 @@
 /** ProfileCard — left-aligned account hero: identity + streak + edit, then stats */
-import { Pressable, Text, View } from 'react-native';
-import { Pencil } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
+import { Text, View } from 'react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { typography, fontWeights } from '../../theme/typography';
+import { SkeletonLoader } from '../SkeletonLoader/SkeletonLoader';
 import { EditableUserAvatar } from './EditableUserAvatar';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
 import { ProfilePremiumBadge } from './ProfilePremiumBadge';
@@ -77,27 +76,24 @@ export function ProfileCard({ isPremium }: ProfileCardProps) {
             </Text>
           ) : null}
           <View className='mt-2 flex-row items-center' style={{ gap: 5 }}>
-            <Text style={{ fontSize: 13 }}>🔥</Text>
-            <Text
-              style={{
-                ...typography.bodySmall,
-                fontWeight: fontWeights.bold,
-                color: themeColors.status.streakText,
-              }}
-            >
-              {stats.currentStreak}-day streak
-            </Text>
+            {statsLoading ? (
+              <SkeletonLoader borderRadius={6} height={16} width={96} />
+            ) : (
+              <>
+                <Text style={{ fontSize: 13 }}>🔥</Text>
+                <Text
+                  style={{
+                    ...typography.bodySmall,
+                    fontWeight: fontWeights.bold,
+                    color: themeColors.status.streakText,
+                  }}
+                >
+                  {stats.currentStreak}-day streak
+                </Text>
+              </>
+            )}
           </View>
         </View>
-        <Pressable
-          accessibilityLabel='Edit profile photo'
-          accessibilityRole='button'
-          className='self-start'
-          hitSlop={8}
-          onPress={openPhotoPicker}
-        >
-          <Pencil color={themeColors.text.tertiary} size={iconSizes.medium} />
-        </Pressable>
       </View>
       <ProfileStatsRow isLoading={statsLoading} stats={stats} />
     </View>

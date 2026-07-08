@@ -7,11 +7,15 @@
 
 import { memo } from 'react';
 import { Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { durations, enterEasing } from '@/theme/animations';
+import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { PREMIUM_BENEFITS } from './constants';
 
 function PremiumBenefitsRowComponent() {
   const { colors } = useThemeColors();
+  const reduceMotion = useReduceMotion();
 
   return (
     <View className='gap-4 rounded-3xl border bg-white/90 p-5 shadow-[0px_16px_44px_rgba(120,90,50,0.06)]' style={{ borderColor: colors.status.warningLight }}>
@@ -19,8 +23,18 @@ function PremiumBenefitsRowComponent() {
         Why members upgrade
       </Text>
       <View className='gap-3'>
-        {PREMIUM_BENEFITS.map((benefit) => (
-          <View key={benefit.title} className='gap-1'>
+        {PREMIUM_BENEFITS.map((benefit, index) => (
+          <Animated.View
+            key={benefit.title}
+            className='gap-1'
+            entering={
+              reduceMotion
+                ? undefined
+                : FadeInDown.delay(index * durations.stagger)
+                    .duration(durations.enter)
+                    .easing(enterEasing)
+            }
+          >
             <Text
               className='text-base font-semibold'
               style={{ color: colors.text.primary }}
@@ -33,7 +47,7 @@ function PremiumBenefitsRowComponent() {
             >
               {benefit.description}
             </Text>
-          </View>
+          </Animated.View>
         ))}
       </View>
     </View>

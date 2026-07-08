@@ -55,13 +55,15 @@ export const getById = query({
 export const getPopular = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, args) => {
-    const limit = args.limit || 10;
-    
-    // PERF: Fetch all templates but with index scan
+    // Clamp caller-supplied limit; this is a public query.
+    const limit = Math.min(Math.max(args.limit || 10, 1), 100);
+
+    // PERF: Fetch templates via index scan, bounded so the in-memory sort
+    // stays safe if the catalog ever grows well past its current ~200 rows.
     const templates = await ctx.db
       .query('templates')
       .withIndex('by_createdAt')
-      .collect();
+      .take(500);
 
     // Filter and sort by popularity, then limit
     return templates

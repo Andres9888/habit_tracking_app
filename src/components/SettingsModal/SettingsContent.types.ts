@@ -3,10 +3,8 @@ import type {
   CompletionSoundType,
   DarkModePreference,
 } from '../../../convex/settings/types';
-import type { SettingsColors } from './types';
 
 export interface SettingsContentProps {
-  colors: SettingsColors;
   bottomInset?: number;
   compactView: boolean;
   onChangeCompactView: (value: boolean) => void | Promise<void>;

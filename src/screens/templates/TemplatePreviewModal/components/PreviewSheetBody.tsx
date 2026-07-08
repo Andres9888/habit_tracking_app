@@ -40,9 +40,6 @@ export function PreviewSheetBody({
           customName={preview.customName}
           progressEmojis={preview.progressEmojis}
           reminderTime={preview.reminderTime}
-          scrollToEnd={() =>
-            scrollViewRef.current?.scrollToEnd({ animated: true })
-          }
           showTimePicker={preview.showTimePicker}
           streakGoal={preview.streakGoal}
           strengthAlgorithm={preview.strengthAlgorithm}

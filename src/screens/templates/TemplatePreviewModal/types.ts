@@ -116,7 +116,6 @@ export interface CustomizationSectionsProps {
   strengthAlgorithm: AlgorithmMode;
   progressEmojis: ProgressEmojiSet | undefined;
   streakGoal: number;
-  scrollToEnd: () => void;
   onIconSelect: (icon: string | null) => void;
   onColorSelect: (color: string) => void;
   onToggleTimePicker: (show: boolean) => void;

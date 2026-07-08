@@ -76,10 +76,13 @@ export function validateWebhookTimestamp(
     return undefined;
   }
 
-  // Check if timestamp is within reasonable range (2020-2030)
-  // This catches obvious errors like sending seconds instead of milliseconds
+  // Check if timestamp is within reasonable range: 2020 (before the app
+  // existed) up to one year from now. A relative upper bound avoids the
+  // hardcoded-cutoff bug where legitimate webhooks start failing after a
+  // fixed year, while still catching obvious errors like sending seconds
+  // instead of milliseconds.
   const minDate = new Date('2020-01-01').getTime();
-  const maxDate = new Date('2030-01-01').getTime();
+  const maxDate = Date.now() + 365 * 24 * 60 * 60 * 1000;
 
   if (timestamp < minDate || timestamp > maxDate) {
     console.error(

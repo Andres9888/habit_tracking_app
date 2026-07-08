@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import type { ReactNode } from 'react';
 import Animated, { useReducedMotion } from 'react-native-reanimated';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import ArchivedHabitsModal from '../../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../../SkeletonLoader';
 import { SettingsHeader } from '../SettingsHeader';
@@ -14,6 +15,7 @@ import type { SettingsMainViewProps } from './SettingsMainView.types';
 
 export function SettingsMainView(props: SettingsMainViewProps) {
   const reduceMotion = useReducedMotion();
+  const { colors: themeColors } = useThemeColors();
   const handleSortSelect = (mode: HabitSortMode) => {
     void props.setHabitSortMode(mode);
   };
@@ -24,7 +26,7 @@ export function SettingsMainView(props: SettingsMainViewProps) {
     reduceMotion
   );
 
-  const backgroundStyle = { backgroundColor: props.colors.background };
+  const backgroundStyle = { backgroundColor: themeColors.background };
 
   let content: ReactNode = null;
 
@@ -78,7 +80,7 @@ export function SettingsMainView(props: SettingsMainViewProps) {
         <SettingsModalSkeleton />
       ) : (
         <>
-          <SettingsHeader colors={props.colors} onClose={props.handleClose} />
+          <SettingsHeader onClose={props.handleClose} />
           <SettingsContent
             {...buildSettingsContentProps(props, handleSortSelect)}
           />

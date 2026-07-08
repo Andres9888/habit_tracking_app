@@ -3,8 +3,9 @@ import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '@/theme/ThemeContext';
-import { fontWeights, typography } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { AdvancedOptionEditAffordance } from './AdvancedOptionEditAffordance';
+import { AdvancedOptionRowTitle } from './AdvancedOptionRowTitle';
 
 interface AdvancedOptionRowProps {
   icon: ReactNode;
@@ -15,6 +16,8 @@ interface AdvancedOptionRowProps {
   onPress: () => void;
   accessibilityHint?: string;
   isFirst?: boolean;
+  /** Optional small pill shown next to the title (e.g. "Recommended"). */
+  titleBadge?: string;
 }
 
 export function AdvancedOptionRow({
@@ -26,6 +29,7 @@ export function AdvancedOptionRow({
   onPress,
   accessibilityHint,
   isFirst = false,
+  titleBadge,
 }: AdvancedOptionRowProps) {
   const { colors } = useThemeColors();
 
@@ -55,17 +59,14 @@ export function AdvancedOptionRow({
     >
       {({ pressed }) => (
         <>
-          <View className='h-9 w-9 items-center justify-center rounded-xl' style={{ backgroundColor: iconBackground }}>{icon}</View>
+          <View
+            className='h-9 w-9 items-center justify-center rounded-xl'
+            style={{ backgroundColor: iconBackground }}
+          >
+            {icon}
+          </View>
           <View className='flex-1'>
-            <Text
-              style={{
-                ...typography.body,
-                fontWeight: fontWeights.semibold,
-                color: colors.text.primary,
-              }}
-            >
-              {title}
-            </Text>
+            <AdvancedOptionRowTitle badge={titleBadge} title={title} />
             <Text
               style={{
                 ...typography.caption,

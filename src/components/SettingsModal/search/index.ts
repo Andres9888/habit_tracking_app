@@ -9,5 +9,3 @@ export {
   anySectionMatches,
   type SettingsSectionKey,
 } from './settingsSearchSections';
-export { SettingsSearchField } from './SettingsSearchField';
-export { SettingsSearchEmpty } from './SettingsSearchEmpty';

@@ -53,15 +53,4 @@ export interface SettingsModalProps {
   settingsDocument?: SettingsModalSettingsDocument;
 }
 
-export interface SettingsColors {
-  accent: string;
-  background: string;
-  card: string;
-  cardBorder: string;
-  headerText: string;
-  icon: string;
-  mutedText: string;
-  versionText: string;
-}
-
 export type { SettingsContentProps } from './SettingsContent.types';

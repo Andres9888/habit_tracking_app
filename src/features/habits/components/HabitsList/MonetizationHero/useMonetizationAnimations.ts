@@ -1,36 +1,35 @@
 /**
  * useMonetizationAnimations — animation lifecycle for {@link MonetizationHero}.
  *
- * Manages three independent `Animated.Value` tracks:
- * 1. **progress** — fills the slot-usage bar to `usageRatio × trackWidth` (420 ms ease-out).
- * 2. **ctaPulse** — loops a gentle 1→1.04 scale on the CTA button when the limit is reached.
- * 3. **shimmer** — loops opacity 0.4↔0.9 on the "Keep 3 habits free" label.
+ * Manages a single `Animated.Value` track:
+ * - **progress** — fills the slot-usage bar to `usageRatio × trackWidth`
+ *   (`durations.emphasis` ease-out).
  *
- * All three tracks short-circuit to static values when `reduceMotion` is true.
- * `trackWidth` is measured via `onLayout` so the progress bar works at any width.
+ * Short-circuits to a static value when `reduceMotion` is true. `trackWidth`
+ * is measured via `onLayout` so the progress bar works at any width.
  *
- * Performance: Uses Reanimated for smooth UI-thread animations
+ * Attention is handled by a one-shot entrance on the hero container (see
+ * {@link MonetizationHero}), not by idle loops. Per the motion spec
+ * (`theme/animations.ts`): no decorative loops on resting surfaces — a calm,
+ * still CTA reads premium; a pulsing one reads desperate.
  */
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSharedValue, useAnimatedStyle, withTiming, withRepeat, withSequence, Easing } from 'react-native-reanimated';
+import { useSharedValue, useAnimatedStyle, withTiming, Easing } from 'react-native-reanimated';
+import { durations } from '../../../../../theme/animations';
 
 interface UseMonetizationAnimationsOptions {
   freeHabitLimit: number;
   habitSlotsUsed: number;
-  hasReachedHabitLimit: boolean;
   reduceMotion: boolean;
 }
 
 export function useMonetizationAnimations({
   freeHabitLimit,
   habitSlotsUsed,
-  hasReachedHabitLimit,
   reduceMotion,
 }: UseMonetizationAnimationsOptions) {
   const progress = useSharedValue(0);
-  const ctaPulse = useSharedValue(1);
-  const shimmer = useSharedValue(0.4);
   const [trackWidth, setTrackWidth] = useState(0);
 
   const usageRatio = useMemo(
@@ -47,54 +46,10 @@ export function useMonetizationAnimations({
       return;
     }
     progress.value = withTiming(targetWidth, {
-      duration: 420,
+      duration: durations.emphasis,
       easing: Easing.out(Easing.cubic),
     });
   }, [progress, trackWidth, usageRatio, reduceMotion]);
-
-  // CTA pulse animation
-  useEffect(() => {
-    if (reduceMotion || !hasReachedHabitLimit) {
-      ctaPulse.value = 1;
-      return;
-    }
-    ctaPulse.value = withRepeat(
-      withSequence(
-        withTiming(1.04, {
-          duration: 720,
-          easing: Easing.inOut(Easing.ease),
-        }),
-        withTiming(1, {
-          duration: 720,
-          easing: Easing.inOut(Easing.ease),
-        })
-      ),
-      -1, // infinite
-      false
-    );
-  }, [ctaPulse, hasReachedHabitLimit, reduceMotion]);
-
-  // Shimmer animation
-  useEffect(() => {
-    if (reduceMotion) {
-      shimmer.value = 1;
-      return;
-    }
-    shimmer.value = withRepeat(
-      withSequence(
-        withTiming(0.9, {
-          duration: 960,
-          easing: Easing.inOut(Easing.ease),
-        }),
-        withTiming(0.4, {
-          duration: 960,
-          easing: Easing.inOut(Easing.ease),
-        })
-      ),
-      -1, // infinite
-      false
-    );
-  }, [shimmer, reduceMotion]);
 
   const handleTrackLayout = useCallback(
     (event: { nativeEvent: { layout: { width: number } } }) => {
@@ -107,19 +62,9 @@ export function useMonetizationAnimations({
     width: progress.value,
   }));
 
-  const ctaPulseStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: ctaPulse.value }],
-  }));
-
-  const shimmerStyle = useAnimatedStyle(() => ({
-    opacity: shimmer.value,
-  }));
-
   return {
-    ctaPulseStyle,
     handleTrackLayout,
     progressStyle,
-    shimmerStyle,
     trackWidth,
   };
 }

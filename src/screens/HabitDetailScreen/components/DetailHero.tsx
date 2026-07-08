@@ -1,9 +1,12 @@
 /** DetailHero - Fused hero card: icon/name/streak row, total, complete bar. */
 import { Text, View } from 'react-native';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
+import { durations, enterEasing } from '../../../theme/animations';
 import { colors as palette } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { Habit } from '../HabitDetailScreen.types';
 import { DetailCompleteButton } from './DetailCompleteButton';
@@ -27,10 +30,16 @@ export function DetailHero({
   onDayPress,
 }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();
+  const reduceMotion = useReduceMotion();
   const habitName = getHabitDisplayName(habit);
 
   return (
-    <View
+    <Animated.View
+      entering={
+        reduceMotion
+          ? undefined
+          : FadeInDown.duration(durations.enter).easing(enterEasing)
+      }
       className='overflow-hidden'
       style={{
         backgroundColor: isDark ? colors.card : palette.light.cardElevated,
@@ -110,6 +119,6 @@ export function DetailHero({
           onPress={() => onDayPress(getLocalDateString(), isCompletedToday)}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 }
