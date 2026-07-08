@@ -42,7 +42,6 @@ const HabitFormBodyComponent = ({
   onProgressEmojisChange,
   streakGoal,
   onStreakGoalChange,
-  onAdvancedExpand,
   reminderSectionRef,
 }: HabitFormBodyProps) => {
   const [committedHabitName, setCommittedHabitName] = useState(habitName);
@@ -96,7 +95,6 @@ const HabitFormBodyComponent = ({
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}
-        onExpand={onAdvancedExpand}
         onProgressEmojisChange={onProgressEmojisChange}
         onStreakGoalChange={onStreakGoalChange}
         onStrengthAlgorithmChange={onStrengthAlgorithmChange}

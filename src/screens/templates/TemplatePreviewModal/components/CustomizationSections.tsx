@@ -27,7 +27,6 @@ export function CustomizationSections({
   strengthAlgorithm,
   progressEmojis,
   streakGoal,
-  scrollToEnd,
   onIconSelect,
   onColorSelect,
   onToggleTimePicker,
@@ -86,7 +85,6 @@ export function CustomizationSections({
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}
-        onExpand={scrollToEnd}
         onProgressEmojisChange={onProgressEmojisChange}
         onStreakGoalChange={onStreakGoalChange}
         onStrengthAlgorithmChange={onStrengthAlgorithmChange}

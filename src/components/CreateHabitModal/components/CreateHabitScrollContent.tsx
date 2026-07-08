@@ -75,9 +75,6 @@ export function CreateHabitScrollContent({
               snapReminderDefaultToPreset
               streakGoal={form.streakGoal}
               strengthAlgorithm={form.strengthAlgorithm}
-              onAdvancedExpand={() =>
-                scrollViewRef.current?.scrollToEnd({ animated: true })
-              }
               onColorSelect={callbacks.handleColorSelect}
               onEmojiSelect={callbacks.handleEmojiSelect}
               onHabitNameChange={callbacks.handleNameChange}

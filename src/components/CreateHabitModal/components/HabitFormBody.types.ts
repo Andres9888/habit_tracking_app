@@ -47,15 +47,15 @@ export interface HabitFormBodyProps {
   showNameError?: boolean;
   /** Per-habit strength algorithm mode */
   strengthAlgorithm: 'forgiving' | 'balanced' | 'strict';
-  onStrengthAlgorithmChange: (mode: 'forgiving' | 'balanced' | 'strict') => void;
+  onStrengthAlgorithmChange: (
+    mode: 'forgiving' | 'balanced' | 'strict'
+  ) => void;
   /** Per-habit growth icons override (undefined = inherit default) */
   progressEmojis: ProgressEmojiSet | undefined;
   onProgressEmojisChange: (next: ProgressEmojiSet | undefined) => void;
   /** Streak goal in days (0 = no goal) */
   streakGoal: number;
   onStreakGoalChange: (days: number) => void;
-  /** Called after the Advanced section expands so the parent can scroll it into view. */
-  onAdvancedExpand?: () => void;
   /** Ref attached to the daily reminder container so the parent can measure and scroll to it. */
   reminderSectionRef?: RefObject<ViewType | null>;
 }
