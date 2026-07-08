@@ -45,7 +45,7 @@ export function AdvancedOptionRow({
   return (
     <Pressable
       accessibilityHint={a11yHint}
-      accessibilityLabel={`${title}, tap to edit`}
+      accessibilityLabel={`${title}${titleBadge ? ` · ${titleBadge}` : ''}, tap to edit`}
       accessibilityRole='button'
       className='flex-row items-center gap-3 py-3.5'
       style={({ pressed }) => ({
