@@ -41,6 +41,10 @@ const baseProps = {
   onOpen: jest.fn(),
 };
 
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('AdvancedOptionsRows', () => {
   it('renders all three plain-language options with their current values', () => {
     const { getByText } = render(<AdvancedOptionsRows {...baseProps} />);
@@ -76,7 +80,9 @@ describe('AdvancedOptionsRows', () => {
     const { getByLabelText } = render(
       <AdvancedOptionsRows {...baseProps} onOpen={onOpen} />
     );
-    fireEvent.press(getByLabelText('How fast it builds, tap to edit'));
+    fireEvent.press(
+      getByLabelText('How fast it builds · Recommended, tap to edit')
+    );
     expect(onOpen).toHaveBeenCalledWith('algorithm');
     fireEvent.press(getByLabelText('Progress icons, tap to edit'));
     expect(onOpen).toHaveBeenCalledWith('growth');
