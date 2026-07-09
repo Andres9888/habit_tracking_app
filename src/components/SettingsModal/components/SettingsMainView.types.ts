@@ -21,8 +21,8 @@ export interface SettingsMainViewProps {
   setHabitSortMode: ModalLogic['setHabitSortMode'];
   showGradientFill: ModalLogic['showGradientFill'];
   setShowGradientFill: ModalLogic['setShowGradientFill'];
-  showStreakConnections: ModalLogic['showStreakConnections'];
-  setShowStreakConnections: ModalLogic['setShowStreakConnections'];
+  connectorStyle: ModalLogic['connectorStyle'];
+  setConnectorStyle: ModalLogic['setConnectorStyle'];
   completionSoundEnabled: SettingsModalProps['completionSoundEnabled'];
   completionSoundType: SettingsModalProps['completionSoundType'];
   dayShape: SettingsModalProps['dayShape'];
