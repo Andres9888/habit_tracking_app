@@ -1,11 +1,15 @@
+import { useEffect, useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import {
+  interpolateColor,
+  useReducedMotion,
   useSharedValue,
   useAnimatedStyle,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import { triggerHaptic } from '@/utils/haptics';
+import { useThemeColors } from '../../../theme/ThemeContext';
 import type { SettingsRowProps } from './SettingsRow.types';
 
 export function useSettingsRowPulse(isDark: boolean) {
@@ -25,6 +29,38 @@ export function useSettingsRowPulse(isDark: boolean) {
   };
 
   return { pulseStyle, triggerPulse };
+}
+
+/**
+ * Green tint flash behind a row's value text when it changes, confirming the
+ * new setting at a glance. Skips the initial mount (and undefined→value
+ * hydration) and is disabled entirely under reduced motion.
+ */
+export function useValueFlash(value: string | undefined) {
+  const { isDark } = useThemeColors();
+  const progress = useSharedValue(0);
+  const prev = useRef(value);
+  const reduceMotion = useReducedMotion() ?? false;
+
+  useEffect(() => {
+    if (prev.current === value) return;
+    const hadValue = prev.current !== undefined;
+    prev.current = value;
+    if (!hadValue || reduceMotion) return;
+    progress.value = withSequence(
+      withTiming(1, { duration: 120 }),
+      withTiming(0, { duration: 900 })
+    );
+  }, [value, reduceMotion, progress]);
+
+  const tint = isDark ? 'rgba(52,211,153,0.22)' : 'rgba(5,150,105,0.12)';
+  return useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      progress.value,
+      [0, 1],
+      ['rgba(0,0,0,0)', tint]
+    ),
+  }));
 }
 
 export function useSettingsRowHandlers(

@@ -1,7 +1,7 @@
-import { Text, View } from 'react-native';
-import { typography, fontWeights } from '@/theme/typography';
+import { View } from 'react-native';
 import { AnimatedToggle } from './AnimatedToggle';
 import { RowChevron } from './RowChevron';
+import { RowValueText } from './RowValueText';
 import { SettingsCountBadge } from '../../SettingsCountBadge';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
@@ -41,15 +41,11 @@ export function RowAccessory({
   if (type === 'selection') {
     return (
       <View className='flex-row items-center gap-1'>
-        <Text
-          style={{
-            ...typography.body,
-            fontWeight: fontWeights.medium,
-            color: colors.value,
-          }}
-        >
-          {value as string}
-        </Text>
+        <RowValueText
+          color={colors.value}
+          value={value as string}
+          variant='selection'
+        />
         <RowChevron color={colors.chevron} />
       </View>
     );
@@ -57,20 +53,7 @@ export function RowAccessory({
 
   if (type === 'info' && typeof value === 'string') {
     const valueText = (
-      <Text
-        className='ml-3'
-        numberOfLines={1}
-        style={{
-          ...typography.bodySmall,
-          fontWeight: fontWeights.medium,
-          color: colors.value,
-          flexShrink: 1,
-          maxWidth: 140,
-          textAlign: 'right',
-        }}
-      >
-        {value}
-      </Text>
+      <RowValueText color={colors.value} value={value} variant='info' />
     );
 
     if (showChevron) {

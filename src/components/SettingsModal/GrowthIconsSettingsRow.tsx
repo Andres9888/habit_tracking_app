@@ -22,7 +22,7 @@ import {
 } from '../../utils/progressEmojis';
 import { ProgressEmojiPicker } from '../ProgressEmojiPicker';
 
-import { GrowthIconsCustomizeAction } from './GrowthIconsCustomizeAction';
+import { GrowthIconsRowAccessory } from './GrowthIconsCustomizeAction';
 import { SettingsRow } from './SettingsRow';
 import { rowMatchesQuery, useSettingsSearch } from './search';
 
@@ -87,9 +87,10 @@ export function GrowthIconsSettingsRow() {
           />
         }
         iconBackgroundColor={settingsIcons.gradient.bg}
-        label='Default growth icons'
+        label='Growth icons'
         rightAccessory={
-          <GrowthIconsCustomizeAction
+          <GrowthIconsRowAccessory
+            emojis={currentValue ?? DEFAULT_PROGRESS_EMOJIS}
             expanded={expanded}
             onToggle={toggleExpanded}
           />
@@ -97,7 +98,7 @@ export function GrowthIconsSettingsRow() {
         subtitle='Used for every new habit'
         type='info'
       />
-      {rowMatchesQuery(query, 'Default growth icons') ? (
+      {rowMatchesQuery(query, 'Growth icons') ? (
         <ProgressEmojiPicker
           customPreset={customPreset}
           expanded={expanded}

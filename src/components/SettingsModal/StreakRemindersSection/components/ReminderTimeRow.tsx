@@ -3,8 +3,10 @@ import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { useValueFlash } from '../../SettingsRow/SettingsRow.hooks';
 import { formatDisplayTime } from '../../timeHelpers';
 
 interface ReminderTimeRowProps {
@@ -17,6 +19,8 @@ export function ReminderTimeRow({
   onToggleTimePicker,
 }: ReminderTimeRowProps) {
   const { colors: themeColors, settings } = useThemeColors();
+  const displayTime = formatDisplayTime(reminderTime);
+  const flashStyle = useValueFlash(displayTime);
 
   const handlePress = () => {
     void triggerHaptic('selection');
@@ -46,15 +50,20 @@ export function ReminderTimeRow({
         >
           Reminder time
         </Text>
-        <Text
-          style={{
-            ...typography.body,
-            fontWeight: fontWeights.medium,
-            color: themeColors.text.secondary,
-          }}
+        <Animated.Text
+          style={[
+            {
+              ...typography.body,
+              fontWeight: fontWeights.medium,
+              color: themeColors.text.secondary,
+              borderRadius: 6,
+              paddingHorizontal: 4,
+            },
+            flashStyle,
+          ]}
         >
-          {formatDisplayTime(reminderTime)}
-        </Text>
+          {displayTime}
+        </Animated.Text>
         <ChevronRight
           color={themeColors.text.secondary}
           size={iconSizes.small}
