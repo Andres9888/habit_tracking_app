@@ -112,6 +112,10 @@ export const deleteCurrentUserData = mutation({
       .query('users')
       .withIndex('by_clerk_id', (q) => q.eq('clerkId', userId))
       .collect();
+    const ownedStorage = await ctx.db
+      .query('storageOwnership')
+      .withIndex('by_user_id', (q) => q.eq('userId', userId))
+      .collect();
     const deletedHabits = await ctx.db
       .query('deletedHabits')
       .withIndex('by_userId', (q) => q.eq('userId', userId))
@@ -159,6 +163,27 @@ export const deleteCurrentUserData = mutation({
       ctx,
       deletedHabits.map((entry) => entry._id)
     );
+
+    const profileStorageIds = new Set(
+      users
+        .map((user) => user.profileImageStorageId)
+        .filter(
+          (storageId): storageId is NonNullable<typeof storageId> =>
+            storageId !== undefined
+        )
+    );
+    for (const ownership of ownedStorage) {
+      profileStorageIds.add(ownership.storageId);
+      await ctx.db.delete(ownership._id);
+    }
+    for (const storageId of profileStorageIds) {
+      try {
+        await ctx.storage.delete(storageId);
+      } catch {
+        // The database deletion must remain complete if a blob was already
+        // removed by an earlier cleanup attempt.
+      }
+    }
 
     return {
       deletedHabits: deletedHabitsCount,

@@ -6,6 +6,11 @@ import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { enforceRateLimit } from './lib/rateLimit';
 import { getInvalidImageUploadReason } from './storageValidation';
+import {
+  claimStorageForUser,
+  getStorageOwner,
+  releaseStorageForUser,
+} from './storageOwnership';
 
 async function getAuthenticatedUser(ctx: {
   auth: { getUserIdentity: () => Promise<{ subject: string } | null> };
@@ -30,7 +35,8 @@ async function getAuthenticatedUser(ctx: {
 
 async function deleteStoredProfileImage(
   ctx: import('./_generated/server').MutationCtx,
-  storageId: import('./_generated/dataModel').Id<'_storage'> | undefined
+  storageId: import('./_generated/dataModel').Id<'_storage'> | undefined,
+  userId: string
 ) {
   if (!storageId) {
     return;
@@ -38,6 +44,7 @@ async function deleteStoredProfileImage(
 
   try {
     await ctx.storage.delete(storageId);
+    await releaseStorageForUser(ctx, storageId, userId);
   } catch {
     // Best-effort cleanup when the blob is already gone.
   }
@@ -48,6 +55,18 @@ export const updateProfileImage = mutation({
   handler: async (ctx, args) => {
     const { identity, user } = await getAuthenticatedUser(ctx);
     await enforceRateLimit(ctx, identity.subject, 'user.updateProfileImage');
+
+    const owner = await getStorageOwner(ctx, args.storageId);
+    if (!owner) {
+      // Permit a one-time migration of a legacy profile image, but do not
+      // allow arbitrary storage IDs to be attached without validation.
+      if (user.profileImageStorageId !== args.storageId) {
+        throw new Error('Uploaded file must be validated before use');
+      }
+      await claimStorageForUser(ctx, args.storageId, identity.subject);
+    } else if (owner.userId !== identity.subject) {
+      throw new Error('Not authorized to use this uploaded file');
+    }
 
     const metadata = await ctx.storage.getMetadata(args.storageId);
     const validationError = getInvalidImageUploadReason(metadata);
@@ -63,7 +82,11 @@ export const updateProfileImage = mutation({
       throw new Error('Uploaded file was not found');
     }
 
-    await deleteStoredProfileImage(ctx, user.profileImageStorageId);
+    await deleteStoredProfileImage(
+      ctx,
+      user.profileImageStorageId,
+      identity.subject
+    );
 
     await ctx.db.patch(user._id, {
       imageUrl,
@@ -81,7 +104,11 @@ export const clearProfileImage = mutation({
     const { identity, user } = await getAuthenticatedUser(ctx);
     await enforceRateLimit(ctx, identity.subject, 'user.updateProfileImage');
 
-    await deleteStoredProfileImage(ctx, user.profileImageStorageId);
+    await deleteStoredProfileImage(
+      ctx,
+      user.profileImageStorageId,
+      identity.subject
+    );
 
     await ctx.db.patch(user._id, {
       imageUrl: undefined,

@@ -425,6 +425,17 @@ const applicationTables = {
     .index('by_clerk_id', ['clerkId'])
     .index('by_email', ['email']),
 
+  // Server-side ownership records for uploaded blobs. Convex storage IDs are
+  // not inherently user-scoped, so every app-managed upload must be claimed
+  // before it can be attached to a user profile.
+  storageOwnership: defineTable({
+    createdAt: v.number(),
+    storageId: v.id('_storage'),
+    userId: v.string(),
+  })
+    .index('by_storage_id', ['storageId'])
+    .index('by_user_id', ['userId']),
+
   userSettings: defineTable({
     // New settings from Figma design
     appIcon: v.optional(v.string()),
