@@ -14,6 +14,7 @@ const WeekNavRowComponent: React.FC<WeekNavRowProps> = ({
   dateSuffix,
   isCalendarOpen,
   isViewingPast,
+  todayDayNumber,
   onJumpToToday,
   onDateRangePress,
 }) => {
@@ -29,6 +30,7 @@ const WeekNavRowComponent: React.FC<WeekNavRowProps> = ({
         dateSuffix={dateSuffix}
         isCalendarOpen={isCalendarOpen}
         monthName={monthName}
+        todayDayNumber={todayDayNumber}
         onDateRangePress={onDateRangePress}
       />
 

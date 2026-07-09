@@ -5,39 +5,50 @@ import Animated, {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { Calendar, ChevronDown } from 'lucide-react-native';
+import { ChevronDown } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { shadows } from '@/theme/spacing';
 
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
-import { fontWeights } from '../../../theme/typography';
+import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { getDatePillColors } from '../theme';
+import { CalendarGlyph } from './CalendarGlyph';
 import { PRESS } from './WeekNavRow.constants';
 import { s } from './WeekNavRow.styles';
 
 const CHEVRON_TIMING = { duration: 200 };
 
+/** Soft green glow while the mini-calendar is open. */
+const OPEN_SHADOW = {
+  elevation: 3,
+  shadowColor: palette.primary[600],
+  shadowOffset: { height: 2, width: 0 },
+  shadowOpacity: 0.3,
+  shadowRadius: 8,
+} as const;
+
 interface DatePillProps {
   monthName: string;
   dateSuffix: string;
   isCalendarOpen?: boolean;
+  todayDayNumber?: string;
   onDateRangePress?: () => void;
 }
 
 /**
- * Centered date pill that opens the calendar popup.
- *
- * Quiet-emphasis toggle styling: neutral hairline chip at rest; while the
- * calendar is open it earns the green (card fill, primary border, bold
- * month, flipped chevron) so open/closed states never read alike.
+ * Date-navigator pill — calendar glyph (today's day number inside it when
+ * today is in view), "Month Year" label (or the past-week range), and a
+ * green caret. Rest keeps the warm tint; while the mini-calendar is open
+ * the pill floods solid green with a flipped caret.
  */
-export const DatePill: React.FC<DatePillProps> = ({
+export function DatePill({
   monthName,
   dateSuffix,
   isCalendarOpen = false,
+  todayDayNumber,
   onDateRangePress,
-}) => {
+}: DatePillProps) {
   const { isDark } = useThemeColors();
   const pillColors = getDatePillColors(isDark, isCalendarOpen);
   const dateLabel = `${monthName} ${dateSuffix}`;
@@ -53,7 +64,9 @@ export const DatePill: React.FC<DatePillProps> = ({
   return (
     <AnimatedPressable
       accessibilityHint={
-        isCalendarOpen ? 'Tap to close calendar' : 'Tap to open calendar'
+        isCalendarOpen
+          ? 'Tap to close the calendar'
+          : 'Opens a calendar to jump to any date'
       }
       accessibilityLabel={dateLabel}
       accessibilityRole='button'
@@ -68,25 +81,15 @@ export const DatePill: React.FC<DatePillProps> = ({
             backgroundColor: pillColors.background,
             borderColor: pillColors.border,
           },
-          isCalendarOpen ? shadows.subtle : null,
+          isCalendarOpen ? OPEN_SHADOW : shadows.subtle,
         ]}
       >
-        <Calendar
+        <CalendarGlyph
           color={pillColors.icon}
+          dayNumber={todayDayNumber}
           size={iconSizes.small}
-          strokeWidth={2}
         />
-        <Text
-          style={[
-            s.monthText,
-            {
-              color: pillColors.month,
-              fontWeight: isCalendarOpen
-                ? fontWeights.bold
-                : fontWeights.medium,
-            },
-          ]}
-        >
+        <Text style={[s.monthText, { color: pillColors.month }]}>
           {monthName}
         </Text>
         <Text style={[s.dateText, { color: pillColors.date }]}>
@@ -96,10 +99,10 @@ export const DatePill: React.FC<DatePillProps> = ({
           <ChevronDown
             color={pillColors.chevron}
             size={iconSizes.micro}
-            strokeWidth={2}
+            strokeWidth={2.4}
           />
         </Animated.View>
       </View>
     </AnimatedPressable>
   );
-};
+}

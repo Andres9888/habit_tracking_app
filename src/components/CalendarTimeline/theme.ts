@@ -4,7 +4,7 @@
  * Centralized color configurations for calendar timeline variants.
  */
 
-import { colors } from '@/theme/colors';
+import { colors, withAlpha } from '@/theme/colors';
 import { darkColors, lightColors } from '@/theme/darkColors';
 
 /**
@@ -70,12 +70,12 @@ export function getCalendarTimelineColors(
 }
 
 /**
- * Date pill colors for WeekNavRow — quiet-emphasis toggle styling.
+ * Date-navigator pill colors for WeekNavRow.
  *
- * Closed (rest) is neutral: warm grays only, no green. Open earns the
- * green — card fill, primary border, green glyphs — so the two states
- * can never read alike. Icon stays at the secondary-text gray tier
- * (not gray[300]) so the rest state doesn't read as disabled.
+ * Rest keeps the warm green tint but the caret is green (not disabled-gray)
+ * so the pill reads as a live control. Open floods to a solid primary fill
+ * with inverse text — a category jump in form, not a shade tweak — so the
+ * open and closed states can never read alike.
  */
 export interface DatePillColors {
   background: string;
@@ -88,39 +88,39 @@ export interface DatePillColors {
 
 const DATE_PILL_OPEN: Record<'dark' | 'light', DatePillColors> = {
   dark: {
-    background: darkColors.card,
+    background: darkColors.primary[500],
     border: darkColors.primary[500],
-    chevron: darkColors.primary[500],
-    date: darkColors.text.primary,
-    icon: darkColors.primary[500],
-    month: darkColors.primary[500],
+    chevron: darkColors.text.inverse,
+    date: withAlpha(darkColors.text.inverse, 0.78),
+    icon: darkColors.text.inverse,
+    month: darkColors.text.inverse,
   },
   light: {
-    background: colors.light.cardElevated,
+    background: colors.primary[600],
     border: colors.primary[600],
-    chevron: colors.primary[600],
-    date: colors.gray[800],
-    icon: colors.primary[600],
-    month: colors.primary[700],
+    chevron: colors.text.inverse,
+    date: withAlpha(colors.text.inverse, 0.78),
+    icon: colors.text.inverse,
+    month: colors.text.inverse,
   },
 };
 
 const DATE_PILL_CLOSED: Record<'dark' | 'light', DatePillColors> = {
   dark: {
-    background: 'transparent',
-    border: darkColors.border,
-    chevron: darkColors.gray[500],
-    date: darkColors.gray[500],
-    icon: darkColors.gray[500],
-    month: darkColors.gray[600],
+    background: 'rgba(5,150,105,0.08)',
+    border: 'rgba(5,150,105,0.20)',
+    chevron: withAlpha(darkColors.primary[500], 0.7),
+    date: darkColors.text.secondary,
+    icon: darkColors.primary[500],
+    month: darkColors.primary[500],
   },
   light: {
-    background: 'transparent',
-    border: colors.gray[200],
-    chevron: colors.gray[300],
-    date: colors.gray[500],
-    icon: colors.gray[500],
-    month: colors.gray[600],
+    background: 'rgba(5,150,105,0.06)',
+    border: 'rgba(5,150,105,0.15)',
+    chevron: withAlpha(colors.primary[600], 0.55),
+    date: colors.text.secondary,
+    icon: colors.primary[600],
+    month: colors.primary[700],
   },
 };
 

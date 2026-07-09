@@ -1,35 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
+import { format } from 'date-fns';
 import { WEEK_STRIP_HORIZONTAL_PADDING } from '../../../constants/weekStripLayout';
 import { DayStrip } from './DayStrip';
 import { StripNav } from './StripNav';
 import { WeekNavRow } from './WeekNavRow';
-import type { CalendarTimelineProps } from '../CalendarTimeline.types';
-import { useCalendarTimelineSetup } from '../CalendarTimeline.derived';
-
-type Setup = ReturnType<typeof useCalendarTimelineSetup>;
-
-interface CalendarTimelineWeekStripProps {
-  canNavigateForward: boolean;
-  compact: boolean;
-  completionByDay: CalendarTimelineProps['completionByDay'];
-  completionIcon: CalendarTimelineProps['completionIcon'];
-  currentStreak: CalendarTimelineProps['currentStreak'];
-  dateSuffix: string;
-  dates: CalendarTimelineProps['dates'];
-  disableFutureDayPress: boolean;
-  isDayPressEnabled: boolean;
-  isViewingPast: boolean;
-  monthName: string;
-  onDayPress: CalendarTimelineProps['onDayPress'];
-  onJumpToToday: CalendarTimelineProps['onJumpToToday'];
-  onNextWeek?: () => void;
-  onPreviousWeek?: () => void;
-  reduceMotion: boolean;
-  strengthPercent: number;
-  tl: Setup;
-}
+import type { CalendarTimelineWeekStripProps } from './CalendarTimelineWeekStrip.types';
 
 export function CalendarTimelineWeekStrip({
   canNavigateForward,
@@ -51,6 +28,9 @@ export function CalendarTimelineWeekStrip({
   strengthPercent,
   tl,
 }: CalendarTimelineWeekStripProps) {
+  const todayDayNumber =
+    !isViewingPast && tl.currentDate ? format(tl.currentDate, 'd') : undefined;
+
   return (
     <>
       <GestureDetector gesture={tl.headerPanGesture}>
@@ -66,6 +46,7 @@ export function CalendarTimelineWeekStrip({
             monthName={monthName}
             onDateRangePress={tl.openCalendar}
             onJumpToToday={onJumpToToday}
+            todayDayNumber={todayDayNumber}
           />
         </View>
       </GestureDetector>
