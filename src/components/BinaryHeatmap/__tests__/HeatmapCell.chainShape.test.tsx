@@ -59,6 +59,27 @@ describe('HeatmapCell — shape="circle"', () => {
       : styles;
     expect(flat.borderStyle).toBe('dashed');
   });
+
+  it('keeps the habit-colored today ring — does not let missed styling override it for today', () => {
+    const habitColor = '#10B981';
+    const day = makeDay({ completed: false, isFuture: false, isToday: true });
+    const { getByRole } = render(
+      <HeatmapCell
+        day={day}
+        habitColor={habitColor}
+        isDark={false}
+        shape='circle'
+        onCellPress={() => {}}
+      />
+    );
+    const cell = getByRole('button');
+    const styles = cell.props.style;
+    const flat = Array.isArray(styles)
+      ? Object.assign({}, ...styles.filter(Boolean))
+      : styles;
+    expect(flat.borderColor).toBe(habitColor);
+    expect(flat.borderWidth).toBe(2);
+  });
 });
 
 describe('HeatmapCell — shape="square" (default, unchanged)', () => {

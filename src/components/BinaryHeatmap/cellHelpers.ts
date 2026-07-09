@@ -69,7 +69,11 @@ export function getChainCellShapeStyle(
   borderWidth?: number;
 } {
   const missed = Boolean(
-    day && !day.completed && !day.isFuture && !day.isBeforeCreation
+    day &&
+    !day.completed &&
+    !day.isFuture &&
+    !day.isBeforeCreation &&
+    !day.isToday
   );
   return {
     borderRadius: CELL_SIZE / 2,
