@@ -8,7 +8,7 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
-import { HabitTemplateCard } from '../components/HabitTemplateCard';
+import { TemplateReadRow } from '../components/ExploreAllSection/TemplateReadRow';
 
 const MAX_STAGGER_INDEX = 4;
 
@@ -39,10 +39,9 @@ export function CatalogFilteredList(p: CatalogFilteredListProps) {
 
         return (
           <Animated.View entering={entering}>
-            <HabitTemplateCard
-              descriptionLines={3}
-              isImported={p.importedTemplateIds.has(item._id)}
-              isImporting={p.importingTemplateId === item._id}
+            <TemplateReadRow
+              importedTemplateIds={p.importedTemplateIds}
+              importingTemplateId={p.importingTemplateId}
               item={item}
               onImport={p.onImport}
               onPreview={p.onPreview}

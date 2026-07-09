@@ -7,7 +7,7 @@
 import { SectionList, StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { spacing } from '../../../theme/spacing';
-import { HabitTemplateCard } from '../components/HabitTemplateCard';
+import { TemplateReadRow } from '../components/ExploreAllSection/TemplateReadRow';
 import { SectionHeader } from '../components/SectionHeader';
 import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
 import { getCategoryMeta } from '../data/categoryMeta';
@@ -41,10 +41,9 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => (
-        <HabitTemplateCard
-          descriptionLines={3}
-          isImported={p.importedTemplateIds.has(item._id)}
-          isImporting={p.importingTemplateId === item._id}
+        <TemplateReadRow
+          importedTemplateIds={p.importedTemplateIds}
+          importingTemplateId={p.importingTemplateId}
           item={item}
           onImport={p.onImport}
           onPreview={p.onPreview}

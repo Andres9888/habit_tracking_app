@@ -1,12 +1,12 @@
 /**
- * MainBrowseView — Habit Library landing: header, category chips, search,
- * and a flat popularity-sorted list ("Two Worlds" layout).
+ * MainBrowseView — Habit Library landing. Renders the catalog page
+ * (search, category chips, category-grouped list) as the main view.
  */
 
 import { StyleSheet, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { styles } from '../../templates/templatesScreenStyles';
-import { LibraryLandingView } from './LibraryLandingView';
+import { CatalogView } from './CatalogView';
 import type { MainBrowseViewProps } from './MainBrowseView.types';
 
 export function MainBrowseView(p: MainBrowseViewProps) {
@@ -15,17 +15,13 @@ export function MainBrowseView(p: MainBrowseViewProps) {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={s.body}>
-        <LibraryLandingView
+        <CatalogView
           allTemplates={p.allTemplates}
           importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
-          searchQuery={p.searchQuery}
-          totalHabitCount={p.totalHabitCount}
+          onBack={p.onClose}
           onImport={p.onPopularImport}
           onPreview={p.onPreview}
-          onSearchChange={p.onSearchChange}
-          onSearchClear={p.onSearchClear}
-          onSeeAll={p.onSeeAll}
         />
       </View>
       {p.modals}

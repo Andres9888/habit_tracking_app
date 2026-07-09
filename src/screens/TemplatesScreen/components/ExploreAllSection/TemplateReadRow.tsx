@@ -5,7 +5,7 @@
  */
 
 import { View } from 'react-native';
-import type { Doc, Id } from '../../../../../convex/_generated/dataModel';
+import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { TemplateReadRowDrawer } from './TemplateReadRowDrawer';
 import { TemplateReadRowHeader } from './TemplateReadRowHeader';
@@ -14,7 +14,7 @@ import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowProps {
   importedTemplateIds: Set<string>;
-  importingTemplateId: Id<'templates'> | null;
+  importingTemplateId: string | null;
   item: Doc<'templates'>;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
@@ -28,10 +28,16 @@ export function TemplateReadRow({
   onPreview,
 }: TemplateReadRowProps) {
   const { colors } = useThemeColors();
+  const surface = colors.card;
   const isImported = importedTemplateIds.has(item._id);
-  // Curated leads are sparse — fall back to the template description so the
-  // science read is available on every row (mock parity).
-  const hasRead = Boolean(item.lead || item.description);
+  // Only offer the science read when there's curated copy beyond the
+  // description already shown on the card — never repeat it.
+  const hasRead = Boolean(
+    item.lead ||
+      item.evidence ||
+      item.startSmallVersion ||
+      item.scientificReference
+  );
   const {
     chevronAnimatedStyle,
     contentAnimatedStyle,
@@ -41,13 +47,8 @@ export function TemplateReadRow({
   } = useTemplateReadRow();
 
   return (
-    <View style={[s.cardWrap, { backgroundColor: colors.gray[50] }]}>
-      <View
-        style={[
-          s.card,
-          { backgroundColor: colors.gray[50], borderColor: colors.border },
-        ]}
-      >
+    <View style={[s.cardWrap, { backgroundColor: surface }]}>
+      <View style={[s.card, { backgroundColor: surface }]}>
         <TemplateReadRowHeader
           importingTemplateId={importingTemplateId}
           isImported={isImported}
@@ -62,6 +63,7 @@ export function TemplateReadRow({
             expanded={expanded}
             item={item}
             onContentLayout={handleContentLayout}
+            onPreview={onPreview}
             onToggle={toggle}
           />
         ) : null}

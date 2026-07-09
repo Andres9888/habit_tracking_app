@@ -11,11 +11,7 @@ export interface MainBrowseViewProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: Id<'templates'> | null;
   modals: ReactNode;
+  onClose: () => void;
   onPopularImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
-  onSearchChange: (text: string) => void;
-  onSearchClear: () => void;
-  onSeeAll: () => void;
-  searchQuery: string;
-  totalHabitCount: number;
 }

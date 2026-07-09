@@ -12,7 +12,6 @@ import { TemplatesScreenModals, TemplatesLoadingState } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
-import { renderSubView } from './views/renderSubView';
 import {
   trackLibraryEvent,
   type TemplateImportSource,
@@ -27,8 +26,7 @@ function TemplatesScreenContent({
   onCloseLibrary,
   onViewHabit,
 }: TemplatesScreenContentProps) {
-  const { data, handlers, packConfirm, state, viewNav } =
-    useTemplatesScreenProps();
+  const { data, handlers, packConfirm, state } = useTemplatesScreenProps();
 
   const handleDismissFeedback = useCallback(() => {
     state.setShowToast(false);
@@ -73,10 +71,6 @@ function TemplatesScreenContent({
     () => makeImportHandler('popular'),
     [makeImportHandler]
   );
-  const handleCatalogImport = useMemo(
-    () => makeImportHandler('catalog'),
-    [makeImportHandler]
-  );
 
   const handleDetailsDirectImport = useCallback(
     async (id: Id<'templates'>) => {
@@ -96,9 +90,6 @@ function TemplatesScreenContent({
   const handlePackConfirm = () => {
     void packConfirm.handleConfirm();
   };
-  const handleSeeAll = () => {
-    viewNav.openCatalog();
-  };
 
   if (data.isLoading && !data.allTemplates?.length) {
     return <TemplatesLoadingState />;
@@ -110,58 +101,6 @@ function TemplatesScreenContent({
         isSeeding={state.isSeeding}
         onSeedTemplates={handleSeedTemplates}
       />
-    );
-  }
-
-  const subView = renderSubView({
-    activeView: viewNav.activeView,
-    allTemplates: data.allTemplates,
-    importedTemplateIds: state.importedTemplateIds,
-    importingTemplateId: state.importingTemplateId,
-    onBack: viewNav.goBack,
-    onImport: handleCatalogImport,
-    onPreview: handlers.handleTemplatePreview,
-  });
-  if (subView) {
-    return (
-      <>
-        {subView}
-        <TemplatesScreenModals
-          importedTemplateIds={state.importedTemplateIds}
-          importingTemplateId={state.importingTemplateId}
-          previewInitialAnchor={state.previewInitialAnchor}
-          previewTemplate={state.previewTemplate}
-          showCustomizeModal={state.showCustomizeModal}
-          showFullsizePreview={state.showFullsizePreview}
-          showPaywall={state.showPaywall}
-          onCloseCustomize={() => state.setShowCustomizeModal(false)}
-          onCloseFullsize={() => state.setShowFullsizePreview(false)}
-          onClosePaywall={() => state.setShowPaywall(false)}
-          onCustomize={handlers.handleCustomizeFromPreview}
-          onDirectImport={handleDetailsDirectImport}
-          onImport={handlers.handleTemplateImport}
-          packConfirmPack={packConfirm.selectedPack}
-          packConfirmVisible={!!packConfirm.selectedPack}
-          onPackCancel={packConfirm.handleCancel}
-          onPackConfirm={handlePackConfirm}
-        />
-        <FeedbackOverlays
-          feedbackHabitId={state.feedbackHabitId}
-          feedbackTemplate={state.previewTemplate}
-          feedbackVariant={state.feedbackVariant}
-          sessionImportCount={state.sessionImportCount}
-          showCelebration={state.showCelebration}
-          showToast={state.showToast}
-          toastMessage={state.toastMessage}
-          toastOnAction={state.toastOnAction}
-          toastTemplateData={state.toastTemplateData}
-          onAddAnother={handleAddAnother}
-          onDismissCelebration={handleDismissFeedback}
-          onDismissToast={handleDismissFeedback}
-          onSaveError={handleSaveError}
-          onViewHabit={handleViewHabit}
-        />
-      </>
     );
   }
 
@@ -209,13 +148,9 @@ function TemplatesScreenContent({
           onPackConfirm={handlePackConfirm}
         />
       }
+      onClose={() => onCloseLibrary?.()}
       onPopularImport={handlePopularImport}
       onPreview={handlers.handleTemplatePreview}
-      onSearchChange={state.setSearchQuery}
-      onSearchClear={() => state.setSearchQuery('')}
-      onSeeAll={handleSeeAll}
-      searchQuery={state.searchQuery}
-      totalHabitCount={data.allTemplates?.length ?? 0}
     />
   );
 }

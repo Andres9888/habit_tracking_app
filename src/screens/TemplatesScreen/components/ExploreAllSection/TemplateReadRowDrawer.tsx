@@ -1,4 +1,4 @@
-/** Expandable "Why this works" science drawer for TemplateReadRow. */
+/** Meta pill + expandable "Why this works" science drawer for TemplateReadRow. */
 
 import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -8,7 +8,8 @@ import type { LayoutChangeEvent, ViewStyle } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { iconSizes } from '@/theme/iconSizes';
-import { getShortCitation } from '../HabitTemplateCard/templateMeta';
+import { getTemplateMetaLabel } from '../HabitTemplateCard/templateMeta';
+import { TemplateReadRowScience } from './TemplateReadRowScience';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowDrawerProps {
@@ -17,6 +18,7 @@ interface TemplateReadRowDrawerProps {
   expanded: boolean;
   item: Doc<'templates'>;
   onContentLayout: (event: LayoutChangeEvent) => void;
+  onPreview: (template: Doc<'templates'>) => void;
   onToggle: () => void;
 }
 
@@ -26,61 +28,51 @@ export function TemplateReadRowDrawer({
   expanded,
   item,
   onContentLayout,
+  onPreview,
   onToggle,
 }: TemplateReadRowDrawerProps) {
   const { colors } = useThemeColors();
-  const citation = getShortCitation(item);
-  // Tint the science affordance with the habit's own category accent (same
-  // color as the row icon), matching the "Two Worlds" mock.
-  const accent = item.iconColor || colors.primary[600];
-  // Curated lead/evidence are sparse — fall back to description and the
-  // start-small line so every drawer has a read.
-  const lead = item.lead || item.description;
-  const takeaway =
-    item.evidence ||
-    (item.startSmallVersion ? `Start small: ${item.startSmallVersion}` : null);
+  const metaLabel = getTemplateMetaLabel(item);
+  const accent = colors.primary[600];
 
   return (
     <>
-      <Pressable
-        accessibilityLabel={expanded ? 'Hide why this works' : 'Show why this works'}
-        accessibilityRole='button'
-        style={[
-          s.toggle,
-          {
-            backgroundColor: expanded ? `${accent}0A` : 'transparent',
-            borderTopColor: colors.border,
-          },
-        ]}
-        onPress={onToggle}
-      >
-        <FlaskConical color={accent} size={iconSizes.small} strokeWidth={2} />
-        <Text numberOfLines={1} style={[s.toggleLabel, { color: accent }]}>
-          Why this works · 1-min read
-        </Text>
-        <Animated.View style={chevronAnimatedStyle}>
-          <ChevronDown color={accent} size={iconSizes.small} strokeWidth={2} />
-        </Animated.View>
-      </Pressable>
+      <View style={[s.footer, { borderTopColor: colors.border }]}>
+        {metaLabel ? (
+          <View style={[s.metaPill, { backgroundColor: colors.border }]}>
+            <Text style={[s.metaPillText, { color: colors.text.tertiary }]}>
+              {metaLabel}
+            </Text>
+          </View>
+        ) : (
+          <View />
+        )}
+        <Pressable
+          accessibilityLabel={expanded ? 'Hide why this works' : 'Show why this works'}
+          accessibilityRole='button'
+          style={s.toggle}
+          onPress={onToggle}
+        >
+          <FlaskConical color={accent} size={iconSizes.small} strokeWidth={2} />
+          <Text numberOfLines={1} style={[s.toggleLabel, { color: accent }]}>
+            Why this works
+          </Text>
+          <Animated.View style={chevronAnimatedStyle}>
+            <ChevronDown color={accent} size={iconSizes.small} strokeWidth={2} />
+          </Animated.View>
+        </Pressable>
+      </View>
       <Animated.View
         accessibilityElementsHidden={!expanded}
         importantForAccessibility={expanded ? 'auto' : 'no-hide-descendants'}
         pointerEvents={expanded ? 'auto' : 'none'}
         style={contentAnimatedStyle}
       >
-        <View style={s.drawerBody} onLayout={onContentLayout}>
-          <Text style={[s.drawerLead, { color: colors.text.secondary }]}>{lead}</Text>
-          {takeaway ? (
-            <Text style={[s.drawerTakeaway, { color: colors.text.primary }]}>
-              {takeaway}
-            </Text>
-          ) : null}
-          {citation ? (
-            <Text style={[s.drawerCitation, { color: colors.text.tertiary }]}>
-              {citation}
-            </Text>
-          ) : null}
-        </View>
+        <TemplateReadRowScience
+          item={item}
+          onLayout={onContentLayout}
+          onPreview={onPreview}
+        />
       </Animated.View>
     </>
   );

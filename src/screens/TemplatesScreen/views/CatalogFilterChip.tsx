@@ -24,6 +24,12 @@ export function CatalogFilterChip({
   onSelect,
 }: CatalogFilterChipProps) {
   const { colors } = useThemeColors();
+  // Ink-pill selected state — dark pill with inverted label, matching the
+  // reference catalog design.
+  const chipColors = isSelected
+    ? { backgroundColor: colors.text.primary, borderColor: colors.text.primary }
+    : { backgroundColor: colors.card, borderColor: colors.border };
+  const labelColor = isSelected ? colors.text.inverse : colors.text.secondary;
 
   return (
     <View onLayout={onLayout(chipId)}>
@@ -31,25 +37,13 @@ export function CatalogFilterChip({
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
         hitSlop={0}
-        style={[
-          s.chip,
-          { backgroundColor: colors.card, borderColor: colors.border },
-          isSelected ? s.chipSelected : null,
-        ]}
+        style={[s.chip, chipColors]}
         onPress={() => {
           void triggerHaptic('selection');
           onSelect(chipId);
         }}
       >
-        <Text
-          style={[
-            s.chipLabel,
-            { color: colors.text.secondary },
-            isSelected ? s.chipLabelSelected : null,
-          ]}
-        >
-          {label}
-        </Text>
+        <Text style={[s.chipLabel, { color: labelColor }]}>{label}</Text>
       </AnimatedPressable>
     </View>
   );
