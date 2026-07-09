@@ -13,6 +13,7 @@ import { StyleSheet } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
+import { isLinkable } from './chainLinkHelpers';
 import type { DayData } from './types';
 
 const CELL_SIZE = 36;
@@ -22,10 +23,6 @@ interface ChainConnectorsProps {
   /** Pre-blended solid tint, identical to the completed cell background. */
   completedBg: string;
   rowWidth: number;
-}
-
-function isLinkable(d: DayData | undefined): boolean {
-  return Boolean(d?.isCompleted && d?.isCurrentMonth && !d?.isFuture);
 }
 
 export const ChainConnectors = memo(function ChainConnectors({
