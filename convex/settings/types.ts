@@ -32,7 +32,7 @@ export const DEFAULT_SETTINGS = {
   completionSoundEnabled: false,
   completionSoundType: 'chime' as CompletionSoundType,
   darkMode: 'light' as DarkModePreference,
-  dayShape: 'square' as const,
+  dayShape: 'circle' as const,
   habitCompletionIcon: 'chain' as const,
   habitSortMode: 'manual' as HabitSortMode,
   hasPremium: false,
