@@ -37,7 +37,7 @@ export function ChainDayBody({
     ? { backgroundColor: habitColor, borderColor: colors.primary[600] }
     : showMissed
       ? {
-          backgroundColor: '#FFFFFF',
+          backgroundColor: colors.light.cardElevated,
           borderColor: colors.gray[300],
           borderStyle: 'dashed' as const,
         }
