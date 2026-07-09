@@ -23,6 +23,7 @@ export function CalendarDayBodyConnector({
 
   return (
     <View
+      testID='chain-small-connector'
       pointerEvents='none'
       style={{
         position: 'absolute',
