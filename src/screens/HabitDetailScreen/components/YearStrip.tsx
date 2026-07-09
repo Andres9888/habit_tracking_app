@@ -11,6 +11,8 @@ import {
 } from '../../../components/BinaryHeatmap';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
+import { api } from '../../../../convex/_generated/api';
+import { useCachedQuery } from '../../../lib/queryCache';
 
 interface YearStripProps {
   completedDates: Set<string>;
@@ -26,6 +28,12 @@ export function YearStrip({
   onNavigateToMonth,
 }: YearStripProps) {
   const { colors } = useThemeColors();
+  const settings = useCachedQuery(
+    api.settings.get,
+    {},
+    { entryName: 'settings.get' }
+  );
+  const dayShape = settings?.dayShape ?? 'square';
   const gridData = useMemo(
     () => generateBinaryGrid('1y', completedDates, habitCreatedAt),
     [completedDates, habitCreatedAt]
@@ -41,6 +49,7 @@ export function YearStrip({
       <InlineHeatmapGrid
         habitColor={habitColor}
         monthLabels={gridData.monthLabels}
+        shape={dayShape}
         weeks={gridData.weeks}
         onCellPress={handleCellPress}
       />

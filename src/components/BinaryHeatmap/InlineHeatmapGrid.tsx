@@ -22,6 +22,7 @@ export interface InlineHeatmapGridProps {
   weeks: (BinaryDay | null)[][];
   monthLabels: BinaryMonthLabel[];
   habitColor: string;
+  shape?: 'circle' | 'square';
   onCellPress?: (
     date: string,
     completed: boolean,
@@ -33,6 +34,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
   weeks,
   monthLabels,
   habitColor,
+  shape = 'square',
   onCellPress,
 }: InlineHeatmapGridProps) {
   const { colors, isDark } = useThemeColors();
@@ -83,6 +85,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
                   day={day}
                   habitColor={habitColor}
                   isDark={isDark}
+                  shape={shape}
                   onCellPress={onCellPress}
                 />
               ))}

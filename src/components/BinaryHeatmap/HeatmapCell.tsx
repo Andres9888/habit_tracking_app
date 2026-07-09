@@ -12,12 +12,13 @@ import type { GestureResponderEvent } from 'react-native';
 
 import type { BinaryDay } from './types';
 import { styles } from './BinaryHeatmapNew.styles';
-import { getCellBackgroundColor } from './cellHelpers';
+import { getCellBackgroundColor, getChainCellShapeStyle } from './cellHelpers';
 
 export interface HeatmapCellProps {
   day: BinaryDay | null;
   habitColor: string;
   isDark: boolean;
+  shape?: 'circle' | 'square';
   onCellPress?: (
     date: string,
     completed: boolean,
@@ -29,6 +30,7 @@ export const HeatmapCell = memo(function HeatmapCell({
   day,
   habitColor,
   isDark,
+  shape = 'square',
   onCellPress,
 }: HeatmapCellProps) {
   const cellStyle = [
@@ -39,6 +41,7 @@ export const HeatmapCell = memo(function HeatmapCell({
       borderWidth: day?.isToday ? 2 : 0,
       opacity: day?.isFuture ? 0.4 : 1,
     },
+    shape === 'circle' ? getChainCellShapeStyle(day, isDark) : null,
   ];
 
   if (!day || !onCellPress || day.isFuture || day.isBeforeCreation) {
