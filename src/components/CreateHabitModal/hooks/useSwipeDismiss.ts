@@ -117,7 +117,7 @@ export function useSwipeDismiss({ visible, onClose }: UseSwipeDismissProps) {
         runOnJS(animateOut)();
       } else {
         translateY.value = withSpring(0, springs.gesture);
-        backdropOpacity.value = withTiming(BACKDROP_TARGET, { duration: 200 });
+        backdropOpacity.value = withTiming(BACKDROP_TARGET, { duration: durations.standard });
       }
     });
 

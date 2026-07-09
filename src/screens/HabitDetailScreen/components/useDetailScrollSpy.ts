@@ -63,9 +63,17 @@ export function useDetailScrollSpy(
       }
       if (Date.now() < suppressUntilRef.current) return;
       const scrollY = rawY + ACTIVE_SECTION_THRESHOLD;
+      // Order-agnostic: active = section with the greatest laid-out y still
+      // above the scroll line. Survives Calendar/Goal/Strength reordering.
       let next: DetailView = 'calendar';
-      if (sections.goal > 0 && scrollY >= sections.goal) next = 'goal';
-      else if (sections.strength > 0 && scrollY >= sections.strength) next = 'strength';
+      let bestY = -Infinity;
+      for (const view of ['calendar', 'goal', 'strength'] as DetailView[]) {
+        const y = sections[view];
+        if (y > 0 && scrollY >= y && y > bestY) {
+          next = view;
+          bestY = y;
+        }
+      }
       setActiveView((prev) => (prev === next ? prev : next));
     },
     [onPinnedChange]

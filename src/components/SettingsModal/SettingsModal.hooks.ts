@@ -69,7 +69,6 @@ export const useSettingsModalLogic = ({
     setReduceMotionState: localPrefs.setReduceMotionState,
     setShowGradientFillState: localPrefs.setShowGradientFillState,
     setShowStreakConnectionsState: localPrefs.setShowStreakConnectionsState,
-    setUseDyslexicFontState: localPrefs.setUseDyslexicFontState,
   });
 
   const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
@@ -86,11 +85,9 @@ export const useSettingsModalLogic = ({
     setReduceMotion: updaters.setReduceMotion,
     setShowGradientFill: updaters.setShowGradientFill,
     setShowStreakConnections: updaters.setShowStreakConnections,
-    setUseDyslexicFont: updaters.setUseDyslexicFont,
     setView,
     showGradientFill: localPrefs.showGradientFill,
     showStreakConnections: localPrefs.showStreakConnections,
-    useDyslexicFont: localPrefs.useDyslexicFont,
     view,
     viewDirection,
   };

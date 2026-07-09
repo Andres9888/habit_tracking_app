@@ -14,13 +14,13 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
-import { springs } from '@/theme/animations';
+import { durations, springs } from '@/theme/animations';
 
 const BOUNCE_SPRING = springs.celebration;
 const COMPLETION_SPRING = springs.standard;
-const CROSSFADE_MS = 150;
+const CROSSFADE_MS = durations.quick;
 const REVERT_DELAY_MS = 3500;
-const REVERT_MS = 800;
+const REVERT_MS = durations.progress;
 const REVERT_SPRING = springs.standard;
 
 export interface CelebrationAnimStyles {

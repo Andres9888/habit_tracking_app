@@ -1,14 +1,10 @@
 /** Upper settings sections: profile → Pro card → Look & Feel → Reminders → Habits */
-import { Accessibility, BellRing, Palette } from 'lucide-react-native';
+import { BellRing, Palette } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import Animated from 'react-native-reanimated';
 import { ProfileHeroCard } from '../ProfileHeroCard';
 import { StreakRemindersSection } from '../StreakRemindersSection';
-import {
-  AccessibilitySection,
-  AppearanceSection,
-  ProSettingsCard,
-} from '../sections';
+import { AppearanceSection, ProSettingsCard } from '../sections';
 import { BehaviorSection } from './BehaviorSection';
 import { sectionEnterAnim } from '../SettingsContent.constants';
 import { sectionHasMatch, useSettingsSearch } from '../search';
@@ -79,15 +75,6 @@ export function SettingsPrimarySections(p: PrimarySectionsProps) {
             onChangeHabitSortMode={p.onChangeHabitSortMode}
             onExportHabitsData={p.onExportHabitsData}
             onOpenArchivedHabits={p.onOpenArchivedHabits}
-          />
-        </Animated.View>
-      ) : null}
-      {sectionHasMatch(query, 'accessibility') ? (
-        <Animated.View entering={entering(5)}>
-          <AccessibilitySection
-            icon={<Accessibility color={p.sectionIconColor} size={iconSize} />}
-            useDyslexicFont={p.useDyslexicFont}
-            onChangeUseDyslexicFont={p.onChangeUseDyslexicFont}
           />
         </Animated.View>
       ) : null}

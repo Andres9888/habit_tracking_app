@@ -39,6 +39,12 @@ export function buildLatestMemoryKey(name: string): string {
   return `${name}:latest`;
 }
 
+// Args the :latest slot was written with — lets readers judge whether the
+// fallback payload is usable for their request (see CachedQueryOptions.latestUsable).
+export function buildLatestArgsMemoryKey(name: string): string {
+  return `${name}:latest:args`;
+}
+
 export function buildLatestStorageKey(
   entry: CacheEntryDefinition,
   scope = queryCacheScope

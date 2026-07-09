@@ -1,3 +1,5 @@
+import { structuralEqual } from '../equality';
+
 type Listener = () => void;
 
 interface CacheRecord {
@@ -37,6 +39,16 @@ export const queryCacheStore = {
     const current = cache.get(key);
     if (current && current.value === value && current.savedAt === savedAt)
       return;
+    // Content-identical fresh instance: keep the prior value reference (so
+    // useSyncExternalStore readers bail on the unchanged snapshot) but adopt
+    // the new savedAt (so useCachedQuerySavedAt readers stay reactive).
+    // NOTE: relies on all value readers going through uSES — a direct
+    // (non-uSES) reader would still see a notify with an unchanged reference.
+    if (current && structuralEqual(current.value, value)) {
+      cache.set(key, { savedAt, value: current.value });
+      notify(key);
+      return;
+    }
     cache.set(key, { savedAt, value });
     notify(key);
   },

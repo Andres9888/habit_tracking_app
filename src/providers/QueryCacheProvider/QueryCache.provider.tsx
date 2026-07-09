@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 
 import {
   hydrateQueryCache,
+  markQueryCacheHydrated,
   resetQueryCache,
   setQueryCacheScope,
 } from '../../lib/queryCache';
@@ -21,7 +22,13 @@ export function QueryCacheProvider({ children }: QueryCacheProviderProps) {
       previousScope.current = scope;
     }
 
-    void hydrateQueryCache(scope);
+    let isCurrentHydration = true;
+    void hydrateQueryCache(scope).finally(() => {
+      if (isCurrentHydration) markQueryCacheHydrated();
+    });
+    return () => {
+      isCurrentHydration = false;
+    };
   }, [isLoaded, isSignedIn, userId]);
 
   return children;

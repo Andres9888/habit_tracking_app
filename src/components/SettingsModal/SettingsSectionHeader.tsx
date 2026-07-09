@@ -10,6 +10,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
+import { settingsSectionTitle } from './settingsSectionTitleStyle';
 
 interface SettingsSectionHeaderProps {
   title: string;
@@ -44,10 +45,7 @@ export function SettingsSectionHeader({
         </View>
         <Text
           style={{
-            fontFamily: typography.heading3.fontFamily,
-            fontSize: 15,
-            fontWeight: fontWeights.bold,
-            letterSpacing: -0.2,
+            ...settingsSectionTitle,
             color: themeColors.text.primary,
           }}
         >

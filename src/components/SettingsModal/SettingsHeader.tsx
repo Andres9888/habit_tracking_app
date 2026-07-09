@@ -4,14 +4,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { fontFamilies, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
-import type { SettingsColors } from './types';
 
 interface SettingsHeaderProps {
-  colors: SettingsColors;
   onClose: () => void;
 }
 
-export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
+export function SettingsHeader({ onClose }: SettingsHeaderProps) {
   const insets = useSafeAreaInsets();
   const { colors: themeColors } = useThemeColors();
 
@@ -19,7 +17,7 @@ export function SettingsHeader({ colors, onClose }: SettingsHeaderProps) {
     <View
       accessibilityRole='header'
       style={{
-        backgroundColor: colors.background,
+        backgroundColor: themeColors.background,
         paddingTop: Math.max(insets.top + 8, 16),
         paddingHorizontal: 20,
         paddingBottom: 12,

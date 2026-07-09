@@ -3,10 +3,8 @@ import type {
   CompletionSoundType,
   DarkModePreference,
 } from '../../../convex/settings/types';
-import type { SettingsColors } from './types';
 
 export interface SettingsContentProps {
-  colors: SettingsColors;
   bottomInset?: number;
   compactView: boolean;
   onChangeCompactView: (value: boolean) => void | Promise<void>;
@@ -22,8 +20,6 @@ export interface SettingsContentProps {
     value: DarkModePreference
   ) => void | Promise<void>;
   archivedHabitsCount?: number;
-  useDyslexicFont: boolean;
-  onChangeUseDyslexicFont: (value: boolean) => void | Promise<void>;
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;
   onOpenCalendarLook: () => void;

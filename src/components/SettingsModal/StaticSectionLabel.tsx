@@ -1,8 +1,9 @@
 /** StaticSectionLabel - iOS grouped-list section label: serif title + trailing green glyph */
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-import { typography, fontFamilies, fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 import { useThemeColors } from '@/theme/ThemeContext';
+import { settingsSectionTitle } from './settingsSectionTitleStyle';
 
 interface StaticSectionLabelProps {
   title: string;
@@ -21,10 +22,7 @@ export function StaticSectionLabel({
     <View className='flex-row items-center px-2' style={{ gap: 7 }}>
       <Text
         style={{
-          fontFamily: fontFamilies.serif,
-          fontSize: 15.5,
-          fontWeight: fontWeights.semibold,
-          letterSpacing: -0.1,
+          ...settingsSectionTitle,
           color: themeColors.text.primary,
         }}
       >

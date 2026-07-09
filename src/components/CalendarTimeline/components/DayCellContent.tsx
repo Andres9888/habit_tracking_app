@@ -1,27 +1,16 @@
-/* eslint-disable max-lines */
-import React, { useEffect } from 'react';
-import { Text } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated';
+import React from 'react';
+import { Text, View } from 'react-native';
+import Animated from 'react-native-reanimated';
 
 import type {
   CalendarColors,
   CompletionStatus,
 } from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { durations } from '../../../theme/animations';
 import { fontFamilies } from '../../../theme/typography';
 import { useTodayGlow } from '../hooks/useTodayGlow';
 
 import { DayCellRing } from './DayCellRing';
-
-const ENTRANCE_DURATION = durations.enter;
-const STAGGER_DELAY = durations.stagger;
-const ENTRANCE_TRANSLATE_Y = 12;
 
 interface DayCellContentProps {
   weekday: string;
@@ -45,7 +34,6 @@ interface DayCellContentProps {
 const DayCellContentComponent: React.FC<DayCellContentProps> = ({
   weekday,
   dayNumber,
-  index,
   isCurrentDay,
   isUpcoming,
   completionStatus,
@@ -67,24 +55,8 @@ const DayCellContentComponent: React.FC<DayCellContentProps> = ({
     isDark,
   });
 
-  const entranceOpacity = useSharedValue(reduceMotion ? 1 : 0);
-  const entranceY = useSharedValue(reduceMotion ? 0 : ENTRANCE_TRANSLATE_Y);
-
-  useEffect(() => {
-    if (reduceMotion) return;
-    const delay = index * STAGGER_DELAY;
-    const timing = { duration: ENTRANCE_DURATION };
-    entranceOpacity.value = withDelay(delay, withTiming(1, timing));
-    entranceY.value = withDelay(delay, withTiming(0, timing));
-  }, [index, reduceMotion, entranceOpacity, entranceY]);
-
-  const entranceStyle = useAnimatedStyle(() => ({
-    opacity: entranceOpacity.value,
-    transform: [{ translateY: entranceY.value }],
-  }));
-
   return (
-    <Animated.View style={entranceStyle}>
+    <View>
       <Text
         className='text-center text-[10px] leading-[14px]'
         style={{
@@ -119,7 +91,7 @@ const DayCellContentComponent: React.FC<DayCellContentProps> = ({
           total={total}
         />
       </Animated.View>
-    </Animated.View>
+    </View>
   );
 };
 

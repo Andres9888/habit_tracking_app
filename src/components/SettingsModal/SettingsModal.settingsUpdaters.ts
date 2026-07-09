@@ -5,7 +5,6 @@ export function createSettingsUpdaters(
   setters: {
     setDarkModeState: (v: DarkModePreference) => void;
     setReduceMotionState: (v: boolean) => void;
-    setUseDyslexicFontState: (v: boolean) => void;
     setCompactViewState: (v: boolean) => void;
     setShowGradientFillState: (v: boolean) => void;
     setShowStreakConnectionsState: (v: boolean) => void;
@@ -34,10 +33,6 @@ export function createSettingsUpdaters(
     setShowStreakConnections: async (value: boolean) => {
       setters.setShowStreakConnectionsState(value);
       await update({ showStreakConnections: value });
-    },
-    setUseDyslexicFont: async (value: boolean) => {
-      setters.setUseDyslexicFontState(value);
-      await update({ useDyslexicFont: value });
     },
   };
 }

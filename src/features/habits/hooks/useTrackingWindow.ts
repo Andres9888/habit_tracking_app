@@ -32,8 +32,15 @@ export function useTrackingWindow(
   extendedDateStrings: string[],
   stableToday: Date
 ) {
-  const requestedStart = extendedDateStrings[0];
-  const requestedEnd = extendedDateStrings.at(-1);
+  // Callers pass date lists in either direction (the modals-state list is
+  // newest-first), so order the endpoints before treating them as a range —
+  // a descending list otherwise inverts the window and silently excludes
+  // the most recent WINDOW_BUFFER_DAYS, including today.
+  const firstDate = extendedDateStrings[0];
+  const lastDate = extendedDateStrings.at(-1);
+  const ascending = firstDate && lastDate ? firstDate <= lastDate : true;
+  const requestedStart = ascending ? firstDate : lastDate;
+  const requestedEnd = ascending ? lastDate : firstDate;
   const windowStartRef = useRef('');
   const windowEndRef = useRef('');
 

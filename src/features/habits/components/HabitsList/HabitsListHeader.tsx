@@ -23,6 +23,7 @@ import { useTrialCountdown } from '../../../../components/TrialCountdownBanner';
 import { useStickyProgress } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import type { HabitsListHeaderProps } from './HabitsListHeader.types';
 import { useHabitsListHeaderComputed } from './useHabitsListHeaderComputed';
+import { DayCompleteBeat } from './DayCompleteBeat';
 
 /** Content padding applied by DraggableFlatList's contentContainerStyle */
 const CONTENT_H_PADDING = 24;
@@ -51,6 +52,9 @@ function HabitsListHeaderComponent(
   });
 
   const { shouldShowBanner, daysRemaining } = useTrialCountdown();
+
+  const isAllDone =
+    props.totalHabits > 0 && props.completedToday >= props.totalHabits;
 
   return (
     <ReAnimated.View
@@ -95,6 +99,10 @@ function HabitsListHeaderComponent(
           />
         </Animated.View>
       ) : null}
+      <DayCompleteBeat
+        isAllDone={isAllDone}
+        reduceMotion={props.reduceMotionPreference}
+      />
     </ReAnimated.View>
   );
 }
