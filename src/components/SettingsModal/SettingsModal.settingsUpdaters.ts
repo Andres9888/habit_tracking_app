@@ -1,3 +1,5 @@
+import type { ConnectorStyle } from '../../../convex/settings/types';
+
 type DarkModePreference = 'system' | 'light' | 'dark';
 
 export function createSettingsUpdaters(
@@ -7,13 +9,17 @@ export function createSettingsUpdaters(
     setReduceMotionState: (v: boolean) => void;
     setCompactViewState: (v: boolean) => void;
     setShowGradientFillState: (v: boolean) => void;
-    setShowStreakConnectionsState: (v: boolean) => void;
+    setConnectorStyleState: (v: ConnectorStyle) => void;
   }
 ) {
   return {
     setCompactView: async (value: boolean) => {
       setters.setCompactViewState(value);
       await update({ compactView: value });
+    },
+    setConnectorStyle: async (value: ConnectorStyle) => {
+      setters.setConnectorStyleState(value);
+      await update({ connectorStyle: value });
     },
     setDarkModePreference: async (value: DarkModePreference) => {
       setters.setDarkModeState(value);
@@ -29,10 +35,6 @@ export function createSettingsUpdaters(
     setShowGradientFill: async (value: boolean) => {
       setters.setShowGradientFillState(value);
       await update({ showGradientFill: value });
-    },
-    setShowStreakConnections: async (value: boolean) => {
-      setters.setShowStreakConnectionsState(value);
-      await update({ showStreakConnections: value });
     },
   };
 }

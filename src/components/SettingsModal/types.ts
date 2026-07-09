@@ -7,7 +7,7 @@ export interface SettingsModalSettingsDocument {
   reduceMotion?: boolean;
   useDyslexicFont?: boolean;
   showGradientFill?: boolean;
-  showStreakConnections?: boolean;
+  connectorStyle?: 'none' | 'small' | 'full';
   stickyCalendarHeader?: boolean;
   habitSortMode?: string;
 }
