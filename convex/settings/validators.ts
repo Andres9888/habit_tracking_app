@@ -37,7 +37,11 @@ export const settingsReturnValidator = v.object({
   showConsistency: v.boolean(),
   showEmojis: v.boolean(),
   showGradientFill: v.boolean(),
-  showStreakConnections: v.boolean(),
+  connectorStyle: v.union(
+    v.literal('none'),
+    v.literal('small'),
+    v.literal('full')
+  ),
   showMotivationalMessages: v.boolean(),
   showStreaks: v.boolean(),
   stickyCalendarHeader: v.boolean(),
@@ -92,7 +96,9 @@ export const updateArgsValidator = {
   showConsistency: v.optional(v.boolean()),
   showEmojis: v.optional(v.boolean()),
   showGradientFill: v.optional(v.boolean()),
-  showStreakConnections: v.optional(v.boolean()),
+  connectorStyle: v.optional(
+    v.union(v.literal('none'), v.literal('small'), v.literal('full'))
+  ),
   showMotivationalMessages: v.optional(v.boolean()),
   showStreaks: v.optional(v.boolean()),
   stickyCalendarHeader: v.optional(v.boolean()),
