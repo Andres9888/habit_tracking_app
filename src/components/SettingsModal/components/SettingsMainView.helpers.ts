@@ -19,7 +19,6 @@ export function buildSettingsContentProps(
     isPremium: p.isPremium ?? false,
     streakRemindersEnabled: p.streakRemindersEnabled ?? false,
     streakReminderTime: p.streakReminderTime ?? '20:00',
-    useDyslexicFont: p.useDyslexicFont,
     onChangeCompactView: p.setCompactView,
     onChangeCompletionSoundEnabled:
       p.onChangeCompletionSoundEnabled ?? (() => {}),
@@ -27,7 +26,6 @@ export function buildSettingsContentProps(
     onChangeDarkModePreference: p.setDarkModePreference,
     onChangeHabitSortMode: handleSortSelect,
     onChangeStreakReminderTime: p.onChangeStreakReminderTime ?? (() => {}),
-    onChangeUseDyslexicFont: p.setUseDyslexicFont,
     onExportHabitsData: p.onExportHabitsData,
     onOpenAccount: () => p.setView('account'),
     onOpenArchivedHabits: () => p.setView('archived'),

@@ -11,7 +11,6 @@ export function useSettingsLocalPrefs(
   const [darkModePreference, setDarkModeState] =
     useState<DarkModePreference>('system');
   const [reduceMotion, setReduceMotionState] = useState(false);
-  const [useDyslexicFont, setUseDyslexicFontState] = useState(false);
   const [compactView, setCompactViewState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
   const [showStreakConnections, setShowStreakConnectionsState] = useState(true);
@@ -20,7 +19,6 @@ export function useSettingsLocalPrefs(
     if (settings) {
       setDarkModeState(normalizeDarkModePreference(settings.darkMode));
       setReduceMotionState(settings.reduceMotion ?? false);
-      setUseDyslexicFontState(settings.useDyslexicFont ?? false);
       setCompactViewState(settings.compactView ?? false);
       setShowGradientFillState(settings.showGradientFill ?? true);
       setShowStreakConnectionsState(settings.showStreakConnections ?? true);
@@ -36,9 +34,7 @@ export function useSettingsLocalPrefs(
     setReduceMotionState,
     setShowGradientFillState,
     setShowStreakConnectionsState,
-    setUseDyslexicFontState,
     showGradientFill,
     showStreakConnections,
-    useDyslexicFont,
   };
 }

@@ -20,8 +20,6 @@ export interface SettingsContentProps {
     value: DarkModePreference
   ) => void | Promise<void>;
   archivedHabitsCount?: number;
-  useDyslexicFont: boolean;
-  onChangeUseDyslexicFont: (value: boolean) => void | Promise<void>;
   onOpenAccount: () => void;
   onOpenArchivedHabits: () => void;
   onOpenCalendarLook: () => void;

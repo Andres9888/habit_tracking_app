@@ -7,7 +7,6 @@ export type SettingsSectionKey =
   | 'appearance'
   | 'behavior'
   | 'reminders'
-  | 'accessibility'
   | 'support';
 
 export const SETTINGS_SEARCH_SECTIONS: Record<SettingsSectionKey, string[]> = {
@@ -21,9 +20,13 @@ export const SETTINGS_SEARCH_SECTIONS: Record<SettingsSectionKey, string[]> = {
   ],
   // Habits now also owns the data rows (Archived / Export) that used to live in
   // a separate Data & Privacy section. Sticky header moved to Calendar look.
-  behavior: ['Sort order', 'Completion sound', 'Archived habits', 'Export habits data'],
+  behavior: [
+    'Sort order',
+    'Completion sound',
+    'Archived habits',
+    'Export habits data',
+  ],
   reminders: ['Streak Reminders'],
-  accessibility: ['Dyslexia-friendly font'],
   support: [
     'Rate Chain Day',
     'Share with Friends',
