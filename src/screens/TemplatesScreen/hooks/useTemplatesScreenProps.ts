@@ -17,9 +17,7 @@ import {
   useTemplatesData,
 } from '../useTemplatesData';
 import { getCategoryLabel as resolveCategoryLabel } from '../utils/getCategoryLabel';
-import { useMainBrowseData } from './useMainBrowseData';
 import { usePackConfirm } from './usePackConfirm';
-import { useViewNavigation } from './useViewNavigation';
 
 export function useTemplatesScreenProps() {
   const reducedMotion = useReduceMotion();
@@ -71,19 +69,12 @@ export function useTemplatesScreenProps() {
     userHabitCount: data.userHabitCount,
   });
 
-  const viewNav = useViewNavigation();
   const packConfirm = usePackConfirm({
     allTemplates: data.allTemplates,
     importTemplate: data.importTemplate,
     onComplete: (count) =>
       state.setSessionImportCount((current) => current + count),
     setImportedIds: state.setImportedTemplateIds,
-  });
-  const mainBrowseData = useMainBrowseData({
-    allTemplates: data.allTemplates,
-    importedTemplateIds: state.importedTemplateIds,
-    isPremiumUser: data.isPremiumUser,
-    userHabitCount: data.userHabitCount,
   });
 
   const getCategoryLabel = (categoryId: string) =>
@@ -101,12 +92,10 @@ export function useTemplatesScreenProps() {
     getCategoryLabel,
     handlers,
     handleTabPress,
-    mainBrowseData,
     packConfirm,
     scienceCountsByCategory,
     state,
     tabIndicator,
     templatesByCategory,
-    viewNav,
   };
 }

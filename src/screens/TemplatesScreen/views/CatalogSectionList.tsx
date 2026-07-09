@@ -5,18 +5,12 @@
  */
 
 import { SectionList, StyleSheet, View } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { durations, enterEasing } from '../../../theme/animations';
 import { spacing } from '../../../theme/spacing';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import { HabitTemplateCard } from '../components/HabitTemplateCard';
+import { TemplateReadRow } from '../components/ExploreAllSection/TemplateReadRow';
 import { SectionHeader } from '../components/SectionHeader';
 import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
 import { getCategoryMeta } from '../data/categoryMeta';
-
-/** Cap staggered entrance to the first few items per section (perf). */
-const MAX_STAGGER_INDEX = 4;
 
 interface CatalogSectionListProps {
   groups: CategoryGroup[];
@@ -34,7 +28,6 @@ interface CatalogSection {
 }
 
 export function CatalogSectionList(p: CatalogSectionListProps) {
-  const reduceMotion = useReduceMotion();
   const sections: CatalogSection[] = p.groups.map((group) => ({
     data: group.templates,
     key: group.category,
@@ -47,27 +40,14 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       contentContainerStyle={s.list}
       keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
-      renderItem={({ item, index }) => (
-        <Animated.View
-          entering={
-            reduceMotion
-              ? undefined
-              : FadeInDown.delay(
-                  Math.min(index, MAX_STAGGER_INDEX) * durations.stagger
-                )
-                  .duration(durations.enter)
-                  .easing(enterEasing)
-          }
-        >
-          <HabitTemplateCard
-            descriptionLines={3}
-            isImported={p.importedTemplateIds.has(item._id)}
-            isImporting={p.importingTemplateId === item._id}
-            item={item}
-            onImport={p.onImport}
-            onPreview={p.onPreview}
-          />
-        </Animated.View>
+      renderItem={({ item }) => (
+        <TemplateReadRow
+          importedTemplateIds={p.importedTemplateIds}
+          importingTemplateId={p.importingTemplateId}
+          item={item}
+          onImport={p.onImport}
+          onPreview={p.onPreview}
+        />
       )}
       renderSectionHeader={({ section }) => (
         <View style={s.header}>

@@ -53,6 +53,7 @@ import type * as habits_deleteTrackingChunk from "../habits/deleteTrackingChunk.
 import type * as habits_get from "../habits/get.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
+import type * as habits_listHabitValidator from "../habits/listHabitValidator.js";
 import type * as habits_pause from "../habits/pause.js";
 import type * as habits_recalcStaleArgs from "../habits/recalcStaleArgs.js";
 import type * as habits_recalcStaleHelpers from "../habits/recalcStaleHelpers.js";
@@ -167,6 +168,7 @@ declare const fullApi: ApiFromModules<{
   "habits/get": typeof habits_get;
   "habits/getTracking": typeof habits_getTracking;
   "habits/list": typeof habits_list;
+  "habits/listHabitValidator": typeof habits_listHabitValidator;
   "habits/pause": typeof habits_pause;
   "habits/recalcStaleArgs": typeof habits_recalcStaleArgs;
   "habits/recalcStaleHelpers": typeof habits_recalcStaleHelpers;

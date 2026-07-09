@@ -6,7 +6,6 @@ import { useMemo } from 'react';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { GOAL_COLLECTIONS } from '../data/goalCollections';
 import { PRESCRIPTIONS, type PrescriptionEntry } from '../data/prescriptions';
-import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
 import {
   buildTemplateMap,
   resolvePrescriptionStep,
@@ -57,8 +56,7 @@ export function usePrescription(
 
 export function getGoalTemplates(
   goalId: string,
-  allTemplates: Doc<'templates'>[] | undefined,
-  importedTemplateIds: Set<string>
+  allTemplates: Doc<'templates'>[] | undefined
 ): Doc<'templates'>[] {
   if (!allTemplates) return [];
   const goal = GOAL_COLLECTIONS.find((g) => g.id === goalId);
@@ -66,8 +64,7 @@ export function getGoalTemplates(
   const filtered = allTemplates.filter((t) =>
     goal.categories.includes(t.category)
   );
-  const byPopularity = [...filtered].sort(
+  return [...filtered].sort(
     (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
   );
-  return sortTemplatesByImportState(byPopularity, importedTemplateIds);
 }

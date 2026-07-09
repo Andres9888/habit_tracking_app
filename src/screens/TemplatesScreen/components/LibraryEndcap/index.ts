@@ -1,1 +1,0 @@
-export { LibraryEndcap } from './LibraryEndcap';

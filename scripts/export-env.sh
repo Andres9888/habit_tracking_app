@@ -12,7 +12,7 @@ fi
 env_file="${ENV_FILE:-.env}"
 
 first_arg="${1:-}"
-if [[ "$first_arg" != "--" && -n "$first_arg" && -f "$first_arg" ]]; then
+if [[ "$first_arg" != "--" && -n "$first_arg" ]]; then
   env_file="$first_arg"
   shift
   first_arg="${1:-}"

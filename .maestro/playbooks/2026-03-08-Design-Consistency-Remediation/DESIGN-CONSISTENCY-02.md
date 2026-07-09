@@ -1,0 +1,29 @@
+# Phase 02: Animation Duration Token Adoption
+
+**Goal:** Replace all hardcoded `withTiming` duration values with theme token references across the codebase.
+
+**Context:** After Phase 01 adds missing tokens (micro: 50, wobble: 80, exit: 120, press: 100), all commonly-used duration values have a corresponding token. This phase systematically replaces ~60 hardcoded duration values across ~25 files. Each task groups files by animation pattern for context efficiency.
+
+**Important:** Every file modified must import `{ durations }` from `@/theme/animations` (or from `@/constants/animations` if that file already imports from there — maintain existing import pattern per file). Never add a new import source if the file already imports animation tokens from one of the two sources.
+
+---
+
+- [ ] **Replace hardcoded durations in toast components**: Files: `src/components/ArchiveUndoToast/useArchiveUndoToast.ts` and `src/components/DeleteUndoToast/useDeleteToastAnimations.ts`. Replace `{ duration: 200 }` with `{ duration: durations.standard }`, `{ duration: 150 }` with `{ duration: durations.quick }`. These files already import `springs` from `@/theme/animations` — add `durations` to the existing import. If Phase 01's toast consolidation already addressed these files, verify the shared module uses tokens and skip.
+
+- [ ] **Replace hardcoded durations in celebration animations**: Files: `src/components/HabitCard/animations/celebrationAnimation.ts` and `src/components/HabitCard/animations/celebrationAnimationEnhanced.ts`. Replace `{ duration: 300 }` with `{ duration: durations.moderate }`, `{ duration: 100 }` with `{ duration: durations.instant }`. Add `import { durations } from '@/theme/animations'` to both files.
+
+- [ ] **Replace hardcoded durations in emoji picker components**: Files: `src/components/EmojiPickerV2/EmojiGrid/EmojiCell.tsx`, `src/components/EmojiPickerV2/EmojiPickerSheet/SuggestionEmojiCell.tsx`, `src/components/EmojiPickerV2/EmojiPickerSheet/SearchBar.tsx`, `src/components/EmojiPickerV2/EmojiPickerSheet/useSheetAnimations.ts`. Replace `{ duration: 50 }` with `{ duration: durations.micro }`, `{ duration: 80 }` with `{ duration: durations.wobble }`, `{ duration: 100 }` with `{ duration: durations.instant }`, `{ duration: 200 }` with `{ duration: durations.standard }`, `{ duration: 150 }` with `{ duration: durations.quick }`, `{ duration: 300 }` with `{ duration: durations.moderate }`.
+
+- [ ] **Replace hardcoded durations in strength indicator animations**: Files: `src/components/HabitStrengthIndicator/animations.ts`, `src/components/DraggableHabit/animationHelpers.ts`, `src/components/StrengthProgressBar/strengthAnimationHelpers.ts`. Replace `{ duration: 150 }` with `{ duration: durations.quick }`, `{ duration: 80 }` with `{ duration: durations.wobble }`, `{ duration: 60 }` with `{ duration: durations.micro }` (closest), `{ duration: 200 }` with `{ duration: durations.standard }`, `{ duration: 100 }` with `{ duration: durations.instant }`. If Phase 01 consolidated these into a shared module, update the shared module instead.
+
+- [ ] **Replace hardcoded durations in success/shimmer animations**: Files: `src/components/animations/CompletionCheckmark.tsx`, `src/components/animations/SuccessShimmer.tsx`. Replace `{ duration: 150 }` with `{ duration: durations.quick }`, `{ duration: 80 }` with `{ duration: durations.wobble }`, `{ duration: 400 }` with `{ duration: durations.emphasis }`, `{ duration: 120 }` with `{ duration: durations.exit }`.
+
+- [ ] **Replace hardcoded durations in settings components**: Files: `src/components/SettingsModal/SettingsRow.tsx`, `src/components/SettingsModal/sections/PremiumStatus.tsx`. In SettingsRow, replace `{ duration: 150 }` with `{ duration: durations.quick }` and `{ duration: 250 }` with `{ duration: durations.standard }` (closest to 250). In PremiumStatus, replace `{ duration: 1000 }` with `{ duration: durations.loop }`.
+
+- [ ] **Replace hardcoded durations in FullsizeTemplatePreview hooks**: Files: `src/components/FullsizeTemplatePreview/hooks/useSuccessAnimations.ts`, `src/components/FullsizeTemplatePreview/hooks/useEntranceAnimations.ts`. Replace: `{ duration: 150 }` -> `durations.quick`, `{ duration: 200 }` -> `durations.standard`, `{ duration: 300 }` -> `durations.moderate`, `{ duration: 400 }` -> `durations.emphasis`, `{ duration: 500 }` -> `durations.complex` (closest).
+
+- [ ] **Replace hardcoded durations in remaining components**: Files: `src/components/StrengthDistributionChart/StrengthDistributionChart.tsx` (`{ duration: 400 }` -> `durations.emphasis`), `src/components/ProgressSectionConsolidated/StreakRecordsAccordion/usePulseAnimation.ts` (`{ duration: 1000 }` -> `durations.loop`), `src/components/HabitCard/components/ConfettiBurst.tsx` (`{ duration: 300 }` -> `durations.moderate`, `{ duration: 400 }` -> `durations.emphasis`), `src/components/ProgressSectionConsolidated/MilestoneProgress/useAnimationEffects.ts` (`{ duration: 500 }` -> `durations.complex`), `src/components/StatsGrid/StatCard.tsx` (`{ duration: 200 }` -> `durations.standard`).
+
+- [ ] **Replace hardcoded durations in MilestoneCelebration**: File: `src/components/MilestoneCelebration/animationSequences.ts`. Line 72 has `withTiming(1, { duration: 200 })` — replace with `{ duration: durations.standard }`. The other durations in this file come from its constants file which should have been updated in Phase 01.
+
+- [ ] **Replace hardcoded duration in CreateHabitModal SuccessAnimation**: File: `src/components/CreateHabitModal/components/SuccessAnimation/constants.ts`. All durations are `200` — replace with `durations.standard`. Update the `ANIMATION_DURATIONS` object to reference the token. File: `src/components/CreateHabitModal/components/SuccessAnimation/animationSequences.ts` — verify it uses the constants from the constants file and not inline values.

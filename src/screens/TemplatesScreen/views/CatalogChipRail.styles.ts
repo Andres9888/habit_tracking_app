@@ -14,11 +14,6 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: fontWeights.semibold,
   },
-  chipLabelSelected: { color: '#FFFFFF' },
-  chipSelected: {
-    backgroundColor: '#2D2A26',
-    borderColor: '#2D2A26',
-  },
   content: {
     alignItems: 'center',
     flexDirection: 'row',

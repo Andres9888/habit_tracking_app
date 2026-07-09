@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Old card shell + new science dropdown</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeaea;
+        --border: #ddd8d2;
+        --forest: #047857;
+        --text: #1c1917;
+        --text-muted: #6b6259;
+        --font-serif: 'Literata', serif;
+        --font-sans: 'DM Sans', sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font-sans) !important;
+        background: #0f0e0d;
+        color: var(--text);
+        padding: 40px 24px 80px;
+      }
+      h1.page-title {
+        font-family: var(--font-sans) !important;
+        color: #fff;
+        text-align: center;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        margin: 0 0 6px !important;
+      }
+      p.page-sub {
+        text-align: center;
+        color: #a8a29e;
+        font-size: 13px !important;
+        margin: 0 0 36px !important;
+        max-width: 640px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      .phone {
+        background: var(--bg);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.45),
+          0 0 0 6px #1c1917;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 20px 0;
+      }
+      .list {
+        padding: 0 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .overline {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--text-muted);
+        padding: 0 4px 2px;
+      }
+
+      .habit-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+      .card-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #e7f5ee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .title {
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        margin: 0 0 3px !important;
+      }
+      .desc {
+        font-size: 13px !important;
+        color: var(--text-muted);
+        line-height: 1.45;
+        margin: 0 !important;
+      }
+      .add-pill {
+        background: var(--forest);
+        color: #fff;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        padding: 8px 16px;
+        border-radius: 999px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--border);
+      }
+      .meta-pill {
+        background: rgba(0, 0, 0, 0.05);
+        font-size: 11.5px !important;
+        font-weight: 600 !important;
+        color: var(--text-muted);
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+
+      /* new: science dropdown replacing the old "View details ›" link */
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: var(--forest);
+      }
+      .drawer {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--border);
+        font-size: 12.5px !important;
+        color: #44403c;
+        line-height: 1.55;
+      }
+      .drawer .takeaway {
+        font-family: var(--font-serif) !important;
+        font-style: italic;
+        font-size: 13px !important;
+        color: var(--text);
+        margin-top: 8px !important;
+      }
+      .drawer .citation {
+        font-family: monospace;
+        font-size: 10px !important;
+        color: #a8a29e;
+        margin-top: 8px !important;
+      }
+
+      .callout {
+        max-width: 700px;
+        margin: 32px auto 0;
+        background: #1c1917;
+        border: 1px solid #292524;
+        border-radius: 14px;
+        padding: 16px 20px;
+        color: #d6d3d1;
+        font-size: 13px !important;
+        line-height: 1.6;
+      }
+      .callout b {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Old card shell, new drop-down</h1>
+    <p class="page-sub">
+      Kept from your screenshot: gray card, icon square, bold title, description
+      always visible, pill "+ Add", meta pill. Swapped: "View details ›" → the
+      "Why this works" science toggle (same content as before — lead / italic
+      takeaway / citation).
+    </p>
+
+    <div class="phone">
+      <div class="list">
+        <div class="overline">Popular right now</div>
+
+        <div class="habit-card">
+          <div class="card-top">
+            <div class="icon-box">☀️</div>
+            <div class="body">
+              <p class="title">Morning sunlight</p>
+              <p class="desc">
+                Get 10 minutes of outdoor light within an hour of waking. Sets
+                your circadian clock and boosts daytime alertness.
+              </p>
+            </div>
+            <div class="add-pill">+ Add</div>
+          </div>
+          <div class="card-footer">
+            <div class="meta-pill">5 min · Daily</div>
+            <div class="toggle">
+              <i data-lucide="flask-conical" width="13" height="13"></i>
+              Why this works
+              <i data-lucide="chevron-down" width="13" height="13"></i>
+            </div>
+          </div>
+          <div class="drawer">
+            Morning light exposure resets your circadian clock, boosting
+            alertness and improving sleep onset that night.
+            <div class="takeaway">
+              "10 minutes outside beats any cup of coffee for real wakefulness."
+            </div>
+            <div class="citation">Huberman Lab, 2021</div>
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="card-top">
+            <div class="icon-box">🧘</div>
+            <div class="body">
+              <p class="title">Box breathing</p>
+              <p class="desc">
+                4 counts in, 4 hold, 4 out, 4 hold. Activates the
+                parasympathetic nervous system in under a minute.
+              </p>
+            </div>
+            <div class="add-pill">+ Add</div>
+          </div>
+          <div class="card-footer">
+            <div class="meta-pill">3 min · Stress</div>
+            <div class="toggle">
+              <i data-lucide="flask-conical" width="13" height="13"></i>
+              Why this works
+              <i data-lucide="chevron-down" width="13" height="13"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="card-top">
+            <div class="icon-box">📝</div>
+            <div class="body">
+              <p class="title">Gratitude journal</p>
+              <p class="desc">
+                Write down 3 things you're grateful for before bed. Linked to
+                improved mood and sleep quality.
+              </p>
+            </div>
+            <div class="add-pill">+ Add</div>
+          </div>
+          <div class="card-footer">
+            <div class="meta-pill">4 min · Mind</div>
+            <div class="toggle">
+              <i data-lucide="flask-conical" width="13" height="13"></i>
+              Why this works
+              <i data-lucide="chevron-down" width="13" height="13"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>Row 1</b> shows the drawer expanded (default-collapsed in the app).
+      Rows 2-3 collapsed, toggle only. This drops the current flat/hairline
+      TemplateReadRow shell entirely and goes back to your screenshot's
+      boxed-card-per-habit look — description always visible above the fold, no
+      need to expand just to read what the habit is. Confirm this is the
+      direction before I port it to code.
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>
