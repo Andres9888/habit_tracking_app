@@ -1,13 +1,9 @@
 import { useThemeColors } from '@/theme';
-import { colors as palette } from '@/theme/colors';
 import { format } from 'date-fns';
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { api } from '../../../../convex/_generated/api';
-import { useCachedQuery } from '../../../lib/queryCache';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
-import { completedTint } from './chainColors';
 import { MonthInsightStrip } from './MonthInsightStrip';
 import { MonthNavigation } from './MonthNavigation';
 import { styles } from './styles';
@@ -15,6 +11,7 @@ import type { MonthlyCalendarGridProps } from './types';
 import { useCalendarDays } from './useCalendarDays';
 import { useMonthGridNavigation } from './useMonthGridNavigation';
 import { useMonthInsights } from './useMonthInsights';
+import { useMonthlyCalendarGridDisplay } from './useMonthlyCalendarGridDisplay';
 import { WeekdayHeaderRow } from './WeekdayHeaderRow';
 
 export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
@@ -43,21 +40,14 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     habitCreatedAt,
   });
   const insights = useMonthInsights(completedDates, currentMonth);
-  const settings = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
-  const showConnections = settings?.showStreakConnections ?? true;
+  const { cardBg, completedBg, connectorStyle, dayShape } =
+    useMonthlyCalendarGridDisplay({
+      cardColor: colors.card,
+      habitColor,
+      isDark,
+      useSolidCompletedFill,
+    });
   const monthKey = format(currentMonth, 'yyyy-MM');
-  const cardBg = isDark ? colors.card : palette.light.surfaceMuted;
-  const completedBg = useMemo(
-    () =>
-      useSolidCompletedFill ? habitColor : completedTint(habitColor, cardBg),
-    [useSolidCompletedFill, habitColor, cardBg]
-  );
   const handleDayPress = useCallback(
     (dateString: string, completed: boolean) => {
       if (pendingToggleDate) return;
@@ -83,11 +73,12 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           <WeekdayHeaderRow labelColor={colors.text.tertiary} />
           <AnimatedWeeksGrid
             completedBg={completedBg}
+            connectorStyle={connectorStyle}
             direction={slideDirection}
             habitColor={habitColor}
             monthKey={monthKey}
             pendingToggleDate={pendingToggleDate}
-            showConnections={showConnections}
+            shape={dayShape}
             textColors={{
               inverse: colors.text.inverse,
               muted: colors.gray[300],

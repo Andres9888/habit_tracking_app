@@ -4,6 +4,7 @@ import Animated, { SlideInLeft, SlideInRight } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 import { CalendarDay } from './CalendarDay';
 import { ChainConnectors } from './ChainConnectors';
+import { shouldJoinRight } from './chainLinkHelpers';
 import { styles } from './styles';
 import type { DayData } from './types';
 
@@ -14,7 +15,8 @@ interface AnimatedWeeksGridProps {
   monthKey: string;
   onPress: (dateString: string, isCompleted: boolean) => void;
   pendingToggleDate?: string | null;
-  showConnections: boolean;
+  shape: 'circle' | 'square';
+  connectorStyle: 'none' | 'small' | 'full';
   textColors: {
     inverse: string;
     muted: string;
@@ -32,7 +34,8 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
   monthKey,
   onPress,
   pendingToggleDate = null,
-  showConnections,
+  shape,
+  connectorStyle,
   textColors,
   useSolidCompletedFill = false,
   weeks,
@@ -63,21 +66,24 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
       >
         {(weeks ?? []).map((week, weekIndex) => (
           <View key={`week-${weekIndex}`} style={styles.row}>
-            {showConnections ? (
+            {shape === 'square' && connectorStyle === 'full' ? (
               <ChainConnectors
                 week={week}
                 completedBg={completedBg}
                 rowWidth={rowWidth}
               />
             ) : null}
-            {(week ?? []).map((day) => (
+            {(week ?? []).map((day, dayIndex) => (
               <CalendarDay
                 key={day.dateString}
                 completedBg={completedBg}
+                connectorStyle={connectorStyle}
                 day={day}
                 habitColor={habitColor}
                 isPending={day.dateString === pendingToggleDate}
                 isToggleBlocked={isToggleBlocked}
+                joinRight={shouldJoinRight(week, dayIndex)}
+                shape={shape}
                 textColors={textColors}
                 useSolidCompletedFill={useSolidCompletedFill}
                 onPress={onPress}

@@ -1,20 +1,29 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet, type ViewStyle, type TextStyle } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  type ViewStyle,
+  type TextStyle,
+} from 'react-native';
 import Animated from 'react-native-reanimated';
 import { styles } from './styles';
 import { fontWeights } from '@/theme/typography';
 import { borderRadius } from '@/theme/spacing';
+import { CalendarDayBodyConnector } from './CalendarDayBodyConnector';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 interface CalendarDayBodyProps {
   cellPopStyle: ViewStyle;
   completedBg: string;
+  connectorStyle: 'none' | 'small' | 'full';
   dayNumber: number | string;
   fillMounted: boolean;
   fillStyle: ViewStyle;
   habitColor: string;
   isToday: boolean;
+  joinRight: boolean;
   showCompleted: boolean;
   showDot: boolean;
   staticTextColor: string;
@@ -25,11 +34,13 @@ interface CalendarDayBodyProps {
 export const CalendarDayBody = memo(function CalendarDayBody({
   cellPopStyle,
   completedBg,
+  connectorStyle,
   dayNumber,
   fillMounted,
   fillStyle,
   habitColor,
   isToday,
+  joinRight,
   showCompleted,
   showDot,
   staticTextColor,
@@ -82,6 +93,11 @@ export const CalendarDayBody = memo(function CalendarDayBody({
       {showDot ? (
         <View style={[styles.dot, { backgroundColor: habitColor }]} />
       ) : null}
+      <CalendarDayBodyConnector
+        connectorStyle={connectorStyle}
+        habitColor={habitColor}
+        joinRight={joinRight}
+      />
     </Animated.View>
   );
 });
