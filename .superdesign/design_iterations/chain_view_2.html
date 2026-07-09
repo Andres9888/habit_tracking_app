@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain — final direction</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --surface: #faf8f5;
+        --ink: #1c1a17;
+        --muted: #7a756c;
+        --line: #ece7df;
+        --g-high: #10b981;
+        --g-med: #6ee7b7;
+        --g-low: #d1fae5;
+        --g-none: #f3f4f6;
+        --chain: #10b981;
+        --break: #c9b79c;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: #efeae2;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--ink);
+        margin: 0;
+        padding: 48px 24px;
+      }
+      .serif {
+        font-family: 'Fraunces', serif;
+      }
+      .phone {
+        width: 340px;
+        background: var(--surface);
+        border-radius: 36px;
+        padding: 22px 18px 26px;
+        box-shadow:
+          0 30px 60px -20px rgba(28, 26, 23, 0.35),
+          0 0 0 1px rgba(28, 26, 23, 0.04);
+      }
+      .card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow:
+          0 8px 22px -12px rgba(28, 26, 23, 0.18),
+          0 0 0 1px var(--line);
+      }
+      .lbl {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      /* weekly chain strip */
+      .weekstrip {
+        display: flex;
+        align-items: center;
+      }
+      .knob {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--chain);
+        border: 2px solid #0e9e74;
+      }
+      .knob.off {
+        background: #fff;
+        border: 2px dashed var(--break);
+      }
+      .conn {
+        width: 12px;
+        height: 8px;
+        border-radius: 2px;
+        background: var(--chain);
+      }
+      .conn.broken {
+        background: transparent;
+        border-top: 2px dotted var(--break);
+        height: 2px;
+        align-self: center;
+      }
+
+      /* month as chain */
+      .chain-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        row-gap: 10px;
+      }
+      .link {
+        position: relative;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 -1px;
+      }
+      .link .dot {
+        width: 78%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--g-none);
+        border: 2px solid transparent;
+        z-index: 2;
+      }
+      .link.on .dot {
+        background: var(--chain);
+        border-color: #0e9e74;
+      }
+      .link.on.join-r::after {
+        content: '';
+        position: absolute;
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 9px;
+        background: var(--chain);
+        z-index: 1;
+        border-radius: 2px;
+      }
+      /* missed day: faded open link, chain ends into it with a dotted trace */
+      .link.miss .dot {
+        background: #fff;
+        border: 2px dashed var(--break);
+      }
+      .link.miss::before {
+        content: '';
+        position: absolute;
+        left: -7px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        border-top: 2px dotted var(--break);
+        z-index: 1;
+      }
+      .link.miss::after {
+        content: '';
+        position: absolute;
+        right: -7px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        border-top: 2px dotted var(--break);
+        z-index: 1;
+      }
+      .link.future .dot {
+        background: #f6f2ec;
+        border: 2px solid transparent;
+      }
+      .link.today .dot {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+      }
+
+      .seg-toggle {
+        display: flex;
+        background: #f1ece4;
+        border-radius: 12px;
+        padding: 3px;
+      }
+      .seg-toggle button {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        font-family: 'DM Sans';
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--muted);
+        padding: 8px 0;
+        border-radius: 9px;
+        cursor: pointer;
+      }
+      .seg-toggle button.active {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.15);
+      }
+      .pill {
+        display: inline-block;
+        background: #e9f7f0;
+        color: #0e9e74;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 99px;
+      }
+
+      .colwrap {
+        display: flex;
+        gap: 44px;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .caption {
+        max-width: 340px;
+        margin-top: 16px;
+      }
+      .caption h3 {
+        margin: 0 0 6px;
+        font-size: 15px;
+      }
+      .caption p {
+        margin: 0 0 6px;
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        font-size: 11.5px;
+        color: var(--muted);
+        margin-top: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .legc {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .pagehdr {
+        text-align: center;
+        color: #5a554c;
+        margin-bottom: 34px;
+      }
+      .pagehdr h1 {
+        font-size: 22px;
+        margin: 0 0 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pagehdr">
+      <h1 class="serif">Chain — final direction</h1>
+      <div style="font-size: 13px">
+        Chain is the new default. The gap is honest but calm — no red, no
+        scolding.
+      </div>
+    </div>
+
+    <div class="colwrap">
+      <!-- CHAIN detail -->
+      <div>
+        <div class="phone">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 16px;
+            "
+          >
+            <div>
+              <div class="lbl">Habit</div>
+              <div
+                class="serif"
+                style="font-size: 21px; font-weight: 600; margin-top: 2px"
+              >
+                Morning Run
+              </div>
+            </div>
+            <div style="text-align: right">
+              <div
+                class="serif"
+                style="
+                  font-size: 26px;
+                  font-weight: 700;
+                  color: var(--chain);
+                  line-height: 1;
+                "
+              >
+                11
+              </div>
+              <div class="lbl" style="font-size: 9px">day chain 🔗</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 14px">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 12px;
+              "
+            >
+              <div class="lbl">This week</div>
+              <span class="pill">Longest · 18</span>
+            </div>
+            <div class="weekstrip">
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+              <div class="conn broken"></div>
+              <div class="knob off"></div>
+              <div class="conn broken"></div>
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-top: 8px;
+                font-size: 11px;
+                color: var(--muted);
+              "
+            >
+              <span>M</span><span>T</span><span>W</span><span>T</span
+              ><span>F</span><span>S</span><span>S</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 14px;
+              "
+            >
+              <div class="serif" style="font-size: 16px; font-weight: 600">
+                July
+              </div>
+              <div class="lbl">links unbroken</div>
+            </div>
+            <div class="chain-grid">
+              <div class="link future"><div class="dot"></div></div>
+              <div class="link future"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+              <div class="link miss"><div class="dot"></div></div>
+
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+              <div class="link miss"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on today"><div class="dot"></div></div>
+              <div class="link future"><div class="dot"></div></div>
+              <div class="link future"><div class="dot"></div></div>
+              <div class="link future"><div class="dot"></div></div>
+              <div class="link future"><div class="dot"></div></div>
+              <div class="link future"><div class="dot"></div></div>
+            </div>
+            <div class="legend">
+              <div class="legc">
+                <span class="knob" style="width: 16px; height: 16px"></span>
+                Done
+              </div>
+              <div class="legc">
+                <span class="knob off" style="width: 16px; height: 16px"></span>
+                Missed
+              </div>
+              <div class="legc">
+                <span
+                  style="width: 20px; border-top: 2px dotted var(--break)"
+                ></span>
+                Chain broke
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3 class="serif">🔗 Chain · default</h3>
+          <p>
+            Consecutive days fuse into one link; the streak reads as a single
+            unbroken run. A miss is a faded open ring with a dotted trace where
+            the chain snapped — clear, but calm. The chain simply picks back up
+            the next day.
+          </p>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div>
+        <div class="phone">
+          <div
+            class="serif"
+            style="font-size: 19px; font-weight: 600; margin-bottom: 4px"
+          >
+            Look &amp; Feel
+          </div>
+          <div
+            style="font-size: 12.5px; color: var(--muted); margin-bottom: 18px"
+          >
+            How streaks are drawn across the app.
+          </div>
+          <div class="card" style="margin-bottom: 14px">
+            <div style="margin-bottom: 14px">
+              <div style="font-weight: 600; font-size: 15px">
+                Calendar style
+              </div>
+              <div
+                style="font-size: 12px; color: var(--muted); margin-top: 2px"
+              >
+                Habit detail &amp; the year view
+              </div>
+            </div>
+            <div class="seg-toggle">
+              <button class="active">🔗 Chain</button>
+              <button>▦ Squares</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="lbl" style="margin-bottom: 12px">Squares preview</div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
+              "
+            >
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-none);
+                "
+              ></div>
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-high);
+                "
+              ></div>
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-high);
+                "
+              ></div>
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-med);
+                "
+              ></div>
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-none);
+                "
+              ></div>
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-high);
+                "
+              ></div>
+              <div
+                style="
+                  aspect-ratio: 1;
+                  border-radius: 6px;
+                  background: var(--g-low);
+                "
+              ></div>
+            </div>
+            <div
+              style="
+                font-size: 12px;
+                color: var(--muted);
+                margin-top: 12px;
+                line-height: 1.5;
+              "
+            >
+              The classic GitHub-style heatmap — best for reading intensity at a
+              glance.
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3 class="serif">▦ Squares · opt-in</h3>
+          <p>
+            Nothing is lost. The heatmap grid you have today moves to Settings →
+            Look &amp; Feel, one tap away for anyone who prefers density over
+            continuity.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
