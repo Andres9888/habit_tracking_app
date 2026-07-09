@@ -51,18 +51,17 @@ export function CalendarTimelineWeekStrip({
   strengthPercent,
   tl,
 }: CalendarTimelineWeekStripProps) {
-  const stripPadding = { paddingHorizontal: WEEK_STRIP_HORIZONTAL_PADDING };
-
   return (
     <>
       <GestureDetector gesture={tl.headerPanGesture}>
         <View
           className={compact ? 'mb-1' : 'mb-3'}
           collapsable={false}
-          style={stripPadding}
+          style={{ paddingHorizontal: WEEK_STRIP_HORIZONTAL_PADDING }}
         >
           <WeekNavRow
             dateSuffix={dateSuffix}
+            isCalendarOpen={tl.calendarOpen}
             isViewingPast={isViewingPast}
             monthName={monthName}
             onDateRangePress={tl.openCalendar}
@@ -70,7 +69,7 @@ export function CalendarTimelineWeekStrip({
           />
         </View>
       </GestureDetector>
-      <View style={stripPadding}>
+      <View style={{ paddingHorizontal: WEEK_STRIP_HORIZONTAL_PADDING }}>
         <StripNav
           canNavigateForward={canNavigateForward}
           onNextWeek={onNextWeek}

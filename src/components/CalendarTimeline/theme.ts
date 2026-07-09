@@ -70,12 +70,65 @@ export function getCalendarTimelineColors(
 }
 
 /**
- * Date pill colors for WeekNavRow (derived from primary[600] with opacity)
+ * Date pill colors for WeekNavRow — quiet-emphasis toggle styling.
+ *
+ * Closed (rest) is neutral: warm grays only, no green. Open earns the
+ * green — card fill, primary border, green glyphs — so the two states
+ * can never read alike. Icon stays at the secondary-text gray tier
+ * (not gray[300]) so the rest state doesn't read as disabled.
  */
-export const getDatePillColors = (isDark: boolean) => ({
-  backgroundColor: isDark ? 'rgba(5,150,105,0.08)' : 'rgba(5,150,105,0.06)',
-  borderColor: isDark ? 'rgba(5,150,105,0.20)' : 'rgba(5,150,105,0.15)',
-});
+export interface DatePillColors {
+  background: string;
+  border: string;
+  chevron: string;
+  date: string;
+  icon: string;
+  month: string;
+}
+
+const DATE_PILL_OPEN: Record<'dark' | 'light', DatePillColors> = {
+  dark: {
+    background: darkColors.card,
+    border: darkColors.primary[500],
+    chevron: darkColors.primary[500],
+    date: darkColors.text.primary,
+    icon: darkColors.primary[500],
+    month: darkColors.primary[500],
+  },
+  light: {
+    background: colors.light.cardElevated,
+    border: colors.primary[600],
+    chevron: colors.primary[600],
+    date: colors.gray[800],
+    icon: colors.primary[600],
+    month: colors.primary[700],
+  },
+};
+
+const DATE_PILL_CLOSED: Record<'dark' | 'light', DatePillColors> = {
+  dark: {
+    background: 'transparent',
+    border: darkColors.border,
+    chevron: darkColors.gray[500],
+    date: darkColors.gray[500],
+    icon: darkColors.gray[500],
+    month: darkColors.gray[600],
+  },
+  light: {
+    background: 'transparent',
+    border: colors.gray[200],
+    chevron: colors.gray[300],
+    date: colors.gray[500],
+    icon: colors.gray[500],
+    month: colors.gray[600],
+  },
+};
+
+export const getDatePillColors = (
+  isDark: boolean,
+  isOpen = false
+): DatePillColors =>
+  (isOpen ? DATE_PILL_OPEN : DATE_PILL_CLOSED)[isDark ? 'dark' : 'light'];
 
 /**
  * Export individual themes for direct access if needed
