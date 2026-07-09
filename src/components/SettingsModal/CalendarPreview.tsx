@@ -38,7 +38,7 @@ interface Props {
   dayShape: DayShape;
   completionIcon: CompletionIcon;
   showGradientFill: boolean;
-  showStreakConnections: boolean;
+  connectorStyle: 'none' | 'small' | 'full';
   compact: boolean;
 }
 
@@ -87,8 +87,8 @@ export function CalendarPreview(p: Props) {
         <CalendarPreviewWeek
           accentColor={accent}
           completionIcon={p.completionIcon}
+          connectorStyle={p.connectorStyle}
           dayShape={p.dayShape}
-          showStreakConnections={p.showStreakConnections}
         />
       </View>
     </LinearGradient>

@@ -23,7 +23,7 @@ interface Props {
   accentColor: string;
   dayShape: DayShape;
   completionIcon: CompletionIcon;
-  showStreakConnections: boolean;
+  connectorStyle: 'none' | 'small' | 'full';
 }
 
 export function CalendarPreviewWeek(p: Props) {
@@ -48,7 +48,7 @@ export function CalendarPreviewWeek(p: Props) {
           shape={p.dayShape}
           shouldReduceMotion={reduceMotion}
           showConnector={Boolean(
-            p.showStreakConnections && d.completed && DAYS[i + 1]?.completed
+            p.connectorStyle !== 'none' && d.completed && DAYS[i + 1]?.completed
           )}
           strengthPercent={d.strength}
           onBurstComplete={() => {}}
