@@ -9,7 +9,7 @@ import { StyleSheet } from 'react-native';
 import { shadows, borderRadius } from '../../../theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
-const WEEK_ROW_HEIGHT = 41;
+const WEEK_ROW_HEIGHT = 46;
 const MONTH_GRID_HEIGHT = 6 * WEEK_ROW_HEIGHT;
 
 export const styles = StyleSheet.create({
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    marginBottom: 1,
+    marginBottom: 6,
   },
   weeksContainer: {
     height: MONTH_GRID_HEIGHT,
@@ -75,5 +75,17 @@ export const styles = StyleSheet.create({
   },
   todayText: {
     fontWeight: fontWeights.bold,
+  },
+  inactiveCell: {
+    opacity: 0.55,
+  },
+  todayHalo: {
+    borderRadius: borderRadius.small + 3,
+    borderWidth: 2.5,
+    bottom: -4,
+    left: -4,
+    position: 'absolute',
+    right: -4,
+    top: -4,
   },
 });

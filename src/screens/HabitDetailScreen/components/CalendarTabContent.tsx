@@ -60,7 +60,6 @@ export function CalendarTabContent({
           habitCreatedAt={habit.createdAt}
           habitId={habit._id}
           pendingToggleDate={pendingToggleDate}
-          showStreakInInsights={false}
           useSolidCompletedFill
           onCurrentMonthChange={setCurrentMonth}
           onDayPress={onDayPress}

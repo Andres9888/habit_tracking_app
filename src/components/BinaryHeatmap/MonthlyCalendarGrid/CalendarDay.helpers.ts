@@ -46,8 +46,9 @@ export function getTextColor(
   if (showCompleted && useSolid) return c.inverse;
   if (todayPending) return habitColor;
   if (!day?.isCurrentMonth) return c.muted;
-  if (day?.isFuture) return c.tertiary;
-  return c.primary;
+  if (day?.isFuture || day?.isBeforeCreation) return c.muted;
+  // Past, not completed — calm miss: the number recedes on its track tile.
+  return c.tertiary;
 }
 
 export function getDayAccessibility(

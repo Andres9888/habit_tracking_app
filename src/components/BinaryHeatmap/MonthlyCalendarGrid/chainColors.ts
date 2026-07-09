@@ -18,9 +18,9 @@ function clampHex(v: number): string {
 
 function parseHex(hex: string): [number, number, number] | null {
   const h = hex.replace('#', '');
-  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+  const full = h.length === 3 ? [...h].map((c) => c + c).join('') : h;
   if (full.length !== 6) return null;
-  const n = parseInt(full, 16);
+  const n = Number.parseInt(full, 16);
   if (Number.isNaN(n)) return null;
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }

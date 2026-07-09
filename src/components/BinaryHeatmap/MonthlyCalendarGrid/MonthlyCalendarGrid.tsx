@@ -4,8 +4,6 @@ import { format } from 'date-fns';
 import { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { api } from '../../../../convex/_generated/api';
-import { useCachedQuery } from '../../../lib/queryCache';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
 import { completedTint } from './chainColors';
 import { MonthInsightStrip } from './MonthInsightStrip';
@@ -24,7 +22,6 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   currentMonth: controlledMonth,
   onCurrentMonthChange,
   useSolidCompletedFill = false,
-  showStreakInInsights = true,
   pendingToggleDate = null,
   onDayPress,
   bare = false,
@@ -43,16 +40,10 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
     habitCreatedAt,
   });
   const insights = useMonthInsights(completedDates, currentMonth);
-  const settings = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
-  const showConnections = settings?.showStreakConnections ?? true;
   const monthKey = format(currentMonth, 'yyyy-MM');
   const cardBg = isDark ? colors.card : palette.light.surfaceMuted;
+  // Quiet "track" tile behind every active day — gaps read as not-yet.
+  const trackBg = isDark ? colors.border : palette.gray[100];
   const completedBg = useMemo(
     () =>
       useSolidCompletedFill ? habitColor : completedTint(habitColor, cardBg),
@@ -87,7 +78,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
             habitColor={habitColor}
             monthKey={monthKey}
             pendingToggleDate={pendingToggleDate}
-            showConnections={showConnections}
+            trackBg={trackBg}
             textColors={{
               inverse: colors.text.inverse,
               muted: colors.gray[300],
@@ -101,9 +92,11 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
         </View>
       </GestureDetector>
       <MonthInsightStrip
-        {...insights}
+        habitColor={habitColor}
         monthKey={monthKey}
-        showStreak={showStreakInInsights}
+        monthLabel={format(currentMonth, 'MMMM')}
+        monthRate={insights.monthRate}
+        strongestDay={insights.strongestDay}
       />
     </View>
   );

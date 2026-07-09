@@ -20,6 +20,7 @@ interface CalendarDayProps {
   day: DayData;
   habitColor: string;
   completedBg: string;
+  trackBg: string;
   textColors: CalendarDayColors;
   useSolidCompletedFill?: boolean;
   isPending?: boolean;
@@ -31,6 +32,7 @@ export const CalendarDay = memo(function CalendarDay({
   day,
   habitColor,
   completedBg,
+  trackBg,
   textColors,
   useSolidCompletedFill = false,
   isPending = false,
@@ -49,11 +51,13 @@ export const CalendarDay = memo(function CalendarDay({
 
   return (
     <AnimatedPressable
+      accessibilityElementsHidden={!day?.isCurrentMonth}
       accessibilityHint={cell.a11y.hint}
       accessibilityLabel={cell.a11y.label}
       accessibilityRole='button'
       accessibilityState={{ disabled: cell.isDisabled, selected: cell.showCompleted }}
       disabled={cell.isDisabled}
+      importantForAccessibility={day?.isCurrentMonth ? 'auto' : 'no-hide-descendants'}
       style={[styles.dayWrapper, pressStyle, cell.animation.pendingStyle]}
       onPress={() => onPress(day?.dateString ?? '', Boolean(day?.isCompleted))}
       onPressIn={pressHandlers.onPressIn}
@@ -62,15 +66,16 @@ export const CalendarDay = memo(function CalendarDay({
       <CalendarDayBody
         cellPopStyle={cell.animation.cellPopStyle}
         completedBg={completedBg}
-        dayNumber={day?.dayNumber ?? ''}
+        day={day}
         fillMounted={cell.animation.fillMounted}
         fillStyle={cell.animation.fillStyle}
         habitColor={habitColor}
         isToday={cell.isToday}
         showCompleted={cell.showCompleted}
-        showDot={cell.showCompleted && !useSolidCompletedFill}
+        showDot={Boolean(cell.showCompleted && !useSolidCompletedFill)}
         staticTextColor={cell.staticTextColor}
         textStyle={cell.animation.textStyle}
+        trackBg={trackBg}
         useSolidCompletedFill={useSolidCompletedFill}
       />
     </AnimatedPressable>

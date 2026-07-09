@@ -1,37 +1,49 @@
 /**
  * MonthInsightStrip
  *
- * Compact summary below the calendar: current streak, strongest weekday,
- * completion rate this month, and all-time best run. Uses the shared
- * detail-page stat idiom (mono number over lowercase label).
+ * One insight sentence below the calendar: "Strongest on Wednesdays · 84% in
+ * July". The strongest-weekday stat is the only number that needs the full
+ * day grid to exist, and the rate is pinned to the visible month's name so it
+ * can't be misread while browsing history. (Streak and best run live in the
+ * hero — repeating them here was filler.)
  */
 
 import React, { memo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { StatColumn, StatHairline } from '@/components/ui';
 import { useThemeColors } from '@/theme';
 import { durations, enterEasing } from '@/theme/animations';
+import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
-import type { MonthInsights } from './useMonthInsights';
+
+const WEEKDAY_PLURALS: Record<string, string> = {
+  Sun: 'Sundays',
+  Mon: 'Mondays',
+  Tue: 'Tuesdays',
+  Wed: 'Wednesdays',
+  Thu: 'Thursdays',
+  Fri: 'Fridays',
+  Sat: 'Saturdays',
+};
+
+interface MonthInsightStripProps {
+  habitColor: string;
+  monthKey: string;
+  monthLabel: string;
+  monthRate: number;
+  strongestDay: string;
+}
 
 export const MonthInsightStrip = memo(function MonthInsightStrip({
-  currentStreak,
-  bestRun,
+  habitColor,
   monthKey,
-  strongestDay,
+  monthLabel,
   monthRate,
-  showStreak = true,
-}: MonthInsights & { monthKey: string; showStreak?: boolean }) {
+  strongestDay,
+}: MonthInsightStripProps) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
-
-  const items = [
-    ...(showStreak ? [{ label: 'streak', value: String(currentStreak) }] : []),
-    { label: 'strongest', value: strongestDay },
-    { label: 'this month', value: `${monthRate}%` },
-    { label: 'best run', value: String(bestRun) },
-  ];
+  const weekday = WEEKDAY_PLURALS[strongestDay];
 
   const entering = reduceMotion
     ? undefined
@@ -41,26 +53,48 @@ export const MonthInsightStrip = memo(function MonthInsightStrip({
 
   return (
     <View style={[styles.row, { borderTopColor: colors.border }]}>
-      <Animated.View key={monthKey} entering={entering} style={styles.statsRow}>
-        {items.map((item, i) => (
-          <React.Fragment key={item.label}>
-            <StatColumn label={item.label} size='compact' value={item.value} />
-            {i < items.length - 1 ? <StatHairline /> : null}
-          </React.Fragment>
-        ))}
+      <Animated.View key={monthKey} entering={entering} style={styles.line}>
+        <Text style={[styles.text, { color: colors.text.secondary }]}>
+          {weekday ? (
+            <>
+              Strongest on{' '}
+              <Text
+                style={{
+                  color: colors.text.primary,
+                  fontWeight: fontWeights.semibold,
+                }}
+              >
+                {weekday}
+              </Text>
+              {'  ·  '}
+            </>
+          ) : null}
+          <Text style={[styles.rate, { color: habitColor }]}>
+            {monthRate}%
+          </Text>{' '}
+          in {monthLabel}
+        </Text>
       </Animated.View>
     </View>
   );
 });
 
 const styles = StyleSheet.create({
+  line: {
+    alignItems: 'center',
+  },
   row: {
     borderTopWidth: 1,
     marginTop: 14,
     paddingTop: 14,
   },
-  statsRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
+  rate: {
+    fontFamily: fontFamilies.monospace,
+    fontWeight: fontWeights.bold,
+  },
+  text: {
+    fontFamily: fontFamilies.primary.text,
+    fontSize: typography.bodySmall.fontSize,
+    textAlign: 'center',
   },
 });

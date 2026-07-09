@@ -27,8 +27,6 @@ export interface MonthlyCalendarGridProps {
   onCurrentMonthChange?: (month: Date) => void;
   /** Solid habit-color fills for completed days (detail screen). */
   useSolidCompletedFill?: boolean;
-  /** Hide streak stat in insight strip (hero already shows streak). */
-  showStreakInInsights?: boolean;
   pendingToggleDate?: string | null;
   onDayPress?: (date: string, completed: boolean) => void;
   /** Suppress the own card background/border/shadow/padding when embedded
