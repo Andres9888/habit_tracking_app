@@ -6,6 +6,7 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { getInvalidImageUploadReason } from './storageValidation';
+import { claimStorageForUser, getStorageOwner } from './storageOwnership';
 
 /**
  * Generate a signed upload URL for file storage
@@ -34,6 +35,11 @@ export const validateImageUpload = mutation({
       throw new Error('Unauthenticated: Must be logged in to upload files');
     }
 
+    const owner = await getStorageOwner(ctx, args.storageId);
+    if (owner && owner.userId !== identity.subject) {
+      throw new Error('Not authorized to use this uploaded file');
+    }
+
     const metadata = await ctx.storage.getMetadata(args.storageId);
     const validationError = getInvalidImageUploadReason(metadata);
 
@@ -47,6 +53,8 @@ export const validateImageUpload = mutation({
     if (!metadata) {
       throw new Error('Uploaded file was not found');
     }
+
+    await claimStorageForUser(ctx, args.storageId, identity.subject);
 
     const contentType = metadata.contentType;
     if (!contentType) {

@@ -46,6 +46,7 @@ import type * as habitStrength_updateStrength from "../habitStrength/updateStren
 import type * as habitStrength from "../habitStrength.js";
 import type * as habits_archive from "../habits/archive.js";
 import type * as habits_batchArchive from "../habits/batchArchive.js";
+import type * as habits_batchGuards from "../habits/batchGuards.js";
 import type * as habits_batchRemove from "../habits/batchRemove.js";
 import type * as habits_cleanupLegacyGoalFields from "../habits/cleanupLegacyGoalFields.js";
 import type * as habits_create from "../habits/create.js";
@@ -80,6 +81,7 @@ import type * as settings_types from "../settings/types.js";
 import type * as settings_validators from "../settings/validators.js";
 import type * as settings from "../settings.js";
 import type * as storage from "../storage.js";
+import type * as storageOwnership from "../storageOwnership.js";
 import type * as storageValidation from "../storageValidation.js";
 import type * as streakUtils_dateHelpers from "../streakUtils/dateHelpers.js";
 import type * as streakUtils_historyCalculation from "../streakUtils/historyCalculation.js";
@@ -161,6 +163,7 @@ declare const fullApi: ApiFromModules<{
   habitStrength: typeof habitStrength;
   "habits/archive": typeof habits_archive;
   "habits/batchArchive": typeof habits_batchArchive;
+  "habits/batchGuards": typeof habits_batchGuards;
   "habits/batchRemove": typeof habits_batchRemove;
   "habits/cleanupLegacyGoalFields": typeof habits_cleanupLegacyGoalFields;
   "habits/create": typeof habits_create;
@@ -195,6 +198,7 @@ declare const fullApi: ApiFromModules<{
   "settings/validators": typeof settings_validators;
   settings: typeof settings;
   storage: typeof storage;
+  storageOwnership: typeof storageOwnership;
   storageValidation: typeof storageValidation;
   "streakUtils/dateHelpers": typeof streakUtils_dateHelpers;
   "streakUtils/historyCalculation": typeof streakUtils_historyCalculation;
