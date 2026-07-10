@@ -10,19 +10,23 @@ import type { DayData } from './types';
 import { useCalendarDayAnimation } from './useCalendarDayAnimation';
 
 interface UseCalendarDayCellStateParams {
+  completedBg: string;
   day: DayData;
   habitColor: string;
   isPending: boolean;
   isToggleBlocked: boolean;
+  surfaceBg: string;
   textColors: CalendarDayColors;
   useSolidCompletedFill: boolean;
 }
 
 export function useCalendarDayCellState({
+  completedBg,
   day,
   habitColor,
   isPending,
   isToggleBlocked,
+  surfaceBg,
   textColors,
   useSolidCompletedFill,
 }: UseCalendarDayCellStateParams) {
@@ -44,11 +48,13 @@ export function useCalendarDayCellState({
     [day, textColors, habitColor, todayPending, useSolidCompletedFill]
   );
   const animation = useCalendarDayAnimation({
+    completedBg,
     completeTextColor: textColorEndpoints.complete,
     incompleteTextColor: textColorEndpoints.incomplete,
     isPending,
     reduceMotion,
     showCompleted,
+    surfaceBg,
     useSolidCompletedFill,
   });
 

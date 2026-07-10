@@ -73,6 +73,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           <WeekdayHeaderRow labelColor={colors.text.tertiary} />
           <AnimatedWeeksGrid
             completedBg={completedBg}
+            surfaceBg={cardBg}
             connectorStyle={connectorStyle}
             direction={slideDirection}
             habitColor={habitColor}

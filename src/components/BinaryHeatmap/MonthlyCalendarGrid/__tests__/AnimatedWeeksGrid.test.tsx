@@ -46,6 +46,7 @@ const textColors = {
 
 const defaultProps = {
   completedBg: '#D1FAE5',
+  surfaceBg: '#FFFFFF',
   direction: 'left' as const,
   habitColor: '#10B981',
   monthKey: '2026-07',

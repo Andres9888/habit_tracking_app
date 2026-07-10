@@ -12,6 +12,7 @@ interface AnimatedWeeksGridProps {
   direction: 'left' | 'right';
   habitColor: string;
   completedBg: string;
+  surfaceBg: string;
   monthKey: string;
   onPress: (dateString: string, isCompleted: boolean) => void;
   pendingToggleDate?: string | null;
@@ -31,6 +32,7 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
   direction,
   habitColor,
   completedBg,
+  surfaceBg,
   monthKey,
   onPress,
   pendingToggleDate = null,
@@ -77,6 +79,7 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
               <CalendarDay
                 key={day.dateString}
                 completedBg={completedBg}
+                surfaceBg={surfaceBg}
                 connectorStyle={connectorStyle}
                 day={day}
                 habitColor={habitColor}

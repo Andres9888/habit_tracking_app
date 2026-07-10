@@ -8,7 +8,6 @@ import { CalendarDayNumber } from './CalendarDayNumber';
 
 interface CalendarDayBodyProps {
   cellPopStyle: ViewStyle;
-  completedBg: string;
   connectorStyle: 'none' | 'small' | 'full';
   dayNumber: number | string;
   fillMounted: boolean;
@@ -25,7 +24,6 @@ interface CalendarDayBodyProps {
 
 export const CalendarDayBody = memo(function CalendarDayBody({
   cellPopStyle,
-  completedBg,
   connectorStyle,
   dayNumber,
   fillMounted,
@@ -52,12 +50,9 @@ export const CalendarDayBody = memo(function CalendarDayBody({
       {fillMounted ? (
         <Animated.View
           style={[
-            fillStyle,
             StyleSheet.absoluteFill,
-            {
-              backgroundColor: completedBg,
-              borderRadius: borderRadius.small,
-            },
+            { borderRadius: borderRadius.small },
+            fillStyle,
           ]}
         />
       ) : null}

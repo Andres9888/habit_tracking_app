@@ -21,6 +21,7 @@ interface CalendarDayProps {
   day: DayData;
   habitColor: string;
   completedBg: string;
+  surfaceBg: string;
   textColors: CalendarDayColors;
   useSolidCompletedFill?: boolean;
   isPending?: boolean;
@@ -35,6 +36,7 @@ export const CalendarDay = memo(function CalendarDay({
   day,
   habitColor,
   completedBg,
+  surfaceBg,
   textColors,
   useSolidCompletedFill = false,
   isPending = false,
@@ -47,10 +49,12 @@ export const CalendarDay = memo(function CalendarDay({
   const { animatedStyle: pressStyle, pressHandlers } =
     useDetailPressAnimation();
   const cell = useCalendarDayCellState({
+    completedBg,
     day,
     habitColor,
     isPending,
     isToggleBlocked,
+    surfaceBg,
     textColors,
     useSolidCompletedFill,
   });
@@ -80,7 +84,6 @@ export const CalendarDay = memo(function CalendarDay({
       ) : (
         <CalendarDayBody
           cellPopStyle={cell.animation.cellPopStyle}
-          completedBg={completedBg}
           connectorStyle={connectorStyle}
           dayNumber={day?.dayNumber ?? ''}
           fillMounted={cell.animation.fillMounted}

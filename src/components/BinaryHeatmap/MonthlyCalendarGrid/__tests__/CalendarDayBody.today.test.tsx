@@ -4,7 +4,6 @@ import { CalendarDayBody } from '../CalendarDayBody';
 
 const BASE_PROPS = {
   cellPopStyle: {},
-  completedBg: '#10B981',
   connectorStyle: 'full' as const,
   dayNumber: 10,
   fillMounted: true,
