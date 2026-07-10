@@ -43,17 +43,24 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
   const writeLatest = options.writeLatest ?? options.fallbackToLatest ?? true;
   const argsKey = normalizeArgs(args);
   const stableArgs = useRef(args);
-  if (normalizeArgs(stableArgs.current) !== argsKey) stableArgs.current = args;
+  const previousLive = useRef<Query['_returnType'] | undefined>(undefined);
+  if (normalizeArgs(stableArgs.current) !== argsKey) {
+    stableArgs.current = args;
+    // previousLive bridges resubscribe flicker for the SAME args only; a
+    // kept value from different args (e.g. another habitId) must never leak.
+    previousLive.current = undefined;
+  }
   const memoryKey = useMemo(
     () => buildMemoryKey(entry.name, stableArgs.current),
     [entry.name, argsKey]
   );
   const live = useLiveQuery(query, stableArgs.current);
-  const previousLive = useRef<Query['_returnType'] | undefined>(undefined);
   const cached = useQueryCacheValue<Query['_returnType']>(memoryKey);
   const latestKey = buildLatestMemoryKey(entry.name);
   const latest = useQueryCacheValue<Query['_returnType']>(latestKey);
-  const latestArgs = useQueryCacheValue<unknown>(buildLatestArgsMemoryKey(entry.name));
+  const latestArgs = useQueryCacheValue<unknown>(
+    buildLatestArgsMemoryKey(entry.name)
+  );
 
   usePersistCachedQuery({
     argsKey,
