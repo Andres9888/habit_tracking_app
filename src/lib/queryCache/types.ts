@@ -1,5 +1,6 @@
 export type QueryCacheEntryName =
   | 'analytics.getAnalyticsDashboard'
+  | 'habits.get'
   | 'habits.getTracking'
   | 'habits.list'
   | 'habits.listArchived'

@@ -8,6 +8,14 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     storage: 'plain',
     version: 1,
   },
+  // Detail data is private and keyed by habit ID. Persist the most recently
+  // opened habit for fast reopen/offline access, but never fall back across
+  // IDs: hydrateQueryCache restores the exact args key for the persisted row.
+  'habits.get': {
+    name: 'habits.get',
+    storage: 'secure',
+    version: 1,
+  },
   'habits.getTracking': {
     latestFallback: true,
     latestUsable: isWindowEndRecent,
