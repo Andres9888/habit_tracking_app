@@ -1,20 +1,20 @@
 import React, { memo } from 'react';
-import { View, Text, StyleSheet, type ViewStyle, type TextStyle } from 'react-native';
+import { View, StyleSheet, type ViewStyle, type TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { styles } from './styles';
-import { fontWeights } from '@/theme/typography';
 import { borderRadius } from '@/theme/spacing';
-
-const AnimatedText = Animated.createAnimatedComponent(Text);
+import { CalendarDayBodyConnector } from './CalendarDayBodyConnector';
+import { CalendarDayNumber } from './CalendarDayNumber';
 
 interface CalendarDayBodyProps {
   cellPopStyle: ViewStyle;
-  completedBg: string;
+  connectorStyle: 'none' | 'small' | 'full';
   dayNumber: number | string;
   fillMounted: boolean;
   fillStyle: ViewStyle;
   habitColor: string;
   isToday: boolean;
+  joinRight: boolean;
   showCompleted: boolean;
   showDot: boolean;
   staticTextColor: string;
@@ -24,12 +24,13 @@ interface CalendarDayBodyProps {
 
 export const CalendarDayBody = memo(function CalendarDayBody({
   cellPopStyle,
-  completedBg,
+  connectorStyle,
   dayNumber,
   fillMounted,
   fillStyle,
   habitColor,
   isToday,
+  joinRight,
   showCompleted,
   showDot,
   staticTextColor,
@@ -41,47 +42,36 @@ export const CalendarDayBody = memo(function CalendarDayBody({
       style={[
         styles.dayCell,
         cellPopStyle,
-        isToday && { borderColor: habitColor, borderWidth: 2 },
+        // Today ring only while incomplete: its border would inset the fill.
+        isToday &&
+          !showCompleted && { borderColor: habitColor, borderWidth: 2 },
       ]}
     >
       {fillMounted ? (
         <Animated.View
           style={[
-            fillStyle,
             StyleSheet.absoluteFill,
-            {
-              backgroundColor: completedBg,
-              borderRadius: borderRadius.small,
-            },
+            { borderRadius: borderRadius.small },
+            fillStyle,
           ]}
         />
       ) : null}
-      {useSolidCompletedFill ? (
-        <AnimatedText
-          style={[
-            styles.dayText,
-            textStyle,
-            isToday && styles.todayText,
-            showCompleted && { fontWeight: fontWeights.semibold },
-          ]}
-        >
-          {dayNumber}
-        </AnimatedText>
-      ) : (
-        <Text
-          style={[
-            styles.dayText,
-            { color: staticTextColor },
-            isToday && styles.todayText,
-            showCompleted && { fontWeight: fontWeights.semibold },
-          ]}
-        >
-          {dayNumber}
-        </Text>
-      )}
+      <CalendarDayNumber
+        dayNumber={dayNumber}
+        isToday={isToday}
+        showCompleted={showCompleted}
+        staticTextColor={staticTextColor}
+        textStyle={textStyle}
+        useSolidCompletedFill={useSolidCompletedFill}
+      />
       {showDot ? (
         <View style={[styles.dot, { backgroundColor: habitColor }]} />
       ) : null}
+      <CalendarDayBodyConnector
+        connectorStyle={connectorStyle}
+        habitColor={habitColor}
+        joinRight={joinRight}
+      />
     </Animated.View>
   );
 });

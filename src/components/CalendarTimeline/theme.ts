@@ -4,7 +4,7 @@
  * Centralized color configurations for calendar timeline variants.
  */
 
-import { colors } from '@/theme/colors';
+import { colors, withAlpha } from '@/theme/colors';
 import { darkColors, lightColors } from '@/theme/darkColors';
 
 /**
@@ -70,12 +70,65 @@ export function getCalendarTimelineColors(
 }
 
 /**
- * Date pill colors for WeekNavRow (derived from primary[600] with opacity)
+ * Date-navigator pill colors for WeekNavRow.
+ *
+ * Rest keeps the warm green tint but the caret is green (not disabled-gray)
+ * so the pill reads as a live control. Open floods to a solid primary fill
+ * with inverse text — a category jump in form, not a shade tweak — so the
+ * open and closed states can never read alike.
  */
-export const getDatePillColors = (isDark: boolean) => ({
-  backgroundColor: isDark ? 'rgba(5,150,105,0.08)' : 'rgba(5,150,105,0.06)',
-  borderColor: isDark ? 'rgba(5,150,105,0.20)' : 'rgba(5,150,105,0.15)',
-});
+export interface DatePillColors {
+  background: string;
+  border: string;
+  chevron: string;
+  date: string;
+  icon: string;
+  month: string;
+}
+
+const DATE_PILL_OPEN: Record<'dark' | 'light', DatePillColors> = {
+  dark: {
+    background: darkColors.primary[500],
+    border: darkColors.primary[500],
+    chevron: darkColors.text.inverse,
+    date: withAlpha(darkColors.text.inverse, 0.78),
+    icon: darkColors.text.inverse,
+    month: darkColors.text.inverse,
+  },
+  light: {
+    background: colors.primary[600],
+    border: colors.primary[600],
+    chevron: colors.text.inverse,
+    date: withAlpha(colors.text.inverse, 0.78),
+    icon: colors.text.inverse,
+    month: colors.text.inverse,
+  },
+};
+
+const DATE_PILL_CLOSED: Record<'dark' | 'light', DatePillColors> = {
+  dark: {
+    background: 'rgba(5,150,105,0.08)',
+    border: 'rgba(5,150,105,0.20)',
+    chevron: withAlpha(darkColors.primary[500], 0.7),
+    date: darkColors.text.secondary,
+    icon: darkColors.primary[500],
+    month: darkColors.primary[500],
+  },
+  light: {
+    background: 'rgba(5,150,105,0.06)',
+    border: 'rgba(5,150,105,0.15)',
+    chevron: withAlpha(colors.primary[600], 0.55),
+    date: colors.text.secondary,
+    icon: colors.primary[600],
+    month: colors.primary[700],
+  },
+};
+
+export const getDatePillColors = (
+  isDark: boolean,
+  isOpen = false
+): DatePillColors =>
+  (isOpen ? DATE_PILL_OPEN : DATE_PILL_CLOSED)[isDark ? 'dark' : 'light'];
 
 /**
  * Export individual themes for direct access if needed

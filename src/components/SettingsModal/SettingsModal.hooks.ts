@@ -65,29 +65,29 @@ export const useSettingsModalLogic = ({
 
   const updaters = createSettingsUpdaters(update, {
     setCompactViewState: localPrefs.setCompactViewState,
+    setConnectorStyleState: localPrefs.setConnectorStyleState,
     setDarkModeState: localPrefs.setDarkModeState,
     setReduceMotionState: localPrefs.setReduceMotionState,
     setShowGradientFillState: localPrefs.setShowGradientFillState,
-    setShowStreakConnectionsState: localPrefs.setShowStreakConnectionsState,
   });
 
   const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
 
   return {
     compactView: localPrefs.compactView,
+    connectorStyle: localPrefs.connectorStyle,
     darkModePreference: localPrefs.darkModePreference,
     habitSortMode,
     handleClose,
     reduceMotion: localPrefs.reduceMotion,
     setCompactView: updaters.setCompactView,
+    setConnectorStyle: updaters.setConnectorStyle,
     setDarkModePreference: updaters.setDarkModePreference,
     setHabitSortMode: updaters.setHabitSortMode,
     setReduceMotion: updaters.setReduceMotion,
     setShowGradientFill: updaters.setShowGradientFill,
-    setShowStreakConnections: updaters.setShowStreakConnections,
     setView,
     showGradientFill: localPrefs.showGradientFill,
-    showStreakConnections: localPrefs.showStreakConnections,
     view,
     viewDirection,
   };

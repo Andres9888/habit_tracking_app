@@ -1,15 +1,31 @@
-/** Static styles for DetailCompleteButton. */
+/** Static styles for DetailCompleteButton — C1 "Settled" anatomy. */
 import { StyleSheet } from 'react-native';
 import { borderRadius, spacing } from '../../../theme/spacing';
 
 export const BAR_HEIGHT = 46;
+export const WELL_SIZE = 30;
 
 export const styles = StyleSheet.create({
   container: {
     borderRadius: borderRadius.full,
-    gap: spacing.sm,
+    borderWidth: 1.5,
     height: BAR_HEIGHT,
-    shadowOffset: { height: 4, width: 0 },
-    shadowRadius: 14,
+    paddingHorizontal: spacing.sm,
+  },
+  label: {
+    flex: 1,
+    textAlign: 'center',
+  },
+  well: {
+    alignItems: 'center',
+    borderRadius: borderRadius.full,
+    borderWidth: 2,
+    height: WELL_SIZE,
+    justifyContent: 'center',
+    width: WELL_SIZE,
+  },
+  // Trailing spacer mirroring the well so the label stays optically centered.
+  wellBalance: {
+    width: WELL_SIZE,
   },
 });

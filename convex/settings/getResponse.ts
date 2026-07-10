@@ -40,8 +40,11 @@ export function toSettingsResponse(settings: StoredSettings) {
     showEmojis: settings?.showEmojis ?? DEFAULT_SETTINGS.showEmojis,
     showGradientFill:
       settings?.showGradientFill ?? DEFAULT_SETTINGS.showGradientFill,
-    showStreakConnections:
-      settings?.showStreakConnections ?? DEFAULT_SETTINGS.showStreakConnections,
+    connectorStyle:
+      settings?.connectorStyle ??
+      (settings?.showStreakConnections === false
+        ? 'none'
+        : DEFAULT_SETTINGS.connectorStyle),
     showMotivationalMessages:
       settings?.showMotivationalMessages ??
       DEFAULT_SETTINGS.showMotivationalMessages,

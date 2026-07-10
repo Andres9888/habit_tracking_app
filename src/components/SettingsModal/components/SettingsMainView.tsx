@@ -1,16 +1,9 @@
 import { View } from 'react-native';
-import type { ReactNode } from 'react';
 import Animated, { useReducedMotion } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import ArchivedHabitsModal from '../../ArchivedHabitsModal';
-import { SettingsModalSkeleton } from '../../SkeletonLoader';
-import { SettingsHeader } from '../SettingsHeader';
-import { AccountPage } from '../AccountPage';
-import { CalendarLookPage } from '../CalendarLookPage';
-import { SettingsContent } from '../SettingsContent';
 import type { HabitSortMode } from '../../../features/habits/types';
-import { buildSettingsContentProps } from './SettingsMainView.helpers';
 import { getSettingsViewEntering } from './SettingsMainView.animations';
+import { renderSettingsMainViewContent } from './SettingsMainView.renderContent';
 import type { SettingsMainViewProps } from './SettingsMainView.types';
 
 export function SettingsMainView(props: SettingsMainViewProps) {
@@ -27,71 +20,7 @@ export function SettingsMainView(props: SettingsMainViewProps) {
   );
 
   const backgroundStyle = { backgroundColor: themeColors.background };
-
-  let content: ReactNode = null;
-
-  switch (props.view) {
-    case 'archived': {
-      content = (
-        <ArchivedHabitsModal
-          onBack={() => props.setView('settings')}
-          onClose={props.handleClose}
-        />
-      );
-      break;
-    }
-    case 'account': {
-      content = (
-        <AccountPage
-          isPremium={props.isPremium}
-          onBack={() => props.setView('settings')}
-          onClose={props.handleClose}
-          onPremiumUpsell={props.onPremiumUpsell}
-        />
-      );
-      break;
-    }
-    case 'calendar': {
-      content = (
-        <CalendarLookPage
-          compactView={props.compactView}
-          dayShape={props.dayShape ?? 'square'}
-          habitCompletionIcon={props.habitCompletionIcon ?? 'chain'}
-          showGradientFill={props.showGradientFill}
-          showStreakConnections={props.showStreakConnections}
-          stickyCalendarHeader={props.stickyCalendarHeader ?? false}
-          onBack={() => props.setView('settings')}
-          onChangeDayShape={props.onChangeDayShape ?? (() => {})}
-          onChangeHabitCompletionIcon={
-            props.onChangeHabitCompletionIcon ?? (() => {})
-          }
-          onChangeShowGradientFill={props.setShowGradientFill}
-          onChangeShowStreakConnections={props.setShowStreakConnections}
-          onChangeStickyCalendarHeader={
-            props.onChangeStickyCalendarHeader ?? (() => {})
-          }
-          onClose={props.handleClose}
-        />
-      );
-      break;
-    }
-    case 'settings': {
-      content = props.isLoading ? (
-        <SettingsModalSkeleton />
-      ) : (
-        <>
-          <SettingsHeader onClose={props.handleClose} />
-          <SettingsContent
-            {...buildSettingsContentProps(props, handleSortSelect)}
-          />
-        </>
-      );
-      break;
-    }
-    default: {
-      break;
-    }
-  }
+  const content = renderSettingsMainViewContent(props, handleSortSelect);
 
   return (
     <View className='flex-1' style={backgroundStyle}>

@@ -1,6 +1,11 @@
-/** DetailCompleteButton - Fused full-width complete-today pill inside the hero card. */
+/**
+ * DetailCompleteButton — C1 "Settled" full-width bar inside the hero card.
+ * Rest: outlined bar with an empty check-well waiting to be filled.
+ * Done: settles into a deep fill; the well flips to a medallion with a check.
+ * The whole bar toggles in both states (tap the done bar to un-mark).
+ */
 import { Check } from 'lucide-react-native';
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { durations } from '../../../theme/animations';
 import { fontWeights, typography } from '../../../theme/typography';
@@ -26,55 +31,64 @@ export function DetailCompleteButton({
 }: DetailCompleteButtonProps) {
   const { colors } = useThemeColors();
   const reduceMotion = useReduceMotion();
-  const { checkStyle, containerStyle, labelStyle, pressHandlers } =
+  const { checkStyle, containerStyle, labelStyle, pressHandlers, wellStyle } =
     useDetailCompleteButtonAnimation(isCompletedToday, {
-      doneBg: colors.primary[100],
-      doneBorder: withAlpha(colors.primary[700], 0.25),
-      doneText: colors.primary[700],
-      filledBg: colors.primary[600],
-      filledText: colors.text.inverse,
+      doneBg: colors.primary[700],
+      doneText: colors.text.inverse,
+      restBg: colors.card,
+      restBorder: colors.primary[600],
+      restText: colors.primary[700],
+      wellDoneBg: colors.card,
+      wellRestBg: withAlpha(colors.card, 0),
+      wellRestRing: withAlpha(colors.primary[600], 0.45),
     });
 
-  const labelEnter = reduceMotion ? undefined : FadeIn.duration(durations.quick);
-  const labelExit = reduceMotion ? undefined : FadeOut.duration(durations.quick);
-  const label = isCompletedToday ? 'Done for Today' : 'Mark as done';
+  const labelEnter = reduceMotion
+    ? undefined
+    : FadeIn.duration(durations.quick);
+  const labelExit = reduceMotion
+    ? undefined
+    : FadeOut.duration(durations.quick);
+  const label = isCompletedToday ? 'Done today' : 'Mark as done';
 
   return (
     <AnimatedPressable
       accessibilityLabel={
-        isCompletedToday
-          ? 'Done for today, tap to undo'
-          : 'Mark as done for today'
+        isCompletedToday ? 'Done today, tap to undo' : 'Mark as done for today'
       }
       accessibilityRole='button'
-      className='flex-row items-center justify-center'
+      accessibilityState={{ checked: isCompletedToday }}
+      className='flex-row items-center'
       disabled={disabled}
       style={[
         containerStyle,
         styles.container,
-        { shadowColor: colors.primary[600], opacity: disabled ? 0.6 : 1 },
+        { opacity: disabled ? 0.6 : 1 },
       ]}
       onPress={onPress}
       onPressIn={pressHandlers.onPressIn}
       onPressOut={pressHandlers.onPressOut}
     >
-      {isCompletedToday ? (
+      <Animated.View style={[styles.well, wellStyle]}>
         <Animated.View style={checkStyle}>
-          <Check color={colors.primary[700]} size={17} strokeWidth={2.6} />
+          <Check color={colors.primary[700]} size={15} strokeWidth={3} />
         </Animated.View>
-      ) : null}
+      </Animated.View>
       <AnimatedText
         key={isCompletedToday ? 'done' : 'pending'}
         entering={labelEnter}
         exiting={labelExit}
+        maxFontSizeMultiplier={2}
         style={[
           typography.body,
+          styles.label,
           labelStyle,
           { fontWeight: fontWeights.semibold },
         ]}
       >
         {label}
       </AnimatedText>
+      <View style={styles.wellBalance} />
     </AnimatedPressable>
   );
 }

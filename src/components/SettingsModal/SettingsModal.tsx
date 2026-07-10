@@ -53,11 +53,11 @@ function SettingsModalContent(props: SettingsModalProps) {
         setCompactView={logic.setCompactView}
         setDarkModePreference={logic.setDarkModePreference}
         setHabitSortMode={logic.setHabitSortMode}
+        connectorStyle={logic.connectorStyle}
+        setConnectorStyle={logic.setConnectorStyle}
         setShowGradientFill={logic.setShowGradientFill}
-        setShowStreakConnections={logic.setShowStreakConnections}
         setView={logic.setView}
         showGradientFill={logic.showGradientFill}
-        showStreakConnections={logic.showStreakConnections}
         stickyCalendarHeader={props.stickyCalendarHeader}
         streakRemindersEnabled={props.streakRemindersEnabled}
         streakReminderTime={props.streakReminderTime}

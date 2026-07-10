@@ -62,7 +62,10 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
   const result = useStreakGreeting(currentStreak, completedToday, totalHabits);
   const heroColor = getGreetingColor(result, isDark, colors);
   const monthName = format(currentDate, 'MMMM');
-  const dateSuffix = isViewingPast ? dateRangeText : format(currentDate, 'd');
+  const dateSuffix = isViewingPast
+    ? dateRangeText
+    : format(currentDate, 'yyyy');
+  const todayDayNumber = isViewingPast ? undefined : format(currentDate, 'd');
 
   return (
     <View>
@@ -84,6 +87,7 @@ export const ProgressGreeting: React.FC<ProgressGreetingProps> = ({
         dateSuffix={dateSuffix}
         isViewingPast={isViewingPast}
         monthName={monthName}
+        todayDayNumber={todayDayNumber}
         onDateRangePress={onDateRangePress}
         onJumpToToday={onJumpToToday}
       />

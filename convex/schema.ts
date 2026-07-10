@@ -497,8 +497,16 @@ const applicationTables = {
 
     showGradientFill: v.optional(v.boolean()),
 
-    // Draw connecting "chain ribbon" between consecutive completed calendar days.
+    // Draw connecting "chain ribbon" between consecutive completed calendar
+    // days. Retained field, no longer read/written by app code — superseded
+    // by connectorStyle below.
     showStreakConnections: v.optional(v.boolean()),
+
+    // Replaces showStreakConnections: none/small/full connector between
+    // consecutive completed calendar cells (month grid + year strip).
+    connectorStyle: v.optional(
+      v.union(v.literal('none'), v.literal('small'), v.literal('full'))
+    ),
 
     showMotivationalMessages: v.boolean(),
 

@@ -10,6 +10,7 @@ import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { CalendarPreview } from './CalendarPreview';
 import { CompletionIconSettingsRow } from './CompletionIconSettingsRow';
+import { ConnectorStyleSettingsRow } from './ConnectorStyleSettingsRow';
 import { DayMarkerShapeSettingsRow } from './DayMarkerShapeSettingsRow';
 import { SettingsRow } from './SettingsRow';
 import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
@@ -57,7 +58,7 @@ export function CalendarLookPage(p: CalendarLookPageProps) {
               completionIcon={p.habitCompletionIcon}
               dayShape={p.dayShape}
               showGradientFill={p.showGradientFill}
-              showStreakConnections={p.showStreakConnections}
+              connectorStyle={p.connectorStyle}
             />
             <DayMarkerShapeSettingsRow
               selected={p.dayShape}
@@ -65,9 +66,12 @@ export function CalendarLookPage(p: CalendarLookPageProps) {
             />
             <AppearanceChainRows
               showGradientFill={p.showGradientFill}
-              showStreakConnections={p.showStreakConnections}
               onChangeShowGradientFill={p.onChangeShowGradientFill}
-              onChangeShowStreakConnections={p.onChangeShowStreakConnections}
+            />
+            <ConnectorStyleSettingsRow
+              dayShape={p.dayShape}
+              selected={p.connectorStyle}
+              onSelect={p.onChangeConnectorStyle}
             />
             <CompletionIconSettingsRow
               selected={p.habitCompletionIcon}

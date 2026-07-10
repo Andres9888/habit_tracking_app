@@ -20,6 +20,10 @@ export type HabitSortMode = (typeof HABIT_SORT_MODE_OPTIONS)[number];
 export const COMPLETION_SOUND_OPTIONS = ['chime', 'pop', 'success'] as const;
 export type CompletionSoundType = (typeof COMPLETION_SOUND_OPTIONS)[number];
 
+// Calendar connector style — replaces the old showStreakConnections boolean.
+export const CONNECTOR_STYLE_OPTIONS = ['none', 'small', 'full'] as const;
+export type ConnectorStyle = (typeof CONNECTOR_STYLE_OPTIONS)[number];
+
 export const DEFAULT_SETTINGS = {
   appIcon: 'default' as const,
   catTheme: true,
@@ -28,7 +32,7 @@ export const DEFAULT_SETTINGS = {
   completionSoundEnabled: false,
   completionSoundType: 'chime' as CompletionSoundType,
   darkMode: 'light' as DarkModePreference,
-  dayShape: 'square' as const,
+  dayShape: 'circle' as const,
   habitCompletionIcon: 'chain' as const,
   habitSortMode: 'manual' as HabitSortMode,
   hasPremium: false,
@@ -38,7 +42,7 @@ export const DEFAULT_SETTINGS = {
   showConsistency: true,
   showEmojis: true,
   showGradientFill: true,
-  showStreakConnections: true,
+  connectorStyle: 'full' as ConnectorStyle,
   showMotivationalMessages: true,
   showStreaks: true,
   stickyCalendarHeader: false,

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { SettingsModalSettingsDocument } from './types';
+import type { ConnectorStyle } from '../../../convex/settings/types';
 import {
   normalizeDarkModePreference,
   type DarkModePreference,
@@ -13,7 +14,8 @@ export function useSettingsLocalPrefs(
   const [reduceMotion, setReduceMotionState] = useState(false);
   const [compactView, setCompactViewState] = useState(false);
   const [showGradientFill, setShowGradientFillState] = useState(true);
-  const [showStreakConnections, setShowStreakConnectionsState] = useState(true);
+  const [connectorStyle, setConnectorStyleState] =
+    useState<ConnectorStyle>('full');
 
   useEffect(() => {
     if (settings) {
@@ -21,20 +23,20 @@ export function useSettingsLocalPrefs(
       setReduceMotionState(settings.reduceMotion ?? false);
       setCompactViewState(settings.compactView ?? false);
       setShowGradientFillState(settings.showGradientFill ?? true);
-      setShowStreakConnectionsState(settings.showStreakConnections ?? true);
+      setConnectorStyleState(settings.connectorStyle ?? 'full');
     }
   }, [settings]);
 
   return {
     compactView,
+    connectorStyle,
     darkModePreference,
     reduceMotion,
     setCompactViewState,
+    setConnectorStyleState,
     setDarkModeState,
     setReduceMotionState,
     setShowGradientFillState,
-    setShowStreakConnectionsState,
     showGradientFill,
-    showStreakConnections,
   };
 }

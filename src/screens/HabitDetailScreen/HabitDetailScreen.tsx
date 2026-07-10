@@ -2,7 +2,6 @@
 /** HabitDetailScreen - Optimized for 9+ scores across all dimensions */
 import { iconSizes } from '@/theme/iconSizes';
 import { fontWeights, typography } from '@/theme/typography';
-import { useQuery } from 'convex/react';
 import { Edit3 } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, View } from 'react-native';
@@ -12,6 +11,7 @@ import { useThemeColors } from '../../theme';
 import { overlays } from '../../theme/colors';
 import { shadows } from '../../theme/spacing';
 import { api } from '../../../convex/_generated/api';
+import { useCachedQuery } from '../../lib/queryCache';
 import {
   DetailLoadingState,
   getHabitDisplayName,
@@ -36,10 +36,15 @@ function HabitDetailScreenContent({
   visible,
 }: HabitDetailScreenProps) {
   const { colors } = useThemeColors();
-  const fullHabit = useQuery(
+  const fetchedHabit = useCachedQuery(
     api.habits.get,
-    visible && habit ? { habitId: habit._id } : 'skip'
+    visible && habit ? { habitId: habit._id } : 'skip',
+    { entryName: 'habits.get' }
   );
+  // The detail modal stays mounted across habit switches; never let a payload
+  // for a different habit win over the list-seeded habit prop.
+  const fullHabit =
+    fetchedHabit && fetchedHabit._id === habit?._id ? fetchedHabit : undefined;
   const displayHabit = fullHabit ?? habit;
   const screenState = useHabitDetailScreenState({
     bestStreak: displayHabit?.bestStreak ?? 0,

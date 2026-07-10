@@ -4,6 +4,8 @@
 
 import type { BinaryDay } from './types';
 import { hexToRgba } from './MonthlyCalendarGrid/colors';
+import { colors } from '@/theme/colors';
+import { CELL_SIZE } from './constants';
 
 /**
  * Alpha applied to the habit color for "missed" (eligible, not completed) cells.
@@ -50,6 +52,39 @@ export function getCellBackgroundColor(
   }
   const alpha = isDark ? MISSED_TINT_ALPHA_DARK : MISSED_TINT_ALPHA_LIGHT;
   return hexToRgba(habitColor, alpha);
+}
+
+/**
+ * Shape-specific style overrides for the year strip's chain rendering.
+ * Only borderRadius/border — background color still comes from
+ * getCellBackgroundColor above. No connector at this 13px scale (see spec).
+ */
+export function getChainCellShapeStyle(
+  day: BinaryDay | null,
+  isDark: boolean
+): {
+  borderRadius: number;
+  borderStyle?: 'dashed';
+  borderColor?: string;
+  borderWidth?: number;
+} {
+  const missed = Boolean(
+    day &&
+    !day.completed &&
+    !day.isFuture &&
+    !day.isBeforeCreation &&
+    !day.isToday
+  );
+  return {
+    borderRadius: CELL_SIZE / 2,
+    ...(missed
+      ? {
+          borderStyle: 'dashed',
+          borderColor: isDark ? colors.gray[500] : colors.gray[300],
+          borderWidth: 1.5,
+        }
+      : {}),
+  };
 }
 
 /**

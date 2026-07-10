@@ -12,7 +12,9 @@ import type { WeekNavRowProps } from './WeekNavRow.types';
 const WeekNavRowComponent: React.FC<WeekNavRowProps> = ({
   monthName,
   dateSuffix,
+  isCalendarOpen,
   isViewingPast,
+  todayDayNumber,
   onJumpToToday,
   onDateRangePress,
 }) => {
@@ -26,7 +28,9 @@ const WeekNavRowComponent: React.FC<WeekNavRowProps> = ({
 
       <DatePill
         dateSuffix={dateSuffix}
+        isCalendarOpen={isCalendarOpen}
         monthName={monthName}
+        todayDayNumber={todayDayNumber}
         onDateRangePress={onDateRangePress}
       />
 

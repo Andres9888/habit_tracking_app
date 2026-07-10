@@ -10,23 +10,26 @@ import { durations } from '@/theme/animations';
 import { runCalendarDayFillTransition } from './runCalendarDayFillTransition';
 
 interface UseCalendarDayAnimationParams {
+  completedBg: string;
   completeTextColor: string;
   incompleteTextColor: string;
   isPending?: boolean;
   reduceMotion: boolean;
   showCompleted: boolean;
+  surfaceBg: string;
   useSolidCompletedFill: boolean;
 }
 
 export function useCalendarDayAnimation({
+  completedBg,
   completeTextColor,
   incompleteTextColor,
   isPending = false,
   reduceMotion,
   showCompleted,
+  surfaceBg,
   useSolidCompletedFill,
 }: UseCalendarDayAnimationParams) {
-  const fillScale = useSharedValue(showCompleted ? 1 : 0);
   const fillProgress = useSharedValue(showCompleted ? 1 : 0);
   const cellPop = useSharedValue(1);
   const pendingOpacity = useSharedValue(1);
@@ -50,7 +53,6 @@ export function useCalendarDayAnimation({
     runCalendarDayFillTransition({
       cellPop,
       fillProgress,
-      fillScale,
       hideFill,
       reduceMotion,
       setFillMounted,
@@ -61,15 +63,30 @@ export function useCalendarDayAnimation({
     showCompleted,
     useSolidCompletedFill,
     reduceMotion,
-    fillScale,
     fillProgress,
     cellPop,
     hideFill,
   ]);
 
-  const fillStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: fillScale.value }],
-  }));
+  // One shared progress drives an OPAQUE color ramp (surface → completed).
+  // Opaque interpolation is visually identical to the ribbon's alpha fade
+  // over the same surface, and it can't compound where layers overlap — so
+  // cell and bridge read as one shape dissolving, with no two-tone seam.
+  // gamma: 1 = plain per-channel lerp, identical to the compositor's alpha
+  // blend of the ribbon over the same surface — keeps cell and bridge on the
+  // exact same color at every instant of the ramp.
+  const fillStyle = useAnimatedStyle(
+    () => ({
+      backgroundColor: interpolateColor(
+        fillProgress.value,
+        [0, 1],
+        [surfaceBg, completedBg],
+        'RGB',
+        { gamma: 1 }
+      ),
+    }),
+    [surfaceBg, completedBg]
+  );
   const cellPopStyle = useAnimatedStyle(() => ({
     transform: [{ scale: cellPop.value }],
   }));

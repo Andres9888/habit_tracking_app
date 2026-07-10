@@ -18,6 +18,7 @@ const VALID_COMPLETION_SOUND: Set<string> = new Set([
   'pop',
   'success',
 ]);
+const VALID_CONNECTOR_STYLE: Set<string> = new Set(['none', 'small', 'full']);
 
 function isValidBoolean(value: unknown): value is boolean {
   return typeof value === 'boolean';
@@ -85,8 +86,11 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.showGradientFill = source.showGradientFill;
   }
 
-  if (isValidBoolean(source.showStreakConnections)) {
-    output.showStreakConnections = source.showStreakConnections;
+  if (
+    isValidString(source.connectorStyle) &&
+    VALID_CONNECTOR_STYLE.has(source.connectorStyle)
+  ) {
+    output.connectorStyle = source.connectorStyle;
   }
 
   if (isValidBoolean(source.showMotivationalMessages)) {

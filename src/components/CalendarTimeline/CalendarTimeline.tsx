@@ -49,7 +49,9 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
       ? `${format(tl.firstDate, 'd')} – ${format(tl.lastDate, 'd')}`
       : `${format(tl.firstDate, 'd')} – ${format(tl.lastDate, 'MMM d')}`;
   } else {
-    dateSuffix = format(tl.currentDate, 'd');
+    // Current week: "July 2026" — today's day number lives inside the pill's
+    // calendar glyph instead (it duplicated the highlighted today cell).
+    dateSuffix = format(tl.currentDate, 'yyyy');
   }
 
   return (

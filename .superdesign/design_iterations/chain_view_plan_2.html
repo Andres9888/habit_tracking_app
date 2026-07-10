@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain — shape × connector matrix (interactive)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --gray-50: #faf8f5;
+        --gray-100: #f5f1ed;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --gray-400: #6e6660;
+        --gray-800: #2d2a26;
+        --card-elevated: #ffffff;
+        --border: #ddd8d2;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: #efeae2;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--gray-800);
+        margin: 0;
+        padding: 40px 20px;
+      }
+      .serif {
+        font-family: 'Fraunces', serif;
+      }
+      .note {
+        max-width: 900px;
+        margin: 0 auto 24px;
+        background: #fff7e8;
+        border: 1px solid #f0deb8;
+        border-radius: 12px;
+        padding: 14px 18px;
+        font-size: 13px;
+        color: #6b4e16;
+        line-height: 1.6;
+      }
+      .wrap {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+      .pagehdr {
+        text-align: center;
+        color: #5a554c;
+        margin-bottom: 26px;
+      }
+      .pagehdr h1 {
+        font-size: 22px;
+        margin: 0 0 6px;
+      }
+      .card {
+        background: var(--card-elevated);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow:
+          0 8px 22px -12px rgba(28, 26, 23, 0.18),
+          0 0 0 1px var(--border);
+      }
+      .lbl {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--gray-400);
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+        justify-content: center;
+      }
+      .control-group {
+        background: var(--gray-50);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+      .control-group .lbl {
+        margin-bottom: 8px;
+      }
+      .seg {
+        display: flex;
+        background: var(--gray-100);
+        border-radius: 12px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .seg button {
+        border: 0;
+        background: transparent;
+        font-family: 'DM Sans';
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--gray-400);
+        padding: 8px 14px;
+        border-radius: 9px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .seg button.active {
+        background: var(--card-elevated);
+        color: var(--gray-800);
+        box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.15);
+      }
+      .seg button[hidden] {
+        display: none;
+      }
+
+      /* ---- grid, driven by data-shape / data-connector on the container ---- */
+      .chain-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 36px);
+        row-gap: 6px;
+        column-gap: 0;
+        justify-content: space-between;
+        margin-bottom: 6px;
+      }
+      .cell {
+        position: relative;
+        width: 36px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .dot {
+        width: 28px;
+        height: 28px;
+        background: var(--gray-100);
+        border: 2px solid transparent;
+        z-index: 2;
+      }
+      .chain-grid[data-shape='circle'] .dot {
+        border-radius: 999px;
+      }
+      .chain-grid[data-shape='square'] .dot {
+        border-radius: 8px;
+      }
+      .cell.done .dot {
+        background: var(--primary-500);
+        border-color: var(--primary-600);
+      }
+      .cell.missed .dot {
+        background: var(--card-elevated);
+        border: 2px dashed var(--gray-300);
+      }
+      .cell.future .dot {
+        background: var(--gray-100);
+        border: 2px solid transparent;
+        opacity: 0.7;
+      }
+      .cell.today .dot {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+      }
+
+      /* FULL connector: merges the gap into one continuous block */
+      .chain-grid[data-connector='full'] .cell.join-r::after {
+        content: '';
+        position: absolute;
+        right: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 28px;
+        background: var(--primary-500);
+        z-index: 1;
+      }
+      .chain-grid[data-shape='square'][data-connector='full']
+        .cell.join-r::after {
+        border-radius: 0;
+      }
+      .chain-grid[data-shape='circle'][data-connector='full']
+        .cell.join-r::after {
+        height: 8px;
+        border-radius: 2px;
+      }
+
+      /* SMALL connector: thin standalone line, cells stay visually separate */
+      .chain-grid[data-connector='small'] .cell.join-r::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--primary-500);
+        z-index: 1;
+      }
+
+      /* missed dotted trace — only shown when a connector style is active */
+      .chain-grid:not([data-connector='none']) .cell.missed::before {
+        content: '';
+        position: absolute;
+        left: -1px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        border-top: 2px dotted var(--gray-300);
+        z-index: 1;
+      }
+      .chain-grid:not([data-connector='none']) .cell.missed::after {
+        content: '';
+        position: absolute;
+        right: -1px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        border-top: 2px dotted var(--gray-300);
+        z-index: 1;
+      }
+
+      .caption {
+        font-size: 12.5px;
+        color: var(--gray-400);
+        line-height: 1.6;
+        text-align: center;
+        margin-top: 14px;
+      }
+      .caption b {
+        color: var(--gray-800);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="note">
+      <b>Interactive — click the controls below.</b> "Full" square = the
+      existing shipped ChainConnectors ribbon (merges the gap solid). "Small" =
+      the existing shipped DayConnector thin line (already used on the
+      habit-list weekly strip / Settings preview) applied to the month grid.
+      "Full" circle = the round per-cell join bar from the first mock.
+      Missed-day dotted trace only appears when a connector style is active.
+    </div>
+
+    <div class="pagehdr">
+      <h1 class="serif">Shape × connector — pick a combination</h1>
+    </div>
+
+    <div class="wrap">
+      <div class="controls">
+        <div class="control-group">
+          <div class="lbl">Shape</div>
+          <div class="seg" id="shape-seg">
+            <button class="active" data-shape="circle">◯ Circle</button>
+            <button data-shape="square">▢ Square</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="lbl">Connector</div>
+          <div class="seg" id="connector-seg">
+            <button data-connector="none">— None</button>
+            <button data-connector="small">╌ Small line</button>
+            <button class="active" data-connector="full">🔗 Full chain</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+          "
+        >
+          <div class="serif" style="font-size: 16px; font-weight: 600">
+            July
+          </div>
+          <div class="lbl" style="margin: 0" id="state-label">
+            circle · full
+          </div>
+        </div>
+        <div
+          class="chain-grid"
+          id="grid"
+          data-shape="circle"
+          data-connector="full"
+        >
+          <div class="cell future"><div class="dot"></div></div>
+          <div class="cell future"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done"><div class="dot"></div></div>
+          <div class="cell missed"><div class="dot"></div></div>
+
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done"><div class="dot"></div></div>
+          <div class="cell missed"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done"><div class="dot"></div></div>
+
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done"><div class="dot"></div></div>
+
+          <div class="cell done join-r"><div class="dot"></div></div>
+          <div class="cell done today"><div class="dot"></div></div>
+          <div class="cell future"><div class="dot"></div></div>
+          <div class="cell future"><div class="dot"></div></div>
+          <div class="cell future"><div class="dot"></div></div>
+          <div class="cell future"><div class="dot"></div></div>
+          <div class="cell future"><div class="dot"></div></div>
+        </div>
+      </div>
+
+      <div class="caption">
+        <p>
+          <b>Default on ship</b> = Circle + Full (this is "Chain"). Square +
+          None ≈ today's plain grid. Square + Full = today's existing ribbon,
+          unchanged. Square + Small and Circle + None are the two genuinely new
+          combinations this adds.
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const grid = document.getElementById('grid');
+      const stateLabel = document.getElementById('state-label');
+      const shapeSeg = document.getElementById('shape-seg');
+      const connectorSeg = document.getElementById('connector-seg');
+      const smallBtn = connectorSeg.querySelector('[data-connector="small"]');
+
+      function setActive(seg, btn) {
+        seg
+          .querySelectorAll('button')
+          .forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+      }
+
+      function render() {
+        stateLabel.textContent =
+          grid.dataset.shape + ' · ' + grid.dataset.connector;
+        // Circle only supports none/full per the plan — hide "small" and fall back to full.
+        const isCircle = grid.dataset.shape === 'circle';
+        smallBtn.hidden = isCircle;
+        if (isCircle && grid.dataset.connector === 'small') {
+          grid.dataset.connector = 'full';
+          setActive(
+            connectorSeg,
+            connectorSeg.querySelector('[data-connector="full"]')
+          );
+        }
+      }
+
+      shapeSeg.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+        grid.dataset.shape = btn.dataset.shape;
+        setActive(shapeSeg, btn);
+        render();
+      });
+
+      connectorSeg.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn || btn.hidden) return;
+        grid.dataset.connector = btn.dataset.connector;
+        setActive(connectorSeg, btn);
+        render();
+      });
+
+      render();
+    </script>
+  </body>
+</html>
