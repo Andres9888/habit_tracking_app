@@ -52,7 +52,10 @@ export const CalendarDayBody = memo(function CalendarDayBody({
       style={[
         styles.dayCell,
         cellPopStyle,
-        isToday && { borderColor: habitColor, borderWidth: 2 },
+        // Today marker only while incomplete: the 2px border insets the inner
+        // absoluteFill, so a completed today would render partially filled.
+        isToday &&
+          !showCompleted && { borderColor: habitColor, borderWidth: 2 },
       ]}
     >
       {fillMounted ? (

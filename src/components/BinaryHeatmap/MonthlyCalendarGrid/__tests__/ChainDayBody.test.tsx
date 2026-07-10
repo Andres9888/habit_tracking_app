@@ -97,4 +97,41 @@ describe('ChainDayBody', () => {
     );
     expect(queryByTestId('chain-missed-trace-left')).toBeNull();
   });
+
+  it('paints a completed today fully filled, without the translucent today halo', () => {
+    const { getByTestId } = render(
+      <ChainDayBody
+        day={makeDay({ isCompleted: true, isToday: true })}
+        habitColor='#10B981'
+        connectorStyle='full'
+        joinRight={false}
+      />
+    );
+    const dot = getByTestId('chain-day-dot');
+    const flat = Object.assign(
+      {},
+      ...dot.props.style.filter(Boolean)
+    ) as Record<string, unknown>;
+    expect(flat.backgroundColor).toBe('#10B981');
+    // Solid completed border, not the 3px 25%-alpha today ring.
+    expect(flat.borderWidth).toBe(2);
+    expect(String(flat.borderColor)).not.toContain('0.25');
+  });
+
+  it('keeps the today halo for an incomplete today', () => {
+    const { getByTestId } = render(
+      <ChainDayBody
+        day={makeDay({ isToday: true })}
+        habitColor='#10B981'
+        connectorStyle='full'
+        joinRight={false}
+      />
+    );
+    const dot = getByTestId('chain-day-dot');
+    const flat = Object.assign(
+      {},
+      ...dot.props.style.filter(Boolean)
+    ) as Record<string, unknown>;
+    expect(flat.borderWidth).toBe(3);
+  });
 });

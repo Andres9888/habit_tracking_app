@@ -58,7 +58,9 @@ export function ChainDayBody({
             borderWidth: 2,
           },
           dotStyle,
-          isToday
+          // Today halo only while incomplete: a completed today must keep the
+          // solid completed border and paint fully filled like its neighbors.
+          isToday && !showCompleted
             ? {
                 borderColor: hexToRgba(colors.primary[500], 0.25),
                 borderWidth: 3,
