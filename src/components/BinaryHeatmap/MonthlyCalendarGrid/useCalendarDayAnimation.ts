@@ -26,7 +26,6 @@ export function useCalendarDayAnimation({
   showCompleted,
   useSolidCompletedFill,
 }: UseCalendarDayAnimationParams) {
-  const fillScale = useSharedValue(showCompleted ? 1 : 0);
   const fillProgress = useSharedValue(showCompleted ? 1 : 0);
   const cellPop = useSharedValue(1);
   const pendingOpacity = useSharedValue(1);
@@ -50,7 +49,6 @@ export function useCalendarDayAnimation({
     runCalendarDayFillTransition({
       cellPop,
       fillProgress,
-      fillScale,
       hideFill,
       reduceMotion,
       setFillMounted,
@@ -61,14 +59,15 @@ export function useCalendarDayAnimation({
     showCompleted,
     useSolidCompletedFill,
     reduceMotion,
-    fillScale,
     fillProgress,
     cellPop,
     hideFill,
   ]);
 
+  // One shared progress: the fill fades (opacity) on exactly the same curve
+  // that drives the text color crossfade — no scale collapse, no staggering.
   const fillStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: fillScale.value }],
+    opacity: fillProgress.value,
   }));
   const cellPopStyle = useAnimatedStyle(() => ({
     transform: [{ scale: cellPop.value }],

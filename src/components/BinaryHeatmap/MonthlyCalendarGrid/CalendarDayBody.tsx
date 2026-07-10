@@ -1,18 +1,10 @@
 import React, { memo } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  type ViewStyle,
-  type TextStyle,
-} from 'react-native';
+import { View, StyleSheet, type ViewStyle, type TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { styles } from './styles';
-import { fontWeights } from '@/theme/typography';
 import { borderRadius } from '@/theme/spacing';
 import { CalendarDayBodyConnector } from './CalendarDayBodyConnector';
-
-const AnimatedText = Animated.createAnimatedComponent(Text);
+import { CalendarDayNumber } from './CalendarDayNumber';
 
 interface CalendarDayBodyProps {
   cellPopStyle: ViewStyle;
@@ -52,8 +44,7 @@ export const CalendarDayBody = memo(function CalendarDayBody({
       style={[
         styles.dayCell,
         cellPopStyle,
-        // Today marker only while incomplete: the 2px border insets the inner
-        // absoluteFill, so a completed today would render partially filled.
+        // Today ring only while incomplete: its border would inset the fill.
         isToday &&
           !showCompleted && { borderColor: habitColor, borderWidth: 2 },
       ]}
@@ -70,29 +61,14 @@ export const CalendarDayBody = memo(function CalendarDayBody({
           ]}
         />
       ) : null}
-      {useSolidCompletedFill ? (
-        <AnimatedText
-          style={[
-            styles.dayText,
-            textStyle,
-            isToday && styles.todayText,
-            showCompleted && { fontWeight: fontWeights.semibold },
-          ]}
-        >
-          {dayNumber}
-        </AnimatedText>
-      ) : (
-        <Text
-          style={[
-            styles.dayText,
-            { color: staticTextColor },
-            isToday && styles.todayText,
-            showCompleted && { fontWeight: fontWeights.semibold },
-          ]}
-        >
-          {dayNumber}
-        </Text>
-      )}
+      <CalendarDayNumber
+        dayNumber={dayNumber}
+        isToday={isToday}
+        showCompleted={showCompleted}
+        staticTextColor={staticTextColor}
+        textStyle={textStyle}
+        useSolidCompletedFill={useSolidCompletedFill}
+      />
       {showDot ? (
         <View style={[styles.dot, { backgroundColor: habitColor }]} />
       ) : null}

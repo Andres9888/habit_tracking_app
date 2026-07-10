@@ -1,12 +1,13 @@
 /**
  * ChainDayBodyOverlays — the join bar, small DayConnector, and missed-day
  * dotted trace stubs for ChainDayBody. Split out to keep ChainDayBody.tsx
- * under the project's 100-line cap.
+ * under the project's 100-line cap. Every overlay mounts/unmounts through
+ * OverlayFadeView so it moves on the same clock as the dot's fill fade.
  */
-import { View } from 'react-native';
 import { colors } from '@/theme/colors';
 import { DayConnector } from '../../HabitChainVisualizer/DayConnector';
 import { SMALL_CONNECTOR_STRENGTH } from './chainLinkHelpers';
+import { OverlayFadeView } from './OverlayFadeView';
 
 interface ChainDayBodyOverlaysProps {
   habitColor: string;
@@ -14,6 +15,15 @@ interface ChainDayBodyOverlaysProps {
   joinRight: boolean;
   showMissedTrace: boolean;
 }
+
+const traceStyle = {
+  position: 'absolute' as const,
+  top: '50%' as const,
+  width: 10,
+  borderTopWidth: 2,
+  borderStyle: 'dotted' as const,
+  borderTopColor: colors.gray[300],
+};
 
 export function ChainDayBodyOverlays({
   habitColor,
@@ -27,9 +37,8 @@ export function ChainDayBodyOverlays({
   return (
     <>
       {showJoinBar ? (
-        <View
+        <OverlayFadeView
           testID='chain-join-bar'
-          pointerEvents='none'
           style={{
             position: 'absolute',
             right: -2,
@@ -42,9 +51,8 @@ export function ChainDayBodyOverlays({
         />
       ) : null}
       {showSmallConnector ? (
-        <View
+        <OverlayFadeView
           testID='chain-small-connector'
-          pointerEvents='none'
           style={{
             position: 'absolute',
             right: -6,
@@ -58,35 +66,17 @@ export function ChainDayBodyOverlays({
             strengthPercent={SMALL_CONNECTOR_STRENGTH}
             visible
           />
-        </View>
+        </OverlayFadeView>
       ) : null}
       {showMissedTrace ? (
         <>
-          <View
+          <OverlayFadeView
             testID='chain-missed-trace-left'
-            pointerEvents='none'
-            style={{
-              position: 'absolute',
-              left: -1,
-              top: '50%',
-              width: 10,
-              borderTopWidth: 2,
-              borderStyle: 'dotted',
-              borderTopColor: colors.gray[300],
-            }}
+            style={{ ...traceStyle, left: -1 }}
           />
-          <View
+          <OverlayFadeView
             testID='chain-missed-trace-right'
-            pointerEvents='none'
-            style={{
-              position: 'absolute',
-              right: -1,
-              top: '50%',
-              width: 10,
-              borderTopWidth: 2,
-              borderStyle: 'dotted',
-              borderTopColor: colors.gray[300],
-            }}
+            style={{ ...traceStyle, right: -1 }}
           />
         </>
       ) : null}

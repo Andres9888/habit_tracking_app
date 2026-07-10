@@ -10,8 +10,8 @@
 
 import React, { memo, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, { FadeIn } from 'react-native-reanimated';
-import { durations, enterEasing } from '@/theme/animations';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { durations, enterEasing, exitEasing } from '@/theme/animations';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
 import { isLinkable } from './chainLinkHelpers';
 import type { DayData } from './types';
@@ -52,9 +52,15 @@ export const ChainConnectors = memo(function ChainConnectors({
   }
   if (bridges.length === 0) return null;
 
+  // Bridges fade on the same clock as the day-cell fill (durations.quick) so
+  // toggling a day moves cell + ribbon as one motion, both in and out.
   const entering =
     animationsEnabled && !reduceMotion
-      ? FadeIn.duration(durations.reveal).easing(enterEasing)
+      ? FadeIn.duration(durations.quick).easing(enterEasing)
+      : undefined;
+  const exiting =
+    animationsEnabled && !reduceMotion
+      ? FadeOut.duration(durations.quick).easing(exitEasing)
       : undefined;
 
   return (
@@ -63,6 +69,7 @@ export const ChainConnectors = memo(function ChainConnectors({
         <Animated.View
           key={key}
           entering={entering}
+          exiting={exiting}
           style={{
             backgroundColor: completedBg,
             height: CELL_SIZE,

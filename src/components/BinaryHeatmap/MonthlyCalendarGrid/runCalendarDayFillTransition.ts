@@ -12,7 +12,6 @@ const SETTLE_SCALE = 0.97;
 interface FillTransitionParams {
   cellPop: SharedValue<number>;
   fillProgress: SharedValue<number>;
-  fillScale: SharedValue<number>;
   hideFill: () => void;
   reduceMotion: boolean;
   setFillMounted: (mounted: boolean) => void;
@@ -20,10 +19,13 @@ interface FillTransitionParams {
   wasCompleted: boolean;
 }
 
+/**
+ * Fill and clear are a single fade: fillProgress drives the fill layer's
+ * opacity AND the text color crossfade, so the whole cell moves as one.
+ */
 export function runCalendarDayFillTransition({
   cellPop,
   fillProgress,
-  fillScale,
   hideFill,
   reduceMotion,
   setFillMounted,
@@ -33,12 +35,10 @@ export function runCalendarDayFillTransition({
   if (showCompleted && !wasCompleted) {
     setFillMounted(true);
     if (reduceMotion) {
-      fillScale.value = 1;
       fillProgress.value = 1;
       cellPop.value = 1;
       return;
     }
-    fillScale.value = 1;
     fillProgress.value = withTiming(1, {
       duration: durations.quick,
       easing: enterEasing,
@@ -52,23 +52,18 @@ export function runCalendarDayFillTransition({
 
   if (!showCompleted && wasCompleted) {
     if (reduceMotion) {
-      fillScale.value = 0;
       fillProgress.value = 0;
       cellPop.value = 1;
       setFillMounted(false);
       return;
     }
-    fillScale.value = withTiming(
+    fillProgress.value = withTiming(
       0,
       { duration: durations.quick, easing: exitEasing },
       (finished) => {
         if (finished) runOnJS(hideFill)();
       }
     );
-    fillProgress.value = withTiming(0, {
-      duration: durations.quick,
-      easing: exitEasing,
-    });
     cellPop.value = 1;
   }
 }

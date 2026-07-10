@@ -1,12 +1,13 @@
 /**
  * CalendarDayBodyConnector — small "chain" connector rendered on the square
  * day cell when connectorStyle === 'small' and the day fuses to its right
- * neighbor. Reuses the same DayConnector visual as the full ribbon overlay.
+ * neighbor. Reuses the same DayConnector visual as the full ribbon overlay,
+ * fading in/out through OverlayFadeView on the shared cell-toggle clock.
  */
 import React from 'react';
-import { View } from 'react-native';
 import { DayConnector } from '../../HabitChainVisualizer/DayConnector';
 import { SMALL_CONNECTOR_STRENGTH } from './chainLinkHelpers';
+import { OverlayFadeView } from './OverlayFadeView';
 
 interface CalendarDayBodyConnectorProps {
   connectorStyle: 'none' | 'small' | 'full';
@@ -22,9 +23,8 @@ export function CalendarDayBodyConnector({
   if (connectorStyle !== 'small' || !joinRight) return null;
 
   return (
-    <View
+    <OverlayFadeView
       testID='chain-small-connector'
-      pointerEvents='none'
       style={{
         position: 'absolute',
         right: -6,
@@ -38,6 +38,6 @@ export function CalendarDayBodyConnector({
         strengthPercent={SMALL_CONNECTOR_STRENGTH}
         visible
       />
-    </View>
+    </OverlayFadeView>
   );
 }
