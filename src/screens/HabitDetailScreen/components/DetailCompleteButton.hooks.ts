@@ -1,6 +1,7 @@
 /**
- * DetailCompleteButton — fused full-width pill.
- * Incomplete: filled, elevated, loud CTA. Complete: light tinted, calm, check icon.
+ * DetailCompleteButton — C1 "Settled" animation.
+ * Rest: white bar, green outline, empty check-well ring.
+ * Done: deep settled fill, well flips to a light medallion with a check.
  */
 import { useEffect, useRef } from 'react';
 import {
@@ -14,11 +15,14 @@ import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation'
 import { runCompleteButtonTransition } from './runCompleteButtonTransition';
 
 interface CompleteButtonPalette {
-  filledBg: string;
-  filledText: string;
   doneBg: string;
-  doneBorder: string;
   doneText: string;
+  restBg: string;
+  restBorder: string;
+  restText: string;
+  wellDoneBg: string;
+  wellRestBg: string;
+  wellRestRing: string;
 }
 
 export function useDetailCompleteButtonAnimation(
@@ -47,11 +51,13 @@ export function useDetailCompleteButtonAnimation(
     backgroundColor: interpolateColor(
       completionProgress.value,
       [0, 1],
-      [palette.filledBg, palette.doneBg]
+      [palette.restBg, palette.doneBg]
     ),
-    borderColor: palette.doneBorder,
-    borderWidth: interpolate(completionProgress.value, [0, 1], [0, 1]),
-    shadowOpacity: interpolate(completionProgress.value, [0, 1], [0.28, 0]),
+    borderColor: interpolateColor(
+      completionProgress.value,
+      [0, 1],
+      [palette.restBorder, palette.doneBg]
+    ),
     transform: [{ scale: pressScale.value }],
   }));
 
@@ -59,7 +65,20 @@ export function useDetailCompleteButtonAnimation(
     color: interpolateColor(
       completionProgress.value,
       [0, 1],
-      [palette.filledText, palette.doneText]
+      [palette.restText, palette.doneText]
+    ),
+  }));
+
+  const wellStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      completionProgress.value,
+      [0, 1],
+      [palette.wellRestBg, palette.wellDoneBg]
+    ),
+    borderColor: interpolateColor(
+      completionProgress.value,
+      [0, 1],
+      [palette.wellRestRing, palette.wellDoneBg]
     ),
   }));
 
@@ -73,5 +92,6 @@ export function useDetailCompleteButtonAnimation(
     containerStyle,
     labelStyle,
     pressHandlers,
+    wellStyle,
   };
 }
