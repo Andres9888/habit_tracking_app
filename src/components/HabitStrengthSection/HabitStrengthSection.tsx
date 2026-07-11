@@ -18,6 +18,7 @@ import { shadows } from '../../theme/spacing';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { getStrengthJourney } from './journey';
 import { MilestoneTrack } from './MilestoneTrack';
+import { RangeToggle } from './RangeToggle';
 import { StrengthChart } from './StrengthChart';
 import { StrengthEmptyState } from './StrengthEmptyState';
 import { StrengthSkeleton } from './StrengthSkeleton';
@@ -31,8 +32,14 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
 }: HabitStrengthSectionProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
-  const { chartData, currentStrength, isCalculating, isEmpty, timeRange } =
-    useHabitStrengthData({ completedDates, habitCreatedAt, habitStrength });
+  const {
+    chartData,
+    currentStrength,
+    isCalculating,
+    isEmpty,
+    setTimeRange,
+    timeRange,
+  } = useHabitStrengthData({ completedDates, habitCreatedAt, habitStrength });
 
   // The journey reads as level progression, so the chart + milestones follow
   // the current level's color (shown across StrengthProgressBar and HabitCard too).
@@ -63,7 +70,12 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
     >
       <View className='p-4'>
         <View className='mb-3 flex-row items-center justify-between'>
-          <Text style={{ ...typography.overline, color: themeColors.text.secondary }}>
+          <Text
+            style={{
+              ...typography.overline,
+              color: themeColors.text.secondary,
+            }}
+          >
             Strength
           </Text>
           <Text
@@ -75,6 +87,10 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           >
             {journey.current.emoji} {journey.current.label} · {currentStrength}%
           </Text>
+        </View>
+
+        <View className='mb-3 flex-row justify-end'>
+          <RangeToggle value={timeRange} onChange={setTimeRange} />
         </View>
 
         <View className='-mx-4 mb-3'>
