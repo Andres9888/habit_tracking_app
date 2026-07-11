@@ -50,6 +50,7 @@ export function SimpleStreakGoalHero({
     <View>
       <StreakGoalNumeral
         animatedStreak={streakText}
+        bestStreak={bestStreak}
         daysRemaining={daysText}
         goalLabel={goalLabel}
       />

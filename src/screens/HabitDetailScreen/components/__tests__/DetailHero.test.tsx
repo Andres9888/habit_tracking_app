@@ -17,6 +17,7 @@ jest.mock('../../../../theme/ThemeContext', () => ({
         success: '#22c55e',
         successLight: '#dcfce7',
         successText: '#166534',
+        streak: '#d97706',
         streakLight: '#fef3c7',
         streakText: '#92400e',
       },
@@ -60,12 +61,12 @@ describe('DetailHero', () => {
     expect(getByLabelText('Habit icon: 🏃')).toBeTruthy();
   });
 
-  it('renders the total-completions number', () => {
+  it('folds total completions into the encouragement line', () => {
     const { getByText } = render(
       <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
     );
-    expect(getByText('89')).toBeTruthy();
-    expect(getByText('total')).toBeTruthy();
+    expect(getByText('89 times')).toBeTruthy();
+    expect(getByText(/You.ve shown up/)).toBeTruthy();
   });
 
   it('renders the fused complete bar', () => {
@@ -102,18 +103,43 @@ describe('DetailHero', () => {
     expect(getByRole('header')).toBeTruthy();
   });
 
-  it('surfaces an ongoing-streak note with best streak', () => {
-    const { getByText } = render(
+  it('renders the current streak as the hero with a personal-best pill', () => {
+    const { getByText, queryByText } = render(
       <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
     );
-    expect(getByText('🔥 5-day streak · best 21')).toBeTruthy();
+    expect(getByText('5')).toBeTruthy();
+    expect(getByText('day streak')).toBeTruthy();
+    expect(getByText('Personal best · 21 days')).toBeTruthy();
+    expect(queryByText(/to beat/i)).toBeNull();
   });
 
-  it('surfaces a personal-best note when current matches best', () => {
-    const recordHabit = { ...mockHabit, currentStreak: 21, bestStreak: 21 };
+  it('shows the rebuilding sublabel only for a freshly reset streak', () => {
+    const brokenHabit = { ...mockHabit, currentStreak: 1, bestStreak: 139 };
     const { getByText } = render(
-      <DetailHero habit={recordHabit as never} totalCompletions={89} onDayPress={noop} />
+      <DetailHero habit={brokenHabit as never} totalCompletions={170} onDayPress={noop} />
     );
-    expect(getByText('🔥 Longest streak yet')).toBeTruthy();
+    expect(getByText('1')).toBeTruthy();
+    expect(getByText('day streak · rebuilding')).toBeTruthy();
+    expect(getByText('Personal best · 139 days')).toBeTruthy();
+    expect(getByText(/The chain always starts again/)).toBeTruthy();
+  });
+
+  it('keeps a healthy streak free of rebuilding copy', () => {
+    const { queryByText } = render(
+      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
+    );
+    expect(queryByText(/rebuilding/)).toBeNull();
+    expect(queryByText(/starts again/)).toBeNull();
+  });
+
+  it('hides pill and encouragement for a brand-new habit', () => {
+    const freshHabit = { ...mockHabit, currentStreak: 0, bestStreak: 0 };
+    const { getByText, queryByText } = render(
+      <DetailHero habit={freshHabit as never} totalCompletions={0} onDayPress={noop} />
+    );
+    expect(getByText('0')).toBeTruthy();
+    expect(getByText('day streak')).toBeTruthy();
+    expect(queryByText(/Personal best/)).toBeNull();
+    expect(queryByText(/shown up/)).toBeNull();
   });
 });

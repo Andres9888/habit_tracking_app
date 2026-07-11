@@ -1,18 +1,18 @@
-/** DetailHero - Fused hero card: icon/name/streak row, total, complete bar. */
-import { Text, View } from 'react-native';
+/** DetailHero - Momentum-first hero card: name row, streak centerpiece,
+ *  best pill + encouragement, complete bar. */
+import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
 import { durations, enterEasing } from '../../../theme/animations';
 import { colors as palette } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import type { Habit } from '../HabitDetailScreen.types';
 import { DetailCompleteButton } from './DetailCompleteButton';
-import { getHabitDisplayName } from './DetailHero.utils';
-import { DetailHeroContext } from './DetailHeroContext';
-import { DetailHeroIcon } from './DetailHeroIcon';
+import { DetailHeroHeaderRow } from './DetailHeroHeaderRow';
+import { DetailHeroMomentum } from './DetailHeroMomentum';
+import { DetailHeroStreakHero } from './DetailHeroStreakHero';
 
 interface DetailHeroProps {
   habit: Habit;
@@ -31,7 +31,8 @@ export function DetailHero({
 }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
-  const habitName = getHabitDisplayName(habit);
+  const bestStreak = habit.bestStreak ?? 0;
+  const currentStreak = habit.currentStreak ?? 0;
 
   return (
     <Animated.View
@@ -51,68 +52,27 @@ export function DetailHero({
         ...shadows.subtle,
       }}
     >
-      <View
-        className='flex-row items-center'
-        style={{ gap: spacing.md, padding: spacing.base }}
-      >
-        {habit.icon ? (
-          <DetailHeroIcon
-            color={habit.color ?? habit.iconColor}
-            icon={habit.icon}
-            isCompletedToday={isCompletedToday}
-          />
-        ) : null}
+      <DetailHeroHeaderRow habit={habit} isCompletedToday={isCompletedToday} />
 
-        <View className='flex-1' style={{ minWidth: 0 }}>
-          <Text
-            accessibilityLabel={`Habit: ${habitName}`}
-            accessibilityRole='header'
-            numberOfLines={1}
-            style={{
-              color: colors.text.primary,
-              fontFamily: fontFamilies.primary.display,
-              fontSize: 19,
-              fontWeight: fontWeights.bold,
-              letterSpacing: -0.2,
-            }}
-          >
-            {habitName}
-          </Text>
-          <DetailHeroContext
-            bestStreak={habit.bestStreak ?? 0}
-            currentStreak={habit.currentStreak ?? 0}
-            goalDuration={habit.goalDuration ?? 0}
-          />
-        </View>
-
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text
-            style={{
-              color: colors.text.primary,
-              fontFamily: fontFamilies.primary.display,
-              fontSize: 22,
-              fontWeight: fontWeights.bold,
-              lineHeight: 22,
-            }}
-          >
-            {totalCompletions}
-          </Text>
-          <Text
-            style={{
-              color: colors.text.tertiary,
-              fontSize: 10.5,
-              fontWeight: fontWeights.semibold,
-              letterSpacing: 0.8,
-              marginTop: 2,
-              textTransform: 'uppercase',
-            }}
-          >
-            total
-          </Text>
-        </View>
+      <View style={{ paddingHorizontal: spacing.base }}>
+        <DetailHeroStreakHero
+          bestStreak={bestStreak}
+          currentStreak={currentStreak}
+        />
+        <DetailHeroMomentum
+          bestStreak={bestStreak}
+          currentStreak={currentStreak}
+          totalCompletions={totalCompletions}
+        />
       </View>
 
-      <View style={{ paddingHorizontal: spacing.base, paddingBottom: spacing.base }}>
+      <View
+        style={{
+          paddingBottom: spacing.base,
+          paddingHorizontal: spacing.base,
+          paddingTop: spacing.base,
+        }}
+      >
         <DetailCompleteButton
           disabled={isToggling}
           isCompletedToday={isCompletedToday}
