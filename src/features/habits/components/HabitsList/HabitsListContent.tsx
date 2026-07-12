@@ -17,10 +17,7 @@ import { View, type StyleProp, type ViewStyle } from 'react-native';
 import DraggableFlatList, {
   type RenderItemParams,
 } from 'react-native-draggable-flatlist';
-import {
-  renderHabitsListHeader,
-  renderHabitRow,
-} from './HabitsListRenders';
+import { renderHabitsListHeader, renderHabitRow } from './HabitsListRenders';
 import { HabitsListModals } from './HabitsListModals';
 import { StickyHeaderContext } from '../../../../components/CalendarTimeline/StickyHeaderContext';
 import { useStickyHeader } from './useStickyHeader';
@@ -59,10 +56,7 @@ export function HabitsListContent({
       paddingHorizontal: list.contentPadding.paddingHorizontal,
       paddingTop: 0,
     }),
-    [
-      list.contentPadding.paddingBottom,
-      list.contentPadding.paddingHorizontal,
-    ]
+    [list.contentPadding.paddingBottom, list.contentPadding.paddingHorizontal]
   );
 
   const headerWrapperStyle = useMemo<StyleProp<ViewStyle>>(
@@ -119,14 +113,15 @@ export function HabitsListContent({
             }
             contentContainerStyle={contentContainerStyle}
             data={list.habits}
-            initialNumToRender={12}
+            initialNumToRender={6}
             keyExtractor={handlers.keyExtractor}
-            maxToRenderPerBatch={16}
-            removeClippedSubviews={false}
+            maxToRenderPerBatch={6}
+            removeClippedSubviews
             renderItem={renderHabitItem}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={false}
-            windowSize={21}
+            updateCellsBatchingPeriod={32}
+            windowSize={5}
             onDragBegin={handlers.handleDragBegin}
             onDragEnd={(params) => {
               void list.handleDragEnd(params);

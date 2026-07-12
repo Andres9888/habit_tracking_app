@@ -12,6 +12,7 @@ import { addDays, format, parse } from 'date-fns';
 import {
   startTransition,
   useCallback,
+  useDeferredValue,
   useEffect,
   useMemo,
   useRef,
@@ -190,9 +191,18 @@ export function useHabitsListState(): HabitsListState {
   });
 
   const weekDatesState = useHabitsWeekDates();
-  const { today, extendedDateStrings } = weekDatesState;
+  const { today } = weekDatesState;
+  // Keep the calendar controls urgent. Recomputing tracking, streaks, header
+  // stats, and every visible habit row can safely trail the displayed dates by
+  // a frame, so a navigation tap never waits for the whole list to reconcile.
+  const deferredExtendedDateStrings = useDeferredValue(
+    weekDatesState.extendedDateStrings
+  );
+  const deferredWeekDateStrings = useDeferredValue(
+    weekDatesState.weekDateStrings
+  );
   const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
-    extendedDateStrings,
+    deferredExtendedDateStrings,
     today
   );
   const [predictedStrengths, setPredictedStrengths] = useState<
@@ -313,7 +323,7 @@ export function useHabitsListState(): HabitsListState {
     getHabitStatus,
     getStreak,
     habits,
-    weekDateStrings: weekDatesState.weekDateStrings,
+    weekDateStrings: deferredWeekDateStrings,
   });
 
   const archiveState = useHabitsArchive(habits);
@@ -475,7 +485,7 @@ export function useHabitsListState(): HabitsListState {
     showWeekCompletionBar,
     userProgressEmojis,
     weekDates: weekDatesState.weekDates,
-    weekDateStrings: weekDatesState.weekDateStrings,
+    weekDateStrings: deferredWeekDateStrings,
     ...archiveState,
     ...rewardState,
     getHabitStatus,
