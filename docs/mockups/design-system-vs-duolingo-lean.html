@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chain Day — Design System vs Duolingo Lean</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #ede8e0;
+        --parchment: #f5f1ed;
+        --card: #ffffff;
+        --ink: #2c2c2c;
+        --ink-2: #6b6560;
+        --ink-3: #8a847c;
+        --border: #ddd8d2;
+        --forest: #059669;
+        --forest-deep: #047857;
+        --forest-dark: #1b4332;
+        --sage: #74a68d;
+        --amber: #8b6208;
+        --amber-soft: #e8a838;
+        --streak-gold: #c9a227;
+        --page: #1a1816;
+        --page-2: #2d2a26;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        background: linear-gradient(
+          160deg,
+          #1a1816 0%,
+          #2d2a26 45%,
+          #1f1c19 100%
+        );
+        color: #f5f1ed;
+        min-height: 100vh;
+        padding: 32px 24px 64px;
+      }
+
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+      }
+
+      header {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+      header .eyebrow {
+        font-size: 12px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #a39c93;
+        margin-bottom: 10px;
+      }
+      header h1 {
+        font-family: Literata, Georgia, serif;
+        font-size: clamp(28px, 4vw, 40px);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+      }
+      header p {
+        max-width: 640px;
+        margin: 0 auto;
+        color: #b8b0a6;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+
+      .legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        margin: 22px 0 28px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .dot.before {
+        background: #8a847c;
+      }
+      .dot.after {
+        background: #34d399;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        padding: 18px;
+        backdrop-filter: blur(8px);
+      }
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 14px;
+        padding: 0 4px;
+      }
+      .panel-head h2 {
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .panel-head .sub {
+        font-size: 12px;
+        color: #a39c93;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .tag {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .tag.before {
+        background: rgba(138, 132, 124, 0.18);
+        color: #c4bfb7;
+      }
+      .tag.after {
+        background: rgba(16, 185, 129, 0.16);
+        color: #6ee7b7;
+      }
+
+      /* Phone frame */
+      .phone {
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+        background: var(--parchment);
+        border-radius: 36px;
+        border: 8px solid #111;
+        box-shadow:
+          0 0 0 1px #333,
+          0 30px 60px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+        color: var(--ink);
+        min-height: 720px;
+        position: relative;
+      }
+      .notch {
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--parchment);
+      }
+      .notch-bar {
+        width: 96px;
+        height: 5px;
+        border-radius: 999px;
+        background: #d5cfc6;
+      }
+      .screen {
+        padding: 8px 16px 24px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .nav button {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--ink-2);
+        font-size: 16px;
+        display: grid;
+        place-items: center;
+      }
+      .nav .title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink-2);
+      }
+
+      .hero {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+      .hero-top {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 14px;
+      }
+      .emoji {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: #f0ebe4;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+      }
+      .hero h3 {
+        font-family: Literata, Georgia, serif;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--forest-dark);
+        line-height: 1.15;
+      }
+      .hero .meta {
+        font-size: 13px;
+        color: var(--ink-2);
+        margin-top: 2px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .stat {
+        background: #faf8f5;
+        border-radius: 12px;
+        padding: 10px 8px;
+        text-align: center;
+      }
+      .stat .n {
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--ink);
+      }
+      .stat .l {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--ink-3);
+        margin-top: 2px;
+      }
+
+      /* BEFORE: noisy duplicate numbers */
+      .before .stat .n.dup {
+        color: var(--ink);
+      }
+      .before .journey {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--ink-3);
+        text-align: center;
+      }
+
+      /* AFTER: one strong streak story */
+      .after .streak-band {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #fbf6e8, #f7f1e4);
+        border: 1px solid #e8dfc8;
+      }
+      .after .streak-band .left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .after .streak-band .fire {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #fff4d6;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+      }
+      .after .streak-band .num {
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--amber);
+        font-variant-numeric: tabular-nums;
+      }
+      .after .streak-band .lbl {
+        font-size: 11px;
+        color: var(--ink-2);
+      }
+      .after .streak-band .best {
+        font-size: 12px;
+        color: var(--ink-2);
+        text-align: right;
+      }
+      .after .streak-band .best strong {
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .complete-wrap {
+        margin: 12px 0 14px;
+      }
+      .complete {
+        width: 100%;
+        height: 56px;
+        border-radius: 16px;
+        border: none;
+        font-family: inherit;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: default;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.2s ease;
+      }
+
+      /* BEFORE: outline-only / flat */
+      .before .complete {
+        background: transparent;
+        border: 2px solid var(--forest);
+        color: var(--forest-deep);
+      }
+
+      /* AFTER: settled deep fill (Duolingo clarity, Chain Day craft) */
+      .after .complete {
+        background: var(--forest-deep);
+        color: white;
+        box-shadow: 0 8px 18px rgba(5, 150, 105, 0.28);
+        animation: settle 0.45s ease-out;
+      }
+      .after .complete .check {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+      }
+      .after .milestone {
+        margin-top: 8px;
+        text-align: center;
+        font-size: 13px;
+        color: var(--forest-deep);
+        font-weight: 500;
+        animation: fadeUp 0.5s ease-out both;
+      }
+      @keyframes settle {
+        0% {
+          transform: scale(0.97);
+          background: #10b981;
+        }
+        100% {
+          transform: scale(1);
+          background: var(--forest-deep);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink-3);
+        margin: 4px 0 10px;
+      }
+
+      .cal {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 14px;
+      }
+      .cal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .cal-head .month {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--ink);
+      }
+      .cal-head .pill-nav {
+        font-size: 12px;
+        color: var(--ink-2);
+        background: #faf8f5;
+        border: 1px solid var(--border);
+        padding: 6px 10px;
+        border-radius: 999px;
+      }
+      .after .cal-head .pill-nav {
+        background: var(--forest-deep);
+        border-color: var(--forest-deep);
+        color: white;
+        font-weight: 600;
+      }
+
+      .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        margin-bottom: 6px;
+      }
+      .weekdays span {
+        text-align: center;
+        font-size: 10px;
+        color: var(--ink-3);
+        font-weight: 500;
+      }
+
+      .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px 4px;
+      }
+
+      /* BEFORE squares */
+      .before .day {
+        aspect-ratio: 1;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--ink-2);
+        background: #faf8f5;
+        position: relative;
+      }
+      .before .day.done {
+        background: #a7f3d0;
+        color: var(--forest-dark);
+      }
+      .before .day.today {
+        outline: 2px solid var(--forest);
+        outline-offset: 0;
+      }
+      .before .day.miss {
+        background: #f0ebe4;
+        color: #c4bfb7;
+      }
+
+      /* AFTER chain circles + connectors */
+      .after .days {
+        gap: 8px 0;
+      }
+      .after .day {
+        aspect-ratio: 1;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--ink-2);
+        background: transparent;
+        border: 1.5px solid #c4bfb7;
+        position: relative;
+        width: 86%;
+        margin: 0 auto;
+        z-index: 1;
+      }
+      .after .day.done {
+        background: var(--forest);
+        border-color: var(--forest-deep);
+        color: white;
+        box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+      }
+      .after .day.done.join::after {
+        content: '';
+        position: absolute;
+        left: 70%;
+        top: 50%;
+        width: 55%;
+        height: 10px;
+        background: var(--forest);
+        transform: translateY(-50%);
+        z-index: -1;
+        border-radius: 0;
+      }
+      .after .day.today:not(.done) {
+        border-color: var(--forest);
+        border-width: 2px;
+        box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.12);
+        color: var(--forest-deep);
+      }
+      .after .day.miss {
+        border-style: dashed;
+        border-color: #d5cfc6;
+        color: #c4bfb7;
+        background: transparent;
+      }
+      .after .day.future {
+        border-color: #e8e3db;
+        color: #d5cfc6;
+      }
+
+      .strength {
+        margin-top: 12px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 14px;
+      }
+      .strength-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .ring {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: conic-gradient(var(--forest) 0 62%, #e8e3db 62% 100%);
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+      .ring-inner {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: var(--card);
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--forest-deep);
+      }
+      .strength h4 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .strength p {
+        font-size: 12px;
+        color: var(--ink-2);
+        margin-top: 2px;
+        line-height: 1.4;
+      }
+
+      /* BEFORE: triple progress noise */
+      .before .bar {
+        margin-top: 12px;
+        height: 10px;
+        background: #e8e3db;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .before .bar > i {
+        display: block;
+        height: 100%;
+        width: 62%;
+        background: var(--sage);
+      }
+      .before .bar-meta {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--ink-3);
+        display: flex;
+        justify-content: space-between;
+      }
+      .before .deltas {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .before .deltas div {
+        background: #faf8f5;
+        border-radius: 10px;
+        padding: 8px 4px;
+        text-align: center;
+        font-size: 11px;
+        color: var(--ink-2);
+      }
+      .before .deltas strong {
+        display: block;
+        font-size: 13px;
+        color: var(--ink);
+        margin-bottom: 2px;
+      }
+
+      /* AFTER: ring carries next-level hint, 2 deltas only */
+      .after .deltas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 10px;
+      }
+      .after .deltas div {
+        background: #faf8f5;
+        border-radius: 12px;
+        padding: 10px;
+        text-align: center;
+        font-size: 11px;
+        color: var(--ink-2);
+      }
+      .after .deltas strong {
+        display: block;
+        font-size: 14px;
+        color: var(--forest-deep);
+        margin-bottom: 2px;
+      }
+      .after .next-hint {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--forest-deep);
+        font-weight: 500;
+      }
+
+      .callouts {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .callouts {
+          grid-template-columns: 1fr;
+        }
+      }
+      .callout {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 16px 18px;
+      }
+      .callout h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .callout ul {
+        list-style: none;
+        display: grid;
+        gap: 8px;
+      }
+      .callout li {
+        font-size: 13px;
+        line-height: 1.45;
+        color: #c9c2b8;
+        padding-left: 18px;
+        position: relative;
+      }
+      .callout li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .callout.keep li::before {
+        background: #34d399;
+      }
+      .callout.avoid li::before {
+        background: #f87171;
+      }
+
+      .principle {
+        margin-top: 22px;
+        text-align: center;
+        padding: 18px 20px;
+        border-radius: 18px;
+        background: linear-gradient(
+          135deg,
+          rgba(5, 150, 105, 0.12),
+          rgba(139, 98, 8, 0.1)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .principle strong {
+        display: block;
+        font-family: Literata, Georgia, serif;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .principle span {
+        font-size: 13px;
+        color: #b8b0a6;
+        line-height: 1.5;
+      }
+
+      footer {
+        margin-top: 28px;
+        text-align: center;
+        font-size: 12px;
+        color: #7a736b;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="eyebrow">Design direction · Habit detail</div>
+        <h1>Design system vs Duolingo lean</h1>
+        <p>
+          Same product, two energies. Left is pure warm-minimal / dashboard
+          calm. Right keeps Chain Day craft (tokens, calm type, premium settle)
+          but borrows Duolingo’s <em>progress legibility</em> and
+          <em>one clear win</em>.
+        </p>
+      </header>
+
+      <div class="legend">
+        <div class="pill">
+          <span class="dot before"></span> Before · system-pure, quiet,
+          fragmented
+        </div>
+        <div class="pill">
+          <span class="dot after"></span> After · Duolingo mechanics, Chain Day
+          surface
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- BEFORE -->
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Before — design system only</h2>
+              <div class="sub">
+                Correct tokens, low energy. Progress split into many quiet
+                fragments. Hard to “feel” the chain.
+              </div>
+            </div>
+            <span class="tag before">Warm minimal</span>
+          </div>
+
+          <div class="phone before">
+            <div class="notch"><div class="notch-bar"></div></div>
+            <div class="screen">
+              <div class="nav">
+                <button aria-hidden="true">‹</button>
+                <div class="title">Habit detail</div>
+                <button aria-hidden="true">✎</button>
+              </div>
+
+              <div class="hero">
+                <div class="hero-top">
+                  <div class="emoji">📖</div>
+                  <div>
+                    <h3>Read 20 min</h3>
+                    <div class="meta">Morning · Building</div>
+                  </div>
+                </div>
+                <div class="stats">
+                  <div class="stat">
+                    <div class="n">12</div>
+                    <div class="l">Streak</div>
+                  </div>
+                  <div class="stat">
+                    <div class="n dup">12</div>
+                    <div class="l">Best</div>
+                  </div>
+                  <div class="stat">
+                    <div class="n">47</div>
+                    <div class="l">Total</div>
+                  </div>
+                </div>
+                <div class="journey">Day 38 of your journey</div>
+              </div>
+
+              <div class="complete-wrap">
+                <button class="complete" type="button">Mark complete</button>
+              </div>
+
+              <div class="section-label">Calendar</div>
+              <div class="cal">
+                <div class="cal-head">
+                  <div class="month">July 2026</div>
+                  <div class="pill-nav">Today ▾</div>
+                </div>
+                <div class="weekdays">
+                  <span>S</span><span>M</span><span>T</span><span>W</span
+                  ><span>T</span><span>F</span><span>S</span>
+                </div>
+                <div class="days" id="before-days"></div>
+              </div>
+
+              <div class="strength">
+                <div class="strength-row">
+                  <div class="ring"><div class="ring-inner">62%</div></div>
+                  <div>
+                    <h4>Building</h4>
+                    <p>Strength 62% · also in the bar below</p>
+                  </div>
+                </div>
+                <div class="bar"><i></i></div>
+                <div class="bar-meta">
+                  <span>Building</span>
+                  <span>62% · 18% to Developing</span>
+                </div>
+                <div class="deltas">
+                  <div><strong>62%</strong>since start</div>
+                  <div><strong>+4%</strong>last week</div>
+                  <div><strong>+11%</strong>last month</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AFTER -->
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>After — Duolingo lean</h2>
+              <div class="sub">
+                Same tokens & type. Stronger chain, settled complete, one streak
+                story, rare calm milestone — not cartoon chrome.
+              </div>
+            </div>
+            <span class="tag after">Recommended</span>
+          </div>
+
+          <div class="phone after">
+            <div class="notch"><div class="notch-bar"></div></div>
+            <div class="screen">
+              <div class="nav">
+                <button aria-hidden="true">‹</button>
+                <div class="title">Habit detail</div>
+                <button aria-hidden="true">✎</button>
+              </div>
+
+              <div class="hero">
+                <div class="hero-top">
+                  <div class="emoji">📖</div>
+                  <div>
+                    <h3>Read 20 min</h3>
+                    <div class="meta">Morning · Building</div>
+                  </div>
+                </div>
+                <div class="stats">
+                  <div class="stat">
+                    <div class="n" style="color: var(--amber)">12</div>
+                    <div class="l">Streak</div>
+                  </div>
+                  <div class="stat">
+                    <div class="n">9</div>
+                    <div class="l">Prev best</div>
+                  </div>
+                  <div class="stat">
+                    <div class="n">47</div>
+                    <div class="l">Shown up</div>
+                  </div>
+                </div>
+                <div class="streak-band">
+                  <div class="left">
+                    <div class="fire">🔥</div>
+                    <div>
+                      <div class="num">12 day chain</div>
+                      <div class="lbl">Don’t break it tomorrow</div>
+                    </div>
+                  </div>
+                  <div class="best">Beat prev<br /><strong>9</strong></div>
+                </div>
+              </div>
+
+              <div class="complete-wrap">
+                <button class="complete" type="button">
+                  <span class="check">✓</span>
+                  Done for today
+                </button>
+                <div class="milestone">Nice — 7-day milestone locked in</div>
+              </div>
+
+              <div class="section-label">Chain</div>
+              <div class="cal">
+                <div class="cal-head">
+                  <div class="month">July 2026</div>
+                  <div class="pill-nav">Jul · open</div>
+                </div>
+                <div class="weekdays">
+                  <span>S</span><span>M</span><span>T</span><span>W</span
+                  ><span>T</span><span>F</span><span>S</span>
+                </div>
+                <div class="days" id="after-days"></div>
+              </div>
+
+              <div class="strength">
+                <div class="strength-row">
+                  <div class="ring"><div class="ring-inner">62%</div></div>
+                  <div>
+                    <h4>Building</h4>
+                    <p class="next-hint">18% to Developing</p>
+                    <p>One ring, one next step — no second bar.</p>
+                  </div>
+                </div>
+                <div class="deltas">
+                  <div><strong>+4%</strong>last week</div>
+                  <div><strong>+11%</strong>last month</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="callouts">
+        <div class="callout keep">
+          <h3>✅ Borrow from Duolingo</h3>
+          <ul>
+            <li>Chain continuity you can read at a glance (circles + joins)</li>
+            <li>One primary complete control that feels “settled” when done</li>
+            <li>Streak as the hero story; prev best as a finish line</li>
+            <li>
+              Milestone only on rare crossings — calm line, not confetti storm
+            </li>
+            <li>De-dupe numbers (no twin “12 / 12”, no triple strength UI)</li>
+          </ul>
+        </div>
+        <div class="callout avoid">
+          <h3>🚫 Still not Duolingo</h3>
+          <ul>
+            <li>No mascot, XP bar, hearts, or league chrome</li>
+            <li>No rainbow saturation or cartoon type</li>
+            <li>No party on every tap — everyday = settle, rare = one beat</li>
+            <li>No new colors outside forest / streak gold / parchment</li>
+            <li>No decorative idle loops or constant bounce</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="principle">
+        <strong>Duolingo mechanics · Chain Day craft</strong>
+        <span
+          >Design system owns tokens, motion budget, and components. Duolingo
+          only influences what progress should feel like on the daily
+          path.</span
+        >
+      </div>
+
+      <footer>
+        Mock for design-direction review · Chain Day ·
+        docs/mockups/design-system-vs-duolingo-lean.html
+      </footer>
+    </div>
+
+    <script>
+      // July 2026 calendar: starts Wednesday
+      // status map for days 1-31
+      const pattern = {
+        // week of June 28 padding + July
+        // We'll render 5 weeks starting empty for Sun-Tue of first week
+      };
+
+      // Build a fixed demo month: days 1-31 with a 12-day streak ending "today" (11)
+      // Today = 11 July for the mock
+      const today = 11;
+      const completed = new Set([1, 2, 3, 5, 6, 7, 8, 9, 10, 11]); // streak 4..11 continuous-ish; show misses
+      // Make a clean chain: 1-3, miss 4, then 5-11
+      completed.clear();
+      [1, 2, 3, 5, 6, 7, 8, 9, 10, 11].forEach((d) => completed.add(d));
+      const missed = new Set([4]);
+
+      function renderDays(containerId, mode) {
+        const el = document.getElementById(containerId);
+        // July 2026 starts on Wednesday → 3 leading blanks (Sun Mon Tue)
+        const cells = [];
+        for (let i = 0; i < 3; i++) cells.push({ empty: true });
+        for (let d = 1; d <= 31; d++) {
+          cells.push({ d, empty: false });
+        }
+        // pad to full weeks
+        while (cells.length % 7 !== 0) cells.push({ empty: true });
+
+        el.innerHTML = cells
+          .map((cell, idx) => {
+            if (cell.empty)
+              return `<div class="day future" style="opacity:0;pointer-events:none"></div>`;
+            const d = cell.d;
+            const isToday = d === today;
+            const isDone = completed.has(d);
+            const isMiss = missed.has(d) || (d < today && !isDone);
+            const isFuture = d > today;
+
+            // join right if this and next are both completed and not end of week
+            const col = idx % 7;
+            const next = cells[idx + 1];
+            const join =
+              mode === 'after' &&
+              isDone &&
+              next &&
+              !next.empty &&
+              completed.has(next.d) &&
+              col < 6;
+
+            let cls = 'day';
+            if (isDone) cls += ' done';
+            if (isMiss && !isDone) cls += ' miss';
+            if (isFuture) cls += ' future';
+            if (isToday) cls += ' today';
+            if (join) cls += ' join';
+
+            return `<div class="${cls}">${d}</div>`;
+          })
+          .join('');
+      }
+
+      renderDays('before-days', 'before');
+      renderDays('after-days', 'after');
+    </script>
+  </body>
+</html>

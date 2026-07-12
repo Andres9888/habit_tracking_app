@@ -12,6 +12,7 @@ import {
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import { api } from '../../../../convex/_generated/api';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { useCachedQuery } from '../../../lib/queryCache';
 
 interface YearStripProps {
@@ -33,15 +34,15 @@ export function YearStrip({
     {},
     { entryName: 'settings.get' }
   );
-  const dayShape = settings?.dayShape ?? 'square';
   const gridData = useMemo(
     () => generateBinaryGrid('1y', completedDates, habitCreatedAt),
     [completedDates, habitCreatedAt]
   );
 
-  // Year cells INSPECT + navigate only — never toggle. A ~6px cell is too
-  // small to safely write a completion; all toggling happens on the month
-  // grid above.
+  // Never paint DEFAULT_SETTINGS then flip — wait for real preference.
+  if (!settings) return null;
+  const dayShape = settings.dayShape ?? DEFAULT_SETTINGS.dayShape;
+  // Year cells navigate only; toggling is on the month grid above.
   const handleCellPress = (date: string) => onNavigateToMonth(date);
 
   return (

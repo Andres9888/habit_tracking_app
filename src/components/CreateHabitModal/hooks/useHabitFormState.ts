@@ -13,6 +13,10 @@ import {
 } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { getReminderOptionFromTime } from './reminderUtils';
+import {
+  initialProgressEmojis,
+  initialStrengthAlgorithm,
+} from './useHabitFormState.init';
 
 const DEFAULT_SOUND = 'Default';
 
@@ -59,17 +63,12 @@ export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
       habitToEdit?.reminderTime
     )
   );
-  const [strengthAlgorithm, setStrengthAlgorithm] = useState<
-    'forgiving' | 'balanced' | 'strict'
-  >(() => {
-    const mode = habitToEdit?.strengthAlgorithm;
-    return mode === 'forgiving' || mode === 'balanced' || mode === 'strict'
-      ? mode
-      : 'balanced';
-  });
+  const [strengthAlgorithm, setStrengthAlgorithm] = useState(() =>
+    initialStrengthAlgorithm(habitToEdit)
+  );
   const [progressEmojis, setProgressEmojis] = useState<
     ProgressEmojiSet | undefined
-  >(habitToEdit?.progressEmojis as ProgressEmojiSet | undefined);
+  >(() => initialProgressEmojis(habitToEdit));
   const [streakGoal, setStreakGoal] = useState<number>(
     habitToEdit?.goalDuration ?? 0
   );

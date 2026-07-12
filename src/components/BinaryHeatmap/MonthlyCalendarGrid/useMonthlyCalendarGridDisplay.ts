@@ -7,6 +7,7 @@
 import { useMemo } from 'react';
 import { colors as palette } from '@/theme/colors';
 import { api } from '../../../../convex/_generated/api';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { useCachedQuery } from '../../../lib/queryCache';
 import { completedTint } from './chainColors';
 
@@ -28,8 +29,11 @@ export function useMonthlyCalendarGridDisplay({
     {},
     { entryName: 'settings.get' }
   );
-  const dayShape = settings?.dayShape ?? 'square';
-  const connectorStyle = settings?.connectorStyle ?? 'full';
+  // Only surface appearance once settings exist — never flash defaults.
+  const isSettingsReady = settings !== undefined;
+  const dayShape = settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
+  const connectorStyle =
+    settings?.connectorStyle ?? DEFAULT_SETTINGS.connectorStyle;
   const cardBg = isDark ? cardColor : palette.light.surfaceMuted;
   const completedBg = useMemo(
     () =>
@@ -37,5 +41,5 @@ export function useMonthlyCalendarGridDisplay({
     [useSolidCompletedFill, habitColor, cardBg]
   );
 
-  return { cardBg, completedBg, connectorStyle, dayShape };
+  return { cardBg, completedBg, connectorStyle, dayShape, isSettingsReady };
 }

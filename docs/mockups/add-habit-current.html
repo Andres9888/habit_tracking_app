@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add Habit — current in-app (as shipped)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=Literata:opsz,wght@7..72,500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #edeae5;
+        --card: #ffffff;
+        --border: #ddd8d2;
+        --fg: #2d2a26;
+        --muted: #6b6560;
+        --meta: #9a948c;
+        --accent: #059669;
+        --accent-active: #047857;
+        --accent-soft: #d1fae5;
+        --accent-mid: #10b981;
+        --streak: #e8890c;
+        --streak-deep: #c2410c;
+        --streak-soft: #fef3c7;
+        --streak-text: #7a5406;
+        --edit-border: #6ee7b7;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        background: #1c1917;
+        color: #f5f1ed;
+        min-height: 100vh;
+        padding: 28px 16px 48px;
+      }
+      .page {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      header .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #a39c93;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      header h1 {
+        font-family: Literata, Georgia, serif;
+        font-size: clamp(24px, 3.5vw, 32px);
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      header p {
+        font-size: 14px;
+        color: #b8b0a6;
+        line-height: 1.5;
+        max-width: 560px;
+        margin: 0 auto;
+      }
+      header code {
+        font-size: 12px;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 2px 6px;
+        border-radius: 6px;
+        color: #d1fae5;
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(300px, 380px) 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      @media (max-width: 860px) {
+        .layout {
+          grid-template-columns: 1fr;
+          justify-items: center;
+        }
+      }
+
+      /* Phone = faithful snapshot */
+      .phone {
+        width: 100%;
+        max-width: 380px;
+        background: var(--surface);
+        border-radius: 36px;
+        border: 8px solid #0a0a0a;
+        box-shadow:
+          0 0 0 1px #333,
+          0 30px 60px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        color: var(--fg);
+        min-height: 780px;
+      }
+      .statusbar {
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--surface);
+      }
+      .statusbar i {
+        width: 88px;
+        height: 5px;
+        border-radius: 999px;
+        background: #d5cfc6;
+        display: block;
+      }
+
+      /* ScreenHeader: close left · Create Habit pill right */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 14px 10px;
+        background: var(--surface);
+      }
+      .close {
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+        font-size: 18px;
+      }
+      .create-pill {
+        height: 44px;
+        padding: 0 22px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      }
+
+      .scroll {
+        padding: 8px 0 28px;
+        background: var(--surface);
+      }
+
+      /* 1 · Name */
+      .name-block {
+        text-align: center;
+        padding: 20px 24px 28px;
+      }
+      .name-block h2 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        letter-spacing: -0.02em;
+        color: var(--fg);
+      }
+      .name-input {
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 18px;
+        font-size: 17px;
+        color: #c4bfb7;
+        text-align: center;
+      }
+      .name-input .e {
+        color: #c4bfb7;
+      }
+
+      /* 2 · Icon / color */
+      .sec {
+        padding: 0 24px;
+        margin-bottom: 18px;
+      }
+      .sec-label {
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--meta);
+        margin-bottom: 12px;
+      }
+      .emoji-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+      }
+      .emoji-chip {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+      }
+      .emoji-chip.on {
+        border-color: var(--accent);
+        background: var(--accent-soft);
+        box-shadow: 0 0 0 2px var(--accent-soft);
+      }
+      .color-row {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .color-dot {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+      }
+      .color-dot.on {
+        box-shadow:
+          0 0 0 2px #fff,
+          0 0 0 4px var(--fg);
+      }
+
+      /* 3 · Reminder */
+      .reminder-card {
+        margin: 8px 24px 20px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.04);
+      }
+      .reminder-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .bell {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: var(--surface);
+        display: grid;
+        place-items: center;
+        color: var(--accent-active);
+        font-size: 16px;
+      }
+      .reminder-left span {
+        font-size: 16px;
+        font-weight: 500;
+      }
+      .switch {
+        width: 48px;
+        height: 28px;
+        border-radius: 999px;
+        background: #d5cfc6;
+        position: relative;
+      }
+      .switch i {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+      }
+
+      /* 4 · Advanced options card (default expanded) */
+      .adv {
+        margin: 8px 24px 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.04);
+      }
+      .adv-head {
+        padding: 14px 16px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .adv-head .l {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .adv-head .chev {
+        color: var(--muted);
+        font-size: 14px;
+        transform: rotate(180deg);
+      }
+      .adv-body {
+        padding: 0 16px 14px;
+      }
+
+      /* Strength curve row */
+      .curve-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 64px;
+        padding: 8px 0;
+      }
+      .icon-tile {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        background: var(--accent-soft);
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: var(--accent-active);
+        flex-shrink: 0;
+      }
+      .curve-row .txt {
+        flex: 1;
+        min-width: 0;
+      }
+      .curve-row .ttl {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .curve-row .sub {
+        font-size: 13px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .edit-pill {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-height: 36px;
+        padding: 0 10px 0 14px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        border: 2px solid var(--edit-border);
+        border-bottom: 3px solid var(--accent-active);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent-active);
+        white-space: nowrap;
+      }
+
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 4px 0 16px;
+      }
+
+      /* Streak goal */
+      .block-head {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+      }
+      .block-head .tile {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: var(--surface);
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .block-head .ttl {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .block-help {
+        font-size: 12px;
+        color: var(--meta);
+        margin: 0 0 12px 42px;
+        line-height: 1.35;
+      }
+      .chips {
+        display: flex;
+        gap: 6px;
+      }
+      .chip {
+        flex: 1;
+        min-width: 0;
+        min-height: 66px;
+        border-radius: 14px;
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-bottom-width: 3px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 2px;
+        position: relative;
+      }
+      .chip .n {
+        font-size: 17px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .chip .c {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        color: var(--meta);
+        margin-top: 2px;
+      }
+      .chip.rec::before {
+        content: 'START';
+        position: absolute;
+        top: -7px;
+        font-size: 8px;
+        font-weight: 800;
+        letter-spacing: 0.4px;
+        background: var(--streak-soft);
+        color: var(--streak-text);
+        padding: 2px 5px;
+        border-radius: 6px;
+        border: 1px solid #f3e0a8;
+      }
+      .chip.on {
+        background: var(--streak-soft);
+        border-color: var(--streak);
+        border-bottom-color: var(--streak-deep);
+        box-shadow: 0 3px 0 var(--streak-deep);
+      }
+      .chip.on .n {
+        color: var(--streak-text);
+      }
+      .chip.on .c {
+        color: var(--streak-text);
+      }
+
+      /* Growth icons */
+      .stages {
+        display: flex;
+        justify-content: space-between;
+        gap: 4px;
+        margin-bottom: 12px;
+        padding: 0 4px;
+      }
+      .stage {
+        flex: 1;
+        text-align: center;
+        font-size: 18px;
+        background: var(--surface);
+        border-radius: 10px;
+        padding: 8px 0;
+      }
+      .theme-row {
+        display: flex;
+        gap: 6px;
+      }
+      .theme {
+        flex: 1;
+        min-height: 52px;
+        border-radius: 14px;
+        border: 2px solid var(--border);
+        border-bottom-width: 3px;
+        background: var(--card);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 600;
+        gap: 2px;
+      }
+      .theme.on {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        border-bottom-color: var(--accent-active);
+        color: var(--accent-active);
+      }
+      .theme span {
+        font-size: 16px;
+      }
+
+      /* Map panel */
+      .map {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 18px 18px 8px;
+      }
+      .map h2 {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .map .intro {
+        font-size: 12.5px;
+        color: #a39c93;
+        line-height: 1.45;
+        margin-bottom: 14px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12.5px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        vertical-align: top;
+        line-height: 1.4;
+      }
+      th {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #8a847c;
+        font-weight: 700;
+      }
+      td:first-child {
+        color: #e8e2d8;
+        font-weight: 600;
+        width: 28%;
+      }
+      td:nth-child(2) {
+        color: #c9c2b8;
+      }
+      .badge {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 3px 7px;
+        border-radius: 6px;
+        margin-top: 4px;
+      }
+      .badge.ds {
+        background: rgba(138, 132, 124, 0.25);
+        color: #c4bfb7;
+      }
+      .badge.duo {
+        background: rgba(232, 137, 12, 0.2);
+        color: #fbbf24;
+      }
+      .badge.mix {
+        background: rgba(5, 150, 105, 0.2);
+        color: #6ee7b7;
+      }
+
+      .callout {
+        margin-top: 16px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: linear-gradient(
+          135deg,
+          rgba(5, 150, 105, 0.12),
+          rgba(232, 137, 12, 0.1)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 13px;
+        line-height: 1.5;
+        color: #c9c2b8;
+      }
+      .callout strong {
+        color: #f5f1ed;
+        display: block;
+        margin-bottom: 4px;
+        font-size: 14px;
+      }
+
+      footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 11px;
+        color: #7a736b;
+      }
+      footer a {
+        color: #a7f3d0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <div class="eyebrow">Source of truth · current code</div>
+        <h1>Add Habit — what you have now</h1>
+        <p>
+          Faithful layout of <code>CreateHabitModalCentered</code> +
+          <code>HabitFormBody</code> + <code>AdvancedOptionsSection</code>
+          (default expanded). Not a redesign proposal.
+        </p>
+      </header>
+
+      <div class="layout">
+        <div class="phone" aria-label="Current Add Habit screen">
+          <div class="statusbar"><i></i></div>
+
+          <div class="header">
+            <div class="close" aria-label="Close">×</div>
+            <div class="create-pill">Create Habit</div>
+          </div>
+
+          <div class="scroll">
+            <!-- Name -->
+            <div class="name-block">
+              <h2>Name your new habit</h2>
+              <div class="name-input">
+                <span class="e">e.g. Read before bed</span>
+              </div>
+            </div>
+
+            <!-- Icon -->
+            <div class="sec">
+              <div class="sec-label">Choose an icon</div>
+              <div class="emoji-row">
+                <div class="emoji-chip on">📖</div>
+                <div class="emoji-chip">🏃</div>
+                <div class="emoji-chip">💧</div>
+                <div class="emoji-chip">🧘</div>
+                <div class="emoji-chip">✍️</div>
+                <div class="emoji-chip">➕</div>
+              </div>
+            </div>
+
+            <!-- Color -->
+            <div class="sec">
+              <div class="sec-label">Pick a color</div>
+              <div class="color-row">
+                <div class="color-dot on" style="background: #059669"></div>
+                <div class="color-dot" style="background: #2563eb"></div>
+                <div class="color-dot" style="background: #d97706"></div>
+                <div class="color-dot" style="background: #7c3aed"></div>
+                <div class="color-dot" style="background: #dc2626"></div>
+                <div class="color-dot" style="background: #db2777"></div>
+              </div>
+            </div>
+
+            <!-- Reminder -->
+            <div class="reminder-card">
+              <div class="reminder-left">
+                <div class="bell">🔔</div>
+                <span>Daily Reminder</span>
+              </div>
+              <div class="switch"><i></i></div>
+            </div>
+
+            <!-- Advanced options (expanded default) -->
+            <div class="adv">
+              <div class="adv-head">
+                <span class="l">Advanced options</span>
+                <span class="chev">▾</span>
+              </div>
+              <div class="adv-body">
+                <!-- Strength Curve -->
+                <div class="curve-row">
+                  <div class="icon-tile">⚖️</div>
+                  <div class="txt">
+                    <div class="ttl">Strength Curve</div>
+                    <div class="sub">Balanced · builds gradually</div>
+                  </div>
+                  <div class="edit-pill">Edit ›</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Streak Goal -->
+                <div class="block-head">
+                  <div class="tile">◎</div>
+                  <div class="ttl">Streak Goal</div>
+                </div>
+                <p class="block-help">
+                  A visual target with no penalty if you miss it.
+                </p>
+                <div class="chips">
+                  <div class="chip">
+                    <div class="n">Off</div>
+                    <div class="c">NO GOAL</div>
+                  </div>
+                  <div class="chip on rec">
+                    <div class="n">7</div>
+                    <div class="c">STARTER</div>
+                  </div>
+                  <div class="chip">
+                    <div class="n">30</div>
+                    <div class="c">STEADY</div>
+                  </div>
+                  <div class="chip">
+                    <div class="n">100</div>
+                    <div class="c">CHAMP</div>
+                  </div>
+                  <div class="chip">
+                    <div class="n">···</div>
+                    <div class="c">CUSTOM</div>
+                  </div>
+                </div>
+
+                <div class="divider" style="margin-top: 16px"></div>
+
+                <!-- Growth Icons -->
+                <div class="block-head">
+                  <div class="tile" style="background: var(--accent-soft)">
+                    🌱
+                  </div>
+                  <div class="ttl">Growth Icons</div>
+                </div>
+                <p class="block-help">
+                  How your habit’s strength looks as it grows.
+                </p>
+                <div class="stages">
+                  <div class="stage">🌱</div>
+                  <div class="stage">🌿</div>
+                  <div class="stage">🌳</div>
+                  <div class="stage">💪</div>
+                  <div class="stage">⚡</div>
+                </div>
+                <div class="theme-row">
+                  <div class="theme on"><span>🌱</span>Sprout</div>
+                  <div class="theme"><span>🔥</span>Fire</div>
+                  <div class="theme"><span>···</span>Custom</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="map">
+          <h2>Stack map (what’s actually on the page)</h2>
+          <p class="intro">
+            Top → bottom as rendered. Primary save is the header pill — not a
+            sticky bottom bar.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Region</th>
+                <th>Current behavior</th>
+                <th>Style system</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Header</td>
+                <td>
+                  Close + emerald “Create Habit” pill (disabled until name).
+                  Shake on invalid save.
+                </td>
+                <td><span class="badge ds">Theme tokens</span></td>
+              </tr>
+              <tr>
+                <td>Name</td>
+                <td>
+                  “Name your new habit” · centered field · rotating library
+                  placeholder <code>e.g. …</code>
+                </td>
+                <td><span class="badge ds">Theme tokens</span></td>
+              </tr>
+              <tr>
+                <td>Icon</td>
+                <td>
+                  “Choose an icon” · emoji grid · locks after pick · suggestions
+                  from name
+                </td>
+                <td><span class="badge ds">Theme tokens</span></td>
+              </tr>
+              <tr>
+                <td>Color</td>
+                <td>“Pick a color” · habit color swatches</td>
+                <td><span class="badge ds">Theme tokens</span></td>
+              </tr>
+              <tr>
+                <td>Reminder</td>
+                <td>
+                  “Daily Reminder” card · toggle · when on:
+                  Morning/Midday/Evening + custom time
+                </td>
+                <td><span class="badge ds">Theme tokens</span></td>
+              </tr>
+              <tr>
+                <td>Advanced options</td>
+                <td>
+                  Card, <strong>default open</strong>. Header collapses to
+                  chips. Three blocks inside.
+                </td>
+                <td><span class="badge mix">Hybrid panel</span></td>
+              </tr>
+              <tr>
+                <td>↳ Strength Curve</td>
+                <td>
+                  Gated row → sheet (Gentle / Balanced / Strict). “Edit ›” pill.
+                </td>
+                <td><span class="badge duo">Duo press on Edit</span></td>
+              </tr>
+              <tr>
+                <td>↳ Streak Goal</td>
+                <td>
+                  Inline chips Off · 7 STARTER · 30 · 100 · Custom. Amber heat
+                  when selected. Custom stepper expands.
+                </td>
+                <td><span class="badge duo">Duo press + streak amber</span></td>
+              </tr>
+              <tr>
+                <td>↳ Growth Icons</td>
+                <td>
+                  5-stage preview · Sprout / Fire / Custom · more themes expand
+                </td>
+                <td>
+                  <span class="badge mix">Press chips + emerald select</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout">
+            <strong>Already a hybrid — not pure design system</strong>
+            Upper form (name → reminder) uses <code>useThemeColors</code> /
+            theme type. Advanced Options uses dedicated
+            <code>mockTokens</code> (Open Design hybrid): emerald + sand, plus
+            Duo-style 3px bottom press on chips and amber streak selection
+            (<code>pressChipStyles</code>, <code>StreakGoalChip</code>,
+            <code>Edit ›</code> pill). That’s the balance you already shipped on
+            this page.
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        Snapshot of current Add Habit · files under
+        <code>src/components/CreateHabitModal/</code> and
+        <code>src/components/AdvancedOptions/</code>
+      </footer>
+    </div>
+  </body>
+</html>

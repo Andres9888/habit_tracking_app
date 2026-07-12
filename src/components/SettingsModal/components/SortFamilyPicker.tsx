@@ -47,9 +47,10 @@ export function SortFamilyPicker({
           <Pressable
             key={key}
             accessibilityLabel={label}
+            accessibilityHint={`Sort habits by ${label.toLowerCase()}`}
             accessibilityRole='radio'
             accessibilityState={{ selected: on }}
-            className='flex-1 items-center justify-center rounded-lg py-2'
+            className='min-h-11 flex-1 items-center justify-center rounded-lg px-1 py-2.5'
             hitSlop={4}
             style={{ backgroundColor: on ? selectedBg : 'transparent' }}
             onPress={() => handleFamilySelect(key)}
@@ -57,13 +58,13 @@ export function SortFamilyPicker({
             {key === 'manual' ? (
               <GripVertical
                 color={on ? accent : colors.text.secondary}
-                size={iconSizes.small}
+                size={iconSizes.medium}
                 strokeWidth={on ? 2.5 : 2}
               />
             ) : (
               <Text
                 adjustsFontSizeToFit
-                minimumFontScale={0.85}
+                minimumFontScale={0.8}
                 numberOfLines={1}
                 style={{
                   ...typography.caption,

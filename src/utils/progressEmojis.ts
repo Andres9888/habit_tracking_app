@@ -1,109 +1,31 @@
 /**
  * Progress growth emoji defaults, resolution, and curated presets.
- *
- * Resolution order: per-habit override → user-wide default → built-in defaults.
+ * Barrel re-export — implementations live in focused modules.
  */
 
-export const STRENGTH_LEVEL_KEYS = [
-  'starting',
-  'building',
-  'developing',
-  'strong',
-  'automatic',
-] as const;
+export {
+  STRENGTH_LEVEL_KEYS,
+  DEFAULT_PROGRESS_EMOJIS,
+  resolveProgressEmojis,
+  CUSTOM_PRESET_ID,
+  type StrengthLevelKey,
+  type ProgressEmojiSet,
+  type PartialProgressEmojiSet,
+} from './progressEmojisCore';
 
-export type StrengthLevelKey = (typeof STRENGTH_LEVEL_KEYS)[number];
-export type ProgressEmojiSet = Record<StrengthLevelKey, string>;
-export type PartialProgressEmojiSet = Partial<ProgressEmojiSet>;
+export {
+  SPROUT_PROGRESS_EMOJIS,
+  FIRE_PROGRESS_EMOJIS,
+  PROGRESS_EMOJI_PRESETS,
+  type ProgressEmojiPreset,
+} from './progressEmojiPresets';
 
-export const DEFAULT_PROGRESS_EMOJIS: ProgressEmojiSet = {
-  starting: '🥉',
-  building: '🥈',
-  developing: '🥇',
-  strong: '🏆',
-  automatic: '💎',
-};
-
-const CHAIN_PROGRESS_EMOJIS: ProgressEmojiSet = {
-  starting: '🪙',
-  building: '🔗',
-  developing: '⚙️',
-  strong: '🥇',
-  automatic: '💎',
-};
-
-const PLANTS_PROGRESS_EMOJIS: ProgressEmojiSet = {
-  starting: '🌱',
-  building: '🌿',
-  developing: '🌳',
-  strong: '💪',
-  automatic: '⚡',
-};
-
-export interface ProgressEmojiPreset {
-  id: string;
-  label: string;
-  emojis: ProgressEmojiSet;
-}
-
-export const PROGRESS_EMOJI_PRESETS: ProgressEmojiPreset[] = [
-  { id: 'ranks', label: 'Ranks', emojis: DEFAULT_PROGRESS_EMOJIS },
-  { id: 'chain', label: 'Chain', emojis: CHAIN_PROGRESS_EMOJIS },
-  { id: 'plants', label: 'Plants', emojis: PLANTS_PROGRESS_EMOJIS },
-  {
-    id: 'fitness',
-    label: 'Fitness',
-    emojis: {
-      starting: '💧',
-      building: '🏃',
-      developing: '🏋️',
-      strong: '💪',
-      automatic: '🏆',
-    },
-  },
-  {
-    id: 'space',
-    label: 'Space',
-    emojis: {
-      starting: '🌑',
-      building: '🌓',
-      developing: '🌕',
-      strong: '🪐',
-      automatic: '🌌',
-    },
-  },
-  {
-    id: 'mind',
-    label: 'Mind',
-    emojis: {
-      starting: '💭',
-      building: '📖',
-      developing: '🎓',
-      strong: '🧠',
-      automatic: '✨',
-    },
-  },
-  {
-    id: 'fire',
-    label: 'Fire',
-    emojis: {
-      starting: '🪵',
-      building: '🔥',
-      developing: '🌋',
-      strong: '⚡',
-      automatic: '👑',
-    },
-  },
-];
-
-export function resolveProgressEmojis(
-  habitOverride?: PartialProgressEmojiSet,
-  userDefault?: PartialProgressEmojiSet
-): ProgressEmojiSet {
-  return { ...DEFAULT_PROGRESS_EMOJIS, ...userDefault, ...habitOverride };
-}
-
-export const CUSTOM_PRESET_ID = 'custom';
+import {
+  CUSTOM_PRESET_ID,
+  STRENGTH_LEVEL_KEYS,
+  type ProgressEmojiSet,
+} from './progressEmojisCore';
+import { PROGRESS_EMOJI_PRESETS } from './progressEmojiPresets';
 
 export function matchPresetId(
   set: ProgressEmojiSet,

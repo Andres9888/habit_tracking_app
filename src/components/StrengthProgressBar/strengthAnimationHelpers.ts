@@ -22,9 +22,14 @@ export function animateProgressWidth(
   if (reduceMotion) {
     progressWidth.value = clampedStrength;
   } else if (isFirst) {
-    // First paint shows the final width instantly — no cold-start grow-in.
-    // Later strength changes still animate via the branches below.
-    progressWidth.value = clampedStrength;
+    progressWidth.value = 0;
+    progressWidth.value = withDelay(
+      200,
+      withTiming(clampedStrength, {
+        duration: durations.progress,
+        easing: Easing.out(Easing.cubic),
+      })
+    );
   } else if (isEmptyingTransition) {
     progressWidth.value = withTiming(clampedStrength, {
       duration: durations.emphasis,

@@ -4,6 +4,7 @@ import { Alert } from 'react-native';
 import { useConvex } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
+import { DEFAULT_SETTINGS } from '../../../../../convex/settings/types';
 import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
 import { usePremium } from '../../../../hooks/usePremium';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
@@ -150,15 +151,27 @@ export function SettingsModalSection({
       <SettingsModal
         archivedHabitsCount={archivedHabitsCount}
         celebrationsEnabled={celebrationsEnabled}
-        completionSoundEnabled={settings?.completionSoundEnabled ?? false}
-        completionSoundType={settings?.completionSoundType ?? 'chime'}
-        dayShape={settings?.dayShape ?? 'square'}
-        habitCompletionIcon={settings?.habitCompletionIcon ?? 'chain'}
+        completionSoundEnabled={
+          settings?.completionSoundEnabled ??
+          DEFAULT_SETTINGS.completionSoundEnabled
+        }
+        completionSoundType={
+          settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType
+        }
+        dayShape={settings?.dayShape ?? DEFAULT_SETTINGS.dayShape}
+        habitCompletionIcon={
+          settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon
+        }
         isPremium={isPremium}
         settingsDocument={settings as SettingsModalSettingsDocument | undefined}
-        showCharacterScreen={settings?.showCharacterScreen ?? true}
+        showCharacterScreen={
+          settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen
+        }
         showHabitStrengthPercentage={showHabitStrengthPercentage}
-        stickyCalendarHeader={settings?.stickyCalendarHeader ?? false}
+        stickyCalendarHeader={
+          settings?.stickyCalendarHeader ??
+          DEFAULT_SETTINGS.stickyCalendarHeader
+        }
         streakRemindersEnabled={streakReminders.enabled}
         streakReminderTime={streakReminders.reminderTime}
         visible={showSettings}

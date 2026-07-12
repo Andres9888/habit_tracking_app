@@ -59,9 +59,10 @@ export function SortDirectionSegments({
             <Pressable
               key={isAsc ? 'asc' : 'desc'}
               accessibilityLabel={label}
+              accessibilityHint={`Set ${label.toLowerCase()} sort direction`}
               accessibilityRole='radio'
               accessibilityState={{ selected: on }}
-              className='flex-1 flex-row items-center justify-center gap-1 rounded-lg py-2'
+              className='min-h-12 flex-1 flex-row items-center justify-center gap-1.5 rounded-lg px-2 py-2.5'
               hitSlop={4}
               style={{ backgroundColor: on ? selectedBg : 'transparent' }}
               onPress={() => handleDirectionSelect(isAsc)}
@@ -73,12 +74,14 @@ export function SortDirectionSegments({
               />
               <Text
                 adjustsFontSizeToFit
-                minimumFontScale={0.85}
-                numberOfLines={1}
+                minimumFontScale={0.78}
+                numberOfLines={2}
                 style={{
                   ...typography.caption,
                   color: on ? accent : colors.text.secondary,
                   fontWeight: on ? fontWeights.semibold : fontWeights.regular,
+                  lineHeight: 16,
+                  textAlign: 'center',
                 }}
               >
                 {label}

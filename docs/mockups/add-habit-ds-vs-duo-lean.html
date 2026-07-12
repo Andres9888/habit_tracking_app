@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add Habit — Design system vs Duolingo lean</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;600;700&family=Literata:opsz,wght@7..72,500;600&family=Nunito:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --sand: #f5f1ed;
+        --card: #ffffff;
+        --surface: #edeae5;
+        --border: #ddd8d2;
+        --ink: #2d2a26;
+        --ink2: #6b6560;
+        --ink3: #9a948c;
+        --emerald: #059669;
+        --emerald-deep: #047857;
+        --emerald-soft: #d1fae5;
+        --emerald-mid: #10b981;
+        --streak: #e8890c;
+        --streak-deep: #c2410c;
+        --streak-soft: #fef3c7;
+        --streak-tx: #92400e;
+        --page: #1c1917;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        background: linear-gradient(165deg, #1a1816, #2a2622 50%, #1c1917);
+        color: #f5f1ed;
+        min-height: 100vh;
+        padding: 28px 18px 56px;
+      }
+      .wrap {
+        max-width: 1120px;
+        margin: 0 auto;
+      }
+      header {
+        text-align: center;
+        margin-bottom: 22px;
+      }
+      header .eyebrow {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #a39c93;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      header h1 {
+        font-family: Literata, Georgia, serif;
+        font-size: clamp(26px, 4vw, 36px);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        margin-bottom: 10px;
+      }
+      header p {
+        max-width: 620px;
+        margin: 0 auto;
+        color: #b8b0a6;
+        font-size: 14.5px;
+        line-height: 1.55;
+      }
+      header p strong {
+        color: #e8e2d8;
+        font-weight: 600;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin: 18px 0 24px;
+      }
+      .tab {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.04);
+        color: #c9c2b8;
+        text-decoration: none;
+      }
+      .tab.active {
+        background: rgba(5, 150, 105, 0.18);
+        color: #6ee7b7;
+        border-color: rgba(5, 150, 105, 0.35);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        padding: 16px;
+      }
+      .panel-head {
+        margin-bottom: 12px;
+        padding: 0 4px;
+      }
+      .panel-head .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .panel-head h2 {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .panel-head .sub {
+        font-size: 12px;
+        color: #a39c93;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+      .tag.ds {
+        background: rgba(138, 132, 124, 0.2);
+        color: #c4bfb7;
+      }
+      .tag.duo {
+        background: rgba(16, 185, 129, 0.16);
+        color: #6ee7b7;
+      }
+
+      /* Phone */
+      .phone {
+        width: 100%;
+        max-width: 360px;
+        margin: 0 auto;
+        background: var(--sand);
+        border-radius: 34px;
+        border: 8px solid #111;
+        color: var(--ink);
+        box-shadow:
+          0 0 0 1px #333,
+          0 28px 55px rgba(0, 0, 0, 0.45);
+        overflow: hidden;
+        min-height: 740px;
+        display: flex;
+        flex-direction: column;
+      }
+      .statusbar {
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .statusbar i {
+        width: 90px;
+        height: 5px;
+        border-radius: 999px;
+        background: #d5cfc6;
+        display: block;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 18px 8px;
+      }
+      .nav .cancel {
+        font-size: 15px;
+        color: var(--ink2);
+        font-weight: 500;
+      }
+      .nav .title {
+        font-family: Literata, Georgia, serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .nav .spacer {
+        width: 48px;
+      }
+      .scroll {
+        flex: 1;
+        padding: 6px 18px 12px;
+        overflow: hidden;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink2);
+        letter-spacing: 0.02em;
+        margin-bottom: 6px;
+      }
+      .name {
+        font-family: Literata, Georgia, serif;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+        line-height: 1.15;
+        margin-bottom: 14px;
+      }
+      .name .cursor {
+        color: var(--emerald);
+        font-weight: 400;
+      }
+
+      .style-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .emoji {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+      }
+      .swatches {
+        display: flex;
+        gap: 7px;
+        flex: 1;
+      }
+      .swatch {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+      }
+      .swatch.on {
+        border-color: var(--ink);
+        box-shadow: 0 0 0 2px #fff inset;
+      }
+      .time-pill {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ink2);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 8px 10px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+
+      .sec-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 4px 0 6px;
+      }
+      .sec-label .l {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--ink3);
+      }
+      .opt-pill {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: var(--surface);
+        color: var(--ink2);
+        border: 1px solid var(--border);
+      }
+      .reassure {
+        font-size: 12px;
+        color: var(--ink2);
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        padding: 14px 14px;
+        border-bottom: 1px solid var(--border);
+        align-items: flex-start;
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .row-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--emerald-soft);
+        display: grid;
+        place-items: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .row .ttl {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ink);
+      }
+      .row .sub {
+        font-size: 12.5px;
+        color: var(--ink2);
+        margin-top: 2px;
+      }
+      .row .desc {
+        font-size: 12px;
+        color: var(--ink3);
+        margin-top: 4px;
+        line-height: 1.35;
+      }
+      .rec {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: var(--emerald-soft);
+        color: var(--emerald-deep);
+        padding: 2px 6px;
+        border-radius: 6px;
+        margin-left: 4px;
+        vertical-align: 1px;
+      }
+      .chev {
+        color: var(--ink3);
+        font-size: 18px;
+        margin-left: auto;
+        padding-top: 6px;
+      }
+
+      /* Inline streak (expanded after state) */
+      .streak-block {
+        padding: 14px;
+        border-top: 1px solid var(--border);
+      }
+      .streak-block .ttl {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .streak-block .help {
+        font-size: 12px;
+        color: var(--ink2);
+        margin-bottom: 10px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .chip {
+        min-width: 44px;
+        height: 36px;
+        padding: 0 12px;
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        background: var(--sand);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ink2);
+        display: grid;
+        place-items: center;
+      }
+      .chip.on {
+        background: var(--emerald-soft);
+        border-color: var(--emerald);
+        color: var(--emerald-deep);
+      }
+
+      .createbar {
+        padding: 12px 16px 20px;
+        background: linear-gradient(to top, var(--sand) 70%, transparent);
+      }
+      .createbtn {
+        height: 54px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, var(--emerald-mid), var(--emerald));
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.2);
+      }
+
+      /* ─── AFTER: Duo lean ─── */
+      .after .nav .title {
+        font-family: Nunito, 'DM Sans', sans-serif;
+        font-weight: 800;
+        font-size: 20px;
+      }
+      .after .name {
+        font-family: Nunito, 'DM Sans', sans-serif;
+        font-weight: 800;
+        font-size: 30px;
+      }
+      .after .emoji {
+        border-width: 2px;
+        border-color: var(--border);
+        box-shadow: 0 3px 0 #d5cfc6;
+      }
+      .after .swatch.on {
+        border-color: var(--emerald-deep);
+        box-shadow:
+          0 0 0 2px #fff inset,
+          0 2px 0 rgba(0, 0, 0, 0.08);
+      }
+      .after .time-pill {
+        border-width: 2px;
+        box-shadow: 0 2px 0 #d5cfc6;
+        font-weight: 700;
+      }
+      .after .card {
+        border-width: 2px;
+        box-shadow: 0 3px 0 #d5cfc6;
+      }
+      .after .row-icon {
+        border-radius: 12px;
+        box-shadow: 0 2px 0 color-mix(in srgb, var(--emerald) 35%, #047857);
+      }
+      .after .chip {
+        border-width: 2px;
+        border-radius: 14px;
+        box-shadow: 0 3px 0 #d5cfc6;
+        font-weight: 700;
+        font-family: Nunito, 'DM Sans', sans-serif;
+      }
+      .after .chip.on {
+        background: var(--streak);
+        border-color: var(--streak-deep);
+        color: #fff;
+        box-shadow: 0 3px 0 var(--streak-deep);
+      }
+      .after .createbtn {
+        border-radius: 16px;
+        background: var(--emerald);
+        font-family: Nunito, 'DM Sans', sans-serif;
+        font-weight: 800;
+        font-size: 17px;
+        box-shadow: 0 4px 0 var(--emerald-deep);
+        transform: translateY(0);
+      }
+      .after .createbtn:active {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 var(--emerald-deep);
+      }
+      .after .streak-block .ttl {
+        font-family: Nunito, sans-serif;
+        font-weight: 800;
+      }
+      .after .shield {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        font-size: 12px;
+        color: var(--ink2);
+        line-height: 1.4;
+        background: var(--streak-soft);
+        border-radius: 12px;
+        padding: 10px 12px;
+        border: 1px solid #f3e0a8;
+      }
+      .after .shield b {
+        color: var(--streak-tx);
+      }
+
+      .notes {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      @media (max-width: 900px) {
+        .notes {
+          grid-template-columns: 1fr;
+        }
+      }
+      .note {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 16px 18px;
+      }
+      .note h3 {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .note ul {
+        list-style: none;
+        display: grid;
+        gap: 7px;
+      }
+      .note li {
+        font-size: 12.5px;
+        color: #c9c2b8;
+        line-height: 1.45;
+        padding-left: 16px;
+        position: relative;
+      }
+      .note li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 6px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+      .note.keep li::before {
+        background: #34d399;
+      }
+      .note.borrow li::before {
+        background: #fbbf24;
+      }
+      .note.refuse li::before {
+        background: #f87171;
+      }
+
+      .principle {
+        margin-top: 18px;
+        text-align: center;
+        padding: 16px 18px;
+        border-radius: 16px;
+        background: linear-gradient(
+          135deg,
+          rgba(5, 150, 105, 0.12),
+          rgba(232, 137, 12, 0.1)
+        );
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .principle strong {
+        display: block;
+        font-family: Literata, serif;
+        font-size: 17px;
+        margin-bottom: 6px;
+      }
+      .principle span {
+        font-size: 13px;
+        color: #b8b0a6;
+        line-height: 1.5;
+      }
+
+      footer {
+        margin-top: 22px;
+        text-align: center;
+        font-size: 11px;
+        color: #7a736b;
+      }
+      footer a {
+        color: #a7f3d0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <div class="eyebrow">Surface · Add Habit (CreateHabitModal)</div>
+        <h1>Design system vs Duolingo lean</h1>
+        <p>
+          Same <strong>Add Habit</strong> funnel you were shipping (name → style
+          → optional fine-tune → Create). Left is pure Chain Day craft. Right
+          keeps emerald/sand but borrows Duo
+          <em>press, streak heat, and type confidence</em> on the optional rows
+          + CTA.
+        </p>
+      </header>
+
+      <div class="tabs">
+        <a class="tab active" href="#compare">DS vs Duo lean</a>
+        <a class="tab" href="add-habit-before-after.html"
+          >IA before/after (dropdown → open list)</a
+        >
+        <a class="tab" href="add-habit-duo-hybrid-balance.html"
+          >Live Calm / Balanced / Loud dial</a
+        >
+      </div>
+
+      <div class="grid" id="compare">
+        <!-- BEFORE: design system -->
+        <section class="panel">
+          <div class="panel-head">
+            <div class="row">
+              <div>
+                <h2>Before — design system only</h2>
+                <div class="sub">
+                  Warm minimal tokens, open optional list (post-CUSTOMIZE fix).
+                  Soft shadows, Literata title, no press depth. Correct — a bit
+                  quiet for a “win” moment.
+                </div>
+              </div>
+              <span class="tag ds">Chain Day</span>
+            </div>
+          </div>
+
+          <div class="phone before">
+            <div class="statusbar"><i></i></div>
+            <div class="nav">
+              <span class="cancel">Cancel</span>
+              <span class="title">New Habit</span>
+              <span class="spacer"></span>
+            </div>
+            <div class="scroll">
+              <div class="eyebrow">What do you want to build?</div>
+              <div class="name">
+                Read before bed<span class="cursor">|</span>
+              </div>
+
+              <div class="style-row">
+                <div class="emoji">📖</div>
+                <div class="swatches">
+                  <span class="swatch" style="background: #059669"></span>
+                  <span class="swatch on" style="background: #2563eb"></span>
+                  <span class="swatch" style="background: #d97706"></span>
+                  <span class="swatch" style="background: #7c3aed"></span>
+                  <span class="swatch" style="background: #dc2626"></span>
+                </div>
+                <div class="time-pill">⏰ 9:30 PM</div>
+              </div>
+
+              <div class="sec-label">
+                <span class="l">Fine-tune this habit</span>
+                <span class="opt-pill">Optional</span>
+              </div>
+              <p class="reassure">
+                Defaults are great — adjust only if you want to.
+              </p>
+
+              <div class="card">
+                <div class="row">
+                  <div class="row-icon">📈</div>
+                  <div>
+                    <div class="ttl">How fast it builds</div>
+                    <div class="sub">
+                      Average · ~66-day build
+                      <span class="rec">Recommended</span>
+                    </div>
+                    <div class="desc">
+                      Steady pace. Missing a day sets you back a little.
+                    </div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+                <div class="row">
+                  <div class="row-icon" style="background: #fef3c7">🥉</div>
+                  <div>
+                    <div class="ttl">Progress icons</div>
+                    <div class="sub">Ranks · 5 stages</div>
+                    <div class="desc">
+                      Emojis that mark your habit getting stronger.
+                    </div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+                <div class="row" style="border-bottom: 0">
+                  <div class="row-icon" style="background: #fef3c7">◎</div>
+                  <div>
+                    <div class="ttl">Streak target</div>
+                    <div class="sub">No goal set</div>
+                    <div class="desc">
+                      Optional aim — no penalty if you miss.
+                    </div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+              </div>
+            </div>
+            <div class="createbar">
+              <div class="createbtn">✓ Create Habit</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- AFTER: duo lean -->
+        <section class="panel">
+          <div class="panel-head">
+            <div class="row">
+              <div>
+                <h2>After — Duolingo lean (recommended)</h2>
+                <div class="sub">
+                  Same IA and emerald primary. Add tactile press on Create,
+                  amber heat on selected streak chips, bolder display type.
+                  Still sand canvas — not owl neon.
+                </div>
+              </div>
+              <span class="tag duo">Balanced hybrid</span>
+            </div>
+          </div>
+
+          <div class="phone after">
+            <div class="statusbar"><i></i></div>
+            <div class="nav">
+              <span class="cancel">Cancel</span>
+              <span class="title">New Habit</span>
+              <span class="spacer"></span>
+            </div>
+            <div class="scroll">
+              <div class="eyebrow">What do you want to build?</div>
+              <div class="name">
+                Read before bed<span class="cursor">|</span>
+              </div>
+
+              <div class="style-row">
+                <div class="emoji">📖</div>
+                <div class="swatches">
+                  <span class="swatch" style="background: #059669"></span>
+                  <span class="swatch on" style="background: #2563eb"></span>
+                  <span class="swatch" style="background: #d97706"></span>
+                  <span class="swatch" style="background: #7c3aed"></span>
+                  <span class="swatch" style="background: #dc2626"></span>
+                </div>
+                <div class="time-pill">⏰ 9:30 PM</div>
+              </div>
+
+              <div class="sec-label">
+                <span class="l">Fine-tune this habit</span>
+                <span class="opt-pill">Optional</span>
+              </div>
+              <p class="reassure">
+                Defaults are great — adjust only if you want to.
+              </p>
+
+              <div class="card">
+                <div class="row">
+                  <div class="row-icon">📈</div>
+                  <div style="flex: 1">
+                    <div class="ttl">How fast it builds</div>
+                    <div class="sub">
+                      Average · ~66-day build
+                      <span class="rec">Recommended</span>
+                    </div>
+                    <div class="desc">
+                      Steady pace. Missing a day sets you back a little.
+                    </div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+
+                <div class="row">
+                  <div class="row-icon" style="background: #fef3c7">🥉</div>
+                  <div style="flex: 1">
+                    <div class="ttl">Progress icons</div>
+                    <div class="sub">Ranks · 5 stages</div>
+                    <div class="desc">
+                      Emojis that mark your habit getting stronger.
+                    </div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+
+                <!-- Expanded streak inline (Variant B) — Duo heat on selection -->
+                <div class="streak-block">
+                  <div class="ttl">Streak target</div>
+                  <div class="help">
+                    Visual aim for this chain · no penalty if you miss
+                  </div>
+                  <div class="chips">
+                    <div class="chip">Off</div>
+                    <div class="chip">7</div>
+                    <div class="chip on">30</div>
+                    <div class="chip">100</div>
+                    <div class="chip">Custom</div>
+                  </div>
+                  <div class="shield">
+                    <span aria-hidden="true">🛡</span>
+                    <span
+                      ><b>No penalty</b> — missing a day never deletes the
+                      habit. Goal is a compass, not a trap.</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="createbar">
+              <div class="createbtn">✓ Create Habit</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="notes">
+        <div class="note keep">
+          <h3>✅ Keep (design system)</h3>
+          <ul>
+            <li>Sand canvas + emerald primary — never Duo #58CC02 as brand</li>
+            <li>Open optional list (no competing CUSTOMIZE CTA)</li>
+            <li>
+              Plain-language rows: How fast / Progress icons / Streak target
+            </li>
+            <li>“Optional” + reassurance · Create is the only primary</li>
+            <li>
+              Theme tokens via <code>@/theme</code> — no one-off neon hex in app
+              code
+            </li>
+          </ul>
+        </div>
+        <div class="note borrow">
+          <h3>🔥 Borrow (Duolingo lean)</h3>
+          <ul>
+            <li>Hard bottom press on Create Habit (4px → 1px on press)</li>
+            <li>Streak chips: amber selected heat, not muted emerald-only</li>
+            <li>
+              Heavier display weight on title + CTA (Nunito 800 or DM Sans 700)
+            </li>
+            <li>Chunkier chip borders so choices feel tappable</li>
+            <li>Inline streak presets (7 / 30 / 100) for instant win setup</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="notes" style="margin-top: 14px">
+        <div class="note refuse" style="grid-column: 1 / -1">
+          <h3>🚫 Still refuse on Add Habit</h3>
+          <ul>
+            <li>Owl green / white clinical canvas as the default brand</li>
+            <li>XP, hearts, gem currency, or mascot on the create form</li>
+            <li>
+              Making fine-tune look required (loud secondary greens competing
+              with Create)
+            </li>
+            <li>
+              Shame copy (“don’t lose your streak!”) — keep shield / no-penalty
+              language
+            </li>
+            <li>Confetti on every create — one calm success is enough</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="principle">
+        <strong>Add Habit rule</strong>
+        <span>
+          Structure = Chain Day design system · Feedback = Duo tactility on
+          Create + streak chips only. If a change needs new green, put it in
+          tokens first — don’t freestyle the modal.
+        </span>
+      </div>
+
+      <footer>
+        Add Habit design direction ·
+        <a href="add-habit-before-after.html">IA before/after</a> ·
+        <a href="add-habit-duo-hybrid-balance.html">balance dial</a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,39 +1,35 @@
-/** Right-side "Edit ›" CTA pill rendered by AdvancedOptionRow; tints deeper when the row is pressed. */
+/** Flat emerald "Edit ›" pill — press feedback comes from the parent row. */
 import { Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
-import { useThemeColors } from '@/theme/ThemeContext';
-import { fontWeights } from '@/theme/typography';
+import { fontWeights, typography } from '@/theme/typography';
+import { useAdvancedTokens } from './useAdvancedTokens';
 
-interface AdvancedOptionEditAffordanceProps {
-  pressed?: boolean;
-}
-
-export function AdvancedOptionEditAffordance({
-  pressed = false,
-}: AdvancedOptionEditAffordanceProps) {
-  const { colors } = useThemeColors();
-  const bg = pressed ? colors.primary[300] : colors.primary[100];
-  const fg = colors.primary[700];
+export function AdvancedOptionEditAffordance() {
+  const t = useAdvancedTokens();
   return (
     <View
-      className='flex-row items-center gap-1.5 rounded-full px-3.5 py-2'
       style={{
-        backgroundColor: bg,
-        borderWidth: 1,
-        borderColor: colors.primary[300],
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
+        minHeight: 36,
+        paddingLeft: 14,
+        paddingRight: 10,
+        borderRadius: 999,
+        backgroundColor: t.accentTile,
       }}
     >
       <Text
         style={{
-          fontSize: 13,
-          fontWeight: fontWeights.semibold,
-          color: fg,
-          letterSpacing: 0.3,
+          ...typography.caption,
+          fontWeight: fontWeights.bold,
+          color: t.accentText,
+          letterSpacing: 0.2,
         }}
       >
         Edit
       </Text>
-      <ChevronRight color={colors.primary[600]} size={16} strokeWidth={2.5} />
+      <ChevronRight color={t.accentText} size={14} strokeWidth={2.5} />
     </View>
   );
 }

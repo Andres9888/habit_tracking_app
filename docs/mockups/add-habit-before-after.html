@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Before / After</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@7..72,500;7..72,600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        background: #cfc8bf;
+      }
+      body {
+        font-family: var(--sans);
+        color: var(--t1);
+        padding: 34px 24px 40px;
+      }
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --surface: #edeae5;
+        --p100: #d1fae5;
+        --p500: #10b981;
+        --p600: #059669;
+        --p700: #047857;
+        --t1: #2d2a26;
+        --t2: #6b6560;
+        --t3: #6e6660;
+        --streakLt: #fef3c7;
+        --streakTx: #92400e;
+        --sans:
+          'DM Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+          Roboto, sans-serif;
+        --serif: 'Literata', Georgia, serif;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+      .frame {
+        width: 390px;
+        min-height: 860px;
+        background: var(--bg);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .statusbar {
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--t1);
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 20px 2px;
+      }
+      .nav .cancel {
+        font-size: 15px;
+        color: var(--t2);
+        font-weight: 500;
+      }
+      .nav .h {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--t1);
+      }
+      .nav .spacer {
+        width: 48px;
+      }
+      .scroll {
+        flex: 0 0 auto;
+        padding: 8px 0 0;
+      }
+      .namewrap {
+        padding: 22px 24px 14px;
+        text-align: center;
+      }
+      .eyebrow {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--t3);
+        text-transform: uppercase;
+      }
+      .name {
+        margin-top: 10px;
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--t1);
+      }
+      .name .cursor {
+        color: var(--p600);
+        font-weight: 400;
+      }
+      .stylerow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 2px 24px 6px;
+      }
+      .emojibubble {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: #dbeafe;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .dots {
+        display: flex;
+        gap: 7px;
+      }
+      .dot {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+      }
+      .dot.sel {
+        border-color: var(--t1);
+        transform: scale(1.05);
+      }
+      .divider {
+        height: 1px;
+        background: var(--border);
+        margin: 14px 24px;
+      }
+      .sec {
+        margin: 6px 24px 0;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.05);
+      }
+      .rowicon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .chev {
+        color: var(--t3);
+      }
+      .optrow {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 14px 15px;
+      }
+      .optrow + .optrow {
+        border-top: 1px solid var(--border);
+      }
+      .optrow .txt {
+        flex: 1;
+        min-width: 0;
+      }
+      .optrow .ttl {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--t1);
+      }
+      .optrow .sub {
+        font-size: 12.5px;
+        color: var(--t2);
+        margin-top: 2px;
+      }
+      .optrow .desc {
+        font-size: 12px;
+        color: var(--t3);
+        margin-top: 3px;
+        line-height: 1.35;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .createbar {
+        margin-top: 18px;
+        padding: 14px 24px 30px;
+      }
+      .createbtn {
+        height: 54px;
+        border-radius: 14px;
+        background: var(--p600);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        box-shadow: 0 6px 16px rgba(5, 150, 105, 0.28);
+      }
+      .hdrlabel {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 2px 6px;
+      }
+      .hdrlabel .l {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.6px;
+        color: var(--t2);
+        text-transform: uppercase;
+      }
+      .hdrlabel .opt {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--p700);
+        background: var(--p100);
+        border-radius: 999px;
+        padding: 2px 8px;
+      }
+      .tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--t3);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 2px 6px;
+      }
+      .rec {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        color: var(--p700);
+        background: var(--p100);
+        border-radius: 6px;
+        padding: 2px 7px;
+      }
+      .caption {
+        font-size: 12px;
+        color: var(--t3);
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="text-align: center; margin-bottom: 26px">
+      <div
+        style="
+          font-family: var(--serif);
+          font-size: 26px;
+          font-weight: 600;
+          color: #2d2a26;
+        "
+      >
+        Add Habit · "extra options"
+      </div>
+      <div style="font-size: 14px; color: #6b6560; margin-top: 4px">
+        Removing the dropdown → an always-visible, plain-language list
+      </div>
+    </div>
+    <div
+      style="
+        display: flex;
+        gap: 46px;
+        justify-content: center;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 30px;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 14px;
+        "
+      >
+        <div
+          style="
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #8a6d57;
+            background: #ede3da;
+            border-radius: 999px;
+            padding: 7px 20px;
+          "
+        >
+          BEFORE
+        </div>
+        <div
+          style="
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(45, 42, 38, 0.22);
+            border: 1px solid #d8d2ca;
+          "
+        >
+          <div class="frame">
+            <div class="statusbar">
+              <span>9:41</span
+              ><span style="font-size: 13px">📶 &nbsp; 100%</span>
+            </div>
+            <div class="nav">
+              <span class="cancel">Cancel</span><span class="h">New Habit</span
+              ><span class="spacer"></span>
+            </div>
+            <div class="scroll">
+              <div class="namewrap">
+                <div class="eyebrow">What do you want to build?</div>
+                <div class="name">
+                  Read before bed<span class="cursor">|</span>
+                </div>
+              </div>
+              <div class="stylerow">
+                <div class="emojibubble">📖</div>
+                <div class="dots">
+                  <span class="dot" style="background: #059669"></span
+                  ><span class="dot sel" style="background: #2563eb"></span
+                  ><span class="dot" style="background: #d97706"></span
+                  ><span class="dot" style="background: #7c3aed"></span
+                  ><span class="dot" style="background: #dc2626"></span>
+                </div>
+                <div
+                  class="pill"
+                  style="
+                    background: var(--card);
+                    border: 1px solid var(--border);
+                    color: var(--t2);
+                  "
+                >
+                  ⏰ 9:30 PM
+                </div>
+              </div>
+              <div class="divider"></div>
+
+              <div class="sec">
+                <div class="card" style="padding: 15px 16px 16px">
+                  <div style="text-align: center">
+                    <div class="eyebrow">More to customize</div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      flex-wrap: wrap;
+                      justify-content: center;
+                      gap: 8px;
+                      margin-top: 13px;
+                    "
+                  >
+                    <span
+                      class="pill"
+                      style="background: var(--p100); color: var(--p700)"
+                      >📈 Average</span
+                    >
+                    <span
+                      class="pill"
+                      style="background: var(--p100); color: var(--p700)"
+                      >🥉 Ranks</span
+                    >
+                    <span
+                      class="pill"
+                      style="
+                        background: var(--streakLt);
+                        color: var(--streakTx);
+                      "
+                      >◎ No goal set</span
+                    >
+                  </div>
+                  <div
+                    style="
+                      margin-top: 15px;
+                      height: 46px;
+                      border-radius: 12px;
+                      background: var(--p600);
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 7px;
+                      color: #fff;
+                      font-size: 13px;
+                      font-weight: 700;
+                      letter-spacing: 0.5px;
+                    "
+                  >
+                    CUSTOMIZE <span style="font-size: 14px">﹀</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="createbar">
+              <div class="createbtn">Create Habit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 14px;
+        "
+      >
+        <div
+          style="
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #047857;
+            background: #d1fae5;
+            border-radius: 999px;
+            padding: 7px 20px;
+          "
+        >
+          AFTER
+        </div>
+        <div
+          style="
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(45, 42, 38, 0.22);
+            border: 1px solid #d8d2ca;
+          "
+        >
+          <div class="frame">
+            <div class="statusbar">
+              <span>9:41</span
+              ><span style="font-size: 13px">📶 &nbsp; 100%</span>
+            </div>
+            <div class="nav">
+              <span class="cancel">Cancel</span><span class="h">New Habit</span
+              ><span class="spacer"></span>
+            </div>
+            <div class="scroll">
+              <div class="namewrap">
+                <div class="eyebrow">What do you want to build?</div>
+                <div class="name">
+                  Read before bed<span class="cursor">|</span>
+                </div>
+              </div>
+              <div class="stylerow">
+                <div class="emojibubble">📖</div>
+                <div class="dots">
+                  <span class="dot" style="background: #059669"></span
+                  ><span class="dot sel" style="background: #2563eb"></span
+                  ><span class="dot" style="background: #d97706"></span
+                  ><span class="dot" style="background: #7c3aed"></span
+                  ><span class="dot" style="background: #dc2626"></span>
+                </div>
+                <div
+                  class="pill"
+                  style="
+                    background: var(--card);
+                    border: 1px solid var(--border);
+                    color: var(--t2);
+                  "
+                >
+                  ⏰ 9:30 PM
+                </div>
+              </div>
+              <div class="divider"></div>
+
+              <div class="sec">
+                <div class="hdrlabel">
+                  <span class="l">Fine-tune this habit</span
+                  ><span class="opt">Optional</span>
+                </div>
+                <div class="caption" style="margin: 0 2px 9px">
+                  Defaults are great — adjust any only if you want to.
+                </div>
+                <div class="card">
+                  <div class="optrow" style="align-items: flex-start">
+                    <div class="rowicon" style="margin-top: 1px">
+                      <span style="color: var(--p700); font-size: 18px"
+                        >📈</span
+                      >
+                    </div>
+                    <div class="txt">
+                      <div class="ttl">How fast it builds</div>
+                      <div class="sub">
+                        Average · ~66-day build &nbsp;<span class="rec"
+                          >Recommended</span
+                        >
+                      </div>
+                      <div class="desc">
+                        Steady, research-backed pace. Missing a day sets you
+                        back a little.
+                      </div>
+                    </div>
+                    <span style="margin-top: 2px"
+                      ><span class="chev">›</span></span
+                    >
+                  </div>
+
+                  <div class="optrow" style="align-items: flex-start">
+                    <div class="rowicon" style="margin-top: 1px">
+                      <span style="font-size: 19px">🥉</span>
+                    </div>
+                    <div class="txt">
+                      <div class="ttl">Progress icons</div>
+                      <div class="sub">Ranks · 5 stages</div>
+                      <div class="desc">
+                        The 5 emojis that mark your habit getting stronger.
+                      </div>
+                    </div>
+                    <span style="margin-top: 2px"
+                      ><span class="chev">›</span></span
+                    >
+                  </div>
+
+                  <div class="optrow" style="align-items: flex-start">
+                    <div class="rowicon" style="margin-top: 1px">
+                      <span style="color: var(--p700); font-size: 17px">◎</span>
+                    </div>
+                    <div class="txt">
+                      <div class="ttl">Streak target</div>
+                      <div class="sub">No goal set</div>
+                      <div class="desc">
+                        An optional number to aim for — no penalty if you miss.
+                      </div>
+                    </div>
+                    <span style="margin-top: 2px"
+                      ><span class="chev">›</span></span
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="createbar">
+              <div class="createbtn">Create Habit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          flex: 1;
+          min-width: 250px;
+          background: #fff;
+          border: 1px solid #e5e0d8;
+          border-radius: 16px;
+          padding: 18px 20px;
+        "
+      >
+        <div
+          style="
+            font-size: 14px;
+            font-weight: 800;
+            color: #b91c1c;
+            margin-bottom: 8px;
+          "
+        >
+          ✕ Problem with the dropdown
+        </div>
+        <div style="font-size: 13.5px; line-height: 1.5; color: #524d47">
+          A big green <b>CUSTOMIZE</b> button competes with the primary
+          <b>Create Habit</b> CTA and implies customizing is required. The
+          options are hidden one tap away, and the labels ("Strength Curve",
+          "Growth Icons") are jargon.
+        </div>
+      </div>
+      <div
+        style="
+          flex: 1;
+          min-width: 250px;
+          background: #fff;
+          border: 1px solid #e5e0d8;
+          border-radius: 16px;
+          padding: 18px 20px;
+        "
+      >
+        <div
+          style="
+            font-size: 14px;
+            font-weight: 800;
+            color: #047857;
+            margin-bottom: 8px;
+          "
+        >
+          ✓ Why the open list wins
+        </div>
+        <div style="font-size: 13.5px; line-height: 1.5; color: #524d47">
+          Options are <b>visible & self-explanatory</b> (plain titles + one-line
+          "what it does"), an <b>Optional</b> pill + reassurance line remove
+          pressure, and <b>Create Habit is the only primary button</b> — a
+          cleaner funnel. Reuses the existing row component, so it ships fast.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

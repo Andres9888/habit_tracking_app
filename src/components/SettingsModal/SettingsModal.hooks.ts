@@ -71,7 +71,8 @@ export const useSettingsModalLogic = ({
     setShowGradientFillState: localPrefs.setShowGradientFillState,
   });
 
-  const habitSortMode = (settings?.habitSortMode as string) ?? 'manual';
+  const habitSortMode =
+    (settings?.habitSortMode as string) ?? DEFAULT_SETTINGS.habitSortMode;
 
   return {
     compactView: localPrefs.compactView,

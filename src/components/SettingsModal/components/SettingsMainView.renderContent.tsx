@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import ArchivedHabitsModal from '../../ArchivedHabitsModal';
 import { SettingsModalSkeleton } from '../../SkeletonLoader';
 import { SettingsHeader } from '../SettingsHeader';
@@ -36,11 +37,15 @@ export function renderSettingsMainViewContent(
       return (
         <CalendarLookPage
           compactView={props.compactView}
-          dayShape={props.dayShape ?? 'square'}
-          habitCompletionIcon={props.habitCompletionIcon ?? 'chain'}
+          dayShape={props.dayShape ?? DEFAULT_SETTINGS.dayShape}
+          habitCompletionIcon={
+            props.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon
+          }
           connectorStyle={props.connectorStyle}
           showGradientFill={props.showGradientFill}
-          stickyCalendarHeader={props.stickyCalendarHeader ?? false}
+          stickyCalendarHeader={
+            props.stickyCalendarHeader ?? DEFAULT_SETTINGS.stickyCalendarHeader
+          }
           onBack={() => props.setView('settings')}
           onChangeConnectorStyle={props.setConnectorStyle}
           onChangeDayShape={props.onChangeDayShape ?? (() => {})}

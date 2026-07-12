@@ -78,8 +78,12 @@ function HabitsAppContent() {
     onLongPressSettings: selection.enterSelectionMode,
   });
 
-  const showSkeleton = list.isHabitsLoading && list.habits.length === 0;
-  const showEmptyState = !list.isHabitsLoading && list.habits.length === 0;
+  // Hold skeleton until habits AND settings exist so dayShape / week bar
+  // never paint product defaults then flip to the user's preference.
+  const showSkeleton =
+    !list.isSettingsReady || (list.isHabitsLoading && list.habits.length === 0);
+  const showEmptyState =
+    list.isSettingsReady && !list.isHabitsLoading && list.habits.length === 0;
   const handleBatchArchivePress = () => {
     void selectionActions.handleBatchArchive();
   };
@@ -130,17 +134,18 @@ function HabitsAppContent() {
           </Animated.View>
         )}
         {selection.isSelectionMode ? (
-            <SelectionActionBar
-              selectedCount={selection.selectedCount}
-              onArchive={handleBatchArchivePress}
-              onCancel={handleExitSelectionMode}
-              onDelete={selectionActions.showDeleteConfirmation}
-            />
-          ) : (
-            <BottomActionBar {...bottomBar} />
-          )}
+          <SelectionActionBar
+            selectedCount={selection.selectedCount}
+            onArchive={handleBatchArchivePress}
+            onCancel={handleExitSelectionMode}
+            onDelete={selectionActions.showDeleteConfirmation}
+          />
+        ) : (
+          <BottomActionBar {...bottomBar} />
+        )}
 
-        {overlaysMounted ? <HabitsAppOverlays
+        {overlaysMounted ? (
+          <HabitsAppOverlays
             batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
             batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
             confirmDeleteCount={selectionActions.deleteCount}
@@ -153,7 +158,8 @@ function HabitsAppContent() {
             onConfirmDeleteConfirm={handleConfirmBatchDelete}
             onPaywallClose={handlers.handlePaywallClose}
             onPaywallSuccess={handlers.handlePaywallSuccess}
-          /> : null}
+          />
+        ) : null}
       </View>
     </GestureHandlerRootView>
   );

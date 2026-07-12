@@ -2,17 +2,20 @@
  * useCardStrengthFill — Reanimated width for the watercolor fill background.
  *
  * Animates a `width: N%` style that drives the {@link StrengthFillBackground}
- * gradient behind the card content. First render paints the final width
- * instantly (no cold-start grow-in); subsequent changes use a spring.
+ * gradient behind the card content. First render uses a delayed ease-in;
+ * subsequent changes use a spring.
  *
  * @returns `{ isDark, strengthFillStyle }`
  */
 
 import { useEffect, useRef } from 'react';
 import {
+  Easing as ReanimatedEasing,
   useAnimatedStyle,
   useSharedValue,
+  withDelay,
   withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -29,10 +32,14 @@ export function useCardStrengthFill(
     if (reduceMotion) {
       fillWidth.value = strengthPercent;
     } else if (isFirstRender.current) {
-      // First paint shows the final fill instantly — no cold-start grow-in.
-      // Later strength changes still animate via the spring below.
       isFirstRender.current = false;
-      fillWidth.value = strengthPercent;
+      fillWidth.value = withDelay(
+        200,
+        withTiming(strengthPercent, {
+          duration: 800,
+          easing: ReanimatedEasing.out(ReanimatedEasing.cubic),
+        })
+      );
     } else {
       fillWidth.value = withSpring(strengthPercent, {
         ...springs.gentle,

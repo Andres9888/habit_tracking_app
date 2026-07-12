@@ -31,6 +31,8 @@ export interface HabitsListState {
   habitSortMode: HabitSortMode;
   habitCompletionIcon: HabitSettings['habitCompletionIcon'];
   isHabitsLoading: boolean;
+  /** False until settings.get resolves — never paint appearance with defaults. */
+  isSettingsReady: boolean;
   weekDates: Date[];
   weekDateStrings: string[];
   canNavigateForward: boolean;

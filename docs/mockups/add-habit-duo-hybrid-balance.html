@@ -1,0 +1,1450 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chain Day × Duo — Design System Balance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Base hybrid contract (Balanced default) ───
+ * Chain Day owns surfaces + emerald primary.
+ * Duo contributes: chunky press, streak heat, confident display type.
+ * Levels swap :root via [data-balance].
+ */
+      :root,
+      [data-balance='balanced'] {
+        /* Chain Day surfaces */
+        --bg: #f5f1ed;
+        --surface: #edeae5;
+        --surface-raised: #ffffff;
+        --fg: #2d2a26;
+        --muted: #6b6560;
+        --meta: #9a948c;
+        --border: #ddd8d2;
+        --border-strong: #c9c2b8;
+
+        /* Chain Day emerald — brand primary (never Duo neon) */
+        --accent: #059669;
+        --accent-on: #ffffff;
+        --accent-hover: #10b981;
+        --accent-active: #047857;
+        --accent-soft: #d1fae5;
+
+        /* Duo-adapted streak heat (sand-friendly amber) */
+        --streak: #e8890c;
+        --streak-deep: #c2410c;
+        --streak-soft: #fef3c7;
+        --streak-on: #ffffff;
+
+        /* Semantic */
+        --success: #059669;
+        --warn: #e8890c;
+        --danger: #dc2626;
+
+        /* Type — rounded display confidence (Duo) + calm body (Chain Day) */
+        --font-display:
+          'Nunito', 'DIN Round Pro', 'Helvetica Neue', system-ui, sans-serif;
+        --font-body: 'DM Sans', 'Helvetica Neue', system-ui, sans-serif;
+        --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+
+        --text-xs: 11px;
+        --text-sm: 13px;
+        --text-base: 15px;
+        --text-lg: 17px;
+        --text-xl: 22px;
+        --text-2xl: 28px;
+        --text-3xl: 36px;
+
+        --leading-body: 1.45;
+        --leading-tight: 1.15;
+        --tracking-display: -0.02em;
+
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 20px;
+        --space-6: 24px;
+        --space-8: 32px;
+        --space-12: 48px;
+
+        --radius-sm: 12px;
+        --radius-md: 16px;
+        --radius-lg: 20px;
+        --radius-pill: 9999px;
+
+        /* Duo contribution: tactile press depth */
+        --press-depth: 3px;
+        --elev-raised: 0 3px 0 color-mix(in srgb, var(--border) 85%, var(--fg));
+        --elev-accent: 0 4px 0 var(--accent-active);
+        --elev-streak: 0 4px 0 var(--streak-deep);
+        --focus-ring: 0 0 0 3px
+          color-mix(in srgb, var(--accent) 28%, transparent);
+
+        --motion-fast: 160ms;
+        --motion-base: 280ms;
+        --ease-press: cubic-bezier(0.34, 1.2, 0.64, 1);
+
+        --phone-w: 320px;
+        --phone-h: 640px;
+      }
+
+      /* Calm — almost pure Chain Day, whisper of press */
+      [data-balance='calm'] {
+        --bg: #f5f1ed;
+        --surface: #edeae5;
+        --surface-raised: #ffffff;
+        --accent: #059669;
+        --accent-hover: #10b981;
+        --accent-active: #047857;
+        --accent-soft: #d1fae5;
+        --streak: #b45309;
+        --streak-deep: #92400e;
+        --streak-soft: #fef3c7;
+        --press-depth: 2px;
+        --elev-raised: 0 2px 0 color-mix(in srgb, var(--border) 90%, var(--fg));
+        --elev-accent: 0 2px 0 var(--accent-active);
+        --elev-streak: 0 2px 0 var(--streak-deep);
+        --text-2xl: 24px;
+        --text-3xl: 30px;
+      }
+
+      /* Loud — Duo energy adapted, Chain Day still owns copy/structure */
+      [data-balance='loud'] {
+        --bg: #ffffff;
+        --surface: #f7f7f7;
+        --surface-raised: #ffffff;
+        --fg: #3c3c3c;
+        --muted: #777777;
+        --meta: #afafaf;
+        --border: #e5e5e5;
+        --border-strong: #afafaf;
+        --accent: #58cc02;
+        --accent-hover: #89e219;
+        --accent-active: #58a700;
+        --accent-soft: #dbf8c5;
+        --accent-on: #ffffff;
+        --streak: #ff9600;
+        --streak-deep: #cc7a00;
+        --streak-soft: #fff3d6;
+        --success: #58cc02;
+        --press-depth: 4px;
+        --elev-raised: 0 4px 0 #d7d7d7;
+        --elev-accent: 0 4px 0 var(--accent-active);
+        --elev-streak: 0 4px 0 var(--streak-deep);
+        --text-2xl: 32px;
+        --text-3xl: 40px;
+        --focus-ring: 0 0 0 3px rgba(28, 176, 246, 0.22);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font-body);
+        font-size: var(--text-base);
+        line-height: var(--leading-body);
+        color: var(--fg);
+        background:
+          radial-gradient(
+            900px 420px at 10% -10%,
+            color-mix(in srgb, var(--accent) 12%, transparent),
+            transparent 60%
+          ),
+          radial-gradient(
+            700px 360px at 100% 0%,
+            color-mix(in srgb, var(--streak) 10%, transparent),
+            transparent 55%
+          ),
+          var(--bg);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ─── Page chrome ─── */
+      .page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: var(--space-6) var(--space-4) var(--space-12);
+      }
+      @media (min-width: 768px) {
+        .page {
+          padding: var(--space-8) var(--space-6) 80px;
+        }
+      }
+
+      .hero {
+        display: grid;
+        gap: var(--space-4);
+        margin-bottom: var(--space-8);
+      }
+      .eyebrow {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-xs);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      h1 {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: clamp(28px, 4vw, var(--text-3xl));
+        line-height: var(--leading-tight);
+        letter-spacing: var(--tracking-display);
+        margin: 0;
+        max-width: 18ch;
+      }
+      .lede {
+        margin: 0;
+        max-width: 58ch;
+        color: var(--muted);
+        font-size: var(--text-lg);
+      }
+      .rule-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: 10px 14px;
+        background: var(--surface-raised);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-pill);
+        box-shadow: var(--elev-raised);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        color: var(--fg);
+        width: fit-content;
+      }
+      .rule-pill strong {
+        color: var(--accent);
+        font-family: var(--font-display);
+        font-weight: 800;
+      }
+
+      /* ─── Balance switcher ─── */
+      .balance-bar {
+        display: grid;
+        gap: var(--space-3);
+        margin-bottom: var(--space-8);
+        padding: var(--space-4);
+        background: var(--surface-raised);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--elev-raised);
+      }
+      .balance-bar h2 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: var(--text-lg);
+        font-weight: 800;
+      }
+      .balance-bar p {
+        margin: 0;
+        color: var(--muted);
+        font-size: var(--text-sm);
+      }
+      .seg {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--space-2);
+      }
+      .seg-btn {
+        appearance: none;
+        border: 2px solid var(--border);
+        background: var(--surface);
+        color: var(--muted);
+        border-radius: var(--radius-md);
+        padding: 12px 10px;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-sm);
+        cursor: pointer;
+        transition:
+          transform var(--motion-fast) var(--ease-press),
+          background var(--motion-fast),
+          color var(--motion-fast),
+          border-color var(--motion-fast),
+          box-shadow var(--motion-fast);
+        box-shadow: 0 var(--press-depth) 0
+          color-mix(in srgb, var(--border) 80%, var(--fg));
+      }
+      .seg-btn small {
+        display: block;
+        font-family: var(--font-body);
+        font-weight: 500;
+        font-size: 11px;
+        margin-top: 4px;
+        opacity: 0.85;
+      }
+      .seg-btn:hover {
+        color: var(--fg);
+        border-color: var(--border-strong);
+      }
+      .seg-btn[aria-pressed='true'] {
+        background: var(--accent);
+        border-color: var(--accent-active);
+        color: var(--accent-on);
+        box-shadow: var(--elev-accent);
+      }
+      .seg-btn[aria-pressed='true'] small {
+        color: color-mix(in srgb, var(--accent-on) 85%, transparent);
+      }
+      .seg-btn:active {
+        transform: translateY(var(--press-depth));
+        box-shadow: none;
+      }
+      .seg-btn:focus-visible {
+        outline: none;
+        box-shadow: var(--elev-accent), var(--focus-ring);
+      }
+
+      /* ─── Token compare ─── */
+      .section-label {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-xl);
+        margin: 0 0 var(--space-2);
+        letter-spacing: var(--tracking-display);
+      }
+      .section-sub {
+        margin: 0 0 var(--space-5);
+        color: var(--muted);
+        font-size: var(--text-sm);
+        max-width: 62ch;
+      }
+      .compare {
+        display: grid;
+        gap: var(--space-4);
+        margin-bottom: var(--space-10);
+      }
+      @media (min-width: 900px) {
+        .compare {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      .col {
+        background: var(--surface-raised);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        box-shadow: var(--elev-raised);
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+      }
+      .col.highlight {
+        border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+        outline: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      }
+      .col-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
+      .col-head h3 {
+        margin: 0;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-lg);
+      }
+      .badge {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 4px 8px;
+        border-radius: var(--radius-pill);
+        background: var(--accent-soft);
+        color: var(--accent-active);
+        border: 1.5px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      }
+      .swatches {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .swatch {
+        aspect-ratio: 1;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        position: relative;
+      }
+      .swatch span {
+        position: absolute;
+        left: 6px;
+        bottom: 6px;
+        right: 6px;
+        font-size: 9px;
+        font-weight: 700;
+        font-family: var(--font-display);
+        line-height: 1.15;
+        color: inherit;
+      }
+      .swatch.light span {
+        color: var(--fg);
+      }
+      .swatch.dark span {
+        color: #fff;
+      }
+      .col ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 8px;
+      }
+      .col li {
+        font-size: var(--text-sm);
+        color: var(--muted);
+        padding-left: 14px;
+        position: relative;
+      }
+      .col li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 7px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+      .col.chain li::before {
+        background: #059669;
+      }
+      .col.duo li::before {
+        background: #58cc02;
+      }
+
+      /* Fixed source palettes for compare cards */
+      .sw-cd-bg {
+        background: #f5f1ed;
+      }
+      .sw-cd-card {
+        background: #edeae5;
+      }
+      .sw-cd-accent {
+        background: #059669;
+      }
+      .sw-cd-text {
+        background: #2d2a26;
+      }
+      .sw-duo-bg {
+        background: #ffffff;
+        border-color: #e5e5e5;
+      }
+      .sw-duo-accent {
+        background: #58cc02;
+      }
+      .sw-duo-streak {
+        background: #ff9600;
+      }
+      .sw-duo-fg {
+        background: #3c3c3c;
+      }
+
+      /* Live hybrid swatches use CSS vars */
+      .sw-h-bg {
+        background: var(--bg);
+      }
+      .sw-h-surface {
+        background: var(--surface);
+      }
+      .sw-h-accent {
+        background: var(--accent);
+      }
+      .sw-h-streak {
+        background: var(--streak);
+      }
+
+      /* ─── Component samples ─── */
+      .samples {
+        display: grid;
+        gap: var(--space-4);
+        margin-bottom: var(--space-10);
+      }
+      @media (min-width: 800px) {
+        .samples {
+          grid-template-columns: 1fr 1.15fr;
+          align-items: start;
+        }
+      }
+      .panel {
+        background: var(--surface-raised);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: var(--space-5);
+        box-shadow: var(--elev-raised);
+      }
+      .panel h3 {
+        margin: 0 0 var(--space-4);
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-lg);
+      }
+      .btn-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        margin-bottom: var(--space-5);
+      }
+      .btn {
+        appearance: none;
+        border: none;
+        cursor: pointer;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 15px;
+        letter-spacing: 0.02em;
+        padding: 14px 22px;
+        border-radius: var(--radius-md);
+        transition:
+          transform var(--motion-fast) var(--ease-press),
+          box-shadow var(--motion-fast),
+          background var(--motion-fast);
+      }
+      .btn:active {
+        transform: translateY(var(--press-depth));
+        box-shadow: none !important;
+      }
+      .btn:focus-visible {
+        outline: none;
+        box-shadow: var(--elev-accent), var(--focus-ring);
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: var(--accent-on);
+        box-shadow: var(--elev-accent);
+      }
+      .btn-primary:hover {
+        background: var(--accent-hover);
+      }
+      .btn-secondary {
+        background: var(--surface-raised);
+        color: var(--muted);
+        border: 2px solid var(--border);
+        border-bottom-width: calc(2px + var(--press-depth));
+        box-shadow: none;
+        padding-bottom: calc(14px - var(--press-depth) + 2px);
+      }
+      .btn-secondary:hover {
+        color: var(--fg);
+        border-color: var(--border-strong);
+      }
+      .btn-secondary:active {
+        border-bottom-width: 2px;
+        padding-bottom: 14px;
+      }
+      .btn-streak {
+        background: var(--streak);
+        color: var(--streak-on);
+        box-shadow: var(--elev-streak);
+      }
+      .btn-streak:hover {
+        filter: brightness(1.05);
+      }
+
+      .type-sample {
+        display: grid;
+        gap: 6px;
+      }
+      .type-sample .display {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-2xl);
+        letter-spacing: var(--tracking-display);
+        line-height: var(--leading-tight);
+      }
+      .type-sample .body {
+        color: var(--muted);
+        font-size: var(--text-base);
+      }
+      .type-sample .caption {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-xs);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--streak);
+      }
+
+      /* ─── Phone frame — Streak Goal (Variant C + Custom B) ─── */
+      .phone-wrap {
+        display: flex;
+        justify-content: center;
+      }
+      .phone {
+        width: var(--phone-w);
+        min-height: var(--phone-h);
+        background: var(--bg);
+        border: 3px solid color-mix(in srgb, var(--fg) 88%, transparent);
+        border-radius: 36px;
+        box-shadow:
+          var(--elev-raised),
+          0 24px 48px color-mix(in srgb, var(--fg) 12%, transparent);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+      }
+      .phone-notch {
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .phone-notch i {
+        width: 96px;
+        height: 10px;
+        background: color-mix(in srgb, var(--fg) 90%, transparent);
+        border-radius: 999px;
+      }
+      .phone-body {
+        padding: 8px 16px 28px;
+        flex: 1;
+        overflow: auto;
+      }
+      .nav-back {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--muted);
+        font-size: var(--text-sm);
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      .nav-back svg {
+        width: 18px;
+        height: 18px;
+      }
+      .screen-title {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-2xl);
+        letter-spacing: var(--tracking-display);
+        line-height: var(--leading-tight);
+        margin: 0 0 4px;
+      }
+      .screen-sub {
+        margin: 0 0 18px;
+        color: var(--muted);
+        font-size: var(--text-sm);
+      }
+
+      .block {
+        background: var(--surface-raised);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 14px;
+        box-shadow: var(--elev-raised);
+        margin-bottom: 12px;
+      }
+      .block-label {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 4px;
+      }
+      .block-title {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-lg);
+        margin: 0 0 4px;
+      }
+      .block-help {
+        margin: 0 0 12px;
+        font-size: var(--text-sm);
+        color: var(--muted);
+      }
+      .muted-row {
+        opacity: 0.55;
+        pointer-events: none;
+      }
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chip {
+        appearance: none;
+        border: 2px solid var(--border);
+        background: var(--surface);
+        color: var(--fg);
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 14px;
+        padding: 10px 14px;
+        border-radius: var(--radius-pill);
+        cursor: pointer;
+        min-height: 44px;
+        transition:
+          background var(--motion-fast),
+          border-color var(--motion-fast),
+          color var(--motion-fast),
+          box-shadow var(--motion-fast),
+          transform var(--motion-fast);
+        box-shadow: 0 2px 0 color-mix(in srgb, var(--border) 85%, var(--fg));
+      }
+      .chip:hover {
+        border-color: var(--border-strong);
+      }
+      .chip[aria-pressed='true'] {
+        background: var(--streak-soft);
+        border-color: var(--streak);
+        color: var(--streak-deep);
+        box-shadow: 0 3px 0 var(--streak-deep);
+      }
+      .chip.custom-active[aria-pressed='true'] {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: var(--accent-active);
+        box-shadow: 0 3px 0 var(--accent-active);
+      }
+      .chip:active {
+        transform: translateY(2px);
+        box-shadow: none;
+      }
+      .chip:focus-visible {
+        outline: none;
+        box-shadow: var(--focus-ring);
+      }
+
+      .custom-panel {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: var(--radius-sm);
+        background: var(--surface);
+        border: 2px solid var(--border);
+        display: none;
+        animation: expandIn var(--motion-base) var(--ease-press);
+      }
+      .custom-panel.open {
+        display: block;
+      }
+      @keyframes expandIn {
+        from {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .stepper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .step-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 2px solid var(--border);
+        background: var(--surface-raised);
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 20px;
+        color: var(--fg);
+        cursor: pointer;
+        box-shadow: 0 2px 0 color-mix(in srgb, var(--border) 80%, var(--fg));
+      }
+      .step-btn:active {
+        transform: translateY(2px);
+        box-shadow: none;
+      }
+      .step-val {
+        flex: 1;
+        text-align: center;
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: var(--tracking-display);
+      }
+      .step-val span {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .shield-note {
+        margin: 10px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+        display: flex;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .shield-note b {
+        color: var(--accent-active);
+        font-family: var(--font-display);
+        font-weight: 800;
+      }
+
+      /* Legend / keep-borrow */
+      .matrix {
+        display: grid;
+        gap: var(--space-3);
+        margin-bottom: var(--space-8);
+      }
+      @media (min-width: 700px) {
+        .matrix {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .matrix .panel h3 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .dot.keep {
+        background: var(--accent);
+      }
+      .dot.borrow {
+        background: var(--streak);
+      }
+      .matrix ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+      .matrix li {
+        font-size: var(--text-sm);
+        color: var(--muted);
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 10px;
+      }
+      .matrix li:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+      .matrix li strong {
+        display: block;
+        color: var(--fg);
+        font-family: var(--font-display);
+        font-weight: 800;
+        margin-bottom: 2px;
+      }
+
+      /* Footer actions */
+      .footer-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-3);
+        align-items: center;
+        padding: var(--space-5);
+        background: var(--surface-raised);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--elev-raised);
+      }
+      .footer-cta p {
+        margin: 0;
+        flex: 1 1 220px;
+        color: var(--muted);
+        font-size: var(--text-sm);
+      }
+      .footer-cta p strong {
+        color: var(--fg);
+        font-family: var(--font-display);
+        font-weight: 800;
+      }
+      .pick-status {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: var(--text-sm);
+        color: var(--accent-active);
+      }
+
+      /* Token dump */
+      .token-dump {
+        margin-top: var(--space-6);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        line-height: 1.5;
+        background: color-mix(in srgb, var(--fg) 92%, #000);
+        color: #e8e4dc;
+        border-radius: var(--radius-md);
+        padding: var(--space-4);
+        overflow: auto;
+        max-height: 220px;
+      }
+      .token-dump .c {
+        color: #6ee7b7;
+      }
+      .token-dump .k {
+        color: #fcd34d;
+      }
+    </style>
+  </head>
+  <body data-balance="balanced">
+    <div class="page" data-od-id="page-root">
+      <header class="hero" data-od-id="hero">
+        <div class="eyebrow" data-od-id="eyebrow">
+          Creative Director · Hybrid DS
+        </div>
+        <h1 data-od-id="hero-title">Chain Day surfaces. Duo feedback.</h1>
+        <p class="lede" data-od-id="hero-lede">
+          Mix your emerald/sand system with Duolingo’s tactile press, streak
+          heat, and confident type — without becoming a neon language app.
+        </p>
+        <div class="rule-pill" data-od-id="rule-pill">
+          Balance rule: <strong>Surfaces = Chain Day</strong> ·
+          <strong>Feedback = Duo</strong>
+        </div>
+      </header>
+
+      <section
+        class="balance-bar"
+        data-od-id="balance-bar"
+        aria-label="Balance level"
+      >
+        <div>
+          <h2 data-od-id="balance-title">Pick a balance level</h2>
+          <p data-od-id="balance-help">
+            Live tokens + Streak Goal preview update together. Recommended:
+            <strong>Balanced</strong>.
+          </p>
+        </div>
+        <div class="seg" role="group" aria-label="Design balance">
+          <button
+            type="button"
+            class="seg-btn"
+            data-od-id="balance-calm"
+            data-level="calm"
+            aria-pressed="false"
+          >
+            Calm
+            <small>Chain Day + soft press</small>
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            data-od-id="balance-balanced"
+            data-level="balanced"
+            aria-pressed="true"
+          >
+            Balanced ★
+            <small>Emerald + streak heat</small>
+          </button>
+          <button
+            type="button"
+            class="seg-btn"
+            data-od-id="balance-loud"
+            data-level="loud"
+            aria-pressed="false"
+          >
+            Loud
+            <small>Closer to Duo chrome</small>
+          </button>
+        </div>
+      </section>
+
+      <h2 class="section-label" data-od-id="compare-label">
+        Source systems vs hybrid
+      </h2>
+      <p class="section-sub" data-od-id="compare-sub">
+        Left and center stay fixed references. Right column is the live mix
+        driven by your balance pick.
+      </p>
+
+      <div class="compare" data-od-id="compare-grid">
+        <article class="col chain" data-od-id="col-chainday">
+          <div class="col-head">
+            <h3>Chain Day</h3>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <div class="swatch light sw-cd-bg"><span>Canvas</span></div>
+            <div class="swatch light sw-cd-card"><span>Card</span></div>
+            <div class="swatch sw-cd-accent dark"><span>Emerald</span></div>
+            <div class="swatch sw-cd-text dark"><span>Ink</span></div>
+          </div>
+          <ul>
+            <li>Sand canvas <code>#F5F1ED</code> · warm cards</li>
+            <li>Primary <code>#059669</code> — growth, not game-neon</li>
+            <li>Calm density, scientific strength language</li>
+            <li>No-penalty goals — coach, not shame</li>
+          </ul>
+        </article>
+
+        <article class="col duo" data-od-id="col-duolingo">
+          <div class="col-head">
+            <h3>Duolingo</h3>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <div class="swatch light sw-duo-bg"><span>Snow</span></div>
+            <div class="swatch sw-duo-accent dark"><span>Owl</span></div>
+            <div class="swatch sw-duo-streak dark"><span>Streak</span></div>
+            <div class="swatch sw-duo-fg dark"><span>Ink</span></div>
+          </div>
+          <ul>
+            <li>White canvas · owl green <code>#58CC02</code></li>
+            <li>Chunky 4px press shadow on every CTA</li>
+            <li>Big 800-weight display type</li>
+            <li>Streak orange as emotional heat</li>
+          </ul>
+        </article>
+
+        <article class="col highlight" data-od-id="col-hybrid">
+          <div class="col-head">
+            <h3>Hybrid (live)</h3>
+            <span class="badge" data-od-id="hybrid-badge">Balanced</span>
+          </div>
+          <div class="swatches" aria-hidden="true">
+            <div class="swatch light sw-h-bg"><span>BG</span></div>
+            <div class="swatch light sw-h-surface"><span>Surface</span></div>
+            <div class="swatch sw-h-accent dark"><span>Accent</span></div>
+            <div class="swatch sw-h-streak dark"><span>Streak</span></div>
+          </div>
+          <ul>
+            <li><strong>Keep</strong> Chain Day canvas + emerald primary</li>
+            <li><strong>Borrow</strong> Duo press depth + goal type weight</li>
+            <li><strong>Adapt</strong> streak amber that sits on sand</li>
+            <li>
+              <strong>Refuse</strong> guilt, lockouts, neon as default brand
+            </li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="matrix" data-od-id="keep-borrow">
+        <div class="panel" data-od-id="keep-panel">
+          <h3><span class="dot keep"></span> Keep from Chain Day</h3>
+          <ul>
+            <li>
+              <strong>Sand foundation</strong> Warm #F5F1ED / #EDEAE5 — not
+              clinical white (except Loud).
+            </li>
+            <li>
+              <strong>Emerald identity</strong> #059669 as the app primary in
+              Calm & Balanced.
+            </li>
+            <li>
+              <strong>Philosophy</strong> “Visual target · no penalty if you
+              miss.” Shield, never shame.
+            </li>
+            <li>
+              <strong>Variant C IA</strong> Strength Curve gated; streak goals
+              stay light & inline.
+            </li>
+          </ul>
+        </div>
+        <div class="panel" data-od-id="borrow-panel">
+          <h3><span class="dot borrow"></span> Borrow from Duo</h3>
+          <ul>
+            <li>
+              <strong>Tactile press</strong> Hard bottom offset + translateY on
+              active — buttons feel pressable.
+            </li>
+            <li>
+              <strong>Streak heat</strong> Amber selection on goals (not every
+              surface).
+            </li>
+            <li>
+              <strong>Type confidence</strong> Nunito 800 for titles/chips;
+              bigger goal moments.
+            </li>
+            <li>
+              <strong>Daily win loop</strong> Clear selected state, stepper,
+              shield microcopy.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 class="section-label" data-od-id="apply-label">
+        Applied: Streak Goal · Custom inline (Variant B)
+      </h2>
+      <p class="section-sub" data-od-id="apply-sub">
+        Same interaction pattern you preferred for Custom goals — restyled under
+        the live hybrid tokens.
+      </p>
+
+      <div class="samples" data-od-id="samples">
+        <div class="panel" data-od-id="components-panel">
+          <h3 data-od-id="components-title">Component feel</h3>
+          <div class="btn-row" data-od-id="btn-row">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-od-id="btn-primary"
+            >
+              Save goal
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-od-id="btn-secondary"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              class="btn btn-streak"
+              data-od-id="btn-streak"
+            >
+              Start streak
+            </button>
+          </div>
+          <div class="type-sample" data-od-id="type-sample">
+            <div class="caption">Streak goal</div>
+            <div class="display">30-day steady</div>
+            <div class="body">
+              A visual target for your chain — no penalty if you miss.
+            </div>
+          </div>
+          <pre
+            class="token-dump"
+            data-od-id="token-dump"
+            aria-label="Live hybrid tokens"
+          ></pre>
+        </div>
+
+        <div class="phone-wrap" data-od-id="phone-wrap">
+          <div
+            class="phone"
+            data-od-id="phone"
+            aria-label="Advanced Options streak goal preview"
+          >
+            <div class="phone-notch"><i></i></div>
+            <div class="phone-body">
+              <div class="nav-back" data-od-id="nav-back">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                >
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+                Advanced Options
+              </div>
+              <h2 class="screen-title" data-od-id="screen-title">
+                Habit detail
+              </h2>
+              <p class="screen-sub" data-od-id="screen-sub">
+                Strength, growth & streak target
+              </p>
+
+              <div class="muted-row block" data-od-id="block-strength">
+                <p class="block-label">Strength curve</p>
+                <p class="block-title">Gradual</p>
+                <p class="block-help">
+                  Gated control — kept for Variant C context.
+                </p>
+              </div>
+
+              <div
+                class="block"
+                data-od-id="block-streak"
+                style="
+                  outline: 2px dashed
+                    color-mix(in srgb, var(--streak) 55%, transparent);
+                  outline-offset: 2px;
+                "
+              >
+                <p class="block-label" data-od-id="streak-label">
+                  Marked region
+                </p>
+                <p class="block-title" data-od-id="streak-title">Streak goal</p>
+                <p class="block-help" data-od-id="streak-help">
+                  Visual target for this chain · no penalty if you miss
+                </p>
+
+                <div
+                  class="chip-row"
+                  role="group"
+                  aria-label="Streak goal days"
+                  data-od-id="chip-row"
+                >
+                  <button
+                    type="button"
+                    class="chip"
+                    data-od-id="chip-off"
+                    data-days="off"
+                    aria-pressed="false"
+                  >
+                    Off
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-od-id="chip-7"
+                    data-days="7"
+                    aria-pressed="false"
+                  >
+                    7
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-od-id="chip-30"
+                    data-days="30"
+                    aria-pressed="true"
+                  >
+                    30
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-od-id="chip-100"
+                    data-days="100"
+                    aria-pressed="false"
+                  >
+                    100
+                  </button>
+                  <button
+                    type="button"
+                    class="chip"
+                    data-od-id="chip-custom"
+                    data-days="custom"
+                    aria-pressed="false"
+                  >
+                    Custom
+                  </button>
+                </div>
+
+                <div
+                  class="custom-panel"
+                  id="custom-panel"
+                  data-od-id="custom-panel"
+                >
+                  <div class="stepper" data-od-id="stepper">
+                    <button
+                      type="button"
+                      class="step-btn"
+                      data-od-id="step-minus"
+                      aria-label="Decrease days"
+                    >
+                      −
+                    </button>
+                    <div class="step-val" data-od-id="step-val">
+                      21<span>days</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="step-btn"
+                      data-od-id="step-plus"
+                      aria-label="Increase days"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <p class="shield-note" data-od-id="shield-note">
+                    <span aria-hidden="true">🛡</span>
+                    <span
+                      ><b>Chain Shield</b> can protect one miss per week — life
+                      happens, your chain holds.</span
+                    >
+                  </p>
+                </div>
+              </div>
+
+              <div class="muted-row block" data-od-id="block-growth">
+                <p class="block-label">Growth icons</p>
+                <p class="block-title">Sprout path</p>
+                <p class="block-help">
+                  Context only — not part of this mix decision.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-primary"
+                style="width: 100%; margin-top: 8px"
+                data-od-id="phone-save"
+              >
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="footer-cta" data-od-id="footer-cta">
+        <p data-od-id="footer-copy">
+          <strong>Next:</strong> Tell me
+          <strong>Calm / Balanced / Loud</strong> (or tweak a token). I’ll lock
+          that mix into tokens and merge the winner into your Advanced Options
+          Streak Goal.
+        </p>
+        <span class="pick-status" data-od-id="pick-status"
+          >Live: Balanced ★</span
+        >
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-od-id="btn-lock"
+          id="btn-lock"
+        >
+          Use this balance
+        </button>
+      </footer>
+    </div>
+
+    <script>
+      (function () {
+        const root = document.body;
+        const badge = document.querySelector('[data-od-id="hybrid-badge"]');
+        const status = document.querySelector('[data-od-id="pick-status"]');
+        const dump = document.querySelector('[data-od-id="token-dump"]');
+        const segBtns = document.querySelectorAll('.seg-btn');
+        const STORAGE_KEY = 'chainday-ds-balance';
+
+        const labels = {
+          calm: 'Calm',
+          balanced: 'Balanced ★',
+          loud: 'Loud',
+        };
+
+        function tokenLines(level) {
+          const cs = getComputedStyle(root);
+          const keys = [
+            '--bg',
+            '--surface',
+            '--surface-raised',
+            '--fg',
+            '--muted',
+            '--border',
+            '--accent',
+            '--accent-active',
+            '--streak',
+            '--streak-deep',
+            '--press-depth',
+          ];
+          return ['/* Hybrid tokens — ' + level + ' */', ':root {']
+            .concat(
+              keys.map(function (k) {
+                return '  ' + k + ': ' + cs.getPropertyValue(k).trim() + ';';
+              })
+            )
+            .concat(['}'])
+            .join('\n');
+        }
+
+        function renderDump(level) {
+          if (!dump) return;
+          const raw = tokenLines(level);
+          dump.innerHTML = raw
+            .replace(/\/\*([^*]|\*(?!\/))*\*\//g, '<span class="c">$&</span>')
+            .replace(/(--[\w-]+)/g, '<span class="k">$1</span>');
+        }
+
+        function setBalance(level) {
+          if (!labels[level]) level = 'balanced';
+          root.setAttribute('data-balance', level);
+          segBtns.forEach(function (b) {
+            b.setAttribute(
+              'aria-pressed',
+              b.getAttribute('data-level') === level ? 'true' : 'false'
+            );
+          });
+          if (badge) badge.textContent = labels[level].replace(' ★', '');
+          if (status) status.textContent = 'Live: ' + labels[level];
+          try {
+            localStorage.setItem(STORAGE_KEY, level);
+          } catch (e) {}
+          // allow CSS vars to settle
+          requestAnimationFrame(function () {
+            renderDump(level);
+          });
+        }
+
+        segBtns.forEach(function (b) {
+          b.addEventListener('click', function () {
+            setBalance(b.getAttribute('data-level'));
+          });
+        });
+
+        var lock = document.getElementById('btn-lock');
+        if (lock) {
+          lock.addEventListener('click', function () {
+            var level = root.getAttribute('data-balance') || 'balanced';
+            try {
+              localStorage.setItem('chainday-ds-balance-locked', level);
+            } catch (e) {}
+            lock.textContent = 'Locked: ' + labels[level];
+            if (status) status.textContent = 'Locked → ' + labels[level];
+          });
+        }
+
+        /* Streak chips + custom stepper */
+        var chips = document.querySelectorAll('.chip');
+        var panel = document.getElementById('custom-panel');
+        var customDays = 21;
+        var stepVal = document.querySelector('[data-od-id="step-val"]');
+
+        function setCustomLabel() {
+          if (stepVal) stepVal.innerHTML = customDays + '<span>days</span>';
+        }
+
+        chips.forEach(function (chip) {
+          chip.addEventListener('click', function () {
+            chips.forEach(function (c) {
+              c.setAttribute('aria-pressed', 'false');
+              c.classList.remove('custom-active');
+            });
+            chip.setAttribute('aria-pressed', 'true');
+            var days = chip.getAttribute('data-days');
+            if (days === 'custom') {
+              chip.classList.add('custom-active');
+              if (panel) panel.classList.add('open');
+            } else {
+              if (panel) panel.classList.remove('open');
+            }
+          });
+        });
+
+        var minus = document.querySelector('[data-od-id="step-minus"]');
+        var plus = document.querySelector('[data-od-id="step-plus"]');
+        if (minus)
+          minus.addEventListener('click', function () {
+            customDays = Math.max(2, customDays - 1);
+            setCustomLabel();
+          });
+        if (plus)
+          plus.addEventListener('click', function () {
+            customDays = Math.min(999, customDays + 1);
+            setCustomLabel();
+          });
+        setCustomLabel();
+
+        var saved = null;
+        try {
+          saved = localStorage.getItem(STORAGE_KEY);
+        } catch (e) {}
+        setBalance(saved || 'balanced');
+      })();
+    </script>
+  </body>
+</html>
