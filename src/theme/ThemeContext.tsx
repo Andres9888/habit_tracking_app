@@ -5,10 +5,12 @@
  * Components use `useThemeColors()` to get the active semantic color palette.
  */
 
+import { useAuth } from '@clerk/clerk-expo';
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
 import { api } from '../../convex/_generated/api';
-import { useCachedQuery } from '../lib/queryCache';
+import { useCachedQuery, useQueryCacheHydrated } from '../lib/queryCache';
+import { useConvexAuthReady } from '../providers/ConvexAuthReady.context';
 import { darkColors, lightColors } from './darkColors';
 import { darkSettingsColors, lightSettingsColors } from './settingsColors';
 import type { SemanticColors } from './darkColors';
@@ -35,9 +37,14 @@ export function ThemeColorProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { isSignedIn } = useAuth();
+  const isConvexAuthenticated = useConvexAuthReady();
+  const isCacheHydrated = useQueryCacheHydrated();
+  const canReadSettings =
+    isSignedIn === true && isConvexAuthenticated && isCacheHydrated;
   const settings = useCachedQuery(
     api.settings.get,
-    {},
+    canReadSettings ? {} : 'skip',
     {
       entryName: 'settings.get',
     }

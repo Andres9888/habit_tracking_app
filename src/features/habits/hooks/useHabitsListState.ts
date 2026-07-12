@@ -19,6 +19,7 @@ import {
 } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { useCachedQuery } from '../../../lib/queryCache';
 import type { PartialProgressEmojiSet } from '../../../utils/progressEmojis';
 import type {
@@ -155,17 +156,26 @@ export function useHabitsListState(): HabitsListState {
   const settings = (settingsQuery ?? undefined) as
     | HabitsListSettings
     | undefined;
-  const celebrationsEnabled = settings?.showMotivationalMessages ?? true;
-  const compactView = settings?.compactView ?? false;
-  const completionSoundEnabled = settings?.completionSoundEnabled ?? false;
-  const completionSoundType = settings?.completionSoundType ?? 'chime';
-  const dayShape = settings?.dayShape ?? 'square';
-  const habitSortMode: HabitSortMode = settings?.habitSortMode ?? 'manual';
-  const habitCompletionIcon = settings?.habitCompletionIcon ?? 'chain';
-  const reduceMotionPreference = settings?.reduceMotion ?? false;
-  const isPremiumUser = settings?.hasPremium ?? false;
-  const showWeekCompletionBar = settings?.showWeekCompletionBar ?? true;
-  const showGradientFill = settings?.showGradientFill ?? true;
+  const celebrationsEnabled =
+    settings?.showMotivationalMessages ??
+    DEFAULT_SETTINGS.showMotivationalMessages;
+  const compactView = settings?.compactView ?? DEFAULT_SETTINGS.compactView;
+  const completionSoundEnabled =
+    settings?.completionSoundEnabled ?? DEFAULT_SETTINGS.completionSoundEnabled;
+  const completionSoundType =
+    settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType;
+  const dayShape = settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
+  const habitSortMode: HabitSortMode =
+    settings?.habitSortMode ?? DEFAULT_SETTINGS.habitSortMode;
+  const habitCompletionIcon =
+    settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon;
+  const reduceMotionPreference =
+    settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion;
+  const isPremiumUser = settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium;
+  const showWeekCompletionBar =
+    settings?.showWeekCompletionBar ?? DEFAULT_SETTINGS.showWeekCompletionBar;
+  const showGradientFill =
+    settings?.showGradientFill ?? DEFAULT_SETTINGS.showGradientFill;
   const userProgressEmojis = settings?.progressEmojis ?? undefined;
 
   // Completion sound hook (premium feature)

@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import type { RenderItemParams } from 'react-native-draggable-flatlist';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import type { Habit } from '../types';
 import type { UseHabitRenderItemArgs } from './useHabitRenderItem.types';
 import {
@@ -13,8 +14,8 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     celebrationsEnabled,
     compactView,
     completionIcon,
-    dayShape = 'square',
-    entranceVariant = 'widthExpansion',
+    dayShape = DEFAULT_SETTINGS.dayShape,
+    entranceVariant = 'none',
     handleArchive,
     handleDelete,
     handleHabitPress,
@@ -27,7 +28,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     selectedIds,
     onToggleSelection,
     showConnectors = true,
-    showGradientFill = true,
+    showGradientFill = DEFAULT_SETTINGS.showGradientFill,
     showHabitStrengthPercentage,
     toggleHabit,
     userProgressEmojis,

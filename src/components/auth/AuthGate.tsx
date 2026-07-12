@@ -13,50 +13,15 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import { FEATURE_FLAGS } from '../../constants/featureFlags';
 import { usePremium } from '../../hooks/usePremium';
 import { useQueryCacheHydrated } from '../../lib/queryCache';
 import { useConvexAuthReady } from '../../providers';
 import { useOnboardingV2Complete } from '../../screens/onboarding-v2';
-import { AuthGateContent, type AuthScreenKey } from './AuthGateContent';
+import { getScreenKey, shouldShowLoadingScreen } from './AuthGate.helpers';
+import { AuthGateContent } from './AuthGateContent';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { useAuthGateUserSync } from './useAuthGateUserSync';
-
-function getScreenKey(
-  isSignedIn: boolean,
-  onboardingComplete: boolean,
-  hasEntitlement: boolean
-): AuthScreenKey {
-  if (!isSignedIn) return 'welcome';
-  if (FEATURE_FLAGS.ONBOARDING_V2_ENABLED && !onboardingComplete)
-    return 'onboarding';
-  if (!FEATURE_FLAGS.PAYWALL_ENABLED) return 'app';
-  return hasEntitlement ? 'app' : 'paywall';
-}
-
-function shouldShowLoadingScreen({
-  isCacheHydrated,
-  isLoaded,
-  isPremiumLoading,
-  isSignedIn,
-  onboardingComplete,
-}: {
-  isCacheHydrated: boolean;
-  isLoaded: boolean;
-  isPremiumLoading: boolean;
-  isSignedIn: boolean | undefined;
-  onboardingComplete: boolean | null;
-}): boolean {
-  return (
-    !isLoaded ||
-    !isCacheHydrated ||
-    (isSignedIn === true && onboardingComplete === null) ||
-    (FEATURE_FLAGS.PAYWALL_ENABLED &&
-      isSignedIn === true &&
-      onboardingComplete === true &&
-      isPremiumLoading)
-  );
-}
+import { useSettingsReady } from './useSettingsReady';
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -65,6 +30,8 @@ export function AuthGate() {
   const { complete: onboardingComplete, markComplete } =
     useOnboardingV2Complete(isSignedIn ?? false);
   const { isPremium, isLoading: isPremiumLoading } = usePremium();
+  // prettier-ignore
+  const isSettingsReady = useSettingsReady(isSignedIn, isConvexReady, isCacheHydrated);
   const [paywallDismissed, setPaywallDismissed] = useState(false);
 
   useAuthGateUserSync(isSignedIn, isConvexReady);
@@ -74,6 +41,7 @@ export function AuthGate() {
       isCacheHydrated,
       isLoaded,
       isPremiumLoading,
+      isSettingsReady,
       isSignedIn,
       onboardingComplete,
     })

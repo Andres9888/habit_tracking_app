@@ -19,16 +19,14 @@ export const get = query({
   handler: async (ctx) => {
     // SEC-001: Get user identity for user-scoped settings
     const identity = await ctx.auth.getUserIdentity();
-
-    // Find settings for this user, or fall back to first (for backwards compatibility)
-    let settings;
-    if (identity) {
-      settings = await ctx.db
-        .query('userSettings')
-        .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-        .first();
+    if (!identity) {
+      throw new Error('Unauthenticated: Must be logged in to read settings');
     }
-    // SEC-001: No fallback — return defaults if no user-specific settings exist
+
+    const settings = await ctx.db
+      .query('userSettings')
+      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
+      .first();
 
     return toSettingsResponse(settings);
   },

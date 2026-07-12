@@ -12,6 +12,7 @@ import {
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { typography } from '../../../theme/typography';
 import { api } from '../../../../convex/_generated/api';
+import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { useCachedQuery } from '../../../lib/queryCache';
 
 interface YearStripProps {
@@ -33,7 +34,7 @@ export function YearStrip({
     {},
     { entryName: 'settings.get' }
   );
-  const dayShape = settings?.dayShape ?? 'square';
+  const dayShape = settings?.dayShape ?? DEFAULT_SETTINGS.dayShape;
   const gridData = useMemo(
     () => generateBinaryGrid('1y', completedDates, habitCreatedAt),
     [completedDates, habitCreatedAt]

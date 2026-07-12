@@ -36,6 +36,7 @@
  */
 
 import React, { memo } from 'react';
+import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
 import { useHabitCardEntrance } from '../HabitCard/useHabitCardEntrance';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useDraggableHabitAnimations } from './useDraggableHabitAnimations';
@@ -49,10 +50,10 @@ import type { DraggableHabitProps } from './types';
 function DraggableHabit(props: DraggableHabitProps) {
   const {
     celebrationsEnabled,
-    completionIcon = 'chain',
-    dayShape = 'square',
+    completionIcon = DEFAULT_SETTINGS.habitCompletionIcon,
+    dayShape = DEFAULT_SETTINGS.dayShape,
     entranceDelay = 0,
-    entranceVariant = 'widthExpansion',
+    entranceVariant = 'none',
     habit,
     isCompactMode = false,
     isConnectedToNextWeek = false,
