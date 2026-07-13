@@ -40,6 +40,7 @@ regexes = [
     '''example[_-]?key''',
     '''PLACEHOLDER''',
     '''your[_-]?secret''',
+    '''your_revenuecat_webhook_shared_secret''',
     '''apiLatencyP(50|95)''',
 ]
 

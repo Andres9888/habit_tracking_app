@@ -14,10 +14,11 @@ import type {
 } from './types';
 import { DEFAULT_QUEUE_STATE, OFFLINE_QUEUE_VERSION } from '../queue';
 import type { OfflineQueueState, QueueEvent } from '../queue';
-import { loadQueueState, saveQueueState } from '../persistence';
+import { loadQueueState } from '../persistence';
 import { calculateStats } from './helpers';
 import { createOperations } from './operations';
 import { createBatchOperations } from './optimized';
+import { createPersistenceScheduler } from './createPersistenceScheduler';
 import { createStatusUpdaters } from './status';
 
 export function createOfflineQueueManager(
@@ -34,12 +35,13 @@ export function createOfflineQueueManager(
 
   const listeners = new Set<QueueStateListener>();
   const eventListeners = new Set<QueueEventCallback>();
+  const persistLatestState = createPersistenceScheduler(() => state);
 
   const notifyStateChange = (options?: { persist?: boolean }) => {
     state = { ...state, updatedAt: Date.now() };
     for (const listener of listeners) listener();
     if (autoPersist && options?.persist !== false) {
-      saveQueueState(state).catch((error) => {
+      persistLatestState().catch((error) => {
         if (__DEV__)
           console.error('[OfflineQueueManager] Persist failed:', error);
       });
@@ -87,7 +89,7 @@ export function createOfflineQueueManager(
     ...ops,
     ...statusUpdaters,
     ...batchOps,
-    persist: async () => saveQueueState(state),
+    persist: persistLatestState,
     async restore() {
       const restored = await loadQueueState();
       state = restored;

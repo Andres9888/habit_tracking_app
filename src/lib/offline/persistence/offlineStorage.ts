@@ -25,17 +25,17 @@ const MIGRATED_KEYS = new Set<string>();
 
 async function migrateLegacyIfNeeded(key: string): Promise<void> {
   if (MIGRATED_KEYS.has(key)) return;
-  MIGRATED_KEYS.add(key);
 
   try {
     const legacy = await AsyncStorage.getItem(key);
-    if (legacy === null) return;
-
-    const alreadyMoved = await getSensitiveItem(key);
-    if (alreadyMoved === null) {
-      await setSensitiveItem(key, legacy);
+    if (legacy !== null) {
+      const alreadyMoved = await getSensitiveItem(key);
+      if (alreadyMoved === null) {
+        await setSensitiveItem(key, legacy);
+      }
+      await AsyncStorage.removeItem(key);
     }
-    await AsyncStorage.removeItem(key);
+    MIGRATED_KEYS.add(key);
   } catch (error) {
     if (__DEV__) {
       console.warn('[offlineStorage] legacy migration failed for', key, error);
