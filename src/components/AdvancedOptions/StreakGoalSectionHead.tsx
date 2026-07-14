@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { Target } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { fontWeights, typography } from '@/theme/typography';
+import { sectionHeadTile, sectionHeadTileStyle } from './sectionHeadTile';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
 export function StreakGoalSectionHead() {
@@ -13,21 +14,16 @@ export function StreakGoalSectionHead() {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 10,
+          gap: sectionHeadTile.gap,
           marginBottom: 4,
         }}
       >
-        <View
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 9,
-            backgroundColor: t.tile,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Target color={t.tileIcon} size={iconSizes.small} strokeWidth={2} />
+        <View style={sectionHeadTileStyle(t.accentTile)}>
+          <Target
+            color={t.accentTileIcon}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
         </View>
         <Text
           style={{
@@ -44,7 +40,7 @@ export function StreakGoalSectionHead() {
         style={{
           ...typography.caption,
           color: t.meta,
-          marginLeft: 42,
+          marginLeft: sectionHeadTile.inset,
           marginBottom: 6,
         }}
       >

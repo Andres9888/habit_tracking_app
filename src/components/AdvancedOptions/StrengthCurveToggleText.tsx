@@ -45,9 +45,12 @@ export function StrengthCurveToggleText({ collapsedValue }: Props) {
           Growth rate
         </Text>
         <Text
+          numberOfLines={2}
           style={{
             ...typography.caption,
-            flexGrow: 1,
+            // Claim a full line so a long "Average · +3% per check-in" wraps to
+            // its own row instead of shrinking under / clipping past the chevron.
+            flexBasis: '100%',
             flexShrink: 1,
             minWidth: 0,
             fontSize: 13,

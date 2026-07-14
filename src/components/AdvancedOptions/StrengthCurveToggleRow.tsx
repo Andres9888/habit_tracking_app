@@ -6,6 +6,7 @@ import { ChevronDown } from 'lucide-react-native';
 import { triggerHaptic } from '@/utils/haptics';
 import { iconSizes } from '@/theme/iconSizes';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
+import { sectionHeadTile, sectionHeadTileStyle } from './sectionHeadTile';
 import { StrengthCurveToggleText } from './StrengthCurveToggleText';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
@@ -39,7 +40,7 @@ export function StrengthCurveToggleRow({
         minHeight: 44,
         flexDirection: 'row',
         alignItems: 'flex-start',
-        gap: 12,
+        gap: sectionHeadTile.gap,
         minWidth: 0,
         paddingVertical: 10,
         paddingRight: 2,
@@ -51,12 +52,7 @@ export function StrengthCurveToggleRow({
     >
       <View
         style={{
-          width: 36,
-          height: 36,
-          borderRadius: 11,
-          backgroundColor: t.accentTile,
-          alignItems: 'center',
-          justifyContent: 'center',
+          ...sectionHeadTileStyle(t.accentTile),
           flexShrink: 0,
           marginTop: 2,
         }}
