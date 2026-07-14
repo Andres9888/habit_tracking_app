@@ -2,22 +2,23 @@
 import type { LayoutChangeEvent } from 'react-native';
 import { View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
-import { iconSizes } from '@/theme/iconSizes';
+import type { GrowthType } from '@/utils/growthTypeMeta';
 import type { ProgressEmojiSet } from '@/utils/progressEmojis';
-import { AdvancedOptionRow } from './AdvancedOptionRow';
-import { StreakGoalInline } from './StreakGoalInline';
 import { GrowthIconsInline } from './GrowthIconsInline';
-import { CURVE_MOCK_COPY } from './mockTokens';
+import { StreakGoalInline } from './StreakGoalInline';
+import { StrengthCurveInline } from './StrengthCurveInline';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
 interface Props {
   strengthAlgorithm: AlgorithmMode;
+  growthType?: GrowthType;
+  isNewHabit: boolean;
   AlgoIcon: React.ComponentType<{
     color: string;
     size: number;
     strokeWidth: number;
   }>;
-  onOpenCurve: () => void;
+  onStrengthAlgorithmChange: (mode: AlgorithmMode) => void;
   streakGoal: number;
   onStreakGoalChange: (days: number) => void;
   progressEmojis: ProgressEmojiSet | undefined;
@@ -29,8 +30,10 @@ interface Props {
 
 export function AdvancedOptionsExpanded({
   strengthAlgorithm,
+  growthType,
+  isNewHabit,
   AlgoIcon,
-  onOpenCurve,
+  onStrengthAlgorithmChange,
   streakGoal,
   onStreakGoalChange,
   progressEmojis,
@@ -39,24 +42,16 @@ export function AdvancedOptionsExpanded({
   onProgressEmojisChange,
   onLayout,
 }: Props) {
-  const curve = CURVE_MOCK_COPY[strengthAlgorithm];
   const t = useAdvancedTokens();
 
   return (
     <View onLayout={onLayout}>
-      <AdvancedOptionRow
-        accessibilityHint='Opens strength curve picker'
-        icon={
-          <AlgoIcon
-            color={t.accentTileIcon}
-            size={iconSizes.small}
-            strokeWidth={2}
-          />
-        }
-        iconBackground={t.accentTile}
-        subtitle={`${curve.name} · ${curve.short}`}
-        title='Strength Curve'
-        onPress={onOpenCurve}
+      <StrengthCurveInline
+        AlgoIcon={AlgoIcon}
+        growthType={growthType}
+        isNewHabit={isNewHabit}
+        strengthAlgorithm={strengthAlgorithm}
+        onSelect={onStrengthAlgorithmChange}
       />
 
       <View

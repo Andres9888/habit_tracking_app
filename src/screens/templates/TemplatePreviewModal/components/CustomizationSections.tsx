@@ -81,8 +81,16 @@ export function CustomizationSections({
         </Animated.View>
       </Animated.View>
 
+      {/*
+        Templates with estimatedMinutes carry an explicit curve default
+        (useTemplatePreview derives it via algorithmForMinutes) — treat that as
+        authored and never auto-apply the growthType suggestion over it. Only
+        when the template has no duration is the initial curve a generic
+        fallback, so the habit-type suggestion may take over.
+      */}
       <AdvancedOptionsSection
         growthType={template.growthType}
+        isNewHabit={typeof template.estimatedMinutes !== 'number'}
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}

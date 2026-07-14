@@ -23,6 +23,7 @@ const HabitFormBodyComponent = ({
   title,
   placeholder,
   growthType,
+  isNewHabit,
   initialEmojiLocked,
   selectedEmoji,
   onEmojiSelect,
@@ -93,6 +94,7 @@ const HabitFormBodyComponent = ({
 
       <AdvancedOptionsSection
         growthType={growthType}
+        isNewHabit={isNewHabit}
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}

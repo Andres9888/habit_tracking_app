@@ -138,6 +138,7 @@ function HabitEditScreenContent({
                       growthType={state.growthType}
                       habitName={state.habitName}
                       initialEmojiLocked={false}
+                      isNewHabit={false}
                       placeholder='Update your habit name'
                       progressEmojis={state.progressEmojis}
                       reminderEnabled={state.remindersEnabled}

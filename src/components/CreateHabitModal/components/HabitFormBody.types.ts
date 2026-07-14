@@ -16,6 +16,12 @@ export interface HabitFormBodyProps {
   placeholder?: string;
   /** Growth type pill shown in the Advanced section (edit mode) */
   growthType?: GrowthType;
+  /**
+   * True when creating a habit (create modal without habitToEdit): the
+   * Strength Curve follows the detected habit-type suggestion until the user
+   * overrides it. Edit passes false so the saved curve is never auto-changed.
+   */
+  isNewHabit: boolean;
   /** Called when the name input loses focus */
   onHabitNameBlur?: () => void;
   /**

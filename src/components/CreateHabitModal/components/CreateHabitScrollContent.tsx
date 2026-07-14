@@ -63,6 +63,7 @@ export function CreateHabitScrollContent({
               autoFocus={visible}
               colors={HABIT_COLORS}
               habitName={form.habitName}
+              isNewHabit={form.habitToEdit == null}
               placeholder={isPlaceholderReady ? habitNamePlaceholder : ''}
               title={STRINGS.CREATE_HABIT.nameTitle}
               progressEmojis={form.progressEmojis}

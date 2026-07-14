@@ -10,12 +10,15 @@ import { CURVE_MOCK_COPY, GROWTH_TO_MODE } from './mockTokens';
 interface Args {
   strengthAlgorithm: AlgorithmMode;
   growthType: GrowthType | undefined;
+  /** New-habit flows follow the detected suggestion; edit flows respect the saved value. */
+  isNewHabit: boolean;
   onSelect: (mode: AlgorithmMode) => void;
 }
 
 export function useStrengthCurveInline({
   strengthAlgorithm,
   growthType,
+  isNewHabit,
   onSelect,
 }: Args) {
   const reduceMotion = useReduceMotion();
@@ -31,19 +34,26 @@ export function useStrengthCurveInline({
   });
 
   const suggested = growthType ? GROWTH_TO_MODE[growthType] : 'strict';
+  // New habit: the form value is an untouched default — never infer an override
+  // from divergence. Edit: a saved value diverging from a live detection means
+  // the user chose it earlier; respect it.
   const [userOverrode, setUserOverrode] = useState(
-    () => strengthAlgorithm !== suggested
+    () => !isNewHabit && growthType !== undefined && strengthAlgorithm !== suggested
   );
   const prevGrowthTypeRef = useRef(growthType);
 
-  // Re-suggest logic (contract §4 row 3): follow the new suggestion only if
-  // the user never manually overrode the curve; otherwise keep the selection
-  // and let the "Suggested" pill move to the new detected type.
+  // Default-from-habit-type (contract §1) + re-suggest (contract §4 row 3).
+  // New habits: apply the suggestion whenever detection is live and the user
+  // hasn't overridden — covers mount-with-detection AND detection-after-mount.
+  // Existing habits: only follow when growthType actually CHANGES.
   useEffect(() => {
-    if (prevGrowthTypeRef.current === growthType) return;
+    const growthTypeChanged = prevGrowthTypeRef.current !== growthType;
     prevGrowthTypeRef.current = growthType;
-    if (!userOverrode) onSelect(suggested);
-  }, [growthType, suggested, userOverrode, onSelect]);
+    if (userOverrode || growthType === undefined) return;
+    if ((isNewHabit || growthTypeChanged) && strengthAlgorithm !== suggested) {
+      onSelect(suggested);
+    }
+  }, [growthType, suggested, userOverrode, isNewHabit, strengthAlgorithm, onSelect]);
 
   const handleContentLayout = useCallback(
     (event: LayoutChangeEvent) => {

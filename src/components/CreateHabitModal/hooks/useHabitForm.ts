@@ -105,6 +105,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     dayPhase: state.dayPhase,
     frequency: state.frequency,
     fullHabitName,
+    habitToEdit,
     habitName: habitNameValidation.value,
     habitNameError: habitNameValidation.error,
     habitNameIsValid: habitNameValidation.isValid,

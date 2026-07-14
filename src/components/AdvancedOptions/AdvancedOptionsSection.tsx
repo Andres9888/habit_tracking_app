@@ -12,7 +12,6 @@ import {
 import { shadows } from '@/theme';
 import { durations } from '@/theme/animations';
 import { MODE_STYLES } from '@/screens/StrengthCurvePicker/strengthCurveModeStyles';
-import { AdvancedOptionsCurveSheet } from './AdvancedOptionsCurveSheet';
 import { AdvancedOptionsExpanded } from './AdvancedOptionsExpanded';
 import { AdvancedOptionsSectionLabel } from './AdvancedOptionsSectionLabel';
 import { useAdvancedOptionsAccordion } from './useAdvancedOptionsAccordion';
@@ -20,6 +19,8 @@ import { useAdvancedTokens } from './useAdvancedTokens';
 import type { AdvancedOptionsSectionProps } from './AdvancedOptions.types';
 
 export function AdvancedOptionsSection({
+  growthType,
+  isNewHabit,
   strengthAlgorithm,
   progressEmojis,
   streakGoal,
@@ -32,8 +33,6 @@ export function AdvancedOptionsSection({
   const savedCustomEmojis = useUserCustomProgressEmojis();
   const t = useAdvancedTokens();
   const [expanded, setExpanded] = useState(true);
-  const [curveSheetOpen, setCurveSheetOpen] = useState(false);
-  const [fullPickerVisible, setFullPickerVisible] = useState(false);
   const { chevronAnimatedStyle, contentAnimatedStyle, handleContentLayout } =
     useAdvancedOptionsAccordion({ isExpanded: expanded });
 
@@ -50,49 +49,40 @@ export function AdvancedOptionsSection({
   const AlgoIcon = MODE_STYLES[strengthAlgorithm].Icon;
 
   return (
-    <>
-      <View style={{ marginTop: 24, paddingHorizontal: 24 }}>
-        <AdvancedOptionsSectionLabel
-          chevronAnimatedStyle={chevronAnimatedStyle}
-          expanded={expanded}
-          onToggle={() => setExpanded((v) => !v)}
-        />
-        <Animated.View style={contentAnimatedStyle}>
-          <View
-            style={{
-              backgroundColor: t.card,
-              borderWidth: 1,
-              borderColor: t.border,
-              borderRadius: 16,
-              paddingHorizontal: 16,
-              paddingBottom: 12,
-              ...shadows.card,
-            }}
-            onLayout={handleContentLayout}
-          >
-            <AdvancedOptionsExpanded
-              AlgoIcon={AlgoIcon}
-              progressEmojis={progressEmojis}
-              savedCustomEmojis={savedCustomEmojis}
-              strengthAlgorithm={strengthAlgorithm}
-              streakGoal={streakGoal}
-              userDefaultEmojis={userDefaultEmojis}
-              onOpenCurve={() => setCurveSheetOpen(true)}
-              onProgressEmojisChange={onProgressEmojisChange}
-              onStreakGoalChange={onStreakGoalChange}
-            />
-          </View>
-        </Animated.View>
-      </View>
-      <AdvancedOptionsCurveSheet
-        curveSheetOpen={curveSheetOpen}
-        fullPickerVisible={fullPickerVisible}
-        strengthAlgorithm={strengthAlgorithm}
-        onCloseCurve={() => setCurveSheetOpen(false)}
-        onCloseFull={() => setFullPickerVisible(false)}
-        onOpenFull={() => setFullPickerVisible(true)}
-        onStrengthAlgorithmChange={onStrengthAlgorithmChange}
+    <View style={{ marginTop: 24, paddingHorizontal: 24 }}>
+      <AdvancedOptionsSectionLabel
+        chevronAnimatedStyle={chevronAnimatedStyle}
+        expanded={expanded}
+        onToggle={() => setExpanded((v) => !v)}
       />
-    </>
+      <Animated.View style={contentAnimatedStyle}>
+        <View
+          style={{
+            backgroundColor: t.card,
+            borderWidth: 1,
+            borderColor: t.border,
+            borderRadius: 16,
+            paddingHorizontal: 16,
+            paddingBottom: 12,
+            ...shadows.card,
+          }}
+          onLayout={handleContentLayout}
+        >
+          <AdvancedOptionsExpanded
+            AlgoIcon={AlgoIcon}
+            growthType={growthType}
+            isNewHabit={isNewHabit}
+            progressEmojis={progressEmojis}
+            savedCustomEmojis={savedCustomEmojis}
+            strengthAlgorithm={strengthAlgorithm}
+            streakGoal={streakGoal}
+            userDefaultEmojis={userDefaultEmojis}
+            onProgressEmojisChange={onProgressEmojisChange}
+            onStreakGoalChange={onStreakGoalChange}
+            onStrengthAlgorithmChange={onStrengthAlgorithmChange}
+          />
+        </View>
+      </Animated.View>
+    </View>
   );
 }

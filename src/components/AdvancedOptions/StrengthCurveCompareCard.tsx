@@ -6,6 +6,7 @@ import { fontWeights, typography } from '@/theme/typography';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { CheckCircle, PctBadge, SuggestedPill } from './StrengthCurveCardBits';
 import { CURVE_MOCK_COPY } from './mockTokens';
+import { StrengthCurveMetaChip } from './StrengthCurveMetaChip';
 import { StrengthCurveSpark } from './StrengthCurveSpark';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
@@ -81,12 +82,8 @@ export function StrengthCurveCompareCard({
         stroke={t.accentText}
       />
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
-        <Text style={{ ...typography.caption, fontSize: 11, color: t.meta }}>
-          ~{c.days} days to full
-        </Text>
-        <Text style={{ ...typography.caption, fontSize: 11, color: t.meta }}>
-          {c.missLabel}
-        </Text>
+        <StrengthCurveMetaChip label={`~${c.days} days to full`} t={t} />
+        <StrengthCurveMetaChip label={c.missLabel} t={t} />
       </View>
       <Text style={{ ...typography.caption, fontSize: 12, color: t.meta }}>
         {c.desc}

@@ -19,6 +19,8 @@ interface Props {
     strokeWidth: number;
   }>;
   growthType?: GrowthType;
+  /** True on create flows (untouched defaults follow the suggestion). */
+  isNewHabit: boolean;
   onSelect: (mode: AlgorithmMode) => void;
 }
 
@@ -26,6 +28,7 @@ export function StrengthCurveInline({
   strengthAlgorithm,
   AlgoIcon,
   growthType,
+  isNewHabit,
   onSelect,
 }: Props) {
   const t = useAdvancedTokens();
@@ -37,7 +40,12 @@ export function StrengthCurveInline({
     handleContentLayout,
     suggested,
     handleSelect,
-  } = useStrengthCurveInline({ strengthAlgorithm, growthType, onSelect });
+  } = useStrengthCurveInline({
+    strengthAlgorithm,
+    growthType,
+    isNewHabit,
+    onSelect,
+  });
 
   const curve = CURVE_MOCK_COPY[strengthAlgorithm];
 
