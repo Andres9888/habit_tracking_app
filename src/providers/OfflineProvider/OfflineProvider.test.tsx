@@ -25,7 +25,7 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 
 const mockUseAuth = jest.fn();
 
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   useAuth: () => mockUseAuth(),
 }));
 

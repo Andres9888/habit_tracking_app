@@ -8,7 +8,7 @@ import { setBackgroundSyncTokenProvider } from '../lib/offline/backgroundSync';
 
 const mockUseAuth = jest.fn();
 
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   useAuth: () => mockUseAuth(),
 }));
 

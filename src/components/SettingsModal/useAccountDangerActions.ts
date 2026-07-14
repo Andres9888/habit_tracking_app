@@ -1,7 +1,7 @@
 /** useAccountDangerActions — sign-out and account-deletion flows */
 import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
-import { useClerk, useUser } from '@clerk/clerk-expo';
+import { useClerk, useUser } from '@clerk/expo';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { ERROR_MESSAGES } from '../../constants';

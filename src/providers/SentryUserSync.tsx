@@ -3,7 +3,7 @@
  * Syncs Clerk authentication state with Sentry user context.
  */
 
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 import type { PropsWithChildren } from 'react';
 import { useSentryUser } from '../lib/sentry';
 

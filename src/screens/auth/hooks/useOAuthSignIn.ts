@@ -1,4 +1,4 @@
-import { useSSO } from '@clerk/clerk-expo';
+import { useSSO } from '@clerk/expo';
 import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useEffect, useState } from 'react';
 import { mapOAuthError, MappedError } from '../utils';

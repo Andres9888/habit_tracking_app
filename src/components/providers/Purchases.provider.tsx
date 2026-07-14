@@ -9,7 +9,7 @@
  * - Only initializes when idle or after a short timeout
  */
 
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 import type { PropsWithChildren } from 'react';
 import { useEffect, useState } from 'react';
 

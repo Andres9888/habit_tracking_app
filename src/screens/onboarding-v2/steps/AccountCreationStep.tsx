@@ -1,4 +1,4 @@
-import { useAuth, useUser } from '@clerk/clerk-expo';
+import { useAuth, useUser } from '@clerk/expo';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 

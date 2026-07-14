@@ -5,7 +5,7 @@ import {
   OFFLINE_QUEUE_BACKGROUND_TASK,
   registerOfflineQueueBackgroundSync,
 } from '../registerBackgroundSync';
-import { runBackgroundQueueFlush } from '../runBackgroundQueueFlush';
+import { runBackgroundMaintenance } from '../runBackgroundMaintenance';
 
 jest.mock('expo-background-task', () => ({
   BackgroundTaskResult: {
@@ -25,8 +25,8 @@ jest.mock('expo-task-manager', () => ({
   isTaskRegisteredAsync: jest.fn(),
 }));
 
-jest.mock('../runBackgroundQueueFlush', () => ({
-  runBackgroundQueueFlush: jest.fn(),
+jest.mock('../runBackgroundMaintenance', () => ({
+  runBackgroundMaintenance: jest.fn(),
 }));
 
 describe('registerOfflineQueueBackgroundSync', () => {
@@ -34,13 +34,17 @@ describe('registerOfflineQueueBackgroundSync', () => {
     (BackgroundTask.getStatusAsync as jest.Mock).mockReset();
     (BackgroundTask.registerTaskAsync as jest.Mock).mockReset();
     (TaskManager.isTaskRegisteredAsync as jest.Mock).mockReset();
-    (runBackgroundQueueFlush as jest.Mock).mockReset();
+    (runBackgroundMaintenance as jest.Mock).mockReset();
     (BackgroundTask.getStatusAsync as jest.Mock).mockResolvedValue(
       BackgroundTask.BackgroundTaskStatus.Available
     );
     (BackgroundTask.registerTaskAsync as jest.Mock).mockResolvedValue(undefined);
     (TaskManager.isTaskRegisteredAsync as jest.Mock).mockResolvedValue(false);
-    (runBackgroundQueueFlush as jest.Mock).mockResolvedValue(true);
+    (runBackgroundMaintenance as jest.Mock).mockResolvedValue({
+      prefetched: true,
+      queueFlushed: true,
+      remindersChanged: false,
+    });
   });
 
   it('defines the queue flush task at module scope', () => {
@@ -114,8 +118,12 @@ describe('offline queue background task callback', () => {
   }
 
   beforeEach(() => {
-    (runBackgroundQueueFlush as jest.Mock).mockReset();
-    (runBackgroundQueueFlush as jest.Mock).mockResolvedValue(true);
+    (runBackgroundMaintenance as jest.Mock).mockReset();
+    (runBackgroundMaintenance as jest.Mock).mockResolvedValue({
+      prefetched: true,
+      queueFlushed: true,
+      remindersChanged: false,
+    });
   });
 
   it('returns success after a completed queue flush', async () => {
@@ -126,7 +134,7 @@ describe('offline queue background task callback', () => {
 
   it('returns failed when queue flushing throws', async () => {
     const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
-    (runBackgroundQueueFlush as jest.Mock).mockRejectedValue(
+    (runBackgroundMaintenance as jest.Mock).mockRejectedValue(
       new Error('flush failed')
     );
 
@@ -134,7 +142,7 @@ describe('offline queue background task callback', () => {
       BackgroundTask.BackgroundTaskResult.Failed
     );
     expect(warnSpy).toHaveBeenCalledWith(
-      '[backgroundSync] queue flush failed',
+      '[backgroundSync] maintenance failed',
       expect.any(Error)
     );
     warnSpy.mockRestore();

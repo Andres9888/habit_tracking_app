@@ -25,6 +25,13 @@ export async function hasNotificationPermissions(): Promise<boolean> {
   return mod.hasNotificationPermissions();
 }
 
+export async function registerRemotePushTokenIfNeeded(): Promise<
+  import('./remotePush').RemotePushRegistrationResult
+> {
+  const mod = await import('./remotePush');
+  return mod.registerRemotePushTokenIfNeeded();
+}
+
 export async function cancelHabitReminder(habitId: string): Promise<void> {
   const mod = await import('./habitReminders');
   return mod.cancelHabitReminder(habitId);

@@ -14,6 +14,7 @@ export function SuggestedPill({ bg }: { bg: string }) {
         borderRadius: 999,
         paddingHorizontal: 6,
         paddingVertical: 2,
+        flexShrink: 0,
       }}
     >
       <Text
@@ -48,18 +49,21 @@ export function PctBadge({
         borderColor: active ? t.accentText : t.border,
         backgroundColor: active ? t.accentText : t.card,
         paddingHorizontal: 8,
-        paddingVertical: 4,
+        paddingVertical: 3,
+        flexShrink: 0,
       }}
     >
       <Text
+        numberOfLines={1}
         style={{
-          fontSize: 13,
+          fontSize: 12,
+          lineHeight: 16,
           fontWeight: fontWeights.bold,
           color: active ? '#fff' : t.accentText,
+          fontVariant: ['tabular-nums'],
         }}
       >
-        +{growthPct}%
-        <Text style={{ fontSize: 9, fontWeight: fontWeights.bold }}>/day</Text>
+        {`+${growthPct}%`}
       </Text>
     </View>
   );
@@ -77,6 +81,7 @@ export function CheckCircle({ active, t }: { active: boolean; t: Tokens }) {
         backgroundColor: active ? t.accentText : t.card,
         alignItems: 'center',
         justifyContent: 'center',
+        flexShrink: 0,
       }}
     >
       {active ? <Check color='#fff' size={13} strokeWidth={2.6} /> : null}

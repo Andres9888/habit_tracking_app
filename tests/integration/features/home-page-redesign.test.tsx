@@ -17,7 +17,7 @@ jest.mock('convex/react', () => ({
 }));
 
 // Mock Clerk hooks
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   useAuth: jest.fn(() => ({
     signOut: jest.fn(),
     isSignedIn: true,

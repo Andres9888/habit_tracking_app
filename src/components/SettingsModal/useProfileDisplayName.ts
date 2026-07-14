@@ -1,4 +1,4 @@
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 
 export function useProfileDisplayName() {
   const { user } = useUser();

@@ -40,6 +40,7 @@ export function StrengthCurveToggleRow({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
+        minWidth: 0,
         paddingVertical: 10,
       }}
       onPress={() => {
@@ -55,6 +56,7 @@ export function StrengthCurveToggleRow({
           backgroundColor: t.accentTile,
           alignItems: 'center',
           justifyContent: 'center',
+          flexShrink: 0,
         }}
       >
         {icon}
@@ -71,6 +73,7 @@ export function StrengthCurveToggleRow({
             backgroundColor: t.card,
             alignItems: 'center',
             justifyContent: 'center',
+            flexShrink: 0,
           },
           chevronAnimatedStyle,
         ]}

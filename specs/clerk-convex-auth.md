@@ -21,7 +21,7 @@ This matches the current app shape: Expo SDK 54, Convex backend, existing `conve
 | `@convex-dev/auth` | Good if the product wants auth implemented inside Convex without Clerk/Auth0. | Convex Auth docs say the library is beta. Current npm latest checked July 14, 2026: `@convex-dev/auth@0.0.94`, modified June 9, 2026. | Do not switch now. It would replace, not complement, the existing Clerk stack. |
 | Auth0 / `react-native-auth0` | Mature general-purpose IdP, but heavier and less directly wired to this repo's current Clerk code. | Auth0 pricing page lists free up to 25,000 MAU and paid plans from $35/month for Essentials. Current npm latest checked July 14, 2026: `react-native-auth0@5.9.0`, modified July 14, 2026. | Do not switch unless enterprise Auth0 requirements appear. |
 
-Important package-name finding: current Clerk docs install `@clerk/expo`, while this repo currently depends on `@clerk/clerk-expo`. Do not blindly upgrade by name. Treat migration from `@clerk/clerk-expo` to `@clerk/expo` as a separate compatibility task and verify Clerk's package migration notes before changing imports.
+Important package-name finding: Clerk Core 3 renamed `@clerk/clerk-expo` to `@clerk/expo`. This repo completed that package-name migration after checking Clerk's Core 3 upgrade notes, including the Expo SDK 53+ requirement, removed direct `Clerk` export, and moved optional Apple/Google hooks.
 
 ## Installation
 
@@ -29,7 +29,7 @@ Current repo dependencies already include:
 
 ```json
 {
-  "@clerk/clerk-expo": "^2.19.25",
+  "@clerk/expo": "^3.7.5",
   "convex": "1.21.0",
   "expo-secure-store": "^15.0.7",
   "expo-web-browser": "~15.0.11"
@@ -87,7 +87,7 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 }
 ```
 
-Repo note: imports currently use `@clerk/clerk-expo`. Keep repo imports consistent until the package-name migration is verified.
+Repo note: imports now use `@clerk/expo` after the Core 3 package-name migration.
 
 ### Convex Auth Config
 
@@ -147,10 +147,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
 }
 ```
 
-For this Expo app, keep the current manual provider pattern because the app already uses `@clerk/clerk-expo` and a shared `ConvexReactClient`:
+For this Expo app, keep the current manual provider pattern because the app already uses `@clerk/expo` and a shared `ConvexReactClient`:
 
 ```tsx
-import { useAuth } from '@clerk/clerk-expo';
+import { useAuth } from '@clerk/expo';
 import { ConvexProvider } from 'convex/react';
 import { useEffect, useRef, useState } from 'react';
 import { convexClient } from '../lib/appConfig';
@@ -194,7 +194,7 @@ export function ConvexClerkProvider({ children }: { children: React.ReactNode })
 Clerk's `useSSO()` returns `startSSOFlow()`. Supported strategy values include `oauth_<provider>`, such as `oauth_google` and `oauth_apple`.
 
 ```tsx
-import { useSSO } from '@clerk/clerk-expo';
+import { useSSO } from '@clerk/expo';
 import * as WebBrowser from 'expo-web-browser';
 import { useCallback } from 'react';
 
@@ -276,7 +276,7 @@ Use `identity.subject` as the stable Clerk user identifier unless an existing ta
 
 | API | Package | Purpose | Notes |
 | --- | --- | --- | --- |
-| `<ClerkProvider>` | `@clerk/expo` or current repo `@clerk/clerk-expo` | Provides Clerk session/user context. | Pass `publishableKey`; current docs also pass `tokenCache`. |
+| `<ClerkProvider>` | `@clerk/expo` | Provides Clerk session/user context. | Pass `publishableKey`; current docs also pass `tokenCache`. |
 | `tokenCache` | `@clerk/expo/token-cache` | Secure session persistence for Expo. | Requires `expo-secure-store`. |
 | `useAuth()` | Clerk Expo SDK | Reads Clerk auth state and retrieves tokens with `getToken`. | For Convex readiness, do not use this alone. |
 | `getToken({ template: 'convex' })` | Clerk Expo SDK | Fetches the Clerk JWT generated from the Convex JWT template. | Must match Clerk's Convex integration/template. |
@@ -289,7 +289,7 @@ Use `identity.subject` as the stable Clerk user identifier unless an existing ta
 
 ## Gotchas
 
-1. Package naming changed in current docs. Clerk's current Expo docs use `@clerk/expo`; this repo uses `@clerk/clerk-expo`. Verify migration docs and breaking changes before changing imports.
+1. Package naming changed in Clerk Core 3. This repo now uses `@clerk/expo`; verify Core 3 breaking changes again before adopting new optional Clerk APIs.
 2. Clerk auth loaded is not Convex auth ready. A query can run anonymously if rendered after Clerk signs in but before Convex validates the JWT. Use `useConvexAuth()`, Convex auth helper components, or the existing `setAuth` callback readiness gate.
 3. The Clerk JWT issuer domain must match the Convex deployment config. Development and production Clerk domains differ.
 4. The Clerk Convex JWT template/integration must use audience/application ID `convex`, matching `applicationID: 'convex'` in `convex/auth.config.ts`.
@@ -323,10 +323,11 @@ Use `identity.subject` as the stable Clerk user identifier unless an existing ta
 | Clerk pricing | Checked July 14, 2026 | https://clerk.com/pricing |
 | Convex pricing | Checked July 14, 2026 | https://www.convex.dev/pricing |
 | Auth0 pricing | Checked July 14, 2026 | https://auth0.com/pricing |
-| `@clerk/clerk-expo` npm | Latest `2.19.31`, modified July 13, 2026; checked with `npm view` using temp cache on July 14, 2026 | https://www.npmjs.com/package/@clerk/clerk-expo |
+| `@clerk/expo` npm | Latest `3.7.5`; checked with `npm view` using temp cache on July 14, 2026 | https://www.npmjs.com/package/@clerk/expo |
+| Clerk Core 3 upgrade guide | Package rename and Expo-specific breaking changes checked July 14, 2026 | https://clerk.com/docs/guides/development/upgrading/upgrade-guides/core-3 |
 | `@convex-dev/auth` npm | Latest `0.0.94`, modified June 9, 2026; checked with `npm view` using temp cache on July 14, 2026 | https://www.npmjs.com/package/@convex-dev/auth |
 | `react-native-auth0` npm | Latest `5.9.0`, modified July 14, 2026; checked with `npm view` using temp cache on July 14, 2026 | https://www.npmjs.com/package/react-native-auth0 |
-| Context7 | Requested tools `mcp__context7__resolve-library-id` and `mcp__context7__query-docs` were not exposed in this Codex session after tool discovery attempts on July 14, 2026. | Local tool discovery |
+| Context7 | Clerk docs queried through `/clerk/clerk-docs` on July 14, 2026. | Local tool discovery |
 
 ## References
 
@@ -338,6 +339,6 @@ Use `identity.subject` as the stable Clerk user identifier unless an existing ta
 - Clerk pricing: https://clerk.com/pricing
 - Convex pricing: https://www.convex.dev/pricing
 - Auth0 pricing: https://auth0.com/pricing
-- npm `@clerk/clerk-expo`: https://www.npmjs.com/package/@clerk/clerk-expo
+- npm `@clerk/expo`: https://www.npmjs.com/package/@clerk/expo
 - npm `@convex-dev/auth`: https://www.npmjs.com/package/@convex-dev/auth
 - npm `react-native-auth0`: https://www.npmjs.com/package/react-native-auth0

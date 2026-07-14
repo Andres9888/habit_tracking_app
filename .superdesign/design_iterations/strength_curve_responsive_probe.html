@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Strength Curve responsive probe</title>
+    <style>
+      :root {
+        --fg: #1c1917;
+        --muted: #78716c;
+        --meta: #a8a29e;
+        --border: #e7e5e4;
+        --card: #fafaf9;
+        --accent: #15803d;
+        --accent-tile: #dcfce7;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #0c0a09;
+        color: #fafaf9;
+        padding: 24px;
+      }
+      h1 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 16px;
+      }
+      .frames {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+      .frame {
+        background: #292524;
+        border-radius: 20px;
+        padding: 12px;
+      }
+      .frame h2 {
+        font-size: 12px;
+        font-weight: 600;
+        margin: 0 0 8px;
+        color: #a8a29e;
+      }
+      .phone {
+        background: #fff;
+        color: var(--fg);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .phone.w-pro-max {
+        width: 430px;
+      }
+      .phone.w-se {
+        width: 375px;
+      }
+      .phone.w-narrow {
+        width: 320px;
+      }
+      .ao {
+        margin-top: 8px;
+        padding: 0 24px 16px;
+      }
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 0 16px 12px;
+      }
+      .toggle {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+      }
+      .icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+        background: var(--accent-tile);
+        flex-shrink: 0;
+      }
+      .chevron {
+        width: 28px;
+        height: 28px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .toggle-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .kicker {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .row {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-top: 2px;
+      }
+      .title {
+        font-size: 15px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .value {
+        flex: 1;
+        min-width: 0;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent);
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--meta);
+        margin-top: 2px;
+      }
+      .expand {
+        margin: 4px 0;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: #fff;
+      }
+      .strip {
+        margin-bottom: 12px;
+        padding: 10px 8px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--accent-tile);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .strip-row {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+      }
+      .cell {
+        flex: 1;
+        min-width: 0;
+        text-align: center;
+        padding: 5px 4px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+      }
+      .cell.active {
+        background: var(--accent);
+        color: #fff;
+      }
+      .arrow {
+        flex-shrink: 0;
+        padding: 0 2px;
+        color: var(--meta);
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .strip-caption {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .card {
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .card.active {
+        border-width: 2px;
+        border-color: var(--accent);
+        background: var(--accent-tile);
+      }
+      .header {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .badges {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: 6px;
+        row-gap: 6px;
+      }
+      .name {
+        font-size: 15px;
+        line-height: 20px;
+        font-weight: 700;
+      }
+      .card.active .name {
+        color: var(--accent);
+      }
+      .pct {
+        border-radius: 11px;
+        border: 1px solid var(--border);
+        background: #fff;
+        padding: 3px 7px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+        flex-shrink: 0;
+      }
+      .card.active .pct {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+      .suggested {
+        background: var(--accent);
+        color: #fff;
+        border-radius: 999px;
+        padding: 2px 6px;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+      .check {
+        width: 22px;
+        height: 22px;
+        border-radius: 11px;
+        border: 1.5px solid var(--border);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .card.active .check {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .spark {
+        height: 36px;
+        border-radius: 6px;
+        background: linear-gradient(
+          180deg,
+          rgba(21, 128, 61, 0.12),
+          transparent
+        );
+        border-bottom: 2px solid var(--accent);
+        opacity: 0.7;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 8px;
+        row-gap: 2px;
+        font-size: 11px;
+        color: var(--meta);
+      }
+      .desc {
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--meta);
+      }
+      .report {
+        margin-top: 20px;
+        font-family: ui-monospace, monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        background: #1c1917;
+        border-radius: 12px;
+        padding: 16px;
+        color: #bbf7d0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Strength Curve layout probe — Pro Max / SE / 320</h1>
+    <div class="frames" id="frames"></div>
+    <div class="report" id="report">Measuring…</div>
+    <script>
+      const markup = `
+      <div class="ao">
+        <div class="panel">
+          <div class="toggle">
+            <div class="icon"></div>
+            <div class="toggle-text">
+              <div class="kicker">Strength Curve</div>
+              <div class="row">
+                <div class="title">Growth rate</div>
+                <div class="value" data-probe="collapsed-value">Average · +3% per check-in</div>
+              </div>
+              <div class="hint">How fast strength rises each check-in</div>
+            </div>
+            <div class="chevron"></div>
+          </div>
+          <div class="expand">
+            <div class="strip">
+              <div class="strip-row">
+                <div class="cell">+10%</div>
+                <div class="arrow">→</div>
+                <div class="cell active" data-probe="strip-active">+3%</div>
+                <div class="arrow">→</div>
+                <div class="cell">+1%</div>
+              </div>
+              <div class="strip-caption">per successful check-in · pick one curve</div>
+            </div>
+            <div class="cards">
+              <div class="card">
+                <div class="header">
+                  <div class="badges">
+                    <span class="name">Simple</span>
+                    <span class="pct">+10%/day</span>
+                  </div>
+                  <div class="check"></div>
+                </div>
+                <div class="spark"></div>
+                <div class="meta"><span>~18 days to full</span><span>Soft miss cost</span></div>
+                <div class="desc">Fast climb for easy daily habits</div>
+              </div>
+              <div class="card active">
+                <div class="header">
+                  <div class="badges" data-probe="avg-badges">
+                    <span class="name" data-probe="avg-name">Average</span>
+                    <span class="pct" data-probe="avg-pct">+3%/day</span>
+                    <span class="suggested" data-probe="avg-suggested">Suggested</span>
+                  </div>
+                  <div class="check" data-probe="avg-check"></div>
+                </div>
+                <div class="spark"></div>
+                <div class="meta"><span>~66 days to full</span><span>Medium miss cost</span></div>
+                <div class="desc">Steady rise for typical habits</div>
+              </div>
+              <div class="card">
+                <div class="header">
+                  <div class="badges">
+                    <span class="name">Complex</span>
+                    <span class="pct">+1%/day</span>
+                  </div>
+                  <div class="check"></div>
+                </div>
+                <div class="spark"></div>
+                <div class="meta"><span>~145 days to full</span><span>Gentlest miss cost</span></div>
+                <div class="desc">Slow climb for hard or long habits</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+      const frames = [
+        { cls: 'w-pro-max', label: 'iPhone 16 Pro Max · 430pt' },
+        { cls: 'w-se', label: 'iPhone SE / 16 · 375pt' },
+        { cls: 'w-narrow', label: 'Narrow / small phone · 320pt' },
+      ];
+      const root = document.getElementById('frames');
+      frames.forEach((f) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'frame';
+        wrap.innerHTML = `<h2>${f.label}</h2><div class="phone ${f.cls}" data-width="${f.cls}">${markup}</div>`;
+        root.appendChild(wrap);
+      });
+
+      function rect(el) {
+        const r = el.getBoundingClientRect();
+        return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
+      }
+
+      function fullyInside(child, parent) {
+        const c = rect(child);
+        const p = rect(parent);
+        const eps = 0.5;
+        return (
+          c.left >= p.left - eps &&
+          c.right <= p.right + eps &&
+          c.top >= p.top - eps &&
+          c.bottom <= p.bottom + eps
+        );
+      }
+
+      const lines = [];
+      document.querySelectorAll('.phone').forEach((phone) => {
+        const label = phone.parentElement.querySelector('h2').textContent;
+        const value = phone.querySelector('[data-probe="collapsed-value"]');
+        const badges = phone.querySelector('[data-probe="avg-badges"]');
+        const pct = phone.querySelector('[data-probe="avg-pct"]');
+        const name = phone.querySelector('[data-probe="avg-name"]');
+        const suggested = phone.querySelector('[data-probe="avg-suggested"]');
+        const check = phone.querySelector('[data-probe="avg-check"]');
+        const strip = phone.querySelector('[data-probe="strip-active"]');
+        const panel = phone.querySelector('.panel');
+        const card = phone.querySelector('.card.active');
+
+        const checks = [
+          ['collapsed green value inside panel', fullyInside(value, panel)],
+          ['Average name inside card', fullyInside(name, card)],
+          ['+3%/day badge inside card', fullyInside(pct, card)],
+          ['Suggested pill inside card', fullyInside(suggested, card)],
+          ['check circle inside card', fullyInside(check, card)],
+          ['strip +3% inside panel', fullyInside(strip, panel)],
+          ['badges cluster minWidth respected (no overflow past check)', rect(badges).right <= rect(check).left + 0.5],
+        ];
+        lines.push(`## ${label}`);
+        checks.forEach(([k, ok]) => lines.push(`${ok ? 'PASS' : 'FAIL'}  ${k}`));
+        lines.push(
+          `  value width=${rect(value).width.toFixed(1)}  badges width=${rect(badges).width.toFixed(1)}  card=${rect(card).width.toFixed(1)}`
+        );
+        lines.push('');
+      });
+      document.getElementById('report').textContent = lines.join('\n');
+    </script>
+  </body>
+</html>

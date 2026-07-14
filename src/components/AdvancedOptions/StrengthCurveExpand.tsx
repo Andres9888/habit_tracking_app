@@ -46,7 +46,8 @@ export function StrengthCurveExpand({ selected, suggested, onSelect }: Props) {
         }
       </Text>
       <StrengthCurveCompareStrip selected={selected} />
-      <View accessibilityRole='radiogroup' style={{ gap: 8 }}>
+      {/* gap 6 matches Streak Goal / Growth Icons chip rows */}
+      <View accessibilityRole='radiogroup' style={{ gap: 6 }}>
         {ALGORITHM_ORDER.map((mode) => (
           <StrengthCurveCompareCard
             key={mode}

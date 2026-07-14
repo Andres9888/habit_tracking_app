@@ -20,7 +20,7 @@ jest.mock('expo-av', () => ({
   },
 }));
 
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   useClerk: () => ({ signOut: jest.fn() }),
   useUser: () => ({
     user: {

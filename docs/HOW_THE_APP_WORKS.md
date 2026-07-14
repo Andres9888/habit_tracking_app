@@ -104,7 +104,7 @@ SignUpScreen → useSignUpFlow() hook
 #### OAuth (Apple / Google)
 ```
 SocialSignInButton → useOAuthSignIn() hook
-  1. Uses useSSO() from @clerk/clerk-expo
+  1. Uses useSSO() from @clerk/expo
   2. startSSOFlow({ strategy: 'oauth_google', redirectUrl: 'habit-tracker://sso-callback' })
   3. Native browser opens for OAuth consent
   4. On success: setActive({ session: createdSessionId })

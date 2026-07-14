@@ -1,4 +1,4 @@
-import { useAuth } from '@clerk/clerk-expo';
+import { useAuth } from '@clerk/expo';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getOfflineQueueManager } from '../../lib/offline';

@@ -21,9 +21,11 @@ export function StrengthCurveTypeBar({ growthType }: Props) {
       accessibilityLabel={`Detected habit type, ${copy.label}, ${copy.tagline}. Suggested plus ${pct} percent per check-in.`}
       style={{
         flexDirection: 'row',
+        flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: 8,
+        columnGap: 8,
+        rowGap: 8,
         marginBottom: 10,
         padding: 10,
         borderRadius: 12,
@@ -32,7 +34,7 @@ export function StrengthCurveTypeBar({ growthType }: Props) {
         borderColor: t.border,
       }}
     >
-      <View style={{ flex: 1, minWidth: 0, gap: 2 }}>
+      <View style={{ flex: 1, minWidth: 150, gap: 2 }}>
         <Text
           style={{
             fontSize: 11,
@@ -45,6 +47,8 @@ export function StrengthCurveTypeBar({ growthType }: Props) {
           Detected habit type
         </Text>
         <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.9}
           numberOfLines={1}
           style={{
             ...typography.caption,
@@ -58,17 +62,23 @@ export function StrengthCurveTypeBar({ growthType }: Props) {
       </View>
       <View
         style={{
+          maxWidth: '100%',
           borderRadius: 999,
           borderWidth: 1,
           borderColor: t.accentText,
           backgroundColor: t.card,
           paddingHorizontal: 10,
           paddingVertical: 6,
+          flexShrink: 0,
         }}
       >
         <Text
+          adjustsFontSizeToFit
+          minimumFontScale={0.9}
+          numberOfLines={1}
           style={{
             fontSize: 12,
+            lineHeight: 16,
             fontWeight: fontWeights.bold,
             color: t.accentText,
             fontVariant: ['tabular-nums'],

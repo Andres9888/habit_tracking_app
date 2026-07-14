@@ -49,15 +49,15 @@ ChainDay keeps its existing Expo + Clerk + Convex + RevenueCat + Sentry stack, b
 
 - [x] Audit profile-image upload and deletion flows against Convex storage ownership invariants per `specs/convex-file-storage.md` [wave:4]
 - [x] Add or update storage ownership tests for cross-user storage reuse, invalid metadata cleanup, no-op reattach, and account deletion cleanup per `specs/convex-file-storage.md` [needs:storage ownership audit]
-- [ ] Verify Sentry native plugin, Metro config, release naming, source-map upload settings, and EAS secret requirements per `specs/sentry-react-native.md` [wave:4]
-- [ ] Verify Expo SDK 54/EAS config for notifications, background task, RevenueCat native module, Clerk OAuth scheme, and Sentry plugin per `specs/expo-mobile-runtime.md` [wave:4]
-- [ ] Run release readiness checks: `npx convex env list`, Convex typecheck/codegen, targeted Jest suites for auth/subscriptions/reminders/storage/Sentry, `npm run lint` or scoped typecheck, and a native dev-client/TestFlight smoke path per specs [needs:Phase 1 - MVP Launch Guards]
+- [x] Verify Sentry native plugin, Metro config, release naming, source-map upload settings, and EAS secret requirements per `specs/sentry-react-native.md` [wave:4]
+- [x] Verify Expo SDK 54/EAS config for notifications, background task, RevenueCat native module, Clerk OAuth scheme, and Sentry plugin per `specs/expo-mobile-runtime.md` [wave:4]
+- [x] Run release readiness checks: `npx convex env list`, Convex typecheck/codegen, targeted Jest suites for auth/subscriptions/reminders/storage/Sentry, `npm run lint` or scoped typecheck, and a native dev-client/TestFlight smoke path per specs [needs:Phase 1 - MVP Launch Guards]
 
 ## Low Priority - Future Release
 
-- [ ] Add Expo push-token registration and remote push server flow only if the product needs remote messaging per `specs/expo-notifications.md`.
-- [ ] Add reminder reconciliation/prefetch work to the background task beyond offline queue flushing per `specs/expo-notifications-background.md`.
-- [ ] Evaluate Clerk package-name migration from `@clerk/clerk-expo` to the newer documented package only after reading migration notes per `specs/clerk-expo-auth.md`.
+- [x] Add Expo push-token registration and remote push server flow only if the product needs remote messaging per `specs/expo-notifications.md`.
+- [x] Add reminder reconciliation/prefetch work to the background task beyond offline queue flushing per `specs/expo-notifications-background.md`.
+- [x] Evaluate Clerk package-name migration from `@clerk/clerk-expo` to the newer documented package only after reading migration notes per `specs/clerk-expo-auth.md`.
 - [ ] Evaluate RevenueCat SDK v10 upgrade separately from launch hardening per `specs/revenuecat-iap.md`.
 - [ ] Evaluate Convex SDK upgrade from `1.21.0` only after changelog review per `specs/convex-backend-realtime.md`.
 - [ ] Enable Sentry replay/profiling/logs only after privacy, quota, and store-label review per `specs/sentry-react-native.md`.

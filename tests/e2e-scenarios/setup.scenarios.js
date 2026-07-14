@@ -174,7 +174,7 @@ jest.mock('../../src/lib/purchases', () => ({
 
 // Clerk auth — the base mock omits useAuth, which several providers/screens
 // call. Provide a fully signed-in user so screens render past the auth gate.
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   ClerkProvider: ({ children }) => children,
   ClerkLoaded: ({ children }) => children,
   SignedIn: ({ children }) => children,

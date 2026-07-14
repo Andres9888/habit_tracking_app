@@ -107,7 +107,7 @@ npm test accessibility
 - `react-native-gesture-handler`
 - `@expo/vector-icons`
 - `convex/react`
-- `@clerk/clerk-expo`
+- `@clerk/expo`
 - `expo-secure-store`, `expo-haptics`
 - `react-native-calendars`
 

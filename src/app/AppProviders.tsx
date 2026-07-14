@@ -1,5 +1,5 @@
-import { ClerkProvider } from '@clerk/clerk-expo';
-import { resourceCache } from '@clerk/clerk-expo/resource-cache';
+import { ClerkProvider } from '@clerk/expo';
+import { resourceCache } from '@clerk/expo/resource-cache';
 import type { PropsWithChildren } from 'react';
 import { PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

@@ -1,16 +1,16 @@
 # Overview
 
-Use Clerk's Expo SDK (`@clerk/clerk-expo`) as the native authentication layer for this Expo + Convex app. It supports email/password and email-code flows, native Apple/Google SSO, session persistence through `expo-secure-store`, Clerk hooks for session state, and first-party Convex JWT validation through `ConvexProviderWithClerk`.
+Use Clerk's Expo SDK (`@clerk/expo`) as the native authentication layer for this Expo + Convex app. It supports email/password and email-code flows, native Apple/Google SSO, session persistence through `expo-secure-store`, Clerk hooks for session state, and first-party Convex JWT validation through `ConvexProviderWithClerk`.
 
-Recommendation: keep Clerk. This repo already depends on `@clerk/clerk-expo`, `expo-secure-store`, and `convex`, and `convex/auth.config.ts` already validates Clerk-issued JWTs with `applicationID: "convex"`.
+Recommendation: keep Clerk. This repo already depends on `@clerk/expo`, `expo-secure-store`, and `convex`, and `convex/auth.config.ts` already validates Clerk-issued JWTs with `applicationID: "convex"`.
 
-Context7 note: the requested Context7 tools (`resolve-library-id`, `query-docs`) are not exposed in this Codex session after tool discovery. Details below come from official Clerk, Convex, Auth0, WorkOS, npm registry, and this repo's checked-in files.
+Context7 note: Clerk Expo migration details were checked against `/clerk/clerk-docs` on 2026-07-14. Details below also come from official Clerk, Convex, Auth0, WorkOS, npm registry, and this repo's checked-in files.
 
 # Selection Rationale
 
 | Candidate | Fit | Rationale |
 | --- | --- | --- |
-| Clerk (`@clerk/clerk-expo`) | Chosen | Best fit for native Expo auth plus Convex. Clerk's Expo quickstart documents `ClerkProvider`, `tokenCache`, `AuthView`, custom email/password flows, native Apple/Google setup, and `useSSO()`. Convex documents first-party `ConvexProviderWithClerk` support for React-based Clerk SDKs, including Expo. |
+| Clerk (`@clerk/expo`) | Chosen | Best fit for native Expo auth plus Convex. Clerk's Expo quickstart documents `ClerkProvider`, `tokenCache`, `AuthView`, custom email/password flows, native Apple/Google setup, and `useSSO()`. Convex documents first-party `ConvexProviderWithClerk` support for React-based Clerk SDKs, including Expo. |
 | Auth0 (`react-native-auth0`) | Not chosen | Strong general identity platform, but Expo setup is less aligned with this repo's existing Clerk dependency and Convex Clerk config. Pricing is less favorable for this app's current shape: Auth0 Free lists up to 25,000 MAU; Clerk pricing currently lists 50,000 included MRUs per app. |
 | WorkOS | Not chosen | Excellent B2B identity platform, but the current public npm surface is server/web oriented (`@workos-inc/node` was current; no official `@workos-inc/authkit-react-native` package was found in npm). It adds avoidable integration work for a consumer habit app needing native mobile auth. |
 
@@ -18,7 +18,7 @@ Current package checks on 2026-07-14:
 
 | Package | Current npm result | Notes |
 | --- | --- | --- |
-| `@clerk/clerk-expo` | `2.19.31` latest; `2.19.42` latest-v5 dist-tag | Repo currently has `^2.19.25`. Do not jump to `latest-v5` without reading v5 migration notes. |
+| `@clerk/expo` | `3.7.5` latest | Repo currently has `^3.7.5` after the Core 3 package-name migration from `@clerk/clerk-expo`. |
 | `react-native-auth0` | `5.9.0` latest | Auth0 React Native SDK package. |
 | `@workos-inc/node` | `10.7.0` latest | Server SDK; not a native Expo SDK. |
 | `@workos-inc/authkit-react-native` | 404 from npm | No official package found by that name. |
@@ -28,19 +28,19 @@ Current package checks on 2026-07-14:
 For this repo, the dependencies are already present in `package.json`:
 
 ```bash
-npx expo install @clerk/clerk-expo expo-secure-store
+npx expo install @clerk/expo expo-secure-store
 ```
 
-If using Clerk native components (`AuthView`, `UserButton` from `@clerk/clerk-expo/native`) add `expo-dev-client` and verify the Expo config plugins:
+If using Clerk native components (`AuthView`, `UserButton` from `@clerk/expo/native`) add `expo-dev-client` and verify the Expo config plugins:
 
 ```bash
-npx expo install @clerk/clerk-expo expo-secure-store expo-dev-client
+npx expo install @clerk/expo expo-secure-store expo-dev-client
 ```
 
 ```json
 {
   "expo": {
-    "plugins": ["expo-secure-store", "@clerk/clerk-expo"]
+    "plugins": ["expo-secure-store", "@clerk/expo"]
   }
 }
 ```
@@ -62,8 +62,8 @@ Environment variables used by this app:
 Root provider setup:
 
 ```tsx
-import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
-import { tokenCache } from '@clerk/clerk-expo/token-cache';
+import { ClerkProvider, useAuth } from '@clerk/expo';
+import { tokenCache } from '@clerk/expo/token-cache';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexReactClient } from 'convex/react';
 import { Slot } from 'expo-router';
@@ -120,7 +120,7 @@ Official Convex docs use `process.env.CLERK_JWT_ISSUER_DOMAIN!` and `application
 Email/password sign-in:
 
 ```tsx
-import { useSignIn } from '@clerk/clerk-expo';
+import { useSignIn } from '@clerk/expo';
 import { useRouter } from 'expo-router';
 import * as React from 'react';
 import { Button, TextInput, View } from 'react-native';
@@ -166,7 +166,7 @@ export function EmailSignIn() {
 Email/password sign-up with email-code verification:
 
 ```tsx
-import { useSignUp } from '@clerk/clerk-expo';
+import { useSignUp } from '@clerk/expo';
 import * as React from 'react';
 import { Button, TextInput, View } from 'react-native';
 
@@ -225,7 +225,7 @@ export function EmailSignUp() {
 Apple/Google SSO with `useSSO()`:
 
 ```tsx
-import { useSSO } from '@clerk/clerk-expo';
+import { useSSO } from '@clerk/expo';
 import * as WebBrowser from 'expo-web-browser';
 import * as React from 'react';
 import { Button, View } from 'react-native';
@@ -264,8 +264,8 @@ export function SocialButtons() {
 Native prebuilt auth surface:
 
 ```tsx
-import { useAuth } from '@clerk/clerk-expo';
-import { AuthView, UserButton } from '@clerk/clerk-expo/native';
+import { useAuth } from '@clerk/expo';
+import { AuthView, UserButton } from '@clerk/expo/native';
 import { useState } from 'react';
 import { ActivityIndicator, Button, Modal, View } from 'react-native';
 
@@ -312,14 +312,14 @@ export const viewer = query({
 
 | API | Import | Purpose | Key signature / shape |
 | --- | --- | --- | --- |
-| `ClerkProvider` | `@clerk/clerk-expo` | Provides Clerk session/user context. | `<ClerkProvider publishableKey={key} tokenCache={tokenCache}>...</ClerkProvider>` |
-| `tokenCache` | `@clerk/clerk-expo/token-cache` | Persists active session token securely with `expo-secure-store`. | Pass as `tokenCache` prop. |
-| `useAuth` | `@clerk/clerk-expo` | Reads auth state and token helpers. | Returns `isLoaded`, `isSignedIn`, user/session identifiers, token helpers. Native components may need `{ treatPendingAsSignedOut: false }`. |
-| `useSignIn` | `@clerk/clerk-expo` | Custom email/password sign-in. | Use `signIn.create({ identifier, password })`, then `setActive({ session })` when complete. |
-| `useSignUp` | `@clerk/clerk-expo` | Custom sign-up and verification. | Use `signUp.create(...)`, `prepareEmailAddressVerification({ strategy: 'email_code' })`, `attemptEmailAddressVerification({ code })`. |
-| `useSSO` | `@clerk/clerk-expo` | OAuth / enterprise SSO entry point. | `startSSOFlow(params): Promise<StartSSOFlowReturnType>` where `strategy` supports `oauth_<provider>` and `enterprise_sso`. |
-| `AuthView` | `@clerk/clerk-expo/native` | Prebuilt native sign-in/sign-up UI. | `<AuthView onDismiss={...} />`; requires dev build and Native API. |
-| `UserButton` | `@clerk/clerk-expo/native` | Prebuilt native profile/session button. | `<UserButton />`; requires dev build and Native API. |
+| `ClerkProvider` | `@clerk/expo` | Provides Clerk session/user context. | `<ClerkProvider publishableKey={key} tokenCache={tokenCache}>...</ClerkProvider>` |
+| `tokenCache` | `@clerk/expo/token-cache` | Persists active session token securely with `expo-secure-store`. | Pass as `tokenCache` prop. |
+| `useAuth` | `@clerk/expo` | Reads auth state and token helpers. | Returns `isLoaded`, `isSignedIn`, user/session identifiers, token helpers. Native components may need `{ treatPendingAsSignedOut: false }`. |
+| `useSignIn` | `@clerk/expo` | Custom email/password sign-in. | Use `signIn.create({ identifier, password })`, then `setActive({ session })` when complete. |
+| `useSignUp` | `@clerk/expo` | Custom sign-up and verification. | Use `signUp.create(...)`, `prepareEmailAddressVerification({ strategy: 'email_code' })`, `attemptEmailAddressVerification({ code })`. |
+| `useSSO` | `@clerk/expo` | OAuth / enterprise SSO entry point. | `startSSOFlow(params): Promise<StartSSOFlowReturnType>` where `strategy` supports `oauth_<provider>` and `enterprise_sso`. |
+| `AuthView` | `@clerk/expo/native` | Prebuilt native sign-in/sign-up UI. | `<AuthView onDismiss={...} />`; requires dev build and Native API. |
+| `UserButton` | `@clerk/expo/native` | Prebuilt native profile/session button. | `<UserButton />`; requires dev build and Native API. |
 | `ConvexProviderWithClerk` | `convex/react-clerk` | Supplies Clerk JWTs to Convex client. | `<ConvexProviderWithClerk client={convex} useAuth={useAuth}>...</ConvexProviderWithClerk>` |
 | `useConvexAuth` | `convex/react` | Auth state as validated by Convex. | Prefer over Clerk `useAuth()` when gating Convex queries/mutations. |
 | `ctx.auth.getUserIdentity` | Convex function context | Server-side identity lookup from Clerk JWT. | Returns identity or `null`; throw for protected functions. |
@@ -338,7 +338,10 @@ export const viewer = query({
 - Use `useConvexAuth()` or Convex `<Authenticated>` boundaries for UI that immediately calls authenticated Convex functions; Clerk `useAuth()` alone can be true before Convex has fetched and validated its token.
 - The app currently uses `CLERK_AUTH_DOMAIN`, while Convex docs name this variable `CLERK_JWT_ISSUER_DOMAIN`. Do not set one and read the other by mistake.
 - Do not store Clerk secret keys in Expo public env vars. This spec only requires the publishable key on the client.
-- `@clerk/clerk-expo` has a `latest-v5` dist-tag newer than `latest`; treat v5 as a separate migration, not a routine patch update.
+- Clerk Core 3 renamed `@clerk/clerk-expo` to `@clerk/expo`; this repo completed that package-name migration after checking the Core 3 upgrade notes.
+- `@clerk/expo` v3 requires Expo SDK 53 or later. This repo is on Expo SDK 54.
+- The direct `Clerk` export was removed in Core 3. Use `useClerk()` for imperative calls such as sign-out.
+- `useSignInWithApple` and `useSignInWithGoogle` moved to `@clerk/expo/apple` and `@clerk/expo/google`; this repo does not currently use those hooks.
 
 # Rate Limits
 
@@ -356,8 +359,9 @@ Operational rate limits for Clerk API endpoints are not fully enumerated in the 
 
 | Item | Version / date | Source |
 | --- | --- | --- |
-| `@clerk/clerk-expo` | npm latest `2.19.31`; `latest-v5` `2.19.42`; checked 2026-07-14 | `npm view @clerk/clerk-expo version dist-tags --json` |
-| Repo dependency | `@clerk/clerk-expo` `^2.19.25`; checked 2026-07-14 | `package.json` |
+| `@clerk/expo` | npm latest `3.7.5`; checked 2026-07-14 | `npm view @clerk/expo version dist-tags --json --cache /private/tmp/npm-cache-clerk-eval` |
+| Repo dependency | `@clerk/expo` `^3.7.5`; checked 2026-07-14 | `package.json` |
+| Clerk Core 3 upgrade guide | Package rename and Expo-specific breaking changes checked 2026-07-14 | https://clerk.com/docs/guides/development/upgrading/upgrade-guides/core-3 |
 | Clerk Expo quickstart | Last checked 2026-07-14 | https://clerk.com/docs/expo/getting-started/quickstart |
 | Clerk `useSSO()` reference | Page says last updated 2026-06-30; checked 2026-07-14 | https://clerk.com/docs/reference/expo/native-hooks/use-sso |
 | Clerk OAuth custom flow | Last checked 2026-07-14 | https://clerk.com/docs/guides/development/custom-flows/authentication/oauth-connections |

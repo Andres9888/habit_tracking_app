@@ -3,7 +3,7 @@
  * Syncs user to Convex on sign-in. Gates on cache + settings readiness.
  */
 
-import { useAuth } from '@clerk/clerk-expo';
+import { useAuth } from '@clerk/expo';
 import { useState } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 

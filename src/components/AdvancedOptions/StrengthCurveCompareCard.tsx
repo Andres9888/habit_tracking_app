@@ -2,9 +2,9 @@
 import { Text, View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { triggerHaptic } from '@/utils/haptics';
-import { fontWeights, typography } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
-import { CheckCircle, PctBadge, SuggestedPill } from './StrengthCurveCardBits';
+import { StrengthCurveCompareHeader } from './StrengthCurveCompareHeader';
 import { CURVE_MOCK_COPY } from './mockTokens';
 import { StrengthCurveSpark } from './StrengthCurveSpark';
 import { useAdvancedTokens } from './useAdvancedTokens';
@@ -30,13 +30,13 @@ export function StrengthCurveCompareCard({
       accessibilityRole='radio'
       accessibilityState={{ checked: active }}
       style={{
-        paddingVertical: 10,
+        paddingVertical: 11,
         paddingHorizontal: 12,
         borderRadius: 14,
-        borderWidth: 1.5,
+        borderWidth: active ? 2 : 1,
         borderColor: active ? t.accentText : t.border,
         backgroundColor: active ? t.accentTile : t.card,
-        gap: 8,
+        gap: 7,
         minHeight: 44,
       }}
       onPress={() => {
@@ -44,43 +44,26 @@ export function StrengthCurveCompareCard({
         onSelect(mode);
       }}
     >
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 8,
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: 6,
-            flex: 1,
-            flexWrap: 'wrap',
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: fontWeights.bold,
-              color: active ? t.accentText : t.fg,
-            }}
-          >
-            {c.name}
-          </Text>
-          <PctBadge active={active} growthPct={c.growthPct} t={t} />
-          {suggested ? <SuggestedPill bg={t.accentText} /> : null}
-        </View>
-        <CheckCircle active={active} t={t} />
-      </View>
+      <StrengthCurveCompareHeader
+        active={active}
+        growthPct={c.growthPct}
+        name={c.name}
+        suggested={suggested}
+        t={t}
+      />
       <StrengthCurveSpark
         fillPath={c.sparkFillPath}
         path={c.sparkPath}
         stroke={t.accentText}
       />
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          columnGap: 8,
+          rowGap: 2,
+        }}
+      >
         <Text style={{ ...typography.caption, fontSize: 11, color: t.meta }}>
           ~{c.days} days to full
         </Text>
@@ -88,7 +71,14 @@ export function StrengthCurveCompareCard({
           {c.missLabel}
         </Text>
       </View>
-      <Text style={{ ...typography.caption, fontSize: 12, color: t.meta }}>
+      <Text
+        style={{
+          ...typography.caption,
+          fontSize: 12,
+          lineHeight: 16,
+          color: t.meta,
+        }}
+      >
         {c.desc}
       </Text>
     </AnimatedPressable>

@@ -5,7 +5,7 @@
  * Components use `useThemeColors()` to get the active semantic color palette.
  */
 
-import { useAuth } from '@clerk/clerk-expo';
+import { useAuth } from '@clerk/expo';
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme as useSystemColorScheme } from 'react-native';
 import { api } from '../../convex/_generated/api';

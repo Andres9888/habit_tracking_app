@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { fontWeights, typography } from '@/theme/typography';
 import { CURVE_STRIP } from './mockTokens';
+import { StrengthCurveStripCell } from './StrengthCurveStripCell';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
 interface Props {
@@ -17,22 +18,19 @@ export function StrengthCurveCompareStrip({ selected }: Props) {
       accessibilityElementsHidden
       importantForAccessibility='no-hide-descendants'
       style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 4,
         marginBottom: 12,
-        padding: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 8,
         borderRadius: 12,
         borderWidth: 1,
         borderColor: t.border,
         backgroundColor: t.accentTile,
+        gap: 6,
       }}
     >
-      {CURVE_STRIP.map((cell, i) => {
-        const active = cell.mode === selected;
-        return (
+      {/* Equal-weight cells (flex:1) match Streak/Growth chip rhythm. */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+        {CURVE_STRIP.map((cell, i) => (
           <Fragment key={cell.mode}>
             {i > 0 ? (
               <Text
@@ -40,45 +38,29 @@ export function StrengthCurveCompareStrip({ selected }: Props) {
                   ...typography.caption,
                   fontWeight: fontWeights.bold,
                   color: t.meta,
-                  marginHorizontal: 4,
+                  paddingHorizontal: 2,
+                  flexShrink: 0,
                 }}
               >
                 →
               </Text>
             ) : null}
-            <View
-              style={{
-                minWidth: 48,
-                alignItems: 'center',
-                paddingVertical: 4,
-                paddingHorizontal: 6,
-                borderRadius: 8,
-                backgroundColor: active ? t.accentText : 'transparent',
-                ...(active ? { transform: [{ translateY: -1 }] } : {}),
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 13,
-                  fontWeight: fontWeights.bold,
-                  color: active ? '#fff' : t.accentText,
-                  fontVariant: ['tabular-nums'],
-                }}
-              >
-                {cell.pct}
-              </Text>
-            </View>
+            <StrengthCurveStripCell
+              active={cell.mode === selected}
+              activeBg={t.accentText}
+              inactiveFg={t.accentText}
+              pct={cell.pct}
+            />
           </Fragment>
-        );
-      })}
+        ))}
+      </View>
       <Text
         style={{
-          width: '100%',
           textAlign: 'center',
           fontSize: 11,
+          lineHeight: 14,
           fontWeight: fontWeights.semibold,
           color: t.accentText,
-          marginTop: 4,
         }}
       >
         per successful check-in · pick one curve

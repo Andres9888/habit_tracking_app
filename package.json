@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.37.4",
-    "@clerk/clerk-expo": "^2.19.25",
+    "@clerk/expo": "^3.7.5",
     "@eslint-react/eslint-plugin": "^3.0.0",
     "@expo-google-fonts/literata": "^0.4.3",
     "@react-native-async-storage/async-storage": "2.2.0",

@@ -1,7 +1,7 @@
 import * as BackgroundTask from 'expo-background-task';
 import * as TaskManager from 'expo-task-manager';
 
-import { runBackgroundQueueFlush } from './runBackgroundQueueFlush';
+import { runBackgroundMaintenance } from './runBackgroundMaintenance';
 
 export const OFFLINE_QUEUE_BACKGROUND_TASK =
   'chainday.offlineQueue.backgroundFlush';
@@ -10,11 +10,11 @@ const MINIMUM_INTERVAL_MINUTES = 15;
 
 TaskManager.defineTask(OFFLINE_QUEUE_BACKGROUND_TASK, async () => {
   try {
-    await runBackgroundQueueFlush();
+    await runBackgroundMaintenance();
     return BackgroundTask.BackgroundTaskResult.Success;
   } catch (error) {
     if (__DEV__) {
-      console.warn('[backgroundSync] queue flush failed', error);
+      console.warn('[backgroundSync] maintenance failed', error);
     }
     return BackgroundTask.BackgroundTaskResult.Failed;
   }

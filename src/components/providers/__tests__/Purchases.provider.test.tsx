@@ -1,7 +1,7 @@
 import { render, waitFor } from '@testing-library/react-native';
 import { View } from 'react-native';
 
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   useUser: jest.fn(),
 }));
 jest.mock('../../../hooks/usePremium', () => ({
@@ -20,7 +20,7 @@ jest.mock('../../../lib/purchases', () => ({
   logoutPurchases: jest.fn(),
 }));
 
-import { useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/expo';
 import { PremiumProvider } from '../../../hooks/usePremium';
 import {
   identifyUser,
