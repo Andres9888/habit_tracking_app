@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * RevenueCat Webhook Handler
  *
@@ -24,6 +25,8 @@ const GRANT_EVENTS = new Set([
 ]);
 const REVOKE_EVENTS = new Set(['CANCELLATION', 'EXPIRATION']);
 const BILLING_EVENTS = new Set(['BILLING_ISSUE']);
+const TRANSFER_EVENTS = new Set(['TRANSFER']);
+const REFUND_EVENTS = new Set(['REFUND', 'REFUND_REVERSED']);
 
 function getWebhookEventTimestamp(
   event: Record<string, number | string | undefined>
@@ -136,6 +139,34 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
         clerkId: appUserId,
         eventId,
         eventTimestamp,
+      });
+    } else if (TRANSFER_EVENTS.has(eventType)) {
+      await ctx.runMutation(internal.subscriptions.transferPremium, {
+        clerkId: appUserId,
+        eventId,
+        eventTimestamp,
+        transferredFrom: Array.isArray(event.transferred_from)
+          ? event.transferred_from.filter(
+              (id: unknown): id is string => typeof id === 'string'
+            )
+          : [],
+        transferredTo: Array.isArray(event.transferred_to)
+          ? event.transferred_to.filter(
+              (id: unknown): id is string => typeof id === 'string'
+            )
+          : [appUserId],
+      });
+    } else if (REFUND_EVENTS.has(eventType)) {
+      await ctx.runMutation(internal.subscriptions.handleRefund, {
+        clerkId: appUserId,
+        eventId,
+        eventTimestamp,
+        eventType,
+        expiresAt: validatedExpiresAt,
+        isTrialing: event.period_type === 'TRIAL',
+        productId: event.product_id,
+        revenueCatId: event.original_app_user_id,
+        trialEndsAt: validatedTrialEndsAt,
       });
     } else {
       // Unhandled event type — no action needed

@@ -226,3 +226,187 @@ export const setBillingIssue = internalMutation({
     }
   },
 });
+
+/** Transfer entitlements between RevenueCat App User IDs. */
+export const transferPremium = internalMutation({
+  args: {
+    clerkId: v.string(),
+    eventId: v.string(),
+    eventTimestamp: v.number(),
+    transferredFrom: v.array(v.string()),
+    transferredTo: v.array(v.string()),
+  },
+  handler: async (
+    ctx,
+    { clerkId, eventId, eventTimestamp, transferredFrom, transferredTo }
+  ) => {
+    const now = Date.now();
+    const destinationIds = new Set([...transferredTo, clerkId]);
+
+    for (const sourceClerkId of transferredFrom) {
+      if (destinationIds.has(sourceClerkId)) continue;
+
+      const existing = await ctx.db
+        .query('subscriptions')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', sourceClerkId))
+        .first();
+
+      if (!existing || existing.lastWebhookEventId === eventId) {
+        continue;
+      }
+
+      if (
+        isStaleWebhookTimestamp(
+          existing.lastWebhookEventTimestamp,
+          eventTimestamp
+        )
+      ) {
+        continue;
+      }
+
+      await ctx.db.patch(existing._id, {
+        hasBillingIssue: false,
+        lastWebhookAt: now,
+        lastWebhookEvent: 'TRANSFER',
+        lastWebhookEventId: eventId,
+        lastWebhookEventTimestamp: eventTimestamp,
+        status: 'expired',
+        updatedAt: now,
+      });
+      await updateUserSettingsPremium(ctx, sourceClerkId, false);
+    }
+
+    for (const destinationClerkId of destinationIds) {
+      const existing = await ctx.db
+        .query('subscriptions')
+        .withIndex('by_clerk_id', (q) => q.eq('clerkId', destinationClerkId))
+        .first();
+
+      if (existing && existing.lastWebhookEventId === eventId) {
+        continue;
+      }
+
+      if (
+        existing &&
+        isStaleWebhookTimestamp(
+          existing.lastWebhookEventTimestamp,
+          eventTimestamp
+        )
+      ) {
+        continue;
+      }
+
+      // eslint-disable-next-line unicorn/prefer-ternary
+      if (existing) {
+        await ctx.db.patch(existing._id, {
+          cancelledAt: undefined,
+          hasBillingIssue: false,
+          lastWebhookAt: now,
+          lastWebhookEvent: 'TRANSFER',
+          lastWebhookEventId: eventId,
+          lastWebhookEventTimestamp: eventTimestamp,
+          status: 'active',
+          updatedAt: now,
+        });
+      } else {
+        await ctx.db.insert('subscriptions', {
+          clerkId: destinationClerkId,
+          createdAt: now,
+          hasBillingIssue: false,
+          lastWebhookAt: now,
+          lastWebhookEvent: 'TRANSFER',
+          lastWebhookEventId: eventId,
+          lastWebhookEventTimestamp: eventTimestamp,
+          planType: 'monthly',
+          revenueCatId: destinationClerkId,
+          startedAt: now,
+          status: 'active',
+          updatedAt: now,
+        });
+      }
+
+      await updateUserSettingsPremium(ctx, destinationClerkId, true);
+    }
+  },
+});
+
+/** Handle refund and refund reversal webhook events idempotently. */
+export const handleRefund = internalMutation({
+  args: {
+    clerkId: v.string(),
+    eventId: v.string(),
+    eventTimestamp: v.number(),
+    eventType: v.string(),
+    expiresAt: v.optional(v.number()),
+    isTrialing: v.optional(v.boolean()),
+    productId: v.optional(v.string()),
+    revenueCatId: v.optional(v.string()),
+    trialEndsAt: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const existing = await ctx.db
+      .query('subscriptions')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
+      .first();
+
+    if (existing && existing.lastWebhookEventId === args.eventId) {
+      return;
+    }
+
+    if (
+      existing &&
+      isStaleWebhookTimestamp(
+        existing.lastWebhookEventTimestamp,
+        args.eventTimestamp
+      )
+    ) {
+      return;
+    }
+
+    const isReversal = args.eventType === 'REFUND_REVERSED';
+    const planType = args.productId?.includes('yearly') ? 'yearly' : 'monthly';
+    const status = isReversal
+      ? args.isTrialing
+        ? 'trialing'
+        : 'active'
+      : 'expired';
+
+    // eslint-disable-next-line unicorn/prefer-ternary
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        expiresAt: args.expiresAt ?? existing.expiresAt,
+        hasBillingIssue: false,
+        lastWebhookAt: now,
+        lastWebhookEvent: args.eventType,
+        lastWebhookEventId: args.eventId,
+        lastWebhookEventTimestamp: args.eventTimestamp,
+        planType,
+        productId: args.productId ?? existing.productId,
+        status,
+        trialEndsAt: args.trialEndsAt ?? existing.trialEndsAt,
+        updatedAt: now,
+      });
+    } else {
+      await ctx.db.insert('subscriptions', {
+        clerkId: args.clerkId,
+        createdAt: now,
+        expiresAt: args.expiresAt,
+        hasBillingIssue: false,
+        lastWebhookAt: now,
+        lastWebhookEvent: args.eventType,
+        lastWebhookEventId: args.eventId,
+        lastWebhookEventTimestamp: args.eventTimestamp,
+        planType,
+        productId: args.productId,
+        revenueCatId: args.revenueCatId,
+        startedAt: now,
+        status,
+        trialEndsAt: args.trialEndsAt,
+        updatedAt: now,
+      });
+    }
+
+    await updateUserSettingsPremium(ctx, args.clerkId, isReversal);
+  },
+});
