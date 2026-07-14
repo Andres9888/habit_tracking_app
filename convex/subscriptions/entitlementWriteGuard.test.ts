@@ -1,10 +1,11 @@
 /**
  * Security guard (P2): entitlement writes must stay webhook-only.
  *
- * `hasPremium` on `userSettings` is the premium entitlement source of truth
- * (see subscriptions/premiumCheck.ts). It must be written ONLY by the
- * RevenueCat webhook path (subscriptions/helpers.ts::updateUserSettingsPremium).
- * Any other write site is a premium self-grant vector (the P0 class).
+ * `subscriptions` is the premium entitlement source of truth
+ * (see subscriptions/premiumCheck.ts). The derived `userSettings.hasPremium`
+ * UI cache must be written ONLY by the RevenueCat webhook path
+ * (subscriptions/helpers.ts::updateUserSettingsPremium). Any other write site
+ * is a premium self-grant vector (the P0 class).
  *
  * This test scans the Convex source tree and fails if `hasPremium` appears
  * inside a `ctx.db.patch(...)` / `ctx.db.insert(...)` call anywhere except the

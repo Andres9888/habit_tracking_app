@@ -30,25 +30,25 @@ ChainDay keeps its existing Expo + Clerk + Convex + RevenueCat + Sentry stack, b
 
 ## Phase 2 - Subscription Authority
 
-- [ ] Make `subscriptions` the durable premium source for backend gates and keep `userSettings.hasPremium` derived UI state per `specs/revenuecat-iap.md` [wave:2]
-- [ ] Handle RevenueCat `TRANSFER`, `REFUND`, and `REFUND_REVERSED` webhook events idempotently per `specs/revenuecat-iap.md` [wave:2]
-- [ ] Add canonical subscriber-state reconciliation after webhook receipt or document the deferred API-secret requirement per `specs/revenuecat-iap.md` [needs:RevenueCat webhook signature verification]
-- [ ] Add Convex tests for stale webhook ordering, cancellation without early revoke, expiration revoke, refund/transfer handling, and premium gate trust boundaries per `specs/revenuecat-iap.md` [needs:subscriptions source of truth]
-- [ ] Add native purchase/restore validation checklist for dev-client or TestFlight and web fallback behavior per `specs/revenuecat-iap.md` [wave:2]
+- [x] Make `subscriptions` the durable premium source for backend gates and keep `userSettings.hasPremium` derived UI state per `specs/revenuecat-iap.md` [wave:2]
+- [x] Handle RevenueCat `TRANSFER`, `REFUND`, and `REFUND_REVERSED` webhook events idempotently per `specs/revenuecat-iap.md` [wave:2]
+- [x] Add canonical subscriber-state reconciliation after webhook receipt or document the deferred API-secret requirement per `specs/revenuecat-iap.md` [needs:RevenueCat webhook signature verification]
+- [x] Add Convex tests for stale webhook ordering, cancellation without early revoke, expiration revoke, refund/transfer handling, and premium gate trust boundaries per `specs/revenuecat-iap.md` [needs:subscriptions source of truth]
+- [x] Add native purchase/restore validation checklist for dev-client or TestFlight and web fallback behavior per `specs/revenuecat-iap.md` [wave:2]
 
 ## Phase 3 - Reminder Reliability
 
-- [ ] Persist scheduled notification identifiers or add an equivalent deterministic reconciliation strategy for habit reminders per `specs/expo-notifications.md` [wave:3]
-- [ ] Move archive/delete reminder cancellation after successful Convex mutations across single, batch, and archived-habit flows per `specs/expo-notifications.md` [needs:reminder identifier strategy]
-- [ ] Reschedule reminders on restore/unarchive when saved reminder settings are enabled per `specs/expo-notifications.md` [needs:reminder identifier strategy]
-- [ ] Include habit deep-link data in scheduled reminder payloads and test notification-tap routing to habit detail per `specs/expo-notifications.md` [wave:3]
-- [ ] Add notification utility and flow tests for schedule, cancel, permission options, channel-before-permission, archive, delete, restore, and unarchive behavior per `specs/expo-notifications.md` [needs:reminder identifier strategy]
-- [ ] Extend background task coverage for registration status/error paths and queued flush preconditions per `specs/expo-notifications-background.md` [wave:3]
+- [x] Persist scheduled notification identifiers or add an equivalent deterministic reconciliation strategy for habit reminders per `specs/expo-notifications.md` [wave:3]
+- [x] Move archive/delete reminder cancellation after successful Convex mutations across single, batch, and archived-habit flows per `specs/expo-notifications.md` [needs:reminder identifier strategy]
+- [x] Reschedule reminders on restore/unarchive when saved reminder settings are enabled per `specs/expo-notifications.md` [needs:reminder identifier strategy]
+- [x] Include habit deep-link data in scheduled reminder payloads and test notification-tap routing to habit detail per `specs/expo-notifications.md` [wave:3]
+- [x] Add notification utility and flow tests for schedule, cancel, permission options, channel-before-permission, archive, delete, restore, and unarchive behavior per `specs/expo-notifications.md` [needs:reminder identifier strategy]
+- [x] Extend background task coverage for registration status/error paths and queued flush preconditions per `specs/expo-notifications-background.md` [wave:3]
 
 ## Phase 4 - Storage, Monitoring, and Native Release Proof
 
-- [ ] Audit profile-image upload and deletion flows against Convex storage ownership invariants per `specs/convex-file-storage.md` [wave:4]
-- [ ] Add or update storage ownership tests for cross-user storage reuse, invalid metadata cleanup, no-op reattach, and account deletion cleanup per `specs/convex-file-storage.md` [needs:storage ownership audit]
+- [x] Audit profile-image upload and deletion flows against Convex storage ownership invariants per `specs/convex-file-storage.md` [wave:4]
+- [x] Add or update storage ownership tests for cross-user storage reuse, invalid metadata cleanup, no-op reattach, and account deletion cleanup per `specs/convex-file-storage.md` [needs:storage ownership audit]
 - [ ] Verify Sentry native plugin, Metro config, release naming, source-map upload settings, and EAS secret requirements per `specs/sentry-react-native.md` [wave:4]
 - [ ] Verify Expo SDK 54/EAS config for notifications, background task, RevenueCat native module, Clerk OAuth scheme, and Sentry plugin per `specs/expo-mobile-runtime.md` [wave:4]
 - [ ] Run release readiness checks: `npx convex env list`, Convex typecheck/codegen, targeted Jest suites for auth/subscriptions/reminders/storage/Sentry, `npm run lint` or scoped typecheck, and a native dev-client/TestFlight smoke path per specs [needs:Phase 1 - MVP Launch Guards]

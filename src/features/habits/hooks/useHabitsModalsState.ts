@@ -24,6 +24,7 @@ import { useSyncAllHabitStates } from './modalsStateHelpers';
 import { useOptimisticToggleMutation } from '../../../lib/optimistic';
 import { sanitizeSettingsPayload } from '../../../lib/settings/sanitizeSettingsPayload';
 import { updateSettingsWithFallback } from '../../../lib/settings/updateSettingsWithFallback';
+import { cancelHabitReminder } from '../../../utils/notifications';
 import type { HabitsModalsState } from './types';
 
 interface UseHabitsModalsStateProps {
@@ -152,6 +153,7 @@ export function useHabitsModalsState({
   const handleArchive = useCallback(
     async (habitId: Id<'habits'>) => {
       await archiveHabit({ habitId });
+      await cancelHabitReminder(String(habitId));
     },
     [archiveHabit]
   );

@@ -9,6 +9,14 @@ import { recordProductEvent } from './lib/productEvents';
 // Export premium checking utilities
 export { hasPremiumAccess, requirePremium } from './subscriptions/premiumCheck';
 
+const subscriptionPlanType = v.union(v.literal('monthly'), v.literal('yearly'));
+type SubscriptionStatus =
+  | 'active'
+  | 'cancelled'
+  | 'expired'
+  | 'past_due'
+  | 'trialing';
+
 /** Get subscription by Clerk ID */
 export const getByClerkId = query({
   args: { clerkId: v.string() },
@@ -116,6 +124,90 @@ export const grantPremium = internalMutation({
     }
     await updateUserSettingsPremium(ctx, args.clerkId, true);
     if (args.eventType === 'INITIAL_PURCHASE') {
+      await recordProductEvent(ctx, args.clerkId, 'purchase_succeeded', {
+        source: args.isTrialing ? 'revenuecat_trial' : 'revenuecat_paid',
+      });
+    }
+  },
+});
+
+/** Reconcile durable entitlement state from RevenueCat's canonical subscriber API. */
+export const reconcileRevenueCatSubscriber = internalMutation({
+  args: {
+    cancelledAt: v.optional(v.number()),
+    clerkId: v.string(),
+    eventId: v.string(),
+    eventTimestamp: v.number(),
+    eventType: v.string(),
+    expiresAt: v.optional(v.number()),
+    hasBillingIssue: v.boolean(),
+    isActive: v.boolean(),
+    isTrialing: v.boolean(),
+    planType: subscriptionPlanType,
+    productId: v.optional(v.string()),
+    revenueCatId: v.optional(v.string()),
+    trialEndsAt: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const now = Date.now();
+    const existing = await ctx.db
+      .query('subscriptions')
+      .withIndex('by_clerk_id', (q) => q.eq('clerkId', args.clerkId))
+      .first();
+
+    if (existing && existing.lastWebhookEventId === args.eventId) {
+      return;
+    }
+
+    if (
+      existing &&
+      isStaleWebhookTimestamp(
+        existing.lastWebhookEventTimestamp,
+        args.eventTimestamp
+      )
+    ) {
+      return;
+    }
+
+    const status: SubscriptionStatus = args.isActive
+      ? args.hasBillingIssue
+        ? 'past_due'
+        : args.isTrialing
+          ? 'trialing'
+          : args.cancelledAt
+            ? 'cancelled'
+            : 'active'
+      : 'expired';
+
+    const patch = {
+      cancelledAt: args.cancelledAt,
+      expiresAt: args.expiresAt,
+      hasBillingIssue: args.hasBillingIssue,
+      lastWebhookAt: now,
+      lastWebhookEvent: args.eventType,
+      lastWebhookEventId: args.eventId,
+      lastWebhookEventTimestamp: args.eventTimestamp,
+      planType: args.planType,
+      productId: args.productId,
+      revenueCatId: args.revenueCatId,
+      status,
+      trialEndsAt: args.trialEndsAt,
+      updatedAt: now,
+    };
+
+    if (existing) {
+      await ctx.db.patch(existing._id, patch);
+    } else {
+      await ctx.db.insert('subscriptions', {
+        ...patch,
+        clerkId: args.clerkId,
+        createdAt: now,
+        startedAt: now,
+      });
+    }
+
+    await updateUserSettingsPremium(ctx, args.clerkId, args.isActive);
+    if (args.eventType === 'INITIAL_PURCHASE' && args.isActive) {
       await recordProductEvent(ctx, args.clerkId, 'purchase_succeeded', {
         source: args.isTrialing ? 'revenuecat_trial' : 'revenuecat_paid',
       });

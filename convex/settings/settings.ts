@@ -13,6 +13,7 @@ import { normalizeDarkMode } from './normalizers';
 import { DEFAULT_SETTINGS } from './types';
 import { toSettingsResponse } from './getResponse';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
+import { hasPremiumAccess } from '../subscriptions/premiumCheck';
 
 export const get = query({
   args: {},
@@ -28,7 +29,10 @@ export const get = query({
       .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
       .first();
 
-    return toSettingsResponse(settings);
+    return toSettingsResponse(
+      settings,
+      await hasPremiumAccess(ctx, identity.subject)
+    );
   },
   returns: settingsReturnValidator,
 });

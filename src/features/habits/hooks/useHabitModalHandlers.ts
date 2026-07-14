@@ -1,18 +1,25 @@
 import { useCallback } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit, HabitSettingsUpdate } from '../types';
-import type { HabitModalDeps, HabitModalSetters } from './useHabitModalHandlers.types';
+import type {
+  HabitModalDeps,
+  HabitModalSetters,
+} from './useHabitModalHandlers.types';
 import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import { showGenericError, showSaveError } from '../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 import { updateSettingsWithFallback } from '../../../lib/settings/updateSettingsWithFallback';
+import { cancelHabitReminder } from '../../../utils/notifications';
 
 export function useHabitModalHandlers(
   setters: HabitModalSetters,
   deps: HabitModalDeps
 ) {
   const openHabitDetail = useCallback(
-    (habit: Habit, initialTab: 'progress' | 'motivation' | 'manage' = 'progress') => {
+    (
+      habit: Habit,
+      initialTab: 'progress' | 'motivation' | 'manage' = 'progress'
+    ) => {
       setters.setSelectedHabit(habit);
       setters.setHabitDetailInitialTab(initialTab);
       setters.setIsHabitDetailOpen(true);
@@ -20,7 +27,10 @@ export function useHabitModalHandlers(
     []
   );
 
-  const openHabitCalendar = useCallback((habit: Habit) => { setters.setSelectedHabit(habit); setters.setIsHabitCalendarOpen(true); }, []);
+  const openHabitCalendar = useCallback((habit: Habit) => {
+    setters.setSelectedHabit(habit);
+    setters.setIsHabitCalendarOpen(true);
+  }, []);
 
   const openPauseModal = useCallback(
     (habitId: Id<'habits'>) => {
@@ -46,13 +56,25 @@ export function useHabitModalHandlers(
     }
   }, [deps.habitToPause, deps.pauseHabit]);
 
-  const openEditHabit = useCallback((habit: Habit | null) => { setters.setHabitToEdit(habit); if (habit) setters.setShowEditScreen(true); }, []);
+  const openEditHabit = useCallback((habit: Habit | null) => {
+    setters.setHabitToEdit(habit);
+    if (habit) setters.setShowEditScreen(true);
+  }, []);
 
-  const closeEditScreen = useCallback(() => { setters.setShowEditScreen(false); setters.setHabitToEdit(null); }, []);
+  const closeEditScreen = useCallback(() => {
+    setters.setShowEditScreen(false);
+    setters.setHabitToEdit(null);
+  }, []);
 
-  const openCreateHabitScreen = useCallback(() => { setters.setIsCreateHabitOpen(true); setters.setHabitToEdit(null); }, []);
+  const openCreateHabitScreen = useCallback(() => {
+    setters.setIsCreateHabitOpen(true);
+    setters.setHabitToEdit(null);
+  }, []);
 
-  const closeCreateHabit = useCallback(() => { setters.setIsCreateHabitOpen(false); setters.setHabitToEdit(null); }, []);
+  const closeCreateHabit = useCallback(() => {
+    setters.setIsCreateHabitOpen(false);
+    setters.setHabitToEdit(null);
+  }, []);
 
   const onSettingsChange = useCallback(
     async (updates: Partial<HabitSettingsUpdate>) => {
@@ -80,6 +102,7 @@ export function useHabitModalHandlers(
     async (habitId: Id<'habits'>) => {
       try {
         await deps.removeHabit({ habitId });
+        await cancelHabitReminder(String(habitId));
         setters.setIsHabitDetailOpen(false);
         setters.setSelectedHabit(null);
       } catch (error) {

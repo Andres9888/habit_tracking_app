@@ -15,6 +15,8 @@ export interface ArchivedHabit {
   currentStreak?: number;
   totalCompletions?: number;
   archivedAt?: number;
+  remindersEnabled?: boolean;
+  reminderTime?: string;
   _creationTime: number;
 }
 

@@ -5,8 +5,13 @@
 
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
+import { getStorageMetadata } from './storageMetadata';
 import { getInvalidImageUploadReason } from './storageValidation';
-import { claimStorageForUser, getStorageOwner } from './storageOwnership';
+import {
+  claimStorageForUser,
+  getStorageOwner,
+  releaseStorageForUser,
+} from './storageOwnership';
 
 /**
  * Generate a signed upload URL for file storage
@@ -40,12 +45,15 @@ export const validateImageUpload = mutation({
       throw new Error('Not authorized to use this uploaded file');
     }
 
-    const metadata = await ctx.storage.getMetadata(args.storageId);
+    const metadata = await getStorageMetadata(ctx, args.storageId);
     const validationError = getInvalidImageUploadReason(metadata);
 
     if (validationError) {
       if (metadata) {
         await ctx.storage.delete(args.storageId);
+      }
+      if (owner?.userId === identity.subject) {
+        await releaseStorageForUser(ctx, args.storageId, identity.subject);
       }
       throw new Error(validationError);
     }

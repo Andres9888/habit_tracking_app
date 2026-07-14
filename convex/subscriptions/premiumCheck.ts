@@ -8,7 +8,26 @@
  * premium status across all mutations.
  */
 
+import type { Doc } from '../_generated/dataModel';
 import type { QueryCtx } from '../_generated/server';
+
+const PREMIUM_STATUSES = new Set([
+  'active',
+  'trialing',
+  'past_due',
+  'cancelled',
+]);
+
+function hasUnexpiredAccess(subscription: Doc<'subscriptions'>): boolean {
+  if (!PREMIUM_STATUSES.has(subscription.status)) {
+    return false;
+  }
+
+  return (
+    typeof subscription.expiresAt !== 'number' ||
+    subscription.expiresAt > Date.now()
+  );
+}
 
 /**
  * Check if a user has premium access
@@ -21,12 +40,12 @@ export async function hasPremiumAccess(
   ctx: QueryCtx,
   userId: string
 ): Promise<boolean> {
-  const settings = await ctx.db
-    .query('userSettings')
-    .withIndex('by_userId', (q) => q.eq('userId', userId))
+  const subscription = await ctx.db
+    .query('subscriptions')
+    .withIndex('by_clerk_id', (q) => q.eq('clerkId', userId))
     .first();
 
-  return settings?.hasPremium ?? false;
+  return subscription ? hasUnexpiredAccess(subscription) : false;
 }
 
 /**

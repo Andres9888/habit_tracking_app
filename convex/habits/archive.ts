@@ -104,6 +104,7 @@ export const deleteAllArchived = mutation({
       .withIndex('by_userId', (q) => q.eq('userId', identity!.subject))
       .filter((q) => q.eq(q.field('archived'), true))
       .collect();
+    const habitIds = archivedHabits.map((habit) => habit._id);
     let deletedCount = 0;
     for (const habit of archivedHabits) {
       const records = await ctx.db
@@ -122,7 +123,10 @@ export const deleteAllArchived = mutation({
       await ctx.db.delete(habit._id);
       deletedCount++;
     }
-    return { deletedCount };
+    return { deletedCount, habitIds };
   },
-  returns: v.object({ deletedCount: v.number() }),
+  returns: v.object({
+    deletedCount: v.number(),
+    habitIds: v.array(v.id('habits')),
+  }),
 });

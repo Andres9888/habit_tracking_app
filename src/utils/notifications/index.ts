@@ -20,6 +20,11 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
   return mod.ensureNotificationPermissions();
 }
 
+export async function hasNotificationPermissions(): Promise<boolean> {
+  const mod = await import('./permissions');
+  return mod.hasNotificationPermissions();
+}
+
 export async function cancelHabitReminder(habitId: string): Promise<void> {
   const mod = await import('./habitReminders');
   return mod.cancelHabitReminder(habitId);
@@ -30,6 +35,17 @@ export async function scheduleHabitReminder(
 ): ReturnType<typeof import('./habitReminders').scheduleHabitReminder> {
   const mod = await import('./habitReminders');
   return mod.scheduleHabitReminder(...args);
+}
+
+export async function rescheduleHabitReminderFromSettings(
+  ...args: Parameters<
+    typeof import('./habitReminderReschedule').rescheduleHabitReminderFromSettings
+  >
+): ReturnType<
+  typeof import('./habitReminderReschedule').rescheduleHabitReminderFromSettings
+> {
+  const mod = await import('./habitReminderReschedule');
+  return mod.rescheduleHabitReminderFromSettings(...args);
 }
 
 export {

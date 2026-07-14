@@ -7,6 +7,7 @@ import { logInteraction } from '../../../lib/analytics/interactions';
 import { optimisticStore } from '../../../lib/optimistic';
 import { showGenericError } from '../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
+import { cancelHabitReminder } from '../../../utils/notifications';
 
 export interface UseHabitsArchiveResult {
   handleArchive: (habitId: Id<'habits'>) => Promise<void>;
@@ -34,6 +35,7 @@ export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
 
       try {
         await archiveHabitMutation({ habitId });
+        await cancelHabitReminder(String(habitId));
         optimisticStore.confirm(operationId);
         logInteraction('habit_archived', { habitId, habitName });
       } catch (error) {

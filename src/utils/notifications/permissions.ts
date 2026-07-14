@@ -69,3 +69,18 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
     return false;
   }
 }
+
+export async function hasNotificationPermissions(): Promise<boolean> {
+  if (Platform.OS === 'web') {
+    return false;
+  }
+
+  try {
+    await configureAndroidChannel();
+    const currentPermissions = await Notifications.getPermissionsAsync();
+    return isNotificationsPermissionGranted(currentPermissions);
+  } catch (error) {
+    if (__DEV__) console.error('hasNotificationPermissions failed', error);
+    return false;
+  }
+}

@@ -62,6 +62,8 @@ Use public SDK keys in the app bundle and secrets only on the server.
 | `EXPO_PUBLIC_REVENUECAT_IOS_KEY` | Mobile client | Yes for iOS | Public RevenueCat SDK key for the iOS app. Safe to ship in the app bundle. |
 | `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` | Mobile client | Yes for Android | Public RevenueCat SDK key for the Android app. Safe to ship in the app bundle. |
 | `REVENUECAT_WEBHOOK_SECRET` | Convex/server | Yes | Server-only webhook signing secret. Never expose through `EXPO_PUBLIC_`. |
+| `REVENUECAT_REST_API_KEY` | Convex/server | Yes | Server-only RevenueCat REST API secret key used to call `GET /v1/subscribers/{app_user_id}` after verified webhooks. Never expose through `EXPO_PUBLIC_`. |
+| `REVENUECAT_PREMIUM_ENTITLEMENT_ID` | Convex/server | Optional | RevenueCat entitlement identifier to reconcile. Defaults to `premium`. |
 | `CONVEX_URL` / deployment URL | Client/server config | Yes elsewhere in app | Webhook URL should be configured in RevenueCat dashboard as `https://<deployment-name>.convex.site/revenuecat-webhook`. |
 
 ### Client Init Code

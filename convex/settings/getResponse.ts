@@ -7,7 +7,10 @@ import { DEFAULT_SETTINGS } from './types';
 // stale: progressEmojis/darkMode/completionSoundType all diverged).
 type StoredSettings = Doc<'userSettings'> | null | undefined;
 
-export function toSettingsResponse(settings: StoredSettings) {
+export function toSettingsResponse(
+  settings: StoredSettings,
+  derivedHasPremium: boolean = DEFAULT_SETTINGS.hasPremium
+) {
   return {
     appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
     catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
@@ -27,7 +30,7 @@ export function toSettingsResponse(settings: StoredSettings) {
       settings?.habitSortMode,
       settings?.sortHabitsAlphabetically
     ),
-    hasPremium: settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium,
+    hasPremium: derivedHasPremium,
     progressEmojis: settings?.progressEmojis,
     customProgressEmojis: settings?.customProgressEmojis,
     reduceMotion: settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,

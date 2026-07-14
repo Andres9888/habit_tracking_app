@@ -33,14 +33,18 @@ export function useHabitDelete(habits: Habit[]) {
             style: 'destructive',
             onPress: async () => {
               try {
-                await cancelHabitReminder(String(habitId));
                 await removeHabit({ habitId });
+                await cancelHabitReminder(String(habitId));
                 triggerHaptic('success');
                 logInteraction('habit_deleted', { habitId, habitName });
               } catch (error_) {
-                if (__DEV__) console.error('[useHabitDelete] Delete failed:', error_);
+                if (__DEV__)
+                  console.error('[useHabitDelete] Delete failed:', error_);
                 triggerHaptic('error');
-                Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
+                Alert.alert(
+                  'Error',
+                  `Failed to delete "${habitName}". Please try again.`
+                );
               }
             },
           },

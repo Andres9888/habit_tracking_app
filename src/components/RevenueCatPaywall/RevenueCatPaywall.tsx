@@ -29,7 +29,13 @@ export function RevenueCatPaywall(props: RevenueCatPaywallProps | undefined) {
   }
 
   if (isWebPlatform) {
-    return <WebFallback visible={visible} onClose={onClose} />;
+    return (
+      <WebFallback
+        dismissible={dismissible}
+        visible={visible}
+        onClose={onClose}
+      />
+    );
   }
 
   if (!visible) return null;

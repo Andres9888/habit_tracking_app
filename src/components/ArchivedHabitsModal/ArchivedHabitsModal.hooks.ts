@@ -4,6 +4,7 @@ import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import { triggerHaptic } from '@/utils/haptics';
 import { useCachedQuery } from '@/lib/queryCache';
+import { rescheduleHabitReminderFromSettings } from '@/utils/notifications';
 import { useBatchArchiveActions } from './useBatchArchiveActions';
 import { useArchiveDeleteActions } from './useArchiveDeleteActions';
 
@@ -37,7 +38,8 @@ export const useArchivedHabitsModalLogic = () => {
 
   const { handleBatchRestore, handleBatchDelete } = useBatchArchiveActions(
     unarchiveHabit,
-    removeHabit
+    removeHabit,
+    archivedHabits
   );
 
   const { handlePermanentDelete, handleDeleteAll } = useArchiveDeleteActions({
@@ -51,8 +53,10 @@ export const useArchivedHabitsModalLogic = () => {
     habitName: string
   ): Promise<boolean> => {
     triggerHaptic('tap');
+    const habit = archivedHabits.find((h) => h._id === habitId);
     try {
       await unarchiveHabit({ habitId });
+      if (habit) await rescheduleHabitReminderFromSettings(habit);
       triggerHaptic('success');
       return true;
     } catch (error_) {

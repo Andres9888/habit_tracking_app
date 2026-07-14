@@ -121,6 +121,7 @@ import type * as users from "../users.js";
 import type * as usersProfileImage from "../usersProfileImage.js";
 import type * as webhooks_revenuecat from "../webhooks/revenuecat.js";
 import type * as webhooks_revenuecatSignature from "../webhooks/revenuecatSignature.js";
+import type * as webhooks_revenuecatSubscriber from "../webhooks/revenuecatSubscriber.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -239,6 +240,7 @@ declare const fullApi: ApiFromModules<{
   usersProfileImage: typeof usersProfileImage;
   "webhooks/revenuecat": typeof webhooks_revenuecat;
   "webhooks/revenuecatSignature": typeof webhooks_revenuecatSignature;
+  "webhooks/revenuecatSubscriber": typeof webhooks_revenuecatSubscriber;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

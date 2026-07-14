@@ -2,7 +2,20 @@ import { renderHook } from '@testing-library/react-native';
 import type { CustomerInfo, PurchasesPackage } from 'react-native-purchases';
 
 jest.mock('../../../lib/purchases', () => ({
+  createPurchasesUnavailableError: jest.fn(
+    () => new Error('Purchases unavailable')
+  ),
+  getPurchaseRuntimeInfo: jest.fn(() => ({
+    checklist: [],
+    message: '',
+    runtime: 'native',
+    title: '',
+  })),
   isPurchasesAvailable: jest.fn(() => true),
+  isPurchasesUnavailableError: jest.fn(
+    (error: unknown) =>
+      typeof error === 'object' && error !== null && 'runtime' in error
+  ),
   Purchases: {
     getCustomerInfo: jest.fn(),
     purchasePackage: jest.fn(),
@@ -10,7 +23,11 @@ jest.mock('../../../lib/purchases', () => ({
   },
 }));
 
-import { isPurchasesAvailable, Purchases } from '../../../lib/purchases';
+import {
+  createPurchasesUnavailableError,
+  getPurchaseRuntimeInfo,
+  Purchases,
+} from '../../../lib/purchases';
 import { usePremiumActions } from '../usePremiumActions';
 
 const pkg = { identifier: 'annual' } as PurchasesPackage;
@@ -24,7 +41,8 @@ const premiumCustomer = {
   },
 } as unknown as CustomerInfo;
 
-const mockAvailable = jest.mocked(isPurchasesAvailable);
+const mockUnavailableError = jest.mocked(createPurchasesUnavailableError);
+const mockRuntimeInfo = jest.mocked(getPurchaseRuntimeInfo);
 const mockPurchase = jest.mocked(Purchases.purchasePackage);
 const mockRestore = jest.mocked(Purchases.restorePurchases);
 
@@ -40,7 +58,18 @@ function setup() {
 describe('usePremiumActions purchase safety', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    mockAvailable.mockReturnValue(true);
+    mockRuntimeInfo.mockReturnValue({
+      checklist: [],
+      message: '',
+      runtime: 'native',
+      title: '',
+    });
+    mockUnavailableError.mockImplementation(() => {
+      const runtimeInfo = mockRuntimeInfo();
+      return Object.assign(new Error(runtimeInfo.message), {
+        runtime: runtimeInfo.runtime,
+      });
+    });
   });
 
   it('accepts only a purchase that returns an active entitlement', async () => {
@@ -119,5 +148,46 @@ describe('usePremiumActions purchase safety', () => {
     await expect(result.current.restorePurchases()).rejects.toBe(failure);
 
     expect(setError).toHaveBeenLastCalledWith('Failed to restore purchases');
+  });
+
+  it('surfaces the web fallback message for unavailable purchases', async () => {
+    mockRuntimeInfo.mockReturnValue({
+      checklist: [],
+      message:
+        'Premium purchases and restores are available in the iOS or Android app.',
+      runtime: 'web',
+      title: 'Use the mobile app',
+    });
+    const { result, setError } = setup();
+
+    await expect(result.current.purchasePackage(pkg)).rejects.toThrow(
+      'Premium purchases and restores are available in the iOS or Android app.'
+    );
+
+    expect(mockPurchase).not.toHaveBeenCalled();
+    expect(setError).toHaveBeenLastCalledWith(
+      'Premium purchases and restores are available in the iOS or Android app.'
+    );
+  });
+
+  it('surfaces the native validation checklist for unavailable restores', async () => {
+    mockRuntimeInfo.mockReturnValue({
+      checklist: [
+        'Open this flow in a development client or TestFlight build.',
+      ],
+      message: 'Open this flow in a development client or TestFlight build.',
+      runtime: 'native-unavailable',
+      title: 'Native purchase validation needed',
+    });
+    const { result, setError } = setup();
+
+    await expect(result.current.restorePurchases()).rejects.toThrow(
+      'Open this flow in a development client or TestFlight build.'
+    );
+
+    expect(mockRestore).not.toHaveBeenCalled();
+    expect(setError).toHaveBeenLastCalledWith(
+      'Open this flow in a development client or TestFlight build.'
+    );
   });
 });

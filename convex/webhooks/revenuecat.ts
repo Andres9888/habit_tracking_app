@@ -15,18 +15,9 @@ import { httpAction } from '../_generated/server';
 import { internal } from '../_generated/api';
 import { verifyRevenueCatSignature } from './revenuecatSignature';
 import { validateWebhookTimestamp } from '../subscriptions/premiumCheck';
+import { fetchCanonicalRevenueCatSubscriberState } from './revenuecatSubscriber';
 
-// RevenueCat webhook event types we handle
-const GRANT_EVENTS = new Set([
-  'INITIAL_PURCHASE',
-  'RENEWAL',
-  'PRODUCT_CHANGE',
-  'UNCANCELLATION',
-]);
-const REVOKE_EVENTS = new Set(['CANCELLATION', 'EXPIRATION']);
-const BILLING_EVENTS = new Set(['BILLING_ISSUE']);
 const TRANSFER_EVENTS = new Set(['TRANSFER']);
-const REFUND_EVENTS = new Set(['REFUND', 'REFUND_REVERSED']);
 
 function getWebhookEventTimestamp(
   event: Record<string, number | string | undefined>
@@ -104,43 +95,31 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
 
     // Event processing logged via Convex dashboard
 
-    // Extract and validate timestamps from webhook
-    const validatedExpiresAt = validateWebhookTimestamp(
-      event.expiration_at_ms,
-      'expiration_at_ms'
-    );
-    const validatedTrialEndsAt = validateWebhookTimestamp(
-      event.trial_end_at_ms,
-      'trial_end_at_ms'
+    const canonicalSubscriberState =
+      await fetchCanonicalRevenueCatSubscriberState(appUserId);
+
+    await ctx.runMutation(
+      internal.subscriptions.reconcileRevenueCatSubscriber,
+      {
+        cancelledAt: canonicalSubscriberState.cancelledAt,
+        clerkId: appUserId,
+        eventId,
+        eventTimestamp,
+        eventType,
+        expiresAt: canonicalSubscriberState.expiresAt,
+        hasBillingIssue: canonicalSubscriberState.hasBillingIssue,
+        isActive: canonicalSubscriberState.isActive,
+        isTrialing: canonicalSubscriberState.isTrialing,
+        planType: canonicalSubscriberState.planType,
+        productId: canonicalSubscriberState.productId,
+        revenueCatId: canonicalSubscriberState.revenueCatId,
+        trialEndsAt: canonicalSubscriberState.trialEndsAt,
+      }
     );
 
-    // Route to appropriate handler based on event type
-    if (GRANT_EVENTS.has(eventType)) {
-      await ctx.runMutation(internal.subscriptions.grantPremium, {
-        clerkId: appUserId,
-        eventId,
-        eventTimestamp,
-        eventType,
-        expiresAt: validatedExpiresAt,
-        isTrialing: event.period_type === 'TRIAL',
-        productId: event.product_id,
-        revenueCatId: event.original_app_user_id,
-        trialEndsAt: validatedTrialEndsAt,
-      });
-    } else if (REVOKE_EVENTS.has(eventType)) {
-      await ctx.runMutation(internal.subscriptions.revokePremium, {
-        clerkId: appUserId,
-        eventId,
-        eventTimestamp,
-        eventType,
-      });
-    } else if (BILLING_EVENTS.has(eventType)) {
-      await ctx.runMutation(internal.subscriptions.setBillingIssue, {
-        clerkId: appUserId,
-        eventId,
-        eventTimestamp,
-      });
-    } else if (TRANSFER_EVENTS.has(eventType)) {
+    // Transfer events also need ownership cleanup for the source IDs RevenueCat
+    // includes only on the webhook payload.
+    if (TRANSFER_EVENTS.has(eventType)) {
       await ctx.runMutation(internal.subscriptions.transferPremium, {
         clerkId: appUserId,
         eventId,
@@ -156,20 +135,6 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
             )
           : [appUserId],
       });
-    } else if (REFUND_EVENTS.has(eventType)) {
-      await ctx.runMutation(internal.subscriptions.handleRefund, {
-        clerkId: appUserId,
-        eventId,
-        eventTimestamp,
-        eventType,
-        expiresAt: validatedExpiresAt,
-        isTrialing: event.period_type === 'TRIAL',
-        productId: event.product_id,
-        revenueCatId: event.original_app_user_id,
-        trialEndsAt: validatedTrialEndsAt,
-      });
-    } else {
-      // Unhandled event type — no action needed
     }
 
     // Always return 200 to acknowledge receipt

@@ -5,6 +5,10 @@ import { cancelHabitReminder } from '@/utils/notifications';
 import type { ArchivedHabit } from './types';
 
 type MutationFn<T> = (args: T) => Promise<unknown>;
+type DeleteAllArchivedResult = {
+  deletedCount: number;
+  habitIds?: Id<'habits'>[];
+};
 
 interface UseArchiveDeleteActionsParams {
   removeHabit: MutationFn<{ habitId: Id<'habits'> }>;
@@ -27,13 +31,16 @@ export function useArchiveDeleteActions({
         {
           onPress: async () => {
             try {
-              await cancelHabitReminder(String(habitId));
               await removeHabit({ habitId });
+              await cancelHabitReminder(String(habitId));
               triggerHaptic('success');
             } catch (error_) {
               if (__DEV__) console.error('Failed to delete habit:', error_);
               triggerHaptic('error');
-              Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
+              Alert.alert(
+                'Error',
+                `Failed to delete "${habitName}". Please try again.`
+              );
             }
           },
           style: 'destructive',
@@ -55,13 +62,23 @@ export function useArchiveDeleteActions({
         {
           onPress: async () => {
             try {
-              await Promise.all(archivedHabits.map((h) => cancelHabitReminder(String(h._id))));
-              await deleteAllArchivedMutation({} as Record<string, never>);
+              const result = (await deleteAllArchivedMutation(
+                {} as Record<string, never>
+              )) as DeleteAllArchivedResult;
+              const habitIds =
+                result.habitIds ?? archivedHabits.map((h) => h._id);
+              await Promise.all(
+                habitIds.map((id) => cancelHabitReminder(String(id)))
+              );
               triggerHaptic('success');
             } catch (error_) {
-              if (__DEV__) console.error('Failed to delete all archived:', error_);
+              if (__DEV__)
+                console.error('Failed to delete all archived:', error_);
               triggerHaptic('error');
-              Alert.alert('Error', 'Failed to delete archived habits. Please try again.');
+              Alert.alert(
+                'Error',
+                'Failed to delete archived habits. Please try again.'
+              );
             }
           },
           style: 'destructive',

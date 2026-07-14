@@ -6,7 +6,13 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
-import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
+import {
+  createPurchasesUnavailableError,
+  getPurchaseRuntimeInfo,
+  isPurchasesAvailable,
+  isPurchasesUnavailableError,
+  Purchases,
+} from '../../lib/purchases';
 import type { PurchasesPackage, PurchasesError } from 'react-native-purchases';
 import type {
   PremiumActionsInput,
@@ -34,10 +40,11 @@ export function usePremiumActions({
       purchaseInFlightRef.current = true;
 
       try {
-        if (!isPurchasesAvailable()) {
-          const message = 'Purchases not available on this platform';
+        const runtimeInfo = getPurchaseRuntimeInfo();
+        if (runtimeInfo.runtime !== 'native') {
+          const message = runtimeInfo.message;
           if (isMountedRef.current) setError(message);
-          throw new Error(message);
+          throw createPurchasesUnavailableError();
         }
         if (isMountedRef.current) {
           setError(null);
@@ -60,7 +67,11 @@ export function usePremiumActions({
         if (__DEV__)
           console.error('[usePremium] Purchase failed:', purchaseError);
         if (isMountedRef.current) {
-          setError(purchaseError.message || 'Purchase failed');
+          setError(
+            isPurchasesUnavailableError(error_)
+              ? error_.message
+              : purchaseError.message || 'Purchase failed'
+          );
         }
         throw error_;
       } finally {
@@ -75,10 +86,11 @@ export function usePremiumActions({
     restoreInFlightRef.current = true;
 
     try {
-      if (!isPurchasesAvailable()) {
-        const message = 'Purchases not available on this platform';
+      const runtimeInfo = getPurchaseRuntimeInfo();
+      if (runtimeInfo.runtime !== 'native') {
+        const message = runtimeInfo.message;
         if (isMountedRef.current) setError(message);
-        throw new Error(message);
+        throw createPurchasesUnavailableError();
       }
       if (isMountedRef.current) {
         setError(null);
@@ -92,7 +104,11 @@ export function usePremiumActions({
     } catch (error_) {
       if (__DEV__) console.error('[usePremium] Restore failed:', error_);
       if (isMountedRef.current) {
-        setError('Failed to restore purchases');
+        setError(
+          isPurchasesUnavailableError(error_)
+            ? error_.message
+            : 'Failed to restore purchases'
+        );
       }
       throw error_;
     } finally {

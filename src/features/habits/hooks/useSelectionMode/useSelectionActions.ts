@@ -3,10 +3,18 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import { logInteraction } from '../../../../lib/analytics/interactions';
 import { optimisticStore } from '../../../../lib/optimistic';
-import { cancelHabitReminder } from '@/utils/notifications';
+import {
+  cancelHabitReminder,
+  rescheduleHabitReminderFromSettings,
+} from '@/utils/notifications';
 import { showGenericError } from '../../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
-import type { BatchUndoState, UseSelectionActionsArgs, UseSelectionActionsResult } from './useSelectionActions.types';
+import { useSelectionDeleteActions } from './useSelectionDeleteActions';
+import type {
+  BatchUndoState,
+  UseSelectionActionsArgs,
+  UseSelectionActionsResult,
+} from './useSelectionActions.types';
 
 export function useSelectionActions({
   selectedIds,
@@ -15,17 +23,20 @@ export function useSelectionActions({
 }: UseSelectionActionsArgs): UseSelectionActionsResult {
   const batchArchiveMutation = useMutation(api.habits.batchArchive);
   const batchUnarchiveMutation = useMutation(api.habits.batchUnarchive);
-  const batchRemoveMutation = useMutation(api.habits.batchRemove);
+  const deleteActions = useSelectionDeleteActions({
+    exitSelectionMode,
+    selectedIds,
+  });
 
-  const [undoState, setUndoState] = useState<BatchUndoState>({ count: 0, habitIds: [], visible: false });
-  const [confirmDeleteVisible, setConfirmDeleteVisible] = useState(false);
-  const [deleteCount, setDeleteCount] = useState(0);
-
+  const [undoState, setUndoState] = useState<BatchUndoState>({
+    count: 0,
+    habitIds: [],
+    visible: false,
+  });
   const handleBatchArchive = useCallback(async () => {
     const ids = [...selectedIds];
     const count = ids.length;
 
-    // Optimistic updates for each habit
     const opIds = ids.map((habitId) => {
       const habit = habits.find((h) => h._id === habitId);
       return optimisticStore.addArchive({
@@ -40,6 +51,7 @@ export function useSelectionActions({
 
     try {
       await batchArchiveMutation({ habitIds: ids });
+      await Promise.all(ids.map((id) => cancelHabitReminder(String(id))));
       for (const id of opIds) optimisticStore.confirm(id);
       logInteraction('habits_batch_archived', { count });
     } catch (error) {
@@ -51,6 +63,11 @@ export function useSelectionActions({
 
   const handleBatchArchiveUndo = useCallback(async () => {
     const { habitIds } = undoState;
+    const habitsToRestore = habitIds
+      .map((habitId) => habits.find((h) => h._id === habitId))
+      .filter(
+        (habit): habit is NonNullable<typeof habit> => habit !== undefined
+      );
     const opIds = habitIds.map((habitId) => {
       const habit = habits.find((h) => h._id === habitId);
       return optimisticStore.addArchive({
@@ -62,6 +79,11 @@ export function useSelectionActions({
 
     try {
       await batchUnarchiveMutation({ habitIds });
+      await Promise.all(
+        habitsToRestore.map((habit) =>
+          rescheduleHabitReminderFromSettings(habit)
+        )
+      );
       for (const id of opIds) optimisticStore.confirm(id);
       logInteraction('habits_batch_archive_undone', { count: habitIds.length });
     } catch (error) {
@@ -71,39 +93,17 @@ export function useSelectionActions({
     setUndoState({ count: 0, habitIds: [], visible: false });
   }, [undoState, habits, batchUnarchiveMutation]);
 
-  const dismissBatchArchiveUndo = useCallback(() => setUndoState({ count: 0, habitIds: [], visible: false }), []);
-
-  const showDeleteConfirmation = useCallback(() => {
-    setDeleteCount(selectedIds.size);
-    setConfirmDeleteVisible(true);
-  }, [selectedIds.size]);
-
-  const hideDeleteConfirmation = useCallback(() => setConfirmDeleteVisible(false), []);
-
-  const confirmBatchDelete = useCallback(async () => {
-    const ids = [...selectedIds];
-    setConfirmDeleteVisible(false);
-    exitSelectionMode();
-    try {
-      await Promise.all(ids.map((id) => cancelHabitReminder(String(id))));
-      await batchRemoveMutation({ habitIds: ids });
-      logInteraction('habits_batch_deleted', { count: ids.length });
-    } catch (error) {
-      if (__DEV__) console.error('[useSelectionActions] Batch delete failed:', error);
-      showGenericError('Failed to delete habits. Please try again.');
-    }
-  }, [selectedIds, exitSelectionMode, batchRemoveMutation]);
+  const dismissBatchArchiveUndo = useCallback(
+    () => setUndoState({ count: 0, habitIds: [], visible: false }),
+    []
+  );
 
   return {
     batchArchiveUndoCount: undoState.count,
     batchArchiveUndoVisible: undoState.visible,
-    confirmBatchDelete,
-    confirmDeleteVisible,
-    deleteCount,
     dismissBatchArchiveUndo,
     handleBatchArchive,
     handleBatchArchiveUndo,
-    hideDeleteConfirmation,
-    showDeleteConfirmation,
+    ...deleteActions,
   };
 }
