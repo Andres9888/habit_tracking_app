@@ -45,6 +45,10 @@ function getEnvironment(): SentryConfig['environment'] {
  * @returns Release string (e.g., "daily-habits@1.2.3+100")
  */
 function getRelease(): string {
+  if (process.env.SENTRY_RELEASE) {
+    return process.env.SENTRY_RELEASE;
+  }
+
   const version = Constants.expoConfig?.version ?? '1.0.0';
   const buildNumber =
     Constants.expoConfig?.ios?.buildNumber ??

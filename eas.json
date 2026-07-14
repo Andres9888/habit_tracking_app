@@ -20,7 +20,9 @@
     "production": {
       "autoIncrement": true,
       "env": {
-        "SENTRY_DISABLE_AUTO_UPLOAD": "true"
+        "SENTRY_ORG": "daily-habits",
+        "SENTRY_PROJECT": "react-native",
+        "SENTRY_URL": "https://sentry.io/"
       }
     }
   },
