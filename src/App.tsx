@@ -7,8 +7,10 @@ import { AppProviders } from './app/AppProviders';
 import { initializeAppMonitoring } from './app/initializeAppMonitoring';
 import { AuthGate } from './components/auth/AuthGate';
 import { MAX_FONT_SIZE_MULTIPLIER_BODY } from './utils/accessibility/textScaling';
+import { initNotifications } from './utils/notifications/init';
 
 initializeAppMonitoring();
+initNotifications();
 
 // Global Dynamic Type cap: without this, ~1,200 <Text> sites scale unbounded
 // and break fixed-height layouts (cards, tab bar, day cells). RN honors

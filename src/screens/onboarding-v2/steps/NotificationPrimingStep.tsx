@@ -1,10 +1,10 @@
 import { useQuery } from 'convex/react';
-import * as Notifications from 'expo-notifications';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
+import { ensureNotificationPermissions } from '../../../utils/notifications';
 import { HeroHeader } from '../components/HeroHeader';
 import { PrimaryCTA } from '../components/PrimaryCTA';
 import { StepComponentProps } from '../types';
@@ -29,7 +29,7 @@ export function NotificationPrimingStep({ answers, onNext }: StepComponentProps)
   const enable = async () => {
     setBusy(true);
     try {
-      await Notifications.requestPermissionsAsync();
+      await ensureNotificationPermissions();
     } catch {}
     setBusy(false);
     onNext();

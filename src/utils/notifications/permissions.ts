@@ -43,17 +43,23 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
   }
 
   try {
+    await configureAndroidChannel();
+
     const currentPermissions = await Notifications.getPermissionsAsync();
 
     if (isNotificationsPermissionGranted(currentPermissions)) {
-      await configureAndroidChannel();
       return true;
     }
 
-    const requestedPermissions = await Notifications.requestPermissionsAsync();
+    const requestedPermissions = await Notifications.requestPermissionsAsync({
+      ios: {
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+      },
+    });
 
     if (isNotificationsPermissionGranted(requestedPermissions)) {
-      await configureAndroidChannel();
       return true;
     }
 
