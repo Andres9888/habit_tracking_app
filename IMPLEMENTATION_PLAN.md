@@ -22,11 +22,11 @@ ChainDay keeps its existing Expo + Clerk + Convex + RevenueCat + Sentry stack, b
 
 ## Phase 1 - MVP Launch Guards
 
-- [ ] Remove or quarantine stale `convex/auth.ts` `@convex-dev/auth` surface per `specs/clerk-convex-auth.md` [wave:1]
-- [ ] Add `ConvexClerkProvider` tests for template token fetch, `setAuth` readiness, sign-out `clearAuth`, and background token provider cleanup per `specs/clerk-convex-auth.md` [wave:1]
-- [ ] Tighten RevenueCat webhook signature verification to the active dashboard header/signing mode and keep raw-body verification per `specs/revenuecat-iap.md` [wave:1]
-- [ ] Add startup notification handler initialization and route all permission prompts through channel-first permission helpers per `specs/expo-notifications.md` [wave:1]
-- [ ] Add Sentry startup/init smoke tests for DSN-disabled behavior, privacy scrubbing, and user-context clearing per `specs/sentry-react-native.md` [wave:1]
+- [x] Remove or quarantine stale `convex/auth.ts` `@convex-dev/auth` surface per `specs/clerk-convex-auth.md` [wave:1]
+- [x] Add `ConvexClerkProvider` tests for template token fetch, `setAuth` readiness, sign-out `clearAuth`, and background token provider cleanup per `specs/clerk-convex-auth.md` [wave:1]
+- [x] Tighten RevenueCat webhook signature verification to the active dashboard header/signing mode and keep raw-body verification per `specs/revenuecat-iap.md` [wave:1]
+- [x] Add startup notification handler initialization and route all permission prompts through channel-first permission helpers per `specs/expo-notifications.md` [wave:1]
+- [x] Add Sentry startup/init smoke tests for DSN-disabled behavior, privacy scrubbing, and user-context clearing per `specs/sentry-react-native.md` [wave:1]
 
 ## Phase 2 - Subscription Authority
 

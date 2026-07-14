@@ -50,7 +50,8 @@ function getWebhookEventTimestamp(
 export const revenuecatWebhook = httpAction(async (ctx, request) => {
   try {
     const body = await request.text();
-    const signature = request.headers.get('X-RevenueCat-Signature') ?? '';
+    const signature =
+      request.headers.get('X-RevenueCat-Webhook-Signature') ?? '';
 
     // Verify webhook signature
     const isValid = await verifyRevenueCatSignature(body, signature);
@@ -86,7 +87,9 @@ export const revenuecatWebhook = httpAction(async (ctx, request) => {
     }
 
     if (!eventId || typeof eventId !== 'string') {
-      console.error('[RevenueCat] Missing event id — required for replay protection');
+      console.error(
+        '[RevenueCat] Missing event id — required for replay protection'
+      );
       return new Response('Invalid payload', { status: 400 });
     }
 

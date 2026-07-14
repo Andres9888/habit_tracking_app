@@ -1,10 +1,10 @@
 import { useQuery } from 'convex/react';
-import * as Notifications from 'expo-notifications';
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { api } from '../../../../convex/_generated/api';
+import { ensureNotificationPermissions } from '../../../utils/notifications';
 import { HeroHeader } from '../components/HeroHeader';
 import { PrimaryCTA } from '../components/PrimaryCTA';
 import { StepComponentProps } from '../types';
@@ -13,7 +13,7 @@ function joinNames(names: string[]): string {
   if (names.length === 0) return 'the habits you picked';
   if (names.length === 1) return names[0] ?? '';
   if (names.length === 2) return `${names[0]} and ${names[1]}`;
-  return `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
+  return `${names.slice(0, -1).join(', ')}, and ${names.at(-1)}`;
 }
 
 export function NotificationPrimingStep({ answers, onNext }: StepComponentProps) {
@@ -23,14 +23,16 @@ export function NotificationPrimingStep({ answers, onNext }: StepComponentProps)
   const names = all
     ? answers.pickedTemplateIds
         .map((id) => all.find((t) => t._id === id)?.name)
-        .filter((n): n is string => Boolean(n))
+        .filter((name): name is string => name !== undefined)
     : [];
 
   const enable = async () => {
     setBusy(true);
     try {
-      await Notifications.requestPermissionsAsync();
-    } catch {}
+      await ensureNotificationPermissions();
+    } catch (error) {
+      if (__DEV__) console.warn('Notification permission request failed', error);
+    }
     setBusy(false);
     onNext();
   };

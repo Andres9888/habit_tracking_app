@@ -24,7 +24,6 @@ import type * as analyticsDistribution from "../analyticsDistribution.js";
 import type * as analyticsOverview from "../analyticsOverview.js";
 import type * as analyticsTrend from "../analyticsTrend.js";
 import type * as analyticsWeekly from "../analyticsWeekly.js";
-import type * as auth from "../auth.js";
 import type * as categories from "../categories.js";
 import type * as config_apiConstants from "../config/apiConstants.js";
 import type * as crons from "../crons.js";
@@ -143,7 +142,6 @@ declare const fullApi: ApiFromModules<{
   analyticsOverview: typeof analyticsOverview;
   analyticsTrend: typeof analyticsTrend;
   analyticsWeekly: typeof analyticsWeekly;
-  auth: typeof auth;
   categories: typeof categories;
   "config/apiConstants": typeof config_apiConstants;
   crons: typeof crons;

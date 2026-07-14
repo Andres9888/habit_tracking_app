@@ -5,7 +5,118 @@
  * Verifies HMAC-SHA256 signature verification prevents webhook spoofing.
  */
 
+import { createHmac } from 'node:crypto';
+
 describe('SEC-002: RevenueCat Webhook Signature Verification', () => {
+  const originalSecret = process.env.REVENUECAT_WEBHOOK_SECRET;
+
+  afterEach(() => {
+    jest.resetModules();
+    if (originalSecret === undefined) {
+      delete process.env.REVENUECAT_WEBHOOK_SECRET;
+    } else {
+      process.env.REVENUECAT_WEBHOOK_SECRET = originalSecret;
+    }
+    jest.restoreAllMocks();
+  });
+
+  const signRevenueCatPayload = (
+    body: string,
+    secret: string,
+    timestamp: number
+  ): string => {
+    const signature = createHmac('sha256', secret)
+      .update(`${timestamp}.${body}`)
+      .digest('hex');
+
+    return `t=${timestamp},v1=${signature}`;
+  };
+
+  const loadVerifyRevenueCatSignature =
+    (): (typeof import('./revenuecatSignature'))['verifyRevenueCatSignature'] => {
+      let verifier:
+        | (typeof import('./revenuecatSignature'))['verifyRevenueCatSignature']
+        | undefined;
+
+      jest.isolateModules(() => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        verifier = require('./revenuecatSignature').verifyRevenueCatSignature;
+      });
+
+      if (!verifier) {
+        throw new Error('Failed to load RevenueCat signature verifier');
+      }
+
+      return verifier;
+    };
+
+  describe('Active Dashboard Signature Verification', () => {
+    it('verifies X-RevenueCat-Webhook-Signature over timestamp and raw body', async () => {
+      const secret = 'test_revenuecat_webhook_secret';
+      const timestamp = 1_800_000_000;
+      const body =
+        '{"event":{"id":"evt_1","type":"INITIAL_PURCHASE","app_user_id":"user_1"}}';
+      process.env.REVENUECAT_WEBHOOK_SECRET = secret;
+      jest.spyOn(Date, 'now').mockReturnValue(timestamp * 1000);
+
+      const verifyRevenueCatSignature = loadVerifyRevenueCatSignature();
+
+      await expect(
+        verifyRevenueCatSignature(
+          body,
+          signRevenueCatPayload(body, secret, timestamp)
+        )
+      ).resolves.toBe(true);
+    });
+
+    it('rejects signatures made over only the body', async () => {
+      const secret = 'test_revenuecat_webhook_secret';
+      const timestamp = 1_800_000_000;
+      const body = '{"event":{"id":"evt_1"}}';
+      const bodyOnlySignature = createHmac('sha256', secret)
+        .update(body)
+        .digest('hex');
+      process.env.REVENUECAT_WEBHOOK_SECRET = secret;
+      jest.spyOn(Date, 'now').mockReturnValue(timestamp * 1000);
+
+      const verifyRevenueCatSignature = loadVerifyRevenueCatSignature();
+
+      await expect(
+        verifyRevenueCatSignature(
+          body,
+          `t=${timestamp},v1=${bodyOnlySignature}`
+        )
+      ).resolves.toBe(false);
+    });
+
+    it('rejects stale dashboard signatures', async () => {
+      const secret = 'test_revenuecat_webhook_secret';
+      const timestamp = 1_800_000_000;
+      const body = '{"event":{"id":"evt_1"}}';
+      process.env.REVENUECAT_WEBHOOK_SECRET = secret;
+      jest.spyOn(Date, 'now').mockReturnValue((timestamp + 301) * 1000);
+
+      const verifyRevenueCatSignature = loadVerifyRevenueCatSignature();
+
+      await expect(
+        verifyRevenueCatSignature(
+          body,
+          signRevenueCatPayload(body, secret, timestamp)
+        )
+      ).resolves.toBe(false);
+    });
+
+    it('requires t and v1 values in the signature header', async () => {
+      process.env.REVENUECAT_WEBHOOK_SECRET = 'test_revenuecat_webhook_secret';
+
+      const verifyRevenueCatSignature = loadVerifyRevenueCatSignature();
+
+      await expect(
+        verifyRevenueCatSignature('{"event":{"id":"evt_1"}}', 'abc123')
+      ).resolves.toBe(false);
+    });
+  });
+
   describe('Timing-Safe String Comparison', () => {
     /**
      * Timing-safe comparison prevents timing attacks where attackers
@@ -66,11 +177,11 @@ describe('SEC-002: RevenueCat Webhook Signature Verification', () => {
   });
 
   describe('Webhook Request Validation', () => {
-    it('should require X-RevenueCat-Signature header', () => {
+    it('should require X-RevenueCat-Webhook-Signature header', () => {
       const validateWebhookRequest = (
         headers: Record<string, string | undefined>
       ): { valid: boolean; error?: string } => {
-        const signature = headers['x-revenuecat-signature'];
+        const signature = headers['x-revenuecat-webhook-signature'];
         if (!signature) {
           return { valid: false, error: 'Missing signature header' };
         }
@@ -83,7 +194,7 @@ describe('SEC-002: RevenueCat Webhook Signature Verification', () => {
       });
 
       expect(
-        validateWebhookRequest({ 'x-revenuecat-signature': 'abc123' })
+        validateWebhookRequest({ 'x-revenuecat-webhook-signature': 'abc123' })
       ).toEqual({ valid: true });
     });
 

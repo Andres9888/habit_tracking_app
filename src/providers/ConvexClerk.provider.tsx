@@ -29,6 +29,7 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
 
     if (!isSignedIn) {
       convexClientInstance.clearAuth();
+      setBackgroundSyncTokenProvider(null);
       setIsConvexReady(false);
       return;
     }
