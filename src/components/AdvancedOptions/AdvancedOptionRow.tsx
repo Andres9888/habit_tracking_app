@@ -1,20 +1,19 @@
-/** Advanced Options row: whole row is the tap target; pressed state washes the row + tints the hint. */
+/** Strength Curve gated row — icon · title/value · Edit pill. */
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
-import { useThemeColors } from '@/theme/ThemeContext';
 import { fontWeights, typography } from '@/theme/typography';
+import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { AdvancedOptionEditAffordance } from './AdvancedOptionEditAffordance';
+import { useAdvancedTokens } from './useAdvancedTokens';
 
-interface AdvancedOptionRowProps {
+interface Props {
   icon: ReactNode;
   iconBackground: string;
   title: string;
   subtitle: string;
-  description?: string;
   onPress: () => void;
   accessibilityHint?: string;
-  isFirst?: boolean;
 }
 
 export function AdvancedOptionRow({
@@ -22,79 +21,63 @@ export function AdvancedOptionRow({
   iconBackground,
   title,
   subtitle,
-  description,
   onPress,
   accessibilityHint,
-  isFirst = false,
-}: AdvancedOptionRowProps) {
-  const { colors } = useThemeColors();
-
-  const handlePress = () => {
-    void triggerHaptic('selection');
-    onPress();
-  };
-
-  const a11yHint = description
-    ? `${description} ${accessibilityHint ?? ''}`.trim()
-    : accessibilityHint;
-
+}: Props) {
+  const t = useAdvancedTokens();
   return (
-    <Pressable
-      accessibilityHint={a11yHint}
-      accessibilityLabel={`${title}, tap to edit`}
+    <AnimatedPressable
+      accessibilityHint={accessibilityHint}
+      accessibilityLabel={`${title}, ${subtitle}, tap to edit`}
       accessibilityRole='button'
-      className='flex-row items-center gap-3 py-3.5'
-      style={({ pressed }) => ({
-        borderTopWidth: isFirst ? 0 : StyleSheet.hairlineWidth,
-        borderTopColor: colors.cardBorder,
-        minHeight: 72,
-        backgroundColor: pressed ? colors.gray[200] : 'transparent',
-        borderRadius: 12,
-      })}
-      onPress={handlePress}
+      style={{
+        minHeight: 64,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
+        paddingVertical: 8,
+      }}
+      onPress={() => {
+        void triggerHaptic('selection');
+        onPress();
+      }}
     >
-      {({ pressed }) => (
-        <>
-          <View className='h-9 w-9 items-center justify-center rounded-xl' style={{ backgroundColor: iconBackground }}>{icon}</View>
-          <View className='flex-1'>
-            <Text
-              style={{
-                ...typography.body,
-                fontWeight: fontWeights.semibold,
-                color: colors.text.primary,
-              }}
-            >
-              {title}
-            </Text>
-            <Text
-              style={{
-                ...typography.caption,
-                color: colors.text.secondary,
-                marginTop: 2,
-              }}
-            >
-              {subtitle}
-            </Text>
-            {description ? (
-              <Text
-                accessibilityElementsHidden
-                importantForAccessibility='no'
-                numberOfLines={3}
-                style={{
-                  ...typography.caption,
-                  fontSize: 12,
-                  lineHeight: 16,
-                  color: colors.text.tertiary,
-                  marginTop: 4,
-                }}
-              >
-                {description}
-              </Text>
-            ) : null}
-          </View>
-          <AdvancedOptionEditAffordance pressed={pressed} />
-        </>
-      )}
-    </Pressable>
+      <View
+        style={{
+          width: 36,
+          height: 36,
+          borderRadius: 11,
+          backgroundColor: iconBackground,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {icon}
+      </View>
+      <View style={{ flex: 1, minWidth: 0 }}>
+        <Text
+          style={{
+            ...typography.body,
+            fontSize: 15,
+            fontWeight: fontWeights.semibold,
+            color: t.fg,
+          }}
+        >
+          {title}
+        </Text>
+        <Text
+          numberOfLines={1}
+          style={{
+            ...typography.caption,
+            fontSize: 13,
+            color: t.muted,
+            marginTop: 2,
+          }}
+        >
+          {subtitle}
+        </Text>
+      </View>
+      <AdvancedOptionEditAffordance />
+    </AnimatedPressable>
   );
 }

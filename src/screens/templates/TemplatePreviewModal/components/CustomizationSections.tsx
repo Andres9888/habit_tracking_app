@@ -83,6 +83,7 @@ export function CustomizationSections({
 
       <AdvancedOptionsSection
         growthType={template.growthType}
+        isNewHabit={false}
         progressEmojis={progressEmojis}
         streakGoal={streakGoal}
         strengthAlgorithm={strengthAlgorithm}

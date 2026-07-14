@@ -16,6 +16,12 @@ export interface HabitFormBodyProps {
   placeholder?: string;
   /** Growth type pill shown in the Advanced section (edit mode) */
   growthType?: GrowthType;
+  /**
+   * True on create flows: an untouched default curve follows the detected
+   * habit-type suggestion. False on edit flows (and template previews with an
+   * explicit template default): the incoming value is respected.
+   */
+  isNewHabit: boolean;
   /** Called when the name input loses focus */
   onHabitNameBlur?: () => void;
   /**

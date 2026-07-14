@@ -1,38 +1,32 @@
 /** GrowthIconsSheetBody — preset picker + per-stage rows inside an AdvancedSheet. */
 import { useCallback, useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { ProgressEmojiPresetRow } from '@/components/ProgressEmojiPicker/ProgressEmojiPresetRow';
-import { ProgressEmojiSlotRow } from '@/components/ProgressEmojiPicker/ProgressEmojiSlotRow';
 import { EmojiPickerSheet } from '@/components/EmojiPickerV2';
 import { useUserCustomProgressEmojis } from '@/hooks/useProgressEmojis';
-import { useThemeColors } from '@/theme/ThemeContext';
-import { fontWeights, typography } from '@/theme/typography';
 import {
   CUSTOM_PRESET_ID,
   matchPresetId,
   resolveProgressEmojis,
-  STRENGTH_LEVEL_KEYS,
   type ProgressEmojiPreset,
   type ProgressEmojiSet,
   type StrengthLevelKey,
 } from '@/utils/progressEmojis';
-
-const STAGE_LABELS: Record<StrengthLevelKey, string> = {
-  starting: 'Starting',
-  building: 'Building',
-  developing: 'Developing',
-  strong: 'Strong',
-  automatic: 'Automatic',
-};
+import { GrowthIconsSheetSlots } from './GrowthIconsSheetSlots';
 
 interface Props {
   value: ProgressEmojiSet | undefined;
   fallback: ProgressEmojiSet;
-  onChange: (next: ProgressEmojiSet | undefined) => void;
+  onChange: (next?: ProgressEmojiSet) => void;
+  showPresets?: boolean;
 }
 
-export function GrowthIconsSheetBody({ value, fallback, onChange }: Props) {
-  const { colors } = useThemeColors();
+export function GrowthIconsSheetBody({
+  value,
+  fallback,
+  onChange,
+  showPresets = true,
+}: Props) {
   const [editingSlot, setEditingSlot] = useState<StrengthLevelKey | null>(null);
   const savedCustom = useUserCustomProgressEmojis();
   const resolved = useMemo(
@@ -50,7 +44,6 @@ export function GrowthIconsSheetBody({ value, fallback, onChange }: Props) {
         : null,
     [savedCustom]
   );
-
   const handleSlotChange = useCallback(
     (emoji: string | null) => {
       if (editingSlot && emoji) onChange({ ...resolved, [editingSlot]: emoji });
@@ -65,39 +58,21 @@ export function GrowthIconsSheetBody({ value, fallback, onChange }: Props) {
         contentContainerStyle={{ paddingBottom: 12 }}
         showsVerticalScrollIndicator={false}
       >
-        <ProgressEmojiPresetRow
-          activePresetId={activePresetId}
-          customPreset={customPreset}
-          onSelect={(next) => onChange(next)}
+        {showPresets ? (
+          <ProgressEmojiPresetRow
+            activePresetId={activePresetId}
+            customPreset={customPreset}
+            onSelect={(next) => onChange(next)}
+          />
+        ) : null}
+        <GrowthIconsSheetSlots
+          hasOverride={value !== undefined}
+          resolved={resolved}
+          onEditSlot={setEditingSlot}
+          onReset={() => {
+            onChange();
+          }}
         />
-        <View className='mt-2 gap-2'>
-          {STRENGTH_LEVEL_KEYS.map((k) => (
-            <ProgressEmojiSlotRow
-              key={k}
-              emoji={resolved[k]}
-              stageKey={k}
-              stageLabel={STAGE_LABELS[k]}
-              onPress={setEditingSlot}
-            />
-          ))}
-        </View>
-        {value === undefined ? null : (
-          <Pressable
-            accessibilityRole='button'
-            className='mt-3 items-center py-2'
-            onPress={() => onChange(undefined)}
-          >
-            <Text
-              style={{
-                ...typography.bodySmall,
-                color: colors.text.tertiary,
-                fontWeight: fontWeights.medium,
-              }}
-            >
-              Reset to default
-            </Text>
-          </Pressable>
-        )}
       </ScrollView>
       {editingSlot ? (
         <EmojiPickerSheet
