@@ -31,7 +31,7 @@ export function StrengthCurveSheetBody({
             <StrengthCurveOption
               key={mode}
               active={mode === selected}
-              desc={copy.desc}
+              desc={`+${copy.growthPct}% / day · ${copy.missLabel}`}
               name={copy.name}
               onPress={() => {
                 void triggerHaptic('selection');
