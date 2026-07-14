@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { Target } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { fontWeights, typography } from '@/theme/typography';
+import { advancedRowSpec, advancedRowTextInset } from './advancedRowSpec';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
 export function StreakGoalSectionHead() {
@@ -13,15 +14,15 @@ export function StreakGoalSectionHead() {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 10,
+          gap: advancedRowSpec.gap,
           marginBottom: 4,
         }}
       >
         <View
           style={{
-            width: 32,
-            height: 32,
-            borderRadius: 9,
+            width: advancedRowSpec.iconSize,
+            height: advancedRowSpec.iconSize,
+            borderRadius: advancedRowSpec.iconRadius,
             backgroundColor: t.tile,
             alignItems: 'center',
             justifyContent: 'center',
@@ -44,7 +45,7 @@ export function StreakGoalSectionHead() {
         style={{
           ...typography.caption,
           color: t.meta,
-          marginLeft: 42,
+          marginLeft: advancedRowTextInset,
           marginBottom: 6,
         }}
       >

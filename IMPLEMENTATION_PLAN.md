@@ -1,47 +1,77 @@
 # Implementation Plan
 
-<!-- Mission: cold-open Settings + Habit Library, Advanced Options alignment, release readiness -->
+> **Note:** The template goal in this worktree ("instant Habit Library cold-open")
+> is stale. The user's priority messages + reference image (`goal-design/image.png`)
+> are about a **layout bug in the Create-Habit → Advanced Options section**:
+> (1) the three rows don't align, and (2) the "Growth rate" value is cut off on
+> iPhone 16 Pro Max. This plan addresses that.
 
 ## END_RESULT
-
-ChainDay cold-opens Settings and Habit Library with immediate shell feedback, keeps demand-driven data loading, and shows a non-clipping Strength Curve summary on iPhone 16 Pro Max. Release readiness items (auth, RevenueCat, reminders, storage, Sentry advanced monitoring) stay closed.
+In the Create/Edit Habit sheet, when **Advanced Options** is expanded, the three
+rows — **Growth rate** (Strength Curve), **Streak Goal**, and **Growth Icons** —
+share one consistent icon column and one text left-edge, so the section reads as a
+single balanced list. The "Growth rate" summary value (`Average · +3% per check-in`)
+is fully visible on the widest device (iPhone 16 Pro Max) and never collides with
+the chevron.
 
 ### Acceptance Criteria
+- [x] AC1: The icon tiles of all three rows are the **same size/radius**, and the
+      title + description text of all three rows begin at the **same x-position**
+      (no more ~6px indent step on the Growth rate row).
+- [x] AC2: On iPhone 16 Pro Max, `Average · +3% per check-in` renders in full —
+      either on one line or wrapped — with no truncation and no overlap with the
+      round chevron button.
+- [x] AC3: No regression to the expanded content below each head (type bar / streak
+      chips / emoji slots) or to dark mode; `tsc` and `npm run lint:max-lines` stay green.
 
-- [x] AC1: Cold Settings tap paints a full-screen Settings shell before lazy modules resolve; content-ready timing uses derived loading state.
-- [x] AC2: Cold Habit Library tap paints full-screen library chrome (`TemplatesModalFallback`) before lazy modules resolve; click-to-visible is instrumented.
-- [x] AC3: Settings secondary views (Archived / Account / Calendar Look) lazy-load only when opened.
-- [x] AC4: Habit Library catalog first paint uses memoized section mapping, bounded SectionList virtualization, and deferred science drawer content.
-- [x] AC5: Advanced Options Strength Curve summary shows `Growth rate` + `Average · +3% per check-in` without clipping the chevron.
-- [x] AC6: Sentry replay/profiling/logs are env-gated with privacy-sensitive capture surfaces disabled by default.
-- [x] AC7: RevenueCat v10 and Convex 1.42 evaluation notes are recorded; existing native/CocoaPods caveats remain documented.
+## Root cause (verified in code)
+| Row | File | Icon tile | Gap | Text left-edge |
+|-----|------|-----------|-----|----------------|
+| Growth rate | `StrengthCurveToggleRow.tsx` | 36×36 r11 | 12 | ~48px |
+| Streak Goal | `StreakGoalSectionHead.tsx` | 32×32 r9 | 10 | ~42px (desc `marginLeft:42`) |
+| Growth Icons | `GrowthIconsHead.tsx` | 32×32 r9 | 10 | ~42px (desc `marginLeft:42`) |
 
-## Phase 1 — Settings Cold-Open
+Canonical app primitive `AdvancedOptionRow.tsx` already uses **36 / r11 / gap12** →
+unify the two section heads UP to that; the Strength Curve trigger is already correct.
+The clip has an existing `flexWrap` guard in `StrengthCurveToggleText.tsx` (comment +
+"Strength Curve fit" commit) — task 2 verifies it actually engages, hardens only if not.
 
-- [x] Add Settings open timing marks (tap / state / first-visible / content-ready)
-- [x] Replace Settings `fallback={null}` with `SettingsModalLoadingFallback`
-- [x] Lazy-load Archived / Account / Calendar Look secondary views
-- [x] Keep Settings module prewarm in post-home secondary preload tier
+## Phase 1 — Align & de-clip the Advanced Options rows
+Skill: `frontend-design:frontend-design` for the row geometry; sim-verify per
+memory `habit-app-sim-verify-gotchas` (full native rebuild, `ui_tap` in points).
 
-## Phase 2 — Habit Library Cold-Open
+- [x] **Task 1 — Unify the icon column across the two section heads.** Add a single
+      shared spec (icon `36×36`, radius `11`, row `gap 12`, description `marginLeft 48`)
+      and apply it in `src/components/AdvancedOptions/StreakGoalSectionHead.tsx` and
+      `src/components/AdvancedOptions/GrowthIconsHead.tsx`, replacing their 32/r9/gap10/
+      marginLeft42 values. Prefer a tiny shared constant (e.g. `advancedRowSpec.ts`, or
+      extend `useAdvancedTokens.ts`) that mirrors the values already in
+      `StrengthCurveToggleRow.tsx` / `AdvancedOptionRow.tsx`, so the columns can't drift
+      again. Keep each head's `alignItems: 'center'` (single-line titles). [wave:1]
+- [x] **Task 2 — Guarantee the Growth-rate value can't clip on 16 Pro Max.** In
+      `src/components/AdvancedOptions/StrengthCurveToggleText.tsx`, confirm the existing
+      `flexWrap`/`flexShrink`/`minWidth:0` row actually wraps `Average · +3% per check-in`
+      instead of truncating (RN default `flexShrink` is 0 — verify the value Text keeps
+      its explicit `flexShrink:1`). If it still clips at runtime, drop the value to its
+      own full-width line beneath "Growth rate" (stacked, not inline). Source string lives
+      in `mockTokens.ts` (`CURVE_MOCK_COPY`). [wave:1]
+- [x] **Task 3 — Sim-verify on iPhone 16 Pro Max + static gates.** Rebuild, open
+      Create Habit → expand Advanced Options; screenshot the three rows and confirm AC1
+      (aligned icon column + text left-edges) and AC2 (full "+3% per check-in", no chevron
+      overlap). Also eyeball the "Daily Reminder" row above for the same left-edge so the
+      whole sheet reads consistently. Run `tsc` + `npm run lint:max-lines`. Capture
+      before/after screenshots. [needs:Task 1][needs:Task 2]
 
-- [x] Add Habit Library click-to-visible instrumentation
-- [x] Warm Templates paths after home readiness (frequent idle tier)
-- [x] Full-screen `TemplatesModalFallback` while lazy import resolves
-- [x] Memoize catalog sections + virtualize SectionList; defer science content until expanded
-
-## Phase 3 — Advanced Options Alignment
-
-- [x] Strength Curve toggle text wraps/stacks so value never clips chevron
-- [x] Toggle row aligns icon/chevron with multi-line text stack
-
-## Phase 4 — Release Monitoring & SDK Notes
-
-- [x] Sentry replay/profiling/logs opt-in env flags + privacy review doc
-- [x] RevenueCat v10 + Convex 1.42 evaluation notes in AGENTS / plan
-
-## Validation Notes
-
-- Focused Jest for Settings shell, templates fallback, timing, catalog, and Sentry.
-- Runtime cold-launch device timing may still need a local simulator/device pass.
-- CocoaPods SPM post-install hook and Convex `habits.js:archive` codegen conflict remain pre-existing environment blockers.
+## Verification result (iPhone 16 Pro Max, iOS 26.2)
+- **Task 1:** Added `advancedRowSpec.ts` (icon `36×36` / r`11` / gap`12`, derived
+  `advancedRowTextInset = 48`) and applied it in `StreakGoalSectionHead.tsx` +
+  `GrowthIconsHead.tsx` (replacing 32/r9/gap10/marginLeft42). Growth-Icons emoji bumped
+  16→18 for proportional balance in the larger tile. Sim-confirmed: all three icon
+  tiles same size, all titles + descriptions left-aligned at 48px.
+- **Task 2:** No code change needed — the existing `flexWrap` guard in
+  `StrengthCurveToggleText.tsx` engages on 16 Pro Max: `Average · +3% per check-in`
+  wraps to a second line, fully legible, clear of the chevron (no truncation). The
+  stacked-line fallback was not required.
+- **Task 3:** `tsc` clean; no new `max-lines` violations. After screenshot:
+  `docs/verification/advanced-options-aligned-16promax-after.jpg` (before =
+  `goal-design/image.png`).

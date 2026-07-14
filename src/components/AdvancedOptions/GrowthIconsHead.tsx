@@ -1,6 +1,7 @@
 /** Title row for inline Growth Icons — accent icon tile. */
 import { Text, View } from 'react-native';
 import { fontWeights, typography } from '@/theme/typography';
+import { advancedRowSpec, advancedRowTextInset } from './advancedRowSpec';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
 export function GrowthIconsHead({ starting }: { starting: string }) {
@@ -11,21 +12,21 @@ export function GrowthIconsHead({ starting }: { starting: string }) {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 10,
+          gap: advancedRowSpec.gap,
           marginBottom: 4,
         }}
       >
         <View
           style={{
-            width: 32,
-            height: 32,
-            borderRadius: 9,
+            width: advancedRowSpec.iconSize,
+            height: advancedRowSpec.iconSize,
+            borderRadius: advancedRowSpec.iconRadius,
             backgroundColor: t.accentTile,
             alignItems: 'center',
             justifyContent: 'center',
           }}
         >
-          <Text style={{ fontSize: 16 }}>{starting}</Text>
+          <Text style={{ fontSize: 18 }}>{starting}</Text>
         </View>
         <Text
           style={{
@@ -42,7 +43,7 @@ export function GrowthIconsHead({ starting }: { starting: string }) {
         style={{
           ...typography.caption,
           color: t.meta,
-          marginLeft: 42,
+          marginLeft: advancedRowTextInset,
           marginBottom: 10,
         }}
       >
