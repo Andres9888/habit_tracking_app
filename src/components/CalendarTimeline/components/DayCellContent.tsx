@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 import type {
@@ -11,7 +11,6 @@ import { fontFamilies } from '../../../theme/typography';
 import { useTodayGlow } from '../hooks/useTodayGlow';
 
 import { DayCellRing } from './DayCellRing';
-import { useDayCellEntrance } from './useDayCellEntrance';
 
 interface DayCellContentProps {
   weekday: string;
@@ -35,7 +34,6 @@ interface DayCellContentProps {
 const DayCellContentComponent: React.FC<DayCellContentProps> = ({
   weekday,
   dayNumber,
-  index,
   isCurrentDay,
   isUpcoming,
   completionStatus,
@@ -56,10 +54,8 @@ const DayCellContentComponent: React.FC<DayCellContentProps> = ({
     reduceMotion,
     isDark,
   });
-  const entranceStyle = useDayCellEntrance(index, reduceMotion);
-
   return (
-    <Animated.View style={entranceStyle}>
+    <View>
       <Text
         className='text-center text-[10px] leading-[14px]'
         style={{
@@ -94,7 +90,7 @@ const DayCellContentComponent: React.FC<DayCellContentProps> = ({
           total={total}
         />
       </Animated.View>
-    </Animated.View>
+    </View>
   );
 };
 

@@ -3,13 +3,12 @@
  * Validates runHighlightGlow and runIconPulseLoop use correct reanimated APIs.
  */
 
+import { withSequence, withTiming, Easing } from 'react-native-reanimated';
 import {
-  withSequence,
-  withTiming,
-  withRepeat,
-  Easing,
-} from 'react-native-reanimated';
-import { runHighlightGlow, runIconPulseLoop } from '../highlightAnimations';
+  ICON_PULSE_CYCLES,
+  runHighlightGlow,
+  runIconPulseLoop,
+} from '../highlightAnimations';
 
 describe('highlightAnimations (reanimated)', () => {
   describe('runHighlightGlow', () => {
@@ -43,12 +42,11 @@ describe('highlightAnimations (reanimated)', () => {
       expect(iconPulse.value).toBeDefined();
     });
 
-    it('uses infinite repeat (-1)', () => {
+    it('limits the attention pulse to two cycles', () => {
       const iconPulse = { value: 1 };
       runIconPulseLoop(iconPulse as never);
 
-      // The mock returns the inner value, confirming the animation was set up
-      // In real code, withRepeat(-1) creates an infinite loop
+      expect(ICON_PULSE_CYCLES).toBe(2);
       expect(iconPulse.value).toBe(1);
     });
   });

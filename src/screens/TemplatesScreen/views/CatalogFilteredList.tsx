@@ -14,7 +14,7 @@ const MAX_STAGGER_INDEX = 4;
 
 interface CatalogFilteredListProps {
   importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
+  importingTemplateIds: Set<string>;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   templates: Doc<'templates'>[];
@@ -42,8 +42,8 @@ export function CatalogFilteredList(p: CatalogFilteredListProps) {
         return (
           <Animated.View entering={entering}>
             <TemplateReadRow
-              importedTemplateIds={p.importedTemplateIds}
-              importingTemplateId={p.importingTemplateId}
+              isImported={p.importedTemplateIds.has(item._id)}
+              isImporting={p.importingTemplateIds.has(item._id)}
               item={item}
               onImport={p.onImport}
               onPreview={p.onPreview}

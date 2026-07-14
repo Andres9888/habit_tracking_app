@@ -4,7 +4,7 @@
  * Browse and import science-backed habit templates
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
@@ -12,10 +12,6 @@ import { TemplatesScreenModals, TemplatesLoadingState } from './components';
 import { useTemplatesScreenProps } from './hooks/useTemplatesScreenProps';
 import { FeedbackOverlays } from './views/FeedbackOverlays';
 import { MainBrowseView } from './views/MainBrowseView';
-import {
-  trackLibraryEvent,
-  type TemplateImportSource,
-} from './utils/libraryAnalytics';
 
 interface TemplatesScreenContentProps {
   onCloseLibrary?: () => void;
@@ -54,32 +50,17 @@ function TemplatesScreenContent({
     handleDismissFeedback();
   }, [handleDismissFeedback, onViewHabit, state.feedbackHabitId]);
 
-  const makeImportHandler = useCallback(
-    (source: TemplateImportSource) => (template: Doc<'templates'>) => {
-      trackLibraryEvent({
-        type: 'template_added',
-        templateId: template._id,
-        source,
-      });
+  const handleCatalogImport = useCallback(
+    (template: Doc<'templates'>) => {
       state.setPreviewTemplate(template);
-      void handlers.handleDirectImport(template._id);
+      void handlers.handleDirectImport(template._id, 'catalog');
     },
-    [handlers, state]
-  );
-
-  const handlePopularImport = useMemo(
-    () => makeImportHandler('popular'),
-    [makeImportHandler]
+    [handlers.handleDirectImport, state.setPreviewTemplate]
   );
 
   const handleDetailsDirectImport = useCallback(
     async (id: Id<'templates'>) => {
-      trackLibraryEvent({
-        type: 'template_added',
-        templateId: id,
-        source: 'details',
-      });
-      await handlers.handleDirectImport(id);
+      await handlers.handleDirectImport(id, 'details');
     },
     [handlers]
   );
@@ -107,6 +88,7 @@ function TemplatesScreenContent({
   return (
     <MainBrowseView
       allTemplates={data.allTemplates ?? []}
+      catalogOrderImportedIds={state.catalogOrderImportedIds}
       feedbackOverlays={
         <FeedbackOverlays
           feedbackHabitId={state.feedbackHabitId}
@@ -126,11 +108,11 @@ function TemplatesScreenContent({
         />
       }
       importedTemplateIds={state.importedTemplateIds}
-      importingTemplateId={state.importingTemplateId}
+      importingTemplateIds={state.importingTemplateIds}
       modals={
         <TemplatesScreenModals
           importedTemplateIds={state.importedTemplateIds}
-          importingTemplateId={state.importingTemplateId}
+          importingTemplateIds={state.importingTemplateIds}
           previewInitialAnchor={state.previewInitialAnchor}
           previewTemplate={state.previewTemplate}
           showCustomizeModal={state.showCustomizeModal}
@@ -149,7 +131,7 @@ function TemplatesScreenContent({
         />
       }
       onClose={() => onCloseLibrary?.()}
-      onPopularImport={handlePopularImport}
+      onCatalogImport={handleCatalogImport}
       onPreview={handlers.handleTemplatePreview}
     />
   );

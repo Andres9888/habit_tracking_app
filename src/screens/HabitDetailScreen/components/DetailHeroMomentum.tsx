@@ -1,67 +1,44 @@
 /**
- * DetailHeroMomentum — the calm context under the streak hero: a celebratory
- * "Personal best" pill (an achievement, never a "N to beat" target) and the
- * total-completions count folded into an encouragement sentence.
+ * DetailHeroMomentum — Best / Total / 30-day cells + encouragement line (OD).
  */
-import { Trophy } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontWeights } from '../../../theme/typography';
-import { MAX_FONT_SIZE_MULTIPLIER_STRICT } from '../../../utils/accessibility/textScaling';
+import { spacing } from '../../../theme/spacing';
+import { fontWeights, typography } from '../../../theme/typography';
+import { DetailHeroStatCell } from './DetailHeroStatCell';
 import { isRebuilding } from './DetailHeroStreakHero';
 
 interface DetailHeroMomentumProps {
   bestStreak: number;
   currentStreak: number;
+  rate30Day: number;
   totalCompletions: number;
 }
 
 export function DetailHeroMomentum({
   bestStreak,
   currentStreak,
+  rate30Day,
   totalCompletions,
 }: DetailHeroMomentumProps) {
   const { colors } = useThemeColors();
-  const showPill = bestStreak > 0;
-  const showEncouragement = totalCompletions > 0;
-  if (!showPill && !showEncouragement) return null;
-
-  const bestDays = bestStreak === 1 ? 'day' : 'days';
+  const rebuilding = isRebuilding(currentStreak, bestStreak);
   const times = totalCompletions === 1 ? 'time' : 'times';
 
   return (
-    <View className='items-center' style={{ marginTop: spacing.md }}>
-      {showPill ? (
-        <View
-          className='flex-row items-center'
-          style={{
-            backgroundColor: colors.status.streakLight,
-            borderRadius: borderRadius.full,
-            gap: spacing.sm,
-            paddingHorizontal: spacing.base,
-            paddingVertical: spacing.sm,
-          }}
-        >
-          <Trophy color={colors.status.streakText} size={14} strokeWidth={2.4} />
-          <Text
-            maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
-            style={{
-              ...typography.bodySmall,
-              color: colors.status.streakText,
-              fontWeight: fontWeights.bold,
-            }}
-          >
-            Personal best · {bestStreak} {bestDays}
-          </Text>
-        </View>
-      ) : null}
-      {showEncouragement ? (
+    <View style={{ marginTop: spacing.sm }}>
+      <View className='flex-row' style={{ gap: spacing.sm }}>
+        <DetailHeroStatCell highlight label='Best' value={String(bestStreak)} />
+        <DetailHeroStatCell label='Total' value={String(totalCompletions)} />
+        <DetailHeroStatCell label='30-day' value={`${rate30Day}%`} />
+      </View>
+
+      {totalCompletions > 0 ? (
         <Text
           style={{
             ...typography.caption,
             color: colors.text.secondary,
-            marginTop: showPill ? spacing.md : 0,
+            marginTop: spacing.md,
             textAlign: 'center',
           }}
         >
@@ -70,11 +47,20 @@ export function DetailHeroMomentum({
             {totalCompletions} {times}
           </Text>{' '}
           for this.
-          {isRebuilding(currentStreak, bestStreak)
-            ? '\nThe chain always starts again.'
-            : ''}
+          {rebuilding ? '\nThe chain always starts again.' : ''}
         </Text>
-      ) : null}
+      ) : (
+        <Text
+          style={{
+            ...typography.caption,
+            color: colors.text.secondary,
+            marginTop: spacing.md,
+            textAlign: 'center',
+          }}
+        >
+          Your first check-in starts the chain.
+        </Text>
+      )}
     </View>
   );
 }

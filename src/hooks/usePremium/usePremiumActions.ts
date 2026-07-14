@@ -7,30 +7,21 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
+import type { PurchasesPackage, PurchasesError } from 'react-native-purchases';
 import type {
-  PurchasesPackage,
-  CustomerInfo,
-  PurchasesError,
-} from 'react-native-purchases';
+  PremiumActionsInput,
+  PremiumActionsReturn,
+} from './usePremiumActions.types';
 
 const PREMIUM_ENTITLEMENT_ID = 'premium';
-
-interface PremiumActionsInput {
-  setCustomerInfo: (info: CustomerInfo) => void;
-  setError: (error: string | null) => void;
-}
-
-interface PremiumActionsReturn {
-  purchasePackage: (pkg: PurchasesPackage) => Promise<boolean>;
-  restorePurchases: () => Promise<boolean>;
-  refreshStatus: () => Promise<void>;
-}
 
 export function usePremiumActions({
   setCustomerInfo,
   setError,
 }: PremiumActionsInput): PremiumActionsReturn {
   const isMountedRef = useRef(true);
+  const purchaseInFlightRef = useRef(false);
+  const restoreInFlightRef = useRef(false);
 
   useEffect(() => {
     return () => {
@@ -39,53 +30,61 @@ export function usePremiumActions({
   }, []);
   const purchasePackage = useCallback(
     async (pkg: PurchasesPackage): Promise<boolean> => {
-      if (!isPurchasesAvailable()) {
-        if (isMountedRef.current) {
-          setError('Purchases not available on this platform');
-        }
-        return false;
-      }
+      if (purchaseInFlightRef.current) return false;
+      purchaseInFlightRef.current = true;
 
       try {
+        if (!isPurchasesAvailable()) {
+          const message = 'Purchases not available on this platform';
+          if (isMountedRef.current) setError(message);
+          throw new Error(message);
+        }
         if (isMountedRef.current) {
           setError(null);
         }
         const { customerInfo: newInfo } = await Purchases.purchasePackage(pkg);
-        
+
         if (!isMountedRef.current) return false;
         setCustomerInfo(newInfo);
 
-        return (
-          newInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID] !== undefined
-        );
+        if (newInfo.entitlements.active[PREMIUM_ENTITLEMENT_ID]) return true;
+
+        const message =
+          'Purchase completed, but premium access is not active yet';
+        setError(message);
+        throw new Error(message);
       } catch (error_) {
         const purchaseError = error_ as PurchasesError;
         if (purchaseError.userCancelled) return false;
 
-        if (__DEV__) console.error('[usePremium] Purchase failed:', purchaseError);
+        if (__DEV__)
+          console.error('[usePremium] Purchase failed:', purchaseError);
         if (isMountedRef.current) {
           setError(purchaseError.message || 'Purchase failed');
         }
-        return false;
+        throw error_;
+      } finally {
+        purchaseInFlightRef.current = false;
       }
     },
     [setCustomerInfo, setError]
   );
 
   const restorePurchases = useCallback(async (): Promise<boolean> => {
-    if (!isPurchasesAvailable()) {
-      if (isMountedRef.current) {
-        setError('Purchases not available on this platform');
-      }
-      return false;
-    }
+    if (restoreInFlightRef.current) return false;
+    restoreInFlightRef.current = true;
 
     try {
+      if (!isPurchasesAvailable()) {
+        const message = 'Purchases not available on this platform';
+        if (isMountedRef.current) setError(message);
+        throw new Error(message);
+      }
       if (isMountedRef.current) {
         setError(null);
       }
       const info = await Purchases.restorePurchases();
-      
+
       if (!isMountedRef.current) return false;
       setCustomerInfo(info);
 
@@ -95,7 +94,9 @@ export function usePremiumActions({
       if (isMountedRef.current) {
         setError('Failed to restore purchases');
       }
-      return false;
+      throw error_;
+    } finally {
+      restoreInFlightRef.current = false;
     }
   }, [setCustomerInfo, setError]);
 
@@ -104,7 +105,7 @@ export function usePremiumActions({
 
     try {
       const info = await Purchases.getCustomerInfo();
-      
+
       if (!isMountedRef.current) return;
       setCustomerInfo(info);
     } catch (error_) {

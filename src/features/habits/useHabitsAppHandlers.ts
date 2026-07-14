@@ -72,7 +72,8 @@ export function useHabitsAppHandlers({
 
   /** Paywall reports a successful purchase. */
   const handlePaywallSuccess = useCallback(() => {
-    logInteraction('premium_purchase_success', { source: 'home_prompt' });
+    // RevenueCat's signed, idempotent webhook records purchase_succeeded.
+    // Avoid double-counting it from this optimistic client callback.
     setPaywallVisible(false);
   }, []);
 

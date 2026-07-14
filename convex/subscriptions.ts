@@ -4,6 +4,7 @@ import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 import { updateUserSettingsPremium } from './subscriptions/helpers';
 import { isStaleWebhookTimestamp } from './subscriptions/premiumCheck';
+import { recordProductEvent } from './lib/productEvents';
 
 // Export premium checking utilities
 export { hasPremiumAccess, requirePremium } from './subscriptions/premiumCheck';
@@ -114,6 +115,11 @@ export const grantPremium = internalMutation({
       });
     }
     await updateUserSettingsPremium(ctx, args.clerkId, true);
+    if (args.eventType === 'INITIAL_PURCHASE') {
+      await recordProductEvent(ctx, args.clerkId, 'purchase_succeeded', {
+        source: args.isTrialing ? 'revenuecat_trial' : 'revenuecat_paid',
+      });
+    }
   },
 });
 

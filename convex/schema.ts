@@ -15,6 +15,10 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 
 import { progressEmojisValidator } from './lib/progressEmojisValidator';
+import {
+  productEventNameValidator,
+  productEventSourceValidator,
+} from './productEvents.constants';
 import { templateCategoryValidator } from './templateCategories';
 
 // Subscription status type for type safety
@@ -223,6 +227,7 @@ const applicationTables = {
     woopWish: v.optional(v.string()),
   })
     .index('by_strengthUpdatedAt', ['strengthUpdatedAt'])
+    .index('by_userId_and_archived', ['userId', 'archived'])
     .index('by_userId', ['userId']),
 
   deletedHabits: defineTable({
@@ -233,6 +238,28 @@ const applicationTables = {
   })
     .index('by_expiresAt', ['expiresAt'])
     .index('by_userId', ['userId']),
+
+  // Privacy-minimized product analytics. Properties are fixed and deliberately
+  // exclude habit names, notes, colors, dates, and raw entity IDs.
+  productEvents: defineTable({
+    count: v.optional(v.number()),
+    durationMs: v.optional(v.number()),
+    expiresAt: v.number(),
+    name: productEventNameValidator,
+    occurredAt: v.number(),
+    platform: v.optional(
+      v.union(v.literal('android'), v.literal('ios'), v.literal('web'))
+    ),
+    release: v.optional(v.string()),
+    sessionId: v.optional(v.string()),
+    source: v.optional(productEventSourceValidator),
+    streak: v.optional(v.number()),
+    userId: v.string(),
+  })
+    .index('by_expires_at', ['expiresAt'])
+    .index('by_name_and_time', ['name', 'occurredAt'])
+    .index('by_user_and_name_and_time', ['userId', 'name', 'occurredAt'])
+    .index('by_user_and_time', ['userId', 'occurredAt']),
 
   // Subscriptions - RevenueCat webhook-driven subscription state
   // SEC-002: Server-side premium validation

@@ -15,6 +15,7 @@ import type {
   HabitSettings,
   HabitSortMode,
   HabitStatus,
+  HabitTrackingEntry,
   RewardToastData,
 } from '../types';
 
@@ -28,6 +29,8 @@ export interface HabitsListState {
   completionSoundType: CompletionSoundType;
   dayShape: HabitSettings['dayShape'];
   habits: Habit[];
+  settings: HabitSettings | undefined;
+  tracking: HabitTrackingEntry[];
   habitSortMode: HabitSortMode;
   habitCompletionIcon: HabitSettings['habitCompletionIcon'];
   isHabitsLoading: boolean;

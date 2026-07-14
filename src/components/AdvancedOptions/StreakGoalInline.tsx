@@ -33,7 +33,8 @@ export function StreakGoalInline({ streakGoal, onStreakGoalChange }: Props) {
   return (
     <View>
       <StreakGoalSectionHead />
-      <View style={{ flexDirection: 'row', gap: 6 }}>
+      {/* marginTop keeps the START badge from colliding with the description */}
+      <View style={{ flexDirection: 'row', gap: 6, marginTop: 4 }}>
         {STREAK_PRESETS.map((p) => (
           <StreakGoalChip
             key={p.days}

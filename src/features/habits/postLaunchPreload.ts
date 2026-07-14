@@ -10,30 +10,56 @@ import Constants, { ExecutionEnvironment } from 'expo-constants';
 
 import { scheduleWhenIdle } from '../../lib/timing/scheduleWhenIdle';
 
-let preloadPromise: Promise<void> | null = null;
+const SECONDARY_PRELOAD_DELAY_MS = 2500;
+const noop = () => {};
+let frequentPreloadPromise: Promise<void> | null = null;
+let secondaryPreloadPromise: Promise<void> | null = null;
 
 function shouldSkipPreload(): boolean {
   return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 }
 
-export function preloadPostLaunchAppParts(): Promise<void> {
+export function preloadFrequentAppParts(): Promise<void> {
   if (shouldSkipPreload()) {
     return Promise.resolve();
   }
 
-  if (preloadPromise) return preloadPromise;
+  if (frequentPreloadPromise) return frequentPreloadPromise;
 
-  preloadPromise = Promise.allSettled([
+  frequentPreloadPromise = Promise.allSettled([
+    import('./components/HabitsAppOverlays'),
     import('../../components/CreateHabitModal'),
+    import('../../components/QuickActionsSheet'),
+    import('./components/HabitsModals/CalendarAndDetailModals'),
+    import('./components/HabitsModals/CreateHabitModalSection'),
+    import('./components/HabitsModals/QuickActionsSection'),
+  ]).then(() => {});
+
+  return frequentPreloadPromise;
+}
+
+export function preloadSecondaryAppParts(): Promise<void> {
+  if (shouldSkipPreload()) {
+    return Promise.resolve();
+  }
+
+  if (secondaryPreloadPromise) return secondaryPreloadPromise;
+
+  secondaryPreloadPromise = Promise.allSettled([
     import('../../components/RevenueCatPaywall'),
     import('../../components/SettingsModal'),
     import('../../screens/TemplatesScreen'),
-    import('./components/HabitsModals/CreateHabitModalSection'),
     import('./components/HabitsModals/SettingsModalSection'),
+    import('./components/HabitsModals/ShareAndPauseModals'),
     import('./components/HabitsModals/TemplatesModalSection'),
+    import('./components/HabitsModals/VisualizationModalSection'),
   ]).then(() => {});
 
-  return preloadPromise;
+  return secondaryPreloadPromise;
+}
+
+export async function preloadPostLaunchAppParts(): Promise<void> {
+  await Promise.all([preloadFrequentAppParts(), preloadSecondaryAppParts()]);
 }
 
 export function schedulePostLaunchAppPreload(): () => void {
@@ -42,23 +68,34 @@ export function schedulePostLaunchAppPreload(): () => void {
   }
 
   let cancelled = false;
+  let cancelSecondaryIdle = noop;
 
-  const cancelScheduledPreload = scheduleWhenIdle(
+  const cancelFrequentIdle = scheduleWhenIdle(
     () => {
-      if (cancelled) {
-        return;
-      }
-
-      void preloadPostLaunchAppParts();
+      if (!cancelled) void preloadFrequentAppParts();
     },
     {
-      fallbackDelayMs: 120,
+      fallbackDelayMs: 400,
       timeoutMs: 1500,
     }
   );
+  const secondaryTimer = setTimeout(() => {
+    if (cancelled) return;
+    cancelSecondaryIdle = scheduleWhenIdle(
+      () => {
+        if (!cancelled) void preloadSecondaryAppParts();
+      },
+      {
+        fallbackDelayMs: 500,
+        timeoutMs: 2000,
+      }
+    );
+  }, SECONDARY_PRELOAD_DELAY_MS);
 
   return () => {
     cancelled = true;
-    cancelScheduledPreload();
+    clearTimeout(secondaryTimer);
+    cancelFrequentIdle();
+    cancelSecondaryIdle();
   };
 }

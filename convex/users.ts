@@ -9,6 +9,7 @@ import { mutation, query } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import { v } from 'convex/values';
 import { enforceRateLimit } from './lib/rateLimit';
+import { recordProductEvent } from './lib/productEvents';
 
 async function deleteDocuments(
   ctx: MutationCtx,
@@ -59,6 +60,10 @@ export const getOrCreateUser = mutation({
       isAnonymous: false,
       lastLoginAt: Date.now(),
       name: identity.name ?? undefined,
+    });
+
+    await recordProductEvent(ctx, identity.subject, 'signup_completed', {
+      source: 'clerk_sync',
     });
 
     return userId;
@@ -124,6 +129,10 @@ export const deleteCurrentUserData = mutation({
       .query('templateUsage')
       .withIndex('by_user', (q) => q.eq('userId', userId))
       .collect();
+    const productEvents = await ctx.db
+      .query('productEvents')
+      .withIndex('by_user_and_time', (q) => q.eq('userId', userId))
+      .collect();
     // SR-2026-04-17-09 follow-up: keep GDPR delete complete when the
     // rate-limits table was added. Purge all per-user throttle rows.
     const rateLimits = await ctx.db
@@ -134,6 +143,10 @@ export const deleteCurrentUserData = mutation({
     const deletedTemplateUsage = await deleteDocuments(
       ctx,
       templateUsage.map((entry) => entry._id)
+    );
+    await deleteDocuments(
+      ctx,
+      productEvents.map((entry) => entry._id)
     );
     const deletedRateLimits = await deleteDocuments(
       ctx,

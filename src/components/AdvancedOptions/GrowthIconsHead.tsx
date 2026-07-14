@@ -43,7 +43,7 @@ export function GrowthIconsHead({ starting }: { starting: string }) {
           ...typography.caption,
           color: t.meta,
           marginLeft: 42,
-          marginBottom: 12,
+          marginBottom: 10,
         }}
       >
         How your habit’s strength looks as it grows.

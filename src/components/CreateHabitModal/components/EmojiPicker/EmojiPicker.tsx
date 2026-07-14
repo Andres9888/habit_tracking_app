@@ -62,7 +62,7 @@ function EmojiPickerComponent({
   );
 
   return (
-    <View className='mb-6'>
+    <View className='mb-4'>
       {hideLabel ? null : <Text
           accessibilityLabel={`Suggested emojis for ${debouncedHabitName || 'your habit'}`}
           accessibilityRole='text'

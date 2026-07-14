@@ -1,23 +1,19 @@
 /* eslint-disable max-lines */
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents -- RevenueCat types resolve to any at build time */
 /**
  * usePremiumData Hook
  *
- * Handles SDK initialization, data fetching, and customer info listener.
- * Polls for SDK availability (handles race condition with PurchasesProvider),
- * then fetches customer info + offerings in parallel.
+ * Owns the single customer-info listener and shared RevenueCat requests.
+ * Entitlement and offerings loading are intentionally independent so pricing
+ * cannot keep the app startup gate waiting.
  */
 
-import { useEffect, useState, useRef } from 'react';
-import { isPurchasesAvailable, Purchases } from '../../lib/purchases';
+import { useEffect, useState } from 'react';
+import { Purchases } from '../../lib/purchases';
 import type {
   PurchasesPackage,
   CustomerInfo,
   CustomerInfoUpdateListener,
 } from 'react-native-purchases';
-
-const MAX_RETRIES = 10;
-const RETRY_DELAY_MS = 500;
 
 interface PremiumData {
   customerInfo: CustomerInfo | null;
@@ -29,90 +25,91 @@ interface PremiumData {
   setError: (error: string | null) => void;
 }
 
-export function usePremiumData(): PremiumData {
+interface PremiumDataOptions {
+  enabled: boolean;
+  identityKey: string | null;
+}
+
+// eslint-disable-next-line max-lines-per-function
+export function usePremiumData({
+  enabled,
+  identityKey,
+}: PremiumDataOptions): PremiumData {
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo | null>(null);
   const [packages, setPackages] = useState<PurchasesPackage[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoadingOfferings, setIsLoadingOfferings] = useState(true);
+  const [entitlementResolvedFor, setEntitlementResolvedFor] = useState<
+    string | null
+  >(null);
+  const [offeringsResolvedFor, setOfferingsResolvedFor] = useState<
+    string | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
-  const listenerRef = useRef<CustomerInfoUpdateListener | null>(null);
+  const isLoading = enabled && entitlementResolvedFor !== identityKey;
+  const isLoadingOfferings = enabled && offeringsResolvedFor !== identityKey;
 
+  // eslint-disable-next-line max-lines-per-function
   useEffect(() => {
-    let isMounted = true;
-
-    async function waitForSdk(): Promise<boolean> {
-      let retryCount = 0;
-      while (!isPurchasesAvailable() && retryCount < MAX_RETRIES) {
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
-        retryCount++;
-      }
-      return isPurchasesAvailable();
+    if (!enabled) {
+      setCustomerInfo(null);
+      setPackages(null);
+      setError(null);
+      setEntitlementResolvedFor(null);
+      setOfferingsResolvedFor(null);
+      return;
     }
 
-    async function fetchData() {
-      const sdkAvailable = await waitForSdk();
-      if (!sdkAvailable) {
-        if (isMounted) {
-          setIsLoading(false);
-          setIsLoadingOfferings(false);
-        }
-        return;
-      }
+    let isMounted = true;
+    let listener: CustomerInfoUpdateListener | null = null;
+    setCustomerInfo(null);
+    setPackages(null);
+    setError(null);
+    setEntitlementResolvedFor(null);
+    setOfferingsResolvedFor(null);
 
+    async function fetchEntitlement(): Promise<void> {
       try {
-        const [info, offeringsResult] = await Promise.all([
-          Purchases.getCustomerInfo(),
-          Purchases.getOfferings(),
-        ]);
+        const info = await Purchases.getCustomerInfo();
+        if (isMounted) setCustomerInfo(info);
+      } catch (error_) {
+        if (__DEV__)
+          console.error('[usePremium] Failed to load customer info:', error_);
+        if (isMounted) setError('Failed to load subscription info');
+      } finally {
+        if (isMounted) setEntitlementResolvedFor(identityKey);
+      }
+    }
 
+    async function fetchOfferings(): Promise<void> {
+      try {
+        const offerings = await Purchases.getOfferings();
         if (isMounted) {
-          setCustomerInfo(info);
-          setPackages(offeringsResult.current?.availablePackages ?? null);
+          setPackages(offerings.current?.availablePackages ?? null);
         }
       } catch (error_) {
         if (__DEV__)
-          console.error('[usePremium] Failed to fetch data:', error_);
-        if (isMounted) {
-          setError('Failed to load subscription info');
-        }
+          console.error('[usePremium] Failed to load offerings:', error_);
       } finally {
-        if (isMounted) {
-          setIsLoading(false);
-          setIsLoadingOfferings(false);
-        }
+        if (isMounted) setOfferingsResolvedFor(identityKey);
       }
     }
 
-    function setupListener() {
-      if (isPurchasesAvailable() && !listenerRef.current) {
-        try {
-          const listener: CustomerInfoUpdateListener = (info: CustomerInfo) => {
-            if (isMounted) setCustomerInfo(info);
-          };
-          Purchases.addCustomerInfoUpdateListener(listener);
-          listenerRef.current = listener;
-        } catch {
-          // Listener setup is best-effort
-        }
-      }
+    try {
+      listener = (info: CustomerInfo) => {
+        if (isMounted) setCustomerInfo(info);
+      };
+      Purchases.addCustomerInfoUpdateListener(listener);
+    } catch {
+      listener = null;
     }
 
-    void fetchData()
-      .then(() => {
-        if (isMounted) setupListener();
-      })
-      .catch((error) => {
-        if (__DEV__) console.warn('[usePremium] Unexpected error during setup:', error);
-      });
+    void fetchEntitlement();
+    void fetchOfferings();
 
     return () => {
       isMounted = false;
-      if (listenerRef.current) {
-        Purchases.removeCustomerInfoUpdateListener(listenerRef.current);
-        listenerRef.current = null;
-      }
+      if (listener) Purchases.removeCustomerInfoUpdateListener(listener);
     };
-  }, []);
+  }, [enabled, identityKey]);
 
   return {
     customerInfo,

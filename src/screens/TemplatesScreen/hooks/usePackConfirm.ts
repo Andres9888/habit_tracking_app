@@ -7,10 +7,14 @@ import type { Dispatch, SetStateAction } from 'react';
 import { useCallback, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { PremiumPack } from '../data/premiumPacks';
+import type { TemplateImportAttribution } from '../utils/libraryAnalytics';
 
 interface PackConfirmOptions {
   allTemplates: { _id: Id<'templates'>; name: string }[] | undefined;
-  importTemplate: (args: { templateId: Id<'templates'> }) => Promise<{ success: boolean }>;
+  importTemplate: (args: {
+    source?: TemplateImportAttribution;
+    templateId: Id<'templates'>;
+  }) => Promise<{ alreadyExists?: boolean; success: boolean }>;
   onComplete: (count: number) => void;
   setImportedIds: Dispatch<SetStateAction<Set<string>>>;
 }
@@ -33,16 +37,27 @@ export function usePackConfirm(o: PackConfirmOptions) {
     let count = 0;
     for (const t of matches) {
       try {
-        const res = await o.importTemplate({ templateId: t._id });
+        const res = await o.importTemplate({
+          source: 'pack',
+          templateId: t._id,
+        });
         if (res.success) {
           o.setImportedIds((prev) => new Set(prev).add(t._id));
-          count++;
+          if (!res.alreadyExists) count++;
         }
-      } catch { /* skip failed individual imports */ }
+      } catch {
+        /* skip failed individual imports */
+      }
     }
     setSelectedPack(null);
     if (count > 0) o.onComplete(count);
-  }, [selectedPack, o.allTemplates, o.importTemplate, o.setImportedIds, o.onComplete]);
+  }, [
+    selectedPack,
+    o.allTemplates,
+    o.importTemplate,
+    o.setImportedIds,
+    o.onComplete,
+  ]);
 
   return { handleCancel, handleConfirm, handlePackPress, selectedPack };
 }

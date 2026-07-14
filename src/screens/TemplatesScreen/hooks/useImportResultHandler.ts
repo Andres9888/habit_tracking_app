@@ -19,6 +19,8 @@ interface UseImportResultHandlerOptions {
   showSuccess: (habitId: Id<'habits'>) => void;
 }
 
+export type ImportResultStatus = 'imported' | 'already_exists' | 'failed';
+
 export function useImportResultHandler(o: UseImportResultHandlerOptions) {
   return useCallback(
     (res: ImportResult, templateId: Id<'templates'>) => {
@@ -26,18 +28,18 @@ export function useImportResultHandler(o: UseImportResultHandlerOptions) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
         if (res.habitId) o.showAlreadyImported(res.habitId);
         else o.showError();
-        return true;
+        return 'already_exists';
       }
       if (res.success && res.habitId) {
         o.setImportedTemplateIds((p) => new Set(p).add(templateId));
         o.showSuccess(res.habitId);
-        return true;
+        return 'imported';
       }
       if (res.success) {
         o.showError();
-        return false;
+        return 'failed';
       }
-      return false;
+      return 'failed';
     },
     [
       o.setImportedTemplateIds,

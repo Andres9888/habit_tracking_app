@@ -11,10 +11,12 @@ export const chipValueText: TextStyle = {
 
 /**
  * Uppercase micro-labels (NO GOAL, STARTER, START, DAYS).
- * tabBar floor (10px) + semibold — same pattern as settings badges.
+ * 9px + tight tracking so 5 chips fit without clipping.
  */
 export const chipMicroLabel: TextStyle = {
-  ...typography.tabBar,
-  fontWeight: fontWeights.semibold,
-  letterSpacing: 0.8,
+  fontFamily: typography.tabBar.fontFamily,
+  fontSize: 9,
+  fontWeight: fontWeights.bold,
+  letterSpacing: 0.4,
+  lineHeight: 11,
 };

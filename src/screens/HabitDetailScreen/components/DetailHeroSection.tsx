@@ -1,32 +1,37 @@
-/** DetailHeroSection - Fused hero (icon/name/streak/total/complete bar) plus milestone beat. */
-import { View } from 'react-native';
+/** DetailHeroSection — fused hero + milestone beat. */
+import { View, type LayoutChangeEvent } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
 import { DetailHero } from './DetailHero';
 import { MilestoneBeat } from './MilestoneBeat';
 
 interface DetailHeroSectionProps {
+  completedDates: Set<string>;
   habit: Habit;
   isCompletedToday: boolean;
   isToggling: boolean;
   totalCompletions: number;
-  onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onCompletePress: () => void;
+  onLayout?: (event: LayoutChangeEvent) => void;
 }
 
 export function DetailHeroSection({
+  completedDates,
   habit,
   isCompletedToday,
   isToggling,
   totalCompletions,
-  onDayPress,
+  onCompletePress,
+  onLayout,
 }: DetailHeroSectionProps) {
   return (
-    <View>
+    <View onLayout={onLayout}>
       <DetailHero
+        completedDates={completedDates}
         habit={habit}
         isCompletedToday={isCompletedToday}
         isToggling={isToggling}
         totalCompletions={totalCompletions}
-        onDayPress={onDayPress}
+        onCompletePress={onCompletePress}
       />
       <MilestoneBeat
         currentStreak={habit.currentStreak ?? 0}

@@ -12,12 +12,20 @@ export function buildModalsProps(
     handleConfirmDelete: () => void;
     handleUndoArchive: () => void;
     handleUndoDelete: () => void;
+  },
+  completeHandlers: {
+    toastMessage: string | null;
+    dismissToast: () => void;
+    handleUndo: () => void;
   }
 ) {
   return {
+    completeToastMessage: completeHandlers.toastMessage,
     handleConfirmArchive: calendarHandlers.handleConfirmArchive,
     handleConfirmDelete: calendarHandlers.handleConfirmDelete,
+    handleDismissComplete: completeHandlers.dismissToast,
     handleUndoArchive: calendarHandlers.handleUndoArchive,
+    handleUndoComplete: completeHandlers.handleUndo,
     handleUndoDelete: calendarHandlers.handleUndoDelete,
     pendingArchive: screenState.pendingArchive,
     pendingDelete: screenState.pendingDelete,

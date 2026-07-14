@@ -12,7 +12,7 @@ import type {
 
 interface TemplateModalsProps {
   importedTemplateIds: Set<string>;
-  importingTemplateId: Id<'templates'> | null;
+  importingTemplateIds: Set<string>;
   previewInitialAnchor: TemplatePreviewAnchor;
   previewTemplate: Doc<'templates'> | null;
   showCustomizeModal: boolean;
@@ -29,7 +29,7 @@ interface TemplateModalsProps {
 
 export function TemplateModals({
   importedTemplateIds,
-  importingTemplateId,
+  importingTemplateIds,
   previewInitialAnchor,
   previewTemplate,
   showCustomizeModal,
@@ -43,9 +43,11 @@ export function TemplateModals({
   const isImported = previewTemplate
     ? importedTemplateIds.has(previewTemplate._id)
     : false;
-  const isImporting = previewTemplate
-    ? importingTemplateId === previewTemplate._id
-    : false;
+  const importingTemplateId =
+    previewTemplate && importingTemplateIds.has(previewTemplate._id)
+      ? previewTemplate._id
+      : null;
+  const isImporting = importingTemplateId !== null;
 
   return (
     <>

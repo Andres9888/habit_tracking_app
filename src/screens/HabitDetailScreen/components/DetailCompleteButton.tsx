@@ -2,7 +2,9 @@
  * DetailCompleteButton — C1 "Settled" full-width bar inside the hero card.
  * Rest: outlined bar with an empty check-well waiting to be filled.
  * Done: settles into a deep fill; the well flips to a medallion with a check.
- * The whole bar toggles in both states (tap the done bar to un-mark).
+ * onPress fires in both states, but the caller (useCompleteHandlers) makes
+ * it one-way: a press while done re-offers Undo in a toast rather than
+ * un-marking directly, so a second tap can't silently erase a completion.
  */
 import { Check } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
@@ -54,7 +56,9 @@ export function DetailCompleteButton({
   return (
     <AnimatedPressable
       accessibilityLabel={
-        isCompletedToday ? 'Done today, tap to undo' : 'Mark as done for today'
+        isCompletedToday
+          ? 'Done today, double tap for the undo option'
+          : 'Mark as done for today'
       }
       accessibilityRole='button'
       accessibilityState={{ checked: isCompletedToday }}

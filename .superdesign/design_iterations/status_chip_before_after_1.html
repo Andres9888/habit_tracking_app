@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Status Chip — Before / After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f1eb;
+      --card: #fffcf7;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --faint: #a8a29e;
+      --border: #e7e5e4;
+      --surface: #f5f5f4;
+      --primary: #0f8a6a;
+      --primary-soft: #d8f3ea;
+      --streak: #e07a2f;
+      --streak-soft: #fff1e6;
+      --success: #15803d;
+      --success-soft: #dcfce7;
+      --phone: #1c1917;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      background:
+        radial-gradient(900px 500px at 10% -10%, #e8f7f1 0%, transparent 55%),
+        radial-gradient(700px 400px at 100% 0%, #fff1e6 0%, transparent 50%),
+        var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    h1, .display { font-family: "Literata", Georgia, serif; }
+    .phone {
+      width: 320px;
+      background: #fafaf9;
+      border-radius: 36px;
+      border: 10px solid var(--phone);
+      box-shadow:
+        0 0 0 1px #44403c,
+        0 28px 60px -20px rgba(28, 25, 23, 0.45);
+      overflow: hidden;
+      position: relative;
+    }
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 96px;
+      height: 22px;
+      background: var(--phone);
+      border-radius: 999px;
+      z-index: 5;
+    }
+    .hero-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(28, 25, 23, 0.04);
+      margin: 0 14px;
+      overflow: hidden;
+    }
+    .chip-pending {
+      background: var(--surface);
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .chip-done {
+      background: var(--success-soft);
+      color: var(--success);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .icon-tile {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: var(--primary-soft);
+      border: 1px solid #b7e4d4;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .ring {
+      width: 132px;
+      height: 132px;
+      border-radius: 999px;
+      margin: 8px auto 0;
+      background:
+        conic-gradient(var(--streak) 0 62%, #e7e5e4 62% 100%);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+    .ring::after {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      background: var(--card);
+      border-radius: 999px;
+    }
+    .ring-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      line-height: 1;
+    }
+    .stat {
+      flex: 1;
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .day {
+      flex: 1;
+      text-align: center;
+    }
+    .day-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      margin: 0 auto 4px;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .day-dot.done { background: var(--primary); color: white; }
+    .day-dot.today { background: var(--streak-soft); color: var(--streak); box-shadow: inset 0 0 0 2px var(--streak); }
+    .day-dot.miss { background: transparent; color: var(--faint); box-shadow: inset 0 0 0 1.5px dashed #d6d3d1; }
+    .cta {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      cursor: default;
+    }
+    .cta-pending {
+      background: var(--primary);
+      color: white;
+    }
+    .cta-done {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+    .callout {
+      border-left: 3px solid var(--primary);
+      background: rgba(15, 138, 106, 0.06);
+      border-radius: 0 12px 12px 0;
+    }
+    .badge-before {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .badge-after {
+      background: var(--primary-soft);
+      color: #086148;
+    }
+    .strike-zone {
+      position: relative;
+    }
+    .strike-zone::after {
+      content: "";
+      position: absolute;
+      inset: -4px -6px;
+      border: 2px dashed #ef4444;
+      border-radius: 12px;
+      background: rgba(239, 68, 68, 0.06);
+      pointer-events: none;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.55; }
+      50% { opacity: 1; }
+    }
+    .arrow-note {
+      font-size: 12px;
+      color: #b91c1c;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body class="px-5 py-10 sm:px-8">
+  <div class="mx-auto max-w-6xl">
+    <!-- Intro -->
+    <header class="mb-10 max-w-3xl">
+      <p class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-stone-500">Habit Detail · Hero header</p>
+      <h1 class="display mb-3 text-3xl font-bold tracking-tight text-stone-900 sm:text-4xl">
+        What is the status chip?
+      </h1>
+      <p class="text-[15px] leading-relaxed text-stone-600 sm:text-base">
+        The <strong class="text-stone-800">status chip</strong> is the small uppercase pill in the top-right of the habit detail hero:
+        <span class="chip-pending mx-1 align-middle">Pending</span>
+        or
+        <span class="chip-done mx-1 align-middle">Done</span>.
+        It lives next to the habit name and only answers one question: <em>“Did I complete this today?”</em>
+      </p>
+      <div class="callout mt-5 px-4 py-3 text-sm leading-relaxed text-stone-700">
+        <strong class="text-stone-900">Code:</strong>
+        <code class="rounded bg-white/70 px-1.5 py-0.5 text-[12px]">DetailHeroStatusChip.tsx</code>
+        · rendered inside
+        <code class="rounded bg-white/70 px-1.5 py-0.5 text-[12px]">DetailHeroHeaderRow</code>
+        · flips on <code class="rounded bg-white/70 px-1.5 py-0.5 text-[12px]">isCompletedToday</code>
+      </div>
+    </header>
+
+    <!-- Comparison -->
+    <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+      <h2 class="display text-xl font-bold text-stone-900">Before vs after</h2>
+      <p class="text-sm text-stone-500">Same hero · only the chip is removed</p>
+    </div>
+
+    <div class="grid items-start gap-10 lg:grid-cols-2">
+      <!-- BEFORE -->
+      <section>
+        <div class="mb-4 flex items-center gap-2">
+          <span class="badge-before rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">Before</span>
+          <span class="text-sm font-semibold text-stone-700">With status chip</span>
+        </div>
+
+        <div class="phone mx-auto">
+          <div class="bg-[#fafaf9] pt-11 pb-5">
+            <!-- nav -->
+            <div class="mb-2 flex items-center justify-between px-4">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-500">✕</div>
+              <div class="h-3 w-16 rounded bg-transparent"></div>
+              <div class="rounded-full bg-stone-100 px-3 py-1.5 text-[12px] font-semibold text-stone-600">Edit</div>
+            </div>
+
+            <div class="hero-card">
+              <!-- header row WITH chip -->
+              <div class="flex items-start gap-3 px-[18px] pb-1 pt-[18px]">
+                <div class="icon-tile">📖</div>
+                <div class="min-w-0 flex-1 pt-0.5">
+                  <div class="display text-[18px] font-bold leading-tight tracking-tight">Read 10 minutes</div>
+                  <div class="mt-1 text-[11px] font-medium text-stone-500">Every day · morning</div>
+                  <div class="mt-1.5 flex items-center gap-1 text-[11px] font-semibold text-stone-400">
+                    <span>🕐</span> Reminder 8:00 AM
+                  </div>
+                </div>
+                <div class="strike-zone">
+                  <span class="chip-pending">Pending</span>
+                </div>
+              </div>
+              <p class="arrow-note px-[18px] pb-1 pt-1 text-right">← redundant status</p>
+
+              <!-- streak -->
+              <div class="px-4 pt-1 text-center">
+                <div class="ring">
+                  <div class="ring-inner">
+                    <div class="text-lg">🔥</div>
+                    <div class="display mt-0.5 text-[42px] font-bold tracking-tight">12</div>
+                    <div class="mt-1 text-[12px] font-semibold text-stone-500">day streak</div>
+                  </div>
+                </div>
+                <div class="mt-2 text-[11px] font-semibold text-stone-400">
+                  Path to best · <span class="font-bold text-orange-700">12</span> / 21
+                </div>
+              </div>
+
+              <!-- stats -->
+              <div class="mt-3 flex gap-2 px-4">
+                <div class="stat">
+                  <div class="text-[16px] font-bold text-stone-900">21</div>
+                  <div class="text-[10px] font-semibold uppercase tracking-wide text-stone-400">Best</div>
+                </div>
+                <div class="stat">
+                  <div class="text-[16px] font-bold text-stone-900">48</div>
+                  <div class="text-[10px] font-semibold uppercase tracking-wide text-stone-400">Total</div>
+                </div>
+                <div class="stat">
+                  <div class="text-[16px] font-bold text-stone-900">86%</div>
+                  <div class="text-[10px] font-semibold uppercase tracking-wide text-stone-400">30-day</div>
+                </div>
+              </div>
+              <p class="mt-3 px-4 text-center text-[11px] leading-snug text-stone-500">
+                You've shown up <strong class="text-stone-800">48 times</strong> for this.
+              </p>
+
+              <!-- week -->
+              <div class="mt-3 flex justify-between gap-1 px-4">
+                <div class="day"><div class="day-dot done">M</div><div class="text-[9px] text-stone-400">Mon</div></div>
+                <div class="day"><div class="day-dot done">T</div><div class="text-[9px] text-stone-400">Tue</div></div>
+                <div class="day"><div class="day-dot miss">W</div><div class="text-[9px] text-stone-400">Wed</div></div>
+                <div class="day"><div class="day-dot done">T</div><div class="text-[9px] text-stone-400">Thu</div></div>
+                <div class="day"><div class="day-dot done">F</div><div class="text-[9px] text-stone-400">Fri</div></div>
+                <div class="day"><div class="day-dot today">S</div><div class="text-[9px] text-stone-400">Sat</div></div>
+                <div class="day"><div class="day-dot miss">S</div><div class="text-[9px] text-stone-400">Sun</div></div>
+              </div>
+
+              <div class="p-4">
+                <button class="cta cta-pending">Mark complete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul class="mx-auto mt-5 max-w-sm space-y-2 text-sm text-stone-600">
+          <li class="flex gap-2"><span class="text-red-500">✕</span><span>Chip, week “today,” and CTA all answer the same question</span></li>
+          <li class="flex gap-2"><span class="text-red-500">✕</span><span>Name row feels cramped — chip steals width from long titles</span></li>
+          <li class="flex gap-2"><span class="text-red-500">✕</span><span>Status competes with identity (name + icon) in the first glance</span></li>
+        </ul>
+      </section>
+
+      <!-- AFTER -->
+      <section>
+        <div class="mb-4 flex items-center gap-2">
+          <span class="badge-after rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider">After</span>
+          <span class="text-sm font-semibold text-stone-700">Chip removed</span>
+        </div>
+
+        <div class="phone mx-auto">
+          <div class="bg-[#fafaf9] pt-11 pb-5">
+            <div class="mb-2 flex items-center justify-between px-4">
+              <div class="flex h-8 w-8 items-center justify-center rounded-full bg-stone-100 text-stone-500">✕</div>
+              <div class="h-3 w-16 rounded bg-transparent"></div>
+              <div class="rounded-full bg-stone-100 px-3 py-1.5 text-[12px] font-semibold text-stone-600">Edit</div>
+            </div>
+
+            <div class="hero-card">
+              <!-- header row WITHOUT chip -->
+              <div class="flex items-start gap-3 px-[18px] pb-2 pt-[18px]">
+                <div class="icon-tile">📖</div>
+                <div class="min-w-0 flex-1 pt-0.5">
+                  <div class="display text-[18px] font-bold leading-tight tracking-tight">Read 10 minutes</div>
+                  <div class="mt-1 text-[11px] font-medium text-stone-500">Every day · morning</div>
+                  <div class="mt-1.5 flex items-center gap-1 text-[11px] font-semibold text-stone-400">
+                    <span>🕐</span> Reminder 8:00 AM
+                  </div>
+                </div>
+                <!-- intentional empty: chip gone -->
+              </div>
+
+              <div class="px-4 pt-1 text-center">
+                <div class="ring">
+                  <div class="ring-inner">
+                    <div class="text-lg">🔥</div>
+                    <div class="display mt-0.5 text-[42px] font-bold tracking-tight">12</div>
+                    <div class="mt-1 text-[12px] font-semibold text-stone-500">day streak</div>
+                  </div>
+                </div>
+                <div class="mt-2 text-[11px] font-semibold text-stone-400">
+                  Path to best · <span class="font-bold text-orange-700">12</span> / 21
+                </div>
+              </div>
+
+              <div class="mt-3 flex gap-2 px-4">
+                <div class="stat">
+                  <div class="text-[16px] font-bold text-stone-900">21</div>
+                  <div class="text-[10px] font-semibold uppercase tracking-wide text-stone-400">Best</div>
+                </div>
+                <div class="stat">
+                  <div class="text-[16px] font-bold text-stone-900">48</div>
+                  <div class="text-[10px] font-semibold uppercase tracking-wide text-stone-400">Total</div>
+                </div>
+                <div class="stat">
+                  <div class="text-[16px] font-bold text-stone-900">86%</div>
+                  <div class="text-[10px] font-semibold uppercase tracking-wide text-stone-400">30-day</div>
+                </div>
+              </div>
+              <p class="mt-3 px-4 text-center text-[11px] leading-snug text-stone-500">
+                You've shown up <strong class="text-stone-800">48 times</strong> for this.
+              </p>
+
+              <div class="mt-3 flex justify-between gap-1 px-4">
+                <div class="day"><div class="day-dot done">M</div><div class="text-[9px] text-stone-400">Mon</div></div>
+                <div class="day"><div class="day-dot done">T</div><div class="text-[9px] text-stone-400">Tue</div></div>
+                <div class="day"><div class="day-dot miss">W</div><div class="text-[9px] text-stone-400">Wed</div></div>
+                <div class="day"><div class="day-dot done">T</div><div class="text-[9px] text-stone-400">Thu</div></div>
+                <div class="day"><div class="day-dot done">F</div><div class="text-[9px] text-stone-400">Fri</div></div>
+                <div class="day"><div class="day-dot today">S</div><div class="text-[9px] text-stone-400">Sat</div></div>
+                <div class="day"><div class="day-dot miss">S</div><div class="text-[9px] text-stone-400">Sun</div></div>
+              </div>
+
+              <div class="p-4">
+                <button class="cta cta-pending">Mark complete</button>
+                <p class="mt-2 text-center text-[10px] font-bold uppercase tracking-wider text-emerald-700">
+                  ↑ status lives here instead
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <ul class="mx-auto mt-5 max-w-sm space-y-2 text-sm text-stone-600">
+          <li class="flex gap-2"><span class="text-emerald-600">✓</span><span>Header is identity-only: icon + name + schedule</span></li>
+          <li class="flex gap-2"><span class="text-emerald-600">✓</span><span>One place owns “today’s status” — the primary CTA</span></li>
+          <li class="flex gap-2"><span class="text-emerald-600">✓</span><span>More room for long habit names; cleaner first glance</span></li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Why better -->
+    <section class="mt-14 rounded-2xl border border-stone-200 bg-white/70 p-6 shadow-sm backdrop-blur sm:p-8">
+      <h2 class="display mb-4 text-xl font-bold text-stone-900">Why after is better</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        <div>
+          <p class="mb-1 text-xs font-bold uppercase tracking-wider text-emerald-700">1 · Single source of truth</p>
+          <p class="text-sm leading-relaxed text-stone-600">
+            “Did I do it today?” is already answered by the <strong>Complete button</strong>
+            (label/style changes when done) and reinforced by the <strong>week strip’s today cell</strong>.
+            A third indicator doesn’t add confidence — it adds noise.
+          </p>
+        </div>
+        <div>
+          <p class="mb-1 text-xs font-bold uppercase tracking-wider text-emerald-700">2 · Clearer hierarchy</p>
+          <p class="text-sm leading-relaxed text-stone-600">
+            Top-right is premium real estate. Putting a muted “Pending” there pulls the eye away from
+            the habit name and toward a status the user already expects at the bottom action.
+          </p>
+        </div>
+        <div>
+          <p class="mb-1 text-xs font-bold uppercase tracking-wider text-emerald-700">3 · Less redundancy tax</p>
+          <p class="text-sm leading-relaxed text-stone-600">
+            The hero is already dense (ring, stats, copy, week, CTA). Removing a non-unique control
+            is the cheapest density win — zero product loss, more breathing room for titles.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-6 grid gap-4 rounded-xl bg-stone-50 p-4 sm:grid-cols-2">
+        <div>
+          <p class="mb-2 text-xs font-bold uppercase tracking-wider text-stone-400">When chip is Pending</p>
+          <div class="flex flex-wrap items-center gap-2 text-sm text-stone-700">
+            <span class="chip-pending">Pending</span>
+            <span class="text-stone-400">≈</span>
+            <span class="rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white">Mark complete</span>
+            <span class="text-stone-400">+</span>
+            <span class="inline-grid h-7 w-7 place-items-center rounded-full bg-orange-50 text-[10px] font-bold text-orange-600 ring-2 ring-orange-400">S</span>
+          </div>
+        </div>
+        <div>
+          <p class="mb-2 text-xs font-bold uppercase tracking-wider text-stone-400">When chip is Done</p>
+          <div class="flex flex-wrap items-center gap-2 text-sm text-stone-700">
+            <span class="chip-done">Done</span>
+            <span class="text-stone-400">≈</span>
+            <span class="rounded-lg bg-green-100 px-3 py-1.5 text-xs font-bold text-green-700">Completed today ✓</span>
+            <span class="text-stone-400">+</span>
+            <span class="inline-grid h-7 w-7 place-items-center rounded-full bg-emerald-600 text-[10px] font-bold text-white">S</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="mt-8 text-center text-xs text-stone-400">
+      Mock only · no app code changed · file:
+      <code class="text-stone-500">.superdesign/design_iterations/status_chip_before_after_1.html</code>
+    </p>
+  </div>
+</body>
+</html>

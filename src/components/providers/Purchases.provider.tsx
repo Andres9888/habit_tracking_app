@@ -11,13 +11,15 @@
 
 import { useUser } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { PremiumProvider } from '../../hooks/usePremium';
 import { TIMEOUTS } from '../../lib/timing/config';
 import { scheduleWhenIdle } from '../../lib/timing/scheduleWhenIdle';
 import {
   identifyUser,
   initializePurchases,
+  isPurchasesAvailable,
   logoutPurchases,
 } from '../../lib/purchases';
 
@@ -29,35 +31,58 @@ function logPurchasesTaskError(action: string) {
   };
 }
 
-function runPurchasesTask(task: Promise<void>, action: string): void {
-  void task.catch(logPurchasesTaskError(action));
-}
-
+// eslint-disable-next-line max-lines-per-function
 export function PurchasesProvider({ children }: PropsWithChildren) {
-  const { isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser();
+  const identityKey = isLoaded && isSignedIn ? (user?.id ?? null) : null;
+  const [readyIdentityKey, setReadyIdentityKey] = useState<string | null>(null);
 
   useEffect(() => {
-    return scheduleWhenIdle(
+    setReadyIdentityKey(null);
+    if (!isLoaded) return;
+    if (!identityKey) {
+      if (isPurchasesAvailable()) {
+        void logoutPurchases();
+      }
+      return;
+    }
+
+    let cancelled = false;
+    const cancelScheduledSync = scheduleWhenIdle(
       () => {
-        runPurchasesTask(initializePurchases(), 'initialize');
+        void (async () => {
+          try {
+            const wasInitialized = isPurchasesAvailable();
+            const initialized = await initializePurchases(identityKey);
+            if (cancelled || !initialized) return;
+            const identified = wasInitialized
+              ? await identifyUser(identityKey)
+              : true;
+            if (!cancelled && identified && isPurchasesAvailable()) {
+              setReadyIdentityKey(identityKey);
+            }
+          } catch (error) {
+            logPurchasesTaskError('synchronize customer')(error);
+          }
+        })();
       },
       {
         fallbackDelayMs: TIMEOUTS.PURCHASES_INIT,
         timeoutMs: TIMEOUTS.REQUEST_IDLE_CALLBACK,
       }
     );
-  }, []);
+    return () => {
+      cancelled = true;
+      cancelScheduledSync();
+    };
+  }, [identityKey, isLoaded]);
 
-  useEffect(() => {
-    if (isSignedIn && user?.id) {
-      runPurchasesTask(identifyUser(user.id), 'identify user');
-      return;
-    }
-
-    if (!isSignedIn) {
-      runPurchasesTask(logoutPurchases(), 'logout');
-    }
-  }, [isSignedIn, user?.id]);
-
-  return children;
+  return (
+    <PremiumProvider
+      enabled={identityKey === null ? false : readyIdentityKey === identityKey}
+      identityKey={identityKey}
+    >
+      {children}
+    </PremiumProvider>
+  );
 }

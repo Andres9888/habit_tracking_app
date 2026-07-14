@@ -4,7 +4,10 @@
 
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { PrescriptionStepRef } from '../data/prescriptions';
-import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
+import {
+  compareTemplatesByPopularity,
+  sortTemplatesByImportState,
+} from '../utils/sortTemplatesByImportState';
 
 export interface ResolvedPrescriptionStep {
   reason: string;
@@ -35,10 +38,11 @@ function findFallbackTemplate(
   const candidates = allTemplates.filter(
     (t) => categories.includes(t.category) && !usedIds.has(t._id)
   );
-  const sorted = [...candidates].sort(
-    (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
+  const ordered = sortTemplatesByImportState(
+    candidates,
+    importedTemplateIds,
+    compareTemplatesByPopularity
   );
-  const ordered = sortTemplatesByImportState(sorted, importedTemplateIds);
   return ordered[0] ?? null;
 }
 

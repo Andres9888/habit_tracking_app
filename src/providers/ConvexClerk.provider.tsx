@@ -7,19 +7,16 @@
 import { ConvexProvider } from 'convex/react';
 import { useAuth } from '@clerk/clerk-expo';
 import type { PropsWithChildren } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { convexClient } from '../lib/appConfig';
 import { setBackgroundSyncTokenProvider } from '../lib/offline/backgroundSync';
-
-const ConvexAuthContext = createContext({ isConvexReady: false });
-
-export function useConvexAuthReady() {
-  return useContext(ConvexAuthContext).isConvexReady;
-}
+import { ConvexAuthReadyContext } from './ConvexAuthReady.context';
 
 // eslint-disable-next-line max-lines-per-function
 export function ConvexClerkProvider({ children }: PropsWithChildren) {
   const { getToken, isSignedIn } = useAuth();
+  const getTokenRef = useRef(getToken);
+  getTokenRef.current = getToken;
   const [isConvexReady, setIsConvexReady] = useState(false);
   const convexClientInstance = convexClient;
   const isConvexClientConfigured = convexClientInstance !== null;
@@ -31,6 +28,7 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
     }
 
     if (!isSignedIn) {
+      convexClientInstance.clearAuth();
       setIsConvexReady(false);
       return;
     }
@@ -38,11 +36,11 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
     // Set auth token fetcher for Convex
     const fetchConvexToken = async () => {
       try {
-        const token = await getToken({ template: 'convex' });
+        const token = await getTokenRef.current({ template: 'convex' });
         return token ?? null;
       } catch {
         try {
-          const defaultToken = await getToken();
+          const defaultToken = await getTokenRef.current();
           return defaultToken ?? null;
         } catch {
           return null;
@@ -50,13 +48,21 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
       }
     };
 
-    convexClientInstance.setAuth(fetchConvexToken);
+    // `setAuth` returning does not mean Convex has accepted the token yet.
+    // Only expose readiness after the server-confirmed auth callback fires;
+    // otherwise authenticated queries can briefly run anonymously.
+    let isCurrent = true;
+    setIsConvexReady(false);
+    convexClientInstance.setAuth(fetchConvexToken, (isAuthenticated) => {
+      if (isCurrent) setIsConvexReady(isAuthenticated);
+    });
     setBackgroundSyncTokenProvider(fetchConvexToken);
 
-    setIsConvexReady(true);
-
-    return () => setBackgroundSyncTokenProvider(null);
-  }, [getToken, isSignedIn]);
+    return () => {
+      isCurrent = false;
+      setBackgroundSyncTokenProvider(null);
+    };
+  }, [isConvexClientConfigured, isSignedIn]);
 
   const value = useMemo(() => ({ isConvexReady }), [isConvexReady]);
 
@@ -66,16 +72,16 @@ export function ConvexClerkProvider({ children }: PropsWithChildren) {
     }
 
     return (
-      <ConvexAuthContext.Provider value={value}>
+      <ConvexAuthReadyContext.Provider value={value}>
         {children}
-      </ConvexAuthContext.Provider>
+      </ConvexAuthReadyContext.Provider>
     );
   }
 
   return (
-    <ConvexAuthContext.Provider value={value}>
+    <ConvexAuthReadyContext.Provider value={value}>
       <ConvexProvider client={convexClientInstance}>{children}</ConvexProvider>
-    </ConvexAuthContext.Provider>
+    </ConvexAuthReadyContext.Provider>
   );
 }
 

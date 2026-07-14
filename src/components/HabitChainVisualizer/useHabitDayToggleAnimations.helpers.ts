@@ -6,6 +6,7 @@ import { Motion } from '@/constants/motion';
 // initial completion data hydrates. Coincidentally equal to Motion.duration.breathing.
 const HYDRATION_WINDOW_MS = 1500;
 const FORGE_FLASH_MS = 500;
+export const TODAY_BREATHING_CYCLES = 2;
 
 export function forceValue(animatedValue: Animated.Value, value: number) {
   animatedValue.setValue(value);
@@ -109,5 +110,7 @@ export function buildBreathingAnimation(
       toValue,
       useNativeDriver: true,
     });
-  return Animated.loop(Animated.sequence([pulse(1.03), pulse(1)]));
+  return Animated.loop(Animated.sequence([pulse(1.03), pulse(1)]), {
+    iterations: TODAY_BREATHING_CYCLES,
+  });
 }

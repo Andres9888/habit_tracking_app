@@ -17,12 +17,30 @@ export const purgeExpiredDeletedHabits = internalMutation({
   },
 });
 
+export const purgeExpiredProductEvents = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const expired = await ctx.db
+      .query('productEvents')
+      .withIndex('by_expires_at', (q) => q.lt('expiresAt', Date.now()))
+      .take(500);
+    for (const row of expired) await ctx.db.delete(row._id);
+    return { deleted: expired.length };
+  },
+});
+
 const crons = cronJobs();
 
 crons.daily(
   'purge expired deletedHabits',
   { hourUTC: 7, minuteUTC: 0 },
   internal.crons.purgeExpiredDeletedHabits
+);
+
+crons.interval(
+  'purge expired product events',
+  { hours: 1 },
+  internal.crons.purgeExpiredProductEvents
 );
 
 crons.interval(

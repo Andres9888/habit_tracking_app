@@ -4,6 +4,7 @@ import { DetailCompleteButton } from '../DetailCompleteButton';
 jest.mock('../../../../theme/ThemeContext', () => ({
   useThemeColors: () => ({
     colors: {
+      card: '#FFFFFF',
       primary: { 100: '#d1fae5', 600: '#059669', 700: '#047857' },
       status: { success: '#22c55e' },
       text: { inverse: '#fff', primary: '#1a1a1a' },
@@ -21,12 +22,12 @@ describe('DetailCompleteButton', () => {
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('renders Done for Today when already completed', () => {
+  it('renders Done today when already completed', () => {
     const { getByText, getByLabelText } = render(
       <DetailCompleteButton isCompletedToday onPress={jest.fn()} />
     );
-    expect(getByText('Done for Today')).toBeTruthy();
-    expect(getByLabelText('Done for today, tap to undo')).toBeTruthy();
+    expect(getByText('Done today')).toBeTruthy();
+    expect(getByLabelText('Done today, double tap for the undo option')).toBeTruthy();
   });
 
   it('does not fire onPress while disabled', () => {

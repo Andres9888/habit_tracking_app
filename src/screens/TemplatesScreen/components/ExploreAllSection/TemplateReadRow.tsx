@@ -4,6 +4,7 @@
  * can evaluate the science before adding, without leaving the list.
  */
 
+import { memo } from 'react';
 import { View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -13,23 +14,22 @@ import { useTemplateReadRow } from './TemplateReadRow.hooks';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowProps {
-  importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
+  isImported: boolean;
+  isImporting: boolean;
   item: Doc<'templates'>;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
 
-export function TemplateReadRow({
-  importedTemplateIds,
-  importingTemplateId,
+export const TemplateReadRow = memo(function TemplateReadRow({
+  isImported,
+  isImporting,
   item,
   onImport,
   onPreview,
 }: TemplateReadRowProps) {
   const { colors } = useThemeColors();
   const surface = colors.card;
-  const isImported = importedTemplateIds.has(item._id);
   // Only offer the science read when there's curated copy beyond the
   // description already shown on the card — never repeat it.
   const hasRead = Boolean(
@@ -50,8 +50,8 @@ export function TemplateReadRow({
     <View style={[s.cardWrap, { backgroundColor: surface }]}>
       <View style={[s.card, { backgroundColor: surface }]}>
         <TemplateReadRowHeader
-          importingTemplateId={importingTemplateId}
           isImported={isImported}
+          isImporting={isImporting}
           item={item}
           onImport={onImport}
           onPreview={onPreview}
@@ -70,4 +70,4 @@ export function TemplateReadRow({
       </View>
     </View>
   );
-}
+});

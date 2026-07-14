@@ -6,6 +6,7 @@
  */
 
 export { usePremium } from './usePremium';
+export { PremiumProvider } from './Premium.provider';
 export type {
   UsePremiumReturn,
   PremiumState,

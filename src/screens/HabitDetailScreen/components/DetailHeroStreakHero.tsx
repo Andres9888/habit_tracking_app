@@ -1,22 +1,18 @@
 /**
- * DetailHeroStreakHero — the current streak as the card's centerpiece: flame,
- * one big serif numeral, and a calm sublabel. A recently-reset streak reads
- * "day streak · rebuilding" instead of being scored against best (the old
- * side-by-side band made 1-next-to-139 read as failure).
+ * DetailHeroStreakHero — path-to-best ring + flame + big numeral + caption.
+ * Rebuilding streaks get calm framing (no fail against best).
+ * "rebuilding" lives outside the ring so the long label never clips the 152pt circle.
  */
+import { Flame } from 'lucide-react-native';
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme';
-import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
+import { spacing } from '../../../theme/spacing';
+import { fontFamilies, fontWeights, typography } from '../../../theme/typography';
 import { MAX_FONT_SIZE_MULTIPLIER_STRICT } from '../../../utils/accessibility/textScaling';
+import { DetailHeroPathRing } from './DetailHeroPathRing';
 
-const NUMERAL_SIZE = 48;
-const FLAME_SIZE = 32;
+const NUMERAL_SIZE = 52;
 
-/**
- * Reset signal: streak history exists but the live streak is at 0 (just broke)
- * or 1 (first day back). Extends the goal section's `current === 0 && best > 0`
- * convention by one day so the first rebuilt day still gets the calm framing.
- */
 export function isRebuilding(currentStreak: number, bestStreak: number): boolean {
   return currentStreak <= 1 && bestStreak > currentStreak;
 }
@@ -24,52 +20,93 @@ export function isRebuilding(currentStreak: number, bestStreak: number): boolean
 interface DetailHeroStreakHeroProps {
   bestStreak: number;
   currentStreak: number;
+  glow?: boolean;
 }
 
 export function DetailHeroStreakHero({
   bestStreak,
   currentStreak,
+  glow = false,
 }: DetailHeroStreakHeroProps) {
   const { colors } = useThemeColors();
   const rebuilding = isRebuilding(currentStreak, bestStreak);
-  const sublabel = rebuilding ? 'day streak · rebuilding' : 'day streak';
 
   return (
-    <View
-      accessibilityLabel={`${currentStreak}-day streak${rebuilding ? ', rebuilding' : ''}`}
-      accessibilityRole='summary'
-      className='items-center'
-    >
-      <Text
-        maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
-        style={{ fontSize: FLAME_SIZE, lineHeight: FLAME_SIZE + 6 }}
+    <View className='items-center' style={{ paddingTop: spacing.sm }}>
+      <DetailHeroPathRing
+        bestStreak={bestStreak}
+        currentStreak={currentStreak}
+        glow={glow}
       >
-        🔥
-      </Text>
+        <Flame color={colors.status.streak} size={26} strokeWidth={1.7} />
+        <Text
+          maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
+          style={{
+            color: colors.text.primary,
+            fontFamily: fontFamilies.primary.display,
+            fontSize: NUMERAL_SIZE,
+            fontWeight: fontWeights.bold,
+            letterSpacing: -1.5,
+            lineHeight: NUMERAL_SIZE + 2,
+            marginTop: 2,
+          }}
+        >
+          {currentStreak}
+        </Text>
+        <Text
+          maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
+          style={{
+            ...typography.bodySmall,
+            color: colors.text.secondary,
+            fontWeight: fontWeights.semibold,
+            marginTop: 2,
+            textAlign: 'center',
+          }}
+        >
+          day streak
+        </Text>
+      </DetailHeroPathRing>
+
+      {rebuilding ? (
+        <Text
+          maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
+          style={{
+            color: colors.status.streak,
+            fontSize: 12,
+            fontWeight: fontWeights.bold,
+            letterSpacing: 0.4,
+            marginTop: spacing.sm,
+            textAlign: 'center',
+            textTransform: 'uppercase',
+          }}
+        >
+          rebuilding
+        </Text>
+      ) : null}
+
       <Text
         maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
         style={{
-          color: colors.text.primary,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: NUMERAL_SIZE,
-          fontWeight: fontWeights.bold,
-          lineHeight: NUMERAL_SIZE + 4,
-          marginTop: 2,
-        }}
-      >
-        {currentStreak}
-      </Text>
-      <Text
-        maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
-        style={{
-          ...typography.bodySmall,
-          color: colors.text.secondary,
+          color: colors.text.tertiary,
+          fontSize: 12,
           fontWeight: fontWeights.semibold,
-          letterSpacing: 0.3,
-          marginTop: 2,
+          letterSpacing: 0.12,
+          marginTop: rebuilding ? spacing.xs : spacing.sm,
+          textAlign: 'center',
         }}
       >
-        {sublabel}
+        {rebuilding ? (
+          'Start fresh · path to best opens after day 2'
+        ) : (
+          <>
+            Path to best ·{' '}
+            <Text style={{ color: colors.status.streakText, fontWeight: fontWeights.bold }}>
+              {currentStreak}
+            </Text>
+            {' / '}
+            {Math.max(bestStreak, currentStreak, 1)}
+          </>
+        )}
       </Text>
     </View>
   );

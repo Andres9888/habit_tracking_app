@@ -12,6 +12,7 @@ import {
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
 import { enforceRateLimit } from '../lib/rateLimit';
+import { recordProductEvent } from '../lib/productEvents';
 import {
   getTodayForTimezone,
   isFutureDate,
@@ -62,6 +63,13 @@ export const toggleHabit = mutation({
           habitId: args.habitId,
           userId: identity.subject,
         }));
+
+    await recordProductEvent(
+      ctx,
+      identity.subject,
+      newCompletedStatus ? 'habit_completed' : 'habit_uncompleted',
+      { source: 'habit_toggle' }
+    );
 
     if (habit.pendingStrengthRecalcId) {
       try {
@@ -150,11 +158,15 @@ export const recalculateStreakAndStrength = internalMutation({
         strengthLevel: snapshot.strengthLevel,
         strengthUpdatedAt: Date.now(),
       };
-      const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
-        pausedAt: habit.pausedAt,
-        resumedAt: habit.resumedAt,
-        timezone: args.timezone,
-      });
+      const streakData = calculateStreakFromHistory(
+        tracking,
+        evaluationDateKey,
+        {
+          pausedAt: habit.pausedAt,
+          resumedAt: habit.resumedAt,
+          timezone: args.timezone,
+        }
+      );
       streakPatch = {
         bestStreak: streakData.bestStreak,
         currentStreak: streakData.currentStreak,

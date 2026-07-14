@@ -68,7 +68,7 @@ export function CustomizeFields({
         onSelect={onEmojiSelect}
       />
 
-      <Text className='mt-4 mb-3 text-center uppercase' style={{ ...labelStyle, ...labelColor }}>
+      <Text className='mt-2 mb-3 text-center uppercase' style={{ ...labelStyle, ...labelColor }}>
         Pick a color
       </Text>
 

@@ -7,22 +7,21 @@ import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButto
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowHeaderProps {
-  importingTemplateId: string | null;
   isImported: boolean;
+  isImporting: boolean;
   item: Doc<'templates'>;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
 
 export function TemplateReadRowHeader({
-  importingTemplateId,
   isImported,
+  isImporting,
   item,
   onImport,
   onPreview,
 }: TemplateReadRowHeaderProps) {
   const { colors } = useThemeColors();
-  const isImporting = importingTemplateId === item._id;
   const iconBg = `${item.iconColor || colors.primary[600]}30`;
 
   return (

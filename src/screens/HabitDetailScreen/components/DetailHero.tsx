@@ -1,5 +1,4 @@
-/** DetailHero - Momentum-first hero card: name row, streak centerpiece,
- *  best pill + encouragement, complete bar. */
+/** DetailHero — OD redesign: header, path ring, momentum, week strip, CTA. */
 import { View } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme';
@@ -13,27 +12,38 @@ import { DetailCompleteButton } from './DetailCompleteButton';
 import { DetailHeroHeaderRow } from './DetailHeroHeaderRow';
 import { DetailHeroMomentum } from './DetailHeroMomentum';
 import { DetailHeroStreakHero } from './DetailHeroStreakHero';
+import { DetailHeroWeekStrip } from './DetailHeroWeekStrip';
+import { useDetailHeroMetrics } from './useDetailHeroMetrics';
 
 interface DetailHeroProps {
+  completedDates?: Set<string>;
   habit: Habit;
   isCompletedToday?: boolean;
   isToggling?: boolean;
   totalCompletions: number;
-  onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onCompletePress: () => void;
 }
 
+const EMPTY_COMPLETED_DATES = new Set<string>();
+
 export function DetailHero({
+  completedDates = EMPTY_COMPLETED_DATES,
   habit,
   isCompletedToday = false,
   isToggling = false,
   totalCompletions,
-  onDayPress,
+  onCompletePress,
 }: DetailHeroProps) {
   const { colors, isDark } = useThemeColors();
   const reduceMotion = useReduceMotion();
   const bestStreak = habit.bestStreak ?? 0;
   const currentStreak = habit.currentStreak ?? 0;
-
+  const today = getLocalDateString();
+  const { rate30Day, weekDays } = useDetailHeroMetrics(
+    completedDates,
+    habit,
+    today
+  );
   return (
     <Animated.View
       entering={
@@ -58,12 +68,15 @@ export function DetailHero({
         <DetailHeroStreakHero
           bestStreak={bestStreak}
           currentStreak={currentStreak}
+          glow={isCompletedToday}
         />
         <DetailHeroMomentum
           bestStreak={bestStreak}
           currentStreak={currentStreak}
+          rate30Day={rate30Day}
           totalCompletions={totalCompletions}
         />
+        <DetailHeroWeekStrip days={weekDays} />
       </View>
 
       <View
@@ -76,7 +89,7 @@ export function DetailHero({
         <DetailCompleteButton
           disabled={isToggling}
           isCompletedToday={isCompletedToday}
-          onPress={() => onDayPress(getLocalDateString(), isCompletedToday)}
+          onPress={onCompletePress}
         />
       </View>
     </Animated.View>

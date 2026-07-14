@@ -1,12 +1,18 @@
+/* eslint-disable max-lines */
 /**
  * usePremiumPaywall Hook
  *
  * Unified purchase/restore logic for all paywall variants.
  */
 
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
-import { useSharedValue, useAnimatedStyle, withTiming, type AnimatedStyle } from 'react-native-reanimated';
+import {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  type AnimatedStyle,
+} from 'react-native-reanimated';
 import type { ViewStyle } from 'react-native';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { usePremium } from '../../hooks/usePremium';
@@ -37,14 +43,28 @@ export interface PremiumPaywallHandlers {
   setSelectedPackage: (pkg: PurchasesPackage | null) => void;
 }
 
-export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePurchases }: Params) {
-  const { triggerSelection, triggerLightImpact, triggerSuccess } = useHapticFeedback({});
-  const { monthlyPackage, packages, priceString, isLoadingOfferings, purchasePackage } =
-    usePremium();
+export function usePremiumPaywall({
+  variant,
+  onClose,
+  onStartTrial,
+  onRestorePurchases,
+}: Params) {
+  const { triggerSelection, triggerLightImpact, triggerSuccess, triggerError } =
+    useHapticFeedback({});
+  const {
+    monthlyPackage,
+    packages,
+    priceString,
+    isLoadingOfferings,
+    purchasePackage,
+  } = usePremium();
 
-  const annualPackage = packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
-  const [selectedPackage, setSelectedPackage] = useState<PurchasesPackage | null>(null);
+  const annualPackage =
+    packages?.find((p) => p.packageType === 'ANNUAL') ?? null;
+  const [selectedPackage, setSelectedPackage] =
+    useState<PurchasesPackage | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const purchaseInFlightRef = useRef(false);
   const buttonScale = useSharedValue(1);
 
   useEffect(() => {
@@ -69,37 +89,58 @@ export function usePremiumPaywall({ variant, onClose, onStartTrial, onRestorePur
   }, [onClose, triggerLightImpact]);
 
   const handleStartTrial = useCallback(async () => {
-    if (isProcessing) return;
+    if (purchaseInFlightRef.current) return;
+    purchaseInFlightRef.current = true;
     triggerSelection();
     setIsProcessing(true);
     try {
       if (variant === 'analytics' && selectedPackage) {
         const success = await purchasePackage(selectedPackage);
-        if (success) { triggerSuccess(); onStartTrial(); onClose(); }
+        if (success) {
+          triggerSuccess();
+          void onStartTrial();
+          onClose();
+        }
       } else {
         const result = onStartTrial();
         if (result instanceof Promise) {
           const success = await result;
-          if (success) { triggerSuccess(); onClose(); }
+          if (success) {
+            triggerSuccess();
+            onClose();
+          }
         }
       }
     } catch {
+      triggerError?.();
       Alert.alert(
         'Premium Activation Failed',
         'We couldn\u2019t activate your premium subscription. Please check your payment method and try again.',
         [{ text: 'OK' }]
       );
     } finally {
+      purchaseInFlightRef.current = false;
       setIsProcessing(false);
     }
-     
-  }, [isProcessing, variant, selectedPackage, purchasePackage, onStartTrial, onClose, triggerSelection, triggerSuccess]);
+  }, [
+    variant,
+    selectedPackage,
+    purchasePackage,
+    onStartTrial,
+    onClose,
+    triggerSelection,
+    triggerSuccess,
+    triggerError,
+  ]);
 
-  const { handleRestorePurchases } = useRestorePurchases({ onClose, onRestorePurchases });
+  const { handleRestorePurchases } = useRestorePurchases({
+    onClose,
+    onRestorePurchases,
+  });
 
   const priceLabel = selectedPackage
     ? `${selectedPackage.product.priceString}/${String(selectedPackage.packageType) === 'ANNUAL' ? 'year' : 'month'}`
-    : priceString ?? undefined;
+    : (priceString ?? undefined);
 
   return {
     annualPackage,

@@ -22,7 +22,7 @@ export function TemplatesModalSection({
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
-  useWarmTemplatesCache();
+  useWarmTemplatesCache(showTemplatesScreen);
 
   const handleClose = () => {
     trigger('tap');

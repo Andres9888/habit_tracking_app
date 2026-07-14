@@ -6,16 +6,12 @@ import { StyleSheet } from 'react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
-import {
-  durations,
-  enterEasing,
-  exitEasing,
-} from '../../../theme/animations';
+import { durations, enterEasing, exitEasing } from '../../../theme/animations';
 import { CatalogFilteredList } from './CatalogFilteredList';
 
 interface CatalogFilteredBranchProps {
   importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
+  importingTemplateIds: Set<string>;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   selectedCategoryId: string;
@@ -40,7 +36,7 @@ export function CatalogFilteredBranch(p: CatalogFilteredBranchProps) {
     >
       <CatalogFilteredList
         importedTemplateIds={p.importedTemplateIds}
-        importingTemplateId={p.importingTemplateId}
+        importingTemplateIds={p.importingTemplateIds}
         templates={p.templates}
         onImport={p.onImport}
         onPreview={p.onPreview}

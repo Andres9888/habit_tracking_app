@@ -7,7 +7,7 @@
 import { View, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
 import { useThemeColors } from '../../theme/ThemeContext';
@@ -16,7 +16,6 @@ import { EmptyState } from '../../components/EmptyState/EmptyState';
 import { HabitsList } from './components/HabitsList';
 import { BottomActionBar } from './components/BottomActionBar';
 import { SelectionActionBar } from './components/SelectionActionBar';
-import { HabitsAppOverlays } from './components/HabitsAppOverlays';
 import {
   useSelectionMode,
   useSelectionActions,
@@ -29,23 +28,20 @@ import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
 import { useTemplatesWarmup } from './hooks/useTemplatesWarmup';
 import { enterEasing } from '../../theme/animations';
+import { useAppAnalytics } from '../../lib/analytics/useAppAnalytics';
+import { useDeferredOverlayMount } from './hooks/useDeferredOverlayMount';
+import { hasRequestedOverlay } from './hasRequestedOverlay';
 
 const ENTERING = FadeInDown.duration(280).easing(enterEasing);
 const styles = StyleSheet.create({ flex1: { flex: 1 } });
+const HabitsAppOverlays = lazy(() =>
+  import('./components/HabitsAppOverlays').then((module_) => ({
+    default: module_.HabitsAppOverlays,
+  }))
+);
 
 // eslint-disable-next-line max-lines-per-function
 function HabitsAppContent() {
-  useEffect(() => {
-    return schedulePostLaunchAppPreload();
-  }, []);
-  useTemplatesWarmup();
-
-  const [overlaysMounted, setOverlaysMounted] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setOverlaysMounted(true), 80);
-    return () => clearTimeout(timer);
-  }, []);
-
   const { colors } = useThemeColors();
   const { list, modals } = useHabitsApp();
   const { triggerLightImpact, triggerSelection } = useHapticFeedback({
@@ -82,6 +78,12 @@ function HabitsAppContent() {
   // never paint product defaults then flip to the user's preference.
   const showSkeleton =
     !list.isSettingsReady || (list.isHabitsLoading && list.habits.length === 0);
+  useAppAnalytics(!showSkeleton);
+  useTemplatesWarmup({ homeReady: !showSkeleton });
+  useEffect(() => {
+    if (showSkeleton) return;
+    return schedulePostLaunchAppPreload();
+  }, [showSkeleton]);
   const showEmptyState =
     list.isSettingsReady && !list.isHabitsLoading && list.habits.length === 0;
   const handleBatchArchivePress = () => {
@@ -93,6 +95,15 @@ function HabitsAppContent() {
   const handleConfirmBatchDelete = () => {
     void selectionActions.confirmBatchDelete();
   };
+  const overlayRequested = hasRequestedOverlay(modals, {
+    batchArchiveUndoVisible: selectionActions.batchArchiveUndoVisible,
+    confirmDeleteVisible: selectionActions.confirmDeleteVisible,
+    paywallVisible: handlers.paywallVisible,
+  });
+  const overlaysMounted = useDeferredOverlayMount({
+    homeReady: !showSkeleton,
+    requested: overlayRequested,
+  });
 
   return (
     <GestureHandlerRootView style={styles.flex1}>
@@ -145,20 +156,22 @@ function HabitsAppContent() {
         )}
 
         {overlaysMounted ? (
-          <HabitsAppOverlays
-            batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
-            batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
-            confirmDeleteCount={selectionActions.deleteCount}
-            confirmDeleteVisible={selectionActions.confirmDeleteVisible}
-            modals={modals}
-            paywallVisible={handlers.paywallVisible}
-            onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}
-            onBatchArchiveUndo={handleBatchArchiveUndoPress}
-            onConfirmDeleteCancel={selectionActions.hideDeleteConfirmation}
-            onConfirmDeleteConfirm={handleConfirmBatchDelete}
-            onPaywallClose={handlers.handlePaywallClose}
-            onPaywallSuccess={handlers.handlePaywallSuccess}
-          />
+          <Suspense fallback={null}>
+            <HabitsAppOverlays
+              batchArchiveUndoCount={selectionActions.batchArchiveUndoCount}
+              batchArchiveUndoVisible={selectionActions.batchArchiveUndoVisible}
+              confirmDeleteCount={selectionActions.deleteCount}
+              confirmDeleteVisible={selectionActions.confirmDeleteVisible}
+              modals={modals}
+              paywallVisible={handlers.paywallVisible}
+              onBatchArchiveDismiss={selectionActions.dismissBatchArchiveUndo}
+              onBatchArchiveUndo={handleBatchArchiveUndoPress}
+              onConfirmDeleteCancel={selectionActions.hideDeleteConfirmation}
+              onConfirmDeleteConfirm={handleConfirmBatchDelete}
+              onPaywallClose={handlers.handlePaywallClose}
+              onPaywallSuccess={handlers.handlePaywallSuccess}
+            />
+          </Suspense>
         ) : null}
       </View>
     </GestureHandlerRootView>

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents -- RevenueCat types resolve to any at build time */
 /**
  * Types for premium subscription management
  */
@@ -16,6 +15,8 @@ export type SubscriptionStatus =
 export interface PremiumState {
   /** Whether user has active premium access */
   isPremium: boolean;
+  /** Whether RevenueCat has resolved the current customer's entitlement */
+  entitlementReady: boolean;
   /** Current subscription status */
   status: SubscriptionStatus;
   /** Loading state for SDK operations */
@@ -56,7 +57,8 @@ export interface PremiumSubscriptionInfo {
 }
 
 export interface UsePremiumReturn
-  extends PremiumState,
+  extends
+    PremiumState,
     PremiumOfferings,
     PremiumActions,
     PremiumSubscriptionInfo {}

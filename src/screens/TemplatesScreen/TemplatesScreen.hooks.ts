@@ -2,103 +2,55 @@
  * State management for TemplatesScreen
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { FlatList } from 'react-native';
-import type { Doc, Id } from '../../../convex/_generated/dataModel';
-import type { Category, SortOption } from '../templates/constants';
-import { useExpandedCategories } from './hooks/useExpandedCategories';
+import { useState } from 'react';
+import type { Doc } from '../../../convex/_generated/dataModel';
 import { useFeedbackState } from './hooks/useFeedbackState';
 import { useImportedTemplateIdsSync } from './hooks/useImportedTemplateIdsSync';
-import type {
-  BrowseTab,
-  TemplatePreviewAnchor,
-  ViewMode,
-} from './TemplatesScreen.types';
+import type { TemplatePreviewAnchor } from './TemplatesScreen.types';
 
 interface UseTemplatesScreenStateOptions {
-  categories: { id: string }[] | undefined;
   initialImportedIds?: Set<string>;
 }
 
 export function useTemplatesScreenState({
-  categories,
   initialImportedIds,
 }: UseTemplatesScreenStateOptions) {
-  const flatListRef = useRef<FlatList<Doc<'templates'>>>(null);
-
-  const [viewMode, setViewMode] = useState<ViewMode>('browse');
-  const [browseTab, setBrowseTab] = useState<BrowseTab>('categories');
-  const [selectedCategory, setSelectedCategory] = useState<Category>('all');
-  const { expandedCategories, setExpandedCategories } =
-    useExpandedCategories(categories);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOption, setSortOption] = useState<SortOption>('popular');
   const [previewTemplate, setPreviewTemplate] =
     useState<Doc<'templates'> | null>(null);
   const [showFullsizePreview, setShowFullsizePreview] = useState(false);
   const [previewInitialAnchor, setPreviewInitialAnchor] =
     useState<TemplatePreviewAnchor>('top');
   const [showCustomizeModal, setShowCustomizeModal] = useState(false);
-  const { importedTemplateIds, setImportedTemplateIds } =
-    useImportedTemplateIdsSync(initialImportedIds);
+  const {
+    catalogOrderImportedIds,
+    importedTemplateIds,
+    setImportedTemplateIds,
+  } = useImportedTemplateIdsSync(initialImportedIds);
   const feedback = useFeedbackState();
-  const [importingTemplateId, setImportingTemplateId] =
-    useState<Id<'templates'> | null>(null);
-  const [showSortOptions, setShowSortOptions] = useState(false);
+  const [importingTemplateIds, setImportingTemplateIds] = useState<Set<string>>(
+    new Set()
+  );
   const [showPaywall, setShowPaywall] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
 
-  const safeSearchQuery = searchQuery ?? '';
-  const isSearching = safeSearchQuery.trim().length > 0;
-
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  useEffect(() => {
-    const t = setTimeout(() => setDebouncedSearchQuery(safeSearchQuery), 150);
-    return () => clearTimeout(t);
-  }, [safeSearchQuery]);
-  const isSearchActive = debouncedSearchQuery.trim().length > 0;
-
-  const effectiveViewMode = isSearching ? 'search' : viewMode;
-  const hasActiveFilters =
-    selectedCategory !== 'all' || Boolean(safeSearchQuery.trim());
-
   return {
-    browseTab,
-    debouncedSearchQuery,
-    effectiveViewMode,
-    expandedCategories,
     ...feedback,
-    flatListRef,
-    hasActiveFilters,
+    catalogOrderImportedIds,
     importedTemplateIds,
-    importingTemplateId,
-    isSearchActive,
-    isSearching,
+    importingTemplateIds,
     isSeeding,
     previewInitialAnchor,
     previewTemplate,
-    searchQuery,
-    selectedCategory,
-    setBrowseTab,
-    setExpandedCategories,
     setImportedTemplateIds,
-    setImportingTemplateId,
+    setImportingTemplateIds,
     setIsSeeding,
     setPreviewInitialAnchor,
     setPreviewTemplate,
-    setSearchQuery,
-    setSelectedCategory,
     setShowCustomizeModal,
     setShowFullsizePreview,
     setShowPaywall,
-    setShowSortOptions,
-    setSortOption,
-    setViewMode,
     showCustomizeModal,
     showFullsizePreview,
     showPaywall,
-    showSortOptions,
-    sortOption,
-    viewMode,
   };
 }

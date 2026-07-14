@@ -2,20 +2,22 @@ import { useCallback, type MutableRefObject } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateCustomizations } from '../TemplatesScreen.types';
 import { trackLibraryEvent } from '../utils/libraryAnalytics';
+import type { ImportResultStatus } from './useImportResultHandler';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
 
 interface UseTemplateImportActionOptions {
+  finishImport: (id: Id<'templates'>) => void;
   guardImport: () => boolean;
   handleImportResult: (
     res: Awaited<
       ReturnType<UseTemplateImportHandlersOptions['importTemplate']>
     >,
     id: Id<'templates'>
-  ) => boolean;
+  ) => ImportResultStatus;
   importTemplate: UseTemplateImportHandlersOptions['importTemplate'];
-  setImportingTemplateId: UseTemplateImportHandlersOptions['setImportingTemplateId'];
   setShowCustomizeModal: UseTemplateImportHandlersOptions['setShowCustomizeModal'];
   showError: (retry: () => void) => void;
+  startImport: (id: Id<'templates'>) => boolean;
   templateImportRef: MutableRefObject<
     (id: Id<'templates'>, c?: TemplateCustomizations) => Promise<void>
   >;
@@ -28,32 +30,40 @@ export function useTemplateImportAction(o: UseTemplateImportActionOptions) {
         o.setShowCustomizeModal(false);
         return;
       }
+      if (!o.startImport(id)) return;
       try {
-        o.setImportingTemplateId(id);
-        const args = { ...(c ? { customizations: c } : {}), templateId: id };
+        const args = {
+          ...(c ? { customizations: c } : {}),
+          source: 'details' as const,
+          templateId: id,
+        };
         const res = await o.importTemplate(args);
-        if (o.handleImportResult(res, id)) {
+        const result = o.handleImportResult(res, id);
+        if (result === 'imported') {
           trackLibraryEvent({
             type: 'template_added',
             templateId: id,
             source: 'details',
           });
+        }
+        if (result !== 'failed') {
           o.setShowCustomizeModal(false);
         }
       } catch {
         o.setShowCustomizeModal(false);
         o.showError(() => void o.templateImportRef.current(id, c));
       } finally {
-        o.setImportingTemplateId(null);
+        o.finishImport(id);
       }
     },
     [
+      o.finishImport,
       o.guardImport,
       o.handleImportResult,
       o.importTemplate,
-      o.setImportingTemplateId,
       o.setShowCustomizeModal,
       o.showError,
+      o.startImport,
       o.templateImportRef,
     ]
   );

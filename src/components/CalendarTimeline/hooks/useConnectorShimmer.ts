@@ -18,6 +18,7 @@ interface UseConnectorShimmerParams {
 const SHIMMER_WIDTH = 20;
 const TRAVEL_DISTANCE = 60;
 const STAGGER_MS = 200;
+const ATTENTION_CYCLES = 2;
 
 /**
  * Drives a shimmer highlight that sweeps across a connector bar.
@@ -45,7 +46,7 @@ export function useConnectorShimmer({
           duration: shimmerSpeed,
           easing: Easing.linear,
         }),
-        -1
+        ATTENTION_CYCLES
       )
     );
   }, [active, shimmerSpeed, staggerIndex, position]);

@@ -45,7 +45,7 @@ export function StreakGoalSectionHead() {
           ...typography.caption,
           color: t.meta,
           marginLeft: 42,
-          marginBottom: 12,
+          marginBottom: 6,
         }}
       >
         A visual target with no penalty if you miss it.

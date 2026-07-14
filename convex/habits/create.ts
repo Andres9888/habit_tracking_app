@@ -8,6 +8,7 @@ import { createHabitArgs } from './types';
 import { findMaxOrder } from './utils';
 import { validateDaysOfWeek, validateHabitFields } from './validation';
 import { enforceRateLimit } from '../lib/rateLimit';
+import { recordProductEvent } from '../lib/productEvents';
 
 export const create = mutation({
   args: createHabitArgs,
@@ -34,7 +35,7 @@ export const create = mutation({
 
     const maxOrder = findMaxOrder(allHabits);
 
-    return await ctx.db.insert('habits', {
+    const habitId = await ctx.db.insert('habits', {
       bestStreak: 0,
       createdAt: Date.now(),
       cueAfterBehavior: validated.cueAfterBehavior,
@@ -61,6 +62,11 @@ export const create = mutation({
       strengthUpdatedAt: Date.now(),
       userId,
     });
+
+    await recordProductEvent(ctx, userId, 'habit_created', {
+      source: 'manual',
+    });
+    return habitId;
   },
   returns: v.id('habits'),
 });

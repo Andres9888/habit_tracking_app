@@ -3,15 +3,16 @@
  */
 
 import type { ReactNode } from 'react';
-import type { Doc, Id } from '../../../../convex/_generated/dataModel';
+import type { Doc } from '../../../../convex/_generated/dataModel';
 
 export interface MainBrowseViewProps {
   allTemplates: Doc<'templates'>[];
+  catalogOrderImportedIds: Set<string>;
   feedbackOverlays: ReactNode;
   importedTemplateIds: Set<string>;
-  importingTemplateId: Id<'templates'> | null;
+  importingTemplateIds: Set<string>;
   modals: ReactNode;
   onClose: () => void;
-  onPopularImport: (template: Doc<'templates'>) => void;
+  onCatalogImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }

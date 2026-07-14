@@ -19,6 +19,8 @@ export function useHabitsApp(): UseHabitsAppResult {
   const list = useHabitsListState();
   const modals = useHabitsModalsState({
     habits: list.habits,
+    homeTracking: list.tracking,
+    settings: list.settings,
     showHabitStrengthPercentage: list.showHabitStrengthPercentage,
   });
 

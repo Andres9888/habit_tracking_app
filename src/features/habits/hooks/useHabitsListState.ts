@@ -201,10 +201,8 @@ export function useHabitsListState(): HabitsListState {
   const deferredWeekDateStrings = useDeferredValue(
     weekDatesState.weekDateStrings
   );
-  const { getStreak, getHabitStatus, isCompleted } = useHabitsTracking(
-    deferredExtendedDateStrings,
-    today
-  );
+  const { getStreak, getHabitStatus, isCompleted, tracking } =
+    useHabitsTracking(deferredExtendedDateStrings, today);
   const [predictedStrengths, setPredictedStrengths] = useState<
     Map<Habit['_id'], HabitStrengthPrediction>
   >(new Map());
@@ -499,6 +497,8 @@ export function useHabitsListState(): HabitsListState {
     isPremiumUser,
     openCreateHabitScreen,
     reduceMotionPreference,
+    settings,
     toggleHabit,
+    tracking,
   };
 }

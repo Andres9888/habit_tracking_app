@@ -3,22 +3,11 @@
  * Re-exports aggregated handlers from focused hook modules
  */
 
-import { useNavigationHandlers } from './hooks/useNavigationHandlers';
 import { useSeedHandlers } from './hooks/useSeedHandlers';
-import { useSortHandlers } from './hooks/useSortHandlers';
 import { useTemplateImportHandlers } from './hooks/useTemplateImportHandlers';
 import type { UseTemplateHandlersOptions } from './TemplatesScreen.handlers.types';
 
 export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
-  const navigation = useNavigationHandlers({
-    flatListRef: opts.flatListRef,
-    setExpandedCategories: opts.setExpandedCategories,
-    setSearchQuery: opts.setSearchQuery,
-    setSelectedCategory: opts.setSelectedCategory,
-    setSortOption: opts.setSortOption,
-    setViewMode: opts.setViewMode,
-  });
-
   const imports = useTemplateImportHandlers({
     importTemplate: opts.importTemplate,
     isPremiumUser: opts.isPremiumUser,
@@ -27,7 +16,7 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
     setFeedbackHabitId: opts.setFeedbackHabitId,
     setFeedbackVariant: opts.setFeedbackVariant,
     setImportedTemplateIds: opts.setImportedTemplateIds,
-    setImportingTemplateId: opts.setImportingTemplateId,
+    setImportingTemplateIds: opts.setImportingTemplateIds,
     setPreviewInitialAnchor: opts.setPreviewInitialAnchor,
     setPreviewTemplate: opts.setPreviewTemplate,
     setSessionImportCount: opts.setSessionImportCount,
@@ -41,12 +30,6 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
     userHabitCount: opts.userHabitCount,
   });
 
-  const sort = useSortHandlers({
-    flatListRef: opts.flatListRef,
-    setShowSortOptions: opts.setShowSortOptions,
-    setSortOption: opts.setSortOption,
-  });
-
   const seed = useSeedHandlers({
     seedTemplates: opts.seedTemplates,
     setIsSeeding: opts.setIsSeeding,
@@ -55,27 +38,10 @@ export function useTemplateHandlers(opts: UseTemplateHandlersOptions) {
   });
 
   return {
-    handleBackToBrowse: navigation.handleBackToBrowse,
-    // Also expose individual sort controls
-    handleCloseSortOptions: sort.handleCloseSortOptions,
-
     handleCustomizeFromPreview: imports.handleCustomizeFromPreview,
-
     handleDirectImport: imports.handleDirectImport,
-
-    handleOpenSortOptions: sort.handleOpenSortOptions,
-
-    handleResetFilters: navigation.handleResetFilters,
-
     handleSeedTemplates: seed.handleSeedTemplates,
-
-    handleSelectCategory: navigation.handleSelectCategory,
-
-    handleSelectSortOption: sort.handleSelectSortOption,
-
     handleTemplateImport: imports.handleTemplateImport,
-
     handleTemplatePreview: imports.handleTemplatePreview,
-    handleToggleCategory: navigation.handleToggleCategory,
   };
 }

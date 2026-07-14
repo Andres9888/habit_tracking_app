@@ -44,11 +44,11 @@ export function NameInputSection({
   return (
     <View
       className='items-center px-6'
-      style={{ marginBottom: spacing['2xl'], marginTop: spacing.xl }}
+      style={{ marginBottom: spacing.lg, marginTop: spacing.base }}
     >
       <Text
         accessibilityRole='header'
-        className='mb-6 text-center leading-tight'
+        className='mb-5 text-center leading-tight'
         style={{ ...typography.heading2, color: colors.text.primary }}
       >
         {title}

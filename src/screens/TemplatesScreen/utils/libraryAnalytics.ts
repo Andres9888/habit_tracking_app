@@ -8,6 +8,8 @@ export type TemplateImportSource =
   | 'catalog'
   | 'details';
 
+export type TemplateImportAttribution = TemplateImportSource | 'pack';
+
 export type LibraryAnalyticsEvent =
   | {
       type: 'template_added';

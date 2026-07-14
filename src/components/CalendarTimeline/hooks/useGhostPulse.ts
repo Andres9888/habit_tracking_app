@@ -11,6 +11,7 @@ import {
 const PULSE_MIN = 0.35;
 const PULSE_MAX = 0.85;
 const HALF_CYCLE_MS = 1200;
+const ATTENTION_CYCLES = 2;
 
 /**
  * Breathing opacity animation for ghost connectors.
@@ -36,7 +37,7 @@ export function useGhostPulse(active: boolean, reduceMotion: boolean) {
           easing: Easing.inOut(Easing.ease),
         })
       ),
-      -1
+      ATTENTION_CYCLES
     );
   }, [active, reduceMotion, opacity]);
 

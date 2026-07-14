@@ -8,10 +8,12 @@ import type {
   TemplateCustomizations,
   TemplatePreviewAnchor,
 } from '../TemplatesScreen.types';
+import type { TemplateImportSource } from '../utils/libraryAnalytics';
 
 export type ImportFn = (args: {
   templateId: Id<'templates'>;
   customizations?: TemplateCustomizations;
+  source?: TemplateImportSource;
 }) => Promise<{
   success: boolean;
   alreadyExists?: boolean;
@@ -28,9 +30,7 @@ export interface UseTemplateImportHandlersOptions {
     React.SetStateAction<'success' | 'already_exists' | null>
   >;
   setImportedTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
-  setImportingTemplateId: React.Dispatch<
-    React.SetStateAction<Id<'templates'> | null>
-  >;
+  setImportingTemplateIds: React.Dispatch<React.SetStateAction<Set<string>>>;
   setPreviewInitialAnchor: React.Dispatch<
     React.SetStateAction<TemplatePreviewAnchor>
   >;

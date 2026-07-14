@@ -6,45 +6,6 @@ import { useMutation } from 'convex/react';
 import { useMemo } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
-import type { CategoryFilter } from '../templates/templates.types';
-import type { Doc } from '../../../convex/_generated/dataModel';
-import { CATEGORY_META } from './data/categoryMeta';
-
-const FALLBACK_CATEGORIES: CategoryFilter[] = [
-  { icon: '✨', id: 'all', label: 'All' },
-];
-
-function getCategoriesFromTemplates(templates: Doc<'templates'>[] | undefined) {
-  if (!templates || templates.length === 0) {
-    return FALLBACK_CATEGORIES;
-  }
-
-  const uniqueCategories = [
-    ...new Set(templates.map((template) => template.category).filter(Boolean)),
-  ].sort();
-
-  const normalized = uniqueCategories.map((category) => {
-    const id = category as string;
-    const canonical = CATEGORY_META[id];
-    const metadata = canonical
-      ? { icon: canonical.icon, label: canonical.label }
-      : {
-          icon: '📌',
-          label:
-            typeof category === 'string'
-              ? category.charAt(0).toUpperCase() +
-                category.slice(1).replaceAll('_', ' ')
-              : 'Template',
-        };
-
-    return {
-      ...metadata,
-      id: category as CategoryFilter['id'],
-    };
-  });
-
-  return [...FALLBACK_CATEGORIES, ...normalized];
-}
 
 export function useTemplatesData() {
   const allTemplates = useCachedQuery(
@@ -74,11 +35,6 @@ export function useTemplatesData() {
   const isLoading = allTemplates === undefined;
   const userHabitCount = userHabits?.length ?? 0;
   const isPremiumUser = settings?.hasPremium ?? false;
-  const categories = useMemo(
-    () => getCategoriesFromTemplates(allTemplates),
-    [allTemplates]
-  );
-
   const initialImportedIds = useMemo(
     () => new Set(Array.isArray(importedIds) ? importedIds.map(String) : []),
     [importedIds]
@@ -89,7 +45,6 @@ export function useTemplatesData() {
 
   return {
     allTemplates,
-    categories,
     importTemplate,
     initialImportedIds,
     isLoading,

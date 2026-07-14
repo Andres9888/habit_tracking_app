@@ -63,12 +63,24 @@ export function StreakGoalChip({
         borderWidth: selected ? 2 : 1,
         borderColor: border,
         opacity: pressed ? 0.92 : 1,
+        overflow: 'visible',
       }}
       onPress={onPress}
     >
       {recommended ? <StreakGoalStartBadge /> : null}
       <Text style={{ ...chipValueText, color: fg }}>{valueLabel}</Text>
-      <Text style={{ ...chipMicroLabel, color: meta, marginTop: 2 }}>
+      <Text
+        adjustsFontSizeToFit
+        minimumFontScale={0.85}
+        numberOfLines={1}
+        style={{
+          ...chipMicroLabel,
+          color: meta,
+          marginTop: 2,
+          textAlign: 'center',
+          width: '100%',
+        }}
+      >
         {chipLabel}
       </Text>
     </Pressable>

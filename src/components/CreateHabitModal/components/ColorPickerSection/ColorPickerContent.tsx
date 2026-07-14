@@ -41,7 +41,7 @@ export const ColorPickerContent = ({
   );
 
   return (
-    <View className='mb-6'>
+    <View className='mb-4'>
       {hideLabel ? null : <Text
           accessibilityRole='text'
           className='mb-3 text-sm font-semibold uppercase'

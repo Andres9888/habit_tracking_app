@@ -68,7 +68,7 @@ export function EnhancedReminderSelector(
   });
 
   return (
-    <View className='mb-6' testID='enhanced-reminder-selector'>
+    <View className='mb-2' testID='enhanced-reminder-selector'>
       <ToggleRow enabled={enabled} onToggle={(v) => void handleToggle(v)} />
       <PermissionBanner visible={enabled ? permissionDenied : false} />
 

@@ -15,7 +15,7 @@ export function useHabitRenderItem(args: UseHabitRenderItemArgs) {
     compactView,
     completionIcon,
     dayShape = DEFAULT_SETTINGS.dayShape,
-    entranceVariant = 'widthExpansion',
+    entranceVariant = 'none',
     handleArchive,
     handleDelete,
     handleHabitPress,

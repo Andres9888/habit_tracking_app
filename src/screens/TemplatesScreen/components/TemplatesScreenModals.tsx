@@ -14,7 +14,7 @@ import { TemplateModals } from './TemplateModals';
 
 interface TemplatesScreenModalsProps {
   importedTemplateIds: Set<string>;
-  importingTemplateId: Id<'templates'> | null;
+  importingTemplateIds: Set<string>;
   previewInitialAnchor: TemplatePreviewAnchor;
   previewTemplate: Doc<'templates'> | null;
   showCustomizeModal: boolean;
@@ -40,7 +40,7 @@ export function TemplatesScreenModals(p: TemplatesScreenModalsProps) {
     <>
       <TemplateModals
         importedTemplateIds={p.importedTemplateIds}
-        importingTemplateId={p.importingTemplateId}
+        importingTemplateIds={p.importingTemplateIds}
         previewInitialAnchor={p.previewInitialAnchor}
         previewTemplate={p.previewTemplate}
         showCustomizeModal={p.showCustomizeModal}

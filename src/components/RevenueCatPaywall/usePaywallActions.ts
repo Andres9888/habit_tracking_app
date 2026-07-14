@@ -2,10 +2,16 @@
  * usePaywallActions — purchase and restore handlers
  */
 
-import { useCallback, useState } from 'react';
-import { Alert } from 'react-native';
+import { useCallback, useRef, useState } from 'react';
 import type { PurchasesPackage } from 'react-native-purchases';
+import { logInteraction } from '../../lib/analytics/interactions';
 import { useHapticFeedback } from '../../hooks/useHapticFeedback';
+import {
+  showNoPurchasesFound,
+  showPurchaseFailure,
+  showRestoreFailure,
+  showRestoreSuccess,
+} from './paywallAlerts';
 
 interface Params {
   onClose: () => void;
@@ -15,17 +21,26 @@ interface Params {
   restorePurchases: () => Promise<boolean>;
 }
 
-export function usePaywallActions({ onClose, onPurchaseSuccess, onRestoreSuccess, purchasePackage, restorePurchases }: Params) {
+export function usePaywallActions({
+  onClose,
+  onPurchaseSuccess,
+  onRestoreSuccess,
+  purchasePackage,
+  restorePurchases,
+}: Params) {
   const { triggerSelection, triggerLightImpact, triggerSuccess, triggerError } =
     useHapticFeedback({});
   const [isProcessing, setIsProcessing] = useState(false);
+  const processingRef = useRef(false);
 
   const handlePurchase = useCallback(
     async (selectedPackage: PurchasesPackage | null) => {
-      if (isProcessing || !selectedPackage) return;
+      if (processingRef.current || !selectedPackage) return;
+      processingRef.current = true;
       triggerSelection();
       setIsProcessing(true);
       try {
+        logInteraction('checkout_started', { source: 'paywall' });
         const success = await purchasePackage(selectedPackage);
         if (success) {
           triggerSuccess();
@@ -33,45 +48,54 @@ export function usePaywallActions({ onClose, onPurchaseSuccess, onRestoreSuccess
           onClose();
         }
       } catch {
-        Alert.alert('Purchase Failed', 'Please check your payment method and try again.', [
-          { text: 'OK' },
-        ]);
+        triggerError?.();
+        showPurchaseFailure();
       } finally {
+        processingRef.current = false;
         setIsProcessing(false);
       }
     },
-    [isProcessing, purchasePackage, onPurchaseSuccess, onClose, triggerSelection, triggerSuccess],
+    [
+      purchasePackage,
+      onPurchaseSuccess,
+      onClose,
+      triggerSelection,
+      triggerSuccess,
+      triggerError,
+    ]
   );
 
   const handleRestore = useCallback(async () => {
-    if (isProcessing) return;
+    if (processingRef.current) return;
+    processingRef.current = true;
     triggerLightImpact();
     setIsProcessing(true);
     try {
       const success = await restorePurchases();
       if (success) {
         triggerSuccess();
-        Alert.alert('Purchases Restored', 'Your premium access has been restored!', [
-          {
-            onPress: () => {
-              onRestoreSuccess();
-              onClose();
-            },
-            text: 'Great!',
-          },
-        ]);
+        showRestoreSuccess(() => {
+          onRestoreSuccess();
+          onClose();
+        });
       } else {
-        Alert.alert('No Purchases Found', 'We couldn\u2019t find any previous purchases.', [
-          { text: 'OK' },
-        ]);
+        showNoPurchasesFound();
       }
     } catch {
       triggerError?.();
-      Alert.alert('Restore Failed', 'Please try again or contact support.', [{ text: 'OK' }]);
+      showRestoreFailure();
     } finally {
+      processingRef.current = false;
       setIsProcessing(false);
     }
-  }, [isProcessing, restorePurchases, onRestoreSuccess, onClose, triggerLightImpact, triggerSuccess, triggerError]);
+  }, [
+    restorePurchases,
+    onRestoreSuccess,
+    onClose,
+    triggerLightImpact,
+    triggerSuccess,
+    triggerError,
+  ]);
 
   const handleClose = useCallback(() => {
     triggerLightImpact();

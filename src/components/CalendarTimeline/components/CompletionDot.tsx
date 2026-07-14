@@ -9,6 +9,8 @@ import {
 import type { CompletionDotProps } from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
+export const COMPLETION_DOT_PULSE_CYCLES = 2;
+
 /** Animated completion indicator dot */
 export const CompletionDot: React.FC<CompletionDotProps> = ({
   status,
@@ -26,7 +28,10 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
     }
 
     const springAnim = Animated.spring(scaleAnim, {
-      friction: 5, tension: 200, toValue: 1, useNativeDriver: true,
+      friction: 5,
+      tension: 200,
+      toValue: 1,
+      useNativeDriver: true,
     });
     springAnim.start();
 
@@ -35,14 +40,19 @@ export const CompletionDot: React.FC<CompletionDotProps> = ({
       pulseAnimation = Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
-            duration: 1000, easing: Easing.inOut(Easing.ease),
-            toValue: 1.15, useNativeDriver: true,
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 1.15,
+            useNativeDriver: true,
           }),
           Animated.timing(pulseAnim, {
-            duration: 1000, easing: Easing.inOut(Easing.ease),
-            toValue: 1, useNativeDriver: true,
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+            toValue: 1,
+            useNativeDriver: true,
           }),
-        ])
+        ]),
+        { iterations: COMPLETION_DOT_PULSE_CYCLES }
       );
       pulseAnimation.start();
     }

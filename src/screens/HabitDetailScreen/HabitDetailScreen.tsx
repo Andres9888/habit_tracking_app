@@ -10,6 +10,7 @@ import { ScreenHeader } from '../../components/ScreenHeader';
 import { useThemeColors } from '../../theme';
 import { overlays } from '../../theme/colors';
 import { shadows } from '../../theme/spacing';
+import { getLocalDateString } from '../../utils/getLocalDateString';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
 import {
@@ -22,6 +23,7 @@ import {
 import { buildModalsProps } from './HabitDetailScreen.constants';
 import type { HabitDetailScreenProps } from './HabitDetailScreen.types';
 import { useCalendarHandlers } from './useCalendarHandlers';
+import { useCompleteHandlers } from './useCompleteHandlers';
 import { useHabitDetailScreenState } from './useHabitDetailScreenState';
 
 // eslint-disable-next-line max-lines-per-function
@@ -61,6 +63,13 @@ function HabitDetailScreenContent({
     setPendingArchive: screenState.setPendingArchive,
     setPendingDelete: screenState.setPendingDelete,
     setPendingToggleDate: screenState.setPendingToggleDate,
+  });
+  const completeHandlers = useCompleteHandlers({
+    habitId: displayHabit?._id,
+    habitName: getHabitDisplayName(displayHabit ?? {}),
+    isCompletedToday: screenState.isCompletedToday,
+    isToggling: screenState.pendingToggleDate === getLocalDateString(),
+    onDayPress: calendarHandlers.handleCalendarDayPress,
   });
   const handleEdit = () => {
     if (displayHabit) onEdit?.(displayHabit);
@@ -126,6 +135,7 @@ function HabitDetailScreenContent({
                   isCompletedToday={screenState.isCompletedToday}
                   pendingToggleDate={screenState.pendingToggleDate}
                   totalCompletions={screenState.totalCompletions}
+                  onCompletePress={completeHandlers.handleCompletePress}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onPinnedChange={handlePinnedChange}
                 />
@@ -135,7 +145,11 @@ function HabitDetailScreenContent({
           <HabitDetailModals
             habitId={displayHabit._id}
             habitName={displayHabit.name}
-            {...buildModalsProps(screenState, calendarHandlers)}
+            {...buildModalsProps(
+              screenState,
+              calendarHandlers,
+              completeHandlers
+            )}
           />
         </>
       ) : (

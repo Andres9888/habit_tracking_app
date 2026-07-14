@@ -2,10 +2,13 @@ import { useEffect } from 'react';
 import {
   Easing,
   cancelAnimation,
+  useReducedMotion,
   useSharedValue,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+
+export const CONNECTOR_SHIMMER_CYCLES = 2;
 
 interface UseDayConnectorAnimationsParams {
   visible: boolean;
@@ -16,6 +19,7 @@ export const useDayConnectorAnimations = ({
   visible,
   shimmerSpeed,
 }: UseDayConnectorAnimationsParams) => {
+  const reducedMotion = useReducedMotion();
   const opacity = useSharedValue(visible ? 1 : 0);
   const shimmerPosition = useSharedValue(0);
 
@@ -27,21 +31,22 @@ export const useDayConnectorAnimations = ({
   }, [visible, opacity]);
 
   useEffect(() => {
-    if (visible && shimmerSpeed > 0) {
+    if (visible && shimmerSpeed > 0 && !reducedMotion) {
       shimmerPosition.value = 0;
       shimmerPosition.value = withRepeat(
         withTiming(1, {
           duration: shimmerSpeed,
           easing: Easing.inOut(Easing.ease),
         }),
-        -1,
+        CONNECTOR_SHIMMER_CYCLES,
         false
       );
     } else {
       cancelAnimation(shimmerPosition);
       shimmerPosition.value = 0;
     }
-  }, [visible, shimmerSpeed, shimmerPosition]);
+    return () => cancelAnimation(shimmerPosition);
+  }, [visible, shimmerSpeed, shimmerPosition, reducedMotion]);
 
   return { opacity, shimmerPosition };
 };

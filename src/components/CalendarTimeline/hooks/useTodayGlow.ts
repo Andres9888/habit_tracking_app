@@ -21,6 +21,7 @@ const GLOW_MIN = 0.15;
 const GLOW_MAX = 0.4;
 const HALF_CYCLE_MS = 1500;
 const SHADOW_RADIUS = 8;
+const ATTENTION_CYCLES = 2;
 
 const SHADOW_COLOR_LIGHT = palette.streak[300];
 const SHADOW_COLOR_DARK = palette.streak[600];
@@ -56,9 +57,9 @@ export function useTodayGlow({
         withTiming(GLOW_MIN, {
           duration: HALF_CYCLE_MS,
           easing: Easing.inOut(Easing.ease),
-        }),
+        })
       ),
-      -1,
+      ATTENTION_CYCLES
     );
   }, [active, shadowOpacity]);
 

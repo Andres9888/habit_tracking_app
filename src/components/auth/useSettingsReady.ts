@@ -10,11 +10,46 @@
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
 
-export function useSettingsReady(isSignedIn: boolean): boolean {
-  const settings = useCachedQuery(api.settings.get, isSignedIn ? {} : 'skip', {
+interface SettingsReadyInput {
+  isCacheHydrated: boolean;
+  isConvexAuthenticated: boolean;
+  isSignedIn: boolean;
+}
+
+export function canQuerySettings(input: SettingsReadyInput): boolean {
+  return (
+    input.isSignedIn && input.isConvexAuthenticated && input.isCacheHydrated
+  );
+}
+
+export function useSettingsReady(
+  isSignedIn: boolean | undefined,
+  isConvexAuthenticated: boolean,
+  isCacheHydrated: boolean
+): boolean {
+  return useSettingsGate(isSignedIn, isConvexAuthenticated, isCacheHydrated)
+    .isReady;
+}
+
+export function useSettingsGate(
+  isSignedIn: boolean | undefined,
+  isConvexAuthenticated: boolean,
+  isCacheHydrated: boolean
+): { hasPremium: boolean; isReady: boolean } {
+  const input = {
+    isCacheHydrated,
+    isConvexAuthenticated,
+    isSignedIn: isSignedIn === true,
+  };
+  const canQuery = canQuerySettings(input);
+  const settings = useCachedQuery(api.settings.get, canQuery ? {} : 'skip', {
     entryName: 'settings.get',
   });
 
-  if (!isSignedIn) return true;
-  return settings !== undefined;
+  if (isSignedIn !== true) return { hasPremium: false, isReady: true };
+  if (!canQuery) return { hasPremium: false, isReady: false };
+  return {
+    hasPremium: settings?.hasPremium ?? false,
+    isReady: settings !== undefined,
+  };
 }

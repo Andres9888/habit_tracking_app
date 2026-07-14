@@ -2,7 +2,7 @@
  * Compact inline pill add button with bounce animation.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -28,16 +28,19 @@ export function ListCardAddButton({
 }: ListCardAddButtonProps) {
   const { colors } = useThemeColors();
   const scale = useSharedValue(1);
+  const wasImportedRef = useRef(isImported);
 
   useEffect(() => {
-    if (isImported) {
-      void triggerHaptic('success');
-      scale.value = withSpring(1.08, springs.responsive);
-      const timeout = setTimeout(() => {
-        scale.value = withSpring(1, springs.responsive);
-      }, 120);
-      return () => clearTimeout(timeout);
-    }
+    const justImported = isImported && !wasImportedRef.current;
+    wasImportedRef.current = isImported;
+    if (!justImported) return;
+
+    void triggerHaptic('success');
+    scale.value = withSpring(1.08, springs.responsive);
+    const timeout = setTimeout(() => {
+      scale.value = withSpring(1, springs.responsive);
+    }, 120);
+    return () => clearTimeout(timeout);
   }, [isImported, scale]);
 
   const animatedStyle = useAnimatedStyle(() => ({

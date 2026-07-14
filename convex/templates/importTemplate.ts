@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /**
  * Template import mutation
  */
@@ -12,6 +13,15 @@ import {
 } from '../lib/inputValidation';
 import { progressEmojisValidator } from '../lib/progressEmojisValidator';
 import { validateDaysOfWeek } from '../habits/validation';
+import { recordProductEvent } from '../lib/productEvents';
+
+const TEMPLATE_EVENT_SOURCES = {
+  catalog: 'template_catalog',
+  details: 'template_details',
+  pack: 'template_pack',
+  popular: 'template_popular',
+  prescription: 'template_prescription',
+} as const;
 
 /**
  * Mutation: Import a template to create a new habit
@@ -36,6 +46,15 @@ export const importTemplate = mutation({
           )
         ),
       })
+    ),
+    source: v.optional(
+      v.union(
+        v.literal('catalog'),
+        v.literal('details'),
+        v.literal('pack'),
+        v.literal('popular'),
+        v.literal('prescription')
+      )
     ),
     templateId: v.id('templates'),
   },
@@ -137,9 +156,9 @@ export const importTemplate = mutation({
         ? { daysOfWeek: args.customizations.daysOfWeek }
         : {}),
       frequency: template.frequency,
-      ...(args.customizations?.streakGoal !== undefined
-        ? { goalDuration: args.customizations.streakGoal }
-        : {}),
+      ...(args.customizations?.streakGoal === undefined
+        ? {}
+        : { goalDuration: args.customizations.streakGoal }),
       ...(template.growthType ? { growthType: template.growthType } : {}),
       icon: args.customizations?.icon ?? template.icon,
       iconColor: validatedIconColor,
@@ -162,9 +181,9 @@ export const importTemplate = mutation({
         }
         const minutes = template.estimatedMinutes;
         if (typeof minutes !== 'number') return {};
-        const derived =
+        const derived: 'forgiving' | 'balanced' | 'strict' =
           minutes <= 2 ? 'forgiving' : minutes <= 20 ? 'balanced' : 'strict';
-        return { strengthAlgorithm: derived as 'forgiving' | 'balanced' | 'strict' };
+        return { strengthAlgorithm: derived };
       })(),
       strengthLevel: 'starting',
       strengthUpdatedAt: Date.now(),
@@ -179,6 +198,10 @@ export const importTemplate = mutation({
       importedAt: Date.now(),
       templateId: args.templateId,
       userId,
+    });
+
+    await recordProductEvent(ctx, userId, 'habit_created', {
+      source: args.source ? TEMPLATE_EVENT_SOURCES[args.source] : 'template',
     });
 
     return { habitId, success: true };

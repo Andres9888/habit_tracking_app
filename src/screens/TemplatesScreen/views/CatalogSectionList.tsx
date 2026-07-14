@@ -15,7 +15,7 @@ import { getCategoryMeta } from '../data/categoryMeta';
 interface CatalogSectionListProps {
   groups: CategoryGroup[];
   importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
+  importingTemplateIds: Set<string>;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
@@ -42,8 +42,8 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       keyExtractor={(item) => item._id}
       renderItem={({ item }) => (
         <TemplateReadRow
-          importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={p.importingTemplateId}
+          isImported={p.importedTemplateIds.has(item._id)}
+          isImporting={p.importingTemplateIds.has(item._id)}
           item={item}
           onImport={p.onImport}
           onPreview={p.onPreview}

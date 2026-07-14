@@ -53,7 +53,7 @@ function DraggableHabit(props: DraggableHabitProps) {
     completionIcon = DEFAULT_SETTINGS.habitCompletionIcon,
     dayShape = DEFAULT_SETTINGS.dayShape,
     entranceDelay = 0,
-    entranceVariant = 'widthExpansion',
+    entranceVariant = 'none',
     habit,
     isCompactMode = false,
     isConnectedToNextWeek = false,

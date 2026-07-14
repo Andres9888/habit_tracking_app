@@ -17,10 +17,11 @@ export function MainBrowseView(p: MainBrowseViewProps) {
       <View style={s.body}>
         <CatalogView
           allTemplates={p.allTemplates}
+          catalogOrderImportedIds={p.catalogOrderImportedIds}
           importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={p.importingTemplateId}
+          importingTemplateIds={p.importingTemplateIds}
           onBack={p.onClose}
-          onImport={p.onPopularImport}
+          onImport={p.onCatalogImport}
           onPreview={p.onPreview}
         />
       </View>

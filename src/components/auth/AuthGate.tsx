@@ -15,7 +15,7 @@ import { getScreenKey, shouldShowLoadingScreen } from './AuthGate.helpers';
 import { AuthGateContent } from './AuthGateContent';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
 import { useAuthGateUserSync } from './useAuthGateUserSync';
-import { useSettingsReady } from './useSettingsReady';
+import { useSettingsGate } from './useSettingsReady';
 
 export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
@@ -23,8 +23,12 @@ export function AuthGate() {
   const isCacheHydrated = useQueryCacheHydrated();
   const { complete: onboardingComplete, markComplete } =
     useOnboardingV2Complete(isSignedIn ?? false);
-  const { isPremium, isLoading: isPremiumLoading } = usePremium();
-  const isSettingsReady = useSettingsReady(isSignedIn === true);
+  const { isPremium } = usePremium();
+  const settingsGate = useSettingsGate(
+    isSignedIn,
+    isConvexReady,
+    isCacheHydrated
+  );
   const [paywallDismissed, setPaywallDismissed] = useState(false);
 
   useAuthGateUserSync(isSignedIn, isConvexReady);
@@ -33,8 +37,7 @@ export function AuthGate() {
     shouldShowLoadingScreen({
       isCacheHydrated,
       isLoaded,
-      isPremiumLoading,
-      isSettingsReady,
+      isSettingsReady: settingsGate.isReady,
       isSignedIn,
       onboardingComplete,
     })
@@ -45,7 +48,7 @@ export function AuthGate() {
   const screenKey = getScreenKey(
     isSignedIn ?? false,
     onboardingComplete ?? false,
-    isPremium || paywallDismissed
+    settingsGate.hasPremium || isPremium || paywallDismissed
   );
 
   return (

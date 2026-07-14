@@ -1,13 +1,17 @@
-/** DetailHeroHeaderRow — centered stack (icon above serif name) atop the hero
- *  card, matching the poster read of the streak centerpiece below it. Total
- *  lives in the encouragement line (DetailHeroMomentum). */
-import { Text, View } from 'react-native';
-import { useThemeColors } from '../../../theme';
+/**
+ * DetailHeroHeaderRow — Open Design hero-head:
+ * icon | name + schedule + reminder cue
+ * (Today's status lives on the Complete CTA + week strip — no chip.)
+ */
+import { View } from 'react-native';
 import { spacing } from '../../../theme/spacing';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
-import { MAX_FONT_SIZE_MULTIPLIER_STRICT } from '../../../utils/accessibility/textScaling';
 import type { Habit } from '../HabitDetailScreen.types';
-import { getHabitDisplayName } from './DetailHero.utils';
+import {
+  buildHeroReminderLabel,
+  buildHeroSubtitle,
+  getHabitDisplayName,
+} from './DetailHero.utils';
+import { DetailHeroHeaderMeta } from './DetailHeroHeaderMeta';
 import { DetailHeroIcon } from './DetailHeroIcon';
 
 interface DetailHeroHeaderRowProps {
@@ -19,17 +23,18 @@ export function DetailHeroHeaderRow({
   habit,
   isCompletedToday,
 }: DetailHeroHeaderRowProps) {
-  const { colors } = useThemeColors();
   const habitName = getHabitDisplayName(habit);
+  const subtitle = buildHeroSubtitle(habit);
+  const reminder = buildHeroReminderLabel(habit);
 
   return (
     <View
-      className='items-center'
+      className='flex-row items-start'
       style={{
-        gap: spacing.sm,
-        paddingBottom: spacing.sm,
-        paddingHorizontal: spacing.base,
-        paddingTop: spacing.base,
+        gap: spacing.md,
+        paddingBottom: spacing.xs,
+        paddingHorizontal: spacing.base + 2,
+        paddingTop: spacing.base + 2,
       }}
     >
       {habit.icon ? (
@@ -40,22 +45,11 @@ export function DetailHeroHeaderRow({
         />
       ) : null}
 
-      <Text
-        accessibilityLabel={`Habit: ${habitName}`}
-        accessibilityRole='header'
-        maxFontSizeMultiplier={MAX_FONT_SIZE_MULTIPLIER_STRICT}
-        numberOfLines={1}
-        style={{
-          color: colors.text.primary,
-          fontFamily: fontFamilies.primary.display,
-          fontSize: 19,
-          fontWeight: fontWeights.bold,
-          letterSpacing: -0.2,
-          textAlign: 'center',
-        }}
-      >
-        {habitName}
-      </Text>
+      <DetailHeroHeaderMeta
+        habitName={habitName}
+        reminder={reminder}
+        subtitle={subtitle}
+      />
     </View>
   );
 }

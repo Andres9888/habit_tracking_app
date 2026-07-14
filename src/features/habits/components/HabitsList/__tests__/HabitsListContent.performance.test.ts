@@ -19,6 +19,15 @@ describe('habits list interaction performance', () => {
     expect(source).toContain('windowSize={5}');
   });
 
+  it('preserves the vertical card position when the displayed week changes', () => {
+    const source = readHabitsSource(
+      'components/HabitsList/HabitsListContent.tsx'
+    );
+
+    expect(source).not.toContain('useResetListOnWeekChange');
+    expect(source).not.toContain('scrollToOffset');
+  });
+
   it('defers card recalculation without deferring date navigation', () => {
     const listStateSource = readHabitsSource('hooks/useHabitsListState.ts');
     const weekDatesSource = readHabitsSource('hooks/useHabitsWeekDates.ts');

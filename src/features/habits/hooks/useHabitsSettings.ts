@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
+import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
-import { useCachedQuery } from '../../../lib/queryCache';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
 import { DEFAULT_SETTINGS } from '../../../../convex/settings/types';
 import type { HabitSettings } from '../types';
@@ -18,30 +18,27 @@ export interface HabitsSettingsResult {
   reduceMotionPreference: boolean;
 }
 
+interface UseHabitsSettingsOptions {
+  settings: HabitsSettingsDocument | undefined;
+  shouldLoadArchivedCount: boolean;
+}
+
 /**
  * Fetches and derives settings state for habits feature.
  * Extracted from useHabitsModalsState for decomposition.
  */
-export function useHabitsSettings(): HabitsSettingsResult {
-  const settingsQuery = useCachedQuery(
-    api.settings.get,
-    {},
-    {
-      entryName: 'settings.get',
-    }
-  );
-  const archivedHabits = useCachedQuery(
-    api.habits.listArchived,
-    {},
-    {
-      entryName: 'habits.listArchived',
-    }
+export function useHabitsSettings({
+  settings,
+  shouldLoadArchivedCount,
+}: UseHabitsSettingsOptions): HabitsSettingsResult {
+  const archivedHabitsCountQuery = useQuery(
+    api.habits.listArchivedCount,
+    shouldLoadArchivedCount ? {} : 'skip'
   );
   // Do not substitute DEFAULT_SETTINGS for a missing query — that pretends
   // the user chose product defaults and causes a preference flash when live
   // settings arrive. Gate consumers on settings !== undefined.
-  const settings = settingsQuery as HabitsSettingsDocument | undefined;
-  const archivedHabitsCount = archivedHabits?.length ?? 0;
+  const archivedHabitsCount = archivedHabitsCountQuery ?? 0;
 
   return useMemo(
     () => ({

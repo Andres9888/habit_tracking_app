@@ -9,11 +9,19 @@ import { useImportRetryRefs } from './useImportRetryRefs';
 import { usePreviewHandlers } from './usePreviewHandlers';
 import { useImportResultHandler } from './useImportResultHandler';
 import { useTemplateImportAction } from './useTemplateImportAction';
+import { useTemplateImportTracker } from './useTemplateImportTracker';
 import type { UseTemplateImportHandlersOptions } from './useTemplateImportHandlers.types';
+import {
+  trackLibraryEvent,
+  type TemplateImportSource,
+} from '../utils/libraryAnalytics';
 
 export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { directImportRef, templateImportRef } = useImportRetryRefs();
+  const { finishImport, startImport } = useTemplateImportTracker(
+    o.setImportingTemplateIds
+  );
   const { guardImport, showAlreadyImported, showError, showSuccess } =
     useImportFeedback(o);
   const { handleCustomizeFromPreview, handleTemplatePreview } =
@@ -34,12 +42,15 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
   });
 
   const handleDirectImport = useCallback(
-    async (id: Id<'templates'>) => {
-      if (guardImport()) return;
+    async (id: Id<'templates'>, source: TemplateImportSource = 'catalog') => {
+      if (guardImport() || !startImport(id)) return;
       try {
-        o.setImportingTemplateId(id);
-        const res = await o.importTemplate({ templateId: id });
-        if (handleImportResult(res, id)) {
+        const res = await o.importTemplate({ source, templateId: id });
+        const result = handleImportResult(res, id);
+        if (result === 'imported') {
+          trackLibraryEvent({ type: 'template_added', templateId: id, source });
+        }
+        if (result !== 'failed') {
           if (timeoutRef.current) clearTimeout(timeoutRef.current);
           timeoutRef.current = setTimeout(
             () => o.setShowCustomizeModal(false),
@@ -47,29 +58,31 @@ export function useTemplateImportHandlers(o: UseTemplateImportHandlersOptions) {
           );
         }
       } catch {
-        showError(() => void directImportRef.current(id));
+        showError(() => void directImportRef.current(id, source));
       } finally {
-        o.setImportingTemplateId(null);
+        finishImport(id);
       }
     },
     [
       directImportRef,
+      finishImport,
       guardImport,
       handleImportResult,
       o.importTemplate,
-      o.setImportingTemplateId,
       o.setShowCustomizeModal,
       showError,
+      startImport,
     ]
   );
 
   const handleTemplateImport = useTemplateImportAction({
     guardImport,
+    finishImport,
     handleImportResult,
     importTemplate: o.importTemplate,
-    setImportingTemplateId: o.setImportingTemplateId,
     setShowCustomizeModal: o.setShowCustomizeModal,
     showError,
+    startImport,
     templateImportRef,
   });
 

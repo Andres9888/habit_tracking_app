@@ -6,14 +6,14 @@ import { Platform } from 'react-native';
 import { getPurchasesClient, state } from './client';
 import { getPurchasesInitializationContext } from './getPurchasesInitializationContext';
 
-export async function initializePurchases(userId?: string): Promise<void> {
+export async function initializePurchases(userId?: string): Promise<boolean> {
   if (state.initialized) {
-    return;
+    return true;
   }
 
   const initializationContext = getPurchasesInitializationContext();
   if (!initializationContext) {
-    return;
+    return false;
   }
 
   try {
@@ -22,51 +22,57 @@ export async function initializePurchases(userId?: string): Promise<void> {
       appUserID: userId,
     });
     state.initialized = true;
+    return true;
   } catch (error) {
     if (__DEV__) {
       console.error('[Purchases] Failed to initialize:', error);
     }
+    return false;
   }
 }
 
-export async function identifyUser(userId: string): Promise<void> {
+export async function identifyUser(userId: string): Promise<boolean> {
   if (Platform.OS === 'web' || !state.initialized) {
     if (__DEV__ && Platform.OS !== 'web' && !state.initialized) {
       console.warn('[Purchases] SDK not initialized, skipping identify');
     }
-    return;
+    return false;
   }
 
   const client = getPurchasesClient();
   if (!client) {
-    return;
+    return false;
   }
 
   try {
     await client.logIn(userId);
+    return true;
   } catch (error) {
     if (__DEV__) {
       console.error('[Purchases] Failed to identify user:', error);
     }
+    return false;
   }
 }
 
-export async function logoutPurchases(): Promise<void> {
+export async function logoutPurchases(): Promise<boolean> {
   if (Platform.OS === 'web' || !state.initialized) {
-    return;
+    return false;
   }
 
   const client = getPurchasesClient();
   if (!client) {
-    return;
+    return false;
   }
 
   try {
     await client.logOut();
+    return true;
   } catch (error) {
     if (__DEV__) {
       console.error('[Purchases] Failed to logout:', error);
     }
+    return false;
   }
 }
 

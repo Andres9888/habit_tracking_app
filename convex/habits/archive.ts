@@ -70,8 +70,9 @@ export const listArchived = query({
     if (!identity) return [];
     return await ctx.db
       .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('archived'), true))
+      .withIndex('by_userId_and_archived', (q) =>
+        q.eq('userId', identity.subject).eq('archived', true)
+      )
       .collect();
   },
   returns: v.array(fullHabitValidator),
@@ -84,8 +85,9 @@ export const listArchivedCount = query({
     if (!identity) return 0;
     const archivedHabits = await ctx.db
       .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('archived'), true))
+      .withIndex('by_userId_and_archived', (q) =>
+        q.eq('userId', identity.subject).eq('archived', true)
+      )
       .collect();
     return archivedHabits.length;
   },

@@ -6,7 +6,10 @@ import type { Doc } from '../../../../convex/_generated/dataModel';
 import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
 import { CATEGORY_META, getCategoryMeta } from '../data/categoryMeta';
 import { getCategoryPriority } from '../data/categoryPriority';
-import { sortTemplatesByImportState } from '../utils/sortTemplatesByImportState';
+import {
+  compareTemplatesByPopularity,
+  sortTemplatesByImportState,
+} from '../utils/sortTemplatesByImportState';
 
 function matchesSearch(template: Doc<'templates'>, query: string): boolean {
   const haystack = `${template.name} ${template.description}`.toLowerCase();
@@ -37,10 +40,9 @@ export function buildCatalogGroups(
   for (const [category, templates] of map) {
     const meta = getCategoryMeta(category);
     const ordered = sortTemplatesByImportState(
-      [...templates].sort(
-        (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
-      ),
-      importedTemplateIds
+      templates,
+      importedTemplateIds,
+      compareTemplatesByPopularity
     );
     if (ordered.length === 0) continue;
     groups.push({

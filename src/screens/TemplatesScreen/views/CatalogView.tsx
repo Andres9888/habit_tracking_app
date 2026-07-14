@@ -3,7 +3,7 @@
  * vertical category-grouped list (CatalogSectionList) for the "All" view.
  */
 
-import { useState } from 'react';
+import { useDeferredValue, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { ScreenHeader } from '../../../components/ScreenHeader';
@@ -17,8 +17,9 @@ import { CatalogSectionList } from './CatalogSectionList';
 
 interface CatalogViewProps {
   allTemplates: Doc<'templates'>[];
+  catalogOrderImportedIds: Set<string>;
   importedTemplateIds: Set<string>;
-  importingTemplateId: string | null;
+  importingTemplateIds: Set<string>;
   initialCategoryId?: string;
   onBack: () => void;
   onImport: (template: Doc<'templates'>) => void;
@@ -31,10 +32,11 @@ export function CatalogView(p: CatalogViewProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     p.initialCategoryId ?? CATALOG_ALL_ID
   );
+  const deferredSearchQuery = useDeferredValue(searchQuery);
   const { chipCategories, filteredTemplates, groups } = useCatalogViewData({
     allTemplates: p.allTemplates,
-    importedTemplateIds: p.importedTemplateIds,
-    searchQuery,
+    importedTemplateIds: p.catalogOrderImportedIds,
+    searchQuery: deferredSearchQuery,
     selectedCategoryId,
   });
   const showShelves = selectedCategoryId === CATALOG_ALL_ID;
@@ -68,14 +70,14 @@ export function CatalogView(p: CatalogViewProps) {
         <CatalogSectionList
           groups={groups}
           importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={p.importingTemplateId}
+          importingTemplateIds={p.importingTemplateIds}
           onImport={p.onImport}
           onPreview={p.onPreview}
         />
       ) : (
         <CatalogFilteredBranch
           importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={p.importingTemplateId}
+          importingTemplateIds={p.importingTemplateIds}
           selectedCategoryId={selectedCategoryId}
           templates={filteredTemplates}
           onImport={p.onImport}

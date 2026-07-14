@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Details — Before / After Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --bg-elevated: #EDEAE5;
+    --surface: #FFFFFF;
+    --card: #FAF8F5;
+    --fg: #2D2A26;
+    --fg-secondary: #6B6560;
+    --fg-tertiary: #6E6660;
+    --border: #DDD8D2;
+    --border-soft: #E8E3DC;
+    --primary: #047857;
+    --primary-600: #059669;
+    --primary-100: #D1FAE5;
+    --primary-50: #ECFDF5;
+    --streak: #92400E;
+    --streak-soft: #FEF3C7;
+    --streak-ring: #D97706;
+    --danger: #B91C1C;
+    --danger-soft: #FEE2E2;
+    --radius-lg: 20px;
+    --shadow-soft: 0 1px 2px rgba(45,42,38,0.04), 0 8px 24px rgba(45,42,38,0.06);
+    --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+    --font-body: "Source Sans 3", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    color: var(--fg);
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #E8F5EE 0%, transparent 55%),
+      radial-gradient(900px 500px at 100% 0%, #F5E6C8 0%, transparent 45%),
+      var(--bg);
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 1180px; margin: 0 auto; padding: 40px 28px 90px; }
+
+  .eyebrow {
+    font-family: var(--font-display); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); margin-bottom: 10px;
+  }
+  h1 { font-family: var(--font-display); font-size: clamp(28px, 3.2vw, 38px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; }
+  .lead { margin-top: 12px; max-width: 62ch; color: var(--fg-secondary); font-size: 16px; }
+  .lead strong { color: var(--fg); }
+
+  .issue { margin-top: 34px; }
+  .issue-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .issue-num {
+    flex-shrink: 0; width: 34px; height: 34px; border-radius: 10px;
+    background: var(--primary-50); color: var(--primary);
+    font-family: var(--font-display); font-size: 15px; font-weight: 800;
+    display: grid; place-items: center;
+  }
+  .issue-head h2 { font-family: var(--font-display); font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
+  .issue-sub { color: var(--fg-secondary); font-size: 14px; max-width: 78ch; margin: 2px 0 14px 46px; }
+
+  .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: stretch; }
+  @media (max-width: 860px) { .duo { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--surface); border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-soft);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .panel.before { border-color: #E5D5D0; background: #FBF7F5; }
+  .panel.after  { border-color: #B7E4C7; background: #F7FCF9; }
+  .plabel {
+    align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: 0.07em;
+    text-transform: uppercase; padding: 4px 9px; border-radius: 999px;
+  }
+  .before .plabel { background: var(--danger-soft); color: var(--danger); }
+  .after  .plabel { background: var(--primary-100); color: var(--primary); }
+  .pnote { font-size: 13px; color: var(--fg-secondary); line-height: 1.45; }
+  .pnote strong { color: var(--fg); }
+
+  .frag {
+    background: var(--bg); border: 1px solid var(--border-soft); border-radius: 14px;
+    padding: 14px; flex: 1;
+  }
+  .frag .card {
+    background: var(--surface); border: 1px solid var(--border-soft);
+    border-radius: 14px; padding: 12px; box-shadow: var(--shadow-soft);
+  }
+  .frag .card + .card { margin-top: 10px; }
+
+  /* ------- week strip ------- */
+  .week { display: flex; gap: 6px; justify-content: space-between; }
+  .wday { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+  .wlab { font-size: 10px; font-weight: 700; color: var(--fg-tertiary); letter-spacing: 0.04em; }
+  .wdot {
+    width: 26px; height: 26px; border-radius: 999px; background: var(--bg-elevated);
+    border: 1.5px solid var(--border); display: grid; place-items: center; color: transparent;
+  }
+  .wdot svg { width: 11px; height: 11px; }
+  .wday.done .wdot { background: var(--primary-600); border-color: var(--primary); color: #fff; }
+  .wday.today .wdot { box-shadow: 0 0 0 3px var(--primary-100); }
+  .wday.missed .wdot { background: transparent; border-style: dashed; border-color: #C4BFB7; }
+
+  /* ------- mini calendar ------- */
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 8px; }
+  .cdow { text-align: center; font-size: 9.5px; font-weight: 700; letter-spacing: 0.04em; color: var(--fg-tertiary); padding-bottom: 2px; }
+  .ccell {
+    aspect-ratio: 1; border-radius: 8px; display: grid; place-items: center;
+    font-size: 11.5px; font-weight: 600; color: var(--fg-secondary); background: var(--bg);
+    border: none; font-family: var(--font-body); min-height: 28px; cursor: default;
+  }
+  .ccell.empty { background: transparent; }
+  .ccell.done { background: var(--primary-600); color: #fff; }
+  .ccell.today { box-shadow: inset 0 0 0 2px var(--primary); }
+  .chead { display: flex; justify-content: space-between; align-items: baseline; }
+  .chead h4 { font-family: var(--font-display); font-size: 13px; font-weight: 700; }
+  .chead span { font-size: 11px; font-weight: 600; color: var(--fg-tertiary); }
+
+  .chip {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 4px 8px; border-radius: 999px;
+    background: var(--bg-elevated); color: var(--fg-tertiary);
+  }
+  .chip.done { background: var(--primary-100); color: var(--primary); }
+
+  .callout {
+    font-size: 12px; font-weight: 600; border-radius: 10px; padding: 8px 10px; line-height: 1.4;
+  }
+  .callout.bad  { background: var(--danger-soft); color: var(--danger); }
+  .callout.good { background: var(--primary-100); color: var(--primary); }
+
+  /* ------- ring + goal ------- */
+  .ringrow { display: flex; align-items: center; gap: 16px; }
+  .ringwrap { position: relative; width: 108px; height: 108px; display: grid; place-items: center; flex-shrink: 0; }
+  .ringwrap svg.r { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .ringwrap .track { fill: none; stroke: var(--border-soft); stroke-width: 7; }
+  .ringwrap .prog  { fill: none; stroke: var(--streak-ring); stroke-width: 7; stroke-linecap: round; }
+  .ringcore { text-align: center; z-index: 1; }
+  .ringnum { font-family: var(--font-display); font-size: 30px; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .ringlab { font-size: 10.5px; font-weight: 600; color: var(--fg-secondary); margin-top: 2px; }
+  .pathcap { font-size: 11.5px; font-weight: 600; color: var(--fg-tertiary); margin-top: 6px; text-align: center; }
+  .pathcap strong { color: var(--streak); }
+  .goalbar { height: 8px; border-radius: 999px; background: var(--bg-elevated); overflow: hidden; margin-top: 8px; }
+  .goalfill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--primary-600)); }
+  .goalrow { display: flex; justify-content: space-between; font-size: 12px; color: var(--fg-secondary); margin-top: 7px; }
+  .goalrow strong { font-family: var(--font-display); color: var(--fg); font-weight: 800; }
+  .goalline { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--fg-secondary); }
+  .goalline .tick { width: 16px; height: 16px; border-radius: 999px; background: var(--primary-100); color: var(--primary); display: grid; place-items: center; flex-shrink: 0; }
+  .goalline .tick svg { width: 9px; height: 9px; }
+  .goalline strong { color: var(--fg); font-weight: 700; }
+
+  /* ------- spy demo ------- */
+  .spy { height: 250px; overflow-y: auto; border-radius: 14px; background: var(--bg); border: 1px solid var(--border-soft); position: relative; }
+  .spy::-webkit-scrollbar { width: 0; }
+  .spy .tabs {
+    position: sticky; top: 0; z-index: 3; display: flex; gap: 0;
+    background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px);
+    padding: 8px 10px 6px;
+  }
+  .spy .tabs .rail { display: flex; flex: 1; background: var(--card); border: 1px solid var(--border-soft); border-radius: 999px; padding: 3px; position: relative; }
+  .spy .tab {
+    flex: 1; height: 30px; border: none; background: transparent; border-radius: 999px;
+    font-family: var(--font-body); font-size: 11.5px; font-weight: 600; color: var(--fg-secondary);
+    cursor: pointer; position: relative; z-index: 1;
+  }
+  .spy .tab.active { color: var(--fg); font-weight: 700; }
+  .spy .ind {
+    position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3);
+    background: var(--surface); border-radius: 999px; box-shadow: 0 1px 3px rgba(45,42,38,0.08);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .spy section { margin: 10px 12px 0; background: var(--surface); border: 1px solid var(--border-soft); border-radius: 12px; padding: 12px; }
+  .spy section:last-child { margin-bottom: 14px; }
+  .spy h5 { font-family: var(--font-display); font-size: 12.5px; font-weight: 700; margin-bottom: 6px; }
+  .spy p { font-size: 11.5px; color: var(--fg-secondary); }
+  .spy .tall { height: 230px; }
+  .spy .short { height: 84px; }
+  .spylog { margin-top: 8px; font-size: 11.5px; font-weight: 600; min-height: 18px; }
+  .spylog.ok { color: var(--primary); }
+  .spylog.bad { color: var(--danger); }
+
+  /* ------- CTA demo ------- */
+  .cta {
+    width: 100%; height: 46px; border-radius: 13px; border: 2px solid var(--primary-600);
+    background: var(--surface); color: var(--primary); font-family: var(--font-body);
+    font-size: 14.5px; font-weight: 700; letter-spacing: 0.02em;
+    display: flex; align-items: center; justify-content: center; gap: 9px; cursor: pointer;
+    transition: background 0.25s, color 0.25s, transform 0.12s;
+  }
+  .cta:active { transform: translateY(1px); }
+  .cta .well { width: 21px; height: 21px; border-radius: 999px; border: 2px solid rgba(5,150,105,0.45); display: grid; place-items: center; }
+  .cta .well svg { opacity: 0; transform: scale(0.6); transition: opacity 0.2s, transform 0.2s; }
+  .cta.done { background: var(--primary); border-color: var(--primary); color: #fff; }
+  .cta.done .well { background: #fff; border-color: #fff; }
+  .cta.done .well svg { opacity: 1; transform: scale(1); color: var(--primary); }
+  .demo-streak { text-align: center; font-family: var(--font-display); font-size: 26px; font-weight: 800; }
+  .demo-streak small { display: block; font-family: var(--font-body); font-size: 11px; font-weight: 600; color: var(--fg-secondary); }
+  .toast {
+    display: flex; align-items: center; gap: 10px; justify-content: center;
+    background: var(--fg); color: #F5F1ED; font-size: 12.5px; font-weight: 600;
+    padding: 9px 14px; border-radius: 999px; margin-top: 10px;
+    opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast button {
+    border: none; background: rgba(255,255,255,0.14); color: #FDE68A;
+    font-family: var(--font-body); font-size: 12px; font-weight: 700;
+    padding: 4px 10px; border-radius: 999px; cursor: pointer;
+  }
+
+  /* ------- thoughts ------- */
+  .thoughts {
+    margin-top: 40px; background: linear-gradient(135deg, #2D2A26 0%, #3D3832 100%);
+    color: #EDEAE5; border-radius: var(--radius-lg); padding: 24px 26px; box-shadow: var(--shadow-soft);
+  }
+  .thoughts h2 { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: #C4BFB7; margin-bottom: 12px; }
+  .thoughts p { font-size: 14.5px; max-width: 84ch; }
+  .thoughts p + p { margin-top: 10px; }
+  .thoughts em { font-style: normal; font-weight: 700; color: #D4A84B; }
+  .prio-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .prio {
+    font-family: var(--font-display); font-size: 11px; font-weight: 800; letter-spacing: 0.03em;
+    padding: 6px 11px; border-radius: 999px; background: rgba(255,255,255,0.08); color: #EDEAE5;
+    border: 1px solid rgba(255,255,255,0.14);
+  }
+  .prio b { color: #D4A84B; margin-right: 5px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="eyebrow">Design review · Habit Details prototype</div>
+    <h1>Before / After — five improvement areas</h1>
+    <p class="lead">
+      The direction is right and already shipped into the app. These are the seams left in the prototype itself —
+      <strong>1, 2 and 4 are mechanical bugs</strong> that erode trust when someone pokes the live demo;
+      <strong>3 and 5 are design decisions</strong> worth settling before this screen is used as reference again.
+      After-panels marked <em>live</em> are interactive — try them.
+    </p>
+  </header>
+
+  <!-- ======================= 1. WEEK CONVENTION ======================= -->
+  <div class="issue">
+    <div class="issue-head"><div class="issue-num">1</div><h2>The strip and the calendar disagree on what day it is</h2></div>
+    <p class="issue-sub">Week strip is Monday-first with “today” on Saturday; the month grid is Sunday-first and July&nbsp;12,&nbsp;2026 — its “today” — is a Sunday. One screen, two week conventions, two different todays.</p>
+    <div class="duo">
+      <div class="panel before">
+        <span class="plabel">Before</span>
+        <div class="frag">
+          <div class="card">
+            <div class="week" id="weekBefore"></div>
+          </div>
+          <div class="card">
+            <div class="chead"><h4>July 2026</h4><span>Sun-start</span></div>
+            <div class="cal" id="calBefore"></div>
+          </div>
+          <div class="callout bad" style="margin-top:10px">Strip: today = Saturday · Grid: today = Sunday the 12th</div>
+        </div>
+        <p class="pnote">Two mental models of the same week, four centimetres apart. QA against a real calendar fails immediately.</p>
+      </div>
+      <div class="panel after">
+        <span class="plabel">After</span>
+        <div class="frag">
+          <div class="card">
+            <div class="week" id="weekAfter"></div>
+          </div>
+          <div class="card">
+            <div class="chead"><h4>July 2026</h4><span>Mon-start</span></div>
+            <div class="cal" id="calAfter"></div>
+          </div>
+          <div class="callout good" style="margin-top:10px">One convention (Mon-start) · today = Sunday the 12th in both</div>
+        </div>
+        <p class="pnote">Monday-start keeps the strip’s story — six days of history behind you, today at the end. The grid pads two cells instead of three and the 12th lands in the Sunday column. <strong>Data-only fix.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 2. SCROLL SPY ======================= -->
+  <div class="issue">
+    <div class="issue-head"><div class="issue-num">2</div><h2>Tabs promise navigation they can’t deliver <span style="font-size:12px;color:var(--primary);font-family:var(--font-body);font-weight:700">· live</span></h2></div>
+    <p class="issue-sub">Max scroll never brings Goal or Strength near the top, so the offset-based spy snaps the indicator back to Calendar right after you tap. Fix: pick the section with the greatest visible area instead of comparing offsets.</p>
+    <div class="duo">
+      <div class="panel before">
+        <span class="plabel">Before</span>
+        <div class="spy" data-mode="offset">
+          <div class="tabs"><div class="rail"><div class="ind"></div>
+            <button class="tab active" data-t="0">Calendar</button>
+            <button class="tab" data-t="1">Goal</button>
+            <button class="tab" data-t="2">Strength</button>
+          </div></div>
+          <section class="tall"><h5>Calendar</h5><p>Tap “Goal” — the page scrolls, then the indicator snaps back here.</p></section>
+          <section class="short"><h5>Goal</h5><p>Never reaches the top, never “wins”.</p></section>
+          <section class="short"><h5>Strength</h5><p>Same story.</p></section>
+        </div>
+        <div class="spylog" id="logBefore"></div>
+        <p class="pnote">Spy rule: <strong>last section whose offsetTop ≤ scrollTop + 100</strong>. Honest port of the prototype — faithful to a bug.</p>
+      </div>
+      <div class="panel after">
+        <span class="plabel">After</span>
+        <div class="spy" data-mode="visible">
+          <div class="tabs"><div class="rail"><div class="ind"></div>
+            <button class="tab active" data-t="0">Calendar</button>
+            <button class="tab" data-t="1">Goal</button>
+            <button class="tab" data-t="2">Strength</button>
+          </div></div>
+          <section class="tall"><h5>Calendar</h5><p>Tap “Goal” — it scrolls and the indicator stays put.</p></section>
+          <section class="short"><h5>Goal</h5><p>Wins when it owns the most viewport.</p></section>
+          <section class="short"><h5>Strength</h5><p>Reachable at max scroll.</p></section>
+        </div>
+        <div class="spylog" id="logAfter"></div>
+        <p class="pnote">Spy rule: <strong>section with the largest visible fraction of the viewport wins.</strong> No dead zone at any content height, no special cases.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 3. PROGRESS METAPHORS ======================= -->
+  <div class="issue">
+    <div class="issue-head"><div class="issue-num">3</div><h2>Two progress metaphors race each other</h2></div>
+    <p class="issue-sub">The ring fills toward <em>best</em>; the Goal bar fills toward <em>goal</em>. The demo hides it because best == goal == 21. The moment they diverge, two fills answer “how far am I?” differently.</p>
+    <div class="duo">
+      <div class="panel before">
+        <span class="plabel">Before · best 30, goal 21</span>
+        <div class="frag">
+          <div class="card">
+            <div class="ringrow">
+              <div class="ringwrap">
+                <svg class="r" viewBox="0 0 108 108"><circle class="track" cx="54" cy="54" r="47"/><circle class="prog" cx="54" cy="54" r="47" stroke-dasharray="295.3" stroke-dashoffset="177.2"/></svg>
+                <div class="ringcore"><div class="ringnum">12</div><div class="ringlab">day streak</div></div>
+              </div>
+              <div style="flex:1">
+                <div class="pathcap" style="text-align:left">Ring · path to best · <strong>12</strong> / 30 → <strong>40%</strong></div>
+                <div class="goalbar"><div class="goalfill" style="width:57%"></div></div>
+                <div class="goalrow"><span><strong>12</strong> / 21 days</span><span>bar → <strong>57%</strong></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="callout bad" style="margin-top:10px">Same streak, 40% on the ring, 57% on the bar — which one am I?</div>
+        </div>
+        <p class="pnote">Both fills are honest, but the user reads them as one progress metric drawn twice, inconsistently.</p>
+      </div>
+      <div class="panel after">
+        <span class="plabel">After · one hero, one line</span>
+        <div class="frag">
+          <div class="card">
+            <div class="ringrow">
+              <div class="ringwrap">
+                <svg class="r" viewBox="0 0 108 108"><circle class="track" cx="54" cy="54" r="47"/><circle class="prog" cx="54" cy="54" r="47" stroke-dasharray="295.3" stroke-dashoffset="177.2"/></svg>
+                <div class="ringcore"><div class="ringnum">12</div><div class="ringlab">day streak</div></div>
+              </div>
+              <div style="flex:1">
+                <div class="pathcap" style="text-align:left">Path to best · <strong>12</strong> / 30</div>
+                <div class="goalline" style="margin-top:12px">
+                  <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+                  <span>Streak goal <strong>21 days</strong> · 9 to go — on pace</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="callout good" style="margin-top:10px">Ring stays the only fill. The goal becomes a quiet checkpoint line.</div>
+        </div>
+        <p class="pnote">The ring is the emotional metric — keep it the hero. The goal reads as a milestone <strong>on</strong> that path, not a rival meter. (Alternative: drive the ring off the goal instead — fine too, but pick one.)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 4. TODAY CONTRADICTION ======================= -->
+  <div class="issue">
+    <div class="issue-head"><div class="issue-num">4</div><h2>Today shows “done” in the grid while the chip says Pending</h2></div>
+    <p class="issue-sub">Day 12 is pre-seeded into the done-set, so the calendar contradicts the status chip, and Mark-as-done doesn’t move the month count. Demo-data bug that undercuts the interaction the prototype exists to prove.</p>
+    <div class="duo">
+      <div class="panel before">
+        <span class="plabel">Before</span>
+        <div class="frag">
+          <div class="card">
+            <div class="chead"><h4>Morning pages <span class="chip" style="margin-left:6px">Pending</span></h4><span>9 done</span></div>
+            <div class="cal" id="calContraBefore"></div>
+          </div>
+          <div class="callout bad" style="margin-top:10px">Chip: Pending · Grid: the 12th is already green · count frozen at 9</div>
+        </div>
+        <p class="pnote">Marking done changes nothing visible in this section — the proof moment is dead on arrival.</p>
+      </div>
+      <div class="panel after">
+        <span class="plabel">After · live — tap the 12th or the button</span>
+        <div class="frag">
+          <div class="card">
+            <div class="chead"><h4>Morning pages <span class="chip" id="contraChip" style="margin-left:6px">Pending</span></h4><span id="contraCount">8 done</span></div>
+            <div class="cal" id="calContraAfter"></div>
+          </div>
+          <button class="cta" id="contraCta" style="margin-top:10px"><span class="well"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="contraLbl">Mark as done</span></button>
+        </div>
+        <p class="pnote">Today starts hollow with the today-ring. Completing it flips <strong>chip, cell and count together</strong> — one source of truth, visible cause and effect.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 5. ONE-WAY CTA ======================= -->
+  <div class="issue">
+    <div class="issue-head"><div class="issue-num">5</div><h2>The settled CTA is still a live toggle</h2></div>
+    <p class="issue-sub">Tapping “Done today” silently undoes the completion. This exact pattern has already bitten real users in the app (the accidental Run-habit untoggle). Undo belongs in the toast window, not on the celebration button.</p>
+    <div class="duo">
+      <div class="panel before">
+        <span class="plabel">Before · live — tap it twice</span>
+        <div class="frag">
+          <div class="demo-streak"><span id="togStreak">12</span><small>day streak</small></div>
+          <button class="cta" id="togCta" style="margin-top:10px"><span class="well"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="togLbl">Mark as done</span></button>
+          <div class="callout bad" style="margin-top:12px">Second tap — a fidget, a pocket touch — silently deletes the completion.</div>
+        </div>
+        <p class="pnote">The most prominent, most-tapped control on the screen doubles as its own destructive inverse.</p>
+      </div>
+      <div class="panel after">
+        <span class="plabel">After · live — undo lives in the toast</span>
+        <div class="frag">
+          <div class="demo-streak"><span id="oneStreak">12</span><small>day streak</small></div>
+          <button class="cta" id="oneCta" style="margin-top:10px"><span class="well"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span id="oneLbl">Mark as done</span></button>
+          <div class="toast" id="oneToast"><span id="oneToastMsg">Logged · streak +1</span><button id="oneUndo">Undo</button></div>
+        </div>
+        <p class="pnote">Completion is one-way on the button. A second tap just re-offers <strong>Undo in the toast</strong> — intent must be explicit, accidents are free.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= THOUGHTS ======================= -->
+  <div class="thoughts">
+    <h2>My read</h2>
+    <p><em>The design itself doesn’t need rescuing</em> — hierarchy, tone and the momentum loop are the best version of this screen you have, and the app already runs on them. Every issue above is a seam in the prototype’s execution, not its argument.</p>
+    <p>1, 2 and 4 are mechanical: wrong demo data and a spy heuristic that fails at this content height. Fix them and the prototype survives any live poke. 3 and 5 are actual decisions: <em>one progress metaphor</em> (I’d keep the ring and demote the goal to a checkpoint line) and <em>one-way completion</em> with undo in the toast — the app’s own history shows the toggle CTA causes real accidental undos.</p>
+    <p>Minor leftovers, no mock needed: the milestone slot reserves ~20px of dead space at non-milestone streaks (collapse it); strength “72 / 100” and the 78% rate are hardcoded in JSX instead of living in <code style="color:#D4A84B">demoHabit.ts</code>; the scroll handler re-queries the DOM per tick.</p>
+    <div class="prio-row">
+      <span class="prio"><b>P0</b>#1 week-day mismatch</span>
+      <span class="prio"><b>P0</b>#4 today contradiction</span>
+      <span class="prio"><b>P1</b>#2 spy dead zone</span>
+      <span class="prio"><b>P1</b>#5 one-way CTA + toast undo</span>
+      <span class="prio"><b>P2</b>#3 single progress metaphor</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+
+  /* ---------- 1. week strips + calendars ---------- */
+  function week(el, labs, states) {
+    el.innerHTML = labs.map(function (l, i) {
+      return '<div class="wday ' + states[i] + '"><span class="wlab">' + l + '</span><span class="wdot">' + (states[i].indexOf('done') > -1 ? CHECK : '') + '</span></div>';
+    }).join('');
+  }
+  // Before: Mon-start, today marked on Saturday (index 5)
+  week(document.getElementById('weekBefore'), ['M','T','W','T','F','S','S'],
+       ['done','done','missed','done','done','today','']);
+  // After: Mon-start, today = Sunday (index 6), Saturday shows as missed history
+  week(document.getElementById('weekAfter'), ['M','T','W','T','F','S','S'],
+       ['done','done','missed','done','done','missed','today']);
+
+  function cal(el, dows, pad, days, doneSet, today) {
+    var h = dows.map(function (d) { return '<div class="cdow">' + d + '</div>'; }).join('');
+    for (var i = 0; i < pad; i++) h += '<div class="ccell empty"></div>';
+    for (var d = 1; d <= days; d++) {
+      var cls = 'ccell' + (doneSet.indexOf(d) > -1 ? ' done' : '') + (d === today ? ' today' : '');
+      h += '<div class="' + cls + '" data-d="' + d + '">' + d + '</div>';
+    }
+    el.innerHTML = h;
+  }
+  cal(document.getElementById('calBefore'), ['S','M','T','W','T','F','S'], 3, 14, [1,2,4,5,6,8,9,11,12], 12);
+  cal(document.getElementById('calAfter'),  ['M','T','W','T','F','S','S'], 2, 14, [1,2,4,5,6,8,9,11],    12);
+
+  /* ---------- 2. scroll spy demos ---------- */
+  document.querySelectorAll('.spy').forEach(function (spy) {
+    var mode = spy.dataset.mode;
+    var tabs = [].slice.call(spy.querySelectorAll('.tab'));
+    var secs = [].slice.call(spy.querySelectorAll('section'));
+    var ind = spy.querySelector('.ind');
+    var log = mode === 'offset' ? document.getElementById('logBefore') : document.getElementById('logAfter');
+    function setActive(i) {
+      tabs.forEach(function (t, j) { t.classList.toggle('active', i === j); });
+      ind.style.transform = 'translateX(' + i * 100 + '%)';
+    }
+    function spyPick() {
+      if (mode === 'offset') {
+        var base = spy.scrollTop + 60, cur = 0;
+        secs.forEach(function (s, i) { if (s.offsetTop <= base) cur = i; });
+        return cur;
+      }
+      var top = spy.scrollTop, bot = top + spy.clientHeight, best = 0, bestVis = -1;
+      secs.forEach(function (s, i) {
+        var vis = Math.min(bot, s.offsetTop + s.offsetHeight) - Math.max(top, s.offsetTop);
+        if (vis > bestVis) { bestVis = vis; best = i; }
+      });
+      return best;
+    }
+    spy.addEventListener('scroll', function () { setActive(spyPick()); }, { passive: true });
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () {
+        setActive(i);
+        spy.scrollTo({ top: secs[i].offsetTop - 48, behavior: 'smooth' });
+        setTimeout(function () {
+          var landed = spyPick();
+          setActive(landed);
+          if (log) {
+            var name = tabs[i].textContent, landedName = tabs[landed].textContent;
+            log.className = 'spylog ' + (landed === i ? 'ok' : 'bad');
+            log.textContent = landed === i
+              ? 'Tapped ' + name + ' → stayed on ' + landedName + ' ✓'
+              : 'Tapped ' + name + ' → snapped back to ' + landedName + ' ✕';
+          }
+        }, 420);
+      });
+    });
+  });
+
+  /* ---------- 4. today contradiction (after, live) ---------- */
+  var contra = { done: false, count: 8 };
+  var contraCal = document.getElementById('calContraAfter');
+  cal(contraCal, ['M','T','W','T','F','S','S'], 2, 14, [1,2,4,5,6,8,9,11], 12);
+  function contraRender() {
+    var cell = contraCal.querySelector('[data-d="12"]');
+    cell.classList.toggle('done', contra.done);
+    document.getElementById('contraChip').textContent = contra.done ? 'Done' : 'Pending';
+    document.getElementById('contraChip').classList.toggle('done', contra.done);
+    document.getElementById('contraCount').textContent = (contra.count + (contra.done ? 1 : 0)) + ' done';
+    document.getElementById('contraLbl').textContent = contra.done ? 'Done today' : 'Mark as done';
+    document.getElementById('contraCta').classList.toggle('done', contra.done);
+  }
+  function contraToggle() { contra.done = !contra.done; contraRender(); }
+  document.getElementById('contraCta').addEventListener('click', contraToggle);
+  contraCal.addEventListener('click', function (e) {
+    var c = e.target.closest('[data-d="12"]');
+    if (c) contraToggle();
+  });
+  contraRender();
+
+  /* ---------- 5. toggle CTA (before) ---------- */
+  var tog = false;
+  document.getElementById('togCta').addEventListener('click', function () {
+    tog = !tog;
+    this.classList.toggle('done', tog);
+    document.getElementById('togLbl').textContent = tog ? 'Done today' : 'Mark as done';
+    document.getElementById('togStreak').textContent = tog ? '13' : '12';
+  });
+
+  /* ---------- 5. one-way CTA + toast undo (after) ---------- */
+  var one = false, oneTimer;
+  var oneToast = document.getElementById('oneToast');
+  function oneRender() {
+    document.getElementById('oneCta').classList.toggle('done', one);
+    document.getElementById('oneLbl').textContent = one ? 'Done today' : 'Mark as done';
+    document.getElementById('oneStreak').textContent = one ? '13' : '12';
+  }
+  function showOneToast(msg) {
+    document.getElementById('oneToastMsg').textContent = msg;
+    oneToast.classList.add('show');
+    clearTimeout(oneTimer);
+    oneTimer = setTimeout(function () { oneToast.classList.remove('show'); }, 3200);
+  }
+  document.getElementById('oneCta').addEventListener('click', function () {
+    if (!one) { one = true; oneRender(); showOneToast('Logged · streak +1'); }
+    else { showOneToast('Already done today'); }
+  });
+  document.getElementById('oneUndo').addEventListener('click', function () {
+    one = false; oneRender();
+    oneToast.classList.remove('show');
+    clearTimeout(oneTimer);
+  });
+  oneRender();
+})();
+</script>
+</body>
+</html>
