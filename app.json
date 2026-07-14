@@ -72,11 +72,12 @@
       [
         "@sentry/react-native/expo",
         {
+          "url": "https://sentry.io/",
           "organization": "daily-habits",
-          "project": "react-native"
+          "project": "react-native",
+          "useNativeInit": true
         }
       ],
-      "@sentry/react-native",
       "./plugins/withPrivacyManifest.cjs",
       "@react-native-community/datetimepicker",
       "expo-background-task"

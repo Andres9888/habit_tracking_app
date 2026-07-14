@@ -1,12 +1,12 @@
-const { getDefaultConfig } = require('@expo/metro-config');
+const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 const { withNativeWind } = require('nativewind/metro');
 const crypto = require('crypto');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-// Base Expo config
-const baseConfig = getDefaultConfig(__dirname);
+// Base Expo config with Sentry Debug ID/source-map support.
+const baseConfig = getSentryExpoConfig(__dirname);
 
 function getDependencyFingerprint() {
   const hash = crypto.createHash('sha1');
