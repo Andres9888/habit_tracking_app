@@ -27,12 +27,17 @@ export function useAdvancedOptionsAccordion({
   const handleContentLayout = useCallback(
     (event: LayoutChangeEvent) => {
       const { height } = event.nativeEvent.layout;
-      if (height <= 0) return;
-      if (hasContentMeasured && !isExpanded) return;
+      // Only trust the measurement while expanded. Measuring during the
+      // collapsed state locks in a clipped/short height (the body sits inside
+      // a height:0 overflow:hidden container), which then caps the expanded
+      // panel and makes the lower rows unreachable. Deferring the measure lets
+      // useExpandAnimation's `auto` fallback render the true full height on the
+      // first expand, which we then capture here.
+      if (height <= 0 || !isExpanded) return;
       setContentHeight((prev) => (prev === height ? prev : height));
       setHasContentMeasured(true);
     },
-    [hasContentMeasured, isExpanded]
+    [isExpanded]
   );
 
   return {
