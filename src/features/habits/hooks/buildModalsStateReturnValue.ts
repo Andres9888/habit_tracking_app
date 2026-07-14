@@ -5,6 +5,7 @@ import type {
   HandlersReturn,
   ExtraState,
 } from './buildModalsStateReturnValue.types';
+import { markTemplatesModalOpenIntent } from '../templatesModalOpenPerformance';
 
 /**
  * Builds the complete HabitsModalsState return value by combining visibility state,
@@ -132,7 +133,10 @@ export function buildModalsStateReturnValue(
     // Inline open handlers
     openSettings: () => visibility.setIsSettingsOpen(true),
 
-    openTemplatesScreen: () => visibility.setShowTemplatesScreen(true),
+    openTemplatesScreen: () => {
+      markTemplatesModalOpenIntent('modalState');
+      visibility.setShowTemplatesScreen(true);
+    },
 
     openVisualizationExercise: handlers.openVisualizationExercise,
 

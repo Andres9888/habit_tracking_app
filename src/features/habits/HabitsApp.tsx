@@ -81,8 +81,7 @@ function HabitsAppContent() {
   useAppAnalytics(!showSkeleton);
   useTemplatesWarmup({ homeReady: !showSkeleton });
   useEffect(() => {
-    if (showSkeleton) return;
-    return schedulePostLaunchAppPreload();
+    return schedulePostLaunchAppPreload({ homeReady: !showSkeleton });
   }, [showSkeleton]);
   const showEmptyState =
     list.isSettingsReady && !list.isHabitsLoading && list.habits.length === 0;

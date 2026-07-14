@@ -1,11 +1,9 @@
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
-
 import { TrendingUp } from 'lucide-react-native';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ScrollView, Text, View } from 'react-native';
-
 import type { AlgorithmMode } from '@/components/AlgorithmPicker';
 import { GrowthIconsInline } from '@/components/AdvancedOptions/GrowthIconsInline';
 import { StrengthCurveExpand } from '@/components/AdvancedOptions/StrengthCurveExpand';
@@ -17,7 +15,6 @@ import { useAdvancedTokens } from '@/components/AdvancedOptions/useAdvancedToken
 import { iconSizes } from '@/theme/iconSizes';
 import type { ProgressEmojiSet } from '@/utils/progressEmojis';
 import { SPROUT_PROGRESS_EMOJIS } from '@/utils/progressEmojis';
-
 function Harness() {
   const t = useAdvancedTokens();
   const [mode, setMode] = useState<AlgorithmMode>('balanced');
@@ -26,19 +23,16 @@ function Harness() {
     SPROUT_PROGRESS_EMOJIS
   );
   const curve = CURVE_MOCK_COPY[mode];
-
   return (
     <ScrollView
-      style={{ backgroundColor: '#f7f4ef', minHeight: '100vh' }}
+      style={{ backgroundColor: '#f7f4ef', minHeight: '100%' }}
       contentContainerStyle={{
         paddingBottom: 48,
         paddingTop: 20,
       }}
     >
       <View style={{ paddingHorizontal: 24 }}>
-        <Text style={{ fontSize: 22, fontWeight: '700', marginBottom: 10 }}>
-          Add habit
-        </Text>
+        <Text style={{ fontSize: 22, fontWeight: '700', marginBottom: 10 }}>Add habit</Text>
         <Text style={{ color: '#6b6258', fontSize: 13, marginBottom: 10 }}>
           Advanced options
         </Text>
@@ -102,5 +96,4 @@ function Harness() {
     </ScrollView>
   );
 }
-
-createRoot(document.getElementById('root')!).render(<Harness />);
+createRoot(document.querySelector('#root')!).render(<Harness />);

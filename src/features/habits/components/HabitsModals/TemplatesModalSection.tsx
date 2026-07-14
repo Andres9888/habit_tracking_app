@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -8,6 +9,7 @@ import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import { useWarmTemplatesCache } from '../../../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { captureTemplatesModalFirstVisible } from '../../templatesModalOpenPerformance';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
 
 /**
@@ -23,6 +25,12 @@ export function TemplatesModalSection({
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
   useWarmTemplatesCache(showTemplatesScreen);
+
+  useEffect(() => {
+    if (showTemplatesScreen) {
+      captureTemplatesModalFirstVisible('modal');
+    }
+  }, [showTemplatesScreen]);
 
   const handleClose = () => {
     trigger('tap');

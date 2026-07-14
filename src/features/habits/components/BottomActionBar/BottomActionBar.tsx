@@ -1,9 +1,4 @@
-/**
- * BottomActionBar — Floating liquid glass capsule.
- * Left: Settings icon · Center: Progress ring + FAB · Right: Inspire icon.
- * The capsule floats above the bottom safe area with rounded ends.
- */
-
+/* eslint-disable max-lines */
 import { memo } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,6 +7,7 @@ import { BlurView } from 'expo-blur';
 import { BookOpen, Settings } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { colors as palette } from '../../../../theme/colors';
+import { markTemplatesModalOpenIntent } from '../../templatesModalOpenPerformance';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { useBarAnimations } from './useBarAnimations';
 import { useCelebrationState } from './useCelebrationState';
@@ -96,7 +92,10 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
               hitSlop={iconButtonHitSlop}
               testID='home-templates-button'
               style={styles.iconTouchArea}
-              onPress={props.onOpenTemplates}
+              onPress={() => {
+                markTemplatesModalOpenIntent('bottomActionBar');
+                props.onOpenTemplates();
+              }}
               onPressIn={anim.onTemplatesPressIn}
               onPressOut={anim.onTemplatesPressOut}
             >
