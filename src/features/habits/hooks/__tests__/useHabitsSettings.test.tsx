@@ -29,6 +29,7 @@ describe('useHabitsSettings', () => {
     expect(mockUseQuery).toHaveBeenLastCalledWith(expect.anything(), 'skip');
     expect(result.current.settings).toBe(settings);
     expect(result.current.archivedHabitsCount).toBe(0);
+    expect(result.current.isSettingsModalLoading).toBe(false);
   });
 
   it('loads only the archived count when settings opens', () => {
@@ -43,5 +44,32 @@ describe('useHabitsSettings', () => {
 
     expect(mockUseQuery).toHaveBeenLastCalledWith(expect.anything(), {});
     expect(result.current.archivedHabitsCount).toBe(4);
+    expect(result.current.isSettingsModalLoading).toBe(false);
+  });
+
+  it('keeps the Settings modal loading while the archived count is unresolved', () => {
+    const { result } = renderHook(() =>
+      useHabitsSettings({
+        settings,
+        shouldLoadArchivedCount: true,
+      })
+    );
+
+    expect(mockUseQuery).toHaveBeenLastCalledWith(expect.anything(), {});
+    expect(result.current.archivedHabitsCount).toBe(0);
+    expect(result.current.isSettingsModalLoading).toBe(true);
+  });
+
+  it('keeps the Settings modal loading until home settings are available', () => {
+    mockUseQuery.mockReturnValue(0);
+
+    const { result } = renderHook(() =>
+      useHabitsSettings({
+        settings: undefined,
+        shouldLoadArchivedCount: true,
+      })
+    );
+
+    expect(result.current.isSettingsModalLoading).toBe(true);
   });
 });

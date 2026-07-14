@@ -15,6 +15,7 @@ export interface HabitsSettingsResult {
   completionSoundEnabled: boolean;
   completionSoundType: CompletionSoundType;
   archivedHabitsCount: number;
+  isSettingsModalLoading: boolean;
   reduceMotionPreference: boolean;
 }
 
@@ -39,6 +40,9 @@ export function useHabitsSettings({
   // the user chose product defaults and causes a preference flash when live
   // settings arrive. Gate consumers on settings !== undefined.
   const archivedHabitsCount = archivedHabitsCountQuery ?? 0;
+  const isSettingsModalLoading =
+    settings === undefined ||
+    (shouldLoadArchivedCount && archivedHabitsCountQuery === undefined);
 
   return useMemo(
     () => ({
@@ -51,10 +55,11 @@ export function useHabitsSettings({
         DEFAULT_SETTINGS.completionSoundEnabled,
       completionSoundType:
         settings?.completionSoundType ?? DEFAULT_SETTINGS.completionSoundType,
+      isSettingsModalLoading,
       reduceMotionPreference:
         settings?.reduceMotion ?? DEFAULT_SETTINGS.reduceMotion,
       settings,
     }),
-    [archivedHabitsCount, settings]
+    [archivedHabitsCount, isSettingsModalLoading, settings]
   );
 }

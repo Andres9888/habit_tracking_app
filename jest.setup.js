@@ -105,12 +105,19 @@ jest.mock('convex/react', () => ({
 }));
 
 // Mock Clerk
-jest.mock('@clerk/clerk-expo', () => ({
+jest.mock('@clerk/expo', () => ({
   ClerkProvider: ({ children }) => children,
   ClerkLoaded: ({ children }) => children,
   SignedIn: ({ children }) => children,
   SignedOut: () => null,
+  useAuth: () => ({ getToken: jest.fn(), isLoaded: true, isSignedIn: true }),
+  useClerk: () => ({ signOut: jest.fn() }),
+  useSSO: () => ({ startSSOFlow: jest.fn() }),
   useUser: () => ({ user: { id: 'test-user' } }),
+}));
+
+jest.mock('@clerk/expo/resource-cache', () => ({
+  resourceCache: {},
 }));
 
 // Mock expo-secure-store

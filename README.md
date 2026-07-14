@@ -53,6 +53,9 @@ This feature increases chip engagement by 40-60% by showing habits that align wi
    | `EXPO_PUBLIC_REVENUECAT_IOS_KEY` / `EXPO_PUBLIC_REVENUECAT_ANDROID_KEY` | RevenueCat SDK (premium)                                                                                                                |
    | `REVENUECAT_WEBHOOK_SECRET`                                             | Verifies RevenueCat → Convex entitlement webhooks — **server-side only**: set it in the Convex dashboard, never in a client `.env` file |
    | `EXPO_PUBLIC_SENTRY_DSN`                                                | Sentry error reporting                                                                                                                  |
+   | `EXPO_PUBLIC_SENTRY_ENABLE_REPLAY`                                      | Opt-in Sentry session replay after privacy/store-label review                                                                           |
+   | `EXPO_PUBLIC_SENTRY_ENABLE_PROFILING`                                   | Opt-in Sentry profiling after quota review                                                                                              |
+   | `EXPO_PUBLIC_SENTRY_ENABLE_LOGS`                                        | Opt-in Sentry logs; automatic console-log capture remains disabled                                                                      |
 
    See [ARCHITECTURE.md](./ARCHITECTURE.md) for the backend data model and
    [CONTRIBUTING.md](./CONTRIBUTING.md) for dev/test workflow.

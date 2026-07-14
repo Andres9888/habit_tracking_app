@@ -4,6 +4,7 @@ export function getSettingsProps(state: HabitsModalsProps['state']) {
   return {
     archivedHabitsCount: state.archivedHabitsCount,
     celebrationsEnabled: state.celebrationsEnabled,
+    isSettingsModalLoading: state.isSettingsModalLoading,
     closeSettings: state.closeSettings,
     onSettingsChange: state.onSettingsChange,
     openHapticTest: state.openHapticTest,

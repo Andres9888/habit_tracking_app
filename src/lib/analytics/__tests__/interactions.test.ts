@@ -43,6 +43,21 @@ describe('production analytics interactions', () => {
     );
   });
 
+  it('allows privacy-safe Settings open timing events', () => {
+    const event = buildProductEvent('settings_opened', {
+      durationMs: 147,
+      phase: 'content-ready',
+      route: 'private-settings-route',
+    });
+
+    expect(event).toMatchObject({
+      durationMs: 147,
+      name: 'settings_opened',
+    });
+    expect(event).not.toHaveProperty('phase');
+    expect(event).not.toHaveProperty('route');
+  });
+
   it('does not transport unknown events', () => {
     expect(
       buildProductEvent('habit_name_changed', { habitName: 'Private' })

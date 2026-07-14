@@ -46,6 +46,7 @@ export function useHabitsModalsState({
     archivedHabitsCount,
     settings,
     celebrationsEnabled,
+    isSettingsModalLoading,
     reduceMotionPreference,
   } = useHabitsSettings({
     settings: homeSettings,
@@ -180,6 +181,7 @@ export function useHabitsModalsState({
     habits,
     handleArchive,
     handleToggleHabit,
+    isSettingsModalLoading,
     milestone,
     onChangeCelebrationsEnabled,
     reduceMotionPreference,

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import 'react-native-gesture-handler';
 import 'react-native-reanimated';
 
@@ -15,8 +16,10 @@ import { StreakGoalInline } from '@/components/AdvancedOptions/StreakGoalInline'
 import { CURVE_MOCK_COPY } from '@/components/AdvancedOptions/mockTokens';
 import { useAdvancedTokens } from '@/components/AdvancedOptions/useAdvancedTokens';
 import { iconSizes } from '@/theme/iconSizes';
-import type { ProgressEmojiSet } from '@/utils/progressEmojis';
-import { SPROUT_PROGRESS_EMOJIS } from '@/utils/progressEmojis';
+import {
+  SPROUT_PROGRESS_EMOJIS,
+  type ProgressEmojiSet,
+} from '@/utils/progressEmojis';
 
 function Harness() {
   const t = useAdvancedTokens();
@@ -29,7 +32,7 @@ function Harness() {
 
   return (
     <ScrollView
-      style={{ backgroundColor: '#f7f4ef', minHeight: '100vh' }}
+      style={{ backgroundColor: '#f7f4ef', minHeight: '100%' }}
       contentContainerStyle={{
         paddingBottom: 48,
         paddingTop: 20,
@@ -103,4 +106,4 @@ function Harness() {
   );
 }
 
-createRoot(document.getElementById('root')!).render(<Harness />);
+createRoot(document.querySelector('#root')!).render(<Harness />);

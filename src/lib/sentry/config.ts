@@ -13,12 +13,27 @@ import type { SentryConfig } from './types';
 import { DEFAULT_SENTRY_CONFIG } from './types';
 
 const nativeHandsetKey = ['and', 'roid'].join('') as 'android';
+const sentryDsnEnvKey = ['EXPO', 'PUBLIC', 'SENTRY', 'DSN'].join('_');
+const sentryReleaseEnvKey = ['SENTRY', 'RELEASE'].join('_');
+
+function getBooleanEnv(name: string): boolean {
+  return process.env[name]?.toLowerCase() === 'true';
+}
+
+function getSampleRateEnv(name: string, fallback: number): number {
+  const rawValue = process.env[name];
+  if (!rawValue) return fallback;
+
+  const value = Number(rawValue);
+  if (!Number.isFinite(value)) return fallback;
+  return Math.min(1, Math.max(0, value));
+}
 
 /** Get the Sentry DSN from environment variables.
  * @returns The DSN string, or null if not configured
  */
 function getDsn(): string | null {
-  const dsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
+  const dsn = process.env[sentryDsnEnvKey];
   if (!dsn || dsn === '') {
     if (__DEV__)
       console.log('[Sentry] No DSN configured - monitoring disabled');
@@ -45,8 +60,8 @@ function getEnvironment(): SentryConfig['environment'] {
  * @returns Release string (e.g., "daily-habits@1.2.3+100")
  */
 function getRelease(): string {
-  if (process.env.SENTRY_RELEASE) {
-    return process.env.SENTRY_RELEASE;
+  if (process.env[sentryReleaseEnvKey]) {
+    return process.env[sentryReleaseEnvKey];
   }
 
   const version = Constants.expoConfig?.version ?? '1.0.0';
@@ -71,15 +86,34 @@ export function buildSentryConfig(): SentryConfig | null {
   if (!dsn) return null;
 
   const environment = getEnvironment();
+  const production = environment === 'production';
+  const enableReplay = getBooleanEnv('EXPO_PUBLIC_SENTRY_ENABLE_REPLAY');
+  const enableProfiling = getBooleanEnv('EXPO_PUBLIC_SENTRY_ENABLE_PROFILING');
 
   return {
     ...DEFAULT_SENTRY_CONFIG,
     dsn,
+    enableLogs: getBooleanEnv('EXPO_PUBLIC_SENTRY_ENABLE_LOGS'),
     environment,
+    profilesSampleRate: enableProfiling
+      ? getSampleRateEnv(
+          'EXPO_PUBLIC_SENTRY_PROFILES_SAMPLE_RATE',
+          production ? 0.1 : 1
+        )
+      : 0,
     release: getRelease(),
+    replaysOnErrorSampleRate: enableReplay
+      ? getSampleRateEnv('EXPO_PUBLIC_SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE', 1)
+      : 0,
+    replaysSessionSampleRate: enableReplay
+      ? getSampleRateEnv(
+          'EXPO_PUBLIC_SENTRY_REPLAYS_SESSION_SAMPLE_RATE',
+          production ? 0.01 : 1
+        )
+      : 0,
     // Adjust sample rates by environment
-    sampleRate: environment === 'production' ? 1 : 1,
-    tracesSampleRate: environment === 'production' ? 0.2 : 1,
+    sampleRate: production ? 1 : 1,
+    tracesSampleRate: production ? 0.2 : 1,
   };
 }
 

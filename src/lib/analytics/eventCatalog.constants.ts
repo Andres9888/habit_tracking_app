@@ -12,6 +12,7 @@ export const EVENT_NAMES = [
   'habits_batch_deleted',
   'paywall_viewed',
   'purchase_succeeded',
+  'settings_opened',
   'signup_completed',
 ] as const;
 

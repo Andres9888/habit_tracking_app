@@ -23,7 +23,7 @@ describe('schedulePostLaunchAppPreload', () => {
   });
 
   it('schedules frequent work first and secondary work after 2.5 seconds', () => {
-    schedulePostLaunchAppPreload();
+    schedulePostLaunchAppPreload({ homeReady: true });
 
     expect(mockScheduleWhenIdle).toHaveBeenCalledTimes(1);
     expect(mockScheduleWhenIdle).toHaveBeenNthCalledWith(
@@ -44,7 +44,7 @@ describe('schedulePostLaunchAppPreload', () => {
   });
 
   it('cancels both preload tiers', () => {
-    const cancel = schedulePostLaunchAppPreload();
+    const cancel = schedulePostLaunchAppPreload({ homeReady: true });
     const cancelFrequent = mockScheduleWhenIdle.mock.results[0]?.value;
 
     jest.advanceTimersByTime(2500);
@@ -53,5 +53,27 @@ describe('schedulePostLaunchAppPreload', () => {
 
     expect(cancelFrequent).toHaveBeenCalledTimes(1);
     expect(cancelSecondary).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not schedule work before home is ready', () => {
+    const cancel = schedulePostLaunchAppPreload({ homeReady: false });
+
+    expect(mockScheduleWhenIdle).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(2500);
+    expect(mockScheduleWhenIdle).not.toHaveBeenCalled();
+
+    expect(cancel).not.toThrow();
+  });
+
+  it('cancels before the secondary tier is scheduled', () => {
+    const cancel = schedulePostLaunchAppPreload({ homeReady: true });
+    const cancelFrequent = mockScheduleWhenIdle.mock.results[0]?.value;
+
+    cancel();
+    jest.advanceTimersByTime(2500);
+
+    expect(cancelFrequent).toHaveBeenCalledTimes(1);
+    expect(mockScheduleWhenIdle).toHaveBeenCalledTimes(1);
   });
 });

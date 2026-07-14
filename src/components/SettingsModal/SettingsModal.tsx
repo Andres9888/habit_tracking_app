@@ -1,9 +1,15 @@
 /**
  * SettingsModal Component
  */
+/* eslint-disable max-lines, max-lines-per-function */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  clearSettingsOpenTiming,
+  markSettingsOpenContentReady,
+  markSettingsOpenFirstVisible,
+} from '../../lib/performance/settingsOpenTiming';
 import { ErrorBoundary } from '../ErrorBoundary';
 import Modal from '../Modal';
 import { useSettingsModalLogic } from './SettingsModal.hooks';
@@ -19,6 +25,39 @@ function SettingsModalContent(props: SettingsModalProps) {
     visible: props.visible,
   });
   const insets = useSafeAreaInsets();
+  const markedVisibleReference = useRef(false);
+  const markedReadyReference = useRef(false);
+
+  useEffect(() => {
+    if (!props.visible) {
+      markedVisibleReference.current = false;
+      markedReadyReference.current = false;
+      clearSettingsOpenTiming();
+      return;
+    }
+
+    if (!markedVisibleReference.current) {
+      markedVisibleReference.current = true;
+      markSettingsOpenFirstVisible({ isLoading: props.isLoading ?? false });
+    }
+  }, [props.isLoading, props.visible]);
+
+  useEffect(() => {
+    if (!props.visible || props.isLoading || markedReadyReference.current) {
+      return;
+    }
+
+    markedReadyReference.current = true;
+    markSettingsOpenContentReady({
+      archivedHabitsCount: props.archivedHabitsCount ?? 0,
+      isPremium: props.isPremium ?? false,
+    });
+  }, [
+    props.archivedHabitsCount,
+    props.isLoading,
+    props.isPremium,
+    props.visible,
+  ]);
 
   const handleRequestClose = useCallback(() => {
     if (logic.view !== 'settings') {

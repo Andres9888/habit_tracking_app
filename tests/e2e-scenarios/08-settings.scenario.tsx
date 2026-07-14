@@ -1,7 +1,7 @@
 /**
  * Scenario S15: Settings — appearance, theme and reminders.
  *
- * PASS when the settings surface renders the appearance/notifications sections
+ * PASS when the settings surface renders the look/reminder sections
  * and changing the theme to Dark persists via the settings:update mutation.
  */
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
@@ -29,8 +29,8 @@ describe('S15 Settings', () => {
   it('shows settings sections and persists a theme change', async () => {
     renderScreen(<SettingsModal visible onClose={() => {}} />);
     expect(await screen.findByText('Settings')).toBeTruthy();
-    expect(screen.getByText('Appearance')).toBeTruthy();
-    expect(screen.getByText('Notifications')).toBeTruthy();
+    expect(screen.getByText('Look & Feel')).toBeTruthy();
+    expect(screen.getByText('Reminders')).toBeTruthy();
     fireEvent.press(screen.getByLabelText('Dark'));
     await waitFor(() =>
       expect(getMutation('settings:update')).toHaveBeenCalled()

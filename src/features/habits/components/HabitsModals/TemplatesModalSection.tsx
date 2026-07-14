@@ -1,3 +1,4 @@
+import { Suspense, useEffect } from 'react';
 import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -5,9 +6,11 @@ import ErrorBoundary from '../../../../components/ErrorBoundary';
 import Modal from '../../../../components/Modal';
 import { ModalCloseButton } from '../../../../components/ui/ModalCloseButton';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
+import { TemplatesLoadingState } from '../../../../screens/TemplatesScreen/components/TemplatesLoadingState';
 import { useWarmTemplatesCache } from '../../../../screens/TemplatesScreen/useWarmTemplatesCache';
 import { useHaptics } from '../../../../utils/haptics/useHaptics';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { captureTemplatesModalFirstVisible } from '../../templatesModalOpenPerformance';
 import type { TemplatesModalSectionProps } from './HabitsModals.types';
 
 /**
@@ -23,6 +26,12 @@ export function TemplatesModalSection({
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
   useWarmTemplatesCache(showTemplatesScreen);
+
+  useEffect(() => {
+    if (showTemplatesScreen) {
+      captureTemplatesModalFirstVisible('modal');
+    }
+  }, [showTemplatesScreen]);
 
   const handleClose = () => {
     trigger('tap');
@@ -51,10 +60,12 @@ export function TemplatesModalSection({
     >
       <View className='flex-1' style={{ backgroundColor: colors.background }}>
         <ErrorBoundary>
-          <TemplatesScreen
-            onCloseLibrary={handleClose}
-            onViewHabit={handleViewHabit}
-          />
+          <Suspense fallback={<TemplatesLoadingState />}>
+            <TemplatesScreen
+              onCloseLibrary={handleClose}
+              onViewHabit={handleViewHabit}
+            />
+          </Suspense>
         </ErrorBoundary>
         <View className='absolute right-4' style={{ top: insets.top + 8 }}>
           <ModalCloseButton

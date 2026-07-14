@@ -5,6 +5,8 @@ import type {
   HandlersReturn,
   ExtraState,
 } from './buildModalsStateReturnValue.types';
+import { markSettingsOpenStateRequested } from '../../../lib/performance/settingsOpenTiming';
+import { markTemplatesModalOpenIntent } from '../templatesModalOpenPerformance';
 
 /**
  * Builds the complete HabitsModalsState return value by combining visibility state,
@@ -26,6 +28,7 @@ export function buildModalsStateReturnValue(
     archivedHabitsCount: extra.archivedHabitsCount,
     // State properties
     celebrationsEnabled: extra.celebrationsEnabled,
+    isSettingsModalLoading: extra.isSettingsModalLoading,
     // Handlers from extracted hook
     closeCreateHabit: handlers.closeCreateHabit,
 
@@ -130,9 +133,15 @@ export function buildModalsStateReturnValue(
     openQuickActions: handlers.openQuickActions,
     tracking: extra.tracking,
     // Inline open handlers
-    openSettings: () => visibility.setIsSettingsOpen(true),
+    openSettings: () => {
+      markSettingsOpenStateRequested();
+      visibility.setIsSettingsOpen(true);
+    },
 
-    openTemplatesScreen: () => visibility.setShowTemplatesScreen(true),
+    openTemplatesScreen: () => {
+      markTemplatesModalOpenIntent('modalState');
+      visibility.setShowTemplatesScreen(true);
+    },
 
     openVisualizationExercise: handlers.openVisualizationExercise,
 

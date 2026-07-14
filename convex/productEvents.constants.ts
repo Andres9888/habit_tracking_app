@@ -14,6 +14,7 @@ export const PRODUCT_EVENT_NAMES = [
   'habits_batch_deleted',
   'paywall_viewed',
   'purchase_succeeded',
+  'settings_opened',
   'signup_completed',
 ] as const;
 
@@ -54,6 +55,7 @@ export const productEventNameValidator = v.union(
   v.literal('habits_batch_deleted'),
   v.literal('paywall_viewed'),
   v.literal('purchase_succeeded'),
+  v.literal('settings_opened'),
   v.literal('signup_completed')
 );
 

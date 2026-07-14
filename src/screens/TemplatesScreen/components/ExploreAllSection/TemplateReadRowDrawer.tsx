@@ -74,11 +74,13 @@ export function TemplateReadRowDrawer({
         pointerEvents={expanded ? 'auto' : 'none'}
         style={contentAnimatedStyle}
       >
-        <TemplateReadRowScience
-          item={item}
-          onLayout={onContentLayout}
-          onPreview={onPreview}
-        />
+        {expanded ? (
+          <TemplateReadRowScience
+            item={item}
+            onLayout={onContentLayout}
+            onPreview={onPreview}
+          />
+        ) : null}
       </Animated.View>
     </>
   );

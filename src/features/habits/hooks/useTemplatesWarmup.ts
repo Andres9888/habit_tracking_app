@@ -24,7 +24,7 @@ export function isTemplateCacheFresh(
 export function useTemplatesWarmup({
   homeReady,
 }: UseTemplatesWarmupOptions): void {
-  const { isOnline, status } = useNetworkStatus();
+  const { isChecking, isOnline, status } = useNetworkStatus();
   const templatesSavedAt = useCachedQuerySavedAt(
     'templates.list',
     {},
@@ -42,7 +42,8 @@ export function useTemplatesWarmup({
   const cacheFresh =
     isTemplateCacheFresh(templatesSavedAt) &&
     isTemplateCacheFresh(importedIdsSavedAt);
-  const canWarm = homeReady && isOnline && !status.isExpensive && !cacheFresh;
+  const canWarm =
+    homeReady && !isChecking && isOnline && !status.isExpensive && !cacheFresh;
   const [warmNow, setWarmNow] = useState(false);
 
   useEffect(() => {

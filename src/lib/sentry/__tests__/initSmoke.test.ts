@@ -16,6 +16,7 @@ function mockSentry() {
     captureException: jest.fn(() => 'event-id'),
     captureMessage: jest.fn(() => 'event-id'),
     init: jest.fn(),
+    mobileReplayIntegration: jest.fn(() => ({ name: 'mobileReplay' })),
     reactNavigationIntegration: jest.fn(() => ({ name: 'navigation' })),
     setTag: jest.fn(),
     setUser: jest.fn(),
@@ -67,7 +68,18 @@ describe('Sentry startup/init smoke tests', () => {
     );
 
     const initOptions = Sentry.init.mock.calls[0][0];
-    expect(initOptions).not.toHaveProperty('sendDefaultPii');
+    expect(initOptions).toEqual(
+      expect.objectContaining({
+        attachScreenshot: false,
+        attachViewHierarchy: false,
+        enableAutoConsoleLogs: false,
+        enableCaptureFailedRequests: false,
+        profilesSampleRate: undefined,
+        replaysOnErrorSampleRate: undefined,
+        replaysSessionSampleRate: undefined,
+        sendDefaultPii: false,
+      })
+    );
     const beforeSend = initOptions.beforeSend as (
       event: ErrorEvent
     ) => ErrorEvent | null;
@@ -138,5 +150,38 @@ describe('Sentry startup/init smoke tests', () => {
     expect(Sentry.setTag).toHaveBeenNthCalledWith(1, 'user_premium', 'true');
     expect(Sentry.setUser).toHaveBeenNthCalledWith(2, null);
     expect(Sentry.setTag).toHaveBeenNthCalledWith(2, 'user_premium', null);
+  });
+
+  it('enables reviewed replay, profiling, and logs when config opts in', () => {
+    const Sentry = require('@sentry/react-native');
+    const { initSentryWithConfig } = require('../init');
+
+    expect(
+      initSentryWithConfig({
+        ...TEST_CONFIG,
+        enableLogs: true,
+        profilesSampleRate: 0.1,
+        replaysOnErrorSampleRate: 1,
+        replaysSessionSampleRate: 0.01,
+      })
+    ).toBe(true);
+
+    const initOptions = Sentry.init.mock.calls[0][0];
+    expect(Sentry.mobileReplayIntegration).toHaveBeenCalledTimes(1);
+    expect(initOptions).toEqual(
+      expect.objectContaining({
+        enableAutoConsoleLogs: false,
+        enableLogs: true,
+        profilesSampleRate: 0.1,
+        replaysOnErrorSampleRate: 1,
+        replaysSessionQuality: 'low',
+        replaysSessionSampleRate: 0.01,
+        sendDefaultPii: false,
+      })
+    );
+    expect(initOptions.integrations).toEqual([
+      { name: 'navigation' },
+      { name: 'mobileReplay' },
+    ]);
   });
 });

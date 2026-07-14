@@ -48,9 +48,24 @@ jest.mock('expo-linear-gradient', () => ({
 
 jest.mock('@react-native-community/datetimepicker', () => 'DateTimePicker');
 
+jest.mock('../../lib/performance/settingsOpenTiming', () => ({
+  clearSettingsOpenTiming: jest.fn(),
+  markSettingsOpenContentReady: jest.fn(),
+  markSettingsOpenFirstVisible: jest.fn(),
+}));
+
+import {
+  markSettingsOpenContentReady,
+  markSettingsOpenFirstVisible,
+} from '../../lib/performance/settingsOpenTiming';
+import { SettingsModalLoadingFallback } from './components/SettingsModalFallback';
 import SettingsModal from './SettingsModal';
 
 describe('SettingsModal', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('renders redesigned settings sections when visible', () => {
     const { getByText, getByLabelText } = render(
       <SettingsModal onClose={() => {}} visible />
@@ -61,5 +76,43 @@ describe('SettingsModal', () => {
     expect(getByText('Archived habits')).toBeTruthy();
     expect(getByText('Export habits data')).toBeTruthy();
     expect(getByLabelText('Account settings')).toBeTruthy();
+  });
+
+  it('marks first visible and content ready once after loading resolves', () => {
+    const onClose = jest.fn();
+    const { rerender } = render(
+      <SettingsModal isLoading onClose={onClose} visible />
+    );
+
+    expect(markSettingsOpenFirstVisible).toHaveBeenCalledWith({
+      isLoading: true,
+    });
+    expect(markSettingsOpenContentReady).not.toHaveBeenCalled();
+
+    rerender(
+      <SettingsModal
+        archivedHabitsCount={3}
+        isPremium
+        onClose={onClose}
+        visible
+      />
+    );
+    expect(markSettingsOpenContentReady).toHaveBeenCalledWith({
+      archivedHabitsCount: 3,
+      isPremium: true,
+    });
+
+    rerender(
+      <SettingsModal archivedHabitsCount={4} onClose={onClose} visible />
+    );
+    expect(markSettingsOpenContentReady).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders the loading shell used by lazy Settings boundaries', () => {
+    const { getByTestId } = render(
+      <SettingsModalLoadingFallback onClose={() => {}} visible />
+    );
+
+    expect(getByTestId('settings-modal-loading-fallback')).toBeTruthy();
   });
 });

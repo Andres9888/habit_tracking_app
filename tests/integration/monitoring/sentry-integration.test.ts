@@ -32,6 +32,7 @@ jest.mock('@sentry/react-native', () => ({
   captureException: jest.fn(() => 'mock-event-id'),
   captureMessage: jest.fn(() => 'mock-event-id'),
   addBreadcrumb: jest.fn(),
+  mobileReplayIntegration: jest.fn(() => ({})),
   setUser: jest.fn(),
   setTag: jest.fn(),
   startSpan: jest.fn(() => ({
@@ -72,6 +73,39 @@ describe('Sentry Configuration', () => {
       const config = buildSentryConfig();
       expect(config?.environment).toBe('development');
     });
+
+    it('keeps advanced monitoring disabled by default', () => {
+      process.env.EXPO_PUBLIC_SENTRY_DSN = 'https://test@sentry.io/123';
+      const config = buildSentryConfig();
+      expect(config).toEqual(
+        expect.objectContaining({
+          enableLogs: false,
+          profilesSampleRate: 0,
+          replaysOnErrorSampleRate: 0,
+          replaysSessionSampleRate: 0,
+        })
+      );
+    });
+
+    it('enables advanced monitoring only through explicit env flags', () => {
+      process.env.EXPO_PUBLIC_SENTRY_DSN = 'https://test@sentry.io/123';
+      process.env.EXPO_PUBLIC_SENTRY_ENABLE_LOGS = 'true';
+      process.env.EXPO_PUBLIC_SENTRY_ENABLE_PROFILING = 'true';
+      process.env.EXPO_PUBLIC_SENTRY_PROFILES_SAMPLE_RATE = '0.05';
+      process.env.EXPO_PUBLIC_SENTRY_ENABLE_REPLAY = 'true';
+      process.env.EXPO_PUBLIC_SENTRY_REPLAYS_SESSION_SAMPLE_RATE = '0.02';
+      process.env.EXPO_PUBLIC_SENTRY_REPLAYS_ON_ERROR_SAMPLE_RATE = '0.5';
+
+      const config = buildSentryConfig();
+      expect(config).toEqual(
+        expect.objectContaining({
+          enableLogs: true,
+          profilesSampleRate: 0.05,
+          replaysOnErrorSampleRate: 0.5,
+          replaysSessionSampleRate: 0.02,
+        })
+      );
+    });
   });
 
   describe('isSentryEnabled', () => {
@@ -100,17 +134,14 @@ describe('Sentry Types', () => {
     it('accepts valid user objects', () => {
       const user: SentryUser = {
         id: 'user-123',
-        email: 'test@example.com',
         isPremium: true,
       };
       expect(user.id).toBe('user-123');
-      expect(user.email).toBe('test@example.com');
       expect(user.isPremium).toBe(true);
     });
 
     it('allows optional fields', () => {
       const user: SentryUser = { id: 'user-123' };
-      expect(user.email).toBeUndefined();
       expect(user.isPremium).toBeUndefined();
     });
   });

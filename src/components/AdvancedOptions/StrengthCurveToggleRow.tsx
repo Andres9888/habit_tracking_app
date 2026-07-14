@@ -38,10 +38,11 @@ export function StrengthCurveToggleRow({
       style={{
         minHeight: 44,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         gap: 12,
         minWidth: 0,
         paddingVertical: 10,
+        paddingRight: 2,
       }}
       onPress={() => {
         void triggerHaptic('selection');
@@ -57,6 +58,7 @@ export function StrengthCurveToggleRow({
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0,
+          marginTop: 2,
         }}
       >
         {icon}
@@ -74,6 +76,7 @@ export function StrengthCurveToggleRow({
             alignItems: 'center',
             justifyContent: 'center',
             flexShrink: 0,
+            marginTop: 4,
           },
           chevronAnimatedStyle,
         ]}

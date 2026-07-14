@@ -8,6 +8,7 @@ import {
   VisualizationModalSection,
 } from './HabitsModals.lazy';
 import { getShareAndPauseProps } from './HabitsModals.helpers';
+import { TemplatesModalFallback } from './TemplatesModalFallback';
 import { useRetainedModalMount } from './useRetainedModalMount';
 
 // eslint-disable-next-line max-lines-per-function
@@ -29,7 +30,14 @@ export function SecondaryModalSections({ state }: HabitsModalsProps) {
       ) : null}
       {mountTemplates ? (
         <ErrorBoundary fallback={null}>
-          <Suspense fallback={null}>
+          <Suspense
+            fallback={
+              <TemplatesModalFallback
+                visible={state.showTemplatesScreen}
+                onClose={state.closeTemplatesScreen}
+              />
+            }
+          >
             <TemplatesModalSection
               closeTemplatesScreen={state.closeTemplatesScreen}
               habits={state.habits}

@@ -15,6 +15,10 @@ const noop = () => {};
 let frequentPreloadPromise: Promise<void> | null = null;
 let secondaryPreloadPromise: Promise<void> | null = null;
 
+interface SchedulePostLaunchAppPreloadOptions {
+  homeReady: boolean;
+}
+
 function shouldSkipPreload(): boolean {
   return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 }
@@ -30,9 +34,11 @@ export function preloadFrequentAppParts(): Promise<void> {
     import('./components/HabitsAppOverlays'),
     import('../../components/CreateHabitModal'),
     import('../../components/QuickActionsSheet'),
+    import('../../screens/TemplatesScreen'),
     import('./components/HabitsModals/CalendarAndDetailModals'),
     import('./components/HabitsModals/CreateHabitModalSection'),
     import('./components/HabitsModals/QuickActionsSection'),
+    import('./components/HabitsModals/TemplatesModalSection'),
   ]).then(() => {});
 
   return frequentPreloadPromise;
@@ -48,10 +54,8 @@ export function preloadSecondaryAppParts(): Promise<void> {
   secondaryPreloadPromise = Promise.allSettled([
     import('../../components/RevenueCatPaywall'),
     import('../../components/SettingsModal'),
-    import('../../screens/TemplatesScreen'),
     import('./components/HabitsModals/SettingsModalSection'),
     import('./components/HabitsModals/ShareAndPauseModals'),
-    import('./components/HabitsModals/TemplatesModalSection'),
     import('./components/HabitsModals/VisualizationModalSection'),
   ]).then(() => {});
 
@@ -62,8 +66,10 @@ export async function preloadPostLaunchAppParts(): Promise<void> {
   await Promise.all([preloadFrequentAppParts(), preloadSecondaryAppParts()]);
 }
 
-export function schedulePostLaunchAppPreload(): () => void {
-  if (shouldSkipPreload()) {
+export function schedulePostLaunchAppPreload({
+  homeReady,
+}: SchedulePostLaunchAppPreloadOptions): () => void {
+  if (!homeReady || shouldSkipPreload()) {
     return () => {};
   }
 

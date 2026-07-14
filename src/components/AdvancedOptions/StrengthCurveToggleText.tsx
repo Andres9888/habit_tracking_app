@@ -10,7 +10,7 @@ interface Props {
 export function StrengthCurveToggleText({ collapsedValue }: Props) {
   const t = useAdvancedTokens();
   return (
-    <View style={{ flex: 1, minWidth: 0 }}>
+    <View style={{ flex: 1, minWidth: 0, paddingRight: 4 }}>
       <Text
         style={{
           fontSize: 11,
@@ -22,41 +22,39 @@ export function StrengthCurveToggleText({ collapsedValue }: Props) {
       >
         Strength Curve
       </Text>
-      {/* Value flex-shrinks so green "Average · +3%…" never clips the card. */}
+      {/* Title + value may wrap so "Average · +3%…" never clips the chevron. */}
       <View
         style={{
           flexDirection: 'row',
+          flexWrap: 'wrap',
           alignItems: 'baseline',
-          gap: 8,
+          columnGap: 8,
+          rowGap: 2,
           marginTop: 2,
+          minWidth: 0,
         }}
       >
         <Text
-          numberOfLines={1}
           style={{
             ...typography.body,
             fontSize: 15,
             fontWeight: fontWeights.semibold,
             color: t.fg,
-            flexShrink: 0,
           }}
         >
           Growth rate
         </Text>
         <Text
-          adjustsFontSizeToFit
-          minimumFontScale={0.85}
-          numberOfLines={1}
           style={{
             ...typography.caption,
-            flex: 1,
-            minWidth: 0,
+            flexGrow: 1,
             flexShrink: 1,
+            minWidth: 0,
             fontSize: 13,
+            lineHeight: 18,
             fontWeight: fontWeights.bold,
             color: t.accentText,
             fontVariant: ['tabular-nums'],
-            textAlign: 'right',
           }}
         >
           {collapsedValue}

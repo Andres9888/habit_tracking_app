@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
 import ErrorBoundary from '../../../../components/ErrorBoundary';
+import { SettingsModalLoadingFallback } from '../../../../components/SettingsModal/components/SettingsModalFallback';
 import type { HabitsModalsProps } from './HabitsModals.types';
 import {
   CalendarAndDetailModals,
@@ -24,7 +25,14 @@ export function PrimaryModalSections({ state }: HabitsModalsProps) {
     <>
       {mountSettings ? (
         <ErrorBoundary fallback={null}>
-          <Suspense fallback={null}>
+          <Suspense
+            fallback={
+              <SettingsModalLoadingFallback
+                visible={state.showSettings}
+                onClose={state.closeSettings}
+              />
+            }
+          >
             <SettingsModalSection {...getSettingsProps(state)} />
           </Suspense>
         </ErrorBoundary>

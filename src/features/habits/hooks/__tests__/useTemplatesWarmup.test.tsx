@@ -27,8 +27,19 @@ const mockCachedQuery = jest.mocked(useCachedQuery);
 const mockSavedAt = jest.mocked(useCachedQuerySavedAt);
 const mockScheduleWhenIdle = jest.mocked(scheduleWhenIdle);
 
+function expectTemplateQueriesUseArgs(args: {} | 'skip'): void {
+  expect(mockCachedQuery).toHaveBeenCalledTimes(2);
+  expect(mockCachedQuery).toHaveBeenNthCalledWith(1, expect.anything(), args, {
+    entryName: 'templates.list',
+  });
+  expect(mockCachedQuery).toHaveBeenNthCalledWith(2, expect.anything(), args, {
+    entryName: 'templates.getImportedTemplateIds',
+  });
+}
+
 function setNetwork(isOnline = true, isExpensive = false): void {
   mockNetworkStatus.mockReturnValue({
+    isChecking: false,
     isOnline,
     status: { isExpensive },
   } as ReturnType<typeof useNetworkStatus>);
@@ -46,35 +57,33 @@ describe('useTemplatesWarmup', () => {
       ({ homeReady }) => useTemplatesWarmup({ homeReady }),
       { initialProps: { homeReady: false } }
     );
-    expect(mockCachedQuery).toHaveBeenLastCalledWith(
-      expect.anything(),
-      'skip',
-      expect.anything()
-    );
+    expectTemplateQueriesUseArgs('skip');
 
+    mockCachedQuery.mockClear();
     rerender({ homeReady: true });
     expect(mockScheduleWhenIdle).toHaveBeenCalledTimes(1);
-    expect(mockCachedQuery).toHaveBeenLastCalledWith(
-      expect.anything(),
-      'skip',
-      expect.anything()
-    );
+    expectTemplateQueriesUseArgs('skip');
 
+    mockCachedQuery.mockClear();
     const idleTask = mockScheduleWhenIdle.mock.calls[0]?.[0];
     act(() => idleTask?.());
-    expect(mockCachedQuery).toHaveBeenLastCalledWith(
-      expect.anything(),
-      {},
-      expect.anything()
-    );
+    expectTemplateQueriesUseArgs({});
   });
 
-  it('does not warm offline, on expensive connections, or with fresh cache', () => {
-    setNetwork(false);
+  it('does not warm while checking, offline, on expensive connections, or with fresh cache', () => {
+    mockNetworkStatus.mockReturnValue({
+      isChecking: true,
+      isOnline: true,
+      status: { isExpensive: false },
+    } as ReturnType<typeof useNetworkStatus>);
     const { rerender } = renderHook(
       ({ homeReady }) => useTemplatesWarmup({ homeReady }),
       { initialProps: { homeReady: true } }
     );
+    expect(mockScheduleWhenIdle).not.toHaveBeenCalled();
+
+    setNetwork(false);
+    rerender({ homeReady: true });
     expect(mockScheduleWhenIdle).not.toHaveBeenCalled();
 
     setNetwork(true, true);
@@ -106,6 +115,29 @@ describe('useTemplatesWarmup', () => {
       { fallbackToLatest: true }
     );
     expect(mockScheduleWhenIdle).toHaveBeenCalledTimes(1);
+  });
+
+  it('cancels scheduled warmup when readiness or connection cost changes before idle', () => {
+    const cancelIdle = jest.fn();
+    mockScheduleWhenIdle.mockReturnValueOnce(cancelIdle);
+
+    const { rerender } = renderHook(
+      ({ homeReady }) => useTemplatesWarmup({ homeReady }),
+      { initialProps: { homeReady: true } }
+    );
+    expect(mockScheduleWhenIdle).toHaveBeenCalledTimes(1);
+
+    rerender({ homeReady: false });
+    expect(cancelIdle).toHaveBeenCalledTimes(1);
+
+    const cancelExpensiveIdle = jest.fn();
+    mockScheduleWhenIdle.mockReturnValueOnce(cancelExpensiveIdle);
+    rerender({ homeReady: true });
+    expect(mockScheduleWhenIdle).toHaveBeenCalledTimes(2);
+
+    setNetwork(true, true);
+    rerender({ homeReady: true });
+    expect(cancelExpensiveIdle).toHaveBeenCalledTimes(1);
   });
 
   it('treats cache entries as fresh for six hours', () => {

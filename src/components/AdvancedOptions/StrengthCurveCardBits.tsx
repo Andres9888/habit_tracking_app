@@ -18,8 +18,10 @@ export function SuggestedPill({ bg }: { bg: string }) {
       }}
     >
       <Text
+        numberOfLines={1}
         style={{
           fontSize: 9,
+          lineHeight: 11,
           fontWeight: fontWeights.bold,
           color: '#fff',
           textTransform: 'uppercase',

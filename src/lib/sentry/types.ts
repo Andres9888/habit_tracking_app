@@ -21,6 +21,14 @@ export interface SentryConfig {
   sampleRate?: number;
   /** Sample rate for performance traces (0.0 - 1.0) */
   tracesSampleRate?: number;
+  /** Enable Sentry Logs ingestion. Automatic console-log capture stays off. */
+  enableLogs?: boolean;
+  /** Sample rate for profiling (0.0 - 1.0) */
+  profilesSampleRate?: number;
+  /** Sample rate for performance session replay capture (0.0 - 1.0) */
+  replaysSessionSampleRate?: number;
+  /** Sample rate for replay capture when an error occurs (0.0 - 1.0) */
+  replaysOnErrorSampleRate?: number;
 }
 
 /** User context for Sentry. Only `id` is forwarded to Sentry; other
@@ -103,6 +111,10 @@ export interface SentrySpan {
 export const DEFAULT_SENTRY_CONFIG: Partial<SentryConfig> = {
   debug: typeof __DEV__ !== 'undefined' && __DEV__,
   enablePerformance: true,
+  enableLogs: false,
+  profilesSampleRate: 0,
+  replaysOnErrorSampleRate: 0,
+  replaysSessionSampleRate: 0,
   sampleRate: 1,
   tracesSampleRate: typeof __DEV__ !== 'undefined' && __DEV__ ? 1 : 0.2,
 };

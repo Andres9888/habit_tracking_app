@@ -96,6 +96,25 @@ jest.mock('expo-image-manipulator', () => ({
   SaveFormat: { JPEG: 'jpeg', PNG: 'png' },
 }));
 
+// Background tasks are registered by LazyProviders during whole-app scenario
+// setup. Mock the native modules so scenarios can mount headlessly.
+jest.mock('expo-background-task', () => ({
+  BackgroundTaskResult: {
+    Failed: 'failed',
+    Success: 'success',
+  },
+  BackgroundTaskStatus: {
+    Available: 'available',
+    Restricted: 'restricted',
+  },
+  getStatusAsync: jest.fn(async () => 'available'),
+  registerTaskAsync: jest.fn(async () => undefined),
+}));
+jest.mock('expo-task-manager', () => ({
+  defineTask: jest.fn(),
+  isTaskRegisteredAsync: jest.fn(async () => false),
+}));
+
 // Charts (Analytics). victory-native v41 uses function-child render props on
 // CartesianChart (`{({ points }) => ...}`) and an object API for Pie (Pie.Chart).
 jest.mock('victory-native', () => {

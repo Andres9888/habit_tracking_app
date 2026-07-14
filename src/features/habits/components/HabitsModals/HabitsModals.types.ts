@@ -12,6 +12,7 @@ export interface HabitsModalsProps {
 export interface SettingsModalSectionProps {
   archivedHabitsCount: number;
   celebrationsEnabled: boolean;
+  isSettingsModalLoading: boolean;
   settings: HabitsModalsState['settings'];
   showSettings: boolean;
   showHabitStrengthPercentage: boolean;

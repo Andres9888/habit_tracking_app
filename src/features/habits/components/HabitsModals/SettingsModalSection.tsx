@@ -10,6 +10,7 @@ import { usePremium } from '../../../../hooks/usePremium';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { exportData, prepareExportData } from '../../../../utils/exportData';
 import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
+import { SettingsModalLoadingFallback } from '../../../../components/SettingsModal/components/SettingsModalFallback';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 type HabitDoc = Doc<'habits'>;
@@ -67,6 +68,7 @@ function getTrackingStartDate(habits: HabitDoc[]): string {
 export function SettingsModalSection({
   archivedHabitsCount,
   celebrationsEnabled,
+  isSettingsModalLoading,
   settings,
   showSettings,
   showHabitStrengthPercentage,
@@ -147,7 +149,14 @@ export function SettingsModalSection({
   }, [runHabitsExport]);
 
   return (
-    <Suspense fallback={null}>
+    <Suspense
+      fallback={
+        <SettingsModalLoadingFallback
+          visible={showSettings}
+          onClose={closeSettings}
+        />
+      }
+    >
       <SettingsModal
         archivedHabitsCount={archivedHabitsCount}
         celebrationsEnabled={celebrationsEnabled}
@@ -162,6 +171,7 @@ export function SettingsModalSection({
         habitCompletionIcon={
           settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon
         }
+        isLoading={isSettingsModalLoading}
         isPremium={isPremium}
         settingsDocument={settings as SettingsModalSettingsDocument | undefined}
         showCharacterScreen={
