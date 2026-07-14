@@ -127,6 +127,7 @@ Activate agents in CLI:
 - Habit Library click-to-visible instrumentation uses `src/features/habits/templatesModalOpenPerformance.ts`: mark open intent from the bottom bar and modal state boundary, then capture first visible timing from `TemplatesModalSection`.
 - Post-launch Habit Library preload lives in the frequent idle tier of `src/features/habits/postLaunchPreload.ts`: `TemplatesModalSection` and `TemplatesScreen` warm only after `homeReady`, while paywall/settings remain in the delayed secondary tier.
 - Habit Library lazy fallback lives in `TemplatesModalFallback.tsx`: keep full-screen modal chrome outside the lazy `TemplatesModalSection` boundary and reuse `TemplatesLoadingState`.
+- Advanced Options section heads (Strength Curve, Streak Goal, Growth Icons) share one tile spec in `src/components/AdvancedOptions/sectionHeadTile.ts` (`32/r9`, `gap` 10, `inset` 42) via `sectionHeadTileStyle(bg)` with the accent-green tokens; do not hardcode tile size/radius/gap or per-head `marginLeft` in those heads — pull from the const so the three tiles and their title/description left edges stay unified.
 
 ---
 
