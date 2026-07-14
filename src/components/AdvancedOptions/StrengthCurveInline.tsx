@@ -53,8 +53,9 @@ export function StrengthCurveInline({
     <View>
       {growthType ? <StrengthCurveTypeBar growthType={growthType} /> : null}
       <StrengthCurveToggleRow
+        announceValue={curve.value}
         chevronAnimatedStyle={chevronAnimatedStyle}
-        collapsedValue={curve.value}
+        collapsedValue={curve.short}
         expanded={open}
         icon={
           <AlgoIcon

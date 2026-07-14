@@ -12,6 +12,8 @@ import { useAdvancedTokens } from './useAdvancedTokens';
 interface Props {
   icon: ReactNode;
   collapsedValue: string;
+  /** Full value string for the a11y label (collapsedValue may be shortened for display). */
+  announceValue?: string;
   expanded: boolean;
   chevronAnimatedStyle: object;
   onToggle: () => void;
@@ -20,6 +22,7 @@ interface Props {
 export function StrengthCurveToggleRow({
   icon,
   collapsedValue,
+  announceValue,
   expanded,
   chevronAnimatedStyle,
   onToggle,
@@ -32,7 +35,9 @@ export function StrengthCurveToggleRow({
           ? 'Collapses strength curve options'
           : 'Expands strength curve options'
       }
-      accessibilityLabel={`Strength Curve, Growth rate, ${collapsedValue}`}
+      accessibilityLabel={`Strength Curve, Growth rate, ${
+        announceValue ?? collapsedValue
+      }`}
       accessibilityRole='button'
       accessibilityState={{ expanded }}
       style={{

@@ -11,6 +11,8 @@ export type CurveMockCopy = {
   name: string;
   growthPct: number;
   value: string;
+  /** Collapsed-trigger value — no "per check-in" (the hint line already says that). */
+  short: string;
   days: number;
   missLabel: string;
   desc: string;
@@ -23,6 +25,7 @@ export const CURVE_MOCK_COPY: Record<AlgorithmMode, CurveMockCopy> = {
     name: 'Simple',
     growthPct: 10,
     value: 'Simple · +10% per check-in',
+    short: 'Simple · +10%',
     days: 18,
     missLabel: 'Soft miss cost',
     desc: 'Fast climb for easy daily habits',
@@ -33,6 +36,7 @@ export const CURVE_MOCK_COPY: Record<AlgorithmMode, CurveMockCopy> = {
     name: 'Average',
     growthPct: 3,
     value: 'Average · +3% per check-in',
+    short: 'Average · +3%',
     days: 66,
     missLabel: 'Medium miss cost',
     desc: 'Steady rise for typical habits',
@@ -43,6 +47,7 @@ export const CURVE_MOCK_COPY: Record<AlgorithmMode, CurveMockCopy> = {
     name: 'Complex',
     growthPct: 1,
     value: 'Complex · +1% per check-in',
+    short: 'Complex · +1%',
     days: 145,
     missLabel: 'Gentlest miss cost',
     desc: 'Slow climb for hard or long habits',

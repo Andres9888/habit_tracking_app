@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
+import { InlineExpandBody } from './InlineExpandBody';
 import { StreakGoalChip } from './StreakGoalChip';
 import { StreakGoalCustomExpand } from './StreakGoalCustomExpand';
 import { StreakGoalSectionHead } from './StreakGoalSectionHead';
@@ -11,6 +12,7 @@ import {
   isPresetStreak,
   STREAK_PRESETS,
 } from './streakGoal.constants';
+import { useInlineExpand } from './useInlineExpand';
 
 interface Props {
   streakGoal: number;
@@ -29,6 +31,8 @@ export function StreakGoalInline({ streakGoal, onStreakGoalChange }: Props) {
     setDraftDays(streakGoal);
     setCustomOpen(true);
   }, [isCustomActive, streakGoal]);
+
+  const customExpand = useInlineExpand(customOpen);
 
   return (
     <View>
@@ -66,7 +70,7 @@ export function StreakGoalInline({ streakGoal, onStreakGoalChange }: Props) {
           }}
         />
       </View>
-      {customOpen ? (
+      <InlineExpandBody expand={customExpand} open={customOpen}>
         <StreakGoalCustomExpand
           days={draftDays}
           onApply={() => {
@@ -77,7 +81,7 @@ export function StreakGoalInline({ streakGoal, onStreakGoalChange }: Props) {
           }}
           onDaysChange={setDraftDays}
         />
-      ) : null}
+      </InlineExpandBody>
     </View>
   );
 }

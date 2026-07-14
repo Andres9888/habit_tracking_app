@@ -18,6 +18,8 @@ import {
   GrowthIconsMoreToggle,
 } from './GrowthIconsMoreThemes';
 import { getMoreThemes, getPrimaryThemes } from './growthIconsThemes';
+import { InlineExpandBody } from './InlineExpandBody';
+import { useInlineExpand } from './useInlineExpand';
 
 interface Props {
   value: ProgressEmojiSet | undefined;
@@ -49,6 +51,8 @@ export function GrowthIconsInline({
     setCustomOpen(false);
     onChange(emojis);
   };
+  const customExpand = useInlineExpand(customOpen);
+  const moreGrid = useInlineExpand(moreOpen);
 
   return (
     <View>
@@ -67,13 +71,13 @@ export function GrowthIconsInline({
         }}
         onSelectPreset={selectPreset}
       />
-      {customOpen ? (
+      <InlineExpandBody expand={customExpand} open={customOpen}>
         <GrowthIconsCustomExpand
           fallback={fallback}
           value={value}
           onChange={onChange}
         />
-      ) : null}
+      </InlineExpandBody>
       <GrowthIconsMoreToggle
         open={moreOpen}
         onToggle={() => {
@@ -82,13 +86,13 @@ export function GrowthIconsInline({
           setMoreOpen((v) => !v);
         }}
       />
-      {moreOpen ? (
+      <InlineExpandBody expand={moreGrid} open={moreOpen}>
         <GrowthIconsMoreGrid
           moreThemes={getMoreThemes()}
           presetId={presetId}
           onSelect={selectPreset}
         />
-      ) : null}
+      </InlineExpandBody>
     </View>
   );
 }
