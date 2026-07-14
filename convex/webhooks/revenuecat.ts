@@ -49,11 +49,13 @@ function getWebhookEventTimestamp(
  */
 export const revenuecatWebhook = httpAction(async (ctx, request) => {
   try {
-    const body = await request.text();
-    const signature = request.headers.get('X-RevenueCat-Signature') ?? '';
+    const rawBody = new Uint8Array(await request.arrayBuffer());
+    const body = new TextDecoder().decode(rawBody);
+    const signature =
+      request.headers.get('X-RevenueCat-Webhook-Signature') ?? '';
 
     // Verify webhook signature
-    const isValid = await verifyRevenueCatSignature(body, signature);
+    const isValid = await verifyRevenueCatSignature(rawBody, signature);
     if (!isValid) {
       console.error('[RevenueCat] Invalid webhook signature');
       return new Response('Invalid signature', { status: 401 });
