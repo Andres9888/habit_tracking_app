@@ -4,12 +4,11 @@ import {
   useUserDefaultProgressEmojis,
 } from '@/hooks/useProgressEmojis';
 import {
-  CUSTOM_PRESET_ID,
   matchPresetId,
-  PROGRESS_EMOJI_PRESETS,
   resolveProgressEmojis,
   type ProgressEmojiSet,
 } from '@/utils/progressEmojis';
+import { presetLabelFor } from './presetLabelFor';
 
 export function useAdvancedOptionsSummary(
   progressEmojis: ProgressEmojiSet | undefined
@@ -21,11 +20,7 @@ export function useAdvancedOptionsSummary(
     userDefaultEmojis
   );
   const presetId = matchPresetId(resolvedEmojis, savedCustomEmojis);
-  const presetLabel =
-    presetId === CUSTOM_PRESET_ID
-      ? 'Custom'
-      : (PROGRESS_EMOJI_PRESETS.find((p) => p.id === presetId)?.label ??
-        'Custom');
+  const presetLabel = presetLabelFor(presetId);
 
   return { userDefaultEmojis, savedCustomEmojis, resolvedEmojis, presetLabel };
 }

@@ -78,6 +78,7 @@ export function AdvancedOptionsSection({
               streakGoal={streakGoal}
               userDefaultEmojis={userDefaultEmojis}
               onProgressEmojisChange={onProgressEmojisChange}
+              onSectionExpand={onExpand}
               onStreakGoalChange={onStreakGoalChange}
               onStrengthAlgorithmChange={onStrengthAlgorithmChange}
             />

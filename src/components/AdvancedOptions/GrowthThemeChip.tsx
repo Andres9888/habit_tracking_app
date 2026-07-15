@@ -22,13 +22,13 @@ export function GrowthThemeChip({ label, emoji, selected, onPress }: Props) {
       {...pressProps}
       style={{
         flex: 1,
-        minHeight: 44,
-        borderRadius: 999,
-        flexDirection: 'row',
+        minWidth: 0,
+        minHeight: 66,
+        borderRadius: 14,
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 5,
-        paddingHorizontal: 10,
+        paddingVertical: 6,
+        paddingHorizontal: 2,
         backgroundColor: selected ? colors.primary[100] : colors.card,
         borderWidth: selected ? 2 : 1,
         borderColor: selected ? colors.primary[500] : colors.cardBorder,
@@ -36,13 +36,18 @@ export function GrowthThemeChip({ label, emoji, selected, onPress }: Props) {
       }}
       onPress={onPress}
     >
-      <Text style={{ fontSize: 14 }}>{emoji}</Text>
+      <Text allowFontScaling={false} style={{ fontSize: 18 }}>
+        {emoji}
+      </Text>
       <Text
+        allowFontScaling={false}
         numberOfLines={1}
         style={{
           ...typography.caption,
+          fontSize: 11,
           fontWeight: fontWeights.bold,
           color: selected ? colors.primary[700] : colors.text.secondary,
+          marginTop: 2,
         }}
       >
         {label}

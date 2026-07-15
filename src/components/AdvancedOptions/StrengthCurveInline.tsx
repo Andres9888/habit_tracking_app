@@ -9,6 +9,7 @@ import { StrengthCurveExpand } from './StrengthCurveExpand';
 import { StrengthCurveToggleRow } from './StrengthCurveToggleRow';
 import { StrengthCurveTypeBar } from './StrengthCurveTypeBar';
 import { useAdvancedTokens } from './useAdvancedTokens';
+import { useScrollOnExpand } from './useScrollOnExpand';
 import { useStrengthCurveInline } from './useStrengthCurveInline';
 
 interface Props {
@@ -22,6 +23,8 @@ interface Props {
   /** True on create flows (untouched defaults follow the suggestion). */
   isNewHabit: boolean;
   onSelect: (mode: AlgorithmMode) => void;
+  /** Nudges the parent scroll once the curve options open below the fold. */
+  onExpand?: () => void;
 }
 
 export function StrengthCurveInline({
@@ -30,11 +33,13 @@ export function StrengthCurveInline({
   growthType,
   isNewHabit,
   onSelect,
+  onExpand,
 }: Props) {
   const t = useAdvancedTokens();
   const {
     open,
     setOpen,
+    reduceMotion,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,
@@ -46,6 +51,7 @@ export function StrengthCurveInline({
     isNewHabit,
     onSelect,
   });
+  useScrollOnExpand(open, reduceMotion, onExpand);
 
   const curve = CURVE_MOCK_COPY[strengthAlgorithm];
 

@@ -38,7 +38,8 @@ export function useStrengthCurveInline({
   // from divergence. Edit: a saved value diverging from a live detection means
   // the user chose it earlier; respect it.
   const [userOverrode, setUserOverrode] = useState(
-    () => !isNewHabit && growthType !== undefined && strengthAlgorithm !== suggested
+    () =>
+      !isNewHabit && growthType !== undefined && strengthAlgorithm !== suggested
   );
   const prevGrowthTypeRef = useRef(growthType);
 
@@ -53,7 +54,14 @@ export function useStrengthCurveInline({
     if ((isNewHabit || growthTypeChanged) && strengthAlgorithm !== suggested) {
       onSelect(suggested);
     }
-  }, [growthType, suggested, userOverrode, isNewHabit, strengthAlgorithm, onSelect]);
+  }, [
+    growthType,
+    suggested,
+    userOverrode,
+    isNewHabit,
+    strengthAlgorithm,
+    onSelect,
+  ]);
 
   const handleContentLayout = useCallback(
     (event: LayoutChangeEvent) => {
@@ -78,6 +86,7 @@ export function useStrengthCurveInline({
   return {
     open,
     setOpen,
+    reduceMotion,
     chevronAnimatedStyle,
     contentAnimatedStyle,
     handleContentLayout,

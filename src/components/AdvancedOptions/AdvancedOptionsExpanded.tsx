@@ -26,6 +26,8 @@ interface Props {
   savedCustomEmojis?: ProgressEmojiSet;
   onProgressEmojisChange: (next: ProgressEmojiSet | undefined) => void;
   onLayout?: (e: LayoutChangeEvent) => void;
+  /** Scrolls the modal down when a section opens below the fold. */
+  onSectionExpand?: () => void;
 }
 
 export function AdvancedOptionsExpanded({
@@ -41,27 +43,13 @@ export function AdvancedOptionsExpanded({
   savedCustomEmojis,
   onProgressEmojisChange,
   onLayout,
+  onSectionExpand,
 }: Props) {
   const t = useAdvancedTokens();
 
   return (
     <View onLayout={onLayout}>
-      <StrengthCurveInline
-        AlgoIcon={AlgoIcon}
-        growthType={growthType}
-        isNewHabit={isNewHabit}
-        strengthAlgorithm={strengthAlgorithm}
-        onSelect={onStrengthAlgorithmChange}
-      />
-
-      <View
-        style={{
-          borderTopWidth: 1,
-          borderTopColor: t.border,
-          paddingTop: 16,
-          paddingBottom: 16,
-        }}
-      >
+      <View style={{ paddingTop: 16, paddingBottom: 16 }}>
         <StreakGoalInline
           streakGoal={streakGoal}
           onStreakGoalChange={onStreakGoalChange}
@@ -73,6 +61,7 @@ export function AdvancedOptionsExpanded({
           borderTopWidth: 1,
           borderTopColor: t.border,
           paddingTop: 16,
+          paddingBottom: 16,
         }}
       >
         <GrowthIconsInline
@@ -80,6 +69,24 @@ export function AdvancedOptionsExpanded({
           savedCustom={savedCustomEmojis}
           value={progressEmojis}
           onChange={onProgressEmojisChange}
+        />
+      </View>
+
+      <View
+        style={{
+          borderTopWidth: 1,
+          borderTopColor: t.border,
+          paddingTop: 16,
+          paddingBottom: 16,
+        }}
+      >
+        <StrengthCurveInline
+          AlgoIcon={AlgoIcon}
+          growthType={growthType}
+          isNewHabit={isNewHabit}
+          strengthAlgorithm={strengthAlgorithm}
+          onExpand={onSectionExpand}
+          onSelect={onStrengthAlgorithmChange}
         />
       </View>
     </View>

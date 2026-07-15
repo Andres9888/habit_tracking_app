@@ -7,19 +7,32 @@ export function StreakGoalStartBadge() {
   const { colors } = useThemeColors();
   return (
     <View
+      pointerEvents='none'
       style={{
         position: 'absolute',
         top: -8,
-        paddingHorizontal: 5,
-        paddingVertical: 2,
-        borderRadius: 999,
-        backgroundColor: colors.primary[600],
+        left: 0,
+        right: 0,
+        alignItems: 'center',
         zIndex: 2,
       }}
     >
-      <Text style={{ ...chipMicroLabel, color: colors.text.inverse }}>
-        START
-      </Text>
+      <View
+        style={{
+          paddingHorizontal: 6,
+          paddingVertical: 2,
+          borderRadius: 999,
+          backgroundColor: colors.primary[600],
+        }}
+      >
+        <Text
+          allowFontScaling={false}
+          numberOfLines={1}
+          style={{ ...chipMicroLabel, color: colors.text.inverse }}
+        >
+          START
+        </Text>
+      </View>
     </View>
   );
 }

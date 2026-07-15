@@ -12,13 +12,11 @@ import {
 import { GrowthStagePreview } from './GrowthStagePreview';
 import { GrowthIconsHead } from './GrowthIconsHead';
 import { GrowthIconsCustomExpand } from './GrowthIconsCustomExpand';
+import { GrowthIconsMoreSection } from './GrowthIconsMoreSection';
 import { GrowthIconsPrimaryRow } from './GrowthIconsPrimaryRow';
-import {
-  GrowthIconsMoreGrid,
-  GrowthIconsMoreToggle,
-} from './GrowthIconsMoreThemes';
-import { getMoreThemes, getPrimaryThemes } from './growthIconsThemes';
+import { getPrimaryThemes } from './growthIconsThemes';
 import { InlineExpandBody } from './InlineExpandBody';
+import { presetLabelFor } from './presetLabelFor';
 import { useInlineExpand } from './useInlineExpand';
 
 interface Props {
@@ -50,17 +48,17 @@ export function GrowthIconsInline({
   );
   const presetId = matchPresetId(resolved, savedCustom);
   const isCustom = presetId === CUSTOM_PRESET_ID || presetId === null;
+  const presetLabel = presetLabelFor(presetId);
   const selectPreset = (emojis: ProgressEmojiSet) => {
     void triggerHaptic('selection');
     setCustomOpen(false);
     onChange(emojis);
   };
   const customExpand = useInlineExpand(customOpen);
-  const moreGrid = useInlineExpand(moreOpen);
 
   return (
     <View>
-      <GrowthIconsHead starting={resolved.starting} />
+      <GrowthIconsHead presetLabel={presetLabel} starting={resolved.starting} />
       <GrowthStagePreview emojis={resolved} />
       <GrowthIconsPrimaryRow
         customOpen={customOpen}
@@ -82,21 +80,15 @@ export function GrowthIconsInline({
           onChange={onChange}
         />
       </InlineExpandBody>
-      <GrowthIconsMoreToggle
+      <GrowthIconsMoreSection
         open={moreOpen}
+        presetId={presetId}
+        onSelect={selectPreset}
         onToggle={() => {
-          void triggerHaptic('selection');
           setCustomOpen(false);
           setMoreOpen((v) => !v);
         }}
       />
-      <InlineExpandBody expand={moreGrid} open={moreOpen}>
-        <GrowthIconsMoreGrid
-          moreThemes={getMoreThemes()}
-          presetId={presetId}
-          onSelect={selectPreset}
-        />
-      </InlineExpandBody>
     </View>
   );
 }

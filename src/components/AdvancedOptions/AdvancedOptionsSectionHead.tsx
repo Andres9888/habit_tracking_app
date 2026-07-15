@@ -1,23 +1,47 @@
-/** Title/value-chip/hint text stack for the Strength Curve trigger row. */
+/** Shared head anatomy — icon tile + title + right-aligned value chip + description. */
+import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 import { fontWeights, typography } from '@/theme/typography';
 import { useAdvancedTokens } from './useAdvancedTokens';
 
 interface Props {
-  collapsedValue: string;
+  icon: ReactNode;
+  tileBackground: string;
+  title: string;
+  valueLabel: string;
+  description: string;
 }
 
-export function StrengthCurveToggleText({ collapsedValue }: Props) {
+export function AdvancedOptionsSectionHead({
+  icon,
+  tileBackground,
+  title,
+  valueLabel,
+  description,
+}: Props) {
   const t = useAdvancedTokens();
   return (
-    <View style={{ flex: 1, minWidth: 0 }}>
+    <>
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          gap: 8,
+          gap: 10,
+          marginBottom: 4,
         }}
       >
+        <View
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: 9,
+            backgroundColor: tileBackground,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {icon}
+        </View>
         <Text
           style={{
             ...typography.body,
@@ -27,7 +51,7 @@ export function StrengthCurveToggleText({ collapsedValue }: Props) {
             flex: 1,
           }}
         >
-          Strength Curve
+          {title}
         </Text>
         <View
           style={{
@@ -44,23 +68,22 @@ export function StrengthCurveToggleText({ collapsedValue }: Props) {
               fontSize: 12,
               fontWeight: fontWeights.semibold,
               color: t.muted,
-              fontVariant: ['tabular-nums'],
             }}
           >
-            {collapsedValue}
+            {valueLabel}
           </Text>
         </View>
       </View>
       <Text
         style={{
           ...typography.caption,
-          fontSize: 12,
           color: t.meta,
-          marginTop: 2,
+          marginLeft: 42,
+          marginBottom: 12,
         }}
       >
-        How fast strength rises each check-in
+        {description}
       </Text>
-    </View>
+    </>
   );
 }

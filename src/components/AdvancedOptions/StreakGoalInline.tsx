@@ -36,7 +36,7 @@ export function StreakGoalInline({ streakGoal, onStreakGoalChange }: Props) {
 
   return (
     <View>
-      <StreakGoalSectionHead />
+      <StreakGoalSectionHead streakGoal={streakGoal} />
       <View style={{ flexDirection: 'row', gap: 6 }}>
         {STREAK_PRESETS.map((p) => (
           <StreakGoalChip

@@ -56,7 +56,8 @@ export function StreakGoalChip({
         minHeight: 66,
         alignItems: 'center',
         justifyContent: 'center',
-        paddingVertical: 6,
+        paddingTop: recommended ? 12 : 6,
+        paddingBottom: 6,
         paddingHorizontal: 2,
         borderRadius: 14,
         backgroundColor: bg,
@@ -67,8 +68,18 @@ export function StreakGoalChip({
       onPress={onPress}
     >
       {recommended ? <StreakGoalStartBadge /> : null}
-      <Text style={{ ...chipValueText, color: fg }}>{valueLabel}</Text>
-      <Text style={{ ...chipMicroLabel, color: meta, marginTop: 2 }}>
+      <Text
+        allowFontScaling={false}
+        numberOfLines={1}
+        style={{ ...chipValueText, color: fg }}
+      >
+        {valueLabel}
+      </Text>
+      <Text
+        allowFontScaling={false}
+        numberOfLines={1}
+        style={{ ...chipMicroLabel, color: meta, marginTop: 2 }}
+      >
         {chipLabel}
       </Text>
     </Pressable>

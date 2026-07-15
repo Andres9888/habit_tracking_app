@@ -58,20 +58,6 @@ export function AdvancedOptionsSummaryHeader({
       </View>
       <View className='mt-3 flex-row flex-wrap justify-center gap-2'>
         <AdvancedOptionsPreviewChip
-          backgroundColor={algoStyle.iconTileBackground}
-          foregroundColor={algoStyle.iconColor}
-          icon={
-            <AlgoIcon color={algoStyle.iconColor} size={12} strokeWidth={2.5} />
-          }
-          label={algoEntry.name}
-        />
-        <AdvancedOptionsPreviewChip
-          backgroundColor={colors.primary[100]}
-          foregroundColor={colors.primary[700]}
-          icon={<Text style={{ fontSize: 12 }}>{resolvedStarting}</Text>}
-          label={presetLabel}
-        />
-        <AdvancedOptionsPreviewChip
           backgroundColor={colors.status.streakLight}
           foregroundColor={colors.status.streakText}
           icon={
@@ -82,6 +68,20 @@ export function AdvancedOptionsSummaryHeader({
             />
           }
           label={streakGoal > 0 ? `${streakGoal}-day` : 'No goal set'}
+        />
+        <AdvancedOptionsPreviewChip
+          backgroundColor={colors.primary[100]}
+          foregroundColor={colors.primary[700]}
+          icon={<Text style={{ fontSize: 12 }}>{resolvedStarting}</Text>}
+          label={presetLabel}
+        />
+        <AdvancedOptionsPreviewChip
+          backgroundColor={algoStyle.iconTileBackground}
+          foregroundColor={algoStyle.iconColor}
+          icon={
+            <AlgoIcon color={algoStyle.iconColor} size={12} strokeWidth={2.5} />
+          }
+          label={algoEntry.name}
         />
       </View>
       <AdvancedOptionsToggleButton

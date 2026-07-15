@@ -16,5 +16,5 @@ export const chipValueText: TextStyle = {
 export const chipMicroLabel: TextStyle = {
   ...typography.tabBar,
   fontWeight: fontWeights.semibold,
-  letterSpacing: 0.6,
+  letterSpacing: 0.3,
 };

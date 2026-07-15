@@ -54,9 +54,9 @@ export function StrengthCurveToggleRow({
     >
       <View
         style={{
-          width: 36,
-          height: 36,
-          borderRadius: 11,
+          width: 32,
+          height: 32,
+          borderRadius: 9,
           backgroundColor: t.accentTile,
           alignItems: 'center',
           justifyContent: 'center',
