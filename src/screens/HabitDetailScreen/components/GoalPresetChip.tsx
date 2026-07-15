@@ -1,23 +1,23 @@
 /**
  * GoalPresetChip — Single preset day-count chip for streak goal picker.
  */
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { useThemeColors, withAlpha } from '../../../theme';
-import { borderRadius, spacing } from '../../../theme/spacing';
-import { typography, fontWeights } from '../../../theme/typography';
 import { readableHabitAccent } from './goalColorUtils';
+import { buildChipContainerStyle } from './buildChipContainerStyle';
+import { GoalChipLabel } from './GoalChipLabel';
 import { GoalRecommendedBadge } from './GoalRecommendedBadge';
 import { useGoalPresetChipAnimation } from './GoalPresetChip.hooks';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-const CHIP_BORDER_WIDTH = 1.5;
 
 interface GoalPresetChipProps {
   days: number;
   disabled?: boolean;
   habitColor?: string;
+  role?: string;
   selected: boolean;
   recommended: boolean;
   onPress: () => void;
@@ -28,13 +28,15 @@ export function GoalPresetChip({
   days,
   disabled = false,
   habitColor,
+  role,
   selected,
   recommended,
   onPress,
   variant = 'pill',
 }: GoalPresetChipProps) {
   const { colors } = useThemeColors();
-  const { animatedStyle: pressStyle, pressHandlers } = useDetailPressAnimation();
+  const { animatedStyle: pressStyle, pressHandlers } =
+    useDetailPressAnimation();
   const isGrid = variant === 'grid';
   const fillDefault = isGrid ? colors.gray[50] : colors.card;
   const accent = readableHabitAccent(
@@ -59,29 +61,19 @@ export function GoalPresetChip({
       style={[
         pressStyle,
         selectionStyle,
-        {
-          alignItems: 'center',
-          borderRadius: isGrid ? borderRadius.medium : borderRadius.full,
-          borderWidth: CHIP_BORDER_WIDTH,
-          opacity: disabled ? 0.45 : 1,
-          paddingHorizontal: isGrid ? spacing.sm : spacing.base,
-          paddingVertical: isGrid ? spacing.sm + 2 : spacing.sm,
-          width: isGrid ? '100%' : undefined,
-        },
+        buildChipContainerStyle(isGrid, disabled),
       ]}
       onPress={onPress}
       onPressIn={disabled ? undefined : pressHandlers.onPressIn}
       onPressOut={disabled ? undefined : pressHandlers.onPressOut}
     >
-      <Text
-        style={{
-          ...typography.bodySmall,
-          color: selected ? accent : colors.text.secondary,
-          fontWeight: selected ? fontWeights.bold : fontWeights.medium,
-        }}
-      >
-        {label}
-      </Text>
+      <GoalChipLabel
+        accent={accent}
+        label={label}
+        role={role}
+        selected={selected}
+        showRole={isGrid}
+      />
       <GoalRecommendedBadge accent={accent} recommended={recommended} />
     </AnimatedPressable>
   );

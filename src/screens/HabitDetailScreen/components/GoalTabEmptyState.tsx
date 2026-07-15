@@ -15,10 +15,9 @@ import { typography } from '../../../theme/typography';
 import useHapticFeedback from '../../../hooks/useHapticFeedback';
 import { GoalEmptyIntro } from './GoalEmptyIntro';
 import { GoalPresetChip } from './GoalPresetChip';
+import { GoalMilestoneTeaser } from './GoalMilestoneTeaser';
 import { GoalCtaLabel } from './GoalCtaLabel';
-
-const PRESETS = [7, 21, 30, 66, 100, 365];
-const RECOMMENDED = 66;
+import { GOAL_PRESETS, GRID_CHIP_WIDTH, RECOMMENDED_GOAL } from './goalPresets';
 
 interface GoalTabEmptyStateProps {
   habitId: Id<'habits'>;
@@ -28,7 +27,7 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
   const { colors } = useThemeColors();
   const { triggerSelection, triggerSuccess } = useHapticFeedback();
   const updateHabit = useMutation(api.habits.update);
-  const [selected, setSelected] = useState<number>(RECOMMENDED);
+  const [selected, setSelected] = useState<number>(RECOMMENDED_GOAL);
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
@@ -51,21 +50,26 @@ export function GoalTabEmptyState({ habitId }: GoalTabEmptyStateProps) {
     >
       <GoalEmptyIntro />
 
-      <View className='mb-6 flex-row flex-wrap justify-center gap-2'>
-        {PRESETS.map((days) => (
-          <GoalPresetChip
-            key={days}
-            days={days}
-            disabled={saving}
-            recommended={days === RECOMMENDED}
-            selected={days === selected}
-            onPress={() => {
-              triggerSelection();
-              setSelected(days);
-            }}
-          />
+      <View className='mb-4 flex-row flex-wrap justify-center gap-2'>
+        {GOAL_PRESETS.map(({ days, role }) => (
+          <View key={days} style={{ width: GRID_CHIP_WIDTH }}>
+            <GoalPresetChip
+              days={days}
+              disabled={saving}
+              recommended={days === RECOMMENDED_GOAL}
+              role={role}
+              selected={days === selected}
+              variant='grid'
+              onPress={() => {
+                triggerSelection();
+                setSelected(days);
+              }}
+            />
+          </View>
         ))}
       </View>
+
+      <GoalMilestoneTeaser selected={selected} />
 
       <Button
         accessibilityLabel='Set streak goal'
