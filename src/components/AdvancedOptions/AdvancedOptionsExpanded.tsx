@@ -64,11 +64,13 @@ export function AdvancedOptionsExpanded({
           paddingBottom: 16,
         }}
       >
-        <GrowthIconsInline
-          fallback={userDefaultEmojis}
-          savedCustom={savedCustomEmojis}
-          value={progressEmojis}
-          onChange={onProgressEmojisChange}
+        <StrengthCurveInline
+          AlgoIcon={AlgoIcon}
+          growthType={growthType}
+          isNewHabit={isNewHabit}
+          strengthAlgorithm={strengthAlgorithm}
+          onExpand={onSectionExpand}
+          onSelect={onStrengthAlgorithmChange}
         />
       </View>
 
@@ -80,13 +82,11 @@ export function AdvancedOptionsExpanded({
           paddingBottom: 16,
         }}
       >
-        <StrengthCurveInline
-          AlgoIcon={AlgoIcon}
-          growthType={growthType}
-          isNewHabit={isNewHabit}
-          strengthAlgorithm={strengthAlgorithm}
-          onExpand={onSectionExpand}
-          onSelect={onStrengthAlgorithmChange}
+        <GrowthIconsInline
+          fallback={userDefaultEmojis}
+          savedCustom={savedCustomEmojis}
+          value={progressEmojis}
+          onChange={onProgressEmojisChange}
         />
       </View>
     </View>

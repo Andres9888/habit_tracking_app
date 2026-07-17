@@ -50,7 +50,7 @@ export function GrowthIconsMoreToggle({ open, onToggle }: ToggleProps) {
           color: open ? colors.text.secondary : colors.primary[700],
         }}
       >
-        {open ? 'Less themes' : 'More themes'}
+        {open ? 'Less themes' : 'Themes'}
       </Text>
     </Pressable>
   );
