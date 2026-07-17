@@ -74,11 +74,7 @@ export function SettingsModalSkeleton({
   const { pageBg, cardBg, borderColor } = useSkeletonTheme();
   return (
     <View className='flex-1 px-4 pt-2' style={{ backgroundColor: pageBg }}>
-      <ProfileHeroSkeleton
-        borderColor={borderColor}
-        cardBg={cardBg}
-        reduceMotion={reduceMotion}
-      />
+      <ProfileHeroSkeleton cardBg={cardBg} reduceMotion={reduceMotion} />
       <SectionSkeleton
         borderColor={borderColor}
         cardBg={cardBg}

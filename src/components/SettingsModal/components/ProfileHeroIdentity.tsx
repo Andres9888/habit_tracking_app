@@ -1,4 +1,4 @@
-/** ProfileHeroIdentity — name + plan badge + streak headline column */
+/** ProfileHeroIdentity — name + plan badge + account-entry subtitle column */
 import { Text, View } from 'react-native';
 import { usePremium } from '@/hooks/usePremium';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -8,7 +8,6 @@ import { ProfilePremiumBadge } from '../ProfilePremiumBadge';
 interface ProfileHeroIdentityProps {
   isPremium: boolean;
   name: string;
-  currentStreak: number;
 }
 
 function planBadgeLabel(status: string, isPremium: boolean): string | null {
@@ -20,7 +19,6 @@ function planBadgeLabel(status: string, isPremium: boolean): string | null {
 export function ProfileHeroIdentity({
   isPremium,
   name,
-  currentStreak,
 }: ProfileHeroIdentityProps) {
   const { colors: themeColors } = useThemeColors();
   const { status } = usePremium();
@@ -30,6 +28,7 @@ export function ProfileHeroIdentity({
     <View className='flex-1'>
       <View className='flex-row items-center' style={{ gap: 6 }}>
         <Text
+          numberOfLines={1}
           style={{
             ...typography.heading3,
             color: themeColors.text.primary,
@@ -42,28 +41,16 @@ export function ProfileHeroIdentity({
           <ProfilePremiumBadge label={badgeLabel} variant='compact' />
         ) : null}
       </View>
-      <View className='mt-1 flex-row items-baseline' style={{ gap: 5 }}>
-        <Text
-          style={{
-            ...typography.displayLarge,
-            fontSize: 30,
-            lineHeight: 32,
-            color: themeColors.status.streakText,
-          }}
-        >
-          {currentStreak}
-        </Text>
-        <Text
-          style={{
-            ...typography.bodySmall,
-            fontWeight: fontWeights.semibold,
-            color: themeColors.text.secondary,
-          }}
-        >
-          day streak
-        </Text>
-        <Text style={{ fontSize: 15 }}>🔥</Text>
-      </View>
+      <Text
+        className='mt-1'
+        numberOfLines={1}
+        style={{
+          ...typography.bodySmall,
+          color: themeColors.text.secondary,
+        }}
+      >
+        Manage account & subscription
+      </Text>
     </View>
   );
 }

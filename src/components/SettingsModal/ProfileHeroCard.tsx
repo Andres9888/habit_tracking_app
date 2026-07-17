@@ -1,4 +1,4 @@
-/** ProfileHeroCard — identity, streak headline, and weekly-consistency ring */
+/** ProfileHeroCard — identity-only account entry row that opens the Account page */
 import { View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -6,13 +6,10 @@ import { airy } from '@/theme/airyScale';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
-import { ProfileStatsRow } from './ProfileStatsRow';
-import { WeeklyCompletionRing } from './WeeklyCompletionRing';
 import { ProfileHeroAvatar } from './components/ProfileHeroAvatar';
 import { ProfileHeroIdentity } from './components/ProfileHeroIdentity';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
-import { useProfileStats } from './useProfileStats';
 
 interface ProfileHeroCardProps {
   isPremium: boolean;
@@ -22,7 +19,6 @@ interface ProfileHeroCardProps {
 export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const { initial, name } = useProfileDisplayName();
-  const { isLoading: statsLoading, stats } = useProfileStats();
   const { imageUrl } = useProfileDisplayImage();
 
   return (
@@ -45,27 +41,14 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
             size={iconSizes.medium}
           />
         </View>
-        <View
-          className='flex-row items-center px-4 pb-3 pt-4'
-          style={{ gap: 16 }}
-        >
+        <View className='flex-row items-center px-4 py-4' style={{ gap: 16 }}>
           <ProfileHeroAvatar
             imageUrl={imageUrl}
             initial={initial}
             themeColors={themeColors}
           />
-          <ProfileHeroIdentity
-            currentStreak={stats.currentStreak}
-            isPremium={isPremium}
-            name={name}
-          />
-          {stats.activeHabits > 0 ? (
-            <View style={{ marginRight: 14 }}>
-              <WeeklyCompletionRing rate={stats.weeklyCompletionRate} />
-            </View>
-          ) : null}
+          <ProfileHeroIdentity isPremium={isPremium} name={name} />
         </View>
-        <ProfileStatsRow isLoading={statsLoading} stats={stats} />
       </View>
     </AnimatedPressable>
   );
