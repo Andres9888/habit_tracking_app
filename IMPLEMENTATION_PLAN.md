@@ -77,9 +77,9 @@ render vanity metrics. All existing configuration controls behave exactly as bef
       the duplicated streak line and 3-stat row are gone.
 - [x] AC3: No streak / ring / "Active Habits" / "Flawless Days" / "Lifetime Completions" text renders
       anywhere in the Settings modal or Account subpage.
-- [ ] AC4: Appearance (incl. synthetic Calendar preview + growth icons), Reminders, Habits, Support,
+- [x] AC4: Appearance (incl. synthetic Calendar preview + growth icons), Reminders, Habits, Support,
       and About are visually and functionally unchanged.
-- [ ] AC5: Restore purchases, Sign out, and Delete account remain reachable on the Account subpage.
+- [x] AC5: Restore purchases, Sign out, and Delete account remain reachable on the Account subpage.
 - [x] AC6: `npx tsc --noEmit` and lint pass; no dead imports remain.
 
 ## Phase 1 — Make Settings configuration-only
@@ -102,7 +102,24 @@ render vanity metrics. All existing configuration controls behave exactly as bef
   remaining references before deleting; run `npx tsc --noEmit` + lint to catch orphaned imports.
   [needs:T1] [needs:T2]
 
-- [ ] **T4 — Sim-verify the config-only result.** Build to the iOS simulator, open Settings → confirm
+- [x] **T4 — Sim-verify the config-only result.** Build to the iOS simulator, open Settings → confirm
   identity-only header (AC1, AC3), open Account → confirm config-only profile card and that Restore /
   Sign out / Delete remain (AC2, AC5), and spot-check Appearance/Reminders/Habits unchanged (AC4).
   Use the `run` / `verify` skill + xcodebuild MCP; screenshot Settings + Account. [needs:T3]
+
+  **Verified 2026-07-17** on iPhone 16 Pro Max (iOS 26.2, sim `CBE933B7`) running commit
+  `47de90284` via Metro served from this worktree (confirmed the running Metro was pointed at a
+  sibling worktree — `montreal` — and re-pointed to this one on :8081 before verifying, so the
+  runtime reflected the committed code, not a stale sibling bundle). Results:
+  - AC1 ✅ Settings header = avatar + "Andres Gutierrez" + "Manage account & subscription" + chevron.
+    No streak headline / weekly ring / stat strip.
+  - AC2 ✅ Account profile card = avatar + name + email + edit affordance only. Streak line and
+    3-stat row gone.
+  - AC3 ✅ Full accessibility trees (Settings 265 nodes, Account 154 nodes) contain zero
+    streak/ring/"Active Habits"/"Flawless Days"/"Lifetime Completions" text — proves absence
+    off-screen, not just in the visible viewport.
+  - AC4 ✅ Look & Feel (Calendar look, Theme, growth-icon picker, Compact cards), Reminders
+    (Streak Reminders), Habits (Sort order, Completion sound, Archived, Export) all intact.
+  - AC5 ✅ Restore purchases, Sign Out, and Delete account all present/reachable on Account.
+  - Note: an unrelated `[usePremium] Failed to fetch data` RevenueCat toast appears in the sim
+    (network/env, not touched by this change — T4 removed `useProfileStats`/Convex, not RevenueCat).
