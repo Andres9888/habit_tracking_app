@@ -70,18 +70,18 @@ export function AdvancedOptionsSummaryHeader({
           label={streakGoal > 0 ? `${streakGoal}-day` : 'No goal set'}
         />
         <AdvancedOptionsPreviewChip
-          backgroundColor={colors.primary[100]}
-          foregroundColor={colors.primary[700]}
-          icon={<Text style={{ fontSize: 12 }}>{resolvedStarting}</Text>}
-          label={presetLabel}
-        />
-        <AdvancedOptionsPreviewChip
           backgroundColor={algoStyle.iconTileBackground}
           foregroundColor={algoStyle.iconColor}
           icon={
             <AlgoIcon color={algoStyle.iconColor} size={12} strokeWidth={2.5} />
           }
           label={algoEntry.name}
+        />
+        <AdvancedOptionsPreviewChip
+          backgroundColor={colors.primary[100]}
+          foregroundColor={colors.primary[700]}
+          icon={<Text style={{ fontSize: 12 }}>{resolvedStarting}</Text>}
+          label={presetLabel}
         />
       </View>
       <AdvancedOptionsToggleButton

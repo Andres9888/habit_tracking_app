@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced Options — further balance candidates</title>
+<link rel="stylesheet" href="advanced_options_theme.css" />
+<style>
+  body { display: flex; gap: 40px; padding: 40px; flex-wrap: wrap; justify-content: center; }
+  .col { display: flex; flex-direction: column; align-items: center; max-width: 390px; }
+  .col .why { color: var(--text-secondary); font-size: 12.5px; line-height: 1.5; margin: 10px 4px 0 4px; max-width: 380px; }
+  .col .why b { color: var(--text); }
+
+  /* ---- shared section head ---- */
+  .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .sec-tile { width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sec-title { font-size: 15px; font-weight: 600; color: var(--text); flex: 1; }
+  .sec-value { border-radius: 999px; padding: 4px 10px; background: var(--card-2); }
+  .sec-value span { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .sec-desc { font-size: 12.5px; color: var(--text-tertiary); margin: 0 0 12px 42px; line-height: 1.4; }
+  .chev-circle { width: 28px; height: 28px; border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--text-tertiary); flex-shrink: 0; }
+  .chev-circle svg { width: 14px; height: 14px; }
+
+  /* ---- streak (unchanged reference) ---- */
+  .streak-pills-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px; }
+  .streak-pill-sm { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--border); font-size: 12.5px; color: var(--text-secondary); }
+  .streak-pill-sm.active { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 600; }
+
+  /* ---- strength curve row ---- */
+  .curve-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+  .curve-row .sec-tile { background: rgba(255,191,0,0.14); color: #f5b638; }
+  .curve-row .curve-text { flex: 1; font-size: 14px; color: var(--text); }
+  .curve-row .curve-text b { font-weight: 600; }
+  .curve-row .curve-text span { color: var(--text-tertiary); font-size: 12.5px; }
+
+  /* ---- growth icons preview grid ---- */
+  .preview-grid { display: flex; gap: 6px; margin-bottom: 10px; }
+  .preview-tile { flex: 1; aspect-ratio: 1; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--card); border: 1px solid var(--border); position: relative; }
+  .preview-tile.peak { background: var(--accent-soft); border: 2px solid var(--accent); }
+  .stage-caps { display: flex; justify-content: space-between; margin: 0 2px 8px 2px; }
+  .stage-caps span { font-size: 10px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+  .stage-caps .new { color: var(--text-tertiary); }
+  .stage-caps .strong { color: var(--accent); }
+  /* V2: caps folded under the tiles instead of their own row */
+  .preview-tile .under-cap { position: absolute; bottom: -16px; font-size: 8.5px; letter-spacing: 0.8px; text-transform: uppercase; font-weight: 700; white-space: nowrap; }
+  .preview-tile:first-child .under-cap { color: var(--text-tertiary); left: 0; }
+  .preview-tile:last-child .under-cap { color: var(--accent); right: 0; }
+  .preview-grid.v2 { margin-bottom: 24px; }
+
+  /* ---- themes toggle row ---- */
+  .themes-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+  .themes-toggle { display: flex; align-items: center; gap: 4px; min-height: 36px; padding: 0 4px; border-radius: 10px; }
+  .themes-toggle svg { width: 16px; height: 16px; color: var(--accent); }
+  .themes-toggle span { font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--accent); }
+
+  /* ---- compact grid chip (V1: 8 tiles incl. Custom, 4-per-row) ---- */
+  .compact-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: var(--card-2); }
+  .compact-chip { aspect-ratio: 1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; background: var(--card); border: 1px solid var(--border); }
+  .compact-chip.selected { background: var(--accent-soft); border: 2px solid var(--accent); }
+  .compact-chip .emoji { font-size: 16px; }
+  .compact-chip .label { font-size: 8.5px; font-weight: 700; color: var(--text-secondary); }
+  .compact-chip.selected .label { color: var(--accent); }
+
+  .row-count-badge { display: inline-block; margin-top: 14px; font-size: 11px; letter-spacing: 0.6px; text-transform: uppercase; font-weight: 700; padding: 4px 10px; border-radius: 999px; }
+  .row-count-badge.after { background: var(--accent-soft); color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- V1: Custom folded into the grid as an 8th tile — no orphan row, Themes row shrinks to just the toggle -->
+<div class="col">
+  <div class="state-label">V1 — Custom as 8th grid tile</div>
+  <div class="phone">
+    <div class="drag-handle"></div>
+    <div class="content">
+
+      <div class="section-label"><span class="line"></span><span class="text">Advanced</span><span class="line"></span></div>
+
+      <div class="sec-head">
+        <div class="sec-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;"><span style="font-size:16px;">🌱</span></div>
+        <div class="sec-title">Growth Icons</div>
+        <div class="sec-value"><span>Plants</span></div>
+      </div>
+      <div class="sec-desc">How your habit's strength looks as it grows.</div>
+
+      <div class="stage-caps"><span class="new">New</span><span class="strong">Strong</span></div>
+      <div class="preview-grid">
+        <div class="preview-tile">🌱</div>
+        <div class="preview-tile">🌿</div>
+        <div class="preview-tile">🌳</div>
+        <div class="preview-tile peak">💪</div>
+        <div class="preview-tile">⚡</div>
+      </div>
+
+      <div class="themes-toggle-row">
+        <div class="themes-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="transform:rotate(180deg);"><polyline points="6 9 12 15 18 9"/></svg>
+          <span>Less themes</span>
+        </div>
+      </div>
+
+      <div class="compact-grid">
+        <div class="compact-chip"><span class="emoji">🥉</span><span class="label">Ranks</span></div>
+        <div class="compact-chip"><span class="emoji">🪙</span><span class="label">Chain</span></div>
+        <div class="compact-chip selected"><span class="emoji">🌱</span><span class="label">Plants</span></div>
+        <div class="compact-chip"><span class="emoji">💧</span><span class="label">Fitness</span></div>
+        <div class="compact-chip"><span class="emoji">🌑</span><span class="label">Space</span></div>
+        <div class="compact-chip"><span class="emoji">💭</span><span class="label">Mind</span></div>
+        <div class="compact-chip"><span class="emoji">🪵</span><span class="label">Fire</span></div>
+        <div class="compact-chip"><span class="emoji">···</span><span class="label">Custom</span></div>
+      </div>
+      <a class="reset-link">Reset to default</a>
+
+    </div>
+  </div>
+  <div class="why">8 tiles = clean 4×2 grid, <b>no orphan</b>. Custom stops competing with the toggle row for attention — it's just another theme choice.</div>
+</div>
+
+<!-- V2: stage caps folded under the preview tiles -->
+<div class="col">
+  <div class="state-label">V2 — Caps folded under tiles</div>
+  <div class="phone">
+    <div class="drag-handle"></div>
+    <div class="content">
+
+      <div class="section-label"><span class="line"></span><span class="text">Advanced</span><span class="line"></span></div>
+
+      <div class="sec-head">
+        <div class="sec-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;"><span style="font-size:16px;">🌱</span></div>
+        <div class="sec-title">Growth Icons</div>
+        <div class="sec-value"><span>Plants</span></div>
+      </div>
+      <div class="sec-desc">How your habit's strength looks as it grows.</div>
+
+      <div class="preview-grid v2">
+        <div class="preview-tile">🌱<span class="under-cap">New</span></div>
+        <div class="preview-tile">🌿</div>
+        <div class="preview-tile">🌳</div>
+        <div class="preview-tile peak">💪</div>
+        <div class="preview-tile">⚡<span class="under-cap">Strong</span></div>
+      </div>
+
+      <div class="themes-toggle-row">
+        <div class="themes-toggle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          <span>Themes</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="why">Drops a whole row — "New/Strong" become tiny captions anchored to the first/last tile instead of a separate labeled row above.</div>
+</div>
+
+<!-- V3: unified section grammar across all three sections -->
+<div class="col">
+  <div class="state-label">V3 — One disclosure language for all 3 sections</div>
+  <div class="phone">
+    <div class="drag-handle"></div>
+    <div class="content">
+
+      <div class="section-label"><span class="line"></span><span class="text">Streak Goal</span><span class="line"></span></div>
+      <div class="sec-head">
+        <div class="sec-tile" style="background:rgba(52,211,153,0.14);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div class="sec-title">Streak Goal</div>
+        <div class="sec-value"><span>30 days</span></div>
+      </div>
+      <div class="sec-desc">A visual target with no penalty if you miss it.</div>
+      <div class="streak-pills-row">
+        <div class="streak-pill-sm">Off</div>
+        <div class="streak-pill-sm">7</div>
+        <div class="streak-pill-sm">21</div>
+        <div class="streak-pill-sm active">30</div>
+        <div class="streak-pill-sm">66</div>
+        <div class="streak-pill-sm">100</div>
+        <div class="streak-pill-sm">365</div>
+      </div>
+
+      <div class="section-label"><span class="line"></span><span class="text">Advanced</span><span class="line"></span></div>
+
+      <!-- Strength Curve now gets the same head+desc anatomy as the other two, chevron replaces bespoke row -->
+      <div class="sec-head">
+        <div class="sec-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="sec-title">Strength Curve</div>
+        <div class="sec-value"><span>Balanced</span></div>
+        <div class="chev-circle" style="margin-left:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="sec-desc">How fast your habit gains strength — 66-day curve.</div>
+
+      <div class="sec-head" style="margin-top:22px;">
+        <div class="sec-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;"><span style="font-size:16px;">🌱</span></div>
+        <div class="sec-title">Growth Icons</div>
+        <div class="sec-value"><span>Plants</span></div>
+        <div class="chev-circle" style="margin-left:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="sec-desc">How your habit's strength looks as it grows.</div>
+      <div class="preview-grid">
+        <div class="preview-tile">🌱</div>
+        <div class="preview-tile">🌿</div>
+        <div class="preview-tile">🌳</div>
+        <div class="preview-tile peak">💪</div>
+        <div class="preview-tile">⚡</div>
+      </div>
+
+      <div class="section-label danger"><span class="line"></span><span class="text">Danger Zone</span><span class="line"></span></div>
+      <div class="danger-card">
+        <div class="danger-row">📦 Archive habit</div>
+        <div class="danger-row">🗑️ Delete habit</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="why">Same head (icon tile · title · value pill · description) + same chevron-circle disclosure on all 3 rows. Right now Strength Curve skips the description and uses a different toggle shape than Growth Icons' text-toggle — this makes all 3 feel like one system instead of 3 improvised patterns.</div>
+</div>
+
+<!-- Combined: V1 + V2 + V3 stacked together as one coherent "after" -->
+<div class="col">
+  <div class="state-label">Combined — V1 + V2 + V3 together</div>
+  <div class="phone">
+    <div class="drag-handle"></div>
+    <div class="content">
+
+      <div class="section-label"><span class="line"></span><span class="text">Streak Goal</span><span class="line"></span></div>
+      <div class="sec-head">
+        <div class="sec-tile" style="background:rgba(52,211,153,0.14);color:var(--accent);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <div class="sec-title">Streak Goal</div>
+        <div class="sec-value"><span>30 days</span></div>
+      </div>
+      <div class="sec-desc">A visual target with no penalty if you miss it.</div>
+      <div class="streak-pills-row">
+        <div class="streak-pill-sm">Off</div>
+        <div class="streak-pill-sm">7</div>
+        <div class="streak-pill-sm">21</div>
+        <div class="streak-pill-sm active">30</div>
+        <div class="streak-pill-sm">66</div>
+        <div class="streak-pill-sm">100</div>
+        <div class="streak-pill-sm">365</div>
+      </div>
+
+      <div class="section-label"><span class="line"></span><span class="text">Advanced</span><span class="line"></span></div>
+
+      <div class="sec-head">
+        <div class="sec-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <div class="sec-title">Strength Curve</div>
+        <div class="sec-value"><span>Balanced</span></div>
+        <div class="chev-circle" style="margin-left:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="sec-desc">How fast your habit gains strength — 66-day curve.</div>
+
+      <div class="sec-head" style="margin-top:22px;">
+        <div class="sec-tile" style="background:rgba(255,191,0,0.14);color:#f5b638;"><span style="font-size:16px;">🌱</span></div>
+        <div class="sec-title">Growth Icons</div>
+        <div class="sec-value"><span>Plants</span></div>
+        <div class="chev-circle" style="margin-left:8px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="sec-desc">How your habit's strength looks as it grows.</div>
+      <div class="preview-grid v2">
+        <div class="preview-tile">🌱<span class="under-cap">New</span></div>
+        <div class="preview-tile">🌿</div>
+        <div class="preview-tile">🌳</div>
+        <div class="preview-tile peak">💪</div>
+        <div class="preview-tile">⚡<span class="under-cap">Strong</span></div>
+      </div>
+      <div class="compact-grid">
+        <div class="compact-chip"><span class="emoji">🥉</span><span class="label">Ranks</span></div>
+        <div class="compact-chip"><span class="emoji">🪙</span><span class="label">Chain</span></div>
+        <div class="compact-chip selected"><span class="emoji">🌱</span><span class="label">Plants</span></div>
+        <div class="compact-chip"><span class="emoji">💧</span><span class="label">Fitness</span></div>
+        <div class="compact-chip"><span class="emoji">🌑</span><span class="label">Space</span></div>
+        <div class="compact-chip"><span class="emoji">💭</span><span class="label">Mind</span></div>
+        <div class="compact-chip"><span class="emoji">🪵</span><span class="label">Fire</span></div>
+        <div class="compact-chip"><span class="emoji">···</span><span class="label">Custom</span></div>
+      </div>
+      <a class="reset-link">Reset to default</a>
+
+      <div class="section-label danger"><span class="line"></span><span class="text">Danger Zone</span><span class="line"></span></div>
+      <div class="danger-card">
+        <div class="danger-row">📦 Archive habit</div>
+        <div class="danger-row">🗑️ Delete habit</div>
+      </div>
+
+    </div>
+  </div>
+  <div class="row-count-badge after">All 3 sections same grammar, Growth Icons down ~2 rows total</div>
+</div>
+
+</body>
+</html>

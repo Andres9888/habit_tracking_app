@@ -1,4 +1,4 @@
-/** Inline Growth Icons — stages + Sprout/Fire/Custom + more themes. */
+/** Inline Growth Icons — stages + Themes toggle w/ Custom chip. */
 import { useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
@@ -13,8 +13,6 @@ import { GrowthStagePreview } from './GrowthStagePreview';
 import { GrowthIconsHead } from './GrowthIconsHead';
 import { GrowthIconsCustomExpand } from './GrowthIconsCustomExpand';
 import { GrowthIconsMoreSection } from './GrowthIconsMoreSection';
-import { GrowthIconsPrimaryRow } from './GrowthIconsPrimaryRow';
-import { getPrimaryThemes } from './growthIconsThemes';
 import { InlineExpandBody } from './InlineExpandBody';
 import { presetLabelFor } from './presetLabelFor';
 import { useInlineExpand } from './useInlineExpand';
@@ -60,19 +58,6 @@ export function GrowthIconsInline({
     <View>
       <GrowthIconsHead presetLabel={presetLabel} starting={resolved.starting} />
       <GrowthStagePreview emojis={resolved} />
-      <GrowthIconsPrimaryRow
-        customOpen={customOpen}
-        hasValue={Boolean(value)}
-        isCustom={isCustom}
-        presetId={presetId}
-        primaryThemes={getPrimaryThemes()}
-        resolvedStarting={resolved.starting}
-        onOpenCustom={() => {
-          setMoreOpen(false);
-          setCustomOpen(true);
-        }}
-        onSelectPreset={selectPreset}
-      />
       <InlineExpandBody expand={customExpand} open={customOpen}>
         <GrowthIconsCustomExpand
           fallback={fallback}
@@ -81,8 +66,15 @@ export function GrowthIconsInline({
         />
       </InlineExpandBody>
       <GrowthIconsMoreSection
+        customOpen={customOpen}
+        isCustom={isCustom}
         open={moreOpen}
         presetId={presetId}
+        resolvedStarting={resolved.starting}
+        onOpenCustom={() => {
+          setMoreOpen(false);
+          setCustomOpen(true);
+        }}
         onSelect={selectPreset}
         onToggle={() => {
           setCustomOpen(false);
