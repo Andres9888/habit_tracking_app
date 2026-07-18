@@ -20,5 +20,7 @@ export interface ListCardAddButtonProps {
   isImported: boolean;
   isImporting: boolean;
   name: string;
+  /** 'compact' (default, 30px) keeps other cards untouched; 'regular' = mock-B 40px pill. */
+  size?: 'compact' | 'regular';
   onImport: () => void;
 }

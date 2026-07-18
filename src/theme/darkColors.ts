@@ -69,6 +69,9 @@ export const darkColors = {
   /** Card surface — elevated above background (gray-800) */
   card: '#1F2937',
 
+  /** Warm paper card surface — library card fill (soft-paper light / gray-700 dark) */
+  cardPaper: '#374151',
+
   /** Card border — slightly lighter than surface (gray-700) */
   cardBorder: '#374151',
 
@@ -169,6 +172,9 @@ export const lightColors = {
 
   /** Card surface — subtle lift above background (L1) */
   card: '#EDEAE5',
+
+  /** Warm paper card surface — ~50% warmth between white and canvas #F5F1ED; caps below #F7F3EF or hierarchy collapses into canvas */
+  cardPaper: '#F8F5F1',
 
   /** Card border — same as general border */
   cardBorder: '#DDD8D2',
@@ -272,6 +278,9 @@ export interface SemanticColors {
 
   /** Card/container background */
   card: string;
+
+  /** Warm paper card surface (soft-paper light / gray-700 dark) */
+  cardPaper: string;
 
   /** Card border color */
   cardBorder: string;

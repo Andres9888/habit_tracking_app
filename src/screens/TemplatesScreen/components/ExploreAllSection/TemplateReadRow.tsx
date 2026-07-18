@@ -1,15 +1,17 @@
 /**
- * Habit row with an expandable "Why this works" science drawer.
- * Extends ExploreHabitRow with an inline read (lead + evidence) so users
- * can evaluate the science before adding, without leaving the list.
+ * Habit row — Version B "confidence-first" card. Reads full-width, shows an
+ * always-on "Why it works" teaser and meta chips, and opens the detail view
+ * (via the card body or the footer's "How it works" affordance).
+ * The footer + Add pill creates the habit in one tap.
  */
 
 import { View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { TemplateReadRowDrawer } from './TemplateReadRowDrawer';
+import { TemplateReadRowFooter } from './TemplateReadRowFooter';
 import { TemplateReadRowHeader } from './TemplateReadRowHeader';
-import { useTemplateReadRow } from './TemplateReadRow.hooks';
+import { TemplateReadRowMeta } from './TemplateReadRowMeta';
+import { TemplateReadRowTeaser } from './TemplateReadRowTeaser';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowProps {
@@ -28,45 +30,27 @@ export function TemplateReadRow({
   onPreview,
 }: TemplateReadRowProps) {
   const { colors } = useThemeColors();
-  const surface = colors.card;
+  const surface = colors.cardPaper;
   const isImported = importedTemplateIds.has(item._id);
-  // Only offer the science read when there's curated copy beyond the
-  // description already shown on the card — never repeat it.
-  const hasRead = Boolean(
-    item.lead ||
-    item.evidence ||
-    item.startSmallVersion ||
-    item.scientificReference
-  );
-  const {
-    chevronAnimatedStyle,
-    contentAnimatedStyle,
-    expanded,
-    handleContentLayout,
-    toggle,
-  } = useTemplateReadRow();
 
   return (
-    <View style={[s.cardWrap, { backgroundColor: surface }]}>
+    <View
+      style={[
+        s.cardWrap,
+        { backgroundColor: surface, borderColor: colors.border },
+      ]}
+    >
       <View style={[s.card, { backgroundColor: surface }]}>
-        <TemplateReadRowHeader
+        <TemplateReadRowHeader item={item} onPreview={onPreview} />
+        <TemplateReadRowTeaser item={item} />
+        <TemplateReadRowMeta item={item} />
+        <TemplateReadRowFooter
           importingTemplateId={importingTemplateId}
           isImported={isImported}
           item={item}
           onImport={onImport}
           onPreview={onPreview}
         />
-        {hasRead ? (
-          <TemplateReadRowDrawer
-            chevronAnimatedStyle={chevronAnimatedStyle}
-            contentAnimatedStyle={contentAnimatedStyle}
-            expanded={expanded}
-            item={item}
-            onContentLayout={handleContentLayout}
-            onPreview={onPreview}
-            onToggle={toggle}
-          />
-        ) : null}
       </View>
     </View>
   );

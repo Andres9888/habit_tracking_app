@@ -24,6 +24,7 @@ export function ListCardAddButton({
   isImported,
   isImporting,
   name,
+  size = 'compact',
   onImport,
 }: ListCardAddButtonProps) {
   const { colors } = useThemeColors();
@@ -43,6 +44,8 @@ export function ListCardAddButton({
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
+  const isRegular = size === 'regular';
+  const lblStyle = [s.label, isRegular && s.labelRegular];
 
   return (
     <AnimatedPressable
@@ -51,6 +54,7 @@ export function ListCardAddButton({
       disabled={isImported || isImporting}
       style={[
         s.button,
+        isRegular && s.buttonRegular,
         {
           backgroundColor: isImported
             ? colors.primary[100]
@@ -73,10 +77,10 @@ export function ListCardAddButton({
             size={iconSizes.small}
             strokeWidth={3}
           />
-          <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
+          <Text style={[lblStyle, { color: colors.primary[700] }]}>Added</Text>
         </>
       ) : (
-        <Text style={[s.label, { color: colors.text.inverse }]}>+ Add</Text>
+        <Text style={[lblStyle, { color: colors.text.inverse }]}>+ Add</Text>
       )}
     </AnimatedPressable>
   );
@@ -92,8 +96,14 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.md,
   },
+  buttonRegular: {
+    height: 40,
+    minWidth: 72,
+    paddingHorizontal: 14,
+  },
   label: {
     ...typography.caption,
     fontWeight: fontWeights.bold,
   },
+  labelRegular: { fontSize: 14 },
 });

@@ -1,70 +1,63 @@
 /**
- * Styles for TemplateReadRow
+ * Styles for TemplateReadRow — Version B "confidence-first" card:
+ * full-width read, an always-on "Why it works" teaser, a meta-chip row, and
+ * a footer that pairs a "How it works" detail affordance with + Add.
  */
 
 import { StyleSheet } from 'react-native';
-import { borderRadius, spacing } from '../../../../theme/spacing';
-import {
-  fontFamilies,
-  fontWeights,
-  typography,
-} from '../../../../theme/typography';
+import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
+import { fontWeights, typography } from '../../../../theme/typography';
 
 export const s = StyleSheet.create({
-  addSlot: { alignSelf: 'flex-start', flexShrink: 0 },
-  // Boxed card — no border, subtle lift, matches the pre-merge catalog card.
-  card: {
-    borderRadius: borderRadius.large,
-    overflow: 'hidden',
-  },
-  // Flat card — the reference design has no border or shadow, the
-  // #EDEAE5 surface alone separates it from the parchment background.
+  card: { borderRadius: borderRadius.large, overflow: 'hidden' },
   cardWrap: {
+    ...shadows.card,
     borderRadius: borderRadius.large,
+    borderWidth: 1,
     marginHorizontal: spacing.base,
     marginVertical: spacing.sm,
   },
-  description: { ...typography.caption, lineHeight: 19, marginTop: spacing.xs },
-  detailsLink: { alignSelf: 'flex-end', marginTop: spacing.sm },
-  detailsLinkLabel: {
-    ...typography.caption,
-    fontWeight: fontWeights.bold,
+  chip: {
+    alignSelf: 'flex-start',
+    borderRadius: borderRadius.full,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
   },
-  drawerBody: {
-    paddingBottom: spacing.base,
-    paddingHorizontal: spacing.base,
-    paddingTop: spacing.xs,
-  },
-  drawerCitation: {
-    fontFamily: fontFamilies.monospace,
-    fontSize: 10.5,
-    letterSpacing: 0.2,
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
     marginTop: spacing.md,
+    paddingHorizontal: spacing.base,
   },
-  drawerEvidence: {
+  chipText: {
     ...typography.caption,
-    fontWeight: fontWeights.regular,
-    lineHeight: 20,
-    marginTop: spacing.sm,
+    fontSize: 11,
+    fontWeight: fontWeights.semibold,
   },
-  // The curated "why it works" paragraph — editorial serif read.
-  drawerLead: {
-    fontFamily: fontFamilies.primary.display,
-    fontSize: 15,
-    lineHeight: 23,
+  description: { ...typography.bodySmall, marginTop: spacing.sm },
+  emoji: { fontSize: 22 },
+  // Footer: "How it works" detail affordance (left) + Add pill (right).
+  footChev: {
+    alignItems: 'center',
+    borderRadius: 9,
+    height: 28,
+    justifyContent: 'center',
+    width: 28,
   },
-  drawerStartSmall: {
-    ...typography.caption,
-    fontWeight: fontWeights.regular,
-    lineHeight: 20,
-    marginTop: spacing.sm,
+  footCopy: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginRight: spacing.base,
   },
-  drawerStartSmallPrefix: { fontWeight: fontWeights.bold },
-  emoji: { fontSize: 20 },
+  footTitle: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
   footer: {
     alignItems: 'center',
     borderTopWidth: 1,
     flexDirection: 'row',
+    gap: spacing.md,
     justifyContent: 'space-between',
     marginHorizontal: spacing.base,
     marginTop: spacing.md,
@@ -79,28 +72,28 @@ export const s = StyleSheet.create({
     justifyContent: 'center',
     width: 44,
   },
-  info: { flex: 1, gap: spacing.xs, minWidth: 0 },
-  metaPill: {
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-  },
-  metaPillText: { ...typography.caption, fontWeight: fontWeights.semibold },
-  name: { ...typography.body, fontWeight: fontWeights.semibold },
-  row: {
-    alignItems: 'flex-start',
-    flexDirection: 'row',
-    gap: spacing.md,
-    padding: spacing.base,
-    paddingBottom: 0,
-  },
-  toggle: {
+  header: { padding: spacing.base, paddingBottom: 0 },
+  name: { ...typography.body, flex: 1, fontWeight: fontWeights.semibold },
+  titleRow: {
     alignItems: 'center',
     flexDirection: 'row',
-    gap: spacing.xs,
+    gap: spacing.md,
   },
-  toggleLabel: {
-    fontSize: typography.caption.fontSize,
-    fontWeight: fontWeights.semibold,
+  // Always-on "Why it works" teaser panel.
+  teaser: {
+    borderRadius: borderRadius.medium,
+    borderWidth: 1,
+    marginHorizontal: spacing.base,
+    marginTop: spacing.md,
+    padding: spacing.md,
   },
+  teaserLabel: {
+    fontSize: 10,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 0.8,
+    marginBottom: 5,
+    textTransform: 'uppercase',
+  },
+  teaserText: { ...typography.caption, lineHeight: 19 },
+  textMin: { minWidth: 0 },
 });

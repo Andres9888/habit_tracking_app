@@ -7,16 +7,20 @@
 import type { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { spacing } from '../../../../theme/spacing';
+import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
 
 interface SectionHeaderProps {
+  icon?: string;
+  iconBg?: string;
   rightSlot?: ReactNode;
   subtitle?: string;
   title: string;
 }
 
 export function SectionHeader({
+  icon,
+  iconBg,
   rightSlot,
   subtitle,
   title,
@@ -25,13 +29,20 @@ export function SectionHeader({
 
   return (
     <View style={s.row}>
-      <View style={s.textBlock}>
-        <Text style={[s.title, { color: colors.text.primary }]}>{title}</Text>
-        {subtitle ? (
-          <Text style={[s.subtitle, { color: colors.text.secondary }]}>
-            {subtitle}
-          </Text>
+      <View style={s.titleRow}>
+        {icon ? (
+          <View style={[s.iconBox, { backgroundColor: iconBg }]}>
+            <Text style={s.icon}>{icon}</Text>
+          </View>
         ) : null}
+        <View style={s.textBlock}>
+          <Text style={[s.title, { color: colors.text.primary }]}>{title}</Text>
+          {subtitle ? (
+            <Text style={[s.subtitle, { color: colors.text.secondary }]}>
+              {subtitle}
+            </Text>
+          ) : null}
+        </View>
       </View>
       {rightSlot ? <View style={s.right}>{rightSlot}</View> : null}
     </View>
@@ -39,6 +50,15 @@ export function SectionHeader({
 }
 
 const s = StyleSheet.create({
+  icon: { fontSize: 15 },
+  iconBox: {
+    alignItems: 'center',
+    borderRadius: borderRadius.medium,
+    flexShrink: 0,
+    height: 28,
+    justifyContent: 'center',
+    width: 28,
+  },
   right: { flexShrink: 0 },
   row: {
     alignItems: 'baseline',
@@ -51,4 +71,11 @@ const s = StyleSheet.create({
   subtitle: { ...typography.caption, marginTop: 2 },
   textBlock: { flex: 1, minWidth: 0 },
   title: { ...typography.heading3 },
+  titleRow: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    gap: spacing.sm,
+    minWidth: 0,
+  },
 });

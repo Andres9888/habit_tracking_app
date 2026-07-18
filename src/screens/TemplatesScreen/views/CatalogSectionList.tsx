@@ -22,18 +22,25 @@ interface CatalogSectionListProps {
 
 interface CatalogSection {
   data: Doc<'templates'>[];
+  icon: string;
+  iconBg: string;
   key: string;
   label: string;
   subtitle?: string;
 }
 
 export function CatalogSectionList(p: CatalogSectionListProps) {
-  const sections: CatalogSection[] = p.groups.map((group) => ({
-    data: group.templates,
-    key: group.category,
-    label: `${group.icon} ${group.label}`,
-    subtitle: getCategoryMeta(group.category).subtitle,
-  }));
+  const sections: CatalogSection[] = p.groups.map((group) => {
+    const meta = getCategoryMeta(group.category);
+    return {
+      data: group.templates,
+      icon: group.icon,
+      iconBg: meta.bgColor,
+      key: group.category,
+      label: group.label,
+      subtitle: meta.subtitle,
+    };
+  });
 
   return (
     <SectionList
@@ -51,7 +58,12 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       )}
       renderSectionHeader={({ section }) => (
         <View style={s.header}>
-          <SectionHeader subtitle={section.subtitle} title={section.label} />
+          <SectionHeader
+            icon={section.icon}
+            iconBg={section.iconBg}
+            subtitle={section.subtitle}
+            title={section.label}
+          />
         </View>
       )}
       sections={sections}
@@ -62,6 +74,9 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
 }
 
 const s = StyleSheet.create({
-  header: { marginTop: spacing.lg },
+  // Extra left padding stacks with SectionHeader's own paddingHorizontal so
+  // the icon box's left edge lines up with the card icon box below
+  // (cardWrap.marginHorizontal + header.padding = spacing.base * 2).
+  header: { marginTop: spacing.lg, paddingLeft: spacing.base },
   list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
 });
