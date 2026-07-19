@@ -15,10 +15,13 @@ import type {
  * Build visual state configurations for each day state.
  * Accepts optional status colors for theme-aware rendering.
  */
-export function getDayStateConfigs(
-  statusColors?: { success: string; successText: string }
-): Record<DayVisualState, DayStateConfig> {
-  const success = statusColors?.success ?? '#10b981';
+export function getDayStateConfigs(statusColors?: {
+  success: string;
+  successText: string;
+}): Record<DayVisualState, DayStateConfig> {
+  // Default matches lightColors.status.success (#059669); callers normally
+  // pass theme-aware statusColors from useThemeColors().
+  const success = statusColors?.success ?? '#059669';
   const successText = statusColors?.successText ?? '#6ee7b7';
 
   return {
@@ -36,30 +39,30 @@ export function getDayStateConfigs(
       textColor: themeTokens.text.inverse,
     },
     future: {
-      backgroundColor: '#f5f5f4', // stone-100
-      borderColor: '#e7e5e4', // stone-200
+      backgroundColor: themeTokens.gray[100], // #F5F1ED warm background
+      borderColor: themeTokens.gray[200], // #DDD8D2 warm border
       borderStyle: 'solid',
       borderWidth: 1,
       hasPulse: false,
       hasRing: false,
       icon: null,
-      iconColor: '#a8a29e', // stone-400
+      iconColor: themeTokens.gray[300], // #C4BFB7 warm neutral
       ringColor: 'transparent',
       text: null,
-      textColor: '#78716c', // stone-500
+      textColor: themeTokens.gray[500], // #6B6560 secondary text
     },
     missed: {
-      backgroundColor: '#e7e5e4', // stone-200
-      borderColor: '#d6d3d1', // stone-300
+      backgroundColor: themeTokens.light.card, // #EDEAE5 warm surface
+      borderColor: themeTokens.gray[200], // #DDD8D2 warm border
       borderStyle: 'solid',
       borderWidth: 0,
       hasPulse: false,
       hasRing: false,
       icon: X,
-      iconColor: '#a8a29e', // stone-400
+      iconColor: themeTokens.gray[300], // #C4BFB7 warm neutral
       ringColor: 'transparent',
       text: null,
-      textColor: '#78716c', // stone-500
+      textColor: themeTokens.gray[500], // #6B6560 secondary text
     },
     todayComplete: {
       backgroundColor: success,

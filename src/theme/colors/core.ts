@@ -1,3 +1,4 @@
+/* eslint-disable max-lines -- Data file defining the raw color palette; mirrors darkColors.ts precedent. */
 /**
  * Core Color Palette - Habit Tracking App
  * Frontend Redesign Spec 2026-02-14
@@ -117,7 +118,7 @@ export const colors = {
     100: '#D1FAE5', // Light tinted backgrounds
     300: '#6EE7B7', // Decorative, confetti
     400: '#34D399', // Lighter, hover states
-    500: '#10B981', // Success indicators, focus rings
+    500: '#10B981', // Focus rings, lighter accents — NOT success (success = colors.success #15793C per semantic.ts)
     600: '#059669', // Buttons, CTA fills
     700: '#047857', // High-contrast text on colored surfaces
   },

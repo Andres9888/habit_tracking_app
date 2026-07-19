@@ -17,9 +17,16 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['DMSans', 'system-ui', 'sans-serif'],
-        heading: ['Literata', 'system-ui', 'sans-serif'],
-        dyslexic: ['OpenDyslexic', 'DMSans', 'system-ui', 'sans-serif'],
+        // 'DM Sans' (web, Google Fonts) + 'DMSans' (native, expo-font) — same face
+        sans: ['DM Sans', 'DMSans', 'system-ui', 'sans-serif'],
+        heading: ['Literata', 'Georgia', 'serif'],
+        dyslexic: [
+          'OpenDyslexic',
+          'DM Sans',
+          'DMSans',
+          'system-ui',
+          'sans-serif',
+        ],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -44,20 +51,19 @@ module.exports = {
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: '#059669',
-          foreground: '#FFFFFF',
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
         },
-        'accent-muted': '#D1FAE5',
+        'accent-muted': '#D1FAE5', // = light-mode hsl(var(--accent)); kept for native (no CSS vars)
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
         },
         card: {
-          DEFAULT: '#EDEAE5',
-          foreground: '#2D2A26',
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
         },
-        // Home screen redesign palette (see src/theme/colors/semantic.ts warmPalette)
-        dominant: '#faf9f7',
+        // Warm-minimal neutrals (mirror src/theme/colors/core.ts gray scale)
         'secondary-text': '#1F2937',
         neutral: '#C4BFB7',
       },
@@ -80,11 +86,13 @@ module.exports = {
         display: ['34px', { lineHeight: '41px', fontWeight: '700' }],
       },
       // Full airy: radii bumped app-wide (mirrors src/theme/airyScale.ts).
-      // Canonical = xl 12 / 2xl 16 / 3xl 24 / card 16.
+      // Canonical (AIRY_SCALE=true) = chip 10 / button 14 / xl 16 / 2xl+card 24 / 3xl 28.
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        chip: '10px',
+        button: '14px',
         card: '24px',
         xl: '16px',
         '2xl': '24px',

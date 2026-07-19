@@ -233,7 +233,7 @@ export const lightColors = {
     100: '#D1FAE5', // Lightest — tinted backgrounds
     300: '#6EE7B7', // Light — decorative, confetti
     400: '#34D399', // Medium — hover states
-    500: '#10B981', // Default — success indicators, focus rings
+    500: '#10B981', // Default — focus rings, lighter accents (status.success lives at status.success)
     600: '#059669', // Buttons — primary CTA fills
     700: '#047857', // Darkest — high-contrast text on colored surfaces
   },
