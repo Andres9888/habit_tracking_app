@@ -13,11 +13,11 @@ import { scienceStyles as s } from '../../styles/science.styles';
 import { scienceResearchStyles as b } from '../../styles/scienceResearch.styles';
 
 const LEVELS = [
-  { label: 'Starting', emoji: '🥉', color: colors.strength.starting },
-  { label: 'Building', emoji: '🥈', color: colors.strength.building },
-  { label: 'Developing', emoji: '🥇', color: colors.strength.developing },
-  { label: 'Strong', emoji: '🏆', color: colors.strength.strong },
-  { label: 'Automatic', emoji: '💎', color: colors.strength.automatic },
+  { label: 'Starting', color: colors.strength.starting },
+  { label: 'Building', color: colors.strength.building },
+  { label: 'Developing', color: colors.strength.developing },
+  { label: 'Strong', color: colors.strength.strong },
+  { label: 'Automatic', color: colors.strength.automatic },
 ];
 
 export function StrengthExplainerBlock() {
@@ -28,21 +28,33 @@ export function StrengthExplainerBlock() {
       </SecLabel>
       <View style={s.card}>
         <Text style={b.strIntro}>
-          Every day you keep the chain, this habit gets stronger — climbing five stages from
-          Starting to Automatic. Most daily habits cross into automatic around 66 days.
+          Every day you keep the chain, this habit gets stronger — five stages from Starting
+          to Automatic. Most daily habits cross into automatic around 66 days.
         </Text>
         <View style={b.strTrack}>
-          {LEVELS.map((lv, i) => (
-            <React.Fragment key={lv.label}>
-              {i > 0 ? <View style={[b.strConnector, { backgroundColor: lv.color }]} /> : null}
-              <View style={b.strNode}>
-                <View style={[b.strCircle, { borderColor: lv.color }]}>
-                  <Text style={b.strEmoji}>{lv.emoji}</Text>
+          {LEVELS.map((lv, i) => {
+            const filled = i === 0;
+            return (
+              <React.Fragment key={lv.label}>
+                {i > 0 ? (
+                  <View style={[b.strConnector, i === 1 ? { backgroundColor: lv.color } : null]} />
+                ) : null}
+                <View style={b.strNode}>
+                  <View
+                    style={[
+                      b.strCircle,
+                      filled
+                        ? { backgroundColor: lv.color, borderColor: lv.color }
+                        : { borderColor: colors.border },
+                    ]}
+                  >
+                    <Text style={[b.strNum, filled ? b.strNumFilled : null]}>{i + 1}</Text>
+                  </View>
+                  <Text style={b.strLabel}>{lv.label}</Text>
                 </View>
-                <Text style={b.strLabel}>{lv.label}</Text>
-              </View>
-            </React.Fragment>
-          ))}
+              </React.Fragment>
+            );
+          })}
         </View>
       </View>
     </View>

@@ -23,12 +23,11 @@ export function PreviewContent({
   initialAnchor = 'top',
   isImported,
   isImporting,
-  reducedMotion,
   template,
   visible,
 }: PreviewContentProps) {
   const headerTint = buildHeroGradient(iconColor)[0];
-  const { scrollHandler, onHeroLayout, animatedBgStyle } =
+  const { scrollHandler, onHeroLayout, animatedBgStyle, scrollY } =
     useHeaderTintAnimation(headerTint);
   return (
     <Animated.View
@@ -51,8 +50,8 @@ export function PreviewContent({
         iconGlowStyle={animatedStyles.iconGlowStyle}
         initialAnchor={initialAnchor}
         overscrollTint={headerTint}
-        reducedMotion={reducedMotion}
         scrollHandler={scrollHandler}
+        scrollY={scrollY}
         template={template}
         visible={visible}
         onHeroLayout={onHeroLayout}

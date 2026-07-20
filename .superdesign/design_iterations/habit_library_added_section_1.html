@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Habit Library — Added section: Before vs After</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  h1, h2, h3, .font-heading { font-family: 'Literata', serif !important; }
+  body, p, span, button, div { font-family: 'DM Sans', sans-serif; }
+
+  body {
+    background: #EDEAE5 !important;
+    color: #2D2A26 !important;
+  }
+
+  .phone {
+    width: 375px;
+    max-width: 100%;
+    background: #F5F1ED !important;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(45,42,38,0.18);
+    overflow: hidden;
+    border: 1px solid #DDD8D2 !important;
+  }
+  .phone-scroll {
+    height: 640px;
+    overflow-y: auto;
+  }
+  .phone-scroll::-webkit-scrollbar { width: 6px; }
+  .phone-scroll::-webkit-scrollbar-thumb { background: #DDD8D2; border-radius: 4px; }
+
+  .habit-card {
+    background: #F8F5F1 !important;
+    border: 1px solid #DDD8D2 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+  }
+  .icon-box {
+    width: 44px; height: 44px;
+    border-radius: 12px !important;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .cat-icon-box {
+    width: 28px; height: 28px;
+    border-radius: 12px !important;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .pill-add {
+    background: #059669 !important;
+    color: #FFFFFF !important;
+    border-radius: 999px !important;
+    font-weight: 700; font-size: 13px;
+    padding: 6px 14px;
+  }
+  .pill-added {
+    background: #D1FAE5 !important;
+    color: #047857 !important;
+    border-radius: 999px !important;
+    font-weight: 700; font-size: 13px;
+    padding: 6px 14px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .meta-chip {
+    background: #EDEAE5 !important;
+    color: #6E6660 !important;
+    border-radius: 999px !important;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 10px;
+  }
+  .callout {
+    background: #EDEAE5 !important;
+    border: 1px solid #DDD8D2 !important;
+    border-radius: 12px !important;
+  }
+  .badge-before { background: #F1E4DC !important; color: #7D5907 !important; }
+  .badge-after { background: #D1FAE5 !important; color: #047857 !important; }
+
+  .added-footer {
+    background: #F8F5F1 !important;
+    border: 1px dashed #A9C9BC !important;
+    border-radius: 16px !important;
+  }
+  .divider-line { width: 1px; background: #DDD8D2; }
+  .text-secondary { color: #6B6560 !important; }
+  .text-tertiary { color: #6E6660 !important; }
+</style>
+</head>
+<body class="min-h-screen py-10 px-4">
+
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10">
+      <h1 class="font-heading text-3xl md:text-4xl font-bold" style="color:#2D2A26;">Habit Library — "Added" habits, out of the way</h1>
+      <p class="text-secondary mt-2 max-w-2xl mx-auto">Same two categories, same habits added. Left: today's behavior. Right: proposed change.</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row items-start justify-center gap-0 lg:gap-0">
+
+      <!-- BEFORE PANEL -->
+      <div class="flex flex-col items-center px-4">
+        <span class="badge-before inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide mb-4">Before</span>
+        <div class="phone">
+          <!-- status bar -->
+          <div class="px-5 pt-4 pb-2 flex items-center justify-between text-xs font-semibold" style="color:#6E6660;">
+            <span>9:41</span>
+            <span>●●●●</span>
+          </div>
+          <!-- header -->
+          <div class="px-5 pb-3">
+            <h2 class="font-heading text-xl font-bold" style="color:#2D2A26;">All habits · 6 habits</h2>
+            <p class="text-sm text-secondary mt-0.5">Search or browse by category</p>
+          </div>
+          <!-- search bar -->
+          <div class="mx-5 mb-3 px-4 py-2.5 rounded-full flex items-center gap-2" style="background:#EDEAE5; border:1px solid #DDD8D2;">
+            <i data-lucide="search" style="width:16px;height:16px;color:#6E6660;"></i>
+            <span class="text-sm text-tertiary">Search habits</span>
+          </div>
+          <!-- chip rail -->
+          <div class="flex gap-2 px-5 pb-4 overflow-x-auto">
+            <span class="meta-chip whitespace-nowrap">🧘 Mind</span>
+            <span class="meta-chip whitespace-nowrap">😴 Sleep</span>
+            <span class="meta-chip whitespace-nowrap">💪 Movement</span>
+          </div>
+
+          <div class="phone-scroll px-5 pb-8 space-y-1">
+
+            <!-- Category: Sleep -->
+            <div class="flex items-center gap-2 mb-2 mt-1">
+              <div class="cat-icon-box" style="background:#3872B822;">😴</div>
+              <div>
+                <h3 class="font-heading text-base font-semibold" style="color:#2D2A26;">Sleep</h3>
+              </div>
+            </div>
+
+            <!-- card 1: not added -->
+            <div class="habit-card mb-3 p-4">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#93726F30;">🌙</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">Wind-down routine</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Dim lights and stop screens 30 minutes before bed.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <button class="pill-add">+ Add</button>
+              </div>
+            </div>
+
+            <!-- card 2: ADDED, still stuck inline in category -->
+            <div class="habit-card mb-3 p-4" style="outline:2px solid #05966955; outline-offset:2px;">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#05966930;">📵</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">No phone in bed</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Charge your phone outside the bedroom.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <span class="pill-added"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3;"></i>Added</span>
+              </div>
+            </div>
+
+            <!-- Category: Movement -->
+            <div class="flex items-center gap-2 mb-2 mt-4">
+              <div class="cat-icon-box" style="background:#93726F30;">💪</div>
+              <div>
+                <h3 class="font-heading text-base font-semibold" style="color:#2D2A26;">Movement</h3>
+              </div>
+            </div>
+
+            <div class="habit-card mb-3 p-4">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#6D3AC730;">🚶</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">10-minute walk</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Step outside for a short walk after lunch.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <button class="pill-add">+ Add</button>
+              </div>
+            </div>
+
+            <!-- card: ADDED, stuck inline again -->
+            <div class="habit-card mb-3 p-4" style="outline:2px solid #05966955; outline-offset:2px;">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#05966930;">🧘</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">Morning stretch</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Five minutes of stretching after waking up.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <span class="pill-added"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3;"></i>Added</span>
+              </div>
+            </div>
+
+            <div class="habit-card mb-3 p-4">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#93726F30;">🏋️</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">Bodyweight circuit</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Squats, push-ups, and a plank — 15 minutes.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <button class="pill-add">+ Add</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <p class="text-xs text-tertiary mt-3 max-w-[375px] text-center">Added habits (outlined) stay mixed into every category — you keep re-scanning past habits you already have.</p>
+      </div>
+
+      <div class="divider-line hidden lg:block self-stretch my-8"></div>
+
+      <!-- AFTER PANEL -->
+      <div class="flex flex-col items-center px-4 mt-10 lg:mt-0">
+        <span class="badge-after inline-block px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wide mb-4">After</span>
+        <div class="phone">
+          <div class="px-5 pt-4 pb-2 flex items-center justify-between text-xs font-semibold" style="color:#6E6660;">
+            <span>9:41</span>
+            <span>●●●●</span>
+          </div>
+          <div class="px-5 pb-3">
+            <h2 class="font-heading text-xl font-bold" style="color:#2D2A26;">All habits · 6 habits</h2>
+            <p class="text-sm text-secondary mt-0.5">Search or browse by category</p>
+          </div>
+          <div class="mx-5 mb-3 px-4 py-2.5 rounded-full flex items-center gap-2" style="background:#EDEAE5; border:1px solid #DDD8D2;">
+            <i data-lucide="search" style="width:16px;height:16px;color:#6E6660;"></i>
+            <span class="text-sm text-tertiary">Search habits</span>
+          </div>
+          <div class="flex gap-2 px-5 pb-4 overflow-x-auto">
+            <span class="meta-chip whitespace-nowrap">🧘 Mind</span>
+            <span class="meta-chip whitespace-nowrap">😴 Sleep</span>
+            <span class="meta-chip whitespace-nowrap">💪 Movement</span>
+          </div>
+
+          <div class="phone-scroll px-5 pb-8 space-y-1">
+
+            <!-- Category: Sleep (added habit removed) -->
+            <div class="flex items-center gap-2 mb-2 mt-1">
+              <div class="cat-icon-box" style="background:#3872B822;">😴</div>
+              <div>
+                <h3 class="font-heading text-base font-semibold" style="color:#2D2A26;">Sleep</h3>
+              </div>
+            </div>
+
+            <div class="habit-card mb-3 p-4">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#93726F30;">🌙</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">Wind-down routine</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Dim lights and stop screens 30 minutes before bed.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <button class="pill-add">+ Add</button>
+              </div>
+            </div>
+
+            <!-- Category: Movement (added habits removed) -->
+            <div class="flex items-center gap-2 mb-2 mt-4">
+              <div class="cat-icon-box" style="background:#93726F30;">💪</div>
+              <div>
+                <h3 class="font-heading text-base font-semibold" style="color:#2D2A26;">Movement</h3>
+              </div>
+            </div>
+
+            <div class="habit-card mb-3 p-4">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#6D3AC730;">🚶</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">10-minute walk</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Step outside for a short walk after lunch.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <button class="pill-add">+ Add</button>
+              </div>
+            </div>
+
+            <div class="habit-card mb-3 p-4">
+              <div class="flex gap-3">
+                <div class="icon-box" style="background:#93726F30;">🏋️</div>
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">Bodyweight circuit</h4>
+                  <p class="text-sm text-secondary mt-0.5 line-clamp-2">Squats, push-ups, and a plank — 15 minutes.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                <button class="pill-add">+ Add</button>
+              </div>
+            </div>
+
+            <!-- collapsed Added footer -->
+            <div class="added-footer mt-6 p-4 cursor-pointer">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="check-circle-2" style="width:18px;height:18px;color:#047857;"></i>
+                  <span class="font-semibold" style="color:#047857;">Added · 2 habits</span>
+                </div>
+                <i data-lucide="chevron-down" style="width:18px;height:18px;color:#047857;"></i>
+              </div>
+            </div>
+
+            <!-- expanded peek showing what's inside -->
+            <div class="mt-2 pl-2 space-y-3 opacity-90">
+              <p class="text-xs text-tertiary uppercase font-bold tracking-wide pl-2">tap to expand ↓</p>
+              <div class="habit-card p-4" style="opacity:0.85;">
+                <div class="flex gap-3">
+                  <div class="icon-box" style="background:#05966930;">📵</div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">No phone in bed</h4>
+                    <p class="text-sm text-secondary mt-0.5 line-clamp-2">Charge your phone outside the bedroom.</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                  <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                  <span class="pill-added"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3;"></i>Added</span>
+                </div>
+              </div>
+              <div class="habit-card p-4" style="opacity:0.85;">
+                <div class="flex gap-3">
+                  <div class="icon-box" style="background:#05966930;">🧘</div>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="text-base font-semibold truncate" style="color:#2D2A26;">Morning stretch</h4>
+                    <p class="text-sm text-secondary mt-0.5 line-clamp-2">Five minutes of stretching after waking up.</p>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-3 pt-3" style="border-top:1px solid #DDD8D2;">
+                  <span class="text-sm font-semibold text-secondary flex items-center gap-1">How it works <i data-lucide="chevron-right" style="width:14px;height:14px;"></i></span>
+                  <span class="pill-added"><i data-lucide="check" style="width:12px;height:12px;stroke-width:3;"></i>Added</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <p class="text-xs text-tertiary mt-3 max-w-[375px] text-center">Categories now show only what's left to add. Added habits are one tap away in a single footer, not scattered.</p>
+      </div>
+
+    </div>
+
+    <!-- Explanation callout -->
+    <div class="callout max-w-3xl mx-auto mt-12 p-6">
+      <h3 class="font-heading text-lg font-bold mb-3" style="color:#2D2A26;">Why this is better</h3>
+      <ul class="space-y-2 text-sm" style="color:#2D2A26;">
+        <li class="flex gap-2"><i data-lucide="check" style="width:16px;height:16px;color:#059669;flex-shrink:0;margin-top:2px;"></i><span><strong>Browsing stays focused on what's undone.</strong> Every category only shows habits you haven't added yet, so scanning is faster and less repetitive.</span></li>
+        <li class="flex gap-2"><i data-lucide="check" style="width:16px;height:16px;color:#059669;flex-shrink:0;margin-top:2px;"></i><span><strong>Added habits are still reachable.</strong> They live in one collapsed "Added · N" section at the bottom — never hidden, just out of the way until you want them.</span></li>
+        <li class="flex gap-2"><i data-lucide="check" style="width:16px;height:16px;color:#059669;flex-shrink:0;margin-top:2px;"></i><span><strong>Category clutter drops.</strong> A category with everything already added disappears from the browse list entirely instead of showing a wall of "Added" pills.</span></li>
+        <li class="flex gap-2"><i data-lucide="check" style="width:16px;height:16px;color:#059669;flex-shrink:0;margin-top:2px;"></i><span><strong>Search still works everywhere.</strong> Typing filters both the active categories and the Added list together, so nothing gets lost.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

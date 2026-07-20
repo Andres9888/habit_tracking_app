@@ -1,14 +1,13 @@
 /**
- * Habit row — Version B "confidence-first" card. Reads full-width, shows an
- * always-on "Why it works" teaser and meta chips, and opens the detail view
- * (via the card body or the footer's "How it works" affordance).
- * The footer + Add pill creates the habit in one tap.
+ * Habit row — full-width "confidence-first" card mirroring the habit-library
+ * mock: icon + serif name, description with an inline "Details ›" affordance,
+ * a "Start small" teaser, and a foot row that pairs the duration pill with the
+ * + Add button. Tapping the card body opens the science detail view.
  */
 
 import { View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { TemplateReadRowFooter } from './TemplateReadRowFooter';
 import { TemplateReadRowHeader } from './TemplateReadRowHeader';
 import { TemplateReadRowMeta } from './TemplateReadRowMeta';
 import { TemplateReadRowTeaser } from './TemplateReadRowTeaser';
@@ -43,13 +42,11 @@ export function TemplateReadRow({
       <View style={[s.card, { backgroundColor: surface }]}>
         <TemplateReadRowHeader item={item} onPreview={onPreview} />
         <TemplateReadRowTeaser item={item} />
-        <TemplateReadRowMeta item={item} />
-        <TemplateReadRowFooter
+        <TemplateReadRowMeta
           importingTemplateId={importingTemplateId}
           isImported={isImported}
           item={item}
           onImport={onImport}
-          onPreview={onPreview}
         />
       </View>
     </View>

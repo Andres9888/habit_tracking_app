@@ -1,7 +1,7 @@
 /**
- * Always-on confidence teaser (Version B). Prefers a curated "Why it works"
- * line; when a habit has none, falls back to its "Start small" tip so the
- * box stays populated. Full science lives in the detail view.
+ * Always-on "Start small" teaser box, per the habit-library mock. Falls back
+ * to the "Why it works" lead when a habit has no start-small tip so the box
+ * stays populated. Full science lives in the detail view.
  */
 
 import { Text, View } from 'react-native';
@@ -15,10 +15,10 @@ interface TemplateReadRowTeaserProps {
 
 export function TemplateReadRowTeaser({ item }: TemplateReadRowTeaserProps) {
   const { colors } = useThemeColors();
-  const why = item.lead ?? item.evidence ?? null;
-  const text = why ?? item.startSmallVersion ?? null;
+  const startSmall = item.startSmallVersion ?? null;
+  const text = startSmall ?? item.lead ?? item.evidence ?? null;
   if (!text) return null;
-  const label = why ? 'Why it works' : 'Start small';
+  const label = startSmall ? 'Start small' : 'Why it works';
 
   return (
     <View
