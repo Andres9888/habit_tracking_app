@@ -1,10 +1,8 @@
 /**
  * Spring-based press animations for BottomActionBar icon buttons and FAB.
  *
- * Each element has a unique micro-interaction signature:
- *   Settings:  scale 0.96 + gear rotation -20°
- *   Inspire:   scale 0.96 + sparkle wiggle (-5° → 5° → 0°)
- *   FAB:       scale 0.94 + lift -2px + ring pulse on release
+ * All elements share one press signature to feel like a single system:
+ *   scale 0.94 + lift -2px. The FAB additionally ring-pulses on release.
  */
 
 import {
@@ -13,7 +11,6 @@ import {
   useSharedValue,
   withSequence,
   withSpring,
-  withTiming,
   runOnJS,
 } from 'react-native-reanimated';
 import { SPRING_CONFIGS } from '../../../../utils/animations/helpers';
@@ -21,7 +18,6 @@ import { HapticPatterns } from '../../../../utils/haptics';
 
 export type { CelebrationAnimStyles } from './useCelebrationAnimations';
 
-const ICON_SCALE = 0.96;
 const FAB_SCALE = 0.94;
 const FAB_LIFT = -2;
 const SPRING = SPRING_CONFIGS.snappy;
@@ -32,9 +28,9 @@ const fireToggleHaptic = () => HapticPatterns.toggle();
 
 export function useBarAnimations() {
   const settingsScale = useSharedValue(1);
-  const settingsRotate = useSharedValue(0);
+  const settingsLift = useSharedValue(0);
   const templatesScale = useSharedValue(1);
-  const templatesRotate = useSharedValue(0);
+  const templatesLift = useSharedValue(0);
   const addScale = useSharedValue(1);
   const addLift = useSharedValue(0);
   const ringPulse = useSharedValue(1);
@@ -42,13 +38,13 @@ export function useBarAnimations() {
   const settingsStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: settingsScale.value },
-      { rotate: `${settingsRotate.value}deg` },
+      { translateY: settingsLift.value },
     ],
   }));
   const templatesStyle = useAnimatedStyle(() => ({
     transform: [
       { scale: templatesScale.value },
-      { rotate: `${templatesRotate.value}deg` },
+      { translateY: templatesLift.value },
     ],
   }));
   const addStyle = useAnimatedStyle(() => ({
@@ -63,6 +59,27 @@ export function useBarAnimations() {
     addLift.value = 0;
     ringPulse.value = 1;
   };
+
+  // Icon buttons (settings, templates) share one press signature: scale + lift
+  // with a tap haptic on press-in. Only the shared values differ.
+  const makePress = (
+    scale: typeof settingsScale,
+    lift: typeof settingsLift
+  ) => ({
+    pressIn: () => {
+      'worklet';
+      scale.value = withSpring(FAB_SCALE, SPRING);
+      lift.value = withSpring(FAB_LIFT, SPRING);
+      runOnJS(fireTapHaptic)();
+    },
+    pressOut: () => {
+      'worklet';
+      scale.value = withSpring(1, SPRING);
+      lift.value = withSpring(0, SPRING);
+    },
+  });
+  const settingsPress = makePress(settingsScale, settingsLift);
+  const templatesPress = makePress(templatesScale, templatesLift);
 
   return {
     addStyle,
@@ -81,31 +98,10 @@ export function useBarAnimations() {
         withSpring(1, SPRING)
       );
     },
-    onSettingsPressIn: () => {
-      'worklet';
-      settingsScale.value = withSpring(ICON_SCALE, SPRING);
-      settingsRotate.value = withSpring(-20, SPRING);
-      runOnJS(fireTapHaptic)();
-    },
-    onSettingsPressOut: () => {
-      'worklet';
-      settingsScale.value = withSpring(1, SPRING);
-      settingsRotate.value = withSpring(0, SPRING);
-    },
-    onTemplatesPressIn: () => {
-      'worklet';
-      templatesScale.value = withSpring(ICON_SCALE, SPRING);
-      templatesRotate.value = withSequence(
-        withTiming(-5, { duration: 60 }),
-        withTiming(5, { duration: 60 }),
-        withTiming(0, { duration: 50 })
-      );
-      runOnJS(fireTapHaptic)();
-    },
-    onTemplatesPressOut: () => {
-      'worklet';
-      templatesScale.value = withSpring(1, SPRING);
-    },
+    onSettingsPressIn: settingsPress.pressIn,
+    onSettingsPressOut: settingsPress.pressOut,
+    onTemplatesPressIn: templatesPress.pressIn,
+    onTemplatesPressOut: templatesPress.pressOut,
     resetAddPress,
     ringPulse,
     settingsStyle,
