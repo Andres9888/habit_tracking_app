@@ -3,6 +3,7 @@
  * "Research" chip when the habit carries a scientific reference.
  */
 
+import { memo } from 'react';
 import { Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -16,7 +17,7 @@ interface TemplateReadRowMetaProps {
   item: Doc<'templates'>;
 }
 
-export function TemplateReadRowMeta({ item }: TemplateReadRowMetaProps) {
+function TemplateReadRowMetaImpl({ item }: TemplateReadRowMetaProps) {
   const { colors } = useThemeColors();
   const metaLabel = getTemplateMetaLabel(item);
   // Suppress the chip when the teaser above is already showing evidence-backed
@@ -44,3 +45,5 @@ export function TemplateReadRowMeta({ item }: TemplateReadRowMetaProps) {
     </View>
   );
 }
+
+export const TemplateReadRowMeta = memo(TemplateReadRowMetaImpl);

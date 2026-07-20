@@ -4,6 +4,7 @@
  * Right: the + Add pill. Always rendered so every card can Add.
  */
 
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
@@ -20,7 +21,7 @@ interface TemplateReadRowFooterProps {
   onPreview: (template: Doc<'templates'>) => void;
 }
 
-export function TemplateReadRowFooter({
+function TemplateReadRowFooterImpl({
   importingTemplateId,
   isImported,
   item,
@@ -64,3 +65,5 @@ export function TemplateReadRowFooter({
     </View>
   );
 }
+
+export const TemplateReadRowFooter = memo(TemplateReadRowFooterImpl);

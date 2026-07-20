@@ -5,6 +5,7 @@
  * The footer + Add pill creates the habit in one tap.
  */
 
+import { memo } from 'react';
 import { View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -22,7 +23,7 @@ interface TemplateReadRowProps {
   onPreview: (template: Doc<'templates'>) => void;
 }
 
-export function TemplateReadRow({
+function TemplateReadRowImpl({
   importedTemplateIds,
   importingTemplateId,
   item,
@@ -55,3 +56,5 @@ export function TemplateReadRow({
     </View>
   );
 }
+
+export const TemplateReadRow = memo(TemplateReadRowImpl);

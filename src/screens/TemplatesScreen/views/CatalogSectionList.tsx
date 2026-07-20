@@ -4,6 +4,8 @@
  * followed by full-width HabitTemplateCard rows (matching the rest of the app).
  */
 
+import { useCallback, useMemo } from 'react';
+import type { SectionListRenderItem } from 'react-native';
 import { SectionList, StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { spacing } from '../../../theme/spacing';
@@ -30,45 +32,75 @@ interface CatalogSection {
 }
 
 export function CatalogSectionList(p: CatalogSectionListProps) {
-  const sections: CatalogSection[] = p.groups.map((group) => {
-    const meta = getCategoryMeta(group.category);
-    return {
-      data: group.templates,
-      icon: group.icon,
-      iconBg: meta.bgColor,
-      key: group.category,
-      label: group.label,
-      subtitle: meta.subtitle,
-    };
-  });
+  const {
+    groups,
+    importedTemplateIds,
+    importingTemplateId,
+    onImport,
+    onPreview,
+  } = p;
+
+  const sections: CatalogSection[] = useMemo(
+    () =>
+      groups.map((group) => {
+        const meta = getCategoryMeta(group.category);
+        return {
+          data: group.templates,
+          icon: group.icon,
+          iconBg: meta.bgColor,
+          key: group.category,
+          label: group.label,
+          subtitle: meta.subtitle,
+        };
+      }),
+    [groups]
+  );
+
+  const renderItem: SectionListRenderItem<
+    Doc<'templates'>,
+    CatalogSection
+  > = useCallback(
+    ({ item }) => (
+      <TemplateReadRow
+        importedTemplateIds={importedTemplateIds}
+        importingTemplateId={importingTemplateId}
+        item={item}
+        onImport={onImport}
+        onPreview={onPreview}
+      />
+    ),
+    [importedTemplateIds, importingTemplateId, onImport, onPreview]
+  );
+
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: CatalogSection }) => (
+      <View style={s.header}>
+        <SectionHeader
+          icon={section.icon}
+          iconBg={section.iconBg}
+          subtitle={section.subtitle}
+          title={section.label}
+        />
+      </View>
+    ),
+    []
+  );
 
   return (
     <SectionList
       contentContainerStyle={s.list}
+      initialNumToRender={6}
       keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
-      renderItem={({ item }) => (
-        <TemplateReadRow
-          importedTemplateIds={p.importedTemplateIds}
-          importingTemplateId={p.importingTemplateId}
-          item={item}
-          onImport={p.onImport}
-          onPreview={p.onPreview}
-        />
-      )}
-      renderSectionHeader={({ section }) => (
-        <View style={s.header}>
-          <SectionHeader
-            icon={section.icon}
-            iconBg={section.iconBg}
-            subtitle={section.subtitle}
-            title={section.label}
-          />
-        </View>
-      )}
+      maxToRenderPerBatch={6}
+      removeClippedSubviews
+      renderItem={renderItem}
+      renderSectionHeader={renderSectionHeader}
       sections={sections}
       showsVerticalScrollIndicator={false}
       stickySectionHeadersEnabled={false}
+      updateCellsBatchingPeriod={32}
+      windowSize={5}
     />
   );
 }

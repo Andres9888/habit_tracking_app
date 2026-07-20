@@ -3,6 +3,7 @@
  * Full-width reading column; meta chips and Add live below in their own rows.
  */
 
+import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -13,7 +14,7 @@ interface TemplateReadRowHeaderProps {
   onPreview: (template: Doc<'templates'>) => void;
 }
 
-export function TemplateReadRowHeader({
+function TemplateReadRowHeaderImpl({
   item,
   onPreview,
 }: TemplateReadRowHeaderProps) {
@@ -47,3 +48,5 @@ export function TemplateReadRowHeader({
     </Pressable>
   );
 }
+
+export const TemplateReadRowHeader = memo(TemplateReadRowHeaderImpl);

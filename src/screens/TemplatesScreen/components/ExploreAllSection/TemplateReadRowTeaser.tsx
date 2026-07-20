@@ -4,6 +4,7 @@
  * box stays populated. Full science lives in the detail view.
  */
 
+import { memo } from 'react';
 import { Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
@@ -13,7 +14,7 @@ interface TemplateReadRowTeaserProps {
   item: Doc<'templates'>;
 }
 
-export function TemplateReadRowTeaser({ item }: TemplateReadRowTeaserProps) {
+function TemplateReadRowTeaserImpl({ item }: TemplateReadRowTeaserProps) {
   const { colors } = useThemeColors();
   const why = item.lead ?? item.evidence ?? null;
   const text = why ?? item.startSmallVersion ?? null;
@@ -39,3 +40,5 @@ export function TemplateReadRowTeaser({ item }: TemplateReadRowTeaserProps) {
     </View>
   );
 }
+
+export const TemplateReadRowTeaser = memo(TemplateReadRowTeaserImpl);
