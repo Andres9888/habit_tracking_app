@@ -10,6 +10,7 @@ import { usePremium } from '../../../../hooks/usePremium';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { exportData, prepareExportData } from '../../../../utils/exportData';
 import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
+import { useWarmMountWindow } from '../../../../components/Modal/useWarmMountWindow';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 type HabitDoc = Doc<'habits'>;
@@ -78,6 +79,7 @@ export function SettingsModalSection({
   const streakReminders = useStreakReminderSettings();
   const { isPremium } = usePremium();
   const convex = useConvex();
+  const warmMount = useWarmMountWindow(showSettings);
 
   const runHabitsExport = useCallback(
     async (format: 'csv' | 'json') => {
@@ -175,6 +177,7 @@ export function SettingsModalSection({
         streakRemindersEnabled={streakReminders.enabled}
         streakReminderTime={streakReminders.reminderTime}
         visible={showSettings}
+        warmMount={warmMount}
         onChangeCompletionSoundEnabled={(value) =>
           onSettingsChange({ completionSoundEnabled: value })
         }

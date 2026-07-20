@@ -16,6 +16,9 @@ function shouldSkipPreload(): boolean {
   return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 }
 
+// React tree warm mounts are scheduled separately and intentionally still run
+// in Expo Go, where this module preload is unavailable.
+
 export function preloadPostLaunchAppParts(): Promise<void> {
   if (shouldSkipPreload()) {
     return Promise.resolve();

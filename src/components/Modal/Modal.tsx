@@ -14,6 +14,7 @@ import { useModalStyles } from './useModalStyles';
 import { useModalGestures } from './useModalGestures';
 import { ModalBackdrop } from './ModalBackdrop';
 import { ModalContent } from './ModalContent';
+import { ModalWarmMountHost } from './ModalWarmMountHost';
 
 export function Modal({
   visible,
@@ -24,6 +25,7 @@ export function Modal({
   disableGestureClose = false,
   backdropOpacity = 0.5,
   inline = false,
+  warmMount = false,
   style,
   respectReduceMotion = true,
   skipAnimation = false,
@@ -42,7 +44,10 @@ export function Modal({
       setShouldRender(false);
       return;
     }
-    const timeout = setTimeout(() => setShouldRender(false), EXIT_DURATIONS[variant]);
+    const timeout = setTimeout(
+      () => setShouldRender(false),
+      EXIT_DURATIONS[variant]
+    );
     return () => clearTimeout(timeout);
   }, [visible, reduceMotion, variant]);
   const animationValues = useModalAnimations({
@@ -96,7 +101,11 @@ export function Modal({
     </>
   );
 
-  if (!shouldRender) return null;
+  if (!shouldRender) {
+    return warmMount ? (
+      <ModalWarmMountHost>{children}</ModalWarmMountHost>
+    ) : null;
+  }
 
   if (inline) {
     return (

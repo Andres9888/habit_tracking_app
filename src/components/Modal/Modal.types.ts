@@ -18,6 +18,9 @@ export interface ModalProps {
   /** Render without a nested native modal container (useful inside another modal) */
   inline?: boolean;
 
+  /** Mount children once in a hidden inert host before the modal opens */
+  warmMount?: boolean;
+
   /** Modal variant */
   variant?: ModalVariant;
 

@@ -38,6 +38,7 @@ export interface SettingsModalProps {
   onClose: () => void;
   showCharacterScreen?: boolean;
   visible: boolean;
+  warmMount?: boolean;
   // Streak reminders
   streakRemindersEnabled?: boolean;
   streakReminderTime?: string;

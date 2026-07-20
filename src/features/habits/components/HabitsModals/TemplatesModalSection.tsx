@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ErrorBoundary from '../../../../components/ErrorBoundary';
 import Modal from '../../../../components/Modal';
+import { useWarmMountWindow } from '../../../../components/Modal/useWarmMountWindow';
 import { ModalCloseButton } from '../../../../components/ui/ModalCloseButton';
 import TemplatesScreen from '../../../../screens/TemplatesScreen';
 import { useWarmTemplatesCache } from '../../../../screens/TemplatesScreen/useWarmTemplatesCache';
@@ -22,6 +23,7 @@ export function TemplatesModalSection({
   const insets = useSafeAreaInsets();
   const { colors } = useThemeColors();
   const { trigger } = useHaptics();
+  const warmMount = useWarmMountWindow(showTemplatesScreen);
   useWarmTemplatesCache();
 
   const handleClose = () => {
@@ -43,6 +45,7 @@ export function TemplatesModalSection({
       backdropOpacity={0}
       variant='fullScreen'
       visible={showTemplatesScreen}
+      warmMount={warmMount}
       onClose={handleClose}
       style={{
         borderTopLeftRadius: 0,

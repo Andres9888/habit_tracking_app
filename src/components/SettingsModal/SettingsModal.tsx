@@ -35,6 +35,7 @@ function SettingsModalContent(props: SettingsModalProps) {
       backdropOpacity={0}
       variant='fullScreen'
       visible={props.visible}
+      warmMount={props.warmMount}
       onClose={handleRequestClose}
       style={fullScreenModalStyle}
     >
