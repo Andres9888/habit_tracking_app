@@ -6,6 +6,7 @@
 
 import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
+import { useDeferredMount } from '../../hooks/useDeferredMount';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals, TemplatesLoadingState } from './components';
@@ -27,6 +28,7 @@ function TemplatesScreenContent({
   onViewHabit,
 }: TemplatesScreenContentProps) {
   const { data, handlers, packConfirm, state } = useTemplatesScreenProps();
+  const ready = useDeferredMount();
 
   const handleDismissFeedback = useCallback(() => {
     state.setShowToast(false);
@@ -91,7 +93,9 @@ function TemplatesScreenContent({
     void packConfirm.handleConfirm();
   };
 
-  if (data.isLoading && !data.allTemplates?.length) {
+  // Hold the loading state through the modal open animation; the heavy catalog
+  // tree mounts one frame after interactions settle (warm cache still fast).
+  if (!ready || (data.isLoading && !data.allTemplates?.length)) {
     return <TemplatesLoadingState />;
   }
 
