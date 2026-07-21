@@ -11,6 +11,7 @@ import {
   Easing,
 } from 'react-native-reanimated';
 import { Springs } from '../../../constants/motion';
+import { durations, enterEasing } from '../../../theme/animations';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 interface UseEntranceAnimationsProps {
@@ -47,19 +48,19 @@ export const useEntranceAnimations = ({
         iconScale.value = 1;
         closeButtonOpacity.value = 1;
       } else {
-        // Fast entrance: the page should feel instant — long staggers read
-        // as the app being slow, especially from the View details link.
+        // Entrance uses the shared sheet cadence so the slide-up matches the
+        // Add-button modal open and every other sheet surface in the app.
         backdropOpacity.value = withTiming(0.5, {
-          duration: 180,
-          easing: Easing.out(Easing.cubic),
+          duration: durations.sheet,
+          easing: enterEasing,
         });
         contentTranslateY.value = withTiming(0, {
-          duration: 220,
-          easing: Easing.out(Easing.cubic),
+          duration: durations.sheet,
+          easing: enterEasing,
         });
         contentOpacity.value = withTiming(1, {
-          duration: 200,
-          easing: Easing.out(Easing.cubic),
+          duration: durations.sheet,
+          easing: enterEasing,
         });
         closeButtonOpacity.value = withDelay(
           80,
