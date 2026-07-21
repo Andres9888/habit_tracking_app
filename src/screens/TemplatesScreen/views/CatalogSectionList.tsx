@@ -28,7 +28,6 @@ interface CatalogSection {
   iconBg: string;
   key: string;
   label: string;
-  subtitle?: string;
 }
 
 export function CatalogSectionList(p: CatalogSectionListProps) {
@@ -50,7 +49,6 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
           iconBg: meta.bgColor,
           key: group.category,
           label: group.label,
-          subtitle: meta.subtitle,
         };
       }),
     [groups]
@@ -78,7 +76,6 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
         <SectionHeader
           icon={section.icon}
           iconBg={section.iconBg}
-          subtitle={section.subtitle}
           title={section.label}
         />
       </View>
