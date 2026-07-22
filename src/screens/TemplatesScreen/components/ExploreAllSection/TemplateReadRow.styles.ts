@@ -2,7 +2,7 @@
  * Styles for TemplateReadRow — "Habit Browser" card:
  * serif title beside a tinted icon, description, an outlined "Details" pill,
  * a recessed "START SMALL" box, and a bottom rail pairing a meta pill with a
- * circular Add / Added toggle. All colors come from the theme at render time.
+ * labeled Add / Added pill. All colors come from the theme at render time.
  */
 
 import { StyleSheet } from 'react-native';
@@ -60,7 +60,7 @@ export const s = StyleSheet.create({
     textTransform: 'uppercase',
   },
   startText: { ...typography.body, fontSize: 15, lineHeight: 21, marginTop: 4 },
-  // Bottom rail: meta pill + circular Add / Added button pushed right.
+  // Bottom rail: meta pill + labeled Add / Added pill pushed right.
   footer: {
     alignItems: 'center',
     flexDirection: 'row',

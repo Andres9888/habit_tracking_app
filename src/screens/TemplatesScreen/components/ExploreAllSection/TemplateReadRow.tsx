@@ -1,7 +1,7 @@
 /**
  * Habit Browser card — a tinted icon and serif title, the habit description,
  * an outlined "Details" pill, a "START SMALL" box, and a bottom rail pairing a
- * meta pill with a circular Add / Added toggle. Full-width; one per habit.
+ * meta pill with a labeled Add / Added pill. Full-width; one per habit.
  */
 
 import { memo } from 'react';
