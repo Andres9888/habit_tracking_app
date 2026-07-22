@@ -42,8 +42,8 @@ export function CatalogFilteredList(p: CatalogFilteredListProps) {
         return (
           <Animated.View entering={entering}>
             <TemplateReadRow
-              importedTemplateIds={p.importedTemplateIds}
-              importingTemplateId={p.importingTemplateId}
+              isImported={p.importedTemplateIds.has(item._id)}
+              isImporting={p.importingTemplateId === item._id}
               item={item}
               onImport={p.onImport}
               onPreview={p.onPreview}

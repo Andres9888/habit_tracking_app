@@ -28,6 +28,7 @@ interface CatalogSection {
   iconBg: string;
   key: string;
   label: string;
+  subtitle?: string;
 }
 
 export function CatalogSectionList(p: CatalogSectionListProps) {
@@ -49,6 +50,7 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
           iconBg: meta.bgColor,
           key: group.category,
           label: group.label,
+          subtitle: group.subtitle,
         };
       }),
     [groups]
@@ -60,8 +62,8 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
   > = useCallback(
     ({ item }) => (
       <TemplateReadRow
-        importedTemplateIds={importedTemplateIds}
-        importingTemplateId={importingTemplateId}
+        isImported={importedTemplateIds.has(item._id)}
+        isImporting={importingTemplateId === item._id}
         item={item}
         onImport={onImport}
         onPreview={onPreview}
@@ -76,6 +78,7 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
         <SectionHeader
           icon={section.icon}
           iconBg={section.iconBg}
+          subtitle={section.subtitle}
           title={section.label}
         />
       </View>

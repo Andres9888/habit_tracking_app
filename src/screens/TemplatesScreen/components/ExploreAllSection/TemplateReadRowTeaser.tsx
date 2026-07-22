@@ -1,7 +1,7 @@
 /**
- * Always-on confidence teaser (Version B). Prefers a curated "Why it works"
- * line; when a habit has none, falls back to its "Start small" tip so the
- * box stays populated. Full science lives in the detail view.
+ * "START SMALL" box — the laughably-easy floor version of the habit
+ * (BJ Fogg / Atomic Habits). Recessed tonal panel; hidden when the template
+ * has no start-small version.
  */
 
 import { memo } from 'react';
@@ -16,24 +16,17 @@ interface TemplateReadRowTeaserProps {
 
 function TemplateReadRowTeaserImpl({ item }: TemplateReadRowTeaserProps) {
   const { colors } = useThemeColors();
-  const why = item.lead ?? item.evidence ?? null;
-  const text = why ?? item.startSmallVersion ?? null;
+  const text = item.startSmallVersion?.trim();
   if (!text) return null;
-  const label = why ? 'Why it works' : 'Start small';
 
   return (
-    <View
-      style={[
-        s.teaser,
-        { backgroundColor: colors.surface, borderColor: colors.border },
-      ]}
-    >
-      <Text style={[s.teaserLabel, { color: colors.text.tertiary }]}>
-        {label}
+    <View style={[s.startBox, { backgroundColor: colors.card }]}>
+      <Text style={[s.startLabel, { color: colors.text.tertiary }]}>
+        Start small
       </Text>
       <Text
         numberOfLines={3}
-        style={[s.teaserText, { color: colors.text.primary }]}
+        style={[s.startText, { color: colors.text.primary }]}
       >
         {text}
       </Text>

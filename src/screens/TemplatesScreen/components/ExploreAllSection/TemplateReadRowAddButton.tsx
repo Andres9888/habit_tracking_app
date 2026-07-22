@@ -1,43 +1,43 @@
 /**
- * Compact inline pill add button with bounce animation.
+ * Circular Add / Added toggle for the Habit Browser card. Green "+" to add,
+ * a tinted check once imported. Success haptic + bounce come from the shared
+ * useImportBounce hook, so behavior stays in lockstep with ListCardAddButton.
  */
 
+import { memo } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../../theme/spacing';
-import { typography, fontWeights } from '../../../../theme/typography';
+import { borderRadius } from '../../../../theme/spacing';
+import { useImportBounce } from '../../views/TemplateListCard/useImportBounce';
 import { triggerHaptic } from '@/utils/haptics';
-import { useImportBounce } from './useImportBounce';
-import type { ListCardAddButtonProps } from './TemplateListCard.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export function ListCardAddButton({
+interface TemplateReadRowAddButtonProps {
+  isImported: boolean;
+  isImporting: boolean;
+  name: string;
+  onImport: () => void;
+}
+
+function TemplateReadRowAddButtonImpl({
   isImported,
   isImporting,
   name,
   onImport,
-}: ListCardAddButtonProps) {
+}: TemplateReadRowAddButtonProps) {
   const { colors } = useThemeColors();
   const animatedStyle = useImportBounce(isImported);
+  const bg = isImported ? colors.status.successLight : colors.status.success;
 
   return (
     <AnimatedPressable
       accessibilityLabel={isImported ? `${name} added` : `Add ${name} habit`}
       accessibilityRole='button'
       disabled={isImported || isImporting}
-      style={[
-        s.button,
-        {
-          backgroundColor: isImported
-            ? colors.primary[100]
-            : colors.primary[600],
-        },
-        animatedStyle,
-      ]}
+      style={[s.button, { backgroundColor: bg }, animatedStyle]}
       onPress={(event) => {
         event?.stopPropagation?.();
         void triggerHaptic('selection');
@@ -47,33 +47,24 @@ export function ListCardAddButton({
       {isImporting ? (
         <ActivityIndicator color={colors.text.inverse} size='small' />
       ) : isImported ? (
-        <>
-          <Check
-            color={colors.primary[700]}
-            size={iconSizes.small}
-            strokeWidth={3}
-          />
-          <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
-        </>
+        <Check color={colors.status.successText} size={26} strokeWidth={3} />
       ) : (
-        <Text style={[s.label, { color: colors.text.inverse }]}>+ Add</Text>
+        <Text style={[s.plus, { color: colors.text.inverse }]}>+</Text>
       )}
     </AnimatedPressable>
   );
 }
 
+export const TemplateReadRowAddButton = memo(TemplateReadRowAddButtonImpl);
+
 const s = StyleSheet.create({
   button: {
     alignItems: 'center',
     borderRadius: borderRadius.full,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    height: 30,
+    flexShrink: 0,
+    height: 52,
     justifyContent: 'center',
-    paddingHorizontal: spacing.md,
+    width: 52,
   },
-  label: {
-    ...typography.caption,
-    fontWeight: fontWeights.bold,
-  },
+  plus: { fontSize: 30, fontWeight: '600', lineHeight: 34 },
 });
