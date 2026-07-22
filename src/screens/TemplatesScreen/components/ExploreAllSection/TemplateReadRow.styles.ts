@@ -1,7 +1,8 @@
 /**
- * Styles for TemplateReadRow — Version B "confidence-first" card:
- * full-width read, an always-on "Why it works" teaser, a meta-chip row, and
- * a footer that pairs a "How it works" detail affordance with + Add.
+ * Styles for TemplateReadRow — "Habit Browser" card:
+ * serif title beside a tinted icon, description, an outlined "Details" pill,
+ * a recessed "START SMALL" box, and a bottom rail pairing a meta pill with a
+ * circular Add / Added toggle. All colors come from the theme at render time.
  */
 
 import { StyleSheet } from 'react-native';
@@ -9,91 +10,68 @@ import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 
 export const s = StyleSheet.create({
-  card: { borderRadius: borderRadius.large, overflow: 'hidden' },
-  cardWrap: {
+  card: {
     ...shadows.card,
     borderRadius: borderRadius.large,
     borderWidth: 1,
     marginHorizontal: spacing.base,
     marginVertical: spacing.sm,
+    padding: 20,
   },
-  chip: {
-    alignSelf: 'flex-start',
-    borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-    marginTop: spacing.md,
-    paddingHorizontal: spacing.base,
-  },
-  chipText: {
-    ...typography.caption,
-    fontSize: 11,
-    fontWeight: fontWeights.semibold,
-  },
-  description: { ...typography.bodySmall, marginTop: spacing.sm },
-  emoji: { fontSize: 22 },
-  // Footer: "How it works" detail affordance (left) + Add pill (right).
-  footChev: {
-    alignItems: 'center',
-    borderRadius: 9,
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
-  footCopy: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginRight: spacing.base,
-  },
-  footTitle: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
-  footer: {
-    alignItems: 'center',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.md,
-    justifyContent: 'space-between',
-    marginHorizontal: spacing.base,
-    marginTop: spacing.md,
-    paddingBottom: spacing.base,
-    paddingTop: spacing.md,
-  },
+  // Header: tinted icon square + serif title.
+  titleRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.md },
   iconBox: {
     alignItems: 'center',
     borderRadius: borderRadius.medium,
     flexShrink: 0,
-    height: 44,
+    height: 52,
     justifyContent: 'center',
-    width: 44,
+    width: 52,
   },
-  header: { padding: spacing.base, paddingBottom: 0 },
-  name: { ...typography.body, flex: 1, fontWeight: fontWeights.semibold },
-  titleRow: {
+  emoji: { fontSize: 26 },
+  name: { ...typography.heading1, flex: 1, fontSize: 21, lineHeight: 26 },
+  description: {
+    ...typography.body,
+    fontSize: 15,
+    lineHeight: 22,
+    marginTop: spacing.md,
+  },
+  // Outlined "Details ›" pill — self-start so it hugs its content.
+  detailsPill: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    borderRadius: borderRadius.full,
+    borderWidth: 1.5,
+    flexDirection: 'row',
+    gap: 4,
+    marginTop: spacing.md,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  detailsText: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
+  // Recessed "START SMALL" box.
+  startBox: { borderRadius: 16, marginTop: spacing.md, padding: 14 },
+  startLabel: {
+    fontSize: 11,
+    fontWeight: fontWeights.bold,
+    letterSpacing: 0.9,
+    textTransform: 'uppercase',
+  },
+  startText: { ...typography.body, fontSize: 15, lineHeight: 21, marginTop: 4 },
+  // Bottom rail: meta pill + circular Add / Added button pushed right.
+  footer: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: spacing.md,
+    marginTop: spacing.lg,
   },
-  // Always-on "Why it works" teaser panel.
-  teaser: {
-    borderRadius: borderRadius.medium,
-    borderWidth: 1,
-    marginHorizontal: spacing.base,
-    marginTop: spacing.md,
-    padding: spacing.md,
+  addSlot: { flexShrink: 0, marginLeft: 'auto' },
+  metaPill: {
+    alignSelf: 'flex-start',
+    borderRadius: borderRadius.full,
+    flexShrink: 1,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
   },
-  teaserLabel: {
-    fontSize: 10,
-    fontWeight: fontWeights.bold,
-    letterSpacing: 0.8,
-    marginBottom: 5,
-    textTransform: 'uppercase',
-  },
-  teaserText: { ...typography.caption, lineHeight: 19 },
-  textMin: { minWidth: 0 },
+  metaPillText: { ...typography.bodySmall, fontSize: 14 },
 });

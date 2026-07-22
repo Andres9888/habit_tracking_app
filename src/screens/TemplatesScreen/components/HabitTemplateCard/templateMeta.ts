@@ -14,23 +14,3 @@ export function getTemplateMetaLabel(template: Doc<'templates'>): string {
   if (template.frequency) parts.push(capitalize(template.frequency));
   return parts.join(' · ');
 }
-
-const MAX_CITATION_LENGTH = 26;
-
-export function getShortCitation(template: Doc<'templates'>): string | null {
-  const reference = template.scientificReference?.trim();
-  if (!reference) return null;
-  const short = reference.split(' - ')[0]?.trim();
-  if (short && short.length <= MAX_CITATION_LENGTH && short.includes('(')) {
-    return short;
-  }
-  return 'Research-backed';
-}
-
-export function getScienceDoorLabel(template: Doc<'templates'>): string {
-  const citation = getShortCitation(template);
-  if (citation && citation !== 'Research-backed') {
-    return `🔬 ${citation} ›`;
-  }
-  return '🔬 Why it works ›';
-}

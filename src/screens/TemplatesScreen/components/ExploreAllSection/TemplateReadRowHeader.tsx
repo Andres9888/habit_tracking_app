@@ -1,6 +1,6 @@
 /**
- * Top row of TemplateReadRow (Version B) — icon, name, description.
- * Full-width reading column; meta chips and Add live below in their own rows.
+ * Top of the Habit Browser card — tinted icon square, serif title, and the
+ * habit description. Tapping the header opens the detail view.
  */
 
 import { memo } from 'react';
@@ -25,7 +25,6 @@ function TemplateReadRowHeaderImpl({
     <Pressable
       accessibilityLabel={`${item.name} habit`}
       accessibilityRole='button'
-      style={s.header}
       onPress={() => onPreview(item)}
     >
       <View style={s.titleRow}>

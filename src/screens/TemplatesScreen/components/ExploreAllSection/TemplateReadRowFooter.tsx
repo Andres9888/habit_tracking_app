@@ -1,67 +1,53 @@
 /**
- * Footer for TemplateReadRow (Version B). Left: a "How it works"
- * affordance (green chevron + short copy) that opens the detail view.
- * Right: the + Add pill. Always rendered so every card can Add.
+ * Bottom rail of the Habit Browser card. Left: a meta pill (duration ·
+ * frequency). Right: the circular Add / Added toggle that creates the habit.
  */
 
-import { memo } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { ChevronRight } from 'lucide-react-native';
+import { memo, useCallback } from 'react';
+import { Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { iconSizes } from '@/theme/iconSizes';
-import { ListCardAddButton } from '../../views/TemplateListCard/ListCardAddButton';
+import { getTemplateMetaLabel } from '../HabitTemplateCard/templateMeta';
+import { TemplateReadRowAddButton } from './TemplateReadRowAddButton';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowFooterProps {
-  importingTemplateId: string | null;
   isImported: boolean;
+  isImporting: boolean;
   item: Doc<'templates'>;
   onImport: (template: Doc<'templates'>) => void;
-  onPreview: (template: Doc<'templates'>) => void;
 }
 
 function TemplateReadRowFooterImpl({
-  importingTemplateId,
   isImported,
+  isImporting,
   item,
   onImport,
-  onPreview,
 }: TemplateReadRowFooterProps) {
   const { colors } = useThemeColors();
-  const isImporting = importingTemplateId === item._id;
+  const metaLabel = getTemplateMetaLabel(item);
+  const handleImport = useCallback(() => onImport(item), [item, onImport]);
 
   return (
-    <View style={[s.footer, { borderTopColor: colors.border }]}>
-      <Pressable
-        accessibilityLabel={`Science and how ${item.name} works`}
-        accessibilityRole='button'
-        style={s.footCopy}
-        onPress={() => onPreview(item)}
-      >
-        <View style={s.footChev}>
-          <ChevronRight
-            color={colors.text.tertiary}
-            size={iconSizes.small}
-            strokeWidth={2}
-          />
-        </View>
-        <View style={s.textMin}>
+    <View style={s.footer}>
+      {metaLabel ? (
+        <View style={[s.metaPill, { backgroundColor: colors.card }]}>
           <Text
             numberOfLines={1}
-            style={[s.footTitle, { color: colors.text.secondary }]}
+            style={[s.metaPillText, { color: colors.text.secondary }]}
           >
-            How it works
+            🕐 {metaLabel}
           </Text>
         </View>
-      </Pressable>
-      <ListCardAddButton
-        isImported={isImported}
-        isImporting={isImporting}
-        name={item.name}
-        size='regular'
-        onImport={() => onImport(item)}
-      />
+      ) : null}
+      <View style={s.addSlot}>
+        <TemplateReadRowAddButton
+          isImported={isImported}
+          isImporting={isImporting}
+          name={item.name}
+          onImport={handleImport}
+        />
+      </View>
     </View>
   );
 }
