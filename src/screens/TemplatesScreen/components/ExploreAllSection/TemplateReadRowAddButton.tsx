@@ -9,7 +9,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
 import { borderRadius } from '../../../../theme/spacing';
-import { browserPalette } from '../../browserPalette';
+import { useBrowserPalette } from '../../browserPalette';
 import { useImportBounce } from '../../views/TemplateListCard/useImportBounce';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -28,8 +28,9 @@ function TemplateReadRowAddButtonImpl({
   name,
   onImport,
 }: TemplateReadRowAddButtonProps) {
+  const palette = useBrowserPalette();
   const animatedStyle = useImportBounce(isImported);
-  const bg = isImported ? browserPalette.addedBg : browserPalette.addBg;
+  const bg = isImported ? palette.addedBg : palette.addBg;
 
   return (
     <AnimatedPressable
@@ -44,11 +45,11 @@ function TemplateReadRowAddButtonImpl({
       }}
     >
       {isImporting ? (
-        <ActivityIndicator color={browserPalette.textInverse} size='small' />
+        <ActivityIndicator color={palette.textInverse} size='small' />
       ) : isImported ? (
-        <Check color={browserPalette.addedFg} size={26} strokeWidth={3} />
+        <Check color={palette.addedFg} size={26} strokeWidth={3} />
       ) : (
-        <Text style={[s.plus, { color: browserPalette.textInverse }]}>+</Text>
+        <Text style={[s.plus, { color: palette.textInverse }]}>+</Text>
       )}
     </AnimatedPressable>
   );

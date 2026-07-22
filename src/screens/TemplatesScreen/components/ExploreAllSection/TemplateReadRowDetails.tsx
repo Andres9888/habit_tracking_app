@@ -6,7 +6,7 @@
 import { memo, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { browserPalette } from '../../browserPalette';
+import { useBrowserPalette } from '../../browserPalette';
 import { DetailsChevron } from '../DetailsChevron';
 import { s } from './TemplateReadRow.styles';
 
@@ -19,6 +19,7 @@ function TemplateReadRowDetailsImpl({
   item,
   onPreview,
 }: TemplateReadRowDetailsProps) {
+  const palette = useBrowserPalette();
   const [pressed, setPressed] = useState(false);
 
   return (
@@ -29,10 +30,8 @@ function TemplateReadRowDetailsImpl({
       style={[
         s.detailsPill,
         {
-          backgroundColor: pressed
-            ? browserPalette.startSmallBg
-            : browserPalette.detailsFill,
-          borderColor: browserPalette.border,
+          backgroundColor: pressed ? palette.startSmallBg : palette.detailsFill,
+          borderColor: palette.border,
         },
       ]}
       onPressIn={() => setPressed(true)}
@@ -42,7 +41,7 @@ function TemplateReadRowDetailsImpl({
         onPreview(item);
       }}
     >
-      <Text style={[s.detailsText, { color: browserPalette.textSecondary }]}>
+      <Text style={[s.detailsText, { color: palette.textSecondary }]}>
         Details
       </Text>
       <DetailsChevron />

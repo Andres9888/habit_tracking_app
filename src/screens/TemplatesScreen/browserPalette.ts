@@ -1,36 +1,78 @@
 /**
- * browserPalette — warm cream palette for the Habit Browser (Templates
- * library) screen, imported from the "Habit Browser Final" Claude Design.
+ * browserPalette — theme-aware palette for the Habit Browser (Templates
+ * library) screen, evolved from the "Habit Browser Final" Claude Design.
  *
- * Screen-scoped by design: these constants are applied directly on the
- * browse-path components instead of the global light/dark theme, so the
- * browser keeps its editorial cream look in either app theme. The rest of
- * the app continues to use `useThemeColors()` untouched.
+ * Keeps the editorial look (light cards on warm bg, ink chips, amber icon
+ * tiles) while snapping every value to the app's semantic theme tokens, so
+ * the screen adapts to dark mode like the rest of the app.
  */
 
-export const browserPalette = {
+import { useMemo } from 'react';
+import { useThemeColors } from '../../theme/ThemeContext';
+import type { SemanticColors } from '../../theme/darkColors';
+
+export interface BrowserPalette {
   // Surfaces
-  background: '#EFEBE2', // Screen background
-  card: '#FAF7F0', // Habit card surface
-  border: '#DDD6C6', // Card / control hairline
-  detailsFill: '#FFFFFF', // "Details" pill fill on the warm card
-  startSmallBg: '#EDE9DF', // Recessed "START SMALL" box
-  metaPillBg: '#EDE9DF', // Footer duration · frequency pill
-  closeBg: '#E5E0D4', // Circular header close button
-  iconTile: '#F8E9CE', // Section-header emoji tile
+  background: string;
+  card: string;
+  border: string;
+  detailsFill: string;
+  startSmallBg: string;
+  metaPillBg: string;
+  closeBg: string;
+  iconTile: string;
 
   // Text
-  textPrimary: '#22201B',
-  textSecondary: '#545046',
-  textTertiary: '#8C877B',
-  textInverse: '#FAF7F0', // On the dark ink chip / green add button
+  textPrimary: string;
+  textSecondary: string;
+  textTertiary: string;
+  textInverse: string;
 
   // Chips
-  chipIdle: '#F5F1E8',
-  chipActive: '#22201B', // Selected "ink pill"
+  chipIdle: string;
+  chipActive: string;
 
   // Add / added toggle
-  addBg: '#2FA36F', // Idle green "+"
-  addedBg: '#DDF2E4', // Added light-green pill
-  addedFg: '#157A4E', // Added check + text
-} as const;
+  addBg: string;
+  addedBg: string;
+  addedFg: string;
+}
+
+/**
+ * Pure builder, exported for unit tests.
+ *
+ * `textSecondary` must stay a 6-digit hex in both modes — it's used with an
+ * alpha-suffix (e.g. `${textSecondary}30`) in TemplateReadRowHeader.
+ */
+export function buildBrowserPalette(
+  colors: SemanticColors,
+  isDark: boolean
+): BrowserPalette {
+  return {
+    background: colors.background,
+    card: isDark ? colors.card : colors.cardPaper,
+    border: colors.border,
+    detailsFill: isDark ? colors.gray[200] : '#FFFFFF',
+    startSmallBg: isDark ? colors.background : colors.card,
+    metaPillBg: isDark ? colors.background : colors.card,
+    closeBg: isDark ? colors.gray[200] : colors.card,
+    iconTile: isDark ? colors.status.streakLight : '#F8E9CE',
+
+    textPrimary: colors.text.primary,
+    textSecondary: colors.text.secondary,
+    textTertiary: colors.text.tertiary,
+    textInverse: colors.text.inverse,
+
+    chipIdle: isDark ? colors.card : colors.gray[50],
+    chipActive: colors.gray[900],
+
+    addBg: colors.accent,
+    addedBg: colors.status.successLight,
+    addedFg: colors.status.successText,
+  };
+}
+
+export function useBrowserPalette(): BrowserPalette {
+  const { colors, isDark } = useThemeColors();
+  return useMemo(() => buildBrowserPalette(colors, isDark), [colors, isDark]);
+}

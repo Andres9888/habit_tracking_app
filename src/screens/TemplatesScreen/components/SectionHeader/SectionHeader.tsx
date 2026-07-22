@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
-import { browserPalette } from '../../browserPalette';
+import { useBrowserPalette } from '../../browserPalette';
 
 interface SectionHeaderProps {
   icon?: string;
@@ -22,20 +22,19 @@ export function SectionHeader({
   subtitle,
   title,
 }: SectionHeaderProps) {
+  const palette = useBrowserPalette();
   return (
     <View style={s.row}>
       <View style={s.titleRow}>
         {icon ? (
-          <View style={s.iconTile}>
+          <View style={[s.iconTile, { backgroundColor: palette.iconTile }]}>
             <Text style={s.icon}>{icon}</Text>
           </View>
         ) : null}
         <View style={s.textBlock}>
-          <Text style={[s.title, { color: browserPalette.textPrimary }]}>
-            {title}
-          </Text>
+          <Text style={[s.title, { color: palette.textPrimary }]}>{title}</Text>
           {subtitle ? (
-            <Text style={[s.subtitle, { color: browserPalette.textSecondary }]}>
+            <Text style={[s.subtitle, { color: palette.textSecondary }]}>
               {subtitle}
             </Text>
           ) : null}
@@ -50,7 +49,6 @@ const s = StyleSheet.create({
   icon: { fontSize: 22 },
   iconTile: {
     alignItems: 'center',
-    backgroundColor: browserPalette.iconTile,
     borderRadius: 12,
     height: 44,
     justifyContent: 'center',

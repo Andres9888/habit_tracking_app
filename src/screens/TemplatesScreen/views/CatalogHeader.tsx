@@ -1,8 +1,8 @@
 /**
  * CatalogHeader — the Habit Browser header ("Habit Browser Final" design):
  * a back chevron, the serif "Browse habits" title, a circular close button,
- * and the habit-count line. Colors are pinned to the screen's cream palette
- * (not the app theme) so contrast holds in both light and dark app themes.
+ * and the habit-count line. Colors follow the app's light/dark theme via
+ * useBrowserPalette.
  */
 
 import { Pressable, StyleSheet, Text } from 'react-native';
@@ -11,7 +11,7 @@ import { ScreenHeader } from '../../../components/ScreenHeader';
 import { spacing } from '../../../theme/spacing';
 import { typography } from '../../../theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
-import { browserPalette } from '../browserPalette';
+import { useBrowserPalette } from '../browserPalette';
 
 interface CatalogHeaderProps {
   count: number;
@@ -24,6 +24,7 @@ export function CatalogHeader({
   countLabel,
   onClose,
 }: CatalogHeaderProps) {
+  const palette = useBrowserPalette();
   const close = () => {
     void triggerHaptic('tap');
     onClose();
@@ -41,7 +42,7 @@ export function CatalogHeader({
             onPress={onClose}
           >
             <ChevronLeft
-              color={browserPalette.textPrimary}
+              color={palette.textPrimary}
               size={24}
               strokeWidth={2.5}
             />
@@ -52,21 +53,19 @@ export function CatalogHeader({
             accessibilityLabel='Close habit library'
             accessibilityRole='button'
             hitSlop={8}
-            style={s.close}
+            style={[s.close, { backgroundColor: palette.closeBg }]}
             onPress={close}
           >
-            <X
-              color={browserPalette.textSecondary}
-              size={20}
-              strokeWidth={2.5}
-            />
+            <X color={palette.textSecondary} size={20} strokeWidth={2.5} />
           </Pressable>
         }
         title='Browse habits'
-        titleStyle={{ color: browserPalette.textPrimary }}
+        titleStyle={{ color: palette.textPrimary }}
         onBack={onClose}
       />
-      <Text style={s.count}>{`${count} ${countLabel}`}</Text>
+      <Text style={[s.count, { color: palette.textTertiary }]}>
+        {`${count} ${countLabel}`}
+      </Text>
     </>
   );
 }
@@ -74,7 +73,6 @@ export function CatalogHeader({
 const s = StyleSheet.create({
   close: {
     alignItems: 'center',
-    backgroundColor: browserPalette.closeBg,
     borderRadius: 999,
     height: 40,
     justifyContent: 'center',
@@ -82,7 +80,6 @@ const s = StyleSheet.create({
   },
   count: {
     ...typography.body,
-    color: browserPalette.textTertiary,
     paddingBottom: spacing.xs,
     paddingHorizontal: spacing.base,
   },

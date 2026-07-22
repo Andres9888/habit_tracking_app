@@ -9,7 +9,7 @@ import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { buildTextInputHintProps } from '@/utils/textInputHintProps';
 import { shadows } from '../../../theme/spacing';
 import { styles } from '../../templates/templatesScreenStyles';
-import { browserPalette } from '../browserPalette';
+import { useBrowserPalette } from '../browserPalette';
 import { iconSizes } from '@/theme/iconSizes';
 
 interface SearchBarProps {
@@ -27,7 +27,8 @@ export function SearchBar({
   inputHint = 'Search habits',
   value,
 }: SearchBarProps) {
-  const placeholderColor = browserPalette.textTertiary;
+  const palette = useBrowserPalette();
+  const placeholderColor = palette.textTertiary;
   const inputRef = useRef<TextInput>(null);
 
   const handleClear = () => {
@@ -42,8 +43,8 @@ export function SearchBar({
         styles.searchBar,
         shadows.subtle,
         {
-          backgroundColor: browserPalette.chipIdle,
-          borderColor: browserPalette.border,
+          backgroundColor: palette.chipIdle,
+          borderColor: palette.border,
         },
       ]}
     >
@@ -60,7 +61,7 @@ export function SearchBar({
         style={[
           styles.searchInput,
           {
-            color: browserPalette.textPrimary,
+            color: palette.textPrimary,
             outlineWidth: 0,
             outlineStyle: 'none',
             outlineColor: 'transparent',

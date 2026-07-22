@@ -7,7 +7,7 @@
 import { memo } from 'react';
 import { View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { browserPalette } from '../../browserPalette';
+import { useBrowserPalette } from '../../browserPalette';
 import { TemplateReadRowDetails } from './TemplateReadRowDetails';
 import { TemplateReadRowFooter } from './TemplateReadRowFooter';
 import { TemplateReadRowHeader } from './TemplateReadRowHeader';
@@ -29,13 +29,14 @@ function TemplateReadRowImpl({
   onImport,
   onPreview,
 }: TemplateReadRowProps) {
+  const palette = useBrowserPalette();
   return (
     <View
       style={[
         s.card,
         {
-          backgroundColor: browserPalette.card,
-          borderColor: browserPalette.border,
+          backgroundColor: palette.card,
+          borderColor: palette.border,
         },
       ]}
     >

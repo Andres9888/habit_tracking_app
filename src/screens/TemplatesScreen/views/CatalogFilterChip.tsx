@@ -5,7 +5,7 @@
 import { Text, View, type LayoutChangeEvent } from 'react-native';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { triggerHaptic } from '@/utils/haptics';
-import { browserPalette } from '../browserPalette';
+import { useBrowserPalette } from '../browserPalette';
 import { styles as s } from './CatalogChipRail.styles';
 
 interface CatalogFilterChipProps {
@@ -23,20 +23,19 @@ export function CatalogFilterChip({
   onLayout,
   onSelect,
 }: CatalogFilterChipProps) {
+  const palette = useBrowserPalette();
   // Ink-pill selected state — dark pill with inverted label, matching the
   // reference catalog design.
   const chipColors = isSelected
     ? {
-        backgroundColor: browserPalette.chipActive,
-        borderColor: browserPalette.chipActive,
+        backgroundColor: palette.chipActive,
+        borderColor: palette.chipActive,
       }
     : {
-        backgroundColor: browserPalette.chipIdle,
-        borderColor: browserPalette.chipIdle,
+        backgroundColor: palette.chipIdle,
+        borderColor: palette.chipIdle,
       };
-  const labelColor = isSelected
-    ? browserPalette.textInverse
-    : browserPalette.textSecondary;
+  const labelColor = isSelected ? palette.textInverse : palette.textSecondary;
 
   return (
     <View onLayout={onLayout(chipId)}>

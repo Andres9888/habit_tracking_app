@@ -5,12 +5,13 @@
 
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '../../../../theme/iconSizes';
-import { browserPalette } from '../../browserPalette';
+import { useBrowserPalette } from '../../browserPalette';
 
 export function DetailsChevron() {
+  const palette = useBrowserPalette();
   return (
     <ChevronRight
-      color={browserPalette.textTertiary}
+      color={palette.textTertiary}
       size={iconSizes.small}
       strokeWidth={2.5}
     />

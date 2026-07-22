@@ -4,7 +4,7 @@
 
 import { useEffect, useRef } from 'react';
 import { ScrollView, type LayoutChangeEvent } from 'react-native';
-import { browserPalette } from '../browserPalette';
+import { useBrowserPalette } from '../browserPalette';
 import { CatalogFilterChip } from './CatalogFilterChip';
 import { styles as s } from './CatalogChipRail.styles';
 
@@ -29,6 +29,7 @@ export function CatalogChipRail({
   selectedCategoryId,
   onSelectCategory,
 }: CatalogChipRailProps) {
+  const palette = useBrowserPalette();
   const scrollRef = useRef<ScrollView>(null);
   const chipLayouts = useRef<Record<string, ChipLayout>>({});
   const pendingScrollId = useRef<string | null>(null);
@@ -71,7 +72,7 @@ export function CatalogChipRail({
       ref={scrollRef}
       horizontal
       showsHorizontalScrollIndicator={false}
-      style={[s.rail, { borderBottomColor: browserPalette.border }]}
+      style={[s.rail, { borderBottomColor: palette.border }]}
       contentContainerStyle={s.content}
     >
       <CatalogFilterChip

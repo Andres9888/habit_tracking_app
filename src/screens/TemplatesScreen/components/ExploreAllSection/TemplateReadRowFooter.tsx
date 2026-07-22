@@ -6,7 +6,7 @@
 import { memo, useCallback } from 'react';
 import { Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { browserPalette } from '../../browserPalette';
+import { useBrowserPalette } from '../../browserPalette';
 import { getTemplateMetaLabel } from '../HabitTemplateCard/templateMeta';
 import { TemplateReadRowAddButton } from './TemplateReadRowAddButton';
 import { s } from './TemplateReadRow.styles';
@@ -24,18 +24,17 @@ function TemplateReadRowFooterImpl({
   item,
   onImport,
 }: TemplateReadRowFooterProps) {
+  const palette = useBrowserPalette();
   const metaLabel = getTemplateMetaLabel(item);
   const handleImport = useCallback(() => onImport(item), [item, onImport]);
 
   return (
     <View style={s.footer}>
       {metaLabel ? (
-        <View
-          style={[s.metaPill, { backgroundColor: browserPalette.metaPillBg }]}
-        >
+        <View style={[s.metaPill, { backgroundColor: palette.metaPillBg }]}>
           <Text
             numberOfLines={1}
-            style={[s.metaPillText, { color: browserPalette.textSecondary }]}
+            style={[s.metaPillText, { color: palette.textSecondary }]}
           >
             🕐 {metaLabel}
           </Text>

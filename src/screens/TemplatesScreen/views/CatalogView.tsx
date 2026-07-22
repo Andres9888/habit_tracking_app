@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { spacing } from '../../../theme/spacing';
-import { browserPalette } from '../browserPalette';
+import { useBrowserPalette } from '../browserPalette';
 import { SearchBar } from '../components/SearchBar';
 import { useCatalogViewData } from '../hooks/useCatalogViewData';
 import { CatalogHeader } from './CatalogHeader';
@@ -26,6 +26,7 @@ interface CatalogViewProps {
 }
 
 export function CatalogView(p: CatalogViewProps) {
+  const palette = useBrowserPalette();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     p.initialCategoryId ?? CATALOG_ALL_ID
@@ -43,7 +44,7 @@ export function CatalogView(p: CatalogViewProps) {
   return (
     <View
       testID='templates-catalog-view'
-      style={[s.container, { backgroundColor: browserPalette.background }]}
+      style={[s.container, { backgroundColor: palette.background }]}
     >
       <CatalogHeader
         count={totalCount}
