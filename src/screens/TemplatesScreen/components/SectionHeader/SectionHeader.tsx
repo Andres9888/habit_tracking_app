@@ -1,18 +1,16 @@
 /**
- * SectionHeader — shared header for curated sections on the habit library.
- * One visual rhythm: title + optional subtitle on the left, optional slot
- * on the right. Used by PopularSection, PremiumPacksSection, ExploreAllSection.
+ * SectionHeader — category header for the grouped habit-library catalog.
+ * Renders an optional inline emoji with title/subtitle and a right-side slot.
  */
 
 import type { ReactNode } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useThemeColors } from '../../../../theme/ThemeContext';
-import { borderRadius, spacing } from '../../../../theme/spacing';
+import { spacing } from '../../../../theme/spacing';
 import { typography } from '../../../../theme/typography';
 
 interface SectionHeaderProps {
   icon?: string;
-  iconBg?: string;
   rightSlot?: ReactNode;
   subtitle?: string;
   title: string;
@@ -20,7 +18,6 @@ interface SectionHeaderProps {
 
 export function SectionHeader({
   icon,
-  iconBg,
   rightSlot,
   subtitle,
   title,
@@ -30,11 +27,7 @@ export function SectionHeader({
   return (
     <View style={s.row}>
       <View style={s.titleRow}>
-        {icon ? (
-          <View style={[s.iconBox, { backgroundColor: iconBg }]}>
-            <Text style={s.icon}>{icon}</Text>
-          </View>
-        ) : null}
+        {icon ? <Text style={s.icon}>{icon}</Text> : null}
         <View style={s.textBlock}>
           <Text style={[s.title, { color: colors.text.primary }]}>{title}</Text>
           {subtitle ? (
@@ -50,15 +43,7 @@ export function SectionHeader({
 }
 
 const s = StyleSheet.create({
-  icon: { fontSize: 15 },
-  iconBox: {
-    alignItems: 'center',
-    borderRadius: borderRadius.medium,
-    flexShrink: 0,
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
+  icon: { fontSize: 18 },
   right: { flexShrink: 0 },
   row: {
     alignItems: 'baseline',

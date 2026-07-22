@@ -9,6 +9,8 @@ import { StyleSheet } from 'react-native';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
 import { fontWeights, typography } from '../../../../theme/typography';
 
+export const TEMPLATE_READ_ROW_PADDING = 20;
+
 export const s = StyleSheet.create({
   card: {
     ...shadows.card,
@@ -16,7 +18,7 @@ export const s = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: spacing.base,
     marginVertical: spacing.sm,
-    padding: 20,
+    padding: TEMPLATE_READ_ROW_PADDING,
   },
   // Header: tinted icon square + serif title.
   titleRow: { alignItems: 'center', flexDirection: 'row', gap: spacing.md },

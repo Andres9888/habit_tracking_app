@@ -10,9 +10,9 @@ import { SectionList, StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 import { spacing } from '../../../theme/spacing';
 import { TemplateReadRow } from '../components/ExploreAllSection/TemplateReadRow';
+import { TEMPLATE_READ_ROW_PADDING } from '../components/ExploreAllSection/TemplateReadRow.styles';
 import { SectionHeader } from '../components/SectionHeader';
 import type { CategoryGroup } from '../components/ExploreAllSection/ExploreAllSection.types';
-import { getCategoryMeta } from '../data/categoryMeta';
 
 interface CatalogSectionListProps {
   groups: CategoryGroup[];
@@ -25,7 +25,6 @@ interface CatalogSectionListProps {
 interface CatalogSection {
   data: Doc<'templates'>[];
   icon: string;
-  iconBg: string;
   key: string;
   label: string;
   subtitle?: string;
@@ -42,17 +41,13 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
 
   const sections: CatalogSection[] = useMemo(
     () =>
-      groups.map((group) => {
-        const meta = getCategoryMeta(group.category);
-        return {
-          data: group.templates,
-          icon: group.icon,
-          iconBg: meta.bgColor,
-          key: group.category,
-          label: group.label,
-          subtitle: group.subtitle,
-        };
-      }),
+      groups.map((group) => ({
+        data: group.templates,
+        icon: group.icon,
+        key: group.category,
+        label: group.label,
+        subtitle: group.subtitle,
+      })),
     [groups]
   );
 
@@ -77,7 +72,6 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       <View style={s.header}>
         <SectionHeader
           icon={section.icon}
-          iconBg={section.iconBg}
           subtitle={section.subtitle}
           title={section.label}
         />
@@ -106,9 +100,11 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
 }
 
 const s = StyleSheet.create({
-  // Extra left padding stacks with SectionHeader's own paddingHorizontal so
-  // the icon box's left edge lines up with the card icon box below
-  // (cardWrap.marginHorizontal + header.padding = spacing.base * 2).
-  header: { marginTop: spacing.lg, paddingLeft: spacing.base },
+  // Stacks with SectionHeader's own paddingHorizontal so the emoji's left
+  // edge lines up with the card icon box below.
+  header: {
+    marginTop: spacing.lg,
+    paddingLeft: TEMPLATE_READ_ROW_PADDING,
+  },
   list: { paddingBottom: spacing['2xl'], paddingTop: spacing.xs },
 });
