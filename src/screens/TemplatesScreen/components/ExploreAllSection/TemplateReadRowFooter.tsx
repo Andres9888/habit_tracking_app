@@ -1,6 +1,6 @@
 /**
  * Bottom rail of the Habit Browser card. Left: a meta pill (duration ·
- * frequency). Right: the circular Add / Added toggle that creates the habit.
+ * frequency). Right: the labeled Add / Added pill that creates the habit.
  */
 
 import { memo, useCallback } from 'react';

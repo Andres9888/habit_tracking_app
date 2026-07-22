@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { enterEasing } from '../../../theme/animations';
-import { fontFamilies, fontWeights } from '../../../theme/typography';
+import { fontFamilies } from '../../../theme/typography';
 import { borderRadius as themeRadius } from '../../../theme/spacing';
 import { ShimmerBox } from './ShimmerBox';
 import { SkeletonCard } from './SkeletonCard';
@@ -18,21 +18,9 @@ export function TemplatesLoadingState() {
       >
         <Text
           style={{
-            color: colors.text.primary,
-            fontFamily: fontFamilies.primary.display,
-            fontSize: 22,
-            fontWeight: fontWeights.semibold,
-            letterSpacing: -0.35,
-          }}
-        >
-          Habit library
-        </Text>
-        <Text
-          style={{
             color: colors.text.secondary,
             fontFamily: fontFamilies.primary.text,
             fontSize: 17,
-            marginTop: 4,
           }}
         >
           {'Browse by goal, category, or what\u2019s popular'}

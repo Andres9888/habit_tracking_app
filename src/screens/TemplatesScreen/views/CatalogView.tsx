@@ -38,19 +38,13 @@ export function CatalogView(p: CatalogViewProps) {
     selectedCategoryId,
   });
   const showShelves = selectedCategoryId === CATALOG_ALL_ID;
-  const totalCount = p.allTemplates.length;
-  const totalLabel = totalCount === 1 ? 'habit' : 'habits';
 
   return (
     <View
       testID='templates-catalog-view'
       style={[s.container, { backgroundColor: palette.background }]}
     >
-      <CatalogHeader
-        count={totalCount}
-        countLabel={totalLabel}
-        onClose={p.onBack}
-      />
+      <CatalogHeader onClose={p.onBack} />
       <View style={s.searchWrap}>
         <SearchBar
           inputHint='Search habits…'

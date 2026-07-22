@@ -71,8 +71,8 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
     ({ section }: { section: CatalogSection }) => (
       <View style={s.header}>
         <SectionHeader
+          count={section.data.length}
           icon={section.icon}
-          subtitle={section.subtitle}
           title={section.label}
         />
       </View>

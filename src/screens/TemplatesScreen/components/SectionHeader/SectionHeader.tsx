@@ -10,6 +10,7 @@ import { typography } from '../../../../theme/typography';
 import { useBrowserPalette } from '../../browserPalette';
 
 interface SectionHeaderProps {
+  count?: number;
   icon?: string;
   rightSlot?: ReactNode;
   subtitle?: string;
@@ -17,6 +18,7 @@ interface SectionHeaderProps {
 }
 
 export function SectionHeader({
+  count,
   icon,
   rightSlot,
   subtitle,
@@ -32,7 +34,16 @@ export function SectionHeader({
           </View>
         ) : null}
         <View style={s.textBlock}>
-          <Text style={[s.title, { color: palette.textPrimary }]}>{title}</Text>
+          <View style={s.titleLine}>
+            <Text style={[s.title, { color: palette.textPrimary }]}>
+              {title}
+            </Text>
+            {typeof count === 'number' ? (
+              <Text style={[s.count, { color: palette.textTertiary }]}>
+                {`${count} ${count === 1 ? 'habit' : 'habits'}`}
+              </Text>
+            ) : null}
+          </View>
           {subtitle ? (
             <Text style={[s.subtitle, { color: palette.textSecondary }]}>
               {subtitle}
@@ -63,9 +74,16 @@ const s = StyleSheet.create({
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.base,
   },
+  count: { ...typography.body, fontSize: 15 },
   subtitle: { ...typography.body, fontSize: 15, marginTop: 2 },
   textBlock: { flex: 1, minWidth: 0 },
   title: { ...typography.heading1, fontSize: 22 },
+  titleLine: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.sm,
+  },
   titleRow: {
     alignItems: 'center',
     flex: 1,

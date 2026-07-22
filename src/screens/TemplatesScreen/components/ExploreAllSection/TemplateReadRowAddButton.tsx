@@ -1,14 +1,16 @@
 /**
- * Circular Add / Added toggle for the Habit Browser card. Green "+" to add,
- * a tinted check once imported. Success haptic + bounce come from the shared
- * useImportBounce hook, so behavior stays in lockstep with ListCardAddButton.
+ * Labeled Add / Added pill for the Habit Browser card. Green "+ Add" to add,
+ * a tinted "✓ Added" once imported. Success haptic + bounce come from the
+ * shared useImportBounce hook, so behavior stays in lockstep with
+ * ListCardAddButton.
  */
 
 import { memo } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import { borderRadius } from '../../../../theme/spacing';
+import { borderRadius, spacing } from '../../../../theme/spacing';
+import { fontWeights } from '../../../../theme/typography';
 import { useBrowserPalette } from '../../browserPalette';
 import { useImportBounce } from '../../views/TemplateListCard/useImportBounce';
 import { triggerHaptic } from '@/utils/haptics';
@@ -31,6 +33,7 @@ function TemplateReadRowAddButtonImpl({
   const palette = useBrowserPalette();
   const animatedStyle = useImportBounce(isImported);
   const bg = isImported ? palette.addedBg : palette.addBg;
+  const fg = isImported ? palette.addedFg : palette.textInverse;
 
   return (
     <AnimatedPressable
@@ -45,11 +48,14 @@ function TemplateReadRowAddButtonImpl({
       }}
     >
       {isImporting ? (
-        <ActivityIndicator color={palette.textInverse} size='small' />
+        <ActivityIndicator color={fg} size='small' />
       ) : isImported ? (
-        <Check color={palette.addedFg} size={26} strokeWidth={3} />
+        <>
+          <Check color={fg} size={18} strokeWidth={3} />
+          <Text style={[s.label, { color: fg }]}>Added</Text>
+        </>
       ) : (
-        <Text style={[s.plus, { color: palette.textInverse }]}>+</Text>
+        <Text style={[s.label, { color: fg }]}>+ Add</Text>
       )}
     </AnimatedPressable>
   );
@@ -61,10 +67,12 @@ const s = StyleSheet.create({
   button: {
     alignItems: 'center',
     borderRadius: borderRadius.full,
+    flexDirection: 'row',
     flexShrink: 0,
-    height: 52,
+    gap: 6,
     justifyContent: 'center',
-    width: 52,
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
   },
-  plus: { fontSize: 30, fontWeight: '600', lineHeight: 34 },
+  label: { fontSize: 16, fontWeight: fontWeights.bold },
 });
