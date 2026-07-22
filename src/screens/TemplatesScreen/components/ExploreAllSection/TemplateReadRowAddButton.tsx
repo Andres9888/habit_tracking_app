@@ -8,8 +8,8 @@ import { memo } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Check } from 'lucide-react-native';
-import { useThemeColors } from '../../../../theme/ThemeContext';
 import { borderRadius } from '../../../../theme/spacing';
+import { browserPalette } from '../../browserPalette';
 import { useImportBounce } from '../../views/TemplateListCard/useImportBounce';
 import { triggerHaptic } from '@/utils/haptics';
 
@@ -28,9 +28,8 @@ function TemplateReadRowAddButtonImpl({
   name,
   onImport,
 }: TemplateReadRowAddButtonProps) {
-  const { colors } = useThemeColors();
   const animatedStyle = useImportBounce(isImported);
-  const bg = isImported ? colors.status.successLight : colors.status.success;
+  const bg = isImported ? browserPalette.addedBg : browserPalette.addBg;
 
   return (
     <AnimatedPressable
@@ -45,11 +44,11 @@ function TemplateReadRowAddButtonImpl({
       }}
     >
       {isImporting ? (
-        <ActivityIndicator color={colors.text.inverse} size='small' />
+        <ActivityIndicator color={browserPalette.textInverse} size='small' />
       ) : isImported ? (
-        <Check color={colors.status.successText} size={26} strokeWidth={3} />
+        <Check color={browserPalette.addedFg} size={26} strokeWidth={3} />
       ) : (
-        <Text style={[s.plus, { color: colors.text.inverse }]}>+</Text>
+        <Text style={[s.plus, { color: browserPalette.textInverse }]}>+</Text>
       )}
     </AnimatedPressable>
   );

@@ -6,7 +6,7 @@
 import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { browserPalette } from '../../browserPalette';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowHeaderProps {
@@ -18,8 +18,7 @@ function TemplateReadRowHeaderImpl({
   item,
   onPreview,
 }: TemplateReadRowHeaderProps) {
-  const { colors } = useThemeColors();
-  const iconBg = `${item.iconColor || colors.primary[600]}30`;
+  const iconBg = `${item.iconColor || browserPalette.textSecondary}30`;
 
   return (
     <Pressable
@@ -33,14 +32,14 @@ function TemplateReadRowHeaderImpl({
         </View>
         <Text
           numberOfLines={2}
-          style={[s.name, { color: colors.text.primary }]}
+          style={[s.name, { color: browserPalette.textPrimary }]}
         >
           {item.name}
         </Text>
       </View>
       <Text
         numberOfLines={3}
-        style={[s.description, { color: colors.text.secondary }]}
+        style={[s.description, { color: browserPalette.textSecondary }]}
       >
         {item.description}
       </Text>

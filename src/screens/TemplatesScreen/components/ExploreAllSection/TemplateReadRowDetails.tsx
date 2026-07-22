@@ -6,7 +6,7 @@
 import { memo, useState } from 'react';
 import { Pressable, Text } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { browserPalette } from '../../browserPalette';
 import { DetailsChevron } from '../DetailsChevron';
 import { s } from './TemplateReadRow.styles';
 
@@ -19,11 +19,7 @@ function TemplateReadRowDetailsImpl({
   item,
   onPreview,
 }: TemplateReadRowDetailsProps) {
-  const { colors, isDark } = useThemeColors();
   const [pressed, setPressed] = useState(false);
-  // White pill on the warm card (design); raised overlay in dark mode where
-  // white would glare. Pressed dims toward the recessed surface.
-  const fill = isDark ? 'rgba(255,255,255,0.07)' : '#FFFFFF';
 
   return (
     <Pressable
@@ -33,8 +29,10 @@ function TemplateReadRowDetailsImpl({
       style={[
         s.detailsPill,
         {
-          backgroundColor: pressed ? colors.card : fill,
-          borderColor: colors.cardBorder,
+          backgroundColor: pressed
+            ? browserPalette.startSmallBg
+            : browserPalette.detailsFill,
+          borderColor: browserPalette.border,
         },
       ]}
       onPressIn={() => setPressed(true)}
@@ -44,7 +42,7 @@ function TemplateReadRowDetailsImpl({
         onPreview(item);
       }}
     >
-      <Text style={[s.detailsText, { color: colors.text.secondary }]}>
+      <Text style={[s.detailsText, { color: browserPalette.textSecondary }]}>
         Details
       </Text>
       <DetailsChevron />

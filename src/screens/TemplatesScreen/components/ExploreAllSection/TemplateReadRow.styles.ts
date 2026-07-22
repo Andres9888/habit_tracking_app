@@ -14,7 +14,7 @@ export const TEMPLATE_READ_ROW_PADDING = 20;
 export const s = StyleSheet.create({
   card: {
     ...shadows.card,
-    borderRadius: borderRadius.large,
+    borderRadius: 26,
     borderWidth: 1,
     marginHorizontal: spacing.base,
     marginVertical: spacing.sm,

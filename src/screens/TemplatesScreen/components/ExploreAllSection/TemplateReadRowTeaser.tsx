@@ -7,7 +7,7 @@
 import { memo } from 'react';
 import { Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { browserPalette } from '../../browserPalette';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowTeaserProps {
@@ -15,18 +15,19 @@ interface TemplateReadRowTeaserProps {
 }
 
 function TemplateReadRowTeaserImpl({ item }: TemplateReadRowTeaserProps) {
-  const { colors } = useThemeColors();
   const text = item.startSmallVersion?.trim();
   if (!text) return null;
 
   return (
-    <View style={[s.startBox, { backgroundColor: colors.card }]}>
-      <Text style={[s.startLabel, { color: colors.text.tertiary }]}>
+    <View
+      style={[s.startBox, { backgroundColor: browserPalette.startSmallBg }]}
+    >
+      <Text style={[s.startLabel, { color: browserPalette.textTertiary }]}>
         Start small
       </Text>
       <Text
         numberOfLines={3}
-        style={[s.startText, { color: colors.text.primary }]}
+        style={[s.startText, { color: browserPalette.textPrimary }]}
       >
         {text}
       </Text>

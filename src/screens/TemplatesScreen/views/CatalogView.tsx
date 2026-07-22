@@ -6,11 +6,11 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
-import { ScreenHeader } from '../../../components/ScreenHeader';
-import { useThemeColors } from '../../../theme/ThemeContext';
 import { spacing } from '../../../theme/spacing';
+import { browserPalette } from '../browserPalette';
 import { SearchBar } from '../components/SearchBar';
 import { useCatalogViewData } from '../hooks/useCatalogViewData';
+import { CatalogHeader } from './CatalogHeader';
 import { CATALOG_ALL_ID, CatalogChipRail } from './CatalogChipRail';
 import { CatalogFilteredBranch } from './CatalogFilteredBranch';
 import { CatalogSectionList } from './CatalogSectionList';
@@ -26,7 +26,6 @@ interface CatalogViewProps {
 }
 
 export function CatalogView(p: CatalogViewProps) {
-  const { colors } = useThemeColors();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     p.initialCategoryId ?? CATALOG_ALL_ID
@@ -44,12 +43,12 @@ export function CatalogView(p: CatalogViewProps) {
   return (
     <View
       testID='templates-catalog-view'
-      style={[s.container, { backgroundColor: colors.background }]}
+      style={[s.container, { backgroundColor: browserPalette.background }]}
     >
-      <ScreenHeader
-        subtitle='Search or browse by category'
-        title={`All habits · ${totalCount} ${totalLabel}`}
-        onBack={p.onBack}
+      <CatalogHeader
+        count={totalCount}
+        countLabel={totalLabel}
+        onClose={p.onBack}
       />
       <View style={s.searchWrap}>
         <SearchBar
