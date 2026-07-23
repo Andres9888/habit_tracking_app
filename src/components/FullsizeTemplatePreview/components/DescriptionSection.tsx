@@ -9,16 +9,11 @@ import { heroStyles } from '../styles';
 
 interface DescriptionSectionProps {
   description: string;
-  iconColor?: string;
 }
 
-export function DescriptionSection({
-  description,
-  iconColor,
-}: DescriptionSectionProps) {
+export function DescriptionSection({ description }: DescriptionSectionProps) {
   const theme = useAppTheme();
   const fontFamily = theme.custom.fontFamilies.primary.text;
-  const labelColor = iconColor?.trim() || undefined;
 
   return (
     <View style={heroStyles.descriptionSection}>

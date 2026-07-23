@@ -15,7 +15,6 @@ const IMPORT_LABEL = 'Add to my habits';
 
 export function FooterSection({
   templateName,
-  iconColor,
   isImporting,
   isImported,
   bottomInset,
@@ -49,7 +48,6 @@ export function FooterSection({
           <FooterPrimaryAction
             checkmarkAnimatedStyle={checkmarkAnimatedStyle}
             createPressHandlers={createPressHandlers}
-            iconColor={iconColor}
             importButtonScale={importButtonScale}
             importButtonStyle={importButtonStyle}
             importLabel={IMPORT_LABEL}

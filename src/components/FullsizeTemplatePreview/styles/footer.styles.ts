@@ -38,12 +38,16 @@ export const footerStyles = StyleSheet.create({
     right: 0,
   },
   importButton: {
-    ...shadows.modal,
     alignItems: 'center',
+    backgroundColor: colors.primary[600],
     borderRadius: borderRadius.large,
+    elevation: 8,
     height: 56,
     justifyContent: 'center',
-    shadowOpacity: 0.15,
+    shadowColor: colors.primary[700],
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 14,
   },
   importButtonContent: {
     alignItems: 'center',

@@ -13,6 +13,9 @@ export const overlays = {
   /** Pressed / hover state for glass badges. */
   glassMedium: 'rgba(255, 255, 255, 0.30)',
 
+  /** Neutral metadata pills sitting directly on an accent-tinted hero wash. */
+  glassStrong: 'rgba(255, 255, 255, 0.65)',
+
   /** Secondary text rendered over a gradient or hero surface. */
   subTextOnHero: 'rgba(255, 255, 255, 0.90)',
 

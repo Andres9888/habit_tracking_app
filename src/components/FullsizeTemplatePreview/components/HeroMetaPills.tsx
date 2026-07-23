@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { Clock, Sparkles, Sprout, Users } from 'lucide-react-native';
+import { Clock, Sparkles, Sprout, Timer, Users } from 'lucide-react-native';
 
+import { colors } from '@/theme';
 import { iconSizes } from '@/theme/iconSizes';
 import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { heroStyles } from '../styles';
@@ -15,8 +16,11 @@ import {
   CATEGORY_DURATION_DEFAULTS,
 } from '../FullsizeTemplatePreview.constants';
 import { formatPopularity } from '../../../screens/TemplatesScreen/components/TrendingCard/formatPopularity';
+import { readableAccent } from '../utils/readableAccent';
 import { MetadataPill } from './MetadataPill';
 import type { Template } from '../../../types/template';
+
+const NEUTRAL_ICON_COLOR = colors.gray[500];
 
 interface HeroMetaPillsProps {
   template: Template;
@@ -32,24 +36,56 @@ export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
   const popularity = template?.popularityScore ?? 0;
   const growthMeta = getGrowthTypeMeta(template?.growthType);
 
+  const accentIconColor = readableAccent(iconColor);
+
   return (
     <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
       <MetadataPill
-        icon={<Clock color={iconColor} size={iconSizes.small} strokeWidth={2} />}
+        icon={
+          <Clock
+            color={NEUTRAL_ICON_COLOR}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
+        }
         iconColor={iconColor}
       >
         {frequency}
       </MetadataPill>
       <MetadataPill
-        icon={<Sparkles color={iconColor} size={iconSizes.small} strokeWidth={2} />}
+        icon={
+          <Sparkles
+            color={accentIconColor}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
+        }
         iconColor={iconColor}
+        variant='accent'
       >
         {category}
       </MetadataPill>
-      <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
+      <MetadataPill
+        icon={
+          <Timer
+            color={NEUTRAL_ICON_COLOR}
+            size={iconSizes.small}
+            strokeWidth={2}
+          />
+        }
+        iconColor={iconColor}
+      >
+        {duration}
+      </MetadataPill>
       {growthMeta ? (
         <MetadataPill
-          icon={<Sprout color={iconColor} size={iconSizes.small} strokeWidth={2} />}
+          icon={
+            <Sprout
+              color={NEUTRAL_ICON_COLOR}
+              size={iconSizes.small}
+              strokeWidth={2}
+            />
+          }
           iconColor={iconColor}
         >
           {`${growthMeta.label} · ~${growthMeta.days}d`}
@@ -57,7 +93,13 @@ export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
       ) : null}
       {popularity > 0 ? (
         <MetadataPill
-          icon={<Users color={iconColor} size={iconSizes.small} strokeWidth={2} />}
+          icon={
+            <Users
+              color={NEUTRAL_ICON_COLOR}
+              size={iconSizes.small}
+              strokeWidth={2}
+            />
+          }
           iconColor={iconColor}
         >
           {formatPopularity(popularity)}

@@ -24,7 +24,7 @@ export const scienceStyles = StyleSheet.create({
   },
   secLabelText: {
     color: colors.gray[800],
-    fontFamily: fontFamilies.primary.display,
+    fontFamily: fontFamilies.primary.text,
     fontSize: 17,
     fontWeight: fontWeights.bold,
     letterSpacing: -0.2,

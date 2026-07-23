@@ -21,7 +21,6 @@ interface FooterPrimaryActionProps {
     scale: SharedValue<number>,
     scaleValue?: number
   ) => PressHandlers;
-  iconColor: string;
   importButtonScale: SharedValue<number>;
   importButtonStyle: object;
   importLabel: string;
@@ -61,7 +60,6 @@ export function FooterPrimaryAction(p: FooterPrimaryActionProps) {
       testID='templates-preview-quick-add'
       style={[
         footerStyles.importButton,
-        { backgroundColor: p.iconColor },
         p.isImporting && { opacity: 0.5 },
         p.importButtonStyle,
       ]}

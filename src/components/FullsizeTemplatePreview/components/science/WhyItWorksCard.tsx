@@ -8,6 +8,7 @@ import { Linking, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FileText, ShieldCheck } from 'lucide-react-native';
 
+import { colors } from '@/theme';
 import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
@@ -31,13 +32,19 @@ export function WhyItWorksCard({ template }: { template: Template }) {
         style={s.whyHeader}
       >
         <View style={s.whyBadge}>
-          <ShieldCheck color={t.accent} size={iconSizes.small - 1} strokeWidth={2.2} />
-          <Text style={[s.whyBadgeText, { color: t.accent }]}>Science-backed</Text>
+          <ShieldCheck
+            color={colors.success}
+            size={iconSizes.small - 1}
+            strokeWidth={2.2}
+          />
+          <Text style={[s.whyBadgeText, { color: colors.success }]}>
+            Science-backed
+          </Text>
         </View>
         {paper ? (
           <AnimatedPressable
-            accessibilityLabel="Read the research paper"
-            accessibilityRole="link"
+            accessibilityLabel='Read the research paper'
+            accessibilityRole='link'
             hitSlop={6}
             style={[s.whyReadBtn, { borderColor: `${t.accent}40` }]}
             onPress={() => {
@@ -45,7 +52,11 @@ export function WhyItWorksCard({ template }: { template: Template }) {
               void Linking.openURL(paper);
             }}
           >
-            <FileText color={t.accent} size={iconSizes.small - 1} strokeWidth={2} />
+            <FileText
+              color={t.accent}
+              size={iconSizes.small - 1}
+              strokeWidth={2}
+            />
             <Text style={[s.whyReadText, { color: t.accent }]}>Read paper</Text>
           </AnimatedPressable>
         ) : null}
