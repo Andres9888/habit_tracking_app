@@ -15,13 +15,13 @@ describe('TrialCountdownBanner', () => {
   });
 
   it('renders correctly with days remaining', () => {
-    const { getByText } = render(
+    const { getByLabelText, getByText } = render(
       <TrialCountdownBanner daysRemaining={5} onUpgrade={mockOnUpgrade} />
     );
 
     expect(getByText('5 days left in your free trial')).toBeTruthy();
-    expect(getByText('Keep unlimited habits & analytics')).toBeTruthy();
     expect(getByText('Upgrade')).toBeTruthy();
+    expect(getByLabelText('Upgrade to premium')).toBeTruthy();
   });
 
   it('shows singular "day" when 1 day remaining', () => {

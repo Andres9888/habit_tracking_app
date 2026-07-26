@@ -14,7 +14,10 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import * as Haptics from 'expo-haptics';
-import { OfflinePendingBanner, type OfflinePendingBannerProps } from '../OfflinePendingBanner';
+import {
+  OfflinePendingBanner,
+  type OfflinePendingBannerProps,
+} from '../OfflinePendingBanner';
 import { useNetworkStatus } from '../../contexts/NetworkStatusContext';
 import { useOfflineQueue, type QueueStats } from '../../hooks/useOfflineQueue';
 import { type ProcessingState } from '../OfflineQueueProcessor';
@@ -73,11 +76,6 @@ describe('OfflinePendingBanner', () => {
       pendingItems: 0,
       failedItems: 0,
       byType: {
-        reflection: 0,
-        letter: 0,
-        voiceNote: 0,
-        visionBoardImage: 0,
-        affirmation: 0,
         habitUpdate: 0,
       },
     }),
@@ -89,12 +87,7 @@ describe('OfflinePendingBanner', () => {
     pendingItems: 2,
     failedItems: 1,
     byType: {
-      reflection: 2,
-      letter: 1,
-      voiceNote: 0,
-      visionBoardImage: 0,
-      affirmation: 0,
-      habitUpdate: 0,
+      habitUpdate: 3,
     },
     oldestItemAt: Date.now() - 3600000, // 1 hour ago
   };
@@ -231,7 +224,7 @@ describe('OfflinePendingBanner', () => {
         getStats: jest.fn().mockResolvedValue(mockQueueStats),
       });
 
-      const { getByRole, getByText, queryByText } = render(
+      const { getByLabelText, getByText, queryByText } = render(
         <OfflinePendingBanner />
       );
 
@@ -239,7 +232,7 @@ describe('OfflinePendingBanner', () => {
       expect(queryByText('Pending Items:')).toBeNull();
 
       // Tap to expand
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       // Wait for details to appear
       await waitFor(() => {
@@ -255,13 +248,12 @@ describe('OfflinePendingBanner', () => {
         getStats: jest.fn().mockResolvedValue(mockQueueStats),
       });
 
-      const { getByRole, getByText } = render(<OfflinePendingBanner />);
+      const { getByLabelText, getByText } = render(<OfflinePendingBanner />);
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       await waitFor(() => {
-        expect(getByText('Reflections: 2')).toBeTruthy();
-        expect(getByText('Letters: 1')).toBeTruthy();
+        expect(getByText('Habit Updates: 3')).toBeTruthy();
       });
     });
 
@@ -273,9 +265,9 @@ describe('OfflinePendingBanner', () => {
         getStats: jest.fn().mockResolvedValue(mockQueueStats),
       });
 
-      const { getByRole, getByText } = render(<OfflinePendingBanner />);
+      const { getByLabelText, getByText } = render(<OfflinePendingBanner />);
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       await waitFor(() => {
         expect(getByText('1 item failed to sync')).toBeTruthy();
@@ -289,14 +281,14 @@ describe('OfflinePendingBanner', () => {
         queueCount: 3,
       });
 
-      const { getByRole, getByText } = render(
+      const { getByLabelText, getByText } = render(
         <OfflinePendingBanner queueStats={mockQueueStats} />
       );
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       await waitFor(() => {
-        expect(getByText('Reflections: 2')).toBeTruthy();
+        expect(getByText('Habit Updates: 3')).toBeTruthy();
       });
     });
 
@@ -307,9 +299,9 @@ describe('OfflinePendingBanner', () => {
         queueCount: 3,
       });
 
-      const { getByRole } = render(<OfflinePendingBanner />);
+      const { getByLabelText } = render(<OfflinePendingBanner />);
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
         Haptics.ImpactFeedbackStyle.Light
@@ -324,9 +316,11 @@ describe('OfflinePendingBanner', () => {
         queueCount: 3,
       });
 
-      const { getByRole } = render(<OfflinePendingBanner onPress={onPress} />);
+      const { getByLabelText } = render(
+        <OfflinePendingBanner onPress={onPress} />
+      );
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       expect(onPress).toHaveBeenCalled();
     });
@@ -453,7 +447,9 @@ describe('OfflinePendingBanner', () => {
         queueCount: 3,
       });
 
-      const { getByLabelText } = render(<OfflinePendingBanner showSyncButton />);
+      const { getByLabelText } = render(
+        <OfflinePendingBanner showSyncButton />
+      );
 
       expect(getByLabelText('Sync now')).toBeTruthy();
     });
@@ -473,9 +469,9 @@ describe('OfflinePendingBanner', () => {
         getStats: jest.fn().mockResolvedValue(statsWithOldItem),
       });
 
-      const { getByRole, getByText } = render(<OfflinePendingBanner />);
+      const { getByLabelText, getByText } = render(<OfflinePendingBanner />);
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       await waitFor(() => {
         expect(getByText('Oldest: 2h ago')).toBeTruthy();
@@ -495,9 +491,9 @@ describe('OfflinePendingBanner', () => {
         getStats: jest.fn().mockResolvedValue(statsWithVeryOldItem),
       });
 
-      const { getByRole, getByText } = render(<OfflinePendingBanner />);
+      const { getByLabelText, getByText } = render(<OfflinePendingBanner />);
 
-      fireEvent.press(getByRole('button'));
+      fireEvent.press(getByLabelText('3 items waiting to sync'));
 
       await waitFor(() => {
         expect(getByText('Oldest: 3d ago')).toBeTruthy();
@@ -514,9 +510,7 @@ describe('OfflinePendingBanner', () => {
       });
 
       // Should render without animations when reduceMotion is true
-      const { getByText } = render(
-        <OfflinePendingBanner reduceMotion />
-      );
+      const { getByText } = render(<OfflinePendingBanner reduceMotion />);
 
       expect(getByText('Pending Sync')).toBeTruthy();
     });

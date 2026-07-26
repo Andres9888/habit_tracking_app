@@ -2,10 +2,11 @@
  * Test suite for borderRadius standardization across all components
  * Phase 3 Task 5 - Non-standard borderRadius values → theme tokens
  *
- * Token scale: xs(4), small(8), medium(12), large(16), xl(20), full(9999)
+ * Token scale: xs(4), small(10), medium(14), large(24), xl(28), full(9999)
  */
 
 import { borderRadius } from '@/theme/spacing';
+import { renderHook } from '@testing-library/react-native';
 
 describe('borderRadius token scale', () => {
   it('should include xs token', () => {
@@ -14,10 +15,10 @@ describe('borderRadius token scale', () => {
 
   it('should have correct token values', () => {
     expect(borderRadius.xs).toBe(4);
-    expect(borderRadius.small).toBe(8);
-    expect(borderRadius.medium).toBe(12);
-    expect(borderRadius.large).toBe(16);
-    expect(borderRadius.xl).toBe(20);
+    expect(borderRadius.small).toBe(10);
+    expect(borderRadius.medium).toBe(14);
+    expect(borderRadius.large).toBe(24);
+    expect(borderRadius.xl).toBe(28);
     expect(borderRadius.full).toBe(9999);
   });
 });
@@ -49,11 +50,11 @@ describe('borderRadius: 4 → borderRadius.xs', () => {
     expect(styles.badgeSmall.borderRadius).toBe(borderRadius.xs);
   });
 
-  it('TemplateScienceModal/science.styles uses xs for citationDot', () => {
+  it('EmojiPickerSheet uses xs for its drag handle', () => {
     const {
-      scienceStyles,
-    } = require('@/components/TemplateScienceModal/styles/science.styles');
-    expect(scienceStyles.citationDot.borderRadius).toBe(borderRadius.xs);
+      styles,
+    } = require('@/components/EmojiPickerV2/EmojiPickerSheet/EmojiPickerSheet.styles');
+    expect(styles.handle.borderRadius).toBe(borderRadius.xs);
   });
 });
 
@@ -73,15 +74,19 @@ describe('borderRadius: 6 → borderRadius.small', () => {
   });
 });
 
-describe('borderRadius: 10 → borderRadius.medium', () => {
+describe('borderRadius.medium component mappings', () => {
   it('ArchiveUndoToast uses medium for iconContainer and undoButton', () => {
-    const { styles } = require('@/components/ArchiveUndoToast/styles');
+    const { useToastStyles } = require('@/components/ArchiveUndoToast/styles');
+    const { result } = renderHook(() => useToastStyles());
+    const styles = result.current;
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
     expect(styles.undoButton.borderRadius).toBe(borderRadius.medium);
   });
 
   it('DeleteUndoToast uses medium for iconContainer and undoButton', () => {
-    const { styles } = require('@/components/DeleteUndoToast/styles');
+    const { useToastStyles } = require('@/components/DeleteUndoToast/styles');
+    const { result } = renderHook(() => useToastStyles());
+    const styles = result.current;
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
     expect(styles.undoButton.borderRadius).toBe(borderRadius.medium);
   });
@@ -95,8 +100,10 @@ describe('borderRadius: 10 → borderRadius.medium', () => {
 
   it('TipQuickActionsSheet uses medium for iconContainer', () => {
     const {
-      styles,
+      useStyles,
     } = require('@/components/ProgressSectionConsolidated/TipQuickActionsSheet/styles');
+    const { result } = renderHook(() => useStyles());
+    const styles = result.current;
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
   });
 
@@ -105,25 +112,25 @@ describe('borderRadius: 10 → borderRadius.medium', () => {
     expect(styles.iconContainer.borderRadius).toBe(borderRadius.medium);
   });
 
-  it('CategoryChip uses medium for iconWrapper', () => {
-    const { styles } = require('@/components/CategoryChip/CategoryChip.styles');
-    expect(styles.iconWrapper.borderRadius).toBe(borderRadius.medium);
+  it('EmojiGrid uses medium for emojiCell', () => {
+    const { styles } = require('@/components/EmojiPickerV2/EmojiGrid/styles');
+    expect(styles.emojiCell.borderRadius).toBe(borderRadius.medium);
   });
 
-  it('FullsizeTemplatePreview/tips uses medium for tipIconContainer', () => {
+  it('FullsizeTemplatePreview detail uses medium for videoCard', () => {
     const {
-      tipsStyles,
-    } = require('@/components/FullsizeTemplatePreview/styles/tips.styles');
-    expect(tipsStyles.tipIconContainer.borderRadius).toBe(borderRadius.medium);
-  });
-
-  it('FullsizeTemplatePreview/science uses medium for researchLinkButton', () => {
-    const {
-      scienceStyles,
-    } = require('@/components/FullsizeTemplatePreview/styles/science.styles');
-    expect(scienceStyles.researchLinkButton.borderRadius).toBe(
+      evidenceDetailStyles,
+    } = require('@/components/FullsizeTemplatePreview/styles/evidenceDetail.styles');
+    expect(evidenceDetailStyles.videoCard.borderRadius).toBe(
       borderRadius.medium
     );
+  });
+
+  it('FullsizeTemplatePreview/hero uses medium for metadataPill', () => {
+    const {
+      heroStyles,
+    } = require('@/components/FullsizeTemplatePreview/styles/hero.styles');
+    expect(heroStyles.metadataPill.borderRadius).toBe(borderRadius.medium);
   });
 });
 
@@ -143,14 +150,18 @@ describe('borderRadius: 18 → borderRadius.full (circular 36px elements)', () =
   });
 });
 
-describe('borderRadius: 24 → borderRadius.xl', () => {
+describe('borderRadius.xl component mappings', () => {
   it('ArchiveUndoToast uses xl for toast', () => {
-    const { styles } = require('@/components/ArchiveUndoToast/styles');
+    const { useToastStyles } = require('@/components/ArchiveUndoToast/styles');
+    const { result } = renderHook(() => useToastStyles());
+    const styles = result.current;
     expect(styles.toast.borderRadius).toBe(borderRadius.xl);
   });
 
   it('DeleteUndoToast uses xl for toast', () => {
-    const { styles } = require('@/components/DeleteUndoToast/styles');
+    const { useToastStyles } = require('@/components/DeleteUndoToast/styles');
+    const { result } = renderHook(() => useToastStyles());
+    const styles = result.current;
     expect(styles.toast.borderRadius).toBe(borderRadius.xl);
   });
 
@@ -161,11 +172,11 @@ describe('borderRadius: 24 → borderRadius.xl', () => {
     expect(heroStyles.iconContainer.borderRadius).toBe(borderRadius.xl);
   });
 
-  it('FullsizeTemplatePreview/footer uses xl for successButtonGlow', () => {
+  it('FullsizeTemplatePreview/science uses xl for cards', () => {
     const {
-      footerStyles,
-    } = require('@/components/FullsizeTemplatePreview/styles/footer.styles');
-    expect(footerStyles.successButtonGlow.borderRadius).toBe(borderRadius.xl);
+      scienceStyles,
+    } = require('@/components/FullsizeTemplatePreview/styles/science.styles');
+    expect(scienceStyles.card.borderRadius).toBe(borderRadius.xl);
   });
 
   it('TodaysFocusCard/elementStyles uses xl for iconContainer', () => {
@@ -194,7 +205,9 @@ describe('borderRadius: 28/32/48 → borderRadius.full (circular glows)', () => 
 
 describe('corner-specific borderRadius tokenized', () => {
   it('ArchiveUndoToast uses xl for bottom corner radii', () => {
-    const { styles } = require('@/components/ArchiveUndoToast/styles');
+    const { useToastStyles } = require('@/components/ArchiveUndoToast/styles');
+    const { result } = renderHook(() => useToastStyles());
+    const styles = result.current;
     expect(styles.progressContainer.borderBottomLeftRadius).toBe(
       borderRadius.xl
     );
@@ -204,7 +217,9 @@ describe('corner-specific borderRadius tokenized', () => {
   });
 
   it('DeleteUndoToast uses xl for bottom corner radii', () => {
-    const { styles } = require('@/components/DeleteUndoToast/styles');
+    const { useToastStyles } = require('@/components/DeleteUndoToast/styles');
+    const { result } = renderHook(() => useToastStyles());
+    const styles = result.current;
     expect(styles.progressContainer.borderBottomLeftRadius).toBe(
       borderRadius.xl
     );

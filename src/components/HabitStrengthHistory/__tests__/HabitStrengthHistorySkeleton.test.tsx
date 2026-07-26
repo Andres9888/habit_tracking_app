@@ -111,7 +111,9 @@ describe('HabitStrengthHistorySkeleton', () => {
   describe('Accessibility', () => {
     it('should have correct accessibility label', () => {
       const { getByLabelText } = render(<HabitStrengthHistorySkeleton />);
-      expect(getByLabelText('Loading habit strength history')).toBeTruthy();
+      expect(
+        getByLabelText('Loading your habit strength history...')
+      ).toBeTruthy();
     });
 
     it('should be marked as accessible', () => {
