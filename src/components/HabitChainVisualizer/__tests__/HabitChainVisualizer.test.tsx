@@ -13,15 +13,23 @@ const WEEK_DATE_STRINGS = [
   '2025-12-07',
 ];
 
-const WEEK_STATUS = ['done', 'planned', 'planned', 'planned', 'planned', 'planned', 'planned'] as const;
+const WEEK_STATUS = [
+  'done',
+  'planned',
+  'planned',
+  'planned',
+  'planned',
+  'planned',
+  'planned',
+] as const;
 
 describe('HabitChainVisualizer', () => {
   it('renders a checkbox icon when completionIcon is checkbox', () => {
     const { getAllByTestId } = render(
       <HabitChainVisualizer
-        accentColor="#10b981"
+        accentColor='#10b981'
         celebrationsEnabled={false}
-        completionIcon="checkbox"
+        completionIcon='checkbox'
         habitId={'habits:test' as Id<'habits'>}
         onToggle={() => {}}
         reduceMotionPreference={true}
@@ -36,9 +44,9 @@ describe('HabitChainVisualizer', () => {
   it('does not render a checkbox icon when completionIcon is chain', () => {
     const { queryByTestId } = render(
       <HabitChainVisualizer
-        accentColor="#10b981"
+        accentColor='#10b981'
         celebrationsEnabled={false}
-        completionIcon="chain"
+        completionIcon='chain'
         habitId={'habits:test' as Id<'habits'>}
         onToggle={() => {}}
         reduceMotionPreference={true}
@@ -51,9 +59,9 @@ describe('HabitChainVisualizer', () => {
   });
 
   it('renders square shape by default', () => {
-    const { getByRole } = render(
+    const { getAllByRole } = render(
       <HabitChainVisualizer
-        accentColor="#10b981"
+        accentColor='#10b981'
         habitId={'habits:test' as Id<'habits'>}
         onToggle={() => {}}
         weekDateStrings={WEEK_DATE_STRINGS}
@@ -61,40 +69,48 @@ describe('HabitChainVisualizer', () => {
       />
     );
 
-    // Default shape should be square (rendered with borderRadius: 9)
-    expect(getByRole('button')).toBeTruthy();
+    expect(getAllByRole('button')).toHaveLength(WEEK_DATE_STRINGS.length);
+    expect(getAllByRole('button')[0].props.style.borderRadius).toBe(10);
   });
 
   it('renders circle shape when shape prop is circle', () => {
-    const { getByRole } = render(
+    const { getAllByRole } = render(
       <HabitChainVisualizer
-        accentColor="#10b981"
+        accentColor='#10b981'
         habitId={'habits:test' as Id<'habits'>}
         onToggle={() => {}}
-        shape="circle"
+        shape='circle'
         weekDateStrings={WEEK_DATE_STRINGS}
         weekStatus={[...WEEK_STATUS]}
       />
     );
 
-    // Circle shape should be rendered with borderRadius: 20
-    expect(getByRole('button')).toBeTruthy();
+    expect(getAllByRole('button')).toHaveLength(WEEK_DATE_STRINGS.length);
+    expect(getAllByRole('button')[0].props.style.borderRadius).toBe(22);
   });
 
   it('shows chain connectors when showConnectors is true', () => {
-    const { container } = render(
+    const { toJSON } = render(
       <HabitChainVisualizer
-        accentColor="#10b981"
+        accentColor='#10b981'
         habitId={'habits:test' as Id<'habits'>}
         onToggle={() => {}}
         showConnectors={true}
         weekDateStrings={WEEK_DATE_STRINGS}
-        weekStatus={['done', 'done', 'done', 'planned', 'planned', 'planned', 'planned']}
+        weekStatus={[
+          'done',
+          'done',
+          'done',
+          'planned',
+          'planned',
+          'planned',
+          'planned',
+        ]}
       />
     );
 
-    // Connectors should be visible between completed days
-    expect(container).toBeTruthy();
+    const tree = JSON.stringify(toJSON());
+    expect(tree).toContain('"height":3');
+    expect(tree).toContain('"minWidth":14');
   });
 });
-

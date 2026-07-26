@@ -23,7 +23,7 @@ describe('useButtonAnimation uses springs.button', () => {
   });
 
   it('uses springs.button for press-in', () => {
-    expect(source).toContain('withSpring(0.96, springs.button)');
+    expect(source).toContain('withSpring(CARD_PRESS_SCALE, springs.button)');
   });
 
   it('uses springs.button for press-out', () => {
@@ -34,40 +34,16 @@ describe('useButtonAnimation uses springs.button', () => {
     expect(source).not.toMatch(/\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/);
   });
 
-  it('uses 0.96 scale target (matches AnimatedPressable)', () => {
-    expect(source).toContain('0.96');
+  it('uses the shared card press scale target', () => {
+    expect(source).toContain(
+      "import { CARD_PRESS_SCALE } from '@/utils/animations/cardPressAnimation'"
+    );
     expect(source).not.toContain('0.95');
   });
 });
 
-describe('useCategoryChipHandlers uses springs.button', () => {
-  const source = readSource(
-    'components/CategoryChip/useCategoryChipHandlers.ts'
-  );
-
-  it('imports springs from @/theme/animations', () => {
-    expect(source).toMatch(
-      /import\s+\{[^}]*springs[^}]*\}\s+from\s+['"]@\/theme\/animations['"]/
-    );
-  });
-
-  it('uses springs.button for press-in', () => {
-    expect(source).toContain('withSpring(CARD_PRESS_SCALE, springs.button)');
-  });
-
-  it('uses springs.button for press-out', () => {
-    expect(source).toContain('withSpring(CARD_REST_SCALE, springs.button)');
-  });
-
-  it('does not have hardcoded spring configs', () => {
-    expect(source).not.toMatch(/\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/);
-  });
-});
-
-describe('ScienceBox uses springs.button', () => {
-  const source = readSource(
-    'components/FullsizeTemplatePreview/components/ScienceBox.tsx'
-  );
+describe('CategoryPill uses springs.button', () => {
+  const source = readSource('components/EmojiPickerV2/CategoryPill.tsx');
 
   it('imports springs from @/theme/animations', () => {
     expect(source).toMatch(
@@ -81,6 +57,30 @@ describe('ScienceBox uses springs.button', () => {
 
   it('uses springs.button for press-out', () => {
     expect(source).toContain('withSpring(1, springs.button)');
+  });
+
+  it('does not have hardcoded spring configs', () => {
+    expect(source).not.toMatch(/\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/);
+  });
+});
+
+describe('FullsizeTemplatePreview button handlers use the canonical button spring', () => {
+  const source = readSource(
+    'components/FullsizeTemplatePreview/hooks/useButtonAnimations.ts'
+  );
+
+  it('imports Springs from the shared motion constants', () => {
+    expect(source).toMatch(
+      /import\s+\{[^}]*Springs[^}]*\}\s+from\s+['"]\.\.\/\.\.\/\.\.\/constants\/motion['"]/
+    );
+  });
+
+  it('uses springs.button for press-in', () => {
+    expect(source).toContain('withSpring(scale, Springs.button)');
+  });
+
+  it('uses springs.button for press-out', () => {
+    expect(source).toContain('withSpring(1, Springs.button)');
   });
 
   it('does not have hardcoded spring configs', () => {
@@ -129,15 +129,12 @@ describe('EmojiChip uses canonical premium spring for press-out', () => {
     expect(source).toContain('withSpring(1, springs.standard)');
   });
 
-  it('preserves 1 → 1.08 → 1 press timing pattern', () => {
-    expect(source).toContain('withSequence');
-    expect(source).toContain('withTiming(1.08, { duration: 100 })');
+  it('preserves the scale-down then spring-to-rest press pattern', () => {
+    expect(source).toContain('withTiming(0.97, { duration: 50 })');
     expect(source).toContain('withSpring(1, springs.standard)');
   });
 
   it('does not have hardcoded spring payload objects', () => {
-    expect(source).not.toMatch(
-      /\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/
-    );
+    expect(source).not.toMatch(/\{\s*damping:\s*\d+,\s*stiffness:\s*\d+\s*\}/);
   });
 });
