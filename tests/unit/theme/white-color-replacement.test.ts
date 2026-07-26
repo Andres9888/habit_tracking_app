@@ -6,8 +6,18 @@
 import { colors } from '@/theme/colors';
 import { layoutStyles } from '@/components/OfflinePendingBanner/styles/layout.styles';
 import { controlsStyles } from '@/components/OfflinePendingBanner/styles/controls.styles';
-import { styles as archiveToastStyles } from '@/components/ArchiveUndoToast/styles';
-import { styles as deleteToastStyles } from '@/components/DeleteUndoToast/styles';
+import * as fs from 'fs';
+import * as path from 'path';
+
+const SRC_ROOT = path.resolve(__dirname, '../../../src');
+const archiveToastSource = fs.readFileSync(
+  path.join(SRC_ROOT, 'components/ArchiveUndoToast/styles.ts'),
+  'utf-8'
+);
+const deleteToastSource = fs.readFileSync(
+  path.join(SRC_ROOT, 'components/DeleteUndoToast/styles.ts'),
+  'utf-8'
+);
 
 describe('White Color Replacement - Banner & Toast', () => {
   describe('OfflinePendingBanner', () => {
@@ -23,14 +33,14 @@ describe('White Color Replacement - Banner & Toast', () => {
   });
 
   describe('ArchiveUndoToast', () => {
-    it('should use colors.light.card for toast background', () => {
-      expect(archiveToastStyles.toast.backgroundColor).toBe(colors.light.card);
+    it('should use the theme-aware card token for toast background', () => {
+      expect(archiveToastSource).toContain('backgroundColor: colors.card');
     });
   });
 
   describe('DeleteUndoToast', () => {
-    it('should use colors.light.card for toast background', () => {
-      expect(deleteToastStyles.toast.backgroundColor).toBe(colors.light.card);
+    it('should use the theme-aware card token for toast background', () => {
+      expect(deleteToastSource).toContain('backgroundColor: colors.card');
     });
   });
 
@@ -39,8 +49,8 @@ describe('White Color Replacement - Banner & Toast', () => {
       expect(colors.text.inverse.toLowerCase()).toBe('#ffffff');
     });
 
-    it('colors.light.card should be #ffffff', () => {
-      expect(colors.light.card.toLowerCase()).toBe('#ffffff');
+    it('colors.light.card should be the warm level-one surface', () => {
+      expect(colors.light.card.toLowerCase()).toBe('#edeae5');
     });
   });
 
@@ -61,19 +71,15 @@ describe('White Color Replacement - Banner & Toast', () => {
     });
 
     it('should maintain ArchiveUndoToast structure', () => {
-      expect(archiveToastStyles.toast).toMatchObject({
-        borderWidth: 1,
-        maxWidth: 400,
-        overflow: 'hidden',
-      });
+      expect(archiveToastSource).toMatch(
+        /toast:\s*\{[\s\S]*?borderWidth:\s*1[\s\S]*?maxWidth:\s*400[\s\S]*?overflow:\s*'hidden'/
+      );
     });
 
     it('should maintain DeleteUndoToast structure', () => {
-      expect(deleteToastStyles.toast).toMatchObject({
-        borderWidth: 1,
-        maxWidth: 400,
-        overflow: 'hidden',
-      });
+      expect(deleteToastSource).toMatch(
+        /toast:\s*\{[\s\S]*?borderWidth:\s*1[\s\S]*?maxWidth:\s*400[\s\S]*?overflow:\s*'hidden'/
+      );
     });
   });
 });

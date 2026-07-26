@@ -85,12 +85,14 @@ describe('PersonalBestsCard', () => {
   });
 
   it('displays current streak when active', () => {
-    const { getByText } = render(
+    const { getByLabelText, queryByText } = render(
       <PersonalBestsCard {...defaultProps} currentStreak={5} />
     );
-    expect(getByText('5 days')).toBeTruthy();
-    expect(getByText('Current Streak')).toBeTruthy();
-    expect(getByText('NOW 🔥')).toBeTruthy();
+    expect(
+      getByLabelText('Personal bests, current streak 5 days')
+    ).toBeTruthy();
+    expect(queryByText('Current Streak')).toBeNull();
+    expect(queryByText('NOW 🔥')).toBeNull();
   });
 
   it('hides current streak section when streak is 0', () => {
@@ -155,7 +157,7 @@ describe('PersonalBestsCard', () => {
     expect(mockOnPress).toHaveBeenCalledTimes(1);
   });
 
-  it('hides best/worst cards when worstDay rate >= bestDay rate', () => {
+  it('keeps best/worst cards visible when rates are equal', () => {
     const propsWithSameRates = {
       ...defaultProps,
       bestDay: createDayStats('Mon', 1, 80),
@@ -165,8 +167,8 @@ describe('PersonalBestsCard', () => {
     const { queryByText } = render(
       <PersonalBestsCard {...propsWithSameRates} />
     );
-    expect(queryByText('Best Day')).toBeNull();
-    expect(queryByText('Focus On')).toBeNull();
+    expect(queryByText('Best Day')).toBeTruthy();
+    expect(queryByText('Focus On')).toBeTruthy();
   });
 
   it('shows empty state when no records and no streak', () => {
