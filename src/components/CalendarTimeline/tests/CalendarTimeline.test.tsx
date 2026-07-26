@@ -223,10 +223,9 @@ describe('CalendarTimeline', () => {
         />
       );
 
-      const nextButton = screen.getByRole('button', { name: 'Next week' });
-
-      fireEvent.press(nextButton);
-
+      expect(
+        screen.queryByRole('button', { name: 'Next week' })
+      ).toBeNull();
       expect(onNextWeek).not.toHaveBeenCalled();
     });
   });

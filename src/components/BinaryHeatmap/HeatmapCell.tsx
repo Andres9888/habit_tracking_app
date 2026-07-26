@@ -13,6 +13,7 @@ import type { GestureResponderEvent } from 'react-native';
 import type { BinaryDay } from './types';
 import { styles } from './BinaryHeatmapNew.styles';
 import { getCellBackgroundColor, getChainCellShapeStyle } from './cellHelpers';
+import { getBinaryCellAccessibilityLabel } from './utils';
 
 export interface HeatmapCellProps {
   day: BinaryDay | null;
@@ -43,14 +44,26 @@ export const HeatmapCell = memo(function HeatmapCell({
     },
     shape === 'circle' ? getChainCellShapeStyle(day, isDark) : null,
   ];
+  const accessibilityLabel = getBinaryCellAccessibilityLabel(day);
 
   if (!day || !onCellPress || day.isFuture || day.isBeforeCreation) {
-    return <View style={cellStyle} />;
+    return (
+      <View
+        accessible
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole='text'
+        style={cellStyle}
+      />
+    );
   }
 
   return (
     <Pressable
+      accessible
+      accessibilityHint={day.isToday ? 'Today' : 'Tap to toggle completion'}
+      accessibilityLabel={accessibilityLabel}
       accessibilityRole='button'
+      accessibilityState={{ selected: day.completed }}
       style={cellStyle}
       onPress={(e: GestureResponderEvent) =>
         onCellPress(day.date, day.completed, {

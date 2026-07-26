@@ -9,6 +9,10 @@ import {
   validateHabitsArray,
   safeParseNumber,
 } from '../validation';
+import {
+  MAX_HABIT_NAME_LENGTH,
+  MIN_HABIT_NAME_LENGTH,
+} from '@/constants';
 
 describe('validation - enhanced edge cases', () => {
   describe('validateHabitName', () => {
@@ -66,30 +70,33 @@ describe('validation - enhanced edge cases', () => {
     });
 
     describe('length edge cases', () => {
-      it('accepts single character name', () => {
+      it('rejects names shorter than the current minimum', () => {
         const result = validateHabitName('X');
-        expect(result.isValid).toBe(true);
+        expect(MIN_HABIT_NAME_LENGTH).toBe(2);
+        expect(result.isValid).toBe(false);
         expect(result.sanitized).toBe('X');
       });
 
       it('accepts name at maximum length', () => {
-        const maxName = 'a'.repeat(200);
+        const maxName = 'a'.repeat(MAX_HABIT_NAME_LENGTH);
         const result = validateHabitName(maxName);
         expect(result.isValid).toBe(true);
         expect(result.sanitized).toBe(maxName);
       });
 
       it('rejects name exceeding maximum length', () => {
-        const tooLong = 'a'.repeat(201);
+        const tooLong = 'a'.repeat(MAX_HABIT_NAME_LENGTH + 1);
         const result = validateHabitName(tooLong);
         expect(result.isValid).toBe(false);
-        expect(result.error).toContain('200 characters or less');
+        expect(result.error).toContain(
+          `${MAX_HABIT_NAME_LENGTH} characters or less`
+        );
       });
 
       it('truncates overly long name in sanitized output', () => {
-        const tooLong = 'a'.repeat(250);
+        const tooLong = 'a'.repeat(MAX_HABIT_NAME_LENGTH + 50);
         const result = validateHabitName(tooLong);
-        expect(result.sanitized).toHaveLength(200);
+        expect(result.sanitized).toHaveLength(MAX_HABIT_NAME_LENGTH);
       });
 
       it('handles empty string', () => {
@@ -244,9 +251,10 @@ describe('validation - enhanced edge cases', () => {
         expect(result.error).toContain('out of valid range');
       });
 
-      it('accepts dates at 1900', () => {
+      it('rejects valid dates outside the supported history window', () => {
         const result = validateDateString('1900-01-01');
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('more than 5 years in the past');
       });
 
       it('rejects dates after 2100', () => {
@@ -254,9 +262,10 @@ describe('validation - enhanced edge cases', () => {
         expect(result.isValid).toBe(false);
       });
 
-      it('accepts dates at 2100', () => {
+      it('rejects valid dates outside the supported future window', () => {
         const result = validateDateString('2100-12-31');
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('more than 2 years in the future');
       });
 
       it('rejects dates more than 5 years in past', () => {
@@ -283,9 +292,10 @@ describe('validation - enhanced edge cases', () => {
     });
 
     describe('boundary dates', () => {
-      it('handles leap year century rule (2000 is leap year)', () => {
+      it('applies the supported range after calendar validation', () => {
         const result = validateDateString('2000-02-29');
-        expect(result.isValid).toBe(true);
+        expect(result.isValid).toBe(false);
+        expect(result.error).toContain('more than 5 years in the past');
       });
 
       it('handles non-leap year century (1900 not leap year)', () => {

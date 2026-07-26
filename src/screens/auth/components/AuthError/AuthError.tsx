@@ -14,6 +14,7 @@ export function AuthError({ message, onDismiss }: AuthErrorProps) {
 
   return (
     <Animated.View
+      accessible
       accessibilityLiveRegion='assertive'
       accessibilityRole='alert'
       className='mb-4 flex-row items-start gap-3 rounded-2xl border p-4'

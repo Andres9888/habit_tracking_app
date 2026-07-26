@@ -16,12 +16,12 @@ function readSource(relativePath: string): string {
 describe('CharacterScreen safe area handling', () => {
   const source = readSource('screens/CharacterScreen/CharacterScreen.tsx');
 
-  it('imports useSafeAreaInsets', () => {
-    expect(source).toContain('useSafeAreaInsets');
+  it('uses the shared ScreenHeader', () => {
+    expect(source).toContain('ScreenHeader');
   });
 
-  it('calls useSafeAreaInsets hook', () => {
-    expect(source).toMatch(/const\s+insets\s*=\s*useSafeAreaInsets\(\)/);
+  it('delegates safe-area handling to ScreenHeader', () => {
+    expect(source).not.toContain('useSafeAreaInsets');
   });
 
   it('does not use hardcoded pt-[60px]', () => {
@@ -32,9 +32,8 @@ describe('CharacterScreen safe area handling', () => {
     expect(source).not.toMatch(/pt-\[\d+px\]/);
   });
 
-  it('uses paddingTop with insets (pending migration to canonical formula)', () => {
-    expect(source).toContain('paddingTop');
-    expect(source).toContain('insets.top');
+  it('renders the canonical header for the Character screen', () => {
+    expect(source).toContain("<ScreenHeader title='Character'");
   });
 });
 
@@ -62,26 +61,23 @@ describe('Consistent safe area formula across shared components', () => {
   const screenHeaderSource = readSource(
     'components/ScreenHeader/ScreenHeader.tsx'
   );
-  const safeHeaderSource = readSource(
-    'components/SafeHeader/SafeHeader.tsx'
-  );
 
-  it('ScreenHeader and SafeHeader use compatible formulas', () => {
+  it('ScreenHeader owns the canonical formula', () => {
     const formula = /Math\.max/;
     expect(screenHeaderSource).toMatch(formula);
-    expect(safeHeaderSource).toMatch(formula);
+    expect(screenHeaderSource).toContain('insets.top');
   });
 });
 
 describe('HabitDetailScreen retains its existing inset pattern', () => {
   const source = readSource('screens/HabitDetailScreen/HabitDetailScreen.tsx');
 
-  it('uses useSafeAreaInsets', () => {
-    expect(source).toContain('useSafeAreaInsets');
+  it('uses ScreenHeader for safe-area handling', () => {
+    expect(source).toContain('ScreenHeader');
   });
 
-  it('uses Math.max(insets.top + 4, 12) for header', () => {
-    expect(source).toMatch(/Math\.max\(insets\.top\s*\+\s*4,\s*12\)/);
+  it('does not duplicate the shared inset formula', () => {
+    expect(source).not.toContain('useSafeAreaInsets');
   });
 });
 
@@ -97,23 +93,23 @@ describe('HabitEditScreen retains its existing inset pattern', () => {
   });
 });
 
-describe('SafeHeader component exists with correct defaults', () => {
-  const source = readSource('components/SafeHeader/SafeHeader.tsx');
+describe('ScreenHeader component exists with correct defaults', () => {
+  const source = readSource('components/ScreenHeader/ScreenHeader.tsx');
 
-  it('exports SafeHeader component', () => {
-    expect(source).toMatch(/export\s+(function|const)\s+SafeHeader/);
+  it('exports ScreenHeader component', () => {
+    expect(source).toMatch(/export\s+(function|const)\s+ScreenHeader/);
   });
 
   it('uses useSafeAreaInsets', () => {
     expect(source).toContain('useSafeAreaInsets');
   });
 
-  it('has additionalPadding default of 8', () => {
-    expect(source).toMatch(/additionalPadding\s*=\s*8/);
+  it('adds 8 points to the top inset', () => {
+    expect(source).toMatch(/insets\.top\s*\+\s*8/);
   });
 
-  it('has minPadding default of 16', () => {
-    expect(source).toMatch(/minPadding\s*=\s*16/);
+  it('uses a minimum padding of 16', () => {
+    expect(source).toMatch(/,\s*16\)/);
   });
 
   it('uses Math.max pattern', () => {

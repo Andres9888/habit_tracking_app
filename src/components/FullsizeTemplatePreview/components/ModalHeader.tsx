@@ -11,7 +11,6 @@ import Animated from 'react-native-reanimated';
 import { colors } from '@/theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
 import { borderRadius } from '@/theme/spacing';
-import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { layoutStyles } from '../styles';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
@@ -38,12 +37,6 @@ export function ModalHeader({
   const { colors: themeColors, isDark } = useThemeColors();
   const subtleBg = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)';
 
-  const handleBack = () => {
-    if (!onBack) return;
-    triggerHaptic('tap');
-    onBack();
-  };
-
   return (
     <Animated.View
       style={[
@@ -69,7 +62,7 @@ export function ModalHeader({
             accessibilityRole='button'
             testID='templates-preview-back'
             style={[s.backButton, { backgroundColor: subtleBg }]}
-            onPress={handleBack}
+            onPress={onBack}
           >
             <ChevronLeft
               color={themeColors.text.secondary}
@@ -81,6 +74,7 @@ export function ModalHeader({
           <View />
         )}
         <ModalCloseButton
+          haptic={false}
           label='Close preview'
           variant='subtle'
           onClose={onClose}

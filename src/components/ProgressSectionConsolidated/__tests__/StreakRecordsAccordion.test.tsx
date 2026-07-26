@@ -441,7 +441,7 @@ describe('StreakRecordsAccordion', () => {
       const { getByLabelText } = render(
         <StreakRecordsAccordion streakRecords={[]} currentStreak={0} />
       );
-      expect(getByLabelText(/No streak records yet/)).toBeTruthy();
+      expect(getByLabelText(/No Streaks Yet/)).toBeTruthy();
     });
   });
 

@@ -286,7 +286,7 @@ describe('streak - enhanced edge cases', () => {
     });
 
     it('handles December-January transition at midnight', () => {
-      const newYearMidnight = new Date('2024-01-01T00:00:00Z');
+      const newYearMidnight = new Date(2024, 0, 1);
       
       const completedDates = new Set([
         '2024-01-01',

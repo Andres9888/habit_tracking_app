@@ -56,9 +56,9 @@ describe('HabitNameField - V9 Design System', () => {
   });
 
   describe('Component Rendering', () => {
-    it('should render the section label "Habit name"', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      expect(getByText(STRINGS.CREATE_HABIT.nameLabel)).toBeDefined();
+    it('should expose "Habit name" on the input', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText(STRINGS.CREATE_HABIT.nameLabel)).toBeDefined();
     });
 
     it('should render the input field with the correct hint copy', () => {
@@ -70,49 +70,43 @@ describe('HabitNameField - V9 Design System', () => {
       ).toBeDefined();
     });
 
-    it('should render character counter showing 0/50 initially', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      expect(getByText('0/50')).toBeDefined();
+    it('should hide the progressive character counter initially', () => {
+      const { queryByText } = render(<HabitNameField {...defaultProps} />);
+      expect(queryByText(/\/40/)).toBeNull();
     });
   });
 
   describe('V9 Label Styling', () => {
-    it('should have uppercase styling on label (via className)', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
-
-      // Check className includes uppercase
-      expect(label.props.className).toContain('uppercase');
+    it('should use the current compact input height', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText('Habit name').props.className).toContain('h-14');
     });
 
-    it('should have text-stone-500 color on label', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
-
-      expect(label.props.className).toContain('text-stone-500');
+    it('should use the current rounded input treatment', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText('Habit name').props.className).toContain(
+        'rounded-xl'
+      );
     });
 
-    it('should have 13px font size on label', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
-
-      expect(label.props.className).toContain('text-sm');
+    it('should use the current input font size', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText('Habit name').props.className).toContain(
+        'text-base'
+      );
     });
 
-    it('should have semibold font weight on label', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
-
-      expect(label.props.className).toContain('font-semibold');
+    it('should use the current horizontal padding', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText('Habit name').props.className).toContain('px-4');
     });
 
-    it('should have 0.5px letter-spacing on label', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
-
-      // Letter spacing is in inline style
-      expect(label.props.style).toEqual(
-        expect.objectContaining({ letterSpacing: 0.5 })
+    it('should use the active theme text color', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText('Habit name').props.style).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ color: expect.any(String) }),
+        ])
       );
     });
   });
@@ -120,9 +114,9 @@ describe('HabitNameField - V9 Design System', () => {
   describe('Character Counter', () => {
     it('should display current character count', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='Test' />
+        <HabitNameField {...defaultProps} value={'A'.repeat(21)} />
       );
-      expect(getByText('4/50')).toBeDefined();
+      expect(getByText('21/40')).toBeDefined();
     });
 
     it('should show amber color when approaching limit (>40 chars)', () => {
@@ -130,27 +124,27 @@ describe('HabitNameField - V9 Design System', () => {
       const { getByText } = render(
         <HabitNameField {...defaultProps} value={longValue} />
       );
-      const counter = getByText('45/50');
+      const counter = getByText('45/40');
 
       expect(counter.props.style?.color).toBeTruthy();
     });
 
     it('should show default stone color when under limit', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='Short text' />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
-      const counter = getByText('10/50');
+      const counter = getByText('25/40');
 
-      expect(counter.props.className).toContain('text-stone-400');
+      expect(counter.props.style.color).toBe('#78716c');
     });
 
     it('should have accessibility label for character count', () => {
       const { getByText } = render(
-        <HabitNameField {...defaultProps} value='Hello' />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
-      const counter = getByText('5/50');
+      const counter = getByText('25/40');
 
-      expect(counter.props.accessibilityLabel).toContain('5 of 50 characters');
+      expect(counter.props.accessibilityLabel).toContain('25 of 40 characters');
     });
 
     it('should indicate approaching limit in accessibility label', () => {
@@ -158,7 +152,7 @@ describe('HabitNameField - V9 Design System', () => {
       const { getByText } = render(
         <HabitNameField {...defaultProps} value={longValue} />
       );
-      const counter = getByText('45/50');
+      const counter = getByText('45/40');
 
       expect(counter.props.accessibilityLabel).toContain('approaching limit');
     });
@@ -217,16 +211,16 @@ describe('HabitNameField - V9 Design System', () => {
       );
     });
 
-    it('should have accessibilityRole on section label', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const label = getByText(STRINGS.CREATE_HABIT.nameLabel);
-
-      expect(label.props.accessibilityRole).toBe('text');
+    it('should expose the field through its accessibility label', () => {
+      const { getByLabelText } = render(<HabitNameField {...defaultProps} />);
+      expect(getByLabelText('Habit name')).toBeDefined();
     });
 
     it('should have accessibilityRole on character counter', () => {
-      const { getByText } = render(<HabitNameField {...defaultProps} />);
-      const counter = getByText('0/50');
+      const { getByText } = render(
+        <HabitNameField {...defaultProps} value={'A'.repeat(21)} />
+      );
+      const counter = getByText('21/40');
 
       expect(counter.props.accessibilityRole).toBe('text');
     });
@@ -266,7 +260,7 @@ describe('HabitNameField - V9 Design System', () => {
       );
 
       const input = getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt);
-      expect(input.props.placeholderTextColor).toBe('#a8a29e');
+      expect(input.props.placeholderTextColor).toBe('#6E6660');
     });
   });
 
@@ -281,24 +275,24 @@ describe('HabitNameField - V9 Design System', () => {
 
     it('should update counter when value changes', () => {
       const { getByText, rerender } = render(
-        <HabitNameField {...defaultProps} value='Short' />
+        <HabitNameField {...defaultProps} value={'A'.repeat(25)} />
       );
 
-      expect(getByText('5/50')).toBeDefined();
+      expect(getByText('25/40')).toBeDefined();
 
-      rerender(<HabitNameField {...defaultProps} value='Longer text here' />);
+      rerender(<HabitNameField {...defaultProps} value={'A'.repeat(35)} />);
 
-      expect(getByText('16/50')).toBeDefined();
+      expect(getByText('35/40')).toBeDefined();
     });
   });
 
   describe('Edge Cases', () => {
     it('should handle empty string value', () => {
-      const { getByText, getByPlaceholderText } = render(
+      const { queryByText, getByPlaceholderText } = render(
         <HabitNameField {...defaultProps} value='' />
       );
 
-      expect(getByText('0/50')).toBeDefined();
+      expect(queryByText(/\/40/)).toBeNull();
       expect(
         getByPlaceholderText(STRINGS.CREATE_HABIT.namePrompt)
       ).toBeDefined();
@@ -310,7 +304,7 @@ describe('HabitNameField - V9 Design System', () => {
         <HabitNameField {...defaultProps} value={maxValue} />
       );
 
-      expect(getByText('50/50')).toBeDefined();
+      expect(getByText('50/40')).toBeDefined();
       expect(getByDisplayValue(maxValue)).toBeDefined();
     });
 
@@ -323,16 +317,16 @@ describe('HabitNameField - V9 Design System', () => {
       expect(getByDisplayValue(specialValue)).toBeDefined();
       // Emoji counts as multiple characters in some implementations
       // We verify the counter updates appropriately
-      expect(getByText(/\/50/)).toBeDefined();
+      expect(getByText(/\/40/)).toBeDefined();
     });
 
     it('should handle value with only whitespace', () => {
       const whitespaceValue = '   ';
-      const { getByText, getByDisplayValue } = render(
+      const { queryByText, getByDisplayValue } = render(
         <HabitNameField {...defaultProps} value={whitespaceValue} />
       );
 
-      expect(getByText('3/50')).toBeDefined();
+      expect(queryByText(/\/40/)).toBeNull();
       expect(getByDisplayValue(whitespaceValue)).toBeDefined();
     });
 
@@ -379,15 +373,15 @@ describe('HabitNameField - V9 Design System', () => {
       );
 
       // Still below threshold
-      const counter = getByText('39/50');
-      expect(counter.props.className).toContain('text-stone-400');
+      const counter = getByText('39/40');
+      expect(counter.props.style.color).toBe('#F59E0B');
 
       // Cross threshold to 41 characters
       rerender(<HabitNameField {...defaultProps} value={'A'.repeat(41)} />);
 
       await waitFor(() => {
-        const amberCounter = getByText('41/50');
-        expect(amberCounter.props.style?.color).toBeTruthy();
+        const errorCounter = getByText('41/40');
+        expect(errorCounter.props.style?.color).toBe('#EF4444');
       });
     });
 

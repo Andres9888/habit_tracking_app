@@ -30,7 +30,7 @@ jest.mock('react-native-safe-area-context', () => ({
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
   const React = require('react');
-  const { View, Pressable, Text } = require('react-native');
+  const { View, Pressable, ScrollView, Text } = require('react-native');
 
   const AnimatedView = React.forwardRef(
     (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
@@ -45,6 +45,12 @@ jest.mock('react-native-reanimated', () => {
     }
   );
   AnimatedText.displayName = 'AnimatedText';
+  const AnimatedScrollView = React.forwardRef(
+    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+      return React.createElement(ScrollView, { ...props, ref });
+    }
+  );
+  AnimatedScrollView.displayName = 'AnimatedScrollView';
 
   const createAnimatedComponent = (
     Component: React.ComponentType<Record<string, unknown>>
@@ -61,6 +67,7 @@ jest.mock('react-native-reanimated', () => {
   const Animated = {
     View: AnimatedView,
     Text: AnimatedText,
+    ScrollView: AnimatedScrollView,
     createAnimatedComponent,
   };
 
@@ -449,7 +456,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByLabelText(/Import.*habit/i);
+      const importButton = getByLabelText(
+        'Add Morning Meditation to my habits'
+      );
       fireEvent.press(importButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -471,7 +480,7 @@ describe('FullsizeTemplatePreview', () => {
       );
 
       const customizeButton = getByLabelText(
-        'Customize habit before importing'
+        'Customize habit before adding'
       );
       fireEvent.press(customizeButton);
 
@@ -522,7 +531,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('Importing...')).toBeTruthy();
+      expect(getByText('Adding…')).toBeTruthy();
     });
 
     it('shows success state when isImported is true', () => {
@@ -540,9 +549,11 @@ describe('FullsizeTemplatePreview', () => {
 
       expect(getByText('Added!')).toBeTruthy();
       // The import button should not be shown (it's replaced with success button)
-      expect(queryByLabelText(/Import.*habit/i)).toBeNull();
+      expect(
+        queryByLabelText('Add Morning Meditation to my habits')
+      ).toBeNull();
       // Customize link should be hidden in success state
-      expect(queryByLabelText('Customize habit before importing')).toBeNull();
+      expect(queryByLabelText('Customize habit before adding')).toBeNull();
     });
 
     it('does not call onImport when already importing', () => {
@@ -558,7 +569,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByText('Importing...');
+      const importButton = getByText('Adding…');
       fireEvent.press(importButton);
 
       expect(mockOnImport).not.toHaveBeenCalled();
@@ -582,7 +593,9 @@ describe('FullsizeTemplatePreview', () => {
       expect(successButton).toBeTruthy();
 
       // There should be no import button
-      expect(queryByLabelText(/Import.*habit/i)).toBeNull();
+      expect(
+        queryByLabelText('Add Morning Meditation to my habits')
+      ).toBeNull();
 
       // onImport should never have been called
       expect(mockOnImport).not.toHaveBeenCalled();
@@ -604,9 +617,6 @@ describe('FullsizeTemplatePreview', () => {
 
       const closeButton = getByLabelText('Close preview');
       expect(closeButton.props.accessibilityRole).toBe('button');
-      expect(closeButton.props.accessibilityHint).toBe(
-        'Double tap to close this preview'
-      );
     });
 
     it('has accessible import button with template name', () => {
@@ -621,8 +631,13 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const importButton = getByLabelText('Import Daily Reading habit');
+      const importButton = getByLabelText(
+        'Add Daily Reading to my habits'
+      );
       expect(importButton.props.accessibilityRole).toBe('button');
+      expect(importButton.props.accessibilityHint).toBe(
+        'Add this habit to your list'
+      );
     });
 
     it('has accessible customize button', () => {
@@ -638,14 +653,14 @@ describe('FullsizeTemplatePreview', () => {
       );
 
       const customizeButton = getByLabelText(
-        'Customize habit before importing'
+        'Customize habit before adding'
       );
       expect(customizeButton.props.accessibilityRole).toBe('button');
     });
   });
 
-  describe('Tips for Success Section', () => {
-    it('renders tips section when tips are provided', () => {
+  describe('Current research section', () => {
+    it('uses legacy tips as current how-to-start steps', () => {
       const template = createMockTemplate();
       // Add tips to the template
       (template as unknown).tips = [
@@ -654,7 +669,7 @@ describe('FullsizeTemplatePreview', () => {
         'Use a timer to stay focused',
       ];
 
-      const { getByText } = render(
+      const { getAllByText, getByText, queryByText } = render(
         <FullsizeTemplatePreview
           template={template}
           visible={true}
@@ -664,12 +679,15 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('TIPS FOR SUCCESS')).toBeTruthy();
+      expect(getByText('The research')).toBeTruthy();
+      expect(
+        getAllByText('Morning meditation reduces cortisol by 23%.')
+      ).toBeTruthy();
+      expect(getByText('How to start')).toBeTruthy();
+      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
       expect(
         getByText('Start with just 2 minutes and gradually increase')
       ).toBeTruthy();
-      expect(getByText('Practice at the same time each day')).toBeTruthy();
-      expect(getByText('Use a timer to stay focused')).toBeTruthy();
     });
 
     it('does not render tips section when tips array is empty', () => {
@@ -706,8 +724,23 @@ describe('FullsizeTemplatePreview', () => {
       expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
     });
 
-    it('renders numbered tips with correct order', () => {
-      const template = createMockTemplate();
+    it('renders numbered research sources in their authored order', () => {
+      const template = createMockTemplate({
+        sources: [
+          {
+            authors: 'A. Author',
+            title: 'First study',
+            journal: 'Journal One',
+            year: '2024',
+          },
+          {
+            authors: 'B. Author',
+            title: 'Second study',
+            journal: 'Journal Two',
+            year: '2025',
+          },
+        ],
+      });
       (template as unknown).tips = ['First tip', 'Second tip'];
 
       const { getByText } = render(
@@ -720,17 +753,21 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('1')).toBeTruthy();
-      expect(getByText('2')).toBeTruthy();
+      expect(getByText('01')).toBeTruthy();
+      expect(getByText('02')).toBeTruthy();
+      expect(getByText('First study')).toBeTruthy();
+      expect(getByText('Second study')).toBeTruthy();
       expect(getByText('First tip')).toBeTruthy();
       expect(getByText('Second tip')).toBeTruthy();
     });
 
-    it('has accessible tips section with count', () => {
-      const template = createMockTemplate();
+    it('exposes linked research sources as links', () => {
+      const template = createMockTemplate({
+        scientificLink: 'https://example.com/study',
+      });
       (template as unknown).tips = ['Tip one', 'Tip two', 'Tip three'];
 
-      const { getByLabelText } = render(
+      const { getAllByRole } = render(
         <FullsizeTemplatePreview
           template={template}
           visible={true}
@@ -740,7 +777,7 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByLabelText('Tips for success: 3 tips available')).toBeTruthy();
+      expect(getAllByRole('link')).toHaveLength(2);
     });
   });
 

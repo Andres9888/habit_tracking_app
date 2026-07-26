@@ -52,7 +52,7 @@ describe('DayHabitsBottomSheet', () => {
       _creationTime: Date.now(),
       createdAt: Date.now(),
       name: 'Morning Routine',
-      emoji: '🌅',
+      icon: '🌅',
       notes: '',
       dayPhase: 'push',
       order: 0,
@@ -64,7 +64,7 @@ describe('DayHabitsBottomSheet', () => {
       _creationTime: Date.now(),
       createdAt: Date.now(),
       name: 'Exercise',
-      emoji: '🏃',
+      icon: '🏃',
       notes: '',
       dayPhase: 'pivot',
       order: 1,
@@ -76,7 +76,7 @@ describe('DayHabitsBottomSheet', () => {
       _creationTime: Date.now(),
       createdAt: Date.now(),
       name: 'Read 30 mins',
-      emoji: '📚',
+      icon: '📚',
       notes: '',
       dayPhase: 'pull',
       order: 2,
@@ -113,9 +113,11 @@ describe('DayHabitsBottomSheet', () => {
       expect(getByText('Monday, Jan 15')).toBeTruthy();
     });
 
-    it('should render the "Done" button', () => {
-      const { getByText } = render(<DayHabitsBottomSheet {...defaultProps} />);
-      expect(getByText('Done')).toBeTruthy();
+    it('should render the close button', () => {
+      const { getByLabelText } = render(
+        <DayHabitsBottomSheet {...defaultProps} />
+      );
+      expect(getByLabelText('Close')).toBeTruthy();
     });
 
     it('should render completion count in header', () => {
@@ -144,17 +146,17 @@ describe('DayHabitsBottomSheet', () => {
       const { getByText } = render(
         <DayHabitsBottomSheet {...defaultProps} habits={[]} />
       );
-      expect(getByText('No habits yet')).toBeTruthy();
+      expect(getByText('No Habits Yet')).toBeTruthy();
       expect(
         getByText('Create your first habit to start tracking')
       ).toBeTruthy();
     });
 
-    it('should show emoji in empty state', () => {
-      const { getByText } = render(
+    it('should show an icon in empty state', () => {
+      const { getByTestId } = render(
         <DayHabitsBottomSheet {...defaultProps} habits={[]} />
       );
-      expect(getByText('📝')).toBeTruthy();
+      expect(getByTestId('lucide-icon-ClipboardList')).toBeTruthy();
     });
 
     it('should not show completion count when no habits', () => {
@@ -246,14 +248,14 @@ describe('DayHabitsBottomSheet', () => {
   });
 
   describe('Dismiss Gestures', () => {
-    it('should call onClose when Done button is pressed', () => {
+    it('should call onClose when close button is pressed', () => {
       const onClose = jest.fn();
       const { getByLabelText } = render(
         <DayHabitsBottomSheet {...defaultProps} onClose={onClose} />
       );
 
       // Use accessibility label to target the button
-      fireEvent.press(getByLabelText('Done'));
+      fireEvent.press(getByLabelText('Close'));
 
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -279,15 +281,15 @@ describe('DayHabitsBottomSheet', () => {
       expect(root).toBeTruthy();
     });
 
-    it('should have accessible Done button with role and label', () => {
+    it('should have accessible close button with role and label', () => {
       const { getByLabelText } = render(
         <DayHabitsBottomSheet {...defaultProps} />
       );
 
-      const doneButton = getByLabelText('Done');
-      expect(doneButton).toBeTruthy();
-      expect(doneButton.props.accessibilityRole).toBe('button');
-      expect(doneButton.props.accessibilityHint).toBe('Close habit list');
+      const closeButton = getByLabelText('Close');
+      expect(closeButton).toBeTruthy();
+      expect(closeButton.props.accessibilityRole).toBe('button');
+      expect(closeButton.props.accessibilityHint).toBe('Close habit list');
     });
 
     it('should have checkbox role for habit rows', () => {
@@ -360,11 +362,11 @@ describe('DayHabitsBottomSheet', () => {
       expect(getByText('📚')).toBeTruthy();
     });
 
-    it('should show default emoji when habit has no emoji', () => {
+    it('should show default emoji when habit has no icon', () => {
       const habitsWithoutEmoji = [
         {
           ...mockHabits[0],
-          emoji: undefined,
+          icon: undefined,
         },
       ] as unknown as Habit[];
 

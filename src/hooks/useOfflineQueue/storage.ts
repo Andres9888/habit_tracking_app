@@ -34,8 +34,10 @@ export async function loadQueueIndex(): Promise<string[]> {
 export async function saveQueueIndex(ids: string[]): Promise<void> {
   try {
     await AsyncStorage.setItem(QUEUE_INDEX_KEY, JSON.stringify(ids));
-  } catch {
-    throw new Error('Failed to save queue index');
+  } catch (error) {
+    throw error instanceof Error
+      ? error
+      : new Error('Failed to save queue index');
   }
 }
 
@@ -64,8 +66,10 @@ export async function saveQueueItem(item: QueuedSubmission): Promise<void> {
   try {
     const key = getItemKey(item.id);
     await setSensitiveItem(key, JSON.stringify(item));
-  } catch {
-    throw new Error(`Failed to save queue item ${item.id}`);
+  } catch (error) {
+    throw error instanceof Error
+      ? error
+      : new Error(`Failed to save queue item ${item.id}`);
   }
 }
 

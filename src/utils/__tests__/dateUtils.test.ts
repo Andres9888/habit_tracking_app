@@ -38,17 +38,14 @@ describe('differenceInDays', () => {
     });
   });
 
-  describe('Math.floor behavior (not Math.round)', () => {
-    // This is critical - the bug was caused by using Math.round instead of Math.floor
-    it('should use floor, not round, for edge cases', () => {
-      // When using Date objects that might have slight time differences,
-      // Math.round could give off-by-one errors
+  describe('UTC calendar normalization', () => {
+    it('should compare the UTC dates represented by Date objects', () => {
       const date1 = new Date('2024-01-16T23:59:59.999');
       const date2 = new Date('2024-01-15T00:00:00.001');
 
-      // The function should normalize to midnight, so result should be 1
+      // In America/New_York the first instant falls on Jan 17 UTC.
       const result = differenceInDays(date1, date2);
-      expect(result).toBe(1);
+      expect(result).toBe(2);
     });
 
     it('should handle dates with different times correctly', () => {

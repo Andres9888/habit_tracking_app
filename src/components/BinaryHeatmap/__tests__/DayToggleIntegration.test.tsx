@@ -44,6 +44,8 @@ const mockHabitId = 'test-habit-id' as Id<'habits'>;
 // Fixed date for consistent testing
 const TEST_DATE = new Date('2024-12-15T12:00:00Z');
 const TEST_DATE_STRING = '2024-12-15';
+const pressCell = (cell: Parameters<typeof fireEvent.press>[0]) =>
+  fireEvent.press(cell, { nativeEvent: { pageX: 0, pageY: 0 } });
 
 // Mock the grid generation to use a fixed date
 jest.mock('../utils', () => {
@@ -192,7 +194,7 @@ describe('Day Toggle Integration', () => {
 
       // Press the first interactive cell
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       // Verify mutation was called with correct shape
@@ -219,7 +221,7 @@ describe('Day Toggle Integration', () => {
       const cells = getAllByRole('button');
 
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       expect(mockImpactAsync).toHaveBeenCalledWith('Medium');
@@ -248,7 +250,7 @@ describe('Day Toggle Integration', () => {
 
       if (completedCell) {
         await act(async () => {
-          fireEvent.press(completedCell);
+          pressCell(completedCell);
         });
 
         expect(mockImpactAsync).toHaveBeenCalledWith('Light');
@@ -281,7 +283,7 @@ describe('Day Toggle Integration', () => {
 
       // Press to toggle
       await act(async () => {
-        fireEvent.press(firstCell);
+        pressCell(firstCell);
       });
 
       // Mutation should be called
@@ -310,7 +312,7 @@ describe('Day Toggle Integration', () => {
       const cells = getAllByRole('button');
 
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
         // Let the promise rejection propagate
         await Promise.resolve();
       });
@@ -338,7 +340,7 @@ describe('Day Toggle Integration', () => {
 
       // First press
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       expect(mockMutation).toHaveBeenCalledTimes(1);
@@ -347,7 +349,7 @@ describe('Day Toggle Integration', () => {
       // Advance time slightly but not past the 200ms cooldown
       await act(async () => {
         jest.advanceTimersByTime(50);
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       // Should still be just 1 call (blocked by isToggling)
@@ -356,7 +358,7 @@ describe('Day Toggle Integration', () => {
       // Try again at 100ms
       await act(async () => {
         jest.advanceTimersByTime(50);
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       // Should still be just 1 call
@@ -378,7 +380,7 @@ describe('Day Toggle Integration', () => {
 
       // First press
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       expect(mockMutation).toHaveBeenCalledTimes(1);
@@ -390,7 +392,7 @@ describe('Day Toggle Integration', () => {
 
       // Second press should now work
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       expect(mockMutation).toHaveBeenCalledTimes(2);
@@ -418,7 +420,7 @@ describe('Day Toggle Integration', () => {
       // All buttons should call mutation when pressed
       // (future dates won't be buttons at all)
       for (const button of buttons) {
-        const label = button.props.accessibilityLabel;
+        const label = button.props.accessibilityLabel ?? '';
         // If the label contains "Future", it shouldn't be a button
         expect(label).not.toMatch(/Future/);
       }
@@ -448,7 +450,7 @@ describe('Day Toggle Integration', () => {
       if (completedCell) {
         // Toggle off
         await act(async () => {
-          fireEvent.press(completedCell);
+          pressCell(completedCell);
         });
 
         expect(mockMutation).toHaveBeenCalled();
@@ -474,7 +476,7 @@ describe('Day Toggle Integration', () => {
 
       // Verify no button has "Before tracking" in label
       for (const button of buttons) {
-        const label = button.props.accessibilityLabel;
+        const label = button.props.accessibilityLabel ?? '';
         expect(label).not.toMatch(/Before tracking/);
       }
     });
@@ -497,7 +499,7 @@ describe('Day Toggle Integration', () => {
       const cells = getAllByRole('button');
 
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       expect(mockMutation).toHaveBeenCalledWith(
@@ -521,7 +523,7 @@ describe('Day Toggle Integration', () => {
       const cells = getAllByRole('button');
 
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       const callArgs = mockMutation.mock.calls[0][0];
@@ -549,7 +551,7 @@ describe('Day Toggle Integration', () => {
       const cells = getAllByRole('button');
 
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
         await Promise.resolve();
       });
 
@@ -578,7 +580,7 @@ describe('Day Toggle Integration', () => {
 
       // First press
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
         await Promise.resolve();
       });
 
@@ -589,7 +591,7 @@ describe('Day Toggle Integration', () => {
 
       // Should be able to toggle again
       await act(async () => {
-        fireEvent.press(cells[0]);
+        pressCell(cells[0]);
       });
 
       expect(mockMutation).toHaveBeenCalledTimes(2);
