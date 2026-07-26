@@ -80,9 +80,9 @@ describe('SentryErrorBoundary', () => {
         </SentryErrorBoundary>
       );
 
-      expect(getByText('Something went wrong')).toBeTruthy();
+      expect(getByText('Oops! Something went wrong')).toBeTruthy();
       expect(
-        getByText("We've been notified and are working to fix this.")
+        getByText("Don't worry — your data is safe.")
       ).toBeTruthy();
     });
 
@@ -169,7 +169,7 @@ describe('SentryErrorBoundary', () => {
       );
 
       // Error state is shown
-      expect(getByText('Something went wrong')).toBeTruthy();
+      expect(getByText('Oops! Something went wrong')).toBeTruthy();
 
       // Fix the condition and press Try Again
       shouldThrow = false;

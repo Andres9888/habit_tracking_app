@@ -51,7 +51,7 @@ describe('LegalFooter', () => {
       fireEvent.press(getByLabelText('Terms of Service'));
 
       expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://dailyhabits.app/terms'
+        'https://andres9888.github.io/chainday-landing/terms.html'
       );
     });
 
@@ -61,7 +61,7 @@ describe('LegalFooter', () => {
       fireEvent.press(getByLabelText('Privacy Policy'));
 
       expect(Linking.openURL).toHaveBeenCalledWith(
-        'https://dailyhabits.app/privacy'
+        'https://andres9888.github.io/chainday-landing/privacy.html'
       );
     });
   });

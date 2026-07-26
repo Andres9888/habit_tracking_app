@@ -131,7 +131,8 @@ describe('WeeklySummaryStrip', () => {
   ): WeekDayData[] => {
     const today = new Date();
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1); // Monday
+    const daysSinceMonday = (today.getDay() + 6) % 7;
+    startOfWeek.setDate(today.getDate() - daysSinceMonday);
 
     return completedDays.map((completed, index) => {
       const date = new Date(startOfWeek);
