@@ -1,174 +1,151 @@
 /**
- * StatsNotesModal Token Migration Tests (Phase 2)
- * Verifies that StatsNotesModal files use theme tokens
- * instead of hardcoded hex values.
+ * Analytics token migration contracts.
+ *
+ * StatsNotesModal was retired; analytics now uses TrendLineChart and the
+ * consolidated weekly-pattern components. These checks follow those live
+ * source paths and guard centralized warm-theme usage.
  */
 
 import fs from 'fs';
 import path from 'path';
 import { colors } from '@/theme/colors';
 
-const STATS_DIR = path.resolve(
-  __dirname,
-  '../../../src/components/StatsNotesModal'
-);
+const SRC = path.resolve(__dirname, '../../../src');
+const readSource = (relativePath: string) =>
+  fs.readFileSync(path.join(SRC, relativePath), 'utf8');
 
-function readSource(relativePath: string): string {
-  return fs.readFileSync(path.join(STATS_DIR, relativePath), 'utf-8');
-}
+describe('TrendLineChart uses centralized tokens', () => {
+  const source = readSource('components/TrendLineChart/TrendLineChart.tsx');
 
-describe('StatsNotesModal Token Migration - Phase 2', () => {
-  describe('WeeklyBarChart uses theme tokens', () => {
-    let source: string;
-
-    beforeAll(() => {
-      source = readSource('HabitStats/WeeklyBarChart.tsx');
-    });
-
-    it('imports colors from @/theme/colors', () => {
-      expect(source).toContain("from '@/theme/colors'");
-    });
-
-    it('does not contain hardcoded #48bb78 (green)', () => {
-      expect(source).not.toContain('#48bb78');
-    });
-
-    it('does not contain hardcoded #dde3ed (gray fill)', () => {
-      expect(source).not.toContain('#dde3ed');
-    });
-
-    it('does not contain hardcoded #78716c (stone-500)', () => {
-      expect(source).not.toContain('#78716c');
-    });
-
-    it('uses colors.primary[400] for completed bars', () => {
-      expect(source).toContain('colors.primary[400]');
-    });
-
-    it('uses colors.gray[200] for incomplete bars', () => {
-      expect(source).toContain('colors.gray[200]');
-    });
-
-    it('uses colors.gray[500] for label text', () => {
-      expect(source).toContain('colors.gray[500]');
-    });
+  it('imports the color palette', () => {
+    expect(source).toContain("from '../../theme/colors'");
   });
 
-  describe('TrendLineChart uses theme tokens', () => {
-    let source: string;
-
-    beforeAll(() => {
-      source = readSource('HabitStats/TrendLineChart.tsx');
-    });
-
-    it('imports colors from @/theme/colors', () => {
-      expect(source).toContain("from '@/theme/colors'");
-    });
-
-    it('does not contain hardcoded #48bb78 (green)', () => {
-      expect(source).not.toContain('#48bb78');
-    });
-
-    it('does not contain hardcoded #dde3ed (gray fill)', () => {
-      expect(source).not.toContain('#dde3ed');
-    });
-
-    it('does not contain hardcoded #78716c (stone-500)', () => {
-      expect(source).not.toContain('#78716c');
-    });
-
-    it('does not contain hardcoded #e7e5e4 (border)', () => {
-      expect(source).not.toContain('#e7e5e4');
-    });
-
-    it('does not contain hardcoded #d6d3d1 (stone-300)', () => {
-      expect(source).not.toContain('#d6d3d1');
-    });
-
-    it('does not contain hardcoded #a8a29e (stone-400)', () => {
-      expect(source).not.toContain('#a8a29e');
-    });
-
-    it('uses colors.border for grid line stroke', () => {
-      expect(source).toContain('colors.border');
-    });
-
-    it('uses colors.gray[300] for trend line stroke', () => {
-      expect(source).toContain('colors.gray[300]');
-    });
-
-    it('uses colors.primary[400] for completed points', () => {
-      expect(source).toContain('colors.primary[400]');
-    });
-
-    it('uses colors.gray[400] for incomplete point stroke', () => {
-      expect(source).toContain('colors.gray[400]');
-    });
+  it('does not use the retired green literal', () => {
+    expect(source).not.toContain('#48bb78');
   });
 
-  describe('StreakCards uses theme tokens', () => {
-    let source: string;
-
-    beforeAll(() => {
-      source = readSource('HabitStats/StreakCards.tsx');
-    });
-
-    it('imports colors from @/theme/colors', () => {
-      expect(source).toContain("from '@/theme/colors'");
-    });
-
-    it('does not contain hardcoded #48bb78 (green)', () => {
-      expect(source).not.toContain('#48bb78');
-    });
-
-    it('uses colors.primary[400] via style prop', () => {
-      expect(source).toContain('colors.primary[400]');
-    });
+  it('does not use the retired gray-fill literal', () => {
+    expect(source).not.toContain('#dde3ed');
   });
 
-  describe('NoteEditor uses theme tokens', () => {
-    let source: string;
-
-    beforeAll(() => {
-      source = readSource('NoteEditor/NoteEditor.tsx');
-    });
-
-    it('imports colors from @/theme/colors', () => {
-      expect(source).toContain("from '@/theme/colors'");
-    });
-
-    it('does not contain hardcoded #a8a29e (stone-400)', () => {
-      expect(source).not.toContain('#a8a29e');
-    });
-
-    it('uses colors.gray[400] for hint text color', () => {
-      expect(source).toContain('colors.gray[400]');
-    });
+  it('does not use the retired stone-500 literal', () => {
+    expect(source).not.toContain('#78716c');
   });
 
-  describe('Theme token values are correct', () => {
-    it('primary[400] is emerald-400', () => {
-      expect(colors.primary[400]).toBe('#34D399');
-    });
+  it('uses the primary token for its line', () => {
+    expect(source).toContain('color={colors.primary[500]}');
+  });
 
-    it('gray[200] is a light border gray', () => {
-      expect(colors.gray[200]).toBe('#E5E7EB');
-    });
+  it('uses the primary token for its points', () => {
+    expect(source.match(/colors\.primary\[500\]/g)?.length).toBeGreaterThanOrEqual(2);
+  });
 
-    it('gray[300] is disabled gray', () => {
-      expect(colors.gray[300]).toBe('#D1D5DB');
-    });
+  it('uses the semantic border for axes', () => {
+    expect(source).toContain('lineColor: colors.border');
+  });
 
-    it('gray[400] is hint gray', () => {
-      expect(colors.gray[400]).toBe('#6B7280');
-    });
+  it('uses tertiary text for x-axis labels', () => {
+    expect(source).toContain('labelColor: colors.text.tertiary');
+  });
 
-    it('gray[500] is stone-500 secondary text', () => {
-      expect(colors.gray[500]).toBe('#78716c');
-    });
+  it('uses a bounded 0-100 strength domain', () => {
+    expect(source).toContain('domain={{ y: [0, 100] }}');
+  });
 
-    it('border is stone-200', () => {
-      expect(colors.border).toBe('#e7e5e4');
-    });
+  it('retains the empty-state path for missing data', () => {
+    expect(source).toContain('return <EmptyState />');
+  });
+});
+
+describe('TrendLineChart styles use design-system primitives', () => {
+  const source = readSource('components/TrendLineChart/styles.ts');
+
+  it('imports colors from the theme', () => {
+    expect(source).toContain("from '../../theme/colors'");
+  });
+
+  it('imports typography from the theme', () => {
+    expect(source).toContain("from '../../theme/typography'");
+  });
+
+  it('imports spacing, radii, and shadows from the theme', () => {
+    expect(source).toContain("from '../../theme/spacing'");
+  });
+
+  it('uses the semantic surface token', () => {
+    expect(source).toContain('backgroundColor: colors.surface');
+  });
+
+  it('uses secondary text for readable labels', () => {
+    expect(source).toContain('color: colors.text.secondary');
+  });
+
+  it('uses tertiary text for empty-state supporting copy', () => {
+    expect(source).toContain('color: colors.text.tertiary');
+  });
+
+  it('uses the modal shadow token for the tooltip', () => {
+    expect(source).toContain('...shadows.modal');
+  });
+});
+
+describe('WeeklyPatternChart uses theme-aware tokens', () => {
+  const source = readSource(
+    'components/ProgressSectionConsolidated/WeeklyPatternChart.tsx'
+  );
+
+  it('uses useThemeColors instead of a static page palette', () => {
+    expect(source).toContain('useThemeColors');
+  });
+
+  it('uses primary text for its heading', () => {
+    expect(source).toContain('colors.text.primary');
+  });
+
+  it('uses premium semantic tokens for its detail action', () => {
+    expect(source).toContain('colors.status.premiumText');
+  });
+
+  it('uses a theme gray surface for the chart', () => {
+    expect(source).toContain('backgroundColor: colors.gray[50]');
+  });
+
+  it('does not contain the retired completion green literal', () => {
+    expect(source).not.toContain('#48bb78');
+  });
+
+  it('does not contain the retired gray-fill literal', () => {
+    expect(source).not.toContain('#dde3ed');
+  });
+
+  it('keeps the chart accessible as a summarized image', () => {
+    expect(source).toContain("accessibilityRole='image'");
+  });
+});
+
+describe('Current core token values', () => {
+  it('primary[500] remains the focus/accent green', () => {
+    expect(colors.primary[500]).toBe('#10B981');
+  });
+
+  it('gray[200] is the warm border gray', () => {
+    expect(colors.gray[200]).toBe('#DDD8D2');
+  });
+
+  it('gray[300] is the warm disabled gray', () => {
+    expect(colors.gray[300]).toBe('#C4BFB7');
+  });
+
+  it('gray[400] is the accessible tertiary gray', () => {
+    expect(colors.gray[400]).toBe('#6E6660');
+  });
+
+  it('gray[500] is the accessible secondary gray', () => {
+    expect(colors.gray[500]).toBe('#6B6560');
+  });
+
+  it('border aliases gray[200]', () => {
+    expect(colors.border).toBe(colors.gray[200]);
   });
 });

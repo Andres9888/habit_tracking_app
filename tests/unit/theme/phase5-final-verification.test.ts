@@ -5,7 +5,7 @@
 
 import { colors, milestoneColors } from '@/theme/colors';
 import { REDESIGN_COLORS } from '@/components/HabitCard/HabitCard.colors';
-import { COLORS } from '@/components/StreakIndicator/StreakIndicator.constants';
+import { streakStyles } from '@/components/HabitCard/HabitCard.streakStyles';
 
 describe('Phase 5 Final Verification', () => {
   describe('new primary.100 token', () => {
@@ -47,25 +47,23 @@ describe('Phase 5 Final Verification', () => {
     });
   });
 
-  describe('StreakIndicator.constants uses new tokens', () => {
-    it('bestStreakText uses milestoneColors.amber800', () => {
-      expect(COLORS.bestStreakText).toBe(milestoneColors.amber800);
-      expect(COLORS.bestStreakText).toBe('#92400e');
+  describe('current HabitCard streak styling uses theme tokens', () => {
+    it('exposes the accessible amber text milestone token', () => {
+      expect(milestoneColors.amberText).toBe('#A16207');
     });
 
-    it('milestoneBadgeBgUnachieved uses milestoneColors.stone100', () => {
-      expect(COLORS.milestoneBadgeBgUnachieved).toBe(milestoneColors.stone100);
-      expect(COLORS.milestoneBadgeBgUnachieved).toBe('#f5f5f4');
+    it('exposes the light amber badge background token', () => {
+      expect(milestoneColors.amberLight).toBe('#FEF9C3');
     });
 
-    it('streakLabel uses milestoneColors.stone600', () => {
-      expect(COLORS.streakLabel).toBe(milestoneColors.stone600);
-      expect(COLORS.streakLabel).toBe('#57534e');
+    it('uses the streak palette for the completion ripple', () => {
+      expect(streakStyles.rippleOverlay.backgroundColor).toBe(
+        colors.streak[500]
+      );
     });
 
-    it('streakNumber uses milestoneColors.stone900', () => {
-      expect(COLORS.streakNumber).toBe(milestoneColors.stone900);
-      expect(COLORS.streakNumber).toBe('#1c1917');
+    it('keeps the completion ripple on the burnished-gold accent', () => {
+      expect(streakStyles.rippleOverlay.backgroundColor).toBe('#8B6208');
     });
   });
 
@@ -80,16 +78,16 @@ describe('Phase 5 Final Verification', () => {
       expect(colors.secondary[500]).toBe('#3B82F6');
     });
 
-    it('warning[500] matches amber-500', () => {
-      expect(colors.warning[500]).toBe('#F59E0B');
+    it('warning matches the accessible static warning token', () => {
+      expect(colors.warning).toBe('#9A5504');
     });
 
-    it('error matches red-500', () => {
-      expect(colors.error).toBe('#EF4444');
+    it('error matches the accessible static error token', () => {
+      expect(colors.error).toBe('#B53030');
     });
 
-    it('premium[500] matches violet-500', () => {
-      expect(colors.premium[500]).toBe('#8b5cf6');
+    it('premium[500] matches the current violet token', () => {
+      expect(colors.premium[500]).toBe('#8563C7');
     });
   });
 
