@@ -17,24 +17,24 @@ import {
 
 describe('Theme Typography - Phase 1', () => {
   describe('Font Families', () => {
-    it('should use SF Pro Display for headings', () => {
-      expect(fontFamilies.primary.display).toBe('SF Pro Display');
+    it('should use Literata for display headings', () => {
+      expect(fontFamilies.primary.display).toBe('Literata');
     });
 
-    it('should use SF Pro Text for body copy', () => {
-      expect(fontFamilies.primary.text).toBe('SF Pro Text');
+    it('should use DM Sans for body copy', () => {
+      expect(fontFamilies.primary.text).toBe('DMSans');
     });
 
-    it('should use SF Mono for monospace', () => {
-      expect(fontFamilies.monospace).toBe('SF Mono');
+    it('should use JetBrains Mono for monospace', () => {
+      expect(fontFamilies.monospace).toBe('JetBrainsMono');
     });
 
     it('should have system font fallback', () => {
       expect(fontFamilies.system).toBe('-apple-system');
     });
 
-    it('should have Georgia serif font for formal content', () => {
-      expect(fontFamilies.serif).toBe('Georgia');
+    it('should expose Literata as the serif alias', () => {
+      expect(fontFamilies.serif).toBe('Literata');
     });
   });
 
@@ -58,100 +58,100 @@ describe('Theme Typography - Phase 1', () => {
 
   describe('Display Large (Onboarding headlines)', () => {
     it('should match UX spec: 34pt, Bold, 41pt line height', () => {
-      expect(typography.displayLarge.fontFamily).toBe('SF Pro Display');
+      expect(typography.displayLarge.fontFamily).toBe('Literata');
       expect(typography.displayLarge.fontSize).toBe(34);
       expect(typography.displayLarge.fontWeight).toBe('700');
       expect(typography.displayLarge.lineHeight).toBe(41);
-      expect(typography.displayLarge.letterSpacing).toBe(0.37);
+      expect(typography.displayLarge.letterSpacing).toBe(-0.85);
     });
   });
 
   describe('Heading 1 (Screen titles)', () => {
-    it('should match UX spec: 28pt, Bold, 34pt line height', () => {
-      expect(typography.heading1.fontFamily).toBe('SF Pro Display');
-      expect(typography.heading1.fontSize).toBe(28);
+    it('should match the current 22pt Literata screen-title scale', () => {
+      expect(typography.heading1.fontFamily).toBe('Literata');
+      expect(typography.heading1.fontSize).toBe(22);
       expect(typography.heading1.fontWeight).toBe('700');
-      expect(typography.heading1.lineHeight).toBe(34);
-      expect(typography.heading1.letterSpacing).toBe(0.36);
+      expect(typography.heading1.lineHeight).toBe(28);
+      expect(typography.heading1.letterSpacing).toBe(-0.35);
     });
   });
 
   describe('Heading 2 (Section titles)', () => {
     it('should match UX spec: 22pt, Semibold, 28pt line height', () => {
-      expect(typography.heading2.fontFamily).toBe('SF Pro Text');
+      expect(typography.heading2.fontFamily).toBe('DMSans');
       expect(typography.heading2.fontSize).toBe(22);
       expect(typography.heading2.fontWeight).toBe('600');
       expect(typography.heading2.lineHeight).toBe(28);
-      expect(typography.heading2.letterSpacing).toBe(0.35);
+      expect(typography.heading2.letterSpacing).toBe(-0.35);
     });
   });
 
   describe('Heading 3 (Card titles, habit names)', () => {
-    it('should match UX spec: 17pt, Semibold, 22pt line height', () => {
-      expect(typography.heading3.fontFamily).toBe('SF Pro Text');
-      expect(typography.heading3.fontSize).toBe(17);
+    it('should match the current 20pt DM Sans card-title scale', () => {
+      expect(typography.heading3.fontFamily).toBe('DMSans');
+      expect(typography.heading3.fontSize).toBe(20);
       expect(typography.heading3.fontWeight).toBe('600');
-      expect(typography.heading3.lineHeight).toBe(22);
-      expect(typography.heading3.letterSpacing).toBe(-0.41);
+      expect(typography.heading3.lineHeight).toBe(26);
+      expect(typography.heading3.letterSpacing).toBe(-0.2);
     });
   });
 
   describe('Body (Primary text)', () => {
     it('should match UX spec: 17pt, Regular, 22pt line height', () => {
-      expect(typography.body.fontFamily).toBe('SF Pro Text');
+      expect(typography.body.fontFamily).toBe('DMSans');
       expect(typography.body.fontSize).toBe(17);
       expect(typography.body.fontWeight).toBe('400');
-      expect(typography.body.lineHeight).toBe(22);
-      expect(typography.body.letterSpacing).toBe(-0.41);
+      expect(typography.body.lineHeight).toBe(24);
+      expect(typography.body.letterSpacing).toBe(0);
     });
   });
 
   describe('Body Small (Secondary info)', () => {
-    it('should match UX spec: 15pt, Regular, 20pt line height', () => {
-      expect(typography.bodySmall.fontFamily).toBe('SF Pro Text');
-      expect(typography.bodySmall.fontSize).toBe(15);
+    it('should match the current 14pt secondary-text scale', () => {
+      expect(typography.bodySmall.fontFamily).toBe('DMSans');
+      expect(typography.bodySmall.fontSize).toBe(14);
       expect(typography.bodySmall.fontWeight).toBe('400');
       expect(typography.bodySmall.lineHeight).toBe(20);
-      expect(typography.bodySmall.letterSpacing).toBe(-0.24);
+      expect(typography.bodySmall.letterSpacing).toBe(0);
     });
   });
 
   describe('Caption (Meta info, timestamps)', () => {
-    it('should match UX spec: 13pt, Regular, 18pt line height', () => {
-      expect(typography.caption.fontFamily).toBe('SF Pro Text');
+    it('should match the current 13pt medium caption scale', () => {
+      expect(typography.caption.fontFamily).toBe('DMSans');
       expect(typography.caption.fontSize).toBe(13);
-      expect(typography.caption.fontWeight).toBe('400');
+      expect(typography.caption.fontWeight).toBe('500');
       expect(typography.caption.lineHeight).toBe(18);
-      expect(typography.caption.letterSpacing).toBe(-0.08);
+      expect(typography.caption.letterSpacing).toBe(0.12);
     });
   });
 
   describe('Button Text', () => {
     it('should match UX spec: 17pt, Semibold, 22pt line height', () => {
-      expect(typography.button.fontFamily).toBe('SF Pro Text');
+      expect(typography.button.fontFamily).toBe('DMSans');
       expect(typography.button.fontSize).toBe(17);
       expect(typography.button.fontWeight).toBe('600');
-      expect(typography.button.lineHeight).toBe(22);
-      expect(typography.button.letterSpacing).toBe(-0.41);
+      expect(typography.button.lineHeight).toBe(24);
+      expect(typography.button.letterSpacing).toBe(0.08);
     });
   });
 
   describe('Tab Bar Labels', () => {
     it('should match UX spec: 10pt, Medium, 12pt line height', () => {
-      expect(typography.tabBar.fontFamily).toBe('SF Pro Text');
+      expect(typography.tabBar.fontFamily).toBe('DMSans');
       expect(typography.tabBar.fontSize).toBe(10);
       expect(typography.tabBar.fontWeight).toBe('500');
       expect(typography.tabBar.lineHeight).toBe(12);
-      expect(typography.tabBar.letterSpacing).toBe(0.12);
+      expect(typography.tabBar.letterSpacing).toBe(0.1);
     });
   });
 
   describe('Monospace (Numbers, data)', () => {
-    it('should match UX spec: SF Mono, 17pt, Regular', () => {
-      expect(typography.monospace.fontFamily).toBe('SF Mono');
-      expect(typography.monospace.fontSize).toBe(17);
+    it('should match the current JetBrains Mono 16pt data scale', () => {
+      expect(typography.monospace.fontFamily).toBe('JetBrainsMono');
+      expect(typography.monospace.fontSize).toBe(16);
       expect(typography.monospace.fontWeight).toBe('400');
-      expect(typography.monospace.lineHeight).toBe(22);
+      expect(typography.monospace.lineHeight).toBe(24);
       expect(typography.monospace.letterSpacing).toBe(0);
     });
   });
@@ -160,7 +160,7 @@ describe('Theme Typography - Phase 1', () => {
     describe('textStyle helper', () => {
       it('should return typography variant without color', () => {
         const style = textStyle('heading1');
-        expect(style.fontSize).toBe(28);
+        expect(style.fontSize).toBe(22);
         expect(style.fontWeight).toBe('700');
         expect(style.color).toBeUndefined();
       });
@@ -235,10 +235,10 @@ describe('Theme Typography - Phase 1', () => {
       expect(ratio).toBeCloseTo(1.206, 2);
     });
 
-    it('should have proper line height for body text (1.3x)', () => {
-      // Body: 22 / 17 = 1.294
+    it('should have the current readable body line-height ratio', () => {
+      // Body: 24 / 17 = 1.412
       const ratio = typography.body.lineHeight / typography.body.fontSize;
-      expect(ratio).toBeCloseTo(1.294, 2);
+      expect(ratio).toBeCloseTo(1.412, 2);
     });
 
     it('should have proper line height for captions (1.4x)', () => {

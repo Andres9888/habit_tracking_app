@@ -217,21 +217,25 @@ describe('SocialSignInButton', () => {
       expect(mockOnPress).toHaveBeenCalledTimes(1);
     });
 
-    it('has press handlers defined on both Google and Apple buttons', () => {
+    it('keeps both Google and Apple buttons interactive after press feedback', () => {
       const { getByRole, rerender } = render(
         <SocialSignInButton {...defaultProps} />
       );
 
       // Google button
       const googleButton = getByRole('button');
-      expect(googleButton.props.onPressIn).toBeDefined();
-      expect(googleButton.props.onPressOut).toBeDefined();
+      fireEvent(googleButton, 'pressIn');
+      fireEvent(googleButton, 'pressOut');
+      fireEvent.press(googleButton);
+      expect(mockOnPress).toHaveBeenCalledTimes(1);
 
       // Apple button
       rerender(<SocialSignInButton {...defaultProps} provider='apple' />);
       const appleButton = getByRole('button');
-      expect(appleButton.props.onPressIn).toBeDefined();
-      expect(appleButton.props.onPressOut).toBeDefined();
+      fireEvent(appleButton, 'pressIn');
+      fireEvent(appleButton, 'pressOut');
+      fireEvent.press(appleButton);
+      expect(mockOnPress).toHaveBeenCalledTimes(2);
     });
   });
 });

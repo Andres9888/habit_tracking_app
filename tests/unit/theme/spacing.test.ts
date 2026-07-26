@@ -23,7 +23,6 @@ describe('Theme Spacing - Phase 1', () => {
   describe('8pt Grid System', () => {
     it('should match UX spec xs: 4pt', () => {
       expect(spacing.xs).toBe(4);
-      expect(spacing.xxs).toBe(4); // alias
     });
 
     it('should match UX spec sm: 8pt', () => {
@@ -48,7 +47,6 @@ describe('Theme Spacing - Phase 1', () => {
 
     it('should match UX spec 2xl: 48pt', () => {
       expect(spacing['2xl']).toBe(48);
-      expect(spacing.xxl).toBe(48); // alias
     });
 
     it('should match UX spec 3xl: 64pt', () => {
@@ -140,20 +138,20 @@ describe('Theme Spacing - Phase 1', () => {
   });
 
   describe('Border Radius', () => {
-    it('should match UX spec small: 8pt (buttons, tags)', () => {
-      expect(borderRadius.small).toBe(8);
+    it('should match airy small radius: 10pt (chips, badges)', () => {
+      expect(borderRadius.small).toBe(10);
     });
 
-    it('should match UX spec medium: 12pt (cards, inputs)', () => {
-      expect(borderRadius.medium).toBe(12);
+    it('should match airy medium radius: 14pt (buttons, inputs)', () => {
+      expect(borderRadius.medium).toBe(14);
     });
 
-    it('should match UX spec large: 16pt (modals, sheets)', () => {
-      expect(borderRadius.large).toBe(16);
+    it('should match airy large radius: 24pt (cards)', () => {
+      expect(borderRadius.large).toBe(24);
     });
 
-    it('should match UX spec xl: 20pt (full screen modals)', () => {
-      expect(borderRadius.xl).toBe(20);
+    it('should match airy xl radius: 28pt (modals, sheets)', () => {
+      expect(borderRadius.xl).toBe(28);
     });
 
     it('should have full radius for circular elements', () => {
@@ -164,33 +162,33 @@ describe('Theme Spacing - Phase 1', () => {
   describe('Shadows (iOS-style)', () => {
     describe('Card Shadow', () => {
       it('should have subtle card shadow', () => {
-        expect(shadows.card.shadowColor).toBe('#000000');
+        expect(shadows.card.shadowColor).toBe('#2D2A26');
         expect(shadows.card.shadowOffset).toEqual({ height: 2, width: 0 });
-        expect(shadows.card.shadowOpacity).toBe(0.1);
+        expect(shadows.card.shadowOpacity).toBe(0.06);
         expect(shadows.card.shadowRadius).toBe(8);
-        expect(shadows.card.elevation).toBe(2);
+        expect(shadows.card.elevation).toBe(3);
       });
     });
 
     describe('Modal Shadow', () => {
       it('should have medium modal shadow', () => {
-        expect(shadows.modal.shadowColor).toBe('#000000');
-        expect(shadows.modal.shadowOffset).toEqual({ height: 4, width: 0 });
-        expect(shadows.modal.shadowOpacity).toBe(0.12);
-        expect(shadows.modal.shadowRadius).toBe(16);
-        expect(shadows.modal.elevation).toBe(4);
+        expect(shadows.modal.shadowColor).toBe('#2D2A26');
+        expect(shadows.modal.shadowOffset).toEqual({ height: 8, width: 0 });
+        expect(shadows.modal.shadowOpacity).toBe(0.1);
+        expect(shadows.modal.shadowRadius).toBe(24);
+        expect(shadows.modal.elevation).toBe(8);
       });
     });
 
     describe('Floating Action Button Shadow', () => {
       it('should have prominent FAB shadow', () => {
-        expect(shadows.floatingActionButton.shadowColor).toBe('#000000');
+        expect(shadows.floatingActionButton.shadowColor).toBe('#2D2A26');
         expect(shadows.floatingActionButton.shadowOffset).toEqual({
-          height: 6,
+          height: 4,
           width: 0,
         });
-        expect(shadows.floatingActionButton.shadowOpacity).toBe(0.15);
-        expect(shadows.floatingActionButton.shadowRadius).toBe(12);
+        expect(shadows.floatingActionButton.shadowOpacity).toBe(0.08);
+        expect(shadows.floatingActionButton.shadowRadius).toBe(16);
         expect(shadows.floatingActionButton.elevation).toBe(6);
       });
     });

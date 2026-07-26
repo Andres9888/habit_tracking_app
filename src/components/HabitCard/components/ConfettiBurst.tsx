@@ -15,7 +15,7 @@ import { styles } from './ConfettiBurst.styles';
 const CONFETTI_COLORS = [
   colors.primary[500],
   colors.secondary[500],
-  colors.warning[500],
+  colors.warning,
   colors.error,
   colors.premium[500],
 ];

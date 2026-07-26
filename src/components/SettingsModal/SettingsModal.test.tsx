@@ -9,6 +9,10 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
+jest.mock('../ErrorBoundary', () => ({
+  ErrorBoundary: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 jest.mock('expo-av', () => ({
   Audio: {
     Sound: {
@@ -48,18 +52,23 @@ jest.mock('expo-linear-gradient', () => ({
 
 jest.mock('@react-native-community/datetimepicker', () => 'DateTimePicker');
 
+jest.mock('convex/react', () => ({
+  useMutation: () => jest.fn().mockResolvedValue(undefined),
+  useQuery: () => [],
+}));
+
 import SettingsModal from './SettingsModal';
 
 describe('SettingsModal', () => {
-  it('renders redesigned settings sections when visible', () => {
-    const { getByText, getByLabelText } = render(
+  it('renders redesigned settings sections after the deferred mount', async () => {
+    const { findByText, findByLabelText } = render(
       <SettingsModal onClose={() => {}} visible />
     );
 
-    expect(getByText('Look & Feel')).toBeTruthy();
-    expect(getByText('Habits')).toBeTruthy();
-    expect(getByText('Archived habits')).toBeTruthy();
-    expect(getByText('Export habits data')).toBeTruthy();
-    expect(getByLabelText('Account settings')).toBeTruthy();
+    expect(await findByText('Look & Feel')).toBeTruthy();
+    expect(await findByText('Habits')).toBeTruthy();
+    expect(await findByText('Archived habits')).toBeTruthy();
+    expect(await findByText('Export habits data')).toBeTruthy();
+    expect(await findByLabelText('Account settings')).toBeTruthy();
   });
 });

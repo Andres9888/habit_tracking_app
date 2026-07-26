@@ -59,40 +59,40 @@ describe('HabitStrengthIndicator - Phase 2', () => {
     });
   });
 
-  describe('Strength Levels - Five Emojis 🌱🌿🌳💪⚡', () => {
-    it('should show Starting level (🌱) for 0-20% strength', () => {
+  describe('Strength Levels - Default Rank Emojis', () => {
+    it('should show Starting rank for 0-20% strength', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={10} />
       );
-      expect(getByText('🌱')).toBeDefined();
+      expect(getByText('🥉')).toBeDefined();
     });
 
-    it('should show Building level (🌿) for 20-40% strength', () => {
+    it('should show Building rank for 20-40% strength', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={30} />
       );
-      expect(getByText('🌿')).toBeDefined();
+      expect(getByText('🥈')).toBeDefined();
     });
 
-    it('should show Developing level (🌳) for 40-60% strength', () => {
+    it('should show Developing rank for 40-60% strength', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={50} />
       );
-      expect(getByText('🌳')).toBeDefined();
+      expect(getByText('🥇')).toBeDefined();
     });
 
-    it('should show Strong level (💪) for 60-80% strength', () => {
+    it('should show Strong rank for 60-80% strength', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={70} />
       );
-      expect(getByText('💪')).toBeDefined();
+      expect(getByText('🏆')).toBeDefined();
     });
 
-    it('should show Automatic level (⚡) for 80-100% strength', () => {
+    it('should show Automatic rank for 80-100% strength', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={90} />
       );
-      expect(getByText('⚡')).toBeDefined();
+      expect(getByText('💎')).toBeDefined();
     });
   });
 
@@ -101,42 +101,42 @@ describe('HabitStrengthIndicator - Phase 2', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={0} />
       );
-      expect(getByText('🌱')).toBeDefined();
+      expect(getByText('🥉')).toBeDefined();
     });
 
     it('should show Building at exactly 20%', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={20} />
       );
-      expect(getByText('🌿')).toBeDefined();
+      expect(getByText('🥈')).toBeDefined();
     });
 
     it('should show Developing at exactly 40%', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={40} />
       );
-      expect(getByText('🌳')).toBeDefined();
+      expect(getByText('🥇')).toBeDefined();
     });
 
     it('should show Strong at exactly 60%', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={60} />
       );
-      expect(getByText('💪')).toBeDefined();
+      expect(getByText('🏆')).toBeDefined();
     });
 
     it('should show Automatic at exactly 80%', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={80} />
       );
-      expect(getByText('⚡')).toBeDefined();
+      expect(getByText('💎')).toBeDefined();
     });
 
     it('should show Automatic at 100%', () => {
       const { getByText } = renderWithTheme(
         <HabitStrengthIndicator habitName='Test Habit' strength={100} />
       );
-      expect(getByText('⚡')).toBeDefined();
+      expect(getByText('💎')).toBeDefined();
     });
   });
 
@@ -240,13 +240,13 @@ describe('HabitStrengthIndicator - Phase 2', () => {
             variant='compact'
           />
         );
-        expect(getByText('💪')).toBeDefined();
+        expect(getByText('🏆')).toBeDefined();
       });
     });
 
     describe('Full Variant', () => {
-      it('should show label text when showLabel is true', () => {
-        const { getByText } = renderWithTheme(
+      it('should expose the level in accessibility output', () => {
+        const { getByLabelText } = renderWithTheme(
           <HabitStrengthIndicator
             showLabel
             habitName='Test Habit'
@@ -254,8 +254,7 @@ describe('HabitStrengthIndicator - Phase 2', () => {
             variant='full'
           />
         );
-        // Should show "Strong" label
-        expect(getByText(/Strong/)).toBeDefined();
+        expect(getByLabelText('65% strength, Strong')).toBeDefined();
       });
 
       it('should show description text', () => {
@@ -306,7 +305,7 @@ describe('HabitStrengthIndicator - Phase 2', () => {
         <HabitStrengthIndicator habitName='Test Habit' strength={-10} />
       );
       // Should clamp to 0 and show Starting emoji
-      expect(getByText('🌱')).toBeDefined();
+      expect(getByText('🥉')).toBeDefined();
     });
 
     it('should handle strength values > 100', () => {
@@ -314,7 +313,7 @@ describe('HabitStrengthIndicator - Phase 2', () => {
         <HabitStrengthIndicator habitName='Test Habit' strength={150} />
       );
       // Should clamp to 100 and show Automatic emoji
-      expect(getByText('⚡')).toBeDefined();
+      expect(getByText('💎')).toBeDefined();
     });
 
     it('should handle decimal strength values', () => {
@@ -333,9 +332,9 @@ describe('HabitStrengthIndicator - Phase 2', () => {
   });
 
   describe('Phase 2 Acceptance Criteria', () => {
-    it('✅ Shows emoji (🌱🌿🌳💪⚡) with progress bar', () => {
+    it('✅ Shows default rank emoji with progress bar', () => {
       const strengths = [10, 30, 50, 70, 90];
-      const emojis = ['🌱', '🌿', '🌳', '💪', '⚡'];
+      const emojis = ['🥉', '🥈', '🥇', '🏆', '💎'];
 
       for (const [index, strength] of strengths.entries()) {
         const { getByText } = renderWithTheme(

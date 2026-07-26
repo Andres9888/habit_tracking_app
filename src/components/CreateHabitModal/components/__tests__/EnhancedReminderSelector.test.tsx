@@ -329,7 +329,7 @@ describe('EnhancedReminderSelector', () => {
       fireEvent.press(getByTestId('preset-morning'));
 
       expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith(
-        'Reminder set for 7 AM'
+        'Reminder set for Morning'
       );
     });
   });
@@ -393,7 +393,7 @@ describe('EnhancedReminderSelector', () => {
   });
 
   describe('Custom Time Button', () => {
-    it('should show "Custom time..." when no custom time is set', () => {
+    it('should invite the user to pick a custom time when a preset is set', () => {
       const { getByText } = render(
         <EnhancedReminderSelector
           {...defaultProps}
@@ -401,7 +401,7 @@ describe('EnhancedReminderSelector', () => {
         />
       );
 
-      expect(getByText('Custom time...')).toBeDefined();
+      expect(getByText('or pick a custom time')).toBeDefined();
     });
 
     it('should show formatted time when custom time is set', () => {
@@ -592,9 +592,15 @@ describe('EnhancedReminderSelector', () => {
         <EnhancedReminderSelector {...defaultProps} />
       );
 
-      expect(getByLabelText('Set reminder for 7 AM')).toBeDefined();
-      expect(getByLabelText('Set reminder for 12 PM')).toBeDefined();
-      expect(getByLabelText('Set reminder for 8 PM')).toBeDefined();
+      expect(
+        getByLabelText('Set reminder for Morning at 7:00 AM')
+      ).toBeDefined();
+      expect(
+        getByLabelText('Set reminder for Midday at 12:00 PM')
+      ).toBeDefined();
+      expect(
+        getByLabelText('Set reminder for Evening at 8:00 PM')
+      ).toBeDefined();
     });
 
     it('should have accessible label on custom time button when no value', () => {
@@ -689,8 +695,7 @@ describe('EnhancedReminderSelector', () => {
         />
       );
 
-      // Should show "Custom time..." since noon is a preset
-      expect(getByText('Custom time...')).toBeDefined();
+      expect(getByText('or pick a custom time')).toBeDefined();
     });
 
     it('should handle times with non-zero minutes', () => {

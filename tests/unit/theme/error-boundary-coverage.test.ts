@@ -13,32 +13,33 @@ function readSource(relativePath: string): string {
   return fs.readFileSync(path.join(SRC, relativePath), 'utf-8');
 }
 
-describe('Root-level SentryErrorBoundary (App.tsx)', () => {
-  const source = readSource('App.tsx');
+describe('Root-level startup monitoring and boundary', () => {
+  const appSource = readSource('App.tsx');
+  const providersSource = readSource('app/AppProviders.tsx');
+  const monitoringSource = readSource('app/initializeAppMonitoring.ts');
 
-  it('imports SentryErrorBoundary from sentry lib', () => {
-    expect(source).toMatch(/import.*SentryErrorBoundary.*from.*sentry/);
-  });
-
-  it('wraps Providers function with SentryErrorBoundary', () => {
-    // Production path
-    expect(source).toMatch(
-      /function Providers[\s\S]*?<SentryErrorBoundary>[\s\S]*?<\/SentryErrorBoundary>/
+  it('imports the startup monitoring initializer into App', () => {
+    expect(appSource).toContain(
+      "import { initializeAppMonitoring } from './app/initializeAppMonitoring'"
     );
   });
 
-  it('wraps DevProviders function with SentryErrorBoundary', () => {
-    // Development path
-    expect(source).toMatch(
-      /function DevProviders[\s\S]*?<SentryErrorBoundary>[\s\S]*?<\/SentryErrorBoundary>/
+  it('wraps the provider tree with StartupErrorBoundary', () => {
+    expect(providersSource).toMatch(
+      /<StartupErrorBoundary>[\s\S]*?<SafeAreaProvider>[\s\S]*?<\/StartupErrorBoundary>/
     );
   });
 
-  it('initializes Sentry before rendering', () => {
-    expect(source).toContain('initSentry()');
-    // initSentry should appear before the Providers function
-    const initIndex = source.indexOf('initSentry()');
-    const providersIndex = source.indexOf('function Providers');
+  it('keeps the same startup boundary for every runtime mode', () => {
+    expect(providersSource).not.toContain('DevProviders');
+    expect(providersSource.match(/<StartupErrorBoundary>/g)).toHaveLength(1);
+  });
+
+  it('schedules Sentry before the App component renders', () => {
+    expect(monitoringSource).toContain('scheduleWhenIdle(initSentry');
+    expect(appSource).toContain('initializeAppMonitoring()');
+    const initIndex = appSource.indexOf('initializeAppMonitoring()');
+    const providersIndex = appSource.indexOf('export default function App');
     expect(initIndex).toBeLessThan(providersIndex);
   });
 });
@@ -123,21 +124,21 @@ describe('Secondary ErrorBoundary in TemplatesModalSection', () => {
   });
 });
 
-describe('Both provider paths use SentryErrorBoundary as outermost wrapper', () => {
-  const source = readSource('App.tsx');
+describe('AppProviders uses StartupErrorBoundary as the outer runtime wrapper', () => {
+  const source = readSource('app/AppProviders.tsx');
 
-  it('SentryErrorBoundary is first JSX element in Providers return', () => {
-    // Extract the Providers function body
+  it('StartupErrorBoundary is first JSX element in the configured return', () => {
     const providersMatch = source.match(
-      /function Providers[^{]*\{[\s\S]*?return\s*\(\s*(<\w+)/
+      /return\s*\(\s*(<\w+)[\s\S]*?<SafeAreaProvider>/
     );
-    expect(providersMatch?.[1]).toBe('<SentryErrorBoundary');
+    expect(providersMatch?.[1]).toBe('<StartupErrorBoundary');
   });
 
-  it('SentryErrorBoundary is first JSX element in DevProviders return', () => {
-    const devProvidersMatch = source.match(
-      /function DevProviders[^{]*\{[\s\S]*?return\s*\(\s*(<\w+)/
-    );
-    expect(devProvidersMatch?.[1]).toBe('<SentryErrorBoundary');
+  it('StartupErrorBoundary closes after all configured providers', () => {
+    const boundaryStart = source.indexOf('<StartupErrorBoundary>');
+    const lazyProviders = source.indexOf('<LazyProviders>');
+    const boundaryEnd = source.indexOf('</StartupErrorBoundary>');
+    expect(boundaryStart).toBeLessThan(lazyProviders);
+    expect(boundaryEnd).toBeGreaterThan(lazyProviders);
   });
 });
