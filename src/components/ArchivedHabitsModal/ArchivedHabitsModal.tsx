@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { Alert, FlatList, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { airy } from '@/theme/airyScale';
 import { useArchivedHabitsModalState } from './useArchivedHabitsModalState';
@@ -11,6 +11,7 @@ import {
 } from './components';
 import { DangerZoneFooter } from './components/DangerZoneFooter';
 import { LoadingState } from './components/LoadingState';
+import { showArchivedHabitUpgradeAlert } from './showArchivedHabitUpgradeAlert';
 import type { ArchivedHabitsModalProps, ArchivedHabit } from './types';
 
 export default function ArchivedHabitsModal({
@@ -19,13 +20,7 @@ export default function ArchivedHabitsModal({
   const insets = useSafeAreaInsets();
   const state = useArchivedHabitsModalState();
 
-  const handleUpgradePress = useCallback(() => {
-    Alert.alert(
-      'Upgrade to Premium',
-      "You've reached the free limit of 3 active habits. Upgrade to premium for unlimited habits, or delete an active habit to make room.",
-      [{ text: 'OK', style: 'default' }]
-    );
-  }, []);
+  const handleUpgradePress = useCallback(showArchivedHabitUpgradeAlert, []);
 
   const handleSelectPress = useCallback(() => {
     if (state.selectionMode) state.exitSelectionMode();

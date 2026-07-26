@@ -3,7 +3,7 @@
 import { Pressable, Text, View, StyleSheet } from 'react-native';
 
 import { useThemeColors } from '../../theme/ThemeContext';
-import { typography, fontWeights } from '@/theme/typography';
+import { typography } from '@/theme/typography';
 
 interface SecondaryActionsProps {
   onOpenSettings?: () => void;

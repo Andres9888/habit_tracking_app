@@ -176,7 +176,9 @@ export function HapticTest() {
               await testHaptic(`Rapid ${i + 1}`, () =>
                 triggerHaptic('tap')
               );
-              await new Promise((resolve) => setTimeout(resolve, 200));
+              await new Promise((resolve) => {
+                setTimeout(resolve, 200);
+              });
             }
           }}
         >

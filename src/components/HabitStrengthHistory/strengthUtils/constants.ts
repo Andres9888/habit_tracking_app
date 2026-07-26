@@ -13,7 +13,7 @@ export const ALGORITHM_MODE_CONFIGS: Record<
   string,
   Pick<StrengthAlgorithmConfig, 'growthRate' | 'decayRate'>
 > = {
-  forgiving: { growthRate: 0.10, decayRate: 0.99 },
+  forgiving: { growthRate: 0.1, decayRate: 0.99 },
   balanced: { growthRate: 0.03, decayRate: 0.98 },
   strict: { growthRate: 0.013, decayRate: 0.96 },
 };

@@ -40,8 +40,7 @@ export function HabitCardHeader({ name, icon, accentColor, archiveDate, onDelete
           Archived {getRelativeTime(archiveDate)}
         </Text>
       </View>
-      {showDelete && onDeletePress && (
-        <Pressable
+      {showDelete && onDeletePress ? <Pressable
           accessibilityLabel={`Delete ${name}`} accessibilityRole='button'
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           style={({ pressed }) => ({
@@ -52,8 +51,7 @@ export function HabitCardHeader({ name, icon, accentColor, archiveDate, onDelete
           onPress={onDeletePress}
         >
           <Trash2 color={isDark ? colors.gray[400] : '#C4BCB3'} size={iconSizes.small} strokeWidth={2} />
-        </Pressable>
-      )}
+        </Pressable> : null}
     </View>
   );
 }

@@ -6,16 +6,15 @@
 
 import React from 'react';
 import { ChevronLeft } from 'lucide-react-native';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { colors } from '@/theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { layoutStyles } from '../styles';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { modalHeaderStyles as s } from './ModalHeader.styles';
 
 interface ModalHeaderProps {
   topInset: number;
@@ -89,25 +88,3 @@ export function ModalHeader({
     </Animated.View>
   );
 }
-
-const s = StyleSheet.create({
-  backButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.full,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
-  handle: {
-    backgroundColor: colors.gray[300],
-    borderRadius: borderRadius.xs,
-    height: 4,
-    width: 40,
-  },
-  handleRow: { alignItems: 'center', paddingTop: 8 },
-  headerRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});

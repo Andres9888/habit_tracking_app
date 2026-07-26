@@ -39,7 +39,8 @@ export function useHeroAnimations({
     void AccessibilityInfo.isReduceMotionEnabled()
       .then(setReduceMotion)
       .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
+        if (__DEV__)
+          console.warn('Error checking reduce motion setting:', error);
         setReduceMotion(false);
       });
   }, []);
@@ -66,7 +67,6 @@ export function useHeroAnimations({
         easing: Easing.out(Easing.cubic),
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clampedStrength, reduceMotion, progressPercent]);
 
   const animatedCircleProps = useAnimatedProps(() => ({

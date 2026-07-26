@@ -17,7 +17,7 @@ export function PlanPreviewStep({ answers, onNext }: StepComponentProps) {
   const picked = all
     ? answers.pickedTemplateIds
         .map((id) => all.find((t) => t._id === id))
-        .filter((t): t is NonNullable<typeof t> => Boolean(t))
+        .filter((template) => template !== undefined)
     : [];
 
   return (

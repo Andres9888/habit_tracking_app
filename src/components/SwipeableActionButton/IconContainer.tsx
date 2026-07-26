@@ -19,7 +19,7 @@ export function IconContainer({
   return (
     <View
       className='h-10 w-10 items-center justify-center rounded-xl'
-      style={{ backgroundColor: isDestructive ? themeColors.status.errorLight : !isBoost ? themeColors.background : undefined }}
+      style={{ backgroundColor: isDestructive ? themeColors.status.errorLight : isBoost ? undefined : themeColors.background }}
     >
       {isBoost ? <LinearGradient
           className='absolute inset-0 rounded-xl'

@@ -31,7 +31,7 @@ export function MonetizationHero({
     >
       <View className='gap-2'>
         <Text style={{ color: colors.indigo[300] }} className='text-sm font-medium uppercase tracking-[4px]'>
-          {'✨'} Try Premium Free
+          ✨ Try Premium Free
         </Text>
         <Text className='text-2xl font-semibold leading-[28px] tracking-tight text-white'>
           Ready for unlimited habits?
@@ -59,7 +59,7 @@ export function MonetizationHero({
           onPress={onUpgradePress}
         >
           <Text className='text-base font-semibold leading-[22px] tracking-wide text-white'>
-            Start Free Trial {'→'}
+            Start Free Trial →
           </Text>
         </Pressable>
         <View className='border-white/22 flex-1 rounded-full border px-4 py-3'>

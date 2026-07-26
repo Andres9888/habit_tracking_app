@@ -65,7 +65,7 @@ export function CompactHabitRow({
               style={{ backgroundColor: colors.status.success, opacity: isRestoring ? 0.6 : 1 }}
               onPress={hasReachedLimit ? onUpgradePress : handleRestore}
             >
-              {hasReachedLimit && <Lock color={colors.text.inverse} size={iconSizes.small} strokeWidth={2.5} />}
+              {hasReachedLimit ? <Lock color={colors.text.inverse} size={iconSizes.small} strokeWidth={2.5} /> : null}
               <Text style={[typography.caption, { color: colors.text.inverse, fontWeight: fontWeights.semibold }]}>
                 {isRestoring ? 'Done!' : 'Resume'}
               </Text>

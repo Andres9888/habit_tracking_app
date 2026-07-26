@@ -10,14 +10,11 @@ import { useHabitDayToggleHandlers } from './useHabitDayToggleHandlers';
 import { useHabitDayToggleTierStyles } from './useHabitDayToggleTierStyles';
 import {
   getTodayGlowStyle,
-  getBackgroundColor,
-  getBorderColor,
   getOuterFrame,
-  MISSED_BG,
-  MISSED_BORDER,
 } from './habitDayToggleStyles';
 import { HabitDayToggleContent } from './HabitDayToggleContent';
 import { getMaterialTier } from './materialTier';
+import { getHabitDayToggleVisuals } from './getHabitDayToggleVisuals';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -44,11 +41,8 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const tier = getMaterialTier(strength);
   const tierAnim = useAnimatedTier(strength);
   const borderRadius = shape === 'circle' ? 22 : 10;
-  const tierBackground = getBackgroundColor(completed, accentColor, tier);
-  const tierBorder = getBorderColor(completed, isToday, accentColor, tier);
-  const staticBackground = missed ? MISSED_BG : tierBackground;
-  const staticBorder = missed ? MISSED_BORDER : tierBorder;
-  const showCompletedShadow = completed && !missed;
+  const { showCompletedShadow, staticBackground, staticBorder } =
+    getHabitDayToggleVisuals(completed, missed, isToday, accentColor, tier);
 
   const { cellStyle, shadowStyle } = useHabitDayToggleTierStyles({
     tierAnim,

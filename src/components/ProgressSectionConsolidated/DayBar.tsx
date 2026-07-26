@@ -24,16 +24,8 @@ import {
 } from './DayBar.constants';
 import { springs } from '@/theme/animations';
 import { useThemeColors } from '@/theme/ThemeContext';
-
-export interface DayBarProps {
-  dayIndex: number;
-  rate: number;
-  isBest: boolean;
-  isWorst: boolean;
-  maxRate: number;
-  index: number;
-  reduceMotion: boolean;
-}
+import type { DayBarProps } from './DayBar.types';
+export type { DayBarProps } from './DayBar.types';
 
 /**
  * Individual animated day bar

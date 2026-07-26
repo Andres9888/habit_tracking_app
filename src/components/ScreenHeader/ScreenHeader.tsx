@@ -1,22 +1,13 @@
 import React, { isValidElement, useEffect } from 'react';
 import { Pressable, View } from 'react-native';
-import Animated, {
-  FadeInDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChevronLeft, X } from 'lucide-react-native';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { usePressAnimation } from '../../hooks/usePressAnimation';
-import { durations, enterEasing } from '../../theme/animations';
 import type { ScreenHeaderProps } from './ScreenHeader.types';
 import { styles } from './ScreenHeader.styles';
-
-const ENTERING = FadeInDown.delay(0).duration(durations.enter).easing(enterEasing);
-const SUBTITLE_ENTERING = FadeInDown.delay(50).duration(durations.enter).easing(enterEasing);
-const ICON_SIZE = 24;
+import { SCREEN_HEADER_ENTERING, SCREEN_HEADER_ICON_SIZE, SCREEN_HEADER_SUBTITLE_ENTERING } from './ScreenHeader.constants';
 
 export function ScreenHeader({
   title,
@@ -60,7 +51,11 @@ export function ScreenHeader({
         {...pressHandlers}
       >
         <Animated.View style={[styles.iconButton, animatedStyle]}>
-          <Icon color={iconColor} size={ICON_SIZE} strokeWidth={2.5} />
+          <Icon
+            color={iconColor}
+            size={SCREEN_HEADER_ICON_SIZE}
+            strokeWidth={2.5}
+          />
         </Animated.View>
       </Pressable>
     );
@@ -70,7 +65,7 @@ export function ScreenHeader({
     <Animated.View
       accessible
       accessibilityRole="header"
-      entering={ENTERING}
+      entering={SCREEN_HEADER_ENTERING}
       style={[
         styles.container,
         { paddingTop: Math.max(insets.top + 8, 16) },
@@ -99,7 +94,7 @@ export function ScreenHeader({
         )
       )}
       {subtitle ? <Animated.Text
-          entering={SUBTITLE_ENTERING}
+          entering={SCREEN_HEADER_SUBTITLE_ENTERING}
           style={[styles.subtitle, { color: colors.text.secondary }]}
         >
           {subtitle}

@@ -37,11 +37,11 @@ export function HabitStatsBadges({ habit, strength }: HabitStatsBadgesProps) {
         <Text style={streak > 0 ? statValue : { ...statText, color: muted }}>
           {streak > 0 ? `${streak}d streak` : 'no streak'}
         </Text>
-        {completions > 0 && (<>
+        {completions > 0 ? <>
           <Dot color={trackBg} />
           <Text style={statValue}>{completions}</Text>
           <Text style={{ ...statText, color: muted }}> done</Text>
-        </>)}
+        </> : null}
       </View>
     </View>
   );

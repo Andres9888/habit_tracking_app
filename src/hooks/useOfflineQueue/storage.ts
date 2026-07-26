@@ -25,7 +25,7 @@ export async function loadQueueIndex(): Promise<string[]> {
     }
 
     return parsed.filter((id): id is string => typeof id === 'string');
-  } catch (error) {
+  } catch {
     return [];
   }
 }
@@ -74,7 +74,9 @@ export async function removeQueueItem(id: string): Promise<void> {
   try {
     const key = getItemKey(id);
     await removeSensitiveItem(key);
-  } catch {}
+  } catch {
+    // Queue removal is best-effort.
+  }
 }
 
 /** Load all items from the queue */

@@ -72,7 +72,7 @@ export async function getStreaksForHabit(
 
   const sortedDates = trackings
     .filter((t) => t.completed)
-    .map((t) => t.date as string)
+    .map((t) => t.date)
     .sort();
 
   return computeStreakFromDates(sortedDates);

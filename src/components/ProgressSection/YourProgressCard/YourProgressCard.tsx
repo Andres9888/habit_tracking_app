@@ -4,8 +4,8 @@
  * @deprecated This component is deprecated. Use `ProgressSectionConsolidated` instead.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, Pressable, AccessibilityInfo } from 'react-native';
+import React, { useMemo } from 'react';
+import { View, Text, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Info } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -24,6 +24,7 @@ import { ProgressBar } from './ProgressBar';
 import { ActionableTip } from './ActionableTip';
 import { useProgressAnimations } from './useProgressAnimations';
 import { triggerHaptic } from '@/utils/haptics';
+import { useProgressReduceMotion } from './useProgressReduceMotion';
 
 export function YourProgressCard({
   strength,
@@ -35,16 +36,7 @@ export function YourProgressCard({
   const clampedStrength = Math.max(0, Math.min(100, strength));
   const level = getStrengthLevel(clampedStrength);
   const nextLevel = getNextLevel(clampedStrength);
-  const [reduceMotion, setReduceMotion] = useState(false);
-
-  useEffect(() => {
-    void AccessibilityInfo.isReduceMotionEnabled()
-      .then(setReduceMotion)
-      .catch((error) => {
-        if (__DEV__) console.warn('Error checking reduce motion setting:', error);
-        setReduceMotion(false);
-      });
-  }, []);
+  const reduceMotion = useProgressReduceMotion();
 
   const { animatedStrength, emojiAnimatedStyle } = useProgressAnimations(
     clampedStrength,

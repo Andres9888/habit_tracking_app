@@ -3,13 +3,7 @@
  * Provides network connectivity status throughout the app
  */
 
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useMemo,
-} from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import * as Network from 'expo-network';
 import type {
   NetworkStatus,
@@ -20,6 +14,7 @@ import { networkStateToStatus, calculateIsOnline } from './utils';
 import type { NetworkState } from './utils';
 import { defaultNetworkStatus } from './defaults';
 import { NetworkStatusContext } from './context';
+import { useNetworkCallbacks } from './useNetworkCallbacks';
 
 export function NetworkStatusProvider({
   children,
@@ -29,8 +24,12 @@ export function NetworkStatusProvider({
   const [status, setStatus] = useState<NetworkStatus>(defaultNetworkStatus);
   const [isChecking, setIsChecking] = useState(true);
 
-  const onlineCallbacksRef = useRef<Set<() => void>>(new Set());
-  const offlineCallbacksRef = useRef<Set<() => void>>(new Set());
+  const {
+    offlineCallbacksRef,
+    onlineCallbacksRef,
+    onOfflineCallback,
+    onOnlineCallback,
+  } = useNetworkCallbacks();
   const previousIsOnlineRef = useRef<boolean | null>(null);
 
   const isOnline = calculateIsOnline(status);
@@ -85,20 +84,6 @@ export function NetworkStatusProvider({
     }
   }, [handleStatusUpdate]);
 
-  const onOnlineCallback = useCallback((callback: () => void) => {
-    onlineCallbacksRef.current.add(callback);
-    return () => {
-      onlineCallbacksRef.current.delete(callback);
-    };
-  }, []);
-
-  const onOfflineCallback = useCallback((callback: () => void) => {
-    offlineCallbacksRef.current.add(callback);
-    return () => {
-      offlineCallbacksRef.current.delete(callback);
-    };
-  }, []);
-
   const value: NetworkStatusContextValue = useMemo(
     () => ({
       isChecking,
@@ -115,7 +100,7 @@ export function NetworkStatusProvider({
     if (__DEV__) {
       console.error('[NetworkStatusProvider] Missing NetworkStatusContext.Provider');
     }
-    return <>{children}</>;
+    return children;
   }
 
   return (

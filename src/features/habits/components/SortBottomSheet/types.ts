@@ -27,3 +27,10 @@ export interface SortBottomSheetProps {
   /** Optional reduce motion preference */
   reduceMotion?: boolean;
 }
+
+export interface UseSortBottomSheetOptions {
+  visible: boolean;
+  reduceMotion: boolean;
+  onClose: () => void;
+  onSelectSortMode: (mode: HabitSortMode) => void;
+}

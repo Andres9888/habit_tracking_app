@@ -1,9 +1,10 @@
 import { Image, Pressable, Text, View } from 'react-native';
+import type { ImageSourcePropType } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
+import CHAIN_ICON from '../../../assets/onboarding/chainday-welcome-icon.png';
 
 import { StepComponentProps } from '../types';
 
-const CHAIN_ICON = require('../../../assets/onboarding/chainday-welcome-icon.png');
 const ICON_SIZE = 96;
 
 export function SolutionIntroStep({ onNext }: StepComponentProps) {
@@ -16,7 +17,7 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
           <Image
             accessibilityLabel="ChainDay icon"
             accessibilityRole="image"
-            source={CHAIN_ICON}
+            source={CHAIN_ICON as ImageSourcePropType}
             style={{
               borderRadius: 20,
               height: ICON_SIZE,

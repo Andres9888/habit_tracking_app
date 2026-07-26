@@ -7,17 +7,10 @@ import { useEffect, useRef } from 'react';
 import {
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withSequence,
-  withSpring,
-  withTiming,
-  Easing,
 } from 'react-native-reanimated';
 import ConfettiCannon from 'react-native-confetti-cannon';
 
-import { springs } from '@/theme/animations';
-import { SPRING_BOUNCY, SPRING_EXIT, SPRING_ICON } from './constants';
-import { triggerHaptic } from '@/utils/haptics';
+import { applyOverlayCelebrationAnimations } from './applyOverlayCelebrationAnimations';
 
 interface Params {
   visible: boolean;
@@ -38,57 +31,23 @@ export function useCelebrationAnimations({ visible, reducedMotion }: Params) {
   const glowOpacity = useSharedValue(0);
 
   useEffect(() => {
-    if (!visible) {
-      overlayOpacity.value = 0;
-      emojiScale.value = 0;
-      badgeScale.value = 0;
-      titleOpacity.value = 0;
-      subtitleOpacity.value = 0;
-      actionsOpacity.value = 0;
-      glowOpacity.value = 0;
-      return;
-    }
-    if (reducedMotion) {
-      overlayOpacity.value = 1;
-      emojiScale.value = 1;
-      badgeScale.value = 1;
-      titleOpacity.value = 1;
-      titleY.value = 0;
-      subtitleOpacity.value = 1;
-      subtitleY.value = 0;
-      actionsOpacity.value = 1;
-      actionsY.value = 0;
-      glowOpacity.value = 0.15;
-      return;
-    }
-    triggerHaptic('success');
-    if (confettiRef.current) confettiRef.current.start();
-
-    overlayOpacity.value = withTiming(1, {
-      duration: 400,
-      easing: Easing.out(Easing.ease),
-    });
-    emojiScale.value = withDelay(
-      300,
-      withSequence(withSpring(1.1, SPRING_ICON), withSpring(1, SPRING_EXIT))
+    applyOverlayCelebrationAnimations(
+      {
+        actionsOpacity,
+        actionsY,
+        badgeScale,
+        emojiScale,
+        glowOpacity,
+        overlayOpacity,
+        subtitleOpacity,
+        subtitleY,
+        titleOpacity,
+        titleY,
+      },
+      confettiRef,
+      visible,
+      reducedMotion
     );
-    badgeScale.value = withDelay(
-      700,
-      withSpring(1, springs.celebration)
-    );
-    glowOpacity.value = withDelay(
-      200,
-      withSequence(
-        withTiming(0.3, { duration: 400 }),
-        withTiming(0.12, { duration: 600 })
-      )
-    );
-    titleOpacity.value = withDelay(500, withTiming(1, { duration: 350 }));
-    titleY.value = withDelay(500, withSpring(0, SPRING_BOUNCY));
-    subtitleOpacity.value = withDelay(650, withTiming(1, { duration: 350 }));
-    subtitleY.value = withDelay(650, withSpring(0, SPRING_BOUNCY));
-    actionsOpacity.value = withDelay(850, withTiming(1, { duration: 350 }));
-    actionsY.value = withDelay(850, withSpring(0, SPRING_BOUNCY));
   }, [visible, reducedMotion]);
 
   const overlayStyle = useAnimatedStyle(() => ({

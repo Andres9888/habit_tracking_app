@@ -17,26 +17,17 @@ import { useBarAnimations } from './useBarAnimations';
 import { useCelebrationState } from './useCelebrationState';
 import { useCelebrationAnimations, useProgressAnimation } from './useCelebrationAnimations';
 import { ProgressRingFAB } from './ProgressRingFAB';
-import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW, ENTERING, styles } from './BottomActionBar.styles';
+import { BLUR_INTENSITY, BORDER_DARK, BORDER_LIGHT, CAPSULE_SHADOW, ENTERING, ICON_BUTTON_HIT_SLOP, styles } from './BottomActionBar.styles';
 import type { BottomActionBarProps } from './types';
-
-const iconButtonHitSlop = {
-  bottom: 18,
-  left: 18,
-  right: 18,
-  top: 18,
-};
 
 function BottomActionBarComponent(props: BottomActionBarProps) {
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useThemeColors();
   const anim = useBarAnimations();
-  const { isAllDone, justCompleted } = useCelebrationState(
-    props.completedToday, props.totalHabits, props.reduceMotion);
+  const { isAllDone, justCompleted } = useCelebrationState(props.completedToday, props.totalHabits, props.reduceMotion);
   const celebrationAnim = useCelebrationAnimations(isAllDone, justCompleted, props.reduceMotion);
   const progress = useProgressAnimation(props.completedToday, props.totalHabits, props.reduceMotion);
   const goldColor = isDark ? palette.streak[300] : palette.streak[700];
-  const borderColor = isDark ? BORDER_DARK : BORDER_LIGHT;
 
   return (
     <Animated.View
@@ -46,7 +37,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
       <View style={styles.glassBg} pointerEvents='none'>
         <BlurView intensity={BLUR_INTENSITY} tint={isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
       </View>
-      <View style={[styles.capsuleBorder, { borderColor }]} pointerEvents='none' />
+      <View style={[styles.capsuleBorder, { borderColor: isDark ? BORDER_DARK : BORDER_LIGHT }]} pointerEvents='none' />
 
       <View style={styles.contentRow}>
         <View style={styles.leftZone}>
@@ -54,7 +45,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
             <Pressable
               accessibilityLabel='Open settings'
               accessibilityRole='button'
-              hitSlop={iconButtonHitSlop}
+              hitSlop={ICON_BUTTON_HIT_SLOP}
               testID='settings-button'
               style={styles.iconTouchArea}
               onPress={props.onOpenSettings}
@@ -93,7 +84,7 @@ function BottomActionBarComponent(props: BottomActionBarProps) {
             <Pressable
               accessibilityLabel='Get inspired with habit templates'
               accessibilityRole='button'
-              hitSlop={iconButtonHitSlop}
+              hitSlop={ICON_BUTTON_HIT_SLOP}
               testID='home-templates-button'
               style={styles.iconTouchArea}
               onPress={props.onOpenTemplates}

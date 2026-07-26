@@ -1,10 +1,9 @@
 import React from 'react';
-import { Animated, Pressable, View, Text } from 'react-native';
+import { Animated, Pressable, Text } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { colors } from '@/theme';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { borderRadius } from '../../theme/spacing';
 import { typography, fontWeights, fontFamilies } from '@/theme/typography';
 
 interface DeleteActionProps {

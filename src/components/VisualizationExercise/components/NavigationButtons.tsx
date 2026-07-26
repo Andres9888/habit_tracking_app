@@ -7,7 +7,6 @@ import React from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { clsx } from 'clsx';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { triggerHaptic } from '@/utils/haptics';
 

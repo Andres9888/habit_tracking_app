@@ -15,6 +15,7 @@ import { ThemedTextInput } from '@/components/ui/TextInput';
 import useHapticFeedback from '../../../../hooks/useHapticFeedback';
 import type { HeroNameInputProps } from './types';
 import { MAX_LENGTH } from './types';
+import { getValidationColor } from './getValidationColor';
 import { useHeroNameInputAnimations } from './useHeroNameInputAnimations';
 
 export const HeroNameInput = ({
@@ -40,20 +41,6 @@ export const HeroNameInput = ({
     }
     previousCount.current = charCount;
   }, [charCount, triggerWarning]);
-
-  const getValidationColor = () => {
-    switch (validation?.type) {
-      case 'success': {
-        return themeColors.primary[600];
-      }
-      case 'warning': {
-        return '#D97706';
-      }
-      default: {
-        return themeColors.text.secondary;
-      }
-    }
-  };
 
   return (
     <View className='mb-4'>
@@ -109,7 +96,9 @@ export const HeroNameInput = ({
         >
           <Text
             className='text-sm font-medium'
-            style={{ color: getValidationColor() }}
+            style={{
+              color: getValidationColor(validation.type, themeColors),
+            }}
           >
             {validation.message}
           </Text>

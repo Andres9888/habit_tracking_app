@@ -35,11 +35,7 @@ export async function safeSetItem<T>(key: string, value: T): Promise<void> {
     throw new TypeError('[safeStorage] Invalid AsyncStorage key');
   }
 
-  try {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
-  } catch (error) {
-    throw error;
-  }
+  await AsyncStorage.setItem(key, JSON.stringify(value));
 }
 
 export async function safeRemoveItem(key: string): Promise<void> {
@@ -49,7 +45,9 @@ export async function safeRemoveItem(key: string): Promise<void> {
 
   try {
     await AsyncStorage.removeItem(key);
-  } catch {}
+  } catch {
+    // Removal is best-effort.
+  }
 }
 
 export async function safeGetString(
@@ -75,5 +73,7 @@ export async function safeSetString(key: string, value: string): Promise<void> {
 
   try {
     await AsyncStorage.setItem(key, value);
-  } catch {}
+  } catch {
+    // String persistence is best-effort.
+  }
 }

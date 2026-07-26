@@ -79,7 +79,7 @@ const ConnectorArmsComponent: React.FC<ConnectorArmsProps> = ({
           colorStyle={
             ghostLeft && !connectLeft ? ghostColorStyle : colorStyle
           }
-          isGhost={ghostLeft && !connectLeft}
+          isGhost={Boolean(ghostLeft && !connectLeft)}
           side='left'
         />
       ) : null}
@@ -89,7 +89,7 @@ const ConnectorArmsComponent: React.FC<ConnectorArmsProps> = ({
           colorStyle={
             ghostRight && !connectRight ? ghostColorStyle : colorStyle
           }
-          isGhost={ghostRight && !connectRight}
+          isGhost={Boolean(ghostRight && !connectRight)}
           side='right'
         />
       ) : null}

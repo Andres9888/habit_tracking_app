@@ -4,7 +4,6 @@
 
 import { useMemo, useState } from 'react';
 import { DEFAULT_COLOR } from '../constants';
-import type { HabitDoc } from '../types';
 import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 import { parseHabitName, parseReminderTime } from '../utils';
 import {
@@ -13,12 +12,9 @@ import {
 } from '../../../constants/hubermanPhases';
 import type { ReminderOption } from '../components/ReminderSelector';
 import { getReminderOptionFromTime } from './reminderUtils';
+import type { UseHabitFormStateOptions } from './useHabitFormState.types';
 
 const DEFAULT_SOUND = 'Default';
-
-interface UseHabitFormStateOptions {
-  habitToEdit?: HabitDoc | null;
-}
 
 export function useHabitFormState({ habitToEdit }: UseHabitFormStateOptions) {
   const parsed = useMemo(

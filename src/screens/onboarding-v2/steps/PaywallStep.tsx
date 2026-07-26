@@ -49,8 +49,7 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
         </View>
       </View>
       <View style={{ paddingTop: 12 }}>
-        {failedCount > 0 && (
-          <View
+        {failedCount > 0 ? <View
             style={{
               alignItems: 'center',
               flexDirection: 'row',
@@ -70,8 +69,7 @@ export function PaywallStep({ answers, onNext }: StepComponentProps) {
             >
               Retry
             </Text>
-          </View>
-        )}
+          </View> : null}
         <PrimaryCTA
           label="See pricing"
           onPress={() => setPaywallVisible(true)}

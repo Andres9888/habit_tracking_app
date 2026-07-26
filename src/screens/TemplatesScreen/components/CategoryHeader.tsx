@@ -2,9 +2,8 @@
  * Header for category/search view mode
  */
 
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ArrowLeft } from 'lucide-react-native';
 import { useAppTheme } from '../../../theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import {
@@ -15,7 +14,7 @@ import { styles } from '../../templates/templatesScreenStyles';
 import type { Category } from '../../templates/constants';
 import type { CategoryDoc, ViewMode } from '../TemplatesScreen.types';
 import { fontWeights } from '@/theme/typography';
-import { iconSizes } from '@/theme/iconSizes';
+import { CategoryHeaderBackButton } from './CategoryHeaderBackButton';
 
 interface CategoryHeaderProps {
   categories: CategoryDoc[] | undefined;
@@ -52,36 +51,19 @@ export function CategoryHeader({
     : getCategoryLabel(selectedCategory);
   const subtitle = isSearchView
     ? `${filteredCount} match${filteredCount === 1 ? '' : 'es'}${
-        selectedCategory !== 'all'
-          ? ` in ${getCategoryLabel(selectedCategory)}`
-          : ''
+        selectedCategory === 'all'
+          ? ''
+          : ` in ${getCategoryLabel(selectedCategory)}`
       } across names, descriptions, categories, and research`
     : `${filteredCount} habit${filteredCount === 1 ? '' : 's'}`;
 
   return (
     <View style={[styles.header, { paddingTop: Math.max(insets.top + 8, 16) }]}>
       {shouldShowBackButton ? (
-        <Pressable
-          accessible
-          accessibilityLabel='Go back to browse'
-          accessibilityRole='button'
-          style={styles.backButton}
+        <CategoryHeaderBackButton
+          colors={themeColors}
           onPress={onBackPress}
-        >
-          <ArrowLeft
-            color={themeColors.text.secondary}
-            size={iconSizes.medium}
-            strokeWidth={2.5}
-          />
-          <Text
-            style={[
-              styles.backButtonText,
-              { color: themeColors.text.secondary },
-            ]}
-          >
-            Back
-          </Text>
-        </Pressable>
+        />
       ) : null}
       <View style={styles.categoryHeaderRow}>
         {viewMode === 'category' ? (

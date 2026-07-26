@@ -3,24 +3,21 @@
  * Wraps the simple streak hero in a theme-aware card.
  */
 import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import ErrorBoundary from '../../../components/ErrorBoundary';
 import type { Habit } from '../../../features/habits/types';
-import { useDetailPressAnimation } from '../../../hooks/useDetailPressAnimation';
 import { colors as palette } from '../../../theme/colors';
 import { durations, enterEasing } from '../../../theme/animations';
-import { borderRadius, shadows, spacing } from '../../../theme/spacing';
+import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { withAlpha } from '../../../theme';
-import { typography, fontWeights } from '../../../theme/typography';
+import { typography } from '../../../theme/typography';
+import { GoalAdjustButton } from './GoalAdjustButton';
 import { GoalAdjustSheet } from './GoalAdjustSheet';
 import { GoalTabEmptyState } from './GoalTabEmptyState';
 import { GoalWhyAnchor } from './GoalWhyAnchor';
 import { readableHabitAccent } from './goalColorUtils';
 import { SimpleStreakGoalHero } from './SimpleStreakGoalHero';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 interface GoalTabContentProps {
   habit: Habit;
@@ -29,7 +26,6 @@ interface GoalTabContentProps {
 export function GoalTabContent({ habit }: GoalTabContentProps) {
   const { colors, isDark } = useThemeColors();
   const [adjustOpen, setAdjustOpen] = useState(false);
-  const { animatedStyle, pressHandlers } = useDetailPressAnimation();
   const goalDuration = habit.goalDuration ?? 0;
   const hasGoal = goalDuration > 0;
   const currentStreak = habit.currentStreak ?? 0;
@@ -74,31 +70,10 @@ export function GoalTabContent({ habit }: GoalTabContentProps) {
           <Text style={{ ...typography.overline, color: controlAccent }}>
             Streak goal
           </Text>
-          <AnimatedPressable
-            accessibilityRole='button'
-            style={[
-              animatedStyle,
-              {
-                backgroundColor: withAlpha(controlAccent, 0.1),
-                borderRadius: borderRadius.full,
-                paddingHorizontal: spacing.md,
-                paddingVertical: spacing.xs + 2,
-              },
-            ]}
+          <GoalAdjustButton
+            accent={controlAccent}
             onPress={() => setAdjustOpen(true)}
-            onPressIn={pressHandlers.onPressIn}
-            onPressOut={pressHandlers.onPressOut}
-          >
-            <Text
-              style={{
-                ...typography.bodySmall,
-                color: controlAccent,
-                fontWeight: fontWeights.semibold,
-              }}
-            >
-              Adjust
-            </Text>
-          </AnimatedPressable>
+          />
         </View>
 
         <ErrorBoundary>

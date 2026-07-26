@@ -57,7 +57,7 @@ export const QuickTimeButton = ({
           className={`text-xs font-semibold ${
             isSelected ? 'text-white' : ''
           }`}
-          style={!isSelected ? { color: themeColors.text.secondary } : undefined}
+          style={isSelected ? undefined : { color: themeColors.text.secondary }}
         >
           {label}
         </Text>

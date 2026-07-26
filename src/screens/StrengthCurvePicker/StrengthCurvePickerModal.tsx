@@ -15,7 +15,7 @@ import { TierPickerRow } from './TierPickerRow';
 
 const SCALE_BASE = 600;
 const SCALE_MAX = 850;
-const SCALE_RANGE = 0.30;
+const SCALE_RANGE = 0.3;
 
 function computeScale(usableHeight: number): number {
   const t = Math.max(0, Math.min(1, (usableHeight - SCALE_BASE) / (SCALE_MAX - SCALE_BASE)));

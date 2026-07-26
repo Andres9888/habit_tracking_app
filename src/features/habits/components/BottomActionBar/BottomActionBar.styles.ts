@@ -19,6 +19,12 @@ export const CAPSULE_SHADOW = {
 };
 
 export const NOTIF_SIZE = 8;
+export const ICON_BUTTON_HIT_SLOP = {
+  bottom: 18,
+  left: 18,
+  right: 18,
+  top: 18,
+};
 
 export const styles = StyleSheet.create({
   capsuleBorder: {

@@ -1,6 +1,6 @@
 /** HeaderButton - Animated button with scale + haptic feedback */
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,10 +9,10 @@ import Animated, {
 import { triggerHaptic } from '@/utils/haptics';
 import { withAlpha } from '@/theme';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography, fontWeights } from '../../../theme/typography';
-import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
+import { fontWeights } from '../../../theme/typography';
 import { OPACITY } from '../../../constants/ui-values';
 import { springs } from '@/theme/animations';
+import { headerButtonStyles as s } from './HeaderButton.styles';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -107,28 +107,3 @@ export function HeaderButton({
     </AnimatedPressable>
   );
 }
-
-const s = StyleSheet.create({
-  compactButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  textButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    height: componentSpacing.button.height,
-    paddingHorizontal: spacing.base,
-  },
-  textLabel: {
-    ...typography.bodySmall,
-    fontWeight: fontWeights.medium,
-    letterSpacing: -0.2,
-  },
-});

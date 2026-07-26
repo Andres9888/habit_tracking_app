@@ -3,7 +3,7 @@
  */
 
 import {
-  Infinity,
+  Infinity as InfinityIcon,
   BarChart3,
   Calendar,
   Lightbulb,
@@ -16,7 +16,7 @@ export const ANALYTICS_FEATURES: readonly AnalyticsFeatureItem[] = [
   {
     description:
       'Track every habit across health, work, learning, and more — no limits.',
-    icon: Infinity,
+    icon: InfinityIcon,
     title: 'Unlimited Habits',
   },
   {

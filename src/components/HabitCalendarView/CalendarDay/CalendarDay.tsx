@@ -54,7 +54,6 @@ function getStatusStyles(
         text: { color: colors.status.successText },
       };
     }
-    case 'upcoming':
     default: {
       return {
         container: { borderColor: 'transparent', backgroundColor: colors.card },

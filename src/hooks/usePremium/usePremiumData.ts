@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents -- RevenueCat types resolve to any at build time */
+
 /**
  * usePremiumData Hook
  *
@@ -43,7 +43,9 @@ export function usePremiumData(): PremiumData {
     async function waitForSdk(): Promise<boolean> {
       let retryCount = 0;
       while (!isPurchasesAvailable() && retryCount < MAX_RETRIES) {
-        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+        await new Promise((resolve) => {
+          setTimeout(resolve, RETRY_DELAY_MS);
+        });
         retryCount++;
       }
       return isPurchasesAvailable();
@@ -102,7 +104,8 @@ export function usePremiumData(): PremiumData {
         if (isMounted) setupListener();
       })
       .catch((error) => {
-        if (__DEV__) console.warn('[usePremium] Unexpected error during setup:', error);
+        if (__DEV__)
+          console.warn('[usePremium] Unexpected error during setup:', error);
       });
 
     return () => {

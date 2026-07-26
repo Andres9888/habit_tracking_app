@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Batch Completion Operations
  * @see docs/offline-habit-sync.md FR-011

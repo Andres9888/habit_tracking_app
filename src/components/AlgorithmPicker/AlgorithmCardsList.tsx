@@ -29,7 +29,9 @@ export function AlgorithmCardsList({
             key={mode}
             entry={entry}
             selected={selected === mode}
-            showDefaultPill={markDefault && mode === DEFAULT_ALGORITHM}
+            showDefaultPill={Boolean(
+              markDefault && mode === DEFAULT_ALGORITHM,
+            )}
             onPress={() => onSelect(mode)}
           />
         );

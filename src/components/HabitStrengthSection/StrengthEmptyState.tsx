@@ -10,7 +10,7 @@ import { Text, View } from 'react-native';
 
 import { useThemeColors } from '@/theme/ThemeContext';
 
-import { spacing } from '../../theme/spacing';
+import { shadows, spacing } from '../../theme/spacing';
 import { typography } from '../../theme/typography';
 
 interface StrengthEmptyStateProps {
@@ -24,7 +24,10 @@ export const StrengthEmptyState = React.memo(function StrengthEmptyState({
   const { colors: themeColors } = useThemeColors();
 
   return (
-    <View className='rounded-2xl p-5 shadow-sm' style={{ backgroundColor: themeColors.card }}>
+    <View
+      className='rounded-2xl p-5'
+      style={{ ...shadows.card, backgroundColor: themeColors.card }}
+    >
       <Text style={{ ...typography.heading3, marginBottom: spacing.sm, color: themeColors.text.primary }}>
         Habit Strength
       </Text>

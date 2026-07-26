@@ -81,7 +81,6 @@ export function useCenteredFormCallbacks({
         // Passing findNodeHandle's number is rejected with "ref to a native
         // component" — pass the ref's current value instead.
         node.measureLayout(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           contentNode as any,
           (_x, y) => {
             scrollViewRef.current?.scrollTo({
@@ -93,7 +92,12 @@ export function useCenteredFormCallbacks({
         );
       }, 250);
     },
-    [form.setRemindersEnabled, scrollViewRef, reminderSectionRef, scrollContentRef]
+    [
+      form.setRemindersEnabled,
+      scrollViewRef,
+      reminderSectionRef,
+      scrollContentRef,
+    ]
   );
 
   const handleReminderTimeChange = useCallback(

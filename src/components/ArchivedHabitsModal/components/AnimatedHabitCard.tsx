@@ -42,7 +42,7 @@ export function AnimatedHabitCard({
           {/* Accent strip */}
           <View style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 4, borderTopLeftRadius: 20, borderBottomLeftRadius: 20, backgroundColor: accentBarColor }} />
           <View style={{ paddingVertical: 20, paddingRight: 20, paddingLeft: 24 }}>
-            {selectionMode && <SelectionCheckbox isDark={isDark} isSelected={isSelected} />}
+            {selectionMode ? <SelectionCheckbox isDark={isDark} isSelected={isSelected} /> : null}
             <HabitCardHeader
               accentColor={accentBarColor} archiveDate={archiveDate}
               icon={habit.icon} iconColor={habit.iconColor} name={habit.name}
@@ -50,14 +50,12 @@ export function AnimatedHabitCard({
               onDeletePress={() => onDelete(habit._id, habit.name)}
             />
             <HabitStatsBadges habit={habit} strength={strength} />
-            {!selectionMode && (
-              <ActionButtons
+            {selectionMode ? null : <ActionButtons
                 habitName={habit.name} hasReachedLimit={hasReachedLimit}
                 isRestoring={isRestoring} showSuccess={showSuccess}
                 successIconStyle={successIconStyle}
                 onRestorePress={handleRestorePress} onUpgradePress={onUpgradePress}
-              />
-            )}
+              />}
           </View>
         </View>
       </Pressable>
