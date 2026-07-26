@@ -32,20 +32,28 @@ jest.mock('react-native-reanimated', () => {
   const React = require('react');
   const { View, Pressable, Text } = require('react-native');
 
-  const AnimatedView = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-    return React.createElement(View, { ...props, ref });
-  });
+  const AnimatedView = React.forwardRef(
+    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+      return React.createElement(View, { ...props, ref });
+    }
+  );
   AnimatedView.displayName = 'AnimatedView';
 
-  const AnimatedText = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-    return React.createElement(Text, { ...props, ref });
-  });
+  const AnimatedText = React.forwardRef(
+    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+      return React.createElement(Text, { ...props, ref });
+    }
+  );
   AnimatedText.displayName = 'AnimatedText';
 
-  const createAnimatedComponent = (Component: React.ComponentType<Record<string, unknown>>) => {
-    const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-      return React.createElement(Component, { ...props, ref });
-    });
+  const createAnimatedComponent = (
+    Component: React.ComponentType<Record<string, unknown>>
+  ) => {
+    const AnimatedComponent = React.forwardRef(
+      (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+        return React.createElement(Component, { ...props, ref });
+      }
+    );
     AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
     return AnimatedComponent;
   };
@@ -67,31 +75,48 @@ jest.mock('react-native-reanimated', () => {
     withTiming: (value: number) => value,
     withRepeat: (value: number) => value,
     Easing: {
+      in: () => (x: number) => x,
       out: () => (x: number) => x,
       inOut: () => (x: number) => x,
       ease: (x: number) => x,
     },
     interpolate: () => 0,
+    interpolateColor: (
+      _value: number,
+      _inputRange: number[],
+      outputRange: string[]
+    ) => outputRange[0],
     runOnJS: (fn: Function) => fn,
+    useAnimatedScrollHandler: (
+      handlers: Record<string, (...args: unknown[]) => unknown>
+    ) => handlers,
   };
 });
 
 // Mock react-native-confetti-cannon
 jest.mock('react-native-confetti-cannon', () => {
   const React = require('react');
-  return React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) => {
-    React.useImperativeHandle(ref, () => ({
-      start: jest.fn(),
-    }));
-    return null;
-  });
+  return React.forwardRef(
+    (props: Record<string, unknown>, ref: React.Ref<unknown>) => {
+      React.useImperativeHandle(ref, () => ({
+        start: jest.fn(),
+      }));
+      return null;
+    }
+  );
 });
 
 // Mock Modal component
 jest.mock('../Modal', () => {
   const React = require('react');
   const { View } = require('react-native');
-  return function MockModal({ children, visible }: { children: React.ReactNode; visible: boolean }) {
+  return function MockModal({
+    children,
+    visible,
+  }: {
+    children: React.ReactNode;
+    visible: boolean;
+  }) {
     if (!visible) return null;
     return React.createElement(View, { testID: 'modal' }, children);
   };
@@ -111,17 +136,21 @@ jest.mock('../Button/Button', () => {
 });
 
 // Mock useAppTheme
-jest.mock('../../theme', () => ({
-  useAppTheme: () => ({
-    custom: {
-      fontFamilies: {
-        primary: {
-          text: 'System',
+jest.mock('../../theme', () => {
+  const actual = jest.requireActual('../../theme');
+  return {
+    ...actual,
+    useAppTheme: () => ({
+      custom: {
+        fontFamilies: {
+          primary: {
+            text: 'System',
+          },
         },
       },
-    },
-  }),
-}));
+    }),
+  };
+});
 
 // Mock useReduceMotion
 jest.mock('../../hooks/useReduceMotion', () => ({
@@ -441,7 +470,9 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const customizeButton = getByLabelText('Customize habit before importing');
+      const customizeButton = getByLabelText(
+        'Customize habit before importing'
+      );
       fireEvent.press(customizeButton);
 
       expect(Haptics.impactAsync).toHaveBeenCalledWith(
@@ -606,10 +637,11 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      const customizeButton = getByLabelText('Customize habit before importing');
+      const customizeButton = getByLabelText(
+        'Customize habit before importing'
+      );
       expect(customizeButton.props.accessibilityRole).toBe('button');
     });
-
   });
 
   describe('Tips for Success Section', () => {
@@ -633,7 +665,9 @@ describe('FullsizeTemplatePreview', () => {
       );
 
       expect(getByText('TIPS FOR SUCCESS')).toBeTruthy();
-      expect(getByText('Start with just 2 minutes and gradually increase')).toBeTruthy();
+      expect(
+        getByText('Start with just 2 minutes and gradually increase')
+      ).toBeTruthy();
       expect(getByText('Practice at the same time each day')).toBeTruthy();
       expect(getByText('Use a timer to stay focused')).toBeTruthy();
     });

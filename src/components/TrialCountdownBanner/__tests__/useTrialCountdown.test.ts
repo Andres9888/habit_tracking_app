@@ -2,7 +2,7 @@
  * useTrialCountdown Hook Tests
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import { useTrialCountdown } from '../useTrialCountdown';
 import { usePremium } from '../../../hooks/usePremium';
 

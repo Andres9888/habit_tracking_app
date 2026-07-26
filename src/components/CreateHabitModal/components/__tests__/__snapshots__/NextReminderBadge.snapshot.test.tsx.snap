@@ -6,19 +6,28 @@ exports[`NextReminderBadge Snapshots Enabled State renders badge for future time
 <View
   accessibilityLabel="Next reminder: Today at 2:00 PM (in 4 hours)"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Today at 2:00 PM (in 4 hours)
@@ -31,19 +40,28 @@ exports[`NextReminderBadge Snapshots Enabled State renders badge for past time (
 <View
   accessibilityLabel="Next reminder: Tomorrow at 8:00 AM"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Tomorrow at 8:00 AM
@@ -56,19 +74,28 @@ exports[`NextReminderBadge Snapshots Enabled State renders badge showing hours a
 <View
   accessibilityLabel="Next reminder: Today at 2:30 PM (in 4h 30m)"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Today at 2:30 PM (in 4h 30m)
@@ -81,19 +108,28 @@ exports[`NextReminderBadge Snapshots Enabled State renders badge showing only ho
 <View
   accessibilityLabel="Next reminder: Today at 1:00 PM (in 3 hours)"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Today at 1:00 PM (in 3 hours)
@@ -106,19 +142,28 @@ exports[`NextReminderBadge Snapshots Enabled State renders badge showing only mi
 <View
   accessibilityLabel="Next reminder: Today at 10:30 AM (in 30 minutes)"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Today at 10:30 AM (in 30 minutes)
@@ -131,19 +176,28 @@ exports[`NextReminderBadge Snapshots Time Formats renders custom time with minut
 <View
   accessibilityLabel="Next reminder: Tomorrow at 6:30 AM"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Tomorrow at 6:30 AM
@@ -156,19 +210,28 @@ exports[`NextReminderBadge Snapshots Time Formats renders evening preset time (8
 <View
   accessibilityLabel="Next reminder: Today at 8:00 PM (in 10 hours)"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Today at 8:00 PM (in 10 hours)
@@ -181,19 +244,28 @@ exports[`NextReminderBadge Snapshots Time Formats renders midday preset time (12
 <View
   accessibilityLabel="Next reminder: Today at 12:00 PM (in 2 hours)"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Today at 12:00 PM (in 2 hours)
@@ -206,19 +278,28 @@ exports[`NextReminderBadge Snapshots Time Formats renders morning preset time (7
 <View
   accessibilityLabel="Next reminder: Tomorrow at 7:00 AM"
   accessibilityRole="text"
-  entering={{}}
   exiting={{}}
   testID="next-reminder-badge"
 >
   <View
-    className="flex-row items-center justify-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5"
+    className="flex-row items-center justify-center gap-1.5 rounded-full px-3 py-1.5"
+    style={
+      {
+        "backgroundColor": "#FEF3C7",
+      }
+    }
   >
     <View
-      accessibilityLabel="Clock 12px #92400E"
+      accessibilityLabel="Clock 16px #92400E"
       testID="clock-icon"
     />
     <Text
-      className="text-xs font-medium text-amber-800"
+      className="text-xs font-medium"
+      style={
+        {
+          "color": "#92400E",
+        }
+      }
     >
       Next: 
       Tomorrow at 7:00 AM

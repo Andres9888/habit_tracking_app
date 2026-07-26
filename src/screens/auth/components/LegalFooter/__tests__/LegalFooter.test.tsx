@@ -3,12 +3,11 @@ import { Linking } from 'react-native';
 import { render, fireEvent } from '@testing-library/react-native';
 import { LegalFooter } from '../LegalFooter';
 
-// Mock Linking
-jest.mock('react-native/Libraries/Linking/Linking', () => ({
-  openURL: jest.fn(),
-}));
-
 describe('LegalFooter', () => {
+  beforeAll(() => {
+    Linking.openURL = jest.fn();
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
   });

@@ -36,6 +36,9 @@ jest.mock('../../../../convex/_generated/api', () => ({
     categories: {
       list: 'categories:list',
     },
+    settings: {
+      get: 'settings:get',
+    },
   },
 }));
 
@@ -62,7 +65,7 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 
 // Mock Reanimated for animations
 jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
+  const { Text, View } = require('react-native');
 
   const springify = () => ({
     damping: () => ({
@@ -81,6 +84,7 @@ jest.mock('react-native-reanimated', () => {
     },
     default: {
       View,
+      Text,
       createAnimatedComponent: (Component: React.ComponentType<unknown>) =>
         Component,
       addWhitelistedNativeProps: jest.fn(),
@@ -113,11 +117,6 @@ jest.mock('reanimated-color-picker', () => {
     Preview: View,
   };
 });
-
-// Mock ColorPickerSheet to avoid complex dependencies
-jest.mock('../ColorPickerSheet', () => ({
-  ColorPickerSheet: jest.fn(() => null),
-}));
 
 // Mock SafeAreaProvider
 jest.mock('react-native-safe-area-context', () => ({

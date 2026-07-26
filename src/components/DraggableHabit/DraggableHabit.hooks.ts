@@ -12,10 +12,11 @@
 export const getEmojiAndName = (
   fullName: string
 ): { emoji: string; name: string } => {
-  const emojiRegex = /(?![0-9#*])\p{Emoji}/u;
+  const emojiRegex =
+    /^(?:\p{Regional_Indicator}{2}|(?:\p{Emoji_Presentation}|\p{Extended_Pictographic})(?:\uFE0E|\uFE0F)?\p{Emoji_Modifier}?(?:\u200D(?:\p{Emoji_Presentation}|\p{Extended_Pictographic})(?:\uFE0E|\uFE0F)?\p{Emoji_Modifier}?)*)/u;
   const match = fullName.match(emojiRegex);
 
-  if (match && match.index === 0) {
+  if (match) {
     const emoji = match[0];
     const name = fullName.slice(emoji.length).trim();
     return { emoji, name };

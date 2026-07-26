@@ -87,7 +87,7 @@ export function ConfettiBurst({ active, onComplete }: ConfettiBurstProps) {
   if (!active) return null;
 
   return (
-    <View pointerEvents='none' style={styles.container}>
+    <View pointerEvents='none' style={styles.container} testID='confetti-burst'>
       {particles.map((particle) => (
         <Particle
           key={particle.id}

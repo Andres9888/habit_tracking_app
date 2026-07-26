@@ -13,7 +13,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
-import { Gesture } from 'react-native-gesture-handler';
 import STRINGS from '../../../constants/strings';
 
 // Mock dependencies before imports
@@ -33,6 +32,9 @@ jest.mock('../../../../convex/_generated/api', () => ({
     },
     categories: {
       list: 'categories:list',
+    },
+    settings: {
+      get: 'settings:get',
     },
   },
 }));
@@ -60,8 +62,7 @@ jest.mock('../../../hooks/useHapticFeedback', () => ({
 
 // Mock Reanimated for animations and gestures
 jest.mock('react-native-reanimated', () => {
-  const View = require('react-native').View;
-  const Animated = require('react-native').Animated;
+  const { Animated, Text, View } = require('react-native');
 
   return {
     ...jest.requireActual('react-native-reanimated/mock'),
@@ -78,6 +79,7 @@ jest.mock('react-native-reanimated', () => {
     },
     default: {
       View,
+      Text,
       createAnimatedComponent: (Component: React.ComponentType<unknown>) =>
         Component,
       addWhitelistedNativeProps: jest.fn(),
@@ -88,24 +90,6 @@ jest.mock('react-native-reanimated', () => {
     runOnJS: (fn: (...args: unknown[]) => unknown) => fn,
     withSpring: (value: unknown) => value,
     withTiming: (value: unknown) => value,
-  };
-});
-
-// Mock gesture-handler
-jest.mock('react-native-gesture-handler', () => {
-  const View = require('react-native').View;
-
-  return {
-    GestureDetector: ({ children }: unknown) => children,
-    Gesture: {
-      Pan: () => ({
-        onStart: () => ({}),
-        onUpdate: () => ({}),
-        onEnd: () => ({}),
-      }),
-    },
-    PanGestureHandler: View,
-    State: {},
   };
 });
 
@@ -132,11 +116,6 @@ jest.mock('reanimated-color-picker', () => {
     Preview: View,
   };
 });
-
-// Mock ColorPickerSheet
-jest.mock('../ColorPickerSheet', () => ({
-  ColorPickerSheet: jest.fn(() => null),
-}));
 
 // Mock SafeAreaProvider
 jest.mock('react-native-safe-area-context', () => ({

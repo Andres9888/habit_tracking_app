@@ -26,15 +26,15 @@ import {
 
 // Define NetInfoStateType for use in tests (from the mock)
 const NetInfoStateType = {
-  unknown: 'unknown' as const,
-  none: 'none' as const,
-  cellular: 'cellular' as const,
-  wifi: 'wifi' as const,
-  bluetooth: 'bluetooth' as const,
-  ethernet: 'ethernet' as const,
-  wimax: 'wimax' as const,
-  vpn: 'vpn' as const,
-  other: 'other' as const,
+  unknown: 'UNKNOWN' as const,
+  none: 'NONE' as const,
+  cellular: 'CELLULAR' as const,
+  wifi: 'WIFI' as const,
+  bluetooth: 'BLUETOOTH' as const,
+  ethernet: 'ETHERNET' as const,
+  wimax: 'WIMAX' as const,
+  vpn: 'VPN' as const,
+  other: 'OTHER' as const,
 };
 
 // Define NetInfoState interface for tests
@@ -61,14 +61,15 @@ const createNetInfoState = (
   isConnected: boolean,
   isInternetReachable: boolean | null = null,
   type: NetInfoStateType = NetInfoStateType.wifi
-): NetInfoState => ({
-  isConnected,
-  isInternetReachable,
-  type,
-  details: {
-    isConnectionExpensive: type === NetInfoStateType.cellular,
-  },
-} as NetInfoState);
+): NetInfoState =>
+  ({
+    isConnected,
+    isInternetReachable,
+    type,
+    details: {
+      isConnectionExpensive: type === NetInfoStateType.cellular,
+    },
+  }) as NetInfoState;
 
 describe('NetworkStatusContext', () => {
   let mockNetInfoListeners: ((state: NetInfoState) => void)[] = [];
@@ -86,7 +87,9 @@ describe('NetworkStatusContext', () => {
     (NetInfo.addEventListener as jest.Mock).mockImplementation((callback) => {
       mockNetInfoListeners.push(callback);
       return () => {
-        mockNetInfoListeners = mockNetInfoListeners.filter((l) => l !== callback);
+        mockNetInfoListeners = mockNetInfoListeners.filter(
+          (l) => l !== callback
+        );
       };
     });
   });
@@ -178,7 +181,9 @@ describe('NetworkStatusContext', () => {
 
       await waitFor(() => {
         expect(result.current.status.isConnected).toBe(true);
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.wifi);
+        expect(result.current.status.connectionType).toBe(
+          NetInfoStateType.wifi
+        );
       });
     });
 
@@ -193,7 +198,9 @@ describe('NetworkStatusContext', () => {
 
       // Simulate going offline
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
+        simulateNetworkChange(
+          createNetInfoState(false, false, NetInfoStateType.none)
+        );
       });
 
       await waitFor(() => {
@@ -307,7 +314,9 @@ describe('NetworkStatusContext', () => {
 
       // Go online
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.wifi)
+        );
       });
 
       await waitFor(() => {
@@ -367,7 +376,9 @@ describe('NetworkStatusContext', () => {
 
       // Go online after unmount
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.wifi)
+        );
       });
 
       // Callback should not be called
@@ -399,7 +410,9 @@ describe('NetworkStatusContext', () => {
 
       // Go online
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.wifi)
+        );
       });
 
       await waitFor(() => {
@@ -435,7 +448,9 @@ describe('NetworkStatusContext', () => {
 
       // Go offline
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
+        simulateNetworkChange(
+          createNetInfoState(false, false, NetInfoStateType.none)
+        );
       });
 
       await waitFor(() => {
@@ -471,12 +486,16 @@ describe('NetworkStatusContext', () => {
 
       // Start offline first
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
+        simulateNetworkChange(
+          createNetInfoState(false, false, NetInfoStateType.none)
+        );
       });
 
       // Then go online - callback should not fire
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.wifi)
+        );
       });
 
       expect(callback).not.toHaveBeenCalled();
@@ -494,7 +513,9 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.wifi);
+        expect(result.current.status.connectionType).toBe(
+          NetInfoStateType.wifi
+        );
         expect(result.current.status.isExpensive).toBe(false);
       });
     });
@@ -509,7 +530,9 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.cellular);
+        expect(result.current.status.connectionType).toBe(
+          NetInfoStateType.cellular
+        );
         expect(result.current.status.isExpensive).toBe(true);
       });
     });
@@ -524,7 +547,9 @@ describe('NetworkStatusContext', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.none);
+        expect(result.current.status.connectionType).toBe(
+          NetInfoStateType.none
+        );
         expect(result.current.isOnline).toBe(false);
       });
     });
@@ -542,14 +567,24 @@ describe('NetworkStatusContext', () => {
 
       // Rapid state changes
       act(() => {
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
-        simulateNetworkChange(createNetInfoState(false, false, NetInfoStateType.none));
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.cellular));
+        simulateNetworkChange(
+          createNetInfoState(false, false, NetInfoStateType.none)
+        );
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.wifi)
+        );
+        simulateNetworkChange(
+          createNetInfoState(false, false, NetInfoStateType.none)
+        );
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.cellular)
+        );
       });
 
       await waitFor(() => {
-        expect(result.current.status.connectionType).toBe(NetInfoStateType.cellular);
+        expect(result.current.status.connectionType).toBe(
+          NetInfoStateType.cellular
+        );
         expect(result.current.isOnline).toBe(true);
       });
     });
@@ -580,7 +615,9 @@ describe('NetworkStatusContext', () => {
 
       // Go online - error in first callback should not prevent second
       act(() => {
-        simulateNetworkChange(createNetInfoState(true, true, NetInfoStateType.wifi));
+        simulateNetworkChange(
+          createNetInfoState(true, true, NetInfoStateType.wifi)
+        );
       });
 
       await waitFor(() => {

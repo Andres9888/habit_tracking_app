@@ -41,8 +41,9 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text: require('react-native').Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-        React.createElement(Component, { ...props, ref })
+      const AnimatedComponent = React.forwardRef(
+        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
+          React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
       return AnimatedComponent;
@@ -59,6 +60,7 @@ jest.mock('react-native-reanimated', () => {
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
     Easing: {
+      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       cubic: () => 0,
     },
@@ -96,9 +98,8 @@ jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createIcon =
-    (name: string) => (props: Record<string, unknown>) =>
-      React.createElement(View, { testID: `lucide-${name}`, ...props });
+  const createIcon = (name: string) => (props: Record<string, unknown>) =>
+    React.createElement(View, { testID: `lucide-${name}`, ...props });
 
   return {
     ChevronRight: createIcon('ChevronRight'),
@@ -211,18 +212,14 @@ describe('ActionableTipCard', () => {
       );
       // Check that Ionicons chevron-forward is rendered
       // Using UNSAFE_getByProps since chevron is inside an accessibility-hidden container
-      expect(
-        UNSAFE_getByProps({ testID: 'lucide-ChevronRight' })
-      ).toBeTruthy();
+      expect(UNSAFE_getByProps({ testID: 'lucide-ChevronRight' })).toBeTruthy();
     });
 
     it('does not render chevron when onPress is not provided', () => {
       const { UNSAFE_queryByProps } = render(
         <ActionableTipCard {...defaultProps} onPress={undefined} />
       );
-      expect(
-        UNSAFE_queryByProps({ testID: 'lucide-ChevronRight' })
-      ).toBeNull();
+      expect(UNSAFE_queryByProps({ testID: 'lucide-ChevronRight' })).toBeNull();
     });
   });
 

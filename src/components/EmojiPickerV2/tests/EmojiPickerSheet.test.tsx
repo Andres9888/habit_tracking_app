@@ -10,7 +10,7 @@
  */
 
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { act, render, fireEvent, waitFor } from '@testing-library/react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View } from 'react-native';
 
@@ -18,10 +18,19 @@ import { View } from 'react-native';
 jest.mock('expo-blur', () => {
   const RealView = jest.requireActual('react-native').View;
   return {
-    BlurView: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) =>
-      jest.requireActual('react').createElement(RealView, props, children),
+    BlurView: ({
+      children,
+      ...props
+    }: {
+      children?: React.ReactNode;
+      [key: string]: unknown;
+    }) => jest.requireActual('react').createElement(RealView, props, children),
   };
 });
+
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: () => ({ bottom: 0, left: 0, right: 0, top: 0 }),
+}));
 
 // Mock gesture handler with Gesture API
 jest.mock('react-native-gesture-handler', () => {
@@ -41,6 +50,9 @@ jest.mock('react-native-gesture-handler', () => {
         onEnd: function () {
           return this;
         },
+        runOnJS: function () {
+          return this;
+        },
       }),
     },
     GestureHandlerRootView: RealView,
@@ -52,7 +64,8 @@ jest.mock('react-native-gesture-handler', () => {
 // Mock reanimated with proper Animated component
 jest.mock('react-native-reanimated', () => {
   const RealReact = jest.requireActual('react');
-  const { View, Pressable } = jest.requireActual('react-native');
+  const { View, Text } = jest.requireActual('react-native');
+  const Reanimated = require('react-native-reanimated/mock');
 
   const AnimatedView = RealReact.forwardRef(
     (props: Record<string, unknown>, ref: React.Ref<typeof View>) =>
@@ -62,6 +75,7 @@ jest.mock('react-native-reanimated', () => {
 
   const Animated = {
     View: AnimatedView,
+    Text,
     createAnimatedComponent: (Component: React.ComponentType<unknown>) => {
       const AnimatedComponent = RealReact.forwardRef(
         (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
@@ -78,9 +92,11 @@ jest.mock('react-native-reanimated', () => {
     useSharedValue: (value: number) => ({ value }),
     useAnimatedStyle: () => ({}),
     withSpring: (toValue: number) => toValue,
+    withDelay: (_delay: number, animation: unknown) => animation,
     withTiming: (toValue: number) => toValue,
     withSequence: (..._animations: unknown[]) => 0,
     runOnJS: (fn: () => void) => fn,
+    Easing: Reanimated.Easing,
     interpolate: (value: number, inputRange: number[], outputRange: number[]) =>
       outputRange[0],
     Extrapolation: { CLAMP: 'clamp' },
@@ -281,15 +297,23 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
       });
     });
 
-    it('should show empty state when no results found', async () => {
-      const { getByLabelText, findByText } = render(
-        <EmojiPickerSheet {...defaultProps} />
-      );
+    it('should show empty state when no results found', () => {
+      jest.useFakeTimers();
+      try {
+        const { getByLabelText, getByText } = render(
+          <EmojiPickerSheet {...defaultProps} />
+        );
 
-      const searchInput = getByLabelText('Search emojis');
-      fireEvent.changeText(searchInput, 'qwertyuiopasdfgh');
+        const searchInput = getByLabelText('Search emojis');
+        fireEvent.changeText(searchInput, 'qwertyuiopasdfgh');
+        act(() => {
+          jest.advanceTimersByTime(150);
+        });
 
-      await findByText('No emojis found');
+        expect(getByText('No emojis found')).toBeDefined();
+      } finally {
+        jest.useRealTimers();
+      }
     });
   });
 

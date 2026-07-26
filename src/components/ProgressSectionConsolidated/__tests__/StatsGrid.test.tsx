@@ -63,6 +63,7 @@ jest.mock('react-native-reanimated', () => {
     withRepeat: (animation: unknown) => animation,
     withSequence: (...animations: unknown[]) => animations[0],
     Easing: {
+      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       inOut: () => () => 0,
       cubic: () => 0,

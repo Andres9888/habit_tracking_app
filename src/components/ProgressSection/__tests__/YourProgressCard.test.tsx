@@ -8,12 +8,13 @@ import { AccessibilityInfo } from 'react-native';
 import { YourProgressCard } from '../YourProgressCard';
 
 // Mock AccessibilityInfo
-jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockImplementation(
-  () => Promise.resolve(false)
-);
+jest
+  .spyOn(AccessibilityInfo, 'isReduceMotionEnabled')
+  .mockImplementation(() => Promise.resolve(false));
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
+  const Reanimated = require('react-native-reanimated/mock');
   const { View } = require('react-native');
 
   const Animated = {
@@ -34,6 +35,7 @@ jest.mock('react-native-reanimated', () => {
     withDelay: (_delay: number, value: number) => value,
     withSpring: (value: number) => value,
     Easing: {
+      ...Reanimated.Easing,
       out: () => () => 0,
       cubic: () => 0,
     },
@@ -46,8 +48,13 @@ jest.mock('react-native-svg', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const Svg = ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) =>
-    React.createElement(View, { testID: 'svg', ...props }, children);
+  const Svg = ({
+    children,
+    ...props
+  }: {
+    children?: React.ReactNode;
+    [key: string]: unknown;
+  }) => React.createElement(View, { testID: 'svg', ...props }, children);
   const Circle = (props: { [key: string]: unknown }) =>
     React.createElement(View, { testID: 'circle', ...props });
 
@@ -82,27 +89,37 @@ describe('YourProgressCard', () => {
   });
 
   it('displays level label based on strength', () => {
-    const { getByText } = render(<YourProgressCard {...defaultProps} strength={45} />);
+    const { getByText } = render(
+      <YourProgressCard {...defaultProps} strength={45} />
+    );
     expect(getByText('Developing')).toBeTruthy();
   });
 
   it('displays Starting Out for low strength', () => {
-    const { getByText } = render(<YourProgressCard {...defaultProps} strength={10} />);
+    const { getByText } = render(
+      <YourProgressCard {...defaultProps} strength={10} />
+    );
     expect(getByText('Starting Out')).toBeTruthy();
   });
 
   it('displays Building for 20-40% strength', () => {
-    const { getByText } = render(<YourProgressCard {...defaultProps} strength={30} />);
+    const { getByText } = render(
+      <YourProgressCard {...defaultProps} strength={30} />
+    );
     expect(getByText('Building')).toBeTruthy();
   });
 
   it('displays Strong for 60-80% strength', () => {
-    const { getByText } = render(<YourProgressCard {...defaultProps} strength={70} />);
+    const { getByText } = render(
+      <YourProgressCard {...defaultProps} strength={70} />
+    );
     expect(getByText('Strong')).toBeTruthy();
   });
 
   it('displays Automatic for 80%+ strength', () => {
-    const { getByText } = render(<YourProgressCard {...defaultProps} strength={85} />);
+    const { getByText } = render(
+      <YourProgressCard {...defaultProps} strength={85} />
+    );
     expect(getByText('Automatic')).toBeTruthy();
   });
 
@@ -156,7 +173,9 @@ describe('YourProgressCard', () => {
   });
 
   it('has proper accessibility label', () => {
-    const { getByLabelText } = render(<YourProgressCard {...defaultProps} strength={45} />);
+    const { getByLabelText } = render(
+      <YourProgressCard {...defaultProps} strength={45} />
+    );
     const summary = getByLabelText(/Habit strength at 45%.*Developing/);
     expect(summary).toBeTruthy();
   });

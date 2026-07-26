@@ -1,5 +1,5 @@
 // Standalone reanimated mock for tests that use jest.requireActual('react-native-reanimated/mock')
-const { View, Text, ScrollView } = require('react-native');
+const { View, Text, ScrollView, Pressable } = require('react-native');
 
 const createAnimatedComponent = (Component) => Component;
 
@@ -30,17 +30,32 @@ module.exports = {
     View,
     Text,
     ScrollView,
+    Pressable,
     createAnimatedComponent,
     addWhitelistedNativeProps: () => {},
+    addWhitelistedUIProps: () => {},
   },
   View,
   Text,
   ScrollView,
+  Pressable,
   createAnimatedComponent,
   addWhitelistedNativeProps: () => {},
+  addWhitelistedUIProps: () => {},
+  makeMutable: (initial) => ({ value: initial }),
+  getUseOfValueInStyleWarning: () => '',
+  ReduceMotion: { System: 'system', Always: 'always', Never: 'never' },
+  ReducedMotionConfig: () => null,
+  useAnimatedRef: () => ({ current: null }),
+  useAnimatedReaction: () => {},
+  useScrollViewOffset: () => ({ value: 0 }),
+  measure: () => null,
+  scrollTo: () => {},
   useSharedValue: (initial) => ({ value: initial }),
   useAnimatedStyle: (cb) => cb() || {},
+  useAnimatedProps: (cb) => (typeof cb === 'function' ? cb() : {}),
   useDerivedValue: (cb) => ({ value: cb() }),
+  useFrameCallback: () => ({ setActive: () => {}, isActive: false }),
   useAnimatedScrollHandler: () => ({}),
   useAnimatedGestureHandler: () => ({}),
   useReducedMotion: () => false,

@@ -41,8 +41,9 @@ jest.mock('react-native-reanimated', () => {
     View,
     Text: require('react-native').Text,
     createAnimatedComponent: (Component: React.ComponentType) => {
-      const AnimatedComponent = React.forwardRef((props: Record<string, unknown>, ref: React.Ref<unknown>) =>
-        React.createElement(Component, { ...props, ref })
+      const AnimatedComponent = React.forwardRef(
+        (props: Record<string, unknown>, ref: React.Ref<unknown>) =>
+          React.createElement(Component, { ...props, ref })
       );
       AnimatedComponent.displayName = `Animated(${Component.displayName || Component.name || 'Component'})`;
       return AnimatedComponent;
@@ -62,6 +63,7 @@ jest.mock('react-native-reanimated', () => {
     withSequence: (...args: number[]) => args[0],
     cancelAnimation: jest.fn(),
     Easing: {
+      ...jest.requireActual('react-native-reanimated/mock').Easing,
       out: () => () => 0,
       cubic: () => 0,
     },

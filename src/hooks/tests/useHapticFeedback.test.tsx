@@ -19,18 +19,6 @@ jest.mock('expo-haptics', () => ({
   selectionAsync: jest.fn().mockResolvedValue(undefined),
 }));
 
-jest.mock('react-native', () => {
-  const actual = jest.requireActual('react-native');
-  return {
-    ...actual,
-    AccessibilityInfo: {
-      addEventListener: jest.fn(() => ({ remove: jest.fn() })),
-      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
-    },
-    Platform: { ...actual.Platform, OS: 'ios' as const },
-  };
-});
-
 describe('useHapticFeedback', () => {
   const hapticsMock = jest.requireMock('expo-haptics');
 
@@ -38,7 +26,13 @@ describe('useHapticFeedback', () => {
     jest.clearAllMocks();
   });
 
-  const Harness = ({ isEnabled, preference }: { isEnabled?: boolean; preference?: boolean }) => {
+  const Harness = ({
+    isEnabled,
+    preference,
+  }: {
+    isEnabled?: boolean;
+    preference?: boolean;
+  }) => {
     const haptics = useHapticFeedback({ isEnabled, preference });
 
     useEffect(() => {
@@ -73,4 +67,3 @@ describe('useHapticFeedback', () => {
     expect(hapticsMock.selectionAsync).not.toHaveBeenCalled();
   });
 });
-

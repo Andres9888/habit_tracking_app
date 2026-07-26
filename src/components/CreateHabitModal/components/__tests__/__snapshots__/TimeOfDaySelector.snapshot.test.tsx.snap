@@ -123,8 +123,8 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pivot (Afternoon
         collapsable={false}
         style={
           {
-            "backgroundColor": "#22C55E",
-            "borderColor": "#16A34A",
+            "backgroundColor": "#10B981",
+            "borderColor": "#059669",
             "borderWidth": 1.5,
             "transform": [
               {
@@ -412,8 +412,8 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Pull (Evening) s
         collapsable={false}
         style={
           {
-            "backgroundColor": "#22C55E",
-            "borderColor": "#16A34A",
+            "backgroundColor": "#10B981",
+            "borderColor": "#059669",
             "borderWidth": 1.5,
             "transform": [
               {
@@ -500,8 +500,8 @@ exports[`TimeOfDaySelector Snapshots should match snapshot with Push (Morning) s
         collapsable={false}
         style={
           {
-            "backgroundColor": "#22C55E",
-            "borderColor": "#16A34A",
+            "backgroundColor": "#10B981",
+            "borderColor": "#059669",
             "borderWidth": 1.5,
             "transform": [
               {
