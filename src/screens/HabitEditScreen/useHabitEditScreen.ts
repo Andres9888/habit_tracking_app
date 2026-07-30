@@ -30,6 +30,7 @@ function getEditFormValues(habit?: Habit | null) {
   const mode = habit?.strengthAlgorithm;
 
   return {
+    effortMinutes: habit?.effortMinutes,
     habitName: parsedName.name || habit?.name || '',
     progressEmojis: habit?.progressEmojis ?? undefined,
     reminderTime: createDateFromTimeString(
@@ -64,6 +65,9 @@ export function useHabitEditScreen({
   const formInitializedRef = useRef(Boolean(initialHabit));
 
   const [habitName, setHabitName] = useState(initialFormValues.habitName);
+  const [effortMinutes, setEffortMinutes] = useState<number | undefined>(
+    initialFormValues.effortMinutes
+  );
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(
     initialFormValues.selectedEmoji
   );
@@ -89,6 +93,7 @@ export function useHabitEditScreen({
     if (!sourceHabit) return;
 
     const values = getEditFormValues(sourceHabit);
+    setEffortMinutes(values.effortMinutes);
     setHabitName(values.habitName);
     setSelectedEmoji(values.selectedEmoji);
     setSelectedColor(values.selectedColor);
@@ -102,6 +107,7 @@ export function useHabitEditScreen({
 
   const { handleSave, isSaving } = useHabitSaveHandler({
     habitId,
+    effortMinutes,
     habitName,
     onSuccess: () => {
       triggerSuccess();
@@ -127,6 +133,14 @@ export function useHabitEditScreen({
   const handleEmojiSelect = useCallback((emoji: string | null) => {
     setSelectedEmoji(emoji);
   }, []);
+
+  const handleEffortMinutesChange = useCallback(
+    (minutes: number | undefined) => {
+      triggerSelection();
+      setEffortMinutes(minutes);
+    },
+    [triggerSelection]
+  );
 
   const handleColorSelect = useCallback(
     (color: string) => {
@@ -165,10 +179,12 @@ export function useHabitEditScreen({
   );
 
   return {
+    effortMinutes,
     habitName,
     growthType: habit?.growthType,
     handleColorSelect,
     handleDelete,
+    handleEffortMinutesChange,
     handleEmojiSelect,
     handleArchive,
     handleProgressEmojisChange,

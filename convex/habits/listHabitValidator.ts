@@ -12,6 +12,7 @@ export const listHabitValidator = v.object({
   createdAt: v.number(),
   currentStreak: v.optional(v.number()),
   daysOfWeek: v.optional(v.array(v.number())),
+  effortMinutes: v.optional(v.number()),
   frequency: v.optional(v.string()),
   goalDuration: v.optional(v.number()),
   goalUnit: v.optional(v.string()),

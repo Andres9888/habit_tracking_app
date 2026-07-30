@@ -27,6 +27,7 @@ export function useHabitStateSync(
     icon: string | undefined;
     color: string | undefined;
     iconColor: string | undefined;
+    effortMinutes: number | undefined;
     goalDuration: number | undefined;
   }>({
     id: null,
@@ -36,6 +37,7 @@ export function useHabitStateSync(
     icon: undefined,
     color: undefined,
     iconColor: undefined,
+    effortMinutes: undefined,
     goalDuration: undefined,
   });
 
@@ -49,6 +51,7 @@ export function useHabitStateSync(
         icon: undefined,
         color: undefined,
         iconColor: undefined,
+        effortMinutes: undefined,
         goalDuration: undefined,
       };
       return;
@@ -65,6 +68,7 @@ export function useHabitStateSync(
     const prevIconChanged = prevValuesRef.current.icon !== updated.icon;
     const prevColorChanged = prevValuesRef.current.color !== updated.color;
     const prevIconColorChanged = prevValuesRef.current.iconColor !== updated.iconColor;
+    const prevEffortMinutesChanged = prevValuesRef.current.effortMinutes !== updated.effortMinutes;
     const prevGoalDurationChanged = prevValuesRef.current.goalDuration !== updated.goalDuration;
 
     // Only sync if meaningful values changed
@@ -76,6 +80,7 @@ export function useHabitStateSync(
       prevIconChanged ||
       prevColorChanged ||
       prevIconColorChanged ||
+      prevEffortMinutesChanged ||
       prevGoalDurationChanged
     ) {
       // Update tracking ref before calling setHabit to prevent re-sync
@@ -87,6 +92,7 @@ export function useHabitStateSync(
         icon: updated.icon,
         color: updated.color,
         iconColor: updated.iconColor,
+        effortMinutes: updated.effortMinutes,
         goalDuration: updated.goalDuration,
       };
 

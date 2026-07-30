@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { getLocalDateString } from '@/utils/getLocalDateString';
 import type { DayCompletionStatus } from '../../../components/CalendarTimeline';
 import type { Habit, HabitStatus } from '../types';
+import { buildHabitEffortForecast } from './habitEffortForecast';
 
 interface UseHabitsListHeaderStatsParams {
   habits: Habit[];
@@ -20,9 +21,19 @@ export function useHabitsListHeaderStats({
   const totalHabits = habits.length;
 
   const { completedToday, completionByDay } = useMemo(() => {
+    const effortForecast = buildHabitEffortForecast({
+      dateStrings: weekDateStrings,
+      getHabitStatus,
+      habits,
+      todayString,
+    });
     const result: Record<string, DayCompletionStatus> = {};
     for (const dateString of weekDateStrings) {
-      result[dateString] = { completed: 0, total: totalHabits };
+      result[dateString] = {
+        completed: 0,
+        total: totalHabits,
+        ...effortForecast[dateString],
+      };
     }
 
     let todayCompleted = 0;

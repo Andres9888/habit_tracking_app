@@ -6,7 +6,11 @@ import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
 import { createHabitArgs } from './types';
 import { findMaxOrder } from './utils';
-import { validateDaysOfWeek, validateHabitFields } from './validation';
+import {
+  validateDaysOfWeek,
+  validateEffortMinutes,
+  validateHabitFields,
+} from './validation';
 import { enforceRateLimit } from '../lib/rateLimit';
 
 export const create = mutation({
@@ -25,6 +29,7 @@ export const create = mutation({
     // SEC-003: Input validation
     const validated = validateHabitFields(args);
     validateDaysOfWeek(args.daysOfWeek);
+    validateEffortMinutes(args.effortMinutes);
 
     // Get all existing habits for this user to determine next order value
     const allHabits = await ctx.db
@@ -42,6 +47,7 @@ export const create = mutation({
       cueTime: validated.cueTime,
       currentStreak: 0,
       daysOfWeek: args.daysOfWeek,
+      effortMinutes: args.effortMinutes,
       frequency: args.frequency,
       goalDuration: args.goalDuration,
       icon: validated.icon,

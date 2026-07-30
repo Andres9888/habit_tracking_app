@@ -2,37 +2,18 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-import type {
-  CalendarColors,
-  CompletionStatus,
-} from '../CalendarTimeline.types';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { fontFamilies } from '../../../theme/typography';
 import { useTodayGlow } from '../hooks/useTodayGlow';
 
 import { DayCellRing } from './DayCellRing';
-
-interface DayCellContentProps {
-  weekday: string;
-  dayNumber: string;
-  index: number;
-  isCurrentDay: boolean;
-  isUpcoming: boolean;
-  completionStatus: CompletionStatus;
-  completed: number;
-  total: number;
-  hasCompletionData: boolean;
-  colors: CalendarColors;
-  completionIcon?: 'chain' | 'checkbox';
-  monthPrefix?: string;
-  reduceMotion: boolean;
-  pressed?: boolean;
-  strengthPercent?: number;
-}
+import type { DayCellContentProps } from './DayCellContent.types';
+import { DayEffortForecast } from './DayEffortForecast';
 
 /** The visual content of a day cell — weekday label + SVG progress ring */
 const DayCellContentComponent: React.FC<DayCellContentProps> = ({
   weekday,
+  capacityMinutes,
   dayNumber,
   isCurrentDay,
   isUpcoming,
@@ -46,6 +27,8 @@ const DayCellContentComponent: React.FC<DayCellContentProps> = ({
   reduceMotion,
   pressed = false,
   strengthPercent,
+  plannedMinutes,
+  remainingMinutes,
 }) => {
   const { isDark } = useThemeColors();
   const todayGlowStyle = useTodayGlow({
@@ -91,6 +74,13 @@ const DayCellContentComponent: React.FC<DayCellContentProps> = ({
           total={total}
         />
       </Animated.View>
+      <DayEffortForecast
+        capacityMinutes={capacityMinutes}
+        isCurrentDay={isCurrentDay}
+        isUpcoming={isUpcoming}
+        plannedMinutes={plannedMinutes}
+        remainingMinutes={remainingMinutes}
+      />
     </View>
   );
 };

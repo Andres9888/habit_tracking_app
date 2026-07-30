@@ -24,6 +24,7 @@ export function buildMatchKey(input: OptimisticHabitCreateInput) {
     normalizeValue(input.iconColor ?? input.color),
     normalizeValue(input.frequency),
     normalizeDays(input.daysOfWeek),
+    String(input.effortMinutes ?? ''),
     normalizeValue(input.preferredTime),
     input.remindersEnabled ? '1' : '0',
     normalizeValue(input.reminderTime),
@@ -35,6 +36,7 @@ function buildMatchKeyFromHabit(habit: Habit) {
   return buildMatchKey({
     color: habit.color ?? habit.iconColor ?? '',
     daysOfWeek: habit.daysOfWeek,
+    effortMinutes: habit.effortMinutes,
     frequency: habit.frequency,
     icon: habit.icon,
     iconColor: habit.iconColor,
@@ -61,6 +63,7 @@ export function createOptimisticHabit(
     createdAt: submittedAt,
     currentStreak: 0,
     daysOfWeek: input.daysOfWeek,
+    effortMinutes: input.effortMinutes,
     frequency: input.frequency,
     icon: input.icon,
     iconColor: input.iconColor ?? input.color,
