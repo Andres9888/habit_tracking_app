@@ -7,7 +7,6 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppTheme } from '../../../theme';
 import { heroStyles } from '../styles';
 import { HeroMetaPills } from './HeroMetaPills';
 import { buildHeroGradient } from '../utils/heroGradient';
@@ -19,7 +18,6 @@ export function HeroSection({
   iconAnimatedStyle,
   iconGlowStyle,
 }: HeroSectionProps) {
-  const theme = useAppTheme();
   const baseGradient = buildHeroGradient(iconColor);
   // First stop is transparent so the ScrollView's header-matching background
   // shows through — prevents alpha-stacking that makes the hero top read
@@ -57,13 +55,7 @@ export function HeroSection({
           </View>
         </Animated.View>
 
-        <Text
-          testID='templates-preview-name'
-          style={[
-            heroStyles.templateName,
-            { fontFamily: theme.custom.fontFamilies.primary.text },
-          ]}
-        >
+        <Text testID='templates-preview-name' style={heroStyles.templateName}>
           {template?.name ?? 'Template'}
         </Text>
 

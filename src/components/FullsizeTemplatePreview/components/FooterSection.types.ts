@@ -13,7 +13,6 @@ export interface FooterSectionProps {
   isImporting: boolean;
   isImported: boolean;
   bottomInset: number;
-  importButtonStyle: object;
   customizeButtonStyle: object;
   checkmarkAnimatedStyle: object;
   successPillStyle: object;
@@ -21,8 +20,8 @@ export interface FooterSectionProps {
     scale: SharedValue<number>,
     scaleValue?: number
   ) => PressHandlers;
-  importButtonScale: SharedValue<number>;
   customizeButtonScale: SharedValue<number>;
+  reducedMotion: boolean;
   onImport: () => void;
   onCustomize: () => void;
 }

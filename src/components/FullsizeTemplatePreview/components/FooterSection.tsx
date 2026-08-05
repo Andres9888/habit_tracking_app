@@ -11,7 +11,7 @@ import { FooterPrimaryAction } from './FooterPrimaryAction';
 import { FooterSecondaryActions } from './FooterSecondaryActions';
 import type { FooterSectionProps } from './FooterSection.types';
 
-const IMPORT_LABEL = 'Add to my habits';
+const IMPORT_LABEL = 'Add this habit';
 
 export function FooterSection({
   templateName,
@@ -19,13 +19,12 @@ export function FooterSection({
   isImporting,
   isImported,
   bottomInset,
-  importButtonStyle,
   customizeButtonStyle,
   checkmarkAnimatedStyle,
   successPillStyle,
   createPressHandlers,
-  importButtonScale,
   customizeButtonScale,
+  reducedMotion,
   onImport,
   onCustomize,
 }: FooterSectionProps) {
@@ -48,13 +47,11 @@ export function FooterSection({
         >
           <FooterPrimaryAction
             checkmarkAnimatedStyle={checkmarkAnimatedStyle}
-            createPressHandlers={createPressHandlers}
             iconColor={iconColor}
-            importButtonScale={importButtonScale}
-            importButtonStyle={importButtonStyle}
             importLabel={IMPORT_LABEL}
             isImported={isImported}
             isImporting={isImporting}
+            reducedMotion={reducedMotion}
             successPillStyle={successPillStyle}
             templateName={templateName}
             onImport={onImport}

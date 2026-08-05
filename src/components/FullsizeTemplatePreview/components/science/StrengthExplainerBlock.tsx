@@ -1,6 +1,7 @@
 /**
  * "How it becomes automatic" — ties the science to Chain Day's streak-strength
- * loop: five stages from Starting to Automatic, automaticity around 66 days.
+ * loop: five numbered stages from Starting to Automatic, automaticity around
+ * 66 days. Stage 1 is marked as the start; the rest stay neutral (pre-add).
  */
 
 import React from 'react';
@@ -12,13 +13,7 @@ import { SecLabel } from './SecLabel';
 import { scienceStyles as s } from '../../styles/science.styles';
 import { scienceResearchStyles as b } from '../../styles/scienceResearch.styles';
 
-const LEVELS = [
-  { label: 'Starting', emoji: '🥉', color: colors.strength.starting },
-  { label: 'Building', emoji: '🥈', color: colors.strength.building },
-  { label: 'Developing', emoji: '🥇', color: colors.strength.developing },
-  { label: 'Strong', emoji: '🏆', color: colors.strength.strong },
-  { label: 'Automatic', emoji: '💎', color: colors.strength.automatic },
-];
+const LEVELS = ['Starting', 'Building', 'Developing', 'Strong', 'Automatic'];
 
 export function StrengthExplainerBlock() {
   return (
@@ -32,14 +27,14 @@ export function StrengthExplainerBlock() {
           Starting to Automatic. Most daily habits cross into automatic around 66 days.
         </Text>
         <View style={b.strTrack}>
-          {LEVELS.map((lv, i) => (
-            <React.Fragment key={lv.label}>
-              {i > 0 ? <View style={[b.strConnector, { backgroundColor: lv.color }]} /> : null}
+          {LEVELS.map((label, i) => (
+            <React.Fragment key={label}>
+              {i > 0 ? <View style={b.strConnector} /> : null}
               <View style={b.strNode}>
-                <View style={[b.strCircle, { borderColor: lv.color }]}>
-                  <Text style={b.strEmoji}>{lv.emoji}</Text>
+                <View style={[b.strCircle, i === 0 && b.strCircleStart]}>
+                  <Text style={[b.strNum, i === 0 && b.strNumStart]}>{i + 1}</Text>
                 </View>
-                <Text style={b.strLabel}>{lv.label}</Text>
+                <Text style={b.strLabel}>{label}</Text>
               </View>
             </React.Fragment>
           ))}

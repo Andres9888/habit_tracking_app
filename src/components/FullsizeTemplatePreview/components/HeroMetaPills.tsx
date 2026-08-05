@@ -4,8 +4,9 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { Clock, Sparkles, Sprout, Users } from 'lucide-react-native';
+import { Clock, ShieldCheck, Sparkles, Sprout, Timer, Users } from 'lucide-react-native';
 
+import { colors } from '@/theme';
 import { iconSizes } from '@/theme/iconSizes';
 import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { heroStyles } from '../styles';
@@ -31,9 +32,26 @@ export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
   const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
   const popularity = template?.popularityScore ?? 0;
   const growthMeta = getGrowthTypeMeta(template?.growthType);
+  const scienceBacked = Boolean(
+    template?.scientificReference || template?.lead || template?.evidence
+  );
 
   return (
     <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
+      {scienceBacked ? (
+        <MetadataPill
+          icon={
+            <ShieldCheck
+              color={colors.primary[700]}
+              size={iconSizes.small}
+              strokeWidth={2.2}
+            />
+          }
+          iconColor={colors.primary[700]}
+        >
+          Science-backed
+        </MetadataPill>
+      ) : null}
       <MetadataPill
         icon={<Clock color={iconColor} size={iconSizes.small} strokeWidth={2} />}
         iconColor={iconColor}
@@ -46,7 +64,12 @@ export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
       >
         {category}
       </MetadataPill>
-      <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
+      <MetadataPill
+        icon={<Timer color={iconColor} size={iconSizes.small} strokeWidth={2} />}
+        iconColor={iconColor}
+      >
+        {duration}
+      </MetadataPill>
       {growthMeta ? (
         <MetadataPill
           icon={<Sprout color={iconColor} size={iconSizes.small} strokeWidth={2} />}

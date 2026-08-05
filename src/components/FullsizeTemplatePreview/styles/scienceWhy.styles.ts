@@ -1,6 +1,6 @@
 /**
- * Science drill-down — "Why it works" credibility card styles: accent bar,
- * gradient header with badge + read-paper pill, and the lead/evidence body.
+ * Science drill-down — "Why it works" credibility card styles: a flat surface
+ * header (badge + read-paper pill), then the Literata lead and evidence callout.
  */
 
 import { StyleSheet } from 'react-native';
@@ -11,33 +11,31 @@ import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const scienceWhyStyles = StyleSheet.create({
   whyCard: {
-    backgroundColor: colors.gray[50],
+    backgroundColor: colors.light.cardElevated,
     borderColor: colors.border,
     borderRadius: borderRadius.xl,
     borderWidth: 1,
     overflow: 'hidden',
-    position: 'relative',
     ...shadows.card,
   },
-  whyAccentBar: { bottom: 0, left: 0, position: 'absolute', top: 0, width: 4, zIndex: 2 },
   whyHeader: {
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    backgroundColor: colors.gray[50],
     borderBottomColor: colors.border,
     borderBottomWidth: 1,
+    flexDirection: 'row',
     gap: spacing.sm,
     paddingHorizontal: spacing.base,
-    paddingLeft: spacing.base + 2,
-    paddingVertical: spacing.base,
+    paddingVertical: spacing.md,
   },
   whyBadge: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.primary[100],
     borderRadius: borderRadius.full,
     flexDirection: 'row',
     gap: 7,
-    paddingHorizontal: 13,
+    paddingHorizontal: 12,
     paddingVertical: 7,
-    ...shadows.subtle,
   },
   whyBadgeText: {
     fontFamily: fontFamilies.primary.text,
@@ -48,13 +46,15 @@ export const scienceWhyStyles = StyleSheet.create({
   },
   whyReadBtn: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.light.cardElevated,
+    borderColor: colors.border,
     borderRadius: borderRadius.full,
-    borderWidth: 1,
+    borderWidth: 1.5,
     flexDirection: 'row',
     gap: 7,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
+    marginLeft: 'auto',
+    paddingHorizontal: 13,
+    paddingVertical: 7,
   },
   whyReadText: {
     fontFamily: fontFamilies.primary.text,
@@ -63,10 +63,10 @@ export const scienceWhyStyles = StyleSheet.create({
   },
   whyBody: {
     paddingHorizontal: spacing.base,
-    paddingLeft: spacing.base + 2,
     paddingVertical: spacing.base,
   },
   whyOverline: {
+    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.bold,
@@ -80,12 +80,5 @@ export const scienceWhyStyles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: -0.2,
     lineHeight: 27,
-  },
-  whyEvidence: {
-    color: colors.gray[600],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.bodySmall.fontSize,
-    lineHeight: 20,
-    marginTop: spacing.md,
   },
 });

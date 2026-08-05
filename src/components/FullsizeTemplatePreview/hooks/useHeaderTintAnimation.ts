@@ -16,15 +16,22 @@ import {
 
 const FADE_DISTANCE = 60;
 
-export function useHeaderTintAnimation(headerTint: string) {
+export function useHeaderTintAnimation(
+  headerTint: string,
+  onScrollY?: (y: number) => void
+) {
   const scrollY = useSharedValue(0);
   const heroHeight = useSharedValue(0);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        scrollY.value = event.contentOffset.y;
+        if (onScrollY) onScrollY(event.contentOffset.y);
+      },
     },
-  });
+    [onScrollY]
+  );
 
   const onHeroLayout = useCallback(
     (event: LayoutChangeEvent) => {

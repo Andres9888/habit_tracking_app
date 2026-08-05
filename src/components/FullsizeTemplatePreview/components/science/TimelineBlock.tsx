@@ -1,16 +1,17 @@
 /**
- * "What to expect" — a vertical progression timeline. The final `peak` node is
- * gold-haloed to mark the automaticity milestone. Renders only with timeline data.
+ * "What to expect" — a vertical progression timeline. Nodes use neutral
+ * milestone icons (this screen shows before the habit is added), and the final
+ * `peak` node is gold-washed to mark the automaticity milestone.
  */
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Clock } from 'lucide-react-native';
+import { Circle, Clock, Sparkles, Star } from 'lucide-react-native';
 
 import { colors } from '@/theme';
 import { SecLabel } from './SecLabel';
 import { scienceStyles as s } from '../../styles/science.styles';
-import { scienceBlockStyles as b } from '../../styles/scienceBlocks.styles';
+import { timelinePathStyles as t } from '../../styles/timelinePath.styles';
 import type { Template } from '../../../../types/template';
 
 export function TimelineBlock({ template }: { template: Template }) {
@@ -23,32 +24,20 @@ export function TimelineBlock({ template }: { template: Template }) {
       </SecLabel>
       <View style={s.card}>
         <View style={{ position: 'relative' }}>
-          <View style={b.spine} />
+          <View style={t.spine} />
           {timeline.map((node, i) => {
             const last = i === timeline.length - 1;
+            const Icon = node.peak ? Star : i === 0 ? Sparkles : Circle;
+            const tint = node.peak ? colors.streak[700] : colors.primary[700];
             return (
-              <View key={i} style={[b.tlRow, { paddingBottom: last ? 0 : 16 }]}>
-                <View
-                  style={[
-                    b.tlDot,
-                    node.peak
-                      ? { backgroundColor: colors.streak[300], borderColor: colors.streak[300] }
-                      : { backgroundColor: '#FFFFFF', borderColor: colors.primary[600] },
-                  ]}
-                >
-                  {node.peak ? <Text style={{ fontSize: 9 }}>💎</Text> : null}
+              <View key={i} style={[t.row, { paddingBottom: last ? 0 : 16 }]}>
+                <View style={[t.node, node.peak && t.nodePeak]}>
+                  <Icon color={tint} size={node.peak ? 18 : 15} strokeWidth={2.2} />
                 </View>
-                <View style={{ flex: 1, minWidth: 0 }}>
-                  <Text
-                    style={[
-                      b.tlWhen,
-                      { color: node.peak ? colors.streak[700] : colors.primary[700] },
-                    ]}
-                  >
-                    {node.when}
-                  </Text>
-                  <Text style={b.tlTitle}>{node.title}</Text>
-                  <Text style={b.tlDesc}>{node.description}</Text>
+                <View style={[{ flex: 1, minWidth: 0 }, node.peak && t.peakWash]}>
+                  <Text style={[t.when, node.peak && t.whenPeak]}>{node.when}</Text>
+                  <Text style={t.title}>{node.title}</Text>
+                  <Text style={t.desc}>{node.description}</Text>
                 </View>
               </View>
             );

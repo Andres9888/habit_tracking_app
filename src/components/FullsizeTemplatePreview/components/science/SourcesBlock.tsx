@@ -11,7 +11,6 @@ import { colors } from '@/theme';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { SecLabel } from './SecLabel';
-import { scienceStyles as s } from '../../styles/science.styles';
 import { scienceResearchStyles as b } from '../../styles/scienceResearch.styles';
 import type { Template } from '../../../../types/template';
 import type { ScienceSource } from '../../../../../convex/templates/types';
@@ -27,10 +26,13 @@ export function SourcesBlock({ template }: { template: Template }) {
   if (sources.length === 0) return null;
   return (
     <View>
-      <SecLabel glyph={<Quote color={colors.primary[700]} size={18} strokeWidth={2} />}>
+      <SecLabel
+        count={sources.length}
+        glyph={<Quote color={colors.primary[700]} size={18} strokeWidth={2} />}
+      >
         The research
       </SecLabel>
-      <View style={[s.card, { padding: 0, overflow: 'hidden' }]}>
+      <View style={b.researchCard}>
         {sources.map((src, i) => {
           const meta = [src.authors, src.journal, src.year].filter(Boolean);
           return (
@@ -55,6 +57,7 @@ export function SourcesBlock({ template }: { template: Template }) {
                     {src.year ? ` · ${src.year}` : ''}
                   </Text>
                 ) : null}
+                {src.link ? <Text style={b.sourceLink}>Open full text →</Text> : null}
               </View>
             </AnimatedPressable>
           );

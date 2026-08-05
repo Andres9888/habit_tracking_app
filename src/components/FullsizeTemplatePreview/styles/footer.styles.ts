@@ -5,7 +5,7 @@
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme/colors';
-import { shadows, borderRadius } from '../../../theme/spacing';
+import { borderRadius } from '../../../theme/spacing';
 import {
   typography,
   fontFamilies,
@@ -37,13 +37,18 @@ export const footerStyles = StyleSheet.create({
     position: 'absolute',
     right: 0,
   },
+  // Duolingo press-depth: the deep-toned wrapper's bottom 4px reads as a hard
+  // shadow; the button (bg = iconColor) translates down into it on press.
+  ctaShadowWrap: {
+    borderRadius: borderRadius.large,
+    boxShadow: '0 6px 16px rgba(45,42,38,0.18)',
+    paddingBottom: 4,
+  },
   importButton: {
-    ...shadows.modal,
     alignItems: 'center',
     borderRadius: borderRadius.large,
     height: 56,
     justifyContent: 'center',
-    shadowOpacity: 0.15,
   },
   importButtonContent: {
     alignItems: 'center',
@@ -57,7 +62,6 @@ export const footerStyles = StyleSheet.create({
     fontWeight: fontWeights.bold,
   },
   successButton: {
-    ...shadows.modal,
     alignItems: 'center',
     backgroundColor: colors.primary[400],
     borderRadius: borderRadius.large,
@@ -65,8 +69,6 @@ export const footerStyles = StyleSheet.create({
     gap: 10,
     height: 56,
     justifyContent: 'center',
-    shadowColor: colors.primary[700],
-    shadowOpacity: 0.3,
   },
   successButtonText: {
     color: colors.text.inverse,

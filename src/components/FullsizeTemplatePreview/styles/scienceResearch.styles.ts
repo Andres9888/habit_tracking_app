@@ -1,12 +1,12 @@
 /**
  * Science drill-down — block styles: "How it becomes automatic" strength
- * explainer and "The research" sources list.
+ * explainer (numbered stages) and "The research" sources list.
  */
 
 import { StyleSheet } from 'react-native';
 
 import { colors } from '@/theme';
-import { spacing } from '../../../theme/spacing';
+import { borderRadius, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const scienceResearchStyles = StyleSheet.create({
@@ -18,18 +18,35 @@ export const scienceResearchStyles = StyleSheet.create({
     marginBottom: spacing.base,
   },
   strTrack: { alignItems: 'flex-start', flexDirection: 'row' },
-  strConnector: { borderRadius: 1, flex: 1, height: 2, marginTop: 17, opacity: 0.45 },
+  strConnector: {
+    backgroundColor: colors.border,
+    borderRadius: 2,
+    flex: 1,
+    height: 4,
+    marginTop: 16,
+  },
   strNode: { alignItems: 'center', width: 46 },
   strCircle: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.light.cardElevated,
+    borderColor: colors.border,
     borderRadius: 18,
-    borderWidth: 1.5,
+    borderWidth: 2.5,
     height: 36,
     justifyContent: 'center',
     width: 36,
   },
-  strEmoji: { fontSize: 16 },
+  strCircleStart: {
+    borderColor: colors.primary[600],
+    boxShadow: '0 0 0 3px rgba(5,150,105,0.12), 0 2px 0 rgba(4,120,87,0.2)',
+  },
+  strNum: {
+    color: colors.gray[500],
+    fontFamily: fontFamilies.monospace,
+    fontSize: 12,
+    fontWeight: fontWeights.bold,
+  },
+  strNumStart: { color: colors.primary[700] },
   strLabel: {
     color: colors.gray[500],
     fontSize: 9,
@@ -39,11 +56,18 @@ export const scienceResearchStyles = StyleSheet.create({
     textAlign: 'center',
   },
   // Sources
+  researchCard: {
+    backgroundColor: colors.gray[50],
+    borderColor: colors.border,
+    borderRadius: borderRadius.xl,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
   sourceRow: {
     flexDirection: 'row',
     gap: spacing.md,
     paddingHorizontal: spacing.base,
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
   sourceNum: {
     color: colors.gray[300],
@@ -60,6 +84,13 @@ export const scienceResearchStyles = StyleSheet.create({
   },
   sourceMeta: { color: colors.gray[500], ...typography.caption, marginTop: 2 },
   sourceJournal: { fontStyle: 'italic' },
+  sourceLink: {
+    color: colors.primary[700],
+    fontFamily: fontFamilies.primary.text,
+    fontSize: 12,
+    fontWeight: fontWeights.bold,
+    marginTop: 5,
+  },
   disclaimer: {
     color: colors.gray[400],
     ...typography.caption,

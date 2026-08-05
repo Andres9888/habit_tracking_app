@@ -1,12 +1,16 @@
 /**
- * PreviewContent - Main content area of the preview modal
+ * PreviewContent - Main content area of the preview modal. Wires the shared
+ * scroll handler to both the header tint and the jump-chip scroll-spy.
  */
 
-import React from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import Animated from 'react-native-reanimated';
 import { layoutStyles } from '../styles';
 import { buildHeroGradient } from '../utils/heroGradient';
+import { availableSections, type SectionKey } from '../utils/sectionAvailability';
 import { useHeaderTintAnimation } from '../hooks/useHeaderTintAnimation';
+import { useScrollSpy } from '../hooks/useScrollSpy';
+import { useSectionAnchors } from '../hooks/useSectionAnchors';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
 import { FooterSection } from './FooterSection';
@@ -18,7 +22,6 @@ export function PreviewContent({
   customizeButtonScale,
   handlers,
   iconColor,
-  importButtonScale,
   insets,
   initialAnchor = 'top',
   isImported,
@@ -28,8 +31,29 @@ export function PreviewContent({
   visible,
 }: PreviewContentProps) {
   const headerTint = buildHeroGradient(iconColor)[0];
-  const { scrollHandler, onHeroLayout, animatedBgStyle } =
-    useHeaderTintAnimation(headerTint);
+  const scrollRef = useRef<Animated.ScrollView>(null);
+  const sections = useMemo(() => availableSections(template), [template]);
+  const spy = useScrollSpy(sections);
+  const anchors = useSectionAnchors({
+    registerSection: spy.registerSection,
+    setChipsHeight: spy.setChipsHeight,
+    visible,
+    initialAnchor,
+    reducedMotion,
+    scrollRef,
+    templateId: template?._id,
+  });
+  const { scrollHandler, onHeroLayout, animatedBgStyle } = useHeaderTintAnimation(
+    headerTint,
+    spy.spyWorklet
+  );
+  const onChipPress = useCallback(
+    (key: SectionKey) => {
+      spy.setActiveFromTap(key);
+      anchors.scrollToSection(key);
+    },
+    [spy, anchors]
+  );
   return (
     <Animated.View
       testID='templates-preview-modal'
@@ -41,20 +65,23 @@ export function PreviewContent({
           animatedStyles.closeButtonAnimatedOpacityStyle
         }
         tintColor={headerTint}
+        title={template?.name}
         topInset={insets.top}
         onBack={handlers.handleBack}
         onClose={handlers.handleClose}
       />
       <ScrollableContent
+        activeKey={spy.activeKey}
+        anchors={anchors}
         iconAnimatedStyle={animatedStyles.iconAnimatedStyle}
         iconColor={iconColor}
         iconGlowStyle={animatedStyles.iconGlowStyle}
-        initialAnchor={initialAnchor}
         overscrollTint={headerTint}
-        reducedMotion={reducedMotion}
         scrollHandler={scrollHandler}
+        scrollRef={scrollRef}
+        sections={sections}
         template={template}
-        visible={visible}
+        onChipPress={onChipPress}
         onHeroLayout={onHeroLayout}
       />
       <FooterSection
@@ -64,10 +91,9 @@ export function PreviewContent({
         customizeButtonScale={customizeButtonScale}
         customizeButtonStyle={animatedStyles.customizeButtonStyle}
         iconColor={iconColor}
-        importButtonScale={importButtonScale}
-        importButtonStyle={animatedStyles.importButtonStyle}
         isImported={isImported}
         isImporting={isImporting}
+        reducedMotion={reducedMotion}
         successPillStyle={animatedStyles.successPillStyle}
         templateName={template?.name ?? ''}
         onCustomize={handlers.handleCustomize}

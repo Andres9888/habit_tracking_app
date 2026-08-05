@@ -15,7 +15,6 @@ export interface PreviewContentAnimatedStyles {
   iconGlowStyle: ViewStyle;
   checkmarkAnimatedStyle: ViewStyle;
   customizeButtonStyle: ViewStyle;
-  importButtonStyle: ViewStyle;
   successPillStyle: ViewStyle;
 }
 
@@ -35,7 +34,6 @@ export interface PreviewContentProps {
   customizeButtonScale: SharedValue<number>;
   handlers: PreviewContentHandlers;
   iconColor: string;
-  importButtonScale: SharedValue<number>;
   insets: { top: number; bottom: number };
   initialAnchor?: TemplatePreviewAnchor;
   isImported: boolean;

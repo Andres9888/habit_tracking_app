@@ -1,20 +1,19 @@
 /**
- * Modal header for FullsizeTemplatePreview
- * Uses shared ModalCloseButton for consistent close button styling.
- * Optionally renders a circular back button on the left when `onBack` is provided.
+ * Modal header for FullsizeTemplatePreview: drag handle, optional back button,
+ * a centered "Habit science" title, and the shared close button.
  */
 
 import React from 'react';
 import { ChevronLeft } from 'lucide-react-native';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { colors } from '@/theme/colors';
 import { iconSizes } from '@/theme/iconSizes';
-import { borderRadius } from '@/theme/spacing';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '../../ui/AnimatedPressable';
 import { layoutStyles } from '../styles';
+import { modalHeaderStyles as s } from '../styles/modalHeader.styles';
 import { ModalCloseButton } from '../../ui/ModalCloseButton';
+import { HeaderTitle } from './HeaderTitle';
 import { useThemeColors } from '../../../theme/ThemeContext';
 
 interface ModalHeaderProps {
@@ -23,6 +22,7 @@ interface ModalHeaderProps {
   onBack?: () => void;
   onClose: () => void;
   tintColor?: string;
+  title?: string;
   /** Reanimated style applied to the outer container — overrides tintColor when scrolled. */
   animatedBgStyle?: object;
 }
@@ -33,6 +33,7 @@ export function ModalHeader({
   onBack,
   onClose,
   tintColor,
+  title,
   animatedBgStyle,
 }: ModalHeaderProps) {
   const { colors: themeColors, isDark } = useThemeColors();
@@ -46,10 +47,7 @@ export function ModalHeader({
 
   return (
     <Animated.View
-      style={[
-        tintColor ? { backgroundColor: tintColor } : undefined,
-        animatedBgStyle,
-      ]}
+      style={[tintColor ? { backgroundColor: tintColor } : undefined, animatedBgStyle]}
     >
       <View testID='templates-preview-handle' style={s.handleRow}>
         <View style={s.handle} />
@@ -68,7 +66,7 @@ export function ModalHeader({
             accessibilityLabel='Back'
             accessibilityRole='button'
             testID='templates-preview-back'
-            style={[s.backButton, { backgroundColor: subtleBg }]}
+            style={[s.slot, { backgroundColor: subtleBg }]}
             onPress={handleBack}
           >
             <ChevronLeft
@@ -78,36 +76,11 @@ export function ModalHeader({
             />
           </AnimatedPressable>
         ) : (
-          <View />
+          <View style={s.slot} />
         )}
-        <ModalCloseButton
-          label='Close preview'
-          variant='subtle'
-          onClose={onClose}
-        />
+        {title ? <HeaderTitle name={title} /> : <View style={s.titleWrap} />}
+        <ModalCloseButton label='Close preview' variant='subtle' onClose={onClose} />
       </Animated.View>
     </Animated.View>
   );
 }
-
-const s = StyleSheet.create({
-  backButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.full,
-    height: 44,
-    justifyContent: 'center',
-    width: 44,
-  },
-  handle: {
-    backgroundColor: colors.gray[300],
-    borderRadius: borderRadius.xs,
-    height: 4,
-    width: 40,
-  },
-  handleRow: { alignItems: 'center', paddingTop: 8 },
-  headerRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-});

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Animated styles for FullsizeTemplatePreview
  */
@@ -46,11 +45,6 @@ export const useAnimatedStyles = (props: UseAnimatedStylesProps) => {
     return { opacity: props.closeButtonOpacity.value ?? 0 };
   });
 
-  const importButtonStyle = useAnimatedStyle(() => {
-    'worklet';
-    return { transform: [{ scale: props.importButtonScale.value ?? 1 }] };
-  });
-
   const customizeButtonStyle = useAnimatedStyle(() => {
     'worklet';
     return { transform: [{ scale: props.customizeButtonScale.value ?? 1 }] };
@@ -65,7 +59,6 @@ export const useAnimatedStyles = (props: UseAnimatedStylesProps) => {
     customizeButtonStyle,
     iconAnimatedStyle,
     iconGlowStyle,
-    importButtonStyle,
     ...successStyles,
   };
 };

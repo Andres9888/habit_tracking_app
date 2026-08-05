@@ -52,12 +52,8 @@ function FullsizeTemplatePreviewComponent({
   });
   useExitAnimations({ ...entranceAnimations, reducedMotion, visible });
   const successAnimations = useSuccessAnimations({ isImported, reducedMotion });
-  const {
-    closeButtonScale,
-    importButtonScale,
-    customizeButtonScale,
-    createPressHandlers,
-  } = useButtonAnimations({ reducedMotion });
+  const { closeButtonScale, customizeButtonScale, createPressHandlers } =
+    useButtonAnimations({ reducedMotion });
   const handlers = useHandlers({
     isImported,
     isImporting,
@@ -72,7 +68,6 @@ function FullsizeTemplatePreviewComponent({
     ...entranceAnimations,
     closeButtonScale,
     customizeButtonScale,
-    importButtonScale,
     ...successAnimations,
   });
 
@@ -95,7 +90,6 @@ function FullsizeTemplatePreviewComponent({
         customizeButtonScale={customizeButtonScale}
         handlers={handlers}
         iconColor={iconColor}
-        importButtonScale={importButtonScale}
         insets={insets}
         initialAnchor={initialAnchor}
         isImported={isImported}

@@ -20,7 +20,6 @@ export const useButtonAnimations = ({
   reducedMotion,
 }: UseButtonAnimationsProps) => {
   const closeButtonScale = useSharedValue(1);
-  const importButtonScale = useSharedValue(1);
   const customizeButtonScale = useSharedValue(1);
 
   const createPressHandlers = useCallback(
@@ -41,6 +40,5 @@ export const useButtonAnimations = ({
     closeButtonScale,
     createPressHandlers,
     customizeButtonScale,
-    importButtonScale,
   };
 };

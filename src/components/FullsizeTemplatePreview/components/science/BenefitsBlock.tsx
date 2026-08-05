@@ -21,7 +21,10 @@ export function BenefitsBlock({ template }: { template: Template }) {
   if (!benefits || benefits.length === 0) return null;
   return (
     <View>
-      <SecLabel glyph={<Sparkles color={colors.primary[700]} size={17} strokeWidth={2} />}>
+      <SecLabel
+        count={benefits.length}
+        glyph={<Sparkles color={colors.primary[700]} size={17} strokeWidth={2} />}
+      >
         What you&apos;ll feel
       </SecLabel>
       <View style={[s.card, { padding: 0, overflow: 'hidden' }]}>
