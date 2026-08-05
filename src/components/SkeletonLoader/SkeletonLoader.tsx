@@ -6,7 +6,8 @@
  */
 
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import { absoluteFillObject } from '../../theme/absoluteFillObject';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, {
   Easing,
@@ -90,7 +91,7 @@ export function SkeletonLoader({
         end={{ x: 1, y: 0.5 }}
         start={{ x: 0, y: 0.5 }}
         style={[
-          StyleSheet.absoluteFillObject,
+          absoluteFillObject,
           { width: '200%' },
           animatedStyle,
         ]}

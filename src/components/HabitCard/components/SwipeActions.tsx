@@ -4,8 +4,8 @@
  */
 
 import React, { memo } from 'react';
-import { Pressable, Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Pressable, Text, type ViewStyle } from 'react-native';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { withSpring, type SharedValue } from 'react-native-reanimated';
 import { useAppTheme } from '../../../theme';
 import { actionStyles } from '../HabitCard.actionStyles';
@@ -13,7 +13,7 @@ import { actionStyles } from '../HabitCard.actionStyles';
 interface SwipeActionsProps {
   name: string;
   translateX: SharedValue<number>;
-  actionsAnimatedStyle: { opacity: number };
+  actionsAnimatedStyle: AnimatedStyle<ViewStyle>;
   onEdit?: () => void;
   onDelete?: () => void;
 }

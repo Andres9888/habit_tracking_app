@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '../../../theme/absoluteFillObject';
 
 export const DEFAULT_TILE_SIZE = 44;
 
@@ -7,7 +8,7 @@ export const baseStyles = StyleSheet.create({
     textAlign: 'center',
   },
   gradientLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
   },
   highlight: {
     position: 'absolute',

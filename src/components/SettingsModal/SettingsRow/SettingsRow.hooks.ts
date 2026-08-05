@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import {
   useSharedValue,
   useAnimatedStyle,
@@ -12,7 +12,7 @@ export function useSettingsRowPulse(isDark: boolean) {
   const pulseOpacity = useSharedValue(0);
   const pulseColor = isDark ? 'rgba(52,211,153,0.08)' : 'rgba(5,150,105,0.06)';
   const pulseStyle = useAnimatedStyle(() => ({
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     backgroundColor: pulseColor,
     opacity: pulseOpacity.value,
   }));

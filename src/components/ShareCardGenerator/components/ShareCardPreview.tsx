@@ -5,7 +5,7 @@
 
 import React, { RefObject } from 'react';
 import { View, Dimensions } from 'react-native';
-import ViewShot from 'react-native-view-shot';
+import type { ViewShotRef } from 'react-native-view-shot';
 import { ShareCard } from './ShareCard';
 import { containerStyles } from '../styles';
 import type { ShareFormat, GradientPreset } from '../ShareCardGenerator.types';
@@ -13,7 +13,7 @@ import type { ShareFormat, GradientPreset } from '../ShareCardGenerator.types';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 interface ShareCardPreviewProps {
-  viewShotRef: RefObject<ViewShot>;
+  viewShotRef: RefObject<ViewShotRef>;
   habitName: string;
   emoji: string;
   milestoneLabel: string;

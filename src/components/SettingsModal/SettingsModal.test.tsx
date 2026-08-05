@@ -9,15 +9,13 @@ jest.mock('react-native-reanimated', () => {
   };
 });
 
-jest.mock('expo-av', () => ({
-  Audio: {
-    Sound: {
-      createAsync: jest.fn().mockResolvedValue({
-        replayAsync: jest.fn(),
-        unloadAsync: jest.fn(),
-      }),
-    },
-  },
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: jest.fn().mockReturnValue({
+    play: jest.fn(),
+    remove: jest.fn(),
+    addListener: jest.fn(),
+    volume: 1,
+  }),
 }));
 
 jest.mock('@clerk/clerk-expo', () => ({

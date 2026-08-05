@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, type StyleProp, type ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { ArrowRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 
@@ -9,7 +9,7 @@ import { CHIP_BG, CHIP_TEXT, PRESS } from './WeekNavRow.constants';
 import { s } from './WeekNavRow.styles';
 
 interface TodayPillProps {
-  entranceStyle: StyleProp<ViewStyle>;
+  entranceStyle: StyleProp<AnimatedStyle<ViewStyle>>;
   onJumpToToday: () => void;
 }
 

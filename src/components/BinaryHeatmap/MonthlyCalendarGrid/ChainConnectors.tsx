@@ -10,6 +10,7 @@
 
 import React, { memo, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { durations, enterEasing } from '@/theme/animations';
 import { useReduceMotion } from '@/hooks/useReduceMotion';
@@ -81,5 +82,5 @@ export const ChainConnectors = memo(function ChainConnectors({
 });
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject },
+  overlay: { ...absoluteFillObject },
 });

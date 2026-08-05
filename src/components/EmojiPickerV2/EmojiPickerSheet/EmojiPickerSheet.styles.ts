@@ -3,6 +3,7 @@
  */
 
 import { StyleSheet, Dimensions } from 'react-native';
+import { absoluteFillObject } from '../../../theme/absoluteFillObject';
 
 import { colors } from '../../../theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
@@ -14,7 +15,7 @@ export const SHEET_HEIGHT_EXPANDED = SCREEN_HEIGHT * 0.8;
 
 export const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     justifyContent: 'flex-end',
   },
   handle: {

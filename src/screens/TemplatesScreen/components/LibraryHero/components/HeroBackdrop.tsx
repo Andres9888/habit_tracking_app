@@ -1,4 +1,5 @@
 import { StyleSheet, View } from 'react-native';
+import { absoluteFillObject } from '../../../../../theme/absoluteFillObject';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '../../../../../theme/ThemeContext';
 import { borderRadius } from '../../../../../theme/spacing';
@@ -48,7 +49,7 @@ export function HeroBackdrop() {
 
 const s = StyleSheet.create({
   gradient: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     borderBottomLeftRadius: borderRadius.xl,
     borderBottomRightRadius: borderRadius.xl,
   },

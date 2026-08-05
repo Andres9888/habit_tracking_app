@@ -4,7 +4,7 @@
 
 import React, { useCallback, useEffect, useRef } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
-import Animated, {
+import Animated, { type AnimatedStyle,
   type useAnimatedScrollHandler,
 } from 'react-native-reanimated';
 import { colors } from '@/theme/colors';
@@ -19,8 +19,8 @@ import type { ViewStyle } from 'react-native';
 interface ScrollableContentProps {
   template: Template;
   iconColor: string;
-  iconAnimatedStyle: ViewStyle;
-  iconGlowStyle: ViewStyle;
+  iconAnimatedStyle: AnimatedStyle<ViewStyle>;
+  iconGlowStyle: AnimatedStyle<ViewStyle>;
   initialAnchor?: TemplatePreviewAnchor;
   overscrollTint?: string;
   reducedMotion?: boolean;

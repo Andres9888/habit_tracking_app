@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { FadeInUp } from 'react-native-reanimated';
 import { colors } from '@/theme';
 import { durations, enterEasing } from '../../../../theme/animations';
@@ -22,7 +23,7 @@ export const NOTIF_SIZE = 8;
 
 export const styles = StyleSheet.create({
   capsuleBorder: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     borderRadius: CAPSULE_RADIUS,
     borderWidth: 1,
   },
@@ -40,7 +41,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   glassBg: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     borderRadius: CAPSULE_RADIUS,
     overflow: 'hidden',
   },

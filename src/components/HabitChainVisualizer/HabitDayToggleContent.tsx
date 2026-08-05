@@ -1,5 +1,6 @@
 import React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, View } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { Unlink } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import type { Animated as AnimatedType } from 'react-native';
@@ -31,14 +32,14 @@ export const HabitDayToggleContent: React.FC<Props> = ({
     <Animated.View
       pointerEvents='none'
       style={[
-        StyleSheet.absoluteFillObject,
+        absoluteFillObject,
         { backgroundColor: FORGE_FLASH_COLOR, opacity: forgeFlash },
       ]}
     />
     {missed ? (
       <View
         pointerEvents='none'
-        style={StyleSheet.absoluteFillObject}
+        style={absoluteFillObject}
         className='items-center justify-center'
       >
         <Unlink color={MISSED_BORDER} size={iconSizes.medium} strokeWidth={2.5} />

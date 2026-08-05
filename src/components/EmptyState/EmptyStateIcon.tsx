@@ -9,7 +9,8 @@ type EmptyStateIconProps = {
   iconBackplate?: ViewStyle;
   iconSize: number;
   marginBottom: number;
-  style: AnimatedStyle<TextStyle | ViewStyle>;
+  // Opaque useAnimatedStyle handle; applied to a View or Text branch below.
+  style: AnimatedStyle<ViewStyle>;
 };
 
 export function EmptyStateIcon({
@@ -35,7 +36,7 @@ export function EmptyStateIcon({
 
   return typeof icon === 'string' ? (
     <Animated.Text
-      style={[styles.iconText, { fontSize: iconSize, marginBottom }, style]}
+      style={[styles.iconText, { fontSize: iconSize, marginBottom }, style as AnimatedStyle<TextStyle>]}
     >
       {icon}
     </Animated.Text>

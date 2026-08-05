@@ -1,3 +1,4 @@
+import type { ViewStyle } from 'react-native';
 /**
  * useToastAnimations Hook
  *
@@ -11,6 +12,7 @@
  * unifying either would change their feel, so they are kept separate.
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
 import { useEffect, useCallback, useRef } from 'react';
 import {
   useAnimatedStyle,
@@ -29,7 +31,7 @@ export interface UseToastAnimationsOptions {
 }
 
 export interface UseToastAnimationsResult {
-  animatedStyle: { opacity: number; transform: { translateY: number }[] };
+  animatedStyle: AnimatedStyle<ViewStyle>;
   shouldRender: boolean;
 }
 

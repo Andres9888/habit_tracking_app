@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { colors } from '@/theme';
 import { shadows } from '../../../../theme/spacing';
 
@@ -46,7 +47,7 @@ export const fabRingStyles = StyleSheet.create({
     width: 24,
   },
   ringOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
   },

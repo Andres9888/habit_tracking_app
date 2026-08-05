@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '../../../theme/absoluteFillObject';
 import { borderRadius } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -13,16 +13,17 @@
  *   → DraggableHabitCardProps (this file)   — fully resolved, internal
  */
 
+import type { TextStyle, ViewStyle } from 'react-native';
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
 import type { Id } from '../../../convex/_generated/dataModel';
 import type { CardColors, Habit, HabitStatus } from './types';
 import type { PartialProgressEmojiSet } from '../../utils/progressEmojis';
 
 /** Animated style for the strength emoji (scale + rotate on level-up). */
-export type StrengthEmojiAnimatedStyle = AnimatedStyle;
+export type StrengthEmojiAnimatedStyle = AnimatedStyle<TextStyle>;
 
 /** Animated style for the progress bar width (percentage-based). */
-export type ProgressAnimatedStyle = AnimatedStyle;
+export type ProgressAnimatedStyle = AnimatedStyle<ViewStyle>;
 
 /**
  * Full prop set for the internal `<DraggableHabitCard>` renderer.
@@ -75,7 +76,7 @@ export interface DraggableHabitCardProps {
   showNewRecord: boolean;
   streak: number;
   strengthEmojiAnimatedStyle: StrengthEmojiAnimatedStyle;
-  strengthFillStyle: AnimatedStyle;
+  strengthFillStyle: AnimatedStyle<ViewStyle>;
   strengthPercent: number;
   progressAnimatedStyle: ProgressAnimatedStyle;
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;

@@ -3,7 +3,7 @@
  */
 
 import { useCallback, useRef } from 'react';
-import { Audio } from 'expo-av';
+import { createAudioPlayer, type AudioPlayer } from 'expo-audio';
 import { triggerHaptic } from '@/utils/haptics';
 import type { CompletionSoundType } from '../../../convex/settings/types';
 
@@ -15,24 +15,21 @@ const SOUND_ASSETS: Record<CompletionSoundType, number> = {
 };
 
 export function useSoundPreview(onSelect: (type: CompletionSoundType) => void) {
-  const soundRef = useRef<Audio.Sound | undefined>(undefined);
+  const playerRef = useRef<AudioPlayer | undefined>(undefined);
 
   const preview = useCallback(async (type: CompletionSoundType) => {
     try {
-      if (soundRef.current) await soundRef.current.unloadAsync();
-      const { sound } = await Audio.Sound.createAsync(SOUND_ASSETS[type], {
-        shouldPlay: true,
-        volume: 0.7,
-      });
-      soundRef.current = sound;
-      sound.setOnPlaybackStatusUpdate(
-        (s: { isLoaded: boolean; didJustFinish?: boolean }) => {
-          if (s.isLoaded && s.didJustFinish) {
-            sound.unloadAsync();
-            soundRef.current = undefined;
-          }
+      playerRef.current?.remove();
+      const player = createAudioPlayer(SOUND_ASSETS[type]);
+      playerRef.current = player;
+      player.volume = 0.7;
+      player.play();
+      player.addListener('playbackStatusUpdate', s => {
+        if (s.didJustFinish) {
+          player.remove();
+          if (playerRef.current === player) playerRef.current = undefined;
         }
-      );
+      });
     } catch {
       // Silent fail — non-critical
     }

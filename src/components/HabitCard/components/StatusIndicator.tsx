@@ -6,7 +6,7 @@
  */
 
 import React, { memo } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, type ViewStyle } from 'react-native';
 import Animated, {
   type AnimatedStyle,
   type SharedValue,
@@ -74,7 +74,7 @@ export const StatusIndicator = memo(function StatusIndicator({
         style={[
           styles.checkmark,
           { backgroundColor: theme.custom.colors.success },
-          checkmarkAnimatedStyle as AnimatedStyle,
+          checkmarkAnimatedStyle as AnimatedStyle<ViewStyle>,
         ]}
       >
         <Text style={styles.checkmarkText}>✓</Text>

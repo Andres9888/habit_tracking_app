@@ -3,7 +3,8 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, View } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { Check } from 'lucide-react-native';
 import { ChainLinkIcon } from '../ChainLinkIcon/ChainLinkIcon';
 import { iconSizes } from '@/theme/iconSizes';
@@ -54,7 +55,7 @@ export function AnimatedCompletionIcon({
       {completed && showFallback ? (
         <View
           pointerEvents='none'
-          style={StyleSheet.absoluteFillObject}
+          style={absoluteFillObject}
           className='items-center justify-center'
         >
           {icon}

@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, type TextStyle, type ViewStyle } from 'react-native';
 import ReAnimated, { type AnimatedStyle } from 'react-native-reanimated';
 import { getStrengthEmoji } from './strengthUtils';
 import { useCountingPercent } from './useCountingPercent';
@@ -23,8 +23,8 @@ import { StrengthProgressBarTrack } from './StrengthProgressBarTrack';
 
 interface StrengthProgressBarProps {
   strengthPercent: number;
-  strengthEmojiAnimatedStyle: AnimatedStyle;
-  progressAnimatedStyle: AnimatedStyle;
+  strengthEmojiAnimatedStyle: AnimatedStyle<TextStyle>;
+  progressAnimatedStyle: AnimatedStyle<ViewStyle>;
   emojis?: ProgressEmojiSet;
   accentColor?: string;
 }

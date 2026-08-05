@@ -22,7 +22,8 @@
  */
 
 import React, { memo, useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet } from 'react-native';
+import { Pressable } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { Swipeable } from 'react-native-gesture-handler';
 import ReAnimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { SwipeActions } from './SwipeActions';
@@ -147,7 +148,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
                   borderColor: props.accentColor ?? colors.premium[400],
                   borderRadius: borderRadius.xl,
                   borderWidth: 2,
-                  ...StyleSheet.absoluteFillObject,
+                  ...absoluteFillObject,
                 },
                 glowStyle,
               ]}

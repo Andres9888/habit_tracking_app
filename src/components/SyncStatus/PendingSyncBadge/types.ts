@@ -6,6 +6,7 @@
  * "Given pending completions, When viewing habit, Then subtle 'pending' indicator shows"
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
 import type { ViewStyle, StyleProp } from 'react-native';
 
 /**
@@ -36,6 +37,6 @@ export interface UsePendingSyncBadgeOptions {
  * Hook result for usePendingSyncBadge
  */
 export interface UsePendingSyncBadgeResult {
-  animatedStyle: { opacity: number; transform: { scale: number }[] };
+  animatedStyle: AnimatedStyle<ViewStyle>;
   shouldRender: boolean;
 }

@@ -4,6 +4,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { borderRadius, shadows } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
 
@@ -95,5 +96,5 @@ export const styles = StyleSheet.create({
 export const localStyles = StyleSheet.create({
   dragHandle: { borderRadius: borderRadius.xs, height: 5, width: 36 },
   dragHandleRow: { alignItems: 'center', paddingBottom: 4, paddingTop: 8 },
-  sheet: StyleSheet.absoluteFillObject,
+  sheet: absoluteFillObject,
 });

@@ -47,10 +47,10 @@ export const AnimatedWeeksGrid = memo(function AnimatedWeeksGrid({
 
   const entering =
     direction === 'left'
-      ? SlideInRight.withInitialValues({ originX: 24, opacity: 0 })
+      ? SlideInRight.withInitialValues({ originX: 24 })
           .duration(durations.enter)
           .easing(enterEasing)
-      : SlideInLeft.withInitialValues({ originX: -24, opacity: 0 })
+      : SlideInLeft.withInitialValues({ originX: -24 })
           .duration(durations.enter)
           .easing(enterEasing);
 

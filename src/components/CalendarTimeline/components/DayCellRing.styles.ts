@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '../../../theme/absoluteFillObject';
 
 import { colors as palette } from '../../../theme/colors';
 import { typography, fontFamilies, fontWeights } from '../../../theme/typography';
@@ -85,7 +86,7 @@ export const MONTH_PREFIX_COLORS = {
 
 export const ringStyles = StyleSheet.create({
   centerLabel: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { colors } from '@/theme';
 import { borderRadius } from '@/theme/spacing';
 import { typography, fontFamilies, fontWeights } from '@/theme/typography';
@@ -29,7 +30,7 @@ export const styles = StyleSheet.create({
     width: 120,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     justifyContent: 'center',

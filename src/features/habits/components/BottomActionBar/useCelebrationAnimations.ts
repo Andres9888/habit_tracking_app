@@ -1,3 +1,4 @@
+import type { ViewStyle } from 'react-native';
 /**
  * useCelebrationAnimations — icon crossfade + ring progress for ProgressRingFAB.
  *
@@ -5,6 +6,7 @@
  * COMPLETION_SPRING for settle. Icon swap uses opacity crossfade (150ms).
  */
 
+import type { AnimatedStyle } from 'react-native-reanimated';
 import { useEffect } from 'react';
 import {
   useAnimatedStyle,
@@ -24,8 +26,8 @@ const REVERT_MS = 800;
 const REVERT_SPRING = springs.standard;
 
 export interface CelebrationAnimStyles {
-  plusStyle: { opacity: number; transform: { scale: number }[] };
-  checkStyle: { opacity: number; transform: { scale: number }[] };
+  plusStyle: AnimatedStyle<ViewStyle>;
+  checkStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function useCelebrationAnimations(

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet, type ViewStyle, type TextStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import { fontWeights } from '@/theme/typography';
 import { borderRadius } from '@/theme/spacing';
@@ -8,17 +8,17 @@ import { borderRadius } from '@/theme/spacing';
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
 interface CalendarDayBodyProps {
-  cellPopStyle: ViewStyle;
+  cellPopStyle: AnimatedStyle<ViewStyle>;
   completedBg: string;
   dayNumber: number | string;
   fillMounted: boolean;
-  fillStyle: ViewStyle;
+  fillStyle: AnimatedStyle<ViewStyle>;
   habitColor: string;
   isToday: boolean;
   showCompleted: boolean;
   showDot: boolean;
   staticTextColor: string;
-  textStyle: TextStyle;
+  textStyle: AnimatedStyle<TextStyle>;
   useSolidCompletedFill: boolean;
 }
 

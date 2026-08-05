@@ -3,6 +3,7 @@
  */
 
 import { Dimensions, StyleSheet } from 'react-native';
+import { absoluteFillObject } from '@/theme/absoluteFillObject';
 import { colors } from '@/theme';
 import { borderRadius } from '@/theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
@@ -44,7 +45,7 @@ export const celebrationStyles = StyleSheet.create({
     width: 32,
   },
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     zIndex: 9999,
   },
   glowRing: {

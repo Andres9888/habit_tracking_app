@@ -3,12 +3,13 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '../../theme/absoluteFillObject';
 import { borderRadius, spacing } from '../../theme/spacing';
 import { fontFamilies, typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     zIndex: 100,
   },
   cueHelp: {

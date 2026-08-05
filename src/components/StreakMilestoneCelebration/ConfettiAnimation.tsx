@@ -8,6 +8,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '../../theme/absoluteFillObject';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { useReduceMotion } from '../../hooks/useReduceMotion';
 import {
@@ -61,7 +62,7 @@ export function ConfettiAnimation({
 
 const localStyles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     pointerEvents: 'none',
   },
 });

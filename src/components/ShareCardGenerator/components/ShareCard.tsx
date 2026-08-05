@@ -6,7 +6,7 @@
 import React, { forwardRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import ViewShot from 'react-native-view-shot';
+import ViewShot, { type ViewShotRef } from 'react-native-view-shot';
 import { shareCardContentStyles as contentStyles } from '../styles';
 import { ShareCardInfo } from './ShareCardInfo';
 import { ShareCardFooter } from './ShareCardFooter';
@@ -24,7 +24,7 @@ interface ShareCardProps {
   gradient: GradientPreset;
 }
 
-export const ShareCard = forwardRef<ViewShot, ShareCardProps>((props, ref) => {
+export const ShareCard = forwardRef<ViewShotRef, ShareCardProps>((props, ref) => {
   const { format, gradient, emoji, showUserName, userName } = props;
   const gradientColors = gradient.colors as unknown as readonly [
     string,

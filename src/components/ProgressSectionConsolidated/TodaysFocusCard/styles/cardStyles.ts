@@ -5,6 +5,7 @@
  */
 
 import { StyleSheet } from 'react-native';
+import { absoluteFillObject } from '../../../../theme/absoluteFillObject';
 
 import { borderRadius, shadows } from '../../../../theme/spacing';
 
@@ -31,7 +32,7 @@ export const cardStyles = StyleSheet.create({
     width: 200,
   },
   shimmerOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...absoluteFillObject,
     zIndex: 1,
   },
   textContainer: {

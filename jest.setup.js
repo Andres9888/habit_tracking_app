@@ -50,7 +50,7 @@ jest.mock('expo-network', () => ({
 
 // Mock react-native-gesture-handler
 jest.mock('react-native-gesture-handler', () => {
-  const View = require('react-native').View;
+  const View = jest.requireActual('react-native').View;
 
   // Mock gesture builder for Gesture.Pan() etc.
   const createMockGesture = () => ({
@@ -182,12 +182,14 @@ try {
 
 // Mock lucide-react-native
 jest.mock('lucide-react-native', () => {
-  const React = require('react');
-  const { View } = require('react-native');
+  // Alias createElement: the css-interop babel plugin rewrites bare
+  // React.createElement into a top-level import, which jest.mock forbids.
+  const { createElement } = jest.requireActual('react');
+  const { View } = jest.requireActual('react-native');
 
   const createMockIcon = (name) => {
     return function MockIcon(props) {
-      return React.createElement(View, {
+      return createElement(View, {
         testID: `lucide-icon-${name}`,
         ...props,
       });
@@ -231,7 +233,7 @@ jest.mock('clsx', () => {
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
   const React = require('react');
-  const { View, Text, ScrollView, Pressable } = require('react-native');
+  const { View, Text, ScrollView, Pressable } = jest.requireActual('react-native');
 
   // Create passthrough Animated components
   const AnimatedView = View;
@@ -437,7 +439,7 @@ jest.mock('react-native-reanimated', () => {
 try {
   require.resolve('reanimated-color-picker');
   jest.mock('reanimated-color-picker', () => {
-    const View = require('react-native').View;
+    const View = jest.requireActual('react-native').View;
     return {
       __esModule: true,
       default: View,
@@ -504,14 +506,15 @@ jest.mock(
 
 // Mock react-native-draggable-flatlist
 jest.mock('react-native-draggable-flatlist', () => {
-  const React = require('react');
-  const { FlatList } = require('react-native');
+  // createElement aliased for the same css-interop reason as above.
+  const { createElement } = jest.requireActual('react');
+  const { FlatList } = jest.requireActual('react-native');
 
   const DraggableFlatList = (props) => {
     // Strip drag-specific props, pass rest to FlatList
     const { data, renderItem, onDragEnd, ...flatListProps } = props;
 
-    return React.createElement(FlatList, {
+    return createElement(FlatList, {
       data,
       renderItem: ({ item, index }) => {
         // Provide mock drag handlers
