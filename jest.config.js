@@ -12,7 +12,8 @@ export default {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
-    '^react-native-reanimated/mock$': '<rootDir>/__mocks__/react-native-reanimated-mock.js',
+    '^react-native-reanimated/mock$':
+      '<rootDir>/__mocks__/react-native-reanimated-mock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^~/(.*)$': '<rootDir>/src/$1',
   },
@@ -26,9 +27,11 @@ export default {
     '/node_modules/',
     '/worktrees/',
     '/\\.worktrees/',
+    '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
+    '<rootDir>/.clonk-worktrees/',
     '<rootDir>/website/.next/',
     '/__tests__/.*\\.snap$',
     '/tests/.*\\.snap$',
@@ -36,17 +39,21 @@ export default {
   modulePathIgnorePatterns: [
     '/worktrees/',
     '/\\.worktrees/',
+    '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
+    '<rootDir>/.clonk-worktrees/',
     '<rootDir>/website/.next/',
   ],
   watchPathIgnorePatterns: [
     '/worktrees/',
     '/\\.worktrees/',
+    '/\\.clonk-worktrees/',
     '/\\.next/',
     '<rootDir>/worktrees/',
     '<rootDir>/.worktrees/',
+    '<rootDir>/.clonk-worktrees/',
     '<rootDir>/website/.next/',
   ],
 };

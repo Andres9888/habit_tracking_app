@@ -1,7 +1,7 @@
 /**
- * useAudioRecording - Audio recording hook with expo-av
+ * useAudioRecording - Audio recording hook with expo-audio
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
 export { useAudioRecording, default } from './useAudioRecording';

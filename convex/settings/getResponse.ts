@@ -10,6 +10,7 @@ type StoredSettings = Doc<'userSettings'> | null | undefined;
 export function toSettingsResponse(settings: StoredSettings) {
   return {
     appIcon: settings?.appIcon ?? DEFAULT_SETTINGS.appIcon,
+    appLock: settings?.appLock ?? DEFAULT_SETTINGS.appLock,
     catTheme: settings?.catTheme ?? DEFAULT_SETTINGS.catTheme,
     celebrationsEnabled:
       settings?.celebrationsEnabled ?? DEFAULT_SETTINGS.celebrationsEnabled,

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain Day Settings — Prune Pass: Before / After</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#23221E;color:#F2EFE8;font-family:'DM Sans',-apple-system,system-ui,sans-serif}
+  .wrap{padding:40px 44px 80px}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;color:#7FC49A}
+  h1{font-family:Literata,Georgia,serif;font-size:32px;font-weight:700;margin:10px 0 8px}
+  .lede{font-size:13.5px;line-height:1.65;color:#9B978A;max-width:680px;margin:0}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:#C9C5B8}
+  .key{display:flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .stage{display:flex;gap:34px;align-items:flex-start;margin-top:34px;flex-wrap:wrap}
+
+  .col{flex:none;width:392px}
+  .colhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .colhead b{font-size:15px}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+  .tag.before{background:#4A2F2A;color:#F0B9AA}
+  .tag.after{background:#1B4436;color:#9BD9B4}
+  .metric{font-size:12px;color:#9B978A;margin-left:auto}
+
+  /* phone */
+  .phone{background:#F5F1ED;border-radius:22px;overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.5);padding-bottom:16px}
+  .status{display:flex;justify-content:space-between;align-items:center;padding:13px 22px 2px;font-size:13px;font-weight:600;color:#2D2A26}
+  .hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:14px 20px 12px}
+  .kick{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#047857}
+  .title{font-family:Literata,Georgia,serif;font-size:33px;font-weight:700;color:#2D2A26;margin-top:6px;line-height:1.15}
+  .x{width:38px;height:38px;border-radius:50%;background:#EDEAE5;display:flex;align-items:center;justify-content:center;color:#524D47;font-size:17px}
+
+  .seclabel{font-family:Literata,Georgia,serif;font-size:15.5px;font-weight:600;color:#2D2A26;margin:16px 22px 8px;display:flex;align-items:center;gap:7px}
+  .card{margin:0 16px;background:#FAF8F5;border:1px solid #DDD8D2;border-radius:20px;overflow:hidden}
+  .row{display:flex;align-items:center;gap:13px;padding:13px 15px;position:relative}
+  .row+.row{border-top:1px solid rgba(45,42,38,.08)}
+  .chip{width:38px;height:38px;border-radius:12px;background:#E2F1EA;display:flex;align-items:center;justify-content:center;flex:none;color:#047857;font-size:15px}
+  .rl{flex:1;min-width:0}
+  .rt{font-size:15.5px;font-weight:600;color:#2D2A26}
+  .rs{font-size:12.5px;color:#6B6560;margin-top:2px}
+  .val{font-size:14px;color:#6B6560;flex:none}
+  .chev{color:#A39F92;font-size:15px;flex:none}
+  .tog{width:50px;height:30px;border-radius:15px;background:#CFC9C1;position:relative;flex:none}
+  .tog.on{background:#047857}
+  .tog i{position:absolute;top:2px;left:2px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .tog.on i{left:auto;right:2px}
+  .seg{display:flex;background:rgba(0,0,0,.05);border-radius:12px;padding:3px;gap:2px;flex:none}
+  .seg span{width:34px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#7C7869}
+  .seg span.sel{background:rgba(5,150,105,.12);color:#047857}
+
+  /* inline trays (the bulk we're cutting) */
+  .tray{background:rgba(0,0,0,.02);border-top:1px solid rgba(45,42,38,.08);padding:10px 15px}
+  .pills{display:flex;gap:7px;flex-wrap:wrap}
+  .pill{font-size:12px;padding:7px 12px;border-radius:9px;background:rgba(0,0,0,.05);color:#6B6560}
+  .pill.sel{background:rgba(5,150,105,.12);color:#047857;font-weight:600}
+  .emoji{display:flex;gap:7px;font-size:17px}
+
+  .prem{margin:16px 16px 0;background:linear-gradient(135deg,#0D2119,#173A2A);border:1px solid rgba(189,236,207,.24);border-radius:20px;display:flex;align-items:center;gap:13px;padding:13px 15px}
+  .prem .chip{background:rgba(250,248,245,.12);color:#BDECCF}
+  .prem .rt{color:#FFF8E9;font-size:16px}
+  .prem .rs{color:rgba(240,249,243,.76)}
+  .up{background:#D7F7DF;color:#10251D;font-size:14px;font-weight:600;padding:9px 17px;border-radius:20px;flex:none}
+  .foot{text-align:center;font-size:12px;color:#6E6660;margin-top:18px}
+
+  /* diff affordances */
+  .cut{position:relative}
+  .cut::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(197,74,53,.13) 0 8px,rgba(197,74,53,.04) 8px 16px);pointer-events:none}
+  .cut::before{content:'REMOVE';position:absolute;top:50%;right:12px;transform:translateY(-50%);font-size:9.5px;font-weight:700;letter-spacing:1.3px;color:#fff;background:#B5432E;padding:3px 7px;border-radius:5px;z-index:3}
+  .keepnew{box-shadow:inset 3px 0 0 #178457}
+  .badge-new{position:absolute;top:50%;right:12px;transform:translateY(-50%);font-size:9.5px;font-weight:700;letter-spacing:1.3px;color:#0C2B21;background:#9BD9B4;padding:3px 7px;border-radius:5px}
+
+  /* why panel */
+  .why{flex:1;min-width:330px;max-width:440px;display:flex;flex-direction:column;gap:12px;position:sticky;top:28px}
+  .wcard{background:#2C2B26;border-radius:13px;padding:14px 16px;border-left:3px solid #7FC49A}
+  .wcard.warn{border-left-color:#E0A03C}
+  .wcard.soft{border-left-color:#6E7C74}
+  .wh{font-size:13.5px;font-weight:700;color:#F2EFE8;display:flex;align-items:center;gap:8px}
+  .num{width:19px;height:19px;border-radius:50%;background:#7FC49A;color:#0C2B21;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .wcard.warn .num{background:#E0A03C}
+  .wcard.soft .num{background:#6E7C74;color:#F2EFE8}
+  .wb{font-size:12.5px;line-height:1.62;color:#C9C5B8;margin-top:7px}
+  .wb em{color:#F2EFE8;font-style:normal;font-weight:600}
+  .totals{background:#1B4436;border-radius:13px;padding:14px 16px;font-size:12.5px;line-height:1.6;color:#CFE9D8}
+  .totals b{color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">CHAIN DAY · SETTINGS</div>
+  <h1>Prune pass — before / after</h1>
+  <p class="lede">Left is what ships today after the 4a redesign. Right is the proposal. Nothing new is invented: this pass removes two rows the design brief already called for cutting, collapses the page's heaviest control, and halves the least-used section.</p>
+
+  <div class="legend">
+    <div class="key"><span class="dot" style="background:#B5432E"></span> removed</div>
+    <div class="key"><span class="dot" style="background:#9BD9B4"></span> changed / renamed</div>
+    <div class="key"><span class="dot" style="background:#DDD8D2"></span> untouched</div>
+  </div>
+
+  <div class="stage">
+
+    <!-- ══════════ BEFORE ══════════ -->
+    <div class="col">
+      <div class="colhead"><b>Before</b><span class="tag before">ships today</span><span class="metric">~1,760pt tall · 17 rows</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x">✕</div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="chip" style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-family:Literata,serif;font-size:18px;font-weight:600">AG</div>
+            <div class="rl"><div class="rt">Andres Gutierrez</div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row"><div class="chip">▦</div><div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip">☾</div><div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg"><span>☀</span><span>☾</span><span class="sel">▯</span></div></div>
+          <div class="row cut"><div class="chip">✦</div><div class="rl"><div class="rt">Default growth icons</div><div class="rs">Used for every new habit</div></div><div class="val" style="margin-right:64px">Customize</div></div>
+          <div class="tray cut"><div class="emoji">🌱 🌿 🪴 🌳 🌲</div></div>
+          <div class="row"><div class="chip">▤</div><div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div><div class="tog"><i></i></div></div>
+        </div>
+
+        <div class="seclabel">Reminders <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row"><div class="chip">🔔</div><div class="rl"><div class="rt" style="color:#B5432E">Streak Reminders</div><div class="rs">Get nudged before an active streak slips</div></div><div class="tog on"><i></i></div></div>
+          <div class="row"><div class="chip">🔊</div><div class="rl"><div class="rt">Sounds &amp; haptics</div></div><div class="val">Chime</div><div class="chev">›</div></div>
+          <div class="tray"><div class="pills"><span class="pill sel">Ding</span><span class="pill">Pop</span><span class="pill">Rise</span></div></div>
+        </div>
+
+        <div class="seclabel">Habits <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row"><div class="chip">⇅</div><div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div><div class="val">Manual</div><div class="chev">›</div></div>
+          <div class="tray cut" style="padding-bottom:8px"><div class="pills"><span class="pill sel">Manual</span><span class="pill">Name</span><span class="pill">Strength</span><span class="pill">Streak</span></div></div>
+          <div class="tray cut" style="border-top:none;padding-top:0"><div class="pills"><span class="pill sel">A → Z</span><span class="pill">Z → A</span></div></div>
+          <div class="row"><div class="chip">📖</div><div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="seclabel">Privacy &amp; Security <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row cut"><div class="chip">🔒</div><div class="rl"><div class="rt">App lock</div><div class="rs">Ask for Face ID when opening Chain Day</div></div><div class="tog" style="margin-right:64px"><i></i></div></div>
+          <div class="row"><div class="chip">⤓</div><div class="rl"><div class="rt">Export my data</div><div class="rs">Download your habits as CSV or JSON</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="prem">
+          <div class="chip">♛</div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">Unlimited habits &amp; reminders</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row cut"><div class="chip" style="background:#E9E4DD;color:#6B6560">★</div><div class="rl"><div class="rt">Rate Chain Day</div></div></div>
+          <div class="row cut"><div class="chip" style="background:#E9E4DD;color:#6B6560">↗</div><div class="rl"><div class="rt">Share with Friends</div></div></div>
+          <div class="row"><div class="chip" style="background:#E9E4DD;color:#6B6560">💬</div><div class="rl"><div class="rt">Send Feedback</div></div><div class="chev">›</div></div>
+          <div class="row cut"><div class="chip" style="background:#E9E4DD;color:#6B6560">✦</div><div class="rl"><div class="rt">What's New</div></div></div>
+        </div>
+
+        <div class="foot">Version 2.4.1 (1) · Terms · Privacy</div>
+      </div>
+    </div>
+
+    <!-- ══════════ AFTER ══════════ -->
+    <div class="col">
+      <div class="colhead"><b>After</b><span class="tag after">proposed</span><span class="metric">~1,180pt tall · 11 rows</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x">✕</div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="chip" style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-family:Literata,serif;font-size:18px;font-weight:600">AG</div>
+            <div class="rl"><div class="rt">Andres Gutierrez</div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row"><div class="chip">▦</div><div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip">☾</div><div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg"><span>☀</span><span>☾</span><span class="sel">▯</span></div></div>
+          <div class="row"><div class="chip">▤</div><div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div><div class="tog"><i></i></div></div>
+        </div>
+
+        <div class="seclabel">Reminders <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row keepnew"><div class="chip">🔔</div><div class="rl"><div class="rt">Daily reminder</div><div class="rs">Every day at 8:00 PM</div></div><div class="tog on" style="margin-right:60px"><i></i></div><span class="badge-new">RENAMED</span></div>
+          <div class="row"><div class="chip">🔊</div><div class="rl"><div class="rt">Sounds &amp; haptics</div></div><div class="val">Chime</div><div class="chev">›</div></div>
+        </div>
+
+        <div class="seclabel">Habits <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row keepnew"><div class="chip">⇅</div><div class="rl"><div class="rt">Sort order</div><div class="rs">Manual · tap to change</div></div><div class="val" style="margin-right:60px">Manual</div><span class="badge-new">COLLAPSED</span></div>
+          <div class="row"><div class="chip">📖</div><div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="seclabel">Privacy &amp; Security <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row"><div class="chip">⤓</div><div class="rl"><div class="rt">Export my data</div><div class="rs">Download your habits as CSV or JSON</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="prem">
+          <div class="chip">♛</div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">Unlimited habits &amp; reminders</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support <span style="font-size:13px;color:#047857">◔</span></div>
+        <div class="card">
+          <div class="row keepnew"><div class="chip" style="background:#E9E4DD;color:#6B6560">★</div><div class="rl"><div class="rt">Love Chain Day?</div><div class="rs">Rate it or share with a friend</div></div><span class="badge-new">MERGED</span></div>
+          <div class="row"><div class="chip" style="background:#E9E4DD;color:#6B6560">💬</div><div class="rl"><div class="rt">Send Feedback</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="foot">Version 2.4.1 (1) · What's New · Terms · Privacy</div>
+      </div>
+    </div>
+
+    <!-- ══════════ WHY ══════════ -->
+    <div class="why">
+      <div class="wcard">
+        <div class="wh"><span class="num">1</span> Cut "Default growth icons"</div>
+        <div class="wb">The handoff README lists the growth-icons row under <em>"Removed from the old Settings (intentional) — do not re-add"</em>. It survived only because it wasn't in the removal set you approved. The emoji preset feature stays reachable when editing a habit, which is where you actually choose one. Kills a row <em>plus</em> its always-mounted picker tray — and a Convex query on every Settings open.</div>
+      </div>
+
+      <div class="wcard">
+        <div class="wh"><span class="num">2</span> Collapse the Sort order picker</div>
+        <div class="wb">Today the two-tier picker (family segments + direction segments) renders <em>expanded at all times</em> — the single heaviest block on the page, ~120pt for a setting most people touch once. Collapsing it behind the value row matches how Calendar look and Theme already behave. Same capability, one tap away.</div>
+      </div>
+
+      <div class="wcard warn">
+        <div class="wh"><span class="num">3</span> Pull the App lock stub</div>
+        <div class="wb">The toggle persists a flag but <em>nothing enforces it</em> — no biometric prompt, no gate on open. A user who flips it on believes the app is locked when it isn't. That's worse than the row not existing. Schema and plumbing stay in place, so restoring it is one component once <code>expo-local-authentication</code> lands.</div>
+      </div>
+
+      <div class="wcard">
+        <div class="wh"><span class="num">4</span> "Streak Reminders" → "Daily reminder"</div>
+        <div class="wb">Spec 4a's name, and the subtitle carries the <em>live value</em> ("Every day at 8:00 PM" / "Off") instead of static marketing copy. You can read your setting without opening it — the same value-hint pattern every other row on the page uses.</div>
+      </div>
+
+      <div class="wcard soft">
+        <div class="wh"><span class="num">5</span> Support: 4 rows → 2</div>
+        <div class="wb">Rate and Share are the same intent ("I like this, spread it") and both end at a system sheet. What's New is a changelog, not a setting — it belongs on the footer line with Version. <em>Weakest item here</em>: if these rows actually drive installs for you, drop this one and keep the other four.</div>
+      </div>
+
+      <div class="totals">
+        <b>Net:</b> 17 rows → 11. Roughly a third less scroll.<br>
+        Two removals are the design brief's own instructions; one is a correctness fix; two are polish.<br>
+        <b>Zero features lost</b> — every capability stays reachable, just not all shouting at once.
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

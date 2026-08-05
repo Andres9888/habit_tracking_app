@@ -28,6 +28,7 @@ export function AccountActionsCard() {
         icon={<Mail color={settings.user.icon} size={size} />}
         iconBackgroundColor={settings.user.bg}
         label='Email'
+        subtitle='Managed by your sign-in provider'
         type='info'
         value={email ?? '—'}
       />

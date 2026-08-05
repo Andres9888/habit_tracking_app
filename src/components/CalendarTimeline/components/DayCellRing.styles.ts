@@ -85,7 +85,7 @@ export const MONTH_PREFIX_COLORS = {
 
 export const ringStyles = StyleSheet.create({
   centerLabel: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
   },

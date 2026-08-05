@@ -4,9 +4,8 @@
 
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Check } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
-import { useThemeColors } from '../../../../theme/ThemeContext';
+import { Check, Plus } from 'lucide-react-native';
+import { useBrowserPalette } from '../../browserPalette';
 import { borderRadius, spacing } from '../../../../theme/spacing';
 import { typography, fontWeights } from '../../../../theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
@@ -21,42 +20,38 @@ export function ListCardAddButton({
   name,
   onImport,
 }: ListCardAddButtonProps) {
-  const { colors } = useThemeColors();
-  const animatedStyle = useImportBounce(isImported);
+  const palette = useBrowserPalette();
+  const { animatedStyle, onPressIn, onPressOut } = useImportBounce(isImported);
+  const bg = isImported ? palette.addedBg : palette.addBg;
+  const fg = isImported ? palette.addedFg : palette.addFg;
 
   return (
     <AnimatedPressable
       accessibilityLabel={isImported ? `${name} added` : `Add ${name} habit`}
       accessibilityRole='button'
       disabled={isImported || isImporting}
-      style={[
-        s.button,
-        {
-          backgroundColor: isImported
-            ? colors.primary[100]
-            : colors.primary[600],
-        },
-        animatedStyle,
-      ]}
+      hitSlop={8}
+      style={[s.button, { backgroundColor: bg }, animatedStyle]}
       onPress={(event) => {
         event?.stopPropagation?.();
         void triggerHaptic('selection');
         onImport();
       }}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
     >
       {isImporting ? (
-        <ActivityIndicator color={colors.text.inverse} size='small' />
+        <ActivityIndicator color={fg} size='small' />
       ) : isImported ? (
         <>
-          <Check
-            color={colors.primary[700]}
-            size={iconSizes.small}
-            strokeWidth={3}
-          />
-          <Text style={[s.label, { color: colors.primary[700] }]}>Added</Text>
+          <Check color={fg} size={14} strokeWidth={3} />
+          <Text style={[s.label, { color: fg }]}>Added</Text>
         </>
       ) : (
-        <Text style={[s.label, { color: colors.text.inverse }]}>+ Add</Text>
+        <>
+          <Plus color={fg} size={14} strokeWidth={3} />
+          <Text style={[s.label, { color: fg }]}>Add</Text>
+        </>
       )}
     </AnimatedPressable>
   );

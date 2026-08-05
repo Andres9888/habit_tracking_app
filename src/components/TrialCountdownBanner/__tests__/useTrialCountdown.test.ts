@@ -2,13 +2,15 @@
  * useTrialCountdown Hook Tests
  */
 
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
+import { useQuery } from 'convex/react';
 import { useTrialCountdown } from '../useTrialCountdown';
-import { usePremium } from '../../../hooks/usePremium';
 
-jest.mock('../../../hooks/usePremium');
+jest.mock('convex/react', () => ({
+  useQuery: jest.fn(),
+}));
 
-const mockUsePremium = usePremium as jest.MockedFunction<typeof usePremium>;
+const mockUseQuery = useQuery as jest.MockedFunction<typeof useQuery>;
 
 describe('useTrialCountdown', () => {
   beforeEach(() => {
@@ -16,11 +18,8 @@ describe('useTrialCountdown', () => {
   });
 
   it('returns null when not trialing', () => {
-    mockUsePremium.mockReturnValue({
+    mockUseQuery.mockReturnValue({
       status: 'free',
-      isTrialActive: false,
-      expirationDate: null,
-      isLoading: false,
     } as unknown);
 
     const { result } = renderHook(() => useTrialCountdown());
@@ -33,16 +32,23 @@ describe('useTrialCountdown', () => {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + 5);
 
-    mockUsePremium.mockReturnValue({
+    mockUseQuery.mockReturnValue({
       status: 'trialing',
-      isTrialActive: true,
-      expirationDate: futureDate,
-      isLoading: false,
+      trialEndsAt: futureDate.getTime(),
     } as unknown);
 
     const { result } = renderHook(() => useTrialCountdown());
 
     expect(result.current.daysRemaining).toBe(5);
     expect(result.current.shouldShowBanner).toBe(true);
+  });
+
+  it('reports loading until the Convex subscription resolves', () => {
+    mockUseQuery.mockReturnValue(undefined);
+
+    const { result } = renderHook(() => useTrialCountdown());
+
+    expect(result.current.isLoading).toBe(true);
+    expect(result.current.shouldShowBanner).toBe(false);
   });
 });

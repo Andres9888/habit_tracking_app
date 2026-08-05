@@ -2,6 +2,7 @@
  * CatalogFilteredList — full vertical list when a category chip is selected.
  */
 
+import type { ReactElement } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -15,6 +16,8 @@ const MAX_STAGGER_INDEX = 4;
 interface CatalogFilteredListProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  /** Rendered when the selected category has no matches. */
+  listEmptyComponent?: ReactElement;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   templates: Doc<'templates'>[];
@@ -28,6 +31,7 @@ export function CatalogFilteredList(p: CatalogFilteredListProps) {
       data={p.templates}
       keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
+      ListEmptyComponent={p.listEmptyComponent}
       contentContainerStyle={s.list}
       renderItem={({ index, item }) => {
         const entering =

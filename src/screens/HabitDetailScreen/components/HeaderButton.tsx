@@ -1,22 +1,19 @@
-/** HeaderButton - Animated button with scale + haptic feedback */
+/**
+ * HeaderButton - Animated button with scale + haptic feedback.
+ *
+ * Built on `ui/AnimatedPressable`, which owns the press scale and the web focus
+ * ring. An earlier revision hand-rolled `createAnimatedComponent` + `withSpring`
+ * and silently lost the focus ring.
+ */
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated';
+import { Text, View } from 'react-native';
 import { triggerHaptic } from '@/utils/haptics';
-import { withAlpha } from '@/theme';
+import { AnimatedPressable } from '../../../components/ui';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { typography, fontWeights } from '../../../theme/typography';
-import { borderRadius, spacing, componentSpacing } from '../../../theme/spacing';
+import { fontWeights } from '../../../theme/typography';
 import { OPACITY } from '../../../constants/ui-values';
-import { springs } from '@/theme/animations';
-
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
-
-type HeaderButtonTone = 'subtle' | 'accent';
+import { s } from './HeaderButton.styles';
+import { toneColors, type HeaderButtonTone } from './HeaderButton.tones';
 
 interface HeaderButtonProps {
   onPress: () => void;
@@ -28,26 +25,6 @@ interface HeaderButtonProps {
   compact?: boolean;
 }
 
-function toneColors(
-  tone: HeaderButtonTone,
-  isDark: boolean,
-  colors: ReturnType<typeof useThemeColors>['colors']
-) {
-  if (tone === 'accent') {
-    return {
-      bg: withAlpha(colors.primary[600], isDark ? 0.14 : 0.1),
-      border: withAlpha(colors.primary[600], isDark ? 0.22 : 0.2),
-      fg: colors.primary[700],
-    };
-  }
-  const neutral = colors.gray[900];
-  return {
-    bg: withAlpha(neutral, isDark ? 0.08 : 0.04),
-    border: withAlpha(neutral, isDark ? 0.1 : 0.08),
-    fg: colors.text.secondary,
-  };
-}
-
 export function HeaderButton({
   onPress,
   icon,
@@ -56,9 +33,7 @@ export function HeaderButton({
   tone = 'subtle',
   compact = false,
 }: HeaderButtonProps) {
-  const scale = useSharedValue(1);
   const { colors, isDark } = useThemeColors();
-  const animStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
   const { bg, border, fg } = toneColors(tone, isDark, colors);
   const showText = Boolean(text) && !compact;
 
@@ -67,29 +42,21 @@ export function HeaderButton({
     onPress();
   };
 
-  const pressHandlers = {
-    onPress: handlePress,
-    onPressIn: () => {
-      scale.value = withSpring(0.92, springs.button);
-    },
-    onPressOut: () => {
-      scale.value = withSpring(1, springs.button);
-    },
-  };
-
   return (
     <AnimatedPressable
       accessibilityLabel={label}
       accessibilityRole='button'
+      animationConfig={{ pressScale: 0.92 }}
       style={[
         showText ? s.textButton : s.compactButton,
-        animStyle,
         { backgroundColor: bg, borderColor: border },
       ]}
-      {...pressHandlers}
+      onPress={handlePress}
     >
-      <View style={{ opacity: tone === 'accent' ? 1 : OPACITY.high }}>
-        {React.cloneElement(icon as React.ReactElement<{ color: string }>, { color: fg })}
+      <View style={{ opacity: tone === 'subtle' ? OPACITY.high : 1 }}>
+        {React.cloneElement(icon as React.ReactElement<{ color: string }>, {
+          color: fg,
+        })}
       </View>
       {showText ? (
         <Text
@@ -97,7 +64,8 @@ export function HeaderButton({
             s.textLabel,
             {
               color: fg,
-              fontWeight: tone === 'accent' ? fontWeights.semibold : fontWeights.medium,
+              fontWeight:
+                tone === 'subtle' ? fontWeights.medium : fontWeights.semibold,
             },
           ]}
         >
@@ -107,28 +75,3 @@ export function HeaderButton({
     </AnimatedPressable>
   );
 }
-
-const s = StyleSheet.create({
-  compactButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    height: 40,
-    justifyContent: 'center',
-    width: 40,
-  },
-  textButton: {
-    alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    borderWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.sm,
-    height: componentSpacing.button.height,
-    paddingHorizontal: spacing.base,
-  },
-  textLabel: {
-    ...typography.bodySmall,
-    fontWeight: fontWeights.medium,
-    letterSpacing: -0.2,
-  },
-});

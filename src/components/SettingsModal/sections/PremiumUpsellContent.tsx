@@ -1,63 +1,60 @@
-/** PremiumUpsellContent — crown, copy, and Upgrade pill inside premium hero */
+/** PremiumUpsellContent — spec 4a banner row: chip, two lines of copy, pill.
+ *  Single compact row; the long serif headline was dropped with the redesign. */
 import { Text, View } from 'react-native';
 import { Crown } from 'lucide-react-native';
-import { shadows } from '@/theme';
 import { iconSizes } from '@/theme/iconSizes';
-import { fontFamilies, typography, fontWeights } from '@/theme/typography';
+import { typography, fontWeights } from '@/theme/typography';
 import { premiumHero } from '../theme/premiumHero';
 
 export function PremiumUpsellContent() {
   return (
-    <View className='flex-row items-center'>
+    <View className='flex-row items-center' style={{ gap: 13 }}>
       <View
-        className='mr-3.5 h-12 w-12 items-center justify-center rounded-2xl'
+        className='items-center justify-center'
         style={{
           backgroundColor: premiumHero.iconBox,
-          ...shadows.subtle,
+          borderRadius: 13,
+          height: 40,
+          width: 40,
         }}
       >
-        <Crown color={premiumHero.crown} size={iconSizes.medium} />
+        <Crown color={premiumHero.crown} size={iconSizes.small} />
       </View>
-      <View className='flex-1'>
+      <View className='min-w-0 flex-1'>
         <Text
+          numberOfLines={1}
           style={{
-            ...typography.tabBar,
-            fontWeight: fontWeights.bold,
-            letterSpacing: 1.2,
-            textTransform: 'uppercase',
-            color: premiumHero.overline,
+            ...typography.body,
+            fontSize: 16,
+            fontWeight: fontWeights.semibold,
+            color: premiumHero.title,
           }}
         >
           Chain Day Premium
         </Text>
         <Text
-          className='mt-0.5'
+          numberOfLines={1}
           style={{
-            ...typography.heading1,
-            fontFamily: fontFamilies.serif,
-            fontSize: 19,
-            lineHeight: 23,
-            color: premiumHero.title,
+            ...typography.caption,
+            marginTop: 2,
+            color: premiumHero.subtitle,
           }}
         >
-          Make every habit feel intentional
-        </Text>
-        <Text
-          className='mt-1'
-          numberOfLines={2}
-          style={{ ...typography.bodySmall, color: premiumHero.subtitle }}
-        >
-          Unlimited habits, reminders, sounds, and advanced progress cues.
+          Unlimited habits &amp; reminders
         </Text>
       </View>
       <View
-        className='rounded-full px-4 py-2'
-        style={{ backgroundColor: premiumHero.pill }}
+        style={{
+          backgroundColor: premiumHero.pill,
+          borderRadius: 20,
+          paddingHorizontal: 18,
+          paddingVertical: 10,
+        }}
       >
         <Text
           style={{
             ...typography.bodySmall,
-            fontWeight: fontWeights.bold,
+            fontWeight: fontWeights.semibold,
             color: premiumHero.pillText,
           }}
         >

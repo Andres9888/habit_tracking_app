@@ -1,7 +1,7 @@
 import React from 'react';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import type { ReactNode } from 'react';
-import type { TextStyle, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import { styles } from './styles';
 
 type EmptyStateIconProps = {
@@ -9,7 +9,7 @@ type EmptyStateIconProps = {
   iconBackplate?: ViewStyle;
   iconSize: number;
   marginBottom: number;
-  style: AnimatedStyle<TextStyle | ViewStyle>;
+  style: AnimatedStyle<ViewStyle>;
 };
 
 export function EmptyStateIcon({

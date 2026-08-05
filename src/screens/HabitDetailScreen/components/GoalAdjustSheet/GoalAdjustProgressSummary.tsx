@@ -19,7 +19,9 @@ export function GoalAdjustProgressSummary({
 }: GoalAdjustProgressSummaryProps) {
   const { colors } = useThemeColors();
   const percent =
-    currentGoal > 0 ? Math.min(Math.round((currentStreak / currentGoal) * 100), 100) : 0;
+    currentGoal > 0
+      ? Math.min(Math.round((currentStreak / currentGoal) * 100), 100)
+      : 0;
   const remaining = Math.max(currentGoal - currentStreak, 0);
 
   return (
@@ -36,13 +38,31 @@ export function GoalAdjustProgressSummary({
       }}
     >
       <View className='flex-row items-baseline justify-between'>
-        <Text style={{ ...typography.heading3, color: colors.text.primary, fontWeight: fontWeights.bold }}>
+        <Text
+          style={{
+            ...typography.heading3,
+            color: colors.text.primary,
+            fontWeight: fontWeights.bold,
+          }}
+        >
           {currentStreak}{' '}
-          <Text style={{ ...typography.bodySmall, color: colors.text.secondary, fontWeight: fontWeights.medium }}>
+          <Text
+            style={{
+              ...typography.bodySmall,
+              color: colors.text.secondary,
+              fontWeight: fontWeights.medium,
+            }}
+          >
             / {currentGoal} days
           </Text>
         </Text>
-        <Text style={{ ...typography.caption, color: colors.text.secondary, fontWeight: fontWeights.medium }}>
+        <Text
+          style={{
+            ...typography.caption,
+            color: colors.text.secondary,
+            fontWeight: fontWeights.medium,
+          }}
+        >
           {remaining} to go
         </Text>
       </View>

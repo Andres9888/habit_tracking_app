@@ -1,11 +1,11 @@
 /**
- * Hook for handling recording status updates from expo-av
+ * Hook for handling recording status updates from expo-audio
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
-import { useCallback, useRef } from 'react';
-import { Audio } from 'expo-av';
+import { useCallback, useEffect, useRef } from 'react';
+import type { RecorderState } from 'expo-audio';
 import type { RecordingState } from './types';
 import type {
   SetStatus,
@@ -28,10 +28,15 @@ export function useRecordingStatusHandler(
   const durationRef = useRef<number>(0);
   const warningFiredRef = useRef<boolean>(false);
   const wasRecordingBeforeInterruptionRef = useRef<boolean>(false);
+  const currentStateRef = useRef(currentState);
+
+  useEffect(() => {
+    currentStateRef.current = currentState;
+  }, [currentState]);
 
   const handleInterruption = useCallback(
     (reason: 'phone-call' | 'other-app' | 'system') => {
-      if (currentState !== 'recording') return;
+      if (currentStateRef.current !== 'recording') return;
       wasRecordingBeforeInterruptionRef.current = true;
       setStatus((prev) => ({
         ...prev,
@@ -41,23 +46,24 @@ export function useRecordingStatusHandler(
       }));
       onInterrupted?.(reason);
     },
-    [currentState, onInterrupted, setStatus]
+    [onInterrupted, setStatus]
   );
 
   const onRecordingStatusUpdate = useCallback(
-    (recordingStatus: Audio.RecordingStatus) => {
+    (recordingStatus: RecorderState) => {
       // Detect unexpected pause (interruption)
       if (
         !recordingStatus.isRecording &&
         recordingStatus.durationMillis &&
         recordingStatus.durationMillis > 0 &&
-        currentState === 'recording'
+        currentStateRef.current === 'recording'
       ) {
         handleInterruption('system');
         return;
       }
 
       if (!recordingStatus.isRecording) return;
+      if (currentStateRef.current !== 'recording') return;
 
       const durationSeconds = Math.floor(
         (recordingStatus.durationMillis || 0) / 1000
@@ -97,7 +103,6 @@ export function useRecordingStatusHandler(
       if (durationSeconds >= maxDurationSeconds) onMaxDurationReached?.();
     },
     [
-      currentState,
       maxDurationSeconds,
       warningThresholdSeconds,
       onMaxDurationReached,

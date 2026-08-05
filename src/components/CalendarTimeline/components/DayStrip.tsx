@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { createAnimatedComponent } from 'react-native-reanimated';
 
@@ -10,6 +10,17 @@ const AnimatedView = (() => {
   const fallback = createAnimatedComponent(View);
   return typeof fallback === 'function' ? fallback : (Animated.View ?? View);
 })();
+
+// NativeWind only maps `className` on components registered with cssInterop
+// (the React Native core set). This locally-created animated component is not
+// registered, so its className is dropped — the row layout must be a real style.
+const s = StyleSheet.create({
+  row: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+});
 
 /** Renders the 7-day strip with streak connectors and swipe gesture */
 const DayStripComponent: React.FC<DayStripProps> = ({
@@ -34,10 +45,7 @@ const DayStripComponent: React.FC<DayStripProps> = ({
 }) => (
   <GestureDetector gesture={panGesture}>
     <View collapsable={false}>
-      <AnimatedView
-        className='flex-row items-start justify-between'
-        style={weekTransitionStyle}
-      >
+      <AnimatedView style={[s.row, weekTransitionStyle]}>
         {dates.map((date, index) => {
           const status = completionStatuses[index];
           const isComplete = status === 'complete';

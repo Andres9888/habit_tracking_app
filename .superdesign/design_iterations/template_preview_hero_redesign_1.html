@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Template Preview — Hero Redesign</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* real app tokens — src/theme/colors */
+    --bg: #F5F1ED;
+    --card-bg: #EDEAE5;
+    --border: #DDD8D2;
+    --gray-400: #6E6660;
+    --gray-500: #6B6560;
+    --gray-600: #524D47;
+    --gray-700: #3D3833;
+    --gray-800: #2D2A26;
+    --gray-900: #1A1816;
+
+    /* sunrise icon token — morning_routine category, src/theme/iconTokens/tokens.ts */
+    --accent: #F97316;
+    --accent-15: rgba(249,115,22,0.15);
+    --accent-10: rgba(249,115,22,0.10);
+    --accent-08: rgba(249,115,22,0.08);
+  }
+  body{ font-family:'DM Sans',sans-serif; background:#0d0d0d; }
+  h1,h2,.serif{ font-family:'Literata',serif !important; }
+  .phone{
+    width:390px; height:844px; background:var(--bg); border-radius:44px;
+    overflow:hidden; position:relative; box-shadow:0 30px 80px rgba(0,0,0,.5);
+    border:8px solid #111;
+  }
+  .notch{
+    position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    width:120px; height:26px; background:#111; border-radius:20px; z-index:50;
+  }
+  .scroll{ height:100%; overflow-y:auto; }
+  .label{
+    font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body class="p-10">
+
+<div class="max-w-[1400px] mx-auto">
+  <div class="text-white/70 mb-8 text-sm font-medium tracking-wide" style="font-family:'DM Sans',sans-serif;">
+    FullsizeTemplatePreview &mdash; hero &amp; layout redesign &middot; template: <span class="text-white">Wake-Up Movement</span> &middot; category: <span class="text-white">morning_routine</span> (accent token: <span style="color:#F97316">sunrise</span>)
+  </div>
+
+  <div class="flex gap-16 items-start justify-center flex-wrap">
+
+    <!-- ============ BEFORE ============ -->
+    <div>
+      <div class="text-white/50 text-xs font-bold tracking-widest uppercase mb-3 pl-1">Current</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="scroll">
+          <!-- old hero: radial glow, white-framed icon, 5 pills -->
+          <div style="background:linear-gradient(180deg, rgba(249,115,22,0.25) 0%, rgba(249,115,22,0.15) 45%, var(--bg) 100%); padding:56px 20px 28px;">
+            <div class="flex justify-end">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(0,0,0,0.06);">
+                <i data-lucide="x" style="width:18px;height:18px;color:var(--gray-600)"></i>
+              </div>
+            </div>
+            <div class="flex flex-col items-center mt-2">
+              <div class="relative mb-5">
+                <div style="position:absolute;inset:-14px;border-radius:999px;background:rgba(249,115,22,0.18);filter:blur(2px);"></div>
+                <div style="width:112px;height:112px;border-radius:999px;background:linear-gradient(180deg,#FFA859,#F97316);display:flex;align-items:center;justify-content:center;position:relative;">
+                  <div style="width:64px;height:64px;border-radius:8px;border:3px solid white;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:38px;">🌅</div>
+                </div>
+              </div>
+              <h1 class="serif font-bold text-center" style="font-size:30px;color:var(--gray-900);margin-bottom:16px;">Wake-Up Movement</h1>
+              <div class="flex flex-wrap justify-center gap-2.5 px-1">
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--border);color:var(--gray-800);background:white;">🕐 Daily</span>
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--accent);color:var(--accent);background:var(--accent-10);">✨ Morning Routine</span>
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--border);color:var(--gray-800);background:white;">⏱ 5-15 min</span>
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--border);color:var(--gray-800);background:white;">🌱 Simple · ~30d</span>
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--border);color:var(--gray-800);background:white;">👥 1 tracking</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:20px 20px 24px;">
+            <p class="text-center" style="font-size:18px;line-height:28px;color:var(--gray-500);">
+              Do 5 minutes of light movement (stretching, walking) immediately after waking. Gentle movement clears adenosine and increases alertness.
+            </p>
+          </div>
+
+          <div class="mx-5 rounded-2xl overflow-hidden" style="border:1px solid #B7DEC9;background:#EAF7EF;">
+            <div class="px-4 py-3 flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold" style="color:#15793C;">
+                <i data-lucide="shield-check" style="width:13px;height:13px;"></i> SCIENCE-BACKED
+              </span>
+            </div>
+            <div class="px-4 pb-4">
+              <div class="label" style="color:#15793C;margin-bottom:6px;">Why It Works</div>
+              <div class="text-sm" style="color:var(--gray-600);">Kredlow et al. (2015) &ndash; Effects of physical activity on sleep</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 px-5 pb-8 pt-4" style="background:linear-gradient(180deg, transparent, var(--bg) 30%);">
+          <div class="rounded-2xl py-4 flex items-center justify-center gap-2 font-bold text-white" style="background:#15793C;">
+            <i data-lucide="check" style="width:18px;height:18px;"></i> Added!
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-white/60 text-[13px] leading-relaxed max-w-[390px] space-y-1">
+        <div>&bull; hero ~44% of viewport before description</div>
+        <div>&bull; icon = 3 nested containers (glow / gradient circle / white-framed tile)</div>
+        <div>&bull; 5 pills, ragged 3rd row, "1 tracking" isolated</div>
+        <div>&bull; "5-15 min" is a category default, contradicts "5 minutes" below</div>
+      </div>
+    </div>
+
+    <!-- ============ AFTER ============ -->
+    <div>
+      <div class="text-white/50 text-xs font-bold tracking-widest uppercase mb-3 pl-1">Proposed</div>
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="scroll">
+          <!-- new hero: flat tint, single icon container, eyebrow, 2 pills -->
+          <div style="background:linear-gradient(180deg, var(--accent-15) 0%, var(--accent-08) 60%, var(--bg) 100%); padding:56px 20px 24px;">
+            <div class="flex justify-end">
+              <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background:rgba(0,0,0,0.06);">
+                <i data-lucide="x" style="width:18px;height:18px;color:var(--gray-600)"></i>
+              </div>
+            </div>
+            <div class="flex flex-col items-center mt-1">
+              <div style="width:72px;height:72px;border-radius:20px;background:var(--accent-15);display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:16px;">🌅</div>
+
+              <button class="label flex items-center gap-1" style="color:var(--accent);background:none;border:none;padding:0;margin-bottom:6px;">
+                Morning Routine
+                <i data-lucide="chevron-right" style="width:13px;height:13px;"></i>
+              </button>
+
+              <h1 class="serif font-bold text-center" style="font-size:28px;color:var(--gray-900);margin-bottom:14px;">Wake-Up Movement</h1>
+
+              <div class="flex justify-center gap-2.5">
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--border);color:var(--gray-800);background:white;">🕐 Daily</span>
+                <span class="flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold" style="border-color:var(--border);color:var(--gray-800);background:white;">🌱 Simple · ~30d</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:22px 20px 22px;text-align:left;">
+            <p style="font-size:17px;line-height:26px;color:var(--gray-600);">
+              Do 5 minutes of light movement (stretching, walking) immediately after waking. Gentle movement clears adenosine and increases alertness.
+            </p>
+          </div>
+
+          <div class="mx-5 rounded-2xl overflow-hidden" style="border:1px solid #B7DEC9;background:#EAF7EF;">
+            <div class="px-4 py-3 flex items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold" style="color:#15793C;">
+                <i data-lucide="shield-check" style="width:13px;height:13px;"></i> SCIENCE-BACKED
+              </span>
+            </div>
+            <div class="px-4 pb-4">
+              <div class="label" style="color:#15793C;margin-bottom:6px;">Why It Works</div>
+              <div class="text-sm" style="color:var(--gray-600);">Kredlow et al. (2015) &ndash; Effects of physical activity on sleep</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 px-5 pb-8 pt-4" style="background:linear-gradient(180deg, transparent, var(--bg) 30%);">
+          <div class="rounded-2xl py-4 flex items-center justify-center gap-2 font-bold text-white" style="background:#15793C;">
+            <i data-lucide="check" style="width:18px;height:18px;"></i> Added!
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-white/60 text-[13px] leading-relaxed max-w-[390px] space-y-1">
+        <div>&bull; hero ~30% of viewport &mdash; description starts ~150px higher</div>
+        <div>&bull; icon = one tinted rounded-square, no glow ring, no white frame</div>
+        <div>&bull; category promoted to tappable eyebrow &mdash; accent-colored, links to shelf</div>
+        <div>&bull; pills: 2 max (frequency + growth); category &amp; fictional duration removed; tracking-count pill only if &ge;25</div>
+        <div>&bull; description left-aligned, moves up</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

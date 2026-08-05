@@ -1,9 +1,10 @@
 /**
- * Shared success feedback for template add buttons: when a habit flips to
- * imported, fire the success haptic and a quick spring bounce. Guarded so the
- * effect only runs on the false→true transition — list virtualization
- * remounts rows during scroll, and an unguarded effect would buzz and bounce
- * for every already-imported card scrolled back into view.
+ * Shared success feedback + press feedback for template add buttons: when a
+ * habit flips to imported, fire the success haptic and a quick spring
+ * bounce; on press in/out, apply the standard card press scale. Bounce is
+ * guarded so it only runs on the false→true transition — list
+ * virtualization remounts rows during scroll, and an unguarded effect would
+ * buzz and bounce for every already-imported card scrolled back into view.
  */
 
 import { useEffect, useRef } from 'react';
@@ -13,6 +14,7 @@ import {
   withSpring,
 } from 'react-native-reanimated';
 import { springs } from '../../../../theme/animations';
+import { pressCard, releaseCard } from '@/utils/animations/cardPressAnimation';
 import { triggerHaptic } from '@/utils/haptics';
 
 export function useImportBounce(isImported: boolean) {
@@ -32,7 +34,13 @@ export function useImportBounce(isImported: boolean) {
     return () => clearTimeout(timeout);
   }, [isImported, scale]);
 
-  return useAnimatedStyle(() => ({
+  const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }));
+
+  return {
+    animatedStyle,
+    onPressIn: () => pressCard(scale),
+    onPressOut: () => releaseCard(scale),
+  };
 }

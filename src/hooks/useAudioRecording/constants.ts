@@ -1,37 +1,36 @@
 /**
  * Constants for audio recording
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
-import { Audio } from 'expo-av';
-
-const nativeHandsetKey = ['and', 'roid'].join('') as 'android';
+import {
+  AudioQuality,
+  IOSOutputFormat,
+  type RecordingOptions,
+} from 'expo-audio';
 
 /**
  * Recording quality preset optimized for voice notes
  * Uses AAC codec with reasonable quality settings for file size vs quality balance
  */
-export const RECORDING_OPTIONS = {
-  [nativeHandsetKey]: {
-    audioEncoder: Audio.AndroidAudioEncoder.AAC,
-    bitRate: 128_000,
-    extension: '.m4a',
-    numberOfChannels: 1,
-    outputFormat: Audio.AndroidOutputFormat.MPEG_4,
-    sampleRate: 44_100,
+export const RECORDING_OPTIONS: RecordingOptions = {
+  android: {
+    audioEncoder: 'aac',
+    outputFormat: 'mpeg4',
   },
+  bitRate: 128_000,
+  extension: '.m4a',
+  isMeteringEnabled: true,
   ios: {
-    audioQuality: Audio.IOSAudioQuality.HIGH,
-    bitRate: 128_000,
-    extension: '.m4a',
+    audioQuality: AudioQuality.HIGH,
     linearPCMBitDepth: 16,
     linearPCMIsBigEndian: false,
     linearPCMIsFloat: false,
-    numberOfChannels: 1,
-    outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
-    sampleRate: 44_100,
+    outputFormat: IOSOutputFormat.MPEG4AAC,
   },
+  numberOfChannels: 1,
+  sampleRate: 44_100,
   web: {
     bitsPerSecond: 128_000,
     mimeType: 'audio/webm',

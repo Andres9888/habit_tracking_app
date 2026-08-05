@@ -13,6 +13,7 @@
 
 import { useEffect, useCallback, useRef } from 'react';
 import {
+  type AnimatedStyle,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -21,6 +22,7 @@ import {
   Easing,
   runOnJS,
 } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 
 export interface UseToastAnimationsOptions {
   visible: boolean;
@@ -29,7 +31,7 @@ export interface UseToastAnimationsOptions {
 }
 
 export interface UseToastAnimationsResult {
-  animatedStyle: { opacity: number; transform: { translateY: number }[] };
+  animatedStyle: AnimatedStyle<ViewStyle>;
   shouldRender: boolean;
 }
 

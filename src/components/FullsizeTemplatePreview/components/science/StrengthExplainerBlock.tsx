@@ -7,9 +7,9 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { Link2 } from 'lucide-react-native';
 
-import { colors } from '@/theme';
+import { colors } from '@/theme/colors';
 import { SecLabel } from './SecLabel';
-import { scienceStyles as s } from '../../styles/science.styles';
+import { useScienceCard } from './useScienceCard';
 import { scienceResearchStyles as b } from '../../styles/scienceResearch.styles';
 
 const LEVELS = [
@@ -21,25 +21,37 @@ const LEVELS = [
 ];
 
 export function StrengthExplainerBlock() {
+  const { palette, card, glyph } = useScienceCard();
+
   return (
     <View>
-      <SecLabel glyph={<Link2 color={colors.primary[700]} size={17} strokeWidth={2} />}>
+      <SecLabel glyph={<Link2 color={glyph} size={16} strokeWidth={2} />}>
         How it becomes automatic
       </SecLabel>
-      <View style={s.card}>
-        <Text style={b.strIntro}>
-          Every day you keep the chain, this habit gets stronger — climbing five stages from
-          Starting to Automatic. Most daily habits cross into automatic around 66 days.
+      <View style={card}>
+        <Text style={[b.strIntro, { color: palette.textSecondary }]}>
+          Every day you keep the chain, this habit gets stronger — climbing five
+          stages from Starting to Automatic. Most daily habits cross into
+          automatic around 66 days.
         </Text>
         <View style={b.strTrack}>
           {LEVELS.map((lv, i) => (
             <React.Fragment key={lv.label}>
-              {i > 0 ? <View style={[b.strConnector, { backgroundColor: lv.color }]} /> : null}
+              {i > 0 ? (
+                <View style={[b.strConnector, { backgroundColor: lv.color }]} />
+              ) : null}
               <View style={b.strNode}>
-                <View style={[b.strCircle, { borderColor: lv.color }]}>
+                <View
+                  style={[
+                    b.strCircle,
+                    { backgroundColor: palette.raised, borderColor: lv.color },
+                  ]}
+                >
                   <Text style={b.strEmoji}>{lv.emoji}</Text>
                 </View>
-                <Text style={b.strLabel}>{lv.label}</Text>
+                <Text style={[b.strLabel, { color: palette.textTertiary }]}>
+                  {lv.label}
+                </Text>
               </View>
             </React.Fragment>
           ))}

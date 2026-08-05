@@ -7,16 +7,19 @@ import { useReducedMotion } from 'react-native-reanimated';
 import { ChainDayItem } from '../HabitChainVisualizer/ChainDayItem';
 import type { CompletionIcon, DayShape } from '../HabitChainVisualizer/types';
 
-/** A representative span: a four-day streak building strength, then rest days. */
+/** A full Monday-start week so the weekday letters in CalendarPreviewLegend
+ *  line up: strength climbs, dips on the one missed day, then recovers to its
+ *  peak on the last day — which is what the legend's caption describes. */
 export const PREVIEW_STRENGTH_PERCENT = 92;
 
 const DAYS = [
   { completed: true, strength: 35 },
-  { completed: true, strength: 55 },
-  { completed: true, strength: 75 },
+  { completed: true, strength: 50 },
+  { completed: true, strength: 64 },
+  { completed: true, strength: 76 },
+  { completed: false, strength: 68 },
+  { completed: true, strength: 80 },
   { completed: true, strength: PREVIEW_STRENGTH_PERCENT },
-  { completed: false, strength: 0 },
-  { completed: false, strength: 0 },
 ];
 
 interface Props {

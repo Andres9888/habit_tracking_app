@@ -1,11 +1,11 @@
 /**
  * Hook for stopping and canceling recordings
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
 import { useCallback, RefObject } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioRecorder } from 'expo-audio';
 import type { RecordingStatus } from './types';
 
 type SetStatus = React.Dispatch<React.SetStateAction<RecordingStatus>>;
@@ -15,7 +15,7 @@ interface UseStopRecordingDeps {
   resetAudioMode: () => Promise<void>;
   durationRef: RefObject<number>;
   resetRefs: () => void;
-  recordingRef: RefObject<Audio.Recording | null>;
+  recordingRef: RefObject<AudioRecorder | null>;
   onRecordingComplete?: (uri: string, durationSeconds: number) => void;
   onError?: (error: Error) => void;
 }
@@ -37,13 +37,13 @@ export function useStopRecording(deps: UseStopRecordingDeps) {
     try {
       setStatus((prev) => ({ ...prev, state: 'stopping' }));
 
-      await recordingRef.current.stopAndUnloadAsync();
+      await recordingRef.current.stop();
       await resetAudioMode();
 
-      const uri = recordingRef.current.getURI();
+      const uri = recordingRef.current.uri;
       const finalDuration = durationRef.current ?? 0;
 
-      (recordingRef as { current: Audio.Recording | null }).current = null;
+      (recordingRef as { current: AudioRecorder | null }).current = null;
 
       setStatus((prev) => ({ ...prev, recordingUri: uri, state: 'stopped' }));
 
@@ -73,14 +73,14 @@ export function useStopRecording(deps: UseStopRecordingDeps) {
 
     try {
       try {
-        await recordingRef.current.stopAndUnloadAsync();
+        await recordingRef.current.stop();
       } catch {
         // Recording might already be stopped
       }
 
       await resetAudioMode();
 
-      (recordingRef as { current: Audio.Recording | null }).current = null;
+      (recordingRef as { current: AudioRecorder | null }).current = null;
       resetRefs();
 
       setStatus((prev) => ({

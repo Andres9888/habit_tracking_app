@@ -41,7 +41,11 @@ export function getGoalContextCopy(currentStreak: number, selected: number) {
   };
 }
 
-export function GoalContextLine({ currentStreak, habitColor, selected }: GoalContextLineProps) {
+export function GoalContextLine({
+  currentStreak,
+  habitColor,
+  selected,
+}: GoalContextLineProps) {
   const { colors } = useThemeColors();
   const copy = getGoalContextCopy(currentStreak, selected);
   const accent = copy.warn ? colors.status.warning : habitColor;
@@ -59,8 +63,19 @@ export function GoalContextLine({ currentStreak, habitColor, selected }: GoalCon
         paddingVertical: spacing.sm + 2,
       }}
     >
-      <Text style={{ ...typography.bodySmall, color: colors.text.secondary, lineHeight: 20 }}>
-        <Text style={{ color: colors.text.primary, fontWeight: fontWeights.semibold }}>
+      <Text
+        style={{
+          ...typography.bodySmall,
+          color: colors.text.secondary,
+          lineHeight: 20,
+        }}
+      >
+        <Text
+          style={{
+            color: colors.text.primary,
+            fontWeight: fontWeights.semibold,
+          }}
+        >
           {copy.emphasis}
         </Text>{' '}
         {copy.detail}

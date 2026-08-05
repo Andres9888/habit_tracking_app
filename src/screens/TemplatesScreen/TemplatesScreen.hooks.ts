@@ -39,8 +39,12 @@ export function useTemplatesScreenState({
   const [previewInitialAnchor, setPreviewInitialAnchor] =
     useState<TemplatePreviewAnchor>('top');
   const [showCustomizeModal, setShowCustomizeModal] = useState(false);
-  const { importedTemplateIds, setImportedTemplateIds } =
-    useImportedTemplateIdsSync(initialImportedIds);
+  const {
+    frozenImportedIds,
+    importedTemplateIds,
+    isImportedStateReady,
+    setImportedTemplateIds,
+  } = useImportedTemplateIdsSync(initialImportedIds);
   const feedback = useFeedbackState();
   const [importingTemplateId, setImportingTemplateId] =
     useState<Id<'templates'> | null>(null);
@@ -69,9 +73,11 @@ export function useTemplatesScreenState({
     expandedCategories,
     ...feedback,
     flatListRef,
+    frozenImportedIds,
     hasActiveFilters,
     importedTemplateIds,
     importingTemplateId,
+    isImportedStateReady,
     isSearchActive,
     isSearching,
     isSeeding,

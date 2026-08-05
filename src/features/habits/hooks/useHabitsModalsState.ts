@@ -47,7 +47,7 @@ export function useHabitsModalsState({
     settings,
     celebrationsEnabled,
     reduceMotionPreference,
-  } = useHabitsSettings();
+  } = useHabitsSettings(visibility.isSettingsOpen);
 
   const {
     pauseHabit,

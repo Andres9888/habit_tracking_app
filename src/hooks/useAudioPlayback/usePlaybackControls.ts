@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioPlayer } from 'expo-audio';
 import type { PlaybackState, PlaybackStatus } from './types';
 
 export interface UsePlaybackControlsOptions {
@@ -13,7 +13,7 @@ export interface UsePlaybackControlsOptions {
 }
 
 export interface UsePlaybackControlsDeps {
-  soundRef: React.MutableRefObject<Audio.Sound | null>;
+  soundRef: React.MutableRefObject<AudioPlayer | null>;
   currentState: PlaybackState;
   setStatus: React.Dispatch<React.SetStateAction<PlaybackStatus>>;
 }
@@ -44,9 +44,9 @@ export function usePlaybackControls(
     try {
       // If finished, replay from beginning
       if (currentState === 'finished') {
-        await soundRef.current.setPositionAsync(0);
+        await soundRef.current.seekTo(0);
       }
-      await soundRef.current.playAsync();
+      soundRef.current.play();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to play';
@@ -62,7 +62,7 @@ export function usePlaybackControls(
     if (!soundRef.current) return;
 
     try {
-      await soundRef.current.pauseAsync();
+      soundRef.current.pause();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to pause';
@@ -85,8 +85,8 @@ export function usePlaybackControls(
     if (!soundRef.current) return;
 
     try {
-      await soundRef.current.setPositionAsync(0);
-      await soundRef.current.playAsync();
+      await soundRef.current.seekTo(0);
+      soundRef.current.play();
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to replay';

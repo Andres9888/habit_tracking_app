@@ -3,7 +3,7 @@
  * habit for today is complete. Quiet FadeIn plus a single shimmer sweep, never
  * a modal or burst (honors the premium-not-cheap, calm-fade invariant). Mounts
  * only on the all-done transition and unmounts cleanly when a habit is undone,
- * so it fires once per completed day. Mirrors the MilestoneBeat grammar.
+ * so it fires once per completed day. Shares its grammar with CompletionToast.
  */
 import { memo } from 'react';
 import { View } from 'react-native';

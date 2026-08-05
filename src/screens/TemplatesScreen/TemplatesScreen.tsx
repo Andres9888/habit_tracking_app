@@ -6,7 +6,6 @@
 
 import { useCallback, useMemo } from 'react';
 import { ScreenErrorBoundary } from '../../components/ErrorBoundary';
-import { useDeferredMount } from '../../hooks/useDeferredMount';
 import type { Doc, Id } from '../../../convex/_generated/dataModel';
 import { TemplatesEmptyState } from './components/TemplatesEmptyState';
 import { TemplatesScreenModals, TemplatesLoadingState } from './components';
@@ -28,7 +27,6 @@ function TemplatesScreenContent({
   onViewHabit,
 }: TemplatesScreenContentProps) {
   const { data, handlers, packConfirm, state } = useTemplatesScreenProps();
-  const ready = useDeferredMount();
 
   const handleDismissFeedback = useCallback(() => {
     state.setShowToast(false);
@@ -93,10 +91,15 @@ function TemplatesScreenContent({
     void packConfirm.handleConfirm();
   };
 
-  // Hold the loading state through the modal open animation; the heavy catalog
-  // tree mounts one frame after interactions settle (warm cache still fast).
-  if (!ready || (data.isLoading && !data.allTemplates?.length)) {
-    return <TemplatesLoadingState />;
+  // Do not paint the catalog until both inputs that determine card placement
+  // are ready. Rendering warm templates against an unresolved imported-ID set
+  // briefly puts every card in its category, then moves added cards after the
+  // query resolves — the visible first-open shuffle.
+  if (
+    (data.isLoading && !data.allTemplates?.length) ||
+    !state.isImportedStateReady
+  ) {
+    return <TemplatesLoadingState onClose={() => onCloseLibrary?.()} />;
   }
 
   if (!data.isLoading && !data.allTemplates?.length) {
@@ -129,6 +132,7 @@ function TemplatesScreenContent({
           onViewHabit={handleViewHabit}
         />
       }
+      frozenImportedIds={state.frozenImportedIds}
       importedTemplateIds={state.importedTemplateIds}
       importingTemplateId={state.importingTemplateId}
       modals={

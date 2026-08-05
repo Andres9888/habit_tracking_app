@@ -10,7 +10,9 @@ const OPTIONS: {
   label: string;
   Icon: typeof Volume1;
 }[] = [
-  { key: 'chime', label: 'Ding', Icon: Volume1 },
+  // Label must match SOUND_LABELS in SoundHapticsRows — the row's value hint
+  // and this picker name the same option.
+  { key: 'chime', label: 'Chime', Icon: Volume1 },
   { key: 'pop', label: 'Pop', Icon: Droplet },
   { key: 'success', label: 'Rise', Icon: TrendingUp },
 ];

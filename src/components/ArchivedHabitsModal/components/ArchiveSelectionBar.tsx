@@ -89,10 +89,10 @@ function ArchiveSelectionBarComponent({
 
 const s = StyleSheet.create({
   btn: { alignItems: 'center', borderRadius: borderRadius.xl, height: 44, justifyContent: 'center', width: 44 },
-  capsuleBorder: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
+  capsuleBorder: { ...StyleSheet.absoluteFill, borderRadius: CAPSULE_RADIUS, borderWidth: 1 },
   count: { ...typography.caption, flex: 1, fontWeight: fontWeights.semibold, paddingHorizontal: 12, textAlign: 'center' },
   disabled: { opacity: 0.35 },
-  glassBg: { ...StyleSheet.absoluteFillObject, borderRadius: CAPSULE_RADIUS, overflow: 'hidden' },
+  glassBg: { ...StyleSheet.absoluteFill, borderRadius: CAPSULE_RADIUS, overflow: 'hidden' },
   row: { alignItems: 'center', flexDirection: 'row', paddingHorizontal: 16, paddingVertical: 8 },
   wrapper: { marginHorizontal: 20, overflow: 'visible' },
 });

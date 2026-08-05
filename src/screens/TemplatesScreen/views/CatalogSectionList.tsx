@@ -4,7 +4,7 @@
  * followed by full-width HabitTemplateCard rows (matching the rest of the app).
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, type ReactElement } from 'react';
 import type { SectionListRenderItem } from 'react-native';
 import { SectionList, StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -18,6 +18,8 @@ interface CatalogSectionListProps {
   groups: CategoryGroup[];
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  /** Rendered when a search clears every section. */
+  listEmptyComponent?: ReactElement;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
@@ -35,6 +37,7 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
     groups,
     importedTemplateIds,
     importingTemplateId,
+    listEmptyComponent,
     onImport,
     onPreview,
   } = p;
@@ -86,6 +89,7 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       initialNumToRender={6}
       keyboardDismissMode='on-drag'
       keyExtractor={(item) => item._id}
+      ListEmptyComponent={listEmptyComponent}
       maxToRenderPerBatch={6}
       removeClippedSubviews
       renderItem={renderItem}

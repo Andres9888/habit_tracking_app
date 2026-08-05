@@ -1,7 +1,8 @@
-/** AppearanceSection — Look & Feel: calendar-look entry, theme, growth, density */
+/** AppearanceSection — Look & Feel: calendar-look entry, theme, density.
+ *  "Default growth icons" was removed per the handoff README's removal list;
+ *  the emoji preset is still editable per-habit via AdvancedOptions. */
 import { CalendarDays } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
-import { GrowthIconsSettingsRow } from '../GrowthIconsSettingsRow';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
 import { ThemeSettingsRow } from '../ThemeSettingsRow';
@@ -30,7 +31,6 @@ export function AppearanceSection(p: AppearanceSectionProps) {
         selected={p.darkModePreference}
         onSelect={p.onChangeDarkModePreference}
       />
-      <GrowthIconsSettingsRow />
       <AppearanceDisplayRows
         compactView={p.compactView}
         onChangeCompactView={p.onChangeCompactView}

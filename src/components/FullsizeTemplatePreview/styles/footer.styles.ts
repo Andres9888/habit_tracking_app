@@ -1,11 +1,11 @@
 /**
  * Footer styles for FullsizeTemplatePreview
+ *
+ * Layout only — CTA colors come from `useDetailPalette()` at the call site.
  */
 
 import { StyleSheet } from 'react-native';
 
-import { colors } from '@/theme/colors';
-import { shadows, borderRadius } from '../../../theme/spacing';
 import {
   typography,
   fontFamilies,
@@ -18,7 +18,6 @@ export const footerStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   customizeLinkText: {
-    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
     fontSize: typography.caption.fontSize,
     fontWeight: fontWeights.semibold,
@@ -26,7 +25,7 @@ export const footerStyles = StyleSheet.create({
   footer: {
     gap: 12,
     paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingTop: 14,
   },
   footerGradient: {
     paddingTop: 24,
@@ -38,12 +37,14 @@ export const footerStyles = StyleSheet.create({
     right: 0,
   },
   importButton: {
-    ...shadows.modal,
     alignItems: 'center',
-    borderRadius: borderRadius.large,
+    borderRadius: 999,
+    elevation: 6,
     height: 56,
     justifyContent: 'center',
-    shadowOpacity: 0.15,
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.28,
+    shadowRadius: 14,
   },
   importButtonContent: {
     alignItems: 'center',
@@ -51,27 +52,21 @@ export const footerStyles = StyleSheet.create({
     gap: 8,
   },
   importButtonText: {
-    color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
-    fontSize: typography.body.fontSize,
+    fontSize: 17,
     fontWeight: fontWeights.bold,
   },
   successButton: {
-    ...shadows.modal,
     alignItems: 'center',
-    backgroundColor: colors.primary[400],
-    borderRadius: borderRadius.large,
+    borderRadius: 999,
     flexDirection: 'row',
     gap: 10,
     height: 56,
     justifyContent: 'center',
-    shadowColor: colors.primary[700],
-    shadowOpacity: 0.3,
   },
   successButtonText: {
-    color: colors.text.inverse,
     fontFamily: fontFamilies.primary.text,
-    fontSize: typography.body.fontSize,
+    fontSize: 17,
     fontWeight: fontWeights.bold,
   },
 });

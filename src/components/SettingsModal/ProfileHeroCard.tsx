@@ -1,4 +1,6 @@
-/** ProfileHeroCard — identity, streak headline, and weekly-consistency ring */
+/** ProfileHeroCard — spec 4a profile row: avatar, name, edit hint, chevron.
+ *  Streak headline, stat tiles, and the weekly ring were intentionally removed
+ *  from Settings (handoff README: they belong on a dedicated Stats screen). */
 import { View } from 'react-native';
 import { ChevronRight } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
@@ -6,13 +8,10 @@ import { airy } from '@/theme/airyScale';
 import { AnimatedPressable } from '../ui/AnimatedPressable';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { getProfileCardShellStyle } from './profileCardShellStyle';
-import { ProfileStatsRow } from './ProfileStatsRow';
-import { WeeklyCompletionRing } from './WeeklyCompletionRing';
 import { ProfileHeroAvatar } from './components/ProfileHeroAvatar';
 import { ProfileHeroIdentity } from './components/ProfileHeroIdentity';
 import { useProfileDisplayImage } from './useProfileDisplayImage';
 import { useProfileDisplayName } from './useProfileDisplayName';
-import { useProfileStats } from './useProfileStats';
 
 interface ProfileHeroCardProps {
   isPremium: boolean;
@@ -22,11 +21,11 @@ interface ProfileHeroCardProps {
 export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
   const { colors: themeColors, isDark } = useThemeColors();
   const { initial, name } = useProfileDisplayName();
-  const { isLoading: statsLoading, stats } = useProfileStats();
   const { imageUrl } = useProfileDisplayImage();
 
   return (
     <AnimatedPressable
+      accessibilityHint='Opens your profile and account settings'
       accessibilityLabel='Account settings'
       accessibilityRole='button'
       animationConfig={{ hapticStyle: 'light' }}
@@ -39,33 +38,18 @@ export function ProfileHeroCard({ isPremium, onPress }: ProfileHeroCardProps) {
           { borderRadius: airy.cardRadius },
         ]}
       >
-        <View className='absolute right-3 top-3'>
-          <ChevronRight
-            color={themeColors.text.tertiary}
-            size={iconSizes.medium}
-          />
-        </View>
-        <View
-          className='flex-row items-center px-4 pb-3 pt-4'
-          style={{ gap: 16 }}
-        >
+        <View className='flex-row items-center px-4 py-4' style={{ gap: 13 }}>
           <ProfileHeroAvatar
             imageUrl={imageUrl}
             initial={initial}
             themeColors={themeColors}
           />
-          <ProfileHeroIdentity
-            currentStreak={stats.currentStreak}
-            isPremium={isPremium}
-            name={name}
+          <ProfileHeroIdentity isPremium={isPremium} name={name} />
+          <ChevronRight
+            color={themeColors.text.tertiary}
+            size={iconSizes.small}
           />
-          {stats.activeHabits > 0 ? (
-            <View style={{ marginRight: 14 }}>
-              <WeeklyCompletionRing rate={stats.weeklyCompletionRate} />
-            </View>
-          ) : null}
         </View>
-        <ProfileStatsRow isLoading={statsLoading} stats={stats} />
       </View>
     </AnimatedPressable>
   );

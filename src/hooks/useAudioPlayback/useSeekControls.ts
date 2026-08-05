@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioPlayer } from 'expo-audio';
 import type { PlaybackStatus } from './types';
 import { DEFAULT_SEEK_STEP_SECONDS } from './constants';
 
@@ -14,7 +14,7 @@ export interface UseSeekControlsOptions {
 }
 
 export interface UseSeekControlsDeps {
-  soundRef: React.MutableRefObject<Audio.Sound | null>;
+  soundRef: React.MutableRefObject<AudioPlayer | null>;
   durationSeconds: number;
   positionSeconds: number;
   setStatus: React.Dispatch<React.SetStateAction<PlaybackStatus>>;
@@ -46,10 +46,10 @@ export function useSeekControls(
 
       try {
         const clampedProgress = Math.min(1, Math.max(0, progress));
-        const positionMillis = clampedProgress * durationSeconds * 1000;
+        const position = clampedProgress * durationSeconds;
 
         setStatus((prev) => ({ ...prev, state: 'seeking' }));
-        await soundRef.current.setPositionAsync(positionMillis);
+        await soundRef.current.seekTo(position);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to seek';
@@ -73,10 +73,8 @@ export function useSeekControls(
 
       try {
         const clampedSeconds = Math.min(durationSeconds, Math.max(0, seconds));
-        const positionMillis = clampedSeconds * 1000;
-
         setStatus((prev) => ({ ...prev, state: 'seeking' }));
-        await soundRef.current.setPositionAsync(positionMillis);
+        await soundRef.current.seekTo(clampedSeconds);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : 'Failed to seek';

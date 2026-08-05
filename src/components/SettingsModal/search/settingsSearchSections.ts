@@ -12,26 +12,16 @@ export type SettingsSectionKey =
 export const SETTINGS_SEARCH_SECTIONS: Record<SettingsSectionKey, string[]> = {
   // The calendar-look knobs (shape / fill / connections / completion icon) now
   // live on the Calendar look sub-page; 'Calendar look' is their search entry.
-  appearance: [
-    'Theme',
-    'Calendar look',
-    'Default growth icons',
-    'Compact habit cards',
-  ],
-  // Habits now also owns the data rows (Archived / Export) that used to live in
-  // a separate Data & Privacy section. Sticky header moved to Calendar look.
-  behavior: [
-    'Sort order',
-    'Completion sound',
-    'Archived habits',
-    'Export habits data',
-  ],
-  reminders: ['Streak Reminders'],
+  appearance: ['Theme', 'Calendar look', 'Compact habit cards'],
+  // Sounds & haptics live under Reminders; Habits owns sorting + archive +
+  // export (mock 3B folded the one-row Privacy & Security card in here).
+  behavior: ['Sort order', 'Archived habits', 'Export my data'],
+  reminders: ['Daily reminder', 'Sounds & haptics'],
   support: [
     'Rate Chain Day',
-    'Share with Friends',
+    'Share with a friend',
+    "What's new",
     'Send Feedback',
-    "What's New",
   ],
 };
 

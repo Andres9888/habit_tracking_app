@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioPlayer } from 'expo-audio';
 import type { PlaybackState, PlaybackStatus } from './types';
 
 export interface UseResumeFromInterruptionOptions {
@@ -14,7 +14,7 @@ export interface UseResumeFromInterruptionOptions {
 }
 
 export interface UseResumeFromInterruptionDeps {
-  soundRef: React.MutableRefObject<Audio.Sound | null>;
+  soundRef: React.MutableRefObject<AudioPlayer | null>;
   wasPlayingBeforeInterruptionRef: React.MutableRefObject<boolean>;
   currentState: PlaybackState;
   setStatus: React.Dispatch<React.SetStateAction<PlaybackStatus>>;
@@ -54,7 +54,7 @@ export function useResumeFromInterruption(
       await configureAudioMode();
 
       // Resume playback
-      await soundRef.current.playAsync();
+      soundRef.current.play();
 
       // Clear interruption state
       wasPlayingBeforeInterruptionRef.current = false;

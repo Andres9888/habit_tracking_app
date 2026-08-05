@@ -223,7 +223,8 @@ const applicationTables = {
     woopWish: v.optional(v.string()),
   })
     .index('by_strengthUpdatedAt', ['strengthUpdatedAt'])
-    .index('by_userId', ['userId']),
+    .index('by_userId', ['userId'])
+    .index('by_userId_and_archived', ['userId', 'archived']),
 
   deletedHabits: defineTable({
     createdAt: v.number(),
@@ -423,7 +424,8 @@ const applicationTables = {
     name: v.optional(v.string()), // Legacy field for anonymous users
   })
     .index('by_clerk_id', ['clerkId'])
-    .index('by_email', ['email']),
+    .index('by_email', ['email'])
+    .index('by_profile_image_storage_id', ['profileImageStorageId']),
 
   // Server-side ownership records for uploaded blobs. Convex storage IDs are
   // not inherently user-scoped, so every app-managed upload must be claimed
@@ -439,6 +441,12 @@ const applicationTables = {
   userSettings: defineTable({
     // New settings from Figma design
     appIcon: v.optional(v.string()),
+
+    // Privacy & Security: "App lock" preference. Retained for the future
+    // biometric gate; the Settings row was pulled because nothing enforced it.
+    // No client currently reads or writes this — do not treat it as a security
+    // control until expo-local-authentication and a foreground gate land.
+    appLock: v.optional(v.boolean()),
 
     catTheme: v.boolean(),
 

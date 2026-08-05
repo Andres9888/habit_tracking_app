@@ -61,7 +61,7 @@ export function ConfettiAnimation({
 
 const localStyles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     pointerEvents: 'none',
   },
 });

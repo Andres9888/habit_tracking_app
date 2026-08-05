@@ -16,6 +16,13 @@ const DEFINITIONS: Record<QueryCacheEntryName, CacheEntryDefinition> = {
     storage: 'secure',
     version: 1,
   },
+  // Habit-scoped year-to-date history behind the detail screen's insight
+  // cards. Keyed by habit ID like `habits.get`, so no cross-ID latest fallback.
+  'habits.getHabitTracking': {
+    name: 'habits.getHabitTracking',
+    storage: 'secure',
+    version: 1,
+  },
   'habits.getTracking': {
     latestFallback: true,
     latestUsable: isWindowEndRecent,

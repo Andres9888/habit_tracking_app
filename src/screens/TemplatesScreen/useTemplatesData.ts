@@ -80,7 +80,8 @@ export function useTemplatesData() {
   );
 
   const initialImportedIds = useMemo(
-    () => new Set(Array.isArray(importedIds) ? importedIds.map(String) : []),
+    () =>
+      Array.isArray(importedIds) ? new Set(importedIds.map(String)) : undefined,
     [importedIds]
   );
 

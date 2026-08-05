@@ -1,6 +1,6 @@
 /**
  * useAudioPlayback Hook - Main orchestrator
- * Audio playback integration using expo-av for Voice Notes feature.
+ * Audio playback integration using expo-audio for Voice Notes feature.
  */
 
 import { useEffect } from 'react';
@@ -26,7 +26,7 @@ export function useAudioPlayback(
   useEffect(() => {
     const sound = hooks.soundRef.current;
     return () => {
-      sound?.unloadAsync().catch(() => {});
+      sound?.remove();
     };
   }, [hooks.soundRef]);
 

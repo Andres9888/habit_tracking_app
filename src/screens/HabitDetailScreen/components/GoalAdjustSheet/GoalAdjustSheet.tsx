@@ -29,10 +29,12 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
   const { currentGoal, currentStreak, habitColor, visible, onClose } = props;
   const { colors } = useThemeColors();
   const insets = useSafeAreaInsets();
-  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss({
-    visible,
-    onClose,
-  });
+  const { animateOut, backdropStyle, panGesture, sheetStyle } = useSwipeDismiss(
+    {
+      visible,
+      onClose,
+    }
+  );
   // Route every close (save, remove, swipe, backdrop) through animateOut so the
   // sheet slides away instead of snapping shut.
   const goal = useGoalAdjust({ ...props, onClose: animateOut });
@@ -55,7 +57,11 @@ export function GoalAdjustSheet(props: GoalAdjustSheetProps) {
             className='absolute bottom-0 left-0 right-0 rounded-t-3xl px-5 pt-3'
             style={[
               sheetStyle,
-              { backgroundColor: colors.card, paddingBottom: insets.bottom + 28, ...shadows.modal },
+              {
+                backgroundColor: colors.card,
+                paddingBottom: insets.bottom + 28,
+                ...shadows.modal,
+              },
             ]}
           >
             <GoalAdjustSheetBody

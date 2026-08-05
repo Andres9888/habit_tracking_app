@@ -16,14 +16,12 @@ export function getScreenKey(
 export function shouldShowLoadingScreen({
   isCacheHydrated,
   isLoaded,
-  isPremiumLoading,
   isSettingsReady,
   isSignedIn,
   onboardingComplete,
 }: {
   isCacheHydrated: boolean;
   isLoaded: boolean;
-  isPremiumLoading: boolean;
   isSettingsReady: boolean;
   isSignedIn: boolean | undefined;
   onboardingComplete: boolean | null;
@@ -33,7 +31,6 @@ export function shouldShowLoadingScreen({
     !isLoaded ||
     !isCacheHydrated ||
     (isSignedIn === true && onboardingComplete === null) ||
-    (signedInComplete && !isSettingsReady) ||
-    (FEATURE_FLAGS.PAYWALL_ENABLED && signedInComplete && isPremiumLoading)
+    (signedInComplete && !isSettingsReady)
   );
 }

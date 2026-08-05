@@ -1,12 +1,21 @@
-import type { ReactNode } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 
 import HabitsApp from '../../features/habits/HabitsApp';
-import { OnboardingFlowV2 } from '../../screens/onboarding-v2';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 import { enterEasing } from '../../theme/animations';
-import { RevenueCatPaywall } from '../RevenueCatPaywall';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
+
+const OnboardingFlowV2 = lazy(() =>
+  import('../../screens/onboarding-v2').then((module) => ({
+    default: module.OnboardingFlowV2,
+  }))
+);
+const RevenueCatPaywall = lazy(() =>
+  import('../RevenueCatPaywall').then((module) => ({
+    default: module.RevenueCatPaywall,
+  }))
+);
 
 export type AuthScreenKey = 'welcome' | 'onboarding' | 'paywall' | 'app';
 
@@ -43,31 +52,42 @@ export function AuthGateContent({
   onPaywallDismiss: () => void;
   screenKey: AuthScreenKey;
 }) {
-  if (screenKey === 'welcome') {
-    return (
-      <ScreenShell screenKey='welcome'>
-        <WelcomeScreen />
-      </ScreenShell>
-    );
+  let content: ReactNode;
+
+  switch (screenKey) {
+    case 'welcome': {
+      content = (
+        <ScreenShell screenKey='welcome'>
+          <WelcomeScreen />
+        </ScreenShell>
+      );
+      break;
+    }
+    case 'onboarding': {
+      content = (
+        <ScreenShell screenKey='onboarding'>
+          <OnboardingFlowV2 onComplete={markComplete} />
+        </ScreenShell>
+      );
+      break;
+    }
+    case 'paywall': {
+      content = (
+        <ScreenShell screenKey='paywall'>
+          <BrandedLoadingScreen />
+          <RevenueCatPaywall visible onClose={onPaywallDismiss} />
+        </ScreenShell>
+      );
+      break;
+    }
+    default: {
+      content = (
+        <ScreenShell screenKey='app' withExit={false}>
+          <HabitsApp />
+        </ScreenShell>
+      );
+    }
   }
-  if (screenKey === 'onboarding') {
-    return (
-      <ScreenShell screenKey='onboarding'>
-        <OnboardingFlowV2 onComplete={markComplete} />
-      </ScreenShell>
-    );
-  }
-  if (screenKey === 'paywall') {
-    return (
-      <ScreenShell screenKey='paywall'>
-        <BrandedLoadingScreen />
-        <RevenueCatPaywall visible onClose={onPaywallDismiss} />
-      </ScreenShell>
-    );
-  }
-  return (
-    <ScreenShell screenKey='app' withExit={false}>
-      <HabitsApp />
-    </ScreenShell>
-  );
+
+  return <Suspense fallback={<BrandedLoadingScreen />}>{content}</Suspense>;
 }

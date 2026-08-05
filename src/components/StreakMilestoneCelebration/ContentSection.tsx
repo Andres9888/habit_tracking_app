@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import type { StreakMilestone } from './constants';
@@ -13,8 +13,8 @@ interface ContentSectionProps {
   streakDays: number;
   habitName: string;
   habitEmoji: string;
-  titleAnimatedStyle: AnimatedStyle;
-  contentAnimatedStyle: AnimatedStyle;
+  titleAnimatedStyle: AnimatedStyle<ViewStyle>;
+  contentAnimatedStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function ContentSection({

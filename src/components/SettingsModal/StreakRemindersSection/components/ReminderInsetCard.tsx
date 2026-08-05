@@ -32,8 +32,10 @@ export function ReminderInsetCard(p: ReminderInsetCardProps) {
       pointerEvents={p.enabled ? 'auto' : 'none'}
       style={p.insetExpandStyle}
     >
+      {/* Flush with the row padding, not indented under the icon column — the
+          "Remind me at" row has no icon tile to align to. */}
       <View
-        className='pb-2.5 pl-14 pr-2.5 pt-2'
+        className='px-4 pb-2.5 pt-2'
         style={{ backgroundColor: p.insetBackground }}
       >
         <View
@@ -41,7 +43,7 @@ export function ReminderInsetCard(p: ReminderInsetCardProps) {
           style={{
             backgroundColor: p.insetCardBackground,
             borderColor: p.insetBorder,
-            borderWidth: 0,
+            borderWidth: 1,
           }}
           onLayout={p.onInsetLayout}
         >

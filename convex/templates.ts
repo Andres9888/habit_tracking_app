@@ -3,7 +3,6 @@ export {
   getImportedTemplateIds,
   getPopular,
   getTemplateCount,
-  getUsageStats,
   list,
   listTemplateNames,
 } from './templates/queries';

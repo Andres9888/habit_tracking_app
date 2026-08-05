@@ -14,6 +14,8 @@ export interface SettingsRowProps {
   rightAccessory?: ReactNode;
   /** Adds a chevron beside string values for inline expandable info rows. */
   showChevron?: boolean;
+  /** Overrides the label tint — destructive rows render their label in red. */
+  labelColor?: string;
   /** Override haptic: toggle→Medium, selection→Selection, navigation→Light */
   hapticStyle?: 'light' | 'medium' | 'heavy' | 'selection';
 }

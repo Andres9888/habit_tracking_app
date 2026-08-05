@@ -1,5 +1,7 @@
-/** AccountDangerCard — quiet Sign Out card + separated destructive Delete account danger zone */
-import { View } from 'react-native';
+/** AccountDangerCard — the one card that holds every destructive action.
+ *  Both rows carry the red token pair (settings.signOut / settings.deleteAccount)
+ *  plus a red label, and nothing safe is ever mixed in beside them, so "this
+ *  costs you something" reads before the words do. */
 import { LogOut, Trash2 } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -23,25 +25,24 @@ export function AccountDangerCard({
   const size = iconSizes.small;
 
   return (
-    <View className='gap-4'>
-      <AccountGroupCard>
-        <SettingsRow
-          icon={<LogOut color={settings.neutral.icon} size={size} />}
-          iconBackgroundColor={settings.neutral.bg}
-          label={isSigningOut ? 'Signing out…' : 'Sign Out'}
-          type='navigation'
-          onPress={isSigningOut ? undefined : onSignOut}
-        />
-      </AccountGroupCard>
-      <AccountGroupCard title='Danger zone'>
-        <SettingsRow
-          icon={<Trash2 color={settings.deleteAccount.icon} size={size} />}
-          iconBackgroundColor={settings.deleteAccount.bg}
-          label={isDeletingAccount ? 'Deleting account…' : 'Delete account'}
-          type='navigation'
-          onPress={isDeletingAccount ? undefined : onDeleteAccount}
-        />
-      </AccountGroupCard>
-    </View>
+    <AccountGroupCard>
+      <SettingsRow
+        icon={<LogOut color={settings.signOut.icon} size={size} />}
+        iconBackgroundColor={settings.signOut.bg}
+        label={isSigningOut ? 'Signing out…' : 'Sign out'}
+        labelColor={settings.signOut.icon}
+        type='navigation'
+        onPress={isSigningOut ? undefined : onSignOut}
+      />
+      <SettingsRow
+        icon={<Trash2 color={settings.deleteAccount.icon} size={size} />}
+        iconBackgroundColor={settings.deleteAccount.bg}
+        label={isDeletingAccount ? 'Deleting account…' : 'Delete account'}
+        labelColor={settings.deleteAccount.icon}
+        subtitle='Permanently removes all your data'
+        type='navigation'
+        onPress={isDeletingAccount ? undefined : onDeleteAccount}
+      />
+    </AccountGroupCard>
   );
 }

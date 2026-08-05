@@ -7,7 +7,7 @@ import { milestoneMessage } from '../../constants/milestones';
 /**
  * Get streak message based on streak count. On round-number milestone streaks
  * (7/30/100/365) returns the shared milestone copy so the today-screen toast
- * echoes the detail-screen MilestoneBeat.
+ * and DayCompleteBeat read the same.
  */
 export function getStreakMessage(streak: number): string {
   const milestone = milestoneMessage(streak);

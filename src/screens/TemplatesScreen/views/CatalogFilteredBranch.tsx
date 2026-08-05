@@ -2,6 +2,7 @@
  * CatalogFilteredBranch — keyed filtered list with enter/exit on category switch.
  */
 
+import type { ReactElement } from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -16,6 +17,7 @@ import { CatalogFilteredList } from './CatalogFilteredList';
 interface CatalogFilteredBranchProps {
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  listEmptyComponent?: ReactElement;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
   selectedCategoryId: string;
@@ -41,6 +43,7 @@ export function CatalogFilteredBranch(p: CatalogFilteredBranchProps) {
       <CatalogFilteredList
         importedTemplateIds={p.importedTemplateIds}
         importingTemplateId={p.importingTemplateId}
+        listEmptyComponent={p.listEmptyComponent}
         templates={p.templates}
         onImport={p.onImport}
         onPreview={p.onPreview}

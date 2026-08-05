@@ -3,14 +3,14 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import type { StreakMilestone } from './constants';
 
 interface BadgeSectionProps {
   milestone: StreakMilestone;
-  animatedStyle: AnimatedStyle;
+  animatedStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function BadgeSection({ milestone, animatedStyle }: BadgeSectionProps) {

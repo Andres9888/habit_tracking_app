@@ -4,14 +4,14 @@
  */
 
 import React from 'react';
-import { Linking, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Quote } from 'lucide-react-native';
 
-import { colors } from '@/theme';
 import { triggerHaptic } from '@/utils/haptics';
+import { openExternalLink } from '@/utils/openExternalLink';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { SecLabel } from './SecLabel';
-import { scienceStyles as s } from '../../styles/science.styles';
+import { useScienceCard } from './useScienceCard';
 import { scienceResearchStyles as b } from '../../styles/scienceResearch.styles';
 import type { Template } from '../../../../types/template';
 import type { ScienceSource } from '../../../../../convex/templates/types';
@@ -19,18 +19,30 @@ import type { ScienceSource } from '../../../../../convex/templates/types';
 function fallbackSources(template: Template): ScienceSource[] {
   const ref = template?.scientificReference;
   if (!ref) return [];
-  return [{ authors: '', title: ref, journal: '', year: '', link: template?.scientificLink }];
+  return [
+    {
+      authors: '',
+      title: ref,
+      journal: '',
+      year: '',
+      link: template?.scientificLink,
+    },
+  ];
 }
 
 export function SourcesBlock({ template }: { template: Template }) {
-  const sources = template?.sources?.length ? template.sources : fallbackSources(template);
+  const { palette, flushCard, divider, glyph } = useScienceCard();
+  const sources = template?.sources?.length
+    ? template.sources
+    : fallbackSources(template);
   if (sources.length === 0) return null;
+
   return (
     <View>
-      <SecLabel glyph={<Quote color={colors.primary[700]} size={18} strokeWidth={2} />}>
+      <SecLabel glyph={<Quote color={glyph} size={17} strokeWidth={2} />}>
         The research
       </SecLabel>
-      <View style={[s.card, { padding: 0, overflow: 'hidden' }]}>
+      <View style={flushCard}>
         {sources.map((src, i) => {
           const meta = [src.authors, src.journal, src.year].filter(Boolean);
           return (
@@ -38,18 +50,22 @@ export function SourcesBlock({ template }: { template: Template }) {
               key={i}
               accessibilityRole={src.link ? 'link' : 'text'}
               disabled={!src.link}
-              style={[b.sourceRow, i > 0 ? { borderTopColor: colors.border, borderTopWidth: 1 } : null]}
+              style={[b.sourceRow, i > 0 ? divider : null]}
               onPress={() => {
                 if (!src.link) return;
                 void triggerHaptic('tap');
-                void Linking.openURL(src.link);
+                void openExternalLink(src.link);
               }}
             >
-              <Text style={b.sourceNum}>{String(i + 1).padStart(2, '0')}</Text>
+              <Text style={[b.sourceNum, { color: palette.textQuiet }]}>
+                {String(i + 1).padStart(2, '0')}
+              </Text>
               <View style={{ flex: 1, minWidth: 0 }}>
-                <Text style={b.sourceTitle}>{src.title}</Text>
+                <Text style={[b.sourceTitle, { color: palette.textPrimary }]}>
+                  {src.title}
+                </Text>
                 {meta.length > 0 ? (
-                  <Text style={b.sourceMeta}>
+                  <Text style={[b.sourceMeta, { color: palette.textTertiary }]}>
                     {src.authors ? `${src.authors} · ` : ''}
                     <Text style={b.sourceJournal}>{src.journal}</Text>
                     {src.year ? ` · ${src.year}` : ''}
@@ -60,7 +76,9 @@ export function SourcesBlock({ template }: { template: Template }) {
           );
         })}
       </View>
-      <Text style={b.disclaimer}>Summaries are educational, not medical advice.</Text>
+      <Text style={[b.disclaimer, { color: palette.textQuiet }]}>
+        Summaries are educational, not medical advice.
+      </Text>
     </View>
   );
 }

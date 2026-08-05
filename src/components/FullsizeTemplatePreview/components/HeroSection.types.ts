@@ -2,11 +2,11 @@
  * Types for HeroSection
  */
 
+import type { ViewStyle } from 'react-native';
+import type { AnimatedStyle } from 'react-native-reanimated';
 import type { Doc } from '../../../../convex/_generated/dataModel';
 
 export interface HeroSectionProps {
   template: Doc<'templates'>;
-  iconColor: string;
-  iconAnimatedStyle: object;
-  iconGlowStyle: object;
+  iconAnimatedStyle: AnimatedStyle<ViewStyle>;
 }

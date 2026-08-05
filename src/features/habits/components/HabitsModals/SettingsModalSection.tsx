@@ -1,16 +1,14 @@
 /* eslint-disable max-lines, max-lines-per-function */
-import { lazy, Suspense, useCallback } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 import { useConvex } from 'convex/react';
 import { api } from '../../../../../convex/_generated/api';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { DEFAULT_SETTINGS } from '../../../../../convex/settings/types';
 import { useStreakReminderSettings } from '../../../../hooks/useStreakReminders';
-import { usePremium } from '../../../../hooks/usePremium';
 import { getLocalDateString } from '../../../../utils/getLocalDateString';
 import { exportData, prepareExportData } from '../../../../utils/exportData';
 import type { SettingsModalSettingsDocument } from '../../../../components/SettingsModal/types';
-import { useWarmMountWindow } from '../../../../components/Modal/useWarmMountWindow';
 import type { SettingsModalSectionProps } from './HabitsModals.types';
 
 type HabitDoc = Doc<'habits'>;
@@ -77,9 +75,12 @@ export function SettingsModalSection({
   onSettingsChange,
 }: SettingsModalSectionProps) {
   const streakReminders = useStreakReminderSettings();
-  const { isPremium } = usePremium();
   const convex = useConvex();
-  const warmMount = useWarmMountWindow(showSettings);
+  const [hasOpened, setHasOpened] = useState(showSettings);
+
+  useEffect(() => {
+    if (showSettings) setHasOpened(true);
+  }, [showSettings]);
 
   const runHabitsExport = useCallback(
     async (format: 'csv' | 'json') => {
@@ -148,6 +149,8 @@ export function SettingsModalSection({
     );
   }, [runHabitsExport]);
 
+  if (!showSettings && !hasOpened) return null;
+
   return (
     <Suspense fallback={null}>
       <SettingsModal
@@ -164,7 +167,7 @@ export function SettingsModalSection({
         habitCompletionIcon={
           settings?.habitCompletionIcon ?? DEFAULT_SETTINGS.habitCompletionIcon
         }
-        isPremium={isPremium}
+        isPremium={settings?.hasPremium ?? DEFAULT_SETTINGS.hasPremium}
         settingsDocument={settings as SettingsModalSettingsDocument | undefined}
         showCharacterScreen={
           settings?.showCharacterScreen ?? DEFAULT_SETTINGS.showCharacterScreen
@@ -177,7 +180,6 @@ export function SettingsModalSection({
         streakRemindersEnabled={streakReminders.enabled}
         streakReminderTime={streakReminders.reminderTime}
         visible={showSettings}
-        warmMount={warmMount}
         onChangeCompletionSoundEnabled={(value) =>
           onSettingsChange({ completionSoundEnabled: value })
         }

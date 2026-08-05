@@ -25,6 +25,16 @@ interface StatColumnProps {
   size?: keyof typeof SIZES;
   valueColor?: string;
   labelColor?: string;
+  /**
+   * Rendered smaller and muted after the numeral, e.g. "%".
+   */
+  suffix?: string;
+  /**
+   * Override the numeral face. Defaults to monospace — the original detail-page
+   * idiom. Habit detail passes the serif display face to match its headings
+   * (same choice SettingsModal/ProfileStatItem made).
+   */
+  valueFontFamily?: string;
 }
 
 export function StatColumn({
@@ -33,6 +43,8 @@ export function StatColumn({
   size = 'large',
   valueColor,
   labelColor,
+  suffix,
+  valueFontFamily,
 }: StatColumnProps) {
   const { colors } = useThemeColors();
   return (
@@ -40,11 +52,22 @@ export function StatColumn({
       <Text
         style={{
           color: valueColor ?? colors.text.primary,
-          fontFamily: fontFamilies.monospace,
+          fontFamily: valueFontFamily ?? fontFamilies.monospace,
           ...SIZES[size],
         }}
       >
         {value}
+        {suffix ? (
+          <Text
+            style={{
+              color: labelColor ?? colors.text.tertiary,
+              fontSize: typography.bodySmall.fontSize,
+              fontWeight: fontWeights.regular,
+            }}
+          >
+            {suffix}
+          </Text>
+        ) : null}
       </Text>
       <Text
         style={{

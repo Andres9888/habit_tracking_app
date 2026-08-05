@@ -4,10 +4,17 @@
  */
 
 import { useMemo } from 'react';
-import { usePremium } from '../../hooks/usePremium';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 
 export function useTrialCountdown() {
-  const { status, isTrialActive, expirationDate, isLoading } = usePremium();
+  const subscription = useQuery(
+    api.subscriptions.getCurrentUserSubscription,
+    {}
+  );
+  const isLoading = subscription === undefined;
+  const isTrialActive = subscription?.status === 'trialing';
+  const expirationDate = subscription?.trialEndsAt ?? subscription?.expiresAt;
 
   // Calculate days remaining in trial
   const daysRemaining = useMemo(() => {
@@ -24,10 +31,7 @@ export function useTrialCountdown() {
 
   // Show banner if user is trialing and has days remaining
   const shouldShowBanner =
-    !isLoading &&
-    status === 'trialing' &&
-    daysRemaining !== null &&
-    daysRemaining >= 0;
+    !isLoading && isTrialActive && daysRemaining !== null && daysRemaining >= 0;
 
   return {
     daysRemaining,

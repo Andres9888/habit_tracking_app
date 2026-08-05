@@ -14,7 +14,9 @@ description = "Safe patterns and test files"
 paths = [
     '''node_modules''',
     '''\.git''',
+    '''\.expo''',
     '''\.worktrees''',
+    '''\.clonk-worktrees''',
     '''coverage''',
     '''ios\/Pods''',
     '''website\/\.next''',
@@ -40,6 +42,8 @@ regexes = [
     '''example[_-]?key''',
     '''PLACEHOLDER''',
     '''your[_-]?secret''',
+    '''your_revenuecat_webhook_shared_secret''',
+    '''test_1234567890''',
     '''apiLatencyP(50|95)''',
 ]
 

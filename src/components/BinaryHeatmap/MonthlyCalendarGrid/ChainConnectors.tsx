@@ -85,5 +85,5 @@ export const ChainConnectors = memo(function ChainConnectors({
 });
 
 const styles = StyleSheet.create({
-  overlay: { ...StyleSheet.absoluteFillObject },
+  overlay: { ...StyleSheet.absoluteFill },
 });

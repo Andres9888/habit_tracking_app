@@ -111,7 +111,7 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 - Non-critical error handling
 
 **Dependencies**:
-- `expo-av` (Audio playback)
+- `expo-audio` (Audio playback)
 - Bundled sound assets
 
 ---
@@ -306,7 +306,7 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 - Auto-cleanup
 
 **Dependencies**:
-- `expo-av`
+- `expo-audio`
 
 #### `useAudioRecording`
 **Purpose**: Audio recording for voice notes.
@@ -320,7 +320,7 @@ const { animatedStyle, pressHandlers } = usePressAnimation({
 - File management
 
 **Dependencies**:
-- `expo-av`
+- `expo-audio`
 
 ---
 
@@ -467,7 +467,7 @@ Convex Mutations
     ├── useLetterNotification
     └── useImageUpload
 
-expo-av
+expo-audio
     ├── useCompletionSound
     ├── useAudioPlayback
     └── useAudioRecording

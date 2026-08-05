@@ -7,6 +7,7 @@
 
 import { useEffect } from 'react';
 import {
+  type AnimatedStyle,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
@@ -14,6 +15,7 @@ import {
   withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 import { durations, springs } from '@/theme/animations';
 
 const BOUNCE_SPRING = springs.celebration;
@@ -24,8 +26,8 @@ const REVERT_MS = durations.progress;
 const REVERT_SPRING = springs.standard;
 
 export interface CelebrationAnimStyles {
-  plusStyle: { opacity: number; transform: { scale: number }[] };
-  checkStyle: { opacity: number; transform: { scale: number }[] };
+  plusStyle: AnimatedStyle<ViewStyle>;
+  checkStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function useCelebrationAnimations(

@@ -18,7 +18,8 @@ export function ProfileHeroAvatar({
   initial,
   themeColors,
 }: ProfileHeroAvatarProps) {
-  const avatarSize = 72;
+  // Spec 4a: 50px gradient circle in the profile row.
+  const avatarSize = 58;
   const ringPadding = 2;
 
   return (

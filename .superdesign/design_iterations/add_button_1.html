@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Button — 6 Variants</title>
+<style>
+  :root {
+    /* App tokens (light) */
+    --accent: #059669;
+    --accent-dark-fill: #34D399;
+    --success-light: #D1FAE5;
+    --success-text: #047857;
+    --text-inverse: #FFFFFF;
+    --text-inverse-dark: #111827;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+    background: #ECEAE6;
+    padding: 40px 24px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 { font-size: 22px; font-weight: 800; color: #1C1917; margin-bottom: 4px; letter-spacing: -0.02em; }
+  .sub { font-size: 14px; color: #78716C; margin-bottom: 32px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 24px; max-width: 1200px; margin: 0 auto; }
+  .variant { border-radius: 20px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .variant-header { padding: 14px 18px 12px; background: #FFF; }
+  .variant-name { font-size: 15px; font-weight: 700; color: #1C1917; }
+  .variant-desc { font-size: 12.5px; color: #78716C; margin-top: 2px; line-height: 1.4; }
+  .panel { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .panel.light { background: #FAF9F7; }
+  .panel.dark  { background: #171412; }
+  .mode-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .light .mode-label { color: #A8A29E; }
+  .dark  .mode-label { color: #57534E; }
+
+  /* Habit card mock */
+  .card {
+    border-radius: 16px; padding: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .light .card { background: #FFFFFF; border: 1px solid #EDEAE5; }
+  .dark  .card { background: #211E1B; border: 1px solid #35312C; }
+  .emoji {
+    width: 42px; height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+    flex-shrink: 0;
+  }
+  .light .emoji { background: #F3F1EC; }
+  .dark  .emoji { background: #2B2723; }
+  .meta { flex: 1; min-width: 0; }
+  .title { font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+  .light .title { color: #1C1917; }
+  .dark  .title { color: #F5F4F2; }
+  .detail { font-size: 13px; margin-top: 2px; }
+  .light .detail { color: #8B8680; }
+  .dark  .detail { color: #8B8680; }
+
+  /* Shared pill bones */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 5px; flex-shrink: 0; cursor: pointer; border: none;
+    font-family: inherit; font-weight: 700; font-size: 14.5px;
+    transition: transform 0.12s ease;
+    letter-spacing: -0.01em;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn svg { flex-shrink: 0; }
+
+  /* ---------- A. Current: solid fill, wide pill ---------- */
+  .a-add { border-radius: 999px; padding: 11px 22px; font-size: 16px; }
+  .light .a-add { background: var(--accent); color: #FFF; }
+  .dark  .a-add { background: var(--accent-dark-fill); color: #111827; }
+
+  /* ---------- B. Tonal sibling ---------- */
+  .b-add { border-radius: 999px; padding: 10px 18px; }
+  .light .b-add { background: #D8F3E6; color: #04724D; }
+  .dark  .b-add { background: rgba(52,211,153,0.16); color: #34D399; }
+
+  /* ---------- C. Ghost outline ---------- */
+  .c-add { border-radius: 999px; padding: 9px 18px; background: transparent; }
+  .light .c-add { border: 1.5px solid #05966955; color: var(--accent); }
+  .dark  .c-add { border: 1.5px solid #34D39955; color: var(--accent-dark-fill); }
+
+  /* ---------- D. Compact solid (tighter, smaller) ---------- */
+  .d-add { border-radius: 999px; padding: 8px 15px; font-size: 14px; }
+  .light .d-add { background: var(--accent); color: #FFF; }
+  .dark  .d-add { background: var(--accent-dark-fill); color: #111827; }
+
+  /* ---------- E. Rounded-rect (canonical Button shape) ---------- */
+  .e-add { border-radius: 10px; padding: 10px 16px; font-size: 15px; }
+  .light .e-add { background: var(--accent); color: #FFF; box-shadow: 0 1px 2px rgba(5,150,105,0.25); }
+  .dark  .e-add { background: var(--accent-dark-fill); color: #111827; }
+
+  /* ---------- F. Quiet text button ---------- */
+  .f-add { border-radius: 999px; padding: 10px 12px; background: transparent; font-size: 15px; }
+  .light .f-add { color: var(--accent); }
+  .dark  .f-add { color: var(--accent-dark-fill); }
+
+  /* ---------- Added state (constant across variants) ---------- */
+  .added { border-radius: 999px; padding: 10px 16px; cursor: default; font-size: 14.5px; }
+  .light .added { background: var(--success-light); color: var(--success-text); }
+  .dark  .added { background: rgba(5,150,105,0.15); color: #6EE7B7; }
+  .added:active { transform: none; }
+</style>
+</head>
+<body>
+<h1>Habit Library — “Add” button, 6 directions</h1>
+<p class="sub">Each variant shown on the real card layout, light + dark, next to the unchanged “✓ Added” state.</p>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const plus = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>`;
+const check = (s) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+
+const variants = [
+  { key:'a', name:'A — Current (baseline)', desc:'Solid green pill, 16px label, wide padding. What ships today after the icon swap.', icon:16 },
+  { key:'b', name:'B — Tonal sibling', desc:'Soft green fill + green text — Add and Added become siblings of the same family, differing only by icon and depth of tint. Calmer card.', icon:15 },
+  { key:'c', name:'C — Ghost outline', desc:'Transparent with green hairline border. Lightest-weight “real button”. Added state fills in — satisfying add moment (empty → filled).', icon:15 },
+  { key:'d', name:'D — Compact solid', desc:'Same solid language, ~25% smaller: 14px label, tighter padding. Keeps punch, less shouting per row when many cards stack.', icon:14 },
+  { key:'e', name:'E — Rounded-rect', desc:'Matches the app’s canonical Button radius instead of full pill. Slight shadow. More “control”, less “tag”.', icon:15 },
+  { key:'f', name:'F — Quiet text', desc:'No container at all — green “+ Add” text only. Maximum calm, weakest affordance. Added keeps its tinted pill, which then pops as the reward.', icon:16 },
+];
+
+const card = (mode, key, icon) => `
+  <div class="panel ${mode}">
+    <div class="mode-label">${mode}</div>
+    <div class="card">
+      <div class="emoji">🧘</div>
+      <div class="meta">
+        <div class="title">Morning meditation</div>
+        <div class="detail">10 min · Mindfulness</div>
+      </div>
+      <button class="btn ${key}-add">${plus(icon)}Add</button>
+    </div>
+    <div class="card">
+      <div class="emoji">💧</div>
+      <div class="meta">
+        <div class="title">Drink water</div>
+        <div class="detail">8 glasses · Health</div>
+      </div>
+      <button class="btn added">${check(15)}Added</button>
+    </div>
+  </div>`;
+
+document.getElementById('grid').innerHTML = variants.map(v => `
+  <div class="variant">
+    <div class="variant-header">
+      <div class="variant-name">${v.name}</div>
+      <div class="variant-desc">${v.desc}</div>
+    </div>
+    ${card('light', v.key, v.icon)}
+    ${card('dark', v.key, v.icon)}
+  </div>`).join('');
+</script>
+</body>
+</html>

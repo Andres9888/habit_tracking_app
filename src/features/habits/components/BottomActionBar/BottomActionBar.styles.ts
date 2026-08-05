@@ -22,7 +22,7 @@ export const NOTIF_SIZE = 8;
 
 export const styles = StyleSheet.create({
   capsuleBorder: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: CAPSULE_RADIUS,
     borderWidth: 1,
   },
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   glassBg: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: CAPSULE_RADIUS,
     overflow: 'hidden',
   },

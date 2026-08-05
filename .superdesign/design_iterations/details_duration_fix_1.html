@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Details duration fix — before / after</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --app-bg:#F2EFE9;
+    --card-bg:#FAF8F4;
+    --card-border:#E8E3DA;
+    --text-1:#1A1A18;
+    --text-2:#5F5B53;
+    --text-3:#8A857C;
+    --green-bg:#C6E7D4;
+    --green-fg:#0B6E4F;
+    --hero-top:#DCCAF5;
+    --hero-mid:#C9B0EE;
+    --purple:#9B6DE8;
+    --purple-deep:#5B3A9E;
+    --pill-glass:rgba(255,255,255,0.65);
+    --bad:#C2333A;
+    --bad-bg:#FDECEC;
+    --good:#0B6E4F;
+    --good-bg:#E4F5EB;
+    --page:#211F1C;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--page)!important;
+    font-family:'DM Sans',system-ui,sans-serif!important;
+    color:#EDE9E2;
+    padding:48px 24px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+  h1{
+    font-family:'Literata',Georgia,serif!important;
+    font-size:34px;font-weight:700;letter-spacing:-.02em;margin-bottom:10px;
+  }
+  .sub{color:#A8A296;font-size:16px;line-height:1.55;max-width:760px;margin-bottom:14px;}
+  .file{
+    display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;
+    background:#2F2C28;color:#C9C2B5;border:1px solid #413D37;
+    padding:5px 10px;border-radius:6px;margin-bottom:40px;
+  }
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  @media(max-width:900px){.cols{grid-template-columns:1fr;}}
+
+  .col-head{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .tag{
+    font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+    padding:5px 11px;border-radius:999px;
+  }
+  .tag.before{background:var(--bad-bg);color:var(--bad);}
+  .tag.after{background:var(--good-bg);color:var(--good);}
+  .col-note{font-size:14px;color:#A8A296;}
+
+  /* phone */
+  .phone{
+    background:var(--app-bg);
+    border-radius:34px;
+    padding:0 0 22px;
+    overflow:hidden;
+    border:1px solid #43403A;
+    box-shadow:0 24px 60px rgba(0,0,0,.45);
+  }
+  .status{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 26px 8px;font-size:14px;font-weight:700;color:var(--text-1);
+  }
+  .notch{width:96px;height:26px;background:#000;border-radius:999px;}
+  .sig{display:flex;gap:6px;align-items:center;color:var(--text-1);}
+
+  /* ---- card (unchanged in both) ---- */
+  .card{
+    background:var(--card-bg);border:1px solid var(--card-border);
+    border-radius:20px;margin:8px 16px 0;padding:18px 18px 16px;
+  }
+  .card-top{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+  .emoji-tile{
+    width:52px;height:52px;border-radius:14px;background:#F6E3C4;
+    display:flex;align-items:center;justify-content:center;font-size:27px;flex:0 0 auto;
+  }
+  .card-title{
+    font-family:'Literata',Georgia,serif!important;
+    font-size:22px;font-weight:700;color:var(--text-1);letter-spacing:-.01em;
+  }
+  .card-desc{font-size:15px;line-height:1.5;color:var(--text-2);margin-bottom:16px;}
+  .details-btn{
+    display:inline-flex;align-items:center;gap:7px;
+    background:#FFFDF9;border:1px solid #DED8CD;border-radius:999px;
+    padding:9px 17px;font-size:15px;font-weight:500;color:var(--text-1);
+  }
+  .card-rail{
+    display:flex;justify-content:space-between;align-items:center;margin-top:20px;
+  }
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;
+    background:#EDE9E1;border-radius:999px;padding:9px 15px;
+    font-size:14.5px;color:var(--text-2);font-weight:500;
+  }
+  .add{
+    background:var(--green-bg);color:var(--green-fg);
+    border-radius:999px;padding:10px 19px;font-size:15px;font-weight:700;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+
+  .flow{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    padding:20px 0 4px;color:var(--text-3);font-size:12.5px;
+    font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  }
+  .flow .line{height:1px;width:44px;background:#D5CFC3;}
+
+  /* ---- details hero ---- */
+  .hero{
+    background:linear-gradient(180deg,var(--hero-top) 0%,var(--hero-mid) 46%,#E6DDEF 78%,var(--app-bg) 100%);
+    padding:26px 20px 30px;text-align:center;
+  }
+  .hero-icon{
+    width:96px;height:96px;border-radius:50%;background:var(--purple);
+    display:flex;align-items:center;justify-content:center;font-size:44px;
+    margin:6px auto 16px;box-shadow:0 0 0 14px rgba(255,255,255,.16);
+  }
+  .hero-title{
+    font-family:'Literata',Georgia,serif!important;
+    font-size:31px;font-weight:700;color:#17150F;letter-spacing:-.02em;margin-bottom:20px;
+  }
+  .pills{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;}
+  .pill{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--pill-glass);border:1px solid rgba(255,255,255,.55);
+    border-radius:999px;padding:11px 19px;
+    font-size:16px;font-weight:500;color:#2A2722;
+  }
+  .pill.accent{
+    background:#C4A5F2;border-color:#B291E8;color:#3D2270;font-weight:600;
+  }
+  .pill svg{width:17px;height:17px;stroke-width:2;color:#6F6A61;}
+  .pill.accent svg{color:#5B3A9E;}
+
+  /* highlight states */
+  .pill.hl-bad{
+    background:#FFF1F1;border:2px solid var(--bad);color:var(--bad);font-weight:700;
+    box-shadow:0 0 0 5px rgba(194,51,58,.16);
+  }
+  .pill.hl-bad svg{color:var(--bad);}
+  .pill.hl-good{
+    background:#E8F8EF;border:2px solid var(--good);color:var(--good);font-weight:700;
+    box-shadow:0 0 0 5px rgba(11,110,79,.16);
+  }
+  .pill.hl-good svg{color:var(--good);}
+
+  .callout{
+    margin:18px 16px 0;border-radius:14px;padding:14px 16px;
+    font-size:14.5px;line-height:1.55;
+  }
+  .callout.bad{background:#3A2422;border:1px solid #5C3330;color:#F0B9B9;}
+  .callout.good{background:#1D3329;border:1px solid #2F5544;color:#A6E0C2;}
+  .callout b{color:#fff;font-weight:700;}
+
+  .foot{
+    margin-top:44px;padding:22px 24px;border-radius:14px;
+    background:#2A2724;border:1px solid #413D37;color:#B5AFA3;
+    font-size:14.5px;line-height:1.65;
+  }
+  .foot b{color:#F0EBE2;}
+  .foot code{
+    font-family:ui-monospace,Menlo,monospace;font-size:13px;
+    background:#3A3630;padding:2px 6px;border-radius:4px;color:#D8D1C4;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>The duration pill mismatch</h1>
+  <p class="sub">
+    The habit card and the Details view disagreed about how long the habit takes.
+    The card reads the template's real <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px;background:#3A3630;padding:1px 5px;border-radius:4px;">estimatedMinutes</code>;
+    the Details hero was showing a hardcoded per-category default instead.
+  </p>
+  <span class="file">src/components/FullsizeTemplatePreview/components/HeroMetaPills.tsx</span>
+
+  <div class="cols">
+
+    <!-- ================= BEFORE ================= -->
+    <div>
+      <div class="col-head">
+        <span class="tag before">Before</span>
+        <span class="col-note">card and Details disagree</span>
+      </div>
+
+      <div class="phone">
+        <div class="status">
+          <span>6:40</span><div class="notch"></div>
+          <span class="sig"><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="emoji-tile">🎯</div>
+            <div class="card-title">Values Clarification</div>
+          </div>
+          <p class="card-desc">Review your core values weekly. Self-affirmation through values reduces stress response.</p>
+          <span class="details-btn">Details <i data-lucide="chevron-right" style="width:16px;height:16px;"></i></span>
+          <div class="card-rail">
+            <span class="chip">🕐 5 min · Weekly</span>
+            <span class="add"><i data-lucide="plus" style="width:16px;height:16px;"></i> Add</span>
+          </div>
+        </div>
+
+        <div class="flow"><span class="line"></span> tap Details <span class="line"></span></div>
+
+        <div class="hero">
+          <div class="hero-icon">🎯</div>
+          <div class="hero-title">Values Clarification</div>
+          <div class="pills">
+            <span class="pill"><i data-lucide="clock"></i> Weekly</span>
+            <span class="pill accent"><i data-lucide="sparkles"></i> Mental Health</span>
+            <span class="pill hl-bad"><i data-lucide="timer"></i> 5-15 min</span>
+            <span class="pill"><i data-lucide="sprout"></i> Simple · ~30d</span>
+          </div>
+        </div>
+
+        <div class="callout bad">
+          Card says <b>5 min</b>, Details says <b>5-15 min</b>. The hero ignored the template
+          and used the <b>mental_health</b> category default.
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= AFTER ================= -->
+    <div>
+      <div class="col-head">
+        <span class="tag after">After</span>
+        <span class="col-note">both read the same field</span>
+      </div>
+
+      <div class="phone">
+        <div class="status">
+          <span>6:40</span><div class="notch"></div>
+          <span class="sig"><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span>
+        </div>
+
+        <div class="card">
+          <div class="card-top">
+            <div class="emoji-tile">🎯</div>
+            <div class="card-title">Values Clarification</div>
+          </div>
+          <p class="card-desc">Review your core values weekly. Self-affirmation through values reduces stress response.</p>
+          <span class="details-btn">Details <i data-lucide="chevron-right" style="width:16px;height:16px;"></i></span>
+          <div class="card-rail">
+            <span class="chip">🕐 5 min · Weekly</span>
+            <span class="add"><i data-lucide="plus" style="width:16px;height:16px;"></i> Add</span>
+          </div>
+        </div>
+
+        <div class="flow"><span class="line"></span> tap Details <span class="line"></span></div>
+
+        <div class="hero">
+          <div class="hero-icon">🎯</div>
+          <div class="hero-title">Values Clarification</div>
+          <div class="pills">
+            <span class="pill"><i data-lucide="clock"></i> Weekly</span>
+            <span class="pill accent"><i data-lucide="sparkles"></i> Mental Health</span>
+            <span class="pill hl-good"><i data-lucide="timer"></i> 5 min</span>
+            <span class="pill"><i data-lucide="sprout"></i> Simple · ~30d</span>
+          </div>
+        </div>
+
+        <div class="callout good">
+          Both read <b>5 min</b>. The hero now uses the template's own
+          <b>estimatedMinutes</b>, falling back to the category default only when it's missing.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <b>This is the only change that shipped.</b> The card chip you see on the Habit library
+    screen was already correct — that's why nothing looked different there.
+    Three other planned edits (adding the clock to <code>HabitTemplateCardBottomRail</code>,
+    the time label in <code>CardFooterMeta</code>, and moving <code>templateMeta.ts</code>)
+    were dropped after I confirmed those components have no importers — they never render.
+  </div>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

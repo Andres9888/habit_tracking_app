@@ -2,7 +2,7 @@ import { Text, View } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
 import { AnimatedToggle } from './AnimatedToggle';
 import { RowChevron } from './RowChevron';
-import { SettingsCountBadge } from '../../SettingsCountBadge';
+import { RowCount } from './RowCount';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
@@ -89,7 +89,7 @@ export function RowAccessory({
     return (
       <View className='flex-row items-center gap-2'>
         {badge != null && badge > 0 ? (
-          <SettingsCountBadge count={badge} />
+          <RowCount color={colors.value} count={badge} />
         ) : null}
         <RowChevron color={colors.chevron} />
       </View>

@@ -8,8 +8,8 @@
 import { memo } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Check } from 'lucide-react-native';
-import { borderRadius, spacing } from '../../../../theme/spacing';
+import { Check, Plus } from 'lucide-react-native';
+import { borderRadius } from '../../../../theme/spacing';
 import { fontWeights } from '../../../../theme/typography';
 import { useBrowserPalette } from '../../browserPalette';
 import { useImportBounce } from '../../views/TemplateListCard/useImportBounce';
@@ -31,9 +31,9 @@ function TemplateReadRowAddButtonImpl({
   onImport,
 }: TemplateReadRowAddButtonProps) {
   const palette = useBrowserPalette();
-  const animatedStyle = useImportBounce(isImported);
+  const { animatedStyle, onPressIn, onPressOut } = useImportBounce(isImported);
   const bg = isImported ? palette.addedBg : palette.addBg;
-  const fg = isImported ? palette.addedFg : palette.textInverse;
+  const fg = isImported ? palette.addedFg : palette.addFg;
 
   return (
     <AnimatedPressable
@@ -46,16 +46,21 @@ function TemplateReadRowAddButtonImpl({
         void triggerHaptic('selection');
         onImport();
       }}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
     >
       {isImporting ? (
         <ActivityIndicator color={fg} size='small' />
       ) : isImported ? (
         <>
-          <Check color={fg} size={18} strokeWidth={3} />
+          <Check color={fg} size={14} strokeWidth={3} />
           <Text style={[s.label, { color: fg }]}>Added</Text>
         </>
       ) : (
-        <Text style={[s.label, { color: fg }]}>+ Add</Text>
+        <>
+          <Plus color={fg} size={14} strokeWidth={3} />
+          <Text style={[s.label, { color: fg }]}>Add</Text>
+        </>
       )}
     </AnimatedPressable>
   );
@@ -69,10 +74,10 @@ const s = StyleSheet.create({
     borderRadius: borderRadius.full,
     flexDirection: 'row',
     flexShrink: 0,
-    gap: 6,
+    gap: 5,
     justifyContent: 'center',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
   },
-  label: { fontSize: 16, fontWeight: fontWeights.bold },
+  label: { fontSize: 14, fontWeight: fontWeights.bold },
 });

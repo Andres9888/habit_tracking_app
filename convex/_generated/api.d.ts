@@ -52,6 +52,7 @@ import type * as habits_cleanupLegacyGoalFields from "../habits/cleanupLegacyGoa
 import type * as habits_create from "../habits/create.js";
 import type * as habits_deleteTrackingChunk from "../habits/deleteTrackingChunk.js";
 import type * as habits_get from "../habits/get.js";
+import type * as habits_getHabitTracking from "../habits/getHabitTracking.js";
 import type * as habits_getTracking from "../habits/getTracking.js";
 import type * as habits_list from "../habits/list.js";
 import type * as habits_listHabitValidator from "../habits/listHabitValidator.js";
@@ -81,6 +82,7 @@ import type * as settings_types from "../settings/types.js";
 import type * as settings_validators from "../settings/validators.js";
 import type * as settings from "../settings.js";
 import type * as storage from "../storage.js";
+import type * as storageMetadata from "../storageMetadata.js";
 import type * as storageOwnership from "../storageOwnership.js";
 import type * as storageValidation from "../storageValidation.js";
 import type * as streakUtils_dateHelpers from "../streakUtils/dateHelpers.js";
@@ -103,6 +105,7 @@ import type * as templates_curation from "../templates/curation.js";
 import type * as templates_enrichTemplates from "../templates/enrichTemplates.js";
 import type * as templates_helpers from "../templates/helpers.js";
 import type * as templates_importTemplate from "../templates/importTemplate.js";
+import type * as templates_patchScienceEnrichment from "../templates/patchScienceEnrichment.js";
 import type * as templates_popularity from "../templates/popularity.js";
 import type * as templates_queries from "../templates/queries.js";
 import type * as templates_seedCurationTemplates from "../templates/seedCurationTemplates.js";
@@ -169,6 +172,7 @@ declare const fullApi: ApiFromModules<{
   "habits/create": typeof habits_create;
   "habits/deleteTrackingChunk": typeof habits_deleteTrackingChunk;
   "habits/get": typeof habits_get;
+  "habits/getHabitTracking": typeof habits_getHabitTracking;
   "habits/getTracking": typeof habits_getTracking;
   "habits/list": typeof habits_list;
   "habits/listHabitValidator": typeof habits_listHabitValidator;
@@ -198,6 +202,7 @@ declare const fullApi: ApiFromModules<{
   "settings/validators": typeof settings_validators;
   settings: typeof settings;
   storage: typeof storage;
+  storageMetadata: typeof storageMetadata;
   storageOwnership: typeof storageOwnership;
   storageValidation: typeof storageValidation;
   "streakUtils/dateHelpers": typeof streakUtils_dateHelpers;
@@ -220,6 +225,7 @@ declare const fullApi: ApiFromModules<{
   "templates/enrichTemplates": typeof templates_enrichTemplates;
   "templates/helpers": typeof templates_helpers;
   "templates/importTemplate": typeof templates_importTemplate;
+  "templates/patchScienceEnrichment": typeof templates_patchScienceEnrichment;
   "templates/popularity": typeof templates_popularity;
   "templates/queries": typeof templates_queries;
   "templates/seedCurationTemplates": typeof templates_seedCurationTemplates;

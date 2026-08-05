@@ -2,7 +2,7 @@ import { darkColors, lightColors } from '@/theme/darkColors';
 
 /**
  * Shared overlay colors for inline segmented-control pickers
- * (DayShapePicker, CompletionIconPicker, SoundPicker).
+ * (SegmentedTextPicker, SortFamilyPicker, SoundPicker).
  *
  * The rgba values are intentional — they're alpha overlays that must
  * composite over varying theme surfaces, so they stay translucent rather

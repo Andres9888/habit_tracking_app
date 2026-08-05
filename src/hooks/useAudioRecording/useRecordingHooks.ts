@@ -2,13 +2,19 @@
  * useRecordingHooks - Composes all recording sub-hooks
  */
 
-import { useRef, useState } from 'react';
-import { Audio } from 'expo-av';
+import { useEffect, useRef, useState } from 'react';
+import {
+  useAudioRecorder,
+  useAudioRecorderState,
+  type AudioRecorder,
+} from 'expo-audio';
 import type { UseAudioRecordingOptions, RecordingStatus } from './types';
 import {
   MAX_RECORDING_DURATION_SECONDS,
   DEFAULT_WARNING_THRESHOLD_SECONDS,
   INITIAL_RECORDING_STATUS,
+  RECORDING_OPTIONS,
+  STATUS_UPDATE_INTERVAL_MS,
 } from './constants';
 import { useRecordingPermission } from './useRecordingPermission';
 import { useAudioMode } from './useAudioMode';
@@ -27,7 +33,12 @@ export function useRecordingHooks(options?: UseAudioRecordingOptions) {
   const [status, setStatus] = useState<RecordingStatus>(
     INITIAL_RECORDING_STATUS
   );
-  const recordingRef = useRef<Audio.Recording | null>(null);
+  const recorder = useAudioRecorder(RECORDING_OPTIONS);
+  const recorderState = useAudioRecorderState(
+    recorder,
+    STATUS_UPDATE_INTERVAL_MS
+  );
+  const recordingRef = useRef<AudioRecorder | null>(recorder);
 
   const { requestPermission } = useRecordingPermission(setStatus, {
     onError: opts.onError,
@@ -50,12 +61,16 @@ export function useRecordingHooks(options?: UseAudioRecordingOptions) {
     warningThresholdSeconds: warningThreshold,
   });
 
+  useEffect(() => {
+    onRecordingStatusUpdate(recorderState);
+  }, [onRecordingStatusUpdate, recorderState]);
+
   const { startRecording } = useStartRecording({
     configureAudioMode,
     durationRef,
     hasPermission: status.hasPermission,
     onError: opts.onError,
-    onRecordingStatusUpdate,
+    recorder,
     recordingRef,
     requestPermission,
     resetRefs,

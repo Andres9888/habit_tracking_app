@@ -2,7 +2,12 @@
  * Tab bar component with animated indicator (theme-aware)
  */
 
-import { Pressable, Text, type LayoutChangeEvent } from 'react-native';
+import {
+  Pressable,
+  Text,
+  type LayoutChangeEvent,
+  type ViewStyle,
+} from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from '../../templates/templatesScreenStyles';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -15,8 +20,8 @@ interface TabBarProps {
   categoriesCount: number;
   onLayout: (event: LayoutChangeEvent) => void;
   onTabPress: (tab: BrowseTab) => void;
-  tabBarAnimatedStyle: AnimatedStyle;
-  tabIndicatorStyle: AnimatedStyle;
+  tabBarAnimatedStyle: AnimatedStyle<ViewStyle>;
+  tabIndicatorStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function TabBar({

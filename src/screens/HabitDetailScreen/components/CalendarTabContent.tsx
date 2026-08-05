@@ -1,6 +1,6 @@
 /**
  * CalendarTabContent — one unified card: interactive monthly grid on top,
- * chromeless year strip below a divider (tap a year cell to jump the month).
+ * "Year at a glance" below a divider (tap a year cell to jump the month).
  */
 import { useCallback, useState } from 'react';
 import { View } from 'react-native';
@@ -13,13 +13,17 @@ import type { Habit } from '../../../features/habits/types';
 import { colors as palette } from '../../../theme/colors';
 import { shadows } from '../../../theme/spacing';
 import { useThemeColors } from '../../../theme/ThemeContext';
-import { YearStrip } from './YearStrip';
+import { CalendarYearSection } from './CalendarYearSection';
 
 interface CalendarTabContentProps {
   completedDates: Set<string>;
   habit: Habit;
   habitColor: string;
   pendingToggleDate?: string | null;
+  /** Trend line under the year strip, e.g. "May was your turning point." */
+  yearCaption?: string | null;
+  /** "Jan – Jul", derived from the elapsed months. */
+  yearRangeLabel?: string;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
@@ -29,6 +33,8 @@ export function CalendarTabContent({
   habitColor,
   pendingToggleDate = null,
   onDayPress,
+  yearCaption,
+  yearRangeLabel,
 }: CalendarTabContentProps) {
   const { colors, isDark } = useThemeColors();
   const [currentMonth, setCurrentMonth] = useState(() =>
@@ -70,14 +76,14 @@ export function CalendarTabContent({
         className='mt-3 pt-3'
         style={{ borderTopColor: colors.border, borderTopWidth: 1 }}
       >
-        <ErrorBoundary>
-          <YearStrip
-            completedDates={completedDates}
-            habitColor={habitColor}
-            habitCreatedAt={habit.createdAt}
-            onNavigateToMonth={navigateToMonth}
-          />
-        </ErrorBoundary>
+        <CalendarYearSection
+          caption={yearCaption}
+          completedDates={completedDates}
+          habitColor={habitColor}
+          habitCreatedAt={habit.createdAt}
+          rangeLabel={yearRangeLabel}
+          onNavigateToMonth={navigateToMonth}
+        />
       </View>
     </Animated.View>
   );

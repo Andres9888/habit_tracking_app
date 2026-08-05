@@ -12,7 +12,7 @@ export function useSettingsRowPulse(isDark: boolean) {
   const pulseOpacity = useSharedValue(0);
   const pulseColor = isDark ? 'rgba(52,211,153,0.08)' : 'rgba(5,150,105,0.06)';
   const pulseStyle = useAnimatedStyle(() => ({
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     backgroundColor: pulseColor,
     opacity: pulseOpacity.value,
   }));

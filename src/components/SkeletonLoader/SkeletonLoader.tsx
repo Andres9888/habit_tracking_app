@@ -90,7 +90,7 @@ export function SkeletonLoader({
         end={{ x: 1, y: 0.5 }}
         start={{ x: 0, y: 0.5 }}
         style={[
-          StyleSheet.absoluteFillObject,
+          StyleSheet.absoluteFill,
           { width: '200%' },
           animatedStyle,
         ]}

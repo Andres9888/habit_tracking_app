@@ -44,7 +44,7 @@ export const celebrationStyles = StyleSheet.create({
     width: 32,
   },
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 9999,
   },
   glowRing: {

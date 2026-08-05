@@ -8,7 +8,7 @@
  */
 
 import React, { memo } from 'react';
-import { View } from 'react-native';
+import { View, type ViewStyle } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import FloatingXPText from '../FloatingXPText/FloatingXPText';
@@ -102,7 +102,7 @@ function HabitCardComponent(props: HabitCardProps) {
               completionIcon={completionIcon}
               currentStreak={habit.currentStreak}
               entranceContentStyle={
-                habit.entrance.contentStyle as AnimatedStyle
+                habit.entrance.contentStyle as AnimatedStyle<ViewStyle>
               }
               hasPendingOfflineOps={habit.hasPendingOfflineOps}
               icon={icon}

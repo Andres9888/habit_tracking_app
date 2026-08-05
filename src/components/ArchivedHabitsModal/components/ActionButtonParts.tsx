@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Text, View, type ViewStyle } from 'react-native';
 import { RotateCcw, Check, Lock } from 'lucide-react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { useThemeColors } from '@/theme/ThemeContext';
@@ -19,7 +19,7 @@ export function ResumeButton({
   habitName: string;
   isRestoring: boolean;
   showSuccess: boolean;
-  successIconStyle: AnimatedStyle;
+  successIconStyle: AnimatedStyle<ViewStyle>;
   onRestorePress: () => void;
 }) {
   const { colors: c } = useThemeColors();

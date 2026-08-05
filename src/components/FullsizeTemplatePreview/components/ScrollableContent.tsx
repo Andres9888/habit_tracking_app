@@ -5,22 +5,21 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
+  type AnimatedStyle,
   type useAnimatedScrollHandler,
 } from 'react-native-reanimated';
-import { colors } from '@/theme/colors';
 import type { TemplatePreviewAnchor } from '@/screens/TemplatesScreen/TemplatesScreen.types';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
 import { ScienceDrilldown } from './science/ScienceDrilldown';
 import { layoutStyles } from '../styles';
+import { useDetailPalette } from '../detailPalette';
 import type { Template } from '../../../types/template';
 import type { ViewStyle } from 'react-native';
 
 interface ScrollableContentProps {
   template: Template;
-  iconColor: string;
-  iconAnimatedStyle: ViewStyle;
-  iconGlowStyle: ViewStyle;
+  iconAnimatedStyle: AnimatedStyle<ViewStyle>;
   initialAnchor?: TemplatePreviewAnchor;
   overscrollTint?: string;
   reducedMotion?: boolean;
@@ -31,9 +30,7 @@ interface ScrollableContentProps {
 
 export function ScrollableContent({
   template,
-  iconColor,
   iconAnimatedStyle,
-  iconGlowStyle,
   initialAnchor = 'top',
   overscrollTint,
   reducedMotion = false,
@@ -41,6 +38,7 @@ export function ScrollableContent({
   visible = true,
   onHeroLayout,
 }: ScrollableContentProps) {
+  const palette = useDetailPalette();
   const scrollRef = useRef<Animated.ScrollView>(null);
   const contentRef = useRef<View>(null);
   const scienceRef = useRef<View>(null);
@@ -87,16 +85,11 @@ export function ScrollableContent({
         <View onLayout={onHeroLayout}>
           <HeroSection
             iconAnimatedStyle={iconAnimatedStyle}
-            iconColor={iconColor}
-            iconGlowStyle={iconGlowStyle}
             template={template}
           />
         </View>
-        <View style={{ backgroundColor: colors.gray[50] }}>
-          <DescriptionSection
-            description={template?.description ?? ''}
-            iconColor={iconColor}
-          />
+        <View style={{ backgroundColor: palette.body }}>
+          <DescriptionSection description={template?.description ?? ''} />
           <View ref={scienceRef} onLayout={scrollToScience}>
             <ScienceDrilldown template={template} />
           </View>

@@ -11,6 +11,7 @@ import { typography } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { durations, enterEasing, springs } from '@/theme/animations';
 import { ModalCloseButton } from '@/components/ui/ModalCloseButton';
+import { useDetailPalette } from '@/components/FullsizeTemplatePreview/detailPalette';
 
 interface ImportHeaderProps {
   paddingTop: number;
@@ -30,6 +31,9 @@ export function ImportHeader({
   onImport,
 }: ImportHeaderProps) {
   const { colors, isDark } = useThemeColors();
+  // Same CTA green as the drill-down's sticky Add bar, so the two Add
+  // affordances read as one action.
+  const palette = useDetailPalette();
   const scale = useSharedValue(1);
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -65,7 +69,7 @@ export function ImportHeader({
         disabled={!canImport || isImporting}
         style={[
           animatedStyle,
-          { backgroundColor: canImport && !isImporting ? colors.primary[600] : disabledBg },
+          { backgroundColor: canImport && !isImporting ? palette.addBg : disabledBg },
         ]}
         onPress={handleImport}
         onPressIn={() => {
@@ -75,13 +79,13 @@ export function ImportHeader({
           scale.value = withSpring(1, springs.button);
         }}
       >
-        {isImporting ? <ActivityIndicator color={colors.text.inverse} size='small' /> : null}
+        {isImporting ? <ActivityIndicator color={palette.addFg} size='small' /> : null}
         <Text
           className='font-semibold'
           style={{
             ...typography.button,
             letterSpacing: -0.41,
-            color: canImport && !isImporting ? colors.text.inverse : disabledText,
+            color: canImport && !isImporting ? palette.addFg : disabledText,
           }}
         >
           {isImporting ? 'Adding…' : 'Add this habit'}

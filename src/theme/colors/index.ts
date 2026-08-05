@@ -143,4 +143,4 @@ export type { MilestoneColorKey } from '../milestone-colors';
 export { overlays } from './overlays';
 export type { OverlayKey } from './overlays';
 
-export { withAlpha } from './alpha';
+export { mixHex, withAlpha } from './alpha';

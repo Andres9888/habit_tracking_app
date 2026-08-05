@@ -7,6 +7,7 @@ import { Pressable, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import type { SharedValue } from 'react-native-reanimated';
 import { footerStyles } from '../styles';
+import { useDetailPalette } from '../detailPalette';
 import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -29,6 +30,8 @@ export function FooterSecondaryActions({
   isImporting,
   onCustomize,
 }: FooterSecondaryActionsProps) {
+  const palette = useDetailPalette();
+
   return (
     <AnimatedPressable
       accessible
@@ -41,7 +44,14 @@ export function FooterSecondaryActions({
       onPress={onCustomize}
       {...createPressHandlers(customizeButtonScale, 0.98)}
     >
-      <Text style={footerStyles.customizeLinkText}>Customize</Text>
+      <Text
+        style={[
+          footerStyles.customizeLinkText,
+          { color: palette.textSecondary },
+        ]}
+      >
+        Customize
+      </Text>
     </AnimatedPressable>
   );
 }

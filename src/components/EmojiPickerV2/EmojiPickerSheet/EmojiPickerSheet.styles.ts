@@ -14,7 +14,7 @@ export const SHEET_HEIGHT_EXPANDED = SCREEN_HEIGHT * 0.8;
 
 export const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     justifyContent: 'flex-end',
   },
   handle: {
