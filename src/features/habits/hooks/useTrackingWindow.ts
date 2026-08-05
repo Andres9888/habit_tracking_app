@@ -12,7 +12,11 @@ function buildWindowDateStrings(startDate: string, endDate: string): string[] {
   if (!startDate || !endDate) return [];
   const start = parseISO(startDate);
   const end = parseISO(endDate);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || start > end) {
+  if (
+    Number.isNaN(start.getTime()) ||
+    Number.isNaN(end.getTime()) ||
+    start > end
+  ) {
     return [];
   }
   return eachDayOfInterval({ end, start }).map((d) => format(d, DATE_FMT));
@@ -32,8 +36,21 @@ export function useTrackingWindow(
   extendedDateStrings: string[],
   stableToday: Date
 ) {
-  const requestedStart = extendedDateStrings[0];
-  const requestedEnd = extendedDateStrings.at(-1);
+  // Callers pass the date list in either order (week strip is ascending,
+  // modals-state is descending/newest-first). Normalize to min/max so the
+  // window never inverts — an inverted window silently excludes recent days.
+  const firstDateString = extendedDateStrings[0];
+  const lastDateString = extendedDateStrings.at(-1);
+  const bothEnds =
+    firstDateString !== undefined && lastDateString !== undefined;
+  const requestedStart =
+    bothEnds && lastDateString < firstDateString
+      ? lastDateString
+      : firstDateString;
+  const requestedEnd =
+    bothEnds && lastDateString < firstDateString
+      ? firstDateString
+      : lastDateString;
   const windowStartRef = useRef('');
   const windowEndRef = useRef('');
 
