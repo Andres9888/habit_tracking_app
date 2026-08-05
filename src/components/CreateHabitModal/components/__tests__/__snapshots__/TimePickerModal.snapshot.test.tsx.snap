@@ -1,0 +1,1095 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimePickerModal Snapshots Hidden State iOS modal hidden when visible=false 1`] = `null`;
+
+exports[`TimePickerModal Snapshots Native Handset Platform renders Native Handset picker (no modal wrapper) 1`] = `
+<View
+  testID="mock-datetime-picker"
+>
+  <Text>
+    Display: 
+    clock
+  </Text>
+  <Text>
+    Mode: 
+    time
+  </Text>
+  <Text>
+    Value: 
+    2024-06-14T18:00:00.000Z
+  </Text>
+</View>
+`;
+
+exports[`TimePickerModal Snapshots Native Handset Platform returns null when not visible on Native Handset 1`] = `null`;
+
+exports[`TimePickerModal Snapshots Native handset platform renders the native picker without a modal wrapper 1`] = `
+<View
+  testID="mock-datetime-picker"
+>
+  <Text>
+    Display: 
+    clock
+  </Text>
+  <Text>
+    Mode: 
+    time
+  </Text>
+  <Text>
+    Value: 
+    2024-06-14T16:00:00.000Z
+  </Text>
+</View>
+`;
+
+exports[`TimePickerModal Snapshots Native handset platform returns null when not visible on the native picker path 1`] = `null`;
+
+exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening time (8:00 PM) 1`] = `
+<Modal
+  animationType="fade"
+  onRequestClose={[Function]}
+  testID="time-picker-modal"
+  transparent={true}
+  visible={true}
+>
+  <View
+    accessibilityLabel="Dismiss time picker"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="flex-1 items-center justify-center bg-black/50"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
+    >
+      <Text
+        accessibilityRole="header"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Set Reminder Time
+      </Text>
+      <View
+        accessibilityLabel="Time picker wheel"
+        className="mb-5 items-center"
+      >
+        <View
+          testID="mock-datetime-picker"
+        >
+          <Text>
+            Display: 
+            spinner
+          </Text>
+          <Text>
+            Mode: 
+            time
+          </Text>
+          <Text>
+            Value: 
+            2024-06-15T02:00:00.000Z
+          </Text>
+        </View>
+      </View>
+      <View
+        className="flex-row gap-3"
+      >
+        <View
+          accessibilityLabel="Cancel"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
+        >
+          <Text
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
+          >
+            Cancel
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Set time to 8:00 PM"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <Text
+            className="text-base font-semibold text-white"
+          >
+            Set Time
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</Modal>
+`;
+
+exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at morning time (7:00 AM) 1`] = `
+<Modal
+  animationType="fade"
+  onRequestClose={[Function]}
+  testID="time-picker-modal"
+  transparent={true}
+  visible={true}
+>
+  <View
+    accessibilityLabel="Dismiss time picker"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="flex-1 items-center justify-center bg-black/50"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
+    >
+      <Text
+        accessibilityRole="header"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Set Reminder Time
+      </Text>
+      <View
+        accessibilityLabel="Time picker wheel"
+        className="mb-5 items-center"
+      >
+        <View
+          testID="mock-datetime-picker"
+        >
+          <Text>
+            Display: 
+            spinner
+          </Text>
+          <Text>
+            Mode: 
+            time
+          </Text>
+          <Text>
+            Value: 
+            2024-06-14T13:00:00.000Z
+          </Text>
+        </View>
+      </View>
+      <View
+        className="flex-row gap-3"
+      >
+        <View
+          accessibilityLabel="Cancel"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
+        >
+          <Text
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
+          >
+            Cancel
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Set time to 7:00 AM"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <Text
+            className="text-base font-semibold text-white"
+          >
+            Set Time
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</Modal>
+`;
+
+exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with custom title 1`] = `
+<Modal
+  animationType="fade"
+  onRequestClose={[Function]}
+  testID="time-picker-modal"
+  transparent={true}
+  visible={true}
+>
+  <View
+    accessibilityLabel="Dismiss time picker"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="flex-1 items-center justify-center bg-black/50"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
+    >
+      <Text
+        accessibilityRole="header"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Select Time
+      </Text>
+      <View
+        accessibilityLabel="Time picker wheel"
+        className="mb-5 items-center"
+      >
+        <View
+          testID="mock-datetime-picker"
+        >
+          <Text>
+            Display: 
+            spinner
+          </Text>
+          <Text>
+            Mode: 
+            time
+          </Text>
+          <Text>
+            Value: 
+            2024-06-14T18:00:00.000Z
+          </Text>
+        </View>
+      </View>
+      <View
+        className="flex-row gap-3"
+      >
+        <View
+          accessibilityLabel="Cancel"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
+        >
+          <Text
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
+          >
+            Cancel
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Set time to 12:00 PM"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <Text
+            className="text-base font-semibold text-white"
+          >
+            Set Time
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</Modal>
+`;
+
+exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with default title 1`] = `
+<Modal
+  animationType="fade"
+  onRequestClose={[Function]}
+  testID="time-picker-modal"
+  transparent={true}
+  visible={true}
+>
+  <View
+    accessibilityLabel="Dismiss time picker"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="flex-1 items-center justify-center bg-black/50"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
+    >
+      <Text
+        accessibilityRole="header"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Set Reminder Time
+      </Text>
+      <View
+        accessibilityLabel="Time picker wheel"
+        className="mb-5 items-center"
+      >
+        <View
+          testID="mock-datetime-picker"
+        >
+          <Text>
+            Display: 
+            spinner
+          </Text>
+          <Text>
+            Mode: 
+            time
+          </Text>
+          <Text>
+            Value: 
+            2024-06-14T18:00:00.000Z
+          </Text>
+        </View>
+      </View>
+      <View
+        className="flex-row gap-3"
+      >
+        <View
+          accessibilityLabel="Cancel"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
+        >
+          <Text
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
+          >
+            Cancel
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Set time to 12:00 PM"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <Text
+            className="text-base font-semibold text-white"
+          >
+            Set Time
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</Modal>
+`;
+
+exports[`TimePickerModal Snapshots iOS Platform renders iOS modal with minutes (6:30 AM) 1`] = `
+<Modal
+  animationType="fade"
+  onRequestClose={[Function]}
+  testID="time-picker-modal"
+  transparent={true}
+  visible={true}
+>
+  <View
+    accessibilityLabel="Dismiss time picker"
+    accessibilityRole="button"
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    className="flex-1 items-center justify-center bg-black/50"
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      className="mx-6 w-full max-w-sm rounded-2xl p-5"
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "backgroundColor": "#EDEAE5",
+        }
+      }
+    >
+      <Text
+        accessibilityRole="header"
+        className="mb-4 text-center text-lg font-semibold"
+        style={
+          {
+            "color": "#2D2A26",
+          }
+        }
+      >
+        Set Reminder Time
+      </Text>
+      <View
+        accessibilityLabel="Time picker wheel"
+        className="mb-5 items-center"
+      >
+        <View
+          testID="mock-datetime-picker"
+        >
+          <Text>
+            Display: 
+            spinner
+          </Text>
+          <Text>
+            Mode: 
+            time
+          </Text>
+          <Text>
+            Value: 
+            2024-06-14T12:30:00.000Z
+          </Text>
+        </View>
+      </View>
+      <View
+        className="flex-row gap-3"
+      >
+        <View
+          accessibilityLabel="Cancel"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "backgroundColor": "#DDD8D2",
+            }
+          }
+        >
+          <Text
+            className="text-base font-semibold"
+            style={
+              {
+                "color": "#2D2A26",
+              }
+            }
+          >
+            Cancel
+          </Text>
+        </View>
+        <View
+          accessibilityLabel="Set time to 6:30 AM"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          className="h-12 flex-1 items-center justify-center rounded-xl bg-emerald-500 active:bg-emerald-600"
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <Text
+            className="text-base font-semibold text-white"
+          >
+            Set Time
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</Modal>
+`;

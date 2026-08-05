@@ -1,0 +1,1422 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Timeline Redesign — 4 Variations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --shelf: #f0ede8;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --emerald-100: #d1fae5;
+        --emerald-400: #34d399;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --gold-100: #fef3cd;
+        --gold-300: #e8b94d;
+        --gold-500: #8b6208;
+        --gold-700: #7d5907;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --gray-400: #6e6660;
+        --gray-500: #6b6560;
+        --gray-800: #2d2a26;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif !important;
+        background: #1a1816 !important;
+        min-height: 100vh;
+        padding: 32px 16px;
+      }
+
+      h1 {
+        color: #faf8f5 !important;
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 8px !important;
+        letter-spacing: -0.3px;
+      }
+
+      .subtitle {
+        color: #9ca3af;
+        font-size: 13px;
+        text-align: center;
+        margin-bottom: 32px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.5;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 24px;
+        max-width: 820px;
+        margin: 0 auto;
+      }
+
+      .variation-card {
+        background: var(--bg);
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      }
+
+      .variation-label {
+        background: var(--text-primary);
+        color: var(--bg);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .variation-label .tag {
+        font-size: 10px;
+        font-weight: 500;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 2px 8px;
+        border-radius: 6px;
+        letter-spacing: 0.3px;
+      }
+
+      /* ── Phone frame ─────────────────────────────── */
+      .phone-frame {
+        padding: 16px 22px 20px;
+      }
+
+      /* ── Shelf (calendar timeline container) ─────── */
+      .shelf {
+        background: var(--shelf);
+        border-radius: 0 0 20px 20px;
+        padding: 14px 16px 12px;
+      }
+
+      /* ── Greeting row ────────────────────────────── */
+      .greeting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 4px;
+      }
+
+      .greeting {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+      }
+
+      .progress-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        letter-spacing: -0.2px;
+      }
+
+      .progress-count {
+        font-weight: 700;
+        color: var(--emerald-700);
+      }
+
+      /* ── Date / nav rows ─────────────────────────── */
+      .nav-row {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 3px;
+        margin-bottom: 10px;
+      }
+
+      .date-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-tertiary);
+      }
+
+      .arrow-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+
+      .arrow-btn:hover {
+        opacity: 1;
+      }
+
+      .arrow-btn.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+
+      /* ── Calendar icon button ────────────────────── */
+      .cal-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          opacity 0.15s ease;
+        color: var(--text-tertiary);
+      }
+
+      .cal-icon:hover {
+        transform: scale(1.1);
+        color: var(--emerald-600);
+      }
+
+      .cal-icon:active {
+        transform: scale(0.92);
+      }
+
+      /* ── Glass chip ──────────────────────────────── */
+      .glass-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+
+      .glass-chip:hover {
+        transform: scale(1.02);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .glass-chip:active {
+        transform: scale(0.97);
+      }
+
+      /* ── Glass nav bar (Variation D) ─────────────── */
+      .glass-nav-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        margin: 8px 0;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      .mini-progress-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .mini-ring-track {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        position: relative;
+      }
+
+      .mini-bar-bg {
+        width: 48px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--gray-200);
+        overflow: hidden;
+      }
+
+      .mini-bar-fill {
+        height: 100%;
+        border-radius: 2px;
+        background: var(--emerald-500);
+        transition: width 0.3s ease;
+      }
+
+      /* ── Day strip ───────────────────────────────── */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2px;
+      }
+
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+      }
+
+      .day-label {
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--gray-300);
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+
+      .day-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-500);
+        background: var(--card);
+        position: relative;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .day-circle:hover {
+        transform: scale(1.05);
+      }
+
+      .day-circle.today {
+        background: var(--gold-100);
+        border: 1.5px solid var(--gold-300);
+        color: var(--gold-700);
+        box-shadow: 0 2px 4px rgba(139, 98, 8, 0.15);
+      }
+
+      .day-circle.complete {
+        background: var(--emerald-600);
+        color: white;
+        box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+      }
+
+      .day-circle.future {
+        color: var(--gray-300);
+        background: transparent;
+      }
+
+      .completion-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--gray-200);
+        margin-top: 2px;
+      }
+
+      .completion-dot.done {
+        width: 8px;
+        height: 8px;
+        background: var(--emerald-500);
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+
+      .completion-dot.partial {
+        width: 6px;
+        height: 6px;
+        background: var(--gold-300);
+      }
+
+      .completion-dot.future-dot {
+        background: var(--card);
+      }
+
+      /* ── Streak connectors ───────────────────────── */
+      .streak-connector {
+        position: absolute;
+        height: 3px;
+        background: rgba(16, 185, 129, 0.25);
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 0;
+      }
+
+      .streak-connector.left {
+        right: 50%;
+        width: calc(50% + 8px);
+      }
+
+      .streak-connector.right {
+        left: 50%;
+        width: calc(50% + 8px);
+      }
+
+      /* ── Today link ──────────────────────────────── */
+      .today-link {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--gold-500);
+        cursor: pointer;
+        margin-left: 8px;
+        transition: opacity 0.15s ease;
+      }
+
+      .today-link:hover {
+        opacity: 0.7;
+      }
+
+      /* ── Annotations / callouts ──────────────────── */
+      .callout {
+        margin-top: 12px;
+        padding: 8px 12px;
+        background: rgba(5, 150, 105, 0.08);
+        border-left: 3px solid var(--emerald-500);
+        border-radius: 0 8px 8px 0;
+        font-size: 11px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+
+      .callout strong {
+        color: var(--emerald-700);
+        font-weight: 600;
+      }
+
+      /* ── Compact row (Variation C) ───────────────── */
+      .compact-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .compact-left {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .compact-separator {
+        color: var(--gray-300);
+        font-size: 14px;
+      }
+
+      /* ── Past state badge ────────────────────────── */
+      .state-toggle {
+        display: flex;
+        gap: 4px;
+        margin-top: 12px;
+        justify-content: center;
+      }
+
+      .state-btn {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-secondary);
+        transition: all 0.15s ease;
+      }
+
+      .state-btn.active {
+        background: var(--emerald-600);
+        color: white;
+        border-color: var(--emerald-600);
+      }
+
+      /* ── Habit card placeholders ─────────────────── */
+      .habit-cards {
+        padding: 6px 0;
+      }
+
+      .habit-card-placeholder {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--border);
+      }
+
+      .habit-icon-placeholder {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: var(--emerald-100);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .habit-text-block {
+        flex: 1;
+      }
+
+      .habit-title-placeholder {
+        height: 12px;
+        width: 120px;
+        border-radius: 4px;
+        background: var(--gray-200);
+        margin-bottom: 4px;
+      }
+
+      .habit-sub-placeholder {
+        height: 8px;
+        width: 80px;
+        border-radius: 3px;
+        background: var(--gray-200);
+        opacity: 0.5;
+      }
+
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--gray-300);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .habit-check.checked {
+        border-color: var(--emerald-500);
+        background: var(--emerald-500);
+      }
+
+      /* ── Bottom bar ──────────────────────────────── */
+      .bottom-bar-ref {
+        position: relative;
+        margin: 16px 20px 0;
+        padding: 8px 24px;
+        border-radius: 32px;
+        background: rgba(255, 255, 255, 0.55);
+        backdrop-filter: blur(50px);
+        -webkit-backdrop-filter: blur(50px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .bottom-bar-icon {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+      }
+
+      .fab-ring {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--emerald-500) 0% 60%,
+          var(--gray-200) 60% 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -12px;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.25);
+      }
+
+      .fab-inner {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--emerald-600);
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Calendar Timeline Redesign</h1>
+    <p class="subtitle">
+      Adding calendar discoverability, removing redundant arrows, and aligning
+      the timeline with the liquid glass bottom bar aesthetic.
+    </p>
+
+    <div class="grid">
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- VARIATION A: Calendar Icon + Clean Date        -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="variation-card">
+        <div class="variation-label">
+          Variation A — Calendar Icon + Clean Date
+          <span class="tag">Minimal</span>
+        </div>
+        <div class="phone-frame">
+          <div class="shelf" id="shelf-a">
+            <!-- Greeting row -->
+            <div class="greeting-row">
+              <span class="greeting">Good morning</span>
+              <span class="progress-text"
+                ><span class="progress-count">3</span> of 5</span
+              >
+            </div>
+
+            <!-- Nav row: Calendar icon + date (no arrows) -->
+            <div class="nav-row" id="nav-a">
+              <span
+                class="cal-icon"
+                title="Open mini calendar"
+                onclick="alert('Opens mini calendar popup')"
+              >
+                <i
+                  data-lucide="calendar-days"
+                  style="width: 14px; height: 14px"
+                ></i>
+              </span>
+              <span class="date-text" style="cursor: pointer"
+                >Thu, February 27</span
+              >
+            </div>
+
+            <!-- Day strip -->
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-label">Mon</span>
+                <div class="day-circle complete">24</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Tue</span>
+                <div class="day-circle">25</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Wed</span>
+                <div class="day-circle complete">26</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Thu</span>
+                <div class="day-circle today">27</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Fri</span>
+                <div class="day-circle future">28</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sat</span>
+                <div class="day-circle future">1</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sun</span>
+                <div class="day-circle future">2</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <strong>Key changes:</strong> Calendar icon replaces arrows — single
+            tap opens the mini calendar. Date is tappable. When viewing past
+            weeks, a "Today →" link appears. Swipe still navigates weeks.
+          </div>
+
+          <!-- Habit cards -->
+          <div class="habit-cards">
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="dumbbell"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder"></div>
+                <div class="habit-sub-placeholder"></div>
+              </div>
+              <div class="habit-check checked">
+                <i
+                  data-lucide="check"
+                  style="width: 16px; height: 16px; color: white"
+                ></i>
+              </div>
+            </div>
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="book-open"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder" style="width: 90px"></div>
+                <div class="habit-sub-placeholder" style="width: 60px"></div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- VARIATION B: Glass Chip Date                   -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="variation-card">
+        <div class="variation-label">
+          Variation B — Glass Chip Date
+          <span class="tag">Polished</span>
+        </div>
+        <div class="phone-frame">
+          <div class="shelf">
+            <div class="greeting-row">
+              <span class="greeting">Good morning</span>
+              <span class="progress-text"
+                ><span class="progress-count">3</span> of 5</span
+              >
+            </div>
+
+            <!-- Glass chip date -->
+            <div style="margin-top: 6px; margin-bottom: 12px">
+              <div
+                class="glass-chip"
+                onclick="alert('Opens mini calendar popup')"
+              >
+                <i
+                  data-lucide="calendar-days"
+                  style="width: 13px; height: 13px; color: var(--text-tertiary)"
+                ></i>
+                <span class="date-text">Thu, February 27</span>
+                <i
+                  data-lucide="chevron-down"
+                  style="
+                    width: 11px;
+                    height: 11px;
+                    color: var(--gray-300);
+                    margin-left: -2px;
+                  "
+                ></i>
+              </div>
+            </div>
+
+            <!-- Day strip -->
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-label">Mon</span>
+                <div class="day-circle complete">24</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Tue</span>
+                <div class="day-circle">25</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Wed</span>
+                <div class="day-circle complete">26</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Thu</span>
+                <div class="day-circle today">27</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Fri</span>
+                <div class="day-circle future">28</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sat</span>
+                <div class="day-circle future">1</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sun</span>
+                <div class="day-circle future">2</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <strong>Key changes:</strong> Date lives in a frosted glass pill
+            matching the bottom bar's glass aesthetic. Chevron-down hints at
+            dropdown calendar. Tap pill → opens mini calendar. Strongest visual
+            consistency with BottomActionBar.
+          </div>
+
+          <div class="habit-cards">
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="dumbbell"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder"></div>
+                <div class="habit-sub-placeholder"></div>
+              </div>
+              <div class="habit-check checked">
+                <i
+                  data-lucide="check"
+                  style="width: 16px; height: 16px; color: white"
+                ></i>
+              </div>
+            </div>
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="book-open"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder" style="width: 90px"></div>
+                <div class="habit-sub-placeholder" style="width: 60px"></div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- VARIATION C: Compact Single Row                -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="variation-card">
+        <div class="variation-label">
+          Variation C — Compact Single Row
+          <span class="tag">Efficient</span>
+        </div>
+        <div class="phone-frame">
+          <div class="shelf">
+            <!-- Everything in one row -->
+            <div class="compact-row">
+              <div class="compact-left">
+                <span class="greeting">Good morning</span>
+                <span class="compact-separator">&middot;</span>
+                <span class="progress-text"
+                  ><span class="progress-count">3</span> of 5</span
+                >
+              </div>
+              <span
+                class="cal-icon"
+                title="Open mini calendar"
+                onclick="alert('Opens mini calendar popup')"
+                style="padding: 4px"
+              >
+                <i
+                  data-lucide="calendar-days"
+                  style="width: 18px; height: 18px"
+                ></i>
+              </span>
+            </div>
+
+            <!-- Day strip -->
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-label">Mon</span>
+                <div class="day-circle complete">24</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Tue</span>
+                <div class="day-circle">25</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Wed</span>
+                <div class="day-circle complete">26</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Thu</span>
+                <div class="day-circle today">27</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Fri</span>
+                <div class="day-circle future">28</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sat</span>
+                <div class="day-circle future">1</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sun</span>
+                <div class="day-circle future">2</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <strong>Key changes:</strong> Greeting + progress in one row with
+            calendar icon on far right. Removes the date text entirely — the day
+            strip itself shows dates. Maximum vertical space savings. Calendar
+            icon is larger (18px) for easy tapping.
+          </div>
+
+          <div class="habit-cards">
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="dumbbell"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder"></div>
+                <div class="habit-sub-placeholder"></div>
+              </div>
+              <div class="habit-check checked">
+                <i
+                  data-lucide="check"
+                  style="width: 16px; height: 16px; color: white"
+                ></i>
+              </div>
+            </div>
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="book-open"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder" style="width: 90px"></div>
+                <div class="habit-sub-placeholder" style="width: 60px"></div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="droplets"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder" style="width: 100px"></div>
+                <div class="habit-sub-placeholder" style="width: 70px"></div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════ -->
+      <!-- VARIATION D: Glass Nav Bar                     -->
+      <!-- ═══════════════════════════════════════════════ -->
+      <div class="variation-card">
+        <div class="variation-label">
+          Variation D — Glass Nav Bar
+          <span class="tag">Premium</span>
+        </div>
+        <div class="phone-frame">
+          <div class="shelf">
+            <div class="greeting-row">
+              <span class="greeting">Good morning</span>
+              <span class="progress-text"
+                ><span class="progress-count">3</span> of 5</span
+              >
+            </div>
+
+            <!-- Glass nav bar echoing bottom bar -->
+            <div class="glass-nav-bar">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <span
+                  class="cal-icon"
+                  onclick="alert('Opens mini calendar popup')"
+                >
+                  <i
+                    data-lucide="calendar-days"
+                    style="width: 16px; height: 16px"
+                  ></i>
+                </span>
+                <span class="date-text" style="font-weight: 600"
+                  >Thu, Feb 27</span
+                >
+              </div>
+              <div class="mini-progress-bar">
+                <span
+                  style="
+                    font-size: 11px;
+                    font-weight: 700;
+                    color: var(--emerald-700);
+                  "
+                  >3/5</span
+                >
+                <div class="mini-bar-bg">
+                  <div class="mini-bar-fill" style="width: 60%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day strip -->
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-label">Mon</span>
+                <div class="day-circle complete">24</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Tue</span>
+                <div class="day-circle">25</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Wed</span>
+                <div class="day-circle complete">26</div>
+                <div class="completion-dot done"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Thu</span>
+                <div class="day-circle today">27</div>
+                <div class="completion-dot partial"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Fri</span>
+                <div class="day-circle future">28</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sat</span>
+                <div class="day-circle future">1</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label">Sun</span>
+                <div class="day-circle future">2</div>
+                <div class="completion-dot future-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout">
+            <strong>Key changes:</strong> Frosted glass bar between greeting and
+            day strip — mirrors the bottom bar's liquid glass capsule. Contains
+            calendar icon + date on left, mini progress bar on right. Strongest
+            "top bar ↔ bottom bar" visual bookend effect.
+          </div>
+
+          <div class="habit-cards">
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="dumbbell"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder"></div>
+                <div class="habit-sub-placeholder"></div>
+              </div>
+              <div class="habit-check checked">
+                <i
+                  data-lucide="check"
+                  style="width: 16px; height: 16px; color: white"
+                ></i>
+              </div>
+            </div>
+            <div class="habit-card-placeholder">
+              <div class="habit-icon-placeholder">
+                <i
+                  data-lucide="book-open"
+                  style="width: 18px; height: 18px; color: var(--emerald-600)"
+                ></i>
+              </div>
+              <div class="habit-text-block">
+                <div class="habit-title-placeholder" style="width: 90px"></div>
+                <div class="habit-sub-placeholder" style="width: 60px"></div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- COMPARISON: Past Week States                       -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div style="max-width: 820px; margin: 40px auto 0">
+      <h1 style="font-size: 16px !important; margin-bottom: 16px !important">
+        Past Week Behavior — Variations A & B
+      </h1>
+      <div class="grid">
+        <!-- Past state A -->
+        <div class="variation-card">
+          <div class="variation-label">
+            Variation A — Viewing Past Week
+            <span class="tag">Feb 17–23</span>
+          </div>
+          <div class="phone-frame">
+            <div class="shelf">
+              <div class="greeting-row">
+                <span class="greeting">Good morning</span>
+                <span class="progress-text"
+                  ><span class="progress-count">5</span> of 5</span
+                >
+              </div>
+              <div class="nav-row">
+                <span class="cal-icon">
+                  <i
+                    data-lucide="calendar-days"
+                    style="width: 14px; height: 14px"
+                  ></i>
+                </span>
+                <span class="date-text">Feb 17 – 23</span>
+                <span class="today-link">Today &rarr;</span>
+              </div>
+              <div class="day-strip">
+                <div class="day-cell">
+                  <span class="day-label">Mon</span>
+                  <div class="day-circle complete">17</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Tue</span>
+                  <div class="day-circle complete">18</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Wed</span>
+                  <div class="day-circle complete">19</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Thu</span>
+                  <div class="day-circle complete">20</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Fri</span>
+                  <div class="day-circle complete">21</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Sat</span>
+                  <div class="day-circle">22</div>
+                  <div class="completion-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Sun</span>
+                  <div class="day-circle">23</div>
+                  <div class="completion-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Past state B -->
+        <div class="variation-card">
+          <div class="variation-label">
+            Variation B — Viewing Past Week
+            <span class="tag">Feb 17–23</span>
+          </div>
+          <div class="phone-frame">
+            <div class="shelf">
+              <div class="greeting-row">
+                <span class="greeting">Good morning</span>
+                <span class="progress-text"
+                  ><span class="progress-count">5</span> of 5</span
+                >
+              </div>
+              <div
+                style="
+                  margin-top: 6px;
+                  margin-bottom: 12px;
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                "
+              >
+                <div class="glass-chip">
+                  <i
+                    data-lucide="calendar-days"
+                    style="
+                      width: 13px;
+                      height: 13px;
+                      color: var(--text-tertiary);
+                    "
+                  ></i>
+                  <span class="date-text">Feb 17 – 23</span>
+                  <i
+                    data-lucide="chevron-down"
+                    style="
+                      width: 11px;
+                      height: 11px;
+                      color: var(--gray-300);
+                      margin-left: -2px;
+                    "
+                  ></i>
+                </div>
+                <span class="today-link">Today &rarr;</span>
+              </div>
+              <div class="day-strip">
+                <div class="day-cell">
+                  <span class="day-label">Mon</span>
+                  <div class="day-circle complete">17</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Tue</span>
+                  <div class="day-circle complete">18</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Wed</span>
+                  <div class="day-circle complete">19</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Thu</span>
+                  <div class="day-circle complete">20</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Fri</span>
+                  <div class="day-circle complete">21</div>
+                  <div class="completion-dot done"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Sat</span>
+                  <div class="day-circle">22</div>
+                  <div class="completion-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">Sun</span>
+                  <div class="day-circle">23</div>
+                  <div class="completion-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- Bottom Bar Reference                               -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div style="max-width: 420px; margin: 40px auto 0">
+      <h1 style="font-size: 14px !important; margin-bottom: 12px !important">
+        Reference: Current Bottom Bar (Liquid Glass Capsule)
+      </h1>
+      <div
+        style="
+          background: var(--bg);
+          border-radius: 24px;
+          padding: 20px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        "
+      >
+        <div class="bottom-bar-ref">
+          <div class="bottom-bar-icon">
+            <i data-lucide="settings" style="width: 24px; height: 24px"></i>
+          </div>
+          <div class="fab-ring">
+            <div class="fab-inner">
+              <i data-lucide="plus" style="width: 22px; height: 22px"></i>
+            </div>
+          </div>
+          <div class="bottom-bar-icon" style="color: var(--gold-700)">
+            <i data-lucide="sparkles" style="width: 24px; height: 24px"></i>
+          </div>
+        </div>
+        <p
+          style="
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 12px;
+          "
+        >
+          Variations B & D use the same frosted glass treatment to create visual
+          consistency.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════ -->
+    <!-- Summary comparison table                           -->
+    <!-- ═══════════════════════════════════════════════════ -->
+    <div style="max-width: 820px; margin: 40px auto 24px">
+      <div
+        style="
+          background: rgba(255, 255, 255, 0.06);
+          border-radius: 16px;
+          padding: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+        "
+      >
+        <table
+          style="
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            color: #d1d5db;
+          "
+        >
+          <thead>
+            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1)">
+              <th
+                style="
+                  text-align: left;
+                  padding: 8px;
+                  color: #f9fafb;
+                  font-size: 11px;
+                  text-transform: uppercase;
+                  letter-spacing: 0.5px;
+                "
+              >
+                Feature
+              </th>
+              <th style="text-align: center; padding: 8px; color: #f9fafb">
+                A
+              </th>
+              <th style="text-align: center; padding: 8px; color: #f9fafb">
+                B
+              </th>
+              <th style="text-align: center; padding: 8px; color: #f9fafb">
+                C
+              </th>
+              <th style="text-align: center; padding: 8px; color: #f9fafb">
+                D
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding: 6px 8px">Calendar icon discoverability</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+            </tr>
+            <tr style="background: rgba(255, 255, 255, 0.03)">
+              <td style="padding: 6px 8px">Arrows removed</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+              <td style="text-align: center; padding: 6px">&#10003;</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px">Glass aesthetic match</td>
+              <td style="text-align: center; padding: 6px">&mdash;</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                &#9733;
+              </td>
+              <td style="text-align: center; padding: 6px">&mdash;</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                &#9733;
+              </td>
+            </tr>
+            <tr style="background: rgba(255, 255, 255, 0.03)">
+              <td style="padding: 6px 8px">Vertical space savings</td>
+              <td style="text-align: center; padding: 6px">Med</td>
+              <td style="text-align: center; padding: 6px">Low</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                High
+              </td>
+              <td style="text-align: center; padding: 6px">Low</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px">Visual complexity</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                Low
+              </td>
+              <td style="text-align: center; padding: 6px">Med</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                Low
+              </td>
+              <td style="text-align: center; padding: 6px">Med</td>
+            </tr>
+            <tr style="background: rgba(255, 255, 255, 0.03)">
+              <td style="padding: 6px 8px">Implementation effort</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                Easy
+              </td>
+              <td style="text-align: center; padding: 6px">Med</td>
+              <td style="text-align: center; padding: 6px; color: #34d399">
+                Easy
+              </td>
+              <td style="text-align: center; padding: 6px">Med</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 8px; font-weight: 600; color: #f9fafb">
+                Recommendation
+              </td>
+              <td style="text-align: center; padding: 6px">Good</td>
+              <td
+                style="
+                  text-align: center;
+                  padding: 6px;
+                  color: #34d399;
+                  font-weight: 700;
+                "
+              >
+                Best
+              </td>
+              <td style="text-align: center; padding: 6px">Good</td>
+              <td style="text-align: center; padding: 6px">Bold</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

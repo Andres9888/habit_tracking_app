@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+reviews:
+  # Review the whole codebase; ignore build artifacts/dependencies only.
+  path_filters:
+    - "!coverage/**"
+    - "!dist/**"
+    - "!node_modules/**"
+  auto_review:
+    enabled: true
+    base_branches:
+      - ".*"

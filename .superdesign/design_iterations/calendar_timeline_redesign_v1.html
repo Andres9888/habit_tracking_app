@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CalendarTimeline Redesign — Before & After</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #111827;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+        padding: 40px 20px;
+        gap: 40px;
+      }
+
+      h1 {
+        color: #f5f1ed !important;
+        font-family: 'Literata', serif !important;
+        font-size: 28px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px;
+      }
+      .label {
+        color: #9ca3af;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      .comparison {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* === iPhone Frame === */
+      .phone {
+        width: 393px;
+        height: 460px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #2d2a26,
+          0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Status bar */
+      .status-bar {
+        height: 54px;
+        padding: 16px 32px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .sb-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .sb-bar {
+        width: 24px;
+        height: 12px;
+        border-radius: 3px;
+        border: 1.5px solid #2d2a26;
+        position: relative;
+      }
+      .sb-bar::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 3px;
+        width: 2px;
+        height: 5px;
+        background: #2d2a26;
+        border-radius: 0 1px 1px 0;
+      }
+      .sb-bar-fill {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        bottom: 1px;
+        right: 30%;
+        background: #2d2a26;
+        border-radius: 1px;
+      }
+
+      .content {
+        padding: 0;
+      }
+
+      /* ==============================
+     CURRENT (Before) — Card style
+     ============================== */
+      .current-card {
+        margin: 12px 12px 0;
+        background: #edeae5;
+        border: 1px solid #ddd8d2;
+        border-radius: 16px;
+        padding: 8px 12px 12px;
+        box-shadow:
+          0 1px 3px rgba(107, 101, 96, 0.08),
+          0 2px 8px rgba(107, 101, 96, 0.04);
+      }
+
+      /* Current header: [◀] [Date Range] [▶] ... [Ring 36px] */
+      .current-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .current-nav {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .nav-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #faf8f5;
+        border: 1px solid #ddd8d2;
+        color: #524d47;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .nav-btn.disabled {
+        opacity: 0.3;
+      }
+      .date-range {
+        font-size: 16px;
+        font-weight: 800;
+        color: #1a1816;
+        letter-spacing: -0.3px;
+      }
+
+      /* Small ring (current) */
+      .ring-small {
+        width: 36px;
+        height: 36px;
+        position: relative;
+      }
+      .ring-small svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring-small-track {
+        fill: none;
+        stroke: #f5f5f4;
+        stroke-width: 3;
+      }
+      .ring-small-fill {
+        fill: none;
+        stroke: #10b981;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 95.5;
+      }
+      .ring-small-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10px;
+        font-weight: 800;
+        color: #44403c;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      /* ==============================
+     NEW (After) — Borderless
+     ============================== */
+      .new-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 6px 20px 8px;
+      }
+
+      /* Large ring (new) */
+      .ring-large {
+        width: 64px;
+        height: 64px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring-large svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring-track {
+        fill: none;
+        stroke: #e5e2de;
+        stroke-width: 4.5;
+      }
+      .ring-fill {
+        fill: none;
+        stroke: #10b981;
+        stroke-width: 4.5;
+        stroke-linecap: round;
+        stroke-dasharray: 172.8;
+        transition: stroke-dashoffset 0.8s ease;
+      }
+      .ring-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        line-height: 1;
+      }
+      .ring-fraction {
+        font-size: 14px;
+        font-weight: 800;
+        color: #2d2a26;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .header-info {
+        flex: 1;
+      }
+      .header-day {
+        font-family: 'Literata', serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.5px;
+        line-height: 1.15;
+      }
+      .header-date {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6e6660;
+        margin-top: 1px;
+      }
+
+      /* Compact nav row (new) */
+      .compact-nav {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .compact-nav-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 1px solid #ddd8d2;
+        color: #6e6660;
+        font-size: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .compact-nav-btn:hover {
+        background: #edeae5;
+      }
+      .compact-date-range {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6e6660;
+        letter-spacing: -0.2px;
+      }
+
+      /* ==============================
+     TIMELINE (shared day strip)
+     ============================== */
+      .timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2px;
+        position: relative;
+      }
+      .timeline.current-timeline {
+        padding: 0 4px;
+      }
+      .timeline.new-timeline {
+        padding: 4px 20px 14px;
+      }
+
+      .t-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+        position: relative;
+      }
+      .t-label {
+        font-size: 10px;
+        font-weight: 400;
+        color: #c4bfb7;
+        line-height: 14px;
+      }
+      .t-label.active {
+        color: #c4bfb7;
+        font-weight: 700;
+      }
+
+      .t-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+
+      /* Current (old) day cell colors — generic gray */
+      .current-timeline .t-circle.default {
+        background: #faf8f5;
+        color: #524d47;
+      }
+      .current-timeline .t-circle.today {
+        background: #1a1816;
+        color: #fff;
+        font-weight: 700;
+      }
+      .current-timeline .t-circle.done {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+      }
+      .current-timeline .t-circle.partial {
+        background: #fef3cd;
+        color: #8b6208;
+        border: 1.5px solid #e8b94d;
+      }
+      .current-timeline .t-circle.future {
+        background: #faf8f5;
+        color: #ddd8d2;
+      }
+
+      /* New (warm stone) day cell colors */
+      .new-timeline .t-circle.default {
+        background: #edeae5;
+        color: #524d47;
+      }
+      .new-timeline .t-circle.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.2);
+      }
+      .new-timeline .t-circle.done {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+      }
+      .new-timeline .t-circle.partial {
+        background: #fef3cd;
+        color: #8b6208;
+        border: 1.5px solid #e8b94d;
+      }
+      .new-timeline .t-circle.future {
+        background: #edeae5;
+        color: #c4bfb7;
+      }
+
+      /* Checkmark inside done circles */
+      .t-check {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        color: #10b981;
+        font-weight: 900;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Completion dots */
+      .t-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-top: 2px;
+      }
+      .t-dot.complete {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+      .t-dot.partial {
+        width: 6px;
+        height: 6px;
+        background: #e8b94d;
+      }
+      .t-dot.none {
+        width: 5px;
+        height: 5px;
+        background: #ddd8d2;
+      }
+      .t-dot.future {
+        width: 5px;
+        height: 5px;
+        background: #faf8f5;
+      }
+
+      /* Streak connector */
+      .streak-connector {
+        position: absolute;
+        top: 34px; /* weekday(14) + gap(3) + half-height */
+        height: 3px;
+        z-index: 0;
+      }
+      .streak-connector.left {
+        left: 0;
+        width: 50%;
+        background: rgba(16, 185, 129, 0.25);
+      }
+      .streak-connector.right {
+        left: 50%;
+        width: 50%;
+        background: rgba(16, 185, 129, 0.25);
+      }
+
+      /* Habit card preview (context) */
+      .habit-preview {
+        margin: 0 20px;
+        padding: 14px 16px;
+        background: #edeae5;
+        border-radius: 16px;
+        border: 1px solid #ddd8d2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .habit-preview + .habit-preview {
+        margin-top: 8px;
+      }
+      .habit-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .habit-sub {
+        font-size: 12px;
+        color: #6e6660;
+        margin-top: 1px;
+      }
+      .habit-check {
+        margin-left: auto;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+      .habit-check.done {
+        background: #10b981;
+        color: #fff;
+      }
+      .habit-check.pending {
+        background: transparent;
+        border: 2px solid #ddd8d2;
+      }
+
+      .section-label {
+        padding: 16px 20px 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #c4bfb7;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      /* Annotation arrows */
+      .annotation {
+        position: absolute;
+        color: #f59e0b;
+        font-size: 11px;
+        font-weight: 700;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>CalendarTimeline Redesign</h1>
+
+    <div class="comparison">
+      <!-- ======== BEFORE ======== -->
+      <div>
+        <div class="label">Current — Card Style</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="sb-icons">
+              <svg viewBox="0 0 16 12">
+                <path
+                  d="M1 9h2v3H1zM5 6h2v6H5zM9 3h2v9H9zM13 0h2v12h-2z"
+                  fill="#2D2A26"
+                />
+              </svg>
+              <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="content" style="padding-top: 8px">
+            <!-- Card wrapper -->
+            <div class="current-card">
+              <div class="current-header">
+                <div class="current-nav">
+                  <div class="nav-btn">‹</div>
+                  <span class="date-range">Feb 19 - Feb 25</span>
+                  <div class="nav-btn disabled">›</div>
+                </div>
+                <div class="ring-small">
+                  <svg viewBox="0 0 36 36">
+                    <circle
+                      class="ring-small-track"
+                      cx="18"
+                      cy="18"
+                      r="15.25"
+                    />
+                    <circle
+                      class="ring-small-fill"
+                      cx="18"
+                      cy="18"
+                      r="15.25"
+                      stroke-dashoffset="31.8"
+                    />
+                  </svg>
+                  <span class="ring-small-text">4/6</span>
+                </div>
+              </div>
+
+              <div class="timeline current-timeline">
+                <div class="t-col">
+                  <span class="t-label">Wed</span>
+                  <div class="t-circle done">
+                    <span>19</span>
+                    <div class="t-check">✓</div>
+                  </div>
+                  <div class="t-dot complete"></div>
+                </div>
+                <div class="t-col">
+                  <div class="streak-connector left"></div>
+                  <div class="streak-connector right"></div>
+                  <span class="t-label">Thu</span>
+                  <div class="t-circle done">
+                    <span>20</span>
+                    <div class="t-check">✓</div>
+                  </div>
+                  <div class="t-dot complete"></div>
+                </div>
+                <div class="t-col">
+                  <div class="streak-connector left"></div>
+                  <span class="t-label">Fri</span>
+                  <div class="t-circle done">
+                    <span>21</span>
+                    <div class="t-check">✓</div>
+                  </div>
+                  <div class="t-dot complete"></div>
+                </div>
+                <div class="t-col">
+                  <span class="t-label">Sat</span>
+                  <div class="t-circle default"><span>22</span></div>
+                  <div class="t-dot none"></div>
+                </div>
+                <div class="t-col">
+                  <span class="t-label">Sun</span>
+                  <div class="t-circle partial"><span>23</span></div>
+                  <div class="t-dot partial"></div>
+                </div>
+                <div class="t-col">
+                  <span class="t-label">Mon</span>
+                  <div class="t-circle done">
+                    <span>24</span>
+                    <div class="t-check">✓</div>
+                  </div>
+                  <div class="t-dot complete"></div>
+                </div>
+                <div class="t-col">
+                  <span class="t-label active">Tue</span>
+                  <div class="t-circle today"><span>25</span></div>
+                  <div class="t-dot none"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-label">Today</div>
+            <div class="habit-preview">
+              <div
+                class="habit-icon"
+                style="background: rgba(16, 185, 129, 0.1)"
+              >
+                🧘
+              </div>
+              <div>
+                <div class="habit-name">Meditate</div>
+                <div class="habit-sub">10 min · Morning</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+            <div class="habit-preview">
+              <div
+                class="habit-icon"
+                style="background: rgba(16, 185, 129, 0.1)"
+              >
+                📖
+              </div>
+              <div>
+                <div class="habit-name">Read</div>
+                <div class="habit-sub">20 pages · Evening</div>
+              </div>
+              <div class="habit-check pending"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======== AFTER ======== -->
+      <div>
+        <div class="label">Redesign — Borderless + Progress Header</div>
+        <div class="phone">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="sb-icons">
+              <svg viewBox="0 0 16 12">
+                <path
+                  d="M1 9h2v3H1zM5 6h2v6H5zM9 3h2v9H9zM13 0h2v12h-2z"
+                  fill="#2D2A26"
+                />
+              </svg>
+              <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="content" style="padding-top: 4px">
+            <!-- Progress header — borderless -->
+            <div class="new-header">
+              <div class="ring-large">
+                <svg viewBox="0 0 64 64">
+                  <circle class="ring-track" cx="32" cy="32" r="27.5" />
+                  <circle
+                    class="ring-fill"
+                    cx="32"
+                    cy="32"
+                    r="27.5"
+                    stroke-dashoffset="57.6"
+                    style="filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.2))"
+                  />
+                </svg>
+                <div class="ring-center">
+                  <div class="ring-fraction">4/6</div>
+                </div>
+              </div>
+              <div class="header-info">
+                <div class="header-day">Tuesday</div>
+                <div class="header-date">February 25, 2026</div>
+                <div class="compact-nav">
+                  <div class="compact-nav-btn">‹</div>
+                  <span class="compact-date-range">Feb 19 – 25</span>
+                  <div class="compact-nav-btn" style="opacity: 0.3">›</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day strip — no card wrapper -->
+            <div class="timeline new-timeline">
+              <div class="t-col">
+                <span class="t-label">Wed</span>
+                <div class="t-circle done">
+                  <span>19</span>
+                  <div class="t-check">✓</div>
+                </div>
+              </div>
+              <div class="t-col">
+                <div class="streak-connector left"></div>
+                <div class="streak-connector right"></div>
+                <span class="t-label">Thu</span>
+                <div class="t-circle done">
+                  <span>20</span>
+                  <div class="t-check">✓</div>
+                </div>
+              </div>
+              <div class="t-col">
+                <div class="streak-connector left"></div>
+                <span class="t-label">Fri</span>
+                <div class="t-circle done">
+                  <span>21</span>
+                  <div class="t-check">✓</div>
+                </div>
+              </div>
+              <div class="t-col">
+                <span class="t-label">Sat</span>
+                <div class="t-circle default"><span>22</span></div>
+                <div class="t-dot none"></div>
+              </div>
+              <div class="t-col">
+                <span class="t-label">Sun</span>
+                <div class="t-circle partial"><span>23</span></div>
+                <div class="t-dot partial"></div>
+              </div>
+              <div class="t-col">
+                <span class="t-label">Mon</span>
+                <div class="t-circle done">
+                  <span>24</span>
+                  <div class="t-check">✓</div>
+                </div>
+              </div>
+              <div class="t-col">
+                <span class="t-label active">Tue</span>
+                <div class="t-circle today"><span>25</span></div>
+                <div class="t-dot none"></div>
+              </div>
+            </div>
+
+            <div class="section-label">Today</div>
+            <div class="habit-preview">
+              <div
+                class="habit-icon"
+                style="background: rgba(16, 185, 129, 0.1)"
+              >
+                🧘
+              </div>
+              <div>
+                <div class="habit-name">Meditate</div>
+                <div class="habit-sub">10 min · Morning</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+            <div class="habit-preview">
+              <div
+                class="habit-icon"
+                style="background: rgba(16, 185, 129, 0.1)"
+              >
+                📖
+              </div>
+              <div>
+                <div class="habit-name">Read</div>
+                <div class="habit-sub">20 pages · Evening</div>
+              </div>
+              <div class="habit-check pending"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /comparison -->
+  </body>
+</html>

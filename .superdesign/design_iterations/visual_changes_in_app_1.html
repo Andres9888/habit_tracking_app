@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Visible app changes · 2026-04-25</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #f5f1ed;
+        --card: #edeae5;
+        --surface-muted: #faf8f5;
+        --border: #ddd8d2;
+        --foreground: #2d2a26;
+        --gray-300: #c4bfb7;
+        --gray-400: #6e6660;
+        --gray-500: #6b6560;
+        --gray-600: #524d47;
+        --gray-700: #3d3833;
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --secondary-400: #60a5fa;
+        --streak-100: #fef3cd;
+        --streak-700: #7d5907;
+        --warning: #9a5504;
+        --warning-old: #d97706;
+        --error: #b53030;
+        --stone-400-old: #a8a29e;
+
+        --font-display: 'Literata', Georgia, serif;
+        --font-text: 'DM Sans', -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      }
+
+      html, body {
+        background: var(--background) !important;
+        color: var(--foreground) !important;
+        font-family: var(--font-text) !important;
+        font-size: 16px !important;
+        line-height: 24px !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        margin: 0 auto;
+        max-width: 1100px;
+        padding: 56px 32px;
+      }
+
+      .eyebrow {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -1.1px;
+        line-height: 52px;
+        margin: 6px 0 14px 0;
+      }
+      h2 {
+        font-family: var(--font-display);
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.7px;
+        line-height: 36px;
+        margin: 56px 0 12px 0;
+      }
+      h3 {
+        font-family: var(--font-text);
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        margin: 24px 0 4px 0;
+      }
+      p {
+        color: var(--gray-600);
+        margin: 0 0 14px 0;
+        max-width: 800px;
+      }
+      code {
+        background: var(--card);
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 1px 6px;
+      }
+
+      /* Surface card */
+      .surface {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin: 0 0 16px 0;
+        overflow: hidden;
+      }
+      .surface-head {
+        align-items: center;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 22px;
+      }
+      .surface-where {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+      }
+      .surface-title {
+        color: var(--foreground);
+        font-family: var(--font-display);
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.35px;
+      }
+      .surface-body {
+        padding: 18px 22px 22px;
+      }
+
+      /* Change row */
+      .change {
+        background: var(--surface-muted);
+        border-radius: 10px;
+        margin: 12px 0;
+        padding: 14px 18px;
+      }
+      .change:first-child {
+        margin-top: 0;
+      }
+      .change-meta {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+      }
+      .change-what {
+        color: var(--foreground);
+        font-size: 15px;
+        line-height: 22px;
+        margin-bottom: 12px;
+      }
+      .change-what strong {
+        font-weight: 600;
+      }
+
+      /* Before / after side by side */
+      .ba {
+        align-items: stretch;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: 1fr 24px 1fr;
+        margin-top: 8px;
+      }
+      .ba-cell {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 12px 14px;
+      }
+      .ba-cell.before { background: #fff7f7; }
+      .ba-cell.after { background: #f3fbf6; }
+      .ba-label {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+      }
+      .ba-arrow {
+        align-self: center;
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        text-align: center;
+      }
+
+      /* Demo text weights */
+      .demo {
+        color: var(--foreground);
+        font-family: var(--font-text);
+        font-size: 17px;
+        line-height: 24px;
+      }
+      .demo.regular { font-weight: 400; }
+      .demo.medium { font-weight: 500; }
+      .demo.semibold { font-weight: 600; }
+      .demo.bold { font-weight: 700; }
+      .demo.small { font-size: 14px; }
+      .demo.caption { font-size: 13px; }
+
+      /* Color swatches */
+      .swatch {
+        align-items: stretch;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .swatch-chip {
+        height: 36px;
+      }
+      .swatch-meta {
+        background: #fff;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 6px 10px;
+      }
+
+      /* Icon size visualizer */
+      .icon-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        margin-top: 10px;
+      }
+      .icon-cell {
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 14px 8px;
+      }
+      .circle {
+        background: var(--primary-100);
+        border: 1px solid var(--primary-700);
+        border-radius: 9999px;
+      }
+      .icon-label {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        text-align: center;
+      }
+      .icon-label strong {
+        color: var(--foreground);
+      }
+      .icon-delta {
+        color: var(--streak-700);
+      }
+
+      /* Chart bar mock */
+      .barchart {
+        align-items: flex-end;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        display: flex;
+        gap: 12px;
+        height: 100px;
+        padding: 16px;
+      }
+      .bar {
+        align-items: center;
+        border-radius: 4px 4px 0 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        width: 28px;
+      }
+      .bar-tag {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        margin-top: 4px;
+      }
+
+      /* Chart bar labels */
+      .bar-cap {
+        align-items: flex-end;
+        display: flex;
+        gap: 12px;
+        margin-top: 4px;
+        padding: 0 16px;
+      }
+      .bar-cap > div {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 9px;
+        text-align: center;
+        width: 28px;
+      }
+
+      /* Pill mock */
+      .pill {
+        align-items: center;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 9999px;
+        display: inline-flex;
+        gap: 8px;
+        padding: 6px 14px;
+      }
+      .pill-icon {
+        font-size: 14px;
+        line-height: 14px;
+      }
+      .pill-text {
+        color: var(--gray-600);
+        font-family: var(--font-text);
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* TOC */
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin: 28px 0 36px 0;
+        padding: 16px 22px;
+      }
+      .toc-list {
+        display: grid;
+        gap: 6px;
+        grid-template-columns: 1fr 1fr;
+        margin: 0;
+        padding: 0;
+      }
+      .toc-list li {
+        font-size: 14px;
+        list-style: none;
+      }
+      .toc-list a {
+        color: var(--primary-700);
+        text-decoration: none;
+      }
+      .toc-list a:hover {
+        text-decoration: underline;
+      }
+
+      .badge {
+        align-items: center;
+        border-radius: 9999px;
+        display: inline-flex;
+        font-family: var(--font-mono);
+        font-size: 9px;
+        font-weight: 500;
+        height: 18px;
+        justify-content: center;
+        letter-spacing: 0.6px;
+        padding: 0 8px;
+        text-transform: uppercase;
+      }
+      .badge.bug-fix {
+        background: var(--primary-100);
+        color: var(--primary-700);
+      }
+      .badge.minor {
+        background: var(--streak-100);
+        color: var(--streak-700);
+      }
+
+      @media (max-width: 768px) {
+        .container { padding: 32px 20px; }
+        h1 { font-size: 32px; line-height: 40px; }
+        .ba { grid-template-columns: 1fr; }
+        .ba-arrow { display: none; }
+        .toc-list { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="eyebrow">Chain Day · Visible app changes · 2026-04-25</div>
+      <h1>Where to look in the app.</h1>
+      <p>
+        The session changed 256 files. Almost all are token-reference cleanup — same rendered pixels. This
+        page lists only the changes you'll actually <em>see</em> in the app, organized by where they live.
+      </p>
+
+      <nav class="toc">
+        <div class="eyebrow" style="margin-bottom: 10px;">Jump to</div>
+        <ul class="toc-list">
+          <li><a href="#sync">1 · SyncStatus pills (top of screen)</a></li>
+          <li><a href="#analytics">2 · Analytics → Insights bar chart</a></li>
+          <li><a href="#rankings">3 · Habit rankings + weekly insights</a></li>
+          <li><a href="#feedback">4 · Settings → Send Feedback</a></li>
+          <li><a href="#onboarding">5 · Onboarding "I'll explore later"</a></li>
+          <li><a href="#colorpicker">6 · Create Habit → Color picker</a></li>
+          <li><a href="#icons">7 · Icon size shifts (~60 sites)</a></li>
+          <li><a href="#empty">8 · Empty states (7 surfaces)</a></li>
+          <li><a href="#motion">9 · HabitCard mount bounce</a></li>
+        </ul>
+      </nav>
+
+      <!-- ============================================================ -->
+      <!-- 1. SYNC STATUS                                               -->
+      <!-- ============================================================ -->
+      <section class="surface" id="sync">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Top-of-screen pills · 2 changes</div>
+            <div class="surface-title">SyncStatus indicators</div>
+          </div>
+        </div>
+        <div class="surface-body">
+          <p>
+            The two pills that appear at the top of any screen during sync activity now use theme-token
+            colors. Slight darker shift on both — the icons are now darker and warmer-toned to match the
+            warm-stone palette.
+          </p>
+
+          <div class="change">
+            <div class="change-meta">When you'll see it · device offline</div>
+            <div class="change-what">
+              <strong>OfflineIndicator</strong> — wifi-off icon color went from Tailwind stone-400
+              (lighter, cooler gray) to <code>colors.gray[400]</code> (darker, warmer stone).
+            </div>
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before</div>
+                <div class="pill">
+                  <span class="pill-icon" style="color: #a8a29e;">⊘</span>
+                  <span class="pill-text">Offline</span>
+                </div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After</div>
+                <div class="pill">
+                  <span class="pill-icon" style="color: #6e6660;">⊘</span>
+                  <span class="pill-text">Offline</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="change">
+            <div class="change-meta">When you'll see it · sync in progress (pending changes)</div>
+            <div class="change-what">
+              <strong>SyncingIndicator</strong> — refresh-spinner icon color went from Tailwind amber-600
+              (brighter orange) to <code>colors.warning</code> (darker, more saturated warm orange).
+            </div>
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before</div>
+                <div class="pill">
+                  <span class="pill-icon" style="color: #d97706;">↻</span>
+                  <span class="pill-text">Syncing</span>
+                </div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After</div>
+                <div class="pill">
+                  <span class="pill-icon" style="color: #9a5504;">↻</span>
+                  <span class="pill-text">Syncing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 2. ANALYTICS BAR CHART (DayBar bug fix)                      -->
+      <!-- ============================================================ -->
+      <section class="surface" id="analytics">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Analytics → Insights → Best days · bug fix</div>
+            <div class="surface-title">Day-of-week bar chart</div>
+          </div>
+          <span class="badge bug-fix">★ Bug fix</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            The week-day completion-rate bar chart had a real bug: bars in the 60–79% range were rendering
+            with an undefined background color (<code>colors.secondary[400]</code> doesn't exist on the
+            semantic color object). Fix uses the static palette where the value actually lives.
+          </p>
+          <div class="change">
+            <div class="change-meta">Where to look · day-of-week histogram in Insights tab</div>
+            <div class="change-what">
+              <strong>60–79% bars</strong> were broken/blank; now render the intended emerald-blue tone.
+            </div>
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before — 60–79% range broken</div>
+                <div class="barchart">
+                  <div class="bar" style="background: #10b981; height: 90%;"></div>
+                  <div class="bar" style="background: transparent; border: 1px dashed #b53030; height: 70%;"></div>
+                  <div class="bar" style="background: #10b981; height: 85%;"></div>
+                  <div class="bar" style="background: #6e6660; height: 50%;"></div>
+                  <div class="bar" style="background: #6b6560; height: 40%;"></div>
+                  <div class="bar" style="background: transparent; border: 1px dashed #b53030; height: 75%;"></div>
+                  <div class="bar" style="background: #10b981; height: 88%;"></div>
+                </div>
+                <div class="bar-cap">
+                  <div>M</div><div style="color: #b53030;">T</div><div>W</div><div>T</div><div>F</div><div style="color: #b53030;">S</div><div>S</div>
+                </div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After — all bars render correct color</div>
+                <div class="barchart">
+                  <div class="bar" style="background: #10b981; height: 90%;"></div>
+                  <div class="bar" style="background: #60a5fa; height: 70%;"></div>
+                  <div class="bar" style="background: #10b981; height: 85%;"></div>
+                  <div class="bar" style="background: #6e6660; height: 50%;"></div>
+                  <div class="bar" style="background: #6b6560; height: 40%;"></div>
+                  <div class="bar" style="background: #60a5fa; height: 75%;"></div>
+                  <div class="bar" style="background: #10b981; height: 88%;"></div>
+                </div>
+                <div class="bar-cap">
+                  <div>M</div><div style="color: #047857;">T</div><div>W</div><div>T</div><div>F</div><div style="color: #047857;">S</div><div>S</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 3. RANKINGS / WEEKLY INSIGHTS — bodyBold fix                 -->
+      <!-- ============================================================ -->
+      <section class="surface" id="rankings">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Multiple surfaces · bug fix</div>
+            <div class="surface-title">Bold text that was silently regular</div>
+          </div>
+          <span class="badge bug-fix">★ Bug fix · 7 components</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            <code>typography.bodyBold</code> token didn't exist; components spread <code>undefined</code>
+            and rendered with default <em>regular</em> weight. Now bold actually applies.
+          </p>
+
+          <h3>Where you'll see it</h3>
+          <p>
+            <strong>Habit Rankings list</strong> · <strong>Weekly Insights card</strong> change-percentage
+            text · <strong>TrendLineChart</strong> + <strong>StrengthDistributionChart</strong> legend
+            labels · <strong>Analytics → Export menu</strong> button label.
+          </p>
+
+          <div class="change">
+            <div class="change-meta">Demo · habit name + rank number</div>
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before — silently regular</div>
+                <div class="demo regular">Morning meditation</div>
+                <div class="demo regular small" style="color: var(--gray-500); margin-top: 2px;">#1 · 12 day streak</div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After — actually bold (intent)</div>
+                <div class="demo bold">Morning meditation</div>
+                <div class="demo bold small" style="color: var(--gray-500); margin-top: 2px;">#1 · 12 day streak</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 4. FEEDBACK MODAL labels — fontWeight overwrite bug          -->
+      <!-- ============================================================ -->
+      <section class="surface" id="feedback">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Settings → Send Feedback · bug fix</div>
+            <div class="surface-title">Form labels now semibold</div>
+          </div>
+          <span class="badge bug-fix">★ Bug fix</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            Section labels and feedback-type item titles had <code>fontWeight: semibold</code> declared,
+            but it was overwritten by a <code>...typography.body</code> spread (which carries
+            <code>regular</code> weight). Reordered so the explicit weight wins.
+          </p>
+          <div class="change">
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before — labels rendered regular</div>
+                <div class="demo regular">What kind of feedback?</div>
+                <div class="demo regular" style="margin-top: 12px;">Bug report</div>
+                <div class="demo regular caption" style="color: var(--gray-500); margin-top: 4px;">Found something broken</div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After — labels semibold (intent)</div>
+                <div class="demo semibold">What kind of feedback?</div>
+                <div class="demo semibold" style="margin-top: 12px;">Bug report</div>
+                <div class="demo regular caption" style="color: var(--gray-500); margin-top: 4px;">Found something broken</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 5. ONBOARDING "I'll explore later"                           -->
+      <!-- ============================================================ -->
+      <section class="surface" id="onboarding">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Onboarding screens 1–3 · bug fix</div>
+            <div class="surface-title">Skip-button text now medium weight</div>
+          </div>
+          <span class="badge bug-fix">★ Bug fix</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            Same property-order bug as FeedbackModal. The small <em>"I'll explore later"</em> text
+            top-right of onboarding screens was rendering at regular weight; now medium.
+          </p>
+          <p style="color: var(--gray-500); font-size: 13px;">
+            <strong>Note:</strong> only visible to brand-new users in pre-completion onboarding. If you've
+            already finished onboarding, you won't see this surface.
+          </p>
+          <div class="change">
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before</div>
+                <div class="demo regular small" style="color: var(--gray-500);">I'll explore later</div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After</div>
+                <div class="demo medium small" style="color: var(--gray-500);">I'll explore later</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 6. COLOR PICKER                                              -->
+      <!-- ============================================================ -->
+      <section class="surface" id="colorpicker">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Create/Edit Habit → Customize → Color picker</div>
+            <div class="surface-title">Custom color button — dashed border + plus icon</div>
+          </div>
+        </div>
+        <div class="surface-body">
+          <p>
+            The last circle in the color-swatch row (the dashed-outline + plus icon that opens a custom
+            color dialog) had its border + icon hardcoded to Tailwind stone-400 (<code>#a8a29e</code>).
+            Now uses <code>colors.gray[400]</code> from the warm-stone palette — slightly darker.
+          </p>
+          <div class="change">
+            <div class="ba">
+              <div class="ba-cell before">
+                <div class="ba-label">Before · #a8a29e</div>
+                <div style="display: flex; align-items: center; justify-content: center; padding: 12px 0;">
+                  <div style="width: 44px; height: 44px; border-radius: 9999px; border: 2px dashed #a8a29e; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #a8a29e; font-size: 22px; font-weight: 300;">+</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ba-arrow">→</div>
+              <div class="ba-cell after">
+                <div class="ba-label">After · colors.gray[400] = #6E6660</div>
+                <div style="display: flex; align-items: center; justify-content: center; padding: 12px 0;">
+                  <div style="width: 44px; height: 44px; border-radius: 9999px; border: 2px dashed #6e6660; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #6e6660; font-size: 22px; font-weight: 300;">+</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 7. ICON SIZE SHIFTS                                          -->
+      <!-- ============================================================ -->
+      <section class="surface" id="icons">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">~60 sites across the app · token snap</div>
+            <div class="surface-title">Icon sizes snapped to scale</div>
+          </div>
+          <span class="badge minor">◐ Minor shift</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            Off-scale icon sizes (12, 14, 18, 22, 28) snapped to the nearest <code>iconSizes.*</code> token
+            (10, 16, 20, 24, 32). Each individual change is ≤17%. Most are imperceptible; visible on icons
+            paired with text.
+          </p>
+
+          <div class="icon-grid">
+            <div class="icon-cell">
+              <div class="circle" style="width: 12px; height: 12px;"></div>
+              <span style="color: var(--gray-500); font-family: var(--font-mono); font-size: 11px;">→</span>
+              <div class="circle" style="width: 10px; height: 10px;"></div>
+              <div class="icon-label"><strong>12 → 10</strong><br/><span class="icon-delta">−17%</span><br/>trend arrows, badges</div>
+            </div>
+            <div class="icon-cell">
+              <div class="circle" style="width: 14px; height: 14px;"></div>
+              <span style="color: var(--gray-500); font-family: var(--font-mono); font-size: 11px;">→</span>
+              <div class="circle" style="width: 16px; height: 16px;"></div>
+              <div class="icon-label"><strong>14 → 16</strong><br/><span class="icon-delta">+14%</span><br/>chevrons, meta rows</div>
+            </div>
+            <div class="icon-cell">
+              <div class="circle" style="width: 18px; height: 18px;"></div>
+              <span style="color: var(--gray-500); font-family: var(--font-mono); font-size: 11px;">→</span>
+              <div class="circle" style="width: 20px; height: 20px;"></div>
+              <div class="icon-label"><strong>18 → 20</strong><br/><span class="icon-delta">+11%</span><br/>inline action icons</div>
+            </div>
+            <div class="icon-cell">
+              <div class="circle" style="width: 22px; height: 22px;"></div>
+              <span style="color: var(--gray-500); font-family: var(--font-mono); font-size: 11px;">→</span>
+              <div class="circle" style="width: 24px; height: 24px;"></div>
+              <div class="icon-label"><strong>22 → 24</strong><br/><span class="icon-delta">+9%</span><br/>checkmarks, play btn</div>
+            </div>
+            <div class="icon-cell">
+              <div class="circle" style="width: 28px; height: 28px;"></div>
+              <span style="color: var(--gray-500); font-family: var(--font-mono); font-size: 11px;">→</span>
+              <div class="circle" style="width: 32px; height: 32px;"></div>
+              <div class="icon-label"><strong>28 → 32</strong><br/><span class="icon-delta">+14%</span><br/>warning triangle, empty-state clipboard</div>
+            </div>
+          </div>
+
+          <p style="margin-top: 16px; color: var(--gray-500); font-size: 13px;">
+            <strong>Most-noticeable spots:</strong> UnsavedChangesAlert warning triangle, QuickCompleteButton
+            check mark, DayHabitsBottomSheet empty-state clipboard, science-video play button on template
+            preview, trend arrows in stat cards.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 8. EMPTY STATES                                              -->
+      <!-- ============================================================ -->
+      <section class="surface" id="empty">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">7 surfaces · primitive consolidation</div>
+            <div class="surface-title">Empty states migrated to canonical primitive</div>
+          </div>
+          <span class="badge minor">◐ Layout subtle</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            7 empty-state components migrated to a single <code>EmptyState</code> primitive (with new
+            <code>compact</code> size, <code>iconBackplate</code>, and <code>actionSlot</code> props).
+            Underlying styling slightly changes per file — most are ≤8px padding/spacing differences. Watch for:
+          </p>
+
+          <div class="change">
+            <div class="change-what">
+              <strong>1 · Paused habits modal</strong> — open Settings → Paused. The "No paused habits ⏸️"
+              empty state. Icon size + text alignment may be slightly different.
+            </div>
+          </div>
+          <div class="change">
+            <div class="change-what">
+              <strong>2 · Habit Rankings empty</strong> — analytics rankings tab when no habits yet.
+              "No Habits to Rank Yet" with the list-ordered icon.
+            </div>
+          </div>
+          <div class="change">
+            <div class="change-what">
+              <strong>3 · Day Habits bottom sheet</strong> — tap a calendar day with no habits. The
+              "No Habits Yet" clipboard icon empty state.
+            </div>
+          </div>
+          <div class="change">
+            <div class="change-what">
+              <strong>4 · Streak records empty</strong> — Habit Detail → Streak History accordion when
+              no streaks exist. "No Streaks Yet" with the orange flame icon backplate.
+            </div>
+          </div>
+          <div class="change">
+            <div class="change-what">
+              <strong>5 · Archived habits modal</strong> — Settings → Archived. The "All habits are active 🌱"
+              empty state with the tip card.
+            </div>
+          </div>
+          <div class="change">
+            <div class="change-what">
+              <strong>6 · Smart suggestions empty</strong> — inside Create Habit modal when no template
+              suggestions. The 🎯 "Create your own unique habit!" box.
+            </div>
+          </div>
+          <div class="change">
+            <div class="change-what">
+              <strong>7 · Emoji picker empty</strong> — search for an emoji that doesn't match. The
+              "No emojis found" search-icon state.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 9. MOTION                                                    -->
+      <!-- ============================================================ -->
+      <section class="surface" id="motion">
+        <div class="surface-head">
+          <div>
+            <div class="surface-where">Today screen · habit cards · motion</div>
+            <div class="surface-title">HabitCard accent-bar bounce</div>
+          </div>
+          <span class="badge minor">◐ Minor motion shift</span>
+        </div>
+        <div class="surface-body">
+          <p>
+            When a habit card mounts, its left-edge colored accent bar animates its width from 0. The bounce
+            is now slightly bouncier — damping shifted from <code>12</code> to <code>10</code> via the
+            <code>springs.bouncy</code> preset (stiffness + mass preserved).
+          </p>
+          <p>
+            <strong>Where to look:</strong> any moment a new habit card mounts (loading the Today screen,
+            scrolling new ones into view if windowed, returning from background).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WHAT YOU WON'T SEE                                            -->
+      <!-- ============================================================ -->
+      <h2>What you <em>won't</em> see different</h2>
+      <p>
+        Most of the 256-file diff is <strong>token references with identical rendered values</strong>.
+        Examples that don't change a pixel:
+      </p>
+      <ul style="color: var(--gray-600); line-height: 26px;">
+        <li>
+          26 sites of <code>borderRadius: 9999</code> → <code>borderRadius.full</code> — same number,
+          renders identically
+        </li>
+        <li>
+          188 sites of raw <code>fontSize: N</code> → <code>typography.X.fontSize</code> for exact-match
+          values (10/13/14/17/20/22/34) — token resolves to the same number
+        </li>
+        <li>
+          27 exact-value <code>borderRadius: N</code> sites → token references — same numbers
+        </li>
+        <li>
+          GoalWhyAnchor + GoalCoachLine hex values → <code>colors.parchment.*</code> +
+          <code>colors.tone.*</code> — same colors, just named
+        </li>
+        <li>
+          Spring preset spreads in StrengthRing + DraggableHabit — explicit overrides preserve exact
+          original behavior
+        </li>
+      </ul>
+
+      <p style="margin-top: 28px; color: var(--gray-500); font-size: 13px;">
+        Generated 2026-04-25 · End-of-session visual review.
+        Companions:
+        <a href="design_changes_summary_2.html" style="color: var(--primary-700);">round-2 detail</a>,
+        <a href="whats_left_1.html" style="color: var(--primary-700);">what's left</a>.
+      </p>
+    </div>
+  </body>
+</html>

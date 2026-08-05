@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Archived Habits — Sticky Notes Board</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1a1a;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 16px 0;
+  }
+
+  .phone-frame {
+    width: 390px;
+    min-height: 844px;
+    border-radius: 40px;
+    border: 6px solid #1a1a1a;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 0 0 2px #333,
+      0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .phone-notch {
+    width: 120px;
+    height: 28px;
+    background: #1a1a1a;
+    border-radius: 0 0 16px 16px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 50;
+  }
+
+  /* Cork board background */
+  .cork-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      repeating-conic-gradient(
+        rgba(160, 120, 60, 0.06) 0% 25%,
+        transparent 0% 50%
+      ) 0 0 / 8px 8px,
+      radial-gradient(ellipse at 30% 20%, rgba(210, 175, 120, 0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(180, 140, 80, 0.2) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 90%, rgba(160, 120, 60, 0.25) 0%, transparent 50%),
+      linear-gradient(135deg, #C4A882 0%, #B8A070 30%, #C9AD85 50%, #B5996A 70%, #C4A882 100%);
+    z-index: 0;
+  }
+
+  /* Subtle grain overlay */
+  .cork-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: 150px 150px;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .screen-content {
+    padding: 0 12px 40px;
+    overflow-y: auto;
+    max-height: 780px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .screen-content::-webkit-scrollbar { display: none; }
+  .screen-content { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Header */
+  .board-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 8px 4px;
+  }
+
+  .nav-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 150ms;
+    color: #5C4A2E;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  .nav-btn:hover { background: rgba(255, 255, 255, 0.4); }
+  .nav-btn:active { transform: scale(0.93); }
+
+  /* Title area — looks like written on cork */
+  .board-title {
+    text-align: center;
+    padding: 4px 0 12px;
+  }
+
+  .board-title h1 {
+    font-family: 'Architects Daughter', cursive !important;
+    font-size: 22px;
+    color: #3D2E1A;
+    letter-spacing: 0.5px;
+  }
+
+  .board-title .subtitle {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 11px;
+    color: #7A6548;
+    margin-top: 2px;
+    font-weight: 500;
+  }
+
+  .count-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.35);
+    color: #5C4A2E;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 20px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* STICKY NOTE */
+  .sticky-note {
+    position: relative;
+    width: 155px;
+    min-height: 155px;
+    padding: 28px 14px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 300ms ease;
+    transform-origin: top center;
+    perspective: 800px;
+    opacity: 0;
+    animation: noteAppear 500ms ease-out forwards;
+  }
+
+  .sticky-note:nth-child(1) { animation-delay: 100ms; }
+  .sticky-note:nth-child(2) { animation-delay: 200ms; }
+  .sticky-note:nth-child(3) { animation-delay: 300ms; }
+  .sticky-note:nth-child(4) { animation-delay: 400ms; }
+  .sticky-note:nth-child(5) { animation-delay: 500ms; }
+
+  @keyframes noteAppear {
+    from { opacity: 0; transform: scale(0.7) rotate(0deg) translateY(-20px); }
+    to { opacity: 1; transform: scale(1) var(--note-rotation) translateY(0); }
+  }
+
+  /* Shadows for sticky note depth */
+  .sticky-note::before {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 8px;
+    right: 8px;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.12);
+    filter: blur(6px);
+    border-radius: 0 0 2px 2px;
+    z-index: -1;
+  }
+
+  /* Tape/pin at top */
+  .tape {
+    position: absolute;
+    top: -6px;
+    left: 50%;
+    transform: translateX(-50%) rotate(var(--tape-rotation, 0deg));
+    width: 44px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.45);
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    z-index: 5;
+    backdrop-filter: blur(2px);
+  }
+
+  .tape::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 3px,
+      rgba(200, 200, 200, 0.2) 3px,
+      rgba(200, 200, 200, 0.2) 4px
+    );
+    border-radius: 2px;
+  }
+
+  /* Note content */
+  .note-emoji {
+    font-size: 36px;
+    display: block;
+    text-align: center;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
+    transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .sticky-note:hover .note-emoji {
+    transform: scale(1.15) rotate(-5deg);
+  }
+
+  .note-name {
+    font-family: 'Architects Daughter', cursive !important;
+    font-size: 15px;
+    color: #2D2114;
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    word-wrap: break-word;
+  }
+
+  .note-dormant {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 10px;
+    color: rgba(45, 33, 20, 0.55);
+    text-align: center;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+  }
+
+  /* Peel corner */
+  .peel-corner {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 10;
+    transition: width 300ms ease, height 300ms ease;
+  }
+
+  .peel-corner::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 28px 28px;
+    border-color: transparent transparent var(--peel-color, #b8a070) transparent;
+    transition: border-width 300ms ease;
+    filter: brightness(0.85);
+  }
+
+  .peel-corner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 28px 28px 0;
+    border-color: transparent var(--note-bg) transparent transparent;
+    transition: border-width 300ms ease;
+    filter: brightness(1.05);
+    box-shadow: -2px -2px 4px rgba(0,0,0,0.08);
+  }
+
+  .sticky-note:hover .peel-corner::before {
+    border-width: 0 0 36px 36px;
+  }
+  .sticky-note:hover .peel-corner::after {
+    border-width: 0 36px 36px 0;
+  }
+
+  /* Flipped state — shows actions */
+  .sticky-note.flipped .note-front {
+    opacity: 0;
+    transform: rotateY(90deg);
+    pointer-events: none;
+  }
+
+  .note-front {
+    transition: opacity 250ms ease, transform 250ms ease;
+  }
+
+  .note-back {
+    position: absolute;
+    top: 28px; left: 14px; right: 14px; bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    transform: rotateY(-90deg);
+    transition: opacity 250ms ease 100ms, transform 250ms ease 100ms;
+  }
+
+  .sticky-note.flipped .note-back {
+    opacity: 1;
+    transform: rotateY(0);
+  }
+
+  /* Action buttons on back of note */
+  .action-restore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    padding: 10px 0;
+    background: #059669;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms;
+    box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+  }
+
+  .action-restore:hover {
+    background: #047857;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(5, 150, 105, 0.35);
+  }
+
+  .action-restore:active { transform: scale(0.96); }
+
+  .action-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    padding: 8px 0;
+    background: rgba(181, 48, 48, 0.1);
+    color: #B53030;
+    border: 1.5px solid rgba(181, 48, 48, 0.2);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 200ms;
+  }
+
+  .action-delete:hover {
+    background: rgba(181, 48, 48, 0.18);
+    border-color: rgba(181, 48, 48, 0.35);
+  }
+
+  .action-delete:active { transform: scale(0.96); }
+
+  .action-cancel {
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(45, 33, 20, 0.45);
+    cursor: pointer;
+    padding: 4px;
+    transition: color 150ms;
+  }
+
+  .action-cancel:hover { color: rgba(45, 33, 20, 0.7); }
+
+  /* Note color tiers */
+  .note-green {
+    --note-bg: #C8F7D5;
+    --peel-color: #9ad4a8;
+    background: linear-gradient(135deg, #C8F7D5 0%, #B5EDCA 100%) !important;
+  }
+
+  .note-amber {
+    --note-bg: #FEF3C7;
+    --peel-color: #ddd19e;
+    background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%) !important;
+  }
+
+  .note-blue {
+    --note-bg: #BFDBFE;
+    --peel-color: #97b8d9;
+    background: linear-gradient(135deg, #BFDBFE 0%, #A5D0FE 100%) !important;
+  }
+
+  .note-pink {
+    --note-bg: #FECDD3;
+    --peel-color: #dba8ae;
+    background: linear-gradient(135deg, #FECDD3 0%, #FDA4AF 100%) !important;
+  }
+
+  .note-lavender {
+    --note-bg: #DDD6FE;
+    --peel-color: #b8aed9;
+    background: linear-gradient(135deg, #DDD6FE 0%, #C4B5FD 100%) !important;
+  }
+
+  /* Grid for notes */
+  .notes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 12px;
+    padding: 10px 6px 30px;
+    justify-items: center;
+  }
+
+  /* Restore peel-away animation */
+  @keyframes peelAway {
+    0% {
+      transform: var(--note-rotation) scale(1);
+      opacity: 1;
+    }
+    30% {
+      transform: rotate(-5deg) scale(1.05) translateY(-10px);
+      opacity: 1;
+    }
+    100% {
+      transform: rotate(-15deg) scale(0.3) translateY(-200px) translateX(50px);
+      opacity: 0;
+    }
+  }
+
+  /* Crumple delete animation */
+  @keyframes crumple {
+    0% {
+      transform: var(--note-rotation) scale(1);
+      opacity: 1;
+      filter: none;
+    }
+    25% {
+      transform: rotate(3deg) scale(0.9) skewX(5deg);
+      opacity: 0.9;
+    }
+    50% {
+      transform: rotate(-5deg) scale(0.6) skewX(-8deg) skewY(5deg);
+      opacity: 0.7;
+      filter: blur(1px);
+    }
+    75% {
+      transform: rotate(8deg) scale(0.3) skewX(12deg) skewY(-10deg);
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+    100% {
+      transform: rotate(15deg) scale(0) skewX(20deg) skewY(15deg);
+      opacity: 0;
+      filter: blur(4px);
+    }
+  }
+
+  .note-restoring {
+    animation: peelAway 700ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    pointer-events: none;
+  }
+
+  .note-crumpling {
+    animation: crumple 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    pointer-events: none;
+  }
+
+  /* Strength badge on note */
+  .strength-badge {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: rgba(45, 33, 20, 0.08);
+    color: rgba(45, 33, 20, 0.5);
+    display: inline-block;
+    margin-top: 4px;
+  }
+
+  /* Empty board state */
+  .empty-board {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 30px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 500ms ease-out forwards;
+  }
+
+  .empty-board.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Pushpin variant (used on some notes instead of tape) */
+  .pushpin {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #E8564D, #B53030);
+    box-shadow:
+      0 2px 4px rgba(0,0,0,0.25),
+      inset 0 1px 2px rgba(255,255,255,0.3);
+    z-index: 5;
+  }
+
+  .pushpin::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Subtle lined paper effect on notes */
+  .note-lines {
+    position: absolute;
+    top: 24px; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      transparent,
+      transparent 21px,
+      rgba(45, 33, 20, 0.06) 21px,
+      rgba(45, 33, 20, 0.06) 22px
+    );
+    pointer-events: none;
+    border-radius: 0 0 2px 2px;
+  }
+</style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="phone-notch"></div>
+    <div class="cork-bg"></div>
+
+    <div class="screen-content">
+      <!-- Header -->
+      <div class="board-header">
+        <button class="nav-btn" aria-label="Go back">
+          <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+        </button>
+        <div style="text-align: center;">
+          <span style="font-family: 'Architects Daughter', cursive; font-size: 17px; color: #3D2E1A;">
+            Archived Habits
+            <span class="count-pill" id="countPill">5</span>
+          </span>
+        </div>
+        <button class="nav-btn" aria-label="Close">
+          <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+        </button>
+      </div>
+
+      <!-- Subtitle -->
+      <div style="text-align: center; padding: 2px 0 6px;">
+        <span style="font-family: 'DM Sans', sans-serif; font-size: 11px; color: #7A6548; font-weight: 500;">
+          Tap a note to see actions
+        </span>
+      </div>
+
+      <!-- Sticky Notes Grid -->
+      <div class="notes-grid" id="notesGrid">
+
+        <!-- Note 1: Meditation — Strong (green) -->
+        <div class="sticky-note note-green" id="note-1"
+             style="--note-rotation: rotate(-3deg); transform: rotate(-3deg);"
+             onclick="flipNote('note-1')">
+          <div class="tape" style="--tape-rotation: 5deg;"></div>
+          <div class="note-lines"></div>
+          <div class="note-front">
+            <span class="note-emoji">&#129496;</span>
+            <div class="note-name">Morning Meditation</div>
+            <div class="note-dormant">
+              <i data-lucide="clock" style="width: 10px; height: 10px;"></i>
+              34 days dormant
+            </div>
+            <div style="text-align: center;">
+              <span class="strength-badge">85% strength</span>
+            </div>
+          </div>
+          <div class="note-back">
+            <button class="action-restore" onclick="event.stopPropagation(); restoreNote('note-1')">
+              <i data-lucide="undo-2" style="width: 14px; height: 14px;"></i>
+              Restore
+            </button>
+            <button class="action-delete" onclick="event.stopPropagation(); deleteNote('note-1')">
+              <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+              Delete
+            </button>
+            <button class="action-cancel" onclick="event.stopPropagation(); flipNote('note-1')">
+              cancel
+            </button>
+          </div>
+          <div class="peel-corner"></div>
+        </div>
+
+        <!-- Note 2: Reading — Moderate (amber) -->
+        <div class="sticky-note note-amber" id="note-2"
+             style="--note-rotation: rotate(2deg); transform: rotate(2deg);"
+             onclick="flipNote('note-2')">
+          <div class="pushpin"></div>
+          <div class="note-lines"></div>
+          <div class="note-front">
+            <span class="note-emoji">&#128218;</span>
+            <div class="note-name">Read 30 Minutes</div>
+            <div class="note-dormant">
+              <i data-lucide="clock" style="width: 10px; height: 10px;"></i>
+              20 days dormant
+            </div>
+            <div style="text-align: center;">
+              <span class="strength-badge">58% strength</span>
+            </div>
+          </div>
+          <div class="note-back">
+            <button class="action-restore" onclick="event.stopPropagation(); restoreNote('note-2')">
+              <i data-lucide="undo-2" style="width: 14px; height: 14px;"></i>
+              Restore
+            </button>
+            <button class="action-delete" onclick="event.stopPropagation(); deleteNote('note-2')">
+              <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+              Delete
+            </button>
+            <button class="action-cancel" onclick="event.stopPropagation(); flipNote('note-2')">
+              cancel
+            </button>
+          </div>
+          <div class="peel-corner"></div>
+        </div>
+
+        <!-- Note 3: Journaling — Strong (blue) -->
+        <div class="sticky-note note-blue" id="note-3"
+             style="--note-rotation: rotate(-5deg); transform: rotate(-5deg);"
+             onclick="flipNote('note-3')">
+          <div class="tape" style="--tape-rotation: -3deg;"></div>
+          <div class="note-lines"></div>
+          <div class="note-front">
+            <span class="note-emoji">&#9997;&#65039;</span>
+            <div class="note-name">Daily Journal</div>
+            <div class="note-dormant">
+              <i data-lucide="clock" style="width: 10px; height: 10px;"></i>
+              3 days dormant
+            </div>
+            <div style="text-align: center;">
+              <span class="strength-badge">72% strength</span>
+            </div>
+          </div>
+          <div class="note-back">
+            <button class="action-restore" onclick="event.stopPropagation(); restoreNote('note-3')">
+              <i data-lucide="undo-2" style="width: 14px; height: 14px;"></i>
+              Restore
+            </button>
+            <button class="action-delete" onclick="event.stopPropagation(); deleteNote('note-3')">
+              <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+              Delete
+            </button>
+            <button class="action-cancel" onclick="event.stopPropagation(); flipNote('note-3')">
+              cancel
+            </button>
+          </div>
+          <div class="peel-corner"></div>
+        </div>
+
+        <!-- Note 4: Exercise — Weak (pink) -->
+        <div class="sticky-note note-pink" id="note-4"
+             style="--note-rotation: rotate(4deg); transform: rotate(4deg);"
+             onclick="flipNote('note-4')">
+          <div class="pushpin"></div>
+          <div class="note-lines"></div>
+          <div class="note-front">
+            <span class="note-emoji">&#127947;&#65039;</span>
+            <div class="note-name">Evening Workout</div>
+            <div class="note-dormant">
+              <i data-lucide="clock" style="width: 10px; height: 10px;"></i>
+              67 days dormant
+            </div>
+            <div style="text-align: center;">
+              <span class="strength-badge">32% strength</span>
+            </div>
+          </div>
+          <div class="note-back">
+            <button class="action-restore" onclick="event.stopPropagation(); restoreNote('note-4')">
+              <i data-lucide="undo-2" style="width: 14px; height: 14px;"></i>
+              Restore
+            </button>
+            <button class="action-delete" onclick="event.stopPropagation(); deleteNote('note-4')">
+              <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+              Delete
+            </button>
+            <button class="action-cancel" onclick="event.stopPropagation(); flipNote('note-4')">
+              cancel
+            </button>
+          </div>
+          <div class="peel-corner"></div>
+        </div>
+
+        <!-- Note 5: Water — Moderate (lavender) -->
+        <div class="sticky-note note-lavender" id="note-5"
+             style="--note-rotation: rotate(-2deg); transform: rotate(-2deg);"
+             onclick="flipNote('note-5')">
+          <div class="tape" style="--tape-rotation: 2deg;"></div>
+          <div class="note-lines"></div>
+          <div class="note-front">
+            <span class="note-emoji">&#128167;</span>
+            <div class="note-name">Drink 8 Glasses</div>
+            <div class="note-dormant">
+              <i data-lucide="clock" style="width: 10px; height: 10px;"></i>
+              12 days dormant
+            </div>
+            <div style="text-align: center;">
+              <span class="strength-badge">45% strength</span>
+            </div>
+          </div>
+          <div class="note-back">
+            <button class="action-restore" onclick="event.stopPropagation(); restoreNote('note-5')">
+              <i data-lucide="undo-2" style="width: 14px; height: 14px;"></i>
+              Restore
+            </button>
+            <button class="action-delete" onclick="event.stopPropagation(); deleteNote('note-5')">
+              <i data-lucide="trash-2" style="width: 12px; height: 12px;"></i>
+              Delete
+            </button>
+            <button class="action-cancel" onclick="event.stopPropagation(); flipNote('note-5')">
+              cancel
+            </button>
+          </div>
+          <div class="peel-corner"></div>
+        </div>
+      </div>
+
+      <!-- Empty board state -->
+      <div class="empty-board" id="emptyBoard">
+        <div style="font-size: 48px; margin-bottom: 12px;">&#128204;</div>
+        <div style="font-family: 'Architects Daughter', cursive; font-size: 20px; color: #3D2E1A; margin-bottom: 8px;">
+          Board is clear!
+        </div>
+        <div style="font-family: 'DM Sans', sans-serif; font-size: 13px; color: #7A6548; line-height: 1.6; max-width: 220px;">
+          No archived habits. All your habits are active and thriving.
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Initialize Lucide icons
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof lucide !== 'undefined') {
+      lucide.createIcons();
+    }
+  });
+
+  let activeNotes = 5;
+
+  function updateCount() {
+    var pill = document.getElementById('countPill');
+    pill.textContent = activeNotes;
+    if (activeNotes <= 0) {
+      pill.style.display = 'none';
+    }
+  }
+
+  function checkEmpty() {
+    if (activeNotes <= 0) {
+      document.getElementById('notesGrid').style.display = 'none';
+      document.getElementById('emptyBoard').classList.add('active');
+    }
+  }
+
+  // Flip note to reveal actions
+  function flipNote(noteId) {
+    var note = document.getElementById(noteId);
+    // Close any other flipped notes first
+    var allNotes = document.querySelectorAll('.sticky-note.flipped');
+    allNotes.forEach(function(n) {
+      if (n.id !== noteId) {
+        n.classList.remove('flipped');
+      }
+    });
+    note.classList.toggle('flipped');
+  }
+
+  // Restore: peel away animation
+  function restoreNote(noteId) {
+    var note = document.getElementById(noteId);
+    note.classList.remove('flipped');
+
+    // Short delay before peel animation
+    setTimeout(function() {
+      note.classList.add('note-restoring');
+      activeNotes--;
+      updateCount();
+
+      setTimeout(function() {
+        note.style.display = 'none';
+        checkEmpty();
+      }, 700);
+    }, 150);
+  }
+
+  // Delete: crumple animation
+  function deleteNote(noteId) {
+    var note = document.getElementById(noteId);
+    note.classList.remove('flipped');
+
+    setTimeout(function() {
+      note.classList.add('note-crumpling');
+      activeNotes--;
+      updateCount();
+
+      setTimeout(function() {
+        note.style.display = 'none';
+        checkEmpty();
+      }, 600);
+    }, 150);
+  }
+</script>
+</body>
+</html>

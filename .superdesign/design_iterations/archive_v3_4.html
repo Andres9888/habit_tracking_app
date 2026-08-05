@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0" />
+  <title>Archived Habits — Expandable Compact Rows</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      width: 390px;
+      margin: 0 auto !important;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Literata', serif !important;
+    }
+
+    /* Sticky header */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #F5F1ED;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .sticky-header.scrolled {
+      border-bottom-color: #DDD8D2;
+      box-shadow: 0 1px 4px rgba(45,42,38,0.04);
+    }
+
+    /* Card container */
+    .card-container {
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+      overflow: hidden;
+      margin: 0 20px;
+    }
+
+    /* Habit row */
+    .habit-row {
+      position: relative;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+      user-select: none;
+    }
+
+    .habit-row:hover {
+      background-color: rgba(245, 241, 237, 0.5);
+    }
+
+    .habit-row:active {
+      background-color: rgba(245, 241, 237, 0.8);
+    }
+
+    /* Left accent bar */
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* Row content */
+    .row-content {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px 14px 20px;
+      min-height: 64px;
+      gap: 12px;
+    }
+
+    /* Emoji circle */
+    .emoji-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* Strength pill */
+    .strength-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Chevron */
+    .chevron-icon {
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .habit-row.expanded .chevron-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Divider */
+    .row-divider {
+      height: 1px;
+      background: #DDD8D2;
+      margin-left: 68px;
+    }
+
+    /* Expand area */
+    .expand-area {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+      opacity: 0;
+    }
+
+    .habit-row.expanded .expand-area {
+      max-height: 300px;
+      opacity: 1;
+    }
+
+    .expand-inner {
+      padding: 4px 20px 20px;
+    }
+
+    /* Stat badges */
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      flex: 1;
+    }
+
+    .stat-badge-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Resume button */
+    .resume-btn {
+      width: 100%;
+      height: 44px;
+      background: #059669;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .resume-btn:hover {
+      background: #047857;
+      box-shadow: 0 0 16px rgba(5, 150, 105, 0.3);
+    }
+
+    .resume-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Delete confirm inline */
+    .delete-confirm {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .delete-confirm.visible {
+      display: flex;
+    }
+
+    .delete-pill {
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s ease;
+    }
+
+    .delete-pill-confirm {
+      background: #B53030;
+      color: #FFFFFF;
+    }
+
+    .delete-pill-confirm:hover {
+      background: #9B2626;
+    }
+
+    .delete-pill-cancel {
+      background: #F5F1ED;
+      color: #6E6660;
+    }
+
+    .delete-pill-cancel:hover {
+      background: #E8E3DD;
+    }
+
+    /* Selection mode */
+    .selection-checkbox {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid #DDD8D2;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: #FFFFFF;
+    }
+
+    .selection-mode .selection-checkbox {
+      display: flex;
+    }
+
+    .selection-checkbox.checked {
+      background: #059669;
+      border-color: #059669;
+    }
+
+    /* Floating bottom bar */
+    .floating-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 390px;
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+      background: #FFFFFF;
+      border-top: 1px solid #DDD8D2;
+      box-shadow: 0 -4px 16px rgba(45,42,38,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.3s ease;
+      z-index: 100;
+    }
+
+    .floating-bar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Entrance animation */
+    .habit-row {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .habit-row.entered {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    /* Resume glow + slide */
+    @keyframes resumeGlow {
+      0% { box-shadow: inset 0 0 0 0 rgba(5, 150, 105, 0); }
+      50% { box-shadow: inset 0 0 0 2px rgba(5, 150, 105, 0.3); background: rgba(5, 150, 105, 0.04); }
+      100% { box-shadow: inset 0 0 0 0 rgba(5, 150, 105, 0); }
+    }
+
+    @keyframes slideRight {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    .habit-row.resuming {
+      animation: resumeGlow 0.5s ease, slideRight 0.4s ease 0.5s forwards;
+    }
+
+    /* Delete shrink */
+    @keyframes shrinkOut {
+      0% { max-height: 200px; opacity: 1; }
+      100% { max-height: 0; opacity: 0; padding: 0; margin: 0; overflow: hidden; }
+    }
+
+    .habit-row.deleting {
+      animation: shrinkOut 0.35s ease forwards;
+    }
+
+    /* Delete all footer */
+    .delete-all-btn {
+      background: none;
+      border: none;
+      color: #B53030;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 0;
+      transition: opacity 0.15s ease;
+    }
+
+    .delete-all-btn:hover {
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sticky Header -->
+  <div class="sticky-header" id="stickyHeader">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button onclick="history.back()" style="background:none;border:none;cursor:pointer;padding:4px;">
+          <i data-lucide="arrow-left" style="width:22px;height:22px;color:#2D2A26;"></i>
+        </button>
+        <div>
+          <h1 style="font-size:20px;font-weight:700;color:#2D2A26;line-height:1.2;">Archived Habits</h1>
+          <p style="font-size:13px;color:#6E6660;margin-top:1px;" id="subtitleText">5 habits resting</p>
+        </div>
+      </div>
+      <button id="selectBtn" onclick="toggleSelectionMode()" style="background:none;border:none;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#059669;cursor:pointer;padding:8px 12px;border-radius:8px;transition:background 0.15s ease;">
+        Select
+      </button>
+    </div>
+  </div>
+
+  <!-- Habits Card -->
+  <div class="card-container" id="habitsCard" style="margin-top:8px;">
+  </div>
+
+  <!-- Delete All -->
+  <div style="text-align:center;padding:24px 20px 40px;">
+    <button class="delete-all-btn" onclick="handleDeleteAll()">Delete All Archived Habits</button>
+  </div>
+
+  <!-- Floating Selection Bar -->
+  <div class="floating-bar" id="floatingBar">
+    <span style="font-size:14px;font-weight:600;color:#2D2A26;" id="selectedCount">0 selected</span>
+    <div style="display:flex;gap:8px;">
+      <button onclick="batchResume()" style="padding:8px 18px;border-radius:10px;background:#059669;color:#FFF;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Resume</button>
+      <button onclick="batchDelete()" style="padding:8px 18px;border-radius:10px;background:#B53030;color:#FFF;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Delete</button>
+    </div>
+  </div>
+
+  <script>
+    // -- Data --
+    const habits = [
+      { id: 1, name: 'Morning Meditation', emoji: '\u{1F9D8}', strength: 72, streak: 14, total: 156, daysAgo: 2 },
+      { id: 2, name: 'Daily Journal', emoji: '\u270D\uFE0F', strength: 85, streak: 42, total: 312, daysAgo: 5 },
+      { id: 3, name: 'Read 30 Minutes', emoji: '\u{1F4D6}', strength: 58, streak: 7, total: 89, daysAgo: 20 },
+      { id: 4, name: 'Cold Shower', emoji: '\u{1F9CA}', strength: 35, streak: 3, total: 24, daysAgo: 34 },
+      { id: 5, name: 'Push-ups', emoji: '\u{1F4AA}', strength: 12, streak: 1, total: 8, daysAgo: 67 },
+    ];
+
+    function getTier(s) {
+      if (s >= 80) return { color: '#7C3AED', label: 'Strong', bg: 'rgba(124,58,237,0.10)', textColor: '#7C3AED' };
+      if (s >= 60) return { color: '#059669', label: 'Solid', bg: 'rgba(5,150,105,0.10)', textColor: '#059669' };
+      if (s >= 40) return { color: '#0D9488', label: 'Moderate', bg: 'rgba(13,148,136,0.10)', textColor: '#0D9488' };
+      if (s >= 20) return { color: '#D97706', label: 'Building', bg: 'rgba(217,119,6,0.10)', textColor: '#D97706' };
+      return { color: '#E11D48', label: 'Fading', bg: 'rgba(225,29,72,0.10)', textColor: '#E11D48' };
+    }
+
+    function daysAgoText(d) {
+      if (d === 0) return 'Today';
+      if (d === 1) return '1 day ago';
+      return d + ' days ago';
+    }
+
+    // -- State --
+    const card = document.getElementById('habitsCard');
+    let expandedId = null;
+    let selectionMode = false;
+    let selected = new Set();
+
+    function renderAll() {
+      card.innerHTML = '';
+      habits.forEach(function(h, i) {
+        const tier = getTier(h.strength);
+        const isExpanded = expandedId === h.id;
+
+        const row = document.createElement('div');
+        row.className = 'habit-row' + (isExpanded ? ' expanded' : '');
+        row.dataset.id = h.id;
+        row.style.transitionDelay = (i * 50) + 'ms';
+
+        const tierBgDarker = tier.bg.replace('0.10', '0.25').replace('0.08', '0.20');
+
+        row.innerHTML = '<div class="accent-bar" style="background:' + tier.color + ';"></div>' +
+          '<div class="row-content" onclick="toggleExpand(' + h.id + ')">' +
+            '<div class="selection-checkbox ' + (selected.has(h.id) ? 'checked' : '') + '" onclick="event.stopPropagation();toggleSelect(' + h.id + ')">' +
+              (selected.has(h.id) ? '<i data-lucide="check" style="width:14px;height:14px;color:#FFF;"></i>' : '') +
+            '</div>' +
+            '<div class="emoji-circle" style="background:' + tier.bg + ';">' + h.emoji + '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="font-size:15px;font-weight:600;color:#2D2A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + h.name + '</div>' +
+              '<div style="font-size:13px;color:#9CA3AF;margin-top:1px;">' + daysAgoText(h.daysAgo) + '</div>' +
+            '</div>' +
+            '<div class="strength-pill" style="background:' + tier.bg + ';color:' + tier.textColor + ';">' + h.strength + '% ' + tier.label + '</div>' +
+            '<i data-lucide="chevron-down" class="chevron-icon" style="width:16px;height:16px;color:#9CA3AF;"></i>' +
+          '</div>' +
+          '<div class="expand-area">' +
+            '<div class="expand-inner">' +
+              '<div style="display:flex;gap:8px;margin-bottom:14px;">' +
+                '<div class="stat-badge" style="background:rgba(217,119,6,0.08);">' +
+                  '<div class="stat-badge-icon" style="background:rgba(217,119,6,0.15);">' +
+                    '<i data-lucide="flame" style="width:15px;height:15px;color:#D97706;"></i>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div style="font-size:15px;font-weight:700;color:#2D2A26;">' + h.streak + 'd</div>' +
+                    '<div style="font-size:11px;color:#6E6660;">Best Streak</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="stat-badge" style="background:rgba(59,130,246,0.08);">' +
+                  '<div class="stat-badge-icon" style="background:rgba(59,130,246,0.15);">' +
+                    '<i data-lucide="check-circle" style="width:15px;height:15px;color:#3B82F6;"></i>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div style="font-size:15px;font-weight:700;color:#2D2A26;">' + h.total + '</div>' +
+                    '<div style="font-size:11px;color:#6E6660;">Total</div>' +
+                  '</div>' +
+                '</div>' +
+                '<div class="stat-badge" style="background:' + tier.bg + ';">' +
+                  '<div class="stat-badge-icon" style="background:' + tierBgDarker + ';">' +
+                    '<i data-lucide="activity" style="width:15px;height:15px;color:' + tier.color + ';"></i>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div style="font-size:15px;font-weight:700;color:#2D2A26;">' + h.strength + '%</div>' +
+                    '<div style="font-size:11px;color:#6E6660;">' + tier.label + '</div>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<button class="resume-btn" onclick="event.stopPropagation();handleResume(' + h.id + ')">' +
+                '<i data-lucide="play" style="width:16px;height:16px;"></i>' +
+                'Resume Habit' +
+              '</button>' +
+              '<div style="text-align:center;margin-top:10px;">' +
+                '<button style="background:none;border:none;font-family:DM Sans,sans-serif;font-size:13px;color:#9CA3AF;cursor:pointer;transition:color 0.15s ease;" onclick="event.stopPropagation();showDeleteConfirm(' + h.id + ')">' +
+                  'or delete permanently' +
+                '</button>' +
+              '</div>' +
+              '<div class="delete-confirm" id="deleteConfirm-' + h.id + '">' +
+                '<span style="font-size:13px;color:#6E6660;margin-right:4px;">Are you sure?</span>' +
+                '<button class="delete-pill delete-pill-confirm" onclick="event.stopPropagation();handleDelete(' + h.id + ')">Delete</button>' +
+                '<button class="delete-pill delete-pill-cancel" onclick="event.stopPropagation();hideDeleteConfirm(' + h.id + ')">Cancel</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+
+        card.appendChild(row);
+
+        // Divider (not after last)
+        if (i < habits.length - 1) {
+          const divider = document.createElement('div');
+          divider.className = 'row-divider';
+          divider.dataset.afterId = h.id;
+          card.appendChild(divider);
+        }
+      });
+
+      if (selectionMode) {
+        card.classList.add('selection-mode');
+      } else {
+        card.classList.remove('selection-mode');
+      }
+
+      lucide.createIcons();
+
+      // Stagger entrance
+      requestAnimationFrame(function() {
+        document.querySelectorAll('.habit-row').forEach(function(r, i) {
+          setTimeout(function() { r.classList.add('entered'); }, i * 50);
+        });
+      });
+    }
+
+    // -- Interactions --
+    function toggleExpand(id) {
+      if (selectionMode) {
+        toggleSelect(id);
+        return;
+      }
+      if (expandedId === id) {
+        expandedId = null;
+      } else {
+        expandedId = id;
+      }
+      document.querySelectorAll('.habit-row').forEach(function(row) {
+        var rowId = parseInt(row.dataset.id);
+        if (rowId === expandedId) {
+          row.classList.add('expanded');
+        } else {
+          row.classList.remove('expanded');
+          var confirm_ = document.getElementById('deleteConfirm-' + rowId);
+          if (confirm_) confirm_.classList.remove('visible');
+        }
+      });
+    }
+
+    function handleResume(id) {
+      var row = document.querySelector('.habit-row[data-id="' + id + '"]');
+      if (!row) return;
+      row.classList.add('resuming');
+      setTimeout(function() {
+        var idx = habits.findIndex(function(h) { return h.id === id; });
+        if (idx !== -1) habits.splice(idx, 1);
+        expandedId = null;
+        renderAll();
+        updateSubtitle();
+      }, 900);
+    }
+
+    function showDeleteConfirm(id) {
+      var el = document.getElementById('deleteConfirm-' + id);
+      if (el) el.classList.add('visible');
+    }
+
+    function hideDeleteConfirm(id) {
+      var el = document.getElementById('deleteConfirm-' + id);
+      if (el) el.classList.remove('visible');
+    }
+
+    function handleDelete(id) {
+      var row = document.querySelector('.habit-row[data-id="' + id + '"]');
+      if (!row) return;
+      row.classList.add('deleting');
+      var divider = document.querySelector('.row-divider[data-after-id="' + id + '"]');
+      if (divider) {
+        divider.style.transition = 'opacity 0.2s ease';
+        divider.style.opacity = '0';
+      }
+      setTimeout(function() {
+        var idx = habits.findIndex(function(h) { return h.id === id; });
+        if (idx !== -1) habits.splice(idx, 1);
+        expandedId = null;
+        renderAll();
+        updateSubtitle();
+      }, 350);
+    }
+
+    function handleDeleteAll() {
+      if (confirm('Delete all archived habits permanently?')) {
+        habits.length = 0;
+        renderAll();
+        updateSubtitle();
+      }
+    }
+
+    function updateSubtitle() {
+      var el = document.getElementById('subtitleText');
+      if (habits.length === 0) {
+        el.textContent = 'No archived habits';
+      } else if (habits.length === 1) {
+        el.textContent = '1 habit resting';
+      } else {
+        el.textContent = habits.length + ' habits resting';
+      }
+    }
+
+    // -- Selection Mode --
+    function toggleSelectionMode() {
+      selectionMode = !selectionMode;
+      selected.clear();
+      expandedId = null;
+      var btn = document.getElementById('selectBtn');
+      btn.textContent = selectionMode ? 'Done' : 'Select';
+      btn.style.color = selectionMode ? '#B53030' : '#059669';
+      updateFloatingBar();
+      renderAll();
+    }
+
+    function toggleSelect(id) {
+      if (!selectionMode) return;
+      if (selected.has(id)) {
+        selected.delete(id);
+      } else {
+        selected.add(id);
+      }
+      document.querySelectorAll('.habit-row').forEach(function(row) {
+        var rowId = parseInt(row.dataset.id);
+        var cb = row.querySelector('.selection-checkbox');
+        if (!cb) return;
+        if (selected.has(rowId)) {
+          cb.classList.add('checked');
+          cb.innerHTML = '<i data-lucide="check" style="width:14px;height:14px;color:#FFF;"></i>';
+        } else {
+          cb.classList.remove('checked');
+          cb.innerHTML = '';
+        }
+      });
+      lucide.createIcons();
+      updateFloatingBar();
+    }
+
+    function updateFloatingBar() {
+      var bar = document.getElementById('floatingBar');
+      var count = document.getElementById('selectedCount');
+      if (selectionMode && selected.size > 0) {
+        bar.classList.add('visible');
+        count.textContent = selected.size + ' selected';
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    function batchResume() {
+      var ids = Array.from(selected);
+      ids.forEach(function(id, i) {
+        var row = document.querySelector('.habit-row[data-id="' + id + '"]');
+        if (row) {
+          setTimeout(function() { row.classList.add('resuming'); }, i * 100);
+        }
+      });
+      setTimeout(function() {
+        ids.forEach(function(id) {
+          var idx = habits.findIndex(function(h) { return h.id === id; });
+          if (idx !== -1) habits.splice(idx, 1);
+        });
+        selected.clear();
+        selectionMode = false;
+        document.getElementById('selectBtn').textContent = 'Select';
+        document.getElementById('selectBtn').style.color = '#059669';
+        expandedId = null;
+        updateFloatingBar();
+        renderAll();
+        updateSubtitle();
+      }, ids.length * 100 + 900);
+    }
+
+    function batchDelete() {
+      if (!confirm('Delete ' + selected.size + ' habits permanently?')) return;
+      var ids = Array.from(selected);
+      ids.forEach(function(id) {
+        var row = document.querySelector('.habit-row[data-id="' + id + '"]');
+        if (row) row.classList.add('deleting');
+      });
+      setTimeout(function() {
+        ids.forEach(function(id) {
+          var idx = habits.findIndex(function(h) { return h.id === id; });
+          if (idx !== -1) habits.splice(idx, 1);
+        });
+        selected.clear();
+        selectionMode = false;
+        document.getElementById('selectBtn').textContent = 'Select';
+        document.getElementById('selectBtn').style.color = '#059669';
+        expandedId = null;
+        updateFloatingBar();
+        renderAll();
+        updateSubtitle();
+      }, 350);
+    }
+
+    // -- Scroll header shadow --
+    window.addEventListener('scroll', function() {
+      var header = document.getElementById('stickyHeader');
+      if (window.scrollY > 4) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // -- Init --
+    renderAll();
+  </script>
+</body>
+</html>

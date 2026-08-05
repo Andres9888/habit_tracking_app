@@ -1,0 +1,15 @@
+appId: com.chainday.app
+name: Shared - Launch Signed In
+tags:
+  - helper
+onFlowComplete:
+  - takeScreenshot: shared-launch-signed-in-complete
+---
+- launchApp:
+    appId: com.chainday.app
+    clearState: false
+    clearKeychain: false
+- extendedWaitUntil:
+    visible: Today
+    timeout: 15000
+- waitForAnimationToEnd

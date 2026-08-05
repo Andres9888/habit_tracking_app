@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings Improvements Mock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --page: #d8d0c4;
+        --device: #171512;
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --raised: #faf8f5;
+        --line: #ddd8d2;
+        --ink: #2d2a26;
+        --muted: #6b6560;
+        --faint: #948c83;
+        --brand: #047857;
+        --brand-soft: #e2f1ea;
+        --sound-soft: #eef2ff;
+        --sound: #4f46e5;
+        --archive-soft: #f4e8dc;
+        --archive: #9a5a20;
+        --shadow:
+          0 9px 24px -15px rgba(45, 42, 38, 0.28),
+          0 2px 6px -4px rgba(45, 42, 38, 0.16);
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', system-ui, sans-serif;
+      }
+
+      .dark {
+        --page: #151412;
+        --device: #060605;
+        --bg: #111814;
+        --card: #19231d;
+        --raised: #1e2923;
+        --line: #2b3a32;
+        --ink: #f4f1ea;
+        --muted: #b5ada2;
+        --faint: #8e968e;
+        --brand: #34d399;
+        --brand-soft: #143428;
+        --sound-soft: #20233e;
+        --sound: #a5b4fc;
+        --archive-soft: #372a1e;
+        --archive: #f0b478;
+        --shadow:
+          0 10px 26px -16px rgba(0, 0, 0, 0.7),
+          0 2px 6px -4px rgba(0, 0, 0, 0.5);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 18% 8%, rgba(4, 120, 87, 0.18), transparent 30%),
+          radial-gradient(circle at 82% 15%, rgba(154, 90, 32, 0.16), transparent 34%),
+          var(--page);
+        color: var(--ink);
+        font-family: var(--sans);
+        display: grid;
+        place-items: center;
+        padding: 32px 18px;
+      }
+
+      .stage {
+        display: grid;
+        grid-template-columns: minmax(280px, 390px) minmax(280px, 390px);
+        gap: 28px;
+        align-items: start;
+      }
+
+      .panel {
+        width: min(390px, calc(100vw - 36px));
+      }
+
+      .label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 4px 12px;
+        color: rgba(45, 42, 38, 0.72);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .dark .label {
+        color: rgba(244, 241, 234, 0.72);
+      }
+
+      .toggle {
+        appearance: none;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 999px;
+        background: rgba(20, 18, 15, 0.66);
+        color: #fffaf1;
+        cursor: pointer;
+        font: inherit;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 8px 12px;
+      }
+
+      .phone {
+        width: 390px;
+        max-width: calc(100vw - 36px);
+        height: 844px;
+        overflow: hidden;
+        border: 10px solid var(--device);
+        border-radius: 48px;
+        background: var(--bg);
+        box-shadow:
+          0 32px 70px -24px rgba(25, 20, 15, 0.55),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      .screen {
+        height: 100%;
+        overflow: auto;
+        scrollbar-width: none;
+        background: var(--bg);
+      }
+
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .status {
+        height: 50px;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        padding: 0 25px 8px;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .signals {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px 14px;
+      }
+
+      .nav h1 {
+        margin: 0;
+        font-family: var(--serif);
+        font-size: 33px;
+        font-weight: 650;
+        letter-spacing: 0;
+      }
+
+      .icon-btn {
+        width: 34px;
+        height: 34px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: rgba(45, 42, 38, 0.06);
+        color: var(--muted);
+        display: grid;
+        place-items: center;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 0 16px 42px;
+      }
+
+      .profile {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--raised);
+        box-shadow: var(--shadow);
+      }
+
+      .profile-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 32% 25%, #6ee7b7, transparent 34%),
+          linear-gradient(135deg, #047857, #0f3d2c);
+        color: #f8fff9;
+        display: grid;
+        place-items: center;
+        flex: none;
+        font-family: var(--serif);
+        font-size: 24px;
+        font-weight: 700;
+        box-shadow:
+          0 0 0 3px var(--raised),
+          0 0 0 5px var(--brand);
+      }
+
+      .profile-copy {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .profile-name {
+        font-size: 19px;
+        font-weight: 750;
+        letter-spacing: 0;
+      }
+
+      .profile-sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid var(--line);
+      }
+
+      .stat {
+        padding: 14px 6px 15px;
+        text-align: center;
+      }
+
+      .stat + .stat {
+        border-left: 1px solid var(--line);
+      }
+
+      .stat strong {
+        display: block;
+        color: var(--brand);
+        font-family: var(--serif);
+        font-size: 25px;
+        line-height: 1;
+      }
+
+      .stat span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 6px;
+      }
+
+      .section {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--ink);
+        font-family: var(--serif);
+        font-size: 15px;
+        font-weight: 650;
+        padding: 0 5px;
+      }
+
+      .section-title i {
+        color: var(--brand);
+        width: 16px;
+        height: 16px;
+      }
+
+      .card {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--raised);
+        box-shadow: var(--shadow);
+      }
+
+      .row {
+        min-height: 82px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 20px 16px;
+      }
+
+      .row + .row {
+        border-top: 1px solid var(--line);
+      }
+
+      .tile {
+        width: 42px;
+        height: 42px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        flex: none;
+      }
+
+      .tile.green {
+        background: var(--brand-soft);
+        color: var(--brand);
+      }
+
+      .tile.sound {
+        background: var(--sound-soft);
+        color: var(--sound);
+      }
+
+      .tile.archive {
+        background: var(--archive-soft);
+        color: var(--archive);
+      }
+
+      .row-copy {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .row-title {
+        color: var(--ink);
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.15;
+      }
+
+      .row-sub {
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 4px;
+        line-height: 1.25;
+      }
+
+      .accessory {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: var(--faint);
+        flex: none;
+      }
+
+      .value {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 700;
+        max-width: 120px;
+        overflow: hidden;
+        text-align: right;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .switch {
+        width: 48px;
+        height: 29px;
+        border-radius: 999px;
+        background: #10b981;
+        padding: 3px;
+        display: flex;
+        justify-content: end;
+      }
+
+      .dark .switch {
+        background: #34d399;
+      }
+
+      .knob {
+        width: 23px;
+        height: 23px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.24);
+      }
+
+      .premium {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(145, 198, 154, 0.26);
+        border-radius: 24px;
+        background:
+          radial-gradient(circle at 88% 16%, rgba(116, 196, 149, 0.28), transparent 26%),
+          linear-gradient(145deg, #0d2119 0%, #173a2a 48%, #10251d 100%);
+        box-shadow:
+          0 18px 34px -24px rgba(4, 45, 30, 0.8),
+          0 3px 8px -6px rgba(0, 0, 0, 0.7);
+      }
+
+      .premium::before {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        pointer-events: none;
+        border-radius: 23px;
+        background:
+          linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 32%),
+          linear-gradient(0deg, rgba(6, 20, 14, 0.3), transparent 50%);
+      }
+
+      .premium-inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 17px 16px;
+      }
+
+      .premium-mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 16px;
+        background: rgba(250, 248, 245, 0.12);
+        color: #bdeccf;
+        display: grid;
+        place-items: center;
+        flex: none;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.15),
+          0 8px 16px -10px rgba(0, 0, 0, 0.65);
+      }
+
+      .premium-copy {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .premium-kicker {
+        color: rgba(220, 244, 227, 0.72);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+      }
+
+      .premium-title {
+        color: #fff8e9;
+        font-family: var(--serif);
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 1.08;
+      }
+
+      .premium-sub {
+        color: rgba(240, 249, 243, 0.76);
+        font-size: 13px;
+        margin-top: 5px;
+        line-height: 1.25;
+      }
+
+      .premium-cta {
+        border: 1px solid rgba(214, 255, 223, 0.2);
+        border-radius: 999px;
+        background: #d7f7df;
+        color: #10251d;
+        flex: none;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 9px 12px;
+        box-shadow: 0 7px 16px -10px rgba(0, 0, 0, 0.7);
+      }
+
+      .old-premium {
+        border: 1px solid #ead08f;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #fdf3d2, #f6e2a6);
+        box-shadow: 0 8px 20px -16px rgba(124, 90, 8, 0.8);
+      }
+
+      .old-premium .premium-inner {
+        padding: 16px;
+      }
+
+      .old-premium .premium-mark {
+        background: #fff;
+        color: #936a08;
+      }
+
+      .old-premium .premium-kicker {
+        color: #8a6a2a;
+      }
+
+      .old-premium .premium-title {
+        color: #5a4406;
+      }
+
+      .old-premium .premium-sub {
+        color: #8a6a2a;
+      }
+
+      .old-premium .premium-cta {
+        background: #936a08;
+        color: #fff;
+      }
+
+      .collapsed-preview {
+        margin: -1px 16px 15px 72px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: color-mix(in srgb, var(--card), var(--bg) 28%);
+        padding: 12px;
+      }
+
+      .option {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+        padding: 7px 2px;
+      }
+
+      .option strong {
+        color: var(--brand);
+        font-weight: 800;
+      }
+
+      .badge {
+        border-radius: 999px;
+        background: var(--brand-soft);
+        color: var(--brand);
+        font-size: 12px;
+        font-weight: 800;
+        min-width: 24px;
+        padding: 3px 7px;
+        text-align: center;
+      }
+
+      .current .row:first-child .accessory,
+      .current .row:nth-child(2) .accessory {
+        display: none;
+      }
+
+      .current .content {
+        gap: 20px;
+      }
+
+      .current .row + .row.manual-gap {
+        border-top: 0;
+      }
+
+      @media (max-width: 850px) {
+        body {
+          display: block;
+        }
+
+        .stage {
+          grid-template-columns: 1fr;
+          justify-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage">
+      <section class="panel current" aria-label="Current settings">
+        <div class="label">
+          <span>Current</span>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="status">
+              <span>9:41</span>
+              <span class="signals"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span>
+            </div>
+            <div class="nav">
+              <h1>Settings</h1>
+              <div class="icon-btn"><i data-lucide="x"></i></div>
+            </div>
+            <div class="content">
+              <div class="profile">
+                <div class="profile-top">
+                  <div class="avatar">A</div>
+                  <div class="profile-copy">
+                    <div class="profile-name">Andres</div>
+                    <div class="profile-sub">Signed in with Apple</div>
+                  </div>
+                  <div class="accessory"><i data-lucide="chevron-right"></i></div>
+                </div>
+                <div class="stats">
+                  <div class="stat"><strong>14</strong><span>Habits</span></div>
+                  <div class="stat"><strong>82%</strong><span>This week</span></div>
+                  <div class="stat"><strong>31</strong><span>Best streak</span></div>
+                </div>
+              </div>
+
+              <section class="section">
+                <div class="section-title"><i data-lucide="crown"></i> Subscription</div>
+                <div class="old-premium">
+                  <div class="premium-inner">
+                    <div class="premium-mark"><i data-lucide="crown"></i></div>
+                    <div class="premium-copy">
+                      <div class="premium-title">Go Premium</div>
+                      <div class="premium-sub">Sounds, reminders & unlimited habits</div>
+                    </div>
+                    <div class="premium-cta">Upgrade</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-title"><i data-lucide="sliders-horizontal"></i> Habits</div>
+                <div class="card">
+                  <div class="row">
+                    <div class="tile green"><i data-lucide="arrow-up-down"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Sort order</div>
+                      <div class="row-sub">How habits are ordered</div>
+                    </div>
+                  </div>
+                  <div class="row manual-gap">
+                    <div class="tile sound"><i data-lucide="volume-2"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Completion sound</div>
+                      <div class="row-sub">Play sound when checking off</div>
+                    </div>
+                    <div class="switch"><div class="knob"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="tile archive"><i data-lucide="archive"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Archived habits</div>
+                      <div class="row-sub">View paused or archived habits</div>
+                    </div>
+                    <div class="accessory"><span class="badge">4</span><i data-lucide="chevron-right"></i></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel proposed" aria-label="Proposed settings">
+        <div class="label">
+          <span>Proposed</span>
+          <button class="toggle" type="button">Toggle dark</button>
+        </div>
+        <div class="phone">
+          <div class="screen">
+            <div class="status">
+              <span>9:41</span>
+              <span class="signals"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></span>
+            </div>
+            <div class="nav">
+              <h1>Settings</h1>
+              <div class="icon-btn"><i data-lucide="x"></i></div>
+            </div>
+            <div class="content">
+              <div class="profile">
+                <div class="profile-top">
+                  <div class="avatar">A</div>
+                  <div class="profile-copy">
+                    <div class="profile-name">Andres</div>
+                    <div class="profile-sub">Signed in with Apple</div>
+                  </div>
+                  <div class="accessory"><i data-lucide="chevron-right"></i></div>
+                </div>
+                <div class="stats">
+                  <div class="stat"><strong>14</strong><span>Habits</span></div>
+                  <div class="stat"><strong>82%</strong><span>This week</span></div>
+                  <div class="stat"><strong>31</strong><span>Best streak</span></div>
+                </div>
+              </div>
+
+              <section class="section">
+                <div class="section-title"><i data-lucide="crown"></i> Subscription</div>
+                <div class="premium">
+                  <div class="premium-inner">
+                    <div class="premium-mark"><i data-lucide="crown"></i></div>
+                    <div class="premium-copy">
+                      <div class="premium-kicker">Chain Day Premium</div>
+                      <div class="premium-title">Make every habit feel intentional</div>
+                      <div class="premium-sub">Unlimited habits, reminders, sounds, and advanced progress cues.</div>
+                    </div>
+                    <div class="premium-cta">Upgrade</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-title"><i data-lucide="sliders-horizontal"></i> Habits</div>
+                <div class="card">
+                  <div class="row">
+                    <div class="tile green"><i data-lucide="arrow-up-down"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Sort order</div>
+                      <div class="row-sub">How habits are ordered</div>
+                    </div>
+                    <div class="accessory"><span class="value">Manual</span><i data-lucide="chevron-right"></i></div>
+                  </div>
+                  <div class="collapsed-preview">
+                    <div class="option"><span>Manual drag order</span><strong>Selected</strong></div>
+                    <div class="option"><span>Strongest chains first</span><span>Available</span></div>
+                  </div>
+                  <div class="row">
+                    <div class="tile sound"><i data-lucide="volume-2"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Completion sound</div>
+                      <div class="row-sub">Play sound when checking off</div>
+                    </div>
+                    <div class="accessory"><span class="value">Soft chime</span><i data-lucide="chevron-right"></i></div>
+                  </div>
+                  <div class="row">
+                    <div class="tile archive"><i data-lucide="archive"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Archived habits</div>
+                      <div class="row-sub">View paused or archived habits</div>
+                    </div>
+                    <div class="accessory"><span class="badge">4</span><i data-lucide="chevron-right"></i></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="section">
+                <div class="section-title"><i data-lucide="shield-check"></i> Data & Privacy</div>
+                <div class="card">
+                  <div class="row">
+                    <div class="tile green"><i data-lucide="download"></i></div>
+                    <div class="row-copy">
+                      <div class="row-title">Export habit data</div>
+                      <div class="row-sub">Download your completions and notes</div>
+                    </div>
+                    <div class="accessory"><i data-lucide="chevron-right"></i></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+      lucide.createIcons({ attrs: { strokeWidth: 2, width: 19, height: 19 } });
+
+      const root = document.documentElement;
+      const toggle = document.querySelector('.toggle');
+      toggle.addEventListener('click', () => {
+        root.classList.toggle('dark');
+        toggle.textContent = root.classList.contains('dark')
+          ? 'Toggle light'
+          : 'Toggle dark';
+      });
+    </script>
+  </body>
+</html>

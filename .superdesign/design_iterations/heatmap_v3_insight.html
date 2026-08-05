@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Heatmap v3 — Insight Forward</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@7..72,500;7..72,600;7..72,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#F5F1ED; --card:#FFFFFF; --inner:#F7F4F0; --border:#E4DFD8; --fg:#2D2A26;
+    --text-secondary:#6B6560; --text-tertiary:#8A837B;
+    --accent:#059669; --accent-bright:#10B981; --gold:#8B6208;
+    --cell-empty:#E7E3DD; --today-ring:#047857;
+    --tooltip-bg:#1C1917; --tooltip-fg:#FAF8F5;
+    --shadow:0 1px 3px rgba(45,42,38,0.06),0 1px 2px rgba(45,42,38,0.04);
+  }
+  [data-theme="dark"] {
+    --bg:#111827; --card:#1B2330; --inner:#232D3B; --border:#2A3543; --fg:#E7EAEE;
+    --text-secondary:#9BA3AE; --text-tertiary:#757E89;
+    --accent:#34D399; --accent-bright:#6EE7B7; --gold:#D9A93A;
+    --cell-empty:#2B3543; --today-ring:#6EE7B7;
+    --tooltip-bg:#F5F1ED; --tooltip-fg:#1A1816;
+    --shadow:0 1px 3px rgba(0,0,0,0.4),0 1px 2px rgba(0,0,0,0.3);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); font-family:'DM Sans',system-ui,sans-serif; color:var(--fg); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:32px 16px 80px; transition:background .3s ease; }
+  .toolbar { display:flex; gap:10px; align-items:center; margin-bottom:28px; }
+  .toolbar h1 { font-family:'Literata',serif; font-size:18px; font-weight:600; }
+  .toggle { border:1px solid var(--border); background:var(--card); color:var(--fg); border-radius:9999px; padding:7px 16px; font-size:13px; font-weight:600; cursor:pointer; }
+  .phone { width:390px; max-width:100%; background:var(--bg); border:1px solid var(--border); border-radius:28px; padding:18px 14px; box-shadow:var(--shadow); }
+  .card { background:var(--card); border-radius:18px; padding:18px; box-shadow:var(--shadow); }
+  .card-title { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; margin-bottom:14px; }
+
+  /* stat strip */
+  .stats { display:flex; gap:8px; margin-bottom:18px; }
+  .stat { flex:1; background:var(--inner); border-radius:12px; padding:11px 10px; text-align:center; }
+  .stat .v { font-family:'JetBrains Mono',monospace; font-size:20px; font-weight:600; line-height:1; }
+  .stat .v.green { color:var(--accent); }
+  .stat .v.gold { color:var(--gold); }
+  .stat .l { font-size:10px; color:var(--text-tertiary); margin-top:5px; text-transform:uppercase; letter-spacing:.04em; }
+
+  .grid-area { display:flex; gap:6px; }
+  .day-col { display:flex; flex-direction:column; gap:4px; padding-top:20px; }
+  .day-col .lbl { height:13px; font-size:9px; color:var(--text-tertiary); display:flex; align-items:center; }
+  .scroller { overflow-x:auto; flex:1; }
+  .scroller::-webkit-scrollbar { height:0; }
+  .months { display:flex; height:16px; position:relative; margin-bottom:4px; }
+  .months span { position:absolute; font-size:10px; color:var(--text-tertiary); }
+  .rows { display:flex; flex-direction:column; gap:4px; }
+  .row { display:flex; gap:4px; }
+  .cell { width:13px; height:13px; border-radius:3px; background:var(--cell-empty); flex:0 0 auto; }
+  .cell.done { background:var(--accent); }
+  .cell.future { opacity:.4; }
+  .cell.today { box-shadow:0 0 0 2px var(--today-ring); }
+  /* streak band: brighter + connected look */
+  .cell.streak { background:var(--accent-bright); }
+
+  .legend { display:flex; align-items:center; gap:14px; margin-top:14px; padding:0 2px; }
+  .legend .item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--text-secondary); }
+  .legend .sq { width:9px; height:9px; border-radius:2px; }
+  .tooltip { position:absolute; top:-34px; left:50%; transform:translateX(-50%); background:var(--tooltip-bg); color:var(--tooltip-fg); font-size:11px; padding:5px 9px; border-radius:6px; white-space:nowrap; box-shadow:var(--shadow); }
+  .tooltip::after { content:''; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%) rotate(45deg); width:8px; height:8px; background:var(--tooltip-bg); }
+  .caption { margin-top:18px; font-size:12px; color:var(--text-secondary); max-width:390px; text-align:center; line-height:1.5; }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <h1>v3 — Insight Forward</h1>
+    <button class="toggle" id="toggle">◐ Toggle dark</button>
+  </div>
+
+  <div class="phone">
+    <div class="card">
+      <div class="card-title">Year overview</div>
+
+      <div class="stats">
+        <div class="stat"><div class="v green">68%</div><div class="l">Completion</div></div>
+        <div class="stat"><div class="v">🔥 12</div><div class="l">Current</div></div>
+        <div class="stat"><div class="v gold">31</div><div class="l">Best</div></div>
+      </div>
+
+      <div class="grid-area">
+        <div class="day-col" id="dayCol"></div>
+        <div class="scroller">
+          <div style="display:inline-block">
+            <div class="months" id="months"></div>
+            <div class="rows" id="rows"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="item"><span class="sq" style="background:var(--cell-empty)"></span>Missed</div>
+        <div class="item"><span class="sq" style="background:var(--accent)"></span>Done</div>
+        <div class="item"><span class="sq" style="background:var(--accent-bright)"></span>Current streak</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="caption">Insight-forward. A compact stat strip (completion %, current streak, best streak) sits above the grid, and the active streak is picked out as a brighter band so progress is legible at a glance.</p>
+
+<script>
+  const DAY_LABELS = ['', 'M', '', 'W', '', 'F', ''];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const WEEKS = 53;
+  const today = new Date();
+  const dayCol = document.getElementById('dayCol');
+  DAY_LABELS.forEach(l => { const d=document.createElement('div'); d.className='lbl'; d.textContent=l; dayCol.appendChild(d); });
+  const rowsEl=document.getElementById('rows'); const rows=[];
+  for(let r=0;r<7;r++){ const row=document.createElement('div'); row.className='row'; rowsEl.appendChild(row); rows.push(row); }
+  const todayIndex=(WEEKS-1)*7+today.getDay();
+  for(let w=0;w<WEEKS;w++){ for(let day=0;day<7;day++){
+    const i=w*7+day; const diff=todayIndex-i;
+    const date=new Date(today); date.setDate(today.getDate()-diff);
+    const cell=document.createElement('div'); cell.className='cell';
+    if(diff<0){ cell.classList.add('future'); }
+    else { let done; if(diff<12){done=true;cell.classList.add('streak');} else {done=Math.random()<0.66; if(done)cell.classList.add('done');} if(diff===0)cell.classList.add('today'); cell.dataset.date=MONTHS[date.getMonth()]+' '+date.getDate(); cell.dataset.done=done; }
+    rows[day].appendChild(cell);
+  }}
+  const monthsEl=document.getElementById('months'); let lastMonth=-1;
+  for(let w=0;w<WEEKS;w++){ const diff=todayIndex-w*7; const date=new Date(today); date.setDate(today.getDate()-diff); if(date.getMonth()!==lastMonth){ lastMonth=date.getMonth(); const s=document.createElement('span'); s.textContent=MONTHS[lastMonth]; s.style.left=(w*17)+'px'; monthsEl.appendChild(s);} }
+  monthsEl.style.width=(WEEKS*17)+'px';
+  const sample=rows[3].children[38]; if(sample){ const tip=document.createElement('div'); tip.className='tooltip'; tip.textContent=(sample.dataset.date||'')+' · '+(sample.dataset.done==='true'?'Done ✓':'Missed'); sample.style.position='relative'; sample.appendChild(tip);}
+  document.querySelector('.scroller').scrollLeft=9999;
+  document.getElementById('toggle').onclick=()=>{ const el=document.documentElement; el.dataset.theme=el.dataset.theme==='dark'?'':'dark'; };
+</script>
+</body>
+</html>

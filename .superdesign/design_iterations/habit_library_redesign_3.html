@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library — Goal + Categories v3</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Literata:wght@600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --border: #ddd8d2;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --c-action: #059669;
+      --c-action-bg: #d1fae5;
+      --c-science: #0369a1;
+      --c-science-bg: #e0f2fe;
+      --c-trend: #c2410c;
+      --ff: 'DM Sans', sans-serif;
+      --ff-display: 'Literata', serif;
+      --r-full: 9999px;
+      --r-lg: 14px;
+      --r-md: 10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      background: #1c1917;
+      font-family: var(--ff);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+    }
+    .page-title {
+      color: #a8a29e; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-align: center; margin-bottom: 8px;
+    }
+    .page-subtitle {
+      color: #78716c; font-size: 14px; text-align: center;
+      margin-bottom: 36px; max-width: 700px;
+      margin-left: auto; margin-right: auto; line-height: 1.5;
+    }
+    .comparison {
+      display: flex; gap: 48px; justify-content: center;
+      align-items: flex-start; flex-wrap: wrap;
+    }
+    .phone-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .phone-label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-align: center; margin-bottom: 10px;
+    }
+    .phone-label.current { color: #f97316; }
+    .phone-label.v3 { color: #22c55e; }
+    .phone {
+      width: 390px; height: 844px;
+      background: var(--bg); border-radius: 44px;
+      overflow: hidden; position: relative;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      flex-shrink: 0; display: flex; flex-direction: column;
+    }
+    .status-bar {
+      height: 54px; padding: 16px 28px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px; font-weight: 600; color: var(--text-1); flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+    .screen-content {
+      flex: 1; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    /* ── Header variants ── */
+    .header-v2 {
+      padding: 10px 20px 8px;
+      position: relative;
+    }
+    .header-v2 h1 {
+      font-family: var(--ff-display);
+      font-size: 26px; font-weight: 700;
+      color: var(--text-1); letter-spacing: -0.5px;
+      /* collides with modal X on Pro Max */
+    }
+    .header-v2 .close-x {
+      position: absolute; top: 10px; right: 16px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-2); font-size: 16px;
+    }
+
+    .header-v3 {
+      padding: 10px 20px 8px;
+      position: relative;
+    }
+    .header-v3 .close-x {
+      position: absolute; top: 10px; right: 16px;
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-2); font-size: 16px; z-index: 2;
+    }
+    .header-v3 h1 {
+      font-family: var(--ff-display);
+      font-size: 26px; font-weight: 700;
+      color: var(--text-1); letter-spacing: -0.5px;
+      padding-right: 40px; /* reserves space for X */
+      line-height: 1.15;
+    }
+    .header-v3 .lead {
+      font-size: 13px; color: var(--text-2);
+      margin-top: 4px; line-height: 1.4;
+      padding-right: 40px;
+    }
+
+    /* ── Goal hero ── */
+    .goal-hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; padding: 12px 16px 4px;
+    }
+    .goal-hero-card {
+      border-radius: 16px; padding: 14px;
+      position: relative;
+      min-height: 138px;
+      display: flex; flex-direction: column;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+    .goal-hero-card.featured {
+      grid-column: span 2;
+      min-height: 116px;
+      flex-direction: row; align-items: center; gap: 14px;
+    }
+    .goal-hero-card.featured .ghc-emoji { font-size: 44px; flex-shrink: 0; }
+    .goal-hero-card .ghc-emoji { font-size: 30px; line-height: 32px; }
+    .goal-hero-card .ghc-label {
+      font-family: var(--ff-display);
+      font-size: 16px; font-weight: 700; margin-top: 6px;
+      letter-spacing: -0.2px;
+      padding-right: 42px; /* reserve space for badge */
+    }
+    .goal-hero-card.featured .ghc-content { flex: 1; }
+    .goal-hero-card.featured .ghc-label {
+      margin-top: 0; font-size: 17px;
+      padding-right: 76px; /* reserve for TODAY'S PICK badge */
+    }
+    .goal-hero-card .ghc-promise {
+      font-size: 12px; line-height: 17px;
+      opacity: 0.85; margin-top: 4px;
+    }
+    .goal-hero-card .ghc-bottom {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-top: auto; padding-top: 10px;
+    }
+    .goal-hero-card .ghc-meta {
+      font-size: 11px; font-weight: 600; opacity: 0.75;
+    }
+    .goal-hero-card .ghc-arrow {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(0,0,0,0.08);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 13px; font-weight: 700;
+    }
+    .goal-hero-card.featured .ghc-arrow {
+      width: 32px; height: 32px; font-size: 16px;
+    }
+    .goal-hero-card .ghc-time-badge {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(255,255,255,0.55);
+      border-radius: var(--r-full);
+      padding: 2px 8px; font-size: 9px; font-weight: 700;
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+
+    /* ── Compact pill search (v3 only) ── */
+    .pill-search {
+      margin: 14px 16px 4px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-full);
+      padding: 8px 14px;
+      display: flex; align-items: center; gap: 8px;
+      height: 38px;
+    }
+    .pill-search .search-icon { color: var(--text-3); flex-shrink: 0; }
+    .pill-search .search-placeholder {
+      font-size: 13px; color: var(--text-3); flex: 1;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── Full-size search (v2 current, for comparison) ── */
+    .search-bar {
+      margin: 12px 16px 4px;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 10px 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .search-bar .search-placeholder {
+      font-size: 14px; color: var(--text-3);
+    }
+
+    /* ── Category tiles (back!) ── */
+    .cat-section {
+      padding: 16px 16px 4px;
+    }
+    .cat-section-header {
+      display: flex; justify-content: space-between;
+      align-items: baseline; margin-bottom: 10px;
+    }
+    .cat-section-title {
+      font-size: 17px; font-weight: 700; color: var(--text-1);
+    }
+    .cat-section-link {
+      font-size: 12px; font-weight: 600; color: var(--c-action);
+    }
+    .cat-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .cat-tile {
+      border-radius: var(--r-md);
+      padding: 12px;
+      min-height: 92px;
+      display: flex; flex-direction: column;
+      border-left: 3px solid transparent;
+    }
+    .cat-tile .c-icon { font-size: 24px; line-height: 1; }
+    .cat-tile .c-label {
+      font-size: 13px; font-weight: 600; margin-top: 6px;
+    }
+    .cat-tile .c-count {
+      font-size: 11px; font-weight: 600;
+      margin-top: 2px;
+      opacity: 0.75;
+    }
+
+    /* ── Trending (vertical inline) ── */
+    .trending-section {
+      padding: 16px 0 4px;
+    }
+    .trending-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 16px; margin-bottom: 10px;
+    }
+    .trending-header .title {
+      font-size: 17px; font-weight: 700; color: var(--text-1);
+    }
+    .trending-header .see-all {
+      font-size: 13px; color: var(--c-action); font-weight: 600;
+    }
+    .trending-inline {
+      padding: 0 16px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .trending-inline-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .trending-inline-card .icon-box {
+      width: 44px; height: 44px;
+      border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+    }
+    .trending-inline-card .info { flex: 1; min-width: 0; }
+    .trending-inline-card .name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .trending-inline-card .tdesc {
+      font-size: 11px; color: var(--text-2); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .trending-inline-card .meta-row {
+      display: flex; gap: 6px; align-items: center; margin-top: 3px;
+    }
+    .trending-inline-card .freq { font-size: 10px; color: var(--text-3); font-family: monospace; }
+    .trending-inline-card .pop { font-size: 10px; color: var(--c-trend); font-weight: 600; }
+    .trending-inline-card .sci-badge {
+      font-size: 9px; background: var(--c-science-bg);
+      color: var(--c-science); border-radius: var(--r-full);
+      padding: 1px 6px; font-weight: 600;
+    }
+    .trending-inline-card .add-btn {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--c-action); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
+      box-shadow: 0 2px 6px rgba(5,150,105,0.3);
+      flex-shrink: 0;
+    }
+
+    /* ── Annotations ── */
+    .annot {
+      position: absolute; z-index: 20;
+      padding: 3px 8px; border-radius: 6px;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.02em; pointer-events: none;
+    }
+    .annot.bad {
+      background: rgba(239,68,68,0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .annot.good {
+      background: rgba(34,197,94,0.2);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+
+    /* ── Callouts ── */
+    .callouts {
+      max-width: 860px;
+      margin: 48px auto 0;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .callout {
+      background: #292524;
+      border-radius: 14px;
+      padding: 20px 24px;
+      border-left: 4px solid;
+    }
+    .callout.hero { border-left-color: #22c55e; }
+    .callout.shift { border-left-color: #eab308; }
+    .callout.nit { border-left-color: #8b5cf6; }
+    .callout h3 {
+      font-size: 16px; font-weight: 700; color: #fafaf9;
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .callout h3 .tag {
+      font-size: 10px; padding: 2px 8px; border-radius: var(--r-full);
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .callout h3 .tag.fix { background: rgba(239,68,68,0.15); color: #ef4444; }
+    .callout h3 .tag.add { background: rgba(34,197,94,0.15); color: #22c55e; }
+    .callout h3 .tag.polish { background: rgba(139,92,246,0.15); color: #a78bfa; }
+    .callout p {
+      color: #a8a29e; font-size: 13px; line-height: 1.6;
+    }
+    .callout p + p { margin-top: 8px; }
+    .callout strong { color: #fafaf9; font-weight: 600; }
+    .diff-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-top: 10px;
+    }
+    .diff-col {
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .diff-col .dl {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 4px;
+    }
+    .diff-col.before .dl { color: #ef4444; }
+    .diff-col.after .dl { color: #22c55e; }
+    .diff-col .dt {
+      font-size: 12px; color: #d6d3d1; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Habit Library — v3</p>
+  <p class="page-subtitle">Incorporates your feedback: <strong style="color:#22c55e">bring back category tiles</strong>, <strong style="color:#22c55e">compact pill search</strong>, <strong style="color:#22c55e">fix header X collision on Pro Max</strong>.</p>
+
+  <div class="comparison">
+
+    <!-- ═══════ Current v2 (reference) ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label current">CURRENT (v2)</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div></div>
+        <div class="screen-content">
+          <div class="header-v2">
+            <div class="annot bad" style="top:10px;right:52px;">Cut by X on Pro Max</div>
+            <h1>What do you want to change?</h1>
+            <div class="close-x">✕</div>
+          </div>
+
+          <div class="goal-hero-grid">
+            <div class="goal-hero-card featured" style="background:#FEF3C7;color:#78350F;">
+              <span class="ghc-time-badge" style="color:#92400E;">⚡ Today's pick</span>
+              <span class="ghc-emoji">⚡</span>
+              <div class="ghc-content">
+                <div class="ghc-label">Wake up energized</div>
+                <div class="ghc-promise">Build a morning routine that gives you steady energy</div>
+                <div class="ghc-meta" style="margin-top:8px;">89 habits</div>
+              </div>
+              <span class="ghc-arrow">→</span>
+            </div>
+            <div class="goal-hero-card" style="background:#EFF6FF;color:#1E3A5F;">
+              <span class="ghc-emoji">😴</span>
+              <div class="ghc-label">Sleep deeper</div>
+              <div class="ghc-promise">Wind down, rest fully, wake refreshed</div>
+              <div class="ghc-bottom">
+                <div class="ghc-meta">45 habits</div>
+                <span class="ghc-arrow">→</span>
+              </div>
+            </div>
+            <div class="goal-hero-card" style="background:#F0FDF4;color:#14532D;">
+              <span class="ghc-emoji">🧘</span>
+              <div class="ghc-label">Stress less</div>
+              <div class="ghc-promise">Calm your mind, regulate your system</div>
+              <div class="ghc-bottom">
+                <div class="ghc-meta">61 habits</div>
+                <span class="ghc-arrow">→</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="search-bar">
+            <span style="color:#999">🔍</span>
+            <span class="search-placeholder">Or search for a specific habit…</span>
+          </div>
+
+          <div class="annot bad" style="top:540px;left:16px;">No big category tiles</div>
+          <div style="padding:16px; margin:8px 16px; background:var(--card); border:1px solid var(--border); border-radius:14px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:var(--text-1);">Browse all categories</div>
+              <div style="font-size:11px;color:var(--text-3);margin-top:2px;">14 categories · 200+ habits</div>
+            </div>
+            <span style="color:var(--text-3)">→</span>
+          </div>
+
+          <div style="padding:16px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ v3 ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label v3">NEW v3 — fixes + categories back</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div></div>
+        <div class="screen-content">
+
+          <div class="header-v3">
+            <div class="annot good" style="top:-14px;right:52px;">Padding reserves X space</div>
+            <div class="close-x">✕</div>
+            <h1>What do you want to change?</h1>
+            <div class="lead">Pick a transformation. We'll suggest science-backed habits.</div>
+          </div>
+
+          <div class="goal-hero-grid">
+            <div class="goal-hero-card featured" style="background:#FEF3C7;color:#78350F;">
+              <span class="ghc-time-badge" style="color:#92400E;">⚡ Today's pick</span>
+              <span class="ghc-emoji">⚡</span>
+              <div class="ghc-content">
+                <div class="ghc-label">Wake up energized</div>
+                <div class="ghc-promise">Build a morning routine that gives you steady energy</div>
+                <div class="ghc-meta" style="margin-top:8px;">89 habits</div>
+              </div>
+              <span class="ghc-arrow">→</span>
+            </div>
+            <div class="goal-hero-card" style="background:#EFF6FF;color:#1E3A5F;">
+              <span class="ghc-emoji">😴</span>
+              <div class="ghc-label">Sleep deeper</div>
+              <div class="ghc-promise">Wind down, rest fully, wake refreshed</div>
+              <div class="ghc-bottom">
+                <div class="ghc-meta">45 habits</div>
+                <span class="ghc-arrow">→</span>
+              </div>
+            </div>
+            <div class="goal-hero-card" style="background:#F0FDF4;color:#14532D;">
+              <span class="ghc-emoji">🧘</span>
+              <div class="ghc-label">Stress less</div>
+              <div class="ghc-promise">Calm your mind, regulate your system</div>
+              <div class="ghc-bottom">
+                <div class="ghc-meta">61 habits</div>
+                <span class="ghc-arrow">→</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Compact pill search -->
+          <div class="annot good" style="top:478px;right:16px;">Smaller pill, lower visual weight</div>
+          <div class="pill-search">
+            <span style="color:#999;font-size:13px;">🔍</span>
+            <span class="search-placeholder">Search a specific habit</span>
+          </div>
+
+          <!-- Category tiles BACK -->
+          <div class="annot good" style="top:528px;left:16px;">Big category tiles back</div>
+          <div class="cat-section">
+            <div class="cat-section-header">
+              <span class="cat-section-title">Or browse by category</span>
+              <span class="cat-section-link">See all 14 →</span>
+            </div>
+            <div class="cat-grid">
+              <div class="cat-tile" style="background:#FEF3C7;border-left-color:#F59E0B;">
+                <span class="c-icon">🌅</span>
+                <div class="c-label" style="color:#78350F;">Morning</div>
+                <div class="c-count" style="color:#92400E;">18 habits</div>
+              </div>
+              <div class="cat-tile" style="background:#EFF6FF;border-left-color:#3B82F6;">
+                <span class="c-icon">🧠</span>
+                <div class="c-label" style="color:#1E3A5F;">Mental Health</div>
+                <div class="c-count" style="color:#1E40AF;">14 habits</div>
+              </div>
+              <div class="cat-tile" style="background:#FFF1F2;border-left-color:#F43F5E;">
+                <span class="c-icon">💪</span>
+                <div class="c-label" style="color:#881337;">Fitness</div>
+                <div class="c-count" style="color:#9F1239;">16 habits</div>
+              </div>
+              <div class="cat-tile" style="background:#F0FDF4;border-left-color:#22C55E;">
+                <span class="c-icon">😴</span>
+                <div class="c-label" style="color:#14532D;">Sleep</div>
+                <div class="c-count" style="color:#166534;">12 habits</div>
+              </div>
+              <div class="cat-tile" style="background:#FAF5FF;border-left-color:#A855F7;">
+                <span class="c-icon">🧘</span>
+                <div class="c-label" style="color:#581C87;">Mindfulness</div>
+                <div class="c-count" style="color:#6B21A8;">10 habits</div>
+              </div>
+              <div class="cat-tile" style="background:#FFF7ED;border-left-color:#F97316;">
+                <span class="c-icon">📚</span>
+                <div class="c-label" style="color:#7c2d12;">Learning</div>
+                <div class="c-count" style="color:#9A3412;">8 habits</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trending -->
+          <div class="trending-section">
+            <div class="trending-header">
+              <span class="title">Trending right now</span>
+              <span class="see-all">See all</span>
+            </div>
+            <div class="trending-inline">
+              <div class="trending-inline-card">
+                <div class="icon-box" style="background:#FEF3C7;">🌅</div>
+                <div class="info">
+                  <div class="name">Morning Sunlight</div>
+                  <div class="tdesc">10 min outdoor light exposure</div>
+                  <div class="meta-row">
+                    <span class="freq">Daily</span>
+                    <span class="pop">95% popular</span>
+                    <span class="sci-badge">🔬 Science</span>
+                  </div>
+                </div>
+                <span class="add-btn">+</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ Callouts ═══════ -->
+  <div class="callouts">
+
+    <div class="callout hero">
+      <h3>
+        Fix: Header X collision on Pro Max
+        <span class="tag fix">FIX</span>
+      </h3>
+      <p>On iPhone 16 Pro Max the modal close X overlaps the title text. Fix is surgical — reserve right-padding on the title & subtitle so they naturally leave space for the X overlay.</p>
+      <div class="diff-row">
+        <div class="diff-col before">
+          <div class="dl">BEFORE</div>
+          <div class="dt">Title spans full width, X button overlays the text at top-right. Works on 6.1" iPhone, cuts on Pro Max.</div>
+        </div>
+        <div class="diff-col after">
+          <div class="dl">AFTER</div>
+          <div class="dt"><code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">padding-right: 40px</code> on title & subtitle reserves the X zone. Title wraps or truncates gracefully on any screen.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout hero">
+      <h3>
+        Add back: Big category tiles
+        <span class="tag add">ADD</span>
+      </h3>
+      <p>Replaces the compact "Browse all categories" link with the 2-column category tile grid you liked. Tiles live between the pill search and Trending — positioned as "if goal framing doesn't click, browse by type instead."</p>
+      <p><strong>Placement logic:</strong> Goals (what do I want?) → Search (specific habit) → Categories (what type?) → Trending (what's popular?). Each section is a different lens on the same 200+ habit library.</p>
+      <p><strong>Polish:</strong> Tiles keep the colored-left-border accent from the v1 mockup, emoji + label + count, 92px min-height (compact vs original 120px).</p>
+    </div>
+
+    <div class="callout nit">
+      <h3>
+        Polish: Pill-style compact search
+        <span class="tag polish">POLISH</span>
+      </h3>
+      <p>Shrinks search from a 44px-tall full-size bar to a 38px pill. Rationale: search is now the <em>secondary</em> entry point (goals are primary), so its visual weight should match. Also reduces scroll-depth by ~8px.</p>
+      <p><strong>Bonus fix for the X cutoff</strong> — pill has <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">text-overflow: ellipsis</code> on the input text so long queries clip cleanly instead of running under the clear-X.</p>
+    </div>
+
+    <div class="callout shift">
+      <h3>Final section order</h3>
+      <p>1. Header (with X-safe padding)<br>
+         2. Goal hero (featured + 4 tiles) — primary entry<br>
+         3. Pill search — secondary entry, compact<br>
+         4. Category tiles — "browse by type" — 6 visible + "See all 14"<br>
+         5. Trending right now — vertical inline cards<br>
+         6. Curated Packs — horizontal scroll<br>
+         7. Explore All — grouped drilldowns at bottom</p>
+    </div>
+
+  </div>
+
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>

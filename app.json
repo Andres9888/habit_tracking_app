@@ -1,0 +1,86 @@
+{
+  "expo": {
+    "name": "ChainDay",
+    "slug": "daily-habits-981f52",
+    "scheme": "habit-tracker",
+    "version": "1.0.0",
+    "description": "Chain Day makes consistency visible with chain-based habit tracking, streak progress, and offline-friendly routines.",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#059669"
+    },
+    "assetBundlePatterns": ["assets/*", "assets/sounds/*"],
+    "jsEngine": "hermes",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chainday.app",
+      "buildNumber": "16",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.",
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.expo.modules.backgroundtask.processing"
+        ],
+        "UIBackgroundModes": ["processing"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "package": "com.chainday.app"
+    },
+    "supportUrl": "https://chainday.app/support",
+    "privacyUrl": "https://chainday.app/privacy",
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "32c36f06-6185-42ca-aee8-5a939ad68d75"
+      }
+    },
+    "plugins": [
+      "expo-font",
+      "expo-notifications",
+      "expo-web-browser",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice note recordings."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to capture images for your Vision Board."
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "daily-habits",
+          "project": "react-native"
+        }
+      ],
+      "@sentry/react-native",
+      "./plugins/withPrivacyManifest.cjs",
+      "@react-native-community/datetimepicker",
+      "expo-background-task"
+    ],
+    "owner": "andres9888"
+  }
+}

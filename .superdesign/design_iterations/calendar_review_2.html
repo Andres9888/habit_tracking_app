@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CalendarTimeline — Design Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --stone-950: #0c0a09;
+    --stone-900: #1c1917;
+    --stone-800: #292524;
+    --stone-700: #44403c;
+    --stone-600: #57534e;
+    --stone-500: #78716c;
+    --stone-400: #a8a29e;
+    --stone-300: #d6d3d1;
+    --stone-200: #e7e5e4;
+    --stone-100: #f5f5f4;
+    --stone-50: #fafaf9;
+    --emerald: #10b981;
+    --emerald-600: #059669;
+    --emerald-glow: rgba(16, 185, 129, 0.35);
+    --amber: #f59e0b;
+    --amber-50: #fffbeb;
+    --amber-glow: rgba(245, 158, 11, 0.2);
+    --violet: #8b5cf6;
+    --rose: #f43f5e;
+    --surface: #fdfcfb;
+    --page-bg: #f0eeeb;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--page-bg);
+    color: var(--stone-900);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    padding: 80px 40px 60px;
+    text-align: center;
+    background: var(--stone-950);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 800px 400px at 30% 20%, rgba(16,185,129,0.08), transparent),
+      radial-gradient(ellipse 600px 300px at 70% 80%, rgba(245,158,11,0.06), transparent);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--stone-700), transparent);
+  }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--emerald);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.2s;
+  }
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 400;
+    color: var(--stone-50);
+    line-height: 1.05;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.4s;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--amber);
+  }
+  .hero-sub {
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--stone-400);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.6s;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 32px;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards 0.8s;
+  }
+  .hero-meta-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--stone-500);
+  }
+  .hero-meta-item span { color: var(--stone-300); }
+
+  /* ── Audit Strip ── */
+  .audit-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--stone-200);
+    border-bottom: 1px solid var(--stone-200);
+  }
+  .audit-item {
+    padding: 28px 32px;
+    background: var(--surface);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: background 0.2s;
+  }
+  .audit-item:hover { background: #fff; }
+  .audit-severity {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+  }
+  .sev-high { background: var(--rose); box-shadow: 0 0 8px rgba(244,63,94,0.4); }
+  .sev-med { background: var(--amber); box-shadow: 0 0 8px rgba(245,158,11,0.3); }
+  .sev-low { background: var(--emerald); box-shadow: 0 0 8px rgba(16,185,129,0.3); }
+  .audit-text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--stone-600);
+  }
+  .audit-text strong {
+    display: block;
+    font-weight: 600;
+    color: var(--stone-900);
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  .audit-text code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--stone-100);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--stone-700);
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 72px 40px 0;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--stone-400);
+    letter-spacing: 1px;
+  }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--stone-900);
+    letter-spacing: -0.5px;
+  }
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--stone-200);
+    margin-left: 16px;
+  }
+
+  /* ── Phone Grid ── */
+  .phone-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 40px;
+    padding-bottom: 80px;
+  }
+  .phone-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .phone-col:nth-child(1) { animation-delay: 0.1s; }
+  .phone-col:nth-child(2) { animation-delay: 0.2s; }
+  .phone-col:nth-child(3) { animation-delay: 0.3s; }
+  .phone-col:nth-child(4) { animation-delay: 0.4s; }
+
+  /* Variant badge */
+  .variant-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    margin-bottom: 20px;
+    border: 1px solid;
+  }
+  .badge-current {
+    background: var(--stone-100);
+    color: var(--stone-600);
+    border-color: var(--stone-200);
+  }
+  .badge-a {
+    background: rgba(16,185,129,0.08);
+    color: var(--emerald-600);
+    border-color: rgba(16,185,129,0.2);
+  }
+  .badge-b {
+    background: rgba(245,158,11,0.08);
+    color: #b45309;
+    border-color: rgba(245,158,11,0.2);
+  }
+  .badge-c {
+    background: rgba(139,92,246,0.08);
+    color: var(--violet);
+    border-color: rgba(139,92,246,0.2);
+  }
+  .badge-star {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: var(--violet);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 9px;
+    line-height: 14px;
+    text-align: center;
+  }
+
+  /* Phone */
+  .phone {
+    width: 375px;
+    background: #fff;
+    border-radius: 44px;
+    padding: 56px 0 36px;
+    position: relative;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.04),
+      0 4px 16px rgba(0,0,0,0.06),
+      0 24px 48px rgba(0,0,0,0.08);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+    overflow: hidden;
+  }
+  .phone:hover {
+    transform: translateY(-4px);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.04),
+      0 8px 24px rgba(0,0,0,0.08),
+      0 32px 64px rgba(0,0,0,0.12);
+  }
+  .phone-notch {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 32px;
+    background: var(--stone-950);
+    border-radius: 20px;
+    z-index: 10;
+  }
+  .phone-notch::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 22px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1a1a2e;
+    border: 2px solid #2a2a3e;
+  }
+  .phone-body {
+    padding: 0 24px;
+    background: var(--stone-50);
+  }
+  .phone-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 4px 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--stone-900);
+  }
+  .status-icons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .status-icons svg { width: 16px; height: 16px; }
+
+  /* ── Timeline Card ── */
+  .tl-card {
+    background: #fff;
+    border: 1px solid var(--stone-200);
+    border-radius: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 3px rgba(120,113,108,0.04);
+    overflow: hidden;
+  }
+  .tl-inner {
+    padding: 8px 12px 12px;
+  }
+  .tl-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .tl-header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tl-nav {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--stone-50);
+    border: 1px solid var(--stone-200);
+    color: var(--stone-600);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+  }
+  .tl-nav:hover { background: var(--stone-100); }
+  .tl-nav.disabled { opacity: 0.3; pointer-events: none; }
+  .tl-date {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--stone-900);
+    letter-spacing: -0.3px;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  /* Completion Ring */
+  .ring-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-wrap svg { display: block; }
+  .ring-label {
+    position: absolute;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    color: var(--stone-700);
+  }
+  .ring-label.done { color: var(--emerald-600); }
+
+  /* Days Row */
+  .days-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .day-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .day-lbl {
+    font-family: 'Outfit', sans-serif;
+    font-size: 10px;
+    line-height: 14px;
+    color: var(--stone-400);
+    font-weight: 400;
+  }
+  .day-lbl.today-lbl { font-weight: 700; color: var(--stone-600); }
+  .day-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    color: var(--stone-600);
+    background: transparent;
+    position: relative;
+    transition: all 0.2s;
+  }
+  .day-num.sz-36 { width: 36px; height: 36px; font-size: 13px; }
+  .day-num.sz-40 { width: 40px; height: 40px; font-size: 14px; }
+  .day-num.filled-bg { background: var(--stone-50); }
+  .day-num.is-today {
+    background: var(--stone-900);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 4px var(--amber-glow);
+  }
+  .day-num.is-complete {
+    background: var(--emerald);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px var(--emerald-glow);
+  }
+  .day-num.is-future { color: var(--stone-300); }
+  /* check badge */
+  .day-num.is-complete::after {
+    content: '✓';
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    border-radius: 50%;
+    font-size: 8px;
+    line-height: 14px;
+    text-align: center;
+    color: var(--emerald);
+    font-weight: 800;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .dot-area {
+    margin-top: 4px;
+    height: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .c-dot {
+    border-radius: 50%;
+  }
+  .c-dot.d-none { width: 5px; height: 5px; background: var(--stone-200); }
+  .c-dot.d-partial { width: 6px; height: 6px; background: var(--amber); }
+  .c-dot.d-complete { width: 8px; height: 8px; background: var(--emerald); box-shadow: 0 0 4px var(--emerald-glow); }
+
+  /* ── Habit Card ── */
+  .h-card {
+    display: flex;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--stone-200);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    margin-bottom: 14px;
+  }
+  .h-accent {
+    width: 4px;
+    flex-shrink: 0;
+    border-radius: 24px 0 0 24px;
+  }
+  .h-content {
+    flex: 1;
+    padding: 12px;
+  }
+  .h-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .h-emoji { font-size: 18px; }
+  .h-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--stone-900);
+    letter-spacing: -0.2px;
+  }
+  .h-meta {
+    margin-left: auto;
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    color: var(--stone-400);
+    font-weight: 500;
+  }
+  .chain-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 4px;
+  }
+  .chain-day {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chain-sq {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--stone-200);
+    background: #fff;
+    font-size: 16px;
+    transition: all 0.15s;
+  }
+  .chain-sq.ch-filled {
+    border: none;
+    color: #fff;
+  }
+  .chain-sq.ch-today {
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05), 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .chain-sq.ch-future { opacity: 0.45; }
+
+  /* ── Size annotation ── */
+  .size-anno {
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: var(--amber-50);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 8px;
+  }
+  .size-anno-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    color: #92400e;
+    line-height: 1.4;
+  }
+
+  /* ── Comparison Table ── */
+  .table-section {
+    padding: 0 40px 80px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .comp-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--stone-400);
+    padding: 12px 20px;
+    border-bottom: 2px solid var(--stone-200);
+    background: var(--surface);
+  }
+  .comp-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--stone-100);
+    color: var(--stone-700);
+    font-weight: 400;
+    vertical-align: middle;
+  }
+  .comp-table tr:hover td { background: rgba(250,250,249,0.6); }
+  .comp-table td:first-child {
+    font-weight: 600;
+    color: var(--stone-900);
+    width: 160px;
+  }
+  .comp-table .cell-highlight {
+    color: var(--emerald-600);
+    font-weight: 600;
+  }
+  .comp-table .cell-rec {
+    color: var(--violet);
+    font-weight: 700;
+  }
+  .rec-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    background: rgba(139,92,246,0.1);
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--violet);
+  }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--stone-200);
+    background: var(--surface);
+  }
+  .footer-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--stone-400);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .phone-grid { grid-template-columns: 1fr; justify-items: center; }
+    .section { padding: 48px 20px 0; }
+    .hero { padding: 60px 20px 40px; }
+    .table-section { padding: 0 20px 60px; }
+    .phone { width: 340px; border-radius: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <p class="hero-eyebrow">Design Review</p>
+  <h1>CalendarTimeline<br><em>Visual Refinement</em></h1>
+  <p class="hero-sub">
+    After removing the streak pill and value footer, the timeline card needs rebalancing.
+    Four variants compared for visual weight, alignment, and proportion.
+  </p>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><span>Component</span> CalendarTimeline</div>
+    <div class="hero-meta-item"><span>Sprint</span> Post-streak removal</div>
+    <div class="hero-meta-item"><span>Variants</span> 4</div>
+  </div>
+</header>
+
+<!-- ═══ AUDIT FINDINGS ═══ -->
+<div class="audit-strip">
+  <div class="audit-item">
+    <div class="audit-severity sev-high"></div>
+    <div class="audit-text">
+      <strong>Size mismatch — 36px vs 44px</strong>
+      Calendar day circles are 22% smaller than habit chain squares, creating a visual weight gap between header and content.
+    </div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-severity sev-med"></div>
+    <div class="audit-text">
+      <strong>Header-heavy balance</strong>
+      44px CompletionRing now dominates after footer removal. The ring is the same size as a chain square but towers over the 36px day cells.
+    </div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-severity sev-med"></div>
+    <div class="audit-text">
+      <strong>Hardcoded nav colors</strong>
+      Arrow buttons use <code>#fafaf9</code> / <code>#e7e5e4</code> — won't adapt to dark mode theme colors.
+    </div>
+  </div>
+  <div class="audit-item">
+    <div class="audit-severity sev-low"></div>
+    <div class="audit-text">
+      <strong>Empty day affordance</strong>
+      Non-today/non-complete day circles have <code>#fff</code> background — they disappear into the card. A subtle fill improves tap affordance.
+    </div>
+  </div>
+</div>
+
+<!-- ═══ VARIANTS ═══ -->
+<div class="section">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Variants</h2>
+    <div class="section-rule"></div>
+  </div>
+
+  <div class="phone-grid">
+
+    <!-- ─── CURRENT ─── -->
+    <div class="phone-col">
+      <div class="variant-badge badge-current">Current State</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="phone-status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v4H1zM5 8h2v7H5zM9 5h2v10H9zM13 2h2v13h-2z"/></svg>
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 11H.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm-1 2.5H11v-1.5h2.5v1.5z"/></svg>
+            </div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-inner">
+              <div class="tl-header">
+                <div class="tl-header-left">
+                  <button class="tl-nav">‹</button>
+                  <span class="tl-date">Feb 17 – Feb 23</span>
+                  <button class="tl-nav disabled">›</button>
+                </div>
+                <!-- 44px ring -->
+                <div class="ring-wrap" style="width:44px;height:44px;">
+                  <svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.25" fill="none" stroke="#f5f5f4" stroke-width="3.5"/><circle cx="22" cy="22" r="20.25" fill="none" stroke="#10b981" stroke-width="3.5" stroke-dasharray="127.24" stroke-dashoffset="54.53" stroke-linecap="round" transform="rotate(-90 22 22)"/></svg>
+                  <span class="ring-label" style="font-size:11px;">3/5</span>
+                </div>
+              </div>
+              <div class="days-row" style="padding-left:4px;">
+                <div class="day-col"><span class="day-lbl">Mon</span><div class="day-num sz-36 is-complete">17</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Tue</span><div class="day-num sz-36 is-complete">18</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Wed</span><div class="day-num sz-36">19</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Thu</span><div class="day-num sz-36 is-complete">20</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Fri</span><div class="day-num sz-36">21</div><div class="dot-area"><span class="c-dot d-none"></span></div></div>
+                <div class="day-col"><span class="day-lbl today-lbl">Sat</span><div class="day-num sz-36 is-today">22</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Sun</span><div class="day-num sz-36 is-future">23</div><div class="dot-area"></div></div>
+              </div>
+            </div>
+            <div class="size-anno">
+              <span class="size-anno-text">Day circles: 36px · Ring: 44px · Chain: 44px</span>
+            </div>
+          </div>
+          <!-- Habit card -->
+          <div class="h-card">
+            <div class="h-accent" style="background:var(--violet);"></div>
+            <div class="h-content">
+              <div class="h-top">
+                <span class="h-emoji">🧘</span>
+                <span class="h-name">Meditate</span>
+                <span class="h-meta">4 day streak</span>
+              </div>
+              <div class="chain-row">
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-today" style="border-color:var(--violet);"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-future"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── VARIANT A ─── -->
+    <div class="phone-col">
+      <div class="variant-badge badge-a">A — Larger Day Cells</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="phone-status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v4H1zM5 8h2v7H5zM9 5h2v10H9zM13 2h2v13h-2z"/></svg>
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 11H.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm-1 2.5H11v-1.5h2.5v1.5z"/></svg>
+            </div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-inner">
+              <div class="tl-header">
+                <div class="tl-header-left">
+                  <button class="tl-nav">‹</button>
+                  <span class="tl-date">Feb 17 – Feb 23</span>
+                  <button class="tl-nav disabled">›</button>
+                </div>
+                <!-- 44px ring (unchanged) -->
+                <div class="ring-wrap" style="width:44px;height:44px;">
+                  <svg width="44" height="44" viewBox="0 0 44 44"><circle cx="22" cy="22" r="20.25" fill="none" stroke="#f5f5f4" stroke-width="3.5"/><circle cx="22" cy="22" r="20.25" fill="none" stroke="#10b981" stroke-width="3.5" stroke-dasharray="127.24" stroke-dashoffset="54.53" stroke-linecap="round" transform="rotate(-90 22 22)"/></svg>
+                  <span class="ring-label" style="font-size:11px;">3/5</span>
+                </div>
+              </div>
+              <div class="days-row" style="padding-left:4px;">
+                <div class="day-col"><span class="day-lbl">Mon</span><div class="day-num sz-40 filled-bg is-complete">17</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Tue</span><div class="day-num sz-40 filled-bg is-complete">18</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Wed</span><div class="day-num sz-40 filled-bg">19</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Thu</span><div class="day-num sz-40 filled-bg is-complete">20</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Fri</span><div class="day-num sz-40 filled-bg">21</div><div class="dot-area"><span class="c-dot d-none"></span></div></div>
+                <div class="day-col"><span class="day-lbl today-lbl">Sat</span><div class="day-num sz-40 is-today">22</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Sun</span><div class="day-num sz-40 is-future">23</div><div class="dot-area"></div></div>
+              </div>
+            </div>
+            <div class="size-anno" style="background:rgba(16,185,129,0.06); border-color:rgba(16,185,129,0.15);">
+              <span class="size-anno-text" style="color:#065f46;">Day circles: <b>40px</b> · Ring: 44px · Ratio: 91%</span>
+            </div>
+          </div>
+          <div class="h-card">
+            <div class="h-accent" style="background:var(--violet);"></div>
+            <div class="h-content">
+              <div class="h-top">
+                <span class="h-emoji">🧘</span>
+                <span class="h-name">Meditate</span>
+                <span class="h-meta">4 day streak</span>
+              </div>
+              <div class="chain-row">
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-today" style="border-color:var(--violet);"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-future"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── VARIANT B ─── -->
+    <div class="phone-col">
+      <div class="variant-badge badge-b">B — Compact Ring</div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="phone-status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v4H1zM5 8h2v7H5zM9 5h2v10H9zM13 2h2v13h-2z"/></svg>
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 11H.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm-1 2.5H11v-1.5h2.5v1.5z"/></svg>
+            </div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-inner" style="padding:8px 12px 10px;">
+              <div class="tl-header" style="margin-bottom:8px;">
+                <div class="tl-header-left">
+                  <button class="tl-nav" style="width:26px;height:26px;font-size:12px;">‹</button>
+                  <span class="tl-date" style="font-size:16px;">Feb 17 – Feb 23</span>
+                  <button class="tl-nav disabled" style="width:26px;height:26px;font-size:12px;">›</button>
+                </div>
+                <!-- 36px ring -->
+                <div class="ring-wrap" style="width:36px;height:36px;">
+                  <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16.25" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="16.25" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="102.1" stroke-dashoffset="43.76" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg>
+                  <span class="ring-label" style="font-size:10px;">3/5</span>
+                </div>
+              </div>
+              <div class="days-row" style="padding-left:4px;">
+                <div class="day-col"><span class="day-lbl">Mon</span><div class="day-num sz-36 filled-bg is-complete">17</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Tue</span><div class="day-num sz-36 filled-bg is-complete">18</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Wed</span><div class="day-num sz-36 filled-bg">19</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Thu</span><div class="day-num sz-36 filled-bg is-complete">20</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Fri</span><div class="day-num sz-36 filled-bg">21</div><div class="dot-area"><span class="c-dot d-none"></span></div></div>
+                <div class="day-col"><span class="day-lbl today-lbl">Sat</span><div class="day-num sz-36 is-today">22</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Sun</span><div class="day-num sz-36 is-future">23</div><div class="dot-area"></div></div>
+              </div>
+            </div>
+            <div class="size-anno" style="background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.15);">
+              <span class="size-anno-text" style="color:#92400e;">Day circles: 36px · Ring: <b>36px</b> · Nav: <b>26px</b></span>
+            </div>
+          </div>
+          <div class="h-card">
+            <div class="h-accent" style="background:var(--violet);"></div>
+            <div class="h-content">
+              <div class="h-top">
+                <span class="h-emoji">🧘</span>
+                <span class="h-name">Meditate</span>
+                <span class="h-meta">4 day streak</span>
+              </div>
+              <div class="chain-row">
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-today" style="border-color:var(--violet);"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-future"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── VARIANT C (RECOMMENDED) ─── -->
+    <div class="phone-col">
+      <div class="variant-badge badge-c"><span class="badge-star">★</span> C — Combined (Recommended)</div>
+      <div class="phone" style="box-shadow: 0 0 0 2px rgba(139,92,246,0.3), 0 4px 16px rgba(0,0,0,0.06), 0 24px 48px rgba(0,0,0,0.08);">
+        <div class="phone-notch"></div>
+        <div class="phone-body">
+          <div class="phone-status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 11h2v4H1zM5 8h2v7H5zM9 5h2v10H9zM13 2h2v13h-2z"/></svg>
+              <svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.5 11H.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm-1 2.5H11v-1.5h2.5v1.5z"/></svg>
+            </div>
+          </div>
+          <div class="tl-card">
+            <div class="tl-inner" style="padding:8px 12px 10px;">
+              <div class="tl-header" style="margin-bottom:10px;">
+                <div class="tl-header-left">
+                  <button class="tl-nav" style="width:26px;height:26px;font-size:12px;">‹</button>
+                  <span class="tl-date" style="font-size:16px;">Feb 17 – Feb 23</span>
+                  <button class="tl-nav disabled" style="width:26px;height:26px;font-size:12px;">›</button>
+                </div>
+                <!-- 36px ring -->
+                <div class="ring-wrap" style="width:36px;height:36px;">
+                  <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16.25" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="16.25" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="102.1" stroke-dashoffset="43.76" stroke-linecap="round" transform="rotate(-90 18 18)"/></svg>
+                  <span class="ring-label done" style="font-size:10px;">3/5</span>
+                </div>
+              </div>
+              <div class="days-row" style="padding-left:4px;">
+                <div class="day-col"><span class="day-lbl">Mon</span><div class="day-num sz-40 filled-bg is-complete">17</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Tue</span><div class="day-num sz-40 filled-bg is-complete">18</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Wed</span><div class="day-num sz-40 filled-bg">19</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Thu</span><div class="day-num sz-40 filled-bg is-complete">20</div><div class="dot-area"></div></div>
+                <div class="day-col"><span class="day-lbl">Fri</span><div class="day-num sz-40 filled-bg">21</div><div class="dot-area"><span class="c-dot d-none"></span></div></div>
+                <div class="day-col"><span class="day-lbl today-lbl">Sat</span><div class="day-num sz-40 is-today">22</div><div class="dot-area"><span class="c-dot d-partial"></span></div></div>
+                <div class="day-col"><span class="day-lbl">Sun</span><div class="day-num sz-40 is-future">23</div><div class="dot-area"></div></div>
+              </div>
+            </div>
+            <div class="size-anno" style="background:rgba(139,92,246,0.06); border-color:rgba(139,92,246,0.15);">
+              <span class="size-anno-text" style="color:#5b21b6;">Day: <b>40px</b> · Ring: <b>36px</b> · Nav: <b>26px</b> · Ratio: <b>91%</b></span>
+            </div>
+          </div>
+          <div class="h-card">
+            <div class="h-accent" style="background:var(--violet);"></div>
+            <div class="h-content">
+              <div class="h-top">
+                <span class="h-emoji">🧘</span>
+                <span class="h-name">Meditate</span>
+                <span class="h-meta">4 day streak</span>
+              </div>
+              <div class="chain-row">
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--violet);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-today" style="border-color:var(--violet);"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-future"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="h-card">
+            <div class="h-accent" style="background:var(--amber);"></div>
+            <div class="h-content">
+              <div class="h-top">
+                <span class="h-emoji">📖</span>
+                <span class="h-name">Read 20 pages</span>
+                <span class="h-meta">2 day streak</span>
+              </div>
+              <div class="chain-row">
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--amber);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq"></div></div>
+                <div class="chain-day"><div class="chain-sq"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--amber);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-filled" style="background:var(--amber);">✓</div></div>
+                <div class="chain-day"><div class="chain-sq ch-today" style="border-color:var(--amber);"></div></div>
+                <div class="chain-day"><div class="chain-sq ch-future"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ COMPARISON TABLE ═══ -->
+<div class="section" style="padding-bottom: 24px;">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title">Comparison</h2>
+    <div class="section-rule"></div>
+  </div>
+</div>
+
+<div class="table-section">
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th>Dimension</th>
+        <th>Current</th>
+        <th>A — Larger Cells</th>
+        <th>B — Compact Ring</th>
+        <th>C — Combined</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Day cell size</td>
+        <td>36px <code style="font-family:'JetBrains Mono';font-size:10px;color:var(--stone-400);">w-9</code></td>
+        <td class="cell-highlight">40px <code style="font-family:'JetBrains Mono';font-size:10px;color:var(--emerald);">w-10</code></td>
+        <td>36px</td>
+        <td class="cell-highlight">40px <code style="font-family:'JetBrains Mono';font-size:10px;color:var(--emerald);">w-10</code></td>
+      </tr>
+      <tr>
+        <td>Ring size</td>
+        <td>44px</td>
+        <td>44px</td>
+        <td class="cell-highlight">36px</td>
+        <td class="cell-highlight">36px</td>
+      </tr>
+      <tr>
+        <td>Nav arrows</td>
+        <td>28px</td>
+        <td>28px</td>
+        <td class="cell-highlight">26px</td>
+        <td class="cell-highlight">26px</td>
+      </tr>
+      <tr>
+        <td>Cell : Chain ratio</td>
+        <td>82%</td>
+        <td class="cell-highlight">91%</td>
+        <td>82%</td>
+        <td class="cell-highlight">91%</td>
+      </tr>
+      <tr>
+        <td>Visual balance</td>
+        <td>Header-heavy</td>
+        <td>More balanced</td>
+        <td>Balanced</td>
+        <td class="cell-rec">Best balance</td>
+      </tr>
+      <tr>
+        <td>Code changes</td>
+        <td>—</td>
+        <td>DayCellContent<br><code style="font-family:'JetBrains Mono';font-size:10px;">w-9→w-10</code></td>
+        <td>CompletionRing<br><code style="font-family:'JetBrains Mono';font-size:10px;">44→36</code></td>
+        <td>Both changes</td>
+      </tr>
+      <tr>
+        <td>Verdict</td>
+        <td style="color:var(--stone-400);">baseline</td>
+        <td>Good</td>
+        <td>Good</td>
+        <td><span class="rec-pill">★ Recommended</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+  <p class="footer-text">CalendarTimeline Design Review · Post streak/footer removal · v2</p>
+</footer>
+
+</body>
+</html>

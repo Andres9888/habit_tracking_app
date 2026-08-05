@@ -1,0 +1,1162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Template Added — Adaptive Hybrid Implementation Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #0a0a10 !important;
+        color: #e8e6e3 !important;
+        overflow-x: hidden !important;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      span,
+      button {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+
+      .page-header {
+        text-align: center !important;
+        padding: 48px 24px 12px !important;
+      }
+      .page-header h1 {
+        font-size: 26px !important;
+        font-weight: 800 !important;
+      }
+      .page-header p {
+        font-size: 14px !important;
+        color: #707088 !important;
+        margin-top: 8px !important;
+        max-width: 600px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        line-height: 1.5 !important;
+      }
+
+      .flow-label {
+        display: inline-block !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1.2px !important;
+        padding: 4px 14px !important;
+        border-radius: 20px !important;
+        margin-bottom: 8px !important;
+      }
+      .flow-label-first {
+        background: rgba(168, 85, 247, 0.15) !important;
+        color: #a855f7 !important;
+      }
+      .flow-label-repeat {
+        background: rgba(34, 197, 94, 0.15) !important;
+        color: #22c55e !important;
+      }
+
+      .section-title {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+      }
+      .section-desc {
+        font-size: 13px !important;
+        color: #707088 !important;
+        text-align: center !important;
+        max-width: 500px !important;
+        margin: 6px auto 0 !important;
+        line-height: 1.5 !important;
+      }
+
+      /* ─── Phone Frame ─── */
+      .phone {
+        width: 340px !important;
+        height: 700px !important;
+        background: #141420 !important;
+        border-radius: 40px !important;
+        border: 3px solid #252538 !important;
+        overflow: hidden !important;
+        position: relative !important;
+        flex-shrink: 0 !important;
+        cursor: pointer !important;
+      }
+      .phone-screen {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      /* ─── Status Bar ─── */
+      .status-bar {
+        height: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 0 20px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #888 !important;
+      }
+
+      /* ─── Mock Template Preview BG ─── */
+      .mock-bg {
+        position: absolute !important;
+        inset: 0 !important;
+        background: #fafaf9 !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+      .mock-bg-header {
+        padding: 52px 20px 0 !important;
+      }
+      .mock-close {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+        background: #f0f0ec !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 16px !important;
+        color: #888 !important;
+      }
+      .mock-hero {
+        display: flex !important;
+        align-items: center !important;
+        gap: 14px !important;
+        padding: 20px 20px 0 !important;
+      }
+      .mock-icon-lg {
+        width: 56px !important;
+        height: 56px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 28px !important;
+      }
+      .mock-name {
+        font-size: 22px !important;
+        font-weight: 800 !important;
+        color: #1a1a2e !important;
+      }
+      .mock-cat {
+        font-size: 12px !important;
+        color: #8b8b9e !important;
+        margin-top: 2px !important;
+      }
+      .mock-body {
+        padding: 16px 20px !important;
+        flex: 1 !important;
+      }
+      .mock-desc {
+        font-size: 14px !important;
+        color: #5a5a70 !important;
+        line-height: 1.6 !important;
+      }
+      .mock-section {
+        background: #f0f0ec !important;
+        border-radius: 12px !important;
+        padding: 14px !important;
+        margin-top: 14px !important;
+      }
+      .mock-section-lbl {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #8b8b9e !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+      }
+      .mock-section-txt {
+        font-size: 13px !important;
+        color: #4a4a5e !important;
+        margin-top: 4px !important;
+        line-height: 1.4 !important;
+      }
+      .mock-footer {
+        padding: 0 20px 32px !important;
+        background: linear-gradient(transparent, #fafaf9 30%) !important;
+      }
+      .mock-import-btn {
+        width: 100% !important;
+        padding: 16px !important;
+        border-radius: 16px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        border: none !important;
+        text-align: center !important;
+      }
+      .mock-customize {
+        text-align: center !important;
+        font-size: 14px !important;
+        color: #8b8b9e !important;
+        margin-top: 10px !important;
+        font-weight: 600 !important;
+      }
+
+      /* ════════════════════════════════════════════
+       FIRST HABIT — Full-Screen Celebration
+       ════════════════════════════════════════════ */
+      .fs-overlay {
+        position: absolute !important;
+        inset: 0 !important;
+        background: linear-gradient(
+          160deg,
+          #0f0a1e 0%,
+          #1a0f30 40%,
+          #0f172a 100%
+        ) !important;
+        z-index: 30 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 40px 28px !important;
+        opacity: 0;
+        animation: fsReveal 0.6s 0.3s ease-out forwards;
+      }
+      @keyframes fsReveal {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Particles */
+      .fs-particles {
+        position: absolute !important;
+        inset: 0 !important;
+        pointer-events: none !important;
+        overflow: hidden !important;
+      }
+      .fs-dot {
+        position: absolute !important;
+        border-radius: 50% !important;
+        animation: dotDrift 4s ease-out infinite;
+      }
+      @keyframes dotDrift {
+        0% {
+          opacity: 0.5;
+          transform: translateY(0) scale(1);
+        }
+        50% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-160px) scale(0.3);
+        }
+      }
+
+      /* Glow ring */
+      .fs-glow-ring {
+        width: 120px !important;
+        height: 120px !important;
+        border-radius: 50% !important;
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        animation: glowPulse 2.5s ease-in-out infinite;
+      }
+      .fs-glow-ring::before {
+        content: '' !important;
+        position: absolute !important;
+        inset: -8px !important;
+        border-radius: 50% !important;
+        border: 2px solid rgba(168, 85, 247, 0.2) !important;
+        animation: ringExpand 2s ease-out infinite;
+      }
+      @keyframes glowPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 40px rgba(168, 85, 247, 0.15);
+        }
+        50% {
+          box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
+        }
+      }
+      @keyframes ringExpand {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        100% {
+          transform: scale(1.5);
+          opacity: 0;
+        }
+      }
+
+      .fs-emoji {
+        font-size: 56px !important;
+        animation: emojiPop 0.7s 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes emojiPop {
+        from {
+          transform: scale(0) rotate(-20deg);
+        }
+        to {
+          transform: scale(1) rotate(0);
+        }
+      }
+
+      .fs-check-badge {
+        position: absolute !important;
+        bottom: 2px !important;
+        right: 2px !important;
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+        background: #22c55e !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border: 3px solid #1a0f30 !important;
+        animation: badgePop 0.5s 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes badgePop {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .fs-title {
+        font-size: 24px !important;
+        font-weight: 800 !important;
+        color: #fff !important;
+        margin-top: 28px !important;
+        text-align: center !important;
+        animation: fadeSlide 0.5s 0.8s ease-out both;
+      }
+      .fs-subtitle {
+        font-size: 15px !important;
+        color: #808098 !important;
+        margin-top: 8px !important;
+        text-align: center !important;
+        line-height: 1.5 !important;
+        animation: fadeSlide 0.5s 0.9s ease-out both;
+      }
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fs-actions {
+        margin-top: 36px !important;
+        width: 100% !important;
+        animation: fadeSlide 0.5s 1.1s ease-out both;
+      }
+      .fs-btn-primary {
+        width: 100% !important;
+        padding: 16px !important;
+        border-radius: 50px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        border: none !important;
+        cursor: pointer !important;
+        background: linear-gradient(135deg, #a855f7, #7c3aed) !important;
+        box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3) !important;
+      }
+      .fs-btn-secondary {
+        width: 100% !important;
+        padding: 14px !important;
+        margin-top: 12px !important;
+        background: transparent !important;
+        border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 50px !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #808098 !important;
+        cursor: pointer !important;
+      }
+
+      /* Confetti burst */
+      .confetti-piece {
+        position: absolute !important;
+        width: 8px !important;
+        height: 8px !important;
+        border-radius: 2px !important;
+        animation: confettiBurst 1.2s ease-out forwards;
+      }
+      @keyframes confettiBurst {
+        0% {
+          opacity: 1;
+          transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--tx), var(--ty)) rotate(var(--rot))
+            scale(0.3);
+        }
+      }
+
+      /* ════════════════════════════════════════════
+       REPEAT — Floating Pill
+       ════════════════════════════════════════════ */
+      .pill-overlay {
+        position: absolute !important;
+        bottom: 100px !important;
+        left: 50% !important;
+        z-index: 20 !important;
+        animation: pillIn 0.6s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes pillIn {
+        from {
+          transform: translateX(-50%) translateY(24px) scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(-50%) translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+
+      .pill {
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        background: #1a1a2e !important;
+        border-radius: 50px !important;
+        padding: 10px 16px 10px 10px !important;
+        box-shadow:
+          0 12px 40px rgba(0, 0, 0, 0.4),
+          0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+        white-space: nowrap !important;
+      }
+      .pill-icon {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 18px !important;
+        animation: iconBounce 0.5s 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes iconBounce {
+        from {
+          transform: scale(0);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+      .pill-text {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+      }
+      .pill-action {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        background: rgba(168, 85, 247, 0.15) !important;
+        color: #a855f7 !important;
+        border-radius: 20px !important;
+        padding: 5px 12px !important;
+        cursor: pointer !important;
+      }
+
+      /* Pill confetti mini */
+      .pill-spark {
+        position: absolute !important;
+        font-size: 14px !important;
+        animation: sparkUp 0.8s ease-out forwards;
+        pointer-events: none !important;
+      }
+      @keyframes sparkUp {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-50px) scale(0.5);
+        }
+      }
+
+      /* ─── Progress bar on pill ─── */
+      .pill-progress {
+        position: absolute !important;
+        bottom: 0 !important;
+        left: 10px !important;
+        right: 10px !important;
+        height: 2px !important;
+        border-radius: 1px !important;
+        overflow: hidden !important;
+      }
+      .pill-progress-bar {
+        height: 100% !important;
+        border-radius: 1px !important;
+        background: rgba(168, 85, 247, 0.4) !important;
+        animation: progressShrink 4s linear forwards;
+      }
+      @keyframes progressShrink {
+        from {
+          width: 100%;
+        }
+        to {
+          width: 0%;
+        }
+      }
+
+      /* ─── Arrow connector ─── */
+      .arrow-section {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 32px 0 !important;
+      }
+      .arrow-line {
+        width: 2px !important;
+        height: 40px !important;
+        background: linear-gradient(#252538, #353550, #252538) !important;
+      }
+      .arrow-text {
+        font-size: 11px !important;
+        color: #505068 !important;
+        font-weight: 600 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1px !important;
+      }
+
+      /* ─── Layout ─── */
+      .section {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 32px 24px !important;
+      }
+      .phones-row {
+        display: flex !important;
+        gap: 48px !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        margin-top: 24px !important;
+      }
+      .phone-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 12px !important;
+      }
+      .phone-label {
+        font-size: 12px !important;
+        color: #606078 !important;
+        font-weight: 600 !important;
+        text-align: center !important;
+      }
+
+      /* ─── Replay hint ─── */
+      .replay-hint {
+        font-size: 11px !important;
+        color: #404058 !important;
+        text-align: center !important;
+        margin-top: 8px !important;
+      }
+
+      /* ─── Footer comparison ─── */
+      .comparison {
+        max-width: 700px !important;
+        margin: 40px auto 80px !important;
+        padding: 0 24px !important;
+      }
+      .comp-row {
+        display: flex !important;
+        padding: 14px 0 !important;
+        border-bottom: 1px solid #1a1a28 !important;
+        font-size: 13px !important;
+      }
+      .comp-label {
+        width: 140px !important;
+        color: #606078 !important;
+        font-weight: 600 !important;
+        flex-shrink: 0 !important;
+      }
+      .comp-first {
+        flex: 1 !important;
+        color: #c084fc !important;
+      }
+      .comp-repeat {
+        flex: 1 !important;
+        color: #4ade80 !important;
+      }
+      .comp-header {
+        font-weight: 700 !important;
+        font-size: 12px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.8px !important;
+        padding-bottom: 10px !important;
+        border-bottom: 2px solid #252538 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>Adaptive Feedback — Implementation Mock</h1>
+      <p>
+        First-ever habit gets an immersive celebration. Subsequent adds get a
+        compact, non-blocking pill. Click each phone to replay.
+      </p>
+    </div>
+
+    <!-- ═══════════ FIRST HABIT SECTION ═══════════ -->
+    <div class="section">
+      <span class="flow-label flow-label-first">First Habit Ever</span>
+      <div class="section-title">Full-Screen Celebration</div>
+      <div class="section-desc">
+        Maximum emotional impact. Creates a positive anchor that drives Day 7
+        retention.
+      </div>
+
+      <div class="phones-row">
+        <!-- Before state -->
+        <div class="phone-wrapper">
+          <div class="phone-label">① User taps "Import"</div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="mock-bg">
+                <div class="mock-bg-header">
+                  <div class="mock-close">✕</div>
+                </div>
+                <div class="mock-hero">
+                  <div
+                    class="mock-icon-lg"
+                    style="background: rgba(168, 85, 247, 0.12)"
+                  >
+                    🏃
+                  </div>
+                  <div>
+                    <div class="mock-name">Morning Run</div>
+                    <div class="mock-cat">Fitness · Daily</div>
+                  </div>
+                </div>
+                <div class="mock-body">
+                  <div class="mock-desc">
+                    Start your day with a 20-30 minute jog. Morning exercise
+                    boosts serotonin, elevates BDNF, and sets a positive tone
+                    for the entire day.
+                  </div>
+                  <div class="mock-section">
+                    <div class="mock-section-lbl">🔬 Science</div>
+                    <div class="mock-section-txt">
+                      Huberman Lab: Morning cardio within 1hr of waking elevates
+                      BDNF by 300% and sustains focus for 4-6 hours.
+                    </div>
+                  </div>
+                  <div class="mock-section">
+                    <div class="mock-section-lbl">💡 Tips</div>
+                    <div class="mock-section-txt">
+                      Lay out running clothes the night before. Start with 10
+                      minutes if 30 feels daunting.
+                    </div>
+                  </div>
+                </div>
+                <div class="mock-footer">
+                  <div
+                    class="mock-import-btn"
+                    style="background: #a855f7; opacity: 0.5"
+                  >
+                    Importing...
+                  </div>
+                  <div class="mock-customize">Customize First →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- After state: Full-screen -->
+        <div class="phone-wrapper">
+          <div class="phone-label">② Celebration appears</div>
+          <div class="phone" onclick="replayFirst()" id="firstPhone">
+            <div class="phone-screen">
+              <div class="mock-bg" style="filter: blur(2px); opacity: 0.15">
+                <div class="mock-bg-header">
+                  <div class="mock-close">✕</div>
+                </div>
+              </div>
+
+              <div class="fs-overlay" id="fsOverlay">
+                <div class="fs-particles">
+                  <div
+                    class="fs-dot"
+                    style="
+                      width: 5px;
+                      height: 5px;
+                      background: #a855f7;
+                      left: 15%;
+                      top: 25%;
+                      animation-delay: 0s;
+                    "
+                  ></div>
+                  <div
+                    class="fs-dot"
+                    style="
+                      width: 4px;
+                      height: 4px;
+                      background: #f59e0b;
+                      left: 75%;
+                      top: 35%;
+                      animation-delay: 0.8s;
+                    "
+                  ></div>
+                  <div
+                    class="fs-dot"
+                    style="
+                      width: 6px;
+                      height: 6px;
+                      background: #22c55e;
+                      left: 25%;
+                      top: 65%;
+                      animation-delay: 1.6s;
+                    "
+                  ></div>
+                  <div
+                    class="fs-dot"
+                    style="
+                      width: 4px;
+                      height: 4px;
+                      background: #ec4899;
+                      left: 80%;
+                      top: 55%;
+                      animation-delay: 0.4s;
+                    "
+                  ></div>
+                  <div
+                    class="fs-dot"
+                    style="
+                      width: 5px;
+                      height: 5px;
+                      background: #3b82f6;
+                      left: 50%;
+                      top: 80%;
+                      animation-delay: 2s;
+                    "
+                  ></div>
+                  <div
+                    class="fs-dot"
+                    style="
+                      width: 3px;
+                      height: 3px;
+                      background: #f97316;
+                      left: 60%;
+                      top: 20%;
+                      animation-delay: 1.2s;
+                    "
+                  ></div>
+                </div>
+
+                <!-- Confetti burst -->
+                <div
+                  class="confetti-piece"
+                  style="
+                    background: #a855f7;
+                    left: 48%;
+                    top: 32%;
+                    --tx: -80px;
+                    --ty: -120px;
+                    --rot: 720deg;
+                    animation-delay: 0.7s;
+                  "
+                ></div>
+                <div
+                  class="confetti-piece"
+                  style="
+                    background: #22c55e;
+                    left: 52%;
+                    top: 32%;
+                    --tx: 90px;
+                    --ty: -100px;
+                    --rot: -540deg;
+                    animation-delay: 0.75s;
+                  "
+                ></div>
+                <div
+                  class="confetti-piece"
+                  style="
+                    background: #f59e0b;
+                    left: 50%;
+                    top: 34%;
+                    --tx: -40px;
+                    --ty: -140px;
+                    --rot: 360deg;
+                    animation-delay: 0.8s;
+                  "
+                ></div>
+                <div
+                  class="confetti-piece"
+                  style="
+                    background: #ec4899;
+                    left: 46%;
+                    top: 33%;
+                    --tx: 60px;
+                    --ty: -80px;
+                    --rot: -720deg;
+                    animation-delay: 0.85s;
+                  "
+                ></div>
+                <div
+                  class="confetti-piece"
+                  style="
+                    background: #3b82f6;
+                    left: 54%;
+                    top: 35%;
+                    --tx: -100px;
+                    --ty: -60px;
+                    --rot: 540deg;
+                    animation-delay: 0.9s;
+                  "
+                ></div>
+                <div
+                  class="confetti-piece"
+                  style="
+                    background: #f97316;
+                    left: 48%;
+                    top: 36%;
+                    --tx: 120px;
+                    --ty: -110px;
+                    --rot: -360deg;
+                    animation-delay: 0.95s;
+                  "
+                ></div>
+
+                <div
+                  class="fs-glow-ring"
+                  style="background: rgba(168, 85, 247, 0.1)"
+                >
+                  <span class="fs-emoji">🏃</span>
+                  <div class="fs-check-badge">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#fff"
+                      stroke-width="3.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="fs-title">Morning Run Added!</div>
+                <div class="fs-subtitle">
+                  Your first habit is ready. Consistency starts with one step.
+                </div>
+
+                <div class="fs-actions">
+                  <button class="fs-btn-primary">Go to My Habits →</button>
+                  <button class="fs-btn-secondary">Add Another Habit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="replay-hint">Click to replay</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="arrow-section">
+      <div class="arrow-line"></div>
+      <div class="arrow-text">After first habit</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <!-- ═══════════ SUBSEQUENT HABITS SECTION ═══════════ -->
+    <div class="section">
+      <span class="flow-label flow-label-repeat">Subsequent Habits</span>
+      <div class="section-title">Floating Pill</div>
+      <div class="section-desc">
+        Non-blocking, still has personality. Auto-dismisses in 4s with progress
+        indicator.
+      </div>
+
+      <div class="phones-row">
+        <!-- Before: browsing templates list -->
+        <div class="phone-wrapper">
+          <div class="phone-label">① User taps "Import" on preview</div>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="mock-bg">
+                <div class="mock-bg-header">
+                  <div class="mock-close">✕</div>
+                </div>
+                <div class="mock-hero">
+                  <div
+                    class="mock-icon-lg"
+                    style="background: rgba(245, 158, 11, 0.12)"
+                  >
+                    📖
+                  </div>
+                  <div>
+                    <div class="mock-name">Evening Journal</div>
+                    <div class="mock-cat">Mindfulness · Daily</div>
+                  </div>
+                </div>
+                <div class="mock-body">
+                  <div class="mock-desc">
+                    Spend 10 minutes reflecting on your day. Gratitude
+                    journaling before sleep improves sleep quality and emotional
+                    regulation.
+                  </div>
+                  <div class="mock-section">
+                    <div class="mock-section-lbl">🔬 Science</div>
+                    <div class="mock-section-txt">
+                      Journaling activates the prefrontal cortex, helping
+                      process emotions and reduce amygdala reactivity.
+                    </div>
+                  </div>
+                </div>
+                <div class="mock-footer">
+                  <div
+                    class="mock-import-btn"
+                    style="background: #f59e0b; opacity: 0.5"
+                  >
+                    Importing...
+                  </div>
+                  <div class="mock-customize">Customize First →</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- After: pill appears -->
+        <div class="phone-wrapper">
+          <div class="phone-label">② Pill slides up, modal closes</div>
+          <div class="phone" onclick="replayPill()" id="pillPhone">
+            <div class="phone-screen">
+              <div class="mock-bg">
+                <div class="mock-bg-header">
+                  <div class="mock-close">✕</div>
+                </div>
+                <div class="mock-hero">
+                  <div
+                    class="mock-icon-lg"
+                    style="background: rgba(245, 158, 11, 0.12)"
+                  >
+                    📖
+                  </div>
+                  <div>
+                    <div class="mock-name">Evening Journal</div>
+                    <div class="mock-cat">Mindfulness · Daily</div>
+                  </div>
+                </div>
+                <div class="mock-body">
+                  <div class="mock-desc">
+                    Spend 10 minutes reflecting on your day. Gratitude
+                    journaling before sleep improves sleep quality and emotional
+                    regulation.
+                  </div>
+                  <div class="mock-section">
+                    <div class="mock-section-lbl">🔬 Science</div>
+                    <div class="mock-section-txt">
+                      Journaling activates the prefrontal cortex, helping
+                      process emotions and reduce amygdala reactivity.
+                    </div>
+                  </div>
+                </div>
+                <div class="mock-footer">
+                  <div class="mock-import-btn" style="background: #22c55e">
+                    <span
+                      style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                      "
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      Added!
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating pill -->
+              <div class="pill-overlay" id="pillOverlay">
+                <div
+                  class="pill-spark"
+                  id="spark1"
+                  style="left: -10px; top: -8px; animation-delay: 0.3s"
+                >
+                  ✨
+                </div>
+                <div
+                  class="pill-spark"
+                  id="spark2"
+                  style="right: -5px; top: -12px; animation-delay: 0.45s"
+                >
+                  ⭐
+                </div>
+                <div class="pill">
+                  <div
+                    class="pill-icon"
+                    style="background: rgba(245, 158, 11, 0.15)"
+                  >
+                    📖
+                  </div>
+                  <span class="pill-text">Evening Journal added!</span>
+                  <span class="pill-action">View →</span>
+                  <div class="pill-progress">
+                    <div class="pill-progress-bar" id="pillProgress"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="replay-hint">Click to replay</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ Comparison Table ═══════════ -->
+    <div class="comparison">
+      <div class="comp-row comp-header">
+        <div class="comp-label"></div>
+        <div class="comp-first" style="color: #a855f7 !important">
+          First Habit
+        </div>
+        <div class="comp-repeat" style="color: #22c55e !important">
+          Subsequent
+        </div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">Pattern</div>
+        <div class="comp-first">Full-screen overlay</div>
+        <div class="comp-repeat">Floating pill</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">Blocking</div>
+        <div class="comp-first">Yes — intentional pause</div>
+        <div class="comp-repeat">No — can keep browsing</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">Duration</div>
+        <div class="comp-first">Until user taps CTA</div>
+        <div class="comp-repeat">4s auto-dismiss</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">Animation</div>
+        <div class="comp-first">Confetti + glow ring + pop</div>
+        <div class="comp-repeat">Bounce-in + icon pop</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">Haptic</div>
+        <div class="comp-first">Success notification</div>
+        <div class="comp-repeat">Success notification</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">CTAs</div>
+        <div class="comp-first">"Go to Habits" + "Add Another"</div>
+        <div class="comp-repeat">"View →" pill badge</div>
+      </div>
+      <div class="comp-row">
+        <div class="comp-label">Dismiss</div>
+        <div class="comp-first">Tap CTA buttons</div>
+        <div class="comp-repeat">Auto / swipe down</div>
+      </div>
+      <div class="comp-row" style="border-bottom: none !important">
+        <div class="comp-label">Logic</div>
+        <div
+          class="comp-first"
+          style="color: #808098 !important; font-size: 12px !important"
+        >
+          importedTemplateIds.size === 0
+        </div>
+        <div
+          class="comp-repeat"
+          style="color: #808098 !important; font-size: 12px !important"
+        >
+          importedTemplateIds.size > 0
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function replayEl(el, anim) {
+        el.style.animation = 'none';
+        el.offsetHeight;
+        el.style.animation = anim;
+      }
+
+      function replayFirst() {
+        const overlay = document.getElementById('fsOverlay');
+        replayEl(overlay, 'fsReveal 0.6s 0.3s ease-out forwards');
+        overlay.querySelectorAll('[style*="animation"]').forEach((el) => {
+          const a = el.style.animation;
+          el.style.animation = 'none';
+          el.offsetHeight;
+          el.style.animation = a;
+        });
+        // Also replay via class re-add for CSS animations
+        document
+          .querySelectorAll(
+            '.fs-emoji,.fs-check-badge,.fs-title,.fs-subtitle,.fs-actions,.confetti-piece,.fs-dot'
+          )
+          .forEach((el) => {
+            const a = getComputedStyle(el).animation;
+            el.style.animation = 'none';
+            el.offsetHeight;
+            el.style.animation = '';
+          });
+      }
+
+      function replayPill() {
+        const pill = document.getElementById('pillOverlay');
+        const progress = document.getElementById('pillProgress');
+        const sparks = document.querySelectorAll('.pill-spark');
+        const icon = document.querySelector('.pill-icon');
+
+        [pill, progress, icon, ...sparks].forEach((el) => {
+          el.style.animation = 'none';
+          el.offsetHeight;
+          el.style.animation = '';
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1492 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sticky Calendar — Full-Width + Science UX</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #0a0a0f;
+        color: #e5e7eb;
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 24px 100px;
+      }
+
+      h1 {
+        font-size: 28px !important;
+        font-weight: 800 !important;
+        letter-spacing: -0.5px;
+        color: #fff !important;
+        margin-bottom: 4px !important;
+      }
+      .subtitle {
+        color: #6b7280;
+        font-size: 13px;
+        margin-bottom: 48px;
+      }
+
+      .section {
+        margin-bottom: 64px;
+      }
+      .section-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .section-tag.red {
+        color: #f87171;
+      }
+      .section-tag.green {
+        color: #10b981;
+      }
+      .section-tag.amber {
+        color: #e8b94d;
+      }
+      .section-tag.purple {
+        color: #a78bfa;
+      }
+      .section-title {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-bottom: 4px !important;
+      }
+      .section-desc {
+        font-size: 13px;
+        color: #6b7280;
+        line-height: 1.5;
+        margin-bottom: 24px;
+        max-width: 700px;
+      }
+
+      .phones {
+        display: flex;
+        gap: 28px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phone-wrap {
+        text-align: center;
+      }
+      .phone-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .phone-label.dim {
+        color: #666;
+      }
+      .phone-label.green {
+        color: #10b981;
+      }
+      .phone-label.amber {
+        color: #e8b94d;
+      }
+      .phone-label.red {
+        color: #f87171;
+      }
+
+      /* Phone frame */
+      .phone {
+        width: 310px;
+        height: 620px;
+        border-radius: 36px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #222,
+          0 16px 48px rgba(0, 0, 0, 0.5);
+      }
+      .phone.light {
+        background: #f5f1ed;
+      }
+      .phone.dark {
+        background: #111827;
+      }
+
+      /* Status bar */
+      .status-bar {
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .status-bar.light {
+        color: #2d2a26;
+      }
+      .status-bar.dark {
+        color: #e5e7eb;
+      }
+
+      /* Shelf */
+      .shelf {
+        padding: 4px 16px 12px;
+        position: relative;
+        transition:
+          border-radius 0.3s ease,
+          margin 0.3s ease;
+      }
+      .shelf.light {
+        background: #f0ede8;
+        border-radius: 0 0 16px 16px;
+      }
+      .shelf.dark {
+        background: #1f2937;
+        border-radius: 0 0 16px 16px;
+      }
+      .shelf.sticky-active {
+        border-radius: 0 !important;
+      }
+
+      /* Greeting row */
+      .greeting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 2px;
+      }
+      .greeting {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        letter-spacing: -0.3px;
+      }
+      .greeting.light {
+        color: #2d2a26;
+      }
+      .greeting.dark {
+        color: #e5e7eb;
+      }
+      .greeting.streak {
+        color: #e8b94d !important;
+      }
+      .greeting.risk {
+        color: #f87171 !important;
+      }
+
+      .progress {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .progress.light {
+        color: #6e6660;
+      }
+      .progress.dark {
+        color: #9ca3af;
+      }
+      .progress .count {
+        font-weight: 700;
+      }
+      .progress .count.active {
+        color: #047857;
+      }
+      .progress .count.active-dark {
+        color: #34d399;
+      }
+
+      /* Glass chip */
+      .chip-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 6px;
+      }
+      .glass-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 14px;
+        font-size: 12px;
+        font-weight: 500;
+        border: 1px solid;
+      }
+      .glass-chip.light {
+        background: rgba(255, 255, 255, 0.5);
+        border-color: rgba(255, 255, 255, 0.6);
+        color: #6b6560;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .glass-chip.dark {
+        background: rgba(31, 41, 55, 0.6);
+        border-color: rgba(55, 65, 81, 0.35);
+        color: #9ca3af;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .glass-chip .icon {
+        font-size: 13px;
+        opacity: 0.6;
+      }
+      .glass-chip .chevron {
+        font-size: 9px;
+        opacity: 0.4;
+      }
+
+      /* Day strip */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding: 0 2px;
+        position: relative;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+        position: relative;
+      }
+      .day-label {
+        font-size: 10px;
+        line-height: 14px;
+      }
+      .day-label.light {
+        color: #6e6660;
+      }
+      .day-label.dark {
+        color: #9ca3af;
+      }
+      .day-label.today {
+        font-weight: 700;
+      }
+
+      .day-num {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        position: relative;
+      }
+      .day-num.default.light {
+        color: #2d2a26;
+      }
+      .day-num.default.dark {
+        color: #d1d5db;
+      }
+      .day-num.complete.light {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+      }
+      .day-num.complete.dark {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 12px rgba(16, 185, 129, 0.5);
+      }
+      .day-num.today.light {
+        background: #fef3cd;
+        border: 2px solid #e8b94d;
+        color: #7d5907;
+        font-weight: 700;
+      }
+      .day-num.today.dark {
+        background: #3d2f0a;
+        border: 2px solid #b8860b;
+        color: #e8b94d;
+        font-weight: 700;
+      }
+      .day-num.future.light {
+        color: #c4b8af;
+      }
+      .day-num.future.dark {
+        color: #4b5563;
+      }
+
+      /* Check badge */
+      .check-badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        color: #10b981;
+        font-weight: 800;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Connector arms */
+      .connector {
+        position: absolute;
+        top: 36px;
+        height: 3px;
+        z-index: 0;
+      }
+      .connector.left {
+        left: 0;
+        width: 50%;
+      }
+      .connector.right {
+        left: 50%;
+        width: 50%;
+      }
+      .connector.solid.light {
+        background: rgba(16, 185, 129, 0.25);
+      }
+      .connector.solid.dark {
+        background: rgba(52, 211, 153, 0.2);
+      }
+      .connector.ghost.light {
+        background: rgba(16, 185, 129, 0.12);
+      }
+      .connector.ghost.dark {
+        background: rgba(52, 211, 153, 0.1);
+      }
+
+      /* Completion dots */
+      .dot-spacer {
+        margin-top: 4px;
+        height: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .comp-dot {
+        border-radius: 50%;
+      }
+      .comp-dot.none.light {
+        width: 5px;
+        height: 5px;
+        background: #d6cdc4;
+      }
+      .comp-dot.none.dark {
+        width: 5px;
+        height: 5px;
+        background: #374151;
+      }
+      .comp-dot.partial.light {
+        width: 6px;
+        height: 6px;
+        background: #e8b94d;
+      }
+      .comp-dot.partial.dark {
+        width: 6px;
+        height: 6px;
+        background: #e8b94d;
+      }
+      .comp-dot.complete.light {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+      .comp-dot.complete.dark {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.7);
+      }
+
+      /* Habit cards */
+      .habit-list {
+        padding: 8px 24px 20px;
+      }
+      .habit-card {
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .habit-card.light {
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .habit-card.dark {
+        background: #1e293b;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .habit-emoji {
+        font-size: 24px;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .habit-name.light {
+        color: #2d2a26;
+      }
+      .habit-name.dark {
+        color: #e5e7eb;
+      }
+      .habit-meta {
+        font-size: 11px;
+        margin-top: 2px;
+      }
+      .habit-meta.light {
+        color: #a39890;
+      }
+      .habit-meta.dark {
+        color: #6b7280;
+      }
+      .habit-dots {
+        display: flex;
+        gap: 3px;
+        align-items: center;
+      }
+      .habit-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .habit-dot.done.light {
+        background: #10b981;
+      }
+      .habit-dot.done.dark {
+        background: #34d399;
+      }
+      .habit-dot.missed.light {
+        background: #e5ddd4;
+      }
+      .habit-dot.missed.dark {
+        background: #374151;
+      }
+      .habit-dot.today {
+        border: 2px solid #e8b94d;
+        background: transparent;
+      }
+
+      /* Scrollable phone content */
+      .phone-scroll {
+        height: calc(100% - 44px);
+        overflow-y: auto;
+        position: relative;
+        scroll-behavior: smooth;
+      }
+      .phone-scroll::-webkit-scrollbar {
+        width: 0;
+      }
+
+      /* Sticky header simulation */
+      .sticky-header-wrap {
+        position: relative;
+        z-index: 10;
+        transition: all 0.3s ease;
+      }
+      .sticky-header-wrap.stuck {
+        position: sticky;
+        top: 0;
+      }
+
+      /* Full-width sticky overlay */
+      .sticky-header-wrap.stuck .shelf {
+        border-radius: 0 !important;
+      }
+      .sticky-header-wrap.stuck.full-width {
+        margin-left: -24px;
+        margin-right: -24px;
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .sticky-header-wrap.stuck.full-width .shelf {
+        border-radius: 0 !important;
+      }
+
+      /* Before: visible gap problem */
+      .before-phone .sticky-header-wrap.stuck .shelf {
+        /* keeps rounded corners - the "problem" */
+      }
+
+      /* Annotation badges */
+      .annotation {
+        position: absolute;
+        z-index: 20;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+      .annotation.problem {
+        background: rgba(248, 113, 113, 0.2);
+        color: #f87171;
+        border: 1px solid rgba(248, 113, 113, 0.3);
+      }
+      .annotation.fix {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+      .annotation.science {
+        background: rgba(167, 139, 250, 0.15);
+        color: #a78bfa;
+        border: 1px solid rgba(167, 139, 250, 0.3);
+      }
+
+      /* Pulsing ghost connector */
+      @keyframes ghostPulse {
+        0%,
+        100% {
+          opacity: 0.35;
+        }
+        50% {
+          opacity: 0.55;
+        }
+      }
+      .connector.ghost {
+        animation: ghostPulse 2.5s ease-in-out infinite;
+      }
+
+      /* Today glow breath */
+      @keyframes todayGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(232, 185, 77, 0);
+        }
+        50% {
+          box-shadow: 0 0 8px 2px rgba(232, 185, 77, 0.3);
+        }
+      }
+      .day-num.today {
+        animation: todayGlow 3s ease-in-out infinite;
+      }
+
+      /* Science callout cards */
+      .callout-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .callout {
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid;
+      }
+      .callout.zeigarnik {
+        background: rgba(167, 139, 250, 0.06);
+        border-color: rgba(167, 139, 250, 0.2);
+      }
+      .callout.duolingo {
+        background: rgba(248, 113, 113, 0.06);
+        border-color: rgba(248, 113, 113, 0.2);
+      }
+      .callout.cognitive {
+        background: rgba(16, 185, 129, 0.06);
+        border-color: rgba(16, 185, 129, 0.2);
+      }
+      .callout-icon {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+      .callout-title {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .callout.zeigarnik .callout-title {
+        color: #a78bfa;
+      }
+      .callout.duolingo .callout-title {
+        color: #f87171;
+      }
+      .callout.cognitive .callout-title {
+        color: #10b981;
+      }
+      .callout-body {
+        font-size: 12px;
+        color: #9ca3af;
+        line-height: 1.5;
+      }
+
+      /* Comparison arrow */
+      .arrow-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+      }
+      .arrow-col svg {
+        width: 32px;
+        height: 32px;
+        color: #4b5563;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Sticky Calendar — Full-Width + Science UX</h1>
+      <p class="subtitle">
+        Before → After comparison of sticky header fix and behavioral psychology
+        improvements
+      </p>
+
+      <!-- ─── SECTION 1: STICKY FIX ─── -->
+      <div class="section">
+        <div class="section-tag red">PROBLEM → FIX</div>
+        <div class="section-title">Full-Width Sticky Header</div>
+        <div class="section-desc">
+          When the user scrolls, the calendar sticks to the top. Currently habit
+          cards peek through the rounded corners and side gaps. The fix: animate
+          to full-width with opaque background and flat bottom when sticky.
+        </div>
+
+        <div class="phones" style="align-items: flex-start">
+          <div class="phone-wrap">
+            <div class="phone-label dim">BEFORE — SCROLLED (PROBLEMS)</div>
+            <div class="phone light before-phone">
+              <div class="status-bar light">
+                <span>9:41</span>
+                <span style="font-size: 10px">●●● ▐█▌</span>
+              </div>
+              <div class="phone-scroll">
+                <!-- Sticky header with problems -->
+                <div class="sticky-header-wrap stuck" style="padding: 0 24px">
+                  <div
+                    class="shelf light"
+                    style="border-radius: 0 0 16px 16px; position: relative"
+                  >
+                    <!-- Problem annotations -->
+                    <div
+                      class="annotation problem"
+                      style="top: -2px; right: 28px"
+                    >
+                      Rounded corners leak
+                    </div>
+
+                    <div class="greeting-row">
+                      <span class="greeting streak">3-day streak</span>
+                      <span class="progress light"
+                        ><span class="count active">2</span> of 5</span
+                      >
+                    </div>
+                    <div class="chip-row">
+                      <div class="glass-chip light">
+                        <span class="icon">📅</span> Tue, March 4
+                        <span class="chevron">▾</span>
+                      </div>
+                    </div>
+                    <div class="day-strip">
+                      <div class="day-cell">
+                        <span class="day-label light">Mon</span>
+                        <div class="day-num complete light">
+                          3
+                          <div class="check-badge">✓</div>
+                        </div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Tue</span>
+                        <div class="day-num complete light">
+                          4
+                          <div class="check-badge">✓</div>
+                        </div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Wed</span>
+                        <div class="day-num complete light">
+                          5
+                          <div class="check-badge">✓</div>
+                        </div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light today">Thu</span>
+                        <div class="day-num today light">6</div>
+                        <div class="dot-spacer">
+                          <div class="comp-dot partial light"></div>
+                        </div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Fri</span>
+                        <div class="day-num future light">7</div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Sat</span>
+                        <div class="day-num future light">8</div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Sun</span>
+                        <div class="day-num future light">9</div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Show the gap problem: habit card peeking through -->
+                  <div
+                    class="annotation problem"
+                    style="bottom: -6px; left: 0px; font-size: 8px"
+                  >
+                    ← Gap
+                  </div>
+                  <div
+                    class="annotation problem"
+                    style="bottom: -6px; right: 0px; font-size: 8px"
+                  >
+                    Gap →
+                  </div>
+                </div>
+
+                <!-- Habit cards partially hidden -->
+                <div class="habit-list" style="margin-top: 4px">
+                  <div
+                    class="habit-card light"
+                    style="opacity: 0.4; transform: translateY(-8px)"
+                  >
+                    <span class="habit-emoji">🧘</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Morning Meditation</div>
+                      <div class="habit-meta light">Peeking through gap ↑</div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">📖</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Read 20 Pages</div>
+                      <div class="habit-meta light">5-day streak</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">💧</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Drink 8 Glasses</div>
+                      <div class="habit-meta light">3-day streak</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">🏃</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Run 5K</div>
+                      <div class="habit-meta light">Just started</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot missed light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot missed light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">✍️</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Journal Entry</div>
+                      <div class="habit-meta light">Evening ritual</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot missed light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arrow-col">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14m-7-7l7 7-7 7" />
+            </svg>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone-label green">AFTER — FULL-WIDTH STICKY</div>
+            <div class="phone light after-phone">
+              <div class="status-bar light">
+                <span>9:41</span>
+                <span style="font-size: 10px">●●● ▐█▌</span>
+              </div>
+              <div class="phone-scroll">
+                <!-- Fixed sticky header: full width, no rounded corners -->
+                <div class="sticky-header-wrap stuck" style="padding: 0">
+                  <div
+                    class="shelf light"
+                    style="
+                      border-radius: 0;
+                      position: relative;
+                      padding-left: 16px;
+                      padding-right: 16px;
+                    "
+                  >
+                    <div class="annotation fix" style="top: -2px; right: 4px">
+                      Full width, no gaps
+                    </div>
+
+                    <div class="greeting-row">
+                      <span class="greeting streak">3-day streak</span>
+                      <span class="progress light"
+                        ><span class="count active">2</span> of 5</span
+                      >
+                    </div>
+                    <div class="chip-row">
+                      <div class="glass-chip light">
+                        <span class="icon">📅</span> Tue, March 4
+                        <span class="chevron">▾</span>
+                      </div>
+                    </div>
+                    <div class="day-strip">
+                      <!-- Connectors between completed days -->
+                      <div class="day-cell">
+                        <span class="day-label light">Mon</span>
+                        <div class="day-num complete light">
+                          3
+                          <div class="check-badge">✓</div>
+                        </div>
+                        <div class="connector right solid light"></div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Tue</span>
+                        <div class="day-num complete light">
+                          4
+                          <div class="check-badge">✓</div>
+                        </div>
+                        <div class="connector left solid light"></div>
+                        <div class="connector right solid light"></div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Wed</span>
+                        <div class="day-num complete light">
+                          5
+                          <div class="check-badge">✓</div>
+                        </div>
+                        <div class="connector left solid light"></div>
+                        <!-- Ghost connector to today -->
+                        <div class="connector right ghost light"></div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light today">Thu</span>
+                        <div class="day-num today light">6</div>
+                        <!-- Ghost connector from yesterday -->
+                        <div class="connector left ghost light"></div>
+                        <div class="dot-spacer">
+                          <div class="comp-dot partial light"></div>
+                        </div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Fri</span>
+                        <div class="day-num future light">7</div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Sat</span>
+                        <div class="day-num future light">8</div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                      <div class="day-cell">
+                        <span class="day-label light">Sun</span>
+                        <div class="day-num future light">9</div>
+                        <div class="dot-spacer"></div>
+                      </div>
+                    </div>
+                    <div
+                      class="annotation science"
+                      style="
+                        bottom: 22px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        font-size: 8px;
+                      "
+                    >
+                      Ghost chain = Zeigarnik "waiting" cue
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Clean habit list, no peeking -->
+                <div class="habit-list" style="margin-top: 4px">
+                  <div class="habit-card light">
+                    <span class="habit-emoji">🧘</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Morning Meditation</div>
+                      <div class="habit-meta light">12-day streak</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">📖</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Read 20 Pages</div>
+                      <div class="habit-meta light">5-day streak</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">💧</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Drink 8 Glasses</div>
+                      <div class="habit-meta light">3-day streak</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">🏃</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Run 5K</div>
+                      <div class="habit-meta light">Just started</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot missed light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot missed light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                  <div class="habit-card light">
+                    <span class="habit-emoji">✍️</span>
+                    <div class="habit-info">
+                      <div class="habit-name light">Journal Entry</div>
+                      <div class="habit-meta light">Evening ritual</div>
+                    </div>
+                    <div class="habit-dots">
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot done light"></div>
+                      <div class="habit-dot missed light"></div>
+                      <div class="habit-dot today"></div>
+                      <div class="habit-dot missed light"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 2: GHOST CONNECTOR ARMS ─── -->
+      <div class="section">
+        <div class="section-tag purple">BEHAVIORAL SCIENCE</div>
+        <div class="section-title">
+          Ghost Connector — Chain "Waiting" vs "Broken"
+        </div>
+        <div class="section-desc">
+          When yesterday was completed but today is not yet done, a faded
+          connector arm appears at 50% opacity. This leverages the Zeigarnik
+          effect — incomplete tasks create cognitive tension that motivates
+          completion. The chain appears "waiting" rather than "broken."
+        </div>
+
+        <div class="phones">
+          <div class="phone-wrap">
+            <div class="phone-label dim">BEFORE — NO VISUAL CONNECTION</div>
+            <div class="phone light">
+              <div class="status-bar light">
+                <span>9:41</span><span style="font-size: 10px">●●● ▐█▌</span>
+              </div>
+              <div style="padding: 0 16px; padding-top: 48px">
+                <div class="shelf light">
+                  <div class="greeting-row">
+                    <span class="greeting streak">3-day streak</span>
+                    <span class="progress light"
+                      ><span class="count active">2</span> of 5</span
+                    >
+                  </div>
+                  <div class="chip-row">
+                    <div class="glass-chip light">
+                      <span class="icon">📅</span> Tue, March 4
+                      <span class="chevron">▾</span>
+                    </div>
+                  </div>
+                  <div class="day-strip">
+                    <div class="day-cell">
+                      <span class="day-label light">Mon</span>
+                      <div class="day-num complete light">
+                        3
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Tue</span>
+                      <div class="day-num complete light">
+                        4
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Wed</span>
+                      <div class="day-num complete light">
+                        5
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <!-- No connection to today — chain looks "broken" -->
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell" style="position: relative">
+                      <span class="day-label light today">Thu</span>
+                      <div class="day-num today light">6</div>
+                      <div class="dot-spacer">
+                        <div class="comp-dot partial light"></div>
+                      </div>
+                      <div
+                        class="annotation problem"
+                        style="
+                          bottom: -16px;
+                          left: 50%;
+                          transform: translateX(-50%);
+                          font-size: 8px;
+                        "
+                      >
+                        Chain "broken"
+                      </div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Fri</span>
+                      <div class="day-num future light">7</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sat</span>
+                      <div class="day-num future light">8</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sun</span>
+                      <div class="day-num future light">9</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="arrow-col">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14m-7-7l7 7-7 7" />
+            </svg>
+          </div>
+
+          <div class="phone-wrap">
+            <div class="phone-label green">AFTER — GHOST CONNECTOR</div>
+            <div class="phone light">
+              <div class="status-bar light">
+                <span>9:41</span><span style="font-size: 10px">●●● ▐█▌</span>
+              </div>
+              <div style="padding: 0 16px; padding-top: 48px">
+                <div class="shelf light">
+                  <div class="greeting-row">
+                    <span class="greeting streak">3-day streak</span>
+                    <span class="progress light"
+                      ><span class="count active">2</span> of 5</span
+                    >
+                  </div>
+                  <div class="chip-row">
+                    <div class="glass-chip light">
+                      <span class="icon">📅</span> Tue, March 4
+                      <span class="chevron">▾</span>
+                    </div>
+                  </div>
+                  <div class="day-strip">
+                    <div class="day-cell">
+                      <span class="day-label light">Mon</span>
+                      <div class="day-num complete light">
+                        3
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Tue</span>
+                      <div class="day-num complete light">
+                        4
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Wed</span>
+                      <div class="day-num complete light">
+                        5
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <!-- Ghost connector reaching toward today -->
+                      <div class="connector right ghost light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell" style="position: relative">
+                      <span class="day-label light today">Thu</span>
+                      <div class="day-num today light">6</div>
+                      <!-- Ghost connector reaching back from today -->
+                      <div class="connector left ghost light"></div>
+                      <div class="dot-spacer">
+                        <div class="comp-dot partial light"></div>
+                      </div>
+                      <div
+                        class="annotation fix"
+                        style="
+                          bottom: -16px;
+                          left: 50%;
+                          transform: translateX(-50%);
+                          font-size: 8px;
+                        "
+                      >
+                        Chain "waiting"
+                      </div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Fri</span>
+                      <div class="day-num future light">7</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sat</span>
+                      <div class="day-num future light">8</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sun</span>
+                      <div class="day-num future light">9</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 3: STREAK GREETING CHANGES ─── -->
+      <div class="section">
+        <div class="section-tag amber">PSYCHOLOGY TWEAKS</div>
+        <div class="section-title">Streak Greeting Optimizations</div>
+        <div class="section-desc">
+          Two evidence-based changes: (1) Shift "at risk" warning from 8pm to
+          7pm per Duolingo research on optimal alert windows. (2) Suppress
+          streak display for streaks below 3 days — reduces cognitive noise for
+          users who haven't built momentum yet.
+        </div>
+
+        <div class="phones">
+          <!-- Risk warning at 7pm -->
+          <div class="phone-wrap">
+            <div class="phone-label red">
+              7:00 PM — STREAK AT RISK (WAS 8PM)
+            </div>
+            <div class="phone light">
+              <div class="status-bar light">
+                <span>7:00 PM</span><span style="font-size: 10px">●●● ▐█▌</span>
+              </div>
+              <div style="padding: 0 16px; padding-top: 48px">
+                <div class="shelf light">
+                  <div class="greeting-row">
+                    <span class="greeting risk">5-day streak at risk</span>
+                    <span class="progress light"
+                      ><span class="count" style="color: #6e6660">0</span> of
+                      5</span
+                    >
+                  </div>
+                  <div class="chip-row">
+                    <div class="glass-chip light">
+                      <span class="icon">📅</span> Tue, March 4
+                      <span class="chevron">▾</span>
+                    </div>
+                  </div>
+                  <div class="day-strip">
+                    <div class="day-cell">
+                      <span class="day-label light">Mon</span>
+                      <div class="day-num complete light">
+                        3
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Tue</span>
+                      <div class="day-num complete light">
+                        4
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Wed</span>
+                      <div class="day-num complete light">
+                        5
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <div class="connector right ghost light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light today">Thu</span>
+                      <div
+                        class="day-num today light"
+                        style="border-color: #f87171; background: #fef2f2"
+                      >
+                        6
+                      </div>
+                      <div class="connector left ghost light"></div>
+                      <div class="dot-spacer">
+                        <div class="comp-dot none light"></div>
+                      </div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Fri</span>
+                      <div class="day-num future light">7</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sat</span>
+                      <div class="day-num future light">8</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sun</span>
+                      <div class="day-num future light">9</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                  </div>
+                  <div
+                    class="annotation science"
+                    style="
+                      bottom: 6px;
+                      left: 50%;
+                      transform: translateX(-50%);
+                      font-size: 8px;
+                    "
+                  >
+                    1hr earlier = optimal Duolingo alert window
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Streak < 3 suppressed -->
+          <div class="phone-wrap">
+            <div class="phone-label amber">STREAK OF 2 — NO LONGER SHOWN</div>
+            <div class="phone light">
+              <div class="status-bar light">
+                <span>9:41</span><span style="font-size: 10px">●●● ▐█▌</span>
+              </div>
+              <div style="padding: 0 16px; padding-top: 48px">
+                <div class="shelf light">
+                  <!-- Collapsed header: no greeting for streak < 3 -->
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                    "
+                  >
+                    <span class="progress light"
+                      ><span class="count active">1</span> of 4</span
+                    >
+                    <div class="glass-chip light">
+                      <span class="icon">📅</span> Tue, March 4
+                      <span class="chevron">▾</span>
+                    </div>
+                  </div>
+                  <div class="day-strip">
+                    <div class="day-cell">
+                      <span class="day-label light">Mon</span>
+                      <div class="day-num default light">3</div>
+                      <div class="dot-spacer">
+                        <div class="comp-dot none light"></div>
+                      </div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Tue</span>
+                      <div class="day-num complete light">
+                        4
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector right solid light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Wed</span>
+                      <div class="day-num complete light">
+                        5
+                        <div class="check-badge">✓</div>
+                      </div>
+                      <div class="connector left solid light"></div>
+                      <div class="connector right ghost light"></div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light today">Thu</span>
+                      <div class="day-num today light">6</div>
+                      <div class="connector left ghost light"></div>
+                      <div class="dot-spacer">
+                        <div class="comp-dot partial light"></div>
+                      </div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Fri</span>
+                      <div class="day-num future light">7</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sat</span>
+                      <div class="day-num future light">8</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                    <div class="day-cell">
+                      <span class="day-label light">Sun</span>
+                      <div class="day-num future light">9</div>
+                      <div class="dot-spacer"></div>
+                    </div>
+                  </div>
+                  <div
+                    class="annotation science"
+                    style="
+                      bottom: 6px;
+                      left: 50%;
+                      transform: translateX(-50%);
+                      font-size: 8px;
+                    "
+                  >
+                    Collapsed header: streak < 3 has no behavioral value
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SECTION 4: SCIENCE CALLOUTS ─── -->
+      <div class="section">
+        <div class="section-tag purple">RESEARCH BASIS</div>
+        <div class="section-title">Evidence Behind Each Change</div>
+        <div class="callout-grid">
+          <div class="callout zeigarnik">
+            <div class="callout-icon">🧠</div>
+            <div class="callout-title">Zeigarnik Effect — Ghost Connectors</div>
+            <div class="callout-body">
+              Uncompleted tasks occupy greater mental space than completed ones.
+              A faded connector arm signals "your chain is waiting, not broken"
+              — creating cognitive tension resolved only by completing today's
+              habit. The 50% opacity creates a visual "incomplete task" that
+              drives the urge to complete.
+            </div>
+          </div>
+          <div class="callout duolingo">
+            <div class="callout-icon">🦉</div>
+            <div class="callout-title">Duolingo Research — Alert Window</div>
+            <div class="callout-body">
+              Duolingo's 600+ experiments show 7-day streak milestones create a
+              3.6x course completion multiplier. Their Streak Freeze feature
+              (University of Pennsylvania/UCLA research) shows flexibility
+              increases motivation. Shifting the "at risk" warning from 8pm to
+              7pm gives users 5 hours of runway instead of 4 — the sweet spot
+              between urgency and anxiety.
+            </div>
+          </div>
+          <div class="callout cognitive">
+            <div class="callout-icon">📊</div>
+            <div class="callout-title">
+              Cognitive Load — Suppress Low Streaks
+            </div>
+            <div class="callout-body">
+              Miller's Law limits working memory to 5-9 items. Every UI element
+              competes for attention. Showing "2-day streak" adds cognitive
+              noise without behavioral value — users haven't built enough
+              momentum for the streak to serve as motivation. JMIR systematic
+              review: feedback is effective when it reaches threshold
+              significance (88% of successful interventions).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

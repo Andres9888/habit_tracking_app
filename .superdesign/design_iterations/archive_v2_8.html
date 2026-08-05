@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Archived Habits — Recipe Box</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E2DB !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 0;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 844px;
+      background: #F5F1ED;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      border-radius: 44px;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.06),
+        0 25px 60px -12px rgba(0,0,0,0.18),
+        0 8px 24px -8px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    /* ── Header ── */
+    .recipe-box-header {
+      background: linear-gradient(180deg, #E8DFD5 0%, #F5F1ED 100%);
+      padding: 60px 24px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .recipe-box-header h1 {
+      font-family: 'Literata', serif !important;
+      font-size: 26px !important;
+      font-weight: 700 !important;
+      color: #3D3028 !important;
+      letter-spacing: -0.3px;
+    }
+
+    .recipe-box-header .subtitle {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 14px !important;
+      color: #8C7B6B !important;
+      font-style: italic;
+      margin-top: 2px;
+    }
+
+    .header-icon {
+      width: 42px;
+      height: 42px;
+      background: #FDF8F0;
+      border: 1px solid #D4C8BA;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .recipe-count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #E8DFD5;
+      border: 1px solid #D4C8BA;
+      border-radius: 12px;
+      padding: 3px 10px;
+      font-size: 12px;
+      color: #6B5D4F;
+      font-weight: 500;
+      margin-top: 10px;
+    }
+
+    /* ── Recipe Card ── */
+    .recipe-card-wrapper {
+      perspective: 900px;
+      margin: 0 20px 18px;
+      cursor: pointer;
+    }
+
+    .recipe-card-inner {
+      position: relative;
+      width: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .recipe-card-wrapper.flipped .recipe-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .recipe-card-front,
+    .recipe-card-back {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      width: 100%;
+    }
+
+    .recipe-card-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotateY(180deg);
+    }
+
+    .recipe-card {
+      background: #FDF8F0;
+      border: 1px solid #E0D5C7;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 1px 3px rgba(80, 60, 30, 0.08),
+        0 4px 12px rgba(80, 60, 30, 0.04);
+    }
+
+    /* Paper texture — faint ruled lines */
+    .recipe-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 27px,
+          rgba(180, 170, 155, 0.10) 27px,
+          rgba(180, 170, 155, 0.10) 28px
+        );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Yellowed / worn edges */
+    .recipe-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at top left, rgba(200, 180, 140, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom right, rgba(200, 180, 140, 0.20) 0%, transparent 50%),
+        radial-gradient(ellipse at top right, rgba(200, 180, 140, 0.10) 0%, transparent 40%);
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 6px;
+    }
+
+    /* Red ruled line at top */
+    .card-ruled-line {
+      height: 3px;
+      background: linear-gradient(90deg, #C45C5C 0%, #D4736E 50%, #C45C5C 100%);
+      opacity: 0.65;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      padding: 16px 18px 14px;
+    }
+
+    /* Card title */
+    .card-title {
+      font-family: 'Literata', serif !important;
+      font-size: 19px !important;
+      font-weight: 600 !important;
+      color: #2D2418 !important;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title .emoji {
+      font-size: 20px;
+    }
+
+    .card-category {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 12px !important;
+      color: #9C8B78 !important;
+      font-style: italic;
+      margin-bottom: 14px;
+      padding-left: 2px;
+    }
+
+    /* Section labels */
+    .section-label {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #6B5D4F !important;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #DDD3C5;
+    }
+
+    /* Ingredients (stats) */
+    .ingredients-list {
+      list-style: none !important;
+      padding: 0 !important;
+      margin: 0 0 14px 0 !important;
+    }
+
+    .ingredients-list li {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 14px !important;
+      color: #4A3E32 !important;
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ingredients-list li .amount {
+      font-weight: 600;
+      color: #2D2418;
+      min-width: 40px;
+    }
+
+    .ingredients-list li .unit {
+      color: #7A6C5C;
+    }
+
+    .ingredient-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #C45C5C;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    /* Instructions */
+    .instructions-text {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 13px !important;
+      color: #6B5D4F !important;
+      line-height: 1.55 !important;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    .instructions-text strong {
+      color: #3D3028;
+      font-style: normal;
+    }
+
+    /* Cook Again button */
+    .cook-again-btn {
+      width: 100%;
+      background: #059669 !important;
+      color: white !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      padding: 10px 0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+
+    .cook-again-btn:hover {
+      background: #047857 !important;
+    }
+
+    .cook-again-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Toss Recipe link */
+    .toss-recipe-link {
+      display: block;
+      text-align: center;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 12px !important;
+      color: #B53030 !important;
+      margin-top: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .toss-recipe-link:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* ── Card Back ── */
+    .card-back-content {
+      padding: 16px 18px 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card-back-title {
+      font-family: 'Literata', serif !important;
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: #2D2418 !important;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-timeline {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 14px;
+    }
+
+    .history-timeline::before {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 4px;
+      bottom: 4px;
+      width: 1.5px;
+      background: #D4C8BA;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 4px 0;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -14px;
+      top: 10px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #C45C5C;
+      border: 1.5px solid #FDF8F0;
+    }
+
+    .timeline-item .tl-date {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      color: #9C8B78 !important;
+      font-weight: 500;
+    }
+
+    .timeline-item .tl-event {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 13px !important;
+      color: #4A3E32 !important;
+    }
+
+    .best-week-box {
+      background: rgba(5, 150, 105, 0.06);
+      border: 1px dashed rgba(5, 150, 105, 0.25);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+    }
+
+    .best-week-box .bw-label {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      color: #059669 !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .best-week-box .bw-value {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 14px !important;
+      color: #2D2418 !important;
+      margin-top: 2px;
+    }
+
+    .flip-hint {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      color: #A89888 !important;
+      text-align: center;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    /* ── Footer ── */
+    .recipe-box-footer {
+      text-align: center;
+      padding: 24px 24px 48px;
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 13px !important;
+      color: #A89888 !important;
+      font-style: italic;
+    }
+
+    /* ── Animations ── */
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) rotate(-1deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) rotate(0);
+      }
+    }
+
+    .recipe-card-wrapper {
+      animation: cardSlideIn 0.5s ease-out both;
+    }
+
+    .recipe-card-wrapper:nth-child(1) { animation-delay: 0.05s; }
+    .recipe-card-wrapper:nth-child(2) { animation-delay: 0.12s; }
+    .recipe-card-wrapper:nth-child(3) { animation-delay: 0.19s; }
+    .recipe-card-wrapper:nth-child(4) { animation-delay: 0.26s; }
+
+    /* Slight rotation for scattered feel */
+    .recipe-card-wrapper:nth-child(odd) .recipe-card-front .recipe-card {
+      transform: rotate(-0.3deg);
+    }
+    .recipe-card-wrapper:nth-child(even) .recipe-card-front .recipe-card {
+      transform: rotate(0.4deg);
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #2D2418;
+      color: #FDF8F0;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 100;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Confirm Overlay ── */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(45, 36, 24, 0.4);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+
+    .confirm-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .confirm-card {
+      background: #FDF8F0;
+      border: 1px solid #E0D5C7;
+      border-radius: 14px;
+      padding: 24px;
+      width: 310px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(60, 40, 20, 0.15);
+      transform: scale(0.95);
+      transition: transform 0.25s;
+    }
+
+    .confirm-overlay.show .confirm-card {
+      transform: scale(1);
+    }
+
+    .confirm-card h3 {
+      font-family: 'Literata', serif !important;
+      font-size: 17px !important;
+      color: #2D2418 !important;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .confirm-card p {
+      font-family: 'Source Serif 4', serif !important;
+      font-size: 13px !important;
+      color: #6B5D4F !important;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .confirm-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .confirm-btns button {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-cancel {
+      background: #E8DFD5 !important;
+      color: #4A3E32 !important;
+    }
+
+    .btn-cancel:hover {
+      background: #DDD3C5 !important;
+    }
+
+    .btn-confirm-delete {
+      background: #B53030 !important;
+      color: white !important;
+    }
+
+    .btn-confirm-delete:hover {
+      background: #9A2828 !important;
+    }
+
+    .btn-confirm-restore {
+      background: #059669 !important;
+      color: white !important;
+    }
+
+    .btn-confirm-restore:hover {
+      background: #047857 !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame" id="app">
+
+  <!-- Header -->
+  <div class="recipe-box-header">
+    <div class="header-top">
+      <div>
+        <h1>Recipe Box</h1>
+        <div class="subtitle">Archived habits, ready to revisit</div>
+      </div>
+      <div class="header-icon">
+        <i data-lucide="archive" style="width: 20px; height: 20px; color: #8C7B6B;"></i>
+      </div>
+    </div>
+    <div class="recipe-count-badge">
+      <i data-lucide="book-open" style="width: 12px; height: 12px;"></i>
+      <span id="card-count">4 recipes saved</span>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div style="padding-top: 14px;" id="cards-container">
+
+    <!-- Card 1: Morning Meditation -->
+    <div class="recipe-card-wrapper" data-id="1" onclick="flipCard(this)">
+      <div class="recipe-card-inner">
+        <!-- Front -->
+        <div class="recipe-card-front">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-content">
+              <div class="card-title">
+                <span class="emoji">&#129495;</span>
+                Morning Meditation
+              </div>
+              <div class="card-category">Mind & Wellness</div>
+
+              <div class="section-label">Ingredients</div>
+              <ul class="ingredients-list">
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">42</span>
+                  <span class="unit">day streak (best)</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">186</span>
+                  <span class="unit">total completions</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">78%</span>
+                  <span class="unit">habit strength</span>
+                </li>
+              </ul>
+
+              <div class="section-label">Instructions</div>
+              <div class="instructions-text">
+                Archived on <strong>Jan 15, 2026</strong>. This recipe has been resting for <strong>2 months</strong>. Originally practiced every morning at 6:30 AM.
+              </div>
+
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Morning Meditation', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Morning Meditation', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to see full history
+          </div>
+        </div>
+
+        <!-- Back -->
+        <div class="recipe-card-back">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-back-content">
+              <div class="card-back-title">
+                <i data-lucide="clock" style="width: 15px; height: 15px; color: #8C7B6B;"></i>
+                Full History
+              </div>
+              <div class="history-timeline">
+                <div class="timeline-item">
+                  <div class="tl-date">Jun 2025</div>
+                  <div class="tl-event">Recipe first created</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Aug 2025</div>
+                  <div class="tl-event">Hit 42-day streak peak</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Nov 2025</div>
+                  <div class="tl-event">Frequency dropped to 2x/week</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Jan 2026</div>
+                  <div class="tl-event">Moved to recipe box</div>
+                </div>
+              </div>
+              <div class="best-week-box">
+                <div class="bw-label">Best Week</div>
+                <div class="bw-value">Aug 12 &#8211; 18, 2025 &#8212; 7/7 days</div>
+              </div>
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Morning Meditation', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Morning Meditation', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to flip back
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Evening Journaling -->
+    <div class="recipe-card-wrapper" data-id="2" onclick="flipCard(this)">
+      <div class="recipe-card-inner">
+        <div class="recipe-card-front">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-content">
+              <div class="card-title">
+                <span class="emoji">&#9997;&#65039;</span>
+                Evening Journaling
+              </div>
+              <div class="card-category">Reflection & Growth</div>
+
+              <div class="section-label">Ingredients</div>
+              <ul class="ingredients-list">
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">21</span>
+                  <span class="unit">day streak (best)</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">93</span>
+                  <span class="unit">total completions</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">54%</span>
+                  <span class="unit">habit strength</span>
+                </li>
+              </ul>
+
+              <div class="section-label">Instructions</div>
+              <div class="instructions-text">
+                Archived on <strong>Feb 28, 2026</strong>. Dormant for <strong>3 weeks</strong>. Practiced nightly, writing 3 gratitudes &amp; reflections.
+              </div>
+
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Evening Journaling', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Evening Journaling', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to see full history
+          </div>
+        </div>
+
+        <div class="recipe-card-back">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-back-content">
+              <div class="card-back-title">
+                <i data-lucide="clock" style="width: 15px; height: 15px; color: #8C7B6B;"></i>
+                Full History
+              </div>
+              <div class="history-timeline">
+                <div class="timeline-item">
+                  <div class="tl-date">Sep 2025</div>
+                  <div class="tl-event">Recipe first created</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Oct 2025</div>
+                  <div class="tl-event">Hit 21-day streak peak</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Jan 2026</div>
+                  <div class="tl-event">Skipped most evenings</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Feb 2026</div>
+                  <div class="tl-event">Moved to recipe box</div>
+                </div>
+              </div>
+              <div class="best-week-box">
+                <div class="bw-label">Best Week</div>
+                <div class="bw-value">Oct 7 &#8211; 13, 2025 &#8212; 7/7 days</div>
+              </div>
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Evening Journaling', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Evening Journaling', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to flip back
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Cold Showers -->
+    <div class="recipe-card-wrapper" data-id="3" onclick="flipCard(this)">
+      <div class="recipe-card-inner">
+        <div class="recipe-card-front">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-content">
+              <div class="card-title">
+                <span class="emoji">&#128703;</span>
+                Cold Showers
+              </div>
+              <div class="card-category">Discipline & Energy</div>
+
+              <div class="section-label">Ingredients</div>
+              <ul class="ingredients-list">
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">14</span>
+                  <span class="unit">day streak (best)</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">47</span>
+                  <span class="unit">total completions</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">35%</span>
+                  <span class="unit">habit strength</span>
+                </li>
+              </ul>
+
+              <div class="section-label">Instructions</div>
+              <div class="instructions-text">
+                Archived on <strong>Dec 1, 2025</strong>. Dormant for <strong>3 months</strong>. Ended each shower with 2 minutes of cold water.
+              </div>
+
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Cold Showers', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Cold Showers', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to see full history
+          </div>
+        </div>
+
+        <div class="recipe-card-back">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-back-content">
+              <div class="card-back-title">
+                <i data-lucide="clock" style="width: 15px; height: 15px; color: #8C7B6B;"></i>
+                Full History
+              </div>
+              <div class="history-timeline">
+                <div class="timeline-item">
+                  <div class="tl-date">Jul 2025</div>
+                  <div class="tl-event">Recipe first created</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Aug 2025</div>
+                  <div class="tl-event">Hit 14-day streak peak</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Oct 2025</div>
+                  <div class="tl-event">Winter made it tough</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Dec 2025</div>
+                  <div class="tl-event">Moved to recipe box</div>
+                </div>
+              </div>
+              <div class="best-week-box">
+                <div class="bw-label">Best Week</div>
+                <div class="bw-value">Aug 4 &#8211; 10, 2025 &#8212; 7/7 days</div>
+              </div>
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Cold Showers', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Cold Showers', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to flip back
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Read 30 Minutes -->
+    <div class="recipe-card-wrapper" data-id="4" onclick="flipCard(this)">
+      <div class="recipe-card-inner">
+        <div class="recipe-card-front">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-content">
+              <div class="card-title">
+                <span class="emoji">&#128218;</span>
+                Read 30 Minutes
+              </div>
+              <div class="card-category">Learning & Focus</div>
+
+              <div class="section-label">Ingredients</div>
+              <ul class="ingredients-list">
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">60</span>
+                  <span class="unit">day streak (best)</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">244</span>
+                  <span class="unit">total completions</span>
+                </li>
+                <li>
+                  <span class="ingredient-dot"></span>
+                  <span class="amount">89%</span>
+                  <span class="unit">habit strength</span>
+                </li>
+              </ul>
+
+              <div class="section-label">Instructions</div>
+              <div class="instructions-text">
+                Archived on <strong>Mar 10, 2026</strong>. Dormant for <strong>11 days</strong>. Read non-fiction before bed &#8212; finished 12 books!
+              </div>
+
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Read 30 Minutes', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Read 30 Minutes', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to see full history
+          </div>
+        </div>
+
+        <div class="recipe-card-back">
+          <div class="recipe-card">
+            <div class="card-ruled-line"></div>
+            <div class="card-back-content">
+              <div class="card-back-title">
+                <i data-lucide="clock" style="width: 15px; height: 15px; color: #8C7B6B;"></i>
+                Full History
+              </div>
+              <div class="history-timeline">
+                <div class="timeline-item">
+                  <div class="tl-date">Mar 2025</div>
+                  <div class="tl-event">Recipe first created</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Jun 2025</div>
+                  <div class="tl-event">Hit 60-day streak peak</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Dec 2025</div>
+                  <div class="tl-event">Switched to audiobooks</div>
+                </div>
+                <div class="timeline-item">
+                  <div class="tl-date">Mar 2026</div>
+                  <div class="tl-event">Moved to recipe box</div>
+                </div>
+              </div>
+              <div class="best-week-box">
+                <div class="bw-label">Best Week</div>
+                <div class="bw-value">Jun 2 &#8211; 8, 2025 &#8212; 45 min avg/day</div>
+              </div>
+              <button class="cook-again-btn" onclick="event.stopPropagation(); confirmAction('restore', 'Read 30 Minutes', this)">
+                <i data-lucide="rotate-ccw" style="width: 15px; height: 15px;"></i>
+                Cook Again
+              </button>
+              <a class="toss-recipe-link" onclick="event.stopPropagation(); confirmAction('delete', 'Read 30 Minutes', this)">
+                Toss Recipe
+              </a>
+            </div>
+          </div>
+          <div class="flip-hint">
+            <i data-lucide="rotate-3d" style="width: 12px; height: 12px;"></i>
+            Tap to flip back
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="recipe-box-footer">
+    &#8220;The best recipes are worth making again.&#8221;
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Confirm Dialog -->
+  <div class="confirm-overlay" id="confirm-overlay" onclick="closeConfirm()">
+    <div class="confirm-card" onclick="event.stopPropagation()">
+      <h3 id="confirm-title">Toss Recipe?</h3>
+      <p id="confirm-desc">This will permanently delete this habit and all its history.</p>
+      <div class="confirm-btns">
+        <button class="btn-cancel" onclick="closeConfirm()">Keep It</button>
+        <button id="confirm-action-btn" class="btn-confirm-delete" onclick="executeConfirm()">Toss It</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  // ── Flip Card ──
+  function flipCard(wrapper) {
+    wrapper.classList.toggle('flipped');
+  }
+
+  // ── Confirm Dialog ──
+  let pendingAction = null;
+  let pendingName = '';
+  let pendingElement = null;
+
+  function confirmAction(action, name, el) {
+    pendingAction = action;
+    pendingName = name;
+    pendingElement = el;
+
+    const overlay = document.getElementById('confirm-overlay');
+    const title = document.getElementById('confirm-title');
+    const desc = document.getElementById('confirm-desc');
+    const btn = document.getElementById('confirm-action-btn');
+
+    if (action === 'delete') {
+      title.textContent = 'Toss Recipe?';
+      desc.textContent = 'Permanently delete \u201C' + name + '\u201D and all its history. This can\u2019t be undone.';
+      btn.textContent = 'Toss It';
+      btn.className = 'btn-confirm-delete';
+    } else {
+      title.textContent = 'Cook Again?';
+      desc.textContent = 'Restore \u201C' + name + '\u201D to your active habits. Pick up where you left off!';
+      btn.textContent = "Let\u2019s Cook!";
+      btn.className = 'btn-confirm-restore';
+    }
+
+    overlay.classList.add('show');
+  }
+
+  function closeConfirm() {
+    document.getElementById('confirm-overlay').classList.remove('show');
+    pendingAction = null;
+    pendingName = '';
+    pendingElement = null;
+  }
+
+  function executeConfirm() {
+    if (!pendingAction || !pendingElement) return;
+
+    const wrapper = pendingElement.closest('.recipe-card-wrapper');
+    const action = pendingAction;
+    const name = pendingName;
+
+    closeConfirm();
+
+    // Animate removal
+    wrapper.style.transition = 'all 0.4s ease';
+    wrapper.style.opacity = '0';
+    wrapper.style.transform = action === 'delete'
+      ? 'translateX(-100px) rotate(-5deg)'
+      : 'translateY(-30px) scale(0.95)';
+    wrapper.style.maxHeight = wrapper.scrollHeight + 'px';
+
+    setTimeout(function() {
+      wrapper.style.maxHeight = '0';
+      wrapper.style.marginBottom = '0';
+      wrapper.style.padding = '0';
+      wrapper.style.overflow = 'hidden';
+    }, 200);
+
+    setTimeout(function() {
+      wrapper.remove();
+      updateCount();
+      showToast(
+        action === 'delete'
+          ? '\u201C' + name + '\u201D tossed from the box'
+          : '\u201C' + name + '\u201D is back on the menu!'
+      );
+    }, 500);
+  }
+
+  function updateCount() {
+    var remaining = document.querySelectorAll('.recipe-card-wrapper').length;
+    var badge = document.getElementById('card-count');
+    if (remaining === 0) {
+      badge.textContent = 'Box is empty';
+    } else if (remaining === 1) {
+      badge.textContent = '1 recipe saved';
+    } else {
+      badge.textContent = remaining + ' recipes saved';
+    }
+  }
+
+  function showToast(message) {
+    var toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(function() {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+</script>
+
+</body>
+</html>

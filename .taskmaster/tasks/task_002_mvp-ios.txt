@@ -1,0 +1,85 @@
+# Task ID: 2
+# Title: Story 1.2.1: Edge Cases & Error Handling for Check-Off
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Implement comprehensive edge case handling and error recovery for habit check-off feature including debounce, retry queue, conflict resolution, and offline support
+# Details:
+Add robust error handling to prevent data loss and provide graceful degradation under adverse conditions. Implement: debounce (300ms cooldown) for rapid taps, retry queue with exponential backoff for network failures, multi-device conflict resolution using last-write-wins, offline-to-online sync with progress indicators, animation interruption handling, date boundary validation, corrupted data detection and repair, background app kill recovery. Full specifications in docs/stories/epic-1-home-screen/habit-card/bugs/story-1.2.1-edge-cases.md
+
+# Test Strategy:
+Unit tests for debounce logic, error handling, and retry queue. Integration tests for multi-device conflicts and offline sync. Manual testing on physical device for rapid taps, airplane mode, app kills, and timezone changes. Verify 99.9% sync success rate and zero data loss.
+
+# Subtasks:
+## 1. Implement Debounce and Race Condition Prevention [pending]
+### Dependencies: None
+### Description: Add 300ms cooldown to prevent duplicate mutations from rapid taps
+### Details:
+Add isToggling state flag to HabitCard, implement 300ms cooldown period, ignore taps within window, ensure haptic feedback fires only once per window. Modify src/components/HabitCard.tsx
+
+## 2. Add Error Handling with Try-Catch [pending]
+### Dependencies: None
+### Description: Handle network failures and mutation errors gracefully with toast notifications
+### Details:
+Wrap toggleCompletionMutation in try/catch, add error state management, display toast notifications for errors, log to Sentry, ensure UI consistency on errors. Create src/utils/toastMessages.ts
+
+## 3. Implement Retry Queue with Exponential Backoff [pending]
+### Dependencies: None
+### Description: Automatically retry failed mutations with 1s, 2s, 4s delays
+### Details:
+Create retry queue manager, implement exponential backoff, persist queue to AsyncStorage, show sync status indicator during retries, maximum 3 attempts. Create src/utils/retryQueue.ts and src/hooks/useRetryQueue.ts
+
+## 4. Add Sync Status Indicator [pending]
+### Dependencies: None
+### Description: Visual feedback for pending sync operations
+### Details:
+Create SyncStatusIndicator component showing spinning icon during sync, display count of pending operations, auto-hide when complete, integrate with retry queue. Create src/components/SyncStatusIndicator.tsx
+
+## 5. Implement Multi-Device Conflict Resolution [pending]
+### Dependencies: None
+### Description: Handle concurrent updates from multiple devices using last-write-wins
+### Details:
+Add timestamp comparison logic in toggleCompletion mutation, detect concurrent updates via Convex reactivity, show toast for changes from other devices, handle deleted habits. Modify convex/tracking.ts and src/components/HabitCard.tsx
+
+## 6. Handle Animation Interruptions [pending]
+### Dependencies: None
+### Description: Allow tap during animation without visual artifacts
+### Details:
+Cancel in-progress animation on new tap using Reanimated cancelAnimation(), ensure atomic state transitions, respect debounce during cancellation. Modify src/components/HabitCard.tsx
+
+## 7. Offline-to-Online Sync Flow [pending]
+### Dependencies: None
+### Description: Batch sync queued completions when network reconnects
+### Details:
+Detect online/offline events with NetInfo, queue mutations to AsyncStorage when offline, batch sync on reconnection, show progress indicator. Create src/hooks/useNetworkStatus.ts and src/utils/offlineQueue.ts
+
+## 8. Strength Calculation Failure Handling [pending]
+### Dependencies: None
+### Description: Persist completion even if strength calculation fails
+### Details:
+Separate completion tracking from strength calculation, make calculation async and non-blocking, add fallback UI state, implement background retry. Modify convex/tracking.ts and src/components/HabitStrengthIndicator.tsx
+
+## 9. Date Boundary Validation [pending]
+### Dependencies: None
+### Description: Prevent timezone-related date errors
+### Details:
+Calculate date on client in local timezone, send YYYY-MM-DD string to server, server validates format only, handle DST transitions. Create src/utils/dateHelpers.ts and modify convex/tracking.ts
+
+## 10. Corrupted Data Detection and Repair [pending]
+### Dependencies: None
+### Description: Handle missing or invalid habit data gracefully
+### Details:
+Add Zod validation schema for habit documents, detect schema violations on query, show error state UI with restore option, provide repair mutation. Create convex/schemas/habitSchema.ts and convex/mutations/repairHabit.ts
+
+## 11. Background App Kill Recovery [pending]
+### Dependencies: None
+### Description: Persist mutations across app kills
+### Details:
+Persist mutation queue to AsyncStorage before kill, check for queued mutations on app launch, auto-sync on relaunch, show sync progress. Modify src/utils/retryQueue.ts, create src/hooks/useAppState.ts, modify App.tsx
+
+## 12. Comprehensive Testing Suite [pending]
+### Dependencies: None
+### Description: Ensure all edge cases covered by tests
+### Details:
+Write 20+ unit tests for debounce, error handling, and retry logic. Integration tests for conflicts and offline sync. Manual testing checklist for physical device. Create test files and manual checklist.
+

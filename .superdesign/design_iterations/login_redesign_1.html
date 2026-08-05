@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Redesign - Daily Habits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1a1a1a !important; }
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: white;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #1a1a1a;
+      border-radius: 0 0 18px 18px;
+      z-index: 10;
+    }
+    .btn-apple {
+      background: #000;
+      color: white;
+    }
+    .btn-google {
+      background: white;
+      border: 1px solid #d6d3d1;
+      color: #1c1917;
+    }
+    .btn-primary {
+      background: #1c1917;
+      color: white;
+    }
+    .btn-secondary {
+      background: white;
+      border: 1px solid #d6d3d1;
+      color: #1c1917;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e7e5e4;
+    }
+    .label-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ef4444;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .label-badge.green {
+      background: #22c55e;
+    }
+    .label-badge.blue {
+      background: #3b82f6;
+    }
+    .gradient-logo {
+      background: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+      animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    .float-animation {
+      animation: float 4s ease-in-out infinite;
+    }
+    .social-proof-badge {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border: 1px solid #fcd34d;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-white mb-2 text-center">Login Experience Redesign</h1>
+    <p class="text-stone-400 text-center mb-12">Daily Habits App - UI/UX Improvements</p>
+
+    <div class="flex flex-wrap justify-center gap-12">
+
+      <!-- CURRENT: Welcome Screen -->
+      <div class="relative">
+        <div class="label-badge">CURRENT</div>
+        <div class="phone-frame">
+          <div class="h-11"></div>
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-16 pb-12 justify-between">
+            <!-- Hero - Current -->
+            <div class="flex flex-col items-center gap-4">
+              <span class="text-7xl mb-4">✓</span>
+              <h1 class="text-4xl font-extrabold tracking-tight text-stone-800 text-center">
+                Habit Tracker
+              </h1>
+              <p class="text-lg text-stone-500 text-center leading-7">
+                Build better habits, one day at a time
+              </p>
+            </div>
+
+            <!-- Buttons - Current -->
+            <div class="flex flex-col gap-3">
+              <button class="btn-apple py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-google py-4 rounded-3xl font-semibold text-base flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <div class="divider text-xs text-stone-400 font-medium tracking-widest my-1">OR</div>
+
+              <button class="btn-primary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                GET STARTED
+              </button>
+              <button class="btn-secondary py-4 rounded-3xl font-semibold tracking-widest text-sm">
+                SIGN IN
+              </button>
+            </div>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">Plain emoji, 2 email buttons</p>
+      </div>
+
+      <!-- PROPOSED: Welcome Screen -->
+      <div class="relative">
+        <div class="label-badge green">PROPOSED</div>
+        <div class="phone-frame bg-gradient-to-b from-stone-50 to-white">
+          <div class="h-11"></div>
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-12 pb-8 justify-between">
+            <!-- Hero - Redesigned -->
+            <div class="flex flex-col items-center">
+              <!-- Animated Logo -->
+              <div class="gradient-logo w-20 h-20 rounded-3xl flex items-center justify-center mb-6 shadow-lg float-animation">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+
+              <h1 class="text-3xl font-black tracking-tight text-stone-900 text-center mb-2">
+                Daily Habits
+              </h1>
+              <p class="text-base text-stone-500 text-center leading-relaxed mb-6">
+                Build lasting habits with<br/>science-backed techniques
+              </p>
+
+              <!-- Social Proof -->
+              <div class="social-proof-badge rounded-full px-4 py-2 flex items-center gap-2 mb-2">
+                <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span class="text-sm font-semibold text-amber-800">10,000+ habits tracked</span>
+              </div>
+            </div>
+
+            <!-- Buttons - Redesigned -->
+            <div class="flex flex-col gap-3">
+              <button class="btn-apple py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-3 shadow-sm">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-google py-4 rounded-2xl font-semibold text-base flex items-center justify-center gap-3 shadow-sm">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+
+              <div class="divider text-xs text-stone-400 font-medium my-2">or</div>
+
+              <button class="btn-primary py-4 rounded-2xl font-semibold text-base shadow-sm">
+                Continue with Email
+              </button>
+
+              <!-- Text link instead of button -->
+              <p class="text-center text-sm text-stone-500 mt-2">
+                Already have an account? <button class="text-emerald-600 font-semibold">Sign in</button>
+              </p>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-4">
+              <p class="text-center text-xs text-stone-400">
+                <button class="hover:text-stone-600">Terms</button>
+                <span class="mx-2">·</span>
+                <button class="hover:text-stone-600">Privacy</button>
+              </p>
+            </div>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">Gradient logo, social proof, cleaner hierarchy</p>
+      </div>
+
+      <!-- PROPOSED: Sign In Screen -->
+      <div class="relative">
+        <div class="label-badge blue">SIGN IN</div>
+        <div class="phone-frame bg-white">
+          <div class="h-11"></div>
+          <div class="flex flex-col h-[calc(100%-44px)] px-6 pt-4">
+            <!-- Back button -->
+            <button class="flex items-center gap-1 text-stone-600 font-medium text-base mb-6 -ml-1">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+              </svg>
+              Back
+            </button>
+
+            <!-- Header -->
+            <h1 class="text-2xl font-bold text-stone-900 mb-1">
+              Welcome back
+            </h1>
+            <p class="text-base text-stone-500 mb-8">
+              Sign in to continue your streak
+            </p>
+
+            <!-- Social Buttons -->
+            <div class="flex flex-col gap-3 mb-4">
+              <button class="btn-apple py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Continue with Apple
+              </button>
+
+              <button class="btn-google py-3.5 rounded-2xl font-semibold text-sm flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                Continue with Google
+              </button>
+            </div>
+
+            <div class="divider text-xs text-stone-400 font-medium my-4">or</div>
+
+            <!-- Form -->
+            <div class="flex flex-col gap-5">
+              <div>
+                <label class="text-xs font-semibold tracking-wide text-stone-500 mb-2 block">Email</label>
+                <input type="email" placeholder="you@example.com" class="w-full py-3.5 px-4 border border-stone-200 rounded-xl text-base bg-stone-50 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all">
+              </div>
+
+              <div>
+                <div class="flex justify-between items-center mb-2">
+                  <label class="text-xs font-semibold tracking-wide text-stone-500">Password</label>
+                  <button class="text-xs font-medium text-emerald-600">Forgot?</button>
+                </div>
+                <input type="password" placeholder="••••••••" class="w-full py-3.5 px-4 border border-stone-200 rounded-xl text-base bg-stone-50 focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none transition-all">
+              </div>
+
+              <button class="bg-emerald-600 text-white py-4 rounded-xl font-semibold text-base shadow-sm hover:bg-emerald-700 transition-colors mt-2">
+                Sign In
+              </button>
+            </div>
+
+            <!-- Footer -->
+            <p class="text-center text-sm text-stone-500 mt-6">
+              Don't have an account? <button class="text-emerald-600 font-semibold">Sign up</button>
+            </p>
+          </div>
+        </div>
+        <p class="text-stone-500 text-center mt-4 text-sm">Cleaner form, emerald accents</p>
+      </div>
+
+    </div>
+
+    <!-- Design Changes Summary -->
+    <div class="mt-16 bg-stone-800/50 rounded-2xl p-8 max-w-4xl mx-auto">
+      <h3 class="text-xl font-bold text-white mb-6">Key Design Changes</h3>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <h4 class="text-emerald-400 font-semibold mb-3">Visual Identity</h4>
+          <ul class="space-y-2 text-sm text-stone-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Gradient logo</strong> with breathing animation (emerald tones)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>"Daily Habits"</strong> name matches the app</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Social proof badge</strong> builds trust</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Subtle gradient background</strong> (stone-50 → white)</span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-emerald-400 font-semibold mb-3">UX Improvements</h4>
+          <ul class="space-y-2 text-sm text-stone-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Single primary CTA</strong> reduces decision fatigue</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Text link for sign-in</strong> (secondary action)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Lowercase "or"</strong> softer, friendlier tone</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Terms/Privacy footer</strong> App Store compliance</span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-emerald-400 font-semibold mb-3">Form Design</h4>
+          <ul class="space-y-2 text-sm text-stone-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Sentence case labels</strong> more readable than ALL CAPS</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Inline "Forgot?"</strong> link near password field</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Focus states</strong> with emerald ring</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Rounded-xl inputs</strong> (12px vs current 8px)</span>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-emerald-400 font-semibold mb-3">Color System</h4>
+          <ul class="space-y-2 text-sm text-stone-300">
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Emerald primary</strong> (growth/habit metaphor)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Stone neutrals</strong> maintained for consistency</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Amber for social proof</strong> (warm, trustworthy)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-emerald-400 mt-0.5">✓</span>
+              <span><strong>Official brand logos</strong> (Apple/Google)</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <p class="text-stone-600 text-center mt-8 text-xs">
+      Login Redesign Mock • Daily Habits App • January 2026
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Add Screen - V8 Final (12 Colors)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; -webkit-font-smoothing: antialiased; }
+    .modal-bg { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); }
+    .paper-bg { background: #faf9f7; }
+    .color-swatch { transition: all 0.15s ease-out; }
+    .color-swatch.selected { box-shadow: 0 0 0 2.5px #1a1a1a; transform: scale(1.12); }
+    .pressable { transition: transform 0.1s ease-out; }
+    .pressable:active { transform: scale(0.96); }
+    input:focus { outline: none; }
+    .emoji-chip { transition: all 0.15s ease-out; }
+    .emoji-chip.selected { box-shadow: 0 0 0 2px #10B981; background: #ECFDF5; }
+    .reminder-option { transition: all 0.15s ease; }
+    .reminder-option.selected { background: #ECFDF5; border-color: #10B981; }
+    ::-webkit-scrollbar { width: 0px; }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-end justify-center p-4">
+  <div class="w-full max-w-[390px] h-[844px] bg-black rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
+    <div class="w-full h-full rounded-[40px] overflow-hidden relative modal-bg">
+      <div class="absolute bottom-0 left-0 right-0 h-[85%] paper-bg rounded-t-3xl flex flex-col shadow-2xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-4">
+          <button class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-200/60 pressable">
+            <i data-lucide="x" class="w-5 h-5 text-stone-500"></i>
+          </button>
+          <h1 class="text-lg font-semibold text-[#1F2937]">New Habit</h1>
+          <div class="w-9"></div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-5 pb-6">
+
+          <!-- Hero Name Input -->
+          <div class="mb-6">
+            <label class="text-sm font-semibold text-[#1F2937] mb-2 block">What habit do you want to build?</label>
+            <div class="relative bg-white rounded-2xl border-2 border-stone-200 overflow-hidden focus-within:border-[#10B981] transition-colors">
+              <input type="text" value="Read for 20 minutes" class="w-full h-14 pl-4 pr-16 text-lg font-medium text-[#1F2937] placeholder-[#9CA3AF] bg-transparent" placeholder="e.g. Meditate, Exercise, Read..."/>
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-[#9CA3AF]">20/50</span>
+            </div>
+          </div>
+
+          <!-- Icon Section -->
+          <div class="mb-6">
+            <div class="flex items-center justify-between mb-3">
+              <label class="text-sm font-semibold text-[#1F2937]">Icon</label>
+              <button class="text-xs text-[#10B981] font-medium pressable">Browse all →</button>
+            </div>
+            <div class="flex gap-2.5">
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center selected"><span class="text-2xl">📖</span></button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center"><span class="text-2xl">📚</span></button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center"><span class="text-2xl">📰</span></button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center"><span class="text-2xl">✍️</span></button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center"><span class="text-2xl">🎯</span></button>
+              <button class="emoji-chip w-12 h-12 rounded-xl bg-white border border-stone-200 flex items-center justify-center"><span class="text-2xl">✨</span></button>
+            </div>
+          </div>
+
+          <!-- Color Section - 12 colors (fills row) -->
+          <div class="mb-6">
+            <label class="text-sm font-semibold text-[#1F2937] mb-3 block">Color</label>
+            <div class="flex flex-wrap gap-3">
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #EF4444;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #F97316;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #FBBF24;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #84CC16;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable selected" style="background: #10B981;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #14B8A6;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #06B6D4;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #3B82F6;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #8B5CF6;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #A855F7;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #EC4899;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #78716C;"></button>
+            </div>
+          </div>
+
+          <!-- Reminder Section -->
+          <div class="mb-6">
+            <label class="text-sm font-semibold text-[#1F2937] mb-3 block">Reminder</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button class="reminder-option py-3 px-2 rounded-xl bg-white border border-stone-200 pressable flex flex-col items-center">
+                <span class="text-lg mb-1">🔕</span>
+                <span class="text-xs font-medium text-[#78716c]">None</span>
+              </button>
+              <button class="reminder-option py-3 px-2 rounded-xl pressable flex flex-col items-center selected border-2">
+                <span class="text-lg mb-1">🌅</span>
+                <span class="text-xs font-medium text-[#047857]">Morning</span>
+                <span class="text-[10px] text-[#10B981]">7:00 AM</span>
+              </button>
+              <button class="reminder-option py-3 px-2 rounded-xl bg-white border border-stone-200 pressable flex flex-col items-center">
+                <span class="text-lg mb-1">☀️</span>
+                <span class="text-xs font-medium text-[#78716c]">Midday</span>
+                <span class="text-[10px] text-[#9CA3AF]">12:00 PM</span>
+              </button>
+              <button class="reminder-option py-3 px-2 rounded-xl bg-white border border-stone-200 pressable flex flex-col items-center">
+                <span class="text-lg mb-1">🌙</span>
+                <span class="text-xs font-medium text-[#78716c]">Evening</span>
+                <span class="text-[10px] text-[#9CA3AF]">8:00 PM</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Browse Templates Link -->
+          <div class="mb-6">
+            <button class="w-full py-3.5 px-4 rounded-xl bg-white border border-stone-200 pressable flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                  <i data-lucide="layout-grid" class="w-4 h-4 text-[#78716c]"></i>
+                </div>
+                <div class="text-left">
+                  <p class="text-sm font-medium text-[#1F2937]">Need inspiration?</p>
+                  <p class="text-xs text-[#78716c]">Browse science-backed templates</p>
+                </div>
+              </div>
+              <i data-lucide="chevron-right" class="w-5 h-5 text-[#9CA3AF]"></i>
+            </button>
+          </div>
+
+          <div class="h-24"></div>
+        </div>
+
+        <!-- Sticky CTA -->
+        <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#faf9f7] via-[#faf9f7] to-transparent pt-8">
+          <button class="w-full h-14 rounded-2xl flex items-center justify-center gap-2 pressable shadow-lg" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i data-lucide="check" class="w-5 h-5 text-white"></i>
+            <span class="text-base font-semibold text-white">Create Habit</span>
+          </button>
+          <div class="flex justify-center mt-3"><div class="w-32 h-1 rounded-full bg-stone-300"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

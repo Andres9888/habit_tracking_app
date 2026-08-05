@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Touch Target Fixes — Before / After</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+        background: #f5f5f0;
+        color: #1c1917;
+        padding: 32px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #047857;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        color: #6b7280;
+        font-size: 15px;
+        margin-bottom: 40px;
+      }
+      .section {
+        margin-bottom: 48px;
+      }
+      .section h2 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      .section .file {
+        font-size: 13px;
+        color: #9ca3af;
+        font-family: 'SF Mono', monospace;
+        margin-bottom: 16px;
+      }
+      .compare {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+      .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        flex: 1;
+        min-width: 260px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      }
+      .card h3 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 16px;
+      }
+      .card.before h3 {
+        color: #dc2626;
+      }
+      .card.after h3 {
+        color: #059669;
+      }
+      .demo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 80px;
+        position: relative;
+      }
+      .measure {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: 'SF Mono', monospace;
+        color: #6b7280;
+      }
+      /* Day Toggle */
+      .day-toggle {
+        border-radius: 50%;
+        background: #059669;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: 13px;
+      }
+      .day-toggle.before {
+        width: 36px;
+        height: 36px;
+      }
+      .day-toggle.after {
+        width: 44px;
+        height: 44px;
+      }
+      /* Button */
+      .btn {
+        background: #059669;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .btn.before {
+        height: 32px;
+      }
+      .btn.after {
+        height: 44px;
+      }
+      /* Chip */
+      .chip {
+        background: #1c1917;
+        color: #fff;
+        border-radius: 999px;
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .chip.before {
+        height: 32px;
+      }
+      .chip.after {
+        min-height: 44px;
+      }
+      /* Skip */
+      .skip-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-size: 17px;
+        font-weight: 500;
+      }
+      .skip-area.before {
+        height: 32px;
+        width: 48px;
+      }
+      .skip-area.after {
+        min-height: 44px;
+        min-width: 44px;
+      }
+      .hit-slop {
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hit-slop.before {
+        padding: 16px;
+      }
+      .hit-slop.after {
+        padding: 24px;
+      }
+      /* Guide line */
+      .guide {
+        position: relative;
+      }
+      .guide::after {
+        content: '44pt minimum';
+        position: absolute;
+        bottom: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 10px;
+        color: #059669;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .ruler {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        justify-content: center;
+      }
+      .ruler-line {
+        height: 1px;
+        background: #d1d5db;
+        flex: 1;
+        max-width: 40px;
+      }
+      .ruler-label {
+        font-size: 12px;
+        font-weight: 600;
+        font-family: 'SF Mono', monospace;
+      }
+      .ruler-label.fail {
+        color: #dc2626;
+      }
+      .ruler-label.pass {
+        color: #059669;
+      }
+      .min-line {
+        border-left: 2px dashed #059669;
+        position: absolute;
+        height: 44px;
+        left: 50%;
+        opacity: 0.2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Touch Target Audit — 44pt Minimum</h1>
+    <p class="subtitle">
+      Apple HIG &amp; Material Design both require ≥44pt / 48dp for comfortable
+      tap targets. Here's what changed.
+    </p>
+
+    <!-- 1. HabitDayToggle -->
+    <div class="section">
+      <h2>1. Day Toggle Buttons</h2>
+      <p class="file">src/components/HabitChainVisualizer/HabitDayToggle.tsx</p>
+      <div class="compare">
+        <div class="card before">
+          <h3>❌ Before — 36×36pt</h3>
+          <div class="demo">
+            <div style="display: flex; gap: 6px">
+              <div class="day-toggle before">✓</div>
+              <div
+                class="day-toggle before"
+                style="
+                  background: transparent;
+                  border: 2px solid #d1d5db;
+                  color: #9ca3af;
+                "
+              >
+                ·
+              </div>
+              <div class="day-toggle before">✓</div>
+              <div class="day-toggle before">✓</div>
+              <div
+                class="day-toggle before"
+                style="
+                  background: transparent;
+                  border: 2px solid #d1d5db;
+                  color: #9ca3af;
+                "
+              >
+                ·
+              </div>
+              <div class="day-toggle before">✓</div>
+              <div
+                class="day-toggle before"
+                style="
+                  background: transparent;
+                  border: 2px solid #059669;
+                  color: #059669;
+                "
+              >
+                T
+              </div>
+            </div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label fail">36pt</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+        <div class="card after">
+          <h3>✅ After — 44×44pt</h3>
+          <div class="demo">
+            <div style="display: flex; gap: 6px">
+              <div class="day-toggle after">✓</div>
+              <div
+                class="day-toggle after"
+                style="
+                  background: transparent;
+                  border: 2px solid #d1d5db;
+                  color: #9ca3af;
+                "
+              >
+                ·
+              </div>
+              <div class="day-toggle after">✓</div>
+              <div class="day-toggle after">✓</div>
+              <div
+                class="day-toggle after"
+                style="
+                  background: transparent;
+                  border: 2px solid #d1d5db;
+                  color: #9ca3af;
+                "
+              >
+                ·
+              </div>
+              <div class="day-toggle after">✓</div>
+              <div
+                class="day-toggle after"
+                style="
+                  background: transparent;
+                  border: 2px solid #059669;
+                  color: #059669;
+                "
+              >
+                T
+              </div>
+            </div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label pass">44pt ✓</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Small Button -->
+    <div class="section">
+      <h2>2. Small Button Height</h2>
+      <p class="file">src/components/Button/useButtonConfig.ts</p>
+      <div class="compare">
+        <div class="card before">
+          <h3>❌ Before — 32pt</h3>
+          <div class="demo"><div class="btn before">Small Action</div></div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label fail">32pt</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+        <div class="card after">
+          <h3>✅ After — 44pt</h3>
+          <div class="demo"><div class="btn after">Small Action</div></div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label pass">44pt ✓</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. QuickPickChips -->
+    <div class="section">
+      <h2>3. Sort Quick-Pick Chips</h2>
+      <p class="file">
+        src/features/habits/components/SortBottomSheet/QuickPickChips.tsx
+      </p>
+      <div class="compare">
+        <div class="card before">
+          <h3>❌ Before — ~32pt</h3>
+          <div class="demo" style="gap: 8px">
+            <div class="chip before">🔥 Streak</div>
+            <div class="chip before">📅 Recent</div>
+            <div class="chip before">💪 Strength</div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label fail">~32pt</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+        <div class="card after">
+          <h3>✅ After — 44pt min</h3>
+          <div class="demo" style="gap: 8px">
+            <div class="chip after">🔥 Streak</div>
+            <div class="chip after">📅 Recent</div>
+            <div class="chip after">💪 Strength</div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label pass">44pt ✓</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Skip Button -->
+    <div class="section">
+      <h2>4. Onboarding Skip Button</h2>
+      <p class="file">src/screens/onboarding/OnboardingScreen.tsx</p>
+      <div class="compare">
+        <div class="card before">
+          <h3>❌ Before — hitSlop 16, no min size</h3>
+          <div class="demo">
+            <div class="hit-slop before">
+              <div class="skip-area before">Skip</div>
+            </div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label fail">~32pt + 16 slop</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+        <div class="card after">
+          <h3>✅ After — hitSlop 24, 44pt min</h3>
+          <div class="demo">
+            <div class="hit-slop after">
+              <div class="skip-area after">Skip</div>
+            </div>
+          </div>
+          <div class="ruler">
+            <div class="ruler-line"></div>
+            <span class="ruler-label pass">44pt + 24 slop ✓</span>
+            <div class="ruler-line"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        margin-top: 24px;
+        padding: 20px;
+        background: #f0fdf4;
+        border-radius: 12px;
+        border: 1px solid #bbf7d0;
+      "
+    >
+      <strong style="color: #047857">Summary:</strong> All primary touch targets
+      now meet the 44pt minimum recommended by Apple HIG and Material Design
+      guidelines.
+    </div>
+  </body>
+</html>

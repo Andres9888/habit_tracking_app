@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Tabs 06 — iOS Segmented Refined</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  .tabs-06 {
+    margin: 14px 16px 0;
+    background: #E6E1DA;
+    border-radius: 10px;
+    padding: 3px;
+    position: relative;
+    display: flex;
+    box-shadow: inset 0 1px 2px rgba(45, 42, 38, 0.08);
+  }
+  .tabs-06 .indicator {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    width: calc((100% - 6px) / 3);
+    background: #FFFFFF;
+    border-radius: 8px;
+    box-shadow:
+      0 3px 8px rgba(45, 42, 38, 0.08),
+      0 1px 0 rgba(45, 42, 38, 0.04);
+    transition: transform 220ms var(--ease-out-soft);
+  }
+  .tabs-06 .tab {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    transition: color 180ms var(--ease-out-soft);
+  }
+  .tabs-06 .tab[data-active="true"] { font-weight: 600; }
+  .tabs-06 .tab:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 22%;
+    bottom: 22%;
+    width: 1px;
+    background: rgba(45, 42, 38, 0.12);
+    opacity: 1;
+    transition: opacity 180ms var(--ease-out-soft);
+  }
+  .tabs-06[data-index="0"] .tab[data-i="1"]::before,
+  .tabs-06[data-index="1"] .tab[data-i="1"]::before,
+  .tabs-06[data-index="1"] .tab[data-i="2"]::before,
+  .tabs-06[data-index="2"] .tab[data-i="2"]::before { opacity: 0; }
+  .tabs-06[data-index="0"] .indicator { transform: translateX(0); }
+  .tabs-06[data-index="1"] .indicator { transform: translateX(100%); }
+  .tabs-06[data-index="2"] .indicator { transform: translateX(200%); }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stage-title">06 · iOS Segmented Refined</div>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>●●●● ▐▌</span></div>
+      <div class="screen-header">
+        <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+        <button class="icon-btn"><i data-lucide="pencil"></i></button>
+      </div>
+      <div class="detail-hero">
+        <div class="hero-emoji-ring">🌱</div>
+        <div class="hero-title">Morning Meditation</div>
+        <div class="hero-sub">
+          <span class="streak-pill">🔥 12 day streak</span>
+          <span>·</span>
+          <span>72% strength</span>
+        </div>
+      </div>
+      <div class="tabs-06" data-index="0" id="tabs">
+        <div class="indicator"></div>
+        <button class="tab" data-i="0" data-active="true">Calendar</button>
+        <button class="tab" data-i="1">Strength</button>
+        <button class="tab" data-i="2">Goal</button>
+      </div>
+      <div class="content-card">
+        <div class="section-title">This month</div>
+        <div class="cal-grid">
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">
+      <h3>iOS Segmented Refined</h3>
+      <p>Faithful iOS segmented control re-skinned in warm tokens. Inset track with hairline dividers between inactive segments that fade out when adjacent to the active pill. Users know the interaction instantly — zero learning curve.</p>
+      <p><span class="tag">Most familiar</span><span class="tag">Platform-native</span><span class="tag">Least distinctive</span></p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+    const el = document.getElementById('tabs');
+    el.addEventListener('click', (e) => {
+      const t = e.target.closest('.tab');
+      if (!t) return;
+      el.querySelectorAll('.tab').forEach(x => x.dataset.active = 'false');
+      t.dataset.active = 'true';
+      el.dataset.index = t.dataset.i;
+    });
+  </script>
+</body>
+</html>

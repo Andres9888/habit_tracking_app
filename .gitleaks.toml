@@ -1,0 +1,90 @@
+# Gitleaks Configuration
+# Part of RES-005: Automated security scanning
+# Custom rules for Habit Tracking App
+
+title = "Habit Tracking App - Secret Detection Configuration"
+
+[extend]
+# Use the default gitleaks ruleset as base
+useDefault = true
+
+# Allowlist paths that are safe to ignore
+[allowlist]
+description = "Safe patterns and test files"
+paths = [
+    '''node_modules''',
+    '''\.git''',
+    '''\.worktrees''',
+    '''coverage''',
+    '''ios\/Pods''',
+    '''website\/\.next''',
+    '''dist\/''',
+    '''superdesign\/dist''',
+    '''__tests__''',
+    '''__mocks__''',
+    '''tests\/''',
+    '''\.test\.(ts|tsx|js|jsx)$''',
+    '''\.spec\.(ts|tsx|js|jsx)$''',
+    '''\.d\.ts$''',
+    '''docs\/Working''',
+]
+# Ignore known safe patterns
+regexes = [
+    # Expo public keys (designed to be public)
+    '''EXPO_PUBLIC_''',
+    # Clerk publishable keys (designed to be public)
+    '''pk_test_''',
+    '''pk_live_''',
+    # Example/placeholder values
+    '''your[_-]?api[_-]?key''',
+    '''example[_-]?key''',
+    '''PLACEHOLDER''',
+    '''your[_-]?secret''',
+    '''apiLatencyP(50|95)''',
+]
+
+# Custom rules for this codebase
+[[rules]]
+id = "convex-admin-key"
+description = "Convex Admin Key"
+regex = '''(?i)convex[_-]?admin[_-]?key['":\s]*[=:]\s*['"]?([a-zA-Z0-9\-_]{32,})['"]?'''
+tags = ["key", "convex"]
+secretGroup = 1
+
+[[rules]]
+id = "revenuecat-secret-key"
+description = "RevenueCat Secret API Key"
+regex = '''(?i)revenuecat[_-]?(?:api[_-]?)?secret[_-]?key['":\s]*[=:]\s*['"]?([a-zA-Z0-9\-_]{32,})['"]?'''
+tags = ["key", "revenuecat", "payment"]
+secretGroup = 1
+
+[[rules]]
+id = "clerk-secret-key"
+description = "Clerk Secret Key"
+regex = '''sk_(?:test|live)_[a-zA-Z0-9]{20,}'''
+tags = ["key", "clerk", "auth"]
+
+[[rules]]
+id = "openai-api-key"
+description = "OpenAI API Key"
+regex = '''sk-[a-zA-Z0-9]{32,}'''
+tags = ["key", "openai", "api"]
+
+[[rules]]
+id = "sentry-dsn"
+description = "Sentry DSN (should not contain auth token)"
+regex = '''https://[a-f0-9]{32}@[a-z0-9]+\.ingest\.sentry\.io/[0-9]+'''
+tags = ["dsn", "sentry"]
+# Note: DSNs are semi-public, but auth tokens embedded are not
+
+[[rules]]
+id = "webhook-secret"
+description = "Webhook Secret"
+regex = '''(?i)webhook[_-]?secret['":\s]*[=:]\s*['"]?([a-zA-Z0-9\-_]{16,})['"]?'''
+tags = ["secret", "webhook"]
+secretGroup = 1
+
+# Files that should always be scanned regardless of size
+[rules.gitleaks-ignore]
+# The .gitleaks.toml file itself should be scanned
+paths = []

@@ -1,0 +1,1198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — Liquid Glass Oval Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1a1a !important;
+        color: #fff !important;
+        min-height: 100vh;
+        padding: 32px 20px 60px;
+      }
+
+      h1 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 8px !important;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 40px;
+      }
+
+      .concepts-grid {
+        display: flex;
+        gap: 32px;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .concept-card {
+        background: #222;
+        border-radius: 20px;
+        padding: 20px;
+        width: 375px;
+        border: 1px solid #333;
+      }
+      .concept-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: #10b981;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+      .concept-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+      .concept-desc {
+        font-size: 12px;
+        color: #888;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+
+      /* ─── Phone Frame ─── */
+      .phone-frame {
+        width: 335px;
+        height: 520px;
+        background: #faf8f5;
+        border-radius: 36px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ─── Fake habit content ─── */
+      .habits-content {
+        padding: 16px;
+        padding-top: 50px;
+      }
+      .habit-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #d4d0cc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .habit-check.done {
+        background: #059669;
+        border-color: #059669;
+      }
+      .habit-check.done::after {
+        content: '✓';
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .habit-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2a2520;
+      }
+      .habit-streak {
+        font-size: 11px;
+        color: #9a9590;
+        margin-top: 2px;
+      }
+      .habit-dots {
+        display: flex;
+        gap: 4px;
+        margin-left: auto;
+      }
+      .habit-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #e8e4e0;
+      }
+      .habit-dot.filled {
+        background: #059669;
+      }
+
+      /* ─── CONCEPT A: Current Full-Width Bar ─── */
+      .bar-current {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        background: rgba(250, 248, 245, 0.75);
+        border-top: 1px solid rgba(221, 216, 210, 0.45);
+        padding: 12px 22px;
+        padding-bottom: 28px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .pill-ghost {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid rgba(221, 216, 210, 0.55);
+        font-size: 13px;
+        font-weight: 600;
+        color: #6e6660;
+        margin-top: -5px;
+        min-width: 105px;
+        justify-content: center;
+      }
+      .pill-gold {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: rgba(254, 243, 205, 0.45);
+        border: 1px solid rgba(139, 98, 8, 0.15);
+        font-size: 13px;
+        font-weight: 600;
+        color: #7d5907;
+        margin-top: -5px;
+        min-width: 105px;
+        justify-content: center;
+      }
+
+      /* ─── SVG Ring + FAB (shared) ─── */
+      .ring-fab-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -24px;
+      }
+      .ring-container {
+        position: relative;
+        width: 68px;
+        height: 68px;
+      }
+      .ring-svg {
+        transform: rotate(-90deg);
+      }
+      .fab-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #059669;
+        border: 2px solid rgba(245, 241, 237, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+      .fab-button:hover {
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+      .progress-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6e6660;
+        margin-top: 3px;
+        text-align: center;
+      }
+      .progress-label span {
+        color: #047857;
+        font-weight: 700;
+      }
+
+      /* ─── CONCEPT B: Liquid Glass Oval ─── */
+      .bar-liquid {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 40px;
+        padding: 10px 20px;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+      .liquid-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+      }
+      .liquid-icon-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+      .liquid-icon-btn.gold-tint {
+        color: #7d5907;
+      }
+      .liquid-ring-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -28px;
+      }
+
+      /* ─── CONCEPT C: Liquid Glass Compact ─── */
+      .bar-liquid-compact {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .liquid-tray {
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 28px;
+        padding: 6px 10px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+      .tray-icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .tray-icon-btn:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+      .tray-divider {
+        width: 1px;
+        height: 20px;
+        background: rgba(0, 0, 0, 0.1);
+        margin: 0 2px;
+      }
+
+      /* ─── CONCEPT D: Liquid Glass Wide Capsule ─── */
+      .bar-liquid-wide {
+        position: absolute;
+        bottom: 16px;
+        left: 20px;
+        right: 20px;
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.45);
+        border-radius: 32px;
+        padding: 10px 24px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      }
+      .wide-icon-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding-top: 6px;
+      }
+      .wide-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .wide-icon-btn:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+      .wide-icon-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #6e6660;
+      }
+      .wide-ring-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -28px;
+      }
+
+      /* ─── Badge ─── */
+      .badge-current {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #333;
+        color: #888;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-new {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #059669;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      /* ─── Section divider ─── */
+      .section-divider {
+        max-width: 1200px;
+        margin: 48px auto 32px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .section-divider hr {
+        flex: 1;
+        border: none;
+        border-top: 1px solid #333;
+      }
+      .section-divider span {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Bottom Bar — Liquid Glass Exploration</h1>
+    <p class="subtitle">
+      Apple-style floating capsule vs. current full-width bar
+    </p>
+
+    <!-- ─── ROW 1: Current vs. Liquid Glass ─── -->
+    <div class="concepts-grid">
+      <!-- CONCEPT A: Current -->
+      <div class="concept-card">
+        <div class="concept-label">Current</div>
+        <div class="concept-title">Full-Width Frosted Bar</div>
+        <div class="concept-desc">
+          Edge-to-edge blur with ghost + gold pills flanking the ring FAB. The
+          three visual treatments compete for attention.
+        </div>
+        <div class="phone-frame">
+          <span class="badge-current">Current</span>
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">🔥 12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">🔥 8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">🔥 5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">🔥 3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">🔥 15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Current full-width bar -->
+          <div class="bar-current">
+            <div class="pill-ghost">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#6E6660"
+                stroke-width="2.25"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              Settings
+            </div>
+
+            <div class="ring-fab-wrapper">
+              <div class="ring-container">
+                <svg
+                  class="ring-svg"
+                  width="68"
+                  height="68"
+                  viewBox="0 0 68 68"
+                >
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="#EDEAE5"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="201.06"
+                    stroke-dashoffset="120.64"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="fab-button">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="progress-label"><span>2</span> of 5</div>
+            </div>
+
+            <div class="pill-gold">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D5907"
+                stroke-width="2.25"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                />
+              </svg>
+              Inspire
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONCEPT B: Liquid Glass Oval -->
+      <div class="concept-card">
+        <div class="concept-label">Concept B</div>
+        <div class="concept-title">Liquid Glass Floating Oval</div>
+        <div class="concept-desc">
+          Apple-style floating capsule. Ring FAB breaks the top edge. Side icons
+          sit directly on the glass — no nested pills. Feels lighter, more
+          modern.
+        </div>
+        <div class="phone-frame">
+          <span class="badge-new">New</span>
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">🔥 12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">🔥 8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">🔥 5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">🔥 3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">🔥 15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Liquid glass floating oval -->
+          <div class="bar-liquid">
+            <div class="liquid-icon-btn" title="Settings">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#6E6660"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+
+            <div class="liquid-ring-section">
+              <div class="ring-container">
+                <svg
+                  class="ring-svg"
+                  width="68"
+                  height="68"
+                  viewBox="0 0 68 68"
+                >
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="rgba(0,0,0,0.08)"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="201.06"
+                    stroke-dashoffset="120.64"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="fab-button">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="progress-label"><span>2</span> of 5</div>
+            </div>
+
+            <div class="liquid-icon-btn gold-tint" title="Inspire">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D5907"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONCEPT C: Floating FAB + Compact Tray -->
+      <div class="concept-card">
+        <div class="concept-label">Concept C</div>
+        <div class="concept-title">Floating FAB + Glass Tray</div>
+        <div class="concept-desc">
+          The FAB floats independently above a small glass tray with just the
+          two icons. Clearest visual hierarchy — one hero element, one
+          supporting surface.
+        </div>
+        <div class="phone-frame">
+          <span class="badge-new">New</span>
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">🔥 12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">🔥 8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">🔥 5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">🔥 3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">🔥 15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating FAB + compact tray below -->
+          <div class="bar-liquid-compact">
+            <!-- FAB floats above -->
+            <div
+              style="
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: -4px;
+              "
+            >
+              <div class="ring-container">
+                <svg
+                  class="ring-svg"
+                  width="68"
+                  height="68"
+                  viewBox="0 0 68 68"
+                >
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="rgba(0,0,0,0.08)"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="201.06"
+                    stroke-dashoffset="120.64"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="fab-button">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="progress-label"><span>2</span> of 5</div>
+            </div>
+
+            <!-- Compact glass tray with just two icons -->
+            <div class="liquid-tray">
+              <div class="tray-icon-btn" title="Settings">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#6E6660"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="tray-divider"></div>
+              <div class="tray-icon-btn" title="Inspire">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#7D5907"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <hr />
+      <span>Wide Capsule Variant</span>
+      <hr />
+    </div>
+
+    <div class="concepts-grid">
+      <!-- CONCEPT D: Wide Capsule -->
+      <div class="concept-card">
+        <div class="concept-label">Concept D</div>
+        <div class="concept-title">Wide Liquid Capsule</div>
+        <div class="concept-desc">
+          Full-width-ish capsule with generous border-radius. Like the current
+          bar but with rounded ends and margin from screen edges. Icons with
+          micro labels. Apple Dynamic Island energy.
+        </div>
+        <div class="phone-frame">
+          <span class="badge-new">New</span>
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">🔥 12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">🔥 8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">🔥 5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">🔥 3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">🔥 15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wide liquid glass capsule -->
+          <div class="bar-liquid-wide">
+            <div class="wide-icon-section">
+              <div class="wide-icon-btn" title="Settings">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#6E6660"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="wide-icon-label">Settings</div>
+            </div>
+
+            <div class="wide-ring-section">
+              <div class="ring-container">
+                <svg
+                  class="ring-svg"
+                  width="68"
+                  height="68"
+                  viewBox="0 0 68 68"
+                >
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="rgba(0,0,0,0.08)"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="201.06"
+                    stroke-dashoffset="120.64"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="fab-button">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="progress-label"><span>2</span> of 5</div>
+            </div>
+
+            <div class="wide-icon-section">
+              <div class="wide-icon-btn" title="Inspire">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#7D5907"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                  />
+                </svg>
+              </div>
+              <div class="wide-icon-label" style="color: #7d5907">Inspire</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize lucide icons for any remaining elements
+      if (window.lucide) lucide.createIcons();
+    </script>
+  </body>
+</html>

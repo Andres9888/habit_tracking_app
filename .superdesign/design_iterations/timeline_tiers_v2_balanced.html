@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Timeline Tiers — V2 Balanced (recommended)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    .ring-svg { transform: rotate(-90deg); }
+    .connector { border-radius: 2px; transition: all 0.45s cubic-bezier(0.4,0,0.2,1); position: relative; overflow: hidden; }
+    .connector.shimmer::after {
+      content:''; position:absolute; inset:0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%);
+      animation: shimmer var(--shimmer-speed, 2000ms) linear infinite;
+    }
+    @keyframes shimmer { 0% { transform: translateX(-100%);} 100% { transform: translateX(100%);} }
+    .day-cell { width: 44px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; font-size: 14px; transition: all 0.45s cubic-bezier(0.4,0,0.2,1); }
+    .cell-shimmer::before {
+      content:''; position:absolute; inset:0; border-radius:9999px;
+      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.55) 50%, transparent 70%);
+      animation: shimmer var(--cell-shimmer, 2000ms) linear infinite;
+      mix-blend-mode: overlay;
+    }
+    .check-icon { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 3; position: absolute; z-index:2; }
+    .tier-chip { padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; transition: all 0.3s; }
+    .nav-link { color: #6366F1; }
+    .nav-link.active { color: #1F2937; font-weight: 700; }
+    .reco-badge { background:#EEF2FF; color:#4338CA; padding:2px 8px; border-radius:9999px; font-size:10px; font-weight:700; vertical-align: middle; margin-left: 8px; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen py-8">
+  <div class="max-w-3xl mx-auto px-6">
+    <nav class="flex gap-4 text-sm mb-6">
+      <a class="nav-link" href="./timeline_tiers_v1_conservative.html">V1 Conservative</a>
+      <a class="nav-link active" href="./timeline_tiers_v2_balanced.html">V2 Balanced ★</a>
+      <a class="nav-link" href="./timeline_tiers_v3_full.html">V3 Full parity</a>
+      <a class="nav-link" href="./timeline_tiers_v4_perday.html">V4 Per-day</a>
+    </nav>
+
+    <header class="mb-8">
+      <h1 class="text-2xl font-bold text-slate-900">Variant 2 — Balanced <span class="reco-badge">RECOMMENDED</span></h1>
+      <p class="text-slate-600 mt-2 leading-relaxed">
+        Average habit strength drives the tier (same input as the chain). Tier color AND connector evolution
+        (thickness, opacity, shimmer, glow) replace the ad-hoc <code class="text-xs bg-slate-200 px-1 rounded">connectorStrength.ts</code>.
+        Gold/legendary cells shimmer. <strong>Legendary platinum cell background skipped</strong> — designed for chain's square cells, awkward on round rings.
+      </p>
+      <p class="text-xs text-slate-500 mt-2">Thresholds: 0 / 20 / 40 / 60 / 80 % strength → copper / chain / iron / gold / legendary (exact parity with <code>getMaterialTier</code>).</p>
+    </header>
+
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-sm text-slate-500">Current tier:</span>
+      <span id="tier-chip" class="tier-chip" style="background:#B87333;color:#FEF3C7;">Copper</span>
+      <span id="pct-label" class="text-sm text-slate-500">0 %</span>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+      <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
+        <span class="font-semibold text-slate-700">April</span><span>15–21</span>
+      </div>
+      <div id="strip" class="flex items-center justify-between"></div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+      <label class="block text-sm font-medium text-slate-700 mb-2">Average habit strength (%)</label>
+      <input id="slider" type="range" min="0" max="100" value="0" class="w-full" />
+      <div class="flex justify-between text-xs text-slate-400 mt-1">
+        <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-5 gap-2">
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#B87333;color:#FEF3C7;">Copper<br/>0–19%</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#10B981;color:#FFF;">Chain<br/>20–39%</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#10B981;color:#FFF;box-shadow:0 0 10px rgba(16,185,129,0.6);">Iron<br/>40–59%</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#D4A23F;color:#78350F;box-shadow:0 0 12px rgba(242,184,75,0.55);">Gold<br/>60–79%</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#F2B84B;color:#78350F;font-weight:700;box-shadow:0 0 14px rgba(242,184,75,0.65);">Legendary<br/>80–100%</div>
+    </div>
+  </div>
+
+  <script>
+    const TIERS = {
+      copper:    { name:'Copper',    color:'#B87333', icon:'#FEF3C7', shadow:'#B87333', shadowOp:0.25, shadowR:3,  conH:2,   conOp:0.55, shimmer:0,    glow:false, useAccent:false },
+      chain:     { name:'Chain',     color:'#10B981', icon:'#FFFFFF', shadow:'#10B981', shadowOp:0.3,  shadowR:5,  conH:3,   conOp:0.7,  shimmer:0,    glow:false, useAccent:true  },
+      iron:      { name:'Iron',      color:'#10B981', icon:'#FFFFFF', shadow:'#10B981', shadowOp:0.5,  shadowR:8,  conH:4,   conOp:0.85, shimmer:0,    glow:true,  useAccent:true  },
+      gold:      { name:'Gold',      color:'#D4A23F', icon:'#78350F', shadow:'#F2B84B', shadowOp:0.55, shadowR:10, conH:4.5, conOp:1,    shimmer:2000, glow:true,  useAccent:false },
+      legendary: { name:'Legendary', color:'#F2B84B', icon:'#78350F', shadow:'#F2B84B', shadowOp:0.65, shadowR:14, conH:5,   conOp:1,    shimmer:1000, glow:true,  useAccent:false },
+    };
+
+    function tierForStrength(p) {
+      if (p >= 80) return TIERS.legendary;
+      if (p >= 60) return TIERS.gold;
+      if (p >= 40) return TIERS.iron;
+      if (p >= 20) return TIERS.chain;
+      return TIERS.copper;
+    }
+
+    const DAYS = [
+      { label:'M', n:15, state:'complete' },
+      { label:'T', n:16, state:'complete' },
+      { label:'W', n:17, state:'complete' },
+      { label:'T', n:18, state:'complete' },
+      { label:'F', n:19, state:'partial', progress:0.6 },
+      { label:'S', n:20, state:'none' },
+      { label:'S', n:21, state:'future' },
+    ];
+
+    const strip = document.getElementById('strip');
+    function render(pct) {
+      const tier = tierForStrength(pct);
+      strip.innerHTML = '';
+      DAYS.forEach((d, i) => {
+        const wrap = document.createElement('div');
+        wrap.className = 'flex flex-col items-center gap-1';
+
+        const weekday = document.createElement('span');
+        weekday.className = 'text-[10px] font-semibold text-slate-400 tracking-wider';
+        weekday.textContent = d.label;
+        wrap.appendChild(weekday);
+
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+        if (d.state === 'complete') {
+          cell.style.background = tier.color;
+          cell.style.color = tier.icon;
+          const boxShadow = `0 0 ${tier.shadowR*2}px ${tier.shadow}${Math.round(tier.shadowOp*255).toString(16).padStart(2,'0')}`;
+          cell.style.boxShadow = boxShadow;
+          if (tier.shimmer > 0) {
+            cell.classList.add('cell-shimmer');
+            cell.style.setProperty('--cell-shimmer', tier.shimmer + 'ms');
+          }
+          const check = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          check.setAttribute('viewBox','0 0 24 24');
+          check.classList.add('check-icon');
+          check.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+          cell.appendChild(check);
+        } else if (d.state === 'partial') {
+          const ring = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          ring.setAttribute('width',44); ring.setAttribute('height',44);
+          ring.classList.add('ring-svg');
+          ring.innerHTML = `
+            <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="4"/>
+            <circle cx="22" cy="22" r="20" fill="none" stroke="${tier.color}" stroke-width="4"
+              stroke-dasharray="${2*Math.PI*20}" stroke-dashoffset="${2*Math.PI*20*(1-d.progress)}" stroke-linecap="round"/>`;
+          cell.appendChild(ring);
+          const num = document.createElement('span'); num.style.position='absolute'; num.textContent=d.n; num.style.color='#1F2937';
+          cell.appendChild(num);
+        } else if (d.state === 'future') {
+          cell.style.opacity = 0.3;
+          cell.style.border = '2px dashed #CBD5E1';
+          cell.style.color = '#94A3B8';
+          cell.textContent = d.n;
+        } else {
+          cell.style.border = '2px solid rgba(0,0,0,0.12)';
+          cell.style.color = '#1F2937';
+          cell.textContent = d.n;
+        }
+        wrap.appendChild(cell);
+        strip.appendChild(wrap);
+
+        if (i < DAYS.length - 1) {
+          const con = document.createElement('div');
+          con.className = 'connector';
+          con.style.flex = '1';
+          con.style.margin = '0 8px';
+          con.style.marginTop = '18px';
+          const bothComplete = d.state === 'complete' && DAYS[i+1].state === 'complete';
+          const isPartialEdge = (d.state === 'complete' && DAYS[i+1].state === 'partial') || (d.state==='partial' && DAYS[i+1].state==='complete');
+          if (bothComplete) {
+            con.style.height = tier.conH + 'px';
+            con.style.opacity = tier.conOp;
+            con.style.background = tier.color;
+            if (tier.glow) con.style.boxShadow = `0 0 ${tier.shadowR}px ${tier.shadow}`;
+            if (tier.shimmer > 0) {
+              con.classList.add('shimmer');
+              con.style.setProperty('--shimmer-speed', tier.shimmer + 'ms');
+            }
+          } else if (isPartialEdge) {
+            con.style.background = tier.color;
+            con.style.opacity = 0.4;
+            con.style.height = '2px';
+          } else {
+            con.style.background = '#E5E7EB';
+            con.style.opacity = 1;
+            con.style.height = '2px';
+          }
+          strip.appendChild(con);
+        }
+      });
+
+      document.getElementById('tier-chip').textContent = tier.name;
+      document.getElementById('tier-chip').style.background = tier.color;
+      document.getElementById('tier-chip').style.color = tier.icon;
+      document.getElementById('pct-label').textContent = pct + ' %';
+    }
+
+    document.getElementById('slider').addEventListener('input', e => render(+e.target.value));
+    render(0);
+  </script>
+</body>
+</html>

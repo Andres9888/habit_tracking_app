@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Growth-icon scroll affordance — 10 variants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --stone-l1: #edeae5;
+        --stone-page: #f5f1ed;
+        --text-primary: #0f172a;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8a847e;
+        --card-border: rgba(15, 23, 42, 0.08);
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --text-inverse: #ffffff;
+      }
+      html,
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: #e7e2db;
+        color: var(--text-primary);
+      }
+      .phone {
+        width: 360px;
+        background: var(--stone-l1);
+        border-radius: 20px;
+        padding: 14px 0 16px;
+        box-shadow:
+          0 2px 6px rgba(0, 0, 0, 0.05),
+          0 10px 24px rgba(0, 0, 0, 0.08);
+      }
+      .phone-title {
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+      }
+      .phone-emojis {
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .phone-emojis .set {
+        font-size: 18px;
+        letter-spacing: 0.05em;
+      }
+      .phone-emojis .done {
+        color: var(--primary-600);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .chip {
+        background: var(--stone-l1);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 8px 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .chip.active {
+        background: var(--primary-500);
+        border-color: var(--primary-500);
+        color: var(--text-inverse);
+      }
+      .chip .emojis {
+        font-size: 16px;
+      }
+      .scroll-row {
+        display: flex;
+        gap: 8px;
+        padding: 4px 20px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .scroll-row::-webkit-scrollbar {
+        display: none;
+      }
+      .row-wrap {
+        position: relative;
+      }
+      .fade {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 28px;
+        pointer-events: none;
+      }
+      .fade.right {
+        right: 0;
+        background: linear-gradient(
+          to right,
+          rgba(237, 234, 229, 0),
+          rgba(237, 234, 229, 1)
+        );
+      }
+      .fade.left {
+        left: 0;
+        background: linear-gradient(
+          to left,
+          rgba(237, 234, 229, 0),
+          rgba(237, 234, 229, 1)
+        );
+      }
+      .variant-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .variant-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .variant-label .num {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--primary-500);
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+      }
+      .variant-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .variant-desc {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+      .pros-cons {
+        display: flex;
+        gap: 10px;
+        font-size: 11px;
+        margin-top: 2px;
+      }
+      .pros-cons .pro {
+        color: #047857;
+      }
+      .pros-cons .con {
+        color: #b91c1c;
+      }
+      /* Variant-specific */
+      .chip-sm {
+        padding: 6px 10px;
+        font-size: 11px;
+        border-radius: 12px;
+      }
+      .chip-sm .emojis {
+        font-size: 14px;
+      }
+      .chevron-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: white;
+        color: var(--text-primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        font-size: 14px;
+        font-weight: 700;
+        pointer-events: none;
+      }
+      .more-pill {
+        background: transparent;
+        border: 1px dashed var(--card-border);
+        color: var(--text-secondary);
+        padding: 8px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
+      }
+      .dots {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+        margin-top: 8px;
+      }
+      .dots span {
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: #cdc8c1;
+      }
+      .dots span.active {
+        background: #6b6560;
+        width: 14px;
+      }
+      .scrollbar {
+        margin: 8px 20px 0;
+        height: 3px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.08);
+        position: relative;
+      }
+      .scrollbar .thumb {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 40%;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.28);
+      }
+      .hint {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        text-align: center;
+        margin-top: 6px;
+        font-style: italic;
+      }
+      .count-badge {
+        position: absolute;
+        right: 12px;
+        top: 10px;
+        background: rgba(15, 23, 42, 0.75);
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 999px;
+        pointer-events: none;
+      }
+      .stack-peek {
+        position: relative;
+        margin-left: -14px;
+        opacity: 0.55;
+        transform: scale(0.94);
+      }
+      .stack-peek2 {
+        position: relative;
+        margin-left: -22px;
+        opacity: 0.3;
+        transform: scale(0.88);
+      }
+      .grid-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        padding: 4px 20px;
+      }
+      .grid-row .chip {
+        justify-content: center;
+      }
+      @keyframes nudge {
+        0%,
+        20%,
+        100% {
+          transform: translateX(0);
+        }
+        10% {
+          transform: translateX(-14px);
+        }
+      }
+      .nudge {
+        animation: nudge 2.4s ease-in-out 0.4s 2;
+      }
+      @keyframes bounce-peek {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(-18px);
+        }
+      }
+      .peek-bounce .scroll-row {
+        animation: bounce-peek 2.4s ease-in-out 0.6s 2;
+      }
+      .pulse-dot {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--primary-500);
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+        animation: pulse 1.6s ease-out infinite;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+        }
+        100% {
+          box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        }
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-8">
+    <div class="mx-auto max-w-[1400px]">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-900">
+          Preset row scroll affordance — 10 variants
+        </h1>
+        <p class="mt-1 text-sm text-slate-600">
+          All mocks show the same row: Plants / Fitness (active) / Space /
+          Mind / Fire. Treatment differs.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <!-- 1. Edge fade gradient (IMPLEMENTED) -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">1</span>
+              <span>Edge fade gradient</span>
+              <span
+                class="ml-2 rounded bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-700"
+                >shipped</span
+              >
+            </div>
+            <div class="variant-title mt-1">28px right-edge fade</div>
+            <div class="variant-desc">
+              Reuses `useHorizontalScrollFade`. Matches
+              `CategoryPills` pattern in-app.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="row-wrap">
+              <div class="scroll-row">
+                <div class="chip">
+                  <span class="emojis">🌱🌳⚡</span>
+                  <span>Plants</span>
+                </div>
+                <div class="chip active">
+                  <span class="emojis">💧🏋️🏆</span>
+                  <span>Fitness</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🌑🌕🌌</span>
+                  <span>Space</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">💭🎓✨</span>
+                  <span>Mind</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🪵🌋👑</span>
+                  <span>Fire</span>
+                </div>
+              </div>
+              <div class="fade right"></div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Native-feeling, in-app idiom</span>
+            <span class="con">– Static signal, passive</span>
+          </div>
+        </div>
+
+        <!-- 2. Floating chevron -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">2</span>
+              <span>Floating chevron</span>
+            </div>
+            <div class="variant-title mt-1">Right-edge circular ›</div>
+            <div class="variant-desc">
+              A small white circle with a chevron floats over the row's right edge.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="row-wrap">
+              <div class="scroll-row" style="padding-right: 52px">
+                <div class="chip">
+                  <span class="emojis">🌱🌳⚡</span>
+                  <span>Plants</span>
+                </div>
+                <div class="chip active">
+                  <span class="emojis">💧🏋️🏆</span>
+                  <span>Fitness</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🌑🌕🌌</span>
+                  <span>Space</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">💭🎓✨</span>
+                  <span>Mind</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🪵🌋👑</span>
+                  <span>Fire</span>
+                </div>
+              </div>
+              <span class="chevron-btn">›</span>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Unambiguous directional cue</span>
+            <span class="con">– Occludes content, extra UI</span>
+          </div>
+        </div>
+
+        <!-- 3. "More →" trailing pill -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">3</span>
+              <span>Trailing "More" pill</span>
+            </div>
+            <div class="variant-title mt-1">Dashed placeholder chip</div>
+            <div class="variant-desc">
+              A ghosted chip at end invites the user to scroll/tap for more presets.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="scroll-row">
+              <div class="chip">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="more-pill">+3 more →</div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Explicit count, self-explanatory</span>
+            <span class="con">– Hides the next preset thumbnails</span>
+          </div>
+        </div>
+
+        <!-- 4. Pagination dots -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">4</span>
+              <span>Pagination dots</span>
+            </div>
+            <div class="variant-title mt-1">Below-row position indicator</div>
+            <div class="variant-desc">
+              Five dots under the row, current viewport highlighted.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="scroll-row">
+              <div class="chip">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">🌑🌕🌌</span>
+                <span>Space</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">💭🎓✨</span>
+                <span>Mind</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">🪵🌋👑</span>
+                <span>Fire</span>
+              </div>
+            </div>
+            <div class="dots">
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Classic, shows count & position</span>
+            <span class="con">– Adds height, less relevant for chips</span>
+          </div>
+        </div>
+
+        <!-- 5. Smaller chips (fit 3.5) -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">5</span>
+              <span>Smaller chips</span>
+            </div>
+            <div class="variant-title mt-1">Fit 3 + clear peek</div>
+            <div class="variant-desc">
+              Shrink chip size so the third chip shows most of its label + the peek
+              becomes meaningful.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="scroll-row">
+              <div class="chip chip-sm">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip chip-sm active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="chip chip-sm">
+                <span class="emojis">🌑🌕🌌</span>
+                <span>Space</span>
+              </div>
+              <div class="chip chip-sm">
+                <span class="emojis">💭🎓✨</span>
+                <span>Mind</span>
+              </div>
+              <div class="chip chip-sm">
+                <span class="emojis">🪵🌋👑</span>
+                <span>Fire</span>
+              </div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ No new UI; more info fits</span>
+            <span class="con">– Still fails at 6+ presets</span>
+          </div>
+        </div>
+
+        <!-- 6. Persistent thin scrollbar -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">6</span>
+              <span>Persistent scrollbar</span>
+            </div>
+            <div class="variant-title mt-1">Always-visible thin track</div>
+            <div class="variant-desc">
+              A permanent 3px bar under the row, thumb reflects scroll position.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="scroll-row">
+              <div class="chip">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">🌑🌕🌌</span>
+                <span>Space</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">💭🎓✨</span>
+                <span>Mind</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">🪵🌋👑</span>
+                <span>Fire</span>
+              </div>
+            </div>
+            <div class="scrollbar">
+              <div class="thumb"></div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Exact fraction + direction</span>
+            <span class="con">– Visually heavy for a small row</span>
+          </div>
+        </div>
+
+        <!-- 7. Swipe-hint caption -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">7</span>
+              <span>Swipe hint caption</span>
+            </div>
+            <div class="variant-title mt-1">Tiny italic label below</div>
+            <div class="variant-desc">
+              Small "← swipe for more themes →" caption under the row.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="scroll-row">
+              <div class="chip">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">🌑🌕🌌</span>
+                <span>Space</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">💭🎓✨</span>
+                <span>Mind</span>
+              </div>
+              <div class="chip">
+                <span class="emojis">🪵🌋👑</span>
+                <span>Fire</span>
+              </div>
+            </div>
+            <div class="hint">swipe for more themes</div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Literal, unambiguous</span>
+            <span class="con">– Text clutter, stale after learned</span>
+          </div>
+        </div>
+
+        <!-- 8. Two-row grid (no scroll) -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">8</span>
+              <span>2-row grid</span>
+            </div>
+            <div class="variant-title mt-1">No horizontal scroll at all</div>
+            <div class="variant-desc">
+              Wrap all 5 chips into two rows. No discovery problem.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="grid-row">
+              <div class="chip chip-sm">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip chip-sm active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="chip chip-sm">
+                <span class="emojis">🌑🌕🌌</span>
+                <span>Space</span>
+              </div>
+            </div>
+            <div class="grid-row mt-1" style="grid-template-columns: repeat(3, 1fr)">
+              <div class="chip chip-sm">
+                <span class="emojis">💭🎓✨</span>
+                <span>Mind</span>
+              </div>
+              <div class="chip chip-sm">
+                <span class="emojis">🪵🌋👑</span>
+                <span>Fire</span>
+              </div>
+              <span></span>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Zero discovery friction</span>
+            <span class="con">– Adds ~40px; doesn't scale to 10+</span>
+          </div>
+        </div>
+
+        <!-- 9. Cascaded stack peek -->
+        <div class="variant-card">
+          <div>
+            <div class="variant-label">
+              <span class="num">9</span>
+              <span>Cascaded stack peek</span>
+            </div>
+            <div class="variant-title mt-1">Chips tuck behind last one</div>
+            <div class="variant-desc">
+              Third/fourth chips stack with slight overlap + opacity, signaling depth.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="scroll-row">
+              <div class="chip">
+                <span class="emojis">🌱🌳⚡</span>
+                <span>Plants</span>
+              </div>
+              <div class="chip active">
+                <span class="emojis">💧🏋️🏆</span>
+                <span>Fitness</span>
+              </div>
+              <div class="chip stack-peek">
+                <span class="emojis">🌑🌕🌌</span>
+                <span>Space</span>
+              </div>
+              <div class="chip stack-peek2">
+                <span class="emojis">💭🎓✨</span>
+                <span>Mind</span>
+              </div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Playful, conveys "there's more here"</span>
+            <span class="con">– Novel pattern, breaks row rhythm</span>
+          </div>
+        </div>
+
+        <!-- 10. Fade + first-render nudge animation -->
+        <div class="variant-card peek-bounce">
+          <div>
+            <div class="variant-label">
+              <span class="num">10</span>
+              <span>Fade + first-load nudge</span>
+            </div>
+            <div class="variant-title mt-1">Gentle auto-scroll peek on mount</div>
+            <div class="variant-desc">
+              Fade gradient + the row briefly slides left on first render, revealing
+              the next chip then settling back.
+            </div>
+          </div>
+          <div class="phone">
+            <div class="phone-title">Customize growth icons</div>
+            <div class="phone-emojis">
+              <span class="set">💧 🏃 🏋️ 💪 🏆</span>
+              <span class="done">Done</span>
+            </div>
+            <div class="row-wrap">
+              <div class="scroll-row">
+                <div class="chip">
+                  <span class="emojis">🌱🌳⚡</span>
+                  <span>Plants</span>
+                </div>
+                <div class="chip active">
+                  <span class="emojis">💧🏋️🏆</span>
+                  <span>Fitness</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🌑🌕🌌</span>
+                  <span>Space</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">💭🎓✨</span>
+                  <span>Mind</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🪵🌋👑</span>
+                  <span>Fire</span>
+                </div>
+              </div>
+              <div class="fade right"></div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <span class="pro">+ Active demo of scrollability</span>
+            <span class="con">– Motion on every open can annoy</span>
+          </div>
+        </div>
+      </div>
+
+      <footer class="mt-12 border-t border-slate-200 pt-6 text-xs text-slate-500">
+        <div class="mb-1 font-semibold text-slate-700">
+          Quick ranking (my read)
+        </div>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li>
+            <strong>#10 Fade + nudge</strong> — strongest initial discovery,
+            minimal clutter once learned.
+          </li>
+          <li>
+            <strong>#1 Fade gradient</strong> — already shipped, consistent
+            with app's other scroll rows.
+          </li>
+          <li>
+            <strong>#3 "+3 more →"</strong> — most literal signal, sacrifices
+            the Space thumbnail.
+          </li>
+          <li>
+            <strong>#8 2-row grid</strong> — only option that fully eliminates
+            the problem, but doesn't scale.
+          </li>
+        </ol>
+      </footer>
+    </div>
+  </body>
+</html>

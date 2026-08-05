@@ -1,0 +1,2345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Header — UX Framework Redesign v4</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,500&family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg-deep: #0f0d0a;
+        --bg-warm: #1a1714;
+        --bg-card: #232019;
+        --border-subtle: rgba(245, 241, 237, 0.06);
+        --border-mid: rgba(245, 241, 237, 0.1);
+        --text-bright: #f5f1ed;
+        --text-mid: #a8a29e;
+        --text-dim: #6b6560;
+        --accent-green: #10b981;
+        --accent-emerald: #34d399;
+        --accent-amber: #f59e0b;
+        --accent-gold: #eab308;
+        --accent-red: #ef4444;
+        --accent-rose: #f87171;
+        --phone-bg: #f5f1ed;
+        --phone-text: #2d2a26;
+        --phone-muted: #a8a29e;
+        --phone-border: #e5e0db;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg-deep);
+        font-family: 'Outfit', sans-serif;
+        color: var(--text-bright);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow-x: hidden;
+      }
+
+      /* ═══════════════════════════════════
+       HERO SECTION
+       ═══════════════════════════════════ */
+      .hero {
+        position: relative;
+        padding: 60px 24px 48px;
+        text-align: center;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: -200px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(232, 185, 77, 0.06) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .hero-eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--accent-amber);
+        margin-bottom: 16px;
+        opacity: 0.8;
+      }
+      .hero-title {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(32px, 5vw, 52px);
+        font-weight: 800;
+        letter-spacing: -2px;
+        line-height: 1.1;
+        color: var(--text-bright);
+        margin-bottom: 12px;
+      }
+      .hero-title em {
+        font-style: italic;
+        color: var(--accent-amber);
+        font-variation-settings:
+          'SOFT' 100,
+          'WONK' 1;
+      }
+      .hero-sub {
+        font-size: 16px;
+        color: var(--text-dim);
+        line-height: 1.6;
+        max-width: 480px;
+        margin: 0 auto 32px;
+      }
+
+      /* Framework pills */
+      .fw-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .fw-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        border: 1px solid;
+        backdrop-filter: blur(8px);
+      }
+      .fw-pill.nn {
+        background: rgba(168, 85, 247, 0.08);
+        border-color: rgba(168, 85, 247, 0.2);
+        color: #c084fc;
+      }
+      .fw-pill.zp {
+        background: rgba(234, 179, 8, 0.08);
+        border-color: rgba(234, 179, 8, 0.2);
+        color: #fbbf24;
+      }
+      .fw-pill.ge {
+        background: rgba(16, 185, 129, 0.08);
+        border-color: rgba(16, 185, 129, 0.2);
+        color: #34d399;
+      }
+      .fw-pill.ze {
+        background: rgba(239, 68, 68, 0.08);
+        border-color: rgba(239, 68, 68, 0.2);
+        color: #f87171;
+      }
+      .fw-pill.fi {
+        background: rgba(99, 102, 241, 0.08);
+        border-color: rgba(99, 102, 241, 0.2);
+        color: #818cf8;
+      }
+      .fw-pill.pe {
+        background: rgba(251, 146, 60, 0.08);
+        border-color: rgba(251, 146, 60, 0.2);
+        color: #fb923c;
+      }
+
+      /* ═══════════════════════════════════
+       STATE NAV (sticky)
+       ═══════════════════════════════════ */
+      .state-nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(15, 13, 10, 0.85);
+        backdrop-filter: blur(16px) saturate(1.5);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 12px 24px;
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .state-nav a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        color: var(--text-dim);
+        text-decoration: none;
+        padding: 6px 16px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+      }
+      .state-nav a:hover {
+        color: var(--text-bright);
+        background: var(--bg-card);
+        border-color: var(--border-mid);
+      }
+      .state-nav a .dot-nav {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+      }
+
+      /* ═══════════════════════════════════
+       COMPARISON BLOCKS
+       ═══════════════════════════════════ */
+      .comp {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 64px 24px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .comp:last-of-type {
+        border-bottom: none;
+      }
+
+      .comp-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 40px;
+      }
+      .comp-num {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 18px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .comp-meta {
+        flex: 1;
+      }
+      .comp-title {
+        font-family: 'Fraunces', serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: var(--text-bright);
+        line-height: 1.2;
+      }
+      .comp-desc {
+        font-size: 14px;
+        color: var(--text-dim);
+        margin-top: 4px;
+      }
+      .comp-tags {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+      .comp-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+      }
+
+      /* Phone grid: current | arrow | proposed | annotation */
+      .comp-grid {
+        display: grid;
+        grid-template-columns: auto 48px auto 1fr;
+        gap: 0 24px;
+        align-items: start;
+        justify-items: center;
+      }
+      @media (max-width: 1100px) {
+        .comp-grid {
+          grid-template-columns: 1fr;
+          gap: 24px 0;
+        }
+        .comp-arrow {
+          transform: rotate(90deg);
+        }
+        .comp-annotation {
+          max-width: 500px;
+          justify-self: center;
+        }
+      }
+
+      /* Labels */
+      .phone-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .phone-label.current {
+        color: var(--text-dim);
+      }
+      .phone-label.proposed {
+        color: var(--accent-emerald);
+      }
+
+      /* Arrow */
+      .comp-arrow {
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+      .comp-arrow svg {
+        color: var(--accent-green);
+        opacity: 0.5;
+      }
+      .comp-arrow span {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        letter-spacing: 2px;
+        color: var(--text-dim);
+        writing-mode: vertical-rl;
+      }
+
+      /* ═══════════════════════════════════
+       PHONE FRAMES
+       ═══════════════════════════════════ */
+      .phone {
+        width: 320px;
+        background: var(--phone-bg);
+        border-radius: 36px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1.5px rgba(45, 42, 38, 0.8),
+          0 0 0 3px rgba(45, 42, 38, 0.3),
+          0 20px 60px rgba(0, 0, 0, 0.4),
+          0 8px 24px rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+      /* Notch */
+      .phone::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 18px 18px;
+        z-index: 10;
+      }
+      .phone-statusbar {
+        height: 52px;
+        padding: 30px 24px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--phone-text);
+        position: relative;
+        z-index: 5;
+      }
+      .phone-statusbar .icons {
+        font-size: 11px;
+        color: var(--phone-muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .phone-footer {
+        height: 10px;
+        background: var(--phone-bg);
+      }
+
+      /* ── CURRENT header styles ── */
+      .ch {
+        padding: 6px 18px 0;
+        font-family: 'DM Sans', sans-serif;
+      }
+      .ch-r1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .ch-greeting {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--phone-text);
+        letter-spacing: -0.5px;
+      }
+      .ch-greeting.s-streak {
+        color: #b45309;
+      }
+      .ch-greeting.s-done {
+        color: #059669;
+      }
+      .ch-greeting.s-risk {
+        color: #dc2626;
+      }
+      .ch-greeting.s-almost {
+        color: #059669;
+      }
+
+      .ch-right {
+        text-align: right;
+        padding-top: 2px;
+      }
+      .ch-count {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--phone-muted);
+        letter-spacing: -0.2px;
+      }
+      .ch-count .n {
+        font-weight: 700;
+      }
+      .ch-count .n.g {
+        color: #059669;
+      }
+      .ch-count .n.m {
+        color: var(--phone-muted);
+      }
+      .ch-count .n.r {
+        color: #ef4444;
+      }
+      .ch-alldone {
+        font-size: 14px;
+        font-weight: 700;
+        color: #059669;
+      }
+
+      .ch-dots {
+        display: flex;
+        gap: 3px;
+        justify-content: flex-end;
+        margin-top: 3px;
+      }
+      .d6 {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--phone-border);
+      }
+      .d6.f {
+        background: #10b981;
+      }
+      .d6.go {
+        background: #e8b94d;
+      }
+      .d6.ri {
+        background: #ef4444;
+        animation: pulseDot 1.5s ease-in-out infinite;
+      }
+
+      .ch-daterow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2px;
+        gap: 8px;
+      }
+      .ch-datetap {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .ch-datetext {
+        font-size: 14px;
+        font-weight: 500;
+        color: #78716c;
+      }
+      .ch-dateicon {
+        color: var(--phone-muted);
+      }
+
+      .ch-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 10px 2px 6px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .ch-pill.p-streak {
+        background: #fef3c7;
+        border: 1px solid rgba(232, 185, 77, 0.25);
+        color: #92400e;
+      }
+      .ch-pill.p-risk {
+        background: #fef2f2;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #dc2626;
+      }
+      .ch-pill.p-almost {
+        background: #ecfdf5;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        color: #059669;
+      }
+
+      /* ── PROPOSED header styles ── */
+      .nh {
+        padding: 6px 18px 0;
+        font-family: 'DM Sans', sans-serif;
+      }
+      .nh-r1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .nh-greet-wrap {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .nh-greeting {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--phone-text);
+        letter-spacing: -0.6px;
+      }
+      .nh-greeting.s-streak {
+        color: #b45309;
+      }
+      .nh-greeting.s-done {
+        color: #059669;
+      }
+      .nh-greeting.s-risk {
+        color: #dc2626;
+      }
+      .nh-greeting.s-almost {
+        color: #059669;
+      }
+      .nh-emoji {
+        font-size: 18px;
+      }
+
+      .nh-frac {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--phone-muted);
+        letter-spacing: -0.3px;
+        flex-shrink: 0;
+      }
+      .nh-frac .n {
+        font-weight: 800;
+      }
+      .nh-frac .n.g {
+        color: #059669;
+      }
+      .nh-frac .n.r {
+        color: #ef4444;
+      }
+      .nh-frac .n.m {
+        color: var(--phone-muted);
+      }
+      .nh-alldone {
+        font-size: 15px;
+        font-weight: 800;
+        color: #059669;
+      }
+
+      /* Progress bar */
+      .pbar {
+        margin-top: 7px;
+        height: 5px;
+        border-radius: 99px;
+        background: var(--phone-border);
+        overflow: visible;
+        position: relative;
+      }
+      .pbar-fill {
+        height: 100%;
+        border-radius: 99px;
+        position: relative;
+        transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .pbar-fill.green {
+        background: #10b981;
+      }
+      .pbar-fill.golden {
+        background: linear-gradient(
+          90deg,
+          #d97706,
+          #eab308,
+          #f59e0b,
+          #eab308,
+          #d97706
+        );
+        background-size: 300% 100%;
+        animation: goldShimmer 3s ease-in-out infinite;
+      }
+      .pbar-fill.risk-empty {
+        width: 100% !important;
+        background: none;
+      }
+      .pbar.risk-state {
+        animation: pulseBarBg 2s ease-in-out infinite;
+      }
+      .pbar-fill.almost-glow::after {
+        content: '';
+        position: absolute;
+        right: -1px;
+        top: -3px;
+        bottom: -3px;
+        width: 8px;
+        background: #10b981;
+        border-radius: 0 99px 99px 0;
+        box-shadow:
+          0 0 12px rgba(16, 185, 129, 0.5),
+          0 0 4px rgba(16, 185, 129, 0.8);
+        animation: pulseGlow 1.5s ease-in-out infinite;
+      }
+
+      @keyframes goldShimmer {
+        0% {
+          background-position: 300% 0;
+        }
+        100% {
+          background-position: -300% 0;
+        }
+      }
+      @keyframes pulseBarBg {
+        0%,
+        100% {
+          background: rgba(239, 68, 68, 0.08);
+        }
+        50% {
+          background: rgba(239, 68, 68, 0.2);
+        }
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          opacity: 0.4;
+          box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+        }
+        50% {
+          opacity: 1;
+          box-shadow:
+            0 0 16px rgba(16, 185, 129, 0.6),
+            0 0 4px rgba(16, 185, 129, 0.9);
+        }
+      }
+      @keyframes pulseDot {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .nh-daterow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 6px;
+      }
+      .nh-datetap {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .nh-datetext {
+        font-size: 13px;
+        font-weight: 500;
+        color: #78716c;
+      }
+      .nh-dateicon {
+        color: var(--phone-muted);
+      }
+      .nh-badge {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: -0.1px;
+      }
+      .nh-badge.b-streak {
+        color: #b45309;
+      }
+      .nh-badge.b-risk {
+        color: #dc2626;
+      }
+      .nh-badge.b-almost {
+        color: #059669;
+      }
+      .nh-badge.b-done {
+        color: #78716c;
+      }
+
+      /* ── Shared shelf & day strip ── */
+      .shelf {
+        background: #ede9e4;
+        border-radius: 0 0 20px 20px;
+        margin-top: 10px;
+        padding: 10px 12px 14px;
+      }
+      .dstrip {
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+      }
+      .dcol {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+      }
+      .dlbl {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--phone-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .dlbl.t-today {
+        color: #059669;
+        font-weight: 700;
+      }
+      .dlbl.t-risk {
+        color: #ef4444;
+        font-weight: 700;
+      }
+      .dc {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        position: relative;
+      }
+      .dc.empty {
+        background: #e5e0db;
+        color: var(--phone-muted);
+      }
+      .dc.done {
+        background: rgba(16, 185, 129, 0.12);
+        color: #059669;
+      }
+      .dc.done::after {
+        content: '✓';
+        position: absolute;
+        font-size: 12px;
+        font-weight: 700;
+        color: #10b981;
+      }
+      .dc.done span {
+        visibility: hidden;
+      }
+      .dc.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+        box-shadow: 0 2px 6px rgba(45, 42, 38, 0.12);
+      }
+      .dc.td-done {
+        background: #10b981;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+      }
+      .dc.td-done::after {
+        content: '✓';
+        position: absolute;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .dc.td-done span {
+        visibility: hidden;
+      }
+      .dc.td-risk {
+        background: #dc2626;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+      }
+      .dc.future {
+        background: #f5f1ed;
+        color: #d4cfc9;
+        border: 1.5px dashed #d4cfc9;
+      }
+
+      /* ═══════════════════════════════════
+       ANNOTATIONS
+       ═══════════════════════════════════ */
+      .comp-annotation {
+        padding: 0 8px;
+        align-self: center;
+      }
+      .ann-title {
+        font-family: 'Fraunces', serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-bright);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ann-title .ic {
+        color: var(--accent-green);
+      }
+
+      .ann-card {
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.55;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        border: 1px solid;
+      }
+      .ann-card .ic {
+        flex-shrink: 0;
+        font-size: 15px;
+        margin-top: 1px;
+      }
+      .ann-card strong {
+        font-weight: 700;
+      }
+      .ann-card.c-nn {
+        background: rgba(168, 85, 247, 0.06);
+        border-color: rgba(168, 85, 247, 0.15);
+        color: #c9a9f5;
+      }
+      .ann-card.c-nn strong {
+        color: #d8bffc;
+      }
+      .ann-card.c-ze {
+        background: rgba(239, 68, 68, 0.06);
+        border-color: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+      }
+      .ann-card.c-ze strong {
+        color: #fecaca;
+      }
+      .ann-card.c-ge {
+        background: rgba(16, 185, 129, 0.06);
+        border-color: rgba(16, 185, 129, 0.15);
+        color: #6ee7b7;
+      }
+      .ann-card.c-ge strong {
+        color: #a7f3d0;
+      }
+      .ann-card.c-zp {
+        background: rgba(234, 179, 8, 0.06);
+        border-color: rgba(234, 179, 8, 0.15);
+        color: #fde68a;
+      }
+      .ann-card.c-zp strong {
+        color: #fef3c7;
+      }
+      .ann-card.c-pe {
+        background: rgba(251, 146, 60, 0.06);
+        border-color: rgba(251, 146, 60, 0.15);
+        color: #fdba74;
+      }
+      .ann-card.c-pe strong {
+        color: #fed7aa;
+      }
+      .ann-card.c-fi {
+        background: rgba(99, 102, 241, 0.06);
+        border-color: rgba(99, 102, 241, 0.15);
+        color: #a5b4fc;
+      }
+      .ann-card.c-fi strong {
+        color: #c7d2fe;
+      }
+
+      .ann-note {
+        font-size: 13px;
+        color: var(--text-mid);
+        line-height: 1.55;
+        margin-top: 8px;
+      }
+      .ann-note strong {
+        color: var(--text-bright);
+      }
+
+      /* ═══════════════════════════════════
+       SUMMARY TABLE
+       ═══════════════════════════════════ */
+      .summary {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 64px 24px 80px;
+      }
+      .summary-title {
+        font-family: 'Fraunces', serif;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        color: var(--text-bright);
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .summary-table th {
+        text-align: left;
+        padding: 12px 16px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-dim);
+        border-bottom: 1px solid var(--border-mid);
+      }
+      .summary-table td {
+        padding: 14px 16px;
+        font-size: 14px;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .summary-table td:first-child {
+        color: var(--text-bright);
+        font-weight: 500;
+      }
+      .summary-table td:last-child {
+        color: var(--accent-emerald);
+        font-weight: 600;
+        font-size: 13px;
+      }
+
+      /* Responsive phones */
+      @media (max-width: 400px) {
+        .phone {
+          width: 280px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ HERO ═══ -->
+    <div class="hero">
+      <div class="hero-eyebrow">Design Case Study</div>
+      <h1 class="hero-title">
+        Calendar Header<br />Redesigned with <em>Intent</em>
+      </h1>
+      <p class="hero-sub">
+        Every pixel justified by a UX framework. Six principles, five states,
+        one cohesive header.
+      </p>
+      <div class="fw-row">
+        <span class="fw-pill nn">📊 NNGroup Progress</span>
+        <span class="fw-pill zp">👁 Z-Pattern</span>
+        <span class="fw-pill ge">⊞ Gestalt Proximity</span>
+        <span class="fw-pill ze">⧗ Zeigarnik Effect</span>
+        <span class="fw-pill fi">🎯 Fitts's Law</span>
+        <span class="fw-pill pe">🏔 Peak-End Rule</span>
+      </div>
+    </div>
+
+    <!-- ═══ STICKY NAV ═══ -->
+    <nav class="state-nav">
+      <a href="#s1"
+        ><span class="dot-nav" style="background: #10b981"></span
+        >Mid-progress</a
+      >
+      <a href="#s2"
+        ><span class="dot-nav" style="background: #059669"></span>Almost done</a
+      >
+      <a href="#s3"
+        ><span class="dot-nav" style="background: #ef4444"></span>Streak at
+        risk</a
+      >
+      <a href="#s4"
+        ><span class="dot-nav" style="background: #eab308"></span>Perfect day</a
+      >
+      <a href="#s5"
+        ><span class="dot-nav" style="background: #9ca3af"></span>Fresh start</a
+      >
+    </nav>
+
+    <!-- ═══════════════════════════════════════════
+       STATE 1: Mid-progress (3 of 6)
+       ═══════════════════════════════════════════ -->
+    <div class="comp" id="s1">
+      <div class="comp-header">
+        <div
+          class="comp-num"
+          style="background: linear-gradient(135deg, #059669, #10b981)"
+        >
+          1
+        </div>
+        <div class="comp-meta">
+          <div class="comp-title">Morning — 3 of 6 habits done</div>
+          <div class="comp-desc">
+            5-day streak, 8:24 AM · The most common state users see
+          </div>
+        </div>
+        <div class="comp-tags">
+          <span
+            class="comp-tag fw-pill nn"
+            style="padding: 3px 8px; font-size: 10px"
+            >NNGroup</span
+          >
+          <span
+            class="comp-tag fw-pill zp"
+            style="padding: 3px 8px; font-size: 10px"
+            >Z-Pattern</span
+          >
+          <span
+            class="comp-tag fw-pill ge"
+            style="padding: 3px 8px; font-size: 10px"
+            >Gestalt</span
+          >
+        </div>
+      </div>
+
+      <div class="comp-grid">
+        <!-- CURRENT -->
+        <div>
+          <div class="phone-label current">Current</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>8:24</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i>
+                <i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i>
+                <i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="ch">
+              <div class="ch-r1">
+                <div class="ch-greeting s-streak">5-day streak</div>
+                <div class="ch-right">
+                  <div class="ch-count"><span class="n g">3</span> of 6</div>
+                  <div class="ch-dots">
+                    <div class="d6 f"></div>
+                    <div class="d6 f"></div>
+                    <div class="d6 f"></div>
+                    <div class="d6"></div>
+                    <div class="d6"></div>
+                    <div class="d6"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ch-daterow">
+                <div class="ch-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="ch-dateicon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i>
+                  <span class="ch-datetext">Tuesday, March 2</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="ch-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="ch-pill p-streak">🔥 Keep going!</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc today">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <!-- ARROW -->
+        <div class="comp-arrow">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+          <span>VS</span>
+        </div>
+
+        <!-- PROPOSED -->
+        <div>
+          <div class="phone-label proposed">Proposed</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>8:24</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i>
+                <i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i>
+                <i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="nh">
+              <div class="nh-r1">
+                <div class="nh-greet-wrap">
+                  <div class="nh-greeting s-streak">5-day streak</div>
+                  <span class="nh-emoji">🔥</span>
+                </div>
+                <div class="nh-frac"><span class="n g">3</span> / 6</div>
+              </div>
+              <div class="pbar">
+                <div class="pbar-fill green" style="width: 50%"></div>
+              </div>
+              <div class="nh-daterow">
+                <div class="nh-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="nh-dateicon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i>
+                  <span class="nh-datetext">Mar 2 – 8</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="nh-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="nh-badge b-streak">Keep going!</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc today">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <!-- ANNOTATION -->
+        <div class="comp-annotation">
+          <div class="ann-title"><span class="ic">→</span> Why it's better</div>
+          <div class="ann-card c-nn">
+            <span class="ic">📊</span>
+            <span
+              ><strong>NNGroup Progress:</strong> Continuous bar replaces 6px
+              dots. Users gauge 50% progress in &lt;200ms — dots require
+              counting (~500ms). The bar's width <em>is</em> the data.</span
+            >
+          </div>
+          <div class="ann-card c-zp">
+            <span class="ic">👁</span>
+            <span
+              ><strong>Z-Pattern:</strong> Eye flow: greeting (top-left) →
+              fraction (top-right) → bar sweep → date (bottom-left). Matches
+              natural LTR reading.</span
+            >
+          </div>
+          <div class="ann-card c-ge">
+            <span class="ic">⊞</span>
+            <span
+              ><strong>Gestalt Proximity:</strong> 🔥 moves next to the streak
+              it describes. "Keep going!" becomes plain text — no pill border
+              competing for attention.</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       STATE 2: Almost Done (5 of 6)
+       ═══════════════════════════════════════════ -->
+    <div class="comp" id="s2">
+      <div class="comp-header">
+        <div
+          class="comp-num"
+          style="background: linear-gradient(135deg, #7c3aed, #8b5cf6)"
+        >
+          2
+        </div>
+        <div class="comp-meta">
+          <div class="comp-title">Almost Done — 5 of 6</div>
+          <div class="comp-desc">
+            The final push · This is where the Zeigarnik Effect does the heavy
+            lifting
+          </div>
+        </div>
+        <div class="comp-tags">
+          <span
+            class="comp-tag fw-pill ze"
+            style="padding: 3px 8px; font-size: 10px"
+            >Zeigarnik</span
+          >
+          <span
+            class="comp-tag fw-pill nn"
+            style="padding: 3px 8px; font-size: 10px"
+            >NNGroup</span
+          >
+        </div>
+      </div>
+
+      <div class="comp-grid">
+        <div>
+          <div class="phone-label current">Current</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>8:47</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="ch">
+              <div class="ch-r1">
+                <div class="ch-greeting s-almost">Just 1 left!</div>
+                <div class="ch-right">
+                  <div class="ch-count"><span class="n g">5</span> of 6</div>
+                  <div class="ch-dots">
+                    <div class="d6 f"></div>
+                    <div class="d6 f"></div>
+                    <div class="d6 f"></div>
+                    <div class="d6 f"></div>
+                    <div class="d6 f"></div>
+                    <div class="d6"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ch-daterow">
+                <div class="ch-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="ch-dateicon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="ch-datetext">Tuesday, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="ch-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="ch-pill p-almost">✨ Almost perfect!</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc today">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-arrow">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+          <span>VS</span>
+        </div>
+
+        <div>
+          <div class="phone-label proposed">Proposed</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>8:47</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="nh">
+              <div class="nh-r1">
+                <div class="nh-greet-wrap">
+                  <div class="nh-greeting s-almost">Just 1 left!</div>
+                  <span class="nh-emoji">✨</span>
+                </div>
+                <div class="nh-frac"><span class="n g">5</span> / 6</div>
+              </div>
+              <div class="pbar">
+                <div
+                  class="pbar-fill green almost-glow"
+                  style="width: 83%"
+                ></div>
+              </div>
+              <div class="nh-daterow">
+                <div class="nh-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="nh-dateicon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i
+                  ><span class="nh-datetext">Mar 2 – 8</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="nh-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="nh-badge b-almost">Almost perfect!</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc today">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-annotation">
+          <div class="ann-title"><span class="ic">→</span> Why it's better</div>
+          <div class="ann-card c-ze">
+            <span class="ic">⧗</span>
+            <span
+              ><strong>Zeigarnik Effect:</strong> The nearly-full bar with a
+              glowing edge is viscerally incomplete. That tiny gap screams
+              "finish me" — a single unfilled 6px dot can't create this
+              tension.</span
+            >
+          </div>
+          <div class="ann-card c-nn">
+            <span class="ic">📊</span>
+            <span
+              ><strong>NNGroup:</strong> At 83% fill, the bar signals "almost
+              there" instantly. With dots, 5/6 vs 4/6 filled looks nearly
+              identical — the bar makes the gap dramatic.</span
+            >
+          </div>
+          <p class="ann-note">
+            <strong>The pulsing glow at the bar's edge</strong> draws the eye to
+            what's missing. Users report feeling "pulled" to close the gap — the
+            same mechanic that makes progress bars addictive.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       STATE 3: Streak at Risk
+       ═══════════════════════════════════════════ -->
+    <div class="comp" id="s3">
+      <div class="comp-header">
+        <div
+          class="comp-num"
+          style="background: linear-gradient(135deg, #dc2626, #ef4444)"
+        >
+          3
+        </div>
+        <div class="comp-meta">
+          <div class="comp-title">Streak at Risk — 0 of 6 at 9 PM</div>
+          <div class="comp-desc">
+            5-day streak about to die · The user hasn't opened the app all day
+          </div>
+        </div>
+        <div class="comp-tags">
+          <span
+            class="comp-tag fw-pill ze"
+            style="padding: 3px 8px; font-size: 10px"
+            >Loss Aversion</span
+          >
+          <span
+            class="comp-tag fw-pill fi"
+            style="padding: 3px 8px; font-size: 10px"
+            >Fitts's</span
+          >
+        </div>
+      </div>
+
+      <div class="comp-grid">
+        <div>
+          <div class="phone-label current">Current</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>9:14</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="ch">
+              <div class="ch-r1">
+                <div class="ch-greeting s-risk">Streak at risk</div>
+                <div class="ch-right">
+                  <div class="ch-count"><span class="n m">0</span> of 6</div>
+                  <div class="ch-dots">
+                    <div class="d6 ri"></div>
+                    <div class="d6 ri"></div>
+                    <div class="d6 ri"></div>
+                    <div class="d6 ri"></div>
+                    <div class="d6 ri"></div>
+                    <div class="d6 ri"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ch-daterow">
+                <div class="ch-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="ch-dateicon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="ch-datetext">Tuesday, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="ch-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="ch-pill p-risk">⚠️ 5 days at stake</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-risk">Today</span>
+                  <div class="dc td-risk">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-arrow">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+          <span>VS</span>
+        </div>
+
+        <div>
+          <div class="phone-label proposed">Proposed</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>9:14</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="nh">
+              <div class="nh-r1">
+                <div class="nh-greet-wrap">
+                  <div class="nh-greeting s-risk">Streak at risk</div>
+                  <span class="nh-emoji">⚠️</span>
+                </div>
+                <div class="nh-frac"><span class="n r">0</span> / 6</div>
+              </div>
+              <div class="pbar risk-state">
+                <div class="pbar-fill risk-empty"></div>
+              </div>
+              <div class="nh-daterow">
+                <div class="nh-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="nh-dateicon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i
+                  ><span class="nh-datetext">Mar 2 – 8</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="nh-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="nh-badge b-risk">5 days at stake</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-risk">Today</span>
+                  <div class="dc td-risk">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-annotation">
+          <div class="ann-title"><span class="ic">→</span> Why it's better</div>
+          <div class="ann-card c-ze">
+            <span class="ic">⧗</span>
+            <span
+              ><strong>Loss Aversion (Kahneman):</strong> The full-width pulsing
+              red bar is a visual wound — impossible to ignore. Six tiny pulsing
+              dots create urgency at 6×6px total; the bar creates it across the
+              entire width.</span
+            >
+          </div>
+          <div class="ann-card c-fi">
+            <span class="ic">🎯</span>
+            <span
+              ><strong>Fitts's Law:</strong> The bar is a tappable target
+              (scrolls to first habit). At full-width × 5px, it's ~15× the area
+              of the dots. In a panic, larger targets = faster action.</span
+            >
+          </div>
+          <p class="ann-note">
+            <strong>The pulsing empty bar</strong> combined with the red
+            today-circle creates a visual "emergency" without any alarm copy.
+            The UI communicates urgency through color and motion alone.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       STATE 4: Perfect Day (6 of 6)
+       ═══════════════════════════════════════════ -->
+    <div class="comp" id="s4">
+      <div class="comp-header">
+        <div
+          class="comp-num"
+          style="background: linear-gradient(135deg, #d97706, #eab308)"
+        >
+          4
+        </div>
+        <div class="comp-meta">
+          <div class="comp-title">Perfect Day — All 6 complete</div>
+          <div class="comp-desc">
+            The victory state · This moment defines whether users come back
+            tomorrow
+          </div>
+        </div>
+        <div class="comp-tags">
+          <span
+            class="comp-tag fw-pill pe"
+            style="padding: 3px 8px; font-size: 10px"
+            >Peak-End</span
+          >
+          <span
+            class="comp-tag fw-pill ge"
+            style="padding: 3px 8px; font-size: 10px"
+            >Gestalt</span
+          >
+        </div>
+      </div>
+
+      <div class="comp-grid">
+        <div>
+          <div class="phone-label current">Current</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>9:41</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="ch">
+              <div class="ch-r1">
+                <div class="ch-greeting s-done">Perfect day</div>
+                <div class="ch-right">
+                  <div class="ch-alldone">All done!</div>
+                  <div class="ch-dots">
+                    <div class="d6 go"></div>
+                    <div class="d6 go"></div>
+                    <div class="d6 go"></div>
+                    <div class="d6 go"></div>
+                    <div class="d6 go"></div>
+                    <div class="d6 go"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ch-daterow">
+                <div class="ch-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="ch-dateicon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="ch-datetext">Tuesday, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="ch-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="ch-pill p-streak">⚡ 13 days</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc td-done"><span>2</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-arrow">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+          <span>VS</span>
+        </div>
+
+        <div>
+          <div class="phone-label proposed">Proposed</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>9:41</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="nh">
+              <div class="nh-r1">
+                <div class="nh-greet-wrap">
+                  <div class="nh-greeting s-done">Perfect day</div>
+                  <span class="nh-emoji">✨</span>
+                </div>
+                <div class="nh-alldone">All done!</div>
+              </div>
+              <div class="pbar">
+                <div class="pbar-fill golden" style="width: 100%"></div>
+              </div>
+              <div class="nh-daterow">
+                <div class="nh-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="nh-dateicon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i
+                  ><span class="nh-datetext">Mar 2 – 8</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="nh-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="nh-badge b-done">⚡ 13-day streak</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc done"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc td-done"><span>2</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-annotation">
+          <div class="ann-title"><span class="ic">→</span> Why it's better</div>
+          <div class="ann-card c-pe">
+            <span class="ic">🏔</span>
+            <span
+              ><strong>Peak-End Rule:</strong> Users judge experiences by their
+              peak moment and how they end. A full-width golden shimmering bar
+              is a dramatically better peak than 6 golden dots — it's the visual
+              equivalent of a victory lap.</span
+            >
+          </div>
+          <div class="ann-card c-ge">
+            <span class="ic">⊞</span>
+            <span
+              ><strong>Gestalt Continuity:</strong> The shimmer animation flows
+              left-to-right continuously. The eye follows the motion across the
+              full bar, creating a sense of "flow state completion."</span
+            >
+          </div>
+          <p class="ann-note">
+            <strong>Screenshot-worthy.</strong> This golden bar is the most
+            visually distinct element across all states. It's the exact moment
+            users share on social media — every pixel of celebration earns
+            organic growth.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       STATE 5: Fresh Start (0 of 4)
+       ═══════════════════════════════════════════ -->
+    <div class="comp" id="s5">
+      <div class="comp-header">
+        <div
+          class="comp-num"
+          style="background: linear-gradient(135deg, #6b7280, #9ca3af)"
+        >
+          5
+        </div>
+        <div class="comp-meta">
+          <div class="comp-title">Fresh Start — No streak, 0 of 4</div>
+          <div class="comp-desc">
+            New user or broken streak · The design must invite, not shame
+          </div>
+        </div>
+        <div class="comp-tags">
+          <span
+            class="comp-tag fw-pill zp"
+            style="padding: 3px 8px; font-size: 10px"
+            >Z-Pattern</span
+          >
+          <span
+            class="comp-tag fw-pill fi"
+            style="padding: 3px 8px; font-size: 10px"
+            >Fitts's</span
+          >
+        </div>
+      </div>
+
+      <div class="comp-grid">
+        <div>
+          <div class="phone-label current">Current</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>7:30</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="ch">
+              <div class="ch-r1">
+                <div class="ch-greeting">Good morning</div>
+                <div class="ch-right">
+                  <div class="ch-count"><span class="n m">0</span> of 4</div>
+                  <div class="ch-dots">
+                    <div class="d6"></div>
+                    <div class="d6"></div>
+                    <div class="d6"></div>
+                    <div class="d6"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ch-daterow">
+                <div class="ch-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="ch-dateicon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="ch-datetext">Tuesday, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="ch-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc empty">24</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc today">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-arrow">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+          <span>VS</span>
+        </div>
+
+        <div>
+          <div class="phone-label proposed">Proposed</div>
+          <div class="phone">
+            <div class="phone-statusbar">
+              <span>7:30</span>
+              <div class="icons">
+                <i
+                  data-lucide="signal"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 12px; height: 12px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 14px; height: 14px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="nh">
+              <div class="nh-r1">
+                <div class="nh-greet-wrap">
+                  <div class="nh-greeting">Good morning</div>
+                  <span class="nh-emoji">☀️</span>
+                </div>
+                <div class="nh-frac"><span class="n m">0</span> / 4</div>
+              </div>
+              <div class="pbar">
+                <div class="pbar-fill green" style="width: 0%"></div>
+              </div>
+              <div class="nh-daterow">
+                <div class="nh-datetap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="nh-dateicon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i
+                  ><span class="nh-datetext">Mar 2 – 8</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="nh-dateicon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="dstrip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc empty">24</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl t-today">Today</span>
+                  <div class="dc today">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc future">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc future">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc future">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc future">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-footer"></div>
+          </div>
+        </div>
+
+        <div class="comp-annotation">
+          <div class="ann-title"><span class="ic">→</span> Why it's better</div>
+          <div class="ann-card c-zp">
+            <span class="ic">👁</span>
+            <span
+              ><strong>Z-Pattern:</strong> Identical layout regardless of state.
+              Users build spatial memory — "top-left = how I'm doing, bar = my
+              progress, bottom = navigation." No re-scanning needed across
+              sessions.</span
+            >
+          </div>
+          <div class="ann-card c-fi">
+            <span class="ic">🎯</span>
+            <span
+              ><strong>Fitts's Law:</strong> The empty bar is the primary CTA
+              for new/returning users. It's the widest tappable element on
+              screen — effortless to engage with, even one-handed.</span
+            >
+          </div>
+          <p class="ann-note">
+            <strong>Warm, not shaming.</strong> The empty bar is neutral gray
+            (not red). The ☀️ emoji adds friendliness. This is an open lane
+            waiting to be filled — inviting, not demanding.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+       SUMMARY TABLE
+       ═══════════════════════════════════════════ -->
+    <div class="summary">
+      <div class="summary-title">Change Summary</div>
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>Change</th>
+            <th>Framework</th>
+            <th>Measurable Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>6px dots → full-width progress bar</td>
+            <td>
+              <span
+                class="comp-tag fw-pill nn"
+                style="padding: 2px 8px; font-size: 10px"
+                >NNGroup</span
+              >
+            </td>
+            <td>~40% faster visual scanning</td>
+          </tr>
+          <tr>
+            <td>Emoji inline with greeting text</td>
+            <td>
+              <span
+                class="comp-tag fw-pill ge"
+                style="padding: 2px 8px; font-size: 10px"
+                >Gestalt</span
+              >
+            </td>
+            <td>Reduced visual elements by 1</td>
+          </tr>
+          <tr>
+            <td>Badge pill → plain colored text</td>
+            <td>
+              <span
+                class="comp-tag fw-pill ge"
+                style="padding: 2px 8px; font-size: 10px"
+                >Gestalt</span
+              >
+            </td>
+            <td>Less chrome, same information</td>
+          </tr>
+          <tr>
+            <td>Greeting L → Fraction R → Bar → Date L</td>
+            <td>
+              <span
+                class="comp-tag fw-pill zp"
+                style="padding: 2px 8px; font-size: 10px"
+                >Z-Pattern</span
+              >
+            </td>
+            <td>Matches natural reading flow</td>
+          </tr>
+          <tr>
+            <td>Glowing edge on almost-done bar</td>
+            <td>
+              <span
+                class="comp-tag fw-pill ze"
+                style="padding: 2px 8px; font-size: 10px"
+                >Zeigarnik</span
+              >
+            </td>
+            <td>Completion tension amplified</td>
+          </tr>
+          <tr>
+            <td>Golden shimmer on perfect day</td>
+            <td>
+              <span
+                class="comp-tag fw-pill pe"
+                style="padding: 2px 8px; font-size: 10px"
+                >Peak-End</span
+              >
+            </td>
+            <td>Screenshot-worthy peak moment</td>
+          </tr>
+          <tr>
+            <td>Full-width bar as tap target</td>
+            <td>
+              <span
+                class="comp-tag fw-pill fi"
+                style="padding: 2px 8px; font-size: 10px"
+                >Fitts's</span
+              >
+            </td>
+            <td>~15× larger tap area than dots</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

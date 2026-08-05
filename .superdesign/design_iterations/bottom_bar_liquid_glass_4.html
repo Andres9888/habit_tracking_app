@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — FAB Exploration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #0a0a0a !important;
+        color: #fff !important;
+        min-height: 100vh;
+        padding: 28px 16px 60px;
+      }
+      h1 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 24px !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 6px !important;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #555;
+        font-size: 12px;
+        margin-bottom: 36px;
+        line-height: 1.6;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* ────── Phone frame ────── */
+      .phone-frame {
+        background: #111;
+        border-radius: 44px;
+        padding: 10px;
+        border: 2px solid #2a2a2a;
+        width: 390px;
+        margin: 0 auto;
+      }
+      .phone-screen {
+        background: #1a1a1c;
+        border-radius: 36px;
+        overflow: visible;
+        min-height: 460px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      /* Habit list */
+      .habit-list {
+        flex: 1;
+        padding: 20px 16px 0;
+      }
+      .habit-header {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 11px;
+        color: #444;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 14px;
+      }
+      .habit-row {
+        background: #222;
+        border-radius: 14px;
+        padding: 13px 14px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 8px;
+      }
+      .habit-check {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .habit-check.done {
+        background: #10b981;
+      }
+      .habit-check.pending {
+        border: 2px solid #444;
+      }
+      .habit-text {
+        font-size: 13.5px;
+        color: #ddd;
+      }
+      .habit-text.done-text {
+        text-decoration: line-through;
+        opacity: 0.4;
+      }
+      .check-svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      /* ────── Capsule base ────── */
+      .capsule-base {
+        position: relative;
+        margin: 0 16px;
+        border-radius: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        background: rgba(30, 30, 34, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      }
+
+      /* Side icons */
+      .side-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .side-icon:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .side-icon:active {
+        transform: scale(0.92);
+      }
+      .side-icon svg {
+        width: 22px;
+        height: 22px;
+      }
+      .notif-dot {
+        position: absolute;
+        top: 8px;
+        right: 6px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #d97706;
+      }
+
+      /* ────── FAB variants ────── */
+      .fab-circle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        flex-shrink: 0;
+      }
+      .fab-circle:hover {
+        transform: scale(1.08);
+      }
+      .fab-circle:active {
+        transform: scale(0.95);
+      }
+      .fab-circle svg {
+        color: #fff;
+      }
+
+      /* Ring SVG */
+      .ring-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ring-wrap svg.ring-svg {
+        position: absolute;
+        inset: 0;
+      }
+      .ring-inner {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Progress bar under capsule */
+      .progress-bar-track {
+        height: 3px;
+        border-radius: 2px;
+        background: rgba(255, 255, 255, 0.06);
+        margin: 6px 28px 0;
+        overflow: hidden;
+      }
+      .progress-bar-fill {
+        height: 100%;
+        border-radius: 2px;
+        background: #10b981;
+        width: 43%;
+        transition: width 0.6s ease-out;
+      }
+
+      /* ────── Variant container ────── */
+      .bar-area {
+        padding: 0 0 18px;
+        position: relative;
+      }
+
+      /* Variant A: Floating ring (rises above) */
+      .float-wrapper {
+        position: relative;
+      }
+      .float-wrapper .capsule-base {
+        align-items: center;
+      }
+      .float-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -18px;
+      }
+
+      /* Variant D: Notch cutout */
+      .notch-capsule {
+        position: relative;
+        margin: 0 16px;
+        border-radius: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        background: rgba(30, 30, 34, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      }
+      .notch-center {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -22px;
+      }
+      .notch-bg {
+        position: absolute;
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        background: #1a1a1c;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* ────── Grid layout ────── */
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 860px;
+        margin: 0 auto;
+      }
+      .variant-card {
+        background: #111;
+        border-radius: 20px;
+        border: 1px solid #1e1e1e;
+        overflow: visible;
+        position: relative;
+        transition: border-color 0.2s;
+      }
+      .variant-card:hover {
+        border-color: #333;
+      }
+      .variant-card.rec {
+        border-color: #10b98130;
+      }
+      .variant-card.rec::after {
+        content: '★ REC';
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 9px;
+        font-weight: 700;
+        color: #10b981;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background: #10b98115;
+        padding: 3px 8px;
+        border-radius: 6px;
+      }
+      .variant-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 14px 16px 0;
+        letter-spacing: -0.2px;
+      }
+      .variant-desc {
+        font-size: 11px;
+        color: #666;
+        padding: 4px 16px 14px;
+        line-height: 1.5;
+      }
+
+      /* Animated strokes */
+      @keyframes ring-draw {
+        from {
+          stroke-dashoffset: 165;
+        }
+        to {
+          stroke-dashoffset: 95;
+        }
+      }
+      @keyframes ring-draw-lg {
+        from {
+          stroke-dashoffset: 201;
+        }
+        to {
+          stroke-dashoffset: 115;
+        }
+      }
+      @keyframes ring-draw-sm {
+        from {
+          stroke-dashoffset: 138;
+        }
+        to {
+          stroke-dashoffset: 79;
+        }
+      }
+      .anim-ring {
+        animation: ring-draw 1.2s ease-out forwards;
+      }
+      .anim-ring-lg {
+        animation: ring-draw-lg 1.2s ease-out forwards;
+      }
+      .anim-ring-sm {
+        animation: ring-draw-sm 1.2s ease-out forwards;
+      }
+
+      /* Pulse on FAB */
+      @keyframes soft-pulse {
+        0%,
+        100% {
+          box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+        }
+        50% {
+          box-shadow: 0 4px 28px rgba(5, 150, 105, 0.45);
+        }
+      }
+      .pulse-glow {
+        animation: soft-pulse 2.5s ease-in-out infinite;
+      }
+
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+          max-width: 420px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Plus Button — Explorations</h1>
+    <p class="subtitle">
+      No text ratio. Focus on the plus button prominence, ring visibility, and
+      how it relates to the capsule surface.
+    </p>
+
+    <div class="grid">
+      <!-- ═══════════════════════════════════════ -->
+      <!-- Variant A: Floating Rise                -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="variant-card rec">
+        <div class="variant-label">A — Floating Rise</div>
+        <div class="variant-desc">
+          Ring+FAB rises 18px above capsule. No label. Ring is 64px with visible
+          4px stroke — large enough to clearly read progress. Side icons stay
+          center-aligned to capsule.
+        </div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="habit-list">
+              <div class="habit-header">Today's Habits</div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Morning meditation</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Read 20 pages</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Exercise 30 min</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Drink 8 glasses water</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Journal before bed</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">No phone after 10pm</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Walk 10,000 steps</div>
+              </div>
+            </div>
+            <div class="bar-area">
+              <div class="float-wrapper">
+                <div class="capsule-base">
+                  <div class="side-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#888"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                      />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </div>
+
+                  <div class="float-center">
+                    <div class="ring-wrap" style="width: 64px; height: 64px">
+                      <svg class="ring-svg" viewBox="0 0 64 64">
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="29"
+                          fill="none"
+                          stroke="#2a2a2e"
+                          stroke-width="4"
+                        />
+                        <circle
+                          cx="32"
+                          cy="32"
+                          r="29"
+                          fill="none"
+                          stroke="#10b981"
+                          stroke-width="4"
+                          stroke-dasharray="182"
+                          stroke-dashoffset="104"
+                          stroke-linecap="round"
+                          transform="rotate(-90 32 32)"
+                          class="anim-ring-lg"
+                        />
+                      </svg>
+                      <div class="ring-inner">
+                        <div
+                          class="fab-circle pulse-glow"
+                          style="
+                            width: 48px;
+                            height: 48px;
+                            border-radius: 50%;
+                            background: #059669;
+                            border: 2px solid rgba(17, 24, 39, 0.9);
+                            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+                          "
+                        >
+                          <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round"
+                          >
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="side-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#D97706"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                      />
+                      <path d="M5 3v4" />
+                      <path d="M19 17v4" />
+                      <path d="M3 5h4" />
+                      <path d="M17 19h4" />
+                    </svg>
+                    <div class="notif-dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- Variant B: Clean Floating (No Ring)     -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="variant-card">
+        <div class="variant-label">B — Clean Float, No Ring</div>
+        <div class="variant-desc">
+          Just the FAB rising above the capsule — no ring at all. Progress moves
+          to a thin bar under the capsule. Maximum simplicity. The plus is pure
+          and unmistakable.
+        </div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="habit-list">
+              <div class="habit-header">Today's Habits</div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Morning meditation</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Read 20 pages</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Exercise 30 min</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Drink 8 glasses water</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Journal before bed</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">No phone after 10pm</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Walk 10,000 steps</div>
+              </div>
+            </div>
+            <div class="bar-area">
+              <div class="capsule-base" style="align-items: center">
+                <div class="side-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#888"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </div>
+
+                <div style="margin-top: -22px">
+                  <div
+                    class="fab-circle pulse-glow"
+                    style="
+                      width: 54px;
+                      height: 54px;
+                      border-radius: 50%;
+                      background: #059669;
+                      border: 2.5px solid rgba(17, 24, 39, 0.9);
+                      box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+                    "
+                  >
+                    <svg
+                      width="26"
+                      height="26"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </div>
+                </div>
+
+                <div class="side-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#D97706"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                    />
+                    <path d="M5 3v4" />
+                    <path d="M19 17v4" />
+                    <path d="M3 5h4" />
+                    <path d="M17 19h4" />
+                  </svg>
+                  <div class="notif-dot"></div>
+                </div>
+              </div>
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- Variant C: Inline Flush (no float)      -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="variant-card">
+        <div class="variant-label">C — Inline Flush</div>
+        <div class="variant-desc">
+          Plus stays inside the capsule at the same level as side icons.
+          Slightly larger (48px) with primary fill. Ring is gone — capsule
+          border itself shows progress via conic gradient. Clean, no overflow.
+        </div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="habit-list">
+              <div class="habit-header">Today's Habits</div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Morning meditation</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Read 20 pages</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Exercise 30 min</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Drink 8 glasses water</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Journal before bed</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">No phone after 10pm</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Walk 10,000 steps</div>
+              </div>
+            </div>
+            <div class="bar-area">
+              <!-- Capsule with conic border -->
+              <div
+                style="
+                  position: relative;
+                  margin: 0 16px;
+                  border-radius: 32px;
+                  padding: 2px;
+                "
+              >
+                <!-- Conic gradient border layer -->
+                <div
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 32px;
+                    background: conic-gradient(
+                      from -90deg,
+                      #10b981 0deg,
+                      #10b981 154deg,
+                      rgba(255, 255, 255, 0.06) 154deg,
+                      rgba(255, 255, 255, 0.06) 360deg
+                    );
+                  "
+                ></div>
+                <!-- Inner capsule -->
+                <div
+                  style="
+                    position: relative;
+                    border-radius: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 7px 18px;
+                    backdrop-filter: blur(40px);
+                    background: rgba(30, 30, 34, 0.92);
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+                  "
+                >
+                  <div class="side-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#888"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                      />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  </div>
+
+                  <div
+                    class="fab-circle"
+                    style="
+                      width: 48px;
+                      height: 48px;
+                      border-radius: 50%;
+                      background: #059669;
+                      border: 2px solid rgba(17, 24, 39, 0.9);
+                      box-shadow: 0 2px 12px rgba(5, 150, 105, 0.3);
+                    "
+                  >
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </div>
+
+                  <div class="side-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#D97706"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                      />
+                      <path d="M5 3v4" />
+                      <path d="M19 17v4" />
+                      <path d="M3 5h4" />
+                      <path d="M17 19h4" />
+                    </svg>
+                    <div class="notif-dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- Variant D: Gentle Bump + Ring           -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="variant-card">
+        <div class="variant-label">D — Gentle Bump</div>
+        <div class="variant-desc">
+          Ring+FAB rises just 10px — enough to break the surface without
+          dominating. The capsule has a subtle notch/dip that hugs the ring.
+          Best of both worlds: floating drama without harsh overflow.
+        </div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="habit-list">
+              <div class="habit-header">Today's Habits</div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Morning meditation</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Read 20 pages</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check done">
+                  <svg
+                    class="check-svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="habit-text done-text">Exercise 30 min</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Drink 8 glasses water</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Journal before bed</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">No phone after 10pm</div>
+              </div>
+              <div class="habit-row">
+                <div class="habit-check pending"></div>
+                <div class="habit-text">Walk 10,000 steps</div>
+              </div>
+            </div>
+            <div class="bar-area">
+              <div
+                class="capsule-base"
+                style="align-items: center; padding: 10px 20px"
+              >
+                <div class="side-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#888"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                    />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </div>
+
+                <div style="margin-top: -12px">
+                  <div class="ring-wrap" style="width: 58px; height: 58px">
+                    <svg class="ring-svg" viewBox="0 0 58 58">
+                      <circle
+                        cx="29"
+                        cy="29"
+                        r="26"
+                        fill="none"
+                        stroke="#2a2a2e"
+                        stroke-width="3.5"
+                      />
+                      <circle
+                        cx="29"
+                        cy="29"
+                        r="26"
+                        fill="none"
+                        stroke="#10b981"
+                        stroke-width="3.5"
+                        stroke-dasharray="163"
+                        stroke-dashoffset="93"
+                        stroke-linecap="round"
+                        transform="rotate(-90 29 29)"
+                        class="anim-ring"
+                      />
+                    </svg>
+                    <div class="ring-inner">
+                      <div
+                        class="fab-circle pulse-glow"
+                        style="
+                          width: 44px;
+                          height: 44px;
+                          border-radius: 50%;
+                          background: #059669;
+                          border: 2px solid rgba(17, 24, 39, 0.9);
+                          box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+                        "
+                      >
+                        <svg
+                          width="22"
+                          height="22"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2.5"
+                          stroke-linecap="round"
+                        >
+                          <line x1="12" y1="5" x2="12" y2="19" />
+                          <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="side-icon">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#D97706"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                    />
+                    <path d="M5 3v4" />
+                    <path d="M19 17v4" />
+                    <path d="M3 5h4" />
+                    <path d="M17 19h4" />
+                  </svg>
+                  <div class="notif-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

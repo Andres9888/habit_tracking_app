@@ -1,0 +1,22 @@
+=== BASELINE METRICS ===
+Date: 2025-12-22
+
+TypeScript Errors: 23
+Source: docs/baseline-lint-20251222.log
+
+Test Results:
+- Test Suites: 59 failed, 68 passed, 127 total
+- Tests: 319 failed, 1791 passed, 2110 total
+- Pass Rate: 84.9% (1791/2110)
+Source: docs/baseline-test-20251222.log
+
+Failed Test Suites: 59
+
+Key Error Categories:
+1. Reanimated mocks missing (useAnimatedProps not a function)
+2. Duplicate file redeclarations (TS2451)
+3. Invalid prop types (reanimated-color-picker, AnimatedPressable)
+4. Type mismatches (Date | undefined, null vs undefined)
+5. Variable hoisting errors (TS2448, TS2454)
+
+Build Status: ❌ Failed (23 TypeScript errors)

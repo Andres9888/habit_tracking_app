@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archived Habits — Slide to Restore</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .app-frame {
+    width: 390px;
+    min-height: 100vh;
+    position: relative;
+    padding: 0 0 40px 0;
+  }
+
+  /* Header */
+  .page-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(245, 241, 237, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 56px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+  .back-btn:hover { background: #F3F4F6; }
+  .back-btn:active { transform: scale(0.95); }
+
+  .header-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #1F2937 !important;
+    line-height: 1.2 !important;
+  }
+
+  .header-count {
+    background: #E5E7EB;
+    color: #6B7280;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    line-height: 1;
+  }
+
+  /* Card list */
+  .card-list {
+    padding: 8px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Habit card */
+  .habit-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                opacity 0.35s ease,
+                box-shadow 0.2s ease;
+    transform-origin: center top;
+  }
+  .habit-card.removing {
+    transform: translateX(100%) scale(0.9);
+    opacity: 0;
+    margin-top: -10px;
+  }
+  .habit-card.restored {
+    animation: restoreFlash 0.5s ease;
+  }
+
+  @keyframes restoreFlash {
+    0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(5, 150, 105, 0.15); }
+    100% { box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03); }
+  }
+
+  /* Delete button */
+  .delete-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9CA3AF;
+    transition: all 0.2s ease;
+  }
+  .delete-btn:hover {
+    background: #FEF2F2;
+    color: #B53030;
+  }
+  .delete-btn:active { transform: scale(0.9); }
+
+  /* Delete confirmation */
+  .delete-confirm {
+    display: none;
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: rgba(181, 48, 48, 0.95);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    animation: fadeIn 0.2s ease;
+  }
+  .delete-confirm.visible { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .delete-confirm p {
+    color: #FFFFFF !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+  }
+  .delete-confirm-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .delete-confirm-actions button {
+    padding: 8px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .delete-confirm-actions button:active { transform: scale(0.95); }
+  .btn-cancel-delete {
+    background: rgba(255,255,255,0.2);
+    color: #FFFFFF;
+  }
+  .btn-cancel-delete:hover { background: rgba(255,255,255,0.3); }
+  .btn-confirm-delete {
+    background: #FFFFFF;
+    color: #B53030;
+  }
+  .btn-confirm-delete:hover { background: #FEE2E2; }
+
+  /* Habit info row */
+  .habit-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding-right: 36px;
+  }
+  .habit-emoji {
+    font-size: 36px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .habit-meta { flex: 1; min-width: 0; }
+  .habit-name {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1F2937 !important;
+    margin-bottom: 3px !important;
+    line-height: 1.3 !important;
+  }
+  .habit-date {
+    font-size: 12px !important;
+    color: #9CA3AF !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Stat pills */
+  .stat-pills {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: #F9FAFB;
+    border: 1px solid #F3F4F6;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #4B5563;
+    white-space: nowrap;
+  }
+  .stat-pill .stat-label {
+    color: #9CA3AF;
+    font-weight: 400;
+  }
+
+  /* Slide track */
+  .slide-track {
+    position: relative;
+    width: 100%;
+    height: 48px;
+    background: #E5E7EB;
+    border-radius: 24px;
+    overflow: hidden;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+  }
+  .slide-track:active { cursor: grabbing; }
+
+  /* Green fill */
+  .slide-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, rgba(5,150,105,0.15) 0%, rgba(5,150,105,0.5) 100%);
+    border-radius: 24px;
+    transition: none;
+    pointer-events: none;
+  }
+
+  /* Ghost text */
+  .slide-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #9CA3AF;
+    letter-spacing: 0.01em;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+  .slide-text.threshold-reached {
+    color: #059669;
+    font-weight: 600;
+  }
+
+  /* Handle */
+  .slide-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(5,150,105,0.3);
+    transition: none;
+    pointer-events: none;
+  }
+  .slide-handle svg,
+  .slide-handle i {
+    color: #FFFFFF;
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+  }
+
+  /* Pulse animation when past threshold */
+  @keyframes handlePulse {
+    0%, 100% { box-shadow: 0 2px 6px rgba(5,150,105,0.3), 0 0 0 0 rgba(5,150,105,0.4); }
+    50% { box-shadow: 0 2px 6px rgba(5,150,105,0.3), 0 0 0 6px rgba(5,150,105,0.0); }
+  }
+  .slide-handle.pulsing {
+    animation: handlePulse 0.6s ease infinite;
+  }
+
+  /* Track glow when past threshold */
+  .slide-track.threshold-active {
+    box-shadow: 0 0 0 2px rgba(5,150,105,0.25), 0 0 12px rgba(5,150,105,0.15);
+  }
+
+  /* Snap-back animation */
+  .slide-handle.snapping {
+    transition: left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+  .slide-fill.snapping {
+    transition: width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  }
+
+  /* Success snap-to-end */
+  .slide-handle.success {
+    transition: left 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+  .slide-fill.success {
+    transition: width 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    text-align: center;
+  }
+  .empty-state.visible { display: flex; }
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: #9CA3AF;
+  }
+  .empty-state h3 {
+    font-family: 'Literata', serif !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #1F2937 !important;
+    margin-bottom: 6px !important;
+  }
+  .empty-state p {
+    font-size: 14px !important;
+    color: #9CA3AF !important;
+  }
+</style>
+</head>
+<body>
+
+<div class="app-frame">
+  <!-- Header -->
+  <div class="page-header">
+    <button class="back-btn" aria-label="Go back">
+      <i data-lucide="arrow-left" style="width:18px;height:18px;color:#1F2937;"></i>
+    </button>
+    <span class="header-title">Archived Habits</span>
+    <span class="header-count" id="habitCount">4</span>
+  </div>
+
+  <!-- Card list -->
+  <div class="card-list" id="cardList">
+
+    <!-- Card 1 -->
+    <div class="habit-card" data-habit="Morning Meditation">
+      <button class="delete-btn" aria-label="Delete habit" onclick="showDeleteConfirm(this)">
+        <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+      </button>
+      <div class="delete-confirm">
+        <p>Delete forever?</p>
+        <div class="delete-confirm-actions">
+          <button class="btn-cancel-delete" onclick="hideDeleteConfirm(this)">Cancel</button>
+          <button class="btn-confirm-delete" onclick="confirmDelete(this)">Delete</button>
+        </div>
+      </div>
+      <div class="habit-info">
+        <span class="habit-emoji">&#x1F9D8;</span>
+        <div class="habit-meta">
+          <div class="habit-name">Morning Meditation</div>
+          <div class="habit-date">Archived Feb 15 &middot; 34 days ago</div>
+        </div>
+      </div>
+      <div class="stat-pills">
+        <span class="stat-pill"><span class="stat-label">Strength</span> 72%</span>
+        <span class="stat-pill">&#x1F525; <span class="stat-label">Streak</span> 45d</span>
+        <span class="stat-pill">&#x2713; <span class="stat-label">Total</span> 234</span>
+      </div>
+      <div class="slide-track" data-slide-track>
+        <div class="slide-fill"></div>
+        <div class="slide-text">Slide to restore &rarr;</div>
+        <div class="slide-handle">
+          <i data-lucide="arrow-right" style="width:18px;height:18px;color:#FFF;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="habit-card" data-habit="Read 30 Minutes">
+      <button class="delete-btn" aria-label="Delete habit" onclick="showDeleteConfirm(this)">
+        <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+      </button>
+      <div class="delete-confirm">
+        <p>Delete forever?</p>
+        <div class="delete-confirm-actions">
+          <button class="btn-cancel-delete" onclick="hideDeleteConfirm(this)">Cancel</button>
+          <button class="btn-confirm-delete" onclick="confirmDelete(this)">Delete</button>
+        </div>
+      </div>
+      <div class="habit-info">
+        <span class="habit-emoji">&#x1F4D6;</span>
+        <div class="habit-meta">
+          <div class="habit-name">Read 30 Minutes</div>
+          <div class="habit-date">Archived Mar 1 &middot; 20 days ago</div>
+        </div>
+      </div>
+      <div class="stat-pills">
+        <span class="stat-pill"><span class="stat-label">Strength</span> 58%</span>
+        <span class="stat-pill">&#x1F525; <span class="stat-label">Streak</span> 28d</span>
+        <span class="stat-pill">&#x2713; <span class="stat-label">Total</span> 156</span>
+      </div>
+      <div class="slide-track" data-slide-track>
+        <div class="slide-fill"></div>
+        <div class="slide-text">Slide to restore &rarr;</div>
+        <div class="slide-handle">
+          <i data-lucide="arrow-right" style="width:18px;height:18px;color:#FFF;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="habit-card" data-habit="Cold Shower">
+      <button class="delete-btn" aria-label="Delete habit" onclick="showDeleteConfirm(this)">
+        <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+      </button>
+      <div class="delete-confirm">
+        <p>Delete forever?</p>
+        <div class="delete-confirm-actions">
+          <button class="btn-cancel-delete" onclick="hideDeleteConfirm(this)">Cancel</button>
+          <button class="btn-confirm-delete" onclick="confirmDelete(this)">Delete</button>
+        </div>
+      </div>
+      <div class="habit-info">
+        <span class="habit-emoji">&#x1F976;</span>
+        <div class="habit-meta">
+          <div class="habit-name">Cold Shower</div>
+          <div class="habit-date">Archived Mar 10 &middot; 11 days ago</div>
+        </div>
+      </div>
+      <div class="stat-pills">
+        <span class="stat-pill"><span class="stat-label">Strength</span> 35%</span>
+        <span class="stat-pill">&#x1F525; <span class="stat-label">Streak</span> 12d</span>
+        <span class="stat-pill">&#x2713; <span class="stat-label">Total</span> 89</span>
+      </div>
+      <div class="slide-track" data-slide-track>
+        <div class="slide-fill"></div>
+        <div class="slide-text">Slide to restore &rarr;</div>
+        <div class="slide-handle">
+          <i data-lucide="arrow-right" style="width:18px;height:18px;color:#FFF;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="habit-card" data-habit="Daily Journal">
+      <button class="delete-btn" aria-label="Delete habit" onclick="showDeleteConfirm(this)">
+        <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+      </button>
+      <div class="delete-confirm">
+        <p>Delete forever?</p>
+        <div class="delete-confirm-actions">
+          <button class="btn-cancel-delete" onclick="hideDeleteConfirm(this)">Cancel</button>
+          <button class="btn-confirm-delete" onclick="confirmDelete(this)">Delete</button>
+        </div>
+      </div>
+      <div class="habit-info">
+        <span class="habit-emoji">&#x270D;&#xFE0F;</span>
+        <div class="habit-meta">
+          <div class="habit-name">Daily Journal</div>
+          <div class="habit-date">Archived Mar 18 &middot; 3 days ago</div>
+        </div>
+      </div>
+      <div class="stat-pills">
+        <span class="stat-pill"><span class="stat-label">Strength</span> 85%</span>
+        <span class="stat-pill">&#x1F525; <span class="stat-label">Streak</span> 67d</span>
+        <span class="stat-pill">&#x2713; <span class="stat-label">Total</span> 312</span>
+      </div>
+      <div class="slide-track" data-slide-track>
+        <div class="slide-fill"></div>
+        <div class="slide-text">Slide to restore &rarr;</div>
+        <div class="slide-handle">
+          <i data-lucide="arrow-right" style="width:18px;height:18px;color:#FFF;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">
+      <i data-lucide="archive-restore" style="width:28px;height:28px;"></i>
+    </div>
+    <h3>All Clear</h3>
+    <p>No archived habits. Nice work keeping things active.</p>
+  </div>
+</div>
+
+<script>
+// Initialize Lucide icons
+lucide.createIcons();
+
+// -- Delete confirmation --
+function showDeleteConfirm(btn) {
+  const card = btn.closest('.habit-card');
+  const overlay = card.querySelector('.delete-confirm');
+  overlay.classList.add('visible');
+}
+
+function hideDeleteConfirm(btn) {
+  const overlay = btn.closest('.delete-confirm');
+  overlay.classList.remove('visible');
+}
+
+function confirmDelete(btn) {
+  const card = btn.closest('.habit-card');
+  card.classList.add('removing');
+  card.addEventListener('transitionend', function handler() {
+    card.removeEventListener('transitionend', handler);
+    card.remove();
+    updateCount();
+  });
+}
+
+function updateCount() {
+  const cards = document.querySelectorAll('.habit-card');
+  const countEl = document.getElementById('habitCount');
+  countEl.textContent = cards.length;
+  if (cards.length === 0) {
+    document.getElementById('emptyState').classList.add('visible');
+  }
+}
+
+// -- Slide to restore --
+const THRESHOLD = 0.8; // 80% of track width
+
+document.querySelectorAll('[data-slide-track]').forEach(track => {
+  const handle = track.querySelector('.slide-handle');
+  const fill = track.querySelector('.slide-fill');
+  const text = track.querySelector('.slide-text');
+
+  let isDragging = false;
+  let startX = 0;
+  let handleOffset = 0;
+  let trackWidth = 0;
+  let maxSlide = 0;
+  let pastThreshold = false;
+
+  function getClientX(e) {
+    if (e.touches && e.touches.length > 0) return e.touches[0].clientX;
+    if (e.changedTouches && e.changedTouches.length > 0) return e.changedTouches[0].clientX;
+    return e.clientX;
+  }
+
+  function startDrag(e) {
+    // Prevent starting if card is being removed
+    if (track.closest('.habit-card').classList.contains('removing')) return;
+    isDragging = true;
+    pastThreshold = false;
+
+    // Remove any snap class
+    handle.classList.remove('snapping', 'success', 'pulsing');
+    fill.classList.remove('snapping', 'success');
+    track.classList.remove('threshold-active');
+    text.classList.remove('threshold-reached');
+
+    trackWidth = track.offsetWidth;
+    maxSlide = trackWidth - 40 - 8; // handle width + padding
+
+    startX = getClientX(e);
+    handleOffset = handle.offsetLeft;
+
+    e.preventDefault();
+  }
+
+  function moveDrag(e) {
+    if (!isDragging) return;
+
+    const currentX = getClientX(e);
+    const deltaX = currentX - startX;
+    let newLeft = handleOffset + deltaX;
+
+    // Clamp
+    if (newLeft < 4) newLeft = 4;
+    if (newLeft > maxSlide) newLeft = maxSlide;
+
+    handle.style.left = newLeft + 'px';
+    fill.style.width = (newLeft + 20) + 'px'; // fill to center of handle
+
+    // Progress ratio (0 to 1)
+    const progress = (newLeft - 4) / (maxSlide - 4);
+
+    // Fade text based on handle position
+    const textOpacity = Math.max(0, 1 - (progress * 2.5));
+    text.style.opacity = textOpacity;
+
+    // Threshold check
+    if (progress >= THRESHOLD && !pastThreshold) {
+      pastThreshold = true;
+      handle.classList.add('pulsing');
+      track.classList.add('threshold-active');
+      text.textContent = 'Release to restore!';
+      text.classList.add('threshold-reached');
+      text.style.opacity = 1;
+
+      // Haptic feedback if available
+      if (navigator.vibrate) navigator.vibrate(20);
+    } else if (progress < THRESHOLD && pastThreshold) {
+      pastThreshold = false;
+      handle.classList.remove('pulsing');
+      track.classList.remove('threshold-active');
+      text.innerHTML = 'Slide to restore &rarr;';
+      text.classList.remove('threshold-reached');
+    }
+
+    e.preventDefault();
+  }
+
+  function endDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+
+    const currentLeft = handle.offsetLeft;
+    const progress = (currentLeft - 4) / (maxSlide - 4);
+
+    if (progress >= THRESHOLD) {
+      // SUCCESS: snap to end, then remove card
+      handle.classList.remove('pulsing');
+      handle.classList.add('success');
+      fill.classList.add('success');
+
+      handle.style.left = maxSlide + 'px';
+      fill.style.width = (maxSlide + 20) + 'px';
+      text.style.opacity = 0;
+
+      const card = track.closest('.habit-card');
+
+      // Flash green then remove
+      setTimeout(() => {
+        card.classList.add('restored');
+        setTimeout(() => {
+          card.classList.add('removing');
+          card.addEventListener('transitionend', function handler(ev) {
+            if (ev.propertyName !== 'transform') return;
+            card.removeEventListener('transitionend', handler);
+            card.remove();
+            updateCount();
+          });
+        }, 350);
+      }, 200);
+
+    } else {
+      // SNAP BACK
+      handle.classList.remove('pulsing');
+      handle.classList.add('snapping');
+      fill.classList.add('snapping');
+      track.classList.remove('threshold-active');
+      text.classList.remove('threshold-reached');
+      text.innerHTML = 'Slide to restore &rarr;';
+
+      handle.style.left = '4px';
+      fill.style.width = '0px';
+      text.style.opacity = 1;
+
+      // Clean up transition class after animation
+      setTimeout(() => {
+        handle.classList.remove('snapping');
+        fill.classList.remove('snapping');
+      }, 500);
+    }
+  }
+
+  // Mouse events
+  track.addEventListener('mousedown', startDrag);
+  window.addEventListener('mousemove', moveDrag);
+  window.addEventListener('mouseup', endDrag);
+
+  // Touch events
+  track.addEventListener('touchstart', startDrag, { passive: false });
+  window.addEventListener('touchmove', moveDrag, { passive: false });
+  window.addEventListener('touchend', endDrag);
+});
+</script>
+
+</body>
+</html>

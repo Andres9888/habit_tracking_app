@@ -1,0 +1,62 @@
+# MVP iOS - Apple Store Submission Requirements
+
+## Core Features Required for App Store Submission
+
+### 1. Onboarding Flow
+- First-run experience with welcome screens
+- Sample habit creation tutorial
+- Initial setup guidance
+
+### 2. Basic Authentication
+- User sign-up and login
+- Secure session management
+- Account creation flow
+
+### 3. Core Habit Management
+- Create new habits
+- Edit existing habits
+- Delete habits with confirmation
+- Basic habit categories/tags
+
+### 4. Habit Tracking
+- Daily check-in functionality
+- Track habit completion
+- Visual feedback for completed habits
+
+### 5. Basic Statistics
+- Current streak display
+- Simple completion rate
+- Today's progress view
+
+### 6. Error Handling & Empty States
+- Graceful error handling
+- Loading states
+- Empty state designs (no habits, no data)
+- User-friendly error messages
+
+### 7. Settings & Account Management
+- Basic user settings
+- App preferences
+- Account information display
+
+### 8. App Help & Tutorial
+- In-app help system
+- Basic tutorial overlay
+- FAQ section
+
+## App Store Requirements
+
+### Technical Requirements
+- Privacy policy compliance
+- Terms of service
+- Data handling transparency
+- Offline functionality basics
+- Performance optimization
+- iOS platform guidelines compliance
+
+### UI/UX Requirements
+- Polished user interface
+- Intuitive navigation
+- Responsive design
+- Accessibility basics (text size, contrast)
+- Loading and error states

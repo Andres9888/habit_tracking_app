@@ -1,0 +1,788 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Consistency Plan — 2026-04-16</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --dominant: #faf9f7;
+        --card: #edeae5;
+        --card-border: #ddd8d2;
+        --fg: #2d2a26;
+        --fg-heading: #3d3833;
+        --fg-secondary: #524d47;
+        --fg-tertiary: #6e6660;
+        --fg-hint: #6b6560;
+        --neutral: #c4bfb7;
+        --accent: #059669;
+        --accent-soft: #d1fae5;
+        --accent-dark: #047857;
+        --streak: #b88621;
+        --streak-soft: #fef3c7;
+        --error: #b53030;
+        --error-soft: #fee2e2;
+        --warn: #9a5504;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'DM Sans', system-ui, sans-serif !important;
+        -webkit-font-smoothing: antialiased;
+      }
+      .font-serif {
+        font-family: 'Literata', Georgia, serif !important;
+      }
+      .font-mono {
+        font-family: 'JetBrains Mono', Menlo, monospace !important;
+      }
+      .surface {
+        background: var(--card);
+        border: 1px solid var(--card-border);
+        box-shadow:
+          0 1px 0 rgba(45, 42, 38, 0.04),
+          0 2px 8px -4px rgba(45, 42, 38, 0.08);
+      }
+      .surface-raised {
+        background: var(--dominant);
+        border: 1px solid var(--card-border);
+        box-shadow:
+          0 1px 0 rgba(45, 42, 38, 0.04),
+          0 8px 24px -12px rgba(45, 42, 38, 0.12);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 9999px;
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+      }
+      .chip-accent {
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+      }
+      .chip-warn {
+        background: var(--streak-soft);
+        color: var(--warn);
+      }
+      .chip-error {
+        background: var(--error-soft);
+        color: var(--error);
+      }
+      .chip-neutral {
+        background: rgba(196, 191, 183, 0.25);
+        color: var(--fg-secondary);
+      }
+      .code-inline {
+        font-family: 'JetBrains Mono', Menlo, monospace;
+        font-size: 12px;
+        background: rgba(45, 42, 38, 0.06);
+        color: var(--fg-heading);
+        padding: 2px 6px;
+        border-radius: 6px;
+      }
+      .diff-line {
+        font-family: 'JetBrains Mono', Menlo, monospace;
+        font-size: 12px;
+        line-height: 1.7;
+        padding: 2px 10px;
+        border-radius: 4px;
+      }
+      .diff-remove {
+        background: rgba(181, 48, 48, 0.08);
+        color: #852020;
+      }
+      .diff-remove::before {
+        content: '−  ';
+        color: rgba(133, 32, 32, 0.6);
+      }
+      .diff-add {
+        background: rgba(5, 150, 105, 0.08);
+        color: #04624b;
+      }
+      .diff-add::before {
+        content: '+  ';
+        color: rgba(4, 98, 75, 0.6);
+      }
+      .diff-context {
+        color: var(--fg-tertiary);
+      }
+      .diff-context::before {
+        content: '   ';
+      }
+      .metric-value {
+        font-family: 'Literata', Georgia, serif;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+      }
+      .progress-track {
+        height: 8px;
+        border-radius: 9999px;
+        background: rgba(196, 191, 183, 0.35);
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        border-radius: 9999px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+        transition: width 800ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .shimmer {
+        position: relative;
+        overflow: hidden;
+      }
+      .shimmer::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          105deg,
+          transparent 40%,
+          rgba(255, 255, 255, 0.35) 50%,
+          transparent 60%
+        );
+        animation: shimmer 2.4s ease-in-out infinite;
+      }
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+      .stroke-demo path {
+        fill: none;
+        stroke: var(--fg-secondary);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .ring-pulse {
+        animation: ringPulse 2.8s ease-in-out infinite;
+      }
+      @keyframes ringPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(5, 150, 105, 0);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(5, 150, 105, 0.12);
+        }
+      }
+      .tier-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .tier-1 {
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+      }
+      .tier-2 {
+        background: var(--streak-soft);
+        color: var(--warn);
+      }
+      .tier-3 {
+        background: rgba(196, 191, 183, 0.3);
+        color: var(--fg-secondary);
+      }
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        display: inline-block;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen">
+    <div class="mx-auto max-w-[1160px] px-8 py-14">
+      <!-- ═══════════════ Header ═══════════════ -->
+      <header class="mb-14">
+        <div class="mb-3 flex items-center gap-3">
+          <span class="chip chip-neutral">
+            <span class="dot" style="background: var(--accent)"></span>
+            Design Review · 2026-04-16
+          </span>
+          <span class="chip chip-accent">Pillar score 23 / 24</span>
+          <span class="chip chip-neutral font-mono" style="font-size: 11px">
+            vs 21 / 24 on 2026-04-05
+          </span>
+        </div>
+        <h1
+          class="font-serif text-[44px] leading-[1.08] tracking-[-0.02em]"
+          style="color: var(--fg-heading); font-weight: 700"
+        >
+          Design consistency —<br />the remaining cleanup plan.
+        </h1>
+        <p class="mt-4 max-w-2xl text-[17px] leading-relaxed" style="color: var(--fg-secondary)">
+          PR #1233 did the heavy lifting. Icon tokens went from 0 → 305 references,
+          <span class="code-inline">fontWeight</span> raw values dropped 96.5%, and the
+          <span class="code-inline">borderRadius: 999</span> bug is gone. Here's what's left —
+          ranked by ROI, with concrete diffs.
+        </p>
+      </header>
+
+      <!-- ═══════════════ Wins dashboard ═══════════════ -->
+      <section class="mb-14">
+        <h2
+          class="mb-5 text-[12px] font-semibold uppercase tracking-[0.12em]"
+          style="color: var(--fg-tertiary)"
+        >
+          What moved since the last audit
+        </h2>
+        <div class="grid grid-cols-4 gap-4">
+          <!-- iconSizes -->
+          <div class="surface rounded-2xl p-5">
+            <div class="flex items-start justify-between">
+              <span class="text-[12px] font-medium" style="color: var(--fg-tertiary)">
+                iconSizes adoption
+              </span>
+              <span class="chip chip-accent">resolved</span>
+            </div>
+            <div class="metric-value mt-3 text-[32px]" style="color: var(--fg-heading)">305</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              references · was
+              <span class="font-mono">0</span>
+            </div>
+            <div class="progress-track mt-4">
+              <div class="progress-fill" style="width: 96%"></div>
+            </div>
+          </div>
+          <!-- fontWeight -->
+          <div class="surface rounded-2xl p-5">
+            <div class="flex items-start justify-between">
+              <span class="text-[12px] font-medium" style="color: var(--fg-tertiary)">
+                Raw fontWeight
+              </span>
+              <span class="chip chip-accent">-96.5%</span>
+            </div>
+            <div class="metric-value mt-3 text-[32px]" style="color: var(--fg-heading)">8</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              occurrences · was
+              <span class="font-mono">229</span>
+            </div>
+            <div class="progress-track mt-4">
+              <div class="progress-fill" style="width: 96%"></div>
+            </div>
+          </div>
+          <!-- size={N} -->
+          <div class="surface rounded-2xl p-5">
+            <div class="flex items-start justify-between">
+              <span class="text-[12px] font-medium" style="color: var(--fg-tertiary)">
+                Raw size={N}
+              </span>
+              <span class="chip chip-accent">-67%</span>
+            </div>
+            <div class="metric-value mt-3 text-[32px]" style="color: var(--fg-heading)">152</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              remaining · was
+              <span class="font-mono">460</span>
+            </div>
+            <div class="progress-track mt-4">
+              <div class="progress-fill" style="width: 67%"></div>
+            </div>
+          </div>
+          <!-- bug -->
+          <div class="surface rounded-2xl p-5">
+            <div class="flex items-start justify-between">
+              <span class="text-[12px] font-medium" style="color: var(--fg-tertiary)">
+                borderRadius: 999 bug
+              </span>
+              <span class="chip chip-accent">fixed</span>
+            </div>
+            <div class="metric-value mt-3 text-[32px]" style="color: var(--fg-heading)">0</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              instances · was
+              <span class="font-mono">5</span>
+            </div>
+            <div class="progress-track mt-4">
+              <div class="progress-fill" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ Tier 1 fixes ═══════════════ -->
+      <section class="mb-14">
+        <div class="mb-5 flex items-baseline justify-between">
+          <div>
+            <span class="tier-badge tier-1">Tier 1</span>
+            <h2
+              class="mt-3 font-serif text-[28px] tracking-[-0.01em]"
+              style="color: var(--fg-heading); font-weight: 700"
+            >
+              Ship today · under 20 minutes
+            </h2>
+            <p class="mt-1 text-[14px]" style="color: var(--fg-tertiary)">
+              Three surgical edits. No refactoring. No risk.
+            </p>
+          </div>
+        </div>
+
+        <!-- Fix 1: SortOptionRow strokeWidth -->
+        <div class="surface mb-4 rounded-2xl p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <div>
+              <span class="chip chip-neutral font-mono" style="font-size: 11px">
+                src/components/SettingsModal/SortOptionRow.tsx:50
+              </span>
+              <h3 class="mt-2 text-[17px] font-semibold" style="color: var(--fg-heading)">
+                Last
+                <span class="code-inline">strokeWidth={2.25}</span>
+                in production
+              </h3>
+              <p class="mt-1 text-[14px]" style="color: var(--fg-secondary)">
+                Down from 6 files to 1. Normalize to
+                <span class="code-inline">2.5</span>
+                to eliminate the non-standard weight entirely.
+              </p>
+            </div>
+            <span class="tier-badge tier-1">~2 min</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Before visual -->
+            <div
+              class="rounded-xl p-5"
+              style="background: var(--dominant); border: 1px solid var(--card-border)"
+            >
+              <div
+                class="mb-3 text-[10px] font-semibold uppercase tracking-[0.1em]"
+                style="color: var(--fg-tertiary)"
+              >
+                Before
+              </div>
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-full"
+                  style="background: var(--card)"
+                >
+                  <svg
+                    class="stroke-demo"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    stroke-width="2.25"
+                  >
+                    <path d="M3 6h18M6 12h12M10 18h4" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-[14px] font-medium" style="color: var(--fg-heading)">
+                    Sort order
+                  </div>
+                  <div class="font-mono text-[11px]" style="color: var(--fg-tertiary)">
+                    strokeWidth={2.25}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- After visual -->
+            <div
+              class="rounded-xl p-5"
+              style="background: var(--dominant); border: 1px solid var(--accent-soft)"
+            >
+              <div
+                class="mb-3 text-[10px] font-semibold uppercase tracking-[0.1em]"
+                style="color: var(--accent-dark)"
+              >
+                After
+              </div>
+              <div class="flex items-center gap-3">
+                <div
+                  class="flex h-9 w-9 items-center justify-center rounded-full"
+                  style="background: var(--card)"
+                >
+                  <svg
+                    class="stroke-demo"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    stroke-width="2.5"
+                  >
+                    <path d="M3 6h18M6 12h12M10 18h4" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="text-[14px] font-medium" style="color: var(--fg-heading)">
+                    Sort order
+                  </div>
+                  <div class="font-mono text-[11px]" style="color: var(--accent-dark)">
+                    strokeWidth={2.5}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <div class="diff-line diff-remove">
+              &lt;option.Icon color={style.icon} size={iconSizes.medium} strokeWidth={2.25} /&gt;
+            </div>
+            <div class="diff-line diff-add">
+              &lt;option.Icon color={style.icon} size={iconSizes.medium} strokeWidth={2.5} /&gt;
+            </div>
+          </div>
+        </div>
+
+        <!-- Fix 2: fontWeight tokens -->
+        <div class="surface mb-4 rounded-2xl p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <div>
+              <span class="chip chip-neutral font-mono" style="font-size: 11px">
+                CustomizeSection.tsx · TemplatePreviewModal.tsx
+              </span>
+              <h3 class="mt-2 text-[17px] font-semibold" style="color: var(--fg-heading)">
+                4 raw
+                <span class="code-inline">fontWeight: '600'</span>
+                lines → token
+              </h3>
+              <p class="mt-1 text-[14px]" style="color: var(--fg-secondary)">
+                Down from 229 raw occurrences to 8. Four of those live in a non-production example
+                file — these 4 are the actual prod lines.
+              </p>
+            </div>
+            <span class="tier-badge tier-1">~5 min</span>
+          </div>
+
+          <div
+            class="rounded-xl p-4"
+            style="background: var(--dominant); border: 1px solid var(--card-border)"
+          >
+            <div class="diff-line diff-context">// CustomizeSection.tsx:50, 66</div>
+            <div class="diff-line diff-remove">
+              style={{ ...typography.caption, fontWeight: '600', letterSpacing: 0.5, color:
+              themeColors.text.tertiary }}
+            </div>
+            <div class="diff-line diff-add">
+              style={{ ...typography.caption, fontWeight: fontWeights.semibold, letterSpacing: 0.5,
+              color: themeColors.text.tertiary }}
+            </div>
+            <div class="diff-line diff-context mt-2">// TemplatePreviewModal.tsx:191, 227</div>
+            <div class="diff-line diff-remove">fontWeight: '600',</div>
+            <div class="diff-line diff-add">fontWeight: fontWeights.semibold,</div>
+          </div>
+        </div>
+
+        <!-- Fix 3: MiniCalendarGrid hex -->
+        <div class="surface rounded-2xl p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <div>
+              <span class="chip chip-neutral font-mono" style="font-size: 11px">
+                CalendarTimeline/components/MiniCalendarGrid.helpers.ts
+              </span>
+              <h3 class="mt-2 text-[17px] font-semibold" style="color: var(--fg-heading)">
+                6 hardcoded hex → semantic tokens
+              </h3>
+              <p class="mt-1 text-[14px]" style="color: var(--fg-secondary)">
+                The only module still shipping raw Tailwind-style greens/ambers. Convert to the
+                semantic palette so the helpers work through themes.
+              </p>
+            </div>
+            <span class="tier-badge tier-1">~15 min</span>
+          </div>
+
+          <div class="grid grid-cols-6 gap-2">
+            <!-- Raw color swatches -->
+            <div class="col-span-3">
+              <div
+                class="mb-2 text-[10px] font-semibold uppercase tracking-[0.1em]"
+                style="color: var(--fg-tertiary)"
+              >
+                Before (raw hex)
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                  <div class="h-8 w-8 rounded-lg" style="background: #10b981"></div>
+                  <span class="font-mono text-[11px]" style="color: var(--fg-secondary)">
+                    #10b981
+                  </span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="h-8 w-8 rounded-lg" style="background: #f59e0b"></div>
+                  <span class="font-mono text-[11px]" style="color: var(--fg-secondary)">
+                    #f59e0b
+                  </span>
+                </div>
+              </div>
+            </div>
+            <!-- Token swatches -->
+            <div class="col-span-3">
+              <div
+                class="mb-2 text-[10px] font-semibold uppercase tracking-[0.1em]"
+                style="color: var(--accent-dark)"
+              >
+                After (tokens)
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center gap-3">
+                  <div class="h-8 w-8 rounded-lg" style="background: var(--accent)"></div>
+                  <span class="font-mono text-[11px]" style="color: var(--fg-secondary)">
+                    colors.success
+                  </span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <div class="h-8 w-8 rounded-lg" style="background: var(--streak)"></div>
+                  <span class="font-mono text-[11px]" style="color: var(--fg-secondary)">
+                    colors.streak[500]
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ Tier 2 sweeps ═══════════════ -->
+      <section class="mb-14">
+        <div class="mb-5">
+          <span class="tier-badge tier-2">Tier 2</span>
+          <h2
+            class="mt-3 font-serif text-[28px] tracking-[-0.01em]"
+            style="color: var(--fg-heading); font-weight: 700"
+          >
+            Token sweeps when you next touch these surfaces
+          </h2>
+          <p class="mt-1 text-[14px]" style="color: var(--fg-tertiary)">
+            Residual raw values concentrated in two recently-refactored areas.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <!-- CalendarTimeline -->
+          <div class="surface rounded-2xl p-6">
+            <div class="mb-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg"
+                  style="background: var(--accent-soft); color: var(--accent-dark)"
+                >
+                  <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                </div>
+                <h3 class="text-[15px] font-semibold" style="color: var(--fg-heading)">
+                  CalendarTimeline
+                </h3>
+              </div>
+              <span class="chip chip-warn">11 files</span>
+            </div>
+            <p class="mb-4 text-[13px] leading-relaxed" style="color: var(--fg-secondary)">
+              Recent strength-based chain refactor introduced raw typography. Largest cluster:
+              <span class="code-inline">DayCellRing.styles.ts</span>
+              at 10 occurrences.
+            </p>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">DayCellRing.styles.ts</span>
+                <span class="chip chip-neutral" style="font-size: 11px">10</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">WeekNavRow.tsx</span>
+                <span class="chip chip-neutral" style="font-size: 11px">6</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">ProgressText.tsx</span>
+                <span class="chip chip-neutral" style="font-size: 11px">4</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">InlineTrialBar.tsx</span>
+                <span class="chip chip-neutral" style="font-size: 11px">4</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- HabitCard -->
+          <div class="surface rounded-2xl p-6">
+            <div class="mb-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div
+                  class="flex h-8 w-8 items-center justify-center rounded-lg"
+                  style="background: var(--streak-soft); color: var(--warn)"
+                >
+                  <i data-lucide="flame" class="h-4 w-4"></i>
+                </div>
+                <h3 class="text-[15px] font-semibold" style="color: var(--fg-heading)">
+                  HabitCard
+                </h3>
+              </div>
+              <span class="chip chip-warn">5 files</span>
+            </div>
+            <p class="mb-4 text-[13px] leading-relaxed" style="color: var(--fg-secondary)">
+              Recent 3-line description + chain connector work left residual raw values across the
+              styles files.
+            </p>
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">streakStyles.ts</span>
+                <span class="chip chip-neutral" style="font-size: 11px">6</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">statusStyles.ts</span>
+                <span class="chip chip-neutral" style="font-size: 11px">5</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">HabitCard.styles.ts</span>
+                <span class="chip chip-neutral" style="font-size: 11px">3</span>
+              </div>
+              <div class="flex items-center justify-between text-[12px]">
+                <span class="font-mono" style="color: var(--fg-tertiary)">actionStyles.ts</span>
+                <span class="chip chip-neutral" style="font-size: 11px">1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Off-scale icon sizes -->
+        <div class="surface mt-4 rounded-2xl p-6">
+          <div class="mb-4 flex items-center justify-between">
+            <div>
+              <h3 class="text-[15px] font-semibold" style="color: var(--fg-heading)">
+                ~61 off-scale icon sizes
+              </h3>
+              <p class="mt-1 text-[13px]" style="color: var(--fg-secondary)">
+                Values between token stops. Either add new tokens or normalize to the nearest
+                defined size.
+              </p>
+            </div>
+            <span class="tier-badge tier-2">Codemod</span>
+          </div>
+
+          <div class="grid grid-cols-5 gap-3">
+            <div
+              class="rounded-lg p-3 text-center"
+              style="background: var(--dominant); border: 1px solid var(--card-border)"
+            >
+              <div class="font-mono text-[11px]" style="color: var(--fg-tertiary)">size={14}</div>
+              <div class="metric-value mt-1 text-[20px]" style="color: var(--fg-heading)">24×</div>
+              <div class="mt-1 text-[10px]" style="color: var(--fg-tertiary)">→ small (16)</div>
+            </div>
+            <div
+              class="rounded-lg p-3 text-center"
+              style="background: var(--dominant); border: 1px solid var(--card-border)"
+            >
+              <div class="font-mono text-[11px]" style="color: var(--fg-tertiary)">size={18}</div>
+              <div class="metric-value mt-1 text-[20px]" style="color: var(--fg-heading)">19×</div>
+              <div class="mt-1 text-[10px]" style="color: var(--fg-tertiary)">→ medium (20)</div>
+            </div>
+            <div
+              class="rounded-lg p-3 text-center"
+              style="background: var(--dominant); border: 1px solid var(--card-border)"
+            >
+              <div class="font-mono text-[11px]" style="color: var(--fg-tertiary)">size={12}</div>
+              <div class="metric-value mt-1 text-[20px]" style="color: var(--fg-heading)">13×</div>
+              <div class="mt-1 text-[10px]" style="color: var(--fg-tertiary)">→ micro (10)</div>
+            </div>
+            <div
+              class="rounded-lg p-3 text-center"
+              style="background: var(--dominant); border: 1px solid var(--card-border)"
+            >
+              <div class="font-mono text-[11px]" style="color: var(--fg-tertiary)">size={28}</div>
+              <div class="metric-value mt-1 text-[20px]" style="color: var(--fg-heading)">3×</div>
+              <div class="mt-1 text-[10px]" style="color: var(--fg-tertiary)">→ xl (32)</div>
+            </div>
+            <div
+              class="rounded-lg p-3 text-center"
+              style="background: var(--dominant); border: 1px solid var(--card-border)"
+            >
+              <div class="font-mono text-[11px]" style="color: var(--fg-tertiary)">size={22}</div>
+              <div class="metric-value mt-1 text-[20px]" style="color: var(--fg-heading)">2×</div>
+              <div class="mt-1 text-[10px]" style="color: var(--fg-tertiary)">→ medium (20)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ Tier 3 long tail ═══════════════ -->
+      <section class="mb-14">
+        <div class="mb-5">
+          <span class="tier-badge tier-3">Tier 3</span>
+          <h2
+            class="mt-3 font-serif text-[28px] tracking-[-0.01em]"
+            style="color: var(--fg-heading); font-weight: 700"
+          >
+            Long tail · codemod when there's appetite
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div class="surface rounded-2xl p-5">
+            <div class="mb-2 flex items-center gap-2">
+              <i data-lucide="layers" class="h-4 w-4" style="color: var(--fg-tertiary)"></i>
+              <h3 class="text-[14px] font-semibold" style="color: var(--fg-heading)">
+                Inline shadow props
+              </h3>
+            </div>
+            <div class="metric-value mt-2 text-[26px]" style="color: var(--fg-heading)">424</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              flat since last audit · prefer
+              <span class="code-inline">...shadows.card</span>
+            </div>
+          </div>
+
+          <div class="surface rounded-2xl p-5">
+            <div class="mb-2 flex items-center gap-2">
+              <i data-lucide="type" class="h-4 w-4" style="color: var(--fg-tertiary)"></i>
+              <h3 class="text-[14px] font-semibold" style="color: var(--fg-heading)">
+                Raw fontSize
+              </h3>
+            </div>
+            <div class="metric-value mt-2 text-[26px]" style="color: var(--fg-heading)">270</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              was 328 · CharacterCard is the largest single file (8×)
+            </div>
+          </div>
+
+          <div class="surface rounded-2xl p-5">
+            <div class="mb-2 flex items-center gap-2">
+              <i data-lucide="square-dashed" class="h-4 w-4" style="color: var(--fg-tertiary)"></i>
+              <h3 class="text-[14px] font-semibold" style="color: var(--fg-heading)">
+                Raw borderRadius
+              </h3>
+            </div>
+            <div class="metric-value mt-2 text-[26px]" style="color: var(--fg-heading)">192</div>
+            <div class="text-[12px]" style="color: var(--fg-tertiary)">
+              was ~180 · ratio with tokens steady
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════ Footer ═══════════════ -->
+      <footer
+        class="mt-20 border-t pt-8 text-[12px]"
+        style="border-color: var(--card-border); color: var(--fg-tertiary)"
+      >
+        Plan file:
+        <span class="code-inline">DESIGN_REVIEW_20260416.md</span>
+        · PRD:
+        <span class="code-inline">
+          MEMORY/WORK/20260416-124659_review-app-design-consistency/PRD.md
+        </span>
+      </footer>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

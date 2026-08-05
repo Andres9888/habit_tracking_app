@@ -1,0 +1,1347 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mass Delete – Edit Mode Mockup</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Inter', sans-serif !important;
+        background: #0a0a0a !important;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .phone-frame {
+        width: 390px;
+        height: 844px;
+        background: #111111;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        border: 3px solid #2a2a2a;
+        box-shadow:
+          0 0 60px rgba(0, 0, 0, 0.8),
+          0 0 0 1px rgba(255, 255, 255, 0.05);
+      }
+
+      .status-bar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 28px 8px;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .screen-content {
+        height: calc(100% - 54px);
+        overflow-y: auto;
+        padding-bottom: 100px;
+        scroll-behavior: smooth;
+      }
+      .screen-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Greeting Section */
+      .greeting-section {
+        padding: 16px 20px 12px;
+      }
+      .greeting-text {
+        font-size: 22px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+      .greeting-sub {
+        font-size: 13px;
+        color: #888;
+        margin-top: 2px;
+      }
+
+      /* Week Strip */
+      .week-strip {
+        display: flex;
+        gap: 4px;
+        padding: 8px 20px 16px;
+        justify-content: space-between;
+      }
+      .day-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+      }
+      .day-label {
+        font-size: 10px;
+        color: #666;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .day-num {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #aaa;
+      }
+      .day-num.today {
+        background: #fff;
+        color: #111;
+      }
+      .day-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: transparent;
+      }
+      .day-dot.completed {
+        background: #4ade80;
+      }
+      .day-dot.partial {
+        background: #fbbf24;
+      }
+
+      /* Habit Card */
+      .habit-card {
+        margin: 6px 16px;
+        background: #1a1a1a;
+        border-radius: 16px;
+        padding: 14px 16px;
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+        border: 1.5px solid transparent;
+      }
+      .habit-card:active {
+        transform: scale(0.98);
+      }
+      .habit-card.selected {
+        border-color: #ef4444;
+        background: #1f1215;
+      }
+
+      .card-top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .checkbox-area {
+        width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .checkbox-area.visible {
+        width: 28px;
+        opacity: 1;
+      }
+
+      .checkbox-circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid #444;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      }
+      .checkbox-circle.checked {
+        border-color: #ef4444;
+        background: #ef4444;
+      }
+      .checkbox-circle.checked::after {
+        content: '✓';
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .habit-emoji {
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .habit-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .habit-streak {
+        font-size: 12px;
+        color: #888;
+        margin-top: 1px;
+      }
+      .habit-streak span {
+        color: #fbbf24;
+      }
+
+      /* Chain Visualizer */
+      .chain-row {
+        display: flex;
+        gap: 3px;
+        margin-top: 10px;
+        padding-left: 0;
+      }
+      .chain-link {
+        width: 36px;
+        height: 6px;
+        border-radius: 3px;
+        background: #2a2a2a;
+      }
+      .chain-link.done {
+        background: #4ade80;
+      }
+      .chain-link.done-2 {
+        background: #22c55e;
+      }
+      .chain-link.missed {
+        background: #ef4444;
+        opacity: 0.5;
+      }
+      .chain-link.today {
+        background: #333;
+        border: 1px dashed #555;
+      }
+
+      /* Strength Bar */
+      .strength-bar {
+        height: 3px;
+        background: #222;
+        border-radius: 2px;
+        margin-top: 10px;
+        overflow: hidden;
+      }
+      .strength-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.5s ease;
+      }
+
+      /* Bottom Action Bar - Normal */
+      .bottom-bar {
+        position: absolute;
+        bottom: 28px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 0;
+        background: rgba(30, 30, 30, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 28px;
+        padding: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10;
+      }
+
+      .bar-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: transparent;
+        border: none;
+      }
+      .bar-btn:hover {
+        color: #fff;
+      }
+
+      .fab-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #111;
+        cursor: pointer;
+        margin: 0 4px;
+        transition: all 0.2s ease;
+        border: none;
+      }
+      .fab-btn:hover {
+        transform: scale(1.05);
+      }
+
+      /* Edit Mode Bottom Bar */
+      .edit-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(20, 20, 20, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 12px 20px 36px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 10;
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .edit-bar.visible {
+        transform: translateY(0);
+      }
+
+      .edit-bar-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .selected-count {
+        font-size: 14px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .select-all-btn {
+        font-size: 13px;
+        color: #60a5fa;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+        font-weight: 500;
+      }
+
+      .edit-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .edit-action-btn {
+        flex: 1;
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+      }
+      .edit-action-btn.archive-btn {
+        background: #1e293b;
+        color: #94a3b8;
+      }
+      .edit-action-btn.delete-btn {
+        background: #2a1215;
+        color: #ef4444;
+      }
+      .edit-action-btn.delete-btn.active {
+        background: #ef4444;
+        color: #fff;
+      }
+      .edit-action-btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* Edit Mode Header */
+      .edit-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 20px 12px;
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        transition: all 0.3s ease;
+      }
+      .edit-header.visible {
+        opacity: 1;
+        height: auto;
+      }
+      .edit-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .done-btn {
+        font-size: 15px;
+        font-weight: 600;
+        color: #60a5fa;
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+      }
+
+      /* Shake Animation */
+      @keyframes gentle-shake {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(-0.5deg);
+        }
+        75% {
+          transform: rotate(0.5deg);
+        }
+      }
+      .edit-mode .habit-card {
+        animation: gentle-shake 0.4s ease-in-out;
+      }
+
+      /* Entry Point Label */
+      .entry-label {
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      /* Long-press indicator */
+      .long-press-hint {
+        text-align: center;
+        font-size: 11px;
+        color: #555;
+        padding: 16px 20px 8px;
+        transition: all 0.3s ease;
+      }
+
+      /* Confirmation dialog */
+      .confirm-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .confirm-overlay.visible {
+        opacity: 1;
+        pointer-events: all;
+      }
+      .confirm-dialog {
+        background: #1c1c1e;
+        border-radius: 14px;
+        width: 280px;
+        overflow: hidden;
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .confirm-overlay.visible .confirm-dialog {
+        transform: scale(1);
+      }
+      .confirm-body {
+        padding: 20px;
+        text-align: center;
+      }
+      .confirm-body h3 {
+        color: #fff;
+        font-size: 17px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .confirm-body p {
+        color: #999;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .confirm-actions {
+        border-top: 1px solid #333;
+      }
+      .confirm-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 17px;
+        font-family: inherit;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+      }
+      .confirm-btn.cancel {
+        color: #60a5fa;
+        font-weight: 400;
+        border-bottom: 1px solid #333;
+      }
+      .confirm-btn.destructive {
+        color: #ef4444;
+        font-weight: 600;
+      }
+
+      /* State label */
+      .state-label {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #222;
+        border: 1px solid #333;
+        border-radius: 12px;
+        padding: 16px 20px;
+        color: #fff;
+        max-width: 260px;
+        z-index: 100;
+      }
+      .state-label h4 {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #60a5fa;
+      }
+      .state-label p {
+        font-size: 12px;
+        color: #999;
+        line-height: 1.5;
+      }
+      .state-label .step {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .state-label .step-num {
+        background: #333;
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .state-label .step-text {
+        font-size: 12px;
+        color: #ccc;
+        line-height: 1.4;
+      }
+      .state-label .step-text em {
+        color: #fbbf24;
+        font-style: normal;
+      }
+
+      @media (max-width: 780px) {
+        .state-label {
+          display: none;
+        }
+        body {
+          padding: 0;
+        }
+        .phone-frame {
+          border-radius: 0;
+          border: none;
+          width: 100%;
+          height: 100vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Instructions Panel -->
+    <div class="state-label">
+      <h4>Interactive Mockup</h4>
+      <p>Mass Delete via Edit Mode</p>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          Tap <em>Settings gear</em> → <em>Edit Habits</em> to enter edit mode
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Tap habit cards to <em>select/deselect</em></div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          Use bottom bar for <em>Archive</em> or <em>Delete</em>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">Tap <em>Done</em> to exit edit mode</div>
+      </div>
+    </div>
+
+    <!-- Phone Frame -->
+    <div class="phone-frame" id="phone">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <span style="display: flex; gap: 4px; align-items: center">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="white">
+            <rect x="0" y="4" width="3" height="8" rx="1" />
+            <rect x="4.5" y="2" width="3" height="10" rx="1" />
+            <rect x="9" y="0" width="3" height="12" rx="1" />
+            <rect x="13.5" y="3" width="2" height="9" rx="1" opacity="0.3" />
+          </svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+            <rect
+              x="0.5"
+              y="0.5"
+              width="22"
+              height="11"
+              rx="2"
+              stroke="white"
+              stroke-opacity="0.35"
+            />
+            <rect
+              x="23.5"
+              y="3.5"
+              width="1.5"
+              height="5"
+              rx="0.75"
+              fill="white"
+              fill-opacity="0.4"
+            />
+            <rect x="2" y="2" width="16" height="8" rx="1" fill="white" />
+          </svg>
+        </span>
+      </div>
+
+      <!-- Screen Content -->
+      <div class="screen-content" id="screen">
+        <!-- Edit Mode Header (hidden by default) -->
+        <div class="edit-header" id="editHeader">
+          <span class="edit-title">Select Habits</span>
+          <button class="done-btn" onclick="toggleEditMode()">Done</button>
+        </div>
+
+        <!-- Greeting -->
+        <div class="greeting-section" id="greetingSection">
+          <div class="greeting-text">Good evening ✨</div>
+          <div class="greeting-sub">4 of 6 completed today</div>
+        </div>
+
+        <!-- Week Strip -->
+        <div class="week-strip">
+          <div class="day-col">
+            <span class="day-label">Mon</span>
+            <span class="day-num">24</span>
+            <span class="day-dot completed"></span>
+          </div>
+          <div class="day-col">
+            <span class="day-label">Tue</span>
+            <span class="day-num">25</span>
+            <span class="day-dot completed"></span>
+          </div>
+          <div class="day-col">
+            <span class="day-label">Wed</span>
+            <span class="day-num">26</span>
+            <span class="day-dot partial"></span>
+          </div>
+          <div class="day-col">
+            <span class="day-label">Thu</span>
+            <span class="day-num">27</span>
+            <span class="day-dot completed"></span>
+          </div>
+          <div class="day-col">
+            <span class="day-label">Fri</span>
+            <span class="day-num">28</span>
+            <span class="day-dot completed"></span>
+          </div>
+          <div class="day-col">
+            <span class="day-label">Sat</span>
+            <span class="day-num">1</span>
+            <span class="day-dot partial"></span>
+          </div>
+          <div class="day-col">
+            <span class="day-label">Sun</span>
+            <span class="day-num today">2</span>
+            <span class="day-dot"></span>
+          </div>
+        </div>
+
+        <!-- Habit Cards -->
+        <div id="habitsList">
+          <!-- Card 1 -->
+          <div class="habit-card" data-id="1" onclick="toggleSelect(this)">
+            <div class="card-top">
+              <div class="checkbox-area" data-checkbox>
+                <div class="checkbox-circle"></div>
+              </div>
+              <span class="habit-emoji">🧘</span>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">🔥 <span>14 day streak</span></div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chain-link done"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link today"></div>
+            </div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                style="
+                  width: 85%;
+                  background: linear-gradient(90deg, #4ade80, #22c55e);
+                "
+              ></div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="habit-card" data-id="2" onclick="toggleSelect(this)">
+            <div class="card-top">
+              <div class="checkbox-area" data-checkbox>
+                <div class="checkbox-circle"></div>
+              </div>
+              <span class="habit-emoji">📖</span>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">🔥 <span>7 day streak</span></div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chain-link done"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link today"></div>
+            </div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                style="
+                  width: 62%;
+                  background: linear-gradient(90deg, #60a5fa, #3b82f6);
+                "
+              ></div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="habit-card" data-id="3" onclick="toggleSelect(this)">
+            <div class="card-top">
+              <div class="checkbox-area" data-checkbox>
+                <div class="checkbox-circle"></div>
+              </div>
+              <span class="habit-emoji">💪</span>
+              <div class="habit-info">
+                <div class="habit-name">Workout</div>
+                <div class="habit-streak">🔥 <span>3 day streak</span></div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chain-link done"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link today"></div>
+            </div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                style="
+                  width: 45%;
+                  background: linear-gradient(90deg, #f97316, #ef4444);
+                "
+              ></div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="habit-card" data-id="4" onclick="toggleSelect(this)">
+            <div class="card-top">
+              <div class="checkbox-area" data-checkbox>
+                <div class="checkbox-circle"></div>
+              </div>
+              <span class="habit-emoji">💧</span>
+              <div class="habit-info">
+                <div class="habit-name">Drink 8 Glasses Water</div>
+                <div class="habit-streak">🔥 <span>21 day streak</span></div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chain-link done-2"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link today"></div>
+            </div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                style="
+                  width: 92%;
+                  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+                "
+              ></div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="habit-card" data-id="5" onclick="toggleSelect(this)">
+            <div class="card-top">
+              <div class="checkbox-area" data-checkbox>
+                <div class="checkbox-circle"></div>
+              </div>
+              <span class="habit-emoji">🎸</span>
+              <div class="habit-info">
+                <div class="habit-name">Practice Guitar</div>
+                <div class="habit-streak" style="color: #555">
+                  No active streak
+                </div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chain-link missed"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link today"></div>
+            </div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                style="
+                  width: 12%;
+                  background: linear-gradient(90deg, #a855f7, #7c3aed);
+                "
+              ></div>
+            </div>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="habit-card" data-id="6" onclick="toggleSelect(this)">
+            <div class="card-top">
+              <div class="checkbox-area" data-checkbox>
+                <div class="checkbox-circle"></div>
+              </div>
+              <span class="habit-emoji">📝</span>
+              <div class="habit-info">
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">🔥 <span>5 day streak</span></div>
+              </div>
+            </div>
+            <div class="chain-row">
+              <div class="chain-link done"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link missed"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done"></div>
+              <div class="chain-link done-2"></div>
+              <div class="chain-link today"></div>
+            </div>
+            <div class="strength-bar">
+              <div
+                class="strength-fill"
+                style="
+                  width: 55%;
+                  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+                "
+              ></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="long-press-hint" id="editHint">
+          Swipe left on a habit to archive
+        </div>
+      </div>
+
+      <!-- Normal Bottom Bar -->
+      <div class="bottom-bar" id="normalBar">
+        <button
+          class="bar-btn"
+          onclick="showSettingsMenu()"
+          id="settingsBtn"
+          title="Settings"
+        >
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+            />
+          </svg>
+        </button>
+        <button class="fab-btn" title="Add Habit">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+        </button>
+        <button class="bar-btn" title="Templates">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M12 3l1.9 5.8h6.1l-4.9 3.6 1.9 5.8L12 14.6l-4.9 3.6 1.9-5.8L4 8.8h6.1z"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Settings Quick Menu -->
+      <div
+        id="settingsMenu"
+        style="
+          position: absolute;
+          bottom: 90px;
+          left: 20px;
+          background: #1c1c1e;
+          border-radius: 14px;
+          padding: 4px 0;
+          min-width: 180px;
+          z-index: 15;
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(8px) scale(0.95);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 1px solid #333;
+        "
+      >
+        <div
+          style="
+            padding: 10px 16px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          "
+          onmouseover="this.style.background = '#2a2a2a'"
+          onmouseout="this.style.background = 'transparent'"
+          onclick="closeSettingsMenu()"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#999"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+            />
+          </svg>
+          Settings
+        </div>
+        <div style="height: 1px; background: #333; margin: 0 8px"></div>
+        <div
+          style="
+            padding: 10px 16px;
+            color: #ef4444;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+          "
+          onmouseover="this.style.background = '#2a2a2a'"
+          onmouseout="this.style.background = 'transparent'"
+          onclick="enterEditFromMenu()"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ef4444"
+            stroke-width="2"
+            stroke-linecap="round"
+          >
+            <path
+              d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+            />
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+          </svg>
+          Edit Habits
+        </div>
+      </div>
+
+      <!-- Edit Mode Bottom Bar -->
+      <div class="edit-bar" id="editBar">
+        <div class="edit-bar-top">
+          <span class="selected-count" id="selectedCount">0 selected</span>
+          <button
+            class="select-all-btn"
+            id="selectAllBtn"
+            onclick="toggleSelectAll()"
+          >
+            Select All
+          </button>
+        </div>
+        <div class="edit-actions">
+          <button
+            class="edit-action-btn archive-btn"
+            id="archiveBtn"
+            disabled
+            onclick="handleArchive()"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <rect x="2" y="3" width="20" height="5" rx="1" />
+              <path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" />
+              <path d="M10 12h4" />
+            </svg>
+            Archive
+          </button>
+          <button
+            class="edit-action-btn delete-btn"
+            id="deleteBtn"
+            disabled
+            onclick="handleDelete()"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <polyline points="3 6 5 6 21 6" />
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirmation Dialog -->
+      <div class="confirm-overlay" id="confirmOverlay" onclick="closeConfirm()">
+        <div class="confirm-dialog" onclick="event.stopPropagation()">
+          <div class="confirm-body">
+            <h3 id="confirmTitle">Delete 3 Habits?</h3>
+            <p id="confirmDesc">
+              This will permanently delete the selected habits and all their
+              tracking data. This cannot be undone.
+            </p>
+          </div>
+          <div class="confirm-actions">
+            <button class="confirm-btn cancel" onclick="closeConfirm()">
+              Cancel
+            </button>
+            <button
+              class="confirm-btn destructive"
+              id="confirmAction"
+              onclick="confirmDelete()"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let editMode = false;
+      let selectedIds = new Set();
+      let menuOpen = false;
+
+      function showSettingsMenu() {
+        const menu = document.getElementById('settingsMenu');
+        if (menuOpen) {
+          closeSettingsMenu();
+          return;
+        }
+        menu.style.opacity = '1';
+        menu.style.pointerEvents = 'all';
+        menu.style.transform = 'translateY(0) scale(1)';
+        menuOpen = true;
+
+        // Close on outside click
+        setTimeout(() => {
+          document.addEventListener('click', outsideMenuClick);
+        }, 10);
+      }
+
+      function closeSettingsMenu() {
+        const menu = document.getElementById('settingsMenu');
+        menu.style.opacity = '0';
+        menu.style.pointerEvents = 'none';
+        menu.style.transform = 'translateY(8px) scale(0.95)';
+        menuOpen = false;
+        document.removeEventListener('click', outsideMenuClick);
+      }
+
+      function outsideMenuClick(e) {
+        if (
+          !document.getElementById('settingsMenu').contains(e.target) &&
+          e.target !== document.getElementById('settingsBtn')
+        ) {
+          closeSettingsMenu();
+        }
+      }
+
+      function enterEditFromMenu() {
+        closeSettingsMenu();
+        toggleEditMode();
+      }
+
+      function toggleEditMode() {
+        editMode = !editMode;
+        const phone = document.getElementById('phone');
+        const normalBar = document.getElementById('normalBar');
+        const editBar = document.getElementById('editBar');
+        const editHeader = document.getElementById('editHeader');
+        const greetingSection = document.getElementById('greetingSection');
+        const editHint = document.getElementById('editHint');
+        const checkboxes = document.querySelectorAll('[data-checkbox]');
+
+        if (editMode) {
+          phone.classList.add('edit-mode');
+          normalBar.style.transform = 'translateX(-50%) translateY(100px)';
+          normalBar.style.opacity = '0';
+          editBar.classList.add('visible');
+          editHeader.classList.add('visible');
+          greetingSection.style.display = 'none';
+          editHint.textContent = 'Tap habits to select, then choose an action';
+          editHint.style.color = '#666';
+
+          checkboxes.forEach((cb) => cb.classList.add('visible'));
+        } else {
+          phone.classList.remove('edit-mode');
+          normalBar.style.transform = 'translateX(-50%) translateY(0)';
+          normalBar.style.opacity = '1';
+          editBar.classList.remove('visible');
+          editHeader.classList.remove('visible');
+          greetingSection.style.display = '';
+          editHint.textContent = 'Swipe left on a habit to archive';
+          editHint.style.color = '#555';
+
+          checkboxes.forEach((cb) => cb.classList.remove('visible'));
+
+          // Clear selections
+          selectedIds.clear();
+          document.querySelectorAll('.habit-card').forEach((card) => {
+            card.classList.remove('selected');
+            card.querySelector('.checkbox-circle').classList.remove('checked');
+          });
+          updateCount();
+        }
+      }
+
+      function toggleSelect(card) {
+        if (!editMode) return;
+
+        const id = card.dataset.id;
+        const checkbox = card.querySelector('.checkbox-circle');
+
+        if (selectedIds.has(id)) {
+          selectedIds.delete(id);
+          card.classList.remove('selected');
+          checkbox.classList.remove('checked');
+        } else {
+          selectedIds.add(id);
+          card.classList.add('selected');
+          checkbox.classList.add('checked');
+        }
+
+        updateCount();
+      }
+
+      function updateCount() {
+        const count = selectedIds.size;
+        document.getElementById('selectedCount').textContent =
+          `${count} selected`;
+        document.getElementById('archiveBtn').disabled = count === 0;
+        document.getElementById('deleteBtn').disabled = count === 0;
+
+        const deleteBtn = document.getElementById('deleteBtn');
+        if (count > 0) {
+          deleteBtn.classList.add('active');
+        } else {
+          deleteBtn.classList.remove('active');
+        }
+
+        // Update select all button text
+        const totalCards = document.querySelectorAll('.habit-card').length;
+        document.getElementById('selectAllBtn').textContent =
+          count === totalCards ? 'Deselect All' : 'Select All';
+      }
+
+      function toggleSelectAll() {
+        const cards = document.querySelectorAll('.habit-card');
+        const totalCards = cards.length;
+
+        if (selectedIds.size === totalCards) {
+          // Deselect all
+          selectedIds.clear();
+          cards.forEach((card) => {
+            card.classList.remove('selected');
+            card.querySelector('.checkbox-circle').classList.remove('checked');
+          });
+        } else {
+          // Select all
+          cards.forEach((card) => {
+            const id = card.dataset.id;
+            selectedIds.add(id);
+            card.classList.add('selected');
+            card.querySelector('.checkbox-circle').classList.add('checked');
+          });
+        }
+
+        updateCount();
+      }
+
+      function handleDelete() {
+        if (selectedIds.size === 0) return;
+        const count = selectedIds.size;
+        document.getElementById('confirmTitle').textContent =
+          `Delete ${count} Habit${count > 1 ? 's' : ''}?`;
+        document.getElementById('confirmDesc').textContent =
+          `This will permanently delete ${count === 1 ? 'this habit' : 'these habits'} and all tracking data. This cannot be undone.`;
+        document.getElementById('confirmAction').textContent =
+          `Delete ${count} Habit${count > 1 ? 's' : ''}`;
+        document.getElementById('confirmOverlay').classList.add('visible');
+      }
+
+      function handleArchive() {
+        if (selectedIds.size === 0) return;
+        const count = selectedIds.size;
+        document.getElementById('confirmTitle').textContent =
+          `Archive ${count} Habit${count > 1 ? 's' : ''}?`;
+        document.getElementById('confirmDesc').textContent =
+          `${count === 1 ? 'This habit' : 'These habits'} will be moved to the archive. You can restore ${count === 1 ? 'it' : 'them'} anytime.`;
+        document.getElementById('confirmAction').textContent = `Archive`;
+        document.getElementById('confirmAction').style.color = '#60a5fa';
+        document.getElementById('confirmOverlay').classList.add('visible');
+      }
+
+      function closeConfirm() {
+        document.getElementById('confirmOverlay').classList.remove('visible');
+        document.getElementById('confirmAction').style.color = '';
+      }
+
+      function confirmDelete() {
+        // Animate removal
+        selectedIds.forEach((id) => {
+          const card = document.querySelector(`[data-id="${id}"]`);
+          if (card) {
+            card.style.transform = 'translateX(-100%) scale(0.8)';
+            card.style.opacity = '0';
+            card.style.maxHeight = card.offsetHeight + 'px';
+            setTimeout(() => {
+              card.style.maxHeight = '0';
+              card.style.margin = '0';
+              card.style.padding = '0';
+            }, 200);
+            setTimeout(() => card.remove(), 400);
+          }
+        });
+
+        selectedIds.clear();
+        updateCount();
+        closeConfirm();
+
+        // Exit edit mode after short delay
+        setTimeout(() => {
+          if (document.querySelectorAll('.habit-card').length === 0) {
+            toggleEditMode();
+          }
+        }, 500);
+      }
+    </script>
+  </body>
+</html>

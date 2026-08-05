@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Goals — Variations E–H</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important;
+    color: #FAF8F5 !important;
+    padding: 48px 24px !important;
+    min-height: 100vh !important;
+  }
+  h1,h2,h3,.serif { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone {
+    width: 375px !important; height: 720px !important;
+    background: #F5F1ED !important; border-radius: 40px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    overflow-y: auto !important; padding: 56px 20px 24px !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+  .app-card {
+    background: #EDEAE5 !important; border: 1px solid #DDD8D2 !important;
+    border-radius: 16px !important;
+  }
+  .section-label {
+    font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.06em !important;
+    text-transform: uppercase !important; color: #C4BFB7 !important; margin-bottom: 12px !important;
+  }
+  .habit-header {
+    display: flex !important; align-items: center !important; gap: 12px !important; margin-bottom: 20px !important;
+  }
+  .habit-emoji {
+    width: 44px !important; height: 44px !important; background: #EDEAE5 !important;
+    border: 1px solid #DDD8D2 !important; border-radius: 12px !important;
+    display: flex !important; align-items: center !important; justify-content: center !important; font-size: 22px !important;
+  }
+  .habit-name { font-family: 'Literata', serif !important; font-size: 20px !important; font-weight: 700 !important; color: #2D2A26 !important; }
+  .habit-streak { font-size: 13px !important; color: #8B6208 !important; font-weight: 600 !important; }
+
+  .variation-wrapper { display: flex !important; flex-direction: column !important; align-items: center !important; }
+  .variation-number { font-size: 13px !important; font-weight: 600 !important; color: #6B6560 !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; }
+  .variation-title { font-family: 'Literata', serif !important; font-size: 24px !important; font-weight: 700 !important; color: #FAF8F5 !important; margin-top: 4px !important; }
+  .variation-principle { font-size: 14px !important; color: #C4BFB7 !important; margin-top: 6px !important; font-style: italic !important; }
+  .variation-note { font-size: 13px !important; color: #6B6560 !important; margin-top: 12px !important; max-width: 340px !important; line-height: 1.5 !important; text-align: center !important; }
+  .variation-label { text-align: center !important; margin-bottom: 16px !important; }
+
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes progressFill { from { width: 0%; } }
+  @keyframes pulseGlow { 0%,100% { box-shadow: 0 0 0 0 rgba(139,98,8,0); } 50% { box-shadow: 0 0 12px 2px rgba(139,98,8,0.15); } }
+  @keyframes moonFill { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 65% 0 0); } }
+  @keyframes gentlePulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+  @keyframes growUp { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  @keyframes flicker { 0%,100% { opacity: 1; transform: scaleY(1); } 25% { opacity: 0.9; transform: scaleY(1.02) scaleX(0.98); } 50% { opacity: 1; transform: scaleY(0.98) scaleX(1.01); } 75% { opacity: 0.95; transform: scaleY(1.01) scaleX(0.99); } }
+  @keyframes weaveIn { from { opacity: 0; width: 0; } to { opacity: 1; } }
+  .fade-up { animation: fadeSlideUp 0.5s ease-out both; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.3s; }
+  .fade-up-4 { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align: center; margin-bottom: 56px;">
+  <p style="font-size: 13px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Chain Day</p>
+  <h1 style="font-family: 'Literata', serif; font-size: 36px; font-weight: 700; color: #FAF8F5; margin-top: 8px;">Streak Goal — Set 2</h1>
+  <p style="font-size: 17px; color: #C4BFB7; margin-top: 8px;">4 more directions &middot; Day 23 of 66</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 64px; max-width: 1600px; margin: 0 auto;">
+
+<!-- ============================================ -->
+<!-- VARIATION E: Moonphase                       -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation E</div>
+    <div class="variation-title">Moonphase</div>
+    <div class="variation-principle">Natural Rhythm + Cyclical Progress</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Moon Card -->
+      <div class="app-card fade-up fade-up-1" style="padding: 28px 24px; margin-bottom: 16px; text-align: center;">
+        <div class="section-label" style="text-align: left;">Streak Goal</div>
+
+        <!-- Moon visualization -->
+        <div style="position: relative; width: 160px; height: 160px; margin: 8px auto 20px;">
+          <!-- Outer glow -->
+          <div style="position: absolute; inset: -8px; border-radius: 50%; background: radial-gradient(circle, rgba(232,185,77,0.08) 0%, transparent 70%);"></div>
+
+          <!-- Moon track (full circle, dim) -->
+          <svg width="160" height="160" viewBox="0 0 160 160" style="position: absolute; inset: 0;">
+            <circle cx="80" cy="80" r="68" fill="#EDEAE5" stroke="#DDD8D2" stroke-width="1"/>
+
+            <!-- Phase fill using clip-path (35% = waxing crescent to first quarter) -->
+            <!-- We simulate moon illumination: right side lit -->
+            <defs>
+              <clipPath id="moonClip">
+                <!-- Illuminate ~35% of the moon from right side -->
+                <rect x="44" y="0" width="120" height="160"/>
+              </clipPath>
+              <radialGradient id="moonGlow" cx="65%" cy="45%">
+                <stop offset="0%" stop-color="#FEF3CD"/>
+                <stop offset="60%" stop-color="#E8B94D"/>
+                <stop offset="100%" stop-color="#8B6208"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Illuminated portion -->
+            <circle cx="80" cy="80" r="67" fill="url(#moonGlow)" clip-path="url(#moonClip)" opacity="0.85"/>
+
+            <!-- Surface texture dots -->
+            <circle cx="95" cy="65" r="6" fill="#8B6208" opacity="0.08"/>
+            <circle cx="110" cy="85" r="4" fill="#8B6208" opacity="0.06"/>
+            <circle cx="88" cy="100" r="8" fill="#8B6208" opacity="0.05"/>
+            <circle cx="105" cy="55" r="3" fill="#8B6208" opacity="0.07"/>
+
+            <!-- Terminator line (shadow boundary) — soft edge -->
+            <ellipse cx="80" cy="80" rx="18" ry="68" fill="#EDEAE5" opacity="0.4"/>
+          </svg>
+
+          <!-- Center label -->
+          <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2;">
+            <span style="font-family: 'Literata', serif; font-size: 36px; font-weight: 700; color: #2D2A26; text-shadow: 0 1px 4px rgba(255,255,255,0.5);">35%</span>
+            <span style="font-size: 11px; color: #6B6560; font-weight: 500; margin-top: 2px;">illuminated</span>
+          </div>
+        </div>
+
+        <!-- Phase description -->
+        <div style="background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 12px; padding: 12px 16px; margin-bottom: 16px;">
+          <div style="font-size: 15px; font-weight: 600; color: #2D2A26;">🌓 First Quarter</div>
+          <div style="font-size: 12px; color: #6B6560; margin-top: 4px;">Day 23 — waxing toward full moon at Day 66</div>
+        </div>
+
+        <!-- Phase timeline -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 8px;">
+          <div style="text-align: center;">
+            <span style="font-size: 18px;">🌑</span>
+            <div style="font-size: 9px; color: #C4BFB7; margin-top: 2px;">Day 1</div>
+          </div>
+          <div style="text-align: center;">
+            <span style="font-size: 18px;">🌒</span>
+            <div style="font-size: 9px; color: #059669; margin-top: 2px;">7d ✓</div>
+          </div>
+          <div style="text-align: center;">
+            <span style="font-size: 18px;">🌓</span>
+            <div style="font-size: 9px; color: #8B6208; font-weight: 600; margin-top: 2px;">Now</div>
+          </div>
+          <div style="text-align: center; opacity: 0.4;">
+            <span style="font-size: 18px;">🌔</span>
+            <div style="font-size: 9px; color: #6B6560; margin-top: 2px;">44d</div>
+          </div>
+          <div style="text-align: center; opacity: 0.3;">
+            <span style="font-size: 18px;">🌕</span>
+            <div style="font-size: 9px; color: #8B6208; margin-top: 2px;">66d</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="fade-up fade-up-2" style="display: flex; gap: 10px; margin-bottom: 16px;">
+        <div class="app-card" style="flex: 1; padding: 14px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 24px; font-weight: 700; color: #2D2A26;">43</div>
+          <div style="font-size: 11px; color: #6B6560;">to full moon</div>
+        </div>
+        <div class="app-card" style="flex: 1; padding: 14px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 24px; font-weight: 700; color: #8B6208;">7</div>
+          <div style="font-size: 11px; color: #6B6560;">to next phase</div>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-3" style="text-align: center; padding: 16px;">
+        <p style="font-size: 14px; color: #6B6560; font-style: italic; font-family: 'Literata', serif;">"The moon doesn't rush to fullness. Neither should you."</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Progress as lunar illumination. Poetic, patient, nature-aligned. The moon phase emoji timeline makes progress feel organic rather than mechanical.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION F: Growth Rings                    -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation F</div>
+    <div class="variation-title">Growth Rings</div>
+    <div class="variation-principle">Accumulation + Organic Identity</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Tree Ring Card -->
+      <div class="app-card fade-up fade-up-1" style="padding: 28px 24px; margin-bottom: 16px; text-align: center;">
+        <div class="section-label" style="text-align: left;">Streak Goal</div>
+
+        <!-- Concentric rings visualization -->
+        <div style="position: relative; width: 200px; height: 200px; margin: 8px auto 20px;">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <defs>
+              <radialGradient id="woodCenter" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="#8B6208"/>
+                <stop offset="100%" stop-color="#6B6560"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Future rings (66 total, showing outer rings as guides) -->
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#E7E5E4" stroke-width="1" stroke-dasharray="3 3"/>
+            <circle cx="100" cy="100" r="86" fill="none" stroke="#E7E5E4" stroke-width="0.5" opacity="0.4"/>
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#E7E5E4" stroke-width="0.5" opacity="0.4"/>
+            <circle cx="100" cy="100" r="74" fill="none" stroke="#E7E5E4" stroke-width="0.5" opacity="0.4"/>
+
+            <!-- Goal ring (66d) - dashed gold -->
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#E8B94D" stroke-width="1.5" stroke-dasharray="4 6" opacity="0.4"/>
+
+            <!-- Milestone ring: 60d -->
+            <circle cx="100" cy="100" r="83" fill="none" stroke="#DDD8D2" stroke-width="0.5" opacity="0.3"/>
+
+            <!-- Milestone ring: 30d -->
+            <circle cx="100" cy="100" r="54" fill="none" stroke="#E8B94D" stroke-width="1" stroke-dasharray="2 4" opacity="0.35"/>
+
+            <!-- Grown rings (23 days — each ring ~1.4px radius step from center) -->
+            <!-- Rings 1-7 (week 1) — tight, dark -->
+            <circle cx="100" cy="100" r="8" fill="#8B6208" opacity="0.7"/>
+            <circle cx="100" cy="100" r="10" fill="none" stroke="#8B6208" stroke-width="1.2" opacity="0.65"/>
+            <circle cx="100" cy="100" r="12.5" fill="none" stroke="#8B6208" stroke-width="1" opacity="0.6"/>
+            <circle cx="100" cy="100" r="15" fill="none" stroke="#8B6208" stroke-width="1" opacity="0.55"/>
+            <circle cx="100" cy="100" r="17.5" fill="none" stroke="#7D5907" stroke-width="1" opacity="0.5"/>
+            <circle cx="100" cy="100" r="20" fill="none" stroke="#7D5907" stroke-width="0.8" opacity="0.5"/>
+            <circle cx="100" cy="100" r="22" fill="none" stroke="#059669" stroke-width="1.2" opacity="0.6"/>
+
+            <!-- Rings 8-14 (week 2) — growing, greener -->
+            <circle cx="100" cy="100" r="24.5" fill="none" stroke="#059669" stroke-width="1" opacity="0.5"/>
+            <circle cx="100" cy="100" r="27" fill="none" stroke="#059669" stroke-width="1" opacity="0.5"/>
+            <circle cx="100" cy="100" r="29.5" fill="none" stroke="#059669" stroke-width="0.8" opacity="0.45"/>
+            <circle cx="100" cy="100" r="32" fill="none" stroke="#059669" stroke-width="0.8" opacity="0.45"/>
+            <circle cx="100" cy="100" r="34.5" fill="none" stroke="#10B981" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="100" cy="100" r="37" fill="none" stroke="#10B981" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="100" cy="100" r="39" fill="none" stroke="#059669" stroke-width="1.2" opacity="0.55"/>
+
+            <!-- Rings 15-21 (week 3) -->
+            <circle cx="100" cy="100" r="41.5" fill="none" stroke="#10B981" stroke-width="0.8" opacity="0.4"/>
+            <circle cx="100" cy="100" r="44" fill="none" stroke="#10B981" stroke-width="0.8" opacity="0.38"/>
+            <circle cx="100" cy="100" r="46.5" fill="none" stroke="#10B981" stroke-width="0.8" opacity="0.38"/>
+            <circle cx="100" cy="100" r="49" fill="none" stroke="#059669" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="100" cy="100" r="51.5" fill="none" stroke="#059669" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="100" cy="100" r="54" fill="none" stroke="#059669" stroke-width="0.8" opacity="0.35"/>
+            <circle cx="100" cy="100" r="56" fill="none" stroke="#059669" stroke-width="1.2" opacity="0.5"/>
+
+            <!-- Rings 22-23 (current) -->
+            <circle cx="100" cy="100" r="58.5" fill="none" stroke="#10B981" stroke-width="0.8" opacity="0.35"/>
+            <!-- Today's ring — thicker, gold accent -->
+            <circle cx="100" cy="100" r="61" fill="none" stroke="#8B6208" stroke-width="2" opacity="0.7" style="animation: gentlePulse 2.5s ease-in-out infinite;"/>
+
+            <!-- Center heartwood dot -->
+            <circle cx="100" cy="100" r="4" fill="#6B6560"/>
+
+            <!-- Milestone marker: 7d ring -->
+            <text x="100" y="74" text-anchor="middle" font-size="8" fill="#059669" font-weight="600" font-family="DM Sans" opacity="0.7">7d</text>
+            <!-- Milestone marker: 14d ring -->
+            <text x="100" y="61" text-anchor="middle" font-size="8" fill="#059669" font-weight="600" font-family="DM Sans" opacity="0.6">14d</text>
+            <!-- Milestone marker: 21d ring -->
+            <text x="100" y="41" text-anchor="middle" font-size="8" fill="#059669" font-weight="600" font-family="DM Sans" opacity="0.5">21d</text>
+          </svg>
+        </div>
+
+        <!-- Ring count -->
+        <div style="margin-bottom: 16px;">
+          <span style="font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #2D2A26;">23</span>
+          <span style="font-size: 15px; color: #6B6560;"> rings grown</span>
+          <span style="font-size: 15px; color: #C4BFB7;"> of 66</span>
+        </div>
+
+        <!-- Thin bar -->
+        <div style="height: 4px; background: #DDD8D2; border-radius: 2px; overflow: hidden; margin: 0 8px;">
+          <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #8B6208, #059669); border-radius: 2px; animation: progressFill 1s ease-out both; animation-delay: 0.5s;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 8px; padding: 0 8px;">
+          <span style="font-size: 11px; color: #6B6560;">Seedling</span>
+          <span style="font-size: 11px; color: #8B6208; font-weight: 600;">35%</span>
+          <span style="font-size: 11px; color: #C4BFB7;">Old Growth</span>
+        </div>
+      </div>
+
+      <!-- Growth stage card -->
+      <div class="app-card fade-up fade-up-2" style="padding: 16px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+        <div style="width: 40px; height: 40px; background: #D1FAE5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;">🌿</div>
+        <div style="flex: 1;">
+          <div style="font-size: 15px; font-weight: 600; color: #2D2A26;">Young Tree</div>
+          <div style="font-size: 12px; color: #6B6560;">Roots established &middot; Growing steadily</div>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-3" style="text-align: center; padding: 16px;">
+        <p style="font-size: 14px; color: #6B6560; font-style: italic; font-family: 'Literata', serif;">"Each ring tells the story of a day you showed up."</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Tree trunk cross-section — each day adds a ring. Gold heartwood, green growth. The organic metaphor makes consistency feel like nurturing something alive.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION G: Ember                           -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation G</div>
+    <div class="variation-title">Ember</div>
+    <div class="variation-principle">Variable Reward + Visceral Feedback</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Ember Card -->
+      <div class="app-card fade-up fade-up-1" style="padding: 0; overflow: hidden; margin-bottom: 16px;">
+        <div style="padding: 20px 24px 0;">
+          <div class="section-label">Streak Goal</div>
+        </div>
+
+        <!-- Flame visualization -->
+        <div style="position: relative; height: 240px; background: linear-gradient(180deg, #EDEAE5 0%, #FAF8F5 30%, #FEF3CD 80%, #F5F1ED 100%); display: flex; align-items: flex-end; justify-content: center; overflow: hidden;">
+          <!-- Ambient warmth glow -->
+          <div style="position: absolute; bottom: -20px; width: 200px; height: 200px; background: radial-gradient(ellipse, rgba(232,185,77,0.2) 0%, rgba(232,185,77,0.05) 50%, transparent 70%); border-radius: 50%;"></div>
+
+          <!-- Flame SVG -->
+          <svg width="120" height="180" viewBox="0 0 120 180" style="position: relative; z-index: 1; margin-bottom: -10px; animation: flicker 3s ease-in-out infinite;">
+            <defs>
+              <linearGradient id="flameOuter" x1="0.5" y1="1" x2="0.5" y2="0">
+                <stop offset="0%" stop-color="#8B6208"/>
+                <stop offset="40%" stop-color="#E8B94D"/>
+                <stop offset="70%" stop-color="#FEF3CD"/>
+                <stop offset="100%" stop-color="#FEF3CD" stop-opacity="0.3"/>
+              </linearGradient>
+              <linearGradient id="flameInner" x1="0.5" y1="1" x2="0.5" y2="0">
+                <stop offset="0%" stop-color="#059669"/>
+                <stop offset="50%" stop-color="#10B981"/>
+                <stop offset="100%" stop-color="#FEF3CD" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="flameBlur">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+              </filter>
+            </defs>
+
+            <!-- Outer flame (gold) — 35% of max height -->
+            <path d="M 60,20 C 45,50 25,80 22,120 C 18,145 30,170 60,175 C 90,170 102,145 98,120 C 95,80 75,50 60,20 Z"
+              fill="url(#flameOuter)" opacity="0.85" filter="url(#flameBlur)"/>
+            <path d="M 60,20 C 45,50 25,80 22,120 C 18,145 30,170 60,175 C 90,170 102,145 98,120 C 95,80 75,50 60,20 Z"
+              fill="url(#flameOuter)" opacity="0.5"/>
+
+            <!-- Inner flame (green core) -->
+            <path d="M 60,55 C 50,75 38,95 36,125 C 34,145 42,165 60,168 C 78,165 86,145 84,125 C 82,95 70,75 60,55 Z"
+              fill="url(#flameInner)" opacity="0.7" filter="url(#flameBlur)"/>
+            <path d="M 60,55 C 50,75 38,95 36,125 C 34,145 42,165 60,168 C 78,165 86,145 84,125 C 82,95 70,75 60,55 Z"
+              fill="url(#flameInner)" opacity="0.5"/>
+
+            <!-- Bright core -->
+            <ellipse cx="60" cy="150" rx="16" ry="20" fill="#FEF3CD" opacity="0.4" filter="url(#flameBlur)"/>
+          </svg>
+
+          <!-- Flame stage label -->
+          <div style="position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; z-index: 2;">
+            <span style="background: rgba(245,241,237,0.85); padding: 4px 12px; border-radius: 8px; font-size: 12px; color: #8B6208; font-weight: 600; backdrop-filter: blur(4px);">Steady Flame</span>
+          </div>
+        </div>
+
+        <!-- Progress bar below flame -->
+        <div style="padding: 16px 24px 20px; background: #EDEAE5;">
+          <!-- Flame intensity scale -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span style="font-size: 12px; color: #6B6560;">🕯️ Spark</span>
+            <span style="font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #2D2A26;">Day 23</span>
+            <span style="font-size: 12px; color: #8B6208;">Bonfire 🔥</span>
+          </div>
+
+          <!-- Intensity bar -->
+          <div style="height: 6px; background: #DDD8D2; border-radius: 3px; overflow: hidden;">
+            <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #8B6208, #E8B94D, #059669); border-radius: 3px; animation: progressFill 1.2s ease-out both; animation-delay: 0.5s;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+            <span class="mono" style="font-size: 11px; color: #6B6560;">35% intensity</span>
+            <span style="font-size: 11px; color: #C4BFB7;">43 days to bonfire</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flame stages -->
+      <div class="app-card fade-up fade-up-2" style="padding: 16px 20px; margin-bottom: 16px;">
+        <div class="section-label">Flame Stages</div>
+        <div style="display: flex; justify-content: space-between;">
+          <div style="text-align: center;">
+            <span style="font-size: 20px;">🕯️</span>
+            <div style="font-size: 10px; color: #059669; margin-top: 2px;">1–7d</div>
+            <div style="font-size: 9px; color: #059669;">✓</div>
+          </div>
+          <div style="text-align: center;">
+            <span style="font-size: 20px;">🔥</span>
+            <div style="font-size: 10px; color: #059669; margin-top: 2px;">8–21d</div>
+            <div style="font-size: 9px; color: #059669;">✓</div>
+          </div>
+          <div style="text-align: center; padding: 2px 6px; background: #FEF3CD; border-radius: 8px;">
+            <span style="font-size: 20px;">🔥</span>
+            <div style="font-size: 10px; color: #8B6208; font-weight: 600; margin-top: 2px;">22–44d</div>
+            <div style="font-size: 9px; color: #8B6208;">NOW</div>
+          </div>
+          <div style="text-align: center; opacity: 0.35;">
+            <span style="font-size: 20px;">🔥</span>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 2px;">45–65d</div>
+          </div>
+          <div style="text-align: center; opacity: 0.3;">
+            <span style="font-size: 20px;">🏕️</span>
+            <div style="font-size: 10px; color: #8B6208; margin-top: 2px;">66d</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-3" style="text-align: center; padding: 16px;">
+        <p style="font-size: 14px; color: #6B6560; font-style: italic; font-family: 'Literata', serif;">"Feed the flame. Every day you show up, it burns brighter."</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Your streak is a flame that grows from spark to bonfire. Matches the existing 🔥 brand. The flickering animation makes it feel alive — skip a day and the flame would dim.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- VARIATION H: Woven Fabric                    -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation H</div>
+    <div class="variation-title">Woven</div>
+    <div class="variation-principle">Craft Metaphor + Irreversible Progress</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Weave Card -->
+      <div class="app-card fade-up fade-up-1" style="padding: 24px; margin-bottom: 16px;">
+        <div class="section-label">Streak Goal</div>
+
+        <!-- Textile visualization -->
+        <div style="background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+          <!-- Woven grid -->
+          <svg width="100%" height="180" viewBox="0 0 295 180">
+            <!-- Warp threads (vertical, always present) -->
+            <g opacity="0.15">
+              <line x1="15" y1="0" x2="15" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="30" y1="0" x2="30" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="45" y1="0" x2="45" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="60" y1="0" x2="60" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="75" y1="0" x2="75" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="90" y1="0" x2="90" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="105" y1="0" x2="105" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="120" y1="0" x2="120" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="135" y1="0" x2="135" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="150" y1="0" x2="150" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="165" y1="0" x2="165" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="180" y1="0" x2="180" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="195" y1="0" x2="195" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="210" y1="0" x2="210" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="225" y1="0" x2="225" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="240" y1="0" x2="240" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="255" y1="0" x2="255" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="270" y1="0" x2="270" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+              <line x1="285" y1="0" x2="285" y2="180" stroke="#C4BFB7" stroke-width="2"/>
+            </g>
+
+            <!-- Weft threads (horizontal, woven = completed days) -->
+            <!-- Days 1-7: gold foundation threads -->
+            <line x1="0" y1="10" x2="295" y2="10" stroke="#8B6208" stroke-width="3" opacity="0.6"/>
+            <line x1="0" y1="18" x2="295" y2="18" stroke="#7D5907" stroke-width="2.5" opacity="0.5"/>
+            <line x1="0" y1="26" x2="295" y2="26" stroke="#8B6208" stroke-width="3" opacity="0.55"/>
+            <line x1="0" y1="34" x2="295" y2="34" stroke="#E8B94D" stroke-width="2" opacity="0.4"/>
+            <line x1="0" y1="42" x2="295" y2="42" stroke="#8B6208" stroke-width="2.5" opacity="0.5"/>
+            <line x1="0" y1="50" x2="295" y2="50" stroke="#7D5907" stroke-width="2" opacity="0.45"/>
+            <!-- 7d milestone thread — thicker -->
+            <line x1="0" y1="58" x2="295" y2="58" stroke="#059669" stroke-width="4" opacity="0.7"/>
+
+            <!-- Days 8-14: transitioning to green -->
+            <line x1="0" y1="66" x2="295" y2="66" stroke="#059669" stroke-width="2.5" opacity="0.45"/>
+            <line x1="0" y1="74" x2="295" y2="74" stroke="#10B981" stroke-width="2" opacity="0.4"/>
+            <line x1="0" y1="82" x2="295" y2="82" stroke="#059669" stroke-width="2.5" opacity="0.45"/>
+            <line x1="0" y1="90" x2="295" y2="90" stroke="#10B981" stroke-width="2" opacity="0.38"/>
+            <line x1="0" y1="98" x2="295" y2="98" stroke="#059669" stroke-width="2" opacity="0.4"/>
+            <line x1="0" y1="106" x2="295" y2="106" stroke="#10B981" stroke-width="2.5" opacity="0.42"/>
+            <!-- 14d milestone thread -->
+            <line x1="0" y1="114" x2="295" y2="114" stroke="#059669" stroke-width="4" opacity="0.65"/>
+
+            <!-- Days 15-21 -->
+            <line x1="0" y1="122" x2="295" y2="122" stroke="#10B981" stroke-width="2" opacity="0.38"/>
+            <line x1="0" y1="130" x2="295" y2="130" stroke="#059669" stroke-width="2.5" opacity="0.4"/>
+            <line x1="0" y1="138" x2="295" y2="138" stroke="#10B981" stroke-width="2" opacity="0.35"/>
+            <line x1="0" y1="146" x2="295" y2="146" stroke="#059669" stroke-width="2" opacity="0.38"/>
+            <line x1="0" y1="154" x2="295" y2="154" stroke="#10B981" stroke-width="2.5" opacity="0.4"/>
+            <line x1="0" y1="162" x2="295" y2="162" stroke="#059669" stroke-width="2" opacity="0.38"/>
+            <!-- 21d milestone -->
+            <line x1="0" y1="170" x2="295" y2="170" stroke="#059669" stroke-width="3.5" opacity="0.6"/>
+
+            <!-- Days 22-23 (current) -->
+            <line x1="0" y1="178" x2="295" y2="178" stroke="#8B6208" stroke-width="3" opacity="0.65" style="animation: gentlePulse 2s ease-in-out infinite;"/>
+
+            <!-- "Shuttle" indicator — current weaving point -->
+            <circle cx="148" cy="178" r="4" fill="#8B6208" stroke="#FAF8F5" stroke-width="2"/>
+
+            <!-- Future area: subtle dotted guides -->
+            <rect x="0" y="180" width="295" height="40" fill="#FAF8F5" opacity="0.6"/>
+          </svg>
+
+          <!-- Weaving edge label -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+            <span style="font-size: 11px; color: #059669;">↑ 23 threads woven</span>
+            <span style="font-size: 11px; color: #C4BFB7;">43 threads remaining ↓</span>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px; margin-bottom: 12px;">
+          <span style="font-family: 'Literata', serif; font-size: 32px; font-weight: 700; color: #2D2A26;">23</span>
+          <span style="font-size: 15px; color: #C4BFB7;">/</span>
+          <span style="font-family: 'Literata', serif; font-size: 20px; font-weight: 600; color: #8B6208;">66</span>
+          <span style="font-size: 13px; color: #6B6560; margin-left: 4px;">threads</span>
+        </div>
+
+        <!-- Thin bar -->
+        <div style="height: 4px; background: #DDD8D2; border-radius: 2px; overflow: hidden;">
+          <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #8B6208, #059669); border-radius: 2px; animation: progressFill 1s ease-out both; animation-delay: 0.5s;"></div>
+        </div>
+      </div>
+
+      <!-- Fabric quality card -->
+      <div class="app-card fade-up fade-up-2" style="padding: 16px 20px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px;">
+        <div style="width: 40px; height: 40px; background: #FEF3CD; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px;">🧶</div>
+        <div style="flex: 1;">
+          <div style="font-size: 15px; font-weight: 600; color: #2D2A26;">Tight Weave</div>
+          <div style="font-size: 12px; color: #6B6560;">No gaps in 23 days &middot; Strong fabric</div>
+        </div>
+        <span style="font-size: 13px; color: #059669; font-weight: 600;">100%</span>
+      </div>
+
+      <div class="fade-up fade-up-3" style="text-align: center; padding: 16px;">
+        <p style="font-size: 14px; color: #6B6560; font-style: italic; font-family: 'Literata', serif;">"Thread by thread, you're weaving something unbreakable."</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Each day is a thread in a tapestry. Gold foundation threads transition to green as the habit strengthens. Missed days leave visible gaps — the craft metaphor makes consistency feel like artistry.</p>
+</div>
+
+</div><!-- end grid -->
+
+<!-- Footer -->
+<div style="text-align: center; padding: 48px 24px 32px;">
+  <p style="font-size: 13px; color: #524D47; margin-bottom: 4px;">All four show: 🧘 Meditate &middot; Day 23 of 66 goal</p>
+  <p style="font-size: 12px; color: #3D3833;">E &mdash; Lunar patience &middot; F &mdash; Organic growth &middot; G &mdash; Living flame &middot; H &mdash; Artisan craft</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Next iteration — prescription card + goal browse revert</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+        --sleep-bg: #eff6ff;
+        --sleep-deep: #1e3a5f;
+        --sleep-border: #bfdbfe;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 880px;
+        line-height: 1.5;
+      }
+
+      .lane {
+        display: flex;
+        align-items: flex-start;
+        gap: 0;
+        overflow-x: auto;
+        padding: 26px 0 10px;
+      }
+      .stepcol {
+        flex: none;
+        width: 379px;
+        display: flex;
+        flex-direction: column;
+      }
+      .arrow {
+        flex: none;
+        align-self: flex-start;
+        margin-top: 350px;
+        width: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .arrow .line {
+        font-size: 26px;
+        color: var(--text-2);
+      }
+      .arrow .lbl {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-2);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px 8px;
+        text-align: center;
+        line-height: 1.35;
+      }
+      .col-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary-deep);
+        margin-bottom: 10px;
+        background: var(--primary-tint);
+        border-radius: 999px;
+        padding: 5px 13px;
+        align-self: flex-start;
+      }
+
+      .phone {
+        width: 375px;
+        height: 812px;
+        background: var(--bg);
+        border-radius: 40px;
+        border: 9px solid #2d2a26;
+        box-shadow: 0 20px 48px rgba(45, 42, 38, 0.3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .statusbar {
+        height: 40px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .overline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 18px 16px 9px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 9px;
+        white-space: nowrap;
+      }
+      .sci {
+        font-size: 11px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        background: var(--primary);
+        border: none;
+        border-radius: 999px;
+        padding: 8px 14px;
+        cursor: pointer;
+      }
+      .btn-add.quiet {
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+      }
+
+      .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5) 0%,
+          rgba(254, 215, 170, 0.28) 52%,
+          #f5f1ed 100%
+        );
+        padding: 16px 16px 14px;
+        border-radius: 0 0 24px 24px;
+        position: relative;
+      }
+      .hero .close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: var(--text-2);
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: 25px;
+        font-weight: 700;
+        letter-spacing: -0.35px;
+        line-height: 1.25;
+      }
+      .hero .sub {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 5px;
+        padding-right: 40px;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+        margin-top: 13px;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.07);
+      }
+      .chip.on {
+        border-color: var(--sleep-deep);
+        background: var(--sleep-bg);
+        color: var(--sleep-deep);
+      }
+      .chip .prog {
+        font-size: 10.5px;
+        font-weight: 700;
+        background: rgba(5, 150, 105, 0.12);
+        color: var(--primary-deep);
+        border-radius: 999px;
+        padding: 2px 7px;
+      }
+      .search {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 14px;
+        color: var(--text-3);
+        font-size: 13.5px;
+      }
+
+      .rx {
+        margin: 14px 16px 0;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1.5px solid var(--sleep-border);
+        background: linear-gradient(180deg, var(--sleep-bg), #fff 70%);
+        box-shadow: 0 6px 18px rgba(30, 58, 95, 0.1);
+      }
+      .rx .rxhead {
+        padding: 13px 14px 4px;
+      }
+      .rx .rxlabel {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sleep-deep);
+      }
+      .rx h3 {
+        font-family: var(--serif);
+        font-size: 17.5px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .rx .why {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 3px;
+        line-height: 1.45;
+      }
+      .rxhabit {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        margin: 10px 12px 0;
+        padding: 10px 11px;
+      }
+      .rxhabit.done {
+        background: var(--primary-tint);
+        border-color: #a7f3d0;
+      }
+      .rxhabit .emoji {
+        width: 40px;
+        height: 40px;
+        flex: none;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .rxhabit .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .rxhabit h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+      }
+      .rxhabit p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .rxhabit .step {
+        flex: none;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--sleep-deep);
+        background: var(--sleep-bg);
+        border-radius: 999px;
+        padding: 3px 8px;
+      }
+      .rxhabit .step.done {
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+      }
+      .rx .rxfoot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px 13px;
+        gap: 10px;
+      }
+      .rx .conf {
+        font-size: 11px;
+        color: var(--text-3);
+        line-height: 1.4;
+      }
+      .rx .go {
+        flex: none;
+        border: none;
+        border-radius: 12px;
+        background: var(--primary);
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 11px 16px;
+        cursor: pointer;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 11px 12px;
+        margin: 0 16px 8px;
+      }
+      .row .emoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 14.5px;
+        font-weight: 600;
+      }
+      .row p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 4px;
+      }
+
+      /* goal browse */
+      .ghero {
+        padding: 14px 16px 16px;
+        border-radius: 0 0 24px 24px;
+      }
+      .ghero .back {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .ghero .hrow {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .ghero .gicon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+      }
+      .ghero h2 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+      }
+      .ghero .promise {
+        font-size: 12.5px;
+        margin-top: 2px;
+        opacity: 0.85;
+      }
+      .ghero .cnt {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid rgba(0, 0, 0, 0.14);
+        border-radius: 999px;
+        padding: 3px 9px;
+        margin-top: 8px;
+      }
+      .fchips {
+        display: flex;
+        gap: 8px;
+        padding: 10px 16px;
+      }
+      .fchip {
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: 999px;
+        padding: 6px 13px;
+        color: var(--text-2);
+      }
+      .fchip.on {
+        background: var(--sleep-bg);
+        border-color: var(--sleep-deep);
+        color: var(--sleep-deep);
+      }
+      .drow {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        margin: 0 16px 8px;
+      }
+      .drow .top {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+      }
+      .drow .emoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .drow .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .drow h4 {
+        font-size: 14.5px;
+        font-weight: 600;
+      }
+      .drow p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 2px;
+        line-height: 1.4;
+      }
+      .drow .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 7px;
+        flex-wrap: wrap;
+      }
+      .drow .addwrap {
+        flex: none;
+        margin-left: 8px;
+      }
+
+      .chev {
+        flex: none;
+        font-size: 16px;
+        font-weight: 600;
+        color: #c9c2ba;
+        margin-left: 2px;
+      }
+      .annot {
+        width: 375px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .annot ul {
+        margin: 4px 0 0 16px;
+      }
+      .annot li {
+        margin-bottom: 4px;
+      }
+      .annot code {
+        background: var(--lift);
+        border-radius: 5px;
+        padding: 1px 5px;
+        font-size: 11.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">Next iteration — steps 1 + 2 of the plan</p>
+    <h1 class="page-title">
+      Prescription card inline · goal page back to detailed browse
+    </h1>
+    <p class="page-sub">
+      Builds on what's live (serif hero, white chips, citations). Frame 1:
+      tapping a chip expands "Your way in" in place. Frame 2: the return visit
+      remembers progress. Frame 3: the goal page loses the path framing and
+      becomes a detailed browse.
+    </p>
+
+    <div class="lane">
+      <!-- ════ 1. CHIP TAPPED → PRESCRIPTION ════ -->
+      <div class="stepcol">
+        <div class="col-label">1 · Tap "Sleep better" → Your way in</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero">
+              <div class="close">✕</div>
+              <h1>What do you want to change?</h1>
+              <div class="chips" style="margin-top: 11px">
+                <span class="chip on">😴 Sleep better</span>
+                <span class="chip">🧘 Stress less</span>
+                <span class="chip">⚡ More energy</span>
+                <span class="chip" style="opacity: 0.65">+ 2 more</span>
+              </div>
+            </div>
+
+            <div class="rx">
+              <div class="rxhead">
+                <div class="rxlabel">Your way in</div>
+                <h3>Start with a wind-down, not a wake-up</h3>
+                <div class="why">
+                  Most sleep problems are evening problems. These two habits fix
+                  the input — when and how your body powers down.
+                </div>
+              </div>
+              <div class="rxhabit">
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                  📵
+                </div>
+                <div class="body">
+                  <h4>Screens Off by 10</h4>
+                  <p>Blue light delays melatonin ~90 min · 🔬 Chang (2015)</p>
+                </div>
+                <div class="step">Step 1</div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rxhabit">
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  📖
+                </div>
+                <div class="body">
+                  <h4>Read Before Bed</h4>
+                  <p>Replaces scrolling, drops heart rate · 10 min</p>
+                </div>
+                <div class="step">Step 2</div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rxfoot">
+                <div class="conf">
+                  Works best together — starting with one is fine.
+                </div>
+                <button class="go">Start step 1 →</button>
+              </div>
+            </div>
+
+            <div class="overline">All sleep habits · 8 <a>See all ›</a></div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                🌡️
+              </div>
+              <div class="body">
+                <h4>Cool Room Setup</h4>
+                <p>65–68°F is the sleep sweet spot</p>
+                <div class="meta">
+                  <span class="pill">2 min · Evening</span
+                  ><span class="sci">🔬 Research-backed</span>
+                </div>
+              </div>
+              <span class="chev">›</span>
+              <button class="btn-add quiet">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                ☕
+              </div>
+              <div class="body">
+                <h4>Caffeine Cutoff at 2pm</h4>
+                <p>Caffeine's half-life is ~6 hours</p>
+                <div class="meta">
+                  <span class="pill">0 min · Daily</span
+                  ><span class="sci">🔬 Drake (2013)</span>
+                </div>
+              </div>
+              <span class="chev">›</span>
+              <button class="btn-add quiet">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Chip tap = inline expand, no navigation</h3>
+          <ul>
+            <li>
+              Hero compresses (subtitle + search collapse); selected chip
+              highlights; others stay one tap away.
+            </li>
+            <li>
+              Prescription card slides in: insight line, 2 sequenced habits, one
+              CTA. "Start step 1 →" = the normal one-tap add (→ Make-It-Stick on
+              first add).
+            </li>
+            <li>
+              Below: that goal's habits as one-tap rows, with "See all ›" → the
+              goal page (frame 3).
+            </li>
+            <li>
+              Data: static <code>prescriptions.ts</code> — 5 entries,
+              hand-written, no backend.
+            </li>
+            <li>
+              Tap the chip again (or ✕ region) to collapse back to the question.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">Adds step 1, returns later</div>
+      </div>
+
+      <!-- ════ 2. RETURN STATE ════ -->
+      <div class="stepcol">
+        <div class="col-label">2 · Return visit — progress remembered</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero">
+              <div class="close">✕</div>
+              <h1>Your sleep path</h1>
+              <div class="sub">
+                🌱 Day 4 of Screens Off by 10 — the first week matters most.
+              </div>
+              <div class="chips" style="margin-top: 11px">
+                <span class="chip on"
+                  >😴 Sleep better <span class="prog">1 of 2</span></span
+                >
+                <span class="chip">🧘 Stress less</span>
+                <span class="chip" style="opacity: 0.65">+ 3 more</span>
+              </div>
+            </div>
+
+            <div class="rx">
+              <div class="rxhead">
+                <div class="rxlabel">Your way in</div>
+                <h3>Start with a wind-down, not a wake-up</h3>
+              </div>
+              <div class="rxhabit done">
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                  📵
+                </div>
+                <div class="body">
+                  <h4>Screens Off by 10</h4>
+                  <p>Day 4 · going strong</p>
+                </div>
+                <div class="step done">✓ Added</div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rxhabit">
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  📖
+                </div>
+                <div class="body">
+                  <h4>Read Before Bed</h4>
+                  <p>Pairs with your wind-down · 10 min</p>
+                </div>
+                <div class="step">Step 2</div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rxfoot">
+                <div class="conf">
+                  Most people add step 2 in week two. No rush.
+                </div>
+                <button class="go">Add step 2 →</button>
+              </div>
+            </div>
+
+            <div class="overline">All sleep habits · 8 <a>See all ›</a></div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                🌡️
+              </div>
+              <div class="body">
+                <h4>Cool Room Setup</h4>
+                <p>65–68°F is the sleep sweet spot</p>
+                <div class="meta">
+                  <span class="pill">2 min · Evening</span>
+                </div>
+              </div>
+              <span class="chev">›</span>
+              <button class="btn-add quiet">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>The page remembers — derived, not stored</h3>
+          <ul>
+            <li>
+              Hero flips to "Your sleep path" + coach line with the real day
+              count.
+            </li>
+            <li>
+              Chip shows <b>1 of 2</b>; step 1 wears its ✓; step 2 nudged with
+              the week-two social norm.
+            </li>
+            <li>
+              All computed from <code>importedTemplateIds</code> + habit
+              <code>createdAt</code> — zero new backend state. Last selected
+              goal kept in local storage.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">"See all ›"</div>
+      </div>
+
+      <!-- ════ 3. GOAL PAGE — DETAILED BROWSE ════ -->
+      <div class="stepcol">
+        <div class="col-label">
+          3 · Goal page — detailed browse (path removed)
+        </div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div
+              class="ghero"
+              style="background: var(--sleep-bg); color: var(--sleep-deep)"
+            >
+              <div class="back">‹ Library</div>
+              <div class="hrow">
+                <div class="gicon">😴</div>
+                <div>
+                  <h2>Sleep deeper</h2>
+                  <div class="promise">
+                    Wind down, rest fully, wake refreshed
+                  </div>
+                  <span class="cnt">📋 8 habits</span>
+                </div>
+              </div>
+            </div>
+            <div class="fchips">
+              <div class="fchip on">Popular</div>
+              <div class="fchip">A–Z</div>
+              <div class="fchip">Not added · 7</div>
+            </div>
+
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                  📵
+                </div>
+                <div class="body">
+                  <h4>Screens Off by 10</h4>
+                  <p>
+                    Blue light delays melatonin by about 90 minutes — power down
+                    before your body tries to.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">0 min · Evening</span
+                    ><span class="sci">🔬 Chang (2015)</span>
+                  </div>
+                </div>
+                <div
+                  class="addwrap"
+                  style="display: flex; align-items: center; gap: 6px"
+                >
+                  <span class="chev">›</span
+                  ><button class="btn-add quiet">✓</button>
+                </div>
+              </div>
+            </div>
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  📖
+                </div>
+                <div class="body">
+                  <h4>Read Before Bed</h4>
+                  <p>
+                    Replaces doom-scrolling with something that actually drops
+                    your heart rate.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">10 min · Evening</span
+                    ><span class="sci">🔬 Research-backed</span>
+                  </div>
+                </div>
+                <div
+                  class="addwrap"
+                  style="display: flex; align-items: center; gap: 6px"
+                >
+                  <span class="chev">›</span
+                  ><button class="btn-add quiet">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                  🌡️
+                </div>
+                <div class="body">
+                  <h4>Cool Room Setup</h4>
+                  <p>
+                    65–68°F is the science-backed sweet spot for deep sleep
+                    onset.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">2 min · Evening</span
+                    ><span class="sci">🔬 Research-backed</span>
+                  </div>
+                </div>
+                <div
+                  class="addwrap"
+                  style="display: flex; align-items: center; gap: 6px"
+                >
+                  <span class="chev">›</span
+                  ><button class="btn-add quiet">+ Add</button>
+                </div>
+              </div>
+            </div>
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                  ☕
+                </div>
+                <div class="body">
+                  <h4>Caffeine Cutoff at 2pm</h4>
+                  <p>
+                    Caffeine's ~6-hour half-life means an afternoon cup is still
+                    working at midnight.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">0 min · Daily</span
+                    ><span class="sci">🔬 Drake (2013)</span>
+                  </div>
+                </div>
+                <div
+                  class="addwrap"
+                  style="display: flex; align-items: center; gap: 6px"
+                >
+                  <span class="chev">›</span
+                  ><button class="btn-add quiet">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Path framing gone; detail per row up</h3>
+          <ul>
+            <li>
+              No "Start here / Then build on it" — the prescription already did
+              the guiding.
+            </li>
+            <li>
+              Goal-tinted hero + the filter chips return (Popular / A–Z / Not
+              added).
+            </li>
+            <li>
+              Rows get a <b>2-line description</b>, time · frequency pill,
+              citation, and a › chevron — tap anywhere on the row body for the
+              details page; + Add stays instant.
+            </li>
+            <li>
+              Mostly a revert to <code>DrillListBody</code> + an upgraded row
+              template.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

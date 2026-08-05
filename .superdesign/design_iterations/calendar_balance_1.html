@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainDay — CalendarTimeline Balance Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --surface-2: #1a1a1a;
+    --border: #222;
+    --text: #e8e4df;
+    --text-muted: #7a756e;
+    --text-dim: #4a4640;
+    --accent-emerald: #10b981;
+    --accent-amber: #e8b94d;
+    --card-bg: #EDEAE5;
+    --card-border: #DDD8D2;
+    --gray-50: #FAF8F5;
+    --gray-200: #DDD8D2;
+    --gray-300: #C4BFB7;
+    --gray-400: #6E6660;
+    --gray-600: #524D47;
+    --gray-800: #2D2A26;
+    --today-bg: #FEF3CD;
+    --today-border: #E8B94D;
+    --today-text: #7D5907;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Page layout ── */
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .page-header .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent-emerald);
+    margin-bottom: 16px;
+  }
+
+  .page-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+
+  .page-header h1 em {
+    font-style: italic;
+    color: var(--accent-amber);
+  }
+
+  .page-header .subtitle {
+    font-size: 15px;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Comparison grid ── */
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+
+  .comparison-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .version-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .version-label .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+  }
+
+  .tag-current {
+    background: rgba(234, 88, 12, 0.12);
+    color: #f97316;
+    border: 1px solid rgba(234, 88, 12, 0.2);
+  }
+
+  .tag-balanced {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+  }
+
+  .version-label .name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Phone frame ── */
+  .phone-frame {
+    width: 320px;
+    background: #f7f5f0;
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04),
+      0 20px 60px rgba(0,0,0,0.5),
+      0 4px 16px rgba(0,0,0,0.3);
+    position: relative;
+  }
+
+  .phone-screen {
+    background: #f7f5f0;
+    border-radius: 26px;
+    overflow: hidden;
+    padding: 20px 16px 24px;
+  }
+
+  /* ── Habit cards (context) ── */
+  .habit-card-placeholder {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 14px 12px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    position: relative;
+  }
+
+  .habit-accent-bar {
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .habit-emoji {
+    font-size: 20px;
+    width: 32px;
+    text-align: center;
+    margin-left: 8px;
+  }
+
+  .habit-info {
+    flex: 1;
+  }
+
+  .habit-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-600);
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+  }
+
+  .habit-meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--gray-400);
+    margin-top: 2px;
+  }
+
+  .habit-chain {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+
+  .chain-link {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+
+  /* ══════════════════════════════════════════
+     CALENDAR TIMELINE CARD — CURRENT VERSION
+     ══════════════════════════════════════════ */
+  .ct-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 8px 12px 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 8px rgba(107,101,96,0.04);
+  }
+
+  /* Header row */
+  .ct-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .ct-header-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ct-nav-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .ct-nav-btn svg {
+    width: 13px;
+    height: 13px;
+    stroke: var(--gray-600);
+    stroke-width: 2.5;
+    fill: none;
+  }
+
+  .ct-date-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--gray-800);
+    letter-spacing: -0.3px;
+    line-height: 20px;
+    margin-left: 4px;
+  }
+
+  /* Completion ring */
+  .ct-ring {
+    width: 36px;
+    height: 36px;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .ct-ring svg {
+    width: 36px;
+    height: 36px;
+    transform: rotate(-90deg);
+  }
+
+  .ct-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    color: #44403c;
+  }
+
+  /* Day cells row */
+  .ct-days-row {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 4px; /* the pl-1 offset */
+  }
+
+  .ct-day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+  }
+
+  .ct-day-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--gray-400);
+    line-height: 14px;
+    text-align: center;
+  }
+
+  .ct-day-label.today {
+    font-weight: 700;
+  }
+
+  .ct-day-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+  }
+
+  .ct-day-num.completed {
+    background: var(--accent-emerald);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 0 12px rgba(16,185,129,0.35);
+  }
+
+  .ct-day-num.today-cell {
+    background: var(--today-bg);
+    border: 2px solid var(--today-border);
+    color: var(--today-text);
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(232,185,77,0.2);
+  }
+
+  .ct-day-num.upcoming {
+    background: var(--gray-50);
+    color: var(--gray-300);
+  }
+
+  .ct-day-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    margin-top: 2px;
+  }
+
+  .ct-day-dot.partial { background: var(--accent-amber); width: 6px; height: 6px; }
+  .ct-day-dot.none { background: var(--gray-200); }
+  .ct-day-dot.future { background: var(--gray-50); }
+
+  /* ══════════════════════════════════════════
+     BALANCED VERSION — Differences
+     ══════════════════════════════════════════ */
+  .ct-card.balanced .ct-header {
+    margin-bottom: 8px;
+    background: rgba(0,0,0,0.018);
+    border-radius: 10px;
+    padding: 6px 8px;
+    margin: -2px -4px 8px;
+  }
+
+  .ct-card.balanced .ct-header-left {
+    gap: 8px;
+    flex: 1;
+  }
+
+  .ct-card.balanced .ct-nav-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .ct-card.balanced .ct-nav-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .ct-card.balanced .ct-ring {
+    order: -1;
+  }
+
+  .ct-card.balanced .ct-date-text {
+    flex: 1;
+    text-align: center;
+    margin-left: 0;
+  }
+
+  .ct-card.balanced .ct-days-row {
+    padding-left: 0;
+    padding: 0 2px;
+  }
+
+  .ct-card.balanced .ct-header {
+    justify-content: flex-start;
+  }
+
+  /* ── Annotation callouts ── */
+  .annotations {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .callout {
+    position: absolute;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .callout-issue {
+    background: rgba(234, 88, 12, 0.15);
+    color: #fb923c;
+    border: 1px solid rgba(234, 88, 12, 0.25);
+  }
+
+  .callout-fix {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+
+  .callout-line {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /* ── Comparison table ── */
+  .table-section {
+    margin-top: 16px;
+  }
+
+  .table-section h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .table-section .table-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .diff-table thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .diff-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .diff-table tbody tr:hover {
+    background: rgba(255,255,255,0.015);
+  }
+
+  .diff-table .prop-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .diff-table .val-before {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #f97316;
+    background: rgba(234,88,12,0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  .diff-table .val-after {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent-emerald);
+    background: rgba(16,185,129,0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+
+  .diff-table .rationale {
+    font-size: 12px;
+    color: var(--text-muted);
+    max-width: 260px;
+  }
+
+  /* ── Grain overlay ── */
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px;
+    z-index: 9999;
+  }
+
+  /* ── Visual weight indicators ── */
+  .weight-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 0 4px;
+  }
+
+  .weight-bar .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    width: 50px;
+    text-align: right;
+  }
+
+  .weight-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 2px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .weight-left {
+    height: 100%;
+    border-radius: 2px 0 0 2px;
+  }
+
+  .weight-right {
+    height: 100%;
+    border-radius: 0 2px 2px 0;
+    margin-left: 1px;
+  }
+
+  .phone-wrapper {
+    position: relative;
+  }
+
+  /* ── Divider ── */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 48px 0;
+  }
+
+  /* ── Impact summary ── */
+  .impact-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 32px;
+  }
+
+  .impact-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .impact-card .metric {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    color: var(--accent-emerald);
+    margin-bottom: 4px;
+  }
+
+  .impact-card .metric-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .impact-card .metric-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="page">
+
+  <!-- ── Page header ── -->
+  <header class="page-header">
+    <div class="eyebrow">ChainDay · CalendarTimeline · Balance Audit</div>
+    <h1>The header is <em>top-heavy</em></h1>
+    <p class="subtitle">The CalendarTimeline card concentrates visual weight in the header row — nav buttons, date text, and a completion ring all compete on one line, while the day cells below feel visually lighter and asymmetrically offset.</p>
+  </header>
+
+  <!-- ── Side-by-side comparison ── -->
+  <div class="comparison">
+
+    <!-- LEFT: Current -->
+    <div class="comparison-col">
+      <div class="version-label">
+        <span class="tag tag-current">Current</span>
+        <span class="name">Top-heavy header, offset grid</span>
+      </div>
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+
+            <!-- CalendarTimeline Card — CURRENT -->
+            <div class="ct-card">
+              <div class="ct-header">
+                <div class="ct-header-left">
+                  <div class="ct-nav-btn">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  </div>
+                  <div class="ct-nav-btn">
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                  <span class="ct-date-text">Feb 17 – Feb 23</span>
+                </div>
+                <div class="ct-ring">
+                  <svg viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/>
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3"
+                      stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/>
+                  </svg>
+                  <span class="ct-ring-text">5/7</span>
+                </div>
+              </div>
+
+              <div class="ct-days-row">
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Mon</span>
+                  <div class="ct-day-num completed">17</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Tue</span>
+                  <div class="ct-day-num completed">18</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Wed</span>
+                  <div class="ct-day-num completed">19</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label today">Thu</span>
+                  <div class="ct-day-num today-cell">20</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Fri</span>
+                  <div class="ct-day-num upcoming">21</div>
+                  <div class="ct-day-dot future"></div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Sat</span>
+                  <div class="ct-day-num upcoming">22</div>
+                  <div class="ct-day-dot future"></div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Sun</span>
+                  <div class="ct-day-num upcoming">23</div>
+                  <div class="ct-day-dot future"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Context: Habit cards below -->
+            <div class="habit-card-placeholder">
+              <div class="habit-accent-bar" style="background: #10b981;"></div>
+              <span class="habit-emoji">🧘</span>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">Strong · 42 day streak</div>
+              </div>
+              <div class="habit-chain">
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+              </div>
+            </div>
+
+            <div class="habit-card-placeholder">
+              <div class="habit-accent-bar" style="background: #f59e0b;"></div>
+              <span class="habit-emoji">📖</span>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">Growing · 12 day streak</div>
+              </div>
+              <div class="habit-chain">
+                <div class="chain-link" style="background:#f59e0b;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+              </div>
+            </div>
+
+            <div class="habit-card-placeholder">
+              <div class="habit-accent-bar" style="background: #10b981;"></div>
+              <span class="habit-emoji">💪</span>
+              <div class="habit-info">
+                <div class="habit-name">Workout</div>
+                <div class="habit-meta">Strong · 28 day streak</div>
+              </div>
+              <div class="habit-chain">
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Issue callouts overlaid -->
+        <div class="annotations">
+          <div class="callout callout-issue" style="top: 56px; right: -12px;">← ring isolated</div>
+          <div class="callout callout-issue" style="top: 88px; left: -8px;">pl-1 offset →</div>
+          <div class="callout callout-issue" style="top: 38px; left: -8px;">header-heavy ↓</div>
+        </div>
+      </div>
+
+      <!-- Visual weight indicator -->
+      <div class="weight-bar" style="width: 280px;">
+        <span class="label">Header</span>
+        <div class="weight-track">
+          <div class="weight-left" style="width: 72%; background: #f97316;"></div>
+          <div class="weight-right" style="width: 28%; background: rgba(249,115,22,0.25);"></div>
+        </div>
+      </div>
+      <div class="weight-bar" style="width: 280px;">
+        <span class="label">Grid</span>
+        <div class="weight-track">
+          <div class="weight-left" style="width: 38%; background: #f97316;"></div>
+          <div class="weight-right" style="width: 62%; background: rgba(249,115,22,0.25);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Balanced -->
+    <div class="comparison-col">
+      <div class="version-label">
+        <span class="tag tag-balanced">Balanced</span>
+        <span class="name">Centered flow, symmetric grid</span>
+      </div>
+      <div class="phone-wrapper">
+        <div class="phone-frame">
+          <div class="phone-screen">
+
+            <!-- CalendarTimeline Card — BALANCED -->
+            <div class="ct-card balanced">
+              <div class="ct-header">
+                <div class="ct-header-left">
+                  <div class="ct-ring" style="order: -1;">
+                    <svg viewBox="0 0 36 36">
+                      <circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/>
+                      <circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3"
+                        stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/>
+                    </svg>
+                    <span class="ct-ring-text">5/7</span>
+                  </div>
+                  <div class="ct-nav-btn">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                  </div>
+                  <span class="ct-date-text">Feb 17 – Feb 23</span>
+                  <div class="ct-nav-btn">
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ct-days-row">
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Mon</span>
+                  <div class="ct-day-num completed">17</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Tue</span>
+                  <div class="ct-day-num completed">18</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Wed</span>
+                  <div class="ct-day-num completed">19</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label today">Thu</span>
+                  <div class="ct-day-num today-cell">20</div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Fri</span>
+                  <div class="ct-day-num upcoming">21</div>
+                  <div class="ct-day-dot future"></div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Sat</span>
+                  <div class="ct-day-num upcoming">22</div>
+                  <div class="ct-day-dot future"></div>
+                </div>
+                <div class="ct-day-cell">
+                  <span class="ct-day-label">Sun</span>
+                  <div class="ct-day-num upcoming">23</div>
+                  <div class="ct-day-dot future"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Context: Habit cards -->
+            <div class="habit-card-placeholder">
+              <div class="habit-accent-bar" style="background: #10b981;"></div>
+              <span class="habit-emoji">🧘</span>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">Strong · 42 day streak</div>
+              </div>
+              <div class="habit-chain">
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+              </div>
+            </div>
+
+            <div class="habit-card-placeholder">
+              <div class="habit-accent-bar" style="background: #f59e0b;"></div>
+              <span class="habit-emoji">📖</span>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">Growing · 12 day streak</div>
+              </div>
+              <div class="habit-chain">
+                <div class="chain-link" style="background:#f59e0b;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+              </div>
+            </div>
+
+            <div class="habit-card-placeholder">
+              <div class="habit-accent-bar" style="background: #10b981;"></div>
+              <span class="habit-emoji">💪</span>
+              <div class="habit-info">
+                <div class="habit-name">Workout</div>
+                <div class="habit-meta">Strong · 28 day streak</div>
+              </div>
+              <div class="habit-chain">
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#10b981;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+                <div class="chain-link" style="background:#DDD8D2;"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Fix callouts -->
+        <div class="annotations">
+          <div class="callout callout-fix" style="top: 56px; right: -12px;">ring anchors left ✓</div>
+          <div class="callout callout-fix" style="top: 88px; left: -8px;">symmetric px ✓</div>
+          <div class="callout callout-fix" style="top: 38px; left: -8px;">balanced weight ✓</div>
+        </div>
+      </div>
+
+      <!-- Visual weight indicator -->
+      <div class="weight-bar" style="width: 280px;">
+        <span class="label">Header</span>
+        <div class="weight-track">
+          <div class="weight-left" style="width: 52%; background: var(--accent-emerald);"></div>
+          <div class="weight-right" style="width: 48%; background: rgba(16,185,129,0.25);"></div>
+        </div>
+      </div>
+      <div class="weight-bar" style="width: 280px;">
+        <span class="label">Grid</span>
+        <div class="weight-track">
+          <div class="weight-left" style="width: 50%; background: var(--accent-emerald);"></div>
+          <div class="weight-right" style="width: 50%; background: rgba(16,185,129,0.25);"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Divider ── -->
+  <div class="section-divider"></div>
+
+  <!-- ── Diff table ── -->
+  <div class="table-section">
+    <h2>Proposed changes</h2>
+    <p class="table-subtitle">Six targeted adjustments to rebalance the CalendarTimeline header-to-grid weight ratio.</p>
+
+    <table class="diff-table">
+      <thead>
+        <tr>
+          <th style="width: 22%;">Property</th>
+          <th style="width: 18%;">Before</th>
+          <th style="width: 18%;">After</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="prop-name">Ring position</td>
+          <td><span class="val-before">right (isolated)</span></td>
+          <td><span class="val-after">left of date text</span></td>
+          <td class="rationale">Integrates the ring into the header's reading flow instead of floating alone on the right edge.</td>
+        </tr>
+        <tr>
+          <td class="prop-name">Date text alignment</td>
+          <td><span class="val-before">left (after btns)</span></td>
+          <td><span class="val-after">center (flex)</span></td>
+          <td class="rationale">Centering the date creates symmetry between the ring anchor on the left and nav on the right.</td>
+        </tr>
+        <tr>
+          <td class="prop-name">Nav button size</td>
+          <td><span class="val-before">26 × 26px</span></td>
+          <td><span class="val-after">30 × 30px</span></td>
+          <td class="rationale">Brings touch target closer to Apple's 44px minimum (with hit slop) and balances against the 36px ring.</td>
+        </tr>
+        <tr>
+          <td class="prop-name">Nav button layout</td>
+          <td><span class="val-before">both left</span></td>
+          <td><span class="val-after">split (←date→)</span></td>
+          <td class="rationale">Flanking the date text with nav buttons creates a natural < Date > pattern that users expect.</td>
+        </tr>
+        <tr>
+          <td class="prop-name">Day row padding</td>
+          <td><span class="val-before">pl-1 (4px left)</span></td>
+          <td><span class="val-after">px-0.5 (2px sym)</span></td>
+          <td class="rationale">Removes the asymmetric offset. Slight inset keeps cells from touching card edges.</td>
+        </tr>
+        <tr>
+          <td class="prop-name">Header backdrop</td>
+          <td><span class="val-before">none</span></td>
+          <td><span class="val-after">subtle bg + radius</span></td>
+          <td class="rationale">Groups all nav controls into one visual zone, separating them from the day grid below.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Divider ── -->
+  <div class="section-divider"></div>
+
+  <!-- ── Impact ── -->
+  <div class="table-section">
+    <h2>Expected impact</h2>
+    <div class="impact-row">
+      <div class="impact-card">
+        <div class="metric">~50:50</div>
+        <div class="metric-label">Header-to-grid weight ratio</div>
+        <div class="metric-desc">Down from roughly 70:30. The header no longer dominates the card's visual mass.</div>
+      </div>
+      <div class="impact-card">
+        <div class="metric">30px</div>
+        <div class="metric-label">Touch target (nav buttons)</div>
+        <div class="metric-desc">Up from 26px. Combined with 8px hit slop, effective target reaches 46px — above the 44px guideline.</div>
+      </div>
+      <div class="impact-card">
+        <div class="metric">0px</div>
+        <div class="metric-label">Asymmetric offset removed</div>
+        <div class="metric-desc">The 4px left-only padding that misaligned the grid with the card edges is gone.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

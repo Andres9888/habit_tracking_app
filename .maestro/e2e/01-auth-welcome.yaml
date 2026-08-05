@@ -1,0 +1,22 @@
+appId: com.chainday.app
+name: Auth Welcome Signed Out
+tags:
+  - regression
+  - native
+onFlowComplete:
+  - takeScreenshot: e2e-01-auth-welcome-complete
+---
+- launchApp:
+    appId: com.chainday.app
+    clearState: true
+    clearKeychain: true
+- extendedWaitUntil:
+    visible: Chain Day
+    timeout: 15000
+- assertVisible: Miss a day. Keep the chain.
+- assertVisible:
+    id: auth-apple-button
+- assertVisible:
+    id: auth-google-button
+- assertVisible: Terms of Service
+- assertVisible: Privacy Policy

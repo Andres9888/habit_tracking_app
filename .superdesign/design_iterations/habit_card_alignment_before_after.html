@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Card Alignment — Before / After</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1816 !important;
+        color: #f5f1ed;
+        padding: 32px 24px 64px;
+      }
+      h1 {
+        font-family: 'Literata', serif !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px !important;
+      }
+      .subtitle {
+        color: #6b6560;
+        font-size: 14px;
+        margin-bottom: 36px;
+      }
+
+      .compare-row {
+        display: flex;
+        gap: 28px;
+        align-items: flex-start;
+      }
+      .compare-col {
+        flex: 1;
+        min-width: 0;
+      }
+      .compare-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 14px;
+        padding: 5px 12px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+      .label-before {
+        background: #b53030;
+        color: #fff;
+      }
+      .label-after {
+        background: #059669;
+        color: #fff;
+      }
+
+      .phone {
+        width: 100%;
+        max-width: 360px;
+        border-radius: 28px;
+        overflow: hidden;
+        border: 2px solid #3d3833;
+        background: #f5f1ed;
+      }
+      .phone-header {
+        background: #edeae5;
+        padding: 14px 16px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b6560;
+        border-bottom: 1px solid #e0dbd4;
+      }
+
+      /* ── Card shell ── */
+      .habit-card {
+        margin: 12px;
+        border-radius: 24px;
+        background: #fff;
+        border: 1px solid #ede9e4;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+        display: flex;
+        position: relative;
+      }
+      .accent {
+        width: 4px;
+        flex-shrink: 0;
+        background: linear-gradient(180deg, #34d399, #10b981);
+      }
+      .card-body {
+        flex: 1;
+        position: relative;
+      }
+
+      /* ── Grid guides ── */
+      .guides {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .guide-v {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        border-left: 1px dashed;
+      }
+      .guide-v.bad {
+        border-color: rgba(181, 48, 48, 0.55);
+      }
+      .guide-v.good {
+        border-color: rgba(5, 150, 105, 0.55);
+      }
+      .guide-h {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        border-top: 1px dashed rgba(5, 150, 105, 0.35);
+      }
+
+      /* ── BEFORE layout (1:4 flex + drifted bar) ── */
+      .before .card-top {
+        padding: 16px 12px 0;
+      }
+      .before .header-row {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+      .before .icon-col {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        padding-top: 2px;
+      }
+      .before .title-col {
+        flex: 4;
+        padding-left: 8px;
+        padding-right: 12px;
+      }
+      .before .icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .before .title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .before .title-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d2a26;
+        letter-spacing: -0.3px;
+        line-height: 22px;
+        flex: 1;
+      }
+      .before .chevron {
+        color: #d6d3d1;
+        flex-shrink: 0;
+      }
+
+      .before .bar-row {
+        position: relative;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        margin-bottom: 12px;
+        height: 36px;
+      }
+      .before .bar-col {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      .before .bar-col.emoji {
+        font-size: 22px;
+      }
+      .before .bar-col.pct {
+        font-size: 14px;
+        font-weight: 700;
+        color: #10b981;
+        margin-left: 12px; /* drift */
+      }
+      .before .bar-track-wrap {
+        position: absolute;
+        left: 20%;
+        right: 22%;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+      }
+      .before .bar-track {
+        width: 100%;
+        height: 8px;
+        background: #e7e5e4;
+        border-radius: 4px;
+        margin: 0 8px;
+        overflow: hidden;
+        position: relative;
+      }
+      .before .bar-fill {
+        height: 100%;
+        width: 72%;
+        background: #10b981;
+        border-radius: 4px;
+      }
+
+      .before .chain-row {
+        padding: 0 12px 16px 12px; /* pl-3 pr-4 asymmetry simulated as 12/12 but chain dots offset */
+        padding-right: 16px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .before .chain-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        border: 2px solid #d6d3d1;
+        flex-shrink: 0;
+      }
+      .before .chain-dot.done {
+        background: #10b981;
+        border-color: #10b981;
+      }
+
+      /* ── AFTER layout (5-col grid + symmetric) ── */
+      .after .card-top {
+        padding: 16px 12px 0;
+      }
+      .after .card-bottom {
+        padding: 0 12px 16px;
+      }
+
+      .after .grid-row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        align-items: center;
+        position: relative;
+        margin-bottom: 12px;
+        min-height: 36px;
+      }
+      .after .grid-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .after .grid-cell.span-title {
+        grid-column: 2 / 5;
+        justify-content: flex-start;
+        padding-left: 8px;
+        min-height: 36px;
+      }
+      .after .icon-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background: #f0fdf4;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .after .title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .after .title-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d2a26;
+        letter-spacing: -0.3px;
+        line-height: 22px;
+      }
+      .after .chevron {
+        color: #d6d3d1;
+      }
+
+      .after .bar-overlay {
+        position: absolute;
+        left: 20%;
+        right: 20%;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        pointer-events: none;
+      }
+      .after .bar-track {
+        width: 100%;
+        height: 8px;
+        background: #e7e5e4;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .after .bar-fill {
+        height: 100%;
+        width: 72%;
+        background: #10b981;
+        border-radius: 4px;
+      }
+      .after .pct {
+        font-size: 14px;
+        font-weight: 700;
+        color: #10b981;
+      }
+
+      .after .chain-row {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .after .chain-spacer {
+        width: calc(20% - 0px);
+        flex-shrink: 0;
+      }
+      .after .chain-dots {
+        flex: 1;
+        display: flex;
+        gap: 6px;
+      }
+      .after .chain-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        border: 2px solid #d6d3d1;
+      }
+      .after .chain-dot.done {
+        background: #10b981;
+        border-color: #10b981;
+      }
+
+      .callout {
+        margin-top: 16px;
+        font-size: 12px;
+        color: #6b6560;
+        line-height: 1.65;
+        border-left: 2px solid #3d3833;
+        padding-left: 12px;
+      }
+      .callout code {
+        background: #2d2a26;
+        color: #e8b94d;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 11px;
+      }
+      .callout li {
+        margin-left: 16px;
+        margin-bottom: 4px;
+      }
+
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        font-size: 11px;
+        color: #6b6560;
+      }
+      .legend span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .swatch {
+        width: 20px;
+        height: 3px;
+        border-radius: 2px;
+      }
+      .swatch.bad {
+        background: repeating-linear-gradient(
+          90deg,
+          #b53030 0 4px,
+          transparent 4px 8px
+        );
+      }
+      .swatch.good {
+        background: repeating-linear-gradient(
+          90deg,
+          #059669 0 4px,
+          transparent 4px 8px
+        );
+      }
+
+      .scan-demo {
+        margin-top: 8px;
+      }
+      .scan-line {
+        position: absolute;
+        width: 2px;
+        background: rgba(232, 185, 77, 0.7);
+        top: 8px;
+        bottom: 8px;
+        z-index: 11;
+      }
+
+      @media (max-width: 900px) {
+        .compare-row {
+          flex-direction: column;
+        }
+        .phone {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Habit Card Alignment</h1>
+    <p class="subtitle">
+      Before / After — shared 5-column grid, uniform padding, title ↔ emoji
+      centerline
+    </p>
+
+    <div class="compare-row">
+      <!-- BEFORE -->
+      <div class="compare-col before">
+        <div class="compare-label label-before">Before</div>
+        <div class="phone">
+          <div class="phone-header">Today · 3 habits</div>
+
+          <div class="habit-card">
+            <div class="accent"></div>
+            <div class="card-body">
+              <div class="guides">
+                <div class="guide-v bad" style="left: 12%"></div>
+                <div class="guide-v bad" style="left: 32%"></div>
+                <div class="guide-v bad" style="left: 78%"></div>
+                <div class="guide-v bad" style="left: 80%"></div>
+              </div>
+              <div class="card-top">
+                <div class="header-row">
+                  <div class="icon-col">
+                    <div class="icon-box">🧘</div>
+                  </div>
+                  <div class="title-col">
+                    <div class="title-row">
+                      <span class="title-text">Morning Meditation</span>
+                      <i
+                        data-lucide="chevron-right"
+                        class="chevron"
+                        style="width: 18px; height: 18px"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-col emoji">🌿</div>
+                  <div class="bar-col"></div>
+                  <div class="bar-col"></div>
+                  <div class="bar-col"></div>
+                  <div class="bar-col pct">72%</div>
+                  <div class="bar-track-wrap">
+                    <div class="bar-track"><div class="bar-fill"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="chain-row">
+                <div class="chain-dot done"></div>
+                <div class="chain-dot done"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot done"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div
+              class="accent"
+              style="background: linear-gradient(180deg, #fcd34d, #f59e0b)"
+            ></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div class="header-row">
+                  <div class="icon-col"><div class="icon-box">📚</div></div>
+                  <div class="title-col">
+                    <div class="title-row">
+                      <span class="title-text"
+                        >Read 30 Minutes Before Bed Every Night</span
+                      >
+                      <i
+                        data-lucide="chevron-right"
+                        class="chevron"
+                        style="width: 18px; height: 18px"
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="bar-row">
+                  <div class="bar-col emoji">🌱</div>
+                  <div class="bar-col"></div>
+                  <div class="bar-col"></div>
+                  <div class="bar-col"></div>
+                  <div class="bar-col pct">45%</div>
+                  <div class="bar-track-wrap">
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 45%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="chain-row">
+                <div class="chain-dot done"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot done"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot"></div>
+                <div class="chain-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><span class="swatch bad"></span> Misaligned column edges</span>
+        </div>
+        <div class="callout">
+          <strong style="color: #f5a5a5">Problems</strong>
+          <ul>
+            <li>
+              Header uses <code>flex:1 + flex:4</code>; bar uses 5×
+              <code>flex-1</code> — different math
+            </li>
+            <li>
+              Bar overlay <code>right: 22%</code> +
+              <code>marginHorizontal: 8</code> drifts track
+            </li>
+            <li>Percent has extra <code>marginLeft: 12</code></li>
+            <li>
+              Icon <code>pt-0.5</code> + <code>items-start</code> — title sits
+              above emoji center
+            </li>
+            <li>
+              Chain section <code>pr-4</code> (16px) vs header
+              <code>px-3</code> (12px)
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="compare-col after">
+        <div class="compare-label label-after">After</div>
+        <div class="phone">
+          <div class="phone-header">Today · 3 habits</div>
+
+          <div class="habit-card">
+            <div class="accent"></div>
+            <div class="card-body">
+              <div class="guides">
+                <div class="guide-v good" style="left: 12%"></div>
+                <div class="guide-v good" style="left: 32%"></div>
+                <div class="guide-v good" style="left: 80%"></div>
+                <div class="scan-line" style="left: 22%"></div>
+              </div>
+              <div class="card-top">
+                <div class="grid-row">
+                  <div class="grid-cell"><div class="icon-box">🧘</div></div>
+                  <div class="grid-cell span-title">
+                    <div class="title-row">
+                      <span class="title-text">Morning Meditation</span>
+                    </div>
+                  </div>
+                  <div class="grid-cell">
+                    <i
+                      data-lucide="chevron-right"
+                      class="chevron"
+                      style="width: 18px; height: 18px"
+                    ></i>
+                  </div>
+                </div>
+                <div class="grid-row" style="margin-bottom: 0">
+                  <div class="grid-cell emoji" style="font-size: 22px">🌿</div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell pct">72%</div>
+                  <div class="bar-overlay">
+                    <div class="bar-track"><div class="bar-fill"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-bottom">
+                <div class="chain-row">
+                  <div class="chain-spacer"></div>
+                  <div class="chain-dots">
+                    <div class="chain-dot done"></div>
+                    <div class="chain-dot done"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot done"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div
+              class="accent"
+              style="background: linear-gradient(180deg, #fcd34d, #f59e0b)"
+            ></div>
+            <div class="card-body">
+              <div class="card-top">
+                <div class="grid-row">
+                  <div class="grid-cell"><div class="icon-box">📚</div></div>
+                  <div class="grid-cell span-title">
+                    <div class="title-row">
+                      <span class="title-text"
+                        >Read 30 Minutes Before Bed Every Night</span
+                      >
+                    </div>
+                  </div>
+                  <div class="grid-cell">
+                    <i
+                      data-lucide="chevron-right"
+                      class="chevron"
+                      style="width: 18px; height: 18px"
+                    ></i>
+                  </div>
+                </div>
+                <div class="grid-row" style="margin-bottom: 0">
+                  <div class="grid-cell" style="font-size: 22px">🌱</div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell pct">45%</div>
+                  <div class="bar-overlay">
+                    <div class="bar-track">
+                      <div class="bar-fill" style="width: 45%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-bottom">
+                <div class="chain-row">
+                  <div class="chain-spacer"></div>
+                  <div class="chain-dots">
+                    <div class="chain-dot done"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot done"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot"></div>
+                    <div class="chain-dot"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend">
+          <span><span class="swatch good"></span> Shared 20% column grid</span>
+          <span style="color: #e8b94d">│ gold scan line</span>
+        </div>
+        <div class="callout">
+          <strong style="color: #86efac">Fixes</strong>
+          <ul>
+            <li>
+              <code>HabitCardGridRow</code> — one 5-column primitive for header
+              + bar
+            </li>
+            <li>
+              Symmetric overlay <code>left: 20%</code> / <code>right: 20%</code>
+            </li>
+            <li>
+              Title <code>minHeight</code> = icon size +
+              <code>justifyContent: center</code>
+            </li>
+            <li>
+              Padding centralized in <code>CardContent</code> — uniform
+              <code>px-3</code>
+            </li>
+            <li>Chevron + percent each own column 5</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

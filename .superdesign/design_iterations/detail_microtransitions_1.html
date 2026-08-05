@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Microtransitions: Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F7F5F0; --card:#FFFFFF; --ink:#1C1B18; --muted:#8A8578;
+  --green:#4D7C5F; --green-deep:#3D6850; --green-soft:#E8F0EA;
+  --primary:#2B2A26; --line:#E7E3DA;
+  --shadow-card:0 1px 2px rgba(28,27,24,.05),0 4px 16px rgba(28,27,24,.07);
+  --shadow-pop:0 2px 4px rgba(28,27,24,.08),0 12px 28px rgba(28,27,24,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);padding:48px 24px 96px}
+.wrap{max-width:1060px;margin:0 auto}
+h1{font-family:'Literata',serif;font-size:34px;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);margin-top:8px;max-width:640px;line-height:1.55;font-size:15px}
+.section{margin-top:64px}
+.section h2{font-family:'Literata',serif;font-size:22px;font-weight:600;display:flex;align-items:center;gap:12px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:#fff;font-family:'Inter';font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+@media(max-width:760px){.pair{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow-card);position:relative}
+.panel.after{border-color:#CFDCD3;background:linear-gradient(180deg,#FFFFFF 0%,#FBFDFB 100%)}
+.tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:99px;display:inline-block;margin-bottom:18px}
+.tag.before{background:#F0EDE6;color:#9A937F}
+.tag.after{background:var(--green-soft);color:var(--green-deep)}
+.stage{min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.replay{margin-top:18px;width:100%;padding:10px;border:1px solid var(--line);background:#FAF9F5;border-radius:12px;font:600 13px 'Inter';color:var(--ink);cursor:pointer;transition:background .15s}
+.replay:hover{background:#F1EFE7}
+.why{margin-top:20px;background:#FCFBF7;border:1px solid var(--line);border-left:3px solid var(--green);border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.6;color:#4A463C}
+.why b{color:var(--ink)}
+.note{font-size:12px;color:var(--muted);text-align:center}
+
+/* ---- Complete button ---- */
+.cbtn{width:280px;height:56px;border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font:600 16px 'Inter';color:#fff;background:var(--primary);position:relative;overflow:hidden;box-shadow:var(--shadow-card)}
+.cbtn .lbl{position:relative}
+.cbtn .icon{width:22px;height:22px;flex:none;position:relative}
+.cbtn .icon svg{position:absolute;inset:0}
+/* before: hard swap */
+.cbtn.b.done{background:var(--green)}
+/* after: animated */
+.cbtn.a{transition:none}
+.cbtn.a.done{animation:none}
+.cbtn.a .bgfill{position:absolute;inset:0;background:var(--green);opacity:0;transition:opacity .3s ease}
+.cbtn.a.done .bgfill{opacity:1}
+.cbtn.a.done{animation:pulse .45s cubic-bezier(.34,1.56,.64,1) .25s}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.04)}100%{transform:scale(1)}}
+.cbtn.a .circle{transition:opacity .2s ease}
+.cbtn.a.done .circle{opacity:0}
+.cbtn.a .check{opacity:0;transform:scale(0);transform-origin:center}
+.cbtn.a.done .check{animation:checkin .5s cubic-bezier(.34,1.8,.64,1) .12s forwards}
+@keyframes checkin{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+.cbtn.a .lbl span{display:block;transition:opacity .15s ease}
+.cbtn.a .lbl .l2{position:absolute;inset:0;opacity:0}
+.cbtn.a.done .lbl .l1{opacity:0}
+.cbtn.a.done .lbl .l2{opacity:1;transition-delay:.12s}
+.cbtn.b .lbl .l2{position:absolute;inset:0;display:none}
+.cbtn.b.done .lbl .l1{display:none}
+.cbtn.b.done .lbl .l2{display:block}
+.cbtn.b .check{display:none}
+.cbtn.b.done .check{display:block;opacity:1}
+.cbtn.b.done .circle{display:none}
+
+/* ---- Hero ---- */
+.hero{display:flex;flex-direction:column;align-items:center;gap:14px}
+.tile{width:72px;height:72px;border-radius:20px;background:var(--green-soft);display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;box-shadow:var(--shadow-card)}
+.badge{position:absolute;right:-7px;top:-7px;width:26px;height:26px;border-radius:50%;background:var(--green);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;opacity:0}
+.badge svg{width:13px;height:13px}
+.hero.done .badge.b{opacity:1}
+.hero.done .badge.a{animation:badgein .55s cubic-bezier(.34,1.9,.64,1) .1s forwards}
+@keyframes badgein{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+.stats{display:flex;gap:28px}
+.stat{text-align:center}
+.stat .v{font-family:'Literata',serif;font-size:24px;font-weight:600;height:30px;position:relative;overflow:hidden}
+.stat .v span{position:absolute;left:0;right:0}
+.stat .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.tick .old,.tick .new{transition:none}
+.tick .new{opacity:0;transform:translateY(12px)}
+.hero.done .tick.a .old{animation:numout .3s ease .15s forwards}
+.hero.done .tick.a .new{animation:numin .35s cubic-bezier(.22,1,.36,1) .25s forwards}
+@keyframes numout{to{opacity:0;transform:translateY(-12px)}}
+@keyframes numin{to{opacity:1;transform:translateY(0)}}
+.hero.done .tick.b .old{display:none}
+.hero.done .tick.b .new{opacity:1;transform:none}
+
+/* ---- Goal ---- */
+.goal{width:100%;max-width:300px}
+.gnum{font-family:'Literata',serif;font-size:64px;font-weight:600;line-height:1;text-align:center;color:var(--ink)}
+.gof{text-align:center;color:var(--muted);font-size:14px;margin-top:4px}
+.bar{height:10px;border-radius:99px;background:#EEEBE2;margin-top:18px;overflow:hidden}
+.fill{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--green-deep),var(--green))}
+.goal.run .fill{transition:width .8s cubic-bezier(.22,1,.36,1)}
+.goal.run.b .fill{transition:width .8s cubic-bezier(.22,1,.36,1)}
+.glabels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:10px}
+.goal.a .glabels{opacity:0;transition:opacity .35s ease .8s}
+.goal.a.run .glabels{opacity:1}
+.goal.a.reached .bar{animation:pulse .45s cubic-bezier(.34,1.56,.64,1) .85s}
+.affirm{display:none;text-align:center;font-size:13px;font-weight:600;color:var(--green-deep);margin-top:10px}
+.goal.a.reached .affirm{display:block;animation:numin .4s ease .9s backwards}
+.goal.a.reached .glabels{display:none}
+
+/* ---- Press parity ---- */
+.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.chip{padding:10px 18px;border-radius:99px;border:1px solid var(--line);background:#fff;font:500 13px 'Inter';cursor:pointer;box-shadow:var(--shadow-card)}
+.chip.a{transition:transform .08s ease}
+.chip.a:active{transform:scale(.96)}
+.chip.b:active{opacity:.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Habit Detail — Microtransitions</h1>
+  <p class="sub">Before / after mock of the plan. <b>Before</b> panels behave like the current build (instant hard swaps). <b>After</b> panels simulate the proposed Reanimated transitions. Click any element or its replay button to run the moment.</p>
+
+  <!-- 1 -->
+  <div class="section">
+    <h2><span class="num">1</span>Complete button transition — the headline fix</h2>
+    <div class="pair">
+      <div class="panel">
+        <span class="tag before">Before — instant flip</span>
+        <div class="stage">
+          <button class="cbtn b" onclick="this.classList.toggle('done')">
+            <span class="icon">
+              <svg class="circle" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="9" fill="#fff" stroke="none" opacity=".18"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>
+            </span>
+            <span class="lbl"><span class="l1">Complete Today</span><span class="l2">Completed Today</span></span>
+          </button>
+          <span class="note">Color, label and icon hard-swap in one frame</span>
+        </div>
+        <button class="replay" onclick="toggle(this,'.cbtn')">Toggle</button>
+      </div>
+      <div class="panel after">
+        <span class="tag after">After — celebratory transition</span>
+        <div class="stage">
+          <button class="cbtn a" onclick="this.classList.toggle('done')">
+            <span class="bgfill"></span>
+            <span class="icon">
+              <svg class="circle" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="9" fill="#fff" stroke="none" opacity=".18"/><path d="M8 12.5l2.6 2.6L16 9.5"/></svg>
+            </span>
+            <span class="lbl"><span class="l1">Complete Today</span><span class="l2">Completed Today</span></span>
+          </button>
+          <span class="note">300ms color fade · check springs in · label cross-fade · 1.04 pulse + success haptic</span>
+        </div>
+        <button class="replay" onclick="toggle(this,'.cbtn')">Toggle</button>
+      </div>
+    </div>
+    <div class="why"><b>Why:</b> this is the dopamine moment — the single interaction the whole app exists for. An instant flip gives zero reward feedback; a sub-400ms celebratory transition makes the rep feel <i>acknowledged</i>, which is the behavioral hook that brings users back tomorrow.</div>
+  </div>
+
+  <!-- 2 -->
+  <div class="section">
+    <h2><span class="num">2</span>Hero badge + streak stat reaction</h2>
+    <div class="pair">
+      <div class="panel">
+        <span class="tag before">Before — page doesn't react</span>
+        <div class="stage">
+          <div class="hero" onclick="this.classList.toggle('done')">
+            <div class="tile">🏃<span class="badge b"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></div>
+            <div class="stats">
+              <div class="stat tick b"><div class="v"><span class="old">12</span><span class="new">13</span></div><div class="k">Streak</div></div>
+              <div class="stat"><div class="v">86%</div><div class="k">Rate</div></div>
+              <div class="stat"><div class="v">41</div><div class="k">Total</div></div>
+            </div>
+          </div>
+          <span class="note">Badge and number snap to new values</span>
+        </div>
+        <button class="replay" onclick="toggle(this,'.hero')">Toggle completion</button>
+      </div>
+      <div class="panel after">
+        <span class="tag after">After — data visibly moves</span>
+        <div class="stage">
+          <div class="hero" onclick="this.classList.toggle('done')">
+            <div class="tile">🏃<span class="badge a"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span></div>
+            <div class="stats">
+              <div class="stat tick a"><div class="v"><span class="old">12</span><span class="new">13</span></div><div class="k">Streak</div></div>
+              <div class="stat"><div class="v">86%</div><div class="k">Rate</div></div>
+              <div class="stat"><div class="v">41</div><div class="k">Total</div></div>
+            </div>
+          </div>
+          <span class="note">Badge springs in · streak number ticks up (old fades out, new slides in)</span>
+        </div>
+        <button class="replay" onclick="toggle(this,'.hero')">Toggle completion</button>
+      </div>
+    </div>
+    <div class="why"><b>Why:</b> the user just changed their streak — the page should react <i>where the data lives</i>. Connecting the button press to the streak number reinforces "my action moved my progress," the core transformation narrative of the app.</div>
+  </div>
+
+  <!-- 3 -->
+  <div class="section">
+    <h2><span class="num">3</span>Streak goal — count-up numeral & goal-reached state</h2>
+    <div class="pair">
+      <div class="panel">
+        <span class="tag before">Before — bar moves, number doesn't</span>
+        <div class="stage">
+          <div class="goal b">
+            <div class="gnum">12</div>
+            <div class="gof">of 14 days</div>
+            <div class="bar"><div class="fill"></div></div>
+            <div class="glabels"><span>86% complete</span><span>2 to go</span></div>
+          </div>
+        </div>
+        <button class="replay" onclick="runGoal(this,false)">Replay mount</button>
+      </div>
+      <div class="panel after">
+        <span class="tag after">After — synced count-up + celebration</span>
+        <div class="stage">
+          <div class="goal a">
+            <div class="gnum"><span class="count">0</span></div>
+            <div class="gof">of 14 days</div>
+            <div class="bar"><div class="fill"></div></div>
+            <div class="glabels"><span>86% complete</span><span>2 to go</span></div>
+            <div class="affirm">Goal reached — extend it?</div>
+          </div>
+          <span class="note">Numeral counts 0→12 with the 800ms fill · labels ease in after fill settles</span>
+        </div>
+        <button class="replay" onclick="runGoal(this,false)">Replay mount</button>
+        <button class="replay" onclick="runGoal(this,true)">Replay goal-reached (14/14)</button>
+      </div>
+    </div>
+    <div class="why"><b>Why:</b> the Goal tab is where users ask "is this working?" A number counting up alongside the bar makes progress feel earned and tangible — and a celebrated goal-reached state (pulse + streak haptic + "extend it?" copy) converts an achievement into the prompt to set the next goal. That's the retention loop.</div>
+  </div>
+
+  <!-- 4 -->
+  <div class="section">
+    <h2><span class="num">4</span>Consistency — one press / motion / haptic language</h2>
+    <div class="pair">
+      <div class="panel">
+        <span class="tag before">Before — mixed feedback</span>
+        <div class="stage">
+          <div class="chips">
+            <button class="chip b">Tab pill (opacity dim)</button>
+            <button class="chip b">Adjust (no feedback)</button>
+            <button class="chip b">Day cell (inline haptic)</button>
+          </div>
+          <span class="note">Each tappable presses differently; haptics defined ad-hoc inline</span>
+        </div>
+      </div>
+      <div class="panel after">
+        <span class="tag after">After — uniform press-scale convention</span>
+        <div class="stage">
+          <div class="chips">
+            <button class="chip a">Tab pill</button>
+            <button class="chip a">Adjust</button>
+            <button class="chip a">Day cell</button>
+          </div>
+          <span class="note">All tappables: 80ms scale-in → spring out · haptics routed through patterns.ts · one shadow token · tab content matches indicator timing (press and hold to feel it)</span>
+        </div>
+      </div>
+    </div>
+    <div class="why"><b>Why:</b> inconsistent micro-feedback reads as <i>cheap</i>. Users can't name it, but a uniform press/motion/haptic vocabulary is what makes the app feel trustworthy enough to host a daily ritual — the "premium not cheap" direction.</div>
+  </div>
+</div>
+
+<script>
+function toggle(btn, sel){
+  const el = btn.closest('.panel').querySelector(sel);
+  el.classList.toggle('done');
+}
+function runGoal(btn, reached){
+  const g = btn.closest('.panel').querySelector('.goal');
+  const fill = g.querySelector('.fill');
+  const count = g.querySelector('.count');
+  const target = reached ? 14 : 12;
+  const pct = reached ? 100 : 86;
+  g.classList.remove('run','reached');
+  fill.style.width = '0%';
+  if(count) count.textContent = '0';
+  void g.offsetWidth;
+  requestAnimationFrame(()=>{
+    g.classList.add('run');
+    if(reached) g.classList.add('reached');
+    fill.style.width = pct + '%';
+    if(count){
+      const t0 = performance.now(), D = 800;
+      (function step(t){
+        const p = Math.min((t - t0)/D, 1);
+        const e = 1 - Math.pow(1-p, 3);
+        count.textContent = Math.round(e*target);
+        if(p < 1) requestAnimationFrame(step);
+      })(t0);
+    }
+  });
+}
+</script>
+</body>
+</html>

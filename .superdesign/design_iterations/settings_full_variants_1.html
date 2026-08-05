@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — 10 Full Layout Variants</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif !important; background: #0a0a0a; color: #e5e5e5; padding: 32px; }
+
+  h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .subtitle { font-size: 14px; color: #737373; margin-bottom: 28px; line-height: 1.5; }
+
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 40px; }
+  @media (max-width: 1600px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .variant { background: #111; border: 1px solid #222; border-radius: 16px; overflow: hidden; position: relative; }
+  .variant.recommended { border: 2px solid #059669; }
+  .rec-badge { position: absolute; top: 10px; right: 10px; background: #059669; color: white; font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: 4px; z-index: 10; text-transform: uppercase; letter-spacing: 0.5px; }
+  .variant-header { padding: 14px 14px 10px; }
+  .variant-num { font-size: 10px; font-weight: 700; color: #059669; text-transform: uppercase; letter-spacing: 1px; }
+  .variant-name { font-size: 15px; font-weight: 700; color: #f5f5f5; margin-top: 2px; }
+  .variant-desc { font-size: 11px; color: #737373; margin-top: 3px; line-height: 1.4; }
+
+  /* Mini phone */
+  .mini-phone { height: 520px; overflow-y: auto; background: #fafaf9; margin: 0 10px 10px; border-radius: 16px; padding: 10px; }
+  .mini-phone::-webkit-scrollbar { display: none; }
+
+  /* Shared settings primitives */
+  .s-drag { width: 28px; height: 4px; background: #d4d4d4; border-radius: 2px; margin: 4px auto 6px; }
+  .s-header { font-size: 14px; font-weight: 700; color: #1c1917; text-align: center; margin-bottom: 8px; }
+  .s-section { font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #a8a29e; padding: 0 2px; margin: 10px 0 3px; }
+  .s-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 8px; }
+  .s-row { display: flex; align-items: center; padding: 7px 8px; border-bottom: 0.5px solid #f0ece8; gap: 6px; }
+  .s-row:last-child { border-bottom: none; }
+  .s-icon { width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .s-label { font-size: 10.5px; font-weight: 600; color: #1c1917; flex: 1; line-height: 1.2; }
+  .s-sub { font-size: 8px; color: #a8a29e; }
+  .s-val { font-size: 9px; font-weight: 500; color: #a8a29e; }
+  .s-chev { color: #d4d4d4; }
+  .s-toggle { width: 32px; height: 18px; border-radius: 9px; position: relative; flex-shrink: 0; }
+  .s-toggle.on { background: #059669; }
+  .s-toggle.off { background: #e5e5e5; }
+  .s-toggle-t { width: 14px; height: 14px; border-radius: 7px; background: white; position: absolute; top: 2px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); }
+  .s-toggle.on .s-toggle-t { left: 16px; }
+  .s-toggle.off .s-toggle-t { left: 2px; }
+
+  /* Profile */
+  .s-profile { display: flex; align-items: center; padding: 8px; gap: 7px; }
+  .s-avatar { width: 32px; height: 32px; border-radius: 16px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
+  .s-avatar-lg { width: 44px; height: 44px; border-radius: 22px; font-size: 17px; }
+  .s-name { font-size: 11px; font-weight: 700; color: #1c1917; }
+  .s-email { font-size: 8px; color: #a8a29e; }
+  .s-pro { display: inline-flex; align-items: center; gap: 2px; background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 1px 4px; border-radius: 3px; font-size: 7px; font-weight: 700; color: #92400e; }
+
+  /* Special */
+  .s-signout-card { text-align: center; padding: 8px; font-size: 11px; font-weight: 600; color: #ef4444; background: white; border-radius: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 8px; }
+  .s-delete-muted { font-size: 10px; color: #d4d4d4; font-weight: 500; }
+  .s-delete-tiny { font-size: 8px; color: #e7e5e4; text-align: center; padding: 4px 0; }
+  .s-search { background: #f0ece8; border-radius: 8px; padding: 6px 8px; font-size: 10px; color: #a8a29e; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+  .s-tab-bar { display: flex; gap: 2px; margin-bottom: 8px; background: #f0ece8; border-radius: 8px; padding: 2px; }
+  .s-tab { flex: 1; text-align: center; padding: 5px 4px; font-size: 9px; font-weight: 600; color: #a8a29e; border-radius: 6px; }
+  .s-tab.active { background: white; color: #1c1917; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .s-cat-card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+  .s-cat-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .s-cat-label { font-size: 11px; font-weight: 700; color: #1c1917; }
+  .s-cat-desc { font-size: 8px; color: #a8a29e; }
+  .s-inline-row { display: flex; align-items: center; padding: 6px 0; gap: 6px; border-bottom: 0.5px solid #f0ece8; }
+  .s-inline-row:last-child { border-bottom: none; }
+
+  /* Tags */
+  .tags { margin-top: 6px; }
+  .tag { display: inline-block; font-size: 8px; font-weight: 600; padding: 2px 5px; border-radius: 3px; margin-right: 2px; }
+  .tag-pro { background: #1a2e1a; color: #4ade80; }
+  .tag-con { background: #2e1a1a; color: #f87171; }
+  .tag-money { background: #2e2a1a; color: #fbbf24; }
+
+  /* Recommendation section */
+  .rec-section { background: #0d1f0d; border: 1px solid #1a3a1a; border-radius: 16px; padding: 28px 32px; margin-top: 16px; }
+  .rec-title { font-size: 22px; font-weight: 800; color: #4ade80; margin-bottom: 12px; }
+  .rec-body { font-size: 14px; line-height: 1.7; color: #a3a3a3; }
+  .rec-body strong { color: #e5e5e5; }
+  .rec-body ul { padding-left: 20px; margin: 8px 0; }
+  .rec-body li { margin-bottom: 4px; }
+  .rec-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .rec-vs-card { background: #111; border-radius: 10px; padding: 16px; }
+  .rec-vs-title { font-size: 12px; font-weight: 700; color: #f5f5f5; margin-bottom: 6px; }
+  .rec-vs-body { font-size: 11px; color: #737373; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<h1>Settings Redesign — 10 Layout Variants</h1>
+<p class="subtitle">Each variant has a different design philosophy. Scroll down to see my recommendation with full reasoning.</p>
+
+<div class="grid">
+
+<!-- V1: CURRENT IMPROVED -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 1</div>
+    <div class="variant-name">Current + Reorg</div>
+    <div class="variant-desc">Keep existing structure, just split Preferences and add profile card. Minimal risk.</div>
+    <div class="tags"><span class="tag tag-pro">Safe</span><span class="tag tag-pro">Low effort</span><span class="tag tag-con">Still feels same</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div></div>
+    <div class="s-section">Preferences</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort Order</div><div class="s-val">Manual</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#bae6fd;"><i data-lucide="check" style="width:11px;height:11px;color:#0284c7;"></i></div><div class="s-label">Completion icon</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Completion sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#dbeafe;"><i data-lucide="calendar" style="width:11px;height:11px;color:#0ea5e9;"></i></div><div class="s-label">Pin calendar</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#ddd6fe;"><i data-lucide="circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Circular markers</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="droplets" style="width:11px;height:11px;color:#059669;"></i></div><div class="s-label">Gradient fill</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="book-open" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Archived Habits</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div class="s-section">Notifications</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fed7aa;"><i data-lucide="bell" style="width:11px;height:11px;color:#ea580c;"></i></div><div class="s-label">Streak reminders</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div class="s-section">Account</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Rate</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:11px;height:11px;color:#10b981;"></i></div><div class="s-label">Share</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Privacy</div></div>
+    </div>
+    <div class="s-signout-card">Sign Out</div>
+    <div class="s-delete-tiny">Delete Account</div>
+  </div>
+</div>
+
+<!-- V2: APPLE SETTINGS -->
+<div class="variant recommended">
+  <div class="rec-badge">Recommended</div>
+  <div class="variant-header">
+    <div class="variant-num">Variant 2</div>
+    <div class="variant-name">Apple Settings</div>
+    <div class="variant-desc">Profile top, semantic sections, Sign Out card at bottom, Delete in About. Familiar to every iOS user.</div>
+    <div class="tags"><span class="tag tag-pro">Familiar</span><span class="tag tag-pro">Scannable</span><span class="tag tag-money">Premium feel</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div></div>
+    <div class="s-section">Appearance</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#ddd6fe;"><i data-lucide="circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Circular markers</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="droplets" style="width:11px;height:11px;color:#059669;"></i></div><div class="s-label">Gradient fill</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#bae6fd;"><i data-lucide="check" style="width:11px;height:11px;color:#0284c7;"></i></div><div class="s-label">Completion icon</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div class="s-section">Behavior</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort Order</div><div class="s-val">Manual</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Completion sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#dbeafe;"><i data-lucide="calendar" style="width:11px;height:11px;color:#0ea5e9;"></i></div><div class="s-label">Pin calendar</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div class="s-section">Data</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="book-open" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Archived Habits</div><div style="font-size:9px;font-weight:700;color:#78716c;background:#f5f5f4;border-radius:8px;padding:1px 5px;">3</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div class="s-section">Notifications</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fed7aa;"><i data-lucide="bell" style="width:11px;height:11px;color:#ea580c;"></i></div><div class="s-label">Streak reminders</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row" style="padding-left:36px;background:#fafaf9;"><div class="s-icon" style="background:#bae6fd;width:18px;height:18px;border-radius:4px;"><i data-lucide="clock" style="width:10px;height:10px;color:#0284c7;"></i></div><div class="s-label" style="font-size:10px;">Reminder time</div><div class="s-val">8 PM</div></div>
+    </div>
+    <div class="s-section">Support</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Rate Chain Day</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:11px;height:11px;color:#10b981;"></i></div><div class="s-label">Share with Friends</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#ede9fe;"><i data-lucide="message-circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Send Feedback</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#f3e8ff;"><i data-lucide="sparkles" style="width:11px;height:11px;color:#a855f7;"></i></div><div class="s-label">What's New</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div class="s-section">About</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="shield" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Privacy Policy</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="file-text" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Terms of Service</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Version 1.0.0</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#f5f5f4;"><i data-lucide="trash-2" style="width:11px;height:11px;color:#d4d4d4;"></i></div><div class="s-label s-delete-muted">Delete Account</div></div>
+    </div>
+    <div class="s-signout-card">Sign Out</div>
+  </div>
+</div>
+
+<!-- V3: MINIMAL NO ICONS -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 3</div>
+    <div class="variant-name">Minimal / No Icons</div>
+    <div class="variant-desc">Strip icons entirely. Text-only rows. Linear/Notion aesthetic.</div>
+    <div class="tags"><span class="tag tag-pro">Ultra clean</span><span class="tag tag-con">Harder to scan</span><span class="tag tag-con">Breaking change</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com • PRO</div></div></div></div>
+    <div class="s-section">Appearance</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-label">Circular markers</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-label">Gradient fill</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-label">Completion icon</div><div class="s-val">Checkmark</div></div>
+    </div>
+    <div class="s-section">Behavior</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-label">Sort order</div><div class="s-val">Manual</div></div>
+      <div class="s-row"><div class="s-label">Completion sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-label">Sticky calendar</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div class="s-section">Notifications</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-label">Streak reminders</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row" style="padding-left:16px;"><div class="s-label" style="font-size:10px;color:#a8a29e;">Reminder time</div><div class="s-val">8:00 PM</div></div>
+    </div>
+    <div class="s-section">More</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-label">Archived Habits</div><div class="s-val">3</div></div>
+      <div class="s-row"><div class="s-label">Rate App</div></div>
+      <div class="s-row"><div class="s-label">Share</div></div>
+      <div class="s-row"><div class="s-label">Feedback</div></div>
+      <div class="s-row"><div class="s-label" style="color:#a8a29e;">Privacy • Terms • v1.0.0</div></div>
+    </div>
+    <div style="text-align:center;padding:10px 0 2px;"><span style="font-size:11px;font-weight:600;color:#ef4444;">Sign Out</span></div>
+    <div class="s-delete-tiny">Delete Account</div>
+  </div>
+</div>
+
+<!-- V4: TABBED -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 4</div>
+    <div class="variant-name">Tabbed Categories</div>
+    <div class="variant-desc">Horizontal tabs at top. Each tab is a category. Less scrolling.</div>
+    <div class="tags"><span class="tag tag-pro">No scrolling</span><span class="tag tag-con">Complex nav</span><span class="tag tag-con">Lots of new code</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div></div></div>
+    <div class="s-tab-bar">
+      <div class="s-tab active">General</div>
+      <div class="s-tab">Notify</div>
+      <div class="s-tab">Account</div>
+    </div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort Order</div><div class="s-val">Manual</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#bae6fd;"><i data-lucide="check" style="width:11px;height:11px;color:#0284c7;"></i></div><div class="s-label">Completion icon</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Completion sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#dbeafe;"><i data-lucide="calendar" style="width:11px;height:11px;color:#0ea5e9;"></i></div><div class="s-label">Pin calendar</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#ddd6fe;"><i data-lucide="circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Circular markers</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="droplets" style="width:11px;height:11px;color:#059669;"></i></div><div class="s-label">Gradient fill</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="book-open" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Archived</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div style="text-align:center;padding:6px;font-size:8px;color:#a8a29e;">← swipe tabs for Notifications & Account</div>
+  </div>
+</div>
+
+<!-- V5: HUB AND SPOKE -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 5</div>
+    <div class="variant-name">Hub & Spoke</div>
+    <div class="variant-desc">Main page shows category cards only. Tap to expand into sub-screens. Clean hub.</div>
+    <div class="tags"><span class="tag tag-pro">Scalable</span><span class="tag tag-con">Extra taps</span><span class="tag tag-con">Major rework</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div></div>
+    <div class="s-cat-card"><div class="s-cat-icon" style="background:#fce7f3;"><i data-lucide="palette" style="width:16px;height:16px;color:#ec4899;"></i></div><div style="flex:1;"><div class="s-cat-label">Appearance</div><div class="s-cat-desc">Cards, markers, colors, icons</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+    <div class="s-cat-card"><div class="s-cat-icon" style="background:#e0e7ff;"><i data-lucide="settings-2" style="width:16px;height:16px;color:#6366f1;"></i></div><div style="flex:1;"><div class="s-cat-label">Behavior</div><div class="s-cat-desc">Sorting, sounds, calendar</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+    <div class="s-cat-card"><div class="s-cat-icon" style="background:#fed7aa;"><i data-lucide="bell" style="width:16px;height:16px;color:#ea580c;"></i></div><div style="flex:1;"><div class="s-cat-label">Notifications</div><div class="s-cat-desc">Streak reminders</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+    <div class="s-cat-card"><div class="s-cat-icon" style="background:#e7e5e4;"><i data-lucide="database" style="width:16px;height:16px;color:#78716c;"></i></div><div style="flex:1;"><div class="s-cat-label">Data</div><div class="s-cat-desc">Archived habits, export</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+    <div class="s-cat-card"><div class="s-cat-icon" style="background:#d1fae5;"><i data-lucide="heart" style="width:16px;height:16px;color:#10b981;"></i></div><div style="flex:1;"><div class="s-cat-label">Support</div><div class="s-cat-desc">Rate, share, feedback</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+    <div class="s-cat-card"><div class="s-cat-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:16px;height:16px;color:#6366f1;"></i></div><div style="flex:1;"><div class="s-cat-label">About</div><div class="s-cat-desc">Legal, version</div></div><div class="s-chev"><i data-lucide="chevron-right" style="width:12px;height:12px;"></i></div></div>
+    <div class="s-signout-card">Sign Out</div>
+  </div>
+</div>
+
+<!-- V6: SEARCH FIRST -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 6</div>
+    <div class="variant-name">Search First</div>
+    <div class="variant-desc">Search bar at top. Power users jump to any setting instantly. Full list below.</div>
+    <div class="tags"><span class="tag tag-pro">Power user</span><span class="tag tag-con">Overkill for ~15 settings</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-search"><i data-lucide="search" style="width:12px;height:12px;color:#a8a29e;"></i> Search settings...</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div></div></div>
+    <div class="s-section">Appearance</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#ddd6fe;"><i data-lucide="circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Circular markers</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="droplets" style="width:11px;height:11px;color:#059669;"></i></div><div class="s-label">Gradient fill</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div class="s-section">Behavior</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort Order</div><div class="s-val">Manual</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Completion sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div style="text-align:center;padding:8px;font-size:8px;color:#a8a29e;">↕ more sections below...</div>
+  </div>
+</div>
+
+<!-- V7: SPOTIFY STYLE -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 7</div>
+    <div class="variant-name">Spotify Profile</div>
+    <div class="variant-desc">Large profile header. Settings as a flat list. No section cards.</div>
+    <div class="tags"><span class="tag tag-pro">Bold identity</span><span class="tag tag-con">No grouping</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div style="text-align:center;padding:16px 0 12px;">
+      <div class="s-avatar s-avatar-lg" style="margin:0 auto;">A</div>
+      <div class="s-name" style="margin-top:8px;font-size:14px;">Andres</div>
+      <div class="s-email" style="font-size:10px;">andres@example.com</div>
+      <div class="s-pro" style="margin-top:4px;">PRO</div>
+    </div>
+    <div style="padding:0 2px;">
+      <div class="s-inline-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#ddd6fe;"><i data-lucide="circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Circular markers</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="droplets" style="width:11px;height:11px;color:#059669;"></i></div><div class="s-label">Gradient fill</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort Order</div><div class="s-val">Manual</div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Completion sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#fed7aa;"><i data-lucide="bell" style="width:11px;height:11px;color:#ea580c;"></i></div><div class="s-label">Streak reminders</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="book-open" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Archived</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Rate</div></div>
+      <div class="s-inline-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:11px;height:11px;color:#10b981;"></i></div><div class="s-label">Share</div></div>
+    </div>
+    <div style="text-align:center;padding:12px 0;"><span style="font-size:11px;font-weight:600;color:#ef4444;">Sign Out</span></div>
+  </div>
+</div>
+
+<!-- V8: DENSE TOGGLES -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 8</div>
+    <div class="variant-name">Dense Toggle Grid</div>
+    <div class="variant-desc">Two-column toggle grid for appearance. Compact. Data-heavy feel.</div>
+    <div class="tags"><span class="tag tag-pro">Space efficient</span><span class="tag tag-con">Unconventional</span><span class="tag tag-con">Hard to label</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div></div></div></div>
+    <div class="s-section">Appearance</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px;">
+      <div class="s-card" style="margin:0;"><div style="padding:8px;text-align:center;"><i data-lucide="rows-3" style="width:18px;height:18px;color:#ec4899;margin:0 auto 4px;display:block;"></i><div style="font-size:9px;font-weight:600;color:#1c1917;">Compact</div><div class="s-toggle on" style="margin:4px auto 0;"><div class="s-toggle-t"></div></div></div></div>
+      <div class="s-card" style="margin:0;"><div style="padding:8px;text-align:center;"><i data-lucide="circle" style="width:18px;height:18px;color:#8b5cf6;margin:0 auto 4px;display:block;"></i><div style="font-size:9px;font-weight:600;color:#1c1917;">Circular</div><div class="s-toggle off" style="margin:4px auto 0;"><div class="s-toggle-t"></div></div></div></div>
+      <div class="s-card" style="margin:0;"><div style="padding:8px;text-align:center;"><i data-lucide="droplets" style="width:18px;height:18px;color:#059669;margin:0 auto 4px;display:block;"></i><div style="font-size:9px;font-weight:600;color:#1c1917;">Gradient</div><div class="s-toggle on" style="margin:4px auto 0;"><div class="s-toggle-t"></div></div></div></div>
+      <div class="s-card" style="margin:0;"><div style="padding:8px;text-align:center;"><i data-lucide="check" style="width:18px;height:18px;color:#0284c7;margin:0 auto 4px;display:block;"></i><div style="font-size:9px;font-weight:600;color:#1c1917;">Check ✓</div><div class="s-toggle on" style="margin:4px auto 0;"><div class="s-toggle-t"></div></div></div></div>
+    </div>
+    <div class="s-section">Behavior</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort</div><div class="s-val">Manual</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#dbeafe;"><i data-lucide="calendar" style="width:11px;height:11px;color:#0ea5e9;"></i></div><div class="s-label">Pin cal</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div class="s-section">More</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-label">Reminders • Archived • About</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div class="s-signout-card">Sign Out</div>
+  </div>
+</div>
+
+<!-- V9: PRIORITY BASED -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 9</div>
+    <div class="variant-name">Priority / Frequency</div>
+    <div class="variant-desc">Most-used settings first. Rarely-used collapsed. Based on usage analytics.</div>
+    <div class="tags"><span class="tag tag-pro">Quick access</span><span class="tag tag-money">Data-driven</span><span class="tag tag-con">Needs analytics</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div></div></div>
+    <div class="s-section">Quick Settings</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort Order</div><div class="s-val">Manual</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact cards</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fed7aa;"><i data-lucide="bell" style="width:11px;height:11px;color:#ea580c;"></i></div><div class="s-label">Streak reminders</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+    </div>
+    <div class="s-section">All Settings</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-label" style="color:#a8a29e;">Appearance (4 settings)</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-label" style="color:#a8a29e;">Notifications (2 settings)</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-label" style="color:#a8a29e;">Data (1 setting)</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+    </div>
+    <div class="s-section">Support</div>
+    <div class="s-card">
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Rate</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="share" style="width:11px;height:11px;color:#10b981;"></i></div><div class="s-label">Share</div></div>
+    </div>
+    <div class="s-signout-card">Sign Out</div>
+  </div>
+</div>
+
+<!-- V10: COMPACT SINGLE CARD -->
+<div class="variant">
+  <div class="variant-header">
+    <div class="variant-num">Variant 10</div>
+    <div class="variant-name">Single Card</div>
+    <div class="variant-desc">Everything in one continuous card. Section dividers inside. Ultra-compact.</div>
+    <div class="tags"><span class="tag tag-pro">Compact</span><span class="tag tag-con">Wall of settings</span><span class="tag tag-con">No breathing room</span></div>
+  </div>
+  <div class="mini-phone">
+    <div class="s-drag"></div>
+    <div class="s-header">Settings</div>
+    <div class="s-card"><div class="s-profile"><div class="s-avatar">A</div><div style="flex:1;"><div class="s-name">Andres</div><div class="s-email">andres@example.com</div><div class="s-pro" style="margin-top:2px;">PRO</div></div></div></div>
+    <div class="s-card">
+      <div style="padding:4px 8px;font-size:8px;font-weight:700;color:#a8a29e;text-transform:uppercase;background:#fafaf9;">Appearance</div>
+      <div class="s-row"><div class="s-icon" style="background:#fce7f3;"><i data-lucide="rows-3" style="width:11px;height:11px;color:#ec4899;"></i></div><div class="s-label">Compact</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#ddd6fe;"><i data-lucide="circle" style="width:11px;height:11px;color:#8b5cf6;"></i></div><div class="s-label">Circular</div><div class="s-toggle off"><div class="s-toggle-t"></div></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#d1fae5;"><i data-lucide="droplets" style="width:11px;height:11px;color:#059669;"></i></div><div class="s-label">Gradient</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div style="padding:4px 8px;font-size:8px;font-weight:700;color:#a8a29e;text-transform:uppercase;background:#fafaf9;">Behavior</div>
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="arrow-up-down" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">Sort</div><div class="s-val">Manual</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="volume-2" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Sound</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div style="padding:4px 8px;font-size:8px;font-weight:700;color:#a8a29e;text-transform:uppercase;background:#fafaf9;">Notifications</div>
+      <div class="s-row"><div class="s-icon" style="background:#fed7aa;"><i data-lucide="bell" style="width:11px;height:11px;color:#ea580c;"></i></div><div class="s-label">Reminders</div><div class="s-toggle on"><div class="s-toggle-t"></div></div></div>
+      <div style="padding:4px 8px;font-size:8px;font-weight:700;color:#a8a29e;text-transform:uppercase;background:#fafaf9;">More</div>
+      <div class="s-row"><div class="s-icon" style="background:#e7e5e4;"><i data-lucide="book-open" style="width:11px;height:11px;color:#78716c;"></i></div><div class="s-label">Archived</div><div class="s-chev"><i data-lucide="chevron-right" style="width:10px;height:10px;"></i></div></div>
+      <div class="s-row"><div class="s-icon" style="background:#fef3c7;"><i data-lucide="star" style="width:11px;height:11px;color:#f59e0b;"></i></div><div class="s-label">Rate</div></div>
+      <div class="s-row"><div class="s-icon" style="background:#e0e7ff;"><i data-lucide="info" style="width:11px;height:11px;color:#6366f1;"></i></div><div class="s-label">v1.0.0</div></div>
+    </div>
+    <div class="s-signout-card">Sign Out</div>
+    <div class="s-delete-tiny">Delete Account</div>
+  </div>
+</div>
+
+</div>
+
+<!-- RECOMMENDATION -->
+<div class="rec-section">
+  <div class="rec-title">Recommendation: Variant 2 — Apple Settings</div>
+  <div class="rec-body">
+    <strong>The short version:</strong> Variant 2 wins because it scores highest on familiarity, scannability, and implementation feasibility while delivering real UX and monetization improvements.
+
+    <br><br><strong>Evaluation criteria (scored 1-5):</strong>
+
+    <table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:12px;">
+      <tr style="border-bottom:1px solid #262626;">
+        <th style="text-align:left;padding:6px 8px;color:#737373;">Variant</th>
+        <th style="padding:6px 8px;color:#737373;">Familiar</th>
+        <th style="padding:6px 8px;color:#737373;">Scannable</th>
+        <th style="padding:6px 8px;color:#737373;">Effort</th>
+        <th style="padding:6px 8px;color:#737373;">Growth</th>
+        <th style="padding:6px 8px;color:#737373;">Scale</th>
+        <th style="padding:6px 8px;color:#737373;font-weight:800;">Total</th>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">1. Current+Reorg</td><td style="text-align:center;padding:6px;">4</td><td style="text-align:center;">3</td><td style="text-align:center;">5</td><td style="text-align:center;">2</td><td style="text-align:center;">3</td><td style="text-align:center;font-weight:700;">17</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;background:#0d1f0d;">
+        <td style="padding:6px 8px;color:#4ade80;font-weight:700;">2. Apple Settings</td><td style="text-align:center;padding:6px;color:#4ade80;">5</td><td style="text-align:center;color:#4ade80;">5</td><td style="text-align:center;color:#4ade80;">4</td><td style="text-align:center;color:#4ade80;">5</td><td style="text-align:center;color:#4ade80;">4</td><td style="text-align:center;font-weight:700;color:#4ade80;">23</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">3. Minimal</td><td style="text-align:center;padding:6px;">2</td><td style="text-align:center;">4</td><td style="text-align:center;">4</td><td style="text-align:center;">2</td><td style="text-align:center;">3</td><td style="text-align:center;font-weight:700;">15</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">4. Tabbed</td><td style="text-align:center;padding:6px;">3</td><td style="text-align:center;">4</td><td style="text-align:center;">2</td><td style="text-align:center;">3</td><td style="text-align:center;">4</td><td style="text-align:center;font-weight:700;">16</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">5. Hub & Spoke</td><td style="text-align:center;padding:6px;">3</td><td style="text-align:center;">3</td><td style="text-align:center;">1</td><td style="text-align:center;">3</td><td style="text-align:center;">5</td><td style="text-align:center;font-weight:700;">15</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">6. Search First</td><td style="text-align:center;padding:6px;">3</td><td style="text-align:center;">5</td><td style="text-align:center;">2</td><td style="text-align:center;">2</td><td style="text-align:center;">5</td><td style="text-align:center;font-weight:700;">17</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">7. Spotify</td><td style="text-align:center;padding:6px;">3</td><td style="text-align:center;">2</td><td style="text-align:center;">3</td><td style="text-align:center;">3</td><td style="text-align:center;">2</td><td style="text-align:center;font-weight:700;">13</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">8. Dense Grid</td><td style="text-align:center;padding:6px;">1</td><td style="text-align:center;">3</td><td style="text-align:center;">2</td><td style="text-align:center;">2</td><td style="text-align:center;">2</td><td style="text-align:center;font-weight:700;">10</td>
+      </tr>
+      <tr style="border-bottom:1px solid #1a1a1a;">
+        <td style="padding:6px 8px;">9. Priority</td><td style="text-align:center;padding:6px;">2</td><td style="text-align:center;">4</td><td style="text-align:center;">2</td><td style="text-align:center;">4</td><td style="text-align:center;">4</td><td style="text-align:center;font-weight:700;">16</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 8px;">10. Single Card</td><td style="text-align:center;padding:6px;">2</td><td style="text-align:center;">2</td><td style="text-align:center;">4</td><td style="text-align:center;">2</td><td style="text-align:center;">1</td><td style="text-align:center;font-weight:700;">11</td>
+      </tr>
+    </table>
+
+    <strong>Why Variant 2 wins each category:</strong>
+    <ul>
+      <li><strong>Familiarity (5/5)</strong> — Jakob's Law: users expect your app to work like every other iOS app. Apple Settings = the universal reference point. Zero learning curve.</li>
+      <li><strong>Scannability (5/5)</strong> — Miller's Law compliant sections (≤4 items each). Hick's Law: faster decisions. Section titles match mental models ("Appearance" = how it looks).</li>
+      <li><strong>Implementation effort (4/5)</strong> — Reuses 100% of existing components (SettingsRow, SettingsSection). Only 3 new small files. No new navigation patterns.</li>
+      <li><strong>Growth potential (5/5)</strong> — Profile card with premium badge (conversion), Support section visibility (ratings + shares), Destructive actions separated (churn prevention).</li>
+      <li><strong>Scalability (4/5)</strong> — Adding new settings = add a row to the right section. New sections slot in naturally. Could evolve to hub-and-spoke (V5) later if settings grow past ~25.</li>
+    </ul>
+
+    <br><strong>Why not the runners-up:</strong>
+    <ul>
+      <li><strong>V1 (17pts)</strong> — Safe but doesn't solve the real UX problems. Just rearranging deck chairs.</li>
+      <li><strong>V6 Search (17pts)</strong> — Great for 50+ settings. Overkill for 15. The effort-to-payoff ratio is bad.</li>
+      <li><strong>V4 Tabbed (16pts)</strong> — Adds navigation complexity and hides content behind tabs. Users can't see everything at once.</li>
+      <li><strong>V9 Priority (16pts)</strong> — Clever but needs analytics data you don't have yet. Ship V2 now, evolve to V9 later if data shows clear usage patterns.</li>
+    </ul>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HabitDetailScreen - Design Token Review</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif !important;
+      background: #111 !important;
+      color: #e5e7eb !important;
+      padding: 32px !important;
+    }
+    h1 { font-family: 'DM Sans', sans-serif !important; font-size: 28px !important; font-weight: 700 !important; color: #f9fafb !important; margin-bottom: 8px !important; }
+    h2 { font-family: 'DM Sans', sans-serif !important; font-size: 20px !important; font-weight: 600 !important; color: #f9fafb !important; margin-bottom: 16px !important; margin-top: 40px !important; }
+    h3 { font-family: 'DM Sans', sans-serif !important; font-size: 16px !important; font-weight: 600 !important; color: #d1d5db !important; margin-bottom: 8px !important; }
+    p { font-family: 'Inter', sans-serif !important; font-size: 14px !important; line-height: 1.6 !important; color: #9ca3af !important; margin-bottom: 12px !important; }
+
+    .page-subtitle { color: #6b7280 !important; font-size: 14px !important; margin-bottom: 32px !important; }
+
+    .component-section {
+      background: #1a1a2e !important;
+      border: 1px solid #2d2d44 !important;
+      border-radius: 16px !important;
+      padding: 24px !important;
+      margin-bottom: 24px !important;
+    }
+    .component-header {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      margin-bottom: 16px !important;
+    }
+    .component-badge {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 11px !important;
+      padding: 3px 8px !important;
+      border-radius: 6px !important;
+      font-weight: 600 !important;
+    }
+    .badge-high { background: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+    .badge-medium { background: rgba(251, 191, 36, 0.15) !important; color: #fbbf24 !important; }
+    .badge-low { background: rgba(52, 211, 153, 0.15) !important; color: #34d399 !important; }
+
+    .comparison {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 16px !important;
+      margin-top: 16px !important;
+    }
+    .before, .after {
+      border-radius: 12px !important;
+      padding: 20px !important;
+      position: relative !important;
+    }
+    .before {
+      background: #1f1f35 !important;
+      border: 1px solid #ef4444 !important;
+      border-style: dashed !important;
+    }
+    .after {
+      background: #1f2f1f !important;
+      border: 1px solid #34d399 !important;
+      border-style: dashed !important;
+    }
+    .before-label, .after-label {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 10px !important;
+      text-transform: uppercase !important;
+      letter-spacing: 1.5px !important;
+      position: absolute !important;
+      top: -9px !important;
+      left: 12px !important;
+      padding: 0 6px !important;
+    }
+    .before-label { color: #f87171 !important; background: #1f1f35 !important; }
+    .after-label { color: #34d399 !important; background: #1f2f1f !important; }
+
+    .code-line {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 12px !important;
+      line-height: 1.8 !important;
+      color: #a5b4fc !important;
+    }
+    .code-bad { color: #fca5a5 !important; text-decoration: line-through !important; opacity: 0.7 !important; }
+    .code-good { color: #6ee7b7 !important; }
+    .code-comment { color: #6b7280 !important; font-style: italic !important; }
+
+    .reason-box {
+      background: rgba(99, 102, 241, 0.08) !important;
+      border-left: 3px solid #6366f1 !important;
+      border-radius: 0 8px 8px 0 !important;
+      padding: 12px 16px !important;
+      margin-top: 12px !important;
+    }
+    .reason-box p { color: #a5b4fc !important; font-size: 13px !important; margin-bottom: 0 !important; }
+    .reason-label { font-weight: 600 !important; color: #818cf8 !important; font-size: 11px !important; text-transform: uppercase !important; letter-spacing: 1px !important; margin-bottom: 4px !important; }
+
+    /* Phone mock styles */
+    .phone-mock {
+      width: 320px !important;
+      background: #F5F1ED !important;
+      border-radius: 24px !important;
+      overflow: hidden !important;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important;
+      margin: 0 auto !important;
+    }
+    .phone-mock-dark {
+      background: #111827 !important;
+    }
+
+    /* Mock habit detail elements */
+    .mock-header {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 12px 16px !important;
+    }
+    .mock-close { width: 40px !important; height: 40px !important; display: flex !important; align-items: center !important; justify-content: center !important; font-size: 20px !important; color: #2D2A26 !important; }
+    .mock-edit-btn {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      height: 44px !important;
+      padding: 0 16px !important;
+      border-radius: 24px !important;
+      background: rgba(0,0,0,0.04) !important;
+      border: 1px solid rgba(0,0,0,0.08) !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 14px !important;
+      color: #6B6560 !important;
+    }
+    .mock-hero {
+      text-align: center !important;
+      padding: 0 16px 24px !important;
+    }
+    .mock-icon {
+      width: 80px !important;
+      height: 80px !important;
+      border-radius: 16px !important;
+      background: #FEF3C7 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 34px !important;
+      margin: 0 auto 16px !important;
+      position: relative !important;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important;
+    }
+    .mock-check {
+      position: absolute !important;
+      bottom: -4px !important;
+      right: -4px !important;
+      width: 24px !important;
+      height: 24px !important;
+      background: #059669 !important;
+      border: 2px solid #F5F1ED !important;
+      border-radius: 50% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      color: white !important;
+      font-size: 12px !important;
+      font-weight: bold !important;
+    }
+
+    .mock-habit-name-before {
+      font-size: 34px !important;
+      font-weight: 700 !important;
+      color: #2D2A26 !important;
+      letter-spacing: -0.5px !important;
+      line-height: 41px !important;
+      font-family: -apple-system, sans-serif !important;
+    }
+    .mock-habit-name-after {
+      font-size: 34px !important;
+      font-weight: 700 !important;
+      color: #2D2A26 !important;
+      letter-spacing: -0.85px !important;
+      line-height: 41px !important;
+      font-family: 'Literata', serif !important;
+    }
+    .mock-schedule {
+      font-size: 13px !important;
+      color: #6B6560 !important;
+      margin-top: 4px !important;
+      font-family: 'DM Sans', sans-serif !important;
+    }
+
+    /* Stats row */
+    .mock-stats {
+      display: flex !important;
+      gap: 8px !important;
+      justify-content: center !important;
+      padding: 8px 16px !important;
+    }
+    .mock-pill {
+      display: flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      padding: 6px 12px !important;
+      border-radius: 9999px !important;
+      background: #D1FAE5 !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: #047857 !important;
+    }
+    .mock-pill-inactive {
+      background: #EDEAE5 !important;
+      color: #6B6560 !important;
+    }
+    .mock-pill-emoji { font-size: 12px !important; }
+    .mock-pill-label {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 11px !important;
+      font-weight: 400 !important;
+      color: #059669 !important;
+    }
+    .mock-pill-label-inactive { color: #6E6660 !important; }
+
+    /* Tabs */
+    .mock-tabs {
+      margin: 16px !important;
+      background: #DDD8D2 !important;
+      border-radius: 8px !important;
+      padding: 4px !important;
+      display: flex !important;
+    }
+    .mock-tab {
+      flex: 1 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      padding: 10px !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #059669 !important;
+      border-radius: 6px !important;
+    }
+    .mock-tab-active {
+      background: #FFFFFF !important;
+      box-shadow: 0 3px 8px rgba(5,150,105,0.12) !important;
+    }
+    .mock-tab-inactive {
+      color: #6E6660 !important;
+      font-weight: 500 !important;
+    }
+    .mock-tab-hint {
+      font-size: 12px !important;
+      padding: 2px 6px !important;
+      border-radius: 9999px !important;
+      background: rgba(0,0,0,0.06) !important;
+    }
+
+    .annotation {
+      position: relative !important;
+    }
+    .annotation::after {
+      content: attr(data-note) !important;
+      position: absolute !important;
+      right: -160px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 10px !important;
+      color: #f87171 !important;
+      white-space: nowrap !important;
+      border-left: 2px solid #f87171 !important;
+      padding-left: 8px !important;
+    }
+
+    .summary-grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 16px !important;
+      margin-top: 16px !important;
+    }
+    .summary-card {
+      background: #1a1a2e !important;
+      border: 1px solid #2d2d44 !important;
+      border-radius: 12px !important;
+      padding: 16px !important;
+      text-align: center !important;
+    }
+    .summary-number {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 32px !important;
+      font-weight: 700 !important;
+      color: #f9fafb !important;
+    }
+    .summary-label {
+      font-size: 12px !important;
+      color: #6b7280 !important;
+      margin-top: 4px !important;
+    }
+
+    .divider {
+      height: 1px !important;
+      background: #2d2d44 !important;
+      margin: 32px 0 !important;
+    }
+
+    .file-path {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 12px !important;
+      color: #6b7280 !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Title -->
+  <h1>HabitDetailScreen - Design Token Audit</h1>
+  <p class="page-subtitle">Comparing current inline values against the established design token system</p>
+
+  <!-- Summary stats -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-number" style="color: #f87171 !important;">8</div>
+      <div class="summary-label">Files with issues</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-number" style="color: #fbbf24 !important;">~25</div>
+      <div class="summary-label">Token violations</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-number" style="color: #34d399 !important;">0</div>
+      <div class="summary-label">Visual changes expected</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== 1. DETAIL HERO ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">1. DetailHero</h2>
+      <span class="component-badge badge-high">HIGH</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/DetailHero.tsx</p>
+    <p>The habit name is the largest text on the detail screen but doesn't use the typography system. It specifies font properties inline instead of referencing <code>typography.displayLarge</code>, causing two issues: wrong letterSpacing and missing Literata serif font.</p>
+
+    <div class="comparison">
+      <!-- Before Phone -->
+      <div style="text-align: center !important;">
+        <div class="before" style="border: none !important; background: transparent !important; padding: 0 !important;">
+          <span class="before-label" style="position: static !important; display: block !important; margin-bottom: 12px !important; background: transparent !important;">Current (inline styles)</span>
+          <div class="phone-mock">
+            <div class="mock-header">
+              <div class="mock-close">&times;</div>
+              <div class="mock-edit-btn">
+                <span style="font-size: 15px !important;">&#9998;</span>
+                Edit Habit
+              </div>
+            </div>
+            <div class="mock-hero">
+              <div class="mock-icon">
+                &#x1F4DA;
+                <div class="mock-check">&#10003;</div>
+              </div>
+              <div class="mock-habit-name-before">Read Books</div>
+              <div class="mock-schedule">Every day</div>
+            </div>
+            <div class="mock-stats">
+              <div class="mock-pill"><span class="mock-pill-emoji">&#128293;</span> 12 <span class="mock-pill-label">streak</span></div>
+              <div class="mock-pill mock-pill-inactive"><span class="mock-pill-emoji">&#11088;</span> <span style="color: #6B6560 !important;">24</span> <span class="mock-pill-label mock-pill-label-inactive">best</span></div>
+              <div class="mock-pill mock-pill-inactive"><span class="mock-pill-emoji">&#128197;</span> <span style="color: #6B6560 !important;">89</span> <span class="mock-pill-label mock-pill-label-inactive">total</span></div>
+            </div>
+            <div class="mock-tabs">
+              <div class="mock-tab mock-tab-active">&#128197; Calendar <span class="mock-tab-hint">89 days</span></div>
+              <div class="mock-tab mock-tab-inactive">&#9889; Strength <span class="mock-tab-hint">72%</span></div>
+            </div>
+            <div style="height: 40px !important;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- After Phone -->
+      <div style="text-align: center !important;">
+        <div class="after" style="border: none !important; background: transparent !important; padding: 0 !important;">
+          <span class="after-label" style="position: static !important; display: block !important; margin-bottom: 12px !important; background: transparent !important;">After (design tokens)</span>
+          <div class="phone-mock">
+            <div class="mock-header">
+              <div class="mock-close">&times;</div>
+              <div class="mock-edit-btn">
+                <span style="font-size: 16px !important;">&#9998;</span>
+                Edit Habit
+              </div>
+            </div>
+            <div class="mock-hero">
+              <div class="mock-icon">
+                &#x1F4DA;
+                <div class="mock-check">&#10003;</div>
+              </div>
+              <div class="mock-habit-name-after">Read Books</div>
+              <div class="mock-schedule" style="letter-spacing: 0.12px !important;">Every day</div>
+            </div>
+            <div class="mock-stats">
+              <div class="mock-pill"><span class="mock-pill-emoji">&#128293;</span> 12 <span class="mock-pill-label">streak</span></div>
+              <div class="mock-pill mock-pill-inactive"><span class="mock-pill-emoji">&#11088;</span> <span style="color: #6B6560 !important;">24</span> <span class="mock-pill-label mock-pill-label-inactive">best</span></div>
+              <div class="mock-pill mock-pill-inactive"><span class="mock-pill-emoji">&#128197;</span> <span style="color: #6B6560 !important;">89</span> <span class="mock-pill-label mock-pill-label-inactive">total</span></div>
+            </div>
+            <div class="mock-tabs">
+              <div class="mock-tab mock-tab-active">&#128197; Calendar <span class="mock-tab-hint">89 days</span></div>
+              <div class="mock-tab mock-tab-inactive">&#9889; Strength <span class="mock-tab-hint">72%</span></div>
+            </div>
+            <div style="height: 40px !important;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Annotation callouts -->
+    <div style="margin-top: 20px !important;">
+      <h3>What changes and why:</h3>
+
+      <div class="reason-box">
+        <div class="reason-label">Habit Name Typography</div>
+        <p><strong>Before:</strong> <code style="color: #fca5a5 !important;">fontSize: 34, letterSpacing: -0.5, font-bold (system font)</code></p>
+        <p><strong>After:</strong> <code style="color: #6ee7b7 !important;">...typography.displayLarge</code> &rarr; <code>Literata serif, letterSpacing: -0.85</code></p>
+        <p style="margin-top: 8px !important;"><strong>Why:</strong> The design system specifies Literata (serif) for display headings to create emotional weight. The current code uses the system sans-serif font, breaking the serif/sans-serif pairing that distinguishes display text from body text across the app. The letterSpacing -0.85 is tighter than -0.5 for better large-text optical balance.</p>
+      </div>
+
+      <div class="reason-box" style="margin-top: 8px !important;">
+        <div class="reason-label">Schedule Text</div>
+        <p><strong>Before:</strong> <code style="color: #fca5a5 !important;">className='text-[13px]'</code> (Tailwind arbitrary, no fontFamily/letterSpacing/lineHeight)</p>
+        <p><strong>After:</strong> <code style="color: #6ee7b7 !important;">style={{ ...typography.caption, color: colors.text.secondary }}</code></p>
+        <p style="margin-top: 8px !important;"><strong>Why:</strong> The caption token includes fontFamily (DM Sans), letterSpacing (0.12), lineHeight (18px), and fontWeight (500). Using the arbitrary class only sets fontSize, missing all other properties. If the type scale ever changes, this text won't update.</p>
+      </div>
+
+      <div class="reason-box" style="margin-top: 8px !important;">
+        <div class="reason-label">Checkmark Color</div>
+        <p><strong>Before:</strong> <code style="color: #fca5a5 !important;">color='#FFFFFF'</code></p>
+        <p><strong>After:</strong> <code style="color: #6ee7b7 !important;">color={colors.text.inverse}</code></p>
+        <p style="margin-top: 8px !important;"><strong>Why:</strong> Hardcoded white won't adapt to theme changes. <code>colors.text.inverse</code> is the semantic token for text on colored backgrounds. In light mode it resolves to #FFFFFF, in dark mode to #111827.</p>
+      </div>
+
+      <div class="reason-box" style="margin-top: 8px !important;">
+        <div class="reason-label">Edit Icon Size</div>
+        <p><strong>Before:</strong> <code style="color: #fca5a5 !important;">size={15}</code> (off-grid)</p>
+        <p><strong>After:</strong> <code style="color: #6ee7b7 !important;">size={16}</code> (standard icon grid)</p>
+        <p style="margin-top: 8px !important;"><strong>Why:</strong> The icon size system uses even numbers (10, 12, 14, 16, 18, 20, 24...). 15px is off-grid and renders with sub-pixel antialiasing, causing slight blur on non-retina displays.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 2. QUICK STATS ROW ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">2. QuickStatsRow</h2>
+      <span class="component-badge badge-medium">MEDIUM</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/QuickStatsRow.tsx</p>
+    <p>The stat pills use raw pixel numbers for gap and padding instead of spacing tokens. The values happen to match tokens, but they bypass the system.</p>
+
+    <div class="comparison">
+      <div class="before">
+        <span class="before-label">Current</span>
+        <div class="code-line code-bad">gap: 4,</div>
+        <div class="code-line code-bad">paddingHorizontal: 12,</div>
+        <div class="code-line code-bad">paddingVertical: 6,</div>
+        <div class="code-line code-bad">gap: 8,</div>
+        <div class="code-line code-bad">paddingVertical: 8,</div>
+      </div>
+      <div class="after">
+        <span class="after-label">After</span>
+        <div class="code-line code-good">gap: spacing.xs,       <span class="code-comment">// 4</span></div>
+        <div class="code-line code-good">paddingHorizontal: spacing.md, <span class="code-comment">// 12</span></div>
+        <div class="code-line">paddingVertical: 6,    <span class="code-comment">// keep (between xs:4 and sm:8)</span></div>
+        <div class="code-line code-good">gap: spacing.sm,       <span class="code-comment">// 8</span></div>
+        <div class="code-line code-good">paddingVertical: spacing.sm,  <span class="code-comment">// 8</span></div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <div class="reason-label">Why replace matching values with tokens?</div>
+      <p>If spacing.sm changes from 8 to 10 during a design refresh, raw <code>8</code> stays frozen while <code>spacing.sm</code> updates everywhere. Tokens make the design system the single source of truth. Also: developers reading <code>spacing.sm</code> immediately know "this follows the grid" vs. a magic <code>8</code> that could be anything.</p>
+    </div>
+  </div>
+
+  <!-- ===== 3. DETAIL VIEW TABS ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">3. DetailViewTabs</h2>
+      <span class="component-badge badge-medium">MEDIUM</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/DetailViewTabs.tsx</p>
+    <p>The animated pill indicator defines its own shadow inline instead of building on the <code>shadows.card</code> token.</p>
+
+    <div class="comparison">
+      <div class="before">
+        <span class="before-label">Current (inline shadow)</span>
+        <div class="code-line code-bad">elevation: 3,</div>
+        <div class="code-line code-bad">shadowColor: accentColor,</div>
+        <div class="code-line code-bad">shadowOffset: { height: 3, width: 0 },</div>
+        <div class="code-line code-bad">shadowOpacity: 0.12,</div>
+        <div class="code-line code-bad">shadowRadius: 8,</div>
+      </div>
+      <div class="after">
+        <span class="after-label">After (token + override)</span>
+        <div class="code-line code-good">...shadows.card,</div>
+        <div class="code-line code-good">shadowColor: accentColor,</div>
+        <div class="code-line code-comment">// shadows.card gives: elevation 3,</div>
+        <div class="code-line code-comment">// offset {h:2}, opacity 0.06, radius 8</div>
+        <div class="code-line code-comment">// only shadowColor is custom (accent tint)</div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <div class="reason-label">Why use shadows.card as base?</div>
+      <p>The shadow token system defines 5 elevation levels with warm-toned <code>#2D2A26</code> shadow color for tonal consistency. The inline shadow uses <code>accentColor</code> for a tinted glow, which is intentional and good &mdash; but the base metrics (elevation, radius) should come from the token so elevation hierarchy stays consistent if the shadow system is updated.</p>
+    </div>
+  </div>
+
+  <!-- ===== 4. TAB BUTTON ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">4. DetailViewTabButton</h2>
+      <span class="component-badge badge-medium">MEDIUM</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/DetailViewTabButton.tsx</p>
+    <p>Tab label uses Tailwind arbitrary <code>text-[13px]</code> and inline fontWeight instead of typography tokens.</p>
+
+    <div class="comparison">
+      <div class="before">
+        <span class="before-label">Current</span>
+        <div class="code-line code-bad">className='text-[13px]'</div>
+        <div class="code-line code-bad">fontWeight: isActive ? '600' : '500'</div>
+      </div>
+      <div class="after">
+        <span class="after-label">After</span>
+        <div class="code-line code-good">style={{</div>
+        <div class="code-line code-good">&nbsp;&nbsp;...typography.caption,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;fontWeight: isActive</div>
+        <div class="code-line code-good">&nbsp;&nbsp;&nbsp;&nbsp;? fontWeights.semibold</div>
+        <div class="code-line code-good">&nbsp;&nbsp;&nbsp;&nbsp;: fontWeights.medium,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;color: foreground,</div>
+        <div class="code-line code-good">}}</div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <div class="reason-label">Why?</div>
+      <p><code>typography.caption</code> includes fontFamily (DM Sans), letterSpacing (0.12px), and lineHeight (18px) &mdash; all missing from the arbitrary Tailwind class. The <code>fontWeights</code> tokens make it explicit that '600' = semibold and '500' = medium, improving readability.</p>
+    </div>
+  </div>
+
+  <!-- ===== 5. HEADER BUTTON ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">5. HeaderButton</h2>
+      <span class="component-badge badge-high">HIGH</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/HeaderButton.tsx</p>
+    <p>The "Edit Habit" button uses 6 raw numbers that have exact token equivalents.</p>
+
+    <div class="comparison">
+      <div class="before">
+        <span class="before-label">Current (raw numbers)</span>
+        <div class="code-line code-bad">borderRadius: 24</div>
+        <div class="code-line code-bad">gap: 8</div>
+        <div class="code-line code-bad">height: 44</div>
+        <div class="code-line code-bad">paddingHorizontal: 16</div>
+        <div class="code-line code-bad">opacity: 0.7</div>
+        <div class="code-line code-bad">fontSize: 14, letterSpacing: -0.2</div>
+      </div>
+      <div class="after">
+        <span class="after-label">After (tokens)</span>
+        <div class="code-line code-good">borderRadius: borderRadius.xl <span class="code-comment">// 24</span></div>
+        <div class="code-line code-good">gap: spacing.sm <span class="code-comment">// 8</span></div>
+        <div class="code-line code-good">height: componentSpacing.button.height <span class="code-comment">// 44</span></div>
+        <div class="code-line code-good">paddingHorizontal: spacing.base <span class="code-comment">// 16</span></div>
+        <div class="code-line code-good">opacity: OPACITY.high <span class="code-comment">// 0.7</span></div>
+        <div class="code-line code-good">...typography.bodySmall, letterSpacing: -0.2</div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <div class="reason-label">Why?</div>
+      <p>Every one of these raw values has an exact token match. Using tokens communicates <em>intent</em>: <code>componentSpacing.button.height</code> says "this is a button" while <code>44</code> says nothing. If the design system standardizes buttons to 48px, all tokenized buttons update together.</p>
+    </div>
+  </div>
+
+  <!-- ===== 6. ICON SHADOW ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">6. DetailHeader.constants</h2>
+      <span class="component-badge badge-low">LOW</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/DetailHeader.constants.ts</p>
+    <p>The icon shadow is missing <code>shadowColor</code>, causing it to default to black instead of the warm <code>#2D2A26</code> used by all other shadows in the app.</p>
+
+    <div class="comparison">
+      <div class="before">
+        <span class="before-label">Current (missing shadowColor)</span>
+        <div class="code-line code-bad">iconShadow = {</div>
+        <div class="code-line code-bad">&nbsp;&nbsp;elevation: 6,</div>
+        <div class="code-line code-bad">&nbsp;&nbsp;shadowOffset: { height: 6, width: 0 },</div>
+        <div class="code-line code-bad">&nbsp;&nbsp;shadowOpacity: 0.15,</div>
+        <div class="code-line code-bad">&nbsp;&nbsp;shadowRadius: 16,</div>
+        <div class="code-line code-comment">&nbsp;&nbsp;// no shadowColor &rarr; defaults to #000</div>
+        <div class="code-line code-bad">}</div>
+      </div>
+      <div class="after">
+        <span class="after-label">After (warm shadow)</span>
+        <div class="code-line code-good">iconShadow = {</div>
+        <div class="code-line code-good">&nbsp;&nbsp;elevation: 6,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;shadowColor: '#2D2A26',</div>
+        <div class="code-line code-good">&nbsp;&nbsp;shadowOffset: { height: 6, width: 0 },</div>
+        <div class="code-line code-good">&nbsp;&nbsp;shadowOpacity: 0.15,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;shadowRadius: 16,</div>
+        <div class="code-line code-good">}</div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <div class="reason-label">Why?</div>
+      <p>All 5 shadow tokens in <code>spacing.ts</code> use <code>shadowColor: '#2D2A26'</code> (warm stone-brown) for tonal consistency with the warm neutral palette. Missing it here causes the hero icon to cast a cooler black shadow compared to every other elevated element.</p>
+    </div>
+  </div>
+
+  <!-- ===== 7. SECTION LABEL ===== -->
+  <div class="component-section">
+    <div class="component-header">
+      <h2 style="margin: 0 !important;">7. SectionLabel</h2>
+      <span class="component-badge badge-low">LOW</span>
+    </div>
+    <p class="file-path">src/screens/HabitDetailScreen/components/SectionLabel.tsx</p>
+    <p>Section divider text uses Tailwind arbitrary styling instead of typography token.</p>
+
+    <div class="comparison">
+      <div class="before">
+        <span class="before-label">Current</span>
+        <div class="code-line code-bad">className='text-[13px] font-semibold tracking-wider'</div>
+        <div class="code-line code-comment">// No fontFamily, no lineHeight</div>
+      </div>
+      <div class="after">
+        <span class="after-label">After</span>
+        <div class="code-line code-good">style={{</div>
+        <div class="code-line code-good">&nbsp;&nbsp;...typography.caption,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;fontWeight: fontWeights.semibold,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;letterSpacing: 0.8,</div>
+        <div class="code-line code-good">&nbsp;&nbsp;color: textColor,</div>
+        <div class="code-line code-good">}}</div>
+      </div>
+    </div>
+
+    <div class="reason-box">
+      <div class="reason-label">Why?</div>
+      <p>Same principle as tab labels: <code>typography.caption</code> provides the complete text style (fontFamily, fontSize, lineHeight, letterSpacing, fontWeight). The wider letter-spacing is overridden since section labels use wider tracking as a design choice for divider text.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SUMMARY -->
+  <h2>Summary of Changes</h2>
+  <p>All fixes are <strong>token substitutions</strong>. The rendered pixel values are identical (or nearly so for letterSpacing on the habit name). No layout shifts, no color changes, no animation changes.</p>
+
+  <div style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 16px !important; margin-top: 16px !important;">
+    <div style="background: #1a1a2e !important; border: 1px solid #2d2d44 !important; border-radius: 12px !important; padding: 16px !important;">
+      <h3 style="color: #f87171 !important;">Tokens replaced</h3>
+      <p style="font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; line-height: 2 !important;">
+        <span style="color: #fca5a5 !important;">fontSize: 34, letterSpacing: -0.5</span> &rarr; typography.displayLarge<br>
+        <span style="color: #fca5a5 !important;">text-[13px]</span> &rarr; typography.caption (3 places)<br>
+        <span style="color: #fca5a5 !important;">'#FFFFFF'</span> &rarr; colors.text.inverse<br>
+        <span style="color: #fca5a5 !important;">gap: 4/8, padding: 8/12/16</span> &rarr; spacing.xs/sm/md/base<br>
+        <span style="color: #fca5a5 !important;">borderRadius: 24</span> &rarr; borderRadius.xl<br>
+        <span style="color: #fca5a5 !important;">height: 44</span> &rarr; componentSpacing.button.height<br>
+        <span style="color: #fca5a5 !important;">opacity: 0.7</span> &rarr; OPACITY.high<br>
+        <span style="color: #fca5a5 !important;">fontWeight: '600'/'500'</span> &rarr; fontWeights.semibold/medium<br>
+        <span style="color: #fca5a5 !important;">inline shadow</span> &rarr; shadows.card + override<br>
+        <span style="color: #fca5a5 !important;">size={15}</span> &rarr; size={16}<br>
+        <span style="color: #fca5a5 !important;">missing shadowColor</span> &rarr; '#2D2A26'
+      </p>
+    </div>
+    <div style="background: #1a1a2e !important; border: 1px solid #2d2d44 !important; border-radius: 12px !important; padding: 16px !important;">
+      <h3 style="color: #34d399 !important;">Kept as-is (acceptable)</h3>
+      <p style="font-family: 'JetBrains Mono', monospace !important; font-size: 12px !important; line-height: 2 !important;">
+        paddingVertical: 6 <span class="code-comment">(micro-adjustment)</span><br>
+        fontSize: 11, 12 <span class="code-comment">(pill micro-text)</span><br>
+        rgba() translucent overlays <span class="code-comment">(no token equiv)</span><br>
+        #FFFFFF indicator bg <span class="code-comment">(intentional white)</span><br>
+        Tailwind flex/layout classes <span class="code-comment">(non-token)</span><br>
+        emoji fontSize: 34 <span class="code-comment">(independent of type scale)</span><br>
+        badge dimensions 24x24 <span class="code-comment">(contextual)</span><br>
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

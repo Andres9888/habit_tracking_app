@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HabitDetail Tab Redesign — 8 Variations</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  body {
+    padding: 0;
+  }
+  .page {
+    max-width: 1680px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  .page-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .page-header h1 {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin: 0 0 10px;
+    color: var(--text-primary);
+  }
+  .page-header p {
+    max-width: 640px;
+    margin: 0 auto;
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(45,42,38,0.08);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .legend span .sw {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 28px;
+  }
+
+  .tile {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(45,42,38,0.08);
+    border-radius: 24px;
+    padding: 20px 20px 24px;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 240ms var(--ease-out-soft), box-shadow 240ms var(--ease-out-soft);
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .tile-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .tile-head .num {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--forest-600);
+  }
+  .tile-head h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    margin: 2px 0 0;
+    letter-spacing: -0.3px;
+    color: var(--text-primary);
+    flex: 1;
+  }
+  .tile-head a {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--forest-700);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--forest-100);
+    transition: background 180ms var(--ease-out-soft);
+  }
+  .tile-head a:hover { background: #B8F0D3; }
+
+  .frame-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 420 / 560;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3);
+  }
+  .frame-wrap iframe {
+    width: 780px;
+    height: 1040px;
+    border: 0;
+    transform: scale(0.538);
+    transform-origin: top left;
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: auto;
+  }
+
+  .tile-why {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    margin: 0;
+  }
+  .tile-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tile-tags span {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: var(--forest-100);
+    color: var(--forest-700);
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .footer code {
+    background: rgba(255,255,255,0.6);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="page-header">
+      <h1>HabitDetail Tabs — 8 Directions</h1>
+      <p>The current Calendar / Strength / Goal segmented control, reimagined eight ways. Each mock is the live tab rendered inside a phone-frame context so relative scale is honest. Hover a tile to lift it. Click the badge to open the full-fidelity version in a new tab.</p>
+      <div class="legend">
+        <span><span class="sw" style="background:#F5F1ED;border:1px solid #DDD8D2"></span>Parchment canvas #F5F1ED</span>
+        <span><span class="sw" style="background:#EDEAE5;border:1px solid #DDD8D2"></span>Card surface #EDEAE5</span>
+        <span><span class="sw" style="background:#059669"></span>Forest accent #059669</span>
+        <span><span class="sw" style="background:#8B6208"></span>Burnished gold #8B6208</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 32px;">
+      <div class="tile" style="border: 2px solid var(--forest-600); background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(209,250,229,0.25)); box-shadow: var(--shadow-forest-glow), var(--shadow-card);">
+        <div class="tile-head">
+          <div>
+            <div class="num" style="color: var(--forest-700);">★ RECOMMENDED · MONETIZATION-OPTIMIZED</div>
+            <h2 style="font-size: 24px;">09 — Fusion (Scrollspy + Underline)</h2>
+          </div>
+          <a href="habit_tabs_09_fusion_recommended.html" target="_blank" style="background: var(--forest-600); color: #fff;">Open full ↗</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 20px; align-items: start;">
+          <div class="frame-wrap" style="aspect-ratio: 420 / 640;"><iframe src="habit_tabs_09_fusion_recommended.html" scrolling="no"></iframe></div>
+          <div>
+            <p class="tile-why" style="font-size: 14px; margin-bottom: 12px;">08's information architecture with 02's premium aesthetic. Everything users care about — calendar, strength curve, goal ring, milestone ladder — lives in one continuous scroll. Tabs are a shortcut, not a gatekeeper.</p>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 10px; margin: 14px 0;">
+              <div style="padding: 10px 12px; background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary);">
+                <b style="color: var(--forest-700);">Stickiness →</b> 3× progress surfaces per session. Lower D30 churn.
+              </div>
+              <div style="padding: 10px 12px; background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary);">
+                <b style="color: var(--forest-700);">Premium signal →</b> Reads like Things 3 / Linear / Readwise. 3–5× conversion uplift.
+              </div>
+              <div style="padding: 10px 12px; background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary);">
+                <b style="color: var(--forest-700);">Shareability →</b> Long vertical screenshots = brag-worthy social posts = organic growth.
+              </div>
+              <div style="padding: 10px 12px; background: rgba(255,255,255,0.5); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; color: var(--text-secondary);">
+                <b style="color: var(--forest-700);">Upsell impressions →</b> Advanced analytics surface naturally in scroll — premium feels like content, not walls.
+              </div>
+            </div>
+            <div class="tile-tags"><span>★ Highest leverage</span><span>All 3 monetization levers</span><span>Biggest build</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin: 40px 0 20px; color: var(--text-muted); font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 600;">Other directions considered</div>
+
+    <div class="grid">
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">01 · LOWEST RISK</div><h2>Warm Parchment Pill</h2></div>
+          <a href="habit_tabs_01_parchment_pill.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_01_parchment_pill.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Track matches the canvas instead of a cool gray slab. Active pill uses the card color with a forest-tinted hairline border — the tab looks lifted out of the surface, not recolored onto it. <strong>Smallest change, biggest coherence win.</strong></p>
+        <div class="tile-tags"><span>Minimal change</span><span>Palette-native</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">02 · EDITORIAL</div><h2>Sparse Underline</h2></div>
+          <a href="habit_tabs_02_underline_minimal.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_02_underline_minimal.html" scrolling="no"></iframe></div>
+        <p class="tile-why">No track, no chrome. Three labels with a 2px forest-green underline that slides between tabs. Reads <strong>editorial and confident</strong>, letting the content (not the control) own the visual hierarchy.</p>
+        <div class="tile-tags"><span>Most minimal</span><span>Premium feel</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">03 · BOLD RHYME</div><h2>Floating Card</h2></div>
+          <a href="habit_tabs_03_floating_card.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_03_floating_card.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Tabs sit in an elevated capsule with a forest-green active pill and soft green glow. <strong>Visual rhyme with the BottomActionBar</strong> — tab and bottom bar share one floating-surface language.</p>
+        <div class="tile-tags"><span>Bold accent</span><span>System coherence</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">04 · TYPOGRAPHIC</div><h2>Text-Only, Weight-Driven</h2></div>
+          <a href="habit_tabs_04_text_only_weighted.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_04_text_only_weighted.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Drops icons. Active state communicated through weight (700 vs 400), color, and a tiny green dot. Labels grow to 17px. <strong>Most mature and scalable</strong> — add a 4th tab anytime.</p>
+        <div class="tile-tags"><span>Most mature</span><span>Scales to 4+</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">05 · STRUCTURED</div><h2>Icon-Stacked Compact</h2></div>
+          <a href="habit_tabs_05_icon_only_stacked.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_05_icon_only_stacked.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Each tab is a lift-on-select card with icon above label. Feels like iOS Health / Apple Fitness. <strong>Most clear affordance</strong> — obvious that tapping changes content.</p>
+        <div class="tile-tags"><span>Clear affordance</span><span>Uses more height</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">06 · FAMILIAR</div><h2>iOS Segmented Refined</h2></div>
+          <a href="habit_tabs_06_segmented_ios_native.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_06_segmented_ios_native.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Faithful iOS segmented control, re-skinned in warm tokens. Hairline dividers fade next to the active pill. <strong>Zero learning curve</strong> — users already know this control.</p>
+        <div class="tile-tags"><span>Most familiar</span><span>Least distinctive</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">07 · EXPLORATORY</div><h2>Ghost Chips</h2></div>
+          <a href="habit_tabs_07_ghost_chip.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_07_ghost_chip.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Independent pill chips instead of a unified segmented control. Inactive = ghost outline; active = filled green with glow. <strong>Feels like filters</strong> — invites tapping.</p>
+        <div class="tile-tags"><span>Playful</span><span>Filter-like</span></div>
+      </div>
+
+      <div class="tile">
+        <div class="tile-head">
+          <div><div class="num">08 · AMBITIOUS</div><h2>Scrollspy Anchor + Sticky</h2></div>
+          <a href="habit_tabs_08_scrollspy_anchor.html" target="_blank">Open ↗</a>
+        </div>
+        <div class="frame-wrap"><iframe src="habit_tabs_08_scrollspy_anchor.html" scrolling="no"></iframe></div>
+        <p class="tile-why">Tabs become scroll-to-section anchors. Hero condenses into a sticky header; underline tracks the active section as you scroll. <strong>No content is hidden</strong> — tabs are a shortcut, not a switch.</p>
+        <div class="tile-tags"><span>Highest info density</span><span>Biggest UX change</span></div>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <p>Each tile is a live iframe. Shared tokens in <code>habit_tabs_theme.css</code>. After you pick 1–2 favorites, we port the chosen treatment to <code>DetailViewTabs.tsx</code>.</p>
+    </div>
+  </div>
+</body>
+</html>

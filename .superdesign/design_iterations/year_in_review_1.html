@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Year In Review - Habit Hard Premium Feature Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1c1917 0%, #0c0a09 100%) !important;
+      min-height: 100vh;
+    }
+
+    /* Stone palette (matching Habit Hard) */
+    :root {
+      --stone-50: #fafaf9;
+      --stone-100: #f5f5f4;
+      --stone-200: #e7e5e4;
+      --stone-300: #d6d3d0;
+      --stone-400: #a8a29e;
+      --stone-500: #78716c;
+      --stone-600: #57534e;
+      --stone-700: #44403c;
+      --stone-800: #292524;
+      --stone-900: #1c1917;
+      --stone-950: #0c0a09;
+    }
+
+    /* Heatmap cell colors */
+    .heat-0 { background-color: #292524; }
+    .heat-1 { background-color: #365314; }
+    .heat-2 { background-color: #4d7c0f; }
+    .heat-3 { background-color: #65a30d; }
+    .heat-4 { background-color: #84cc16; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .animate-fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .animate-scale-in {
+      animation: scaleIn 0.5s ease-out forwards;
+    }
+
+    .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+    .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+    .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+    .stagger-4 { animation-delay: 0.4s; opacity: 0; }
+    .stagger-5 { animation-delay: 0.5s; opacity: 0; }
+    .stagger-6 { animation-delay: 0.6s; opacity: 0; }
+
+    .premium-badge {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+      background-size: 200% 200%;
+      animation: shimmer 3s linear infinite;
+    }
+
+    .glow-amber {
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.3), 0 0 40px rgba(251, 191, 36, 0.1);
+    }
+
+    /* Mobile frame */
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 8px solid #292524;
+    }
+
+    /* Scrollbar styling */
+    .phone-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    .phone-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .phone-content::-webkit-scrollbar-thumb {
+      background: #44403c;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-8">
+
+  <!-- Page Header -->
+  <div class="fixed top-6 left-6 right-6 flex justify-between items-start z-10">
+    <div>
+      <h1 class="text-2xl font-bold text-stone-100">Year In Review</h1>
+      <p class="text-stone-400 text-sm mt-1">Premium Feature Mockup for Habit Hard</p>
+    </div>
+    <div class="premium-badge glow-amber px-4 py-2 rounded-full">
+      <span class="text-stone-900 font-bold text-sm">✨ PREMIUM</span>
+    </div>
+  </div>
+
+  <!-- Phone Mockup -->
+  <div class="phone-frame bg-stone-950 mt-16">
+    <div class="phone-content h-full overflow-y-auto">
+
+      <!-- Status Bar -->
+      <div class="flex justify-between items-center px-6 py-3 bg-stone-950">
+        <span class="text-stone-100 text-sm font-semibold">9:41</span>
+        <div class="flex gap-1">
+          <i data-lucide="signal" class="w-4 h-4 text-stone-100"></i>
+          <i data-lucide="wifi" class="w-4 h-4 text-stone-100"></i>
+          <i data-lucide="battery-full" class="w-4 h-4 text-stone-100"></i>
+        </div>
+      </div>
+
+      <!-- Navigation Header -->
+      <div class="flex items-center justify-between px-4 py-3 border-b border-stone-800">
+        <button class="p-2 -ml-2 rounded-full hover:bg-stone-800 transition-colors">
+          <i data-lucide="chevron-left" class="w-6 h-6 text-stone-400"></i>
+        </button>
+        <h2 class="text-lg font-semibold text-stone-100">2024 Year In Review</h2>
+        <button class="p-2 -mr-2 rounded-full hover:bg-stone-800 transition-colors">
+          <i data-lucide="share" class="w-5 h-5 text-stone-400"></i>
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="px-4 py-6 space-y-6">
+
+        <!-- Hero Section -->
+        <div class="text-center animate-fade-in-up stagger-1">
+          <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-lime-500/20 to-emerald-500/20 mb-4">
+            <span class="text-4xl">🏆</span>
+          </div>
+          <h3 class="text-2xl font-bold text-stone-100 mb-2">Your 2024 Journey</h3>
+          <p class="text-stone-400">You've built incredible habits this year!</p>
+        </div>
+
+        <!-- Big Stats Grid -->
+        <div class="grid grid-cols-2 gap-3 animate-fade-in-up stagger-2">
+          <!-- Total Days -->
+          <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                <i data-lucide="calendar-check" class="w-4 h-4 text-emerald-400"></i>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-stone-100">248</div>
+            <div class="text-sm text-stone-400">days completed</div>
+          </div>
+
+          <!-- Success Rate -->
+          <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                <i data-lucide="target" class="w-4 h-4 text-amber-400"></i>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-stone-100">68%</div>
+            <div class="text-sm text-stone-400">success rate</div>
+          </div>
+
+          <!-- Longest Streak -->
+          <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                <i data-lucide="flame" class="w-4 h-4 text-orange-400"></i>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-stone-100">42</div>
+            <div class="text-sm text-stone-400">longest streak</div>
+          </div>
+
+          <!-- Improvement -->
+          <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                <i data-lucide="trending-up" class="w-4 h-4 text-violet-400"></i>
+              </div>
+            </div>
+            <div class="text-3xl font-bold text-emerald-400">+23%</div>
+            <div class="text-sm text-stone-400">vs last year</div>
+          </div>
+        </div>
+
+        <!-- Yearly Heatmap -->
+        <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800 animate-fade-in-up stagger-3">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-lime-500/20 flex items-center justify-center">
+                <i data-lucide="grid-3x3" class="w-4 h-4 text-lime-400"></i>
+              </div>
+              <span class="font-semibold text-stone-100">Activity Heatmap</span>
+            </div>
+            <span class="text-xs text-stone-500">365 days</span>
+          </div>
+
+          <!-- Month Labels -->
+          <div class="flex justify-between mb-2 px-1">
+            <span class="text-[10px] text-stone-500">Jan</span>
+            <span class="text-[10px] text-stone-500">Feb</span>
+            <span class="text-[10px] text-stone-500">Mar</span>
+            <span class="text-[10px] text-stone-500">Apr</span>
+            <span class="text-[10px] text-stone-500">May</span>
+            <span class="text-[10px] text-stone-500">Jun</span>
+            <span class="text-[10px] text-stone-500">Jul</span>
+            <span class="text-[10px] text-stone-500">Aug</span>
+            <span class="text-[10px] text-stone-500">Sep</span>
+            <span class="text-[10px] text-stone-500">Oct</span>
+            <span class="text-[10px] text-stone-500">Nov</span>
+            <span class="text-[10px] text-stone-500">Dec</span>
+          </div>
+
+          <!-- Heatmap Grid (simplified representation) -->
+          <div class="flex gap-[2px]" id="heatmap-grid">
+            <!-- Generated by JS below -->
+          </div>
+
+          <!-- Legend -->
+          <div class="flex items-center justify-end gap-2 mt-3">
+            <span class="text-[10px] text-stone-500">Less</span>
+            <div class="flex gap-[2px]">
+              <div class="w-3 h-3 rounded-sm heat-0"></div>
+              <div class="w-3 h-3 rounded-sm heat-1"></div>
+              <div class="w-3 h-3 rounded-sm heat-2"></div>
+              <div class="w-3 h-3 rounded-sm heat-3"></div>
+              <div class="w-3 h-3 rounded-sm heat-4"></div>
+            </div>
+            <span class="text-[10px] text-stone-500">More</span>
+          </div>
+        </div>
+
+        <!-- Best Month -->
+        <div class="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-2xl p-4 border border-emerald-500/20 animate-fade-in-up stagger-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+              <i data-lucide="trophy" class="w-6 h-6 text-emerald-400"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-sm text-emerald-400 font-medium">Best Month</div>
+              <div class="text-xl font-bold text-stone-100">October 2024</div>
+              <div class="text-sm text-stone-400">28 of 31 days completed (90%)</div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-stone-500"></i>
+          </div>
+        </div>
+
+        <!-- Weekly Pattern -->
+        <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800 animate-fade-in-up stagger-5">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+              <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-400"></i>
+            </div>
+            <span class="font-semibold text-stone-100">Weekly Pattern</span>
+          </div>
+
+          <!-- Day bars -->
+          <div class="flex items-end justify-between gap-2 h-24">
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500/80 rounded-t" style="height: 65%"></div>
+              <span class="text-[10px] text-stone-500">Mon</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500/80 rounded-t" style="height: 78%"></div>
+              <span class="text-[10px] text-stone-500">Tue</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500/80 rounded-t" style="height: 82%"></div>
+              <span class="text-[10px] text-stone-500">Wed</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500/80 rounded-t" style="height: 70%"></div>
+              <span class="text-[10px] text-stone-500">Thu</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-amber-500/80 rounded-t" style="height: 45%"></div>
+              <span class="text-[10px] text-amber-400">Fri</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500 rounded-t" style="height: 95%"></div>
+              <span class="text-[10px] text-lime-400 font-medium">Sat</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500/80 rounded-t" style="height: 88%"></div>
+              <span class="text-[10px] text-stone-500">Sun</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-3 pt-3 border-t border-stone-800">
+            <div class="text-center">
+              <div class="text-xs text-stone-400">Best Day</div>
+              <div class="text-sm font-semibold text-lime-400">Saturday</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xs text-stone-400">Focus Day</div>
+              <div class="text-sm font-semibold text-amber-400">Friday</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="bg-stone-900/80 rounded-2xl p-4 border border-stone-800 animate-fade-in-up stagger-6">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+              <i data-lucide="award" class="w-4 h-4 text-purple-400"></i>
+            </div>
+            <span class="font-semibold text-stone-100">Milestones Achieved</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+              <span class="text-2xl">🔥</span>
+              <div class="flex-1">
+                <div class="font-medium text-stone-100">7-Day Streak</div>
+                <div class="text-xs text-stone-500">Achieved 18 times</div>
+              </div>
+              <div class="text-emerald-400 text-sm font-medium">✓</div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+              <span class="text-2xl">⚡</span>
+              <div class="flex-1">
+                <div class="font-medium text-stone-100">30-Day Streak</div>
+                <div class="text-xs text-stone-500">Achieved 4 times</div>
+              </div>
+              <div class="text-emerald-400 text-sm font-medium">✓</div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+              <span class="text-2xl">💎</span>
+              <div class="flex-1">
+                <div class="font-medium text-stone-100">Perfect Month</div>
+                <div class="text-xs text-stone-500">Achieved 1 time (Oct)</div>
+              </div>
+              <div class="text-emerald-400 text-sm font-medium">✓</div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-stone-800/30 rounded-xl opacity-60">
+              <span class="text-2xl">🏆</span>
+              <div class="flex-1">
+                <div class="font-medium text-stone-300">100-Day Streak</div>
+                <div class="text-xs text-stone-500">Not yet achieved</div>
+              </div>
+              <div class="text-stone-500 text-sm">58% there</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share CTA -->
+        <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-2xl p-4 border border-amber-500/30">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+              <i data-lucide="share-2" class="w-6 h-6 text-amber-400"></i>
+            </div>
+            <div class="flex-1">
+              <div class="font-semibold text-stone-100">Share Your Progress</div>
+              <div class="text-sm text-stone-400">Inspire others with your journey</div>
+            </div>
+            <button class="px-4 py-2 bg-amber-500 text-stone-900 rounded-full font-semibold text-sm hover:bg-amber-400 transition-colors">
+              Share
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom padding -->
+        <div class="h-8"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommendations Panel -->
+  <div class="ml-8 max-w-md">
+    <div class="bg-stone-900/80 rounded-2xl p-6 border border-stone-800">
+      <h3 class="text-lg font-bold text-stone-100 mb-4 flex items-center gap-2">
+        <i data-lucide="lightbulb" class="w-5 h-5 text-amber-400"></i>
+        Recommendations
+      </h3>
+
+      <div class="space-y-4">
+        <!-- Pro -->
+        <div class="p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+            <span class="font-semibold text-emerald-400">Why This Works</span>
+          </div>
+          <ul class="text-sm text-stone-300 space-y-2">
+            <li>• <strong>Celebration moment</strong> - Users love seeing their annual progress</li>
+            <li>• <strong>Retention driver</strong> - Creates anticipation for next year</li>
+            <li>• <strong>Social sharing</strong> - Built-in viral loop potential</li>
+            <li>• <strong>Premium value</strong> - Clear differentiator from free tier</li>
+            <li>• <strong>Low dev effort</strong> - Reuses existing heatmap components</li>
+          </ul>
+        </div>
+
+        <!-- Considerations -->
+        <div class="p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+            <span class="font-semibold text-amber-400">Considerations</span>
+          </div>
+          <ul class="text-sm text-stone-300 space-y-2">
+            <li>• Need 1+ year of data for full value</li>
+            <li>• Could show partial year for new users</li>
+            <li>• Share feature requires image generation</li>
+            <li>• Consider PDF export option</li>
+          </ul>
+        </div>
+
+        <!-- Implementation -->
+        <div class="p-4 bg-stone-800/50 rounded-xl">
+          <div class="flex items-center gap-2 mb-2">
+            <i data-lucide="code" class="w-4 h-4 text-stone-400"></i>
+            <span class="font-semibold text-stone-300">Implementation Notes</span>
+          </div>
+          <ul class="text-sm text-stone-400 space-y-2">
+            <li>• Extend <code class="text-xs bg-stone-700 px-1 rounded">CalendarGrid</code> for 52-week layout</li>
+            <li>• Add <code class="text-xs bg-stone-700 px-1 rounded">YearInReviewScreen.tsx</code></li>
+            <li>• Gate behind premium subscription check</li>
+            <li>• Add share via <code class="text-xs bg-stone-700 px-1 rounded">react-native-share</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Generate heatmap grid
+    const grid = document.getElementById('heatmap-grid');
+    const weeks = 52;
+    const daysPerWeek = 7;
+
+    for (let w = 0; w < weeks; w++) {
+      const weekCol = document.createElement('div');
+      weekCol.className = 'flex flex-col gap-[2px]';
+
+      for (let d = 0; d < daysPerWeek; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'w-[5px] h-[5px] rounded-sm';
+
+        // Random heat level with some patterns
+        let heat;
+        const rand = Math.random();
+
+        // Create some patterns - higher activity mid-year
+        const yearProgress = w / weeks;
+        const bonus = yearProgress > 0.3 && yearProgress < 0.9 ? 0.2 : 0;
+
+        // Weekend bonus
+        const weekendBonus = (d === 5 || d === 6) ? 0.15 : 0;
+
+        // Friday penalty
+        const fridayPenalty = d === 4 ? -0.15 : 0;
+
+        const adjustedRand = rand + bonus + weekendBonus + fridayPenalty;
+
+        if (adjustedRand < 0.25) heat = 0;
+        else if (adjustedRand < 0.45) heat = 1;
+        else if (adjustedRand < 0.65) heat = 2;
+        else if (adjustedRand < 0.85) heat = 3;
+        else heat = 4;
+
+        cell.classList.add(`heat-${heat}`);
+        weekCol.appendChild(cell);
+      }
+
+      grid.appendChild(weekCol);
+    }
+  </script>
+</body>
+</html>

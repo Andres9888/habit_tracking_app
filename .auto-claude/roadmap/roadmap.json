@@ -1,0 +1,782 @@
+{
+  "id": "roadmap-2026-01-05",
+  "project_name": "Daily Habits Tracker",
+  "version": "1.0",
+  "vision": "A playful, cat-themed mobile habit tracker that makes building good habits fun through gamification, time-aware suggestions, and visual streak tracking",
+  "target_audience": {
+    "primary": "Individual consumers seeking to build and maintain positive habits through gamification and visual tracking",
+    "secondary": [
+      "Productivity enthusiasts who want cross-platform habit tracking",
+      "Users who respond well to playful/gamified interfaces (cat theme)",
+      "People who need gentle accountability and motivational support",
+      "Users who prefer mobile-first experiences with web fallback"
+    ]
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Foundation & Polish",
+      "description": "Complete MVP gaps, fix technical debt, and strengthen core experience. Quick wins that address immediate user needs and competitor weaknesses.",
+      "order": 1,
+      "status": "planned",
+      "features": [
+        "feature-1",
+        "feature-2",
+        "feature-3",
+        "feature-4",
+        "feature-5",
+        "feature-6"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-1-1",
+          "title": "Core Stability",
+          "description": "All core features work reliably - habits can be reordered, paused, and archived without bugs",
+          "features": [
+            "feature-1",
+            "feature-2"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-1-2",
+          "title": "User Data Ownership",
+          "description": "Users can export their data and trust their habits are safe",
+          "features": [
+            "feature-3",
+            "feature-4"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-1-3",
+          "title": "Motivation Enhancement",
+          "description": "Users feel supported when they miss days with recovery messaging",
+          "features": [
+            "feature-5",
+            "feature-6"
+          ],
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "name": "User Experience Enhancement",
+      "description": "Add features that directly address competitor pain points and user-requested improvements. Focus on friction reduction and delight.",
+      "order": 2,
+      "status": "planned",
+      "features": [
+        "feature-7",
+        "feature-8",
+        "feature-9",
+        "feature-10",
+        "feature-11",
+        "feature-12"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-2-1",
+          "title": "Quick Access",
+          "description": "Users can complete habits without opening the full app via widgets",
+          "features": [
+            "feature-7"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-2-2",
+          "title": "Offline Resilience",
+          "description": "App works offline and syncs when connected - no data loss anxiety",
+          "features": [
+            "feature-8"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-2-3",
+          "title": "Flexible Tracking",
+          "description": "Users can track habits with complex schedules and multiple daily completions",
+          "features": [
+            "feature-9",
+            "feature-10",
+            "feature-11",
+            "feature-12"
+          ],
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "phase-3",
+      "name": "Social & Sharing",
+      "description": "Add accountability and community features that competitors have abandoned or implemented poorly. Build trust through transparency.",
+      "order": 3,
+      "status": "planned",
+      "features": [
+        "feature-13",
+        "feature-14",
+        "feature-15",
+        "feature-16",
+        "feature-17"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-3-1",
+          "title": "Share & Celebrate",
+          "description": "Users can share achievements and invite friends to join their habit journey",
+          "features": [
+            "feature-13",
+            "feature-14"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-3-2",
+          "title": "Accountability Partners",
+          "description": "Users can connect with friends for mutual accountability",
+          "features": [
+            "feature-15",
+            "feature-16"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-3-3",
+          "title": "Premium Value",
+          "description": "Sustainable monetization that respects users (unlike competitors)",
+          "features": [
+            "feature-17"
+          ],
+          "status": "planned"
+        }
+      ]
+    },
+    {
+      "id": "phase-4",
+      "name": "Advanced & Future",
+      "description": "Wearable integration, AI enhancements, and advanced features for power users. Build platform stickiness.",
+      "order": 4,
+      "status": "planned",
+      "features": [
+        "feature-18",
+        "feature-19",
+        "feature-20",
+        "feature-21"
+      ],
+      "milestones": [
+        {
+          "id": "milestone-4-1",
+          "title": "Wearable Integration",
+          "description": "Complete habits from Apple Watch or Wear OS",
+          "features": [
+            "feature-18"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-4-2",
+          "title": "Smart Insights",
+          "description": "AI provides personalized insights and recommendations",
+          "features": [
+            "feature-19",
+            "feature-20"
+          ],
+          "status": "planned"
+        },
+        {
+          "id": "milestone-4-3",
+          "title": "Ecosystem Integration",
+          "description": "Connect with health and productivity apps",
+          "features": [
+            "feature-21"
+          ],
+          "status": "planned"
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "feature-1",
+      "title": "Implement Habit Reordering",
+      "description": "Complete the reorderHabits mutation in convex/habits.ts to enable drag-and-drop habit reordering. The UI already supports this but the backend mutation is missing.",
+      "rationale": "Critical functionality gap identified in technical debt. Users expect to organize their habits in their preferred order. This is a quick win since UI is already built.",
+      "priority": "must",
+      "complexity": "low",
+      "impact": "medium",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can drag and drop habits to reorder them on the main screen",
+        "New order persists across app restarts",
+        "Reorder works across different habit categories",
+        "Optimistic updates provide instant feedback"
+      ],
+      "user_stories": [
+        "As a user, I want to reorder my habits so that I see my most important habits first",
+        "As a user, I want my habit order to be saved so I don't have to reorganize every time"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-2",
+      "title": "Habit Pause & Resume",
+      "description": "Allow users to temporarily pause habits without breaking streaks or losing data. Paused habits are hidden from daily view but preserved in history.",
+      "rationale": "Users need flexibility during vacations, illness, or life changes. Habitica punishes users for breaks, causing frustration. This supports recovery from setbacks - a major market gap.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can pause any active habit from the habit detail screen",
+        "Paused habits are not shown in daily view but appear in a 'Paused' section",
+        "Streak is preserved during pause period (not counted as missed days)",
+        "Users can resume habits at any time",
+        "Pause history is tracked (when paused, when resumed)"
+      ],
+      "user_stories": [
+        "As a user going on vacation, I want to pause my workout habit so my streak isn't broken",
+        "As a user recovering from illness, I want to pause habits temporarily without losing my progress"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-6",
+        "gap-7"
+      ]
+    },
+    {
+      "id": "feature-3",
+      "title": "Data Export & Backup",
+      "description": "Allow users to export their habit data in common formats (JSON, CSV) for backup or switching apps. Include completions, streaks, notes, and analytics.",
+      "rationale": "Addresses the data safety concern that plagues Loop Habit Tracker (Android only, local storage only). Builds trust by giving users ownership of their data. Differentiates from competitors with lock-in strategies.",
+      "priority": "must",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can export all habit data as JSON file",
+        "Users can export completion history as CSV",
+        "Export includes: habits, completions, notes, streaks, categories",
+        "Export can be triggered from settings screen",
+        "File can be shared via system share sheet"
+      ],
+      "user_stories": [
+        "As a user, I want to export my habit data so I have a backup in case something goes wrong",
+        "As a user, I want to download my data so I can analyze it in a spreadsheet"
+      ],
+      "competitor_insight_ids": [
+        "pain-4-2"
+      ]
+    },
+    {
+      "id": "feature-4",
+      "title": "Code Cleanup & Refactoring",
+      "description": "Refactor large components (HabitDetailScreen at 113KB), remove duplicate files (affirmations 2.ts, habits.ts.simple), and clean up technical debt.",
+      "rationale": "Technical debt slows feature development and increases bug risk. The large HabitDetailScreen makes maintenance difficult. Clean code enables faster iteration.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "low",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "HabitDetailScreen split into smaller, focused components (<500 lines each)",
+        "Duplicate files removed or consolidated",
+        "All TODO comments addressed or converted to tracked issues",
+        "No regression in existing functionality"
+      ],
+      "user_stories": [
+        "As a developer, I want clean organized code so I can add features faster",
+        "As a developer, I want no duplicate files so I know which code is authoritative"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-5",
+      "title": "Streak Recovery & Forgiveness",
+      "description": "Allow users to 'forgive' missed days under certain circumstances (e.g., once per month free, or with explanation). Prevent streak loss from being devastating.",
+      "rationale": "Habitica and Streaks punish users harshly for missed days, leading to abandonment. Research shows forgiving systems have better retention. The cat theme can make forgiveness feel supportive rather than like cheating.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users get 1 free 'forgiveness' per habit per month",
+        "Forgiveness retroactively marks a missed day as completed",
+        "Cat character provides encouraging message when forgiveness is used",
+        "Forgiveness count resets monthly",
+        "Clear UI indicates forgiveness is available"
+      ],
+      "user_stories": [
+        "As a user who missed a day due to emergency, I want to recover my streak so I stay motivated",
+        "As a user, I want the app to be forgiving so I don't feel punished for being human"
+      ],
+      "competitor_insight_ids": [
+        "gap-7",
+        "pain-1-6"
+      ]
+    },
+    {
+      "id": "feature-6",
+      "title": "Enhanced Comeback Messaging",
+      "description": "When users return after missing days, provide personalized cat-themed messages that acknowledge the gap and encourage continuation rather than focusing on failure.",
+      "rationale": "Market gap: apps punish rather than encourage recovery. Cat personality can provide emotional support. This is a key differentiator from austere apps like Streaks and Loop.",
+      "priority": "should",
+      "complexity": "low",
+      "impact": "high",
+      "phase_id": "phase-1",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "System detects when user returns after 2+ day absence",
+        "Cat character displays personalized welcome-back message",
+        "Messages vary based on absence length (2 days vs 2 weeks)",
+        "Focus on future progress, not past failure",
+        "At least 20 unique comeback message variants"
+      ],
+      "user_stories": [
+        "As a user returning after a break, I want to feel welcomed back so I'm motivated to continue",
+        "As a user, I want the cat to be understanding so I don't feel guilty about missing days"
+      ],
+      "competitor_insight_ids": [
+        "gap-7",
+        "pain-2-6",
+        "pain-4-5"
+      ]
+    },
+    {
+      "id": "feature-7",
+      "title": "Interactive Home Screen Widgets",
+      "description": "Create iOS and Android widgets that display today's habits and allow direct completion without opening the app. Support multiple widget sizes.",
+      "rationale": "Streaks has view-only widgets, users want interactive ones. Loop has widget issues. This reduces friction for quick check-ins - a key user need. Addresses pain-2-3 directly.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-2",
+      "dependencies": [
+        "feature-1"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Small widget shows top 3 habits with tap-to-complete",
+        "Medium widget shows up to 6 habits with completion status",
+        "Large widget shows all daily habits with category grouping",
+        "Widget updates reflect in app immediately",
+        "Works on both iOS and Android"
+      ],
+      "user_stories": [
+        "As a user, I want to mark habits complete from my home screen so I don't have to open the app",
+        "As a user, I want to see my habit progress at a glance on my home screen"
+      ],
+      "competitor_insight_ids": [
+        "pain-2-3",
+        "gap-6",
+        "pain-4-4"
+      ]
+    },
+    {
+      "id": "feature-8",
+      "title": "Offline Mode with Sync",
+      "description": "Enable full app functionality when offline. Queue changes locally and sync when connection is restored. Handle conflicts gracefully.",
+      "rationale": "Habitica requires constant internet - a major pain point. Users need to track habits anywhere (subway, airplane, rural areas). Convex supports offline patterns.",
+      "priority": "must",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-2",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "All read operations work offline with cached data",
+        "Habit completions can be recorded offline",
+        "Offline changes sync automatically when online",
+        "Clear indicator shows offline status",
+        "Conflict resolution prefers most recent change",
+        "No data loss when switching between online/offline"
+      ],
+      "user_stories": [
+        "As a commuter, I want to use the app underground so I can track habits anytime",
+        "As a traveler, I want to track habits without WiFi so my routine isn't interrupted"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-2",
+        "gap-5"
+      ]
+    },
+    {
+      "id": "feature-9",
+      "title": "Advanced Recurring Patterns",
+      "description": "Support complex habit schedules: every N days, specific days of month, X times per week (flexible), weekdays only, etc.",
+      "rationale": "Current implementation likely supports basic daily/weekly. Users need flexibility for habits like 'workout 3x per week' or 'review finances on 1st and 15th'. Identified in known_gaps.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Support 'every N days' scheduling (e.g., every 3 days)",
+        "Support 'X times per week, any day' flexibility",
+        "Support specific days of month (1st, 15th, last day)",
+        "Support weekday-only or weekend-only habits",
+        "Streak calculation adapts to schedule type"
+      ],
+      "user_stories": [
+        "As a gym-goer, I want to set '3 times per week' without specifying days so I have flexibility",
+        "As a user, I want habits for specific dates like 'pay rent on 1st' to appear only when relevant"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-10",
+      "title": "Multiple Daily Completions",
+      "description": "Allow habits to be completed multiple times per day with a target count. Track each completion with optional notes.",
+      "rationale": "Habitify users complain they can't track 'brush teeth' 2x daily without creating duplicate habits. This is a common need for health habits (water, medication, meals).",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can set target completions per day (1-10)",
+        "Each completion is tracked separately with timestamp",
+        "Progress indicator shows X/Y completions",
+        "Habit is 'complete' when target is reached",
+        "Analytics show completion distribution throughout day"
+      ],
+      "user_stories": [
+        "As a user tracking water intake, I want to log each glass so I reach my daily goal",
+        "As a user, I want to track 'brush teeth' morning and night as one habit with 2 completions"
+      ],
+      "competitor_insight_ids": [
+        "pain-5-3"
+      ]
+    },
+    {
+      "id": "feature-11",
+      "title": "Habit to Break (Negative Habits)",
+      "description": "Support tracking habits to STOP doing, with different mechanics (success = not doing it). Show 'days since' instead of streak.",
+      "rationale": "Loop only supports positive habits - users want to break bad habits too. Different visualization needed (days clean, not streak of doing something).",
+      "priority": "could",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can create 'break habit' type with different icon",
+        "Success = marking day as 'didn't do it'",
+        "Shows 'X days clean' counter instead of streak",
+        "Relapse tracking with notes (optional)",
+        "Encouragement messages adapted for breaking habits"
+      ],
+      "user_stories": [
+        "As a user trying to quit smoking, I want to track 'days smoke-free' so I see my progress",
+        "As a user, I want to track habits to break (social media, snacking) not just habits to build"
+      ],
+      "competitor_insight_ids": [
+        "pain-4-3"
+      ]
+    },
+    {
+      "id": "feature-12",
+      "title": "Smart Notification Improvements",
+      "description": "Enhance notifications to be adaptive based on user behavior: learn optimal times, reduce noise when habits are completed, smart batching.",
+      "rationale": "Streaks users complain notifications aren't smart enough. Time-based suggestions chip (existing) is a differentiator - extend this intelligence to notifications.",
+      "priority": "could",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-2",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Learn from completion patterns to suggest optimal reminder times",
+        "Auto-dismiss notifications when habit is completed",
+        "Batch multiple habit reminders into single notification when appropriate",
+        "Respect focus/DND modes",
+        "User can override learned times"
+      ],
+      "user_stories": [
+        "As a user, I want reminders at times I'm likely to complete habits so they're helpful",
+        "As a user, I don't want notifications for habits I already completed today"
+      ],
+      "competitor_insight_ids": [
+        "pain-2-4"
+      ]
+    },
+    {
+      "id": "feature-13",
+      "title": "Achievement Sharing",
+      "description": "Generate shareable cards/images for milestones (7-day streak, 100 completions, etc.) that users can post to social media.",
+      "rationale": "Organic growth through social sharing. Users are proud of achievements and want to share. Creates brand awareness through user-generated content.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Auto-generate shareable image when milestone reached",
+        "Image includes cat character, achievement, and app branding",
+        "One-tap share to major platforms (Instagram, Twitter, etc.)",
+        "Multiple visual templates to choose from",
+        "Privacy option to hide specific habit names"
+      ],
+      "user_stories": [
+        "As a user who hit 30-day streak, I want to share this achievement so my friends see my progress",
+        "As a user, I want attractive shareable images so I'm proud to post them"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-14",
+      "title": "Habit Templates Sharing",
+      "description": "Allow users to share their habit setups as templates that others can import. Create a public template library.",
+      "rationale": "Reduces setup friction for new users. Creates community engagement. Users often ask 'what habits should I track?' - templates answer this.",
+      "priority": "could",
+      "complexity": "medium",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can export habit configuration as shareable link",
+        "Recipients can preview template before importing",
+        "Import creates habits with user's own customization",
+        "Curated template library (Morning Routine, Fitness, Mindfulness, etc.)",
+        "User-submitted templates with moderation"
+      ],
+      "user_stories": [
+        "As a new user, I want to import a 'morning routine' template so I don't start from scratch",
+        "As an experienced user, I want to share my habit setup with friends starting their journey"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-15",
+      "title": "Accountability Partners",
+      "description": "Connect with friends to see each other's progress and provide encouragement. No competition/leaderboard - just mutual support.",
+      "rationale": "Habitica shut down forums, reducing social accountability. Users want connection without competitive pressure. Gentle accountability matches cat theme personality.",
+      "priority": "should",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-3",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can invite friends via link or contact search",
+        "See friend's streak status (not detailed habits, privacy)",
+        "Send encouragement messages/reactions",
+        "Get notified when friend hits milestone",
+        "Easy to disconnect if needed"
+      ],
+      "user_stories": [
+        "As a user, I want to connect with my workout buddy so we motivate each other",
+        "As a user, I want to see my friend's progress so I feel accountable to continue"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-5"
+      ]
+    },
+    {
+      "id": "feature-16",
+      "title": "Group Challenges",
+      "description": "Create time-limited group challenges (30-day meditation challenge) where friends participate together toward a common goal.",
+      "rationale": "Group accountability drives engagement. Different from Habitica's complex party quests - simpler, time-bound challenges. Could be viral growth mechanism.",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-3",
+      "dependencies": [
+        "feature-15"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Users can create challenges with defined duration and habit",
+        "Invite friends to join challenge via link",
+        "Group progress visualization (everyone's completion rate)",
+        "Celebration when group completes challenge",
+        "Templates for common challenges"
+      ],
+      "user_stories": [
+        "As a group of friends, we want to do a 30-day reading challenge together so we stay motivated",
+        "As a challenge creator, I want to see how everyone is progressing so I can encourage stragglers"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-5"
+      ]
+    },
+    {
+      "id": "feature-17",
+      "title": "Fair Monetization Model",
+      "description": "Implement premium features with transparent pricing, easy cancellation, and generous free tier. Consider lifetime purchase option.",
+      "rationale": "Fabulous has 1.0 stars on Trustpilot due to billing. Habitica's gem system frustrates users. Habitify's pricing is inconsistent. Be the trustworthy option in a sea of predatory pricing.",
+      "priority": "should",
+      "complexity": "medium",
+      "impact": "high",
+      "phase_id": "phase-3",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Free tier includes core features (unlimited habits, basic analytics)",
+        "Premium adds: advanced analytics, unlimited templates, themes, priority support",
+        "Simple pricing: one price, all platforms",
+        "One-tap cancellation in app",
+        "Lifetime purchase option alongside subscription",
+        "No premium currency or confusing gem systems"
+      ],
+      "user_stories": [
+        "As a user, I want clear pricing so I know exactly what I'm paying for",
+        "As a user, I want to cancel easily if the app isn't for me, without calling support"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-3",
+        "pain-3-1",
+        "pain-3-2",
+        "pain-3-4",
+        "pain-3-5",
+        "pain-5-1",
+        "pain-5-2",
+        "pain-5-6",
+        "gap-4"
+      ]
+    },
+    {
+      "id": "feature-18",
+      "title": "Apple Watch & Wear OS Support",
+      "description": "Create companion apps for Apple Watch and Wear OS that allow viewing habits and quick completion from the wrist.",
+      "rationale": "Identified in known_gaps. Streaks has flaky Watch support, Habitify's Watch interface is buggy. Do it right or don't do it.",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-4",
+      "dependencies": [
+        "feature-7"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "View today's habits on watch",
+        "Complete habits with haptic confirmation",
+        "Complications show streak or progress",
+        "Sync with phone app reliably",
+        "Works offline on watch with later sync"
+      ],
+      "user_stories": [
+        "As a Watch user, I want to check off habits during workouts without my phone",
+        "As a user, I want a watch complication showing my daily progress at a glance"
+      ],
+      "competitor_insight_ids": [
+        "pain-2-5",
+        "pain-5-5"
+      ]
+    },
+    {
+      "id": "feature-19",
+      "title": "AI-Powered Habit Insights",
+      "description": "Use AI (existing API keys available) to analyze habit patterns and provide personalized recommendations: best times, habit stacking suggestions, streak risk prediction.",
+      "rationale": "Multiple AI API keys in project suggest AI features planned. Differentiate with smart insights that competitors don't offer. Leverage existing time-based suggestion infrastructure.",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "high",
+      "phase_id": "phase-4",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Weekly AI-generated insight summary",
+        "Habit stacking recommendations based on completion patterns",
+        "Predict which habits are at risk of being dropped",
+        "Suggest optimal times based on completion history",
+        "Cat character delivers insights in personality-consistent way"
+      ],
+      "user_stories": [
+        "As a user, I want the app to tell me which habits I'm likely to skip so I can focus on them",
+        "As a user, I want suggestions for which habits to do together based on my patterns"
+      ],
+      "competitor_insight_ids": [
+        "pain-1-7"
+      ]
+    },
+    {
+      "id": "feature-20",
+      "title": "AI Habit Coach",
+      "description": "Conversational AI (chat with the cat) that helps users set goals, troubleshoot habit struggles, and provide personalized coaching.",
+      "rationale": "Fabulous offers coaching but with terrible billing. Provide AI-powered coaching that's accessible and in-character with the cat theme. Multiple LLM API keys available.",
+      "priority": "wont",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-4",
+      "dependencies": [
+        "feature-19"
+      ],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Chat interface with cat character",
+        "Context-aware: knows user's habits, streaks, patterns",
+        "Can help set SMART goals",
+        "Provides troubleshooting for struggling habits",
+        "Maintains cat personality throughout conversation"
+      ],
+      "user_stories": [
+        "As a user struggling with a habit, I want to chat with the cat for advice",
+        "As a new user, I want help figuring out which habits to track"
+      ],
+      "competitor_insight_ids": []
+    },
+    {
+      "id": "feature-21",
+      "title": "Health App Integrations",
+      "description": "Connect with Apple Health, Google Fit, and other health platforms to auto-complete habits based on tracked activities.",
+      "rationale": "Habitify integrates with health apps. Reduces friction for fitness habits - if you did a workout logged in Apple Health, habit auto-completes.",
+      "priority": "could",
+      "complexity": "high",
+      "impact": "medium",
+      "phase_id": "phase-4",
+      "dependencies": [],
+      "status": "under_review",
+      "acceptance_criteria": [
+        "Apple Health integration for iOS",
+        "Google Fit integration for Android",
+        "Auto-complete habits based on health data (steps, workouts, sleep)",
+        "User controls which habits auto-complete",
+        "Manual override always available"
+      ],
+      "user_stories": [
+        "As a runner, I want my 'run 3x week' habit to auto-complete when Apple Health logs a run",
+        "As a user, I want my step goal habit to sync with my phone's step counter"
+      ],
+      "competitor_insight_ids": []
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-01-05T22:00:00Z",
+    "updated_at": "2026-01-06T03:10:37.365Z",
+    "generated_by": "roadmap_features agent",
+    "prioritization_framework": "MoSCoW",
+    "competitor_analysis_used": true,
+    "total_features": 21,
+    "features_addressing_competitor_pain_points": 14,
+    "priority_breakdown": {
+      "must": 5,
+      "should": 8,
+      "could": 7,
+      "wont": 1
+    },
+    "complexity_breakdown": {
+      "low": 2,
+      "medium": 11,
+      "high": 8
+    },
+    "impact_breakdown": {
+      "low": 1,
+      "medium": 11,
+      "high": 9
+    }
+  }
+}

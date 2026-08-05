@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Archive Page Redesign — Habit Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif !important;
+        background: #1a1a2e !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 32px 16px;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      span,
+      div {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          sans-serif !important;
+      }
+
+      /* Phone frame */
+      .phone-frame {
+        width: 390px;
+        height: 844px;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 3px #333,
+          0 0 0 6px #1a1a1a,
+          0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Toggle switch */
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        color: white;
+        font-size: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      /* View toggle */
+      .view-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 100;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        color: white;
+        font-size: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .view-toggle:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      /* Light theme */
+      .light-theme {
+        --bg: #f5f1ed;
+        --card-bg: #ffffff;
+        --card-border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #78716c;
+        --text-tertiary: #a8a29e;
+        --summary-bg: #edeae5;
+        --separator: #e7e5e4;
+        --danger-bg: #fef2f2;
+        --danger-text: #dc2626;
+        --danger-border: #fecaca;
+        --accent-bar-left: rgba(0, 0, 0, 0.04);
+        --header-blur: rgba(245, 241, 237, 0.85);
+      }
+
+      /* Dark theme */
+      .dark-theme {
+        --bg: #111827;
+        --card-bg: #1f2937;
+        --card-border: #374151;
+        --text-primary: #f3f4f6;
+        --text-secondary: #9ca3af;
+        --text-tertiary: #6b7280;
+        --summary-bg: #1f2937;
+        --separator: #374151;
+        --danger-bg: #7f1d1d;
+        --danger-text: #fca5a5;
+        --danger-border: #991b1b;
+        --accent-bar-left: rgba(255, 255, 255, 0.05);
+        --header-blur: rgba(17, 24, 39, 0.85);
+      }
+
+      .app-container {
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        overflow-y: auto;
+        overflow-x: hidden;
+        position: relative;
+      }
+      .app-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Header */
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--header-blur);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 54px 16px 12px;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+      }
+      .header.scrolled {
+        border-bottom-color: var(--separator);
+      }
+      .header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .back-btn,
+      .close-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--summary-bg);
+        border: none;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.15s ease;
+      }
+      .back-btn:hover,
+      .close-btn:hover {
+        background: var(--card-border);
+        transform: scale(1.05);
+      }
+      .back-btn:active,
+      .close-btn:active {
+        transform: scale(0.95);
+      }
+      .header-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+      }
+
+      /* Content area */
+      .content {
+        padding: 16px 16px 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* Summary pill */
+      .summary-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: var(--summary-bg);
+        border-radius: 12px;
+        margin-bottom: 4px;
+      }
+      .summary-pill span {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-secondary);
+      }
+
+      /* Habit card */
+      .habit-card {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+        animation: cardSlideIn 0.4s ease-out both;
+      }
+      .habit-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+
+      /* Strength gradient bg */
+      .strength-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        opacity: 0.12;
+        pointer-events: none;
+      }
+
+      /* Card header row */
+      .card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 12px;
+        position: relative;
+      }
+      .habit-icon-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .accent-bar {
+        width: 3px;
+        height: 36px;
+        border-radius: 2px;
+        flex-shrink: 0;
+      }
+      .habit-emoji {
+        font-size: 24px;
+        line-height: 1;
+      }
+      .card-header-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.2px;
+        margin-bottom: 2px;
+      }
+      .archive-meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--text-tertiary);
+      }
+      .meta-dot {
+        color: var(--card-border);
+      }
+
+      /* Badges row */
+      .badges-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 14px;
+        position: relative;
+      }
+      .badge {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .badge-emoji {
+        font-size: 13px;
+      }
+
+      /* Badge colors */
+      .badge-purple {
+        background: #f3e8ff;
+        color: #7c3aed;
+      }
+      .badge-emerald {
+        background: #ecfdf5;
+        color: #059669;
+      }
+      .badge-teal {
+        background: #f0fdfa;
+        color: #0d9488;
+      }
+      .badge-yellow {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .badge-rose {
+        background: #fff1f2;
+        color: #e11d48;
+      }
+      .badge-streak {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      .badge-streak-none {
+        background: #f5f5f4;
+        color: #78716c;
+      }
+      .badge-completions {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+
+      .dark-theme .badge-purple {
+        background: rgba(139, 92, 246, 0.15);
+        color: #c4b5fd;
+      }
+      .dark-theme .badge-emerald {
+        background: rgba(16, 185, 129, 0.15);
+        color: #6ee7b7;
+      }
+      .dark-theme .badge-teal {
+        background: rgba(20, 184, 166, 0.15);
+        color: #5eead4;
+      }
+      .dark-theme .badge-yellow {
+        background: rgba(234, 179, 8, 0.15);
+        color: #fde68a;
+      }
+      .dark-theme .badge-rose {
+        background: rgba(244, 63, 94, 0.15);
+        color: #fda4af;
+      }
+      .dark-theme .badge-streak {
+        background: rgba(234, 179, 8, 0.12);
+        color: #fde68a;
+      }
+      .dark-theme .badge-streak-none {
+        background: rgba(55, 65, 81, 0.8);
+        color: #9ca3af;
+      }
+      .dark-theme .badge-completions {
+        background: rgba(59, 130, 246, 0.15);
+        color: #93c5fd;
+      }
+
+      /* Action buttons */
+      .action-row {
+        display: flex;
+        gap: 8px;
+        position: relative;
+      }
+      .action-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.15s ease;
+      }
+      .action-btn:active {
+        transform: scale(0.97);
+      }
+      .restore-btn {
+        background: #ecfdf5;
+        color: #059669;
+        border: 1px solid #d1fae5;
+      }
+      .restore-btn:hover {
+        background: #d1fae5;
+      }
+      .delete-btn {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+      }
+      .delete-btn:hover {
+        background: #fecaca;
+      }
+
+      .dark-theme .restore-btn {
+        background: rgba(5, 150, 105, 0.12);
+        color: #6ee7b7;
+        border-color: rgba(5, 150, 105, 0.2);
+      }
+      .dark-theme .restore-btn:hover {
+        background: rgba(5, 150, 105, 0.2);
+      }
+      .dark-theme .delete-btn {
+        background: rgba(220, 38, 38, 0.1);
+        color: #fca5a5;
+        border-color: rgba(220, 38, 38, 0.2);
+      }
+      .dark-theme .delete-btn:hover {
+        background: rgba(220, 38, 38, 0.18);
+      }
+
+      /* Danger zone */
+      .danger-zone {
+        margin-top: 12px;
+        padding: 16px;
+        border-radius: 16px;
+        border: 1px dashed var(--danger-border);
+        background: var(--danger-bg);
+        text-align: center;
+      }
+      .danger-zone-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--danger-text);
+        opacity: 0.6;
+        margin-bottom: 10px;
+      }
+      .delete-all-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        background: transparent;
+        color: var(--danger-text);
+        transition: all 0.15s ease;
+      }
+      .delete-all-btn:hover {
+        background: rgba(220, 38, 38, 0.08);
+      }
+      .delete-all-btn:active {
+        transform: scale(0.98);
+      }
+      .danger-subtitle {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-top: 4px;
+      }
+
+      /* Empty state */
+      .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 64px 24px;
+        text-align: center;
+      }
+      .empty-icon-wrap {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+        animation: bounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      .empty-icon-wrap.light-bg {
+        background: #ecfdf5;
+      }
+      .empty-icon-wrap.dark-bg {
+        background: rgba(5, 150, 105, 0.15);
+      }
+      .empty-icon {
+        font-size: 44px;
+      }
+      .empty-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.4px;
+        margin-bottom: 8px;
+        animation: fadeUp 0.4s ease-out 0.1s both;
+      }
+      .empty-desc {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        max-width: 260px;
+        margin-bottom: 24px;
+        animation: fadeUp 0.4s ease-out 0.2s both;
+      }
+      .tip-card {
+        display: flex;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        max-width: 300px;
+        width: 100%;
+        text-align: left;
+        animation: fadeUp 0.5s ease-out 0.3s both;
+      }
+      .tip-card.light-bg {
+        background: #ecfdf5;
+        border: 1px solid #d1fae5;
+      }
+      .tip-card.dark-bg {
+        background: rgba(5, 150, 105, 0.1);
+        border: 1px solid rgba(5, 150, 105, 0.2);
+      }
+      .tip-emoji {
+        font-size: 22px;
+        flex-shrink: 0;
+        line-height: 1.3;
+      }
+      .tip-text-wrap {
+        flex: 1;
+      }
+      .tip-title {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+      .tip-card.light-bg .tip-title {
+        color: #065f46;
+      }
+      .tip-card.dark-bg .tip-title {
+        color: #6ee7b7;
+      }
+      .tip-body {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .tip-card.light-bg .tip-body {
+        color: #047857;
+      }
+      .tip-card.dark-bg .tip-body {
+        color: #a7f3d0;
+      }
+
+      /* Animations */
+      @keyframes cardSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes bounceIn {
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        60% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pillFade {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .summary-pill {
+        animation: pillFade 0.3s ease-out both;
+      }
+      .habit-card:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .habit-card:nth-child(2) {
+        animation-delay: 0.08s;
+      }
+      .habit-card:nth-child(3) {
+        animation-delay: 0.16s;
+      }
+      .danger-zone {
+        animation: fadeUp 0.4s ease-out 0.3s both;
+      }
+
+      /* Hidden helper */
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Theme toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <span id="theme-icon">🌙</span>
+      <span id="theme-label">Dark</span>
+    </button>
+
+    <!-- View toggle -->
+    <button class="view-toggle" onclick="toggleView()">
+      <span id="view-icon">📦</span>
+      <span id="view-label">Populated</span>
+    </button>
+
+    <!-- Phone frame -->
+    <div class="phone-frame">
+      <div class="app-container light-theme" id="app">
+        <!-- Header -->
+        <div class="header" id="header">
+          <div class="header-inner">
+            <button class="back-btn" aria-label="Back">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+            <span class="header-title">Archived Habits</span>
+            <button class="close-btn" aria-label="Close">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Populated View -->
+        <div class="content" id="populated-view">
+          <!-- Summary Pill -->
+          <div class="summary-pill">
+            <span>📦</span>
+            <span>3 archived habits</span>
+          </div>
+
+          <!-- Card 1 — High strength (purple) -->
+          <div class="habit-card">
+            <div
+              class="strength-bg"
+              style="
+                width: 85%;
+                background: linear-gradient(to right, #a855f7, transparent);
+              "
+            ></div>
+            <div class="card-header">
+              <div class="habit-icon-wrap">
+                <div class="accent-bar" style="background: #a855f7"></div>
+                <span class="habit-emoji">🏃</span>
+              </div>
+              <div class="card-header-text">
+                <div class="habit-name">Morning Run</div>
+                <div class="archive-meta">
+                  <span>Archived Dec 15</span>
+                  <span class="meta-dot">·</span>
+                  <span>2 months ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="badges-row">
+              <div class="badge badge-purple">
+                <span class="badge-emoji">⚡</span> 85% Automatic
+              </div>
+              <div class="badge badge-streak">
+                <span class="badge-emoji">🔥</span> 12 day streak
+              </div>
+              <div class="badge badge-completions">
+                <span style="font-weight: 800">✓</span> 147 total
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="action-btn restore-btn">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+                Restore
+              </button>
+              <button class="action-btn delete-btn">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2 — Medium strength (emerald) -->
+          <div class="habit-card">
+            <div
+              class="strength-bg"
+              style="
+                width: 62%;
+                background: linear-gradient(to right, #10b981, transparent);
+              "
+            ></div>
+            <div class="card-header">
+              <div class="habit-icon-wrap">
+                <div class="accent-bar" style="background: #10b981"></div>
+                <span class="habit-emoji">📚</span>
+              </div>
+              <div class="card-header-text">
+                <div class="habit-name">Read 30 Minutes</div>
+                <div class="archive-meta">
+                  <span>Archived Nov 3</span>
+                  <span class="meta-dot">·</span>
+                  <span>4 months ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="badges-row">
+              <div class="badge badge-emerald">
+                <span class="badge-emoji">💪</span> 62% Strong
+              </div>
+              <div class="badge badge-streak-none">
+                <span class="badge-emoji">🔥</span> No streak
+              </div>
+              <div class="badge badge-completions">
+                <span style="font-weight: 800">✓</span> 83 total
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="action-btn restore-btn">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+                Restore
+              </button>
+              <button class="action-btn delete-btn">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3 — Low strength (rose) -->
+          <div class="habit-card">
+            <div
+              class="strength-bg"
+              style="
+                width: 15%;
+                background: linear-gradient(to right, #f43f5e, transparent);
+              "
+            ></div>
+            <div class="card-header">
+              <div class="habit-icon-wrap">
+                <div class="accent-bar" style="background: #f43f5e"></div>
+                <span class="habit-emoji">🧘</span>
+              </div>
+              <div class="card-header-text">
+                <div class="habit-name">Evening Meditation</div>
+                <div class="archive-meta">
+                  <span>Archived Jan 20</span>
+                  <span class="meta-dot">·</span>
+                  <span>6 weeks ago</span>
+                </div>
+              </div>
+            </div>
+            <div class="badges-row">
+              <div class="badge badge-rose">
+                <span class="badge-emoji">🌱</span> 15% Starting
+              </div>
+              <div class="badge badge-streak-none">
+                <span class="badge-emoji">🔥</span> No streak
+              </div>
+            </div>
+            <div class="action-row">
+              <button class="action-btn restore-btn">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                </svg>
+                Restore
+              </button>
+              <button class="action-btn delete-btn">
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+                Delete
+              </button>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="danger-zone">
+            <div class="danger-zone-label">Danger Zone</div>
+            <button class="delete-all-btn">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              </svg>
+              Delete All Archived
+            </button>
+            <div class="danger-subtitle">
+              Permanently remove 3 habits and all tracking data
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State View -->
+        <div class="hidden" id="empty-view">
+          <div class="empty-state">
+            <div class="empty-icon-wrap light-bg" id="empty-icon-bg">
+              <span class="empty-icon">🌱</span>
+            </div>
+            <div class="empty-title">All Habits Are Active!</div>
+            <div class="empty-desc">
+              Swipe left on any habit to archive it for safekeeping. Your
+              progress is always preserved.
+            </div>
+            <div class="tip-card light-bg" id="tip-card">
+              <span class="tip-emoji">💚</span>
+              <div class="tip-text-wrap">
+                <div class="tip-title">Good to Know</div>
+                <div class="tip-body">
+                  Archiving preserves all your progress and streaks. Restore
+                  habits anytime and pick up right where you left off!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let isDark = false;
+      let showEmpty = false;
+      const app = document.getElementById('app');
+
+      function toggleTheme() {
+        isDark = !isDark;
+        app.classList.toggle('light-theme', !isDark);
+        app.classList.toggle('dark-theme', isDark);
+        document.getElementById('theme-icon').textContent = isDark
+          ? '☀️'
+          : '🌙';
+        document.getElementById('theme-label').textContent = isDark
+          ? 'Light'
+          : 'Dark';
+
+        // Update empty state classes
+        const iconBg = document.getElementById('empty-icon-bg');
+        const tipCard = document.getElementById('tip-card');
+        iconBg.classList.toggle('light-bg', !isDark);
+        iconBg.classList.toggle('dark-bg', isDark);
+        tipCard.classList.toggle('light-bg', !isDark);
+        tipCard.classList.toggle('dark-bg', isDark);
+      }
+
+      function toggleView() {
+        showEmpty = !showEmpty;
+        document
+          .getElementById('populated-view')
+          .classList.toggle('hidden', showEmpty);
+        document
+          .getElementById('empty-view')
+          .classList.toggle('hidden', !showEmpty);
+        document.getElementById('view-icon').textContent = showEmpty
+          ? '🌱'
+          : '📦';
+        document.getElementById('view-label').textContent = showEmpty
+          ? 'Empty'
+          : 'Populated';
+      }
+
+      // Header scroll border
+      const container = document.querySelector('.app-container');
+      const header = document.getElementById('header');
+      container.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', container.scrollTop > 4);
+      });
+    </script>
+  </body>
+</html>

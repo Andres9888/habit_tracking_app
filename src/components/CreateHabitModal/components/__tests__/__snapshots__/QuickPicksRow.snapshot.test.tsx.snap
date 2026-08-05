@@ -1,0 +1,2506 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuickPicksRow Snapshots should match snapshot with default unselected state 1`] = `
+<View
+  className="mb-4"
+>
+  <View
+    className="mb-3 flex-row items-center justify-between px-1"
+  >
+    <Text
+      accessibilityRole="header"
+      className="text-base font-semibold"
+      style={
+        {
+          "color": "#2D2A26",
+        }
+      }
+    >
+      Quick picks
+    </Text>
+    <View
+      accessibilityLabel="Browse all templates"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <Text
+        className="text-sm font-medium text-[#22C55E]"
+      >
+        Browse all →
+      </Text>
+    </View>
+  </View>
+  <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
+    contentContainerStyle={
+      {
+        "paddingHorizontal": 1,
+      }
+    }
+    data={
+      [
+        {
+          "color": "#8B5CF6",
+          "emoji": "🧘",
+          "id": "meditate",
+          "name": "Meditate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#3B82F6",
+          "emoji": "📖",
+          "id": "read",
+          "name": "Read",
+          "timeOfDay": "phase3_pull",
+        },
+        {
+          "color": "#22C55E",
+          "emoji": "💪",
+          "id": "exercise",
+          "name": "Exercise",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#06B6D4",
+          "emoji": "💧",
+          "id": "hydrate",
+          "name": "Hydrate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#F97316",
+          "emoji": "✍️",
+          "id": "journal",
+          "name": "Journal",
+          "timeOfDay": "phase3_pull",
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={true}
+    initialNumToRender={5}
+    keyExtractor={[Function]}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={0.0001}
+    showsHorizontalScrollIndicator={false}
+    stickyHeaderIndices={[]}
+    viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
+  >
+    <View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#8B5CF6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                🧘
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Meditate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#3B82F6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                📖
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Read
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#22C55E",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💪
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Exercise
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#06B6D4",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💧
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Hydrate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#F97316",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                ✍️
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Journal
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;
+
+exports[`QuickPicksRow Snapshots should match snapshot with selected template (Exercise) 1`] = `
+<View
+  className="mb-4"
+>
+  <View
+    className="mb-3 flex-row items-center justify-between px-1"
+  >
+    <Text
+      accessibilityRole="header"
+      className="text-base font-semibold"
+      style={
+        {
+          "color": "#2D2A26",
+        }
+      }
+    >
+      Quick picks
+    </Text>
+    <View
+      accessibilityLabel="Browse all templates"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <Text
+        className="text-sm font-medium text-[#22C55E]"
+      >
+        Browse all →
+      </Text>
+    </View>
+  </View>
+  <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
+    contentContainerStyle={
+      {
+        "paddingHorizontal": 1,
+      }
+    }
+    data={
+      [
+        {
+          "color": "#8B5CF6",
+          "emoji": "🧘",
+          "id": "meditate",
+          "name": "Meditate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#3B82F6",
+          "emoji": "📖",
+          "id": "read",
+          "name": "Read",
+          "timeOfDay": "phase3_pull",
+        },
+        {
+          "color": "#22C55E",
+          "emoji": "💪",
+          "id": "exercise",
+          "name": "Exercise",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#06B6D4",
+          "emoji": "💧",
+          "id": "hydrate",
+          "name": "Hydrate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#F97316",
+          "emoji": "✍️",
+          "id": "journal",
+          "name": "Journal",
+          "timeOfDay": "phase3_pull",
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={true}
+    initialNumToRender={5}
+    keyExtractor={[Function]}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={0.0001}
+    showsHorizontalScrollIndicator={false}
+    stickyHeaderIndices={[]}
+    viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
+  >
+    <View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#8B5CF6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                🧘
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Meditate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#3B82F6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                📖
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Read
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": true,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#22C55E",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#22C55E",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💪
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Exercise
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#06B6D4",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💧
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Hydrate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#F97316",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                ✍️
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Journal
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;
+
+exports[`QuickPicksRow Snapshots should match snapshot with selected template (Meditate) 1`] = `
+<View
+  className="mb-4"
+>
+  <View
+    className="mb-3 flex-row items-center justify-between px-1"
+  >
+    <Text
+      accessibilityRole="header"
+      className="text-base font-semibold"
+      style={
+        {
+          "color": "#2D2A26",
+        }
+      }
+    >
+      Quick picks
+    </Text>
+    <View
+      accessibilityLabel="Browse all templates"
+      accessibilityRole="button"
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <Text
+        className="text-sm font-medium text-[#22C55E]"
+      >
+        Browse all →
+      </Text>
+    </View>
+  </View>
+  <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
+    contentContainerStyle={
+      {
+        "paddingHorizontal": 1,
+      }
+    }
+    data={
+      [
+        {
+          "color": "#8B5CF6",
+          "emoji": "🧘",
+          "id": "meditate",
+          "name": "Meditate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#3B82F6",
+          "emoji": "📖",
+          "id": "read",
+          "name": "Read",
+          "timeOfDay": "phase3_pull",
+        },
+        {
+          "color": "#22C55E",
+          "emoji": "💪",
+          "id": "exercise",
+          "name": "Exercise",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#06B6D4",
+          "emoji": "💧",
+          "id": "hydrate",
+          "name": "Hydrate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#F97316",
+          "emoji": "✍️",
+          "id": "journal",
+          "name": "Journal",
+          "timeOfDay": "phase3_pull",
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={true}
+    initialNumToRender={5}
+    keyExtractor={[Function]}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={0.0001}
+    showsHorizontalScrollIndicator={false}
+    stickyHeaderIndices={[]}
+    viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
+  >
+    <View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": true,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#22C55E",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#8B5CF6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                🧘
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Meditate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#3B82F6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                📖
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Read
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#22C55E",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💪
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Exercise
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#06B6D4",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💧
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Hydrate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#F97316",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                ✍️
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Journal
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;
+
+exports[`QuickPicksRow Snapshots should match snapshot without browse button 1`] = `
+<View
+  className="mb-4"
+>
+  <View
+    className="mb-3 flex-row items-center justify-between px-1"
+  >
+    <Text
+      accessibilityRole="header"
+      className="text-base font-semibold"
+      style={
+        {
+          "color": "#2D2A26",
+        }
+      }
+    >
+      Quick picks
+    </Text>
+  </View>
+  <RCTScrollView
+    accessibilityLabel="Quick pick templates"
+    accessibilityRole="list"
+    contentContainerStyle={
+      {
+        "paddingHorizontal": 1,
+      }
+    }
+    data={
+      [
+        {
+          "color": "#8B5CF6",
+          "emoji": "🧘",
+          "id": "meditate",
+          "name": "Meditate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#3B82F6",
+          "emoji": "📖",
+          "id": "read",
+          "name": "Read",
+          "timeOfDay": "phase3_pull",
+        },
+        {
+          "color": "#22C55E",
+          "emoji": "💪",
+          "id": "exercise",
+          "name": "Exercise",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#06B6D4",
+          "emoji": "💧",
+          "id": "hydrate",
+          "name": "Hydrate",
+          "timeOfDay": "phase1_push",
+        },
+        {
+          "color": "#F97316",
+          "emoji": "✍️",
+          "id": "journal",
+          "name": "Journal",
+          "timeOfDay": "phase3_pull",
+        },
+      ]
+    }
+    getItem={[Function]}
+    getItemCount={[Function]}
+    horizontal={true}
+    initialNumToRender={5}
+    keyExtractor={[Function]}
+    onContentSizeChange={[Function]}
+    onLayout={[Function]}
+    onMomentumScrollBegin={[Function]}
+    onMomentumScrollEnd={[Function]}
+    onScroll={[Function]}
+    onScrollBeginDrag={[Function]}
+    onScrollEndDrag={[Function]}
+    removeClippedSubviews={false}
+    renderItem={[Function]}
+    scrollEventThrottle={0.0001}
+    showsHorizontalScrollIndicator={false}
+    stickyHeaderIndices={[]}
+    viewabilityConfigCallbackPairs={[]}
+    windowSize={3}
+  >
+    <View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Meditate template"
+          accessibilityLabel="Quick pick: Meditate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#8B5CF6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                🧘
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Meditate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Read template"
+          accessibilityLabel="Quick pick: Read, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#3B82F6",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                📖
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Read
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Exercise template"
+          accessibilityLabel="Quick pick: Exercise, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#22C55E",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💪
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Exercise
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Hydrate template"
+          accessibilityLabel="Quick pick: Hydrate, Push"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#06B6D4",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                💧
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Hydrate
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌅
+               
+              Push
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={
+          [
+            {
+              "flexDirection": "row",
+            },
+            null,
+          ]
+        }
+      >
+        <View
+          accessibilityHint="Tap to use the Journal template"
+          accessibilityLabel="Quick pick: Journal, Pull"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": false,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+        >
+          <View
+            className="mr-3 overflow-hidden rounded-2xl bg-white p-3"
+            collapsable={false}
+            style={
+              {
+                "borderColor": "#e7e5e4",
+                "borderWidth": 2,
+                "minWidth": 100,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              className="mb-2 h-12 w-12 items-center justify-center self-center rounded-xl"
+              style={
+                {
+                  "backgroundColor": "#F97316",
+                }
+              }
+            >
+              <Text
+                className="text-2xl"
+              >
+                ✍️
+              </Text>
+            </View>
+            <Text
+              className="mb-1 text-center text-sm font-semibold"
+              style={
+                {
+                  "color": "#2D2A26",
+                }
+              }
+            >
+              Journal
+            </Text>
+            <Text
+              className="text-center text-xs"
+              style={
+                {
+                  "color": "#6B6560",
+                }
+              }
+            >
+              🌙
+               
+              Pull
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </RCTScrollView>
+</View>
+`;

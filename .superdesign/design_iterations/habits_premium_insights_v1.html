@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habits — Premium Weekly Insights</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #1a1a2e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .phone-frame {
+        width: 393px;
+        height: 852px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      }
+      .status-bar {
+        height: 54px;
+        padding: 14px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .status-icons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .screen {
+        padding: 0;
+        height: calc(100% - 54px);
+        overflow-y: auto;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Header */
+      .insights-header {
+        padding: 12px 20px 16px;
+      }
+      .insights-title {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.5px;
+      }
+      .insights-sub {
+        font-size: 14px;
+        color: #8c8580;
+        margin-top: 2px;
+      }
+
+      /* Week Heatmap */
+      .heatmap-card {
+        background: #fff;
+        border-radius: 18px;
+        margin: 0 20px 16px;
+        padding: 18px;
+        border: 1px solid #ede9e4;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.04);
+      }
+      .heatmap-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2d2a26;
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .heatmap-badge {
+        font-size: 11px;
+        font-weight: 700;
+        background: #ecfdf5;
+        color: #059669;
+        padding: 3px 8px;
+        border-radius: 99px;
+      }
+
+      .heatmap-grid {
+        display: grid;
+        grid-template-columns: 60px repeat(7, 1fr);
+        gap: 3px;
+        align-items: center;
+      }
+      .heatmap-label {
+        font-size: 11px;
+        color: #a8a29e;
+        font-weight: 500;
+        padding-right: 8px;
+        text-align: right;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .heatmap-day-header {
+        font-size: 10px;
+        color: #a8a29e;
+        font-weight: 600;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .heatmap-cell {
+        aspect-ratio: 1;
+        border-radius: 4px;
+        min-height: 24px;
+      }
+      .heatmap-cell.l0 {
+        background: #f3f0eb;
+      }
+      .heatmap-cell.l1 {
+        background: #d1fae5;
+      }
+      .heatmap-cell.l2 {
+        background: #6ee7b7;
+      }
+      .heatmap-cell.l3 {
+        background: #10b981;
+      }
+      .heatmap-cell.today {
+        box-shadow: inset 0 0 0 2px #2d2a26;
+        border-radius: 5px;
+      }
+
+      /* Score card */
+      .score-row {
+        display: flex;
+        gap: 12px;
+        padding: 0 20px;
+        margin-bottom: 16px;
+      }
+      .score-card {
+        flex: 1;
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        border: 1px solid #ede9e4;
+        text-align: center;
+        box-shadow: 0 1px 4px rgba(45, 42, 38, 0.04);
+      }
+      .score-value {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .score-value.green {
+        color: #059669;
+      }
+      .score-value.amber {
+        color: #d97706;
+      }
+      .score-value.purple {
+        color: #7c3aed;
+      }
+      .score-label {
+        font-size: 12px;
+        color: #8c8580;
+        font-weight: 500;
+        margin-top: 4px;
+      }
+      .score-change {
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+      }
+      .score-change.up {
+        color: #059669;
+      }
+      .score-change.down {
+        color: #ef4444;
+      }
+
+      /* Best habit card */
+      .best-habit {
+        background: linear-gradient(135deg, #065f46, #047857);
+        border-radius: 18px;
+        margin: 0 20px 16px;
+        padding: 18px 20px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .best-emoji {
+        font-size: 36px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .best-info {
+        flex: 1;
+      }
+      .best-label {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.7;
+      }
+      .best-name {
+        font-size: 18px;
+        font-weight: 700;
+        margin-top: 2px;
+      }
+      .best-stat {
+        font-size: 13px;
+        opacity: 0.85;
+        margin-top: 2px;
+      }
+
+      /* Trend graph placeholder */
+      .trend-card {
+        background: #fff;
+        border-radius: 18px;
+        margin: 0 20px 16px;
+        padding: 18px;
+        border: 1px solid #ede9e4;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.04);
+      }
+      .trend-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .trend-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .trend-period {
+        font-size: 12px;
+        color: #a8a29e;
+        font-weight: 500;
+      }
+
+      .trend-graph {
+        height: 80px;
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .trend-bar {
+        flex: 1;
+        border-radius: 4px 4px 0 0;
+        min-height: 4px;
+        transition: height 0.3s ease;
+      }
+      .trend-bar.green {
+        background: linear-gradient(180deg, #10b981, #34d399);
+      }
+      .trend-bar.light {
+        background: #e5e7eb;
+      }
+
+      .trend-labels {
+        display: flex;
+        gap: 6px;
+        padding: 6px 4px 0;
+      }
+      .trend-labels span {
+        flex: 1;
+        text-align: center;
+        font-size: 10px;
+        color: #a8a29e;
+        font-weight: 500;
+      }
+
+      /* Premium upsell */
+      .premium-upsell {
+        margin: 0 20px 20px;
+        border-radius: 18px;
+        padding: 20px;
+        background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca);
+        color: #fff;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .premium-upsell::before {
+        content: '';
+        position: absolute;
+        top: -40%;
+        right: -20%;
+        width: 60%;
+        height: 120%;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.08) 0%,
+          transparent 60%
+        );
+      }
+      .premium-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      .premium-title {
+        font-size: 18px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+      .premium-sub {
+        font-size: 13px;
+        opacity: 0.75;
+        margin-bottom: 14px;
+        line-height: 1.4;
+      }
+      .premium-features {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+        text-align: left;
+        padding: 0 12px;
+      }
+      .premium-feature {
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .premium-feature::before {
+        content: '✦';
+        color: #a78bfa;
+        font-size: 12px;
+      }
+
+      .premium-btn {
+        background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 28px;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+        display: inline-block;
+      }
+      .premium-price {
+        font-size: 11px;
+        opacity: 0.6;
+        margin-top: 8px;
+      }
+
+      .design-label {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="design-label">v4 — Premium Insights ($$$ Upsell)</div>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span>●●●●</span><span>WiFi</span><span>🔋</span>
+        </div>
+      </div>
+      <div class="screen">
+        <div class="insights-header">
+          <div class="insights-title">Weekly Review</div>
+          <div class="insights-sub">Feb 19 – 25, 2026</div>
+        </div>
+
+        <div class="heatmap-card">
+          <div class="heatmap-title">
+            Completion Heatmap
+            <span class="heatmap-badge">↑ 12% vs last week</span>
+          </div>
+          <div class="heatmap-grid">
+            <div></div>
+            <div class="heatmap-day-header">M</div>
+            <div class="heatmap-day-header">T</div>
+            <div class="heatmap-day-header">W</div>
+            <div class="heatmap-day-header">T</div>
+            <div class="heatmap-day-header">F</div>
+            <div class="heatmap-day-header">S</div>
+            <div class="heatmap-day-header">S</div>
+
+            <div class="heatmap-label">🏃 Run</div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l3 today"></div>
+
+            <div class="heatmap-label">🧘 Meditate</div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l0"></div>
+            <div class="heatmap-cell l3 today"></div>
+
+            <div class="heatmap-label">📖 Read</div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l1"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3 today"></div>
+
+            <div class="heatmap-label">💧 Water</div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l1"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l3 today"></div>
+
+            <div class="heatmap-label">✍️ Journal</div>
+            <div class="heatmap-cell l1"></div>
+            <div class="heatmap-cell l0"></div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l1"></div>
+            <div class="heatmap-cell l0"></div>
+            <div class="heatmap-cell l2"></div>
+            <div class="heatmap-cell l0 today"></div>
+
+            <div class="heatmap-label">🎸 Guitar</div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l0"></div>
+            <div class="heatmap-cell l0"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l0"></div>
+            <div class="heatmap-cell l3"></div>
+            <div class="heatmap-cell l0 today"></div>
+          </div>
+        </div>
+
+        <div class="score-row">
+          <div class="score-card">
+            <div class="score-value green">78%</div>
+            <div class="score-label">Completion</div>
+            <div class="score-change up">↑ 12%</div>
+          </div>
+          <div class="score-card">
+            <div class="score-value amber">12</div>
+            <div class="score-label">Best Streak</div>
+            <div class="score-change up">↑ 5 days</div>
+          </div>
+          <div class="score-card">
+            <div class="score-value purple">4.2</div>
+            <div class="score-label">Avg / Day</div>
+            <div class="score-change up">↑ 0.8</div>
+          </div>
+        </div>
+
+        <div class="best-habit">
+          <div class="best-emoji">🏃</div>
+          <div class="best-info">
+            <div class="best-label">Most Consistent</div>
+            <div class="best-name">Morning Run</div>
+            <div class="best-stat">93% completion · 12 day streak</div>
+          </div>
+        </div>
+
+        <div class="trend-card">
+          <div class="trend-header">
+            <div class="trend-title">30-Day Trend</div>
+            <div class="trend-period">Jan 26 – Feb 25</div>
+          </div>
+          <div class="trend-graph">
+            <div class="trend-bar green" style="height: 40%"></div>
+            <div class="trend-bar green" style="height: 55%"></div>
+            <div class="trend-bar green" style="height: 35%"></div>
+            <div class="trend-bar green" style="height: 60%"></div>
+            <div class="trend-bar green" style="height: 50%"></div>
+            <div class="trend-bar green" style="height: 70%"></div>
+            <div class="trend-bar green" style="height: 65%"></div>
+            <div class="trend-bar green" style="height: 80%"></div>
+            <div class="trend-bar green" style="height: 75%"></div>
+            <div class="trend-bar green" style="height: 85%"></div>
+            <div class="trend-bar green" style="height: 70%"></div>
+            <div class="trend-bar green" style="height: 90%"></div>
+            <div class="trend-bar green" style="height: 78%"></div>
+            <div class="trend-bar green" style="height: 95%"></div>
+          </div>
+          <div class="trend-labels">
+            <span>W1</span><span></span><span></span><span>W2</span><span></span
+            ><span></span> <span>W3</span><span></span><span></span
+            ><span>W4</span><span></span><span></span> <span></span
+            ><span>Now</span>
+          </div>
+        </div>
+
+        <div class="premium-upsell">
+          <div class="premium-icon">✨</div>
+          <div class="premium-title">Unlock Full Insights</div>
+          <div class="premium-sub">
+            See patterns AI discovers in your habits, predict success rates, and
+            get personalized coaching.
+          </div>
+          <div class="premium-features">
+            <div class="premium-feature">AI habit coaching & predictions</div>
+            <div class="premium-feature">Detailed analytics & heatmaps</div>
+            <div class="premium-feature">Streak protection (1 per week)</div>
+            <div class="premium-feature">Unlimited habits & templates</div>
+          </div>
+          <div class="premium-btn">Start Free Trial</div>
+          <div class="premium-price">$4.99/month after 7-day trial</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

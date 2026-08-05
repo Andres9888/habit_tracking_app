@@ -1,0 +1,14 @@
+appId: com.chainday.app
+name: Shared - Open Settings
+tags:
+  - helper
+onFlowComplete:
+  - takeScreenshot: shared-open-settings-complete
+---
+- runFlow: launch-signed-in.yaml
+- tapOn:
+    id: settings-button
+- extendedWaitUntil:
+    visible: Settings
+    timeout: 5000
+- waitForAnimationToEnd

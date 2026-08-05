@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sound Picker Close Animation — Mock</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --surface: #14181d;
+    --row: #1a1f25;
+    --border: rgba(255,255,255,0.06);
+    --text-primary: #f5f7fa;
+    --text-secondary: #94a3b8;
+    --accent: #34d399;
+    --accent-bg: rgba(52,211,153,0.12);
+    --pill-bg: rgba(255,255,255,0.05);
+    --tray-bg: rgba(0,0,0,0.20);
+  }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  /* ===== Tray (container) — entry: FadeInDown 280ms / exit: FadeOutUp 150ms ===== */
+  @keyframes trayEnter {
+    0%   { opacity: 0; transform: translateY(-12px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes trayExit {
+    0%   { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-12px); }
+  }
+
+  /* ===== Pill entry — FadeIn 200ms, staggered 60ms forward ===== */
+  @keyframes pillEnter {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  /* ===== Pill exit — proposed FadeOut 120ms, staggered 40ms REVERSE ===== */
+  @keyframes pillExit {
+    0%   { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .tray.opening   { animation: trayEnter 280ms ease-out both; }
+  .tray.closing   { animation: trayExit  150ms ease-in  both; }
+
+  .pill.opening   { animation: pillEnter 200ms ease-out both; }
+  .pill.closing   { animation: pillExit  120ms ease-in  both; }
+
+  /* Forward stagger on entry: 120ms base + index*60ms */
+  .pill.opening:nth-child(1) { animation-delay: 120ms; }
+  .pill.opening:nth-child(2) { animation-delay: 180ms; }
+  .pill.opening:nth-child(3) { animation-delay: 240ms; }
+
+  /* Reverse stagger on exit: rightmost leaves first */
+  .pill.closing:nth-child(3) { animation-delay: 0ms;  }
+  .pill.closing:nth-child(2) { animation-delay: 40ms; }
+  .pill.closing:nth-child(1) { animation-delay: 80ms; }
+
+  /* Side-by-side comparison: left = current (uniform), right = proposed (staggered) */
+  .uniform .pill.closing { animation-delay: 0ms !important; }
+
+  .toggle-track { transition: background-color 200ms ease; }
+  .toggle-thumb { transition: transform 200ms ease; }
+  .toggle-on  .toggle-track { background: var(--accent); }
+  .toggle-on  .toggle-thumb { transform: translateX(20px); }
+  .toggle-off .toggle-track { background: rgba(255,255,255,0.15); }
+
+  .replay-btn:active { transform: scale(0.97); }
+</style>
+</head>
+<body class="min-h-screen">
+  <div class="mx-auto max-w-6xl px-6 py-12">
+    <header class="mb-10">
+      <h1 class="text-2xl font-semibold tracking-tight">Sound Picker — Close Animation Mock</h1>
+      <p class="mt-2 text-sm" style="color:var(--text-secondary);">
+        Tap any toggle to close the tray. Compare the two columns to see the difference.
+      </p>
+      <div class="mt-4 flex gap-3">
+        <button id="replayAll" class="replay-btn rounded-lg px-4 py-2 text-sm font-medium" style="background:var(--accent);color:#0b0d10;">
+          ▶ Replay both (open then close)
+        </button>
+        <button id="closeAll" class="replay-btn rounded-lg px-4 py-2 text-sm font-medium" style="background:var(--row);color:var(--text-primary);border:1px solid var(--border);">
+          Close both
+        </button>
+        <button id="openAll" class="replay-btn rounded-lg px-4 py-2 text-sm font-medium" style="background:var(--row);color:var(--text-primary);border:1px solid var(--border);">
+          Open both
+        </button>
+      </div>
+    </header>
+
+    <div class="grid gap-8 md:grid-cols-2">
+      <!-- ============ CURRENT (uniform exit) ============ -->
+      <section>
+        <div class="mb-3 flex items-baseline justify-between">
+          <h2 class="text-base font-semibold">Current</h2>
+          <span class="text-xs" style="color:var(--text-secondary);">FadeOutUp 150ms · pills collapse with parent</span>
+        </div>
+        <div class="rounded-2xl overflow-hidden" style="background:var(--surface);border:1px solid var(--border);">
+          <!-- Header row with toggle -->
+          <div id="row-current" class="toggle-on flex items-center justify-between px-4 py-3 cursor-pointer" data-target="tray-current">
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full" style="background:var(--accent-bg);">
+                <i data-lucide="volume-2" style="color:var(--accent);"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium">Completion sound</div>
+                <div class="text-xs" style="color:var(--text-secondary);">Plays when you mark a habit done</div>
+              </div>
+            </div>
+            <div class="toggle relative h-6 w-11 rounded-full">
+              <div class="toggle-track absolute inset-0 rounded-full"></div>
+              <div class="toggle-thumb absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow"></div>
+            </div>
+          </div>
+          <!-- Tray -->
+          <div id="tray-current" class="tray uniform opening" style="background:var(--tray-bg);border-top:1px solid var(--border);">
+            <div class="flex items-center px-4 py-2.5">
+              <div class="mr-4 w-10"></div>
+              <div class="flex flex-1 items-center gap-2">
+                <button class="pill opening flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2" style="background:var(--accent-bg);">
+                  <i data-lucide="volume-1" style="color:var(--accent);"></i>
+                  <span class="text-xs font-semibold" style="color:var(--accent);">Ding</span>
+                </button>
+                <button class="pill opening flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2" style="background:var(--pill-bg);">
+                  <i data-lucide="droplet" style="color:var(--text-secondary);"></i>
+                  <span class="text-xs" style="color:var(--text-secondary);">Pop</span>
+                </button>
+                <button class="pill opening flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2" style="background:var(--pill-bg);">
+                  <i data-lucide="trending-up" style="color:var(--text-secondary);"></i>
+                  <span class="text-xs" style="color:var(--text-secondary);">Rise</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PROPOSED (reverse-staggered exit) ============ -->
+      <section>
+        <div class="mb-3 flex items-baseline justify-between">
+          <h2 class="text-base font-semibold">Proposed</h2>
+          <span class="text-xs" style="color:var(--accent);">Pills peel right→left (40ms stagger), tray fades up</span>
+        </div>
+        <div class="rounded-2xl overflow-hidden" style="background:var(--surface);border:1px solid var(--border);">
+          <div id="row-proposed" class="toggle-on flex items-center justify-between px-4 py-3 cursor-pointer" data-target="tray-proposed">
+            <div class="flex items-center gap-3">
+              <div class="flex h-10 w-10 items-center justify-center rounded-full" style="background:var(--accent-bg);">
+                <i data-lucide="volume-2" style="color:var(--accent);"></i>
+              </div>
+              <div>
+                <div class="text-sm font-medium">Completion sound</div>
+                <div class="text-xs" style="color:var(--text-secondary);">Plays when you mark a habit done</div>
+              </div>
+            </div>
+            <div class="toggle relative h-6 w-11 rounded-full">
+              <div class="toggle-track absolute inset-0 rounded-full"></div>
+              <div class="toggle-thumb absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow"></div>
+            </div>
+          </div>
+          <div id="tray-proposed" class="tray opening" style="background:var(--tray-bg);border-top:1px solid var(--border);">
+            <div class="flex items-center px-4 py-2.5">
+              <div class="mr-4 w-10"></div>
+              <div class="flex flex-1 items-center gap-2">
+                <button class="pill opening flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2" style="background:var(--accent-bg);">
+                  <i data-lucide="volume-1" style="color:var(--accent);"></i>
+                  <span class="text-xs font-semibold" style="color:var(--accent);">Ding</span>
+                </button>
+                <button class="pill opening flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2" style="background:var(--pill-bg);">
+                  <i data-lucide="droplet" style="color:var(--text-secondary);"></i>
+                  <span class="text-xs" style="color:var(--text-secondary);">Pop</span>
+                </button>
+                <button class="pill opening flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2" style="background:var(--pill-bg);">
+                  <i data-lucide="trending-up" style="color:var(--text-secondary);"></i>
+                  <span class="text-xs" style="color:var(--text-secondary);">Rise</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="mt-12 rounded-2xl p-6" style="background:var(--surface);border:1px solid var(--border);">
+      <h3 class="text-sm font-semibold mb-3">Spec (proposed)</h3>
+      <ul class="space-y-1.5 text-xs" style="color:var(--text-secondary);">
+        <li>• Tray exit: <code style="color:var(--accent);">FadeOutUp.duration(150)</code> — unchanged</li>
+        <li>• Pill exit: <code style="color:var(--accent);">FadeOut.duration(120).delay((OPTIONS.length - 1 - index) * 40)</code></li>
+        <li>• Reverse stagger reads as "undoing" the entry</li>
+        <li>• Total exit ~200ms — pills clear before tray collapses, layered finish</li>
+        <li>• All values inside design tokens (quick=150, stagger≤60)</li>
+      </ul>
+    </section>
+  </div>
+
+<script>
+  lucide.createIcons();
+
+  function setState(trayEl, opening) {
+    const pills = trayEl.querySelectorAll('.pill');
+    const all = [trayEl, ...pills];
+    all.forEach(el => {
+      el.classList.remove('opening', 'closing');
+      // force reflow to restart animation
+      void el.offsetWidth;
+      el.classList.add(opening ? 'opening' : 'closing');
+    });
+  }
+
+  function bindRow(rowId, trayId) {
+    const row = document.getElementById(rowId);
+    const tray = document.getElementById(trayId);
+    let open = true;
+    row.addEventListener('click', () => {
+      open = !open;
+      row.classList.toggle('toggle-on', open);
+      row.classList.toggle('toggle-off', !open);
+      setState(tray, open);
+    });
+  }
+
+  bindRow('row-current', 'tray-current');
+  bindRow('row-proposed', 'tray-proposed');
+
+  document.getElementById('replayAll').addEventListener('click', () => {
+    ['tray-current','tray-proposed'].forEach(id => setState(document.getElementById(id), false));
+    setTimeout(() => {
+      ['tray-current','tray-proposed'].forEach(id => setState(document.getElementById(id), true));
+    }, 600);
+  });
+  document.getElementById('closeAll').addEventListener('click', () => {
+    ['tray-current','tray-proposed'].forEach(id => setState(document.getElementById(id), false));
+  });
+  document.getElementById('openAll').addEventListener('click', () => {
+    ['tray-current','tray-proposed'].forEach(id => setState(document.getElementById(id), true));
+  });
+</script>
+</body>
+</html>

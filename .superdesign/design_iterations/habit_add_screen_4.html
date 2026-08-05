@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Add Screen - V4</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .modal-bg {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+
+    .paper-bg {
+      background: #faf9f7;
+    }
+
+    .color-swatch {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .color-swatch.selected {
+      box-shadow: 0 0 0 2.5px #1a1a1a;
+      transform: scale(1.15);
+    }
+
+    .color-swatch:not(.selected):hover {
+      transform: scale(1.1);
+    }
+
+    .pressable {
+      transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+    }
+
+    .pressable:active {
+      transform: scale(0.96);
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    .emoji-chip {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .emoji-chip:hover {
+      transform: scale(1.1);
+    }
+    .emoji-chip.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px #22C55E;
+      background: #f0fdf4;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.25s ease-out forwards;
+    }
+
+    @keyframes pulse-ring {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+    .pulse-ring {
+      animation: pulse-ring 1.5s ease-out infinite;
+    }
+
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
+
+    /* Preview card gradient border */
+    .preview-card {
+      background: linear-gradient(white, white) padding-box,
+                  linear-gradient(135deg, #22C55E 0%, #16A34A 100%) border-box;
+      border: 2px solid transparent;
+    }
+
+    /* Floating label effect */
+    .input-wrapper {
+      position: relative;
+    }
+    .input-wrapper input:focus + .floating-label,
+    .input-wrapper input:not(:placeholder-shown) + .floating-label {
+      transform: translateY(-24px) scale(0.85);
+      color: #22C55E;
+    }
+    .floating-label {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: all 0.2s ease;
+      pointer-events: none;
+      color: #a8a29e;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-end justify-center p-4">
+
+  <!-- Phone Frame -->
+  <div class="w-full max-w-[390px] h-[844px] bg-black rounded-[50px] p-3 shadow-2xl relative overflow-hidden">
+
+    <!-- Screen -->
+    <div class="w-full h-full rounded-[40px] overflow-hidden relative modal-bg">
+
+      <!-- Modal Sheet -->
+      <div class="absolute bottom-0 left-0 right-0 h-[92%] paper-bg rounded-t-3xl flex flex-col shadow-2xl">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 py-4">
+          <button class="w-9 h-9 flex items-center justify-center rounded-full bg-stone-200/60 pressable">
+            <i data-lucide="x" class="w-5 h-5 text-stone-600"></i>
+          </button>
+          <h1 class="text-lg font-semibold text-stone-900">New Habit</h1>
+          <div class="w-9"></div>
+        </div>
+
+        <!-- Scrollable Content -->
+        <div class="flex-1 overflow-y-auto px-5 pb-6">
+
+          <!-- Compact Live Preview -->
+          <div class="mb-5 p-3 rounded-2xl preview-card shadow-sm fade-in-up">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl flex items-center justify-center shadow-sm pulse-ring" style="background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);">
+                <span class="text-2xl">📖</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-base font-semibold text-stone-900 truncate">Read for 20 minutes</p>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <span class="text-xs text-stone-500">Daily</span>
+                  <span class="text-stone-300">•</span>
+                  <span class="text-xs text-stone-500">☀️ Afternoon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Name Input with character count -->
+          <div class="mb-4">
+            <div class="relative bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+              <input
+                type="text"
+                value="Read for 20 minutes"
+                class="w-full h-14 pl-4 pr-16 text-base font-medium text-stone-900 placeholder-stone-400 bg-transparent"
+                placeholder="What habit do you want?"
+              />
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                <span class="text-xs text-stone-400">19/50</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Smart Emoji Row -->
+          <div class="mb-5 fade-in-up" style="animation-delay: 0.1s">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-xs font-medium text-stone-500">Pick an icon</p>
+              <button class="text-xs text-green-600 font-medium pressable">Browse all →</button>
+            </div>
+            <div class="flex gap-2">
+              <button class="emoji-chip w-11 h-11 rounded-xl bg-white border border-stone-200 flex items-center justify-center selected">
+                <span class="text-xl">📖</span>
+              </button>
+              <button class="emoji-chip w-11 h-11 rounded-xl bg-white border border-stone-200 flex items-center justify-center">
+                <span class="text-xl">📚</span>
+              </button>
+              <button class="emoji-chip w-11 h-11 rounded-xl bg-white border border-stone-200 flex items-center justify-center">
+                <span class="text-xl">📰</span>
+              </button>
+              <button class="emoji-chip w-11 h-11 rounded-xl bg-white border border-stone-200 flex items-center justify-center">
+                <span class="text-xl">✍️</span>
+              </button>
+              <button class="emoji-chip w-11 h-11 rounded-xl bg-white border border-stone-200 flex items-center justify-center">
+                <span class="text-xl">🎯</span>
+              </button>
+              <button class="emoji-chip w-11 h-11 rounded-xl bg-white border border-stone-200 flex items-center justify-center">
+                <span class="text-xl">✨</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Color Picker - Larger, more spaced -->
+          <div class="mb-6">
+            <p class="text-xs font-medium text-stone-500 mb-3">Pick a color</p>
+            <div class="flex flex-wrap gap-3 justify-between">
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #EF4444;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #F97316;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #FBBF24;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable selected" style="background: #22C55E;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #14B8A6;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #0EA5E9;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #6366F1;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #A855F7;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #EC4899;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #78716C;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable" style="background: #1E293B;"></button>
+              <button class="color-swatch w-11 h-11 rounded-full pressable border-2 border-dashed border-stone-300 flex items-center justify-center bg-white">
+                <i data-lucide="pipette" class="w-4 h-4 text-stone-400"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Time of Day - Horizontal scroll -->
+          <div class="mb-5">
+            <p class="text-xs font-medium text-stone-500 mb-3">Best time</p>
+            <div class="flex gap-2">
+              <button class="flex-1 py-2.5 px-3 rounded-xl bg-white border border-stone-200 pressable flex items-center justify-center gap-2">
+                <span class="text-base">🌅</span>
+                <span class="text-sm font-medium text-stone-600">Morning</span>
+              </button>
+              <button class="flex-1 py-2.5 px-3 rounded-xl bg-green-50 border-2 border-green-500 pressable flex items-center justify-center gap-2">
+                <span class="text-base">☀️</span>
+                <span class="text-sm font-medium text-green-700">Afternoon</span>
+              </button>
+              <button class="flex-1 py-2.5 px-3 rounded-xl bg-white border border-stone-200 pressable flex items-center justify-center gap-2">
+                <span class="text-base">🌙</span>
+                <span class="text-sm font-medium text-stone-600">Evening</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Reminder - Compact -->
+          <div class="mb-5">
+            <div class="flex items-center justify-between p-3.5 rounded-xl bg-white border border-stone-200 shadow-sm">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-amber-50 flex items-center justify-center">
+                  <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-stone-800">Remind me</p>
+                  <p class="text-xs text-green-600 font-medium">12:00 PM</p>
+                </div>
+              </div>
+              <button class="w-11 h-6 rounded-full bg-green-500 p-0.5 pressable">
+                <div class="w-5 h-5 rounded-full bg-white shadow-sm transform translate-x-5"></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Frequency (new) -->
+          <div class="mb-6">
+            <p class="text-xs font-medium text-stone-500 mb-3">Repeat</p>
+            <div class="flex gap-1.5">
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">S</button>
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">M</button>
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">T</button>
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">W</button>
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">T</button>
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">F</button>
+              <button class="w-10 h-10 rounded-full bg-green-500 text-white text-xs font-semibold pressable">S</button>
+            </div>
+            <p class="text-xs text-stone-400 mt-2">Every day • Tap to customize</p>
+          </div>
+
+          <!-- Bottom Spacing -->
+          <div class="h-28"></div>
+        </div>
+
+        <!-- Sticky Create Button -->
+        <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-[#faf9f7] via-[#faf9f7] to-transparent pt-10">
+          <button class="w-full h-14 rounded-2xl flex items-center justify-center gap-2 pressable shadow-lg transition-all" style="background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);">
+            <i data-lucide="check" class="w-5 h-5 text-white"></i>
+            <span class="text-base font-semibold text-white">Create Habit</span>
+          </button>
+          <div class="flex justify-center mt-3">
+            <div class="w-32 h-1 rounded-full bg-stone-300"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

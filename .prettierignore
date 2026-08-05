@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+.yarn/
+.pnp.*
+package-lock.json
+
+# Build outputs
+dist/
+build/
+.expo/
+.expo-shared/
+android/
+ios/
+web-build/
+
+# Generated files
+convex/_generated/
+*.generated.*
+
+# AI/Tool folders
+.taskmaster/
+.bmad-core/
+.claude/
+.claude-flow/
+.swarm/
+
+# Config files
+.env
+.env.*
+
+# IDE
+.vscode
+.idea
+
+# Cache
+.cache/
+*.log
+.DS_Store
+
+# Coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Temporary files
+*.tmp
+*.cache
+har.json

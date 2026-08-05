@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Architectural Decisions · 2026-04-25</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #f5f1ed;
+        --card: #edeae5;
+        --surface-muted: #faf8f5;
+        --border: #ddd8d2;
+        --foreground: #2d2a26;
+        --gray-300: #c4bfb7;
+        --gray-400: #6e6660;
+        --gray-500: #6b6560;
+        --gray-600: #524d47;
+        --gray-700: #3d3833;
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-500: #10b981;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --streak-100: #fef3cd;
+        --streak-500: #8b6208;
+        --streak-700: #7d5907;
+        --warning: #9a5504;
+        --error: #b53030;
+        --error-light: #fee2e2;
+
+        --font-display: 'Literata', Georgia, serif;
+        --font-text: 'DM Sans', -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      }
+
+      html, body {
+        background: var(--background) !important;
+        color: var(--foreground) !important;
+        font-family: var(--font-text) !important;
+        font-size: 16px !important;
+        line-height: 24px !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        margin: 0 auto;
+        max-width: 1200px;
+        padding: 56px 32px;
+      }
+
+      .eyebrow {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -1.1px;
+        line-height: 52px;
+        margin: 6px 0 14px 0;
+      }
+      h2 {
+        font-family: var(--font-display);
+        font-size: 30px;
+        font-weight: 700;
+        letter-spacing: -0.7px;
+        line-height: 38px;
+        margin: 64px 0 8px 0;
+      }
+      h3 {
+        font-family: var(--font-text);
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        margin: 24px 0 8px 0;
+      }
+      p {
+        color: var(--gray-600);
+        margin: 0 0 14px 0;
+        max-width: 820px;
+      }
+      code {
+        background: var(--card);
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 1px 6px;
+      }
+
+      /* Decision card */
+      .decision {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin: 28px 0 0 0;
+        overflow: hidden;
+      }
+      .decision-head {
+        align-items: center;
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 16px 24px;
+      }
+      .decision-id {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+      }
+      .decision-title {
+        color: var(--foreground);
+        font-family: var(--font-display);
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.35px;
+      }
+      .decision-effort {
+        color: var(--gray-600);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        margin-left: auto;
+      }
+      .decision-body {
+        padding: 24px 24px 28px;
+      }
+
+      /* Current state strip */
+      .current {
+        background: var(--surface-muted);
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 14px 18px;
+      }
+      .current-label {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+      }
+      .current-stat {
+        color: var(--foreground);
+        font-size: 14px;
+        line-height: 22px;
+      }
+      .current-stat strong {
+        color: var(--primary-700);
+        font-family: var(--font-mono);
+      }
+
+      /* Options grid */
+      .options {
+        display: grid;
+        gap: 14px;
+        grid-template-columns: 1fr;
+        margin-top: 16px;
+      }
+      .option {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .option-head {
+        align-items: center;
+        background: var(--surface-muted);
+        display: flex;
+        gap: 10px;
+        padding: 12px 16px;
+      }
+      .option-letter {
+        align-items: center;
+        background: var(--gray-700);
+        border-radius: 9999px;
+        color: #fff;
+        display: flex;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 600;
+        height: 22px;
+        justify-content: center;
+        width: 22px;
+      }
+      .option-title {
+        color: var(--foreground);
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .option-recommended .option-head {
+        background: var(--primary-100);
+      }
+      .option-recommended .option-letter {
+        background: var(--primary-700);
+      }
+      .badge-recommended {
+        background: var(--primary-700);
+        border-radius: 9999px;
+        color: #fff;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.6px;
+        margin-left: auto;
+        padding: 3px 10px;
+        text-transform: uppercase;
+      }
+      .option-body {
+        padding: 14px 18px;
+      }
+      .option-body p {
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 10px;
+      }
+      .pros, .cons {
+        font-size: 13px;
+        line-height: 20px;
+        margin: 6px 0 0 0;
+        padding-left: 20px;
+      }
+      .pros li { color: var(--primary-700); }
+      .cons li { color: var(--error); }
+      .pros li::marker { content: '+ '; }
+      .cons li::marker { content: '− '; }
+
+      /* Code blocks */
+      pre {
+        background: #1f1c19;
+        border-radius: 8px;
+        color: #e8e3dc;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 19px;
+        margin: 12px 0;
+        overflow-x: auto;
+        padding: 14px 16px;
+      }
+      pre .kw { color: #c084fc; }
+      pre .str { color: #6ee7b7; }
+      pre .num { color: #fbbf24; }
+      pre .com { color: #6b6560; font-style: italic; }
+      pre .fn { color: #93c5fd; }
+
+      /* Visual proof box (Button matrix preview, etc.) */
+      .preview {
+        align-items: center;
+        background: #fff;
+        border: 1px dashed var(--border);
+        border-radius: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 12px 0;
+        padding: 18px;
+      }
+      .btn {
+        align-items: center;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: var(--font-text);
+        font-size: 17px;
+        font-weight: 600;
+        gap: 8px;
+        height: 44px;
+        justify-content: center;
+        letter-spacing: 0.08px;
+        padding: 0 24px;
+      }
+      .btn.primary { background: var(--primary-600); color: #fff; }
+      .btn.secondary { background: transparent; border-color: var(--gray-300); color: var(--foreground); }
+      .btn.ghost { background: transparent; color: var(--primary-700); }
+      .btn.icon { border-radius: 9999px; height: 44px; padding: 0; width: 44px; }
+      .btn.sm { font-size: 14px; height: 32px; padding: 0 16px; }
+      .btn.lg { height: 56px; padding: 0 32px; }
+
+      /* Empty-state preview */
+      .empty {
+        align-items: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin: 12px 0;
+        padding: 36px 24px;
+        text-align: center;
+      }
+      .empty-icon {
+        align-items: center;
+        background: var(--primary-100);
+        border-radius: 9999px;
+        color: var(--primary-700);
+        display: flex;
+        font-size: 28px;
+        height: 64px;
+        justify-content: center;
+        width: 64px;
+      }
+
+      /* Decision question (closing) */
+      .pick {
+        background: var(--primary-100);
+        border: 1px solid var(--primary-300);
+        border-radius: 12px;
+        margin-top: 18px;
+        padding: 14px 18px;
+      }
+      .pick-label {
+        color: var(--primary-700);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+      }
+      .pick-text {
+        color: var(--foreground);
+        font-size: 15px;
+        line-height: 22px;
+        margin-top: 4px;
+      }
+
+      /* TOC */
+      .toc {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin: 32px 0;
+        padding: 16px 22px;
+      }
+      .toc-list {
+        display: grid;
+        gap: 6px;
+        grid-template-columns: 1fr 1fr;
+        margin: 0;
+        padding: 0;
+      }
+      .toc-list li {
+        font-size: 14px;
+        list-style: none;
+      }
+      .toc-list a {
+        color: var(--primary-700);
+        text-decoration: none;
+      }
+      .toc-list a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .container { padding: 32px 20px; }
+        h1 { font-size: 32px; line-height: 40px; }
+        .toc-list { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="eyebrow">Chain Day · Architectural decisions · 2026-04-25</div>
+      <h1>Six choices to make.</h1>
+      <p>
+        With the mechanical waves done (109 TS errors, 13 below baseline), what's left needs
+        actual decisions — not sed. This page lays out the six remaining waves with options,
+        tradeoffs, and a recommendation for each. Pick a letter per section and I'll execute.
+      </p>
+
+      <nav class="toc">
+        <div class="eyebrow" style="margin-bottom: 10px;">Jump to</div>
+        <ul class="toc-list">
+          <li><a href="#w31">3.1 — Unified Button primitive</a></li>
+          <li><a href="#w32">3.2 — EmptyState consolidation</a></li>
+          <li><a href="#w33">3.3 — Animated.Value → Reanimated</a></li>
+          <li><a href="#w34">3.4 — NativeWind vs StyleSheet</a></li>
+          <li><a href="#w12">1.2 — Shadow migration</a></li>
+          <li><a href="#w25">2.5 — Raw hex cleanup (757)</a></li>
+        </ul>
+      </nav>
+
+      <!-- ============================================================ -->
+      <!-- WAVE 3.1 — BUTTON PRIMITIVE                                  -->
+      <!-- ============================================================ -->
+      <section class="decision" id="w31">
+        <div class="decision-head">
+          <div>
+            <div class="decision-id">Wave 3.1 · Architectural · New component</div>
+            <div class="decision-title">Unified Button primitive</div>
+          </div>
+          <div class="decision-effort">~1–3 days · low–medium risk</div>
+        </div>
+        <div class="decision-body">
+          <div class="current">
+            <div class="current-label">Today</div>
+            <div class="current-stat">
+              <strong>290</strong> files use inline <code>Pressable</code>/<code>TouchableOpacity</code>.
+              Only <strong>4</strong> dedicated button folders (<code>Button</code>, <code>QuickCompleteButton</code>,
+              <code>SwipeableActionButton</code>, <code>ForceUpdateButton</code>). Padding combinations:
+              <strong>10+</strong> distinct (<code>px-4</code> 106×, <code>px-3</code> 44×, <code>py-3</code> 48×, etc.).
+            </div>
+          </div>
+          <p>
+            The existing <code>Button</code> component already exists with <code>large/medium/small</code> sizes
+            and <code>primary/secondary/ghost/icon</code> variants in
+            <code>componentSpacing.button</code>. The proposed primitive isn't new design — it's adoption.
+          </p>
+
+          <div class="preview">
+            <button class="btn primary sm">Continue</button>
+            <button class="btn primary">Continue →</button>
+            <button class="btn primary lg">Build My First Habit</button>
+            <button class="btn secondary">Cancel</button>
+            <button class="btn ghost">I'll explore later</button>
+            <button class="btn primary icon" aria-label="Add">+</button>
+          </div>
+
+          <div class="options">
+            <div class="option option-recommended">
+              <div class="option-head">
+                <span class="option-letter">A</span>
+                <span class="option-title">Adopt the existing Button primitive — opt-in</span>
+                <span class="badge-recommended">Recommended</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Document <code>Button</code> in a brief migration guide. Migrate when files are touched
+                  for other reasons. New code MUST use the primitive. Lint rule
+                  (<code>no-restricted-syntax</code>) flags new <code>Pressable</code> usage outside
+                  <code>components/Button/</code> and a small allowlist of feature-specific buttons.
+                </p>
+                <ul class="pros">
+                  <li>Zero immediate risk — no bulk migration</li>
+                  <li>Stops bleeding (new code is consistent)</li>
+                  <li>Migrations happen with proper QA per touched file</li>
+                </ul>
+                <ul class="cons">
+                  <li>Long-tail; complete adoption takes months</li>
+                  <li>Two patterns coexist for a while</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">B</span>
+                <span class="option-title">Bulk-migrate top 30 highest-traffic Pressable sites</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Audit the 30 sites with most app-time render frequency (Habit list, daily completion,
+                  bottom action bar, header buttons). Migrate them in one PR. Leaves 260+ inline.
+                </p>
+                <ul class="pros">
+                  <li>Visible adoption gain (top sites = most-seen UI)</li>
+                  <li>Forces real-world stress test of primitive</li>
+                </ul>
+                <ul class="cons">
+                  <li>Big PR (30 files × component swap)</li>
+                  <li>Each touched site needs visual QA</li>
+                  <li>Without `.env.local` I can't visually validate</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">C</span>
+                <span class="option-title">Replace with library (gluestack / tamagui)</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Adopt a third-party component library, deprecate custom <code>Button</code>.
+                </p>
+                <ul class="pros">
+                  <li>Vendor-maintained, accessibility built-in</li>
+                  <li>Brings other primitives (Modal, Sheet, Input) for free</li>
+                </ul>
+                <ul class="cons">
+                  <li>Adds a major dependency</li>
+                  <li>Existing warm-minimal aesthetic needs theming work</li>
+                  <li>Largest scope — multi-week project</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="pick">
+            <div class="pick-label">Pick A · B · or C</div>
+            <div class="pick-text">
+              My pick: <strong>A</strong>. The Button component already exists; this is an adoption
+              problem. A lint rule plus a docs page closes the gap with zero risk to shipped surfaces.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WAVE 3.2 — EMPTYSTATE CONSOLIDATION                          -->
+      <!-- ============================================================ -->
+      <section class="decision" id="w32">
+        <div class="decision-head">
+          <div>
+            <div class="decision-id">Wave 3.2 · Architectural · Consolidation</div>
+            <div class="decision-title">EmptyState consolidation</div>
+          </div>
+          <div class="decision-effort">~1–2 days · low risk</div>
+        </div>
+        <div class="decision-body">
+          <div class="current">
+            <div class="current-label">Today</div>
+            <div class="current-stat">
+              <strong>17</strong> distinct <code>EmptyState.tsx</code> files. Canonical primitive at
+              <code>src/components/EmptyState/EmptyState.tsx</code> exists. Some implementations are
+              chart-specific (legitimately custom); others are simple "no data yet" messages that
+              could share a shape.
+            </div>
+          </div>
+
+          <div class="empty">
+            <div class="empty-icon">🌱</div>
+            <h3 style="margin: 0;">No habits yet</h3>
+            <p style="font-size: 14px; max-width: 340px;">
+              Start with one small thing you want to do every day. The chain builds itself from there.
+            </p>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn primary">+ Add your first habit</button>
+              <button class="btn ghost">Browse templates</button>
+            </div>
+          </div>
+
+          <div class="options">
+            <div class="option option-recommended">
+              <div class="option-head">
+                <span class="option-letter">A</span>
+                <span class="option-title">Migrate 10 simple cases, leave 7 chart-specific alone</span>
+                <span class="badge-recommended">Recommended</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Extend <code>components/EmptyState</code> with variant props. Migrate
+                  <code>PausedEmptyState</code>, <code>ArchivedEmptyState</code>,
+                  <code>GoalTabEmptyState</code>, <code>HabitRankingsList/EmptyState</code>,
+                  <code>TemplatesEmptyState</code>, <code>PausedHabitsModal/PausedEmptyState</code>,
+                  <code>ArchivedHabitsModal/components/EmptyState</code>,
+                  <code>SmartSuggestions/EmptyState</code>,
+                  <code>DayHabitsBottomSheet/components/EmptyState</code>,
+                  <code>HabitsEmptyStateMinimal</code>. Leave chart ones
+                  (<code>StrengthTimelineChart/EmptyStates</code>,
+                  <code>StrengthHistoryChart/EmptyState</code>,
+                  <code>TrendLineChart/EmptyState</code>,
+                  <code>ComplianceHeatmap/EmptyState</code>,
+                  <code>EmojiPickerV2/EmptyState</code>,
+                  <code>AnalyticsScreen/EmptyState</code>,
+                  <code>HabitStrengthSection/...</code>) — they're tightly coupled to chart geometry.
+                </p>
+                <ul class="pros">
+                  <li>17 → ~7 files (60% reduction)</li>
+                  <li>Each migration is small (per-file)</li>
+                  <li>Shared accessibility props, reduce-motion handling</li>
+                </ul>
+                <ul class="cons">
+                  <li>Per-case visual QA needed for each migrated file</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">B</span>
+                <span class="option-title">Leave all 17, document which is canonical</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Add a section to the design system docs explaining when to use the canonical primitive
+                  vs. when to write custom. No code changes.
+                </p>
+                <ul class="pros">
+                  <li>Zero risk</li>
+                  <li>Forces no migrations</li>
+                </ul>
+                <ul class="cons">
+                  <li>Fragmentation continues</li>
+                  <li>Inconsistent UX across empty states</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">C</span>
+                <span class="option-title">Two-tier system — extract <code>SimpleEmptyState</code> + <code>ChartEmptyState</code></span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Build two canonical primitives. Migrate all 17 to one or the other. Most aggressive
+                  consolidation.
+                </p>
+                <ul class="pros">
+                  <li>Cleanest end state — 17 → 2 primitives</li>
+                  <li>Clear taxonomy</li>
+                </ul>
+                <ul class="cons">
+                  <li>Largest migration scope</li>
+                  <li>Chart empty states have wildly different shapes — abstraction may leak</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="pick">
+            <div class="pick-label">Pick A · B · or C</div>
+            <div class="pick-text">
+              My pick: <strong>A</strong>. Chart-specific empty states are tightly coupled to chart
+              dimensions and animation; forcing them under one primitive leaks abstractions. Migrating
+              the 10 simple ones gives 60% consolidation with no leaky abstractions.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WAVE 3.3 — ANIMATED.VALUE → REANIMATED                       -->
+      <!-- ============================================================ -->
+      <section class="decision" id="w33">
+        <div class="decision-head">
+          <div>
+            <div class="decision-id">Wave 3.3 · Migration · Motion</div>
+            <div class="decision-title">Animated.Value → Reanimated</div>
+          </div>
+          <div class="decision-effort">~3–5 days · high risk (motion QA)</div>
+        </div>
+        <div class="decision-body">
+          <div class="current">
+            <div class="current-label">Today</div>
+            <div class="current-stat">
+              <strong>31</strong> files use legacy <code>new Animated.Value(...)</code> (JS thread).
+              <strong>516</strong> files use <code>react-native-reanimated</code> (UI thread).
+              Mixed APIs in the same app create motion personality drift and maintenance overhead.
+              <strong>14</strong> remaining sites use legacy <code>Animated.spring({ friction, tension })</code>.
+            </div>
+          </div>
+
+          <pre><span class="com">// Legacy — runs on JS thread, can stutter under load</span>
+<span class="kw">const</span> scale = <span class="kw">useRef</span>(<span class="kw">new</span> Animated.Value(<span class="num">1</span>)).<span class="fn">current</span>;
+Animated.<span class="fn">spring</span>(scale, { <span class="fn">friction</span>: <span class="num">8</span>, <span class="fn">tension</span>: <span class="num">200</span>, <span class="fn">toValue</span>: <span class="num">0.95</span> }).<span class="fn">start</span>();
+
+<span class="com">// Reanimated — runs on UI thread, smoother under load</span>
+<span class="kw">const</span> scale = <span class="fn">useSharedValue</span>(<span class="num">1</span>);
+scale.value = <span class="fn">withSpring</span>(<span class="num">0.95</span>, springs.standard);</pre>
+
+          <div class="options">
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">A</span>
+                <span class="option-title">Migrate all 31 files in one focused sprint</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Multi-day effort with motion QA per component. High risk because legacy files often
+                  use bespoke timing the developer hand-tuned.
+                </p>
+                <ul class="pros">
+                  <li>Single API across the codebase</li>
+                  <li>UI thread → smoother animations under load</li>
+                </ul>
+                <ul class="cons">
+                  <li>Each file needs visual QA</li>
+                  <li>Without `.env.local`, I can't validate</li>
+                  <li>Risk of motion personality drift</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option option-recommended">
+              <div class="option-head">
+                <span class="option-letter">B</span>
+                <span class="option-title">Migrate-on-touch + lint rule for new code</span>
+                <span class="badge-recommended">Recommended</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Add ESLint rule banning <code>new Animated.Value</code> in new code. Migrate only
+                  when files are touched for other reasons. Same opt-in pattern as Wave 3.1.
+                </p>
+                <ul class="pros">
+                  <li>Stops bleeding without risk</li>
+                  <li>Migration happens alongside actual feature QA</li>
+                  <li>No motion regressions in shipped paths</li>
+                </ul>
+                <ul class="cons">
+                  <li>Long-tail — full adoption takes months</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">C</span>
+                <span class="option-title">Leave alone — it works</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Animated.Value works fine for these 31 files. Don't migrate.
+                </p>
+                <ul class="pros">
+                  <li>Zero risk</li>
+                </ul>
+                <ul class="cons">
+                  <li>Mixed APIs forever</li>
+                  <li>Loses UI-thread perf for those animations</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="pick">
+            <div class="pick-label">Pick A · B · or C</div>
+            <div class="pick-text">
+              My pick: <strong>B</strong>. Same reasoning as Wave 3.1 — adoption problems are best solved
+              with lint rules + organic migration, not bulk sweeps that need motion QA you can't run today.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WAVE 3.4 — NATIVEWIND vs STYLESHEET                          -->
+      <!-- ============================================================ -->
+      <section class="decision" id="w34">
+        <div class="decision-head">
+          <div>
+            <div class="decision-id">Wave 3.4 · Architectural · Conversation</div>
+            <div class="decision-title">NativeWind vs StyleSheet — pick one</div>
+          </div>
+          <div class="decision-effort">~conversation + multi-week if migrating</div>
+        </div>
+        <div class="decision-body">
+          <div class="current">
+            <div class="current-label">Today</div>
+            <div class="current-stat">
+              <strong>303</strong> files use NativeWind <code>className=</code> with rounded values.
+              <strong>382</strong> files mix <code>className</code> AND <code>style={{}}/StyleSheet</code>.
+              Same component often has both. Tailwind's spacing scale doesn't always match the theme
+              tokens (e.g., <code>borderRadius.card = 16</code> vs Tailwind's <code>rounded-lg = 8</code>).
+            </div>
+          </div>
+
+          <pre><span class="com">// Mixed today — same component</span>
+&lt;<span class="kw">View</span>
+  className=<span class="str">"flex-row items-center gap-2 px-4 py-3 rounded-lg"</span>
+  style={[styles.card, { backgroundColor: colors.surface }]}
+/&gt;</pre>
+
+          <div class="options">
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">A</span>
+                <span class="option-title">Pick StyleSheet + theme tokens — deprecate className</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  All future code uses <code>StyleSheet.create</code> with theme tokens. NativeWind
+                  gradually removed. Theme is the single source of truth.
+                </p>
+                <ul class="pros">
+                  <li>Theme tokens always win — no Tailwind drift</li>
+                  <li>Easier to enforce design system</li>
+                  <li>Better TS autocomplete</li>
+                </ul>
+                <ul class="cons">
+                  <li>NativeWind is faster to write</li>
+                  <li>Removing it is multi-month migration</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">B</span>
+                <span class="option-title">Pick NativeWind v4 — extend Tailwind config to mirror theme</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Sync <code>tailwind.config.js</code> exactly to theme tokens (already partially done).
+                  Deprecate StyleSheet for new code.
+                </p>
+                <ul class="pros">
+                  <li>Faster to write component styles</li>
+                  <li>Smaller diffs in PRs</li>
+                </ul>
+                <ul class="cons">
+                  <li>Two type systems — hard to refactor tokens</li>
+                  <li>Tailwind extends slowly when design system grows</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option option-recommended">
+              <div class="option-head">
+                <span class="option-letter">C</span>
+                <span class="option-title">Document boundary rules — keep both</span>
+                <span class="badge-recommended">Recommended</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Write a one-page convention doc:
+                  <strong>className = layout/spacing/Tailwind utilities</strong>
+                  (flexbox, padding, gap, position).
+                  <strong>StyleSheet + tokens = component-specific styles</strong>
+                  (colors, borders, shadows, typography). Theme tokens always win over className.
+                </p>
+                <ul class="pros">
+                  <li>Zero migration cost</li>
+                  <li>Plays to each system's strengths</li>
+                  <li>Most React Native + NativeWind apps work this way</li>
+                </ul>
+                <ul class="cons">
+                  <li>Boundary requires discipline (lint rule helps)</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">D</span>
+                <span class="option-title">Migrate to tamagui or unistyles — biggest lift</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Replace both with a unified styling system. Multi-month project.
+                </p>
+                <ul class="cons">
+                  <li>Major dependency</li>
+                  <li>Largest scope</li>
+                  <li>Untouched theme system gets rebuilt</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="pick">
+            <div class="pick-label">Pick A · B · C · or D</div>
+            <div class="pick-text">
+              My pick: <strong>C</strong>. The mixed pattern isn't actually bad if the boundary is clear.
+              Most teams that have tried to "pick one" end up regretting it. Document the rule, add a
+              lint check that warns when className includes color/border tokens (those should be StyleSheet).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WAVE 1.2 — SHADOW MIGRATION                                  -->
+      <!-- ============================================================ -->
+      <section class="decision" id="w12">
+        <div class="decision-head">
+          <div>
+            <div class="decision-id">Wave 1.2 · Token migration</div>
+            <div class="decision-title">Shadow migration</div>
+          </div>
+          <div class="decision-effort">~1–2 days · medium risk (visual)</div>
+        </div>
+        <div class="decision-body">
+          <div class="current">
+            <div class="current-label">Today</div>
+            <div class="current-stat">
+              <strong>83</strong> files use <code>shadows.*</code> tokens (~15% adoption).
+              <strong>447</strong> files use inline <code>shadowColor/shadowOffset/shadowRadius</code>.
+              Of those, only <strong>2</strong> have shadow values that exactly match a preset (
+              <code>shadows.card</code>) — the rest are bespoke depths the author hand-tuned.
+            </div>
+          </div>
+
+          <p>
+            The 5-level token system (<code>subtle / card / floatingActionButton / modal / alert</code>)
+            covers all common elevations. But "exact match" is only 2 files because most inline shadows
+            have unique opacity/radius pairings.
+          </p>
+
+          <div class="options">
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">A</span>
+                <span class="option-title">Bulk-migrate top 5 highest-traffic files only</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Pick HabitCard, TodaysFocusCard, CalendarTimeline, ChainVisualizer, and BottomActionBar
+                  (already largely tokenized — extend coverage). Map each inline shadow to nearest preset.
+                </p>
+                <ul class="pros">
+                  <li>Visible in highest-frequency surfaces</li>
+                  <li>Small file count — easy review</li>
+                </ul>
+                <ul class="cons">
+                  <li>Visual diff per file (depth shift)</li>
+                  <li>Without `.env.local`, can't validate</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option option-recommended">
+              <div class="option-head">
+                <span class="option-letter">B</span>
+                <span class="option-title">Leave alone — bespoke shadows are intentional</span>
+                <span class="badge-recommended">Recommended</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Most inline shadows are hand-tuned (different opacity per surface for visual hierarchy).
+                  Forcing them to 5 presets removes nuance. Add a lint rule banning new inline shadows
+                  in new files — the existing ones can remain.
+                </p>
+                <ul class="pros">
+                  <li>Zero risk to existing visual hierarchy</li>
+                  <li>Stops new bespoke shadows</li>
+                </ul>
+                <ul class="cons">
+                  <li>Adoption stays at 15%</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">C</span>
+                <span class="option-title">Audit all 447, normalize where intent matches a preset</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Manual sweep — for each inline shadow, decide if a preset captures the intent.
+                  Migrate where yes, leave where bespoke is intentional.
+                </p>
+                <ul class="pros">
+                  <li>Most thorough</li>
+                </ul>
+                <ul class="cons">
+                  <li>Multi-day; 447 manual decisions</li>
+                  <li>Hard to QA without screenshots</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="pick">
+            <div class="pick-label">Pick A · B · or C</div>
+            <div class="pick-text">
+              My pick: <strong>B</strong>. Shadows encode intentional visual hierarchy that doesn't
+              cleanly snap to 5 presets. Stop new violations via lint, leave existing alone. Revisit
+              when dark mode is unlocked (shadows look different on dark backgrounds anyway).
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- WAVE 2.5 — RAW HEX CLEANUP                                   -->
+      <!-- ============================================================ -->
+      <section class="decision" id="w25">
+        <div class="decision-head">
+          <div>
+            <div class="decision-id">Wave 2.5 · Long-tail cleanup</div>
+            <div class="decision-title">Raw hex cleanup (757 sites)</div>
+          </div>
+          <div class="decision-effort">~varies by approach</div>
+        </div>
+        <div class="decision-body">
+          <div class="current">
+            <div class="current-label">Today</div>
+            <div class="current-stat">
+              <strong>757</strong> raw hex values remain in components (down from 1,101 at Apr 23).
+              Many are intentional: gradient endpoints, achievement palettes, material tier ramps,
+              category colors, confetti particle colors. Others are real drift (one-off colors that
+              should be tokenized).
+            </div>
+          </div>
+
+          <p>
+            The hard part is intent inference. <code>'#FFD700'</code> in a trophy badge is intentional
+            (gold). <code>'#a8a29e'</code> in a generic component is drift (should be
+            <code>colors.gray[400]</code>). I can't tell programmatically.
+          </p>
+
+          <div class="options">
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">A</span>
+                <span class="option-title">Component-by-component manual sweep</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Multi-week. Each hex value gets a per-case decision.
+                </p>
+                <ul class="cons">
+                  <li>Largest scope</li>
+                  <li>Many decisions are subjective</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option option-recommended">
+              <div class="option-head">
+                <span class="option-letter">B</span>
+                <span class="option-title">Define semantic palette tokens for the most common intentional groups</span>
+                <span class="badge-recommended">Recommended</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  Add 3 new namespaced palettes to the theme:
+                </p>
+                <ul style="font-family: var(--font-mono); font-size: 13px;">
+                  <li><code>colors.parchment.{50,100,200,300,400}</code> — warm motivation surfaces (used in GoalWhyAnchor today)</li>
+                  <li><code>colors.tone.{green,red,orange,yellow,blue,purple}</code> — semantic tone for GoalCoachLine, achievements</li>
+                  <li><code>colors.material.{copper,bronze,silver,gold,legendary}</code> — habit chain progression tiers</li>
+                </ul>
+                <p>
+                  This formalizes ~150 of the 757 hex values into named tokens. The remaining 600
+                  are gradients/one-offs that stay raw.
+                </p>
+                <ul class="pros">
+                  <li>Codifies intentional design choices</li>
+                  <li>Sets up for dark mode (each namespace can have a dark variant)</li>
+                  <li>Reduces 757 → ~600 with named meaning</li>
+                </ul>
+                <ul class="cons">
+                  <li>Token namespace decisions need design review</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="option">
+              <div class="option-head">
+                <span class="option-letter">C</span>
+                <span class="option-title">Leave alone</span>
+              </div>
+              <div class="option-body">
+                <p>
+                  757 raw hex isn't great but it's not blocking. Defer until dark mode work resumes.
+                </p>
+                <ul class="pros">
+                  <li>Zero risk now</li>
+                </ul>
+                <ul class="cons">
+                  <li>Dark mode unlock will surface them all at once</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="pick">
+            <div class="pick-label">Pick A · B · or C</div>
+            <div class="pick-text">
+              My pick: <strong>B</strong>. Defining the three semantic namespaces (parchment, tone, material)
+              is the highest-ROI move because it makes dark-mode unlock tractable later. Without
+              namespaces, dark-mode work has to grep 757 hex values one by one. With namespaces,
+              you flip the namespace and ~150 sites update.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- SUMMARY                                                       -->
+      <!-- ============================================================ -->
+      <h2>Summary — my picks</h2>
+      <p>
+        If you accept all my picks (A/A/B/C/B/B), the next session would be:
+      </p>
+      <ol style="color: var(--gray-600); line-height: 26px;">
+        <li>
+          <strong>3.1 Button</strong> (A): Write migration guide + add lint rule. Files touched: ~3.
+          Token-adoption stays flat. ~2 hours.
+        </li>
+        <li>
+          <strong>3.2 EmptyState</strong> (A): Migrate 10 simple cases to canonical primitive. Files
+          touched: ~10. ~1 day.
+        </li>
+        <li>
+          <strong>3.3 Animated.Value</strong> (B): Add lint rule, no migrations. Files touched: 1.
+          ~30 min.
+        </li>
+        <li>
+          <strong>3.4 NativeWind</strong> (C): Write conventions doc. Files touched: 1 doc. ~2 hours.
+        </li>
+        <li>
+          <strong>1.2 Shadow</strong> (B): Add lint rule. Files touched: 1. ~30 min.
+        </li>
+        <li>
+          <strong>2.5 Hex</strong> (B): Define three semantic palette namespaces in theme. Migrate
+          named call sites. Files touched: ~15. ~1 day.
+        </li>
+      </ol>
+      <p>
+        Total: ~2 days of work for major architectural cleanup. Tell me which letters you pick (or
+        say "all my picks") and I'll execute.
+      </p>
+
+      <p style="margin-top: 40px; color: var(--gray-500); font-size: 13px;">
+        Generated 2026-04-25 · Architectural decisions doc.
+        Companions:
+        <a href="design_system_showcase_1.html" style="color: var(--primary-700);">canonical token showcase</a>,
+        <a href="design_changes_summary_2.html" style="color: var(--primary-700);">round 2 changes review</a>.
+      </p>
+    </div>
+  </body>
+</html>

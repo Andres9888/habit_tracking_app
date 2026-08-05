@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Habit Library v4 — Collapsible Discover More</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Literata:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --border: #ddd8d2;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --c-action: #059669;
+      --c-action-bg: #d1fae5;
+      --c-science: #0369a1;
+      --c-science-bg: #e0f2fe;
+      --c-trend: #c2410c;
+      --ff: 'DM Sans', sans-serif;
+      --ff-display: 'Literata', serif;
+      --r-full: 9999px;
+      --r-lg: 14px;
+      --r-md: 10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      background: #1c1917;
+      font-family: var(--ff);
+      min-height: 100vh;
+      padding: 40px 24px 80px;
+    }
+    .page-title {
+      color: #a8a29e; font-size: 11px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-align: center; margin-bottom: 8px;
+    }
+    .page-subtitle {
+      color: #78716c; font-size: 14px; text-align: center;
+      margin-bottom: 36px; max-width: 720px;
+      margin-left: auto; margin-right: auto; line-height: 1.5;
+    }
+    .comparison {
+      display: flex; gap: 48px; justify-content: center;
+      align-items: flex-start; flex-wrap: wrap;
+    }
+    .phone-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .phone-label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      text-align: center; margin-bottom: 10px;
+    }
+    .phone-label.a { color: #f59e0b; }
+    .phone-label.b { color: #22c55e; }
+    .phone {
+      width: 390px; height: 844px;
+      background: var(--bg); border-radius: 44px;
+      overflow: hidden; position: relative;
+      box-shadow: 0 0 0 2px #3a3632, 0 32px 80px rgba(0,0,0,0.55);
+      flex-shrink: 0; display: flex; flex-direction: column;
+    }
+    .status-bar {
+      height: 54px; padding: 16px 28px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 15px; font-weight: 600; color: var(--text-1); flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+    .screen-content {
+      flex: 1; overflow-y: auto;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    }
+    .screen-content::-webkit-scrollbar { display: none; }
+
+    .section-header {
+      padding: 16px 16px 10px;
+      display: flex; justify-content: space-between; align-items: baseline;
+    }
+    .section-header .title {
+      font-size: 17px; font-weight: 700; color: var(--text-1);
+    }
+    .section-header .sub {
+      font-size: 11px; color: var(--text-2); margin-top: 2px;
+    }
+    .section-header .total {
+      font-size: 11px; color: var(--text-3); font-family: monospace;
+    }
+    .section-header-block { flex: 1; }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 14px 16px 0;
+    }
+
+    /* ── Variant A: existing behavior (long, always expanded) ── */
+    .cat-group-a {
+      padding: 4px 0;
+    }
+    .cat-group-a-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px 6px;
+    }
+    .cat-group-a-header .gi { font-size: 20px; }
+    .cat-group-a-header .gl {
+      font-size: 14px; font-weight: 700; color: var(--text-1);
+    }
+    .cat-group-a-header .gc { font-size: 11px; color: var(--text-3); }
+    .habit-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 8px 16px;
+    }
+    .habit-row .ri {
+      width: 40px; height: 40px; border-radius: var(--r-md);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .habit-row .info { flex: 1; min-width: 0; }
+    .habit-row .rname {
+      font-size: 13px; font-weight: 600; color: var(--text-1);
+    }
+    .habit-row .rfreq {
+      font-size: 10px; color: var(--text-3); font-family: monospace;
+    }
+    .habit-row .radd {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--c-action); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .show-more-a {
+      padding: 6px 16px 6px 68px;
+      font-size: 12px; font-weight: 600;
+      color: var(--c-action);
+    }
+
+    /* ── Variant B: accordion collapsed by default ── */
+    .accordion {
+      margin: 8px 16px 0;
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .acc-row {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .acc-row.open {
+      background: #fffbf4;
+      border-color: #e5ded2;
+    }
+    .acc-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+    }
+    .acc-head .ai { font-size: 20px; flex-shrink: 0; }
+    .acc-head .at { flex: 1; }
+    .acc-head .al {
+      font-size: 14px; font-weight: 700; color: var(--text-1);
+    }
+    .acc-head .asub {
+      font-size: 11px; color: var(--text-2); margin-top: 1px;
+    }
+    .acc-head .ac {
+      font-size: 11px; color: var(--text-3);
+      font-family: monospace;
+      padding-right: 8px;
+    }
+    .acc-head .chevron {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,0.05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; color: var(--text-2);
+      transition: transform 0.2s;
+    }
+    .acc-row.open .chevron {
+      transform: rotate(180deg);
+      background: rgba(5,150,105,0.15);
+      color: var(--c-action);
+    }
+    .acc-body {
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    /* ── Annotations ── */
+    .annot {
+      position: absolute; z-index: 20;
+      padding: 3px 8px; border-radius: 6px;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.02em; pointer-events: none;
+    }
+    .annot.bad {
+      background: rgba(239,68,68,0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+    .annot.good {
+      background: rgba(34,197,94,0.2);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,0.3);
+    }
+
+    /* ── Callouts ── */
+    .callouts {
+      max-width: 860px;
+      margin: 48px auto 0;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .callout {
+      background: #292524;
+      border-radius: 14px;
+      padding: 20px 24px;
+      border-left: 4px solid #22c55e;
+    }
+    .callout h3 {
+      font-size: 16px; font-weight: 700; color: #fafaf9;
+      margin-bottom: 10px;
+    }
+    .callout p {
+      color: #a8a29e; font-size: 13px; line-height: 1.6;
+    }
+    .callout p + p { margin-top: 8px; }
+    .callout strong { color: #fafaf9; font-weight: 600; }
+    .diff-row {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 14px; margin-top: 10px;
+    }
+    .diff-col {
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px; padding: 12px 14px;
+    }
+    .diff-col .dl {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 4px;
+    }
+    .diff-col.before .dl { color: #ef4444; }
+    .diff-col.after .dl { color: #22c55e; }
+    .diff-col .dt {
+      font-size: 12px; color: #d6d3d1; line-height: 1.5;
+    }
+
+    .approach-note {
+      background: rgba(34,197,94,0.08);
+      border-left: 3px solid #22c55e;
+      padding: 10px 14px; margin: 0 16px 10px;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px; color: var(--text-2); line-height: 1.5;
+    }
+    .approach-note strong { color: var(--text-1); }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Habit Library v4 — Collapsible Discover More</p>
+  <p class="page-subtitle">
+    Side-by-side of the "Discover more habits" section only — the rest of the page (goal hero + pill search + category tiles + trending) stays identical to v3.<br>
+    <strong style="color:#22c55e">New:</strong> long list becomes an accordion, collapsed by default.
+  </p>
+
+  <div class="comparison">
+
+    <!-- ═══════ Variant A: current v3 ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label a">CURRENT — always expanded</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div></div>
+        <div class="screen-content">
+          <div style="padding:14px 16px;font-size:11px;color:var(--text-3);text-align:center;font-style:italic;">
+            ↑ Above: goal hero + pill search + category tiles + trending + packs<br>
+            (identical in both variants — scrolled past for comparison)
+          </div>
+
+          <div class="divider"></div>
+          <div class="section-header">
+            <div class="section-header-block">
+              <div class="title">Discover more habits</div>
+              <div class="sub">Browse by category, sorted by popularity</div>
+            </div>
+            <div class="total">200+ habits</div>
+          </div>
+
+          <!-- Each category always shown with first 3 habits -->
+          <div class="cat-group-a">
+            <div class="cat-group-a-header">
+              <span class="gi">🌅</span>
+              <span class="gl">Morning Routine</span>
+              <span class="gc">· 18</span>
+            </div>
+            <div class="habit-row"><div class="ri" style="background:#FEF3C7">🌅</div><div class="info"><div class="rname">Morning Sunlight</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="habit-row"><div class="ri" style="background:#FEF3C7">💧</div><div class="info"><div class="rname">Drink Water First</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="habit-row"><div class="ri" style="background:#FEF3C7">🧘</div><div class="info"><div class="rname">Morning Stretch</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="show-more-a">Show all 18 morning habits</div>
+          </div>
+
+          <div class="cat-group-a">
+            <div class="cat-group-a-header">
+              <span class="gi">🧠</span>
+              <span class="gl">Mental Health</span>
+              <span class="gc">· 14</span>
+            </div>
+            <div class="habit-row"><div class="ri" style="background:#EFF6FF">📝</div><div class="info"><div class="rname">Gratitude Journal</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="habit-row"><div class="ri" style="background:#EFF6FF">🧘</div><div class="info"><div class="rname">Meditation</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="habit-row"><div class="ri" style="background:#EFF6FF">💭</div><div class="info"><div class="rname">Thought Log</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="show-more-a">Show all 14 mental habits</div>
+          </div>
+
+          <div class="cat-group-a">
+            <div class="cat-group-a-header">
+              <span class="gi">💪</span>
+              <span class="gl">Fitness</span>
+              <span class="gc">· 16</span>
+            </div>
+            <div class="habit-row"><div class="ri" style="background:#FFF1F2">🏃</div><div class="info"><div class="rname">Daily Run</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+            <div class="habit-row" style="opacity:0.4"><div class="ri" style="background:#FFF1F2">🏋️</div><div class="info"><div class="rname">Strength Training</div><div class="rfreq">3x weekly</div></div><span class="radd">+</span></div>
+          </div>
+
+          <div class="annot bad" style="bottom:15px;left:50%;transform:translateX(-50%);">… continues for 14 categories = very long scroll</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ Variant B: NEW accordion ═══════ -->
+    <div class="phone-wrapper">
+      <div class="phone-label b">NEW v4 — accordion, collapsed by default</div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><div class="status-icons"><span>&#9679;</span><span>&#9679;</span><span>&#9679;</span></div></div>
+        <div class="screen-content">
+          <div style="padding:14px 16px;font-size:11px;color:var(--text-3);text-align:center;font-style:italic;">
+            ↑ Above: goal hero + pill search + category tiles + trending + packs
+          </div>
+
+          <div class="divider"></div>
+          <div class="section-header">
+            <div class="section-header-block">
+              <div class="title">Discover more habits</div>
+              <div class="sub">Tap a category to explore</div>
+            </div>
+            <div class="total">200+ habits</div>
+          </div>
+
+          <div class="approach-note">
+            <strong>Every category collapsed by default.</strong> Tap to expand just the one you want. Compact header shows icon + label + count — fits 14 categories in ~7 scrolls instead of 30+.
+          </div>
+
+          <div class="accordion">
+            <!-- Open example: morning -->
+            <div class="acc-row open">
+              <div class="acc-head">
+                <span class="ai">🌅</span>
+                <div class="at">
+                  <div class="al">Morning Routine</div>
+                  <div class="asub">Start strong, set your day</div>
+                </div>
+                <span class="ac">18</span>
+                <span class="chevron">▼</span>
+              </div>
+              <div class="acc-body">
+                <div class="habit-row"><div class="ri" style="background:#FEF3C7">🌅</div><div class="info"><div class="rname">Morning Sunlight</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+                <div class="habit-row"><div class="ri" style="background:#FEF3C7">💧</div><div class="info"><div class="rname">Drink Water First</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+                <div class="habit-row"><div class="ri" style="background:#FEF3C7">🧘</div><div class="info"><div class="rname">Morning Stretch</div><div class="rfreq">Daily</div></div><span class="radd">+</span></div>
+                <div style="padding:10px 16px;font-size:12px;color:var(--c-action);font-weight:600;">Show all 18 →</div>
+              </div>
+            </div>
+
+            <!-- Collapsed rows -->
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">🧠</span>
+                <div class="at">
+                  <div class="al">Mental Health</div>
+                  <div class="asub">Regulate mood & thought patterns</div>
+                </div>
+                <span class="ac">14</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">💪</span>
+                <div class="at">
+                  <div class="al">Fitness</div>
+                  <div class="asub">Move more, build strength</div>
+                </div>
+                <span class="ac">16</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">😴</span>
+                <div class="at">
+                  <div class="al">Sleep</div>
+                  <div class="asub">Deeper rest, better recovery</div>
+                </div>
+                <span class="ac">12</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">🧘</span>
+                <div class="at">
+                  <div class="al">Mindfulness</div>
+                  <div class="asub">Presence & awareness</div>
+                </div>
+                <span class="ac">10</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">📚</span>
+                <div class="at">
+                  <div class="al">Learning</div>
+                  <div class="asub">Grow your knowledge daily</div>
+                </div>
+                <span class="ac">8</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">💰</span>
+                <div class="at">
+                  <div class="al">Finance</div>
+                  <div class="asub">Build wealth habits</div>
+                </div>
+                <span class="ac">6</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+            <div class="acc-row">
+              <div class="acc-head">
+                <span class="ai">🔬</span>
+                <div class="at">
+                  <div class="al">Huberman</div>
+                  <div class="asub">Science-backed protocols</div>
+                </div>
+                <span class="ac">5</span>
+                <span class="chevron">▼</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding:20px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ Callouts ═══════ -->
+  <div class="callouts">
+    <div class="callout">
+      <h3>Why an accordion (not just section-level collapse)</h3>
+      <p>Two ways to collapse the long list:</p>
+      <p><strong>Option A — whole section collapsed:</strong> "Discover more habits" shows a single header, tap to expand <em>everything</em>. Problem: once expanded, you're back to the same 30-screen scroll.</p>
+      <p><strong>Option B — per-category accordion (chosen):</strong> 14 slim rows always visible, each shows label + count + chevron. Tap one to expand just that category's habits. User sees the full taxonomy at a glance, expands only what they care about. <strong>This is the v4 design.</strong></p>
+    </div>
+
+    <div class="callout">
+      <h3>Implementation scope</h3>
+      <p>The existing <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">CategoryGroupSection</code> in <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">ExploreAllSection.tsx</code> already uses a per-group <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">useState(expanded)</code>. Today <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">expanded</code> only toggles between "3 habits" and "all N habits."</p>
+      <p>v4 changes:</p>
+      <p>1. Flip default: <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">const [expanded, setExpanded] = useState(false)</code><br>
+      2. When collapsed: render only <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">CategoryGroupHeader</code> (no habit rows at all)<br>
+      3. Make the header Pressable to toggle<br>
+      4. Add chevron affordance inside <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">CategoryGroupHeader</code> that rotates on expand<br>
+      5. Show all N habits inline when expanded (keep the "Show all" link as a secondary action if we want a partial reveal, or just show all)</p>
+      <p>Minimal diff. ~20-30 lines total across <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">CategoryGroupSection</code> + <code style="background:#1c1917;padding:1px 5px;border-radius:4px;color:#e7e5e4;">CategoryGroupHeader</code>.</p>
+    </div>
+
+    <div class="callout">
+      <h3>Open example styling</h3>
+      <p>When a category is expanded, the row gets a subtle background color shift (warm off-white) so open state is visually distinct. Chevron rotates 180°. Habit rows render inside the card with a divider line between header and body.</p>
+      <p>Only one category can be tracked in state at a time OR multiple can stay open — I recommend <strong>multiple can stay open</strong> so user can compare across categories. Same as before with per-category expand.</p>
+    </div>
+
+    <div class="callout">
+      <h3>Section order in v4 (full page)</h3>
+      <p>1. Header — "What do you want to change?" (X-safe padding)<br>
+      2. Goal hero — featured + 2×2<br>
+      3. Pill search<br>
+      4. Category tiles — 6 + "See all 14 →"<br>
+      5. Trending right now — vertical inline<br>
+      6. Curated Packs — horizontal<br>
+      7. <strong>Discover more habits — accordion (NEW, collapsed by default)</strong></p>
+    </div>
+
+  </div>
+
+</body>
+</html>

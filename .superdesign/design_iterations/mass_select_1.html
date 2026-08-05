@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mass Select — Habit Home Mockup</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --card: #1a1a1a;
+    --card-border: #2a2a2a;
+    --text-primary: #f5f5f5;
+    --text-secondary: #8a8a8a;
+    --accent-amber: #f59e0b;
+    --accent-amber-dim: rgba(245,158,11,0.15);
+    --accent-red: #ef4444;
+    --accent-red-dim: rgba(239,68,68,0.12);
+    --accent-green: #22c55e;
+    --accent-purple: #a855f7;
+    --accent-blue: #3b82f6;
+    --accent-rose: #f43f5e;
+    --glass-bg: rgba(30,30,30,0.75);
+    --glass-border: rgba(255,255,255,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: var(--bg) !important;
+    color: var(--text-primary) !important;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .phone-frame {
+    width: 393px;
+    height: 852px;
+    margin: 20px auto;
+    border-radius: 44px;
+    border: 3px solid #333;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  }
+  .status-bar {
+    height: 54px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .habit-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    margin: 0 20px 14px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .habit-card:active { transform: scale(0.98); }
+  .habit-card.selected {
+    border-color: rgba(168,85,247,0.4);
+    box-shadow: 0 0 0 1px rgba(168,85,247,0.2), inset 0 0 20px rgba(168,85,247,0.05);
+  }
+  .accent-strip {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 20px 0 0 20px;
+  }
+  .card-content { padding: 14px 16px 14px 20px; }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .card-emoji { font-size: 22px; line-height: 1; }
+  .card-name { font-size: 15px; font-weight: 600; color: var(--text-primary); flex: 1; }
+  .strength-tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .strength-bar {
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .strength-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+  .week-dots {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+  .day-dot {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .day-dot.completed {
+    background: rgba(34,197,94,0.2);
+    border-color: rgba(34,197,94,0.3);
+    color: #22c55e;
+  }
+  .day-dot.today {
+    border-color: rgba(255,255,255,0.2);
+    color: var(--text-primary);
+  }
+
+  /* Checkbox */
+  .selection-checkbox {
+    width: 24px; height: 24px;
+    border-radius: 7px;
+    border: 2px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    background: transparent;
+    cursor: pointer;
+  }
+  .selection-checkbox.checked {
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+  }
+  .selection-checkbox .check-icon {
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.15s ease;
+  }
+  .selection-checkbox.checked .check-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+  .selection-checkbox.indeterminate {
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+  }
+
+  /* Bottom Action Bar */
+  .bottom-bar {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 999px;
+    padding: 8px 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+  }
+  .bar-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+  }
+  .bar-btn:hover { background: rgba(255,255,255,0.08); }
+  .bar-btn:active { transform: scale(0.9); }
+  .bar-btn.fab {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+  .selected-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 0 12px;
+    white-space: nowrap;
+  }
+  .bar-btn.archive-btn { color: var(--accent-amber); }
+  .bar-btn.archive-btn:hover { background: var(--accent-amber-dim); }
+  .bar-btn.delete-btn { color: var(--accent-red); }
+  .bar-btn.delete-btn:hover { background: var(--accent-red-dim); }
+  .bar-btn.cancel-btn { color: var(--text-secondary); }
+
+  /* Select All Row */
+  .select-all-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 24px 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .select-all-row.visible {
+    max-height: 50px;
+    opacity: 1;
+  }
+  .select-all-label { font-weight: 500; }
+  .select-all-count { margin-left: auto; font-size: 12px; color: var(--accent-purple); font-weight: 600; }
+
+  /* Undo Toast */
+  .undo-toast {
+    position: absolute;
+    bottom: 100px;
+    left: 20px;
+    right: 20px;
+    background: #292524;
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 200;
+    pointer-events: none;
+  }
+  .undo-toast.visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .undo-toast .toast-icon { color: var(--accent-amber); flex-shrink: 0; }
+  .undo-toast .toast-msg { flex: 1; font-size: 13px; color: var(--text-primary); }
+  .undo-toast .toast-msg strong { color: #fcd34d; }
+  .undo-toast .undo-btn {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent-amber);
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    background: rgba(245,158,11,0.12);
+    transition: background 0.15s ease;
+  }
+  .undo-toast .undo-btn:hover { background: rgba(245,158,11,0.2); }
+  .toast-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 3px;
+    background: var(--accent-amber);
+    border-radius: 0 0 14px 14px;
+    transition: width 0.1s linear;
+  }
+
+  /* Confirm Modal */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .modal-overlay.visible { opacity: 1; pointer-events: auto; }
+  .modal-box {
+    background: #1c1c1e;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 28px 24px 20px;
+    width: 320px;
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .modal-overlay.visible .modal-box { transform: scale(1); }
+  .modal-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--accent-red-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    color: var(--accent-red);
+  }
+  .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .modal-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 24px; }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+  }
+  .modal-btn:active { transform: scale(0.96); }
+  .modal-btn.cancel {
+    background: rgba(255,255,255,0.08);
+    color: var(--text-primary);
+  }
+  .modal-btn.danger {
+    background: var(--accent-red);
+    color: white;
+  }
+
+  /* Header */
+  .header { padding: 8px 24px 4px; }
+  .header-date { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header-sub { font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+  .calendar-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    padding: 0 2px;
+  }
+  .cal-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .cal-label { font-size: 10px; color: var(--text-secondary); font-weight: 500; }
+  .cal-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+  }
+  .cal-dot.active { background: var(--accent-green); }
+  .cal-dot.half { background: var(--accent-amber); }
+  .cal-day.today .cal-label { color: var(--text-primary); font-weight: 700; }
+
+  /* Edit button in header */
+  .edit-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .edit-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+  .edit-btn:active { transform: scale(0.95); }
+  .edit-btn.hidden { display: none; }
+
+  /* Instruction hint */
+  .hint {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(168,85,247,0.15);
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 12px;
+    color: #c084fc;
+    white-space: nowrap;
+    z-index: 50;
+    pointer-events: none;
+    animation: hintPulse 2s ease infinite;
+    transition: opacity 0.3s ease;
+  }
+  @keyframes hintPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+  }
+
+  /* Long press visual feedback */
+  .habit-card.pressing {
+    transform: scale(0.97);
+    transition: transform 0.4s ease;
+  }
+
+  .scroll-area {
+    height: calc(100% - 54px);
+    overflow-y: auto;
+    padding-bottom: 100px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scroll-area::-webkit-scrollbar { display: none; }
+
+  /* Transition helpers */
+  .checkbox-col {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: width 0.25s ease, opacity 0.2s ease, margin 0.25s ease;
+  }
+  .selection-mode .checkbox-col {
+    width: 24px;
+    opacity: 1;
+  }
+  .card-inner {
+    display: flex;
+    align-items: flex-start;
+  }
+  .card-main { flex: 1; min-width: 0; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame" id="phone">
+  <div class="status-bar">9:41</div>
+  <div class="hint" id="hint">Hold a card or tap Edit to select</div>
+
+  <div class="scroll-area" id="scrollArea">
+    <!-- Header -->
+    <div class="header">
+      <div style="display:flex;align-items:baseline;justify-content:space-between">
+        <div class="header-date">Tuesday</div>
+        <button class="edit-btn" id="editBtn" onclick="enterSelectionMode()">
+          <i data-lucide="check-square" style="width:14px;height:14px"></i>
+          Select
+        </button>
+      </div>
+      <div class="header-sub">March 4, 2026</div>
+      <div class="calendar-row">
+        <div class="cal-day"><span class="cal-label">M</span><span class="cal-dot active"></span></div>
+        <div class="cal-day"><span class="cal-label">T</span><span class="cal-dot active"></span></div>
+        <div class="cal-day"><span class="cal-label">W</span><span class="cal-dot half"></span></div>
+        <div class="cal-day today"><span class="cal-label">T</span><span class="cal-dot"></span></div>
+        <div class="cal-day"><span class="cal-label">F</span><span class="cal-dot"></span></div>
+        <div class="cal-day"><span class="cal-label">S</span><span class="cal-dot"></span></div>
+        <div class="cal-day"><span class="cal-label">S</span><span class="cal-dot"></span></div>
+      </div>
+    </div>
+
+    <!-- Select All Row -->
+    <div class="select-all-row" id="selectAllRow" onclick="toggleSelectAll()">
+      <div class="selection-checkbox" id="selectAllCheckbox">
+        <span class="check-icon">✓</span>
+      </div>
+      <span class="select-all-label">Select All</span>
+      <span class="select-all-count" id="selectAllCount">0 selected</span>
+    </div>
+
+    <!-- Habit Cards -->
+    <div id="habitCards"></div>
+  </div>
+
+  <!-- Normal Bottom Bar -->
+  <div class="bottom-bar" id="normalBar">
+    <button class="bar-btn" title="Settings"><i data-lucide="settings" style="width:22px;height:22px"></i></button>
+    <button class="bar-btn fab"><i data-lucide="plus" style="width:24px;height:24px;color:var(--text-primary)"></i></button>
+    <button class="bar-btn" title="Inspire" style="color:var(--accent-amber)"><i data-lucide="sparkles" style="width:22px;height:22px"></i></button>
+  </div>
+
+  <!-- Selection Bottom Bar -->
+  <div class="bottom-bar" id="selectionBar" style="opacity:0;pointer-events:none;">
+    <button class="bar-btn cancel-btn" onclick="exitSelectionMode()" title="Cancel"><i data-lucide="x" style="width:20px;height:20px"></i></button>
+    <span class="selected-count" id="selectedCount">0 selected</span>
+    <button class="bar-btn archive-btn" onclick="archiveSelected()" title="Archive"><i data-lucide="archive" style="width:20px;height:20px"></i></button>
+    <button class="bar-btn delete-btn" onclick="showDeleteModal()" title="Delete"><i data-lucide="trash-2" style="width:20px;height:20px"></i></button>
+  </div>
+
+  <!-- Undo Toast -->
+  <div class="undo-toast" id="undoToast">
+    <span class="toast-icon"><i data-lucide="archive" style="width:18px;height:18px"></i></span>
+    <span class="toast-msg" id="toastMsg"></span>
+    <button class="undo-btn" onclick="undoArchive()">UNDO</button>
+    <div class="toast-progress" id="toastProgress" style="width:100%"></div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+      <div class="modal-icon"><i data-lucide="alert-triangle" style="width:24px;height:24px"></i></div>
+      <div class="modal-title" id="modalTitle">Delete 3 habits?</div>
+      <div class="modal-desc">This will permanently remove the selected habits and all their tracking data. This cannot be undone.</div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" onclick="hideDeleteModal()">Cancel</button>
+        <button class="modal-btn danger" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const HABITS = [
+  { id: 1, name: 'Morning Meditation', emoji: '🧘', color: '#a855f7', strength: 0.72, level: 'developing', days: [true,true,false,false,false,false,false], streak: 5 },
+  { id: 2, name: 'Read 30 Minutes', emoji: '📚', color: '#3b82f6', strength: 0.85, level: 'strong', days: [true,true,true,false,false,false,false], streak: 12 },
+  { id: 3, name: 'Exercise', emoji: '💪', color: '#22c55e', strength: 0.45, level: 'building', days: [true,false,true,false,false,false,false], streak: 2 },
+  { id: 4, name: 'Journal', emoji: '✍️', color: '#f59e0b', strength: 0.30, level: 'starting', days: [false,true,false,false,false,false,false], streak: 1 },
+  { id: 5, name: 'Drink Water', emoji: '💧', color: '#06b6d4', strength: 0.91, level: 'automatic', days: [true,true,true,false,false,false,false], streak: 21 },
+  { id: 6, name: 'No Social Media', emoji: '📵', color: '#f43f5e', strength: 0.18, level: 'starting', days: [false,false,false,false,false,false,false], streak: 0 },
+  { id: 7, name: 'Practice Guitar', emoji: '🎸', color: '#8b5cf6', strength: 0.55, level: 'developing', days: [true,true,false,false,false,false,false], streak: 4 },
+];
+
+const DAY_LABELS = ['M','T','W','T','F','S','S'];
+let selectionMode = false;
+let selectedIds = new Set();
+let archivedHabits = [];
+let toastTimer = null;
+
+function renderCards() {
+  const container = document.getElementById('habitCards');
+  const visibleHabits = HABITS.filter(h => !archivedHabits.find(a => a.id === h.id));
+  container.innerHTML = visibleHabits.map(h => {
+    const isSelected = selectedIds.has(h.id);
+    const levelColors = {
+      starting: { bg: 'rgba(255,255,255,0.06)', text: '#8a8a8a' },
+      building: { bg: 'rgba(245,158,11,0.12)', text: '#fbbf24' },
+      developing: { bg: 'rgba(168,85,247,0.12)', text: '#c084fc' },
+      strong: { bg: 'rgba(34,197,94,0.12)', text: '#4ade80' },
+      automatic: { bg: 'rgba(6,182,212,0.12)', text: '#22d3ee' },
+    };
+    const lc = levelColors[h.level];
+    return `
+      <div class="habit-card ${isSelected ? 'selected' : ''}"
+           data-id="${h.id}"
+           onclick="handleCardClick(${h.id})"
+        <div class="accent-strip" style="background:${h.color}"></div>
+        <div class="card-content">
+          <div class="card-inner">
+            <div class="checkbox-col">
+              <div class="selection-checkbox ${isSelected ? 'checked' : ''}">
+                <span class="check-icon">✓</span>
+              </div>
+            </div>
+            <div class="card-main">
+              <div class="card-header">
+                <span class="card-emoji">${h.emoji}</span>
+                <span class="card-name">${h.name}</span>
+                <span class="strength-tag" style="background:${lc.bg};color:${lc.text}">${h.level}</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill" style="width:${h.strength*100}%;background:${h.color}"></div>
+              </div>
+              <div class="week-dots">
+                ${h.days.map((d,i) => `<div class="day-dot ${d?'completed':''} ${i===3?'today':''}">${DAY_LABELS[i]}</div>`).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Apply selection mode class for CSS transitions
+  document.getElementById('scrollArea').className = selectionMode ? 'scroll-area selection-mode' : 'scroll-area';
+}
+
+// Desktop + mobile long-press (500ms hold)
+let pressTimer = null;
+let pressedCard = null;
+
+function startPress(card) {
+  if (selectionMode) return;
+  const id = parseInt(card.dataset.id);
+  pressedCard = card;
+  pressTimer = setTimeout(() => {
+    card.classList.remove('pressing');
+    enterSelectionMode(id);
+    pressTimer = null;
+    pressedCard = null;
+  }, 500);
+  card.classList.add('pressing');
+}
+
+function cancelPress() {
+  if (pressTimer) {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+  }
+  if (pressedCard) {
+    pressedCard.classList.remove('pressing');
+    pressedCard = null;
+  }
+}
+
+// Mouse events for desktop long-press
+document.addEventListener('mousedown', (e) => {
+  const card = e.target.closest('.habit-card');
+  if (!card || selectionMode) return;
+  startPress(card);
+});
+document.addEventListener('mouseup', cancelPress);
+document.addEventListener('mouseleave', cancelPress);
+
+// Touch events for mobile long-press
+document.addEventListener('touchstart', (e) => {
+  const card = e.target.closest('.habit-card');
+  if (!card || selectionMode) return;
+  startPress(card);
+});
+document.addEventListener('touchend', cancelPress);
+document.addEventListener('touchmove', cancelPress);
+
+// Disable right-click context menu inside the phone frame
+document.getElementById('phone').addEventListener('contextmenu', (e) => e.preventDefault());
+
+function enterSelectionMode(initialId) {
+  selectionMode = true;
+  if (initialId) selectedIds = new Set([initialId]);
+  document.getElementById('hint').style.opacity = '0';
+  document.getElementById('editBtn').classList.add('hidden');
+  updateUI();
+}
+
+function exitSelectionMode() {
+  selectionMode = false;
+  selectedIds.clear();
+  document.getElementById('hint').style.opacity = '';
+  document.getElementById('editBtn').classList.remove('hidden');
+  updateUI();
+}
+
+function handleCardClick(id) {
+  if (selectionMode) {
+    if (selectedIds.has(id)) selectedIds.delete(id);
+    else selectedIds.add(id);
+    if (selectedIds.size === 0) exitSelectionMode();
+    else updateUI();
+  }
+}
+
+function toggleSelectAll() {
+  const visible = HABITS.filter(h => !archivedHabits.find(a => a.id === h.id));
+  if (selectedIds.size === visible.length) {
+    selectedIds.clear();
+  } else {
+    visible.forEach(h => selectedIds.add(h.id));
+  }
+  updateUI();
+}
+
+function updateUI() {
+  renderCards();
+  const visible = HABITS.filter(h => !archivedHabits.find(a => a.id === h.id));
+  const count = selectedIds.size;
+  const allSelected = count === visible.length && count > 0;
+  const partial = count > 0 && count < visible.length;
+
+  // Select all row
+  const row = document.getElementById('selectAllRow');
+  const checkbox = document.getElementById('selectAllCheckbox');
+  const countLabel = document.getElementById('selectAllCount');
+  row.className = selectionMode ? 'select-all-row visible' : 'select-all-row';
+  checkbox.className = 'selection-checkbox' + (allSelected ? ' checked' : partial ? ' indeterminate checked' : '');
+  checkbox.querySelector('.check-icon').textContent = partial ? '−' : '✓';
+  countLabel.textContent = `${count} selected`;
+
+  // Bottom bars
+  const normalBar = document.getElementById('normalBar');
+  const selBar = document.getElementById('selectionBar');
+  if (selectionMode) {
+    normalBar.style.opacity = '0'; normalBar.style.pointerEvents = 'none';
+    selBar.style.opacity = '1'; selBar.style.pointerEvents = 'auto';
+  } else {
+    normalBar.style.opacity = '1'; normalBar.style.pointerEvents = 'auto';
+    selBar.style.opacity = '0'; selBar.style.pointerEvents = 'none';
+  }
+  document.getElementById('selectedCount').textContent = `${count} selected`;
+}
+
+function archiveSelected() {
+  const count = selectedIds.size;
+  const names = [];
+  selectedIds.forEach(id => {
+    const h = HABITS.find(x => x.id === id);
+    if (h) { archivedHabits.push(h); names.push(h.name); }
+  });
+  exitSelectionMode();
+  showUndoToast(count, names);
+}
+
+function showUndoToast(count, names) {
+  const toast = document.getElementById('undoToast');
+  const msg = document.getElementById('toastMsg');
+  const progress = document.getElementById('toastProgress');
+  msg.innerHTML = `<strong>${count} habit${count>1?'s':''}</strong> archived`;
+  toast.classList.add('visible');
+
+  let width = 100;
+  if (toastTimer) clearInterval(toastTimer);
+  toastTimer = setInterval(() => {
+    width -= 2;
+    progress.style.width = width + '%';
+    if (width <= 0) {
+      clearInterval(toastTimer);
+      toast.classList.remove('visible');
+      archivedHabits = [];
+    }
+  }, 100);
+}
+
+function undoArchive() {
+  if (toastTimer) clearInterval(toastTimer);
+  document.getElementById('undoToast').classList.remove('visible');
+  archivedHabits = [];
+  renderCards();
+}
+
+function showDeleteModal() {
+  const count = selectedIds.size;
+  document.getElementById('modalTitle').textContent = `Delete ${count} habit${count>1?'s':''}?`;
+  document.getElementById('deleteModal').classList.add('visible');
+}
+
+function hideDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('visible');
+}
+
+function confirmDelete() {
+  selectedIds.forEach(id => {
+    const idx = HABITS.findIndex(h => h.id === id);
+    if (idx !== -1) HABITS.splice(idx, 1);
+  });
+  hideDeleteModal();
+  exitSelectionMode();
+}
+
+// Init
+renderCards();
+lucide.createIcons();
+// Re-create icons after renders
+const observer = new MutationObserver(() => lucide.createIcons());
+observer.observe(document.getElementById('habitCards'), { childList: true });
+</script>
+</body>
+</html>

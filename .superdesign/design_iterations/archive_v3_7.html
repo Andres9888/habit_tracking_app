@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=390, initial-scale=1.0" />
+  <title>Archive — Two-Button Decision Cards</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      min-height: 100vh;
+      max-width: 390px;
+      margin: 0 auto !important;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Literata', serif !important;
+    }
+
+    /* ── Sticky header ────────────────────────────── */
+    .archive-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245, 241, 237, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 52px 20px 14px;
+      border-bottom: 1px solid rgba(45, 42, 38, 0.06);
+    }
+
+    /* ── Card ──────────────────────────────────────── */
+    .habit-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Left accent bar */
+    .accent-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 20px 0 0 20px;
+    }
+
+    /* ── Emoji circle ─────────────────────────────── */
+    .emoji-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    /* ── Stat badges ──────────────────────────────── */
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: #F5F1ED;
+      font-size: 12px;
+      font-weight: 500;
+      color: #6E6660;
+      white-space: nowrap;
+    }
+
+    /* ── Resume button ────────────────────────────── */
+    .btn-resume {
+      flex: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 44px;
+      background: #059669 !important;
+      color: #FFFFFF !important;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif !important;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-resume:hover {
+      background: #047857 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+    }
+    .btn-resume:active { transform: translateY(0); box-shadow: none; }
+
+    /* ── Delete button ────────────────────────────── */
+    .btn-delete {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 44px;
+      background: transparent !important;
+      color: #B53030 !important;
+      border: 1px solid #B53030 !important;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif !important;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-delete:hover {
+      background: rgba(181, 48, 48, 0.04) !important;
+      transform: translateY(-1px);
+    }
+    .btn-delete:active { transform: translateY(0); }
+
+    /* ── Button row crossfade ─────────────────────── */
+    .button-row {
+      position: relative;
+      height: 44px;
+    }
+    .button-row .row-normal,
+    .button-row .row-confirm {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .button-row .row-normal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .button-row .row-confirm {
+      opacity: 0;
+      transform: translateY(6px);
+      pointer-events: none;
+    }
+    .button-row.confirming .row-normal {
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+    }
+    .button-row.confirming .row-confirm {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* ── Confirm pills ────────────────────────────── */
+    .confirm-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2D2A26;
+      flex: 1;
+    }
+    .pill-yes {
+      padding: 8px 20px;
+      border-radius: 20px;
+      background: #B53030 !important;
+      color: #FFFFFF !important;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif !important;
+      transition: background 0.15s;
+    }
+    .pill-yes:hover { background: #9B2626 !important; }
+    .pill-no {
+      padding: 8px 20px;
+      border-radius: 20px;
+      background: #E5E1DC !important;
+      color: #6E6660 !important;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif !important;
+      transition: background 0.15s;
+    }
+    .pill-no:hover { background: #D5D1CC !important; }
+
+    /* ── Shimmer overlay ──────────────────────────── */
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    .shimmer-overlay {
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      pointer-events: none;
+    }
+    .shimmer-overlay.active {
+      animation: shimmer 0.55s ease-in-out;
+    }
+
+    /* ── Restored state ───────────────────────────── */
+    .btn-resume.restored {
+      background: #047857 !important;
+      pointer-events: none;
+    }
+
+    /* ── Selection checkbox ────────────────────────── */
+    .sel-checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 2px solid #D5D1CC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      background: transparent;
+    }
+    .sel-checkbox.checked {
+      background: #059669;
+      border-color: #059669;
+    }
+    .sel-checkbox .chk-icon {
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.2s ease;
+      color: #FFFFFF;
+    }
+    .sel-checkbox.checked .chk-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* ── Floating bottom bar ──────────────────────── */
+    .floating-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 390px;
+      padding: 14px 20px;
+      padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+      background: #FFFFFF;
+      border-top: 1px solid rgba(45, 42, 38, 0.08);
+      box-shadow: 0 -4px 20px rgba(45, 42, 38, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 16px 16px 0 0;
+    }
+    .floating-bar.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Strength colors ──────────────────────────── */
+    .str-high { color: #059669; }
+    .str-mid  { color: #D97706; }
+    .str-low  { color: #B53030; }
+
+    /* ── Entrance animation ───────────────────────── */
+    @keyframes cardSlideUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card-enter {
+      opacity: 0;
+      animation: cardSlideUp 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    /* ── Count badge ──────────────────────────────── */
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 12px;
+      background: rgba(45, 42, 38, 0.07);
+      font-size: 13px;
+      font-weight: 600;
+      color: #6E6660;
+      transition: all 0.25s ease;
+    }
+    @keyframes countPop {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .count-pop { animation: countPop 0.3s ease; }
+
+    /* ── Empty state ──────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+      animation: cardSlideUp 0.4s ease-out;
+    }
+
+    /* ── Particle burst ───────────────────────────── */
+    .particle-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .particle-dot {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ Sticky Header ═══ -->
+  <div class="archive-header">
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button onclick="window.history.back()" style="background:none; border:none; cursor:pointer; color:#2D2A26; display:flex; align-items:center; padding:4px;">
+          <i data-lucide="arrow-left" style="width:22px; height:22px;"></i>
+        </button>
+        <h1 style="font-size:22px; font-weight:700; color:#2D2A26; letter-spacing:-0.3px;">Archive</h1>
+        <span class="count-badge" id="countBadge">5</span>
+      </div>
+      <button id="selectToggle" onclick="toggleSelectionMode()" style="background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:#059669; padding:8px 12px; border-radius:8px; transition:all 0.15s;">
+        Select
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ Card List ═══ -->
+  <div id="cardList" style="padding:16px 16px 100px; display:flex; flex-direction:column; gap:16px;"></div>
+
+  <!-- ═══ Floating Selection Bar ═══ -->
+  <div class="floating-bar" id="floatingBar">
+    <span id="selectedCount" style="font-size:14px; font-weight:600; color:#2D2A26; flex:1;">0 selected</span>
+    <button onclick="batchResume()" style="padding:10px 18px; border-radius:12px; background:#059669; color:#FFF; border:none; font-size:14px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background 0.15s;">
+      <i data-lucide="rotate-ccw" style="width:14px; height:14px;"></i>
+      Resume
+    </button>
+    <button onclick="batchDelete()" style="padding:10px 18px; border-radius:12px; background:transparent; color:#B53030; border:1px solid #B53030; font-size:13px; font-weight:600; font-family:'DM Sans',sans-serif; cursor:pointer; display:flex; align-items:center; gap:6px; transition:all 0.15s;">
+      <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+      Delete
+    </button>
+  </div>
+
+  <!-- ═══ Particle Layer ═══ -->
+  <div class="particle-layer" id="particleLayer"></div>
+
+  <script>
+    // ── Data ─────────────────────────────────────────────────
+    const habits = [
+      { id: 1, name: 'Morning Meditation', emoji: '\u{1F9D8}', strength: 72, streak: 14, completions: 156, daysAgo: 2 },
+      { id: 2, name: 'Daily Journal',      emoji: '\u{270D}\u{FE0F}', strength: 85, streak: 42, completions: 312, daysAgo: 5 },
+      { id: 3, name: 'Read 30 Minutes',    emoji: '\u{1F4D6}', strength: 58, streak: 7,  completions: 89,  daysAgo: 20 },
+      { id: 4, name: 'Cold Shower',        emoji: '\u{1F9CA}', strength: 35, streak: 3,  completions: 24,  daysAgo: 34 },
+      { id: 5, name: 'Push-ups',           emoji: '\u{1F4AA}', strength: 12, streak: 1,  completions: 8,   daysAgo: 67 },
+    ];
+
+    let selectionMode = false;
+    let selectedIds = new Set();
+
+    // ── Color helpers ────────────────────────────────────────
+    function strColor(s) {
+      if (s >= 60) return '#059669';
+      if (s >= 30) return '#D97706';
+      return '#B53030';
+    }
+    function strClass(s) {
+      if (s >= 60) return 'str-high';
+      if (s >= 30) return 'str-mid';
+      return 'str-low';
+    }
+    function emojiBg(s) {
+      if (s >= 60) return 'rgba(5,150,105,0.08)';
+      if (s >= 30) return 'rgba(217,119,6,0.08)';
+      return 'rgba(181,48,48,0.08)';
+    }
+    function daysLabel(d) {
+      return d === 1 ? '1 day ago' : d + ' days ago';
+    }
+
+    // ── SVG icons (inline for badges) ────────────────────────
+    function boltSvg(color) {
+      return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
+    }
+    function flameSvg() {
+      return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6E6660" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>';
+    }
+    function checkSvg() {
+      return '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6E6660" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    }
+
+    // ── Render all cards ─────────────────────────────────────
+    function renderCards() {
+      const list = document.getElementById('cardList');
+      list.innerHTML = '';
+
+      if (habits.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:48px; margin-bottom:16px; opacity:0.5;">\u{1F389}</div>
+            <div style="font-size:17px; font-weight:600; color:#2D2A26; margin-bottom:6px;">All clear!</div>
+            <div style="font-size:14px; color:#6E6660;">No archived habits remaining.</div>
+          </div>`;
+        return;
+      }
+
+      habits.forEach(function(h, i) {
+        var card = document.createElement('div');
+        card.className = 'habit-card card-enter';
+        card.id = 'card-' + h.id;
+        card.style.animationDelay = (i * 60) + 'ms';
+
+        var checkboxHtml = selectionMode
+          ? '<div class="sel-checkbox' + (selectedIds.has(h.id) ? ' checked' : '') + '" onclick="toggleSelect(' + h.id + ')">' +
+            '<i data-lucide="check" class="chk-icon" style="width:14px;height:14px;"></i></div>'
+          : '';
+
+        var buttonsDisplay = selectionMode ? 'style="opacity:0;pointer-events:none;"' : '';
+
+        card.innerHTML =
+          '<div class="accent-bar" style="background:' + strColor(h.strength) + ';"></div>' +
+
+          '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-left:8px;">' +
+            checkboxHtml +
+            '<div class="emoji-circle" style="background:' + emojiBg(h.strength) + ';">' + h.emoji + '</div>' +
+            '<div style="flex:1;min-width:0;">' +
+              '<div style="font-size:16px;font-weight:600;color:#2D2A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + h.name + '</div>' +
+            '</div>' +
+            '<span style="font-size:13px;color:#9CA3AF;flex-shrink:0;">' + daysLabel(h.daysAgo) + '</span>' +
+          '</div>' +
+
+          '<div style="display:flex;gap:8px;margin-bottom:14px;padding-left:8px;flex-wrap:wrap;">' +
+            '<span class="stat-badge">' + boltSvg(strColor(h.strength)) + '<span class="' + strClass(h.strength) + '" style="font-weight:600;">' + h.strength + '%</span></span>' +
+            '<span class="stat-badge">' + flameSvg() + ' ' + h.streak + 'd streak</span>' +
+            '<span class="stat-badge">' + checkSvg() + ' ' + h.completions + ' total</span>' +
+          '</div>' +
+
+          '<div class="button-row" id="btnRow-' + h.id + '" style="padding-left:8px;">' +
+            '<div class="row-normal" ' + buttonsDisplay + '>' +
+              '<button class="btn-resume" id="resumeBtn-' + h.id + '" onclick="handleResume(' + h.id + ')">' +
+                '<div class="shimmer-overlay" id="shimmer-' + h.id + '"></div>' +
+                '<i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i>' +
+                'Resume' +
+              '</button>' +
+              '<button class="btn-delete" onclick="handleDeleteTap(' + h.id + ')">' +
+                '<i data-lucide="trash-2" style="width:14px;height:14px;"></i>' +
+                'Delete' +
+              '</button>' +
+            '</div>' +
+            '<div class="row-confirm">' +
+              '<span class="confirm-text">Delete forever?</span>' +
+              '<button class="pill-yes" onclick="confirmDelete(' + h.id + ')">Yes</button>' +
+              '<button class="pill-no" onclick="cancelDelete(' + h.id + ')">No</button>' +
+            '</div>' +
+          '</div>';
+
+        list.appendChild(card);
+      });
+
+      lucide.createIcons();
+      updateCountBadge();
+    }
+
+    // ── Resume ───────────────────────────────────────────────
+    function handleResume(id) {
+      var btn = document.getElementById('resumeBtn-' + id);
+      var shimmer = document.getElementById('shimmer-' + id);
+      if (!btn || !shimmer) return;
+
+      // Green shimmer
+      shimmer.classList.add('active');
+
+      setTimeout(function() {
+        // Show "Restored!" text
+        btn.innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i> Restored!';
+        btn.classList.add('restored');
+        lucide.createIcons();
+
+        // Particle burst from card center
+        var card = document.getElementById('card-' + id);
+        if (card) {
+          var rect = card.getBoundingClientRect();
+          spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 3);
+        }
+
+        // Slide card up and collapse
+        setTimeout(function() {
+          removeCard(id);
+        }, 650);
+      }, 600);
+    }
+
+    // ── Delete flow ──────────────────────────────────────────
+    function handleDeleteTap(id) {
+      var row = document.getElementById('btnRow-' + id);
+      if (row) row.classList.add('confirming');
+    }
+
+    function cancelDelete(id) {
+      var row = document.getElementById('btnRow-' + id);
+      if (row) row.classList.remove('confirming');
+    }
+
+    function confirmDelete(id) {
+      var card = document.getElementById('card-' + id);
+      if (!card) return;
+
+      card.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.96)';
+      var h = card.offsetHeight;
+      card.style.maxHeight = h + 'px';
+
+      requestAnimationFrame(function() {
+        card.style.maxHeight = '0px';
+        card.style.paddingTop = '0';
+        card.style.paddingBottom = '0';
+        card.style.marginBottom = '-16px';
+      });
+
+      setTimeout(function() {
+        spliceHabit(id);
+        renderCards();
+      }, 420);
+    }
+
+    // ── Shared card removal (slide-up collapse) ──────────────
+    function removeCard(id) {
+      var card = document.getElementById('card-' + id);
+      if (!card) { spliceHabit(id); renderCards(); return; }
+
+      card.style.transition = 'all 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      card.style.opacity = '0';
+      card.style.transform = 'translateX(-60px) scale(0.97)';
+      var h = card.offsetHeight;
+      card.style.maxHeight = h + 'px';
+
+      requestAnimationFrame(function() {
+        card.style.maxHeight = '0px';
+        card.style.paddingTop = '0';
+        card.style.paddingBottom = '0';
+        card.style.marginBottom = '-16px';
+      });
+
+      setTimeout(function() {
+        spliceHabit(id);
+        renderCards();
+      }, 470);
+    }
+
+    function spliceHabit(id) {
+      var idx = habits.findIndex(function(h) { return h.id === id; });
+      if (idx > -1) habits.splice(idx, 1);
+    }
+
+    // ── Selection mode ───────────────────────────────────────
+    function toggleSelectionMode() {
+      selectionMode = !selectionMode;
+      selectedIds.clear();
+      var btn = document.getElementById('selectToggle');
+      btn.textContent = selectionMode ? 'Done' : 'Select';
+      btn.style.color = selectionMode ? '#B53030' : '#059669';
+      renderCards();
+      updateFloatingBar();
+    }
+
+    function toggleSelect(id) {
+      if (selectedIds.has(id)) {
+        selectedIds.delete(id);
+      } else {
+        selectedIds.add(id);
+      }
+      // Update checkbox visually
+      var card = document.getElementById('card-' + id);
+      if (card) {
+        var cb = card.querySelector('.sel-checkbox');
+        if (cb) {
+          if (selectedIds.has(id)) { cb.classList.add('checked'); }
+          else { cb.classList.remove('checked'); }
+        }
+      }
+      updateFloatingBar();
+    }
+
+    function updateFloatingBar() {
+      var bar = document.getElementById('floatingBar');
+      var countEl = document.getElementById('selectedCount');
+      if (selectionMode && selectedIds.size > 0) {
+        bar.classList.add('visible');
+        countEl.textContent = selectedIds.size + ' selected';
+      } else {
+        bar.classList.remove('visible');
+      }
+    }
+
+    function updateCountBadge() {
+      var badge = document.getElementById('countBadge');
+      badge.textContent = habits.length;
+      badge.classList.remove('count-pop');
+      void badge.offsetWidth;
+      badge.classList.add('count-pop');
+    }
+
+    function batchResume() {
+      var ids = Array.from(selectedIds);
+      ids.forEach(function(id, i) {
+        setTimeout(function() { handleResume(id); }, i * 180);
+      });
+      setTimeout(function() {
+        selectionMode = false;
+        selectedIds.clear();
+        document.getElementById('selectToggle').textContent = 'Select';
+        document.getElementById('selectToggle').style.color = '#059669';
+        updateFloatingBar();
+      }, ids.length * 180 + 1400);
+    }
+
+    function batchDelete() {
+      var ids = Array.from(selectedIds);
+      ids.forEach(function(id, i) {
+        setTimeout(function() { confirmDelete(id); }, i * 140);
+      });
+      setTimeout(function() {
+        selectionMode = false;
+        selectedIds.clear();
+        document.getElementById('selectToggle').textContent = 'Select';
+        document.getElementById('selectToggle').style.color = '#059669';
+        updateFloatingBar();
+      }, ids.length * 140 + 600);
+    }
+
+    // ── Particle burst ───────────────────────────────────────
+    function spawnParticles(cx, cy) {
+      var layer = document.getElementById('particleLayer');
+      var colors = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0'];
+      for (var i = 0; i < 18; i++) {
+        var dot = document.createElement('div');
+        dot.className = 'particle-dot';
+        var size = 4 + Math.random() * 4;
+        var angle = (Math.PI * 2 * i) / 18 + (Math.random() - 0.5) * 0.4;
+        var dist = 40 + Math.random() * 70;
+        var dx = Math.cos(angle) * dist;
+        var dy = Math.sin(angle) * dist;
+        var dur = 0.4 + Math.random() * 0.25;
+        dot.style.cssText =
+          'width:' + size + 'px;height:' + size + 'px;' +
+          'background:' + colors[Math.floor(Math.random() * colors.length)] + ';' +
+          'left:' + cx + 'px;top:' + cy + 'px;' +
+          'opacity:1;' +
+          'transition:all ' + dur + 's cubic-bezier(0.25,0.46,0.45,0.94);';
+        layer.appendChild(dot);
+        requestAnimationFrame(function() {
+          dot.style.transform = 'translate(' + dx + 'px,' + dy + 'px) scale(0.2)';
+          dot.style.opacity = '0';
+        });
+        setTimeout(function() { dot.remove(); }, 850);
+      }
+    }
+
+    // ── Init ─────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', function() {
+      lucide.createIcons();
+      renderCards();
+    });
+  </script>
+</body>
+</html>

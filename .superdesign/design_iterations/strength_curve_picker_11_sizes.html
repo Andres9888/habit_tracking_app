@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>V5 Size Variants</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #efece4;
+    --card: #fbfaf6;
+    --text: #14171a;
+    --text-2: #4a5057;
+    --text-3: #8a8f96;
+    --border: rgba(20,23,26,0.10);
+    --primary: #0f8a6a;
+    --primary-soft: #d6efe5;
+    --primary-strong: #086148;
+    --orange: #d97a3a;
+    --orange-soft: #f8e2cf;
+    --purple: #6b5ca8;
+    --purple-soft: #e1ddf3;
+    --miss: #c84a4a;
+    --bar-empty: #e8e5dd;
+  }
+  html, body { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; background: #d8d5cd; padding-bottom: 60px; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .heading { text-align: center; max-width: 360px; }
+  .heading .bet { font-size: 11px; font-weight: 700; color: var(--primary-strong); text-transform: uppercase; letter-spacing: 0.10em; }
+  .heading h2 { font-size: 16px; font-weight: 800; color: var(--text); margin-top: 2px; }
+  .heading p { font-size: 11.5px; color: var(--text-2); margin-top: 6px; line-height: 1.45; }
+  .why { background: rgba(15,138,106,0.06); border-left: 3px solid var(--primary); padding: 8px 10px; margin-top: 6px; font-size: 11px; text-align: left; color: var(--text-2); border-radius: 4px; }
+  .why strong { color: var(--primary-strong); }
+  .phone { width: 360px; height: 780px; border-radius: 44px; background: var(--bg); box-shadow: 0 18px 36px -16px rgba(0,0,0,0.30), 0 0 0 7px #111 inset, 0 0 0 9px #2a2a2a; overflow: hidden; position: relative; }
+  .notch { position: absolute; left: 50%; top: 9px; transform: translateX(-50%); width: 110px; height: 28px; background: #000; border-radius: 18px; z-index: 50; }
+  .status-bar { position: absolute; left: 0; right: 0; top: 0; height: 46px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 16px 26px 0 26px; font-size: 14px; font-weight: 600; color: #0a0a0a; }
+  .header-bar { position: absolute; top: 46px; left: 0; right: 0; z-index: 30; background: rgba(239,236,228,0.95); display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; }
+  .header-bar .back { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.7); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+  .header-bar .title { font-size: 14px; font-weight: 600; }
+  .header-bar .done { background: var(--primary); color: #fff; font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 999px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+  .tier-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-weight: 700; }
+  .tier-simple { background: var(--orange-soft); color: #7A2E0A; }
+  .tier-regular { background: var(--primary-soft); color: var(--primary-strong); }
+  .tier-complex { background: var(--purple-soft); color: #3F2F75; }
+  .check-circle { background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+</style>
+</head>
+<body class="flex items-start justify-center gap-8 flex-wrap pt-8">
+
+<!-- ============ CURRENT — what's in code now ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">CURRENT · WHAT'S IN CODE</div>
+    <h2>"My most recent size bump."</h2>
+    <div class="why">Bar 32px. Hero 26px. Stat percent 16px. Reference point.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1.5"><i data-lucide="signal" class="w-4 h-4"></i><i data-lucide="wifi" class="w-4 h-4"></i><i data-lucide="battery-full" class="w-5 h-5 text-green-700"></i></div></div>
+    <div class="header-bar"><button class="back"><i data-lucide="chevron-left" class="w-5 h-5"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div style="padding-top: 96px;">
+      <div class="text-center px-5 pt-3 pb-2">
+        <h1 class="font-extrabold leading-tight" style="font-size: 26px; color: var(--text);">Strength fills like this.</h1>
+        <p class="mt-2" style="font-size: 13px; color: var(--text-2);">Check in daily to grow it. Miss to dip it.</p>
+      </div>
+      <div class="card mx-4 mt-2 p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-extrabold tracking-wider" style="font-size: 12px; color: var(--text-3);">DAY 1</span>
+          <span class="font-extrabold tracking-wider" style="font-size: 12px; color: var(--text-3);">DAY 33</span>
+          <span class="font-extrabold tracking-wider" style="font-size: 12px; color: var(--primary);">DAY 66 ✨</span>
+        </div>
+        <div style="position: relative; height: 32px; background: var(--bar-empty); border-radius: 999px;">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: var(--primary); border-radius: 999px;"></div>
+          <div style="position: absolute; left: 38%; top: -4px; bottom: -4px; width: 4px; background: var(--miss); border-radius: 2px;"></div>
+        </div>
+        <div style="position: relative; height: 18px; margin-top: 6px;">
+          <div style="position: absolute; left: 26%; top: 0;" class="flex items-center gap-1">
+            <i data-lucide="arrow-up" class="w-3 h-3" style="color: var(--miss); transform: rotate(180deg);"></i>
+            <span style="font-size: 11px; font-weight: 700; color: var(--miss);">a miss day</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-1">
+          <span style="font-size: 11px; color: var(--text-3);">Fresh start</span>
+          <span style="font-size: 11px; font-weight: 600; color: var(--text);">feels routine</span>
+          <span style="font-size: 11px; color: var(--primary);">Automatic</span>
+        </div>
+      </div>
+      <div class="flex gap-2 mx-4 mt-4">
+        <div class="flex-1 items-center text-center card p-3.5" style="border-left: 4px solid var(--primary); border-radius: 16px;">
+          <div style="font-size: 22px; color: var(--primary);">✓</div>
+          <div style="font-size: 12px; font-weight: 700; margin-top: 4px; color: var(--text);">Check in</div>
+          <div style="font-size: 16px; font-weight: 800; margin-top: 4px; color: var(--primary);">+1.5%</div>
+        </div>
+        <div class="flex-1 items-center text-center card p-3.5" style="border-left: 4px solid var(--miss); border-radius: 16px;">
+          <div style="font-size: 22px; color: var(--miss);">✗</div>
+          <div style="font-size: 12px; font-weight: 700; margin-top: 4px; color: var(--text);">Miss a day</div>
+          <div style="font-size: 16px; font-weight: 800; margin-top: 4px; color: var(--miss);">−5%</div>
+        </div>
+      </div>
+      <p class="text-center font-bold tracking-wider mt-4 mb-2" style="font-size: 10.5px; color: var(--text-3);">HOW FAST FOR THIS HABIT?</p>
+      <div class="flex gap-2 mx-4">
+        <div class="flex-1 items-center text-center card p-3" style="border-radius: 16px;">
+          <span class="tier-pill tier-simple" style="font-size: 11px;">⚡ Simple</span>
+          <div style="font-size: 12px; margin-top: 8px;"><strong>~2.5 wk</strong><br/><span style="color: var(--text-3);">18d</span></div>
+          <div style="margin-top: 8px; width: 24px; height: 24px;"></div>
+        </div>
+        <div class="flex-1 items-center text-center card p-3" style="border: 1.5px solid var(--primary); border-radius: 16px;">
+          <span class="tier-pill tier-regular" style="font-size: 11px;">🌱 Regular</span>
+          <div style="font-size: 12px; margin-top: 8px;"><strong>~9 wk</strong><br/><span style="color: var(--text-3);">66d</span></div>
+          <div class="check-circle mx-auto" style="margin-top: 8px; width: 24px; height: 24px;"><i data-lucide="check" class="w-3.5 h-3.5 text-white"></i></div>
+        </div>
+        <div class="flex-1 items-center text-center card p-3" style="border-radius: 16px;">
+          <span class="tier-pill tier-complex" style="font-size: 11px;">🏔️ Complex</span>
+          <div style="font-size: 12px; margin-top: 8px;"><strong>~4 mo</strong><br/><span style="color: var(--text-3);">120d</span></div>
+          <div style="margin-top: 8px; width: 24px; height: 24px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BIG — substantially bigger ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">BIG · RECOMMENDED</div>
+    <h2>"Confident sizing."</h2>
+    <div class="why"><strong>Bar 44px · Hero 30px · Stat percent 24px · Tier weeks 16px.</strong> Bar is the unmistakable hero. Stat percentages read as a headline number. Picker tiles feel tappable.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1.5"><i data-lucide="signal" class="w-4 h-4"></i><i data-lucide="wifi" class="w-4 h-4"></i><i data-lucide="battery-full" class="w-5 h-5 text-green-700"></i></div></div>
+    <div class="header-bar"><button class="back"><i data-lucide="chevron-left" class="w-5 h-5"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div style="padding-top: 96px;">
+      <div class="text-center px-5 pt-4 pb-2">
+        <h1 class="font-extrabold leading-tight" style="font-size: 30px; color: var(--text);">Strength fills like this.</h1>
+        <p class="mt-2" style="font-size: 15px; color: var(--text-2);">Check in daily to grow it. Miss to dip it.</p>
+      </div>
+      <div class="card mx-4 mt-3 p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-extrabold tracking-wider" style="font-size: 13px; color: var(--text-3);">DAY 1</span>
+          <span class="font-extrabold tracking-wider" style="font-size: 13px; color: var(--text-3);">DAY 33</span>
+          <span class="font-extrabold tracking-wider" style="font-size: 13px; color: var(--primary);">DAY 66 ✨</span>
+        </div>
+        <div style="position: relative; height: 44px; background: var(--bar-empty); border-radius: 999px;">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: linear-gradient(90deg, var(--primary), var(--primary-strong)); border-radius: 999px;"></div>
+          <div style="position: absolute; left: 38%; top: -6px; bottom: -6px; width: 5px; background: var(--miss); border-radius: 3px;"></div>
+        </div>
+        <div style="position: relative; height: 22px; margin-top: 8px;">
+          <div style="position: absolute; left: 23%; top: 0;" class="flex items-center gap-1.5">
+            <i data-lucide="arrow-up" class="w-4 h-4" style="color: var(--miss); transform: rotate(180deg);"></i>
+            <span style="font-size: 13px; font-weight: 700; color: var(--miss);">a miss day</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span style="font-size: 12px; color: var(--text-3);">Fresh start</span>
+          <span style="font-size: 12px; font-weight: 600; color: var(--text);">feels routine</span>
+          <span style="font-size: 12px; color: var(--primary);">Automatic</span>
+        </div>
+      </div>
+      <div class="flex gap-3 mx-4 mt-4">
+        <div class="flex-1 items-center text-center card p-4" style="border-left: 5px solid var(--primary); border-radius: 18px;">
+          <div style="font-size: 30px; color: var(--primary);">✓</div>
+          <div style="font-size: 13px; font-weight: 700; margin-top: 4px; color: var(--text);">Check in</div>
+          <div style="font-size: 24px; font-weight: 800; margin-top: 4px; color: var(--primary);">+1.5%</div>
+        </div>
+        <div class="flex-1 items-center text-center card p-4" style="border-left: 5px solid var(--miss); border-radius: 18px;">
+          <div style="font-size: 30px; color: var(--miss);">✗</div>
+          <div style="font-size: 13px; font-weight: 700; margin-top: 4px; color: var(--text);">Miss a day</div>
+          <div style="font-size: 24px; font-weight: 800; margin-top: 4px; color: var(--miss);">−5%</div>
+        </div>
+      </div>
+      <p class="text-center font-bold tracking-wider mt-5 mb-3" style="font-size: 12px; color: var(--text-3);">HOW FAST FOR THIS HABIT?</p>
+      <div class="flex gap-2.5 mx-4">
+        <div class="flex-1 items-center text-center card p-3.5" style="border-radius: 18px;">
+          <span class="tier-pill tier-simple" style="font-size: 13px;">⚡ Simple</span>
+          <div style="font-size: 16px; font-weight: 800; margin-top: 8px;">~2.5 wk</div>
+          <div style="font-size: 12px; color: var(--text-3);">18 days</div>
+          <div style="margin-top: 10px; width: 28px; height: 28px;"></div>
+        </div>
+        <div class="flex-1 items-center text-center card p-3.5" style="border: 2px solid var(--primary); border-radius: 18px; box-shadow: 0 0 0 4px rgba(15,138,106,0.10);">
+          <span class="tier-pill tier-regular" style="font-size: 13px;">🌱 Regular</span>
+          <div style="font-size: 16px; font-weight: 800; margin-top: 8px;">~9 wk</div>
+          <div style="font-size: 12px; color: var(--text-3);">66 days</div>
+          <div class="check-circle mx-auto" style="margin-top: 10px; width: 28px; height: 28px;"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+        </div>
+        <div class="flex-1 items-center text-center card p-3.5" style="border-radius: 18px;">
+          <span class="tier-pill tier-complex" style="font-size: 13px;">🏔️ Complex</span>
+          <div style="font-size: 16px; font-weight: 800; margin-top: 8px;">~4 mo</div>
+          <div style="font-size: 12px; color: var(--text-3);">120 days</div>
+          <div style="margin-top: 10px; width: 28px; height: 28px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BIGGER — max sizing ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">BIGGER · MAX</div>
+    <h2>"Stop short of cartoonish."</h2>
+    <div class="why"><strong>Bar 52px · Hero 34px · Stat percent 30px · Tier weeks 18px.</strong> Absolute upper bound — if BIG still reads small, this is where I'd push to. Risk: starts to feel like a tutorial screen for a kid's app.</div>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1.5"><i data-lucide="signal" class="w-4 h-4"></i><i data-lucide="wifi" class="w-4 h-4"></i><i data-lucide="battery-full" class="w-5 h-5 text-green-700"></i></div></div>
+    <div class="header-bar"><button class="back"><i data-lucide="chevron-left" class="w-5 h-5"></i></button><div class="title">Strength curve</div><button class="done">Done</button></div>
+    <div style="padding-top: 96px;">
+      <div class="text-center px-5 pt-4 pb-2">
+        <h1 class="font-extrabold leading-tight" style="font-size: 34px; color: var(--text);">Strength fills like this.</h1>
+        <p class="mt-2" style="font-size: 16px; color: var(--text-2);">Check in daily to grow it. Miss to dip it.</p>
+      </div>
+      <div class="card mx-4 mt-3 p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="font-extrabold tracking-wider" style="font-size: 14px; color: var(--text-3);">DAY 1</span>
+          <span class="font-extrabold tracking-wider" style="font-size: 14px; color: var(--text-3);">DAY 33</span>
+          <span class="font-extrabold tracking-wider" style="font-size: 14px; color: var(--primary);">DAY 66 ✨</span>
+        </div>
+        <div style="position: relative; height: 52px; background: var(--bar-empty); border-radius: 999px;">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 50%; background: linear-gradient(90deg, var(--primary), var(--primary-strong)); border-radius: 999px;"></div>
+          <div style="position: absolute; left: 38%; top: -7px; bottom: -7px; width: 6px; background: var(--miss); border-radius: 3px;"></div>
+        </div>
+        <div style="position: relative; height: 26px; margin-top: 10px;">
+          <div style="position: absolute; left: 22%; top: 0;" class="flex items-center gap-2">
+            <i data-lucide="arrow-up" class="w-5 h-5" style="color: var(--miss); transform: rotate(180deg);"></i>
+            <span style="font-size: 14px; font-weight: 700; color: var(--miss);">a miss day</span>
+          </div>
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span style="font-size: 13px; color: var(--text-3);">Fresh start</span>
+          <span style="font-size: 13px; font-weight: 600; color: var(--text);">feels routine</span>
+          <span style="font-size: 13px; color: var(--primary);">Automatic</span>
+        </div>
+      </div>
+      <div class="flex gap-3 mx-4 mt-5">
+        <div class="flex-1 items-center text-center card p-5" style="border-left: 6px solid var(--primary); border-radius: 18px;">
+          <div style="font-size: 38px; color: var(--primary);">✓</div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 4px; color: var(--text);">Check in</div>
+          <div style="font-size: 30px; font-weight: 800; margin-top: 4px; color: var(--primary);">+1.5%</div>
+        </div>
+        <div class="flex-1 items-center text-center card p-5" style="border-left: 6px solid var(--miss); border-radius: 18px;">
+          <div style="font-size: 38px; color: var(--miss);">✗</div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 4px; color: var(--text);">Miss a day</div>
+          <div style="font-size: 30px; font-weight: 800; margin-top: 4px; color: var(--miss);">−5%</div>
+        </div>
+      </div>
+      <p class="text-center font-bold tracking-wider mt-5 mb-3" style="font-size: 13px; color: var(--text-3);">HOW FAST FOR THIS HABIT?</p>
+      <div class="flex gap-2.5 mx-4">
+        <div class="flex-1 items-center text-center card p-4" style="border-radius: 18px;">
+          <span class="tier-pill tier-simple" style="font-size: 14px;">⚡ Simple</span>
+          <div style="font-size: 18px; font-weight: 800; margin-top: 8px;">~2.5 wk</div>
+          <div style="font-size: 13px; color: var(--text-3);">18 days</div>
+          <div style="margin-top: 12px; width: 32px; height: 32px;"></div>
+        </div>
+        <div class="flex-1 items-center text-center card p-4" style="border: 2px solid var(--primary); border-radius: 18px; box-shadow: 0 0 0 5px rgba(15,138,106,0.10);">
+          <span class="tier-pill tier-regular" style="font-size: 14px;">🌱 Regular</span>
+          <div style="font-size: 18px; font-weight: 800; margin-top: 8px;">~9 wk</div>
+          <div style="font-size: 13px; color: var(--text-3);">66 days</div>
+          <div class="check-circle mx-auto" style="margin-top: 12px; width: 32px; height: 32px;"><i data-lucide="check" class="w-5 h-5 text-white"></i></div>
+        </div>
+        <div class="flex-1 items-center text-center card p-4" style="border-radius: 18px;">
+          <span class="tier-pill tier-complex" style="font-size: 14px;">🏔️ Complex</span>
+          <div style="font-size: 18px; font-weight: 800; margin-top: 8px;">~4 mo</div>
+          <div style="font-size: 13px; color: var(--text-3);">120 days</div>
+          <div style="margin-top: 12px; width: 32px; height: 32px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

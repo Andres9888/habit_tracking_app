@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Board — Archive Habits</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #1a1a1a !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Literata', serif !important;
+    }
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #F5F1ED;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    }
+    .screen {
+      padding: 56px 20px 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Column drop zones */
+    .drop-zone {
+      min-height: 80px;
+      transition: all 0.3s ease;
+      border: 2px dashed transparent;
+      border-radius: 12px;
+    }
+    .drop-zone.drag-over {
+      border-color: currentColor;
+      background: rgba(255,255,255,0.5);
+      transform: scale(1.02);
+    }
+    .drop-zone-green.drag-over {
+      border-color: #059669;
+      background: rgba(5, 150, 105, 0.1);
+    }
+    .drop-zone-red.drag-over {
+      border-color: #B53030;
+      background: rgba(181, 48, 48, 0.1);
+    }
+
+    /* Undecided card */
+    .habit-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(120, 100, 80, 0.12);
+      padding: 14px 16px;
+      cursor: grab;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      user-select: none;
+    }
+    .habit-card:active {
+      cursor: grabbing;
+      box-shadow: 0 8px 24px rgba(120, 100, 80, 0.25);
+      transform: scale(1.03) rotate(0.5deg);
+    }
+    .habit-card.dragging {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+
+    /* Compact pill in columns */
+    .habit-pill {
+      background: white;
+      border-radius: 20px;
+      padding: 7px 12px;
+      box-shadow: 0 1px 6px rgba(120, 100, 80, 0.1);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: grab;
+      transition: all 0.3s ease;
+      animation: pillIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .habit-pill:hover {
+      transform: translateX(2px);
+    }
+    .habit-pill .remove-pill {
+      opacity: 0;
+      transition: opacity 0.2s;
+      cursor: pointer;
+    }
+    .habit-pill:hover .remove-pill {
+      opacity: 1;
+    }
+
+    @keyframes pillIn {
+      from { opacity: 0; transform: scale(0.8) translateY(-6px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .habit-card { animation: cardIn 0.35s ease forwards; }
+
+    /* Strength bar */
+    .strength-bar {
+      height: 3px;
+      border-radius: 2px;
+      background: #E8E2DC;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    /* Counter badges */
+    .counter-badge {
+      min-width: 22px;
+      height: 22px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0 6px;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .counter-badge.bump {
+      animation: badgeBump 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes badgeBump {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.35); }
+      100% { transform: scale(1); }
+    }
+
+    /* Confirm button */
+    .confirm-btn {
+      transition: all 0.3s ease;
+    }
+    .confirm-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .confirm-btn:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(120, 100, 80, 0.25);
+    }
+    .confirm-btn:not(:disabled):active {
+      transform: translateY(0);
+    }
+
+    /* Empty state */
+    .empty-hint {
+      color: #A89F95;
+      font-size: 12px;
+      text-align: center;
+      padding: 12px 4px;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    /* Scrollable areas */
+    .scroll-area {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .scroll-area::-webkit-scrollbar { width: 0; }
+
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #8B7E74;
+    }
+
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.04); }
+      60% { transform: scale(0.98); }
+      100% { transform: scale(1); }
+    }
+    .celebrate { animation: celebrate 0.5s ease; }
+
+    /* Column scroll */
+    .column-scroll {
+      max-height: 140px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .column-scroll::-webkit-scrollbar { width: 0; }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="screen">
+      <!-- Header -->
+      <div style="flex-shrink: 0; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
+          <i data-lucide="arrow-left" style="width: 20px; height: 20px; color: #5C534A; cursor: pointer;"></i>
+          <i data-lucide="help-circle" style="width: 18px; height: 18px; color: #A89F95;"></i>
+        </div>
+        <h1 style="font-size: 22px; font-weight: 700; color: #2D2520; margin-top: 8px;">Decision Board</h1>
+        <p style="font-size: 13px; color: #8B7E74; margin-top: 3px;">Drag each habit or tap the buttons to sort.</p>
+      </div>
+
+      <!-- Two-column kanban -->
+      <div style="flex-shrink: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+        <!-- Bring Back Column -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <div style="width: 7px; height: 7px; border-radius: 50%; background: #059669;"></div>
+              <span style="font-family: 'Literata', serif; font-size: 12px; font-weight: 600; color: #059669;">Bring Back</span>
+            </div>
+            <div class="counter-badge" id="green-count" style="background: #ECFDF5; color: #059669;">0</div>
+          </div>
+          <div
+            class="drop-zone drop-zone-green"
+            id="green-zone"
+            style="background: rgba(5, 150, 105, 0.04); padding: 6px;"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event, 'green')"
+          >
+            <div class="column-scroll">
+              <div id="green-pills" style="display: flex; flex-direction: column; gap: 5px;"></div>
+            </div>
+            <div class="empty-hint" id="green-empty">
+              <i data-lucide="rotate-ccw" style="width: 18px; height: 18px; margin: 0 auto 4px; display: block; opacity: 0.35;"></i>
+              Drop to restore
+            </div>
+          </div>
+        </div>
+
+        <!-- Let Go Column -->
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <div style="width: 7px; height: 7px; border-radius: 50%; background: #B53030;"></div>
+              <span style="font-family: 'Literata', serif; font-size: 12px; font-weight: 600; color: #B53030;">Let Go</span>
+            </div>
+            <div class="counter-badge" id="red-count" style="background: #FEF2F2; color: #B53030;">0</div>
+          </div>
+          <div
+            class="drop-zone drop-zone-red"
+            id="red-zone"
+            style="background: rgba(181, 48, 48, 0.04); padding: 6px;"
+            ondragover="handleDragOver(event)"
+            ondragleave="handleDragLeave(event)"
+            ondrop="handleDrop(event, 'red')"
+          >
+            <div class="column-scroll">
+              <div id="red-pills" style="display: flex; flex-direction: column; gap: 5px;"></div>
+            </div>
+            <div class="empty-hint" id="red-empty">
+              <i data-lucide="trash-2" style="width: 18px; height: 18px; margin: 0 auto 4px; display: block; opacity: 0.35;"></i>
+              Drop to delete
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Undecided Section Header -->
+      <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <span class="section-label">Undecided</span>
+        <span class="section-label" id="undecided-count">5 remaining</span>
+      </div>
+
+      <!-- Undecided Cards Stack (scrollable) -->
+      <div class="scroll-area" id="card-stack" style="flex: 1; display: flex; flex-direction: column; gap: 8px; padding-bottom: 90px;">
+      </div>
+
+      <!-- Confirm Button (anchored bottom) -->
+      <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 20px 40px; background: linear-gradient(transparent, #F5F1ED 35%);">
+        <button
+          class="confirm-btn"
+          id="confirm-btn"
+          disabled
+          onclick="confirmDecisions()"
+          style="width: 100%; padding: 15px; border: none; border-radius: 12px; background: #2D2520; color: white; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;"
+        >
+          <i data-lucide="check-circle" style="width: 18px; height: 18px;"></i>
+          <span id="confirm-text">Sort all habits first</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const habits = [
+      { id: 1, emoji: '🧘', name: 'Morning Meditation', strength: 72, streak: '14 days', category: 'Mindfulness' },
+      { id: 2, emoji: '📖', name: 'Read 30 Minutes', strength: 45, streak: '5 days', category: 'Learning' },
+      { id: 3, emoji: '💪', name: 'Gym Workout', strength: 88, streak: '21 days', category: 'Fitness' },
+      { id: 4, emoji: '🎸', name: 'Practice Guitar', strength: 23, streak: '2 days', category: 'Creative' },
+      { id: 5, emoji: '💧', name: 'Drink 8 Glasses', strength: 61, streak: '9 days', category: 'Health' },
+    ];
+
+    const state = { undecided: [...habits], green: [], red: [] };
+    let draggedId = null;
+    let dragSource = null;
+
+    function strengthColor(s) {
+      if (s >= 70) return '#059669';
+      if (s >= 40) return '#D97706';
+      return '#B53030';
+    }
+
+    function renderCards() {
+      const stack = document.getElementById('card-stack');
+      stack.innerHTML = '';
+
+      if (state.undecided.length === 0) {
+        stack.innerHTML = '<div style="text-align:center;padding:28px 16px;color:#A89F95;">' +
+          '<div style="font-size:28px;margin-bottom:10px;">✨</div>' +
+          '<p style="font-size:14px;font-weight:500;color:#5C534A;">All sorted!</p>' +
+          '<p style="font-size:12px;margin-top:3px;">Tap confirm to process your decisions.</p></div>';
+        return;
+      }
+
+      state.undecided.forEach(function(habit, i) {
+        var card = document.createElement('div');
+        card.className = 'habit-card';
+        card.draggable = true;
+        card.dataset.id = habit.id;
+        card.dataset.source = 'undecided';
+        card.style.animationDelay = (i * 0.05) + 's';
+
+        card.innerHTML =
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
+            '<div style="display:flex;align-items:center;gap:10px;">' +
+              '<span style="font-size:22px;">' + habit.emoji + '</span>' +
+              '<div>' +
+                '<div style="font-weight:600;font-size:14px;color:#2D2520;">' + habit.name + '</div>' +
+                '<div style="font-size:11px;color:#A89F95;margin-top:1px;">' + habit.category + ' &middot; ' + habit.streak + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<div style="text-align:right;">' +
+              '<span style="font-size:16px;font-weight:700;color:' + strengthColor(habit.strength) + ';">' + habit.strength + '%</span>' +
+              '<div style="font-size:9px;color:#A89F95;">strength</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="strength-bar"><div class="strength-fill" style="width:' + habit.strength + '%;background:' + strengthColor(habit.strength) + ';"></div></div>' +
+          '<div style="display:flex;gap:6px;margin-top:10px;">' +
+            '<button onclick="quickSort(' + habit.id + ',\'green\')" style="flex:1;padding:7px;border:1.5px solid #D1E7DD;border-radius:8px;background:#F0FDF4;color:#059669;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;">' +
+              '<i data-lucide="rotate-ccw" style="width:12px;height:12px;"></i> Bring Back</button>' +
+            '<button onclick="quickSort(' + habit.id + ',\'red\')" style="flex:1;padding:7px;border:1.5px solid #F5D5D5;border-radius:8px;background:#FEF2F2;color:#B53030;font-size:11px;font-weight:600;cursor:pointer;font-family:DM Sans,sans-serif;display:flex;align-items:center;justify-content:center;gap:4px;">' +
+              '<i data-lucide="trash-2" style="width:12px;height:12px;"></i> Let Go</button>' +
+          '</div>';
+
+        card.addEventListener('dragstart', function(e) {
+          draggedId = habit.id;
+          dragSource = 'undecided';
+          card.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        card.addEventListener('dragend', function() {
+          card.classList.remove('dragging');
+          draggedId = null;
+          dragSource = null;
+        });
+
+        stack.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function renderPills(zone) {
+      var container = document.getElementById(zone + '-pills');
+      var emptyHint = document.getElementById(zone + '-empty');
+      container.innerHTML = '';
+
+      if (state[zone].length === 0) {
+        emptyHint.style.display = 'block';
+      } else {
+        emptyHint.style.display = 'none';
+        state[zone].forEach(function(habit) {
+          var pill = document.createElement('div');
+          pill.className = 'habit-pill';
+          pill.draggable = true;
+          pill.dataset.id = habit.id;
+          pill.dataset.source = zone;
+
+          var removeColor = zone === 'green' ? '#059669' : '#B53030';
+          pill.innerHTML =
+            '<span style="font-size:14px;">' + habit.emoji + '</span>' +
+            '<span style="flex:1;font-weight:500;color:#2D2520;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + habit.name + '</span>' +
+            '<span class="remove-pill" onclick="unsort(' + habit.id + ',\'' + zone + '\')" style="color:' + removeColor + ';display:flex;cursor:pointer;">' +
+              '<i data-lucide="x" style="width:13px;height:13px;"></i></span>';
+
+          pill.addEventListener('dragstart', function(e) {
+            draggedId = habit.id;
+            dragSource = zone;
+            pill.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+          });
+          pill.addEventListener('dragend', function() {
+            pill.classList.remove('dragging');
+            draggedId = null;
+            dragSource = null;
+          });
+
+          container.appendChild(pill);
+        });
+      }
+
+      var badge = document.getElementById(zone + '-count');
+      badge.textContent = state[zone].length;
+      badge.classList.remove('bump');
+      void badge.offsetWidth;
+      badge.classList.add('bump');
+      lucide.createIcons();
+    }
+
+    function updateUI() {
+      renderCards();
+      renderPills('green');
+      renderPills('red');
+
+      var remaining = state.undecided.length;
+      document.getElementById('undecided-count').textContent = remaining + ' remaining';
+
+      var btn = document.getElementById('confirm-btn');
+      var text = document.getElementById('confirm-text');
+      if (remaining === 0 && (state.green.length > 0 || state.red.length > 0)) {
+        btn.disabled = false;
+        text.textContent = 'Confirm Decisions (' + (state.green.length + state.red.length) + ')';
+      } else {
+        btn.disabled = true;
+        text.textContent = remaining > 0 ? 'Sort all habits first (' + remaining + ' left)' : 'No habits to process';
+      }
+    }
+
+    function quickSort(id, zone) {
+      var idx = state.undecided.findIndex(function(h) { return h.id === id; });
+      if (idx === -1) return;
+      var habit = state.undecided.splice(idx, 1)[0];
+      state[zone].push(habit);
+      updateUI();
+    }
+
+    function unsort(id, zone) {
+      var idx = state[zone].findIndex(function(h) { return h.id === id; });
+      if (idx === -1) return;
+      var habit = state[zone].splice(idx, 1)[0];
+      state.undecided.push(habit);
+      updateUI();
+    }
+
+    function moveToZone(id, fromSource, toZone) {
+      var habit;
+      if (fromSource === 'undecided') {
+        var idx = state.undecided.findIndex(function(h) { return h.id === id; });
+        if (idx === -1) return;
+        habit = state.undecided.splice(idx, 1)[0];
+      } else {
+        var idx2 = state[fromSource].findIndex(function(h) { return h.id === id; });
+        if (idx2 === -1) return;
+        habit = state[fromSource].splice(idx2, 1)[0];
+      }
+      state[toZone].push(habit);
+      updateUI();
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      e.currentTarget.classList.add('drag-over');
+    }
+    function handleDragLeave(e) {
+      e.currentTarget.classList.remove('drag-over');
+    }
+    function handleDrop(e, zone) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      if (draggedId !== null && dragSource !== zone) {
+        moveToZone(draggedId, dragSource, zone);
+      }
+    }
+
+    // Allow dropping back to undecided
+    var cardStack = document.getElementById('card-stack');
+    cardStack.addEventListener('dragover', function(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; });
+    cardStack.addEventListener('drop', function(e) {
+      e.preventDefault();
+      if (draggedId !== null && dragSource !== 'undecided') {
+        unsort(draggedId, dragSource);
+      }
+    });
+
+    function confirmDecisions() {
+      var btn = document.getElementById('confirm-btn');
+      btn.classList.add('celebrate');
+      var text = document.getElementById('confirm-text');
+      text.textContent = '\u2713 ' + state.green.length + ' restored, ' + state.red.length + ' removed';
+      btn.style.background = '#059669';
+      btn.disabled = true;
+      setTimeout(function() { btn.classList.remove('celebrate'); }, 600);
+    }
+
+    updateUI();
+    lucide.createIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,1510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings Improvements v2 — Fixes + Variants</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===== Real app tokens ===== */
+      :root {
+        --bg: #f5f1ed; /* canvas L0 */
+        --card: #edeae5; /* surface L1 */
+        --surface-muted: #faf8f5; /* warm near-white */
+        --border: #ddd8d2;
+        --text: #2d2a26; /* gray.800 */
+        --text-2: #6b6560; /* gray.500 */
+        --text-3: #6e6660; /* gray.400 */
+        --green-600: #059669;
+        --green-700: #047857;
+        --green-100: #d1fae5;
+        --tile-bg: #e2f1ea;
+        --gold-300: #e8b94d;
+        --gold-100: #fef3cd;
+        --gold-600: #936a08;
+        --error: #b53030;
+        --radius-card: 16px;
+        --radius-row: 12px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #2d2a26;
+        font-family: 'DM Sans', sans-serif !important;
+        color: var(--text);
+        padding: 48px 32px 96px;
+      }
+      h1 {
+        font-family: 'Literata', serif !important;
+        color: #f5f1ed;
+        font-size: 30px;
+        font-weight: 600;
+      }
+      h2 {
+        font-family: 'Literata', serif !important;
+        color: #f5f1ed;
+        font-size: 22px;
+        font-weight: 600;
+        margin-top: 64px;
+        padding-top: 28px;
+        border-top: 1px solid #524d47;
+      }
+      .sub {
+        color: #c4bfb7;
+        font-size: 15px;
+        margin-top: 8px;
+        max-width: 880px;
+        line-height: 1.5;
+      }
+      .lane {
+        display: flex;
+        gap: 36px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .col {
+        width: 380px;
+      }
+      .col.wide {
+        width: 420px;
+      }
+      .col-tag {
+        display: inline-block;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+      }
+      .tag-before {
+        background: #524d47;
+        color: #ddd8d2;
+      }
+      .tag-after {
+        background: var(--green-600);
+        color: #fff;
+      }
+      .tag-option {
+        background: var(--gold-300);
+        color: #3d3833;
+      }
+      .rec {
+        display: inline-block;
+        margin-left: 8px;
+        background: var(--green-100);
+        color: var(--green-700);
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        border-radius: 999px;
+        padding: 4px 9px;
+        vertical-align: 2px;
+      }
+
+      /* ===== Panel = settings surface chunk on canvas ===== */
+      .panel {
+        background: var(--bg);
+        border-radius: 24px;
+        padding: 18px 16px;
+        box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ===== Settings building blocks (mirror SettingsSection / SettingsRow) ===== */
+      .hero {
+        background: var(--card);
+        border-radius: var(--radius-card);
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.06);
+      }
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--green-600), #34d399);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 20px;
+        flex: none;
+      }
+      .hero .name {
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .hero .stats {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+      .chev {
+        margin-left: auto;
+        color: var(--text-3);
+        font-size: 18px;
+      }
+
+      .section {
+        background: var(--card);
+        border-radius: var(--radius-card);
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.06);
+      }
+      .section + .section,
+      .hero + .section,
+      .section + .hero {
+        margin-top: 16px;
+      }
+      .section-h {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px 10px;
+      }
+      .section-h .s-title {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .section-h .s-chev {
+        margin-left: auto;
+        color: var(--text-3);
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .row:last-child {
+        border-bottom: none;
+      }
+      .tile {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        background: var(--tile-bg);
+        color: var(--green-700);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex: none;
+      }
+      .tile.gold {
+        background: var(--gold-100);
+        color: var(--gold-600);
+      }
+      .row .lbl {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .row .sublbl {
+        font-size: 12.5px;
+        color: var(--text-2);
+        margin-top: 1px;
+        line-height: 1.3;
+      }
+      .row .val {
+        font-size: 14px;
+        color: var(--text-2);
+        font-weight: 500;
+      }
+      .row .grow {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .switch {
+        width: 46px;
+        height: 28px;
+        border-radius: 999px;
+        background: var(--green-600);
+        position: relative;
+        flex: none;
+      }
+      .switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 24px;
+        height: 24px;
+        border-radius: 999px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+      .switch.off {
+        background: #c4bfb7;
+      }
+      .switch.off::after {
+        right: auto;
+        left: 2px;
+      }
+
+      .seg {
+        display: flex;
+        background: var(--bg);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 2px;
+        flex: none;
+      }
+      .seg span {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-2);
+        padding: 5px 10px;
+        border-radius: 8px;
+      }
+      .seg span.on {
+        background: var(--surface-muted);
+        color: var(--green-700);
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.12);
+      }
+
+      /* ===== Inset card (reminders / sound / sort tray) ===== */
+      .inset {
+        margin: 0 16px 14px;
+        background: var(--surface-muted);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .inset .row {
+        padding: 11px 14px;
+      }
+      .inset-cap {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 11px 14px 4px;
+      }
+
+      /* ===== Live animation demos ===== */
+      @keyframes snapOpen {
+        0%,
+        38% {
+          height: 0;
+        }
+        40%,
+        88% {
+          height: 118px;
+        }
+        90%,
+        100% {
+          height: 0;
+        }
+      }
+      @keyframes easeOpen {
+        0%,
+        35% {
+          height: 0;
+          opacity: 0;
+        }
+        48%,
+        80% {
+          height: 118px;
+          opacity: 1;
+        }
+        93%,
+        100% {
+          height: 0;
+          opacity: 0;
+        }
+      }
+      .demo-clip {
+        overflow: hidden;
+      }
+      .demo-clip.snap {
+        animation: snapOpen 5s step-end infinite;
+      }
+      .demo-clip.ease {
+        animation: easeOpen 5s cubic-bezier(0.3, 0.9, 0.3, 1) infinite;
+      }
+      @keyframes toggleFlip {
+        0%,
+        35% {
+          background: #c4bfb7;
+        }
+        40%,
+        88% {
+          background: var(--green-600);
+        }
+        90%,
+        100% {
+          background: #c4bfb7;
+        }
+      }
+      @keyframes knobFlip {
+        0%,
+        35% {
+          left: 2px;
+          right: auto;
+        }
+        40%,
+        88% {
+          left: 20px;
+        }
+        90%,
+        100% {
+          left: 2px;
+        }
+      }
+      .switch.demo {
+        animation: toggleFlip 5s step-end infinite;
+      }
+      .switch.demo::after {
+        right: auto;
+        animation: knobFlip 5s cubic-bezier(0.3, 0.9, 0.3, 1) infinite;
+      }
+
+      /* ===== Calendar preview strip ===== */
+      .preview {
+        margin: 4px 16px 12px;
+        background: var(--surface-muted);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 14px 12px;
+        position: relative;
+      }
+      .preview .p-cap {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-3);
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .days {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+      .day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        width: 40px;
+        position: relative;
+        z-index: 1;
+      }
+      .day .dlbl {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-3);
+      }
+      .cell {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .cell.done {
+        border: none;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .cell.d1 {
+        background: #34d399;
+      }
+      .cell.d2 {
+        background: #10b981;
+      }
+      .cell.d3 {
+        background: var(--green-600);
+      }
+      .cell.d4 {
+        background: var(--green-700);
+      }
+      .cell.today {
+        border: 2px solid var(--green-600);
+        background: var(--green-100);
+      }
+      .fillbar {
+        height: 6px;
+        border-radius: 3px;
+        background: var(--bg);
+        margin-top: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+      .fillbar .fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        border-radius: 3px;
+        background: linear-gradient(90deg, #34d399, var(--green-700));
+      }
+      .fill-marker {
+        position: absolute;
+        top: -4px;
+        bottom: -4px;
+        width: 2px;
+        background: var(--error);
+      }
+      .fill-note {
+        font-size: 10.5px;
+        margin-top: 6px;
+        font-weight: 600;
+      }
+
+      /* ===== Profile hero variants ===== */
+      .hero-a {
+        box-shadow:
+          0 1px 2px rgba(45, 42, 38, 0.05),
+          0 4px 14px rgba(45, 42, 38, 0.09);
+      }
+      .hero-a .avatar {
+        box-shadow:
+          0 0 0 2px var(--surface-muted),
+          0 0 0 3.5px var(--green-600);
+      }
+      .hero-b {
+        box-shadow: none;
+        border: 1px solid var(--border);
+        background: transparent;
+      }
+      .hero-b .name {
+        font-family: 'Literata', serif !important;
+        font-size: 20px;
+      }
+      .hero-c {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+      }
+      .hero-c .top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-bottom: 14px;
+      }
+      .hero-c .statgrid {
+        display: flex;
+        border-top: 1px solid var(--border);
+        padding-top: 12px;
+      }
+      .hero-c .stat {
+        flex: 1;
+        text-align: center;
+      }
+      .hero-c .stat .n {
+        font-family: 'Literata', serif !important;
+        font-size: 19px;
+        font-weight: 600;
+      }
+      .hero-c .stat .t {
+        font-size: 11px;
+        color: var(--text-3);
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        margin-top: 2px;
+      }
+
+      /* ===== Grouping diagrams ===== */
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .stack .s-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 11px 14px;
+        font-size: 13.5px;
+        font-weight: 700;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.06);
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .stack .s-card .inside {
+        font-weight: 500;
+        color: var(--text-2);
+        font-size: 12px;
+        margin-left: auto;
+        text-align: right;
+        line-height: 1.35;
+      }
+      .stack .s-card.quiet {
+        background: transparent;
+        box-shadow: none;
+        border: 1px dashed var(--border);
+        color: var(--text-2);
+      }
+
+      /* ===== Why blocks ===== */
+      .why {
+        background: #3d3833;
+        border-radius: 16px;
+        padding: 18px 20px;
+        margin-top: 18px;
+        color: #ddd8d2;
+        font-size: 13.5px;
+        line-height: 1.55;
+      }
+      .why h3 {
+        font-family: 'Literata', serif !important;
+        color: #f5f1ed;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .why .good::before {
+        content: '+ ';
+        color: #34d399;
+        font-weight: 700;
+      }
+      .why .bad::before {
+        content: '– ';
+        color: var(--gold-300);
+        font-weight: 700;
+      }
+      .why p {
+        margin-bottom: 7px;
+      }
+      .callout {
+        position: relative;
+      }
+      .callout::before {
+        content: attr(data-note);
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        z-index: 5;
+        background: var(--error);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 9px;
+        border-radius: 999px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        white-space: nowrap;
+      }
+      .callout.green::before {
+        background: var(--green-600);
+      }
+      code {
+        font-family: 'SF Mono', Menlo, monospace;
+        font-size: 0.92em;
+        color: #e8b94d;
+      }
+      .under {
+        background: #3d3833;
+        border-radius: 16px;
+        padding: 20px 22px;
+        color: #ddd8d2;
+        font-size: 13.5px;
+        line-height: 1.6;
+        max-width: 880px;
+        margin-top: 28px;
+      }
+      .under h3 {
+        font-family: 'Literata', serif !important;
+        color: #f5f1ed;
+        font-size: 17px;
+        margin-bottom: 10px;
+      }
+      .under li {
+        margin: 0 0 7px 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Settings v2 — what changes and why</h1>
+    <p class="sub">
+      <b>Part 1</b> is the fixes I'll make regardless — each shows before/after
+      with the reason (two are live animation demos). <b>Part 2</b> is the
+      design decisions that need your pick — A/B/C variants with my
+      recommendation tagged. All colors, fonts, radii are the real app tokens.
+    </p>
+
+    <!-- ════════════════════════ PART 1 — FIXES ════════════════════════ -->
+    <h2>Part 1 · Fixes (no decision needed — just confirming direction)</h2>
+
+    <div class="lane">
+      <!-- FIX 1: Reminders jank -->
+      <div class="col">
+        <span class="col-tag tag-before"
+          >Before — reminders snap (live demo)</span
+        >
+        <div class="panel">
+          <div class="section callout" data-note="hard mount/unmount">
+            <div class="section-h">
+              <span>🔔</span><span class="s-title">Notifications</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row" style="border-bottom: none">
+              <div class="tile">🔔</div>
+              <div class="grow">
+                <div class="lbl">Streak Reminders</div>
+                <div class="sublbl">Get nudged before a streak slips</div>
+              </div>
+              <div class="switch demo"></div>
+            </div>
+            <div class="demo-clip snap">
+              <div class="inset">
+                <div class="row">
+                  <div class="tile">🕐</div>
+                  <div class="grow"><div class="lbl">Reminder time</div></div>
+                  <div class="val">8:00 PM</div>
+                  <span class="chev">›</span>
+                </div>
+                <div class="row">
+                  <div class="tile gold">👑</div>
+                  <div class="grow">
+                    <div class="lbl">Custom times per habit</div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <h3>The jank</h3>
+          <p class="bad">
+            The whole inset (time row + upsell) is a raw conditional render — it
+            appears and vanishes in one frame, shoving everything below it.
+            Watch the demo: content <em>teleports</em>.
+          </p>
+          <p class="bad">
+            Same with the iOS time spinner when you tap the row.
+          </p>
+        </div>
+      </div>
+
+      <div class="col">
+        <span class="col-tag tag-after"
+          >After — animated expand (live demo)</span
+        >
+        <div class="panel">
+          <div class="section callout green" data-note="useExpandAnimation">
+            <div class="section-h">
+              <span>🔔</span><span class="s-title">Notifications</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row" style="border-bottom: none">
+              <div class="tile">🔔</div>
+              <div class="grow">
+                <div class="lbl">Streak Reminders</div>
+                <div class="sublbl">Get nudged before a streak slips</div>
+              </div>
+              <div class="switch demo"></div>
+            </div>
+            <div class="demo-clip ease">
+              <div class="inset">
+                <div class="row">
+                  <div class="tile">🕐</div>
+                  <div class="grow"><div class="lbl">Reminder time</div></div>
+                  <div class="val">8:00 PM</div>
+                  <span class="chev">›</span>
+                </div>
+                <div class="row">
+                  <div class="tile gold">👑</div>
+                  <div class="grow">
+                    <div class="lbl">Custom times per habit</div>
+                  </div>
+                  <span class="chev">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <h3>The fix</h3>
+          <p class="good">
+            Inset expands/collapses with the exact same motion as the section
+            accordions — <code>useExpandAnimation</code> + the measure-and-lock
+            pattern that already fixed the accordion close. Height + opacity
+            ease together; hint text crossfades instead of hard-swapping.
+          </p>
+          <p class="good">
+            Respects reduce-motion (the current sound picker doesn't — fixed in
+            the same pass).
+          </p>
+        </div>
+      </div>
+
+      <!-- FIX 2: preview fill -->
+      <div class="col">
+        <span class="col-tag tag-before">Before — preview fill lies</span>
+        <div class="panel">
+          <div
+            class="preview callout"
+            data-note="hardcoded 78%"
+            style="margin: 0"
+          >
+            <div class="p-cap">
+              <span>Your calendar</span
+              ><span style="color: var(--green-600)">● updates live</span>
+            </div>
+            <div class="days">
+              <div class="day">
+                <span class="dlbl">M</span>
+                <div class="cell done d1">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">T</span>
+                <div class="cell done d2">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">W</span>
+                <div class="cell done d3">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">T</span>
+                <div class="cell done d4">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">F</span>
+                <div class="cell today"></div>
+              </div>
+              <div class="day">
+                <span class="dlbl">S</span>
+                <div class="cell"></div>
+              </div>
+              <div class="day">
+                <span class="dlbl">S</span>
+                <div class="cell"></div>
+              </div>
+            </div>
+            <div class="fillbar">
+              <div class="fill" style="width: 78%"></div>
+              <div class="fill-marker" style="left: 92%"></div>
+            </div>
+            <div class="fill-note" style="color: var(--error)">
+              gradient stops at 78% — but the strongest preview day is 92%
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <h3>The bug</h3>
+          <p class="bad">
+            <code>CalendarPreview.tsx:47</code> hardcodes the strength fill to
+            <code>78%</code>. The preview week's own data peaks at strength 92 —
+            the fill visibly disagrees with the cells right above it.
+          </p>
+        </div>
+      </div>
+
+      <div class="col">
+        <span class="col-tag tag-after">After — fill derived from data</span>
+        <div class="panel">
+          <div
+            class="preview callout green"
+            data-note="derived: 92%"
+            style="margin: 0"
+          >
+            <div class="p-cap">
+              <span>Your calendar</span
+              ><span style="color: var(--green-600)">● updates live</span>
+            </div>
+            <div class="days">
+              <div class="day">
+                <span class="dlbl">M</span>
+                <div class="cell done d1">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">T</span>
+                <div class="cell done d2">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">W</span>
+                <div class="cell done d3">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">T</span>
+                <div class="cell done d4">✓</div>
+              </div>
+              <div class="day">
+                <span class="dlbl">F</span>
+                <div class="cell today"></div>
+              </div>
+              <div class="day">
+                <span class="dlbl">S</span>
+                <div class="cell"></div>
+              </div>
+              <div class="day">
+                <span class="dlbl">S</span>
+                <div class="cell"></div>
+              </div>
+            </div>
+            <div class="fillbar">
+              <div class="fill" style="width: 92%"></div>
+            </div>
+            <div class="fill-note" style="color: var(--green-700)">
+              fill ends exactly at the strongest preview day
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <h3>The fix</h3>
+          <p class="good">
+            Export the preview week's strength from
+            <code>CalendarPreviewWeek</code> and derive the fill width from it.
+            If the sample data ever changes, the fill stays honest
+            automatically.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="under">
+      <h3>Also in this pass (invisible, but it's most of the work)</h3>
+      <li>
+        <b>Delete dead code:</b> <code>AccountRow.tsx</code> →
+        <code>HighContrastAccountRow.tsx</code> →
+        <code>AccountRowContent.tsx</code> chain (~250 lines) is imported by
+        nothing — AccountPage replaced it with ProfileCard.
+      </li>
+      <li>
+        <b>Decompose 6 oversized files</b> (SettingsContent 295, StreakReminders
+        252, SettingsModal 209, SettingsRow 198, useAccountActions 125,
+        PremiumStatus) so the directory has <b>zero</b>
+        <code>eslint-disable max-lines</code>. Pure extraction — no behavior
+        change, import paths preserved.
+      </li>
+      <li>
+        <b>Sound picker</b> migrates its hand-rolled animation to
+        <code>useExpandAnimation</code> — one expansion primitive everywhere,
+        reduce-motion respected.
+      </li>
+      <li>
+        <b>Token honesty:</b> rename <code>settings.circle</code> →
+        <code>settings.dayMarker</code> (it colors both shapes); replace the
+        <code>['and','roid'].join('')</code> string hack with
+        <code>Platform.OS</code>.
+      </li>
+    </div>
+
+    <!-- ════════════════════════ PART 2 — DECISIONS ════════════════════════ -->
+    <h2>
+      Part 2 · Decision 1 — Sort order (7 modes, currently a separate full page)
+    </h2>
+    <p class="sub">
+      Today "Sort order" is the only picker that leaves the page — everything
+      else (theme, shape, icon) is inline. But sort has <b>7 modes</b> (Custom,
+      Name A→Z/Z→A, Strength ↑/↓, Streak ↑/↓), too many for one segmented
+      control.
+    </p>
+
+    <div class="lane">
+      <div class="col">
+        <span class="col-tag tag-option">A — inline expanding tray</span>
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>⚙</span><span class="s-title">Behavior</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row" style="border-bottom: none">
+              <div class="tile">⇅</div>
+              <div class="grow"><div class="lbl">Sort order</div></div>
+              <div class="val">Strength ↓</div>
+              <span class="chev">⌃</span>
+            </div>
+            <div class="inset">
+              <div class="row">
+                <div class="grow">
+                  <div class="lbl" style="font-weight: 500">Custom order</div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="grow">
+                  <div class="lbl" style="font-weight: 500">Name</div>
+                </div>
+                <div class="seg"><span>A→Z</span><span>Z→A</span></div>
+              </div>
+              <div class="row">
+                <div class="grow">
+                  <div
+                    class="lbl"
+                    style="font-weight: 600; color: var(--green-700)"
+                  >
+                    Strength
+                  </div>
+                </div>
+                <div class="seg"><span>↑</span><span class="on">↓</span></div>
+              </div>
+              <div class="row">
+                <div class="grow">
+                  <div class="lbl" style="font-weight: 500">Streak</div>
+                </div>
+                <div class="seg"><span>↑</span><span>↓</span></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="tile">🔊</div>
+              <div class="grow"><div class="lbl">Completion sound</div></div>
+              <div class="switch off"></div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Stays on the page; collapses 7 modes into 4 rows (family +
+            direction). Same inset language as the new reminders tray.
+          </p>
+          <p class="bad">
+            Adds ~190px to Behavior while open; tray-within-accordion needs
+            careful clipping.
+          </p>
+        </div>
+      </div>
+
+      <div class="col">
+        <span class="col-tag tag-option"
+          >B — segmented family + direction chip<span class="rec"
+            >RECOMMENDED</span
+          ></span
+        >
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>⚙</span><span class="s-title">Behavior</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row" style="flex-wrap: wrap">
+              <div class="tile">⇅</div>
+              <div class="grow">
+                <div class="lbl">Sort order</div>
+                <div class="sublbl">How habits are ordered</div>
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center">
+                <div class="seg">
+                  <span>Custom</span><span>Name</span
+                  ><span class="on">Strength</span><span>Streak</span>
+                </div>
+                <div class="seg"><span>↑</span><span class="on">↓</span></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="tile">🔊</div>
+              <div class="grow"><div class="lbl">Completion sound</div></div>
+              <div class="switch off"></div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Matches the Theme/Shape/Icon pattern exactly — one glance, zero
+            navigation. Direction chip only renders for non-Custom (animated in,
+            same expand primitive).
+          </p>
+          <p class="good">
+            Kills a whole modal view (<code>SortPicker</code> page + routing in
+            SettingsModal).
+          </p>
+          <p class="bad">
+            Two controls on one row is novel — direction chip needs to read as
+            related to the segmented control.
+          </p>
+        </div>
+      </div>
+
+      <div class="col">
+        <span class="col-tag tag-option">C — keep full page, restyle</span>
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>⚙</span><span class="s-title">Behavior</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row">
+              <div class="tile">⇅</div>
+              <div class="grow">
+                <div class="lbl">Sort order</div>
+                <div class="sublbl">How habits are ordered</div>
+              </div>
+              <div class="val">Strength ↓</div>
+              <span class="chev">›</span>
+            </div>
+            <div class="row">
+              <div class="tile">🔊</div>
+              <div class="grow"><div class="lbl">Completion sound</div></div>
+              <div class="switch off"></div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Cheapest; full page gives each mode a subtitle explaining it.
+          </p>
+          <p class="bad">
+            Stays the lone picker that navigates away — the inconsistency this
+            effort set out to fix.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Part 2 · Decision 2 — Profile hero treatment</h2>
+    <div class="lane">
+      <div class="col">
+        <span class="col-tag tag-option"
+          >A — layered depth<span class="rec">RECOMMENDED</span></span
+        >
+        <div class="panel">
+          <div class="hero hero-a">
+            <div class="avatar">A</div>
+            <div>
+              <div class="name">Andres</div>
+              <div class="stats">6 active · 23 flawless · 412 done</div>
+            </div>
+            <span class="chev">›</span>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Two-layer shadow + hairline avatar ring — quiet depth, no gimmicks.
+            Matches the premium-not-cheap direction (layered depth over flat
+            shadows).
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option">B — flat minimal, serif name</span>
+        <div class="panel">
+          <div class="hero hero-b">
+            <div class="avatar">A</div>
+            <div>
+              <div class="name">Andres</div>
+              <div class="stats">6 active · 23 flawless · 412 done</div>
+            </div>
+            <span class="chev">›</span>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Typography does the work — Literata name, hairline border, no
+            elevation.
+          </p>
+          <p class="bad">
+            Borderless cards elsewhere make this read as "disabled" next to
+            them.
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option">C — stats-integrated</span>
+        <div class="panel">
+          <div class="hero hero-c">
+            <div class="top">
+              <div class="avatar">A</div>
+              <div>
+                <div class="name">Andres</div>
+                <div class="stats">Member since March</div>
+              </div>
+              <span class="chev">›</span>
+            </div>
+            <div class="statgrid">
+              <div class="stat">
+                <div class="n">6</div>
+                <div class="t">Active</div>
+              </div>
+              <div class="stat">
+                <div class="n">23</div>
+                <div class="t">Flawless</div>
+              </div>
+              <div class="stat">
+                <div class="n">412</div>
+                <div class="t">Done</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Stats get serif numerals and room to breathe — most "dashboard"
+            feel.
+          </p>
+          <p class="bad">
+            Tallest option; duplicates what the Account page already shows.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Part 2 · Decision 3 — Section grouping (currently 7 stacked cards)</h2>
+    <div class="lane">
+      <div class="col">
+        <span class="col-tag tag-option">A — keep 7 cards</span>
+        <div class="panel">
+          <div class="stack">
+            <div class="s-card">👤 Profile</div>
+            <div class="s-card">◐ Appearance</div>
+            <div class="s-card">⚙ Behavior</div>
+            <div class="s-card">🗂 Habit Management</div>
+            <div class="s-card">🔔 Notifications</div>
+            <div class="s-card">♥ Support</div>
+            <div class="s-card">ℹ About</div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">Zero migration.</p>
+          <p class="bad">
+            Two of seven accordions (Support, About) hide 3–4 static links each
+            — collapse machinery with no payoff.
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option"
+          >B — merge Habit Mgmt into Behavior (6 cards)<span class="rec"
+            >RECOMMENDED</span
+          ></span
+        >
+        <div class="panel">
+          <div class="stack">
+            <div class="s-card">👤 Profile</div>
+            <div class="s-card">◐ Appearance</div>
+            <div class="s-card">
+              ⚙ Behavior
+              <span class="inside">+ Archived habits<br />+ Export data</span>
+            </div>
+            <div class="s-card">🔔 Notifications</div>
+            <div class="s-card quiet">♥ Support — static, no accordion</div>
+            <div class="s-card quiet">ℹ About — static, no accordion</div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Habit Management is 2 rows pretending to be a category — they're
+            behavior. Support/About become flat label groups (the
+            <code>StaticSectionLabel</code> component already exists), so
+            chevrons only appear where collapsing earns its keep.
+          </p>
+          <p class="bad">
+            Persisted accordion-state keys need a tiny migration.
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option">C — aggressive merge (4 cards)</span>
+        <div class="panel">
+          <div class="stack">
+            <div class="s-card">👤 Profile</div>
+            <div class="s-card">◐ Appearance</div>
+            <div class="s-card">
+              ⚙ Behavior
+              <span class="inside"
+                >+ archived + export<br />+ notifications</span
+              >
+            </div>
+            <div class="s-card">
+              ℹ Support &amp; About
+              <span class="inside"
+                >rate · share · feedback<br />privacy · terms · version</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">Shortest page.</p>
+          <p class="bad">
+            Notifications buried inside Behavior hurts findability — reminders
+            are the #1 reason to open settings.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h2>
+      Part 2 · Decision 4 — Premium upsell row placement (presentation only —
+      single tier, no new gating)
+    </h2>
+    <div class="lane">
+      <div class="col">
+        <span class="col-tag tag-option">A — current spot, restyled</span>
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>🔔</span><span class="s-title">Notifications</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row" style="border-bottom: none">
+              <div class="tile">🔔</div>
+              <div class="grow"><div class="lbl">Streak Reminders</div></div>
+              <div class="switch"></div>
+            </div>
+            <div class="inset">
+              <div class="row">
+                <div class="tile">🕐</div>
+                <div class="grow"><div class="lbl">Reminder time</div></div>
+                <div class="val">8:00 PM</div>
+              </div>
+              <div class="row">
+                <div class="tile gold">👑</div>
+                <div class="grow">
+                  <div class="lbl">Custom times per habit</div>
+                  <div class="sublbl">Each habit keeps its own schedule</div>
+                </div>
+                <span class="chev">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Contextual — appears exactly where the limitation is felt.
+          </p>
+          <p class="bad">
+            Crown inside a utility tray reads as gating pressure.
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option"
+          >B — quiet text-link row<span class="rec">RECOMMENDED</span></span
+        >
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>🔔</span><span class="s-title">Notifications</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row" style="border-bottom: none">
+              <div class="tile">🔔</div>
+              <div class="grow"><div class="lbl">Streak Reminders</div></div>
+              <div class="switch"></div>
+            </div>
+            <div class="inset">
+              <div class="row">
+                <div class="tile">🕐</div>
+                <div class="grow"><div class="lbl">Reminder time</div></div>
+                <div class="val">8:00 PM</div>
+              </div>
+              <div class="row" style="justify-content: center">
+                <div class="sublbl" style="text-align: center">
+                  Want a different time per habit?
+                  <span style="color: var(--green-700); font-weight: 700"
+                    >Learn more →</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            No crown, no badge — a sentence. Fits single-tier positioning (sell
+            membership, never imply gated features).
+          </p>
+          <p class="bad">Less visually prominent → fewer taps.</p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option">C — section footer card</span>
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>🔔</span><span class="s-title">Notifications</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="row">
+              <div class="tile">🔔</div>
+              <div class="grow"><div class="lbl">Streak Reminders</div></div>
+              <div class="switch"></div>
+            </div>
+          </div>
+          <div class="section" style="border: 1.5px solid var(--gold-300)">
+            <div class="row" style="border-bottom: none">
+              <div class="tile gold">👑</div>
+              <div class="grow">
+                <div class="lbl" style="font-family: 'Literata', serif">
+                  Per-habit schedules
+                </div>
+                <div class="sublbl">
+                  Membership keeps every habit on its own clock
+                </div>
+              </div>
+              <span class="chev">›</span>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">Visible without invading the utility tray.</p>
+          <p class="bad">A second card just for one pitch adds page weight.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>Part 2 · Decision 5 — Calendar preview placement in Appearance</h2>
+    <div class="lane">
+      <div class="col">
+        <span class="col-tag tag-option"
+          >A — scrolls with content (today)<span class="rec"
+            >RECOMMENDED</span
+          ></span
+        >
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>◐</span><span class="s-title">Appearance</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div class="preview">
+              <div class="p-cap">
+                <span>Your calendar</span
+                ><span style="color: var(--green-600)">● updates live</span>
+              </div>
+              <div class="days">
+                <div class="day">
+                  <span class="dlbl">M</span>
+                  <div class="cell done d1">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">T</span>
+                  <div class="cell done d2">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">W</span>
+                  <div class="cell done d3">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">T</span>
+                  <div class="cell done d4">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">F</span>
+                  <div class="cell today"></div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">S</span>
+                  <div class="cell"></div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">S</span>
+                  <div class="cell"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="tile">☾</div>
+              <div class="grow"><div class="lbl">Theme</div></div>
+              <div class="seg">
+                <span>Light</span><span>Dark</span
+                ><span class="on">System</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="tile">◻</div>
+              <div class="grow"><div class="lbl">Day marker shape</div></div>
+              <div class="seg">
+                <span class="on">Square</span><span>Circle</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Simple, already shipped, no clipping conflicts. The 3–4 rows nearest
+            the preview are the ones it demonstrates.
+          </p>
+        </div>
+      </div>
+      <div class="col">
+        <span class="col-tag tag-option"
+          >B — pinned above rows while section scrolls</span
+        >
+        <div class="panel">
+          <div class="section">
+            <div class="section-h">
+              <span>◐</span><span class="s-title">Appearance</span
+              ><span class="s-chev">⌃</span>
+            </div>
+            <div
+              class="preview"
+              style="
+                box-shadow: 0 6px 14px rgba(45, 42, 38, 0.12);
+                border-color: var(--green-600);
+              "
+            >
+              <div class="p-cap">
+                <span>Your calendar — pinned</span
+                ><span style="color: var(--green-600)">● updates live</span>
+              </div>
+              <div class="days">
+                <div class="day">
+                  <span class="dlbl">M</span>
+                  <div class="cell done d1">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">T</span>
+                  <div class="cell done d2">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">W</span>
+                  <div class="cell done d3">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">T</span>
+                  <div class="cell done d4">✓</div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">F</span>
+                  <div class="cell today"></div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">S</span>
+                  <div class="cell"></div>
+                </div>
+                <div class="day">
+                  <span class="dlbl">S</span>
+                  <div class="cell"></div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="opacity: 0.55">
+              <div class="tile">▤</div>
+              <div class="grow"><div class="lbl">Compact habit cards</div></div>
+              <div class="switch off"></div>
+            </div>
+            <div class="row" style="opacity: 0.55">
+              <div class="tile">☺</div>
+              <div class="grow"><div class="lbl">High contrast</div></div>
+              <div class="switch off"></div>
+            </div>
+          </div>
+        </div>
+        <div class="why">
+          <p class="good">
+            Preview stays visible while adjusting the last rows (compact,
+            high-contrast).
+          </p>
+          <p class="bad">
+            Sticky-inside-accordion fights the height-clip animation — the
+            riskiest change on this page for marginal gain.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

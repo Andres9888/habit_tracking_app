@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Tracking App — Target State After Consistency Sweep</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary-100: #D1FAE5; --primary-300: #6EE7B7; --primary-400: #34D399;
+    --primary-500: #10B981; --primary-600: #059669; --primary-700: #047857;
+    --gray-50: #FAF8F5; --gray-100: #F5F1ED; --gray-200: #DDD8D2;
+    --gray-300: #C4BFB9; --gray-400: #A8A29E; --gray-500: #6B6560;
+    --gray-600: #57534E; --gray-700: #3D3833; --gray-800: #2D2A26; --gray-900: #1A1816;
+    --streak-300: #E8B94D; --streak-500: #8B6208;
+    --background: #F5F1ED; --card: #EDEAE5; --surface: #EDEAE5;
+    --border: #DDD8D2; --text-primary: #2D2A26; --text-secondary: #6B6560;
+    --text-tertiary: #6E6660; --text-inverse: #FFFFFF; --shadow-color: #2D2A26;
+    --space-xs: 4px; --space-sm: 8px; --space-md: 12px; --space-base: 16px;
+    --space-lg: 24px; --space-xl: 32px;
+    --radius-xs: 4px; --radius-chip: 8px; --radius-button: 12px;
+    --radius-card: 16px; --radius-modal: 24px; --radius-full: 9999px;
+    --font-display: 'Literata', Georgia, serif;
+    --font-body: 'DM Sans', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+  .dark-mode {
+    --background: #111827; --card: #1F2937; --surface: #1F2937;
+    --border: #374151; --text-primary: #F9FAFB; --text-secondary: #9CA3AF;
+    --text-tertiary: #8E95A2; --text-inverse: #111827;
+    --primary-100: #064E3B; --primary-300: #059669; --primary-400: #10B981;
+    --primary-500: #34D399; --primary-600: #6EE7B7; --primary-700: #A7F3D0;
+    --shadow-color: #000000;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--font-body) !important; background: #1a1a2e !important;
+    min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
+    padding: 32px 16px; gap: 32px; }
+  .phone-frame { width: 390px; height: 844px; border-radius: 44px; overflow: hidden;
+    position: relative; box-shadow: 0 0 0 3px #333, 0 0 0 6px #111, 0 25px 50px rgba(0,0,0,0.5);
+    flex-shrink: 0; }
+  .phone-screen { width: 100%; height: 100%; background: var(--background);
+    overflow-y: auto; overflow-x: hidden; transition: background 0.4s ease; }
+  .phone-screen::-webkit-scrollbar { display: none; }
+  .status-bar { height: 54px; padding: 14px 28px 0; display: flex; justify-content: space-between;
+    align-items: center; color: var(--text-primary); font-size: 15px; font-weight: 600;
+    font-family: var(--font-body); transition: color 0.4s ease; }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+  .calendar-section { padding: 8px var(--space-base) 0; }
+  .greeting-row { display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: var(--space-sm); }
+  .greeting-text { font-family: var(--font-display); font-size: 22px; font-weight: 700;
+    color: var(--text-primary); letter-spacing: -0.35px; transition: color 0.4s ease; }
+  .progress-text { font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    color: var(--primary-600); transition: color 0.4s ease; }
+  .week-nav { display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: var(--space-sm); }
+  .week-label { font-family: var(--font-body); font-size: 14px; font-weight: 500;
+    color: var(--text-secondary); transition: color 0.4s ease; }
+  .nav-arrows { display: flex; gap: var(--space-sm); }
+  .nav-btn { width: 28px; height: 28px; border-radius: var(--radius-full);
+    border: 1px solid var(--border); background: var(--card); display: flex;
+    align-items: center; justify-content: center; cursor: pointer;
+    color: var(--text-secondary); transition: all 0.2s ease; }
+  .nav-btn:hover { background: var(--primary-100); border-color: var(--primary-300);
+    color: var(--primary-600); }
+  .day-strip { display: flex; gap: var(--space-xs); margin-bottom: var(--space-base); }
+  .day-cell { flex: 1; display: flex; flex-direction: column; align-items: center;
+    padding: var(--space-sm) var(--space-xs); border-radius: var(--radius-button);
+    cursor: pointer; transition: all 0.2s ease; border: 1.5px solid transparent; }
+  .day-cell:hover { background: var(--card); }
+  .day-cell.today { background: var(--primary-100); border-color: var(--primary-300); }
+  .day-name { font-size: 11px; font-weight: 500; color: var(--text-tertiary);
+    margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    transition: color 0.4s ease; }
+  .day-cell.today .day-name { color: var(--primary-600); font-weight: 600; }
+  .day-num { font-family: var(--font-mono); font-size: 16px; font-weight: 500;
+    color: var(--text-primary); margin-bottom: 6px; transition: color 0.4s ease; }
+  .day-cell.today .day-num { color: var(--primary-700); font-weight: 700; }
+  .completion-dots { display: flex; gap: 3px; height: 6px; }
+  .dot { width: 6px; height: 6px; border-radius: var(--radius-full);
+    background: var(--border); transition: background 0.3s ease; }
+  .dot.completed { background: var(--primary-500); }
+  .dot.partial { background: var(--primary-300); }
+  .habits-list { padding: 0 var(--space-base); display: flex; flex-direction: column;
+    gap: var(--space-sm); }
+  .habit-card { background: var(--card); border-radius: var(--radius-card);
+    padding: var(--space-base); display: flex; align-items: center; gap: var(--space-md);
+    min-height: 76px; cursor: pointer; transition: all 0.2s ease;
+    box-shadow: 0 2px 8px 0 rgba(45, 42, 38, 0.06);
+    border: 1px solid var(--border); position: relative; overflow: hidden; }
+  .dark-mode .habit-card { box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15); }
+  .habit-card:hover { transform: translateY(-2px);
+    box-shadow: 0 4px 16px 0 rgba(45, 42, 38, 0.08); }
+  .dark-mode .habit-card:hover { box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.25); }
+  .habit-card:active { transform: scale(0.97); }
+  .habit-emoji { width: 44px; height: 44px; border-radius: var(--radius-button);
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    flex-shrink: 0; }
+  .habit-info { flex: 1; min-width: 0; }
+  .habit-name { font-size: 17px; font-weight: 600; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    transition: color 0.4s ease; }
+  .habit-meta { font-size: 13px; font-weight: 500; color: var(--text-secondary);
+    margin-top: var(--space-xs); display: flex; align-items: center; gap: var(--space-sm);
+    transition: color 0.4s ease; }
+  .streak-badge { display: inline-flex; align-items: center; gap: 3px;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+    color: var(--streak-500); background: rgba(139, 98, 8, 0.08);
+    padding: 2px 8px; border-radius: var(--radius-full); }
+  .dark-mode .streak-badge { color: var(--streak-300); background: rgba(232, 185, 77, 0.12); }
+  .strength-bar-wrap { height: 4px; background: var(--border); border-radius: var(--radius-full);
+    overflow: hidden; margin-top: 6px; width: 100%; }
+  .strength-bar { height: 100%; border-radius: var(--radius-full);
+    background: var(--primary-500); transition: width 0.6s ease; }
+  .check-circle { width: 32px; height: 32px; border-radius: var(--radius-full);
+    border: 2px solid var(--border); display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; cursor: pointer; transition: all 0.15s ease; }
+  .check-circle:hover { border-color: var(--primary-400); background: var(--primary-100); }
+  .check-circle.checked { background: var(--primary-500); border-color: var(--primary-500);
+    color: white; }
+  .bottom-bar { position: sticky; bottom: 0; left: 0; right: 0;
+    padding: var(--space-sm) var(--space-base) 34px; display: flex;
+    justify-content: center; align-items: center;
+    background: linear-gradient(transparent, var(--background) 30%);
+    transition: background 0.4s ease; }
+  .fab { width: 64px; height: 64px; border-radius: var(--radius-full);
+    background: var(--primary-600); display: flex; align-items: center;
+    justify-content: center; cursor: pointer; position: relative;
+    box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3), 0 2px 4px rgba(5, 150, 105, 0.15);
+    transition: transform 0.15s ease; }
+  .dark-mode .fab { background: #059669;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35), 0 2px 4px rgba(16, 185, 129, 0.2); }
+  .fab:hover { transform: scale(1.05); }
+  .fab:active { transform: scale(0.95); }
+  .progress-ring { position: absolute; inset: -4px; border-radius: var(--radius-full); }
+  .progress-ring svg { transform: rotate(-90deg); }
+  .mockup-wrapper { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap;
+    justify-content: center; }
+  .phone-label { text-align: center; margin-bottom: 16px; }
+  .phone-label h3 { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600;
+    color: #e5e7eb; margin-bottom: 4px; }
+  .phone-label p { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6b7280; }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-entrance { animation: fadeInUp 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    opacity: 0; }
+  .delay-1 { animation-delay: 0ms; } .delay-2 { animation-delay: 60ms; }
+  .delay-3 { animation-delay: 120ms; } .delay-4 { animation-delay: 180ms; }
+  .delay-5 { animation-delay: 240ms; }
+  .legend-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 24px; width: 320px; flex-shrink: 0; }
+  .legend-panel h4 { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600;
+    color: #e5e7eb; margin-bottom: 16px; }
+  .legend-item { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .legend-swatch { width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.1); }
+  .legend-text { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #9ca3af;
+    line-height: 1.4; }
+  .legend-text strong { color: #e5e7eb; font-weight: 600; }
+  .legend-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 16px 0; }
+  .legend-section-label { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3);
+    margin-bottom: 12px; }
+  .fix-badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
+    letter-spacing: 0.5px; }
+  .fix-badge.fixed { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+  .fix-badge.was { background: rgba(239, 68, 68, 0.15); color: #f87171; }
+</style>
+</head>
+<body>
+<div class="mockup-wrapper">
+  <!-- Light Mode Phone -->
+  <div>
+    <div class="phone-label">
+      <h3>Light Mode — Target State</h3>
+      <p>All tokens applied, shadows unified</p>
+    </div>
+    <div class="phone-frame">
+      <div class="phone-screen">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M1 4h2v8H1V4zm4-2h2v10H5V2zm4-2h2v12H9V0zm4 3h2v9h-2V3z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="23" y="4" width="2" height="4" rx="1"/><rect x="2" y="3" width="14" height="6" rx="1"/></svg>
+          </div>
+        </div>
+        <div class="calendar-section animate-entrance delay-1">
+          <div class="greeting-row">
+            <span class="greeting-text">Good morning</span>
+            <span class="progress-text">2/5 done</span>
+          </div>
+          <div class="week-nav">
+            <span class="week-label">This Week</span>
+            <div class="nav-arrows">
+              <div class="nav-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+              <div class="nav-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+            </div>
+          </div>
+          <div class="day-strip">
+            <div class="day-cell"><span class="day-name">Mon</span><span class="day-num">24</span><div class="completion-dots"><div class="dot completed"></div><div class="dot completed"></div><div class="dot completed"></div></div></div>
+            <div class="day-cell"><span class="day-name">Tue</span><span class="day-num">25</span><div class="completion-dots"><div class="dot completed"></div><div class="dot completed"></div><div class="dot partial"></div></div></div>
+            <div class="day-cell"><span class="day-name">Wed</span><span class="day-num">26</span><div class="completion-dots"><div class="dot completed"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="day-cell today"><span class="day-name">Thu</span><span class="day-num">27</span><div class="completion-dots"><div class="dot completed"></div><div class="dot completed"></div><div class="dot"></div></div></div>
+            <div class="day-cell"><span class="day-name">Fri</span><span class="day-num">28</span><div class="completion-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="day-cell"><span class="day-name">Sat</span><span class="day-num">1</span><div class="completion-dots"><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="day-cell"><span class="day-name">Sun</span><span class="day-num">2</span><div class="completion-dots"><div class="dot"></div><div class="dot"></div></div></div>
+          </div>
+        </div>
+        <div class="habits-list">
+          <div class="habit-card animate-entrance delay-2">
+            <div class="habit-emoji" style="background: rgba(16,185,129,0.1);">&#x1F9D8;</div>
+            <div class="habit-info"><div class="habit-name">Morning Meditation</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 14 days</span><span>10 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 72%;"></div></div></div>
+            <div class="check-circle checked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+          </div>
+          <div class="habit-card animate-entrance delay-3">
+            <div class="habit-emoji" style="background: rgba(59,130,246,0.1);">&#x1F4D6;</div>
+            <div class="habit-info"><div class="habit-name">Read 20 Pages</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 7 days</span><span>20 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 45%; background: #0d9488;"></div></div></div>
+            <div class="check-circle checked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+          </div>
+          <div class="habit-card animate-entrance delay-4">
+            <div class="habit-emoji" style="background: rgba(245,158,11,0.1);">&#x1F4AA;</div>
+            <div class="habit-info"><div class="habit-name">Exercise</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 3 days</span><span>30 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 28%; background: #4D7A0A;"></div></div></div>
+            <div class="check-circle" data-interactive="true"></div>
+          </div>
+          <div class="habit-card animate-entrance delay-5">
+            <div class="habit-emoji" style="background: rgba(139,92,246,0.1);">&#x270D;&#xFE0F;</div>
+            <div class="habit-info"><div class="habit-name">Journal Entry</div><div class="habit-meta"><span>5 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 15%; background: #4D7A0A;"></div></div></div>
+            <div class="check-circle" data-interactive="true"></div>
+          </div>
+          <div class="habit-card animate-entrance delay-5">
+            <div class="habit-emoji" style="background: rgba(236,72,153,0.1);">&#x1F4A7;</div>
+            <div class="habit-info"><div class="habit-name">Drink 8 Glasses of Water</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 21 days</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 88%; background: #0891b2;"></div></div></div>
+            <div class="check-circle" data-interactive="true"></div>
+          </div>
+          <div style="height: 80px;"></div>
+        </div>
+        <div class="bottom-bar">
+          <div class="fab">
+            <svg class="progress-ring" width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="33" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/><circle cx="36" cy="36" r="33" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-dasharray="207" stroke-dashoffset="83" stroke-linecap="round"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dark Mode Phone -->
+  <div>
+    <div class="phone-label">
+      <h3>Dark Mode — Target State</h3>
+      <p>Theme-aware colors, no hardcoded hex</p>
+    </div>
+    <div class="phone-frame">
+      <div class="phone-screen dark-mode">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <svg width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><path d="M1 4h2v8H1V4zm4-2h2v10H5V2zm4-2h2v12H9V0zm4 3h2v9h-2V3z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="22" height="10" rx="2" stroke="currentColor" stroke-width="1" fill="none"/><rect x="23" y="4" width="2" height="4" rx="1"/><rect x="2" y="3" width="14" height="6" rx="1"/></svg>
+          </div>
+        </div>
+        <div class="calendar-section animate-entrance delay-1">
+          <div class="greeting-row">
+            <span class="greeting-text">Good morning</span>
+            <span class="progress-text">2/5 done</span>
+          </div>
+          <div class="week-nav">
+            <span class="week-label">This Week</span>
+            <div class="nav-arrows">
+              <div class="nav-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></div>
+              <div class="nav-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+            </div>
+          </div>
+          <div class="day-strip">
+            <div class="day-cell"><span class="day-name">Mon</span><span class="day-num">24</span><div class="completion-dots"><div class="dot completed"></div><div class="dot completed"></div><div class="dot completed"></div></div></div>
+            <div class="day-cell"><span class="day-name">Tue</span><span class="day-num">25</span><div class="completion-dots"><div class="dot completed"></div><div class="dot completed"></div><div class="dot partial"></div></div></div>
+            <div class="day-cell"><span class="day-name">Wed</span><span class="day-num">26</span><div class="completion-dots"><div class="dot completed"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="day-cell today"><span class="day-name">Thu</span><span class="day-num">27</span><div class="completion-dots"><div class="dot completed"></div><div class="dot completed"></div><div class="dot"></div></div></div>
+            <div class="day-cell"><span class="day-name">Fri</span><span class="day-num">28</span><div class="completion-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="day-cell"><span class="day-name">Sat</span><span class="day-num">1</span><div class="completion-dots"><div class="dot"></div><div class="dot"></div></div></div>
+            <div class="day-cell"><span class="day-name">Sun</span><span class="day-num">2</span><div class="completion-dots"><div class="dot"></div><div class="dot"></div></div></div>
+          </div>
+        </div>
+        <div class="habits-list">
+          <div class="habit-card animate-entrance delay-2">
+            <div class="habit-emoji" style="background: rgba(16,185,129,0.15);">&#x1F9D8;</div>
+            <div class="habit-info"><div class="habit-name">Morning Meditation</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 14 days</span><span>10 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 72%;"></div></div></div>
+            <div class="check-circle checked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+          </div>
+          <div class="habit-card animate-entrance delay-3">
+            <div class="habit-emoji" style="background: rgba(59,130,246,0.15);">&#x1F4D6;</div>
+            <div class="habit-info"><div class="habit-name">Read 20 Pages</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 7 days</span><span>20 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 45%; background: #34d399;"></div></div></div>
+            <div class="check-circle checked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+          </div>
+          <div class="habit-card animate-entrance delay-4">
+            <div class="habit-emoji" style="background: rgba(245,158,11,0.15);">&#x1F4AA;</div>
+            <div class="habit-info"><div class="habit-name">Exercise</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 3 days</span><span>30 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 28%; background: #6EE7B7;"></div></div></div>
+            <div class="check-circle" data-interactive="true"></div>
+          </div>
+          <div class="habit-card animate-entrance delay-5">
+            <div class="habit-emoji" style="background: rgba(139,92,246,0.15);">&#x270D;&#xFE0F;</div>
+            <div class="habit-info"><div class="habit-name">Journal Entry</div><div class="habit-meta"><span>5 min</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 15%; background: #6EE7B7;"></div></div></div>
+            <div class="check-circle" data-interactive="true"></div>
+          </div>
+          <div class="habit-card animate-entrance delay-5">
+            <div class="habit-emoji" style="background: rgba(236,72,153,0.15);">&#x1F4A7;</div>
+            <div class="habit-info"><div class="habit-name">Drink 8 Glasses of Water</div><div class="habit-meta"><span class="streak-badge">&#x1F525; 21 days</span></div><div class="strength-bar-wrap"><div class="strength-bar" style="width: 88%; background: #22d3ee;"></div></div></div>
+            <div class="check-circle" data-interactive="true"></div>
+          </div>
+          <div style="height: 80px;"></div>
+        </div>
+        <div class="bottom-bar">
+          <div class="fab">
+            <svg class="progress-ring" width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="33" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="3"/><circle cx="36" cy="36" r="33" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="3" stroke-dasharray="207" stroke-dashoffset="83" stroke-linecap="round"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend Panel -->
+  <div class="legend-panel" style="align-self: stretch;">
+    <h4>Design Token Reference</h4>
+    <div class="legend-section-label">Color Tokens Applied</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #F5F1ED;"></div><div class="legend-text"><strong>background</strong><br/>#F5F1ED / #111827</div></div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #EDEAE5;"></div><div class="legend-text"><strong>card</strong><br/>#EDEAE5 / #1F2937</div></div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #DDD8D2;"></div><div class="legend-text"><strong>border</strong><br/>#DDD8D2 / #374151</div></div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #059669;"></div><div class="legend-text"><strong>primary.600</strong><br/>Buttons, FAB, CTA</div></div>
+    <div class="legend-divider"></div>
+    <div class="legend-section-label">Shadow Fix</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: #2D2A26;"></div><div class="legend-text"><strong>Unified: #2D2A26</strong><br/><span class="fix-badge was">was</span> #000, #1c1917, #059669...<br/><span class="fix-badge fixed">fixed</span> Single warm shadow</div></div>
+    <div class="legend-divider"></div>
+    <div class="legend-section-label">Spacing Grid (8px)</div>
+    <div class="legend-item"><div class="legend-swatch" style="background: transparent; border: 2px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono'; font-size: 9px; color: #9ca3af;">8</div><div class="legend-text"><strong>Card gap: 8px</strong><br/><span class="fix-badge was">was</span> 6px (off-grid)<br/><span class="fix-badge fixed">fixed</span> spacing.sm</div></div>
+    <div class="legend-divider"></div>
+    <div class="legend-section-label">Typography</div>
+    <div class="legend-item" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+      <div class="legend-text" style="font-family: 'Literata'; font-size: 16px; color: #e5e7eb; font-weight: 700;">Literata — Headings</div>
+      <div class="legend-text" style="font-family: 'DM Sans'; font-size: 13px; color: #e5e7eb;">DM Sans — Body text</div>
+      <div class="legend-text" style="font-family: 'JetBrains Mono'; font-size: 11px; color: #34d399;">JetBrains Mono — Data</div>
+    </div>
+    <div class="legend-divider"></div>
+    <div class="legend-section-label">Animation Tokens</div>
+    <div class="legend-text" style="margin-bottom: 8px;"><strong>Entry:</strong> 280ms + springify<br/><strong>Spring:</strong> damping: 18, stiffness: 150<br/><strong>Stagger:</strong> 60ms/item, max 5</div>
+    <div class="legend-text"><span class="fix-badge was">was</span> damping: 3, 8, 10, 12, 24, 28<br/><span class="fix-badge fixed">fixed</span> All consolidated to theme</div>
+    <div class="legend-divider"></div>
+    <div class="legend-section-label">Haptic Feedback</div>
+    <div class="legend-text"><strong>tap</strong> — day cells, buttons<br/><strong>selection</strong> — filter chips<br/><strong>celebration</strong> — habit completion<br/><span class="fix-badge fixed">added</span> CalendarTimeline, filters</div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-interactive]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      var isChecked = this.classList.contains('checked');
+      if (isChecked) {
+        this.classList.remove('checked');
+        this.textContent = '';
+      } else {
+        this.classList.add('checked');
+        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', '16');
+        svg.setAttribute('height', '16');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'white');
+        svg.setAttribute('stroke-width', '3');
+        var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', 'M20 6L9 17l-5-5');
+        svg.appendChild(path);
+        this.textContent = '';
+        this.appendChild(svg);
+        this.style.transform = 'scale(1.2)';
+        var self = this;
+        setTimeout(function() { self.style.transform = 'scale(1)'; }, 150);
+      }
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Goal Adjust Sheet — Before / After</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --card: #edeae5;
+      --surface: #faf8f5;
+      --border: #ddd8d2;
+      --text: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --green-600: #059669;
+      --green-700: #047857;
+      --green-100: #d1fae5;
+      --green-50: #ecfdf5;
+      --error: #b53030;
+      --shadow: rgba(45, 42, 38, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1a1816;
+      color: #f5f1ed;
+      padding: 48px 32px 96px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-family: 'Literata', serif;
+      font-size: 30px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #c4bfb7;
+      font-size: 15px;
+      line-height: 1.5;
+      max-width: 720px;
+      margin: 10px auto 0;
+    }
+
+    .scenario {
+      display: inline-block;
+      margin-top: 16px;
+      background: #3d3833;
+      color: #ddd8d2;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    .lane {
+      display: flex;
+      gap: 36px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 40px;
+      align-items: flex-start;
+    }
+
+    .col {
+      width: 390px;
+    }
+
+    .col-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .tag-before {
+      background: #524d47;
+      color: #ddd8d2;
+    }
+
+    .tag-after {
+      background: var(--green-600);
+      color: #fff;
+    }
+
+    .issues,
+    .fixes {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #a39c93;
+      margin-bottom: 16px;
+      padding-left: 4px;
+    }
+
+    .issues li,
+    .fixes li {
+      margin-bottom: 6px;
+    }
+
+    .issues strong {
+      color: #e8b4b4;
+    }
+
+    .fixes strong {
+      color: #6ee7b7;
+    }
+
+    /* Phone shell */
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--bg);
+      border-radius: 48px;
+      overflow: hidden;
+      position: relative;
+      box-shadow:
+        0 0 0 3px #2d2a26,
+        0 0 0 6px #3d3833,
+        0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      z-index: 5;
+    }
+
+    .screen-dim {
+      position: absolute;
+      inset: 0;
+      background: rgba(20, 18, 16, 0.52);
+      z-index: 10;
+    }
+
+    .sheet {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      background: var(--card);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 12px 20px 34px;
+      box-shadow: 0 -8px 32px rgba(45, 42, 38, 0.12);
+    }
+
+    .handle {
+      width: 40px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--border);
+      margin: 0 auto 16px;
+    }
+
+    .sheet-title {
+      font-family: 'Literata', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .sheet-caption {
+      font-size: 12px;
+      color: var(--text-2);
+      text-align: center;
+      margin-top: 4px;
+      margin-bottom: 18px;
+    }
+
+    /* BEFORE — current implementation */
+    .before-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .before-chip-wrap {
+      position: relative;
+      margin-top: 10px;
+    }
+
+    .before-chip-wrap.no-badge {
+      margin-top: 0;
+    }
+
+    .before-recommended {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--green-600);
+      letter-spacing: 0.2px;
+      /* Simulates collision with chip label */
+      z-index: 2;
+    }
+
+    .before-chip {
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .before-chip.selected {
+      border-color: var(--green-600);
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--green-700);
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--green-600);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      margin-bottom: 10px;
+    }
+
+    .btn-remove-before {
+      width: 100%;
+      background: transparent;
+      color: var(--error);
+      border: 1.5px solid rgba(181, 48, 48, 0.4);
+      border-radius: 14px;
+      padding: 13px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+    }
+
+    /* AFTER — improved */
+    .progress-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 14px 0 18px;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .progress-count {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .progress-count span {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-2);
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-2);
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 62%;
+      background: var(--green-600);
+      border-radius: 999px;
+    }
+
+    .after-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .after-chip {
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 10px 8px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, transform 0.1s;
+      user-select: none;
+    }
+
+    .after-chip:hover {
+      transform: translateY(-1px);
+    }
+
+    .after-chip.selected {
+      border-color: var(--green-600);
+      background: var(--green-50);
+    }
+
+    .after-chip .days {
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .after-chip.selected .days {
+      color: var(--green-700);
+    }
+
+    .after-chip .badge {
+      display: block;
+      margin-top: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--green-600);
+      min-height: 12px;
+    }
+
+    .context-line {
+      background: var(--surface);
+      border-left: 3px solid var(--green-600);
+      border-radius: 0 10px 10px 0;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--text-2);
+      margin-bottom: 18px;
+      min-height: 58px;
+    }
+
+    .context-line strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .context-line.warn {
+      border-left-color: #d97706;
+      background: #fffbeb;
+    }
+
+    .link-remove {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--error);
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      padding: 10px;
+      margin-top: 4px;
+      cursor: pointer;
+      opacity: 0.85;
+    }
+
+    .link-remove:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    /* Variants row */
+    h2 {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 72px;
+      padding-top: 32px;
+      border-top: 1px solid #3d3833;
+    }
+
+    .variant-note {
+      text-align: center;
+      color: #a39c93;
+      font-size: 14px;
+      margin-top: 8px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    .after-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .pill-chip {
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      border-radius: 999px;
+      padding: 9px 14px 7px;
+      cursor: pointer;
+      min-width: 58px;
+      text-align: center;
+    }
+
+    .pill-chip.selected {
+      border-color: var(--green-600);
+      background: var(--green-50);
+    }
+
+    .pill-chip .days {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .pill-chip.selected .days {
+      color: var(--green-700);
+    }
+
+    .pill-chip .badge {
+      display: block;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: var(--green-600);
+      margin-top: 2px;
+      min-height: 10px;
+    }
+
+    .rec-pill {
+      display: inline-block;
+      margin-left: 8px;
+      background: var(--green-100);
+      color: var(--green-700);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      border-radius: 999px;
+      padding: 3px 8px;
+      vertical-align: 2px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 56px;
+      font-size: 12px;
+      color: #6d6761;
+    }
+
+    footer code {
+      background: #3d3833;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #c4bfb7;
+    }
+  </style>
+</head>
+<body>
+  <h1>Adjust your goal — Before / After</h1>
+  <p class="subtitle">
+    Goal-adjust bottom sheet on Habit Detail → Goal tab. Scenario: Morning run, 41-day streak, current 66-day goal.
+  </p>
+  <p style="text-align: center">
+    <span class="scenario">41 / 66 days · 62% complete · 66d recommended</span>
+  </p>
+
+  <div class="lane">
+    <!-- BEFORE -->
+    <div class="col">
+      <span class="col-tag tag-before">Before — current</span>
+      <ul class="issues">
+        <li><strong>Recommended overlaps 66d</strong> — absolute label collides with chip text</li>
+        <li>Flat hierarchy — tiny "Currently:" caption, no progress context</li>
+        <li>Remove goal matches primary CTA weight — accident-prone</li>
+        <li>No explanation of what presets mean or streak impact</li>
+      </ul>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+        <div class="screen-dim"></div>
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="sheet-caption">Currently: 66-day streak</div>
+          <div class="before-chips">
+            <div class="before-chip-wrap no-badge"><div class="before-chip">7d</div></div>
+            <div class="before-chip-wrap no-badge"><div class="before-chip">21d</div></div>
+            <div class="before-chip-wrap no-badge"><div class="before-chip">30d</div></div>
+            <div class="before-chip-wrap">
+              <div class="before-recommended">Recommended</div>
+              <div class="before-chip selected">66d</div>
+            </div>
+            <div class="before-chip-wrap no-badge"><div class="before-chip">100d</div></div>
+            <div class="before-chip-wrap no-badge"><div class="before-chip">1yr</div></div>
+          </div>
+          <button class="btn-primary" type="button">Set 66-day goal</button>
+          <button class="btn-remove-before" type="button">Remove goal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER (recommended — 3×2 grid) -->
+    <div class="col">
+      <span class="col-tag tag-after">After — recommended</span>
+      <span class="rec-pill">Variant A · 3×2 grid</span>
+      <ul class="fixes">
+        <li><strong>Badge inside chip</strong> — no overlap collision</li>
+        <li>Progress summary replaces bare caption — 41 / 66 with bar</li>
+        <li>Dynamic context line explains selection vs. current streak</li>
+        <li>Remove goal demoted to quiet text link below CTA</li>
+      </ul>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+        <div class="screen-dim"></div>
+        <div class="sheet" id="after-sheet-a">
+          <div class="handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="progress-card">
+            <div class="progress-row">
+              <div class="progress-count">41 <span>/ 66 days</span></div>
+              <div class="progress-label">25 to go</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <div class="after-grid" id="grid-a">
+            <div class="after-chip" data-days="7"><span class="days">7d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip" data-days="21"><span class="days">21d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip" data-days="30"><span class="days">30d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip selected" data-days="66"><span class="days">66d</span><span class="badge">Recommended</span></div>
+            <div class="after-chip" data-days="100"><span class="days">100d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip" data-days="365"><span class="days">1yr</span><span class="badge">&nbsp;</span></div>
+          </div>
+          <div class="context-line" id="context-a">
+            <strong>Science-backed habit window.</strong> You're 41 days in — 25 to go at this goal.
+          </div>
+          <button class="btn-primary" id="cta-a" type="button">Set 66-day goal</button>
+          <button class="link-remove" type="button">Remove goal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>After variants — chip layout</h2>
+  <p class="variant-note">
+    Same content model, different chip treatment. Tap chips in either panel to preview context-line copy.
+  </p>
+
+  <div class="lane">
+    <!-- Variant B — pill row -->
+    <div class="col">
+      <span class="col-tag tag-after">Variant B</span>
+      <span class="rec-pill">Pill row + subtitle badge</span>
+      <div class="phone" style="height: 780px">
+        <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+        <div class="screen-dim"></div>
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="progress-card">
+            <div class="progress-row">
+              <div class="progress-count">41 <span>/ 66 days</span></div>
+              <div class="progress-label">25 to go</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <div class="after-pill-row" id="grid-b">
+            <div class="pill-chip" data-days="7"><span class="days">7d</span><span class="badge">&nbsp;</span></div>
+            <div class="pill-chip" data-days="21"><span class="days">21d</span><span class="badge">&nbsp;</span></div>
+            <div class="pill-chip" data-days="30"><span class="days">30d</span><span class="badge">&nbsp;</span></div>
+            <div class="pill-chip selected" data-days="66"><span class="days">66d</span><span class="badge">Rec.</span></div>
+            <div class="pill-chip" data-days="100"><span class="days">100d</span><span class="badge">&nbsp;</span></div>
+            <div class="pill-chip" data-days="365"><span class="days">1yr</span><span class="badge">&nbsp;</span></div>
+          </div>
+          <div class="context-line" id="context-b">
+            <strong>Science-backed habit window.</strong> You're 41 days in — 25 to go at this goal.
+          </div>
+          <button class="btn-primary" id="cta-b" type="button">Set 66-day goal</button>
+          <button class="link-remove" type="button">Remove goal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant C — 30d selected (already met) -->
+    <div class="col">
+      <span class="col-tag tag-after">Edge state</span>
+      <span class="rec-pill">30d selected · already met</span>
+      <div class="phone" style="height: 780px">
+        <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+        <div class="screen-dim"></div>
+        <div class="sheet">
+          <div class="handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="progress-card">
+            <div class="progress-row">
+              <div class="progress-count">41 <span>/ 66 days</span></div>
+              <div class="progress-label">25 to go</div>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+          </div>
+          <div class="after-grid">
+            <div class="after-chip" data-days="7"><span class="days">7d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip" data-days="21"><span class="days">21d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip selected" data-days="30"><span class="days">30d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip" data-days="66"><span class="days">66d</span><span class="badge">Recommended</span></div>
+            <div class="after-chip" data-days="100"><span class="days">100d</span><span class="badge">&nbsp;</span></div>
+            <div class="after-chip" data-days="365"><span class="days">1yr</span><span class="badge">&nbsp;</span></div>
+          </div>
+          <div class="context-line warn">
+            <strong>You've already passed this.</strong> At 41 days, a 30-day goal completes immediately.
+          </div>
+          <button class="btn-primary" type="button">Set 30-day goal</button>
+          <button class="link-remove" type="button">Remove goal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Mock saved at <code>.superdesign/design_iterations/goal_adjust_sheet_1.html</code> · tap chips in interactive panels
+  </footer>
+
+  <script>
+    const CURRENT_STREAK = 41;
+
+    const LABELS = {
+      7: '7-day',
+      21: '21-day',
+      30: '30-day',
+      66: '66-day',
+      100: '100-day',
+      365: '1-year',
+    };
+
+    function contextFor(days) {
+      if (days <= CURRENT_STREAK) {
+        return {
+          warn: true,
+          html: `<strong>You've already passed this.</strong> At ${CURRENT_STREAK} days, a ${LABELS[days]} goal completes immediately.`,
+        };
+      }
+      if (days === 66) {
+        const remaining = days - CURRENT_STREAK;
+        return {
+          warn: false,
+          html: `<strong>Science-backed habit window.</strong> You're ${CURRENT_STREAK} days in — ${remaining} to go at this goal.`,
+        };
+      }
+      const remaining = days - CURRENT_STREAK;
+      return {
+        warn: false,
+        html: `<strong>${LABELS[days]} target.</strong> You're ${CURRENT_STREAK} days in — ${remaining} day${remaining === 1 ? '' : 's'} remaining.`,
+      };
+    }
+
+    function wireInteractive(gridId, contextId, ctaId, chipClass) {
+      const grid = document.getElementById(gridId);
+      const context = document.getElementById(contextId);
+      const cta = document.getElementById(ctaId);
+      if (!grid) return;
+
+      grid.addEventListener('click', (event) => {
+        const chip = event.target.closest('.' + chipClass);
+        if (!chip) return;
+
+        grid.querySelectorAll('.' + chipClass).forEach((el) => el.classList.remove('selected'));
+        chip.classList.add('selected');
+
+        const days = Number(chip.dataset.days);
+        const copy = contextFor(days);
+        context.classList.toggle('warn', copy.warn);
+        context.innerHTML = copy.html;
+        cta.textContent = `Set ${LABELS[days]} goal`;
+      });
+    }
+
+    wireInteractive('grid-a', 'context-a', 'cta-a', 'after-chip');
+    wireInteractive('grid-b', 'context-b', 'cta-b', 'pill-chip');
+  </script>
+</body>
+</html>

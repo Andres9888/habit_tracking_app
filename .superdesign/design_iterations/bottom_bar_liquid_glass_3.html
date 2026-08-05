@@ -1,0 +1,1284 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — Plus Button Directions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #0a0a0a !important;
+        color: #fff !important;
+        min-height: 100vh;
+        padding: 28px 16px 60px;
+      }
+      h1 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 6px !important;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 13px;
+        margin-bottom: 36px;
+        line-height: 1.6;
+        max-width: 560px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .concepts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 28px;
+        max-width: 1500px;
+        margin: 0 auto;
+      }
+      .concept-card {
+        background: #141414;
+        border-radius: 24px;
+        padding: 20px;
+        border: 1px solid #222;
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s;
+      }
+      .concept-card:hover {
+        border-color: #333;
+      }
+      .concept-card.recommended {
+        border-color: #10b98140;
+      }
+      .concept-card.recommended::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        background: radial-gradient(
+          ellipse at bottom center,
+          rgba(16, 185, 129, 0.04),
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .concept-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 4px;
+      }
+      .label-current {
+        color: #555;
+      }
+      .label-new {
+        color: #10b981;
+      }
+      .label-star {
+        color: #e8b94d;
+      }
+      .concept-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        letter-spacing: -0.3px;
+      }
+      .concept-desc {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 16px;
+        line-height: 1.6;
+      }
+      .pros-cons {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+      .pro,
+      .con {
+        font-size: 11px;
+        line-height: 1.5;
+      }
+      .pro {
+        color: #10b981;
+      }
+      .con {
+        color: #f87171;
+      }
+      .pro::before {
+        content: '+ ';
+        font-weight: 700;
+      }
+      .con::before {
+        content: '− ';
+        font-weight: 700;
+      }
+
+      /* Phone mock */
+      .phone-mock {
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+        background: #1a1a1c;
+        border-radius: 16px;
+        padding: 12px 0;
+        position: relative;
+        min-height: 100px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .phone-bg {
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        opacity: 0.15;
+        background: linear-gradient(180deg, #1a1a1c 60%, #10b98115 100%);
+      }
+
+      /* ────── Capsule bar base ────── */
+      .capsule {
+        position: relative;
+        margin: 0 16px 14px;
+        border-radius: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 24px;
+        z-index: 1;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        background: rgba(30, 30, 34, 0.72);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        width: calc(100% - 32px);
+      }
+
+      /* Icon buttons */
+      .icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .icon-btn svg {
+        width: 24px;
+        height: 24px;
+      }
+      .icon-btn .notif-dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #d97706;
+      }
+
+      /* ────── Direction A: Ring + FAB (current) ────── */
+      .ring-fab-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ring-wrapper {
+        width: 56px;
+        height: 56px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ring-wrapper svg.ring-svg {
+        position: absolute;
+        inset: 0;
+      }
+      .fab-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #059669;
+        border: 2px solid rgba(17, 24, 39, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25);
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+      }
+      .fab-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 24px rgba(5, 150, 105, 0.35);
+      }
+      .fab-btn svg {
+        width: 22px;
+        height: 22px;
+        color: #fff;
+      }
+      .progress-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #888;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+      }
+      .progress-label .count {
+        color: #10b981;
+        font-weight: 700;
+      }
+      .progress-label .done {
+        color: #059669;
+        font-weight: 700;
+      }
+
+      /* ────── Direction B: Border progress ────── */
+      .capsule-progress {
+        position: relative;
+        margin: 0 16px 14px;
+        border-radius: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 24px;
+        z-index: 1;
+        backdrop-filter: blur(40px);
+        -webkit-backdrop-filter: blur(40px);
+        background: rgba(30, 30, 34, 0.72);
+        border: 2px solid transparent;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        width: calc(100% - 32px);
+        overflow: hidden;
+      }
+      .capsule-progress::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 34px;
+        background: conic-gradient(
+          #10b981 0deg,
+          #10b981 154deg,
+          rgba(255, 255, 255, 0.06) 154deg,
+          rgba(255, 255, 255, 0.06) 360deg
+        );
+        z-index: -2;
+      }
+      .capsule-progress::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 32px;
+        background: rgba(30, 30, 34, 0.95);
+        z-index: -1;
+      }
+      .plus-btn-inline {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #059669;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 12px rgba(5, 150, 105, 0.3);
+        transition: transform 0.15s;
+        flex-shrink: 0;
+      }
+      .plus-btn-inline:hover {
+        transform: scale(1.08);
+      }
+      .plus-btn-inline svg {
+        width: 24px;
+        height: 24px;
+        color: #fff;
+      }
+      .center-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* ────── Direction C: Display only ────── */
+      .display-ring {
+        width: 40px;
+        height: 40px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .display-ring svg.ring-svg {
+        position: absolute;
+        inset: 0;
+      }
+      .display-count {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        color: #10b981;
+        position: relative;
+        z-index: 1;
+      }
+      .center-display {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Tag badges */
+      .tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.3px;
+        margin-right: 6px;
+      }
+      .tag-rec {
+        background: #10b98118;
+        color: #10b981;
+      }
+      .tag-current {
+        background: #ffffff10;
+        color: #888;
+      }
+      .tag-alt {
+        background: #8b5cf618;
+        color: #8b5cf6;
+      }
+
+      /* Animated ring stroke */
+      @keyframes dash-fill {
+        from {
+          stroke-dashoffset: 165;
+        }
+        to {
+          stroke-dashoffset: 95;
+        }
+      }
+      .animated-ring {
+        animation: dash-fill 1.5s ease-out forwards;
+      }
+
+      /* Animated border gradient */
+      @keyframes border-sweep {
+        from {
+          background: conic-gradient(
+            from 0deg,
+            #10b981 0deg,
+            #10b981 0deg,
+            rgba(255, 255, 255, 0.06) 0deg,
+            rgba(255, 255, 255, 0.06) 360deg
+          );
+        }
+        to {
+          background: conic-gradient(
+            from 0deg,
+            #10b981 0deg,
+            #10b981 154deg,
+            rgba(255, 255, 255, 0.06) 154deg,
+            rgba(255, 255, 255, 0.06) 360deg
+          );
+        }
+      }
+
+      /* Section divider */
+      .section-divider {
+        text-align: center;
+        margin: 40px 0 32px;
+        position: relative;
+      }
+      .section-divider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        border-top: 1px solid #222;
+      }
+      .section-divider span {
+        position: relative;
+        background: #0a0a0a;
+        padding: 0 16px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Plus Button — 3 Directions</h1>
+    <p class="subtitle">
+      The compact capsule is in place. The question: does the SVG progress ring
+      earn its visual weight at 56px, or should progress move elsewhere? Each
+      direction preserves the floating liquid glass capsule.
+    </p>
+
+    <div class="concepts-grid">
+      <!-- ══════════════════════════════════════════ -->
+      <!-- Direction A: Current (Ring + FAB) -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="concept-card">
+        <div class="concept-label label-current">CURRENT IMPLEMENTATION</div>
+        <div class="concept-title">A — Ring + FAB</div>
+        <div class="concept-desc">
+          SVG progress ring wraps a 44px FAB with Plus icon. Progress label sits
+          inline to the right. Ring is 56px with 3.5px stroke — only ~3.5px of
+          visible track between ring and FAB edge.
+        </div>
+        <div style="margin-bottom: 12px">
+          <span class="tag tag-current">Current</span>
+        </div>
+        <div class="pros-cons">
+          <div><div class="pro">Progress always visible</div></div>
+          <div><div class="con">Ring too thin to read clearly</div></div>
+        </div>
+
+        <div class="phone-mock">
+          <div class="phone-bg"></div>
+          <div class="capsule">
+            <!-- Settings -->
+            <div class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#999"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+
+            <!-- Center: Ring + FAB -->
+            <div class="ring-fab-group">
+              <div class="ring-wrapper">
+                <svg class="ring-svg" viewBox="0 0 56 56">
+                  <circle
+                    cx="28"
+                    cy="28"
+                    r="26.25"
+                    fill="none"
+                    stroke="#2a2a2e"
+                    stroke-width="3.5"
+                  />
+                  <circle
+                    cx="28"
+                    cy="28"
+                    r="26.25"
+                    fill="none"
+                    stroke="#10b981"
+                    stroke-width="3.5"
+                    stroke-dasharray="165"
+                    stroke-dashoffset="95"
+                    stroke-linecap="round"
+                    transform="rotate(-90 28 28)"
+                    class="animated-ring"
+                  />
+                </svg>
+                <div class="fab-btn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="progress-label">
+                <span class="count">3</span> of 7
+              </div>
+            </div>
+
+            <!-- Sparkles -->
+            <div class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#D97706"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                />
+                <path d="M5 3v4" />
+                <path d="M19 17v4" />
+                <path d="M3 5h4" />
+                <path d="M17 19h4" />
+              </svg>
+              <div class="notif-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- Direction B: Border Progress (RECOMMENDED) -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="concept-card recommended">
+        <div class="concept-label label-star">★ RECOMMENDED</div>
+        <div class="concept-title">B — Capsule Border Progress</div>
+        <div class="concept-desc">
+          Drop the SVG ring entirely. The capsule border itself fills clockwise
+          as habits are completed. Plus becomes a 44px filled circle — same size
+          as side icons but with primary background color. Clear visual
+          hierarchy: primary (filled) → secondary (gold) → tertiary (settings).
+        </div>
+        <div style="margin-bottom: 12px">
+          <span class="tag tag-rec">Recommended</span>
+        </div>
+        <div class="pros-cons">
+          <div>
+            <div class="pro">Progress far more visible</div>
+            <div class="pro">Simpler, unified surface</div>
+            <div class="pro">Clear visual hierarchy</div>
+          </div>
+          <div>
+            <div class="con">Loses "special" FAB feeling</div>
+          </div>
+        </div>
+
+        <div class="phone-mock">
+          <div class="phone-bg"></div>
+          <div class="capsule-progress">
+            <!-- Settings -->
+            <div class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#999"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+
+            <!-- Center: Plus + Label -->
+            <div class="center-group">
+              <div class="plus-btn-inline">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+              <div class="progress-label">
+                <span class="count">3</span> of 7
+              </div>
+            </div>
+
+            <!-- Sparkles -->
+            <div class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#D97706"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                />
+                <path d="M5 3v4" />
+                <path d="M19 17v4" />
+                <path d="M3 5h4" />
+                <path d="M17 19h4" />
+              </svg>
+              <div class="notif-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════ -->
+      <!-- Direction C: Display Only (no plus) -->
+      <!-- ══════════════════════════════════════════ -->
+      <div class="concept-card">
+        <div class="concept-label label-new">ALTERNATIVE</div>
+        <div class="concept-title">C — Progress Display Only</div>
+        <div class="concept-desc">
+          Remove the plus button entirely. Center becomes a compact progress
+          ring + count display. "Add habit" moves to a different interaction
+          (long-press capsule, or through Inspire/Templates). Simplest possible
+          bar surface.
+        </div>
+        <div style="margin-bottom: 12px">
+          <span class="tag tag-alt">Alternative</span>
+        </div>
+        <div class="pros-cons">
+          <div>
+            <div class="pro">Cleanest surface, no competing taps</div>
+          </div>
+          <div>
+            <div class="con">Loses primary action from the bar</div>
+            <div class="con">Discovery cost for "add habit"</div>
+          </div>
+        </div>
+
+        <div class="phone-mock">
+          <div class="phone-bg"></div>
+          <div class="capsule">
+            <!-- Settings -->
+            <div class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#999"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+
+            <!-- Center: Display only -->
+            <div class="center-display">
+              <div class="display-ring">
+                <svg class="ring-svg" viewBox="0 0 40 40">
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="17"
+                    fill="none"
+                    stroke="#2a2a2e"
+                    stroke-width="3"
+                  />
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="17"
+                    fill="none"
+                    stroke="#10b981"
+                    stroke-width="3"
+                    stroke-dasharray="107"
+                    stroke-dashoffset="61"
+                    stroke-linecap="round"
+                    transform="rotate(-90 20 20)"
+                    class="animated-ring"
+                  />
+                </svg>
+                <div class="display-count">3/7</div>
+              </div>
+              <div class="progress-label" style="font-size: 13px">
+                <span class="count">3</span> of 7 done
+              </div>
+            </div>
+
+            <!-- Sparkles -->
+            <div class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#D97706"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                />
+                <path d="M5 3v4" />
+                <path d="M19 17v4" />
+                <path d="M3 5h4" />
+                <path d="M17 19h4" />
+              </svg>
+              <div class="notif-dot"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- INTERACTIVE COMPARISON SECTION            -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="section-divider"><span>Interactive Comparison</span></div>
+
+    <div style="max-width: 420px; margin: 0 auto; text-align: center">
+      <p style="color: #666; font-size: 12px; margin-bottom: 20px">
+        Click buttons to toggle between directions on a single phone frame
+      </p>
+      <div
+        style="
+          display: flex;
+          gap: 8px;
+          justify-content: center;
+          margin-bottom: 20px;
+        "
+      >
+        <button
+          onclick="showVariant('a')"
+          id="btn-a"
+          style="
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            background: #1a1a1c;
+            color: #888;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+        >
+          A — Ring+FAB
+        </button>
+        <button
+          onclick="showVariant('b')"
+          id="btn-b"
+          style="
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid #10b98140;
+            background: #10b98115;
+            color: #10b981;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+        >
+          B — Border ★
+        </button>
+        <button
+          onclick="showVariant('c')"
+          id="btn-c"
+          style="
+            padding: 8px 18px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            background: #1a1a1c;
+            color: #888;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+          "
+        >
+          C — Display
+        </button>
+      </div>
+
+      <!-- Shared phone frame -->
+      <div
+        style="
+          background: #111;
+          border-radius: 44px;
+          padding: 12px;
+          border: 2px solid #2a2a2a;
+          max-width: 390px;
+          margin: 0 auto;
+        "
+      >
+        <div
+          style="
+            background: #1a1a1c;
+            border-radius: 36px;
+            overflow: hidden;
+            min-height: 340px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+          "
+        >
+          <!-- Fake habit list -->
+          <div style="flex: 1; padding: 20px 16px">
+            <div
+              style="
+                font-family: 'Space Grotesk', sans-serif;
+                font-size: 11px;
+                color: #555;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                margin-bottom: 16px;
+              "
+            >
+              Today's Habits
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <div
+                style="
+                  background: #222;
+                  border-radius: 14px;
+                  padding: 14px 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                "
+              >
+                <div
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 7px;
+                    background: #10b981;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    color: #ccc;
+                    text-decoration: line-through;
+                    opacity: 0.5;
+                  "
+                >
+                  Morning meditation
+                </div>
+              </div>
+              <div
+                style="
+                  background: #222;
+                  border-radius: 14px;
+                  padding: 14px 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                "
+              >
+                <div
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 7px;
+                    background: #10b981;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    color: #ccc;
+                    text-decoration: line-through;
+                    opacity: 0.5;
+                  "
+                >
+                  Read 20 pages
+                </div>
+              </div>
+              <div
+                style="
+                  background: #222;
+                  border-radius: 14px;
+                  padding: 14px 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                "
+              >
+                <div
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 7px;
+                    background: #10b981;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  "
+                >
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div
+                  style="
+                    font-size: 14px;
+                    color: #ccc;
+                    text-decoration: line-through;
+                    opacity: 0.5;
+                  "
+                >
+                  Exercise 30 min
+                </div>
+              </div>
+              <div
+                style="
+                  background: #222;
+                  border-radius: 14px;
+                  padding: 14px 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                "
+              >
+                <div
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 7px;
+                    border: 2px solid #444;
+                  "
+                ></div>
+                <div style="font-size: 14px; color: #eee">
+                  Drink 8 glasses water
+                </div>
+              </div>
+              <div
+                style="
+                  background: #222;
+                  border-radius: 14px;
+                  padding: 14px 16px;
+                  display: flex;
+                  align-items: center;
+                  gap: 12px;
+                "
+              >
+                <div
+                  style="
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 7px;
+                    border: 2px solid #444;
+                  "
+                ></div>
+                <div style="font-size: 14px; color: #eee">
+                  Journal before bed
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bar variants (toggleable) -->
+          <div id="variant-a" style="padding: 0 0 16px">
+            <div class="capsule" style="margin: 0 16px">
+              <div class="icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#999"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="ring-fab-group">
+                <div class="ring-wrapper">
+                  <svg class="ring-svg" viewBox="0 0 56 56">
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="26.25"
+                      fill="none"
+                      stroke="#2a2a2e"
+                      stroke-width="3.5"
+                    />
+                    <circle
+                      cx="28"
+                      cy="28"
+                      r="26.25"
+                      fill="none"
+                      stroke="#10b981"
+                      stroke-width="3.5"
+                      stroke-dasharray="165"
+                      stroke-dashoffset="95"
+                      stroke-linecap="round"
+                      transform="rotate(-90 28 28)"
+                    />
+                  </svg>
+                  <div class="fab-btn">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                    >
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="progress-label">
+                  <span class="count">3</span> of 7
+                </div>
+              </div>
+              <div class="icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#D97706"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                  />
+                  <path d="M5 3v4" />
+                  <path d="M19 17v4" />
+                  <path d="M3 5h4" />
+                  <path d="M17 19h4" />
+                </svg>
+                <div class="notif-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="variant-b" style="padding: 0 0 16px; display: none">
+            <div class="capsule-progress" style="margin: 0 16px">
+              <div class="icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#999"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="center-group">
+                <div class="plus-btn-inline">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+                <div class="progress-label">
+                  <span class="count">3</span> of 7
+                </div>
+              </div>
+              <div class="icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#D97706"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                  />
+                  <path d="M5 3v4" />
+                  <path d="M19 17v4" />
+                  <path d="M3 5h4" />
+                  <path d="M17 19h4" />
+                </svg>
+                <div class="notif-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="variant-c" style="padding: 0 0 16px; display: none">
+            <div class="capsule" style="margin: 0 16px">
+              <div class="icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#999"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="center-display">
+                <div class="display-ring">
+                  <svg class="ring-svg" viewBox="0 0 40 40">
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="17"
+                      fill="none"
+                      stroke="#2a2a2e"
+                      stroke-width="3"
+                    />
+                    <circle
+                      cx="20"
+                      cy="20"
+                      r="17"
+                      fill="none"
+                      stroke="#10b981"
+                      stroke-width="3"
+                      stroke-dasharray="107"
+                      stroke-dashoffset="61"
+                      stroke-linecap="round"
+                      transform="rotate(-90 20 20)"
+                    />
+                  </svg>
+                  <div class="display-count">3/7</div>
+                </div>
+                <div class="progress-label" style="font-size: 13px">
+                  <span class="count">3</span> of 7 done
+                </div>
+              </div>
+              <div class="icon-btn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#D97706"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"
+                  />
+                  <path d="M5 3v4" />
+                  <path d="M19 17v4" />
+                  <path d="M3 5h4" />
+                  <path d="M17 19h4" />
+                </svg>
+                <div class="notif-dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function showVariant(v) {
+        document.getElementById('variant-a').style.display =
+          v === 'a' ? 'block' : 'none';
+        document.getElementById('variant-b').style.display =
+          v === 'b' ? 'block' : 'none';
+        document.getElementById('variant-c').style.display =
+          v === 'c' ? 'block' : 'none';
+
+        const btns = { a: 'btn-a', b: 'btn-b', c: 'btn-c' };
+        Object.entries(btns).forEach(([key, id]) => {
+          const btn = document.getElementById(id);
+          if (key === v) {
+            btn.style.borderColor = key === 'b' ? '#10b98180' : '#555';
+            btn.style.background = key === 'b' ? '#10b98125' : '#333';
+            btn.style.color = key === 'b' ? '#10b981' : '#fff';
+          } else {
+            btn.style.borderColor = '#333';
+            btn.style.background = '#1a1a1c';
+            btn.style.color = '#888';
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

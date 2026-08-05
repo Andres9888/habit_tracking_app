@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gradient Fill Variants — All Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif !important;
+        background: #0f0f1a !important;
+        color: #f0f0f0 !important;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center !important;
+        font-size: 26px !important;
+        font-weight: 800 !important;
+        margin-bottom: 4px !important;
+        background: linear-gradient(
+          135deg,
+          #10b981,
+          #0891b2,
+          #8b5cf6
+        ) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #667;
+        font-size: 13px;
+        margin-bottom: 24px;
+      }
+
+      /* Slider */
+      .slider-bar {
+        background: #161628;
+        border-radius: 16px;
+        padding: 16px 24px;
+        margin-bottom: 24px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 1px solid #252540;
+        position: sticky;
+        top: 8px;
+        z-index: 100;
+        backdrop-filter: blur(12px);
+      }
+
+      .slider-bar label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #aab;
+        white-space: nowrap;
+      }
+
+      .strength-slider {
+        -webkit-appearance: none;
+        flex: 1;
+        height: 6px;
+        border-radius: 3px;
+        background: linear-gradient(
+          to right,
+          #65a30d,
+          #16a34a,
+          #0d9488,
+          #0891b2,
+          #059669
+        );
+        outline: none;
+      }
+      .strength-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+      }
+
+      .slider-readout {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+      }
+      .slider-pct {
+        font-size: 24px;
+        font-weight: 800;
+      }
+      .slider-phase {
+        font-size: 12px;
+        color: #889;
+      }
+
+      /* Option sections */
+      .option-block {
+        max-width: 1400px;
+        margin: 0 auto 32px;
+        background: #161628;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #252540;
+      }
+      .option-block.recommended {
+        border-color: #10b981;
+      }
+
+      .option-block-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+      .opt-letter {
+        width: 28px;
+        height: 28px;
+        border-radius: 7px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 13px;
+        color: white;
+      }
+      .opt-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .badge {
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .badge-rec {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.15);
+      }
+      .opt-desc {
+        font-size: 12px;
+        color: #778;
+        margin-bottom: 16px;
+        line-height: 1.4;
+      }
+
+      /* Variants row */
+      .variants-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .variants-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .variant-col {
+      }
+      .variant-label {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        padding: 4px 0;
+        border-radius: 6px;
+      }
+
+      .phone {
+        background: #faf8f5;
+        border-radius: 20px;
+        padding: 12px 10px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+      }
+
+      /* Habit Card */
+      .hcard {
+        position: relative;
+        background: #f0eeeb;
+        border: 1px solid #e5e2de;
+        border-radius: 14px;
+        min-height: 66px;
+        margin-bottom: 8px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 3px 12px rgba(28, 25, 23, 0.06);
+      }
+      .hcard:last-child {
+        margin-bottom: 0;
+      }
+
+      .hcard-accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 14px 0 0 14px;
+      }
+
+      .hcard-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 14px 0 0 14px;
+        overflow: hidden;
+        transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .fl {
+        position: absolute;
+        inset: 0;
+      }
+
+      .hcard-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        padding: 12px 14px;
+        width: 100%;
+        gap: 10px;
+      }
+      .hc-icon {
+        font-size: 24px;
+      }
+      .hc-info {
+        flex: 1;
+      }
+      .hc-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1f2937;
+        letter-spacing: -0.3px;
+      }
+      .hc-meta {
+        font-size: 11px;
+        color: #78716c;
+        margin-top: 1px;
+      }
+      .hc-check {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        color: white;
+      }
+      .hc-check.done {
+        border-color: transparent;
+      }
+
+      /* Edge indicators */
+      .edge-line {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+      }
+      .edge-glow {
+        position: absolute;
+        right: -6px;
+        top: -6px;
+        bottom: -6px;
+        width: 32px;
+        filter: blur(10px);
+      }
+      .edge-dot {
+        position: absolute;
+        right: -4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      /* Animations for glow pulse */
+      @keyframes glowPulse {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .pulse {
+        animation: glowPulse 2s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(200%);
+        }
+      }
+
+      /* Dark mode preview toggle */
+      .dark-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #889;
+      }
+      .dark-toggle input {
+        cursor: pointer;
+      }
+
+      .phone.dark-mode {
+        background: #1a1a2a;
+      }
+      .phone.dark-mode .hcard {
+        background: #252540;
+        border-color: #333355;
+      }
+      .phone.dark-mode .hc-name {
+        color: #e8e8f0;
+      }
+      .phone.dark-mode .hc-meta {
+        color: #8888aa;
+      }
+      .phone.dark-mode .hc-check {
+        border-color: #444466;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Gradient Fill Variants</h1>
+    <p class="subtitle">
+      3 intensity levels per option \u00B7 Drag slider to preview \u00B7 Toggle
+      dark mode
+    </p>
+
+    <!-- Sticky Slider Bar -->
+    <div class="slider-bar">
+      <label>Strength:</label>
+      <input
+        type="range"
+        class="strength-slider"
+        id="slider"
+        min="0"
+        max="100"
+        value="60"
+      />
+      <div class="slider-readout">
+        <span class="slider-pct" id="pct">60%</span>
+        <span class="slider-phase" id="phase"></span>
+      </div>
+      <div class="dark-toggle">
+        <input type="checkbox" id="darkToggle" />
+        <label for="darkToggle">Dark mode</label>
+      </div>
+    </div>
+
+    <!-- Options rendered by JS -->
+    <div id="app"></div>
+
+    <script>
+      // ─── Constants ───
+      const HABITS = [
+        { name: 'Meditate', icon: '\u{1F9D8}', color: '#10B981' },
+        { name: 'Read', icon: '\u{1F4D6}', color: '#3B82F6' },
+        { name: 'Exercise', icon: '\u{1F3CB}\u{FE0F}', color: '#F59E0B' },
+        { name: 'Journal', icon: '\u{1F4DD}', color: '#8B5CF6' },
+      ];
+
+      const SC = {
+        starting: '#65a30d',
+        building: '#16a34a',
+        developing: '#0d9488',
+        strong: '#0891b2',
+        automatic: '#059669',
+      };
+
+      function level(s) {
+        if (s < 20) return 'starting';
+        if (s < 40) return 'building';
+        if (s < 60) return 'developing';
+        if (s < 80) return 'strong';
+        return 'automatic';
+      }
+      function sc(s) {
+        return SC[level(s)];
+      }
+      function emoji(s) {
+        return {
+          starting: '\u{1F331}',
+          building: '\u{1F33F}',
+          developing: '\u{1F333}',
+          strong: '\u{1F4AA}',
+          automatic: '\u{26A1}',
+        }[level(s)];
+      }
+      function label(s) {
+        return {
+          starting: 'Starting',
+          building: 'Building',
+          developing: 'Developing',
+          strong: 'Strong',
+          automatic: 'Automatic',
+        }[level(s)];
+      }
+
+      function el(tag, cls, sty, txt) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (sty) Object.assign(e.style, sty);
+        if (txt) e.textContent = txt;
+        return e;
+      }
+
+      function makeCard(h, fillFn) {
+        const card = el('div', 'hcard');
+        card.appendChild(el('div', 'hcard-accent', { background: h.color }));
+        fillFn(card, h);
+
+        const content = el('div', 'hcard-content');
+        content.appendChild(el('span', 'hc-icon', {}, h.icon));
+
+        const info = el('div', 'hc-info');
+        info.appendChild(el('div', 'hc-name', {}, h.name));
+        info.appendChild(
+          el(
+            'div',
+            'hc-meta',
+            {},
+            emoji(h.strength) +
+              ' ' +
+              Math.round(h.strength) +
+              '% \u00B7 ' +
+              label(h.strength)
+          )
+        );
+        content.appendChild(info);
+
+        const chk = el(
+          'div',
+          'hc-check' + (h.strength > 50 ? ' done' : ''),
+          h.strength > 50 ? { background: h.color } : {}
+        );
+        if (h.strength > 50) chk.textContent = '\u2713';
+        content.appendChild(chk);
+
+        card.appendChild(content);
+        return card;
+      }
+
+      // ─── OPTION A VARIANTS ───
+      const optionA = {
+        name: 'Bolder Existing Fill',
+        letter: 'A',
+        letterBg: '#10B981',
+        recommended: true,
+        desc: 'Enhanced horizontal gradient with vertical depth layer and leading-edge glow. The proven pattern, just more visible.',
+        variants: [
+          {
+            label: 'Subtle',
+            color: '#10B981',
+            desc: 'Light touch \u2014 barely stronger than current',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, ' +
+                    c +
+                    '40, ' +
+                    c +
+                    '20, ' +
+                    c +
+                    '08)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to bottom, ' + c + '00, ' + c + '10)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-line', { background: c + '25' })
+              );
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Medium',
+            color: '#059669',
+            desc: 'Clear fill with depth \u2014 balanced visibility',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, ' +
+                    c +
+                    '66, ' +
+                    c +
+                    '38, ' +
+                    c +
+                    '10)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to bottom, ' + c + '00, ' + c + '20)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-line', { background: c + '44' })
+              );
+              const dot = el('div', 'edge-dot pulse', { background: c + '66' });
+              fill.appendChild(dot);
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Bold',
+            color: '#047857',
+            desc: 'Strong presence \u2014 unmistakable progress',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, ' +
+                    c +
+                    '88, ' +
+                    c +
+                    '55, ' +
+                    c +
+                    '18)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to bottom, ' + c + '00, ' + c + '30)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-line', { background: c + '66', width: '3px' })
+              );
+              const glow = el('div', 'edge-glow pulse', {
+                background:
+                  'radial-gradient(ellipse at center, ' +
+                  c +
+                  '55, ' +
+                  c +
+                  '00)',
+              });
+              fill.appendChild(glow);
+              card.appendChild(fill);
+            },
+          },
+        ],
+      };
+
+      // ─── OPTION B VARIANTS ───
+      const optionB = {
+        name: 'Solid Color Fill',
+        letter: 'B',
+        letterBg: '#F59E0B',
+        desc: 'Clean flat fill like a progress bar embedded in the card. Simple, bold, no ambiguity about how far along you are.',
+        variants: [
+          {
+            label: 'Flat',
+            color: '#F59E0B',
+            desc: 'Pure flat fill \u2014 no edge decoration',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(el('div', 'fl', { background: c + '28' }));
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Sharp Edge',
+            color: '#D97706',
+            desc: 'Flat fill with a crisp vertical line at the edge',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(el('div', 'fl', { background: c + '30' }));
+              fill.appendChild(
+                el('div', 'edge-line', { background: c + '66', width: '2px' })
+              );
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Stepped',
+            color: '#B45309',
+            desc: 'Fill with striped texture showing increments',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'repeating-linear-gradient(90deg, ' +
+                    c +
+                    '30 0px, ' +
+                    c +
+                    '30 8px, ' +
+                    c +
+                    '18 8px, ' +
+                    c +
+                    '18 10px)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-line', { background: c + '55', width: '2px' })
+              );
+              card.appendChild(fill);
+            },
+          },
+        ],
+      };
+
+      // ─── OPTION C VARIANTS ───
+      const optionC = {
+        name: 'Multi-Color Journey',
+        letter: 'C',
+        letterBg: '#8B5CF6',
+        desc: 'The fill transitions through strength phase colors (lime \u2192 green \u2192 teal \u2192 cyan \u2192 emerald), showing the full progression.',
+        variants: [
+          {
+            label: 'Soft Bands',
+            color: '#8B5CF6',
+            desc: 'Gentle color transition \u2014 watercolor feel',
+            fn: (card, h) => {
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              const w = Math.max(100 / (h.strength / 100), 100);
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, #65a30d33, #16a34a33, #0d948833, #0891b233, #05966933)',
+                  width: w + '%',
+                  minWidth: '100%',
+                })
+              );
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Vivid Bands',
+            color: '#6D28D9',
+            desc: 'Stronger colors \u2014 bolder progression',
+            fn: (card, h) => {
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              const w = Math.max(100 / (h.strength / 100), 100);
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, #65a30d55, #16a34a55, #0d948855, #0891b255, #05966955)',
+                  width: w + '%',
+                  minWidth: '100%',
+                })
+              );
+              const c = sc(h.strength);
+              fill.appendChild(
+                el('div', 'edge-line', { background: c + '66', width: '2px' })
+              );
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Segmented',
+            color: '#4C1D95',
+            desc: 'Distinct phase segments with dividers',
+            fn: (card, h) => {
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              const w = Math.max(100 / (h.strength / 100), 100);
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, #65a30d44 0%, #65a30d44 20%, #16a34a44 20%, #16a34a44 40%, #0d948844 40%, #0d948844 60%, #0891b244 60%, #0891b244 80%, #05966944 80%, #05966944 100%)',
+                  width: w + '%',
+                  minWidth: '100%',
+                })
+              );
+              // Dividers
+              [20, 40, 60, 80].forEach((pct) => {
+                if (pct <= h.strength) {
+                  const pos = (pct / h.strength) * 100;
+                  const div = el('div', '', {
+                    position: 'absolute',
+                    left: pos + '%',
+                    top: '0',
+                    bottom: '0',
+                    width: '1px',
+                    background: '#ffffff30',
+                  });
+                  fill.appendChild(div);
+                }
+              });
+              card.appendChild(fill);
+            },
+          },
+        ],
+      };
+
+      // ─── OPTION D VARIANTS ───
+      const optionD = {
+        name: 'Glassmorphism Glow',
+        letter: 'D',
+        letterBg: '#EC4899',
+        desc: 'Soft luminous gradient with a frosted feel. The fill glows rather than sitting flat \u2014 premium and modern.',
+        variants: [
+          {
+            label: 'Soft Glow',
+            color: '#EC4899',
+            desc: 'Gentle radial glow at the leading edge',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(135deg, ' +
+                    c +
+                    '25, ' +
+                    c +
+                    '12, ' +
+                    c +
+                    '05)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-glow pulse', {
+                  background:
+                    'radial-gradient(ellipse at center, ' +
+                    c +
+                    '40, ' +
+                    c +
+                    '00)',
+                })
+              );
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Frosted',
+            color: '#DB2777',
+            desc: 'Frosted glass with blur backdrop \u2014 premium feel',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(135deg, ' +
+                    c +
+                    '35, ' +
+                    c +
+                    '18, ' +
+                    c +
+                    '08)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-glow pulse', {
+                  background:
+                    'radial-gradient(ellipse at center, ' +
+                    c +
+                    '55, ' +
+                    c +
+                    '00)',
+                  width: '40px',
+                  right: '-10px',
+                })
+              );
+              fill.appendChild(
+                el('div', '', {
+                  position: 'absolute',
+                  inset: '0',
+                  background:
+                    'linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0))',
+                  borderRadius: '14px 0 0 14px',
+                })
+              );
+              card.appendChild(fill);
+            },
+          },
+          {
+            label: 'Neon Edge',
+            color: '#BE185D',
+            desc: 'Bright glowing edge line \u2014 futuristic energy',
+            fn: (card, h) => {
+              const c = sc(h.strength);
+              const fill = el('div', 'hcard-fill', { width: h.strength + '%' });
+              fill.appendChild(
+                el('div', 'fl', {
+                  background:
+                    'linear-gradient(to right, ' +
+                    c +
+                    '30, ' +
+                    c +
+                    '15, ' +
+                    c +
+                    '05)',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-line', {
+                  background: c + '88',
+                  width: '2px',
+                  boxShadow: '0 0 8px ' + c + '66, 0 0 16px ' + c + '33',
+                })
+              );
+              fill.appendChild(
+                el('div', 'edge-glow pulse', {
+                  background:
+                    'radial-gradient(ellipse at center, ' +
+                    c +
+                    '66, ' +
+                    c +
+                    '00)',
+                  width: '48px',
+                  right: '-14px',
+                })
+              );
+              card.appendChild(fill);
+            },
+          },
+        ],
+      };
+
+      const OPTIONS = [optionA, optionB, optionC, optionD];
+
+      // ─── Render ───
+      function render(baseStrength, isDark) {
+        const app = document.getElementById('app');
+        app.replaceChildren();
+
+        const strengths = [
+          Math.min(100, baseStrength + 25),
+          Math.min(100, baseStrength + 5),
+          Math.max(0, baseStrength - 15),
+          Math.max(0, baseStrength - 35),
+        ];
+
+        OPTIONS.forEach((opt) => {
+          const block = el(
+            'div',
+            'option-block' + (opt.recommended ? ' recommended' : '')
+          );
+
+          const header = el('div', 'option-block-header');
+          header.appendChild(
+            el('div', 'opt-letter', { background: opt.letterBg }, opt.letter)
+          );
+          header.appendChild(el('span', 'opt-title', {}, opt.name));
+          if (opt.recommended) {
+            header.appendChild(
+              el('span', 'badge badge-rec', {}, 'Recommended')
+            );
+          }
+          block.appendChild(header);
+          block.appendChild(el('p', 'opt-desc', {}, opt.desc));
+
+          const row = el('div', 'variants-row');
+
+          opt.variants.forEach((v) => {
+            const col = el('div', 'variant-col');
+            const lbl = el(
+              'div',
+              'variant-label',
+              {
+                color: v.color,
+                background: v.color + '15',
+              },
+              v.label
+            );
+            col.appendChild(lbl);
+
+            const descEl = el(
+              'div',
+              '',
+              {
+                fontSize: '11px',
+                color: '#667',
+                textAlign: 'center',
+                marginBottom: '8px',
+                minHeight: '28px',
+              },
+              v.desc
+            );
+            col.appendChild(descEl);
+
+            const phone = el('div', 'phone' + (isDark ? ' dark-mode' : ''));
+
+            HABITS.forEach((h, i) => {
+              const habit = { ...h, strength: strengths[i] };
+              phone.appendChild(makeCard(habit, v.fn));
+            });
+
+            col.appendChild(phone);
+            row.appendChild(col);
+          });
+
+          block.appendChild(row);
+          app.appendChild(block);
+        });
+      }
+
+      // ─── Init ───
+      let currentStrength = 60;
+      let isDark = false;
+
+      const slider = document.getElementById('slider');
+      const pctEl = document.getElementById('pct');
+      const phaseEl = document.getElementById('phase');
+      const darkToggle = document.getElementById('darkToggle');
+
+      function update() {
+        pctEl.textContent = currentStrength + '%';
+        pctEl.style.color = sc(currentStrength);
+        phaseEl.textContent =
+          emoji(currentStrength) + ' ' + label(currentStrength);
+        render(currentStrength, isDark);
+      }
+
+      slider.addEventListener('input', function () {
+        currentStrength = parseInt(this.value);
+        update();
+      });
+
+      darkToggle.addEventListener('change', function () {
+        isDark = this.checked;
+        update();
+      });
+
+      update();
+    </script>
+  </body>
+</html>

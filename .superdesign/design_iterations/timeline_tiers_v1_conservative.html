@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Timeline Tiers — V1 Conservative</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+    .ring-svg { transform: rotate(-90deg); }
+    .connector { height: 3px; background: #10B981; opacity: 0.6; border-radius: 2px; transition: all 0.4s ease; }
+    .day-cell { width: 44px; height: 44px; border-radius: 9999px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; font-size: 14px; transition: all 0.4s ease; }
+    .cell-completed { color: #FFF; }
+    .check-icon { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 3; position: absolute; }
+    .tier-chip { padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+    .nav-link { color: #6366F1; }
+    .nav-link.active { color: #1F2937; font-weight: 700; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen py-8">
+  <div class="max-w-3xl mx-auto px-6">
+    <!-- Variant nav -->
+    <nav class="flex gap-4 text-sm mb-6">
+      <a class="nav-link active" href="./timeline_tiers_v1_conservative.html">V1 Conservative</a>
+      <a class="nav-link" href="./timeline_tiers_v2_balanced.html">V2 Balanced ★</a>
+      <a class="nav-link" href="./timeline_tiers_v3_full.html">V3 Full parity</a>
+      <a class="nav-link" href="./timeline_tiers_v4_perday.html">V4 Per-day</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-2xl font-bold text-slate-900">Variant 1 — Conservative</h1>
+      <p class="text-slate-600 mt-2 leading-relaxed">
+        Streak-driven. Tier color replaces emerald on <strong>completed day rings only</strong>.
+        Connectors keep the existing streak-based thickness/shimmer from <code class="text-xs bg-slate-200 px-1 rounded">connectorStrength.ts</code>.
+        No cell shimmer, no glow, no legendary background.
+      </p>
+      <p class="text-xs text-slate-500 mt-2">Thresholds: 0 / 5 / 10 / 20 / 30 days → copper / chain / iron / gold / legendary.</p>
+    </header>
+
+    <!-- Tier chip -->
+    <div class="flex items-center gap-3 mb-4">
+      <span class="text-sm text-slate-500">Current tier:</span>
+      <span id="tier-chip" class="tier-chip" style="background:#B87333;color:#FEF3C7;">Copper</span>
+      <span id="streak-label" class="text-sm text-slate-500">0 days</span>
+    </div>
+
+    <!-- Timeline strip -->
+    <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+      <div class="flex items-center justify-between text-xs text-slate-500 mb-4">
+        <span class="font-semibold text-slate-700">April</span>
+        <span>15–21</span>
+      </div>
+      <div id="strip" class="flex items-center justify-between"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="bg-white rounded-2xl shadow-sm p-6">
+      <label class="block text-sm font-medium text-slate-700 mb-2">Streak length (days)</label>
+      <input id="slider" type="range" min="0" max="50" value="0" class="w-full" />
+      <div class="flex justify-between text-xs text-slate-400 mt-1">
+        <span>0</span><span>10</span><span>20</span><span>30</span><span>40</span><span>50</span>
+      </div>
+    </div>
+
+    <!-- Tier reference -->
+    <div class="mt-6 grid grid-cols-5 gap-2">
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#B87333;color:#FEF3C7;">Copper<br/>0–4</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#10B981;color:#FFF;">Chain<br/>5–9</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#10B981;color:#FFF;border:2px solid #065F46;">Iron<br/>10–19</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#D4A23F;color:#78350F;">Gold<br/>20–29</div>
+      <div class="rounded-lg p-3 text-center text-xs" style="background:#F2B84B;color:#78350F;font-weight:700;">Legendary<br/>30+</div>
+    </div>
+  </div>
+
+  <script>
+    const TIERS = {
+      copper:    { name:'Copper',    color:'#B87333', icon:'#FEF3C7' },
+      chain:     { name:'Chain',     color:'#10B981', icon:'#FFFFFF' },
+      iron:      { name:'Iron',      color:'#10B981', icon:'#FFFFFF' },
+      gold:      { name:'Gold',      color:'#D4A23F', icon:'#78350F' },
+      legendary: { name:'Legendary', color:'#F2B84B', icon:'#78350F' },
+    };
+
+    function tierForStreak(days) {
+      if (days >= 30) return TIERS.legendary;
+      if (days >= 20) return TIERS.gold;
+      if (days >= 10) return TIERS.iron;
+      if (days >= 5)  return TIERS.chain;
+      return TIERS.copper;
+    }
+
+    // Mon=completed, Tue=completed, Wed=completed, Thu=completed, Fri=partial(0.6), Sat=none, Sun=future
+    const DAYS = [
+      { label:'M', n:15, state:'complete' },
+      { label:'T', n:16, state:'complete' },
+      { label:'W', n:17, state:'complete' },
+      { label:'T', n:18, state:'complete' },
+      { label:'F', n:19, state:'partial', progress:0.6 },
+      { label:'S', n:20, state:'none' },
+      { label:'S', n:21, state:'future' },
+    ];
+
+    const strip = document.getElementById('strip');
+    function render(streak) {
+      const tier = tierForStreak(streak);
+      strip.innerHTML = '';
+      DAYS.forEach((d, i) => {
+        // Day cell container
+        const wrap = document.createElement('div');
+        wrap.className = 'flex flex-col items-center gap-1';
+
+        const weekday = document.createElement('span');
+        weekday.className = 'text-[10px] font-semibold text-slate-400 tracking-wider';
+        weekday.textContent = d.label;
+        wrap.appendChild(weekday);
+
+        const cell = document.createElement('div');
+        cell.className = 'day-cell';
+        if (d.state === 'complete') {
+          cell.style.background = tier.color;
+          cell.style.color = tier.icon;
+          const check = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          check.setAttribute('viewBox','0 0 24 24');
+          check.classList.add('check-icon');
+          check.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+          cell.appendChild(check);
+        } else if (d.state === 'partial') {
+          // SVG ring with emerald progress (unchanged — not completed)
+          const ring = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          ring.setAttribute('width',44); ring.setAttribute('height',44);
+          ring.classList.add('ring-svg');
+          ring.innerHTML = `
+            <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="4"/>
+            <circle cx="22" cy="22" r="20" fill="none" stroke="#10B981" stroke-width="4"
+              stroke-dasharray="${2*Math.PI*20}" stroke-dashoffset="${2*Math.PI*20*(1-d.progress)}" stroke-linecap="round"/>`;
+          cell.appendChild(ring);
+          const num = document.createElement('span');
+          num.style.position = 'absolute';
+          num.textContent = d.n; num.style.color = '#1F2937';
+          cell.appendChild(num);
+        } else if (d.state === 'future') {
+          cell.style.opacity = 0.3;
+          cell.style.border = '2px dashed #CBD5E1';
+          cell.style.color = '#94A3B8';
+          cell.textContent = d.n;
+        } else {
+          cell.style.border = '2px solid rgba(0,0,0,0.12)';
+          cell.style.color = '#1F2937';
+          cell.textContent = d.n;
+        }
+        if (d.state === 'complete' && d.n !== undefined) {
+          const num = document.createElement('span');
+          num.style.position='absolute'; num.style.zIndex=2;
+          num.textContent = d.n;
+          cell.appendChild(num);
+        }
+        wrap.appendChild(cell);
+
+        strip.appendChild(wrap);
+
+        // Connector (between days, except after last)
+        if (i < DAYS.length - 1) {
+          const con = document.createElement('div');
+          con.className = 'connector';
+          con.style.flex = '1';
+          con.style.margin = '0 8px';
+          con.style.marginTop = '18px'; // align with cell center
+          const bothComplete = d.state === 'complete' && DAYS[i+1].state === 'complete';
+          const isPartialEdge = (d.state === 'complete' && DAYS[i+1].state === 'partial') || (d.state==='partial' && DAYS[i+1].state==='complete');
+          if (bothComplete) {
+            // V1: connector stays emerald, thickness from streak (existing connectorStrength.ts behavior)
+            const h = streak>=30?5:streak>=14?4.5:streak>=7?4:streak>=5?4:streak>=3?3.5:3;
+            const op = streak>=30?0.85:streak>=14?0.8:streak>=7?0.7:streak>=5?0.6:streak>=3?0.5:0.35;
+            con.style.height = h + 'px';
+            con.style.opacity = op;
+            con.style.background = '#10B981';
+          } else if (isPartialEdge) {
+            con.style.background = '#10B981';
+            con.style.opacity = 0.4;
+            con.style.height = '2px';
+          } else {
+            con.style.background = '#E5E7EB';
+            con.style.opacity = 1;
+            con.style.height = '2px';
+          }
+          strip.appendChild(con);
+        }
+      });
+
+      document.getElementById('tier-chip').textContent = tier.name;
+      document.getElementById('tier-chip').style.background = tier.color;
+      document.getElementById('tier-chip').style.color = tier.icon;
+      document.getElementById('streak-label').textContent = streak + ' days';
+    }
+
+    document.getElementById('slider').addEventListener('input', e => render(+e.target.value));
+    render(0);
+  </script>
+</body>
+</html>

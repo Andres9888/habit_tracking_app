@@ -1,0 +1,1968 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Header — UX Framework Redesign</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      body {
+        background: #08080c !important;
+        font-family: 'DM Sans', sans-serif !important;
+        color: #e5e7eb !important;
+        padding: 32px 20px 80px !important;
+        min-height: 100vh !important;
+      }
+
+      /* ── Page layout ── */
+      .page-title {
+        text-align: center !important;
+        font-family: 'Inter', sans-serif !important;
+        font-size: 32px !important;
+        font-weight: 900 !important;
+        color: #fff !important;
+        letter-spacing: -1.5px !important;
+        margin-bottom: 4px !important;
+      }
+      .page-sub {
+        text-align: center !important;
+        font-size: 15px !important;
+        color: #6b7280 !important;
+        margin-bottom: 12px !important;
+      }
+
+      /* ── Framework legend ── */
+      .framework-legend {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        margin-bottom: 48px !important;
+        max-width: 900px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      .fw-tag {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 5px 12px !important;
+        border-radius: 8px !important;
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.3px !important;
+        border: 1px solid !important;
+      }
+      .fw-fitts {
+        background: rgba(99, 102, 241, 0.1) !important;
+        border-color: rgba(99, 102, 241, 0.25) !important;
+        color: #818cf8 !important;
+      }
+      .fw-gestalt {
+        background: rgba(16, 185, 129, 0.1) !important;
+        border-color: rgba(16, 185, 129, 0.25) !important;
+        color: #34d399 !important;
+      }
+      .fw-zpattern {
+        background: rgba(234, 179, 8, 0.1) !important;
+        border-color: rgba(234, 179, 8, 0.25) !important;
+        color: #fbbf24 !important;
+      }
+      .fw-zeigarnik {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border-color: rgba(239, 68, 68, 0.25) !important;
+        color: #f87171 !important;
+      }
+      .fw-nngroup {
+        background: rgba(168, 85, 247, 0.1) !important;
+        border-color: rgba(168, 85, 247, 0.25) !important;
+        color: #c084fc !important;
+      }
+      .fw-peakend {
+        background: rgba(251, 146, 60, 0.1) !important;
+        border-color: rgba(251, 146, 60, 0.25) !important;
+        color: #fb923c !important;
+      }
+
+      /* ── Comparison sections ── */
+      .comparison-section {
+        max-width: 1200px !important;
+        margin: 0 auto 64px !important;
+      }
+      .section-header {
+        display: flex !important;
+        align-items: center !important;
+        gap: 14px !important;
+        margin-bottom: 24px !important;
+        padding-bottom: 14px !important;
+        border-bottom: 1px solid #1f2937 !important;
+      }
+      .section-num {
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: 800 !important;
+        font-size: 15px !important;
+        flex-shrink: 0 !important;
+      }
+      .section-title {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #f3f4f6 !important;
+        letter-spacing: -0.5px !important;
+      }
+      .section-frameworks {
+        margin-left: auto !important;
+        display: flex !important;
+        gap: 6px !important;
+        flex-shrink: 0 !important;
+      }
+      .sf-tag {
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        padding: 3px 8px !important;
+        border-radius: 6px !important;
+        letter-spacing: 0.5px !important;
+      }
+
+      .phones-row {
+        display: flex !important;
+        gap: 28px !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+      }
+      .phone-col {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+      }
+      .phone-label {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1.2px !important;
+        padding: 4px 14px !important;
+        border-radius: 6px !important;
+      }
+      .label-current {
+        background: #1f2937 !important;
+        color: #6b7280 !important;
+      }
+      .label-proposed {
+        background: rgba(16, 185, 129, 0.12) !important;
+        color: #34d399 !important;
+      }
+
+      /* ── Phone frames ── */
+      .phone-frame {
+        width: 340px !important;
+        background: #f5f1ed !important;
+        border-radius: 32px !important;
+        overflow: hidden !important;
+        box-shadow:
+          0 0 0 2px #2d2a26,
+          0 15px 50px rgba(0, 0, 0, 0.5) !important;
+      }
+      .status-bar {
+        height: 48px !important;
+        padding: 14px 24px 0 !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #2d2a26 !important;
+      }
+      .phone-bottom {
+        height: 8px !important;
+        background: #f5f1ed !important;
+      }
+
+      /* ── CURRENT header ── */
+      .cur-header {
+        padding: 4px 18px 0 !important;
+      }
+      .cur-row1 {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: flex-start !important;
+      }
+      .cur-greeting {
+        font-size: 20px !important;
+        font-weight: 800 !important;
+        color: #2d2a26 !important;
+        letter-spacing: -0.5px !important;
+      }
+      .cur-greeting.streak {
+        color: #b45309 !important;
+      }
+      .cur-greeting.done {
+        color: #059669 !important;
+      }
+      .cur-greeting.risk {
+        color: #dc2626 !important;
+      }
+
+      .cur-progress-col {
+        text-align: right !important;
+        padding-top: 2px !important;
+      }
+      .cur-count {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #a8a29e !important;
+        letter-spacing: -0.2px !important;
+      }
+      .cur-count .num {
+        font-weight: 700 !important;
+      }
+      .cur-count .num.green {
+        color: #059669 !important;
+      }
+      .cur-count .num.muted {
+        color: #a8a29e !important;
+      }
+      .cur-all-done {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #059669 !important;
+      }
+
+      .cur-dots {
+        display: flex !important;
+        gap: 3px !important;
+        justify-content: flex-end !important;
+        margin-top: 3px !important;
+      }
+      .dot-old {
+        width: 6px !important;
+        height: 6px !important;
+        border-radius: 50% !important;
+        background: #e5e0db !important;
+      }
+      .dot-old.filled {
+        background: #10b981 !important;
+      }
+      .dot-old.golden {
+        background: #e8b94d !important;
+      }
+      .dot-old.risk {
+        background: #ef4444 !important;
+        animation: pulse-dot 1.5s ease-in-out infinite !important;
+      }
+
+      .cur-date-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-top: 2px !important;
+        gap: 8px !important;
+      }
+      .cur-date-tap {
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+      }
+      .cur-date-text {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #78716c !important;
+      }
+      .cur-date-icon {
+        color: #a8a29e !important;
+      }
+
+      .badge-pill {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        padding: 2px 10px 2px 6px !important;
+        border-radius: 99px !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+      }
+      .badge-streak {
+        background: #fef3c7 !important;
+        border: 1px solid rgba(232, 185, 77, 0.25) !important;
+        color: #92400e !important;
+      }
+      .badge-risk {
+        background: #fef2f2 !important;
+        border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        color: #dc2626 !important;
+      }
+      .badge-almost {
+        background: #ecfdf5 !important;
+        border: 1px solid rgba(16, 185, 129, 0.25) !important;
+        color: #059669 !important;
+      }
+
+      /* ── NEW (proposed) header ── */
+      .new-header {
+        padding: 4px 18px 0 !important;
+      }
+      .new-row1 {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: baseline !important;
+      }
+      .new-greeting-wrap {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+      }
+      .new-greeting {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        color: #2d2a26 !important;
+        letter-spacing: -0.6px !important;
+      }
+      .new-greeting.streak {
+        color: #b45309 !important;
+      }
+      .new-greeting.done {
+        color: #059669 !important;
+      }
+      .new-greeting.risk {
+        color: #dc2626 !important;
+      }
+      .new-greeting .emoji {
+        font-size: 18px !important;
+      }
+
+      .new-fraction {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #a8a29e !important;
+        letter-spacing: -0.3px !important;
+        flex-shrink: 0 !important;
+      }
+      .new-fraction .num {
+        font-weight: 800 !important;
+      }
+      .new-fraction .num.green {
+        color: #059669 !important;
+      }
+      .new-fraction .num.red {
+        color: #ef4444 !important;
+      }
+      .new-all-done {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        color: #059669 !important;
+      }
+
+      /* ── Progress bar ── */
+      .progress-bar-wrap {
+        margin-top: 6px !important;
+        height: 5px !important;
+        border-radius: 99px !important;
+        background: #e5e0db !important;
+        overflow: hidden !important;
+        position: relative !important;
+      }
+      .progress-bar-fill {
+        height: 100% !important;
+        border-radius: 99px !important;
+        background: #10b981 !important;
+        transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        position: relative !important;
+      }
+      .progress-bar-fill.golden {
+        background: linear-gradient(
+          90deg,
+          #f59e0b,
+          #eab308,
+          #f59e0b
+        ) !important;
+        background-size: 200% 100% !important;
+        animation: shimmer 2s ease-in-out infinite !important;
+      }
+      .progress-bar-fill.risk-empty {
+        width: 100% !important;
+        background: rgba(239, 68, 68, 0.15) !important;
+        animation: pulse-bar 2s ease-in-out infinite !important;
+      }
+      .progress-bar-fill.almost {
+        background: #10b981 !important;
+      }
+      .progress-bar-gap {
+        position: absolute !important;
+        right: 0 !important;
+        top: -2px !important;
+        bottom: -2px !important;
+        width: 18% !important;
+        background: rgba(16, 185, 129, 0.08) !important;
+        border-radius: 0 99px 99px 0 !important;
+        animation: pulse-gap 1.5s ease-in-out infinite !important;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes pulse-bar {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 0.8;
+        }
+      }
+      @keyframes pulse-gap {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      .new-date-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-top: 5px !important;
+        gap: 8px !important;
+      }
+      .new-date-tap {
+        display: flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+      }
+      .new-date-text {
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #78716c !important;
+      }
+      .new-date-icon {
+        color: #a8a29e !important;
+      }
+      .new-badge-text {
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.1px !important;
+      }
+      .new-badge-text.streak-color {
+        color: #b45309 !important;
+      }
+      .new-badge-text.risk-color {
+        color: #dc2626 !important;
+      }
+      .new-badge-text.almost-color {
+        color: #059669 !important;
+      }
+      .new-badge-text.done-color {
+        color: #78716c !important;
+      }
+
+      /* ── Shared day strip ── */
+      .shelf {
+        background: #ede9e4 !important;
+        border-radius: 0 0 18px 18px !important;
+        margin: 10px 0 0 !important;
+        padding: 10px 14px 14px !important;
+      }
+      .day-strip {
+        display: flex !important;
+        justify-content: space-between !important;
+        gap: 3px !important;
+      }
+      .day-col {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 4px !important;
+        flex: 1 !important;
+      }
+      .day-lbl {
+        font-size: 9px !important;
+        font-weight: 600 !important;
+        color: #a8a29e !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+      }
+      .day-lbl.today-lbl {
+        color: #059669 !important;
+        font-weight: 700 !important;
+      }
+      .day-lbl.risk-lbl {
+        color: #ef4444 !important;
+        font-weight: 700 !important;
+      }
+      .day-c {
+        width: 34px !important;
+        height: 34px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        position: relative !important;
+      }
+      .day-c.empty {
+        background: #e5e0db !important;
+        color: #a8a29e !important;
+      }
+      .day-c.complete {
+        background: rgba(16, 185, 129, 0.12) !important;
+        color: #059669 !important;
+      }
+      .day-c.complete::after {
+        content: '✓' !important;
+        position: absolute !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #10b981 !important;
+      }
+      .day-c.complete span {
+        visibility: hidden !important;
+      }
+      .day-c.today-c {
+        background: #2d2a26 !important;
+        color: #f5f1ed !important;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.15) !important;
+      }
+      .day-c.today-done {
+        background: #10b981 !important;
+        color: #fff !important;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3) !important;
+      }
+      .day-c.today-done::after {
+        content: '✓' !important;
+        position: absolute !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+      }
+      .day-c.today-done span {
+        visibility: hidden !important;
+      }
+      .day-c.today-risk {
+        background: #dc2626 !important;
+        color: #fff !important;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3) !important;
+      }
+      .day-c.future {
+        background: #f5f1ed !important;
+        color: #d4cfc9 !important;
+        border: 1.5px dashed #d4cfc9 !important;
+      }
+
+      /* ── Annotations ── */
+      .annotation {
+        max-width: 280px !important;
+        align-self: center !important;
+      }
+      .annotation-title {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #f3f4f6 !important;
+        margin-bottom: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+      }
+      .annotation-title .arrow {
+        color: #10b981 !important;
+        font-size: 18px !important;
+      }
+      .annotation p {
+        font-size: 13px !important;
+        color: #9ca3af !important;
+        line-height: 1.55 !important;
+        margin-bottom: 10px !important;
+      }
+      .annotation strong {
+        color: #e5e7eb !important;
+      }
+      .fw-callout {
+        border-radius: 10px !important;
+        padding: 10px 14px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 8px !important;
+      }
+      .fw-callout .icon {
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+      }
+      .fw-callout.nngroup {
+        background: rgba(168, 85, 247, 0.08) !important;
+        border: 1px solid rgba(168, 85, 247, 0.2) !important;
+        color: #c084fc !important;
+      }
+      .fw-callout.zeigarnik {
+        background: rgba(239, 68, 68, 0.08) !important;
+        border: 1px solid rgba(239, 68, 68, 0.2) !important;
+        color: #f87171 !important;
+      }
+      .fw-callout.gestalt {
+        background: rgba(16, 185, 129, 0.08) !important;
+        border: 1px solid rgba(16, 185, 129, 0.2) !important;
+        color: #34d399 !important;
+      }
+      .fw-callout.zpattern {
+        background: rgba(234, 179, 8, 0.08) !important;
+        border: 1px solid rgba(234, 179, 8, 0.2) !important;
+        color: #fbbf24 !important;
+      }
+      .fw-callout.peakend {
+        background: rgba(251, 146, 60, 0.08) !important;
+        border: 1px solid rgba(251, 146, 60, 0.2) !important;
+        color: #fb923c !important;
+      }
+      .fw-callout.fitts {
+        background: rgba(99, 102, 241, 0.08) !important;
+        border: 1px solid rgba(99, 102, 241, 0.2) !important;
+        color: #818cf8 !important;
+      }
+
+      /* ── VS divider ── */
+      .vs-divider {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+        align-self: center !important;
+      }
+      .vs-arrow {
+        color: #10b981 !important;
+        font-size: 20px !important;
+      }
+      .vs-text {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        color: #4b5563 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 1.5px !important;
+        writing-mode: vertical-rl !important;
+      }
+
+      /* ── Highlight brackets ── */
+      .hl {
+        position: relative !important;
+      }
+      .hl::before {
+        content: '' !important;
+        position: absolute !important;
+        left: -5px !important;
+        right: -5px !important;
+        top: -3px !important;
+        bottom: -3px !important;
+        border: 2px dashed rgba(168, 85, 247, 0.35) !important;
+        border-radius: 10px !important;
+        pointer-events: none !important;
+      }
+      .hl.hl-green::before {
+        border-color: rgba(16, 185, 129, 0.35) !important;
+      }
+      .hl.hl-red::before {
+        border-color: rgba(239, 68, 68, 0.35) !important;
+      }
+      .hl.hl-yellow::before {
+        border-color: rgba(234, 179, 8, 0.35) !important;
+      }
+      .hl.hl-orange::before {
+        border-color: rgba(251, 146, 60, 0.35) !important;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 1200px) {
+        .phones-row {
+          flex-direction: column !important;
+          align-items: center !important;
+        }
+        .annotation {
+          max-width: 500px !important;
+        }
+        .vs-divider {
+          flex-direction: row !important;
+        }
+        .vs-text {
+          writing-mode: initial !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-title">UX Framework-Driven Header Redesign</div>
+    <div class="page-sub">
+      Applying 6 established frameworks to improve scannability, motivation &
+      compactness
+    </div>
+
+    <!-- Framework legend -->
+    <div class="framework-legend">
+      <span class="fw-tag fw-nngroup">📊 NNGroup Progress</span>
+      <span class="fw-tag fw-zpattern">👁 Z-Pattern</span>
+      <span class="fw-tag fw-gestalt">⊞ Gestalt Proximity</span>
+      <span class="fw-tag fw-zeigarnik">⧗ Zeigarnik Effect</span>
+      <span class="fw-tag fw-fitts">🎯 Fitts's Law</span>
+      <span class="fw-tag fw-peakend">🏔 Peak-End Rule</span>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       STATE 1: Mid-progress (3 of 6)
+       ═══════════════════════════════════════ -->
+    <div class="comparison-section">
+      <div class="section-header">
+        <div class="section-num" style="background: #10b981; color: #fff">
+          1
+        </div>
+        <div class="section-title">
+          Morning — 3 of 6 habits done (5-day streak)
+        </div>
+        <div class="section-frameworks">
+          <span class="sf-tag fw-nngroup">NNGroup</span>
+          <span class="sf-tag fw-zpattern">Z-Pattern</span>
+          <span class="sf-tag fw-gestalt">Gestalt</span>
+        </div>
+      </div>
+      <div class="phones-row">
+        <!-- CURRENT -->
+        <div class="phone-col">
+          <span class="phone-label label-current">Current</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>8:24 AM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="cur-header">
+              <div class="cur-row1">
+                <div class="cur-greeting streak">5-day streak</div>
+                <div class="cur-progress-col">
+                  <div class="cur-count">
+                    <span class="num green">3</span> of 6
+                  </div>
+                  <div class="hl hl-red">
+                    <div class="cur-dots">
+                      <div class="dot-old filled"></div>
+                      <div class="dot-old filled"></div>
+                      <div class="dot-old filled"></div>
+                      <div class="dot-old"></div>
+                      <div class="dot-old"></div>
+                      <div class="dot-old"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cur-date-row">
+                <div class="cur-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="cur-date-icon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i>
+                  <span class="cur-date-text">Tuesday, March 2</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="cur-date-icon"
+                    style="width: 12px; height: 12px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="badge-pill badge-streak">
+                  <span>🔥</span> Keep going!
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-c">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <div class="vs-divider">
+          <span class="vs-arrow">→</span>
+          <span class="vs-text">vs</span>
+        </div>
+
+        <!-- PROPOSED -->
+        <div class="phone-col">
+          <span class="phone-label label-proposed">Proposed</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>8:24 AM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="new-header">
+              <div class="new-row1">
+                <div class="new-greeting-wrap">
+                  <div class="new-greeting streak">5-day streak</div>
+                  <span class="new-greeting emoji" style="font-size: 18px"
+                    >🔥</span
+                  >
+                </div>
+                <div class="new-fraction">
+                  <span class="num green">3</span> / 6
+                </div>
+              </div>
+              <div class="hl hl-green">
+                <div class="progress-bar-wrap">
+                  <div class="progress-bar-fill" style="width: 50%"></div>
+                </div>
+              </div>
+              <div class="new-date-row">
+                <div class="new-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="new-date-icon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i>
+                  <span class="new-date-text">Mar 2 – 8</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="new-date-icon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="new-badge-text streak-color">Keep going!</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-c">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <!-- ANNOTATION -->
+        <div class="annotation">
+          <div class="annotation-title">
+            <span class="arrow">→</span> Framework-driven changes
+          </div>
+          <div class="fw-callout nngroup">
+            <span class="icon">📊</span>
+            <span
+              ><strong>NNGroup:</strong> Continuous progress bar replaces 6px
+              dots. Bars are 40% faster to scan — users gauge progress in
+              &lt;200ms vs ~500ms counting dots.</span
+            >
+          </div>
+          <div class="fw-callout zpattern">
+            <span class="icon">👁</span>
+            <span
+              ><strong>Z-Pattern:</strong> Eye enters top-left (greeting) →
+              crosses to top-right (3/6) → drops to bar → bottom-left (date).
+              Natural LTR reading flow.</span
+            >
+          </div>
+          <div class="fw-callout gestalt">
+            <span class="icon">⊞</span>
+            <span
+              ><strong>Gestalt Proximity:</strong> 🔥 emoji moved next to "5-day
+              streak" it describes, not isolated in a separate pill. Badge text
+              "Keep going!" stands alone as text — no pill border noise.</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       STATE 2: Almost Done (5 of 6)
+       ═══════════════════════════════════════ -->
+    <div class="comparison-section">
+      <div class="section-header">
+        <div class="section-num" style="background: #8b5cf6; color: #fff">
+          2
+        </div>
+        <div class="section-title">Almost Done — 5 of 6 (the final push)</div>
+        <div class="section-frameworks">
+          <span class="sf-tag fw-zeigarnik">Zeigarnik</span>
+          <span class="sf-tag fw-nngroup">NNGroup</span>
+        </div>
+      </div>
+      <div class="phones-row">
+        <!-- CURRENT -->
+        <div class="phone-col">
+          <span class="phone-label label-current">Current</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>8:47 PM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="cur-header">
+              <div class="cur-row1">
+                <div class="cur-greeting" style="color: #059669">
+                  Just 1 left!
+                </div>
+                <div class="cur-progress-col">
+                  <div class="cur-count">
+                    <span class="num green">5</span> of 6
+                  </div>
+                  <div class="cur-dots">
+                    <div class="dot-old filled"></div>
+                    <div class="dot-old filled"></div>
+                    <div class="dot-old filled"></div>
+                    <div class="dot-old filled"></div>
+                    <div class="dot-old filled"></div>
+                    <div class="dot-old"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cur-date-row">
+                <div class="cur-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="cur-date-icon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i>
+                  <span class="cur-date-text">Tuesday, March 2</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="cur-date-icon"
+                    style="width: 12px; height: 12px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="badge-pill badge-almost">
+                  <span>✨</span> Almost perfect!
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-c">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <div class="vs-divider">
+          <span class="vs-arrow">→</span>
+          <span class="vs-text">vs</span>
+        </div>
+
+        <!-- PROPOSED -->
+        <div class="phone-col">
+          <span class="phone-label label-proposed">Proposed</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>8:47 PM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="new-header">
+              <div class="new-row1">
+                <div class="new-greeting-wrap">
+                  <div class="new-greeting" style="color: #059669">
+                    Just 1 left!
+                  </div>
+                  <span style="font-size: 18px">✨</span>
+                </div>
+                <div class="new-fraction">
+                  <span class="num green">5</span> / 6
+                </div>
+              </div>
+              <div class="hl hl-red" style="position: relative">
+                <div class="progress-bar-wrap">
+                  <div
+                    class="progress-bar-fill almost"
+                    style="width: 83%"
+                  ></div>
+                </div>
+                <!-- Pulsing gap indicator -->
+                <div
+                  style="
+                    position: absolute;
+                    right: 0;
+                    top: -1px;
+                    bottom: -1px;
+                    width: 17%;
+                    background: rgba(16, 185, 129, 0.06);
+                    border-radius: 0 99px 99px 0;
+                    animation: pulse-gap 1.5s ease-in-out infinite;
+                  "
+                ></div>
+              </div>
+              <div class="new-date-row">
+                <div class="new-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="new-date-icon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i>
+                  <span class="new-date-text">Mar 2 – 8</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="new-date-icon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="new-badge-text almost-color">Almost perfect!</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-c">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <!-- ANNOTATION -->
+        <div class="annotation">
+          <div class="annotation-title">
+            <span class="arrow">→</span> Framework-driven changes
+          </div>
+          <div class="fw-callout zeigarnik">
+            <span class="icon">⧗</span>
+            <span
+              ><strong>Zeigarnik Effect:</strong> The nearly-full bar with a
+              pulsing gap is viscerally uncomfortable. The tiny empty space
+              screams "finish me" — far more powerful than a single unfilled 6px
+              dot.</span
+            >
+          </div>
+          <div class="fw-callout nngroup">
+            <span class="icon">📊</span>
+            <span
+              ><strong>NNGroup:</strong> At 83% fill, the bar creates an
+              unmistakable "almost there" signal. With dots, 5-of-6 filled vs
+              4-of-6 looks nearly identical — the bar makes the gap
+              dramatic.</span
+            >
+          </div>
+          <p style="margin-top: 4px">
+            <strong>The pulsing empty gap</strong> draws the eye to what's
+            missing. Users report feeling "pulled" to complete the bar — the
+            same mechanic that makes loading bars addictive.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       STATE 3: Streak at Risk (0 of 6, 9pm)
+       ═══════════════════════════════════════ -->
+    <div class="comparison-section">
+      <div class="section-header">
+        <div class="section-num" style="background: #ef4444; color: #fff">
+          3
+        </div>
+        <div class="section-title">Streak at Risk — 9 PM, 0 habits done</div>
+        <div class="section-frameworks">
+          <span class="sf-tag fw-zeigarnik">Zeigarnik</span>
+          <span class="sf-tag fw-fitts">Fitts's</span>
+        </div>
+      </div>
+      <div class="phones-row">
+        <!-- CURRENT -->
+        <div class="phone-col">
+          <span class="phone-label label-current">Current</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>9:14 PM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="cur-header">
+              <div class="cur-row1">
+                <div class="cur-greeting risk">Streak at risk</div>
+                <div class="cur-progress-col">
+                  <div class="cur-count">
+                    <span class="num muted">0</span> of 6
+                  </div>
+                  <div class="cur-dots">
+                    <div class="dot-old risk"></div>
+                    <div class="dot-old risk"></div>
+                    <div class="dot-old risk"></div>
+                    <div class="dot-old risk"></div>
+                    <div class="dot-old risk"></div>
+                    <div class="dot-old risk"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cur-date-row">
+                <div class="cur-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="cur-date-icon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i>
+                  <span class="cur-date-text">Tuesday, March 2</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="cur-date-icon"
+                    style="width: 12px; height: 12px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="badge-pill badge-risk">
+                  <span>⚠️</span> 5 days at stake
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl risk-lbl">Today</span>
+                  <div class="day-c today-risk">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <div class="vs-divider">
+          <span class="vs-arrow">→</span>
+          <span class="vs-text">vs</span>
+        </div>
+
+        <!-- PROPOSED -->
+        <div class="phone-col">
+          <span class="phone-label label-proposed">Proposed</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>9:14 PM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="new-header">
+              <div class="new-row1">
+                <div class="new-greeting-wrap">
+                  <div class="new-greeting risk">Streak at risk</div>
+                  <span style="font-size: 16px">⚠️</span>
+                </div>
+                <div class="new-fraction">
+                  <span class="num red">0</span> / 6
+                </div>
+              </div>
+              <div class="progress-bar-wrap">
+                <div
+                  class="progress-bar-fill risk-empty"
+                  style="width: 100%"
+                ></div>
+              </div>
+              <div class="new-date-row">
+                <div class="new-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="new-date-icon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i>
+                  <span class="new-date-text">Mar 2 – 8</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="new-date-icon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="new-badge-text risk-color">5 days at stake</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl risk-lbl">Today</span>
+                  <div class="day-c today-risk">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <!-- ANNOTATION -->
+        <div class="annotation">
+          <div class="annotation-title">
+            <span class="arrow">→</span> Framework-driven changes
+          </div>
+          <div class="fw-callout zeigarnik">
+            <span class="icon">⧗</span>
+            <span
+              ><strong>Zeigarnik + Loss Aversion:</strong> A completely empty,
+              pulsing red bar is far more alarming than 6 tiny pulsing dots. The
+              bar occupies the full width — it's impossible to ignore.</span
+            >
+          </div>
+          <div class="fw-callout fitts">
+            <span class="icon">🎯</span>
+            <span
+              ><strong>Fitts's Law:</strong> The full-width progress bar is a
+              tappable target (scrolls to first habit). At 5px × full-width, it
+              has ~15x the tap area of 6 tiny dots — trivial to hit even in a
+              panic.</span
+            >
+          </div>
+          <p style="margin-top: 4px">
+            <strong>The pulsing empty bar</strong> creates a visual "wound" in
+            the UI. Combined with the red today circle, the entire header
+            communicates urgency without a single word of copy.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       STATE 4: Perfect Day (6 of 6)
+       ═══════════════════════════════════════ -->
+    <div class="comparison-section">
+      <div class="section-header">
+        <div class="section-num" style="background: #f59e0b; color: #fff">
+          4
+        </div>
+        <div class="section-title">Perfect Day — All 6 habits complete</div>
+        <div class="section-frameworks">
+          <span class="sf-tag fw-peakend">Peak-End</span>
+          <span class="sf-tag fw-gestalt">Gestalt</span>
+        </div>
+      </div>
+      <div class="phones-row">
+        <!-- CURRENT -->
+        <div class="phone-col">
+          <span class="phone-label label-current">Current</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>9:41 PM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="cur-header">
+              <div class="cur-row1">
+                <div class="cur-greeting done">Perfect day</div>
+                <div class="cur-progress-col">
+                  <div class="cur-all-done">All done!</div>
+                  <div class="cur-dots">
+                    <div class="dot-old golden"></div>
+                    <div class="dot-old golden"></div>
+                    <div class="dot-old golden"></div>
+                    <div class="dot-old golden"></div>
+                    <div class="dot-old golden"></div>
+                    <div class="dot-old golden"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cur-date-row">
+                <div class="cur-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="cur-date-icon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i>
+                  <span class="cur-date-text">Tuesday, March 2</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="cur-date-icon"
+                    style="width: 12px; height: 12px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="badge-pill badge-streak">
+                  <span>⚡</span> 13 days
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-done"><span>2</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <div class="vs-divider">
+          <span class="vs-arrow">→</span>
+          <span class="vs-text">vs</span>
+        </div>
+
+        <!-- PROPOSED -->
+        <div class="phone-col">
+          <span class="phone-label label-proposed">Proposed</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>9:41 PM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="new-header">
+              <div class="new-row1">
+                <div class="new-greeting-wrap">
+                  <div class="new-greeting done">Perfect day</div>
+                  <span style="font-size: 18px">✨</span>
+                </div>
+                <div class="new-all-done">All done!</div>
+              </div>
+              <div class="hl hl-orange">
+                <div class="progress-bar-wrap">
+                  <div
+                    class="progress-bar-fill golden"
+                    style="width: 100%"
+                  ></div>
+                </div>
+              </div>
+              <div class="new-date-row">
+                <div class="new-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="new-date-icon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i>
+                  <span class="new-date-text">Mar 2 – 8</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="new-date-icon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <span class="new-badge-text done-color">⚡ 13-day streak</span>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c complete"><span>24</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-done"><span>2</span></div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <!-- ANNOTATION -->
+        <div class="annotation">
+          <div class="annotation-title">
+            <span class="arrow">→</span> Framework-driven changes
+          </div>
+          <div class="fw-callout peakend">
+            <span class="icon">🏔</span>
+            <span
+              ><strong>Peak-End Rule:</strong> The golden shimmering bar creates
+              a distinct "peak" moment. Users remember emotional peaks — a 6px
+              golden dot row can't compete with a full-width animated gold
+              bar.</span
+            >
+          </div>
+          <div class="fw-callout gestalt">
+            <span class="icon">⊞</span>
+            <span
+              ><strong>Gestalt Continuity:</strong> The bar's shimmer animation
+              flows left-to-right continuously, creating a sense of
+              "completeness in motion" — the visual equivalent of a victory
+              lap.</span
+            >
+          </div>
+          <p style="margin-top: 4px">
+            <strong>Screenshot-worthy.</strong> The golden bar is the most
+            visually distinct element across all states. This is the exact
+            moment users share to social media — make it beautiful.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       STATE 5: Fresh Start (No streak, morning)
+       ═══════════════════════════════════════ -->
+    <div class="comparison-section">
+      <div class="section-header">
+        <div class="section-num" style="background: #6b7280; color: #fff">
+          5
+        </div>
+        <div class="section-title">Fresh Start — No streak, 0 of 4 habits</div>
+        <div class="section-frameworks">
+          <span class="sf-tag fw-zpattern">Z-Pattern</span>
+          <span class="sf-tag fw-fitts">Fitts's</span>
+        </div>
+      </div>
+      <div class="phones-row">
+        <!-- CURRENT -->
+        <div class="phone-col">
+          <span class="phone-label label-current">Current</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>7:30 AM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="cur-header">
+              <div class="cur-row1">
+                <div class="cur-greeting">Good morning</div>
+                <div class="cur-progress-col">
+                  <div class="cur-count">
+                    <span class="num muted">0</span> of 4
+                  </div>
+                  <div class="cur-dots">
+                    <div class="dot-old"></div>
+                    <div class="dot-old"></div>
+                    <div class="dot-old"></div>
+                    <div class="dot-old"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cur-date-row">
+                <div class="cur-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="cur-date-icon"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i>
+                  <span class="cur-date-text">Tuesday, March 2</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="cur-date-icon"
+                    style="width: 12px; height: 12px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c empty">24</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-c">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <div class="vs-divider">
+          <span class="vs-arrow">→</span>
+          <span class="vs-text">vs</span>
+        </div>
+
+        <!-- PROPOSED -->
+        <div class="phone-col">
+          <span class="phone-label label-proposed">Proposed</span>
+          <div class="phone-frame">
+            <div class="status-bar">
+              <span>7:30 AM</span
+              ><span style="font-size: 12px; color: #a8a29e">●●● WiFi 🔋</span>
+            </div>
+            <div class="new-header">
+              <div class="new-row1">
+                <div class="new-greeting-wrap">
+                  <div class="new-greeting">Good morning</div>
+                  <span style="font-size: 16px">☀️</span>
+                </div>
+                <div class="new-fraction">
+                  <span class="num" style="color: #a8a29e">0</span> / 4
+                </div>
+              </div>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" style="width: 0%"></div>
+              </div>
+              <div class="new-date-row">
+                <div class="new-date-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="new-date-icon"
+                    style="width: 13px; height: 13px; stroke-width: 2"
+                  ></i>
+                  <span class="new-date-text">Mar 2 – 8</span>
+                  <i
+                    data-lucide="chevron-down"
+                    class="new-date-icon"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="day-strip">
+                <div class="day-col">
+                  <span class="day-lbl">Mon</span>
+                  <div class="day-c empty">24</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl today-lbl">Today</span>
+                  <div class="day-c today-c">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Wed</span>
+                  <div class="day-c future">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Thu</span>
+                  <div class="day-c future">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Fri</span>
+                  <div class="day-c future">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sat</span>
+                  <div class="day-c future">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-lbl">Sun</span>
+                  <div class="day-c future">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="phone-bottom"></div>
+          </div>
+        </div>
+
+        <!-- ANNOTATION -->
+        <div class="annotation">
+          <div class="annotation-title">
+            <span class="arrow">→</span> Framework-driven changes
+          </div>
+          <div class="fw-callout zpattern">
+            <span class="icon">👁</span>
+            <span
+              ><strong>Z-Pattern:</strong> Even with no streak/badge, the layout
+              is identical. The empty bar + "0/4" tells the user exactly where
+              they stand in <200ms. Consistent spatial memory across all
+              states.</span
+            >
+          </div>
+          <div class="fw-callout fitts">
+            <span class="icon">🎯</span>
+            <span
+              ><strong>Fitts's Law:</strong> The empty progress bar is a
+              full-width tap target that scrolls to the first habit. For a new
+              user with no streaks, this is the primary call-to-action — and
+              it's the biggest target on screen.</span
+            >
+          </div>
+          <p style="margin-top: 4px">
+            <strong>Clean & inviting.</strong> The empty bar isn't
+            anxiety-inducing (no red, no pulsing) — just a neutral lane waiting
+            to be filled. The emoji adds warmth without urgency.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+       Summary card
+       ═══════════════════════════════════════ -->
+    <div
+      style="
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 32px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid #1f2937;
+        border-radius: 16px;
+      "
+    >
+      <div
+        style="
+          font-family: 'Inter', sans-serif;
+          font-size: 18px;
+          font-weight: 800;
+          color: #fff;
+          letter-spacing: -0.5px;
+          margin-bottom: 16px;
+          text-align: center;
+        "
+      >
+        Change Summary
+      </div>
+      <table style="width: 100%; border-collapse: collapse; font-size: 13px">
+        <thead>
+          <tr style="border-bottom: 1px solid #1f2937">
+            <th
+              style="
+                text-align: left;
+                padding: 8px 12px;
+                color: #9ca3af;
+                font-weight: 600;
+              "
+            >
+              Change
+            </th>
+            <th
+              style="
+                text-align: left;
+                padding: 8px 12px;
+                color: #9ca3af;
+                font-weight: 600;
+              "
+            >
+              Framework
+            </th>
+            <th
+              style="
+                text-align: left;
+                padding: 8px 12px;
+                color: #9ca3af;
+                font-weight: 600;
+              "
+            >
+              Impact
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid rgba(31, 41, 55, 0.5)">
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              6px dots → full-width progress bar
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-nngroup" style="font-size: 10px"
+                >NNGroup</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              40% faster scanning
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(31, 41, 55, 0.5)">
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              Emoji into greeting row (not separate pill)
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-gestalt" style="font-size: 10px"
+                >Gestalt</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              Reduced visual noise
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(31, 41, 55, 0.5)">
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              Badge pill → plain text
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-gestalt" style="font-size: 10px"
+                >Gestalt</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              Less chrome, same info
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(31, 41, 55, 0.5)">
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              Greeting L → Fraction R → Bar → Date L
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-zpattern" style="font-size: 10px"
+                >Z-Pattern</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              Natural reading flow
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(31, 41, 55, 0.5)">
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              Pulsing gap on almost-done bar
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-zeigarnik" style="font-size: 10px"
+                >Zeigarnik</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              Completion tension
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(31, 41, 55, 0.5)">
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              Golden shimmer bar on perfect day
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-peakend" style="font-size: 10px"
+                >Peak-End</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              Memorable peak moment
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 12px; color: #e5e7eb">
+              Full-width bar as tap target
+            </td>
+            <td style="padding: 10px 12px">
+              <span class="sf-tag fw-fitts" style="font-size: 10px"
+                >Fitts's</span
+              >
+            </td>
+            <td style="padding: 10px 12px; color: #34d399; font-weight: 600">
+              ~15x larger tap area
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Changed Components · fontWeight migration</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --card-bg: #EDEAE5;
+    --surface: #FFFDFB;
+    --border: #DDD8D2;
+    --border-strong: #C4BFB7;
+    --text: #2D2A26;
+    --text-2: #524D47;
+    --text-muted: #6B6560;
+    --text-tertiary: #6E6660;
+    --primary: #059669;
+    --primary-700: #047857;
+    --primary-100: #D1FAE5;
+    --gold: #8B6208;
+    --gold-100: #FEF3CD;
+    --gold-300: #E8B94D;
+    --error: #B53030;
+    --errorLight: #FEE2E2;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    letter-spacing: -0.005em;
+  }
+  .font-display { font-family: 'Literata', Georgia, serif; letter-spacing: -0.02em; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  .card-outer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 1px 0 rgba(45,42,38,0.04), 0 2px 8px rgba(45,42,38,0.05);
+  }
+  .component-frame {
+    background: var(--bg);
+    border: 1px dashed var(--border-strong);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+  .pill-green { background: var(--primary-100); color: var(--primary-700); }
+  .pill-gold  { background: var(--gold-100);    color: var(--gold); }
+  .pill-gray  { background: #E8E4DE;            color: var(--text-muted); }
+  .mono-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--card-bg);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .diff-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: #1a1816;
+    color: #e4e0d8;
+    border-radius: 10px;
+    padding: 14px 16px;
+    line-height: 1.65;
+    overflow-x: auto;
+  }
+  .diff-minus { color: #ff9f9f; }
+  .diff-plus  { color: #99e6b5; }
+  .diff-neutral { color: #8a857d; }
+
+  /* PREVIEW PRIMITIVES — mimic the app's actual rendering */
+  .preset-chip {
+    padding: 8px 14px;
+    border-radius: 9999px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .preset-chip-sel {
+    background: var(--primary-100);
+    border-color: var(--primary);
+    color: var(--primary-700);
+    font-weight: 600;
+  }
+  .preset-chip-rec::after {
+    content: '★';
+    margin-left: 4px;
+    color: var(--gold);
+    font-size: 10px;
+  }
+  .primary-btn {
+    background: var(--primary);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600; /* post-change: fontWeights.semibold */
+  }
+  .h-line {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body class="min-h-screen py-10 px-6">
+<div class="max-w-5xl mx-auto">
+
+  <!-- HEADER -->
+  <header class="mb-10">
+    <div class="flex items-center gap-2 text-xs uppercase tracking-widest mb-2" style="color: var(--text-muted);">
+      <i data-lucide="git-commit" class="w-3.5 h-3.5"></i>
+      <span>Changed components · 2026-04-21</span>
+    </div>
+    <h1 class="font-display text-4xl font-bold mb-3">6 files edited · 7 raw fontWeights → tokens</h1>
+    <div class="flex items-center gap-3">
+      <span class="pill pill-green"><i data-lucide="check" class="w-3 h-3"></i> 0 visual changes</span>
+      <span class="pill pill-gray">Pure code refactor</span>
+      <span class="pill pill-gray">TypeScript passes</span>
+    </div>
+    <p class="mt-4 max-w-2xl" style="color: var(--text-muted);">
+      Each edit replaced <span class="mono-chip">fontWeight: '500' | '600' | '700'</span> with <span class="mono-chip">fontWeight: fontWeights.medium | .semibold | .bold</span>. The token values equal the strings exactly, so rendered output is unchanged. Mockups below show the current (and post-change) appearance.
+    </p>
+  </header>
+
+  <!-- COMPONENT 1 — GoalTabEmptyState -->
+  <article class="card-outer p-6 mb-8">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <div class="section-label mb-1">Component 1 of 6</div>
+        <h2 class="font-display text-2xl font-bold">GoalTabEmptyState</h2>
+        <div class="mt-1 text-sm" style="color: var(--text-muted);">
+          <span class="mono-chip">src/screens/HabitDetailScreen/components/GoalTabEmptyState.tsx</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">Shown when a habit has no streak goal set. 2 edits (lines 61, 94).</div>
+      </div>
+      <span class="pill pill-green">2 edits</span>
+    </div>
+
+    <div class="grid grid-cols-[1.3fr_1fr] gap-6">
+      <!-- VISUAL -->
+      <div class="component-frame flex flex-col items-center text-center">
+        <div class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style="background: var(--gold-100);">
+          <span class="text-3xl">🎯</span>
+        </div>
+        <div class="font-display text-xl font-bold mb-1" style="color: var(--text);">Set a streak goal</div>
+        <!-- EDIT #1 — was fontWeight: '500', now fontWeights.medium -->
+        <div class="text-sm mb-1" style="color: var(--text); font-weight: 500;" data-annotated="line 61">Pick a target — we'll celebrate every milestone.</div>
+        <div class="text-xs mb-5" style="color: var(--text-muted);">66 days is the science-backed sweet spot.</div>
+        <div class="flex flex-wrap gap-2 justify-center mb-5 max-w-xs">
+          <span class="preset-chip">7d</span>
+          <span class="preset-chip">21d</span>
+          <span class="preset-chip">30d</span>
+          <span class="preset-chip preset-chip-sel preset-chip-rec">66d</span>
+          <span class="preset-chip">100d</span>
+          <span class="preset-chip">1yr</span>
+        </div>
+        <!-- EDIT #2 — was fontWeight: '600', now fontWeights.semibold -->
+        <div class="primary-btn" data-annotated="line 94">Set 66-day goal</div>
+        <div class="text-xs italic mt-3" style="color: var(--text-tertiary);">You can change this anytime in Edit</div>
+      </div>
+
+      <!-- DIFFS -->
+      <div class="flex flex-col gap-3">
+        <div class="text-xs font-semibold" style="color: var(--text-2);">Diff · line 61</div>
+        <div class="diff-block">
+<span class="diff-neutral">  style={{</span>
+<span class="diff-neutral">    ...typography.bodySmall,</span>
+<span class="diff-neutral">    color: colors.text.primary,</span>
+<span class="diff-minus">-   fontWeight: '500'</span>
+<span class="diff-plus">+   fontWeight: fontWeights.medium</span>
+<span class="diff-neutral">  }}</span>
+        </div>
+        <div class="text-xs font-semibold mt-2" style="color: var(--text-2);">Diff · line 94</div>
+        <div class="diff-block">
+<span class="diff-neutral">  style={{</span>
+<span class="diff-neutral">    color: '#fff',</span>
+<span class="diff-minus">-   fontWeight: '600',</span>
+<span class="diff-plus">+   fontWeight: fontWeights.semibold,</span>
+<span class="diff-neutral">    fontSize: 15</span>
+<span class="diff-neutral">  }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- COMPONENT 2 — GoalAdjustSheet -->
+  <article class="card-outer p-6 mb-8">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <div class="section-label mb-1">Component 2 of 6</div>
+        <h2 class="font-display text-2xl font-bold">GoalAdjustSheet</h2>
+        <div class="mt-1 text-sm" style="color: var(--text-muted);">
+          <span class="mono-chip">src/screens/HabitDetailScreen/components/GoalAdjustSheet/GoalAdjustSheet.tsx</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">Bottom sheet for changing / removing the streak goal. 2 edits (both <span class="mono-chip">'600'</span>).</div>
+      </div>
+      <span class="pill pill-green">2 edits</span>
+    </div>
+
+    <div class="grid grid-cols-[1.3fr_1fr] gap-6">
+      <div class="component-frame">
+        <div style="background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px;">
+          <div class="w-10 h-1 rounded-full mx-auto mb-4" style="background: var(--border);"></div>
+          <div class="font-display text-xl font-bold text-center mb-1">Adjust your goal</div>
+          <div class="text-xs text-center mb-4" style="color: var(--text-muted);">Currently: 30-day streak</div>
+          <div class="flex flex-wrap gap-2 justify-center mb-5">
+            <span class="preset-chip">7d</span>
+            <span class="preset-chip">21d</span>
+            <span class="preset-chip preset-chip-sel">30d</span>
+            <span class="preset-chip preset-chip-rec">66d</span>
+            <span class="preset-chip">100d</span>
+            <span class="preset-chip">1yr</span>
+          </div>
+          <!-- EDIT — was '600', now fontWeights.semibold -->
+          <div class="primary-btn mb-2" data-annotated="line 71">Set 30-day goal</div>
+          <!-- EDIT — second '600' in same file -->
+          <div class="text-center text-sm py-2" style="color: var(--error); font-weight: 600;" data-annotated="line 82">Remove goal</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div class="text-xs font-semibold" style="color: var(--text-2);">Diff · both '600' occurrences</div>
+        <div class="diff-block">
+<span class="diff-neutral">// line 71 — "Set {n}-day goal" button</span>
+<span class="diff-neutral">  style={{ color: '#fff',</span>
+<span class="diff-neutral">           fontSize: 15,</span>
+<span class="diff-minus">-          fontWeight: '600' }}</span>
+<span class="diff-plus">+          fontWeight: fontWeights.semibold }}</span>
+
+<span class="diff-neutral">// line 82 — "Remove goal" link</span>
+<span class="diff-neutral">  style={{ ...typography.bodySmall,</span>
+<span class="diff-neutral">           color: colors.status.error,</span>
+<span class="diff-minus">-          fontWeight: '600' }}</span>
+<span class="diff-plus">+          fontWeight: fontWeights.semibold }}</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">
+          Also added <span class="mono-chip">fontWeights</span> to the typography import.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- COMPONENT 3 — GoalWhyAnchor -->
+  <article class="card-outer p-6 mb-8">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <div class="section-label mb-1">Component 3 of 6</div>
+        <h2 class="font-display text-2xl font-bold">GoalWhyAnchor</h2>
+        <div class="mt-1 text-sm" style="color: var(--text-muted);">
+          <span class="mono-chip">src/screens/HabitDetailScreen/components/GoalWhyAnchor/GoalWhyAnchor.tsx</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">Warm pill surfacing the user's own motivation above the goal card. 1 edit (line 42).</div>
+      </div>
+      <span class="pill pill-green">1 edit</span>
+    </div>
+
+    <div class="grid grid-cols-[1.3fr_1fr] gap-6">
+      <div class="component-frame">
+        <div class="flex items-start gap-3 rounded-2xl p-4"
+             style="background: #FFF5E8; border: 1px solid #FED7AA;">
+          <div class="w-9 h-9 flex items-center justify-center rounded-lg" style="background: white;">
+            <span class="text-lg">💪</span>
+          </div>
+          <div class="flex-1">
+            <!-- EDIT — was '700', now fontWeights.bold -->
+            <div class="text-xs uppercase" style="color: #B45309; font-weight: 700; letter-spacing: 0.6px;" data-annotated="line 42">My Why</div>
+            <div class="mt-0.5 italic" style="font-family: Literata, serif; color: #44312A; font-size: 15px; line-height: 21px;">
+              "Because I want to feel strong in my body again."
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div class="text-xs font-semibold" style="color: var(--text-2);">Diff · line 42</div>
+        <div class="diff-block">
+<span class="diff-neutral">  style={{</span>
+<span class="diff-neutral">    ...typography.caption,</span>
+<span class="diff-neutral">    color: '#B45309',</span>
+<span class="diff-minus">-   fontWeight: '700',</span>
+<span class="diff-plus">+   fontWeight: fontWeights.bold,</span>
+<span class="diff-neutral">    letterSpacing: 0.6,</span>
+<span class="diff-neutral">    textTransform: 'uppercase'</span>
+<span class="diff-neutral">  }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- COMPONENT 4 — GoalCoachLine -->
+  <article class="card-outer p-6 mb-8">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <div class="section-label mb-1">Component 4 of 6</div>
+        <h2 class="font-display text-2xl font-bold">GoalCoachLine</h2>
+        <div class="mt-1 text-sm" style="color: var(--text-muted);">
+          <span class="mono-chip">src/screens/HabitDetailScreen/components/GoalCoachLine/GoalCoachLine.tsx</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">One-line state-aware encouragement below the streak ring. 1 edit (line 55).</div>
+      </div>
+      <span class="pill pill-green">1 edit</span>
+    </div>
+
+    <div class="grid grid-cols-[1.3fr_1fr] gap-6">
+      <div class="component-frame">
+        <div class="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5"
+             style="background: #FFF8EE; border: 1px solid #FDE4BD;">
+          <span class="text-lg">🔥</span>
+          <!-- EDIT — was '500', now fontWeights.medium -->
+          <span class="flex-1 text-sm" style="color: #7C3F0A; font-weight: 500;" data-annotated="line 55">Halfway there — keep the streak alive.</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div class="text-xs font-semibold" style="color: var(--text-2);">Diff · line 55</div>
+        <div class="diff-block">
+<span class="diff-neutral">  style={{</span>
+<span class="diff-neutral">    ...typography.bodySmall,</span>
+<span class="diff-neutral">    color: palette.text,</span>
+<span class="diff-minus">-   fontWeight: '500',</span>
+<span class="diff-plus">+   fontWeight: fontWeights.medium,</span>
+<span class="diff-neutral">  }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- COMPONENT 5 — GoalTabContent -->
+  <article class="card-outer p-6 mb-8">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <div class="section-label mb-1">Component 5 of 6</div>
+        <h2 class="font-display text-2xl font-bold">GoalTabContent</h2>
+        <div class="mt-1 text-sm" style="color: var(--text-muted);">
+          <span class="mono-chip">src/screens/HabitDetailScreen/components/GoalTabContent.tsx</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">Wrapper for the goal view. Only the "Adjust goal" underlined link has weight 600. 1 edit (line 73).</div>
+      </div>
+      <span class="pill pill-green">1 edit</span>
+    </div>
+
+    <div class="grid grid-cols-[1.3fr_1fr] gap-6">
+      <div class="component-frame flex flex-col items-center">
+        <div class="text-xs italic mb-2" style="color: var(--text-muted);">[WhyAnchor + StreakGoalCard + CoachLine above]</div>
+        <div class="h-line w-full"></div>
+        <!-- EDIT — was '600', now fontWeights.semibold -->
+        <div class="text-sm py-2" style="color: var(--text-muted); font-weight: 600; text-decoration: underline;" data-annotated="line 73">Adjust goal</div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div class="text-xs font-semibold" style="color: var(--text-2);">Diff · line 73</div>
+        <div class="diff-block">
+<span class="diff-neutral">  style={{</span>
+<span class="diff-neutral">    ...typography.bodySmall,</span>
+<span class="diff-neutral">    color: colors.text.secondary,</span>
+<span class="diff-minus">-   fontWeight: '600',</span>
+<span class="diff-plus">+   fontWeight: fontWeights.semibold,</span>
+<span class="diff-neutral">    textDecorationLine: 'underline'</span>
+<span class="diff-neutral">  }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- COMPONENT 6 — StreakGoalSection -->
+  <article class="card-outer p-6 mb-8">
+    <div class="flex items-start justify-between gap-4 mb-5">
+      <div>
+        <div class="section-label mb-1">Component 6 of 6</div>
+        <h2 class="font-display text-2xl font-bold">StreakGoalSection</h2>
+        <div class="mt-1 text-sm" style="color: var(--text-muted);">
+          <span class="mono-chip">src/screens/HabitEditScreen/StreakGoalSection.tsx</span>
+        </div>
+        <div class="text-xs mt-2" style="color: var(--text-muted);">Preset chip picker inside Edit Habit. The "STREAK GOAL" label uses weight 600. 1 edit (line 47).</div>
+      </div>
+      <span class="pill pill-green">1 edit</span>
+    </div>
+
+    <div class="grid grid-cols-[1.3fr_1fr] gap-6">
+      <div class="component-frame flex flex-col items-center">
+        <!-- EDIT — was '600', now fontWeights.semibold -->
+        <div class="uppercase mb-2" style="color: var(--text-tertiary); font-size: 13px; font-weight: 600; letter-spacing: 0.5px;" data-annotated="line 47">Streak Goal</div>
+        <div class="text-xs mb-4" style="color: var(--text-tertiary);">Aim for 66 days</div>
+        <div class="flex flex-wrap gap-2 justify-center max-w-sm">
+          <span class="preset-chip">None</span>
+          <span class="preset-chip">7d</span>
+          <span class="preset-chip">21d</span>
+          <span class="preset-chip">30d</span>
+          <span class="preset-chip preset-chip-sel">66d</span>
+          <span class="preset-chip">100d</span>
+          <span class="preset-chip">1yr</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <div class="text-xs font-semibold" style="color: var(--text-2);">Diff · line 47</div>
+        <div class="diff-block">
+<span class="diff-neutral">  style={{</span>
+<span class="diff-neutral">    ...typography.caption,</span>
+<span class="diff-neutral">    color: colors.text.tertiary,</span>
+<span class="diff-minus">-   fontWeight: '600',</span>
+<span class="diff-plus">+   fontWeight: fontWeights.semibold,</span>
+<span class="diff-neutral">    letterSpacing: 0.5</span>
+<span class="diff-neutral">  }}</span>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- SUMMARY FOOTER -->
+  <footer class="card-outer p-6 mt-4">
+    <div class="section-label mb-3">Summary</div>
+    <div class="grid grid-cols-4 gap-4 text-sm">
+      <div>
+        <div class="text-xs" style="color: var(--text-muted);">Files edited</div>
+        <div class="font-display font-bold text-2xl mt-1">6</div>
+      </div>
+      <div>
+        <div class="text-xs" style="color: var(--text-muted);">Lines changed</div>
+        <div class="font-display font-bold text-2xl mt-1">14</div>
+        <div class="text-xs mt-0.5" style="color: var(--text-muted);">+14 / −14</div>
+      </div>
+      <div>
+        <div class="text-xs" style="color: var(--text-muted);">fontWeight now</div>
+        <div class="font-display font-bold text-2xl mt-1" style="color: var(--primary);">99%+</div>
+        <div class="text-xs mt-0.5" style="color: var(--text-muted);">was 96.5%</div>
+      </div>
+      <div>
+        <div class="text-xs" style="color: var(--text-muted);">Visual change</div>
+        <div class="font-display font-bold text-2xl mt-1" style="color: var(--primary);">None</div>
+        <div class="text-xs mt-0.5" style="color: var(--text-muted);">Pure refactor</div>
+      </div>
+    </div>
+    <div class="h-line"></div>
+    <div class="text-xs" style="color: var(--text-muted);">
+      Not committed — staged in working tree on branch <span class="mono-chip">design-tokens-audit</span>. Run <span class="mono-chip">git diff</span> to inspect or <span class="mono-chip">git checkout .</span> to revert.
+    </div>
+  </footer>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

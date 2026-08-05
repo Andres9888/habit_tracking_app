@@ -1,0 +1,252 @@
+/* Shared tokens mirroring the app's light/dark theme. */
+:root {
+  --bg: #0a0a0b;
+  --surface: #131316;
+  --card: #1c1c20;
+  --card-2: #222227;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.14);
+  --text: #f5f5f7;
+  --text-secondary: #b5b5bd;
+  --text-tertiary: #7a7a84;
+  --accent: #34d399;
+  --accent-soft: rgba(52, 211, 153, 0.14);
+  --danger: #ef4444;
+  --danger-soft: rgba(239, 68, 68, 0.12);
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
+  --shadow-card: 0 8px 28px rgba(0,0,0,0.45);
+  --font: 'Inter', ui-sans-serif, system-ui, -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: var(--font); color: var(--text); background: #050506; -webkit-font-smoothing: antialiased; }
+
+/* ---------- Phone frame ---------- */
+.phone {
+  width: 390px;
+  background: var(--surface);
+  border-radius: 32px;
+  border: 1px solid var(--border);
+  padding: 16px 0 28px 0;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+  overflow: hidden;
+  position: relative;
+}
+.phone .drag-handle {
+  width: 36px; height: 5px; border-radius: 3px; background: #3a3a42;
+  margin: 4px auto 14px auto;
+}
+.phone .content { padding: 0 20px; }
+
+/* ---------- Section label (matches SectionLabel.tsx) ---------- */
+.section-label {
+  display: flex; align-items: center; gap: 10px;
+  margin: 22px 0 12px 0;
+}
+.section-label .line {
+  flex: 1; height: 1px; background: var(--border);
+}
+.section-label .text {
+  font-size: 11px; letter-spacing: 1.6px; font-weight: 600;
+  color: var(--text-tertiary); text-transform: uppercase;
+}
+.section-label.danger .text { color: #f87171; }
+.section-label.danger .line { background: rgba(239,68,68,0.25); }
+
+/* ---------- Card shared ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: 14px 16px;
+}
+.card.row {
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.card.row:hover { background: var(--card-2); }
+.icon-tile {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--accent-soft); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.icon-tile svg { width: 18px; height: 18px; }
+.row-title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.2; }
+.row-subtitle { font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
+.chevron { color: var(--text-tertiary); margin-left: auto; }
+.chevron svg { width: 18px; height: 18px; }
+
+/* ---------- Streak goal (for visual continuity) ---------- */
+.streak-card { margin-top: 12px; }
+.streak-label {
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+.streak-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.streak-pill {
+  padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 13px; color: var(--text-secondary);
+  background: transparent; cursor: pointer;
+}
+.streak-pill.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+/* ---------- Algorithm cards ---------- */
+.algo-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+  background: var(--card-2);
+  display: flex; gap: 12px; align-items: flex-start;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.algo-card + .algo-card { margin-top: 10px; }
+.algo-card.selected {
+  border-color: var(--accent);
+  background: rgba(52,211,153,0.08);
+}
+.algo-card .algo-icon {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.05); color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.algo-card.selected .algo-icon {
+  background: var(--accent-soft); color: var(--accent);
+}
+.algo-card .algo-body { flex: 1; min-width: 0; }
+.algo-title-row { display: flex; align-items: center; gap: 8px; }
+.algo-title { font-size: 15px; font-weight: 600; color: var(--text); }
+.algo-tag {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.4px;
+  padding: 2px 7px; border-radius: 999px;
+  background: rgba(255,255,255,0.06); color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+.algo-desc { font-size: 12.5px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
+.algo-meta { font-size: 11.5px; color: var(--text-tertiary); margin-top: 6px; }
+
+/* ---------- Growth emoji picker ---------- */
+.preset-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.preset-chip {
+  padding: 6px 10px; border-radius: 999px;
+  background: var(--card-2); border: 1px solid var(--border);
+  font-size: 12px; color: var(--text-secondary); white-space: nowrap;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.preset-chip.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.preset-chip .emojis { font-size: 13px; letter-spacing: -2px; }
+
+.stage-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--card-2);
+  margin-top: 8px;
+  cursor: pointer;
+}
+.stage-row:hover { background: #2a2a30; }
+.stage-emoji { font-size: 24px; width: 34px; text-align: center; }
+.stage-meta { flex: 1; }
+.stage-label { font-size: 13.5px; color: var(--text); font-weight: 500; }
+.stage-hint { font-size: 11.5px; color: var(--text-tertiary); margin-top: 2px; }
+.stage-change { font-size: 11.5px; color: var(--accent); font-weight: 600; }
+
+.reset-link {
+  display: inline-block; margin-top: 10px;
+  font-size: 12px; color: var(--accent); cursor: pointer;
+}
+
+/* ---------- Tabs (Variation A) ---------- */
+.segmented {
+  display: flex; background: var(--card-2); border-radius: 10px; padding: 3px;
+  margin: 12px 0 14px 0;
+}
+.segmented button {
+  flex: 1; padding: 8px 10px; border: 0; background: transparent;
+  color: var(--text-secondary); font-weight: 600; font-size: 13px;
+  border-radius: 8px; cursor: pointer;
+}
+.segmented button.active {
+  background: var(--card); color: var(--text);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* ---------- Collapse machinery ---------- */
+.expandable-body {
+  display: none;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.expandable.open > .expandable-body { display: block; }
+.expandable .chev-rot { transition: transform 0.2s ease; }
+.expandable.open .chev-rot { transform: rotate(180deg); }
+
+/* ---------- Preview chips (Variation A collapsed) ---------- */
+.preview-chips {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+}
+.preview-chip {
+  font-size: 12px; padding: 6px 10px; border-radius: 999px;
+  background: var(--card-2); color: var(--text-secondary);
+  border: 1px solid var(--border);
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.preview-chip strong { color: var(--text); font-weight: 600; }
+.preview-chip .chip-emojis { letter-spacing: -2px; }
+
+/* ---------- Danger Zone ---------- */
+.danger-card {
+  background: var(--card);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: var(--radius-xl);
+  padding: 14px;
+  margin-bottom: 20px;
+}
+.danger-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 4px;
+  color: #f87171; font-size: 14px; font-weight: 500;
+}
+.danger-row + .danger-row { border-top: 1px solid rgba(239,68,68,0.12); }
+
+/* ---------- Index page layout ---------- */
+.index-header {
+  padding: 40px 40px 16px 40px; max-width: 1400px; margin: 0 auto;
+}
+.index-header h1 { font-size: 28px; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+.index-header p { color: var(--text-secondary); margin: 0; font-size: 14px; line-height: 1.6; max-width: 760px; }
+.variations {
+  display: grid; grid-template-columns: repeat(3, minmax(420px, 1fr));
+  gap: 32px; padding: 24px 40px 80px 40px; max-width: 1400px; margin: 0 auto;
+  align-items: start;
+}
+.variant-col h2 { font-size: 17px; margin: 0 0 6px 0; letter-spacing: -0.2px; }
+.variant-col .why { color: var(--text-secondary); font-size: 13px; line-height: 1.55; margin: 0 0 18px 0; }
+.variant-col .why em { color: var(--text-tertiary); font-style: normal; display: block; margin-top: 4px; }
+.state-label {
+  font-size: 10.5px; letter-spacing: 1.5px; font-weight: 700;
+  color: var(--text-tertiary); text-transform: uppercase; margin: 18px 0 8px 2px;
+}
+
+@media (max-width: 1300px) {
+  .variations { grid-template-columns: 1fr; }
+}

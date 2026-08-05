@@ -1,0 +1,713 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Card Gradient Fill Options</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif !important;
+        background: #1a1a2e !important;
+        color: #f0f0f0 !important;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      h1 {
+        text-align: center !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        margin-bottom: 8px !important;
+        background: linear-gradient(135deg, #10b981, #3b82f6) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 32px;
+      }
+
+      .options-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 768px) {
+        .options-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .option-section {
+        background: #16213e;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid #2a3a5c;
+      }
+
+      .option-section.recommended {
+        border-color: #10b981;
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.1);
+      }
+
+      .option-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 6px;
+      }
+
+      .option-letter {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: white;
+      }
+
+      .option-title {
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+      }
+
+      .rec-badge {
+        font-size: 10px;
+        font-weight: 600;
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.15);
+        padding: 2px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .option-desc {
+        font-size: 13px;
+        color: #8899bb;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      .phone-frame {
+        background: #faf8f5;
+        border-radius: 24px;
+        padding: 16px 12px;
+        max-width: 340px;
+        margin: 0 auto;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      }
+
+      .phone-header-label {
+        text-align: center;
+        margin-bottom: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1f2937;
+      }
+
+      .habit-card {
+        position: relative;
+        background: #f0eeeb;
+        border: 1px solid #e5e2de;
+        border-radius: 16px;
+        min-height: 72px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+
+      .habit-card:last-child {
+        margin-bottom: 0;
+      }
+
+      .accent-bar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 16px 0 0 16px;
+      }
+
+      .strength-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 16px 0 0 16px;
+        overflow: hidden;
+        transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .fill-layer {
+        position: absolute;
+        inset: 0;
+      }
+
+      .fill-edge {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 2px;
+      }
+
+      .fill-glow {
+        position: absolute;
+        right: -8px;
+        top: -8px;
+        bottom: -8px;
+        width: 40px;
+        filter: blur(12px);
+      }
+
+      .progress-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .progress-line-dashed {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        pointer-events: none;
+        z-index: 1;
+        border-right-style: dashed;
+        border-right-width: 2px;
+      }
+
+      .card-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        width: 100%;
+        gap: 12px;
+      }
+
+      .card-icon {
+        font-size: 26px;
+      }
+      .card-info {
+        flex: 1;
+      }
+
+      .card-name {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        color: #1f2937 !important;
+        letter-spacing: -0.3px;
+      }
+
+      .card-meta {
+        font-size: 12px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+
+      .card-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: white;
+      }
+
+      .card-check.done {
+        border-color: transparent;
+      }
+
+      .slider-container {
+        grid-column: 1 / -1;
+        background: #16213e;
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid #2a3a5c;
+        text-align: center;
+      }
+
+      .slider-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 12px;
+      }
+
+      .strength-slider {
+        -webkit-appearance: none;
+        width: 80%;
+        max-width: 500px;
+        height: 8px;
+        border-radius: 4px;
+        background: linear-gradient(
+          to right,
+          #65a30d,
+          #16a34a,
+          #0d9488,
+          #0891b2,
+          #059669
+        );
+        outline: none;
+      }
+
+      .strength-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+      }
+
+      .slider-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #10b981;
+        margin-top: 8px;
+      }
+
+      .slider-phase {
+        font-size: 14px;
+        color: #8899bb;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Habit Card Gradient Fill Options</h1>
+    <p class="subtitle">
+      Compare 4 approaches for visualizing habit strength on the card background
+    </p>
+
+    <div class="options-grid">
+      <!-- Interactive Strength Slider -->
+      <div class="slider-container">
+        <div class="slider-label">
+          Drag to preview all options at any strength level
+        </div>
+        <input
+          type="range"
+          class="strength-slider"
+          id="strengthSlider"
+          min="0"
+          max="100"
+          value="65"
+        />
+        <div class="slider-value" id="sliderValue">65%</div>
+        <div class="slider-phase" id="sliderPhase"></div>
+      </div>
+
+      <!-- OPTION A -->
+      <div class="option-section recommended">
+        <div class="option-header">
+          <div class="option-letter" style="background: #10b981">A</div>
+          <div class="option-title">Bolder Existing Fill</div>
+          <span class="rec-badge">Recommended</span>
+        </div>
+        <p class="option-desc">
+          Stronger opacity gradient with vertical depth and a soft leading-edge
+          glow. Visible but tasteful.
+        </p>
+        <div class="phone-frame" id="phoneA"></div>
+      </div>
+
+      <!-- OPTION B -->
+      <div class="option-section">
+        <div class="option-header">
+          <div class="option-letter" style="background: #f59e0b">B</div>
+          <div class="option-title">Solid Color Fill</div>
+        </div>
+        <p class="option-desc">
+          Flat, solid-color background that fills proportionally. Bold and
+          simple like a progress bar.
+        </p>
+        <div class="phone-frame" id="phoneB"></div>
+      </div>
+
+      <!-- OPTION C -->
+      <div class="option-section">
+        <div class="option-header">
+          <div class="option-letter" style="background: #8b5cf6">C</div>
+          <div class="option-title">Multi-Color Journey</div>
+        </div>
+        <p class="option-desc">
+          Fill transitions through all 5 strength colors, showing the full
+          progression journey.
+        </p>
+        <div class="phone-frame" id="phoneC"></div>
+      </div>
+
+      <!-- OPTION D -->
+      <div class="option-section">
+        <div class="option-header">
+          <div class="option-letter" style="background: #ec4899">D</div>
+          <div class="option-title">Glassmorphism Glow</div>
+        </div>
+        <p class="option-desc">
+          Soft, luminous gradient with a frosted-glass feel. Premium and modern.
+        </p>
+        <div class="phone-frame" id="phoneD"></div>
+      </div>
+    </div>
+
+    <script>
+      const HABITS = [
+        { name: 'Meditate', icon: '\u{1F9D8}', color: '#10B981', strength: 85 },
+        { name: 'Read', icon: '\u{1F4D6}', color: '#3B82F6', strength: 52 },
+        {
+          name: 'Exercise',
+          icon: '\u{1F3CB}\u{FE0F}',
+          color: '#F59E0B',
+          strength: 28,
+        },
+        { name: 'Journal', icon: '\u{1F4DD}', color: '#8B5CF6', strength: 12 },
+      ];
+
+      const STRENGTH_COLORS = {
+        starting: '#65a30d',
+        building: '#16a34a',
+        developing: '#0d9488',
+        strong: '#0891b2',
+        automatic: '#059669',
+      };
+
+      function getStrengthLevel(s) {
+        if (s < 20) return 'starting';
+        if (s < 40) return 'building';
+        if (s < 60) return 'developing';
+        if (s < 80) return 'strong';
+        return 'automatic';
+      }
+
+      function getStrengthColor(s) {
+        return STRENGTH_COLORS[getStrengthLevel(s)];
+      }
+
+      function getStrengthEmoji(s) {
+        const emojis = {
+          starting: '\u{1F331}',
+          building: '\u{1F33F}',
+          developing: '\u{1F333}',
+          strong: '\u{1F4AA}',
+          automatic: '\u{26A1}',
+        };
+        return emojis[getStrengthLevel(s)];
+      }
+
+      function getPhaseLabel(s) {
+        const labels = {
+          starting: 'Starting',
+          building: 'Building',
+          developing: 'Developing',
+          strong: 'Strong',
+          automatic: 'Automatic',
+        };
+        return labels[getStrengthLevel(s)];
+      }
+
+      function createEl(tag, className, styles, attrs) {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (styles) Object.assign(el.style, styles);
+        if (attrs) {
+          for (const [k, v] of Object.entries(attrs)) {
+            if (k === 'textContent') el.textContent = v;
+            else el.setAttribute(k, v);
+          }
+        }
+        return el;
+      }
+
+      function createCardBase(h) {
+        const card = createEl('div', 'habit-card');
+
+        const accent = createEl('div', 'accent-bar', { background: h.color });
+        card.appendChild(accent);
+
+        return card;
+      }
+
+      function createCardContent(h) {
+        const content = createEl('div', 'card-content');
+
+        const iconEl = createEl(
+          'span',
+          'card-icon',
+          {},
+          { textContent: h.icon }
+        );
+        content.appendChild(iconEl);
+
+        const info = createEl('div', 'card-info');
+        const nameEl = createEl(
+          'div',
+          'card-name',
+          {},
+          { textContent: h.name }
+        );
+        const metaEl = createEl(
+          'div',
+          'card-meta',
+          {},
+          {
+            textContent:
+              getStrengthEmoji(h.strength) +
+              ' ' +
+              Math.round(h.strength) +
+              '% \u00B7 ' +
+              getPhaseLabel(h.strength),
+          }
+        );
+        info.appendChild(nameEl);
+        info.appendChild(metaEl);
+        content.appendChild(info);
+
+        const check = createEl(
+          'div',
+          'card-check' + (h.strength > 50 ? ' done' : ''),
+          h.strength > 50 ? { background: h.color } : {},
+          { textContent: h.strength > 50 ? '\u2713' : '' }
+        );
+        content.appendChild(check);
+
+        return content;
+      }
+
+      // ─── Option A: Bolder Existing ───
+      function renderOptionA(container, habits) {
+        container.replaceChildren();
+        const header = createEl(
+          'div',
+          'phone-header-label',
+          {},
+          { textContent: 'Option A \u2014 Bolder Existing' }
+        );
+        container.appendChild(header);
+
+        habits.forEach((h) => {
+          const sc = getStrengthColor(h.strength);
+          const card = createCardBase(h);
+
+          const fill = createEl('div', 'strength-fill', {
+            width: h.strength + '%',
+          });
+          const grad = createEl('div', 'fill-layer', {
+            background:
+              'linear-gradient(to right, ' +
+              sc +
+              '66, ' +
+              sc +
+              '40, ' +
+              sc +
+              '14)',
+          });
+          const depth = createEl('div', 'fill-layer', {
+            background:
+              'linear-gradient(to bottom, ' + sc + '00, ' + sc + '22)',
+          });
+          const edge = createEl('div', 'fill-edge', { background: sc + '55' });
+          fill.appendChild(grad);
+          fill.appendChild(depth);
+          fill.appendChild(edge);
+          card.appendChild(fill);
+
+          card.appendChild(createCardContent(h));
+          container.appendChild(card);
+        });
+      }
+
+      // ─── Option B: Solid Fill ───
+      function renderOptionB(container, habits) {
+        container.replaceChildren();
+        const header = createEl(
+          'div',
+          'phone-header-label',
+          {},
+          { textContent: 'Option B \u2014 Solid Color Fill' }
+        );
+        container.appendChild(header);
+
+        habits.forEach((h) => {
+          const sc = getStrengthColor(h.strength);
+          const card = createCardBase(h);
+
+          const fill = createEl('div', 'strength-fill', {
+            width: h.strength + '%',
+          });
+          const solid = createEl('div', 'fill-layer', {
+            background: sc + '33',
+          });
+          fill.appendChild(solid);
+          card.appendChild(fill);
+
+          const line = createEl('div', 'progress-line', {
+            left: h.strength + '%',
+            background: sc + '55',
+          });
+          card.appendChild(line);
+
+          card.appendChild(createCardContent(h));
+          container.appendChild(card);
+        });
+      }
+
+      // ─── Option C: Multi-Color Journey ───
+      function renderOptionC(container, habits) {
+        container.replaceChildren();
+        const header = createEl(
+          'div',
+          'phone-header-label',
+          {},
+          { textContent: 'Option C \u2014 Multi-Color Journey' }
+        );
+        container.appendChild(header);
+
+        habits.forEach((h) => {
+          const sc = getStrengthColor(h.strength);
+          const card = createCardBase(h);
+
+          const fill = createEl('div', 'strength-fill', {
+            width: h.strength + '%',
+          });
+          const scaleFactor = 100 / Math.max(h.strength, 1);
+          const multi = createEl('div', 'fill-layer', {
+            background:
+              'linear-gradient(to right, #65a30d44, #16a34a44, #0d948844, #0891b244, #05966944)',
+            width: scaleFactor * 100 + '%',
+            minWidth: '100%',
+          });
+          fill.appendChild(multi);
+          card.appendChild(fill);
+
+          const line = createEl('div', 'progress-line-dashed', {
+            left: h.strength + '%',
+            borderRightColor: sc + '55',
+          });
+          card.appendChild(line);
+
+          card.appendChild(createCardContent(h));
+          container.appendChild(card);
+        });
+      }
+
+      // ─── Option D: Glassmorphism Glow ───
+      function renderOptionD(container, habits) {
+        container.replaceChildren();
+        const header = createEl(
+          'div',
+          'phone-header-label',
+          {},
+          { textContent: 'Option D \u2014 Glassmorphism Glow' }
+        );
+        container.appendChild(header);
+
+        habits.forEach((h) => {
+          const sc = getStrengthColor(h.strength);
+          const card = createCardBase(h);
+
+          const fill = createEl('div', 'strength-fill', {
+            width: h.strength + '%',
+          });
+          const glass = createEl('div', 'fill-layer', {
+            background:
+              'linear-gradient(135deg, ' +
+              sc +
+              '30, ' +
+              sc +
+              '18, ' +
+              sc +
+              '08)',
+            backdropFilter: 'blur(4px)',
+          });
+          const glow = createEl('div', 'fill-glow', {
+            background:
+              'radial-gradient(ellipse at center, ' + sc + '55, ' + sc + '00)',
+          });
+          fill.appendChild(glass);
+          fill.appendChild(glow);
+          card.appendChild(fill);
+
+          card.appendChild(createCardContent(h));
+          container.appendChild(card);
+        });
+      }
+
+      function renderAll(overrideStrength) {
+        const habitsVaried =
+          overrideStrength !== undefined
+            ? [
+                {
+                  ...HABITS[0],
+                  strength: Math.min(100, overrideStrength + 20),
+                },
+                { ...HABITS[1], strength: overrideStrength },
+                { ...HABITS[2], strength: Math.max(0, overrideStrength - 20) },
+                { ...HABITS[3], strength: Math.max(0, overrideStrength - 40) },
+              ]
+            : HABITS;
+
+        renderOptionA(document.getElementById('phoneA'), habitsVaried);
+        renderOptionB(document.getElementById('phoneB'), habitsVaried);
+        renderOptionC(document.getElementById('phoneC'), habitsVaried);
+        renderOptionD(document.getElementById('phoneD'), habitsVaried);
+      }
+
+      // Initial render
+      renderAll();
+
+      // Slider
+      const slider = document.getElementById('strengthSlider');
+      const sliderValue = document.getElementById('sliderValue');
+      const sliderPhase = document.getElementById('sliderPhase');
+      sliderPhase.textContent = getStrengthEmoji(65) + ' Strong';
+
+      slider.addEventListener('input', function (e) {
+        const val = parseInt(e.target.value);
+        sliderValue.textContent = val + '%';
+        sliderValue.style.color = getStrengthColor(val);
+        sliderPhase.textContent =
+          getStrengthEmoji(val) + ' ' + getPhaseLabel(val);
+        renderAll(val);
+      });
+    </script>
+  </body>
+</html>

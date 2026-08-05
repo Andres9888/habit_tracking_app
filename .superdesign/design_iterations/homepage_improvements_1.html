@@ -1,0 +1,2091 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage Evolution — 6 Strategic Improvements</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #060606 !important;
+        color: #d4d0cc !important;
+        min-height: 100vh;
+        padding: 48px 20px 120px;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      span,
+      div {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+      .hero-eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #10b981;
+        margin-bottom: 14px;
+        opacity: 0.8;
+      }
+      .hero-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 40px;
+        font-weight: 700;
+        color: #f5f1ed;
+        letter-spacing: -1.2px;
+        line-height: 1.1;
+        margin-bottom: 12px;
+      }
+      .hero-sub {
+        font-size: 14px;
+        color: #78716c;
+        max-width: 560px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* ── Section Labels ── */
+      .section-label {
+        text-align: center;
+        margin: 56px 0 28px;
+      }
+      .section-label-text {
+        font-size: 10px;
+        font-weight: 700;
+        color: #57534e;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        position: relative;
+        padding: 0 20px;
+      }
+      .section-label-text::before,
+      .section-label-text::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 48px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .section-label-text::before {
+        right: 100%;
+      }
+      .section-label-text::after {
+        left: 100%;
+      }
+
+      /* ── Phone Grid ── */
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 275px);
+        gap: 28px;
+        justify-content: center;
+      }
+      .grid-featured {
+        display: flex;
+        justify-content: center;
+        gap: 36px;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      @media (max-width: 920px) {
+        .grid-3 {
+          grid-template-columns: repeat(2, 275px);
+        }
+      }
+      @media (max-width: 620px) {
+        .grid-3 {
+          grid-template-columns: 275px;
+        }
+      }
+
+      .variant-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* ── Phone Frame ── */
+      .phone {
+        width: 275px;
+        height: 540px;
+        background: #f5f1ed;
+        border-radius: 30px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.03),
+          0 24px 60px rgba(0, 0, 0, 0.55),
+          0 2px 8px rgba(0, 0, 0, 0.2);
+        flex-shrink: 0;
+      }
+      .phone.large {
+        width: 310px;
+        height: 580px;
+      }
+      .phone-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 34px;
+      }
+
+      /* ── Shelf ── */
+      .shelf {
+        background: #f0ede8;
+        padding: 10px 14px 10px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        margin-bottom: 4px;
+        flex-shrink: 0;
+      }
+      .shelf.celebration {
+        background: linear-gradient(
+          135deg,
+          #f0ede8 60%,
+          rgba(16, 185, 129, 0.08)
+        );
+      }
+
+      /* ── Greeting ── */
+      .g-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .g-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.2px;
+      }
+      .g-text.large {
+        font-size: 15px;
+      }
+      .g-em {
+        color: #10b981;
+        font-weight: 600;
+      }
+      .g-dim {
+        color: #78716c;
+      }
+
+      /* ── Nav Row ── */
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        margin-top: 2px;
+      }
+      .nav-arr {
+        color: #9ca3af;
+        font-size: 9px;
+      }
+      .nav-arr.off {
+        opacity: 0.3;
+      }
+      .nav-date {
+        font-size: 11px;
+        font-weight: 500;
+        color: #78716c;
+      }
+
+      /* ── Day Strip ── */
+      .strip {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 2px 3px;
+      }
+      .dc {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        flex: 1;
+      }
+      .dl {
+        font-size: 8.5px;
+        font-weight: 500;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .dd {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        background: #edeae5;
+      }
+      .dd.cmp {
+        background: #10b981;
+        color: #fff;
+        box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+      }
+      .dd.today {
+        background: #fef9c3;
+        border: 1.5px solid #d4a017;
+        color: #92400e;
+      }
+      .dd.fut {
+        color: #d1d5db;
+      }
+      .dd.part {
+        background: #fef9c3;
+        border: 1.5px solid #d4a017;
+        color: #92400e;
+      }
+      .dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #d1d5db;
+        margin-top: 1px;
+      }
+      .dot.dn {
+        background: #10b981;
+        width: 5px;
+        height: 5px;
+        box-shadow: 0 0 3px rgba(16, 185, 129, 0.3);
+      }
+      .dot.pa {
+        background: #d4a017;
+        width: 5px;
+        height: 5px;
+      }
+      .dot.td {
+        background: #d4a017;
+        width: 3px;
+        height: 3px;
+      }
+
+      /* ── Habit Cards ── */
+      .harea {
+        flex: 1;
+        padding: 4px 14px 80px;
+        overflow: hidden;
+      }
+      .hc {
+        background: #fff;
+        border: 1px solid #e5e2de;
+        border-radius: 14px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-bottom: 6px;
+        box-shadow: 0 1px 4px rgba(45, 42, 38, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .hc.glow {
+        border-color: rgba(16, 185, 129, 0.25);
+        box-shadow:
+          0 1px 4px rgba(45, 42, 38, 0.05),
+          0 0 12px rgba(16, 185, 129, 0.08);
+      }
+      .hc.quickwin {
+        border-color: rgba(16, 185, 129, 0.35);
+        animation: qw-pulse 2s ease-in-out infinite;
+      }
+      @keyframes qw-pulse {
+        0%,
+        100% {
+          box-shadow: 0 1px 4px rgba(45, 42, 38, 0.05);
+        }
+        50% {
+          box-shadow:
+            0 1px 4px rgba(45, 42, 38, 0.05),
+            0 0 16px rgba(16, 185, 129, 0.12);
+        }
+      }
+      .hi {
+        font-size: 17px;
+        flex-shrink: 0;
+      }
+      .hn-wrap {
+        flex: 1;
+        min-width: 0;
+      }
+      .hn {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .hm {
+        font-size: 9.5px;
+        color: #78716c;
+        margin-top: 1px;
+      }
+      .ht {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        flex-shrink: 0;
+        border: 2px solid #e5e2de;
+        background: #fafaf8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .ht.dn {
+        background: #10b981;
+        border-color: #10b981;
+      }
+      .ht.dn::after {
+        content: '✓';
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      /* ── Strength Bar ── */
+      .str-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: #f0ede8;
+      }
+      .str-fill {
+        height: 100%;
+        border-radius: 0 0 0 14px;
+      }
+      .str-fill.strong {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      .str-fill.growing {
+        background: linear-gradient(90deg, #d4a017, #fbbf24);
+      }
+      .str-fill.building {
+        background: linear-gradient(90deg, #9ca3af, #d1d5db);
+      }
+
+      /* ── Quick Win Chip ── */
+      .qw-chip {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 6px;
+        padding: 2px 6px;
+        font-size: 8px;
+        font-weight: 600;
+        color: #10b981;
+        letter-spacing: 0.2px;
+      }
+
+      /* ── Streak Guardian Card ── */
+      .streak-guard {
+        margin: 0 14px 6px;
+        padding: 10px 12px;
+        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        border: 1px solid rgba(212, 160, 23, 0.25);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .sg-fire {
+        font-size: 18px;
+      }
+      .sg-text {
+        flex: 1;
+        font-size: 11px;
+        font-weight: 600;
+        color: #92400e;
+        line-height: 1.3;
+      }
+      .sg-text span {
+        font-weight: 400;
+        color: #b45309;
+      }
+      .sg-cta {
+        font-size: 9px;
+        font-weight: 700;
+        color: #b45309;
+        background: rgba(180, 83, 9, 0.1);
+        padding: 4px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+      }
+
+      /* ── Insight Teaser ── */
+      .insight-line {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 4px;
+        padding: 3px 0;
+      }
+      .insight-icon {
+        font-size: 10px;
+      }
+      .insight-text {
+        font-size: 10px;
+        color: #57534e;
+        font-weight: 500;
+        font-style: italic;
+        flex: 1;
+      }
+      .insight-pro {
+        font-size: 7.5px;
+        font-weight: 700;
+        color: #b45309;
+        background: rgba(254, 243, 205, 0.7);
+        padding: 2px 5px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+
+      /* ── Celebration Overlay ── */
+      .confetti-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 80px;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 5;
+      }
+      .confetti-dot {
+        position: absolute;
+        border-radius: 50%;
+        animation: confetti-fall 3s ease-in infinite;
+      }
+      @keyframes confetti-fall {
+        0% {
+          transform: translateY(-10px) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(450px) rotate(720deg);
+          opacity: 0;
+        }
+      }
+      .celebration-shimmer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          transparent 40%,
+          rgba(16, 185, 129, 0.04) 50%,
+          transparent 60%
+        );
+        animation: shimmer-sweep 3s ease-in-out infinite;
+      }
+      @keyframes shimmer-sweep {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* ── Bottom Bar ── */
+      .bbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(245, 241, 237, 0.88);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(221, 216, 210, 0.4);
+        padding: 10px 16px 20px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+      .bp {
+        height: 28px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 9px;
+        font-size: 10px;
+        font-weight: 600;
+        border: 1px solid;
+        margin-top: -3px;
+      }
+      .bp.gh {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: rgba(221, 216, 210, 0.4);
+        color: #78716c;
+      }
+      .bp.gd {
+        background: rgba(254, 243, 205, 0.45);
+        border-color: rgba(139, 98, 8, 0.15);
+        color: #92400e;
+      }
+      .fab-w {
+        position: relative;
+        margin-top: -16px;
+      }
+      .fab-svg {
+        width: 44px;
+        height: 44px;
+      }
+      .fab-b {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 34px;
+        height: 34px;
+        background: #10b981;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+        font-weight: 300;
+        box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+      }
+      .fab-b.done {
+        background: #10b981;
+        box-shadow: 0 0 12px rgba(16, 185, 129, 0.5);
+      }
+
+      /* ── Labels ── */
+      .vlabel {
+        margin-top: 14px;
+        text-align: center;
+        max-width: 275px;
+      }
+      .vnum {
+        font-size: 9px;
+        font-weight: 600;
+        color: #57534e;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      .vname {
+        font-size: 15px;
+        font-weight: 700;
+        color: #f5f1ed;
+        letter-spacing: -0.3px;
+        margin-bottom: 3px;
+      }
+      .vdesc {
+        font-size: 11px;
+        color: #78716c;
+        line-height: 1.4;
+      }
+      .tags {
+        display: flex;
+        gap: 3px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 7px;
+      }
+      .tag {
+        font-size: 8.5px;
+        font-weight: 600;
+        padding: 3px 6px;
+        border-radius: 4px;
+        letter-spacing: 0.2px;
+      }
+      .tag.rev {
+        background: rgba(212, 160, 23, 0.12);
+        color: #d4a017;
+      }
+      .tag.val {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .tag.pain {
+        background: rgba(244, 63, 94, 0.1);
+        color: #f43f5e;
+      }
+      .tag.eng {
+        background: rgba(139, 92, 246, 0.1);
+        color: #a78bfa;
+      }
+      .tag.rec {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+      }
+
+      /* ── Smart Greeting States ── */
+      .greeting-states {
+        margin: 6px 0;
+        padding: 6px 8px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 8px;
+      }
+      .gs-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+      }
+      .gs-row:last-child {
+        border-bottom: none;
+      }
+      .gs-time {
+        font-size: 8px;
+        color: #9ca3af;
+        font-weight: 500;
+        width: 48px;
+      }
+      .gs-text {
+        font-size: 9.5px;
+        font-weight: 600;
+        color: #2d2a26;
+        flex: 1;
+      }
+      .gs-prog {
+        font-size: 9px;
+        font-weight: 600;
+        color: #10b981;
+      }
+
+      /* ── Impact Matrix ── */
+      .matrix-section {
+        max-width: 1000px;
+        margin: 56px auto 0;
+        padding: 32px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .matrix-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 24px;
+        font-weight: 700;
+        color: #f5f1ed;
+        text-align: center;
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+      }
+      .mx {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 11px;
+        overflow-x: auto;
+      }
+      .mx th {
+        font-size: 9px;
+        font-weight: 600;
+        color: #78716c;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        white-space: nowrap;
+      }
+      .mx td {
+        padding: 8px 10px;
+        color: #a8a29e;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        white-space: nowrap;
+      }
+      .mx td:first-child {
+        color: #f5f1ed;
+        font-weight: 600;
+      }
+      .stars {
+        color: #d4a017;
+        letter-spacing: 1px;
+      }
+      .hi-v {
+        color: #10b981;
+        font-weight: 600;
+      }
+      .md-v {
+        color: #d4a017;
+      }
+      .lo-v {
+        color: #78716c;
+      }
+      .tp td {
+        background: rgba(16, 185, 129, 0.04);
+      }
+
+      /* ── Priority Roadmap ── */
+      .roadmap {
+        max-width: 800px;
+        margin: 40px auto 0;
+        padding: 24px;
+        background: rgba(16, 185, 129, 0.03);
+        border: 1px solid rgba(16, 185, 129, 0.1);
+        border-radius: 14px;
+      }
+      .roadmap-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 18px;
+        font-weight: 700;
+        color: #10b981;
+        margin-bottom: 12px;
+      }
+      .roadmap-body {
+        font-size: 12.5px;
+        color: #a8a29e;
+        line-height: 1.65;
+      }
+      .roadmap-body strong {
+        color: #f5f1ed;
+        font-weight: 600;
+      }
+      .roadmap-body em {
+        color: #10b981;
+        font-style: normal;
+        font-weight: 600;
+      }
+      .phase {
+        margin-top: 12px;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        border-radius: 8px;
+      }
+      .phase-label {
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .phase-label.p1 {
+        color: #10b981;
+      }
+      .phase-label.p2 {
+        color: #d4a017;
+      }
+      .phase-label.p3 {
+        color: #a78bfa;
+      }
+      .phase-items {
+        font-size: 11px;
+        color: #a8a29e;
+        line-height: 1.6;
+      }
+      .phase-items strong {
+        color: #f5f1ed;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══ HERO ═══ -->
+    <div class="hero">
+      <div class="hero-eyebrow">Holistic Homepage Evolution</div>
+      <div class="hero-title">
+        6 Improvements That<br />Drive Revenue & Retention
+      </div>
+      <div class="hero-sub">
+        Beyond the header — improvements spanning habit cards, celebration
+        states, monetization surfaces, and engagement hooks across the full
+        homepage scroll.
+      </div>
+    </div>
+
+    <!-- ═══ CURRENT STATE ═══ -->
+    <div class="section-label">
+      <span class="section-label-text">Current Baseline</span>
+    </div>
+
+    <div class="grid-featured">
+      <div class="variant-wrap">
+        <div class="phone large">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text large">Good afternoon</div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-em">3 of 5</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div class="dd today">25</div>
+                  <div class="dot td"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hc">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">🔥 12 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">🔥 8 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">🔥 5 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn">30 min exercise</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📝</span>
+                <div class="hn-wrap">
+                  <div class="hn">Journal entry</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="113.1"
+                    stroke-dashoffset="45.2"
+                    stroke-linecap="round"
+                    transform="rotate(-90 22 22)"
+                  />
+                </svg>
+                <div class="fab-b">+</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel" style="max-width: 310px">
+          <div class="vnum">Baseline · V1 Implemented</div>
+          <div class="vname">Current Homepage</div>
+          <div class="vdesc">
+            Balanced greeting (left/right), passive strip indicators, FAB
+            progress ring. Clean but has 6 untapped improvement surfaces.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ROW 1: High Impact ═══ -->
+    <div class="section-label">
+      <span class="section-label-text">Engagement & Celebration</span>
+    </div>
+
+    <div class="grid-3">
+      <!-- ── 1: All Done Celebration ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="confetti-overlay">
+              <div
+                class="confetti-dot"
+                style="
+                  width: 5px;
+                  height: 5px;
+                  background: #10b981;
+                  left: 15%;
+                  animation-delay: 0s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 4px;
+                  height: 4px;
+                  background: #fbbf24;
+                  left: 35%;
+                  animation-delay: 0.4s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 6px;
+                  height: 6px;
+                  background: #34d399;
+                  left: 55%;
+                  animation-delay: 0.8s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 4px;
+                  height: 4px;
+                  background: #d4a017;
+                  left: 75%;
+                  animation-delay: 1.2s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 5px;
+                  height: 5px;
+                  background: #10b981;
+                  left: 25%;
+                  animation-delay: 1.6s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 3px;
+                  height: 3px;
+                  background: #fbbf24;
+                  left: 65%;
+                  animation-delay: 2s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 4px;
+                  height: 4px;
+                  background: #34d399;
+                  left: 85%;
+                  animation-delay: 0.6s;
+                "
+              ></div>
+              <div
+                class="confetti-dot"
+                style="
+                  width: 5px;
+                  height: 5px;
+                  background: #10b981;
+                  left: 45%;
+                  animation-delay: 1s;
+                "
+              ></div>
+              <div class="celebration-shimmer"></div>
+            </div>
+            <div class="shelf celebration">
+              <div class="g-row">
+                <div class="g-text large" style="color: #10b981">
+                  Perfect day ✨
+                </div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-em">5 of 5</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div
+                    class="dd cmp"
+                    style="box-shadow: 0 0 10px rgba(16, 185, 129, 0.4)"
+                  >
+                    25
+                  </div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hc glow">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">🔥 12 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc glow">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">🔥 8 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc glow">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">🔥 5 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc glow">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn">30 min exercise</div>
+                  <div class="hm">🔥 3 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc glow">
+                <span class="hi">📝</span>
+                <div class="hn-wrap">
+                  <div class="hn">Journal entry</div>
+                  <div class="hm">🔥 1 day streak!</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="113.1"
+                    stroke-dashoffset="0"
+                    stroke-linecap="round"
+                    transform="rotate(-90 22 22)"
+                  />
+                </svg>
+                <div class="fab-b done">✓</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vnum">Improvement 1</div>
+          <div class="vname">All-Done Celebration</div>
+          <div class="vdesc">
+            Full-page celebration when every habit is complete. Confetti drift,
+            emerald shimmer, "Perfect day ✨" greeting, all cards glow.
+          </div>
+          <div class="tags">
+            <span class="tag rec">★ #1 Priority</span>
+            <span class="tag eng">Engagement loop</span>
+            <span class="tag pain">Completion reward</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 2: Streak Guardian ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text large">Good evening</div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-em">3 of 5</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div class="dd today">25</div>
+                  <div class="dot td"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="streak-guard">
+              <span class="sg-fire">🔥</span>
+              <div class="sg-text">
+                12-day streak ends tonight<br /><span>2 habits remaining</span>
+              </div>
+              <div class="sg-cta">Complete →</div>
+            </div>
+            <div class="harea" style="padding-top: 0">
+              <div class="hc">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">🔥 12 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">🔥 8 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">🔥 5 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc" style="border-color: rgba(212, 160, 23, 0.3)">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn" style="color: #92400e">30 min exercise</div>
+                  <div class="hm" style="color: #b45309">⚠ Streak at risk</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+              <div class="hc" style="border-color: rgba(212, 160, 23, 0.3)">
+                <span class="hi">📝</span>
+                <div class="hn-wrap">
+                  <div class="hn" style="color: #92400e">Journal entry</div>
+                  <div class="hm" style="color: #b45309">⚠ Streak at risk</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="113.1"
+                    stroke-dashoffset="45.2"
+                    stroke-linecap="round"
+                    transform="rotate(-90 22 22)"
+                  />
+                </svg>
+                <div class="fab-b">+</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vnum">Improvement 2</div>
+          <div class="vname">Streak Guardian</div>
+          <div class="vdesc">
+            Amber urgency card when a long streak is at risk in the evening.
+            "Complete →" scrolls to uncompleted habits.
+          </div>
+          <div class="tags">
+            <span class="tag rec">★ #2 Priority</span>
+            <span class="tag rev">$$ Streak protection</span>
+            <span class="tag pain">Streak anxiety</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3: Card Strength Bars ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text large">Good afternoon</div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-em">3 of 5</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div class="dd today">25</div>
+                  <div class="dot td"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hc glow">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">
+                    🔥 12 days ·
+                    <span style="color: #10b981; font-weight: 600">Strong</span>
+                  </div>
+                </div>
+                <div class="ht dn"></div>
+                <div class="str-bar">
+                  <div class="str-fill strong" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="hc">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">
+                    🔥 8 days ·
+                    <span style="color: #d4a017; font-weight: 600"
+                      >Growing</span
+                    >
+                  </div>
+                </div>
+                <div class="ht dn"></div>
+                <div class="str-bar">
+                  <div class="str-fill growing" style="width: 58%"></div>
+                </div>
+              </div>
+              <div class="hc">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">
+                    🔥 5 days ·
+                    <span style="color: #d4a017; font-weight: 600"
+                      >Growing</span
+                    >
+                  </div>
+                </div>
+                <div class="ht dn"></div>
+                <div class="str-bar">
+                  <div class="str-fill growing" style="width: 40%"></div>
+                </div>
+              </div>
+              <div class="hc">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn">30 min exercise</div>
+                  <div class="hm">💪 Building</div>
+                </div>
+                <div class="ht"></div>
+                <div class="str-bar">
+                  <div class="str-fill building" style="width: 15%"></div>
+                </div>
+              </div>
+              <div class="hc">
+                <span class="hi">📝</span>
+                <div class="hn-wrap">
+                  <div class="hn">Journal entry</div>
+                  <div class="hm">💪 Building</div>
+                </div>
+                <div class="ht"></div>
+                <div class="str-bar">
+                  <div class="str-fill building" style="width: 8%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="113.1"
+                    stroke-dashoffset="45.2"
+                    stroke-linecap="round"
+                    transform="rotate(-90 22 22)"
+                  />
+                </svg>
+                <div class="fab-b">+</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vnum">Improvement 3</div>
+          <div class="vname">Habit Strength Bars</div>
+          <div class="vdesc">
+            3px bar at card bottom showing habit maturity: Building → Growing →
+            Strong. Cards with 10+ day streaks get emerald glow border.
+          </div>
+          <div class="tags">
+            <span class="tag val">Long-term progress</span>
+            <span class="tag eng">Gamification</span>
+            <span class="tag rev">$ Per-habit analytics</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ROW 2: Monetization & Intelligence ═══ -->
+    <div class="section-label">
+      <span class="section-label-text">Monetization & Intelligence</span>
+    </div>
+
+    <div class="grid-3">
+      <!-- ── 4: Smart Contextual Greeting ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text large">Almost there</div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-em">4 of 5</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <!-- Show greeting states below strip -->
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div class="dd today">25</div>
+                  <div class="dot td"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Smart greeting variants overlay -->
+            <div style="padding: 4px 14px 0">
+              <div class="greeting-states">
+                <div class="gs-row">
+                  <span class="gs-time">🌅 7am</span
+                  ><span class="gs-text">Fresh start today</span
+                  ><span class="gs-prog" style="color: #78716c">0 of 5</span>
+                </div>
+                <div class="gs-row">
+                  <span class="gs-time">☀ 12pm</span
+                  ><span class="gs-text">Great momentum</span
+                  ><span class="gs-prog">2 of 5</span>
+                </div>
+                <div
+                  class="gs-row"
+                  style="background: rgba(16, 185, 129, 0.05)"
+                >
+                  <span class="gs-time">🌤 3pm</span
+                  ><span class="gs-text" style="color: #10b981"
+                    >Almost there</span
+                  ><span class="gs-prog">4 of 5</span>
+                </div>
+                <div class="gs-row">
+                  <span class="gs-time">🌙 9pm</span
+                  ><span class="gs-text" style="color: #10b981"
+                    >Perfect day ✨</span
+                  ><span class="gs-prog">5 of 5</span>
+                </div>
+              </div>
+            </div>
+            <div class="harea" style="padding-top: 2px">
+              <div class="hc">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">🔥 12 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">🔥 8 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">🔥 5 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn">30 min exercise</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="113.1"
+                    stroke-dashoffset="22.6"
+                    stroke-linecap="round"
+                    transform="rotate(-90 22 22)"
+                  />
+                </svg>
+                <div class="fab-b">+</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vnum">Improvement 4</div>
+          <div class="vname">Smart Greeting</div>
+          <div class="vdesc">
+            Context-aware greeting adapts to time + progress. "Fresh start" at
+            7am, "Almost there" at 3pm, "Perfect day ✨" when done.
+          </div>
+          <div class="tags">
+            <span class="tag val">Personalization</span>
+            <span class="tag eng">Emotional hook</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5: Quick Win Highlight ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text large">Good morning</div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-dim">5 today</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div class="dd today">25</div>
+                  <div class="dot td"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hc quickwin">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">🔥 5 day streak · Avg: 2 min</div>
+                </div>
+                <div class="ht"></div>
+                <div class="qw-chip">Start here</div>
+              </div>
+              <div class="hc">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">🔥 12 day streak</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">🔥 8 day streak</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn">30 min exercise</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📝</span>
+                <div class="hn-wrap">
+                  <div class="hn">Journal entry</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                </svg>
+                <div class="fab-b">+</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vnum">Improvement 5</div>
+          <div class="vname">Quick Win Highlight</div>
+          <div class="vdesc">
+            At 0/5, the easiest habit gets a pulsing emerald border + "Start
+            here" chip. Reduces decision paralysis on first open.
+          </div>
+          <div class="tags">
+            <span class="tag pain">Decision paralysis</span>
+            <span class="tag eng">First-action hook</span>
+            <span class="tag val">Reduces churn</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 6: Premium Insight Header ── -->
+      <div class="variant-wrap">
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text large">Good afternoon</div>
+                <div class="g-text" style="font-size: 13px">
+                  <span class="g-em">3 of 5</span>
+                </div>
+              </div>
+              <div class="nav">
+                <span class="nav-arr">◂</span
+                ><span class="nav-date">Tue, February 25</span
+                ><span class="nav-arr off">▸</span>
+              </div>
+              <div class="insight-line">
+                <span class="insight-icon">💡</span>
+                <span class="insight-text"
+                  >You're 89% more consistent before noon</span
+                >
+                <span class="insight-pro">PRO ›</span>
+              </div>
+              <div class="strip">
+                <div class="dc">
+                  <span class="dl">M</span>
+                  <div class="dd cmp">17</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd cmp">18</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">W</span>
+                  <div class="dd cmp">19</div>
+                  <div class="dot dn"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">T</span>
+                  <div class="dd part">20</div>
+                  <div class="dot pa"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">F</span>
+                  <div class="dd today">25</div>
+                  <div class="dot td"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">26</div>
+                  <div class="dot"></div>
+                </div>
+                <div class="dc">
+                  <span class="dl">S</span>
+                  <div class="dd fut">27</div>
+                  <div class="dot"></div>
+                </div>
+              </div>
+            </div>
+            <div class="harea">
+              <div class="hc">
+                <span class="hi">🧘</span>
+                <div class="hn-wrap">
+                  <div class="hn">Morning meditation</div>
+                  <div class="hm">🔥 12 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📖</span>
+                <div class="hn-wrap">
+                  <div class="hn">Read 20 pages</div>
+                  <div class="hm">🔥 8 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">💧</span>
+                <div class="hn-wrap">
+                  <div class="hn">Drink 2L water</div>
+                  <div class="hm">🔥 5 day streak</div>
+                </div>
+                <div class="ht dn"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">🏃</span>
+                <div class="hn-wrap">
+                  <div class="hn">30 min exercise</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+              <div class="hc">
+                <span class="hi">📝</span>
+                <div class="hn-wrap">
+                  <div class="hn">Journal entry</div>
+                  <div class="hm">Building strength</div>
+                </div>
+                <div class="ht"></div>
+              </div>
+            </div>
+            <div class="bbar">
+              <div class="bp gh">⚙ Settings</div>
+              <div class="fab-w">
+                <svg class="fab-svg" viewBox="0 0 44 44">
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#EDEAE5"
+                    stroke-width="2.5"
+                  />
+                  <circle
+                    cx="22"
+                    cy="22"
+                    r="18"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="2.5"
+                    stroke-dasharray="113.1"
+                    stroke-dashoffset="45.2"
+                    stroke-linecap="round"
+                    transform="rotate(-90 22 22)"
+                  />
+                </svg>
+                <div class="fab-b">+</div>
+              </div>
+              <div class="bp gd">✦ Explore ›</div>
+            </div>
+          </div>
+        </div>
+        <div class="vlabel">
+          <div class="vnum">Improvement 6</div>
+          <div class="vname">Premium Insight Slot</div>
+          <div class="vdesc">
+            One free AI insight per day in the header. "PRO ›" badge converts to
+            premium analytics. Rotates daily.
+          </div>
+          <div class="tags">
+            <span class="tag rev">$$ Premium upsell</span>
+            <span class="tag val">Self-knowledge</span>
+            <span class="tag eng">Daily surprise</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ IMPACT MATRIX ═══ -->
+    <div class="matrix-section">
+      <div class="matrix-title">Impact × Effort Matrix</div>
+      <div style="overflow-x: auto">
+        <table class="mx">
+          <thead>
+            <tr>
+              <th>Improvement</th>
+              <th>Revenue</th>
+              <th>Retention</th>
+              <th>Engagement</th>
+              <th>Effort</th>
+              <th>Dependencies</th>
+              <th>Monetization lever</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="tp">
+              <td>1. All-Done Celebration</td>
+              <td><span class="stars">★★</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td class="hi-v">Low</td>
+              <td>None</td>
+              <td>Drives daily completion → retention</td>
+            </tr>
+            <tr class="tp">
+              <td>2. Streak Guardian</td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="stars">★★★★</span></td>
+              <td><span class="stars">★★★★</span></td>
+              <td class="hi-v">Low</td>
+              <td>Streak data</td>
+              <td>Streak protection ($), urgency-driven completion</td>
+            </tr>
+            <tr>
+              <td>3. Strength Bars</td>
+              <td><span class="stars">★★★</span></td>
+              <td><span class="stars">★★★★</span></td>
+              <td><span class="stars">★★★</span></td>
+              <td class="md-v">Medium</td>
+              <td>Habit history</td>
+              <td>Per-habit analytics (PRO)</td>
+            </tr>
+            <tr>
+              <td>4. Smart Greeting</td>
+              <td><span class="stars">★</span></td>
+              <td><span class="stars">★★★</span></td>
+              <td><span class="stars">★★★★</span></td>
+              <td class="hi-v">Low</td>
+              <td>None</td>
+              <td>Indirect — feels personal</td>
+            </tr>
+            <tr class="tp">
+              <td>5. Quick Win Highlight</td>
+              <td><span class="stars">★★</span></td>
+              <td><span class="stars">★★★★★</span></td>
+              <td><span class="stars">★★★★</span></td>
+              <td class="hi-v">Low</td>
+              <td>Completion history</td>
+              <td>Reduces churn at critical first-action moment</td>
+            </tr>
+            <tr>
+              <td>6. Premium Insight</td>
+              <td><span class="stars">★★★★</span></td>
+              <td><span class="stars">★★★</span></td>
+              <td><span class="stars">★★★</span></td>
+              <td class="md-v">Medium</td>
+              <td>Analytics engine</td>
+              <td>PRO tier conversion via daily teaser</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══ PRIORITY ROADMAP ═══ -->
+    <div class="roadmap">
+      <div class="roadmap-title">Recommended Implementation Sequence</div>
+      <div class="roadmap-body">
+        Ordered by <strong>impact per engineering hour</strong>. Phase 1 is pure
+        UI work with no backend dependencies. Phase 2 needs streak/history data.
+        Phase 3 needs an analytics engine.
+      </div>
+      <div class="phase">
+        <div class="phase-label p1">Phase 1 · This week (no backend)</div>
+        <div class="phase-items">
+          <strong>1. All-Done Celebration</strong> — greeting text swap + card
+          glow + confetti overlay. Builds on existing
+          <em>useCelebrationState</em> hook. ~2 components.<br />
+          <strong>4. Smart Greeting</strong> — enhance <em>getGreeting()</em> to
+          accept progress ratio + time. Zero new components, just logic in
+          <em>ProgressGreeting.tsx</em>.<br />
+          <strong>5. Quick Win Highlight</strong> — add <em>isQuickWin</em> prop
+          to HabitCard. Determine easiest habit by streak length (longest streak
+          = most automatic = quickest). ~1 new hook.
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-label p2">Phase 2 · Next sprint (streak data)</div>
+        <div class="phase-items">
+          <strong>2. Streak Guardian</strong> — new
+          <em>StreakGuardCard</em> component. Shows when time > 6pm AND
+          unfinished habits have streaks > 7 days. Premium: "Protect" button for
+          streak shield purchase. ~2 components + 1 hook.<br />
+          <strong>3. Strength Bars</strong> — compute strength from streak
+          history (0-30 day mapping). 3px bar at card bottom, color-coded.
+          Premium: per-habit analytics deep dive. ~1 component + theme tokens.
+        </div>
+      </div>
+      <div class="phase">
+        <div class="phase-label p3">Phase 3 · Future (analytics engine)</div>
+        <div class="phase-items">
+          <strong>6. Premium Insight Slot</strong> — requires pattern analysis
+          (best time of day, most consistent days, completion correlations).
+          Show 1 free insight daily, PRO badge for unlimited. Composable header
+          slot system for future V2-V8 variants. ~3 components + analytics
+          service.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

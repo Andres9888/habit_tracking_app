@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pattern B — Netflix Category Rows</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --surface-2: #fbf8f3;
+      --text-1: #2d2a26;
+      --text-2: #6f655a;
+      --text-3: #9b8f82;
+      --primary: #059669;
+      --primary-700: #047857;
+      --primary-50: #ecfdf5;
+      --primary-200: #a7f3d0;
+      --gold-100: #fef3c7;
+      --gold-300: #fcd34d;
+      --gold-700: #b45309;
+      --purple-50: #f5f0ff;
+      --purple-200: #e0d4f5;
+      --purple-600: #7c3aed;
+      --blue-50: #eef4fb;
+      --blue-200: #d0dfef;
+      --blue-700: #1d4ed8;
+      --border: rgba(45, 42, 38, 0.1);
+      --shadow-sm: 0 1px 2px rgba(45, 42, 38, 0.05);
+      --shadow-md: 0 4px 14px rgba(45, 42, 38, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(5, 150, 105, 0.12), transparent 38%), linear-gradient(180deg, #f7f4ef 0%, #efe9e0 100%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-1);
+      padding: 40px 20px;
+    }
+    .page { max-width: 520px; margin: 0 auto; }
+    .caption { text-align: center; margin-bottom: 20px; color: var(--text-2); }
+    .caption h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      margin: 0 0 6px;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+    }
+    .caption p { margin: 0; font-size: 14px; }
+    .phone {
+      background: #fbf8f3;
+      border-radius: 36px;
+      box-shadow: 0 24px 60px rgba(45, 42, 38, 0.18);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      width: 390px;
+      margin: 0 auto;
+    }
+    .screen { padding: 18px 0 80px; }
+    .nav {
+      padding: 14px 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav .title {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .nav .sub { color: var(--text-2); font-size: 13px; margin-top: 2px; }
+    .search-wrap { padding: 8px 20px 12px; }
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-3);
+      font-size: 14px;
+    }
+
+    /* QuickFilterChips (curated) — unchanged from today */
+    .quick-chips {
+      display: flex;
+      gap: 8px;
+      padding: 4px 20px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .quick-chips::-webkit-scrollbar { display: none; }
+    .quick-chip {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .quick-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Section head (repeated across rows) */
+    .row-head {
+      padding: 6px 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .row-head-left { display: flex; align-items: center; gap: 8px; }
+    .row-ico {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .row-label {
+      font-family: 'Literata', serif;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .row-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-3);
+      margin-left: 4px;
+    }
+    .see-all {
+      color: var(--primary-700);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* Horizontal row of cards */
+    .row-scroll {
+      display: flex;
+      gap: 12px;
+      padding: 0 20px 22px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .row-scroll::-webkit-scrollbar { display: none; }
+    .h-card {
+      flex-shrink: 0;
+      width: 168px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .h-card .ico-badge {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .h-card .name {
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-1);
+    }
+    .h-card .meta {
+      font-size: 11px;
+      color: var(--text-2);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .h-card .add {
+      margin-top: auto;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      border: 1px solid var(--primary-200);
+    }
+
+    /* Popular rail (existing) */
+    .popular-card {
+      flex-shrink: 0;
+      width: 260px;
+      background: linear-gradient(135deg, #ffffff, #fbf8f3);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .popular-card .badge {
+      display: inline-flex;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #b45309;
+      background: var(--gold-100);
+      padding: 3px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* Browse all CTA */
+    .browse-all {
+      margin: 8px 20px 0;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1.5px dashed var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-1);
+    }
+    .browse-all .arrow { color: var(--primary-700); font-size: 18px; }
+
+    .legend {
+      max-width: 420px;
+      margin: 18px auto 0;
+      font-size: 13px;
+      color: var(--text-2);
+      text-align: center;
+      line-height: 1.55;
+    }
+    .legend strong { color: var(--text-1); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="caption">
+      <h1>Pattern B — Netflix Rows</h1>
+      <p>5–6 horizontal rows, one per category · "Browse all" CTA for the rest</p>
+    </div>
+
+    <div class="phone">
+      <div class="screen">
+        <div class="nav">
+          <div>
+            <div class="title">Habit Library</div>
+            <div class="sub">Science-backed habits to get you started</div>
+          </div>
+          <div style="font-size: 22px;">⚙️</div>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search">
+            <span>🔍</span>
+            <span>Search habits or science keywords</span>
+          </div>
+        </div>
+
+        <div class="quick-chips">
+          <div class="quick-chip active">✨ All</div>
+          <div class="quick-chip">🌅 Morning</div>
+          <div class="quick-chip">🧠 Mental</div>
+          <div class="quick-chip">💪 Fitness</div>
+          <div class="quick-chip">😴 Sleep</div>
+          <div class="quick-chip">🧘 Mindful</div>
+          <div class="quick-chip">📚 Learning</div>
+        </div>
+
+        <!-- Existing Popular rail stays -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--gold-100);">🔥</div>
+            <div class="row-label">Popular now</div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="popular-card">
+            <span class="badge">🔥 Trending</span>
+            <div style="font-family: 'Literata', serif; font-size: 18px; font-weight: 800; margin: 8px 0 4px;">7-Minute Workout</div>
+            <div style="font-size: 12px; color: var(--text-2);">Full-body strength in 7 minutes · Research-backed</div>
+          </div>
+          <div class="popular-card">
+            <span class="badge">🔥 Trending</span>
+            <div style="font-family: 'Literata', serif; font-size: 18px; font-weight: 800; margin: 8px 0 4px;">5-Minute Meditation</div>
+            <div style="font-size: 12px; color: var(--text-2);">Calm the mind in under 5 minutes · Research-backed</div>
+          </div>
+        </div>
+
+        <!-- Row 1: Morning -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--gold-100);">🌅</div>
+            <div class="row-label">Morning<span class="row-count">8</span></div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--gold-100);">☀️</div>
+            <div class="name">Sunrise Viewing</div>
+            <div class="meta">Daily · Huberman</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--gold-100);">💧</div>
+            <div class="name">Hydration First</div>
+            <div class="meta">Daily · Research</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--gold-100);">📝</div>
+            <div class="name">Morning Pages</div>
+            <div class="meta">Daily · Creative</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--gold-100);">🛏️</div>
+            <div class="name">Make Your Bed</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+        </div>
+
+        <!-- Row 2: Health -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--primary-50);">💪</div>
+            <div class="row-label">Health<span class="row-count">42</span></div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--primary-50);">🏃</div>
+            <div class="name">10,000 Steps</div>
+            <div class="meta">Daily · Research</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--primary-50);">🏋️</div>
+            <div class="name">Strength Training</div>
+            <div class="meta">3×/week</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--primary-50);">🧘</div>
+            <div class="name">Stretching Routine</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--primary-50);">🥗</div>
+            <div class="name">Mediterranean Plate</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+        </div>
+
+        <!-- Row 3: Mindfulness -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--purple-50);">🧘</div>
+            <div class="row-label">Mindfulness<span class="row-count">15</span></div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">🙏</div>
+            <div class="name">Gratitude Journaling</div>
+            <div class="meta">Daily · Research</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">🌬️</div>
+            <div class="name">Breathwork Practice</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">🌲</div>
+            <div class="name">Walking in Nature</div>
+            <div class="meta">3×/week</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">📵</div>
+            <div class="name">Digital Detox Hour</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+        </div>
+
+        <!-- Row 4: Productivity -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--blue-50);">🎯</div>
+            <div class="row-label">Productivity<span class="row-count">17</span></div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">🧠</div>
+            <div class="name">Deep Work Session</div>
+            <div class="meta">Daily · Research</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">⏱️</div>
+            <div class="name">Pomodoro Technique</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">⭐</div>
+            <div class="name">MIT – Most Important Task</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">📅</div>
+            <div class="name">Time Blocking</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+        </div>
+
+        <!-- Row 5: Sleep -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--blue-50);">😴</div>
+            <div class="row-label">Sleep<span class="row-count">12</span></div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">🕰️</div>
+            <div class="name">Consistent Bedtime</div>
+            <div class="meta">Daily · Research</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">📱</div>
+            <div class="name">No Screens Before Bed</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">🫁</div>
+            <div class="name">4-7-8 Breathing</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--blue-50);">🌑</div>
+            <div class="name">Sleep in Complete Darkness</div>
+            <div class="meta">Daily · Huberman</div>
+            <div class="add">+ Import</div>
+          </div>
+        </div>
+
+        <!-- Row 6: Mental Health -->
+        <div class="row-head">
+          <div class="row-head-left">
+            <div class="row-ico" style="background: var(--purple-50);">🧠</div>
+            <div class="row-label">Mental Health<span class="row-count">10</span></div>
+          </div>
+          <div class="see-all">See all →</div>
+        </div>
+        <div class="row-scroll">
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">💗</div>
+            <div class="name">Self-Compassion Break</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">✍️</div>
+            <div class="name">Expressive Writing</div>
+            <div class="meta">Daily · Research</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">🧩</div>
+            <div class="name">Cognitive Defusion</div>
+            <div class="meta">Daily</div>
+            <div class="add">+ Import</div>
+          </div>
+          <div class="h-card">
+            <div class="ico-badge" style="background: var(--purple-50);">🎯</div>
+            <div class="name">Values Clarification</div>
+            <div class="meta">Weekly</div>
+            <div class="add">+ Import</div>
+          </div>
+        </div>
+
+        <div class="browse-all">
+          <span>Browse all 14 categories</span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <strong>One horizontal row per category</strong>, 5–6 priority categories shown (Morning, Health, Mindfulness, Productivity, Sleep, Mental Health). "See all →" on each row drills into the full category. "Browse all 14" opens the rest.
+    </div>
+  </div>
+</body>
+</html>

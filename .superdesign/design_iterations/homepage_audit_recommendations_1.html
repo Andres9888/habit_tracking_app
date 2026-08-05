@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Homepage - Design Audit & Recommendations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #0f172a !important; }
+
+    .phone-frame {
+      width: 375px;
+      height: 780px;
+      background: #f8f5f1;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #1a1a1a;
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    .issue-badge {
+      position: absolute;
+      z-index: 20;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .issue-inconsistency { background: #ef4444; color: white; }
+    .issue-improvement { background: #f59e0b; color: white; }
+    .issue-suggestion { background: #3b82f6; color: white; }
+    .issue-good { background: #22c55e; color: white; }
+
+    .callout-line {
+      position: absolute;
+      background: currentColor;
+      z-index: 15;
+    }
+
+    .section-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .severity-critical { border-left: 4px solid #ef4444; }
+    .severity-moderate { border-left: 4px solid #f59e0b; }
+    .severity-minor { border-left: 4px solid #3b82f6; }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+
+  <!-- Header -->
+  <div class="max-w-7xl mx-auto mb-12">
+    <h1 class="text-4xl font-bold text-white mb-3">Habit Homepage — Design Audit</h1>
+    <p class="text-slate-400 text-lg">Consistency analysis and UX improvement recommendations</p>
+  </div>
+
+  <div class="max-w-7xl mx-auto flex gap-12 flex-wrap">
+
+    <!-- Left: Phone Mockup with Annotations -->
+    <div class="relative">
+      <h2 class="text-xl font-bold text-white mb-6">Current State (Annotated)</h2>
+
+      <div class="relative">
+        <!-- Phone Frame -->
+        <div class="phone-frame">
+          <div class="pt-14 px-5 pb-4 overflow-y-auto h-full">
+
+            <!-- Header Row -->
+            <div class="flex items-center justify-between mt-2">
+              <div class="flex items-center gap-2 bg-gradient-to-br from-stone-800 to-stone-900 text-white px-5 py-3 rounded-full shadow-lg">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span class="text-[15px] font-medium">Add Habit</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                  <i data-lucide="lightbulb" class="w-[18px] h-[18px] text-amber-500"></i>
+                </button>
+                <button class="h-9 px-3 flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50/70">
+                  <i data-lucide="arrow-up-down" class="w-4 h-4 text-amber-800"></i>
+                  <span class="text-[13px] font-semibold text-amber-800">A–Z</span>
+                </button>
+                <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                  <i data-lucide="settings" class="w-5 h-5 text-stone-600"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Momentum Meter -->
+            <div class="mt-4 bg-amber-50 rounded-2xl p-4 flex items-center gap-4">
+              <div class="relative">
+                <div class="w-14 h-14 rounded-full border-4 border-white flex items-center justify-center">
+                  <div class="w-10 h-10 rounded-full bg-amber-400 flex items-center justify-center">
+                    <span class="text-lg">⚡</span>
+                  </div>
+                </div>
+                <div class="absolute -bottom-1 -right-1 bg-amber-400 rounded-full px-1.5 py-0.5 min-w-[28px] flex items-center justify-center">
+                  <span class="text-[10px] font-extrabold text-white">57%</span>
+                </div>
+              </div>
+              <div class="flex-1">
+                <p class="text-[15px] font-bold text-amber-700">Great progress</p>
+                <p class="text-[13px] text-stone-500 mt-0.5">4 of 7 habits done</p>
+                <div class="mt-2 h-1.5 bg-white rounded-full overflow-hidden">
+                  <div class="h-full w-[57%] bg-amber-400 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Cards -->
+            <div class="mt-5 space-y-5">
+
+              <!-- Habit 1 -->
+              <div class="bg-white rounded-3xl p-5 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-blue-100/80 border border-black/5 flex items-center justify-center">
+                      <span class="text-[26px]">🧘</span>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="text-[17px] font-bold text-stone-900">Morning meditation</span>
+                        <span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700">AM</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="h-px bg-stone-100 mb-3"></div>
+                <!-- Week Chain -->
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-1.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-stone-200"></div>
+                    <div class="w-8 h-8 rounded-lg bg-stone-200"></div>
+                    <div class="w-8 h-8 rounded-lg border-2 border-dashed border-stone-300"></div>
+                    <div class="w-8 h-8 rounded-lg border-2 border-dashed border-stone-300"></div>
+                  </div>
+                  <div class="flex items-center gap-1 text-orange-600">
+                    <span class="text-sm font-bold tabular-nums">5</span>
+                    <i data-lucide="flame" class="w-4 h-4"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 2 -->
+              <div class="bg-white rounded-3xl p-5 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-violet-100/80 border border-black/5 flex items-center justify-center">
+                      <span class="text-[26px]">📚</span>
+                    </div>
+                    <div>
+                      <span class="text-[17px] font-bold text-stone-900">Read 30 minutes</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Strength Bar -->
+                <div class="mb-3">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="text-[11px] font-medium text-stone-400 uppercase tracking-wide">Strength</span>
+                    <span class="text-[11px] font-bold text-lime-600">68%</span>
+                  </div>
+                  <div class="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                    <div class="h-full w-[68%] bg-gradient-to-r from-lime-400 to-lime-500 rounded-full"></div>
+                  </div>
+                </div>
+                <!-- Week Chain -->
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-1.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-red-100"><i data-lucide="x" class="w-4 h-4 text-red-400 mx-auto mt-2"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-stone-200"></div>
+                    <div class="w-8 h-8 rounded-lg border-2 border-dashed border-stone-300"></div>
+                    <div class="w-8 h-8 rounded-lg border-2 border-dashed border-stone-300"></div>
+                  </div>
+                  <div class="flex items-center gap-1 text-orange-600">
+                    <span class="text-sm font-bold tabular-nums">12</span>
+                    <i data-lucide="flame" class="w-4 h-4"></i>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Habit 3 (Completed styling) -->
+              <div class="bg-white rounded-3xl p-5 border border-stone-100 shadow-sm opacity-70">
+                <div class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-100/80 border border-black/5 flex items-center justify-center">
+                      <span class="text-[26px]">💪</span>
+                    </div>
+                    <div>
+                      <span class="text-[17px] font-bold text-stone-900 line-through">Exercise</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="h-px bg-stone-100 mb-3"></div>
+                <div class="flex items-center justify-between">
+                  <div class="flex gap-1.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center"><i data-lucide="check" class="w-4 h-4 text-white"></i></div>
+                    <div class="w-8 h-8 rounded-lg border-2 border-dashed border-stone-300"></div>
+                    <div class="w-8 h-8 rounded-lg border-2 border-dashed border-stone-300"></div>
+                  </div>
+                  <div class="flex items-center gap-1 text-orange-600">
+                    <span class="text-sm font-bold tabular-nums">8</span>
+                    <i data-lucide="flame" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <div class="mt-3 flex items-center justify-center gap-1.5 rounded-full py-1.5 bg-emerald-500/10">
+                  <span class="text-[10px]">✨</span>
+                  <span class="text-[10px] font-medium uppercase tracking-wider text-emerald-600">Perfect Week</span>
+                  <span class="text-[10px]">✨</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Annotation Badges -->
+        <div class="issue-badge issue-improvement" style="top: 70px; right: -100px;">
+          1. Sort Position
+        </div>
+        <div class="issue-badge issue-inconsistency" style="top: 180px; right: -140px;">
+          2. Color Mismatch
+        </div>
+        <div class="issue-badge issue-suggestion" style="top: 320px; right: -160px;">
+          3. Strength Display
+        </div>
+        <div class="issue-badge issue-inconsistency" style="top: 480px; right: -130px;">
+          4. Divider Style
+        </div>
+        <div class="issue-badge issue-suggestion" style="top: 600px; right: -150px;">
+          5. Completed State
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Issues & Recommendations -->
+    <div class="flex-1 max-w-2xl space-y-6">
+
+      <h2 class="text-xl font-bold text-white mb-6">Findings & Recommendations</h2>
+
+      <!-- Issue 1 -->
+      <div class="section-card severity-moderate">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">📍</span>
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-white">1. Sort Button Position</h3>
+              <span class="px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/20 text-amber-400">MODERATE</span>
+            </div>
+            <p class="text-slate-400 mb-3">Sort control is in the header row, far from the habit list it controls. Creates cognitive distance.</p>
+            <div class="bg-slate-800/50 rounded-lg p-3">
+              <p class="text-sm font-semibold text-emerald-400 mb-1">Recommendation:</p>
+              <p class="text-sm text-slate-300">Move sort to section header directly above habit list, or integrate into momentum meter (see previous mocks).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issue 2 -->
+      <div class="section-card severity-critical">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">🎨</span>
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-white">2. Color Palette Inconsistency</h3>
+              <span class="px-2 py-0.5 rounded text-xs font-semibold bg-red-500/20 text-red-400">CRITICAL</span>
+            </div>
+            <p class="text-slate-400 mb-3">Multiple color systems in use across components:</p>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <div class="bg-slate-800/50 rounded-lg p-3">
+                <p class="text-xs font-semibold text-slate-500 mb-2">HabitsEmptyState</p>
+                <div class="flex gap-2">
+                  <div class="w-6 h-6 rounded bg-[#0f172a]" title="#0f172a"></div>
+                  <div class="w-6 h-6 rounded bg-[#475569]" title="#475569"></div>
+                  <div class="w-6 h-6 rounded bg-[#f8fafc]" title="#f8fafc"></div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-1">Slate palette</p>
+              </div>
+              <div class="bg-slate-800/50 rounded-lg p-3">
+                <p class="text-xs font-semibold text-slate-500 mb-2">DraggableHabit</p>
+                <div class="flex gap-2">
+                  <div class="w-6 h-6 rounded bg-[#1c1917]" title="#1c1917"></div>
+                  <div class="w-6 h-6 rounded bg-[#44403c]" title="#44403c"></div>
+                  <div class="w-6 h-6 rounded bg-[#f5f5f4]" title="#f5f5f4"></div>
+                </div>
+                <p class="text-[10px] text-slate-500 mt-1">Stone palette</p>
+              </div>
+            </div>
+            <div class="bg-slate-800/50 rounded-lg p-3">
+              <p class="text-sm font-semibold text-emerald-400 mb-1">Recommendation:</p>
+              <p class="text-sm text-slate-300">Standardize on <strong>Stone palette</strong> throughout (warmer, matches beige bg). Update HabitsEmptyState colors.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issue 3 -->
+      <div class="section-card severity-minor">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">📊</span>
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-white">3. Strength Bar Inconsistency</h3>
+              <span class="px-2 py-0.5 rounded text-xs font-semibold bg-blue-500/20 text-blue-400">MINOR</span>
+            </div>
+            <p class="text-slate-400 mb-3">Some habits show strength bar, others show plain divider. Setting exists but visual treatment differs.</p>
+            <div class="bg-slate-800/50 rounded-lg p-3">
+              <p class="text-sm font-semibold text-emerald-400 mb-1">Recommendation:</p>
+              <p class="text-sm text-slate-300">When strength is hidden, use consistent divider style matching strength bar height (1.5px vs 1px currently).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issue 4 -->
+      <div class="section-card severity-critical">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">➖</span>
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-white">4. Divider Opacity Mismatch</h3>
+              <span class="px-2 py-0.5 rounded text-xs font-semibold bg-red-500/20 text-red-400">CRITICAL</span>
+            </div>
+            <p class="text-slate-400 mb-3">Dividers use different opacity values:</p>
+            <ul class="text-sm text-slate-400 list-disc list-inside mb-3">
+              <li>Habit card divider: <code class="text-amber-400">rgba(120, 113, 108, 0.08)</code></li>
+              <li>Border color: <code class="text-amber-400">#f5f5f4</code> (stone-100)</li>
+              <li>Some use Tailwind classes, others inline styles</li>
+            </ul>
+            <div class="bg-slate-800/50 rounded-lg p-3">
+              <p class="text-sm font-semibold text-emerald-400 mb-1">Recommendation:</p>
+              <p class="text-sm text-slate-300">Create shared divider component or constant. Use <code>stone-100</code> (#f5f5f4) consistently.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Issue 5 -->
+      <div class="section-card severity-minor">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">✅</span>
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <h3 class="text-lg font-bold text-white">5. Completed Habit Treatment</h3>
+              <span class="px-2 py-0.5 rounded text-xs font-semibold bg-blue-500/20 text-blue-400">MINOR</span>
+            </div>
+            <p class="text-slate-400 mb-3">Completed habits use <code>opacity-70</code> + strikethrough. Could be more celebratory.</p>
+            <div class="bg-slate-800/50 rounded-lg p-3">
+              <p class="text-sm font-semibold text-emerald-400 mb-1">Recommendation:</p>
+              <p class="text-sm text-slate-300">Consider subtle green tint on completed cards instead of dimming. Keeps positive reinforcement.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Findings -->
+      <h2 class="text-xl font-bold text-white mt-10 mb-6">Additional Findings</h2>
+
+      <!-- Good patterns -->
+      <div class="section-card" style="border-left: 4px solid #22c55e;">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">✨</span>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">What's Working Well</h3>
+            <ul class="text-sm text-slate-400 space-y-2">
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 mt-0.5"></i>
+                <span><strong>Card border radius</strong> — Consistent 24px (rounded-3xl) on habit cards</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 mt-0.5"></i>
+                <span><strong>Icon sizing</strong> — 44px (11×4) icon containers follow Apple HIG tap targets</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 mt-0.5"></i>
+                <span><strong>Haptic feedback</strong> — Consistent use of haptics for interactions</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 mt-0.5"></i>
+                <span><strong>Animation springs</strong> — Using reanimated springs with consistent damping/stiffness</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 text-emerald-500 mt-0.5"></i>
+                <span><strong>Warm background</strong> — #f8f5f1 beige creates friendly, approachable feel</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Wins -->
+      <div class="section-card" style="border-left: 4px solid #8b5cf6;">
+        <div class="flex items-start gap-3">
+          <span class="text-2xl">⚡</span>
+          <div>
+            <h3 class="text-lg font-bold text-white mb-2">Quick Wins (Low Effort, High Impact)</h3>
+            <ol class="text-sm text-slate-400 space-y-2 list-decimal list-inside">
+              <li>Replace slate colors in EmptyState with stone palette</li>
+              <li>Unify divider opacity to <code>stone-100</code></li>
+              <li>Add subtle green tint to completed habit cards</li>
+              <li>Move sort button into momentum meter (single line change)</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="max-w-7xl mx-auto mt-16 grid grid-cols-4 gap-6">
+    <div class="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center">
+      <p class="text-4xl font-bold text-red-400">2</p>
+      <p class="text-sm text-red-300 mt-1">Critical Issues</p>
+    </div>
+    <div class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-6 text-center">
+      <p class="text-4xl font-bold text-amber-400">1</p>
+      <p class="text-sm text-amber-300 mt-1">Moderate Issues</p>
+    </div>
+    <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-6 text-center">
+      <p class="text-4xl font-bold text-blue-400">2</p>
+      <p class="text-sm text-blue-300 mt-1">Minor Issues</p>
+    </div>
+    <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 text-center">
+      <p class="text-4xl font-bold text-emerald-400">5</p>
+      <p class="text-sm text-emerald-300 mt-1">Good Patterns</p>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

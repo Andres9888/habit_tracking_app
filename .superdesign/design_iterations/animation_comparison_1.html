@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animation Comparison: Empty State vs Add Habit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #111;
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+  }
+
+  h1 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    margin-bottom: 4px !important;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+
+  .demo-container {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .demo-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .demo-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .demo-description {
+    font-size: 11px;
+    color: #666;
+    max-width: 280px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .phone {
+    width: 280px;
+    height: 560px;
+    border: 2px solid #333;
+    border-radius: 32px;
+    overflow: hidden;
+    background: #000;
+    position: relative;
+  }
+
+  .phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 24px;
+    background: #000;
+    border-radius: 0 0 16px 16px;
+    z-index: 100;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #0a0a0a;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .status-bar {
+    height: 44px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 20px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    position: relative;
+    z-index: 50;
+  }
+
+  /* Empty state */
+  .empty-state {
+    position: absolute;
+    inset: 44px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    transition: opacity 0.3s ease;
+  }
+
+  .empty-state.hidden { opacity: 0; pointer-events: none; }
+
+  .empty-icon {
+    font-size: 44px;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .empty-headline {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #fff;
+    margin-bottom: 6px !important;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .empty-sub {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .empty-input {
+    width: 100%;
+    height: 40px;
+    border-radius: 12px;
+    border: 1.5px solid #333;
+    background: #1a1a1a;
+    color: #fff;
+    padding: 0 14px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    outline: none;
+  }
+  .empty-input::placeholder { color: #555; }
+
+  .empty-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    font-size: 11px;
+    color: #aaa;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .chip:hover { background: #252525; border-color: #555; }
+
+  .empty-cta {
+    padding: 10px 28px;
+    border-radius: 12px;
+    background: #22c55e;
+    color: #000;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: transform 0.1s, background 0.15s;
+  }
+  .empty-cta:hover { background: #16a34a; }
+  .empty-cta:active { transform: scale(0.97); }
+
+  /* Success celebration */
+  .success-state {
+    position: absolute;
+    inset: 44px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .success-state.active { opacity: 1; pointer-events: auto; }
+
+  .success-icon {
+    font-size: 52px;
+    transform: scale(0.8);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .success-state.active .success-icon { transform: scale(1); }
+
+  .success-text {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #fff;
+    margin-top: 12px !important;
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  .success-subtext {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  .success-ring {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #22c55e;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%) rotate(0deg);
+    opacity: 0;
+  }
+
+  .confetti-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .confetti {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 1px;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+  }
+
+  /* Habit list view */
+  .habit-list {
+    position: absolute;
+    inset: 44px 0 0 0;
+    padding: 16px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .habit-list.active { opacity: 1; pointer-events: auto; }
+
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .list-title {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #fff;
+  }
+
+  .list-add-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #22c55e;
+    color: #000;
+    border: none;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s;
+  }
+  .list-add-btn:active { transform: scale(0.93); }
+
+  .mini-calendar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 18px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .cal-day {
+    flex: 1;
+    text-align: center;
+    padding: 6px 2px;
+    border-radius: 10px;
+    background: #1a1a1a;
+    border: 1px solid #222;
+  }
+
+  .cal-day-label { font-size: 9px; color: #555; font-weight: 500; }
+  .cal-day-num { font-size: 13px; font-weight: 600; color: #aaa; margin-top: 2px; }
+  .cal-day.today { border-color: #22c55e; background: rgba(34, 197, 94, 0.08); }
+  .cal-day.today .cal-day-num { color: #22c55e; }
+
+  .habit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    background: #141414;
+    border: 1px solid #222;
+    margin-bottom: 8px;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .habit-emoji {
+    font-size: 22px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #1f1f1f;
+  }
+
+  .habit-info { flex: 1; }
+  .habit-name { font-size: 13px !important; font-weight: 600 !important; color: #fff; }
+  .habit-streak { font-size: 10px; color: #555; margin-top: 1px; }
+
+  .habit-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .habit-check.done { background: #22c55e; border-color: #22c55e; }
+  .habit-check.done::after { content: '\2713'; color: #000; font-size: 14px; font-weight: 700; }
+
+  .new-habit-glow { animation: glowPulse 2s ease-in-out; }
+
+  @keyframes glowPulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3); }
+    50% { box-shadow: 0 0 12px 2px rgba(34, 197, 94, 0.15); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 80;
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+
+  .modal-overlay.active {
+    background: rgba(0,0,0,0.5);
+    pointer-events: auto;
+    backdrop-filter: blur(4px);
+  }
+
+  .modal-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 75%;
+    background: #1a1a1a;
+    border-radius: 20px 20px 0 0;
+    padding: 16px 20px;
+    z-index: 90;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .modal-overlay.active .modal-sheet { transform: translateY(0); }
+
+  .modal-handle {
+    width: 36px;
+    height: 4px;
+    border-radius: 2px;
+    background: #444;
+    margin: 0 auto 14px;
+  }
+
+  .modal-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #fff;
+    margin-bottom: 16px !important;
+  }
+
+  .modal-field { margin-bottom: 14px; }
+
+  .modal-field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+  }
+
+  .modal-field-input {
+    width: 100%;
+    height: 38px;
+    border-radius: 10px;
+    border: 1.5px solid #333;
+    background: #0f0f0f;
+    color: #fff;
+    padding: 0 12px;
+    font-size: 13px;
+    outline: none;
+  }
+  .modal-field-input::placeholder { color: #555; }
+
+  .modal-emoji-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .modal-emoji-opt {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #0f0f0f;
+    border: 1.5px solid #333;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  .modal-emoji-opt.selected {
+    border-color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+  }
+
+  .modal-save-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: #22c55e;
+    color: #000;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.15s;
+  }
+  .modal-save-btn:hover { background: #16a34a; }
+
+  /* Controls */
+  .controls {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .ctrl-btn {
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .ctrl-btn:hover { background: #252525; border-color: #555; }
+  .ctrl-btn.primary { background: #22c55e; color: #000; border-color: #22c55e; }
+  .ctrl-btn.primary:hover { background: #16a34a; }
+
+  .metaphor-tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .metaphor-transform {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+  }
+
+  .metaphor-navigate {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+  }
+
+  .bottom-bar-2 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #111;
+    border-top: 1px solid #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 70;
+  }
+
+  .fab-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #22c55e;
+    color: #000;
+    font-size: 24px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s;
+    animation: fabBounce 2s ease-in-out infinite;
+  }
+
+  .fab-btn:active { transform: scale(0.93); }
+
+  @keyframes fabBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .comparison-note {
+    max-width: 640px;
+    margin-top: 28px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    background: #1a1a1a;
+    border: 1px solid #282828;
+  }
+
+  .comparison-note h3 {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #22c55e;
+    margin-bottom: 8px !important;
+  }
+
+  .comparison-note p {
+    font-size: 12px !important;
+    color: #888;
+    line-height: 1.6 !important;
+  }
+
+  .comparison-note strong { color: #ccc; }
+
+  @keyframes spinRing {
+    from { transform: translate(-50%, -70%) rotate(0deg); }
+    to { transform: translate(-50%, -70%) rotate(360deg); }
+  }
+
+  @media (max-width: 680px) {
+    .demo-container { flex-direction: column; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Animation UX Comparison</h1>
+<p class="subtitle">Two distinct metaphors: Transformation vs. Navigation</p>
+
+<div class="demo-container">
+  <!-- FLOW 1: Empty State -> Habit Home -->
+  <div class="demo-column">
+    <div class="demo-label"><span class="metaphor-tag metaphor-transform">Transformation</span></div>
+    <div class="demo-description">Empty state <strong>becomes</strong> the habit home. First-habit celebration with confetti.</div>
+    <div class="phone" id="phone1">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="status-bar"><span>9:41</span><span></span></div>
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon" id="emptyIcon">&#127793;</div>
+          <div class="empty-headline" id="emptyHeadline">Start your first chain</div>
+          <div class="empty-sub" id="emptySub">Build a habit, one day at a time</div>
+          <input class="empty-input" id="emptyInput" placeholder="e.g. Meditate for 10 min" />
+          <div class="empty-chips" id="emptyChips">
+            <div class="chip">&#129495; Meditate</div>
+            <div class="chip">&#128214; Read</div>
+            <div class="chip">&#127939; Exercise</div>
+          </div>
+          <button class="empty-cta" id="emptyCta" onclick="triggerFlow1()">Create Habit</button>
+        </div>
+
+        <div class="success-state" id="successState">
+          <div class="success-ring" id="successRing"></div>
+          <div class="confetti-container" id="confettiContainer"></div>
+          <div class="success-icon" id="successIcon">&#127881;</div>
+          <div class="success-text" id="successText">Chain started!</div>
+          <div class="success-subtext" id="successSubtext">Tap anywhere to continue</div>
+        </div>
+
+        <div class="habit-list" id="habitList">
+          <div class="list-header" id="listHeader">
+            <div class="list-title">Habits</div>
+            <button class="list-add-btn">+</button>
+          </div>
+          <div class="mini-calendar" id="listCalendar">
+            <div class="cal-day"><div class="cal-day-label">Mon</div><div class="cal-day-num">17</div></div>
+            <div class="cal-day"><div class="cal-day-label">Tue</div><div class="cal-day-num">18</div></div>
+            <div class="cal-day"><div class="cal-day-label">Wed</div><div class="cal-day-num">19</div></div>
+            <div class="cal-day"><div class="cal-day-label">Thu</div><div class="cal-day-num">20</div></div>
+            <div class="cal-day"><div class="cal-day-label">Fri</div><div class="cal-day-num">21</div></div>
+            <div class="cal-day"><div class="cal-day-label">Sat</div><div class="cal-day-num">22</div></div>
+            <div class="cal-day today"><div class="cal-day-label">Sun</div><div class="cal-day-num">23</div></div>
+          </div>
+          <div class="habit-row" id="habitRow1">
+            <div class="habit-emoji">&#129495;</div>
+            <div class="habit-info">
+              <div class="habit-name">Meditate</div>
+              <div class="habit-streak">New chain &#8212; Day 1</div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn primary" onclick="triggerFlow1()">&#9654; Play Flow</button>
+      <button class="ctrl-btn" onclick="resetFlow1()">&#8634; Reset</button>
+    </div>
+  </div>
+
+  <!-- FLOW 2: Add Habit Modal (Navigation) -->
+  <div class="demo-column">
+    <div class="demo-label"><span class="metaphor-tag metaphor-navigate">Navigation</span></div>
+    <div class="demo-description">Add habit slides <strong>over</strong> the home screen. New row fades in with shared stagger.</div>
+    <div class="phone" id="phone2">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="status-bar"><span>9:41</span><span></span></div>
+
+        <div class="habit-list active" id="habitList2" style="opacity:1;">
+          <div class="list-header" id="listHeader2" style="opacity:1;transform:none;">
+            <div class="list-title">Habits</div>
+            <button class="list-add-btn" onclick="openAddModal()">+</button>
+          </div>
+          <div class="mini-calendar" id="listCalendar2" style="opacity:1;transform:none;">
+            <div class="cal-day"><div class="cal-day-label">Mon</div><div class="cal-day-num">17</div></div>
+            <div class="cal-day"><div class="cal-day-label">Tue</div><div class="cal-day-num">18</div></div>
+            <div class="cal-day"><div class="cal-day-label">Wed</div><div class="cal-day-num">19</div></div>
+            <div class="cal-day"><div class="cal-day-label">Thu</div><div class="cal-day-num">20</div></div>
+            <div class="cal-day"><div class="cal-day-label">Fri</div><div class="cal-day-num">21</div></div>
+            <div class="cal-day"><div class="cal-day-label">Sat</div><div class="cal-day-num">22</div></div>
+            <div class="cal-day today"><div class="cal-day-label">Sun</div><div class="cal-day-num">23</div></div>
+          </div>
+          <div class="habit-row" id="existingHabit1" style="opacity:1;transform:none;">
+            <div class="habit-emoji">&#129495;</div>
+            <div class="habit-info">
+              <div class="habit-name">Meditate</div>
+              <div class="habit-streak">&#128293; 12 day chain</div>
+            </div>
+            <div class="habit-check done"></div>
+          </div>
+          <div class="habit-row" id="existingHabit2" style="opacity:1;transform:none;">
+            <div class="habit-emoji">&#128214;</div>
+            <div class="habit-info">
+              <div class="habit-name">Read 20 pages</div>
+              <div class="habit-streak">&#128293; 5 day chain</div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+          <div class="habit-row" id="newHabitRow" style="opacity:0;transform:translateY(20px);display:none;">
+            <div class="habit-emoji">&#127939;</div>
+            <div class="habit-info">
+              <div class="habit-name">Exercise</div>
+              <div class="habit-streak">New chain &#8212; Day 1</div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+        </div>
+
+        <div class="bottom-bar-2">
+          <button class="fab-btn" onclick="openAddModal()">+</button>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay">
+          <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-title">New Habit</div>
+            <div class="modal-field">
+              <div class="modal-field-label">Habit Name</div>
+              <input class="modal-field-input" value="Exercise" readonly />
+            </div>
+            <div class="modal-field">
+              <div class="modal-field-label">Icon</div>
+              <div class="modal-emoji-row">
+                <div class="modal-emoji-opt">&#129495;</div>
+                <div class="modal-emoji-opt">&#128214;</div>
+                <div class="modal-emoji-opt selected">&#127939;</div>
+                <div class="modal-emoji-opt">&#128167;</div>
+                <div class="modal-emoji-opt">&#127928;</div>
+              </div>
+            </div>
+            <div class="modal-field">
+              <div class="modal-field-label">Frequency</div>
+              <input class="modal-field-input" value="Every day" readonly />
+            </div>
+            <button class="modal-save-btn" onclick="saveFromModal()">Create Habit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="ctrl-btn primary" onclick="openAddModal()">&#9654; Play Flow</button>
+      <button class="ctrl-btn" onclick="resetFlow2()">&#8634; Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="comparison-note">
+  <h3>Why different animations?</h3>
+  <p>
+    <strong>Left (Transformation):</strong> The empty screen <em>evolves into</em> the habit home.
+    First-habit celebration with confetti. The user isn't going anywhere; their world is coming to life.
+    <br><br>
+    <strong>Right (Navigation):</strong> The add-habit modal slides <em>over</em> the existing screen.
+    The user takes a detour, then returns. Only the <em>new row</em> uses the shared fade-in-up stagger.
+    <br><br>
+    <strong>Shared DNA:</strong> Both use the same spring physics (damping: 18, stiffness: 150),
+    the same 20px translateY, and the same 100ms stagger gap. Same rhythm, different choreography.
+  </p>
+</div>
+
+<script>
+  // ============================================
+  // FLOW 1: Empty -> Success -> List
+  // ============================================
+  var flow1State = 'empty';
+
+  function animateIn(el, delay) {
+    setTimeout(function() {
+      el.style.transition = 'opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, delay);
+  }
+
+  function playEmptyEntrance() {
+    var ids = ['emptyIcon','emptyHeadline','emptySub','emptyInput','emptyChips','emptyCta'];
+    ids.forEach(function(id, i) { animateIn(document.getElementById(id), i * 60); });
+  }
+
+  function triggerFlow1() {
+    if (flow1State !== 'empty') return;
+    flow1State = 'celebrating';
+    var emptyState = document.getElementById('emptyState');
+    var successState = document.getElementById('successState');
+
+    emptyState.style.transition = 'opacity 0.28s ease-out';
+    emptyState.style.opacity = '0';
+
+    setTimeout(function() {
+      emptyState.classList.add('hidden');
+      successState.classList.add('active');
+
+      var ring = document.getElementById('successRing');
+      ring.style.transition = 'opacity 0.3s ease';
+      ring.style.opacity = '1';
+      ring.style.animation = 'spinRing 1.8s linear';
+
+      setTimeout(function() {
+        var text = document.getElementById('successText');
+        text.style.transition = 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        text.style.opacity = '1';
+        text.style.transform = 'translateY(0)';
+      }, 200);
+
+      setTimeout(function() {
+        var sub = document.getElementById('successSubtext');
+        sub.style.transition = 'opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        sub.style.opacity = '1';
+        sub.style.transform = 'translateY(0)';
+      }, 350);
+
+      spawnConfetti();
+      setTimeout(transitionToList, 1800);
+    }, 300);
+  }
+
+  function spawnConfetti() {
+    var container = document.getElementById('confettiContainer');
+    var colors = ['#22c55e', '#86efac', '#fbbf24', '#a78bfa', '#f472b6', '#38bdf8'];
+    for (var i = 0; i < 20; i++) {
+      var c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.background = colors[i % colors.length];
+      c.style.width = (4 + Math.random() * 4) + 'px';
+      c.style.height = (4 + Math.random() * 6) + 'px';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '1px';
+
+      var angle = (Math.PI * 2 / 20) * i + (Math.random() - 0.5) * 0.5;
+      var dist = 80 + Math.random() * 100;
+      var tx = Math.cos(angle) * dist;
+      var ty = Math.sin(angle) * dist - 40;
+      var rot = Math.random() * 720 - 360;
+
+      c.style.transition = 'all ' + (0.8 + Math.random() * 0.7) + 's cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+      container.appendChild(c);
+
+      (function(particle, x, y, r) {
+        requestAnimationFrame(function() {
+          particle.style.opacity = '1';
+          particle.style.transform = 'translate(' + x + 'px, ' + y + 'px) rotate(' + r + 'deg)';
+          setTimeout(function() {
+            particle.style.opacity = '0';
+            particle.style.transform = 'translate(' + x + 'px, ' + (y + 60) + 'px) rotate(' + (r + 90) + 'deg)';
+          }, 600 + Math.random() * 400);
+        });
+      })(c, tx, ty, rot);
+    }
+  }
+
+  function clearConfetti() {
+    var container = document.getElementById('confettiContainer');
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+  }
+
+  function transitionToList() {
+    var successState = document.getElementById('successState');
+    var habitList = document.getElementById('habitList');
+    var icon = document.getElementById('successIcon');
+    var ring = document.getElementById('successRing');
+
+    icon.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease';
+    icon.style.transform = 'scale(0.4) translateY(-150px)';
+
+    ring.style.transition = 'opacity 0.28s ease';
+    ring.style.opacity = '0';
+
+    document.getElementById('successText').style.transition = 'opacity 0.28s ease';
+    document.getElementById('successText').style.opacity = '0';
+    document.getElementById('successSubtext').style.transition = 'opacity 0.28s ease';
+    document.getElementById('successSubtext').style.opacity = '0';
+
+    setTimeout(function() {
+      successState.classList.remove('active');
+      successState.style.opacity = '0';
+      habitList.classList.add('active');
+      habitList.style.opacity = '1';
+
+      animateIn(document.getElementById('listHeader'), 0);
+      animateIn(document.getElementById('listCalendar'), 100);
+      animateIn(document.getElementById('habitRow1'), 200);
+      document.getElementById('habitRow1').classList.add('new-habit-glow');
+
+      flow1State = 'list';
+    }, 280);
+  }
+
+  function resetFlow1() {
+    flow1State = 'empty';
+    var emptyState = document.getElementById('emptyState');
+    var successState = document.getElementById('successState');
+    var habitList = document.getElementById('habitList');
+
+    habitList.classList.remove('active');
+    habitList.style.opacity = '0';
+    successState.classList.remove('active');
+    successState.style.opacity = '';
+    emptyState.classList.remove('hidden');
+    emptyState.style.opacity = '1';
+
+    ['emptyIcon','emptyHeadline','emptySub','emptyInput','emptyChips','emptyCta'].forEach(function(id) {
+      var el = document.getElementById(id);
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+    });
+
+    ['listHeader','listCalendar','habitRow1'].forEach(function(id) {
+      var el = document.getElementById(id);
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+    });
+
+    var icon = document.getElementById('successIcon');
+    icon.style.transition = 'none';
+    icon.style.transform = 'scale(0.8)';
+
+    ['successText','successSubtext'].forEach(function(id) {
+      var el = document.getElementById(id);
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(15px)';
+    });
+
+    document.getElementById('successRing').style.opacity = '0';
+    document.getElementById('successRing').style.animation = '';
+    clearConfetti();
+    document.getElementById('habitRow1').classList.remove('new-habit-glow');
+
+    setTimeout(playEmptyEntrance, 50);
+  }
+
+  // ============================================
+  // FLOW 2: Add Habit Modal
+  // ============================================
+  var flow2State = 'idle';
+
+  function openAddModal() {
+    if (flow2State !== 'idle') return;
+    flow2State = 'modal';
+    document.getElementById('modalOverlay').classList.add('active');
+  }
+
+  function saveFromModal() {
+    if (flow2State !== 'modal') return;
+    flow2State = 'returning';
+    document.getElementById('modalOverlay').classList.remove('active');
+
+    setTimeout(function() {
+      var newRow = document.getElementById('newHabitRow');
+      newRow.style.display = 'flex';
+      setTimeout(function() {
+        newRow.style.transition = 'opacity 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        newRow.style.opacity = '1';
+        newRow.style.transform = 'translateY(0)';
+        newRow.classList.add('new-habit-glow');
+      }, 100);
+      flow2State = 'idle';
+    }, 380);
+  }
+
+  function resetFlow2() {
+    flow2State = 'idle';
+    document.getElementById('modalOverlay').classList.remove('active');
+    var newRow = document.getElementById('newHabitRow');
+    newRow.style.transition = 'none';
+    newRow.style.opacity = '0';
+    newRow.style.transform = 'translateY(20px)';
+    newRow.style.display = 'none';
+    newRow.classList.remove('new-habit-glow');
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(playEmptyEntrance, 300);
+  });
+</script>
+
+</body>
+</html>

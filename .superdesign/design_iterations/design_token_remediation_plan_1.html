@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Design Token Remediation Plan — What I Plan to Do</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --surface: #EDEAE5;
+    --surface-2: #F0EDE8;
+    --border: #DDD8D2;
+    --border-strong: #C4BFB7;
+    --text: #2D2A26;
+    --text-muted: #6B6560;
+    --text-tertiary: #6E6660;
+    --primary: #059669;
+    --primary-700: #047857;
+    --primary-100: #D1FAE5;
+    --gold: #8B6208;
+    --gold-100: #FEF3CD;
+    --error: #B53030;
+    --warn: #9A5504;
+    --info: #3872B8;
+  }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, sans-serif !important;
+    letter-spacing: -0.005em;
+  }
+  .font-display { font-family: 'Literata', Georgia, serif; letter-spacing: -0.02em; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  .card {
+    background: #FFFDFB;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 1px 0 rgba(45,42,38,0.04), 0 2px 8px rgba(45,42,38,0.05);
+  }
+  .card-soft {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+  }
+  .pill-green { background: var(--primary-100); color: var(--primary-700); }
+  .pill-gold  { background: var(--gold-100);    color: var(--gold); }
+  .pill-red   { background: #FEE2E2;            color: var(--error); }
+  .pill-gray  { background: #E8E4DE;            color: var(--text-muted); }
+  .pill-info  { background: #DCE9F5;            color: var(--info); }
+
+  .meter-track { background: #E8E4DE; height: 6px; border-radius: 9999px; overflow: hidden; }
+  .meter-fill  { height: 100%; border-radius: 9999px; }
+
+  .wave-header {
+    font-family: 'Literata', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.35px;
+  }
+  .task-card {
+    background: #FFFDFB;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all 120ms ease;
+  }
+  .task-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(45,42,38,0.06);
+  }
+  .task-meta {
+    display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    font-size: 11px; color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border-strong); }
+  .mono-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--surface);
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .big-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--text);
+  }
+  .delta-up { color: var(--primary); font-weight: 600; }
+  .shipped-strike { text-decoration: line-through; color: var(--text-muted); }
+</style>
+</head>
+<body class="min-h-screen py-10 px-6">
+<div class="max-w-6xl mx-auto">
+
+  <!-- HEADER -->
+  <header class="mb-8">
+    <div class="flex items-center gap-2 text-xs uppercase tracking-widest" style="color: var(--text-muted);">
+      <i data-lucide="target" class="w-3.5 h-3.5"></i>
+      <span>Remediation plan · 2026-04-21</span>
+    </div>
+    <h1 class="font-display text-4xl font-bold mt-2 mb-2" style="color: var(--text);">What I plan to do</h1>
+    <p class="text-base max-w-2xl" style="color: var(--text-muted);">
+      Based on today's token-adoption audit. Three waves, ordered by effort-to-impact. Everything already shipped since April 5 is struck out.
+    </p>
+  </header>
+
+  <!-- CURRENT STATE METERS -->
+  <section class="mb-8">
+    <div class="section-label mb-3">Current adoption · 4 token systems</div>
+    <div class="grid grid-cols-4 gap-4">
+
+      <div class="card p-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-xs font-medium mb-1" style="color: var(--text-muted);">Typography · fontWeight</div>
+            <div class="big-num">96.5<span class="text-lg" style="color: var(--text-muted);">%</span></div>
+          </div>
+          <span class="pill pill-green">A</span>
+        </div>
+        <div class="meter-track mt-3"><div class="meter-fill" style="width: 96.5%; background: var(--primary);"></div></div>
+        <div class="text-xs mt-2 delta-up">+76pp since Apr 5</div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-xs font-medium mb-1" style="color: var(--text-muted);">Typography · fontSize</div>
+            <div class="big-num">59<span class="text-lg" style="color: var(--text-muted);">%</span></div>
+          </div>
+          <span class="pill pill-gold">C+</span>
+        </div>
+        <div class="meter-track mt-3"><div class="meter-fill" style="width: 59%; background: var(--gold);"></div></div>
+        <div class="text-xs mt-2 delta-up">+13pp since Apr 5</div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-xs font-medium mb-1" style="color: var(--text-muted);">Icons · iconSizes.*</div>
+            <div class="big-num">50<span class="text-lg" style="color: var(--text-muted);">%</span></div>
+          </div>
+          <span class="pill pill-gold">B+</span>
+        </div>
+        <div class="meter-track mt-3"><div class="meter-fill" style="width: 50%; background: var(--primary);"></div></div>
+        <div class="text-xs mt-2 delta-up">+50pp (was 0%)</div>
+      </div>
+
+      <div class="card p-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-xs font-medium mb-1" style="color: var(--text-muted);">Colors · theme tokens</div>
+            <div class="big-num">68<span class="text-lg" style="color: var(--text-muted);">%</span></div>
+          </div>
+          <span class="pill pill-green">B</span>
+        </div>
+        <div class="meter-track mt-3"><div class="meter-fill" style="width: 68%; background: var(--primary);"></div></div>
+        <div class="text-xs mt-2 delta-up">+3pp since Apr 5</div>
+      </div>
+
+    </div>
+
+    <!-- Shadow meter (full width) -->
+    <div class="card p-5 mt-4 flex items-center gap-6">
+      <div class="flex-1">
+        <div class="text-xs font-medium mb-1" style="color: var(--text-muted);">Shadows · shadows.*</div>
+        <div class="flex items-baseline gap-3">
+          <div class="big-num">22<span class="text-lg" style="color: var(--text-muted);">%</span></div>
+          <span class="pill pill-red">D+</span>
+          <div class="text-xs delta-up">+7pp since Apr 5</div>
+        </div>
+        <div class="meter-track mt-3"><div class="meter-fill" style="width: 22%; background: var(--error);"></div></div>
+      </div>
+      <div class="text-xs max-w-sm pl-4 border-l" style="color: var(--text-muted); border-color: var(--border);">
+        <strong style="color: var(--text);">Weakest pillar.</strong> Most inline shadows use semantically correct values (warm <span class="mono-chip">#2D2A26</span>) — they just skip the named token.
+      </div>
+    </div>
+  </section>
+
+  <!-- ALREADY SHIPPED -->
+  <section class="mb-10">
+    <div class="card-soft p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <i data-lucide="check-circle-2" class="w-5 h-5" style="color: var(--primary);"></i>
+        <div class="section-label" style="color: var(--primary-700);">Already shipped since Apr 5 · no action needed</div>
+      </div>
+      <ul class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm shipped-strike">
+        <li>Fix <span class="mono-chip">borderRadius: 999</span> bug (ColorPickerSection × 5)</li>
+        <li>Eliminate <span class="mono-chip">strokeWidth={2.25}</span> (6 files)</li>
+        <li>Tokenize SyncStatus styles (amber/stone hex → <span class="mono-chip">colors.warning</span>)</li>
+        <li>fontWeight raw migration (229 → 12)</li>
+        <li>iconSizes adoption (0 → 237 files)</li>
+        <li>Template styles typography (100% raw → ~90% tokenized)</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- REMEDIATION WAVES -->
+  <section>
+    <div class="section-label mb-4">Remediation · 3 waves ordered by effort-to-impact</div>
+
+    <div class="grid grid-cols-3 gap-5">
+
+      <!-- WAVE 1 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="wave-header">Wave 1</div>
+            <div class="text-xs" style="color: var(--text-muted);">Quick wins · &lt; 1 day total</div>
+          </div>
+          <span class="pill pill-green">Ship now</span>
+        </div>
+
+        <div class="space-y-3">
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Tokenize HabitDetailScreen / Goal* fontWeight</div>
+              <span class="pill pill-green">15m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">7 files</span>
+              <span class="dot"></span>
+              <span>fontWeight 96.5% → 99%+</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Migrate StreakGoalCard dashboard + compact styles</div>
+              <span class="pill pill-green">30m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">26 raw fontSize</span>
+              <span class="dot"></span>
+              <span>Biggest single fontSize win</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Tokenize QuickActionsSheet / ActionItem.tsx</div>
+              <span class="pill pill-green">15m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">10 raw hex</span>
+              <span class="dot"></span>
+              <span>UI hotspot (not data)</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Replace SyncStatus ICON_COLOR constants</div>
+              <span class="pill pill-green">10m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">2 files</span>
+              <span class="dot"></span>
+              <span>Last SyncStatus hardcodes</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Finish TemplatePreviewModal / previewStyles.ts</div>
+              <span class="pill pill-green">10m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">3 raw fontSize</span>
+              <span class="dot"></span>
+              <span>Templates → 100% tokenized</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Audit CalendarLegend.tsx hex usage</div>
+              <span class="pill pill-green">15m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">8 raw hex</span>
+              <span class="dot"></span>
+              <span>UI hotspot</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-t flex items-center justify-between text-xs" style="border-color: var(--border); color: var(--text-muted);">
+          <span>6 tasks · ~1h 35m</span>
+          <span class="font-semibold" style="color: var(--primary);">Highest ROI</span>
+        </div>
+      </div>
+
+      <!-- WAVE 2 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="wave-header">Wave 2</div>
+            <div class="text-xs" style="color: var(--text-muted);">Systematic · 1–2 days</div>
+          </div>
+          <span class="pill pill-gold">Schedule</span>
+        </div>
+
+        <div class="space-y-3">
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Decide: <span class="mono-chip">fontSize: 15</span> → new <code>bodyMedium</code> token or migrate to 14</div>
+              <span class="pill pill-gold">1.5h</span>
+            </div>
+            <div class="task-meta">
+              <span>~10 uses</span>
+              <span class="dot"></span>
+              <span>Closes typography tail</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Decide: <span class="mono-chip">size={18}</span> → add token or migrate to 16/20</div>
+              <span class="pill pill-gold">1.5h</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">28 occurrences</span>
+              <span class="dot"></span>
+              <span>Biggest icon off-scale cluster</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Deduplicate MotivationSystem / Workshop shadows</div>
+              <span class="pill pill-gold">45m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">5 SectionCards</span>
+              <span class="dot"></span>
+              <span>+5 files use <code>shadows.card</code></span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Tokenize SettingsModal shadow cluster</div>
+              <span class="pill pill-gold">1h</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">7 files</span>
+              <span class="dot"></span>
+              <span>Recently polished — alignment overdue</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Codemod: on-scale raw <span class="mono-chip">size={20|16|24}</span> → token</div>
+              <span class="pill pill-gold">30m</span>
+            </div>
+            <div class="task-meta">
+              <span class="mono-chip">~34 instances</span>
+              <span class="dot"></span>
+              <span>Icon strict adoption 50% → ~65%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-t flex items-center justify-between text-xs" style="border-color: var(--border); color: var(--text-muted);">
+          <span>5 tasks · ~5h</span>
+          <span class="font-semibold" style="color: var(--gold);">Depends on decisions</span>
+        </div>
+      </div>
+
+      <!-- WAVE 3 -->
+      <div class="card p-5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <div class="wave-header">Wave 3</div>
+            <div class="text-xs" style="color: var(--text-muted);">Architectural · optional</div>
+          </div>
+          <span class="pill pill-gray">Later</span>
+        </div>
+
+        <div class="space-y-3">
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">ESLint rule: flag raw <code>#hex</code> and <code>shadowColor:</code> outside theme</div>
+              <span class="pill pill-gray">2–4h</span>
+            </div>
+            <div class="task-meta">
+              <span>Prevents regression</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Define policy: sanctioned <span class="mono-chip">*.colors.ts</span> vs violation</div>
+              <span class="pill pill-gray">Discuss</span>
+            </div>
+            <div class="task-meta">
+              <span>Clarifies grey zone</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Extend <code>iconSizes</code> to include <code>14</code> / <code>18</code> if real needs</div>
+              <span class="pill pill-gray">1h + review</span>
+            </div>
+            <div class="task-meta">
+              <span>Completes icon scale</span>
+            </div>
+          </div>
+
+          <div class="task-card">
+            <div class="flex items-start justify-between gap-2">
+              <div class="text-sm font-semibold">Migrate ErrorBoundary / Sentry ErrorFallback styles</div>
+              <span class="pill pill-gray">1h</span>
+            </div>
+            <div class="task-meta">
+              <span>Closes lowest-scoring surface</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-t flex items-center justify-between text-xs" style="border-color: var(--border); color: var(--text-muted);">
+          <span>4 tasks · ~4–6h</span>
+          <span class="font-semibold" style="color: var(--text-muted);">Nice-to-have</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MULTI-SYSTEM HOTSPOTS -->
+  <section class="mt-10">
+    <div class="section-label mb-3">Multi-system offenders · fixing these helps multiple token categories at once</div>
+    <div class="card p-0 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-xs uppercase tracking-wider" style="background: var(--surface); color: var(--text-muted);">
+            <th class="text-left py-3 px-4 font-semibold">File</th>
+            <th class="py-3 px-2 font-semibold">Typography</th>
+            <th class="py-3 px-2 font-semibold">Icons</th>
+            <th class="py-3 px-2 font-semibold">Shadows</th>
+            <th class="py-3 px-2 font-semibold">Colors</th>
+            <th class="text-right py-3 px-4 font-semibold">Severity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-t" style="border-color: var(--border);">
+            <td class="py-3 px-4"><span class="mono-chip">StreakGoalCard / dashboard.styles.ts</span></td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-red">15 raw</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-green">tokens</span></td>
+            <td class="text-right py-3 px-4"><span class="pill pill-red">High</span></td>
+          </tr>
+          <tr class="border-t" style="border-color: var(--border);">
+            <td class="py-3 px-4"><span class="mono-chip">StreakGoalCard / compact.styles.ts</span></td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-red">11 raw</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-green">tokens</span></td>
+            <td class="text-right py-3 px-4"><span class="pill pill-red">High</span></td>
+          </tr>
+          <tr class="border-t" style="border-color: var(--border);">
+            <td class="py-3 px-4"><span class="mono-chip">sentry / ErrorBoundary / ErrorFallback.styles.ts</span></td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-red">7 raw</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-gold">inline</span></td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-gold">hex</span></td>
+            <td class="text-right py-3 px-4"><span class="pill pill-red">High</span></td>
+          </tr>
+          <tr class="border-t" style="border-color: var(--border);">
+            <td class="py-3 px-4"><span class="mono-chip">HabitDetailScreen / Goal* (7 files)</span></td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-gold">raw wt</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-gold">'#fff'</span></td>
+            <td class="text-right py-3 px-4"><span class="pill pill-gold">Med</span></td>
+          </tr>
+          <tr class="border-t" style="border-color: var(--border);">
+            <td class="py-3 px-4"><span class="mono-chip">Workshop / *SectionCard.tsx (5 files)</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-gold">dup</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="text-right py-3 px-4"><span class="pill pill-gold">Med</span></td>
+          </tr>
+          <tr class="border-t" style="border-color: var(--border);">
+            <td class="py-3 px-4"><span class="mono-chip">SettingsModal shadows (7 files)</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="py-3 px-2 text-center"><span class="pill pill-gold">inline</span></td>
+            <td class="py-3 px-2 text-center">—</td>
+            <td class="text-right py-3 px-4"><span class="pill pill-gold">Med</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 pt-8 border-t text-xs flex items-center justify-between" style="border-color: var(--border); color: var(--text-muted);">
+    <div>
+      Source: <span class="mono-chip">docs/DESIGN_TOKEN_ADOPTION_AUDIT.md</span>
+    </div>
+    <div>Mock · no code changed · 2026-04-21</div>
+  </footer>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

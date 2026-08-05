@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Habits - Final Production Design</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --background: #09090b;
+      --foreground: #fafafa;
+      --card: #18181b;
+      --card-foreground: #fafafa;
+      --primary: #f59e0b;
+      --primary-foreground: #09090b;
+      --secondary: #27272a;
+      --muted: #3f3f46;
+      --muted-foreground: #a1a1aa;
+      --accent: #f97316;
+      --border: #27272a;
+      --ring: #f59e0b;
+      --success: #22c55e;
+      --font-sans: 'Inter', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --radius: 16px;
+      --shadow-glow: 0 0 60px -12px rgba(245, 158, 11, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans) !important;
+      background: var(--background);
+      color: var(--foreground);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-display) !important;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Animated gradient border */
+    .gradient-border {
+      position: relative;
+      background: var(--card);
+      border-radius: var(--radius);
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: calc(var(--radius) + 1px);
+      background: linear-gradient(135deg, #f59e0b, #f97316, #ef4444, #f59e0b);
+      background-size: 300% 300%;
+      animation: gradient-shift 4s ease infinite;
+      z-index: -1;
+      opacity: 0.6;
+    }
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Chain animation */
+    @keyframes chain-grow {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      60% { transform: scale(1.15) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .chain-link {
+      animation: chain-grow 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+    .chain-link:nth-child(1) { animation-delay: 0.3s; }
+    .chain-link:nth-child(2) { animation-delay: 0.45s; }
+    .chain-link:nth-child(3) { animation-delay: 0.6s; }
+    .chain-link:nth-child(4) { animation-delay: 0.75s; }
+    .chain-link:nth-child(5) { animation-delay: 0.9s; }
+    .chain-link:nth-child(6) { animation-delay: 1.05s; }
+    .chain-link:nth-child(7) { animation-delay: 1.2s; }
+
+    /* Floating animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-8px) rotate(0.5deg); }
+      75% { transform: translateY(8px) rotate(-0.5deg); }
+    }
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Pulse glow CTA */
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4), var(--shadow-glow); }
+      50% { box-shadow: 0 0 30px 8px rgba(245, 158, 11, 0.2), var(--shadow-glow); }
+    }
+    .cta-glow {
+      animation: pulse-glow 2.5s ease-in-out infinite;
+    }
+
+    /* Shine effect on button */
+    .btn-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-shine::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.1) 50%,
+        rgba(255,255,255,0) 100%
+      );
+      transform: rotate(30deg);
+      animation: shine 3s ease-in-out infinite;
+    }
+    @keyframes shine {
+      0% { transform: translateX(-100%) rotate(30deg); }
+      20%, 100% { transform: translateX(100%) rotate(30deg); }
+    }
+
+    /* Card hover effect */
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.5);
+    }
+
+    /* Icon bounce on hover */
+    .icon-bounce {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .card-hover:hover .icon-bounce {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Stagger fade in */
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      animation: fade-up 0.6s ease-out forwards;
+      opacity: 0;
+    }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+    .delay-5 { animation-delay: 0.5s; }
+
+    /* Noise texture overlay */
+    .noise::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Gradient orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #f59e0b 0%, transparent 70%);
+      top: -200px;
+      right: -200px;
+    }
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, #f97316 0%, transparent 70%);
+      bottom: 100px;
+      left: -100px;
+    }
+
+    /* Testimonial card */
+    .testimonial-card {
+      background: linear-gradient(135deg, rgba(39, 39, 42, 0.8), rgba(24, 24, 27, 0.8));
+      backdrop-filter: blur(10px);
+    }
+
+    /* Stats counter */
+    @keyframes count-up {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .stat-number {
+      animation: count-up 0.8s ease-out forwards;
+    }
+
+    /* Progress bar animation */
+    @keyframes progress-fill {
+      from { width: 0%; }
+      to { width: var(--progress); }
+    }
+    .progress-bar {
+      animation: progress-fill 1.5s ease-out forwards;
+    }
+
+    /* Scroll indicator */
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+    .scroll-indicator {
+      animation: scroll-bounce 2s ease-in-out infinite;
+    }
+
+    /* Video play button */
+    @keyframes play-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .play-btn {
+      animation: play-pulse 2s ease-in-out infinite;
+    }
+
+    /* Star rating twinkle */
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .star {
+      animation: twinkle 1.5s ease-in-out infinite;
+    }
+    .star:nth-child(2) { animation-delay: 0.2s; }
+    .star:nth-child(3) { animation-delay: 0.4s; }
+    .star:nth-child(4) { animation-delay: 0.6s; }
+    .star:nth-child(5) { animation-delay: 0.8s; }
+  </style>
+</head>
+<body class="noise">
+
+  <!-- Background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <!-- Header -->
+  <header class="fixed top-0 inset-x-0 z-50 bg-zinc-950/80 backdrop-blur-xl border-b border-zinc-800/50">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-shadow">
+          <span class="text-lg">🔗</span>
+        </div>
+        <span class="text-xl font-bold tracking-tight">Daily Habits</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#features" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Features</a>
+        <a href="#how-it-works" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">How It Works</a>
+        <a href="#testimonials" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Reviews</a>
+        <a href="#pricing" class="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Pricing</a>
+      </div>
+
+      <a href="#download" class="btn-shine rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-2.5 text-sm font-semibold text-zinc-900 hover:from-amber-400 hover:to-orange-400 transition-all shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40">
+        Download Free
+      </a>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <div class="mx-auto max-w-7xl px-6 py-20 lg:py-32">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Left: Content -->
+        <div class="relative z-10">
+          <!-- Social proof badge -->
+          <div class="fade-up inline-flex items-center gap-3 rounded-full bg-zinc-800/60 backdrop-blur px-4 py-2 ring-1 ring-zinc-700/50 mb-8">
+            <div class="flex items-center gap-0.5">
+              <span class="star text-amber-400">★</span>
+              <span class="star text-amber-400">★</span>
+              <span class="star text-amber-400">★</span>
+              <span class="star text-amber-400">★</span>
+              <span class="star text-amber-400">★</span>
+            </div>
+            <span class="text-sm text-zinc-300">4.9 rating • 2,847 reviews</span>
+            <div class="w-px h-4 bg-zinc-700"></div>
+            <span class="text-sm text-purple-400 font-medium">Featured by Apple</span>
+          </div>
+
+          <!-- Headline -->
+          <h1 class="fade-up delay-1 text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6">
+            Never Break
+            <span class="gradient-text block">The Chain Again</span>
+          </h1>
+
+          <!-- Subheadline -->
+          <p class="fade-up delay-2 text-xl text-zinc-400 leading-relaxed mb-8 max-w-xl">
+            Join <span class="text-white font-semibold">2,847 people</span> who've built lasting habits with our visual chain system.
+            Average user builds <span class="text-amber-400 font-semibold">3 new habits</span> in their first month.
+          </p>
+
+          <!-- CTA Section -->
+          <div class="fade-up delay-3 flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-10">
+            <a href="#download" class="cta-glow btn-shine inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-8 py-4 text-lg font-bold text-zinc-900 hover:from-amber-400 hover:to-orange-400 transition-all">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              Download Free
+            </a>
+            <a href="#demo" class="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors">
+              <div class="w-10 h-10 rounded-full bg-zinc-800 ring-1 ring-zinc-700 flex items-center justify-center">
+                <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+              <span class="font-medium">Watch demo</span>
+            </a>
+          </div>
+
+          <!-- Trust indicators -->
+          <div class="fade-up delay-4 flex items-center gap-6">
+            <div class="flex -space-x-3">
+              <img src="https://i.pravatar.cc/40?img=1" class="w-10 h-10 rounded-full ring-2 ring-zinc-950" alt="">
+              <img src="https://i.pravatar.cc/40?img=2" class="w-10 h-10 rounded-full ring-2 ring-zinc-950" alt="">
+              <img src="https://i.pravatar.cc/40?img=3" class="w-10 h-10 rounded-full ring-2 ring-zinc-950" alt="">
+              <img src="https://i.pravatar.cc/40?img=4" class="w-10 h-10 rounded-full ring-2 ring-zinc-950" alt="">
+              <div class="w-10 h-10 rounded-full ring-2 ring-zinc-950 bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-xs font-bold text-zinc-900">
+                +2k
+              </div>
+            </div>
+            <div class="text-sm">
+              <p class="text-white font-medium">Join 2,847 habit builders</p>
+              <p class="text-zinc-500">Building streaks every day</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Phone Mockup -->
+        <div class="relative flex justify-center lg:justify-end">
+          <div class="floating relative">
+            <!-- Glow effect -->
+            <div class="absolute inset-0 bg-gradient-to-br from-amber-500/30 to-orange-500/30 rounded-[3rem] blur-3xl scale-90"></div>
+
+            <!-- Phone frame -->
+            <div class="relative w-[300px] sm:w-[340px] h-[620px] sm:h-[700px] bg-zinc-900 rounded-[3rem] p-3 shadow-2xl ring-1 ring-zinc-700/50">
+              <!-- Notch -->
+              <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-7 bg-zinc-900 rounded-b-2xl z-10"></div>
+
+              <!-- Screen -->
+              <div class="h-full w-full rounded-[2.5rem] bg-gradient-to-b from-zinc-900 to-zinc-950 overflow-hidden">
+                <div class="p-5 pt-10">
+                  <!-- App header -->
+                  <div class="flex items-center justify-between mb-6">
+                    <div>
+                      <p class="text-xs text-zinc-500">Good morning</p>
+                      <p class="text-lg font-bold">Today's Habits</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 ring-1 ring-amber-500/30 flex items-center justify-center">
+                      <span class="text-lg">👤</span>
+                    </div>
+                  </div>
+
+                  <!-- Habit card -->
+                  <div class="gradient-border p-4 mb-4">
+                    <div class="flex items-center justify-between mb-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center text-xl ring-1 ring-amber-500/30">
+                          🏃
+                        </div>
+                        <div>
+                          <p class="font-semibold">Morning Run</p>
+                          <p class="text-xs text-zinc-500">21 day streak 🔥</p>
+                        </div>
+                      </div>
+                      <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                        </svg>
+                      </div>
+                    </div>
+
+                    <!-- Chain visualization -->
+                    <div class="flex items-center justify-center gap-1 py-3">
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-zinc-900">M</div>
+                      <div class="chain-link w-2 h-1 bg-amber-500/50 rounded-full"></div>
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-zinc-900">T</div>
+                      <div class="chain-link w-2 h-1 bg-amber-500/50 rounded-full"></div>
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-zinc-900">W</div>
+                      <div class="chain-link w-2 h-1 bg-amber-500/50 rounded-full"></div>
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-zinc-900">T</div>
+                      <div class="chain-link w-2 h-1 bg-amber-500/50 rounded-full"></div>
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-zinc-900">F</div>
+                      <div class="chain-link w-2 h-1 bg-amber-500/50 rounded-full"></div>
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-[10px] font-bold text-zinc-900">S</div>
+                      <div class="chain-link w-2 h-1 bg-green-500/50 rounded-full"></div>
+                      <div class="chain-link w-7 h-7 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 ring-2 ring-green-400/50 flex items-center justify-center text-[10px] font-bold text-white">S</div>
+                    </div>
+
+                    <!-- Strength bar -->
+                    <div class="mt-3">
+                      <div class="flex items-center justify-between text-xs mb-1.5">
+                        <span class="text-zinc-500">Habit Strength</span>
+                        <span class="text-amber-400 font-semibold">78%</span>
+                      </div>
+                      <div class="h-2 bg-zinc-800 rounded-full overflow-hidden">
+                        <div class="progress-bar h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style="--progress: 78%"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Second habit card -->
+                  <div class="bg-zinc-800/50 rounded-2xl p-4 ring-1 ring-zinc-700/50">
+                    <div class="flex items-center justify-between">
+                      <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-blue-500/20 flex items-center justify-center text-xl ring-1 ring-blue-500/30">
+                          📚
+                        </div>
+                        <div>
+                          <p class="font-semibold">Read 30 mins</p>
+                          <p class="text-xs text-zinc-500">12 day streak 🔥</p>
+                        </div>
+                      </div>
+                      <div class="w-9 h-9 rounded-full bg-zinc-700 ring-2 ring-zinc-600"></div>
+                    </div>
+                  </div>
+
+                  <!-- Stats grid -->
+                  <div class="grid grid-cols-2 gap-3 mt-4">
+                    <div class="bg-zinc-800/30 rounded-xl p-3 text-center ring-1 ring-zinc-700/30">
+                      <p class="stat-number text-2xl font-bold text-amber-400">847</p>
+                      <p class="text-xs text-zinc-500">Days tracked</p>
+                    </div>
+                    <div class="bg-zinc-800/30 rounded-xl p-3 text-center ring-1 ring-zinc-700/30">
+                      <p class="stat-number text-2xl font-bold text-green-400">94%</p>
+                      <p class="text-xs text-zinc-500">Success rate</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 scroll-indicator">
+      <div class="w-6 h-10 rounded-full border-2 border-zinc-700 flex items-start justify-center p-2">
+        <div class="w-1.5 h-3 bg-zinc-500 rounded-full"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust logos -->
+  <section class="py-12 border-y border-zinc-800/50">
+    <div class="mx-auto max-w-7xl px-6">
+      <p class="text-center text-sm text-zinc-500 mb-8">Featured & trusted by</p>
+      <div class="flex items-center justify-center gap-12 flex-wrap opacity-50">
+        <div class="text-xl font-bold text-zinc-400 tracking-tight">TechCrunch</div>
+        <div class="text-xl font-bold text-zinc-400 tracking-tight">Product Hunt</div>
+        <div class="text-xl font-bold text-zinc-400 tracking-tight">App Store</div>
+        <div class="text-xl font-bold text-zinc-400 tracking-tight">Forbes</div>
+        <div class="text-xl font-bold text-zinc-400 tracking-tight">Lifehacker</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center mb-16">
+        <p class="text-amber-400 font-semibold mb-3">Simple as 1-2-3</p>
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Start Building Habits Today</h2>
+        <p class="text-xl text-zinc-400 max-w-2xl mx-auto">No complicated setup. No learning curve. Just open and start.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="card-hover text-center bg-zinc-900/50 rounded-3xl p-8 ring-1 ring-zinc-800">
+          <div class="icon-bounce w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 ring-1 ring-amber-500/30 flex items-center justify-center text-3xl mx-auto mb-6">
+            1️⃣
+          </div>
+          <h3 class="text-xl font-bold mb-3">Add Your Habits</h3>
+          <p class="text-zinc-400">Pick from templates or create your own. Set your schedule and reminders.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="card-hover text-center bg-zinc-900/50 rounded-3xl p-8 ring-1 ring-zinc-800">
+          <div class="icon-bounce w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 ring-1 ring-amber-500/30 flex items-center justify-center text-3xl mx-auto mb-6">
+            2️⃣
+          </div>
+          <h3 class="text-xl font-bold mb-3">Check Off Daily</h3>
+          <p class="text-zinc-400">One tap to complete. Watch your chain grow link by link.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="card-hover text-center bg-zinc-900/50 rounded-3xl p-8 ring-1 ring-zinc-800">
+          <div class="icon-bounce w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 ring-1 ring-green-500/30 flex items-center justify-center text-3xl mx-auto mb-6">
+            3️⃣
+          </div>
+          <h3 class="text-xl font-bold mb-3">Build Momentum</h3>
+          <p class="text-zinc-400">Your habits get stronger over time. Never want to break the chain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-24 lg:py-32 bg-zinc-900/30">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center mb-16">
+        <p class="text-amber-400 font-semibold mb-3">Everything you need</p>
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Why Daily Habits?</h2>
+        <p class="text-xl text-zinc-400 max-w-2xl mx-auto">Simple, beautiful, and effective. Everything designed to help you build habits that actually stick.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-6 ring-1 ring-zinc-800 hover:ring-amber-500/30 transition-all">
+          <div class="icon-bounce w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 ring-1 ring-amber-500/30 flex items-center justify-center text-2xl mb-5">
+            🔗
+          </div>
+          <h3 class="text-lg font-bold mb-2">Chain Visualization</h3>
+          <p class="text-zinc-400 text-sm">See your streaks as connected chains. Visual motivation that makes you never want to break the chain.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-6 ring-1 ring-zinc-800 hover:ring-green-500/30 transition-all">
+          <div class="icon-bounce w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 ring-1 ring-green-500/30 flex items-center justify-center text-2xl mb-5">
+            💪
+          </div>
+          <h3 class="text-lg font-bold mb-2">Habit Strength</h3>
+          <p class="text-zinc-400 text-sm">Watch your habits get stronger over time. The more consistent you are, the stronger they become.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-6 ring-1 ring-zinc-800 hover:ring-blue-500/30 transition-all">
+          <div class="icon-bounce w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 ring-1 ring-blue-500/30 flex items-center justify-center text-2xl mb-5">
+            📊
+          </div>
+          <h3 class="text-lg font-bold mb-2">Progress Insights</h3>
+          <p class="text-zinc-400 text-sm">Beautiful charts and stats to track your journey. Understand your patterns and optimize.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-6 ring-1 ring-zinc-800 hover:ring-purple-500/30 transition-all">
+          <div class="icon-bounce w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 ring-1 ring-purple-500/30 flex items-center justify-center text-2xl mb-5">
+            🎨
+          </div>
+          <h3 class="text-lg font-bold mb-2">Beautiful Design</h3>
+          <p class="text-zinc-400 text-sm">Clean, minimal, and distraction-free. Focus on what matters - building habits that last.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-6 ring-1 ring-zinc-800 hover:ring-orange-500/30 transition-all">
+          <div class="icon-bounce w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-red-500/20 ring-1 ring-orange-500/30 flex items-center justify-center text-2xl mb-5">
+            🔔
+          </div>
+          <h3 class="text-lg font-bold mb-2">Smart Reminders</h3>
+          <p class="text-zinc-400 text-sm">Gentle nudges at the right time. Set custom reminders for each habit to stay on track.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-6 ring-1 ring-zinc-800 hover:ring-zinc-500/30 transition-all">
+          <div class="icon-bounce w-12 h-12 rounded-xl bg-gradient-to-br from-zinc-500/20 to-zinc-600/20 ring-1 ring-zinc-500/30 flex items-center justify-center text-2xl mb-5">
+            🔒
+          </div>
+          <h3 class="text-lg font-bold mb-2">Privacy First</h3>
+          <p class="text-zinc-400 text-sm">Your data stays secure. We never sell your information or track you for advertising.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-24 lg:py-32">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Real Results from Real Users</h2>
+        <p class="text-xl text-zinc-400">Based on anonymized data from 2,847 active users</p>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-8 text-center ring-1 ring-zinc-800">
+          <p class="text-5xl lg:text-6xl font-bold gradient-text mb-2">21</p>
+          <p class="text-zinc-400">Days to form a habit</p>
+          <p class="text-xs text-green-400 mt-2">↓ 45% faster than avg</p>
+        </div>
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-8 text-center ring-1 ring-zinc-800">
+          <p class="text-5xl lg:text-6xl font-bold text-green-400 mb-2">3.2</p>
+          <p class="text-zinc-400">New habits per month</p>
+          <p class="text-xs text-green-400 mt-2">↑ vs 0.8 industry avg</p>
+        </div>
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-8 text-center ring-1 ring-zinc-800">
+          <p class="text-5xl lg:text-6xl font-bold text-blue-400 mb-2">87%</p>
+          <p class="text-zinc-400">30-day retention</p>
+          <p class="text-xs text-green-400 mt-2">↑ 4x category avg</p>
+        </div>
+        <div class="card-hover bg-zinc-900/50 rounded-3xl p-8 text-center ring-1 ring-zinc-800">
+          <p class="text-5xl lg:text-6xl font-bold text-purple-400 mb-2">94%</p>
+          <p class="text-zinc-400">Would recommend</p>
+          <p class="text-xs text-green-400 mt-2">NPS Score: 72</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-24 lg:py-32 bg-zinc-900/30">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="text-center mb-16">
+        <p class="text-amber-400 font-semibold mb-3">Loved by thousands</p>
+        <h2 class="text-4xl lg:text-5xl font-bold mb-4">Hear From Real Users</h2>
+        <p class="text-xl text-zinc-400">See what people are saying about Daily Habits</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Testimonial 1 -->
+        <div class="card-hover testimonial-card rounded-3xl p-6 ring-1 ring-zinc-700/50">
+          <div class="flex items-center gap-0.5 text-amber-400 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-zinc-300 mb-6">"The chain visualization is genius. I finally understand why I was breaking my habits. Haven't missed a day in 3 months!"</p>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/48?img=11" class="w-12 h-12 rounded-full ring-2 ring-zinc-700" alt="">
+            <div>
+              <p class="font-semibold">Sarah Chen</p>
+              <p class="text-xs text-amber-400">127-day streak 🔥</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="card-hover testimonial-card rounded-3xl p-6 ring-1 ring-zinc-700/50">
+          <div class="flex items-center gap-0.5 text-amber-400 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-zinc-300 mb-6">"Simple, beautiful, and it just works. The habit strength feature keeps me motivated even when I slip up."</p>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/48?img=12" class="w-12 h-12 rounded-full ring-2 ring-zinc-700" alt="">
+            <div>
+              <p class="font-semibold">Marcus Johnson</p>
+              <p class="text-xs text-amber-400">89-day streak 🔥</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="card-hover testimonial-card rounded-3xl p-6 ring-1 ring-zinc-700/50">
+          <div class="flex items-center gap-0.5 text-amber-400 mb-4">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="text-zinc-300 mb-6">"Finally built a meditation habit after 10 years of trying. The design is chef's kiss. 👨‍🍳"</p>
+          <div class="flex items-center gap-3">
+            <img src="https://i.pravatar.cc/48?img=13" class="w-12 h-12 rounded-full ring-2 ring-zinc-700" alt="">
+            <div>
+              <p class="font-semibold">Emily Rodriguez</p>
+              <p class="text-xs text-amber-400">203-day streak 🔥</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section id="download" class="py-24 lg:py-32 relative overflow-hidden">
+    <!-- Background glow -->
+    <div class="absolute inset-0 bg-gradient-to-t from-amber-500/10 via-transparent to-transparent"></div>
+
+    <div class="relative mx-auto max-w-3xl px-6 text-center">
+      <div class="inline-flex items-center gap-2 rounded-full bg-green-500/10 px-4 py-2 ring-1 ring-green-500/30 mb-8">
+        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        <span class="text-sm text-green-400 font-medium">Free forever • No credit card required</span>
+      </div>
+
+      <h2 class="text-4xl lg:text-6xl font-bold mb-6">
+        Ready to Never Break
+        <span class="gradient-text block">The Chain Again?</span>
+      </h2>
+
+      <p class="text-xl text-zinc-400 mb-10 max-w-xl mx-auto">
+        Join 2,847 people building better habits every day. Start free, upgrade when you're ready.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+        <a href="#" class="cta-glow btn-shine inline-flex items-center gap-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-10 py-5 text-xl font-bold text-zinc-900 hover:from-amber-400 hover:to-orange-400 transition-all">
+          <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          Download for iOS — Free
+        </a>
+      </div>
+
+      <!-- Rating -->
+      <div class="flex items-center justify-center gap-3">
+        <div class="flex items-center gap-0.5 text-amber-400">
+          <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+        </div>
+        <span class="text-zinc-400">4.9 rating from 2,847 reviews</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-zinc-800/50">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+            <span>🔗</span>
+          </div>
+          <span class="font-bold">Daily Habits</span>
+        </div>
+
+        <div class="flex items-center gap-8 text-sm text-zinc-400">
+          <a href="#" class="hover:text-white transition-colors">Privacy</a>
+          <a href="#" class="hover:text-white transition-colors">Terms</a>
+          <a href="#" class="hover:text-white transition-colors">Contact</a>
+          <a href="#" class="hover:text-white transition-colors">Twitter</a>
+        </div>
+
+        <p class="text-sm text-zinc-500">© 2024 Daily Habits. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

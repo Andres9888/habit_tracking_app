@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Tabs 02 — Sparse Underline</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  .tabs-02 {
+    margin: 10px 24px 0;
+    position: relative;
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
+  .tabs-02 .tab {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 2px 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    position: relative;
+    transition: color 200ms var(--ease-out-soft);
+    letter-spacing: -0.1px;
+  }
+  .tabs-02 .tab[data-active="true"] {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .tabs-02 .indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: var(--forest-600);
+    border-radius: 2px;
+    transition: transform 320ms var(--ease-out-soft), width 320ms var(--ease-out-soft);
+  }
+  .tabs-02 .dot {
+    position: absolute;
+    bottom: -4px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--forest-600);
+    transition: transform 320ms var(--ease-out-soft);
+  }
+  .tabs-02 .divider {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 0;
+    height: 1px;
+    background: var(--border);
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stage-title">02 · Sparse Underline</div>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>●●●● ▐▌</span></div>
+      <div class="screen-header">
+        <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+        <button class="icon-btn"><i data-lucide="pencil"></i></button>
+      </div>
+      <div class="detail-hero">
+        <div class="hero-emoji-ring">🌱</div>
+        <div class="hero-title">Morning Meditation</div>
+        <div class="hero-sub">
+          <span class="streak-pill">🔥 12 day streak</span>
+          <span>·</span>
+          <span>72% strength</span>
+        </div>
+      </div>
+      <div class="tabs-02" id="tabs">
+        <button class="tab" data-active="true">Calendar</button>
+        <button class="tab">Strength</button>
+        <button class="tab">Goal</button>
+        <div class="indicator"></div>
+        <div class="divider"></div>
+      </div>
+      <div class="content-card">
+        <div class="section-title">This month</div>
+        <div class="cal-grid">
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+          <div class="cal-dot on"></div><div class="cal-dot soft"></div><div class="cal-dot on"></div><div class="cal-dot on"></div><div class="cal-dot"></div><div class="cal-dot"></div><div class="cal-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="caption">
+      <h3>Sparse Underline</h3>
+      <p>No track, no chrome. Three labels on the canvas with a 2px forest-green underline that slides between tabs. Reads editorial, confident, premium — the content (not the control) becomes the visual focus.</p>
+      <p><span class="tag">Most minimal</span><span class="tag">Editorial feel</span><span class="tag">Less affordance</span></p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+    const container = document.getElementById('tabs');
+    const tabs = container.querySelectorAll('.tab');
+    const ind = container.querySelector('.indicator');
+    function move(tab) {
+      ind.style.width = tab.offsetWidth + 'px';
+      ind.style.transform = `translateX(${tab.offsetLeft - container.firstElementChild.offsetLeft}px)`;
+    }
+    requestAnimationFrame(() => move(tabs[0]));
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.dataset.active = 'false');
+      t.dataset.active = 'true';
+      move(t);
+    }));
+  </script>
+</body>
+</html>

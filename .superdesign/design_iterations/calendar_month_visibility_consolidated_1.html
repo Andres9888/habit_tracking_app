@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Timeline — Month Visibility Variations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #2d2a26;
+        color: #f5f1ed;
+        padding: 48px 24px;
+        min-height: 100vh;
+      }
+
+      /* Page header */
+      .page-header {
+        max-width: 900px;
+        margin: 0 auto 48px;
+        text-align: center;
+      }
+      .page-title {
+        font-family: 'Literata', serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 8px;
+      }
+      .page-subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* Grid layout */
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 48px;
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      @media (min-width: 1060px) {
+        .grid {
+          grid-template-columns: 1fr 1fr;
+          max-width: 1020px;
+        }
+      }
+
+      /* Each variation card */
+      .variation {
+        background: #3d3833;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .variation.baseline {
+        border: 1px solid rgba(232, 185, 77, 0.3);
+      }
+      .var-label {
+        padding: 16px 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .var-number {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        color: #6b6560;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+      .var-number.current {
+        background: rgba(232, 185, 77, 0.15);
+        color: #e8b94d;
+      }
+      .var-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #f5f1ed;
+      }
+
+      /* Phone frame mockup */
+      .phone {
+        margin: 16px;
+        background: #faf8f5;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .shelf {
+        padding: 14px 20px 18px;
+        background: #faf8f5;
+      }
+
+      /* Day strip (shared) */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 4px;
+        margin-top: 2px;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+      }
+      .day-lbl {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        color: #6b6560;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .day-lbl.today-lbl {
+        font-weight: 700;
+        color: #7d5907;
+      }
+      .ring {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .ring.complete {
+        background: #059669;
+        color: white;
+        box-shadow: 0 0 12px rgba(5, 150, 105, 0.4);
+      }
+      .ring.today {
+        background: rgba(232, 185, 77, 0.1);
+        color: #7d5907;
+        border: 3.5px solid #ddd8d2;
+        border-top-color: #e8b94d;
+        outline: 1px solid rgba(232, 185, 77, 0.35);
+      }
+      .ring.future {
+        border: 3.5px dashed #ddd8d2;
+        color: #c4bfb7;
+        opacity: 0.3;
+      }
+      .ring.none {
+        border: 3.5px solid #ddd8d2;
+        color: #2d2a26;
+      }
+      /* For month-labeled rings */
+      .ring .month-prefix {
+        font-size: 8px;
+        font-weight: 500;
+        color: #059669;
+        display: block;
+        line-height: 1;
+        margin-bottom: -1px;
+      }
+      .ring .day-num {
+        display: block;
+        line-height: 1;
+      }
+      .ring.complete .month-prefix {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .ring.today .month-prefix {
+        color: #e8b94d;
+      }
+      .ring.future .month-prefix {
+        color: #c4bfb7;
+      }
+
+      /* Date row (current baseline) */
+      .date-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .date-left {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .cal-icon {
+        font-size: 13px;
+        color: #6e6660;
+      }
+      .date-text {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+      .chevron {
+        font-size: 10px;
+        color: #c4bfb7;
+      }
+      .streak-pill {
+        background: #fef3cd;
+        color: #7d5907;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 99px;
+        white-space: nowrap;
+      }
+
+      /* Reasoning tags */
+      .reasoning-section {
+        padding: 0 20px 20px;
+      }
+      .reason-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        margin-right: 4px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+      .reason-tag.ux {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+      }
+      .reason-tag.premium {
+        background: rgba(232, 185, 77, 0.15);
+        color: #e8b94d;
+      }
+      .reason-text {
+        font-size: 13px;
+        color: #9ca3af;
+        line-height: 1.55;
+        margin-bottom: 12px;
+      }
+      .reason-text:last-child {
+        margin-bottom: 0;
+      }
+
+      /* === Variation-specific styles === */
+
+      /* V1: Month-first */
+      .v1-date-text .month-word {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .v1-date-text .day-part {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+
+      /* V2: Two-line split */
+      .v2-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+      .v2-left {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .v2-month {
+        font-family: 'Literata', serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #2d2a26;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+      }
+      .v2-day {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+
+      /* V3: Emphasized month + muted day */
+      .v3-date-text .month-em {
+        font-family: 'Literata', serif;
+        font-size: 16px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .v3-date-text .day-muted {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 400;
+        color: #c4bfb7;
+        margin-left: 2px;
+      }
+
+      /* V5: Contextual + week */
+      .v5-date-text .month-word {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .v5-date-text .day-part {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+      .v5-date-text .week-part {
+        font-size: 12px;
+        font-weight: 500;
+        color: #c4bfb7;
+      }
+      .v5-date-text .dot-sep {
+        font-size: 12px;
+        color: #ddd8d2;
+        margin: 0 4px;
+      }
+
+      /* V6: Month accent dot */
+      .v6-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #059669;
+        flex-shrink: 0;
+      }
+      .v6-date-text .month-word {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: #047857;
+      }
+      .v6-date-text .day-part {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <div class="page-title">Calendar Timeline — Month Visibility</div>
+      <div class="page-subtitle">
+        6 variations that rework the existing date row to make the month more
+        noticeable. No new UI elements added — just better typography hierarchy.
+        Each includes UX and premium-feel reasoning.
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- ═══ CURRENT BASELINE ═══ -->
+      <div class="variation baseline">
+        <div class="var-label">
+          <span class="var-number current">CURRENT</span>
+          <span class="var-title">Baseline — Today's Design</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="date-row">
+              <div class="date-left">
+                <span class="cal-icon">&#128197;</span>
+                <span class="date-text">Thu, March 5</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">1</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">Issue</span></div>
+          <div class="reason-text">
+            Month is buried inside "Thu, March 5" — all three words have equal
+            visual weight (same font, size, color). You have to
+            <em>read</em> the string to find the month. When swiping between
+            weeks, month transitions go unnoticed because the whole string
+            changes at once.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ V1: Month-First Hierarchy ═══ -->
+      <div class="variation">
+        <div class="var-label">
+          <span class="var-number">V1</span>
+          <span class="var-title">Month-First Hierarchy</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="date-row">
+              <div class="date-left">
+                <span class="cal-icon">&#128197;</span>
+                <span class="v1-date-text">
+                  <span class="month-word">March</span>
+                  <span class="day-part">5</span>
+                </span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">1</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">UX</span></div>
+          <div class="reason-text">
+            Drops "Thu" (redundant — the strip already shows day-of-week
+            labels). Promotes "March" to 15px bold, making it the first thing
+            the eye reads. Day number stays at 14px medium. Reduces the date
+            string from 3 info-pieces to 2.
+          </div>
+          <div><span class="reason-tag premium">Premium Feel</span></div>
+          <div class="reason-text">
+            Removing redundant info is a hallmark of premium apps (Things 3,
+            Fantastical). Clutter-free UI signals "every pixel was considered" —
+            users associate this with quality they'd pay for.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ V2: Two-Line Split ═══ -->
+      <div class="variation">
+        <div class="var-label">
+          <span class="var-number">V2</span>
+          <span class="var-title">Two-Line Split</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="v2-header">
+              <div class="v2-left">
+                <div class="v2-month">
+                  March
+                  <span class="chevron" style="font-size: 12px">&#9662;</span>
+                </div>
+                <div class="v2-day">Thursday, 5th</div>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">1</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">UX</span></div>
+          <div class="reason-text">
+            "March" at 20px Literata is the visual anchor — your eye hits it
+            first. "Thursday, 5th" at 13px is secondary context. The hierarchy
+            mirrors how your brain organizes time: month first, then day.
+            Swiping from March to February is impossible to miss when the big
+            word changes.
+          </div>
+          <div><span class="reason-tag premium">Premium Feel</span></div>
+          <div class="reason-text">
+            The Literata serif for the month name adds editorial warmth — it's
+            the same typographic treatment Apple Calendar and Timepage use.
+            Serif + sans-serif pairing signals design sophistication that free
+            apps don't bother with. Users notice this even if they can't
+            articulate it.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ V3: Emphasized Month + Muted Day ═══ -->
+      <div class="variation">
+        <div class="var-label">
+          <span class="var-number">V3</span>
+          <span class="var-title">Emphasized Month, Muted Day</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="date-row">
+              <div class="date-left">
+                <span class="cal-icon">&#128197;</span>
+                <span class="v3-date-text">
+                  <span class="month-em">March</span>
+                  <span class="day-muted">5th</span>
+                </span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">1</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">UX</span></div>
+          <div class="reason-text">
+            Same single line as current, but font mixing creates instant
+            hierarchy. "March" in 16px Literata bold reads as a label. "5th" in
+            13px light gray reads as a detail. Your eye separates them without
+            conscious effort — it's ~200ms faster to find the month than the
+            current flat string.
+          </div>
+          <div><span class="reason-tag premium">Premium Feel</span></div>
+          <div class="reason-text">
+            Font mixing within a single line is a detail most apps skip — it
+            requires intentional design. This is the kind of "I can't explain
+            why, but this looks polished" detail that separates paid apps from
+            free ones. The contrast ratio between the two weights communicates
+            careful craft.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ V4: Month in Day Numbers ═══ -->
+      <div class="variation">
+        <div class="var-label">
+          <span class="var-number">V4</span>
+          <span class="var-title">Month Label in Day Rings</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="date-row">
+              <div class="date-left">
+                <span class="cal-icon">&#128197;</span>
+                <span class="date-text">Thu, March 5</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">
+                  <div style="text-align: center; line-height: 1">
+                    <span class="month-prefix">MAR</span>
+                    <span class="day-num">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">
+                  <div style="text-align: center; line-height: 1">
+                    <span class="month-prefix" style="color: #c4bfb7">W1</span>
+                    <span class="day-num">7</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">UX</span></div>
+          <div class="reason-text">
+            The first day of the displayed week shows "MAR" above its number
+            inside the ring. The last day shows "W1" (week 1). This puts month
+            context directly where you're already looking — in the day strip —
+            without changing the header at all. Especially useful on cross-month
+            weeks where "FEB" and "MAR" would appear on their respective first
+            days.
+          </div>
+          <div><span class="reason-tag premium">Premium Feel</span></div>
+          <div class="reason-text">
+            Information-dense but not cluttered — this is the design principle
+            behind luxury watch complications. Showing month context inside the
+            ring makes every week feel like it has a "place" in the calendar.
+            Free apps treat weeks as disposable; premium apps give each week an
+            identity.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ V5: Contextual Date + Week ═══ -->
+      <div class="variation">
+        <div class="var-label">
+          <span class="var-number">V5</span>
+          <span class="var-title">Month + Week Number Inline</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="date-row">
+              <div class="date-left">
+                <span class="cal-icon">&#128197;</span>
+                <span class="v5-date-text">
+                  <span class="month-word">March</span>
+                  <span class="day-part">5</span>
+                  <span class="dot-sep">&middot;</span>
+                  <span class="week-part">Wk 1</span>
+                </span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">1</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">UX</span></div>
+          <div class="reason-text">
+            Drops "Thu", adds "Wk 1" — same amount of text but different
+            information. Week-of-month tells you where you are within the month
+            (early, mid, late) which pure dates don't. The dot separator creates
+            a clear visual break between the date and the week context. When
+            swiping, "Wk 1" changing to "Wk 4" reinforces that you've moved far.
+          </div>
+          <div><span class="reason-tag premium">Premium Feel</span></div>
+          <div class="reason-text">
+            Week numbering is a power-user feature found in Fantastical and
+            Outlook — it signals that this app understands structured time
+            management. Users who track habits weekly (your entire user base)
+            benefit from this context. It makes the app feel like it was
+            designed by someone who actually uses it.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ V6: Month Accent Dot ═══ -->
+      <div class="variation">
+        <div class="var-label">
+          <span class="var-number">V6</span>
+          <span class="var-title">Green Dot + Month Color Anchor</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="date-row">
+              <div class="date-left">
+                <div class="v6-dot"></div>
+                <span class="v6-date-text">
+                  <span class="month-word">March</span>
+                  <span class="day-part">5</span>
+                </span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="streak-pill">&#128293; 5 day streak</div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">1</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning-section">
+          <div><span class="reason-tag ux">UX</span></div>
+          <div class="reason-text">
+            The green dot replaces the calendar emoji — it's a color anchor that
+            your eye can find faster than an icon. "March" in the brand green at
+            15px bold ties it to the app's primary action color, making it feel
+            like an interactive label (because it is — it opens the calendar).
+            Drops "Thu" like V1.
+          </div>
+          <div><span class="reason-tag premium">Premium Feel</span></div>
+          <div class="reason-text">
+            The dot + colored text creates a "status indicator" pattern used in
+            Linear, Notion, and GitHub. It makes the month feel like a live,
+            active element rather than a static label. This micro-interaction
+            language (green = active) builds a visual system users learn to
+            trust — and trust is what converts free users to paid.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 600px; margin: 48px auto 0; text-align: center">
+      <div style="font-size: 12px; color: #6b6560; line-height: 1.6">
+        All variations use the app's design system: DM Sans (body) + Literata
+        (display), warm stone palette (#FAF8F5, #EDEAE5, #DDD8D2), forest green
+        primary (#059669), burnished gold streak (#E8B94D), 44px progress rings.
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Consistency — Before / After</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: #1a1816; color: #F5F1ED; padding: 32px; }
+  h1 { font-family: 'Literata', serif; font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .subtitle { color: #6B6560; font-size: 14px; margin-bottom: 40px; }
+
+  .section { margin-bottom: 56px; }
+  .section-title { font-family: 'Literata', serif; font-size: 20px; font-weight: 600; margin-bottom: 6px; color: #F5F1ED; letter-spacing: -0.2px; }
+  .section-desc { font-size: 13px; color: #6B6560; margin-bottom: 20px; }
+
+  .compare-row { display: flex; gap: 24px; margin-bottom: 32px; }
+  .compare-col { flex: 1; }
+  .compare-label {
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;
+    margin-bottom: 12px; padding: 4px 10px; border-radius: 4px; display: inline-block;
+  }
+  .label-before { background: #B53030; color: white; }
+  .label-after { background: #059669; color: white; }
+
+  /* Phone frame */
+  .phone {
+    width: 100%; max-width: 375px; border-radius: 24px; overflow: hidden;
+    border: 2px solid #3D3833; background: #F5F1ED;
+  }
+  .phone-dark { background: #1A1816; }
+  .phone-inner { padding: 20px 16px; }
+
+  /* Component mocks */
+  .mock-card { border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .mock-btn { border-radius: 12px; padding: 12px 20px; text-align: center; font-weight: 600; font-size: 14px; }
+
+  .tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 6px; }
+  .tag-red { background: rgba(181,48,48,0.15); color: #B53030; }
+  .tag-amber { background: rgba(154,85,4,0.15); color: #9A5504; }
+  .tag-green { background: rgba(5,150,105,0.15); color: #059669; }
+
+  .change-note {
+    font-size: 11px; color: #6B6560; margin-top: 8px; padding-left: 12px;
+    border-left: 2px solid #3D3833; line-height: 1.6;
+  }
+  .change-note code { background: #2D2A26; padding: 1px 5px; border-radius: 3px; font-size: 10px; color: #E8B94D; }
+
+  @media (max-width: 860px) {
+    .compare-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Design Consistency Audit — Visual Diff</h1>
+<p class="subtitle">Before / After comparison of token alignment changes across 12 files</p>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 1. BATCH DELETE MODAL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">1. Batch Delete Confirm Modal</div>
+  <div class="section-desc">Error color, border radius, text color — BatchDeleteConfirmModal.tsx</div>
+
+  <div class="compare-row">
+    <!-- BEFORE -->
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone">
+        <div style="background:rgba(0,0,0,0.6); padding:80px 28px; display:flex; align-items:center; justify-content:center;">
+          <div style="background:#EDEAE5; border-radius:20px; padding:28px; width:100%; text-align:center;">
+            <div style="width:48px;height:48px;border-radius:24px;background:rgba(239,68,68,0.12);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div style="font-size:17px;font-weight:700;color:#2D2A26;margin-bottom:8px;">Delete 3 habits?</div>
+            <div style="font-size:13px;color:#6B6560;line-height:20px;margin-bottom:24px;">This will permanently remove the selected habits and all their tracking data.</div>
+            <div style="display:flex;gap:10px;">
+              <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:12px;padding:12px;font-size:14px;font-weight:600;color:#2D2A26;">Cancel</div>
+              <div style="flex:1;background:#ef4444;border-radius:12px;padding:12px;font-size:14px;font-weight:600;color:#fff;">Delete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>#ef4444</code> hardcoded (Tailwind red-500)<br>
+        <code>borderRadius: 20</code> — not on 8px grid<br>
+        <code>color: '#fff'</code> — raw hex
+      </div>
+      <span class="tag tag-red">3 hardcoded values</span>
+    </div>
+
+    <!-- AFTER -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone">
+        <div style="background:rgba(0,0,0,0.6); padding:80px 28px; display:flex; align-items:center; justify-content:center;">
+          <div style="background:#EDEAE5; border-radius:24px; padding:28px; width:100%; text-align:center;">
+            <div style="width:48px;height:48px;border-radius:24px;background:#FEE2E2;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B53030" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div style="font-size:17px;font-weight:700;color:#2D2A26;margin-bottom:8px;">Delete 3 habits?</div>
+            <div style="font-size:13px;color:#6B6560;line-height:20px;margin-bottom:24px;">This will permanently remove the selected habits and all their tracking data.</div>
+            <div style="display:flex;gap:10px;">
+              <div style="flex:1;background:rgba(255,255,255,0.08);border-radius:12px;padding:12px;font-size:14px;font-weight:600;color:#2D2A26;">Cancel</div>
+              <div style="flex:1;background:#B53030;border-radius:12px;padding:12px;font-size:14px;font-weight:600;color:#FFFFFF;">Delete</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>palette.error</code> (#B53030) — design system token<br>
+        <code>borderRadius: 24</code> — <code>borderRadius.xl</code><br>
+        <code>palette.text.inverse</code> — semantic token<br>
+        Icon bg: <code>palette.errorLight</code> (#FEE2E2)
+      </div>
+      <span class="tag tag-green">All tokens</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 2. MONETIZATION HERO -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">2. Monetization Hero Card</div>
+  <div class="section-desc">Premium indigo colors — MonetizationHero.tsx</div>
+
+  <div class="compare-row">
+    <!-- BEFORE -->
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone phone-dark">
+        <div class="phone-inner">
+          <div style="background:#1A1816;border-radius:24px;padding:24px;border:1px solid #3D3833;">
+            <div style="font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:4px;color:#a5b4fc;margin-bottom:8px;">&#10024; Try Premium Free</div>
+            <div style="font-size:22px;font-weight:600;color:white;line-height:28px;margin-bottom:8px;">Ready for unlimited habits?</div>
+            <div style="font-size:17px;color:#cbd5f5;line-height:22px;margin-bottom:20px;">Try free for 7 days — track every area of your life.</div>
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+              <div style="flex:1;background:#6d28d9;border-radius:9999px;padding:12px 20px;text-align:center;font-size:17px;font-weight:600;color:white;box-shadow:0 8px 16px rgba(49,46,129,0.32);">Start Free Trial →</div>
+              <div style="flex:1;border:1px solid rgba(255,255,255,0.22);border-radius:9999px;padding:12px;text-align:center;font-size:13px;font-weight:600;color:#cbd5f5;">Keep 3 free</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:13px;color:#6E6660;text-transform:uppercase;letter-spacing:1px;">Habit slots</span>
+              <span style="font-size:13px;font-weight:700;color:white;">2/3</span>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.12);border-radius:9999px;overflow:hidden;">
+              <div style="height:100%;width:66%;background:#E8B94D;border-radius:9999px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>PREMIUM_INDIGO_LIGHT = '#a5b4fc'</code><br>
+        <code>PREMIUM_INDIGO_MUTED = '#cbd5f5'</code><br>
+        <code>PREMIUM_PURPLE_CTA = '#6d28d9'</code><br>
+        <code>PREMIUM_PURPLE_SHADOW = '#312e81'</code><br>
+        4 constants outside design system
+      </div>
+      <span class="tag tag-red">4 hardcoded constants</span>
+    </div>
+
+    <!-- AFTER -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone phone-dark">
+        <div class="phone-inner">
+          <div style="background:#1A1816;border-radius:24px;padding:24px;border:1px solid #3D3833;">
+            <div style="font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:4px;color:#a5b4fc;margin-bottom:8px;">&#10024; Try Premium Free</div>
+            <div style="font-size:22px;font-weight:600;color:white;line-height:28px;margin-bottom:8px;">Ready for unlimited habits?</div>
+            <div style="font-size:17px;color:#cbd5f5;line-height:22px;margin-bottom:20px;">Try free for 7 days — track every area of your life.</div>
+            <div style="display:flex;gap:12px;margin-bottom:16px;">
+              <div style="flex:1;background:#6d28d9;border-radius:9999px;padding:12px 20px;text-align:center;font-size:17px;font-weight:600;color:white;box-shadow:0 8px 16px rgba(49,46,129,0.32);">Start Free Trial →</div>
+              <div style="flex:1;border:1px solid rgba(255,255,255,0.22);border-radius:9999px;padding:12px;text-align:center;font-size:13px;font-weight:600;color:#cbd5f5;">Keep 3 free</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:13px;color:#6E6660;text-transform:uppercase;letter-spacing:1px;">Habit slots</span>
+              <span style="font-size:13px;font-weight:700;color:white;">2/3</span>
+            </div>
+            <div style="height:8px;background:rgba(255,255,255,0.12);border-radius:9999px;overflow:hidden;">
+              <div style="height:100%;width:66%;background:#E8B94D;border-radius:9999px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>colors.indigo[300]</code> — from core.ts<br>
+        <code>colors.indigo[200]</code> — from core.ts<br>
+        <code>colors.indigo[700]</code> — from core.ts<br>
+        <code>colors.indigo[900]</code> — from core.ts<br>
+        Same visual, now tokenized
+      </div>
+      <span class="tag tag-green">Token-referenced (visual parity)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 3. SELECT ALL ROW -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">3. Select All Row</div>
+  <div class="section-desc">Color, typography, spacing, animation duration — SelectAllRow.tsx</div>
+
+  <div class="compare-row">
+    <!-- BEFORE -->
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone">
+        <div class="phone-inner" style="padding:0;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 24px;background:#F5F1ED;">
+            <div style="width:22px;height:22px;border-radius:6px;border:2px solid #059669;background:#059669;display:flex;align-items:center;justify-content:center;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg>
+            </div>
+            <span style="flex:1;font-size:14px;font-weight:500;color:#6B6560;">Select All</span>
+            <span style="font-size:12px;font-weight:600;color:#a855f7;">3 of 5</span>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>#a855f7</code> — Tailwind purple-500<br>
+        <code>fontSize: 12</code> — not in type scale<br>
+        <code>gap: 10</code> — not on 8px grid<br>
+        <code>duration(200)</code> — not spec entry (280)
+      </div>
+      <span class="tag tag-red">4 issues</span>
+    </div>
+
+    <!-- AFTER -->
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone">
+        <div class="phone-inner" style="padding:0;">
+          <div style="display:flex;align-items:center;gap:12px;padding:8px 24px;background:#F5F1ED;">
+            <div style="width:22px;height:22px;border-radius:6px;border:2px solid #059669;background:#059669;display:flex;align-items:center;justify-content:center;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="2 6 5 9 10 3"/></svg>
+            </div>
+            <span style="flex:1;font-size:14px;font-weight:500;color:#6B6560;">Select All</span>
+            <span style="font-size:13px;font-weight:600;color:#8563C7;">3 of 5</span>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>palette.premium[500]</code> (#8563C7)<br>
+        <code>fontSize: 13</code> — matches <code>typography.caption</code><br>
+        <code>gap: 12</code> — <code>spacing.md</code><br>
+        <code>durations.enter</code> (280ms) — spec-aligned
+      </div>
+      <span class="tag tag-green">All tokens</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 4. SELECTION ACTION BAR -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">4. Selection Action Bar</div>
+  <div class="section-desc">Animation token alignment — SelectionActionBar.tsx</div>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone">
+        <div class="phone-inner" style="padding:20px 16px 32px;">
+          <div style="background:rgba(245,241,237,0.85);backdrop-filter:blur(20px);border-radius:32px;border:1px solid #DDD8D2;padding:8px 16px;display:flex;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+            <div style="width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+            <span style="font-size:13px;font-weight:600;color:#2D2A26;padding:0 12px;">3 selected</span>
+            <div style="width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 7h20"/></svg>
+            </div>
+            <div style="width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B53030" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>.duration(280).springify().damping(18)</code><br>
+        Magic numbers inline
+      </div>
+      <span class="tag tag-amber">Hardcoded animation</span>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone">
+        <div class="phone-inner" style="padding:20px 16px 32px;">
+          <div style="background:rgba(245,241,237,0.85);backdrop-filter:blur(20px);border-radius:32px;border:1px solid #DDD8D2;padding:8px 16px;display:flex;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+            <div style="width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+            <span style="font-size:13px;font-weight:600;color:#2D2A26;padding:0 12px;">3 selected</span>
+            <div style="width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B6208" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M2 7h20"/></svg>
+            </div>
+            <div style="width:44px;height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B53030" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>durations.enter</code> + <code>springs.standard.damping</code><br>
+        Token-referenced, same visual behavior
+      </div>
+      <span class="tag tag-green">Token-referenced</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 5. APP PROVIDERS FALLBACK -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">5. App Startup Fallback</div>
+  <div class="section-desc">Error/loading screens — AppProviders.tsx</div>
+
+  <div class="compare-row">
+    <div class="compare-col">
+      <div class="compare-label label-before">Before</div>
+      <div class="phone" style="background:#fff;">
+        <div class="phone-inner" style="text-align:center;padding:60px 24px;">
+          <div style="font-size:24px;font-weight:700;color:#111827;margin-bottom:12px;">Startup Error</div>
+          <div style="font-size:16px;color:#374151;margin-bottom:24px;">The app did not finish loading. Tap retry to reload.</div>
+          <div style="background:#111827;color:#fff;border-radius:8px;padding:12px 16px;font-weight:600;font-size:16px;display:inline-block;">Retry</div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>#fff</code>, <code>#111827</code>, <code>#374151</code><br>
+        11 hardcoded hex values across 2 screens
+      </div>
+      <span class="tag tag-red">11 raw hex values</span>
+    </div>
+
+    <div class="compare-col">
+      <div class="compare-label label-after">After</div>
+      <div class="phone" style="background:#F5F1ED;">
+        <div class="phone-inner" style="text-align:center;padding:60px 24px;">
+          <div style="font-size:24px;font-weight:700;color:#1A1816;margin-bottom:12px;">Startup Error</div>
+          <div style="font-size:16px;color:#524D47;margin-bottom:24px;">The app did not finish loading. Tap retry to reload.</div>
+          <div style="background:#1A1816;color:#FFFFFF;border-radius:8px;padding:12px 16px;font-weight:600;font-size:16px;display:inline-block;">Retry</div>
+        </div>
+      </div>
+      <div class="change-note">
+        <code>palette.light.background</code> (#F5F1ED)<br>
+        <code>palette.gray[900]</code>, <code>palette.gray[600]</code><br>
+        <code>palette.text.inverse</code><br>
+        Warm parchment bg matches app identity
+      </div>
+      <span class="tag tag-green">All tokens — warm palette</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- 6. SUMMARY -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="section" style="margin-top:48px;padding:32px;background:#2D2A26;border-radius:16px;">
+  <div class="section-title" style="margin-bottom:20px;">Summary of Changes</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+    <div>
+      <div style="font-size:32px;font-weight:700;color:#059669;">12</div>
+      <div style="font-size:13px;color:#6B6560;">Files modified</div>
+    </div>
+    <div>
+      <div style="font-size:32px;font-weight:700;color:#E8B94D;">1</div>
+      <div style="font-size:13px;color:#6B6560;">New token scale (indigo)</div>
+    </div>
+    <div>
+      <div style="font-size:32px;font-weight:700;color:#B53030;">0</div>
+      <div style="font-size:13px;color:#6B6560;">Remaining hardcoded colors</div>
+    </div>
+    <div>
+      <div style="font-size:32px;font-weight:700;color:#8563C7;">280ms</div>
+      <div style="font-size:13px;color:#6B6560;">Unified entry animation</div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid #3D3833;">
+    <div style="font-size:14px;font-weight:600;margin-bottom:12px;">Token Categories Fixed</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;">
+      <span style="background:#059669;color:white;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;">Colors</span>
+      <span style="background:#059669;color:white;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;">Animations</span>
+      <span style="background:#059669;color:white;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;">Border Radius</span>
+      <span style="background:#059669;color:white;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;">Typography</span>
+      <span style="background:#059669;color:white;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;">Spacing</span>
+      <span style="background:#9A5504;color:white;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;">Shadows (partial)</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

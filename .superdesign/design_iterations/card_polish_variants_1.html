@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card polish — next design round</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --forest: #047857;
+        --ink: #2d2a26;
+        --text: #1c1917;
+        --text-muted: #6b6560;
+        --font-serif: 'Literata', serif;
+        --font-sans: 'DM Sans', sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font-sans) !important;
+        background: #0f0e0d;
+        color: var(--text);
+        padding: 40px 24px 80px;
+      }
+      h1.page-title {
+        font-family: var(--font-sans) !important;
+        color: #fff;
+        text-align: center;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        margin: 0 0 6px !important;
+      }
+      p.page-sub {
+        text-align: center;
+        color: #a8a29e;
+        font-size: 13px !important;
+        margin: 0 0 36px !important;
+        max-width: 700px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+      .row-flex {
+        display: flex;
+        gap: 28px;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .col {
+        width: 100%;
+        max-width: 375px;
+      }
+      .col-label {
+        color: #e7e5e4;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 10px 4px !important;
+      }
+      .col-note {
+        color: #78716c;
+        font-size: 12px !important;
+        margin: 6px 4px 0 !important;
+        line-height: 1.5;
+      }
+      .panel {
+        background: var(--bg);
+        border-radius: 24px;
+        padding: 18px 16px;
+        box-shadow:
+          0 12px 40px rgba(0, 0, 0, 0.4),
+          0 0 0 5px #1c1917;
+      }
+
+      .habit-card {
+        background: var(--card);
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 14px;
+      }
+      .card-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background: #e2d9f3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .title {
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        margin: 0 0 4px !important;
+      }
+      .desc {
+        font-size: 13px !important;
+        color: var(--text-muted);
+        line-height: 1.46;
+        margin: 0 !important;
+      }
+      .add-pill {
+        background: var(--forest);
+        color: #fff;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        padding: 8px 16px;
+        border-radius: 999px;
+        flex-shrink: 0;
+        white-space: nowrap;
+      }
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .meta-pill {
+        background: rgba(0, 0, 0, 0.05);
+        font-size: 11.5px !important;
+        font-weight: 600 !important;
+        color: var(--text-muted);
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px !important;
+        font-weight: 700 !important;
+        color: var(--forest);
+      }
+      .drawer {
+        margin-top: 12px;
+        font-size: 13px !important;
+        color: #44403c;
+      }
+      .drawer .lead {
+        font-family: var(--font-serif) !important;
+        font-size: 15px !important;
+        line-height: 1.55;
+        color: var(--text);
+        margin: 0 !important;
+      }
+      .drawer .evidence {
+        font-size: 13px !important;
+        line-height: 1.5;
+        color: var(--text-muted);
+        margin: 8px 0 0 !important;
+      }
+      .drawer .start-small {
+        font-size: 13px !important;
+        line-height: 1.5;
+        color: var(--text-muted);
+        margin: 8px 0 0 !important;
+      }
+      .drawer .start-small b {
+        color: var(--forest);
+      }
+      .drawer .citation {
+        font-family: monospace;
+        font-size: 10px !important;
+        color: #a8a29e;
+        margin: 12px 0 0 !important;
+      }
+      .drawer .details-link {
+        display: block;
+        text-align: right;
+        margin-top: 10px !important;
+        font-size: 12.5px !important;
+        font-weight: 700 !important;
+        color: var(--forest);
+      }
+
+      /* B: serif title */
+      .vb .title {
+        font-family: var(--font-serif) !important;
+        font-size: 16.5px !important;
+        font-weight: 600 !important;
+      }
+      .vb .icon-box {
+        border-radius: 12px;
+        width: 42px;
+        height: 42px;
+      }
+
+      /* C: quote-styled lead + hairline accent */
+      .vc .drawer {
+        border-left: 2px solid var(--forest);
+        padding-left: 12px;
+      }
+      .vc .drawer .lead {
+        font-style: italic;
+      }
+      .vc .meta-inline {
+        font-size: 11.5px !important;
+        color: var(--text-muted);
+        font-weight: 600 !important;
+      }
+      .vc .card-footer {
+        border-top: none;
+        padding-top: 0;
+        margin-top: 10px;
+      }
+
+      .callout {
+        max-width: 760px;
+        margin: 36px auto 0;
+        background: #1c1917;
+        border: 1px solid #292524;
+        border-radius: 14px;
+        padding: 16px 20px;
+        color: #d6d3d1;
+        font-size: 13px !important;
+        line-height: 1.6;
+      }
+      .callout b {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Card polish — pick the next move</h1>
+    <p class="page-sub">
+      A = what's in the app right now (after the typography fix). B and C are
+      candidate refinements, drawer expanded on all three for comparison.
+    </p>
+
+    <div class="row-flex">
+      <!-- A: current -->
+      <div class="col">
+        <div class="col-label">A · current (shipped)</div>
+        <div class="panel">
+          <div class="habit-card">
+            <div class="card-top">
+              <div class="icon-box">🪞</div>
+              <div class="body">
+                <p class="title">Identity Journaling</p>
+                <p class="desc">
+                  Weekly 5-minute written reflection: "What did I do this week
+                  that aligns with who I want to become?"
+                </p>
+              </div>
+              <div class="add-pill">+ Add</div>
+            </div>
+            <div class="card-footer">
+              <div class="meta-pill">5 min · Weekly</div>
+              <div class="toggle">
+                <i data-lucide="flask-conical" width="13" height="13"></i> Why
+                this works
+                <i data-lucide="chevron-up" width="13" height="13"></i>
+              </div>
+            </div>
+            <div class="drawer">
+              <p class="lead">
+                Identity-based habits are the strongest predictor of long-term
+                persistence. The identity-behavior link is mutually reinforcing.
+              </p>
+              <p class="evidence">
+                Participants who framed habits as identity statements showed
+                2.3× higher adherence at 12 weeks.
+              </p>
+              <p class="start-small">
+                <b>Start small:</b> Write the words "I am someone who…" once.
+              </p>
+              <p class="citation">Berzonsky et al. (2023)</p>
+              <a class="details-link">View details ›</a>
+            </div>
+          </div>
+        </div>
+        <p class="col-note">
+          Sans title, serif lead in drawer, evidence + start-small as quiet sans
+          lines.
+        </p>
+      </div>
+
+      <!-- B: serif titles -->
+      <div class="col">
+        <div class="col-label">B · serif habit titles</div>
+        <div class="panel vb">
+          <div class="habit-card">
+            <div class="card-top">
+              <div class="icon-box">🪞</div>
+              <div class="body">
+                <p class="title">Identity Journaling</p>
+                <p class="desc">
+                  Weekly 5-minute written reflection: "What did I do this week
+                  that aligns with who I want to become?"
+                </p>
+              </div>
+              <div class="add-pill">+ Add</div>
+            </div>
+            <div class="card-footer">
+              <div class="meta-pill">5 min · Weekly</div>
+              <div class="toggle">
+                <i data-lucide="flask-conical" width="13" height="13"></i> Why
+                this works
+                <i data-lucide="chevron-up" width="13" height="13"></i>
+              </div>
+            </div>
+            <div class="drawer">
+              <p class="lead">
+                Identity-based habits are the strongest predictor of long-term
+                persistence. The identity-behavior link is mutually reinforcing.
+              </p>
+              <p class="evidence">
+                Participants who framed habits as identity statements showed
+                2.3× higher adherence at 12 weeks.
+              </p>
+              <p class="start-small">
+                <b>Start small:</b> Write the words "I am someone who…" once.
+              </p>
+              <p class="citation">Berzonsky et al. (2023)</p>
+              <a class="details-link">View details ›</a>
+            </div>
+          </div>
+        </div>
+        <p class="col-note">
+          Habit names in Literata 16.5 semibold — echoes the page's serif
+          header, card feels more editorial. Softer 12px icon radius.
+        </p>
+      </div>
+
+      <!-- C: accent drawer -->
+      <div class="col">
+        <div class="col-label">C · accent-rail drawer</div>
+        <div class="panel vc">
+          <div class="habit-card">
+            <div class="card-top">
+              <div class="icon-box">🪞</div>
+              <div class="body">
+                <p class="title">Identity Journaling</p>
+                <p class="desc">
+                  Weekly 5-minute written reflection: "What did I do this week
+                  that aligns with who I want to become?"
+                </p>
+              </div>
+              <div class="add-pill">+ Add</div>
+            </div>
+            <div class="card-footer">
+              <span class="meta-inline">5 min · Weekly</span>
+              <div class="toggle">
+                <i data-lucide="flask-conical" width="13" height="13"></i> Why
+                this works
+                <i data-lucide="chevron-up" width="13" height="13"></i>
+              </div>
+            </div>
+            <div class="drawer">
+              <p class="lead">
+                Identity-based habits are the strongest predictor of long-term
+                persistence. The identity-behavior link is mutually reinforcing.
+              </p>
+              <p class="evidence">
+                Participants who framed habits as identity statements showed
+                2.3× higher adherence at 12 weeks.
+              </p>
+              <p class="start-small">
+                <b>Start small:</b> Write the words "I am someone who…" once.
+              </p>
+              <p class="citation">Berzonsky et al. (2023)</p>
+              <a class="details-link">View details ›</a>
+            </div>
+          </div>
+        </div>
+        <p class="col-note">
+          Green hairline rail marks the science read as a quote block; italic
+          serif lead. Footer divider dropped, plain meta text instead of pill —
+          less chrome.
+        </p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>Differences only:</b> B changes the habit title to serif (matches "All
+      habits" header). C styles the expanded read as a cited quote block (green
+      rail + italic) and de-chromes the footer (no divider, no pill bg on meta).
+      Mixable — e.g. B's title + C's drawer. Say which pieces.
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

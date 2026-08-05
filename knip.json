@@ -1,0 +1,45 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "index.ts",
+    "src/main.tsx",
+    "convex/**/*.ts",
+    "scripts/**/*.{js,mjs,cjs,ts}",
+    "plugins/**/*.{js,mjs,cjs,ts}",
+    "__tests__/**/*.{js,jsx,ts,tsx}",
+    "tests/**/*.{js,jsx,ts,tsx}",
+    "__mocks__/**/*.{js,jsx,ts,tsx}",
+    "jest.config.js",
+    "jest.setup.js",
+    "babel.config.cjs",
+    "metro.config.cjs",
+    "src/lib/reactNativeUrlPolyfillAuto.js"
+  ],
+  "project": [
+    "index.ts",
+    "nativewind-env.d.ts",
+    "src/**/*.{js,jsx,ts,tsx}",
+    "convex/**/*.{js,jsx,ts,tsx}",
+    "scripts/**/*.{js,mjs,cjs,ts}",
+    "plugins/**/*.{js,mjs,cjs,ts}",
+    "__tests__/**/*.{js,jsx,ts,tsx}",
+    "tests/**/*.{js,jsx,ts,tsx}",
+    "__mocks__/**/*.{js,jsx,ts,tsx}"
+  ],
+  "ignore": [
+    "docs/**",
+    "dist/**",
+    "coverage/**",
+    "node_modules/**",
+    "android/**",
+    "ios/**",
+    "assets/**",
+    "worktrees/**",
+    "MEMORY/**",
+    "Plans/**",
+    "specs/**",
+    "superdesign/**",
+    ".superdesign/**",
+    "bmad/**"
+  ]
+}

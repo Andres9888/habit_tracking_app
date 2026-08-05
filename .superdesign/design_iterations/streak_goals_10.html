@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizontal Hero — Calendar Fold</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px !important; min-height: 100vh !important;
+  }
+  h1,h2,h3 { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  /* iPhone 15 Pro proportions roughly */
+  .phone {
+    width: 390px !important; height: 844px !important;
+    background: #F5F1ED !important; border-radius: 48px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    padding: 56px 0 0 !important; overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+
+  /* Top chrome */
+  .top-bar {
+    display: flex; align-items: center; padding: 4px 20px 12px;
+  }
+  .back { font-size: 20px; color: #6B6560; }
+  .edit-btn {
+    margin-left: auto; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 20px; padding: 6px 12px; font-size: 12px; color: #6B6560; font-weight: 600;
+  }
+
+  /* BEFORE hero — big centered */
+  .hero-big {
+    display: flex; flex-direction: column; align-items: center; padding: 0 20px 12px;
+  }
+  .hero-big-emoji {
+    width: 72px; height: 72px; background: #059669; border-radius: 18px;
+    display: flex; align-items: center; justify-content: center; font-size: 38px; position: relative;
+    margin-bottom: 12px;
+  }
+  .hero-big-check {
+    position: absolute; bottom: -3px; right: -3px;
+    width: 22px; height: 22px; background: #059669; border: 2px solid #F5F1ED;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 12px; font-weight: 700;
+  }
+  .hero-big-name {
+    font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #2D2A26;
+  }
+
+  /* AFTER hero — horizontal */
+  .hero-row {
+    display: flex; align-items: center; gap: 14px; padding: 0 20px 14px;
+  }
+  .hero-row-emoji {
+    width: 52px; height: 52px; background: #059669; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 26px; position: relative;
+    flex-shrink: 0;
+  }
+  .hero-row-check {
+    position: absolute; bottom: -2px; right: -2px;
+    width: 18px; height: 18px; background: #059669; border: 2px solid #F5F1ED;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 10px; font-weight: 700;
+  }
+  .hero-row-text { flex: 1; min-width: 0; }
+  .hero-row-name {
+    font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #2D2A26;
+    line-height: 1.15;
+  }
+  .hero-row-stats {
+    display: flex; align-items: center; gap: 10px; margin-top: 3px;
+  }
+  .hero-row-stat {
+    display: flex; align-items: center; gap: 4px; font-size: 11px; color: #6B6560;
+  }
+  .hero-row-stat-val { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: #2D2A26; font-size: 12px; }
+  .hero-row-dot { width: 2.5px; height: 2.5px; border-radius: 50%; background: #C4BFB7; }
+
+  /* Inline stats under big name (current) */
+  .inline-stats {
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+    padding: 4px 20px 16px;
+  }
+  .inline-stat { display: flex; align-items: center; gap: 4px; font-size: 12px; color: #6B6560; }
+  .inline-stat .mono { font-weight: 600; color: #2D2A26; font-size: 13px; }
+  .inline-divider { width: 3px; height: 3px; border-radius: 50%; background: #C4BFB7; }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px; background: #DDD8D2; border: 1px solid #DDD8D2;
+    border-radius: 10px; padding: 4px; margin: 4px 20px 0;
+  }
+  .tab {
+    flex: 1; padding: 7px 4px; border-radius: 6px;
+    display: flex; flex-direction: column; align-items: center; gap: 1px;
+  }
+  .tab.active { background: #FAF8F5; box-shadow: 0 1px 3px rgba(45,42,38,0.08); }
+  .tab-icon { font-size: 16px; color: #6B6560; }
+  .tab-label { font-size: 12px; color: #6B6560; font-weight: 500; }
+  .tab-hint { font-size: 10px; color: #C4BFB7; font-weight: 500; }
+  .tab.active .tab-icon, .tab.active .tab-label { color: #059669; }
+  .tab.active .tab-label { font-weight: 700; }
+  .tab.active .tab-hint { color: #8B6208; font-weight: 600; }
+
+  /* Year overview block */
+  .year-card {
+    background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 14px;
+    padding: 14px 14px 10px; margin: 14px 20px 12px;
+  }
+  .year-title {
+    font-family: 'Literata', serif; font-size: 17px; font-weight: 700; color: #2D2A26;
+    margin-bottom: 12px;
+  }
+  .year-grid {
+    display: grid; grid-template-columns: 16px repeat(6, 1fr); gap: 3px; font-size: 9px;
+  }
+  .year-month { font-size: 10px; color: #6B6560; text-align: center; padding-bottom: 4px; }
+  .year-day-label { font-size: 9px; color: #C4BFB7; text-align: right; padding-right: 2px; }
+  .year-cell {
+    aspect-ratio: 1; border-radius: 2px; background: #E7E5E4;
+  }
+  .year-cell.done { background: #059669; }
+  .year-cell.none { background: transparent; }
+  .year-legend {
+    display: flex; gap: 12px; margin-top: 10px; font-size: 10px; color: #6B6560;
+  }
+  .year-legend-swatch { width: 10px; height: 10px; border-radius: 2px; background: #E7E5E4; }
+  .year-legend-swatch.done { background: #059669; }
+
+  /* Month calendar */
+  .month-card {
+    background: white; border-radius: 14px; padding: 14px; margin: 0 20px 16px;
+  }
+  .month-header {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+    margin-bottom: 8px;
+  }
+  .month-dow {
+    text-align: center; font-size: 11px; color: #6B6560; font-weight: 500;
+  }
+  .month-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+  }
+  .month-day {
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #2D2A26; font-weight: 500; border-radius: 8px;
+  }
+  .month-day.prev { color: #C4BFB7; font-weight: 400; }
+  .month-day.done { background: #D1FAE5; color: #047857; position: relative; }
+  .month-day.done::after {
+    content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; border-radius: 50%; background: #059669;
+  }
+  .month-day.today { background: #059669; color: white; }
+
+  /* Labels */
+  .wrapper { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .variation-num { font-size: 12px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+  .variation-title { font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #FAF8F5; margin-top: 4px; }
+  .note { font-size: 13px; color: #6B6560; margin-top: 10px; max-width: 380px; line-height: 1.5; text-align: center; }
+  .variation-label { text-align: center; margin-bottom: 12px; }
+
+  /* Fold indicator */
+  .fold-line {
+    position: absolute; left: -10px; right: -10px; height: 2px;
+    background: repeating-linear-gradient(90deg, #FBBF24 0 6px, transparent 6px 12px);
+    z-index: 20; pointer-events: none;
+  }
+  .fold-label {
+    position: absolute; right: 0; transform: translateY(-50%);
+    background: #FBBF24; color: #1A1816;
+    padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.05em; text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div style="text-align: center; margin-bottom: 40px;">
+  <h1 style="font-size: 32px; font-weight: 700; color: #FAF8F5;">Horizontal hero — more calendar above the fold</h1>
+  <p style="font-size: 15px; color: #C4BFB7; margin-top: 8px;">Yellow dashed line shows approximate fold on iPhone 15 Pro</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 64px; max-width: 1400px; margin: 0 auto;">
+
+<!-- BEFORE — Current big hero + inline stats -->
+<div class="wrapper">
+  <div class="variation-label"><div class="variation-num">Before</div><div class="variation-title" style="color:#FCA5A5;">Current layout</div></div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="top-bar"><span class="back">✕</span><div class="edit-btn">✏️ Edit Habit</div></div>
+      <div class="hero-big">
+        <div class="hero-big-emoji">💪<div class="hero-big-check">✓</div></div>
+        <div class="hero-big-name">Medium Habit</div>
+      </div>
+      <div class="inline-stats">
+        <div class="inline-stat">🔥 <span class="mono">3</span> streak</div>
+        <div class="inline-divider"></div>
+        <div class="inline-stat">⭐ <span class="mono">3</span> best</div>
+        <div class="inline-divider"></div>
+        <div class="inline-stat">✓ <span class="mono">3</span> total</div>
+      </div>
+      <div class="tab-bar">
+        <div class="tab active"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span><span class="tab-hint">3 days</span></div>
+        <div class="tab"><span class="tab-icon">∿</span><span class="tab-label">Strength</span><span class="tab-hint">9%</span></div>
+        <div class="tab"><span class="tab-icon">🎯</span><span class="tab-label">Goal</span><span class="tab-hint">5%</span></div>
+      </div>
+
+      <!-- Year overview -->
+      <div class="year-card">
+        <div class="year-title">Year Overview</div>
+        <div class="year-grid" style="grid-template-rows: auto repeat(7, 1fr);">
+          <div></div><div class="year-month">Nov</div><div class="year-month">Dec</div><div class="year-month">Jan</div><div class="year-month">Feb</div><div class="year-month">Mar</div><div class="year-month">Apr</div>
+          <!-- 7 days x 6 months grid -->
+          <div class="year-day-label">S</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+          <div class="year-day-label">M</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell done"></div>
+          <div class="year-day-label">T</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell done"></div>
+          <div class="year-day-label">W</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell done"></div>
+          <div class="year-day-label">T</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+          <div class="year-day-label">F</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+          <div class="year-day-label">S</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+        </div>
+        <div class="year-legend">
+          <div style="display:flex; align-items:center; gap:5px;"><div class="year-legend-swatch"></div>Missed</div>
+          <div style="display:flex; align-items:center; gap:5px;"><div class="year-legend-swatch done"></div>Done</div>
+        </div>
+      </div>
+
+      <!-- FOLD -->
+      <div class="fold-line" style="top: 724px;"><span class="fold-label">Fold</span></div>
+
+      <!-- Month calendar -->
+      <div class="month-card">
+        <div class="month-header">
+          <div class="month-dow">MON</div><div class="month-dow">TUE</div><div class="month-dow">WED</div><div class="month-dow">THU</div><div class="month-dow">FRI</div><div class="month-dow">SAT</div><div class="month-dow">SUN</div>
+        </div>
+        <div class="month-grid">
+          <div class="month-day prev">30</div><div class="month-day prev">31</div>
+          <div class="month-day">1</div><div class="month-day">2</div><div class="month-day">3</div><div class="month-day">4</div><div class="month-day">5</div>
+          <div class="month-day">6</div><div class="month-day">7</div><div class="month-day">8</div><div class="month-day">9</div><div class="month-day">10</div><div class="month-day">11</div><div class="month-day">12</div>
+          <div class="month-day">13</div><div class="month-day done">14</div><div class="month-day done">15</div><div class="month-day today">16</div><div class="month-day">17</div><div class="month-day">18</div><div class="month-day">19</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="note" style="color:#FCA5A5;">Big emoji (72px) + centered name + inline stats + stacked tabs = ~280px of chrome before Year Overview. Only days of week strip peeks below the fold.</p>
+</div>
+
+<!-- AFTER — Horizontal hero -->
+<div class="wrapper">
+  <div class="variation-label"><div class="variation-num">After</div><div class="variation-title" style="color:#6EE7B7;">Horizontal hero</div></div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="top-bar"><span class="back">✕</span><div class="edit-btn">✏️ Edit Habit</div></div>
+
+      <!-- Horizontal hero: emoji left, name + inline stats stacked right -->
+      <div class="hero-row">
+        <div class="hero-row-emoji">💪<div class="hero-row-check">✓</div></div>
+        <div class="hero-row-text">
+          <div class="hero-row-name">Medium Habit</div>
+          <div class="hero-row-stats">
+            <div class="hero-row-stat">🔥 <span class="hero-row-stat-val">3</span> streak</div>
+            <div class="hero-row-dot"></div>
+            <div class="hero-row-stat">⭐ <span class="hero-row-stat-val">3</span> best</div>
+            <div class="hero-row-dot"></div>
+            <div class="hero-row-stat">✓ <span class="hero-row-stat-val">3</span> total</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tab active"><span class="tab-icon">📅</span><span class="tab-label">Calendar</span><span class="tab-hint">3 days</span></div>
+        <div class="tab"><span class="tab-icon">∿</span><span class="tab-label">Strength</span><span class="tab-hint">9%</span></div>
+        <div class="tab"><span class="tab-icon">🎯</span><span class="tab-label">Goal</span><span class="tab-hint">5%</span></div>
+      </div>
+
+      <!-- Year overview -->
+      <div class="year-card">
+        <div class="year-title">Year Overview</div>
+        <div class="year-grid" style="grid-template-rows: auto repeat(7, 1fr);">
+          <div></div><div class="year-month">Nov</div><div class="year-month">Dec</div><div class="year-month">Jan</div><div class="year-month">Feb</div><div class="year-month">Mar</div><div class="year-month">Apr</div>
+          <div class="year-day-label">S</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+          <div class="year-day-label">M</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell done"></div>
+          <div class="year-day-label">T</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell done"></div>
+          <div class="year-day-label">W</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell done"></div>
+          <div class="year-day-label">T</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+          <div class="year-day-label">F</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+          <div class="year-day-label">S</div>
+          <div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div><div class="year-cell"></div>
+        </div>
+        <div class="year-legend">
+          <div style="display:flex; align-items:center; gap:5px;"><div class="year-legend-swatch"></div>Missed</div>
+          <div style="display:flex; align-items:center; gap:5px;"><div class="year-legend-swatch done"></div>Done</div>
+        </div>
+      </div>
+
+      <!-- Month calendar — NOW starts above the fold -->
+      <div class="month-card">
+        <div class="month-header">
+          <div class="month-dow">MON</div><div class="month-dow">TUE</div><div class="month-dow">WED</div><div class="month-dow">THU</div><div class="month-dow">FRI</div><div class="month-dow">SAT</div><div class="month-dow">SUN</div>
+        </div>
+        <div class="month-grid">
+          <div class="month-day prev">30</div><div class="month-day prev">31</div>
+          <div class="month-day">1</div><div class="month-day">2</div><div class="month-day">3</div><div class="month-day">4</div><div class="month-day">5</div>
+          <div class="month-day">6</div><div class="month-day">7</div><div class="month-day">8</div><div class="month-day">9</div><div class="month-day">10</div><div class="month-day">11</div><div class="month-day">12</div>
+          <div class="month-day">13</div><div class="month-day done">14</div><div class="month-day done">15</div><div class="month-day today">16</div><div class="month-day">17</div><div class="month-day">18</div><div class="month-day">19</div>
+          <div class="month-day">20</div><div class="month-day">21</div><div class="month-day">22</div><div class="month-day">23</div><div class="month-day">24</div><div class="month-day">25</div><div class="month-day">26</div>
+        </div>
+      </div>
+
+      <!-- FOLD — further down -->
+      <div class="fold-line" style="top: 724px;"><span class="fold-label">Fold</span></div>
+    </div>
+  </div>
+  <p class="note" style="color:#6EE7B7;">Emoji 52px left + name + stats inline = ~80px total chrome saved. Year Overview + first 3 weeks of Month calendar now above the fold. Stats still visible on every tab.</p>
+</div>
+
+</div>
+
+<!-- Summary -->
+<div style="max-width: 900px; margin: 48px auto 0; padding: 24px; background: #2D2A26; border-radius: 16px;">
+  <h3 style="font-size: 18px; color: #FAF8F5; margin-bottom: 12px;">What you gain</h3>
+  <div style="font-size: 13px; color: #C4BFB7; line-height: 1.6;">
+    <p><span style="color: #6EE7B7; font-weight: 600;">~80px reclaimed</span> on every tab — emoji shrinks from 72→52px, name drops from 28→20px, stats stack beside the name instead of below.</p>
+    <p style="margin-top: 8px;"><span style="color: #6EE7B7; font-weight: 600;">Calendar wins most:</span> Year Overview + nearly a full month of cells above the fold instead of just 3 weeks.</p>
+    <p style="margin-top: 8px;"><span style="color: #6EE7B7; font-weight: 600;">No lost information:</span> streak / best / total all stay visible as subtitle metadata, exactly where they are now — just moved into the same row as the name.</p>
+    <p style="margin-top: 8px;"><span style="color: #C4BFB7;">Tradeoff:</span> the hero feels less "poster-y" — no more big centered emoji moment. It becomes a functional header instead of a title card.</p>
+  </div>
+</div>
+
+</body>
+</html>

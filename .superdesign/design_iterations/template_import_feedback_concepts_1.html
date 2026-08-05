@@ -1,0 +1,1228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=390, height=844, initial-scale=1.0" />
+    <title>Template Import Feedback Concepts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: 'Inter', sans-serif !important;
+        box-sizing: border-box;
+      }
+      body {
+        background: #0a0a0a;
+        margin: 0;
+        padding: 40px;
+        min-height: 100vh;
+      }
+
+      .phone-frame {
+        width: 390px;
+        height: 700px;
+        background: #111;
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        border: 3px solid #333;
+        display: inline-block;
+        margin: 20px;
+        vertical-align: top;
+      }
+
+      .concept-label {
+        position: absolute;
+        top: -35px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #888;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .concept-title {
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 4px;
+      }
+
+      /* Current Toast */
+      .current-toast {
+        position: absolute;
+        bottom: 100px;
+        left: 20px;
+        right: 20px;
+        background: #10b981;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: slideUp 0.3s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Rich Success Card */
+      .rich-success-card {
+        position: absolute;
+        bottom: 80px;
+        left: 16px;
+        right: 16px;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes popIn {
+        from {
+          transform: scale(0.8) translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1) translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Bottom Sheet */
+      .bottom-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #1a1a1a;
+        border-radius: 24px 24px 0 0;
+        padding: 20px;
+        padding-bottom: 40px;
+        animation: sheetUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes sheetUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .sheet-handle {
+        width: 40px;
+        height: 4px;
+        background: #444;
+        border-radius: 2px;
+        margin: 0 auto 20px;
+      }
+
+      /* Floating Action Card */
+      .floating-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #1a1a2e;
+        border-radius: 24px;
+        padding: 32px 24px;
+        width: 320px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+        animation: floatIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes floatIn {
+        from {
+          transform: translate(-50%, -50%) scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, -50%) scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Chain Animation */
+      .chain-success {
+        position: absolute;
+        bottom: 80px;
+        left: 16px;
+        right: 16px;
+        background: linear-gradient(135deg, #2d1f47 0%, #1a1a2e 100%);
+        border-radius: 20px;
+        padding: 24px;
+        border: 1px solid rgba(167, 139, 250, 0.3);
+      }
+
+      .chain-links {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 16px;
+      }
+
+      .chain-link {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+
+      .chain-link.existing {
+        background: #374151;
+      }
+
+      .chain-link.new {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        animation: linkPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+      }
+
+      @keyframes linkPop {
+        from {
+          transform: scale(0) rotate(-180deg);
+        }
+        to {
+          transform: scale(1) rotate(0deg);
+        }
+      }
+
+      /* Gamified */
+      .gamified-success {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        animation: gameIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      @keyframes gameIn {
+        from {
+          transform: translate(-50%, -50%) scale(0);
+        }
+        to {
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+
+      .xp-badge {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        font-weight: 800;
+        font-size: 24px;
+        padding: 16px 32px;
+        border-radius: 16px;
+        display: inline-block;
+        box-shadow: 0 10px 40px rgba(245, 158, 11, 0.4);
+        animation: pulseBadge 1s ease-in-out infinite;
+      }
+
+      @keyframes pulseBadge {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+      }
+
+      /* Particles */
+      .particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: particle 1s ease-out forwards;
+      }
+
+      @keyframes particle {
+        from {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        to {
+          transform: translate(var(--tx), var(--ty)) scale(0);
+          opacity: 0;
+        }
+      }
+
+      /* Overlay for center modals */
+      .modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+      }
+
+      /* Habit preview mini card */
+      .habit-mini {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 12px;
+        margin: 16px 0;
+      }
+
+      .habit-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+
+      .checkmark-circle {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin: 0 auto 16px;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        border: none;
+        padding: 14px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 15px;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: #888;
+        border: none;
+        padding: 12px 24px;
+        font-weight: 500;
+        font-size: 14px;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      h1 {
+        color: #fff !important;
+        margin: 0 0 40px !important;
+        font-size: 28px !important;
+        font-weight: 800 !important;
+      }
+      h2 {
+        color: #fff !important;
+        margin: 0 !important;
+      }
+      p {
+        margin: 0 !important;
+      }
+
+      .section-title {
+        color: #666;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Template Import Feedback Concepts</h1>
+
+    <p class="section-title" style="margin-bottom: 60px">
+      Current vs. Improved Approaches
+    </p>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 60px">
+      <!-- CONCEPT 0: Current (Baseline) -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Current Implementation
+          <div class="concept-title">Simple Toast</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px; opacity: 0.3">
+            <div
+              style="
+                background: #222;
+                height: 200px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              "
+            ></div>
+            <div
+              style="background: #222; height: 100px; border-radius: 12px"
+            ></div>
+          </div>
+
+          <div class="current-toast">
+            <span style="font-size: 20px">✓</span>
+            <span style="color: white; font-weight: 500; font-size: 14px"
+              >Imported habit successfully</span
+            >
+          </div>
+        </div>
+        <div
+          style="
+            color: #666;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ⚠️ <strong>Issues:</strong> Generic message, no habit details, no
+          clear next action, disappears quickly
+        </div>
+      </div>
+
+      <!-- CONCEPT 1: Rich Success Card -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Concept 1
+          <div class="concept-title">Rich Success Card</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px; opacity: 0.3">
+            <div
+              style="
+                background: #222;
+                height: 200px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              "
+            ></div>
+            <div
+              style="background: #222; height: 100px; border-radius: 12px"
+            ></div>
+          </div>
+
+          <div class="rich-success-card">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 16px;
+              "
+            >
+              <div
+                class="checkmark-circle"
+                style="
+                  width: 44px;
+                  height: 44px;
+                  background: linear-gradient(135deg, #10b981, #059669);
+                  font-size: 22px;
+                  margin: 0;
+                "
+              >
+                ✓
+              </div>
+              <div>
+                <p
+                  style="
+                    color: #10b981;
+                    font-size: 12px;
+                    font-weight: 600;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                  "
+                >
+                  Added to Your Habits
+                </p>
+                <h2 style="font-size: 18px; font-weight: 700">
+                  Morning Meditation
+                </h2>
+              </div>
+            </div>
+
+            <div class="habit-mini">
+              <div
+                class="habit-icon"
+                style="background: linear-gradient(135deg, #8b5cf6, #7c3aed)"
+              >
+                🧘
+              </div>
+              <div style="flex: 1">
+                <p style="color: #fff; font-weight: 600; font-size: 14px">
+                  Morning Meditation
+                </p>
+                <p style="color: #888; font-size: 12px">Daily • 10 min</p>
+              </div>
+              <span style="color: #10b981; font-size: 20px">✓</span>
+            </div>
+
+            <div style="display: flex; gap: 8px">
+              <button class="btn-primary" style="flex: 1">View Habit →</button>
+              <button
+                style="
+                  background: rgba(255, 255, 255, 0.1);
+                  border: none;
+                  padding: 14px;
+                  border-radius: 12px;
+                  color: #888;
+                "
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            color: #888;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ✓ Shows habit details • ✓ Clear CTA • ✓ Dismissible • ✓ Celebratory
+          feel
+        </div>
+      </div>
+
+      <!-- CONCEPT 2: Bottom Sheet -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Concept 2
+          <div class="concept-title">Slide-up Bottom Sheet</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px; opacity: 0.2">
+            <div
+              style="
+                background: #222;
+                height: 200px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              "
+            ></div>
+            <div
+              style="background: #222; height: 100px; border-radius: 12px"
+            ></div>
+          </div>
+
+          <div class="bottom-sheet">
+            <div class="sheet-handle"></div>
+
+            <div style="text-align: center; margin-bottom: 20px">
+              <div
+                class="checkmark-circle"
+                style="background: linear-gradient(135deg, #10b981, #059669)"
+              >
+                ✓
+              </div>
+              <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 4px">
+                Habit Added!
+              </h2>
+              <p style="color: #888; font-size: 14px">
+                Morning Meditation is now in your daily routine
+              </p>
+            </div>
+
+            <div class="habit-mini" style="background: #222">
+              <div
+                class="habit-icon"
+                style="background: linear-gradient(135deg, #f59e0b, #d97706)"
+              >
+                🧘
+              </div>
+              <div style="flex: 1; text-align: left">
+                <p style="color: #fff; font-weight: 600">Morning Meditation</p>
+                <p style="color: #666; font-size: 12px">
+                  Starts tomorrow • 7:00 AM reminder
+                </p>
+              </div>
+            </div>
+
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-top: 16px;
+              "
+            >
+              <button
+                style="
+                  background: #222;
+                  border: none;
+                  padding: 16px;
+                  border-radius: 12px;
+                  color: #fff;
+                  font-weight: 600;
+                "
+              >
+                <span
+                  style="display: block; font-size: 20px; margin-bottom: 4px"
+                  >📝</span
+                >
+                Edit Habit
+              </button>
+              <button
+                style="
+                  background: #222;
+                  border: none;
+                  padding: 16px;
+                  border-radius: 12px;
+                  color: #fff;
+                  font-weight: 600;
+                "
+              >
+                <span
+                  style="display: block; font-size: 20px; margin-bottom: 4px"
+                  >🔔</span
+                >
+                Set Reminder
+              </button>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 12px">
+              Go to My Habits →
+            </button>
+            <button class="btn-secondary">Add Another Template</button>
+          </div>
+        </div>
+        <div
+          style="
+            color: #888;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ✓ Full context • ✓ Multiple actions • ✓ Swipe to dismiss • ✓ Natural
+          mobile pattern
+        </div>
+      </div>
+
+      <!-- CONCEPT 3: Floating Modal -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Concept 3
+          <div class="concept-title">Celebration Modal</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px; opacity: 0.15">
+            <div
+              style="
+                background: #222;
+                height: 200px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              "
+            ></div>
+          </div>
+
+          <div class="modal-overlay"></div>
+
+          <div class="floating-card">
+            <!-- Confetti particles -->
+            <div
+              class="particle"
+              style="
+                background: #f59e0b;
+                left: 20px;
+                top: 30px;
+                --tx: -40px;
+                --ty: -60px;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #10b981;
+                right: 30px;
+                top: 20px;
+                --tx: 50px;
+                --ty: -40px;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #8b5cf6;
+                left: 40px;
+                top: 50px;
+                --tx: -60px;
+                --ty: -30px;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #ec4899;
+                right: 20px;
+                top: 60px;
+                --tx: 40px;
+                --ty: -50px;
+              "
+            ></div>
+
+            <div style="font-size: 48px; margin-bottom: 8px">🎉</div>
+            <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 8px">
+              You're All Set!
+            </h2>
+            <p style="color: #888; font-size: 14px; margin-bottom: 20px">
+              Morning Meditation has been added to your habits
+            </p>
+
+            <div
+              class="habit-mini"
+              style="
+                background: rgba(139, 92, 246, 0.15);
+                border: 1px solid rgba(139, 92, 246, 0.3);
+              "
+            >
+              <div
+                class="habit-icon"
+                style="background: linear-gradient(135deg, #8b5cf6, #7c3aed)"
+              >
+                🧘
+              </div>
+              <div style="flex: 1; text-align: left">
+                <p style="color: #fff; font-weight: 600">Morning Meditation</p>
+                <p style="color: #a78bfa; font-size: 12px">Daily habit</p>
+              </div>
+            </div>
+
+            <button class="btn-primary">View in My Habits</button>
+            <button class="btn-secondary">Continue Browsing</button>
+          </div>
+        </div>
+        <div
+          style="
+            color: #888;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ✓ Big celebration moment • ✓ Confetti feel • ✓ Clear hierarchy • ✓
+          Emotional reward
+        </div>
+      </div>
+
+      <!-- CONCEPT 4: Chain Link Animation -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Concept 4
+          <div class="concept-title">Chain Link Animation</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px; opacity: 0.3">
+            <div
+              style="
+                background: #222;
+                height: 200px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              "
+            ></div>
+          </div>
+
+          <div class="chain-success">
+            <p
+              style="
+                color: #a78bfa;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                text-align: center;
+                margin-bottom: 12px;
+              "
+            >
+              New Link Added
+            </p>
+
+            <div class="chain-links">
+              <div class="chain-link existing">💪</div>
+              <div class="chain-link existing">📚</div>
+              <div class="chain-link existing">🏃</div>
+              <div class="chain-link new">🧘</div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 16px">
+              <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 4px">
+                Morning Meditation
+              </h2>
+              <p style="color: #888; font-size: 13px">
+                Joined your chain of 3 habits
+              </p>
+            </div>
+
+            <div
+              style="
+                background: rgba(139, 92, 246, 0.1);
+                border-radius: 12px;
+                padding: 12px;
+                text-align: center;
+                margin-bottom: 16px;
+              "
+            >
+              <p style="color: #a78bfa; font-size: 13px">
+                <span style="font-weight: 700">Pro tip:</span> Complete all 4
+                habits daily to build momentum
+              </p>
+            </div>
+
+            <button class="btn-primary">Start Building Your Chain →</button>
+          </div>
+        </div>
+        <div
+          style="
+            color: #888;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ✓ Brand-aligned (ChainDay) • ✓ Shows existing habits • ✓ Gamification
+          • ✓ Motivating
+        </div>
+      </div>
+
+      <!-- CONCEPT 5: Gamified XP -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Concept 5
+          <div class="concept-title">Gamified Celebration</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px; opacity: 0.15">
+            <div
+              style="
+                background: #222;
+                height: 200px;
+                border-radius: 16px;
+                margin-bottom: 16px;
+              "
+            ></div>
+          </div>
+
+          <div class="modal-overlay"></div>
+
+          <div class="gamified-success">
+            <!-- Burst particles -->
+            <div
+              class="particle"
+              style="
+                background: #f59e0b;
+                --tx: -80px;
+                --ty: -60px;
+                animation-delay: 0.1s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #f59e0b;
+                --tx: 80px;
+                --ty: -60px;
+                animation-delay: 0.15s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #f59e0b;
+                --tx: -60px;
+                --ty: 40px;
+                animation-delay: 0.2s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #f59e0b;
+                --tx: 60px;
+                --ty: 40px;
+                animation-delay: 0.25s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #fbbf24;
+                --tx: 0px;
+                --ty: -80px;
+                animation-delay: 0.12s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #fbbf24;
+                --tx: -100px;
+                --ty: 0px;
+                animation-delay: 0.18s;
+              "
+            ></div>
+            <div
+              class="particle"
+              style="
+                background: #fbbf24;
+                --tx: 100px;
+                --ty: 0px;
+                animation-delay: 0.22s;
+              "
+            ></div>
+
+            <div class="xp-badge">+50 XP</div>
+
+            <div style="margin-top: 24px">
+              <h2 style="font-size: 22px; font-weight: 800; margin-bottom: 8px">
+                New Habit Unlocked!
+              </h2>
+              <p style="color: #888; font-size: 14px; margin-bottom: 24px">
+                Morning Meditation added
+              </p>
+
+              <div
+                style="
+                  background: #1a1a2e;
+                  border-radius: 16px;
+                  padding: 16px;
+                  width: 280px;
+                  margin: 0 auto 20px;
+                "
+              >
+                <div style="display: flex; align-items: center; gap: 12px">
+                  <div
+                    class="habit-icon"
+                    style="
+                      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+                      width: 44px;
+                      height: 44px;
+                      font-size: 22px;
+                    "
+                  >
+                    🧘
+                  </div>
+                  <div style="text-align: left">
+                    <p style="color: #fff; font-weight: 600; font-size: 15px">
+                      Morning Meditation
+                    </p>
+                    <p style="color: #666; font-size: 12px">
+                      Daily • Science-backed
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    margin-top: 12px;
+                    padding-top: 12px;
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                    "
+                  >
+                    <span style="color: #888; font-size: 12px"
+                      >Streak Potential</span
+                    >
+                    <span
+                      style="color: #f59e0b; font-weight: 700; font-size: 14px"
+                      >🔥 +10/day</span
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <button class="btn-primary" style="width: 280px">
+                Let's Go! →
+              </button>
+              <button class="btn-secondary" style="width: 280px">
+                Keep Browsing
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            color: #888;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ✓ Dopamine hit • ✓ Game-like reward • ✓ Future motivation • ⚠️ May be
+          too much for some
+        </div>
+      </div>
+
+      <!-- CONCEPT 6: Minimal Inline -->
+      <div style="position: relative">
+        <div class="concept-label">
+          Concept 6
+          <div class="concept-title">Inline Transform (Subtle)</div>
+        </div>
+        <div class="phone-frame">
+          <div style="padding: 60px 20px">
+            <!-- Template preview mockup -->
+            <div
+              style="
+                background: linear-gradient(135deg, #1a1a2e, #16213e);
+                border-radius: 20px;
+                overflow: hidden;
+              "
+            >
+              <div
+                style="
+                  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+                  height: 120px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <span style="font-size: 48px">🧘</span>
+              </div>
+              <div style="padding: 20px">
+                <h2
+                  style="font-size: 20px; font-weight: 700; margin-bottom: 8px"
+                >
+                  Morning Meditation
+                </h2>
+                <p style="color: #888; font-size: 13px; margin-bottom: 20px">
+                  Start your day with 10 minutes of mindfulness
+                </p>
+
+                <!-- Success state (replaces import button) -->
+                <div
+                  style="
+                    background: rgba(16, 185, 129, 0.15);
+                    border: 1px solid rgba(16, 185, 129, 0.3);
+                    border-radius: 14px;
+                    padding: 16px;
+                    text-align: center;
+                    animation: popIn 0.4s ease-out;
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      gap: 10px;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    <span
+                      style="
+                        background: #10b981;
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 14px;
+                      "
+                      >✓</span
+                    >
+                    <span
+                      style="color: #10b981; font-weight: 700; font-size: 16px"
+                      >Added to My Habits</span
+                    >
+                  </div>
+                  <button
+                    style="
+                      background: rgba(16, 185, 129, 0.2);
+                      border: none;
+                      padding: 10px 20px;
+                      border-radius: 8px;
+                      color: #10b981;
+                      font-weight: 600;
+                      font-size: 13px;
+                    "
+                  >
+                    View Now →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            color: #888;
+            font-size: 12px;
+            margin-top: 12px;
+            max-width: 390px;
+          "
+        >
+          ✓ No modal/overlay • ✓ In-context feedback • ✓ Quick continue flow • ✓
+          Less intrusive
+        </div>
+      </div>
+    </div>
+
+    <div
+      style="
+        margin-top: 60px;
+        padding: 24px;
+        background: #1a1a1a;
+        border-radius: 16px;
+        max-width: 900px;
+      "
+    >
+      <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px">
+        💡 Recommendation Matrix
+      </h2>
+      <table
+        style="
+          width: 100%;
+          border-collapse: collapse;
+          color: #ccc;
+          font-size: 13px;
+        "
+      >
+        <thead>
+          <tr style="border-bottom: 1px solid #333">
+            <th style="text-align: left; padding: 12px; color: #888">
+              Concept
+            </th>
+            <th style="text-align: center; padding: 12px; color: #888">
+              Celebration
+            </th>
+            <th style="text-align: center; padding: 12px; color: #888">
+              Actionability
+            </th>
+            <th style="text-align: center; padding: 12px; color: #888">
+              Non-intrusive
+            </th>
+            <th style="text-align: center; padding: 12px; color: #888">
+              Dev Effort
+            </th>
+            <th style="text-align: left; padding: 12px; color: #888">
+              Best For
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid #222">
+            <td style="padding: 12px; font-weight: 600">1. Rich Card</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">Low</td>
+            <td style="padding: 12px; color: #10b981">Balanced approach</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222">
+            <td style="padding: 12px; font-weight: 600">2. Bottom Sheet</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">Medium</td>
+            <td style="padding: 12px; color: #10b981">
+              Power users, many options
+            </td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222">
+            <td style="padding: 12px; font-weight: 600">
+              3. Celebration Modal
+            </td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐</td>
+            <td style="padding: 12px; text-align: center">Medium</td>
+            <td style="padding: 12px; color: #f59e0b">First-time imports</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222">
+            <td style="padding: 12px; font-weight: 600">4. Chain Link</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">Medium</td>
+            <td style="padding: 12px; color: #a78bfa">Brand reinforcement</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222">
+            <td style="padding: 12px; font-weight: 600">5. Gamified XP</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐</td>
+            <td style="padding: 12px; text-align: center">High</td>
+            <td style="padding: 12px; color: #f59e0b">
+              If adding gamification system
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; font-weight: 600">6. Inline Transform</td>
+            <td style="padding: 12px; text-align: center">⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">⭐⭐⭐⭐⭐</td>
+            <td style="padding: 12px; text-align: center">Low</td>
+            <td style="padding: 12px; color: #10b981">
+              Quick, minimal changes
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div
+        style="
+          margin-top: 20px;
+          padding: 16px;
+          background: rgba(139, 92, 246, 0.1);
+          border-radius: 12px;
+          border: 1px solid rgba(139, 92, 246, 0.2);
+        "
+      >
+        <p style="color: #a78bfa; font-weight: 600; margin-bottom: 8px">
+          🎯 Top Pick: Concept 4 (Chain Link)
+        </p>
+        <p style="color: #888; font-size: 13px">
+          Best fits ChainDay brand, moderate effort, shows context (other
+          habits), includes motivational messaging. Can be combined with the
+          existing confetti in FullsizeTemplatePreview.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

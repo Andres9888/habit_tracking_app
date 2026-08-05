@@ -1,0 +1,802 @@
+# Quarterly Security Audit Workflow
+# Implements CI-003: Regular security audits (quarterly)
+#
+# This workflow runs comprehensive security audits on the first day of each quarter
+# (January 1, April 1, July 1, October 1) and can be triggered manually.
+#
+# Scope includes:
+# - Authentication & Authorization audit
+# - Data protection verification
+# - API security review
+# - Dependency vulnerability analysis
+# - Code quality & security patterns
+# - RevenueCat webhook security
+# - Input validation coverage
+
+name: Quarterly Security Audit
+
+on:
+  schedule:
+    # Run quarterly on the first day of each quarter at 09:00 UTC
+    # Q1: January 1st | Q2: April 1st | Q3: July 1st | Q4: October 1st
+    - cron: '0 9 1 1,4,7,10 *'
+  workflow_dispatch:
+    inputs:
+      audit_scope:
+        description: 'Audit scope (full, auth, data, api, dependencies)'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - auth
+          - data
+          - api
+          - dependencies
+      generate_report:
+        description: 'Generate detailed audit report'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  security-events: write
+  actions: read
+  issues: write
+
+env:
+  NODE_VERSION: '20'
+  AUDIT_DATE: ${{ github.run_started_at }}
+
+jobs:
+  # ============================================
+  # Audit Initialization
+  # ============================================
+  init-audit:
+    name: Initialize Audit
+    runs-on: ubuntu-latest
+    outputs:
+      quarter: ${{ steps.quarter.outputs.quarter }}
+      audit_id: ${{ steps.quarter.outputs.audit_id }}
+      year: ${{ steps.quarter.outputs.year }}
+    steps:
+      - name: Determine Quarter
+        id: quarter
+        run: |
+          MONTH=$(date +%m)
+          YEAR=$(date +%Y)
+          if [ "$MONTH" -le 3 ]; then
+            QUARTER="Q1"
+          elif [ "$MONTH" -le 6 ]; then
+            QUARTER="Q2"
+          elif [ "$MONTH" -le 9 ]; then
+            QUARTER="Q3"
+          else
+            QUARTER="Q4"
+          fi
+          AUDIT_ID="${YEAR}-${QUARTER}-$(date +%Y%m%d)"
+          echo "quarter=${QUARTER}" >> $GITHUB_OUTPUT
+          echo "audit_id=${AUDIT_ID}" >> $GITHUB_OUTPUT
+          echo "year=${YEAR}" >> $GITHUB_OUTPUT
+
+          echo "## Quarterly Security Audit Initialized" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Field | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Audit ID | \`${AUDIT_ID}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Quarter | ${QUARTER} ${YEAR} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Scope | ${{ inputs.audit_scope || 'full' }} |" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # Authentication & Authorization Audit
+  # ============================================
+  auth-audit:
+    name: Authentication Audit
+    runs-on: ubuntu-latest
+    needs: init-audit
+    if: inputs.audit_scope == 'full' || inputs.audit_scope == 'auth' || inputs.audit_scope == ''
+    outputs:
+      score: ${{ steps.auth-check.outputs.score }}
+      issues: ${{ steps.auth-check.outputs.issues }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run authentication security tests
+        id: auth-tests
+        run: |
+          npm test -- --testPathPattern="security" --testNamePattern="authentication|auth|token|session" \
+            --json --outputFile=auth-test-results.json 2>&1 || true
+
+          if [ -f auth-test-results.json ]; then
+            PASSED=$(jq '.numPassedTests // 0' auth-test-results.json)
+            FAILED=$(jq '.numFailedTests // 0' auth-test-results.json)
+            echo "passed=${PASSED}" >> $GITHUB_OUTPUT
+            echo "failed=${FAILED}" >> $GITHUB_OUTPUT
+          else
+            echo "passed=0" >> $GITHUB_OUTPUT
+            echo "failed=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Audit authentication patterns
+        id: auth-check
+        run: |
+          ISSUES=0
+          CHECKS_PASSED=0
+          TOTAL_CHECKS=0
+
+          echo "## Authentication Pattern Audit" >> auth-audit-report.md
+          echo "" >> auth-audit-report.md
+
+          # Check 1: Verify getUserIdentity usage in mutations
+          echo "### SEC-AUTH-001: API Authentication Check" >> auth-audit-report.md
+          MUTATIONS_WITH_AUTH=$(grep -r "getUserIdentity" convex/ --include="*.ts" | wc -l)
+          TOTAL_MUTATIONS=$(find convex/ -name "*.ts" -exec grep -l "mutation\|query" {} \; | wc -l)
+          echo "- Mutations/queries with auth: ${MUTATIONS_WITH_AUTH}" >> auth-audit-report.md
+          echo "- Total mutation/query files: ${TOTAL_MUTATIONS}" >> auth-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$MUTATIONS_WITH_AUTH" -gt 30 ]; then
+            echo "- Status: ✅ PASS" >> auth-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW - Low auth coverage" >> auth-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> auth-audit-report.md
+
+          # Check 2: Verify no hardcoded tokens
+          echo "### SEC-AUTH-002: Hardcoded Credentials Check" >> auth-audit-report.md
+          HARDCODED=$(grep -rE "(token|secret|key|password)\s*[=:]\s*['\"][a-zA-Z0-9_-]{20,}['\"]" src/ convex/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "test\|mock\|example" | wc -l || echo 0)
+          echo "- Potential hardcoded credentials: ${HARDCODED}" >> auth-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$HARDCODED" -eq 0 ]; then
+            echo "- Status: ✅ PASS" >> auth-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ❌ FAIL - Found potential hardcoded credentials" >> auth-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> auth-audit-report.md
+
+          # Check 3: Verify secure storage usage
+          echo "### SEC-AUTH-003: Secure Storage Check" >> auth-audit-report.md
+          SECURE_STORE=$(grep -r "expo-secure-store\|SecureStore" src/ --include="*.ts" --include="*.tsx" | wc -l)
+          ASYNC_STORAGE_SECRETS=$(grep -rE "AsyncStorage.*(token|secret|key|password)" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | wc -l || echo 0)
+          echo "- SecureStore usages: ${SECURE_STORE}" >> auth-audit-report.md
+          echo "- AsyncStorage for secrets: ${ASYNC_STORAGE_SECRETS}" >> auth-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$ASYNC_STORAGE_SECRETS" -eq 0 ]; then
+            echo "- Status: ✅ PASS" >> auth-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ❌ FAIL - Secrets stored in AsyncStorage" >> auth-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> auth-audit-report.md
+
+          # Check 4: Verify Clerk configuration
+          echo "### SEC-AUTH-004: Clerk Configuration Check" >> auth-audit-report.md
+          CLERK_PROVIDER=$(grep -r "ClerkProvider" src/ app/ --include="*.tsx" | wc -l)
+          ((TOTAL_CHECKS++))
+          if [ "$CLERK_PROVIDER" -gt 0 ]; then
+            echo "- ClerkProvider configured: Yes" >> auth-audit-report.md
+            echo "- Status: ✅ PASS" >> auth-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- ClerkProvider configured: No" >> auth-audit-report.md
+            echo "- Status: ❌ FAIL" >> auth-audit-report.md
+            ((ISSUES++))
+          fi
+
+          # Calculate score
+          SCORE=$(( (CHECKS_PASSED * 100) / TOTAL_CHECKS ))
+          echo "score=${SCORE}" >> $GITHUB_OUTPUT
+          echo "issues=${ISSUES}" >> $GITHUB_OUTPUT
+
+          echo "" >> auth-audit-report.md
+          echo "---" >> auth-audit-report.md
+          echo "**Authentication Audit Score: ${SCORE}/100**" >> auth-audit-report.md
+          echo "**Issues Found: ${ISSUES}**" >> auth-audit-report.md
+
+      - name: Upload auth audit report
+        uses: actions/upload-artifact@v7
+        with:
+          name: auth-audit-report-${{ needs.init-audit.outputs.audit_id }}
+          path: auth-audit-report.md
+          retention-days: 90
+
+  # ============================================
+  # Data Protection Audit
+  # ============================================
+  data-audit:
+    name: Data Protection Audit
+    runs-on: ubuntu-latest
+    needs: init-audit
+    if: inputs.audit_scope == 'full' || inputs.audit_scope == 'data' || inputs.audit_scope == ''
+    outputs:
+      score: ${{ steps.data-check.outputs.score }}
+      issues: ${{ steps.data-check.outputs.issues }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Audit data protection patterns
+        id: data-check
+        run: |
+          ISSUES=0
+          CHECKS_PASSED=0
+          TOTAL_CHECKS=0
+
+          echo "## Data Protection Audit" >> data-audit-report.md
+          echo "" >> data-audit-report.md
+
+          # Check 1: User-scoped queries
+          echo "### SEC-DATA-001: User Data Isolation" >> data-audit-report.md
+          QUERIES_WITH_CLERK=$(grep -r "clerkId\|identity.subject\|userId" convex/ --include="*.ts" | grep -E "(query|mutation)" | wc -l)
+          echo "- Queries/mutations with user scoping: ${QUERIES_WITH_CLERK}" >> data-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$QUERIES_WITH_CLERK" -gt 20 ]; then
+            echo "- Status: ✅ PASS" >> data-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW" >> data-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> data-audit-report.md
+
+          # Check 2: Sensitive data logging
+          echo "### SEC-DATA-002: Sensitive Log Prevention" >> data-audit-report.md
+          SENSITIVE_LOGS=$(grep -rE "console\.(log|warn|error).*\b(token|password|secret|key|credential)" src/ convex/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "test\|mock" | wc -l || echo 0)
+          echo "- Potential sensitive data in logs: ${SENSITIVE_LOGS}" >> data-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$SENSITIVE_LOGS" -eq 0 ]; then
+            echo "- Status: ✅ PASS" >> data-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW" >> data-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> data-audit-report.md
+
+          # Check 3: Input validation
+          echo "### SEC-DATA-003: Input Validation Coverage" >> data-audit-report.md
+          VALIDATION_IMPORTS=$(grep -r "inputValidation\|validateText\|validateUrl\|sanitize" convex/ --include="*.ts" | wc -l)
+          echo "- Input validation usages: ${VALIDATION_IMPORTS}" >> data-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$VALIDATION_IMPORTS" -gt 10 ]; then
+            echo "- Status: ✅ PASS" >> data-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW - Low validation coverage" >> data-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> data-audit-report.md
+
+          # Check 4: URL validation for storage
+          echo "### SEC-DATA-004: URL Security" >> data-audit-report.md
+          URL_VALIDATION=$(grep -r "validateUrl\|ALLOWED_DOMAINS\|https.*only" convex/ --include="*.ts" | wc -l)
+          echo "- URL validation patterns: ${URL_VALIDATION}" >> data-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$URL_VALIDATION" -gt 0 ]; then
+            echo "- Status: ✅ PASS" >> data-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW" >> data-audit-report.md
+            ((ISSUES++))
+          fi
+
+          # Calculate score
+          SCORE=$(( (CHECKS_PASSED * 100) / TOTAL_CHECKS ))
+          echo "score=${SCORE}" >> $GITHUB_OUTPUT
+          echo "issues=${ISSUES}" >> $GITHUB_OUTPUT
+
+          echo "" >> data-audit-report.md
+          echo "---" >> data-audit-report.md
+          echo "**Data Protection Audit Score: ${SCORE}/100**" >> data-audit-report.md
+          echo "**Issues Found: ${ISSUES}**" >> data-audit-report.md
+
+      - name: Upload data audit report
+        uses: actions/upload-artifact@v7
+        with:
+          name: data-audit-report-${{ needs.init-audit.outputs.audit_id }}
+          path: data-audit-report.md
+          retention-days: 90
+
+  # ============================================
+  # API Security Audit
+  # ============================================
+  api-audit:
+    name: API Security Audit
+    runs-on: ubuntu-latest
+    needs: init-audit
+    if: inputs.audit_scope == 'full' || inputs.audit_scope == 'api' || inputs.audit_scope == ''
+    outputs:
+      score: ${{ steps.api-check.outputs.score }}
+      issues: ${{ steps.api-check.outputs.issues }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Audit API security patterns
+        id: api-check
+        run: |
+          ISSUES=0
+          CHECKS_PASSED=0
+          TOTAL_CHECKS=0
+
+          echo "## API Security Audit" >> api-audit-report.md
+          echo "" >> api-audit-report.md
+
+          # Check 1: Ownership validation in mutations
+          echo "### SEC-API-001: Mutation Ownership Validation" >> api-audit-report.md
+          MUTATIONS_COUNT=$(find convex/ -name "*Mutations*.ts" -o -name "*mutations*.ts" | wc -l)
+          OWNERSHIP_CHECKS=$(grep -rE "(habit|note|letter|affirmation|reflection).*userId|\.userId.*===|checkOwnership" convex/ --include="*.ts" | wc -l)
+          echo "- Mutation files: ${MUTATIONS_COUNT}" >> api-audit-report.md
+          echo "- Ownership checks: ${OWNERSHIP_CHECKS}" >> api-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$OWNERSHIP_CHECKS" -gt "$MUTATIONS_COUNT" ]; then
+            echo "- Status: ✅ PASS" >> api-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW" >> api-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> api-audit-report.md
+
+          # Check 2: Error message security
+          echo "### SEC-API-002: Error Message Security" >> api-audit-report.md
+          DETAILED_ERRORS=$(grep -rE "throw.*Error.*\(.*\$\{|throw.*Error.*\+.*variable" convex/ --include="*.ts" 2>/dev/null | wc -l || echo 0)
+          echo "- Potentially detailed error messages: ${DETAILED_ERRORS}" >> api-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$DETAILED_ERRORS" -lt 5 ]; then
+            echo "- Status: ✅ PASS" >> api-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW - Detailed errors may leak info" >> api-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> api-audit-report.md
+
+          # Check 3: Webhook security
+          echo "### SEC-API-003: Webhook Security" >> api-audit-report.md
+          WEBHOOK_SIGNATURE=$(grep -r "signature\|hmac\|HMAC\|verify" convex/webhooks/ --include="*.ts" 2>/dev/null | wc -l || echo 0)
+          echo "- Webhook signature verifications: ${WEBHOOK_SIGNATURE}" >> api-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$WEBHOOK_SIGNATURE" -gt 0 ]; then
+            echo "- Status: ✅ PASS" >> api-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ⚠️ REVIEW - No webhook signature verification found" >> api-audit-report.md
+            ((ISSUES++))
+          fi
+          echo "" >> api-audit-report.md
+
+          # Check 4: Server-only secrets
+          echo "### SEC-API-004: Server-Only Secrets" >> api-audit-report.md
+          EXPO_PUBLIC_SECRETS=$(grep -rE "EXPO_PUBLIC.*(SECRET|KEY|TOKEN)" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "CLERK\|REVENUECAT\|CONVEX\|SENTRY" | wc -l || echo 0)
+          echo "- Non-public secrets exposed: ${EXPO_PUBLIC_SECRETS}" >> api-audit-report.md
+          ((TOTAL_CHECKS++))
+          if [ "$EXPO_PUBLIC_SECRETS" -eq 0 ]; then
+            echo "- Status: ✅ PASS" >> api-audit-report.md
+            ((CHECKS_PASSED++))
+          else
+            echo "- Status: ❌ FAIL" >> api-audit-report.md
+            ((ISSUES++))
+          fi
+
+          # Calculate score
+          SCORE=$(( (CHECKS_PASSED * 100) / TOTAL_CHECKS ))
+          echo "score=${SCORE}" >> $GITHUB_OUTPUT
+          echo "issues=${ISSUES}" >> $GITHUB_OUTPUT
+
+          echo "" >> api-audit-report.md
+          echo "---" >> api-audit-report.md
+          echo "**API Security Audit Score: ${SCORE}/100**" >> api-audit-report.md
+          echo "**Issues Found: ${ISSUES}**" >> api-audit-report.md
+
+      - name: Upload API audit report
+        uses: actions/upload-artifact@v7
+        with:
+          name: api-audit-report-${{ needs.init-audit.outputs.audit_id }}
+          path: api-audit-report.md
+          retention-days: 90
+
+  # ============================================
+  # Dependency Security Audit
+  # ============================================
+  dependency-audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    needs: init-audit
+    if: inputs.audit_scope == 'full' || inputs.audit_scope == 'dependencies' || inputs.audit_scope == ''
+    outputs:
+      critical: ${{ steps.npm-audit.outputs.critical }}
+      high: ${{ steps.npm-audit.outputs.high }}
+      score: ${{ steps.npm-audit.outputs.score }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run comprehensive npm audit
+        id: npm-audit
+        run: |
+          echo "## Dependency Security Audit" >> dependency-audit-report.md
+          echo "" >> dependency-audit-report.md
+          echo "**Audit Date:** $(date)" >> dependency-audit-report.md
+          echo "" >> dependency-audit-report.md
+
+          # Run audit
+          npm audit --json > audit-full.json 2>&1 || true
+
+          CRITICAL=$(jq '.metadata.vulnerabilities.critical // 0' audit-full.json)
+          HIGH=$(jq '.metadata.vulnerabilities.high // 0' audit-full.json)
+          MODERATE=$(jq '.metadata.vulnerabilities.moderate // 0' audit-full.json)
+          LOW=$(jq '.metadata.vulnerabilities.low // 0' audit-full.json)
+          TOTAL=$(jq '.metadata.vulnerabilities.total // 0' audit-full.json)
+
+          echo "### Vulnerability Summary" >> dependency-audit-report.md
+          echo "" >> dependency-audit-report.md
+          echo "| Severity | Count |" >> dependency-audit-report.md
+          echo "|----------|-------|" >> dependency-audit-report.md
+          echo "| Critical | ${CRITICAL} |" >> dependency-audit-report.md
+          echo "| High | ${HIGH} |" >> dependency-audit-report.md
+          echo "| Moderate | ${MODERATE} |" >> dependency-audit-report.md
+          echo "| Low | ${LOW} |" >> dependency-audit-report.md
+          echo "| **Total** | **${TOTAL}** |" >> dependency-audit-report.md
+          echo "" >> dependency-audit-report.md
+
+          # Calculate score
+          if [ "$CRITICAL" -gt 0 ]; then
+            SCORE=0
+          elif [ "$HIGH" -gt 0 ]; then
+            SCORE=50
+          elif [ "$MODERATE" -gt 2 ]; then
+            SCORE=75
+          else
+            SCORE=100
+          fi
+
+          echo "critical=${CRITICAL}" >> $GITHUB_OUTPUT
+          echo "high=${HIGH}" >> $GITHUB_OUTPUT
+          echo "score=${SCORE}" >> $GITHUB_OUTPUT
+
+          echo "---" >> dependency-audit-report.md
+          echo "**Dependency Security Score: ${SCORE}/100**" >> dependency-audit-report.md
+
+      - name: Check for outdated packages
+        run: |
+          echo "" >> dependency-audit-report.md
+          echo "### Outdated Packages" >> dependency-audit-report.md
+          echo "" >> dependency-audit-report.md
+          echo "\`\`\`" >> dependency-audit-report.md
+          npm outdated 2>&1 | head -50 >> dependency-audit-report.md || echo "All packages up to date" >> dependency-audit-report.md
+          echo "\`\`\`" >> dependency-audit-report.md
+
+      - name: Upload dependency audit report
+        uses: actions/upload-artifact@v7
+        with:
+          name: dependency-audit-report-${{ needs.init-audit.outputs.audit_id }}
+          path: |
+            dependency-audit-report.md
+            audit-full.json
+          retention-days: 90
+
+  # ============================================
+  # Security Test Suite
+  # ============================================
+  security-tests:
+    name: Security Test Suite
+    runs-on: ubuntu-latest
+    needs: init-audit
+    outputs:
+      passed: ${{ steps.tests.outputs.passed }}
+      failed: ${{ steps.tests.outputs.failed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security tests
+        id: tests
+        run: |
+          npm test -- --testPathPattern="security" \
+            --coverage --coverageReporters=json-summary \
+            --json --outputFile=security-test-results.json 2>&1 || true
+
+          if [ -f security-test-results.json ]; then
+            PASSED=$(jq '.numPassedTests // 0' security-test-results.json)
+            FAILED=$(jq '.numFailedTests // 0' security-test-results.json)
+          else
+            PASSED=0
+            FAILED=0
+          fi
+
+          echo "passed=${PASSED}" >> $GITHUB_OUTPUT
+          echo "failed=${FAILED}" >> $GITHUB_OUTPUT
+
+          echo "## Security Test Results" >> security-test-report.md
+          echo "" >> security-test-report.md
+          echo "| Metric | Value |" >> security-test-report.md
+          echo "|--------|-------|" >> security-test-report.md
+          echo "| Passed | ${PASSED} |" >> security-test-report.md
+          echo "| Failed | ${FAILED} |" >> security-test-report.md
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        with:
+          name: security-test-results-${{ needs.init-audit.outputs.audit_id }}
+          path: |
+            security-test-report.md
+            security-test-results.json
+            coverage/
+          retention-days: 90
+
+  # ============================================
+  # Generate Consolidated Audit Report
+  # ============================================
+  generate-report:
+    name: Generate Audit Report
+    runs-on: ubuntu-latest
+    needs:
+      [
+        init-audit,
+        auth-audit,
+        data-audit,
+        api-audit,
+        dependency-audit,
+        security-tests,
+      ]
+    if: always() && (inputs.generate_report == true || inputs.generate_report == '')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: audit-artifacts
+
+      - name: Generate consolidated report
+        env:
+          AUDIT_ID: ${{ needs.init-audit.outputs.audit_id }}
+          QUARTER: ${{ needs.init-audit.outputs.quarter }}
+          YEAR: ${{ needs.init-audit.outputs.year }}
+          AUTH_SCORE: ${{ needs.auth-audit.outputs.score || '0' }}
+          AUTH_ISSUES: ${{ needs.auth-audit.outputs.issues || '0' }}
+          DATA_SCORE: ${{ needs.data-audit.outputs.score || '0' }}
+          DATA_ISSUES: ${{ needs.data-audit.outputs.issues || '0' }}
+          API_SCORE: ${{ needs.api-audit.outputs.score || '0' }}
+          API_ISSUES: ${{ needs.api-audit.outputs.issues || '0' }}
+          DEP_SCORE: ${{ needs.dependency-audit.outputs.score || '0' }}
+          DEP_CRITICAL: ${{ needs.dependency-audit.outputs.critical || '0' }}
+          DEP_HIGH: ${{ needs.dependency-audit.outputs.high || '0' }}
+          TESTS_PASSED: ${{ needs.security-tests.outputs.passed || '0' }}
+          TESTS_FAILED: ${{ needs.security-tests.outputs.failed || '0' }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          TOTAL_ISSUES=$((AUTH_ISSUES + DATA_ISSUES + API_ISSUES))
+          OVERALL_SCORE=$(( (AUTH_SCORE + DATA_SCORE + API_SCORE + DEP_SCORE) / 4 ))
+
+          # Determine overall status
+          if [ "$OVERALL_SCORE" -ge 90 ] && [ "$TESTS_FAILED" -eq 0 ]; then
+            STATUS="PASS"
+            STATUS_EMOJI="✅"
+          elif [ "$OVERALL_SCORE" -ge 70 ]; then
+            STATUS="REVIEW"
+            STATUS_EMOJI="⚠️"
+          else
+            STATUS="FAIL"
+            STATUS_EMOJI="❌"
+          fi
+
+          # Calculate test pass rate safely
+          TOTAL_TESTS=$((TESTS_PASSED + TESTS_FAILED))
+          if [ "$TOTAL_TESTS" -gt 0 ]; then
+            PASS_RATE=$(( TESTS_PASSED * 100 / TOTAL_TESTS ))
+          else
+            PASS_RATE=0
+          fi
+
+          cat > quarterly-audit-report.md << EOF
+          ---
+          type: report
+          title: Quarterly Security Audit - ${QUARTER} ${YEAR}
+          created: $(date +%Y-%m-%d)
+          tags:
+            - security
+            - audit
+            - quarterly
+            - ${QUARTER,,}-${YEAR}
+          related:
+            - '[[SECURITY-PERFORMANCE-SPEC]]'
+            - '[[CI-003-quarterly-security-audits]]'
+          ---
+
+          # ${STATUS_EMOJI} Quarterly Security Audit Report
+
+          **Audit ID:** \`${AUDIT_ID}\`
+          **Period:** ${QUARTER} ${YEAR}
+          **Date:** $(date +%Y-%m-%d)
+          **Status:** ${STATUS}
+
+          ---
+
+          ## Executive Summary
+
+          This quarterly security audit evaluates the Habit Tracking App's security posture across authentication, data protection, API security, and dependency management.
+
+          ### Overall Score: ${OVERALL_SCORE}/100 ${STATUS_EMOJI}
+
+          | Category | Score | Issues |
+          |----------|-------|--------|
+          | Authentication | ${AUTH_SCORE}/100 | ${AUTH_ISSUES} |
+          | Data Protection | ${DATA_SCORE}/100 | ${DATA_ISSUES} |
+          | API Security | ${API_SCORE}/100 | ${API_ISSUES} |
+          | Dependencies | ${DEP_SCORE}/100 | Critical: ${DEP_CRITICAL}, High: ${DEP_HIGH} |
+          | **Overall** | **${OVERALL_SCORE}/100** | **${TOTAL_ISSUES} issues** |
+
+          ### Security Test Coverage
+
+          | Metric | Value |
+          |--------|-------|
+          | Tests Passed | ${TESTS_PASSED} |
+          | Tests Failed | ${TESTS_FAILED} |
+          | Pass Rate | ${PASS_RATE}% |
+
+          ---
+
+          ## Audit Categories
+
+          ### 1. Authentication Security (SEC-AUTH)
+
+          **Score:** ${AUTH_SCORE}/100
+
+          Key checks:
+          - JWT token handling
+          - Secure credential storage
+          - Clerk integration
+          - Session management
+
+          ### 2. Data Protection (SEC-DATA)
+
+          **Score:** ${DATA_SCORE}/100
+
+          Key checks:
+          - User data isolation
+          - Input validation coverage
+          - Sensitive data logging prevention
+          - URL security
+
+          ### 3. API Security (SEC-API)
+
+          **Score:** ${API_SCORE}/100
+
+          Key checks:
+          - Mutation ownership validation
+          - Error message security
+          - Webhook signature verification
+          - Server-only secrets
+
+          ### 4. Dependency Security
+
+          **Score:** ${DEP_SCORE}/100
+
+          Vulnerability counts:
+          - Critical: ${DEP_CRITICAL}
+          - High: ${DEP_HIGH}
+
+          ---
+
+          ## Recommendations
+
+          EOF
+
+          if [ "$TOTAL_ISSUES" -gt 0 ]; then
+            echo "### Immediate Actions Required" >> quarterly-audit-report.md
+            echo "" >> quarterly-audit-report.md
+            if [ "$AUTH_ISSUES" -gt 0 ]; then
+              echo "1. Review authentication patterns in flagged areas" >> quarterly-audit-report.md
+            fi
+            if [ "$DATA_ISSUES" -gt 0 ]; then
+              echo "2. Enhance data protection in identified components" >> quarterly-audit-report.md
+            fi
+            if [ "$API_ISSUES" -gt 0 ]; then
+              echo "3. Strengthen API security controls" >> quarterly-audit-report.md
+            fi
+            if [ "$DEP_CRITICAL" -gt 0 ] || [ "$DEP_HIGH" -gt 0 ]; then
+              echo "4. Update vulnerable dependencies immediately" >> quarterly-audit-report.md
+            fi
+          else
+            echo "No immediate actions required. Continue regular security practices." >> quarterly-audit-report.md
+          fi
+
+          echo "" >> quarterly-audit-report.md
+          echo "---" >> quarterly-audit-report.md
+          echo "" >> quarterly-audit-report.md
+          echo "_Generated automatically by CI-003 Quarterly Security Audit workflow_" >> quarterly-audit-report.md
+          echo "_Workflow run: ${WORKFLOW_URL}_" >> quarterly-audit-report.md
+
+      - name: Output to GitHub Summary
+        run: |
+          cat quarterly-audit-report.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload consolidated report
+        uses: actions/upload-artifact@v7
+        with:
+          name: quarterly-audit-report-${{ needs.init-audit.outputs.audit_id }}
+          path: quarterly-audit-report.md
+          retention-days: 365
+
+      - name: Create audit issue (if failures)
+        if: needs.auth-audit.outputs.score < 70 || needs.data-audit.outputs.score < 70 || needs.api-audit.outputs.score < 70 || needs.dependency-audit.outputs.critical > 0
+        uses: actions/github-script@v9
+        env:
+          AUDIT_ID: ${{ needs.init-audit.outputs.audit_id }}
+          QUARTER: ${{ needs.init-audit.outputs.quarter }}
+          YEAR: ${{ needs.init-audit.outputs.year }}
+          AUTH_SCORE: ${{ needs.auth-audit.outputs.score || 'N/A' }}
+          DATA_SCORE: ${{ needs.data-audit.outputs.score || 'N/A' }}
+          API_SCORE: ${{ needs.api-audit.outputs.score || 'N/A' }}
+          DEP_SCORE: ${{ needs.dependency-audit.outputs.score || 'N/A' }}
+          WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        with:
+          script: |
+            const auditId = process.env.AUDIT_ID;
+            const quarter = process.env.QUARTER;
+            const year = process.env.YEAR;
+            const authScore = process.env.AUTH_SCORE;
+            const dataScore = process.env.DATA_SCORE;
+            const apiScore = process.env.API_SCORE;
+            const depScore = process.env.DEP_SCORE;
+            const workflowUrl = process.env.WORKFLOW_URL;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Security] Quarterly Audit ${quarter} ${year} - Action Required`,
+              body: `## Quarterly Security Audit Alert
+
+            **Audit ID:** \`${auditId}\`
+
+            The quarterly security audit identified issues requiring attention.
+
+            ### Scores
+            - Authentication: ${authScore}/100
+            - Data Protection: ${dataScore}/100
+            - API Security: ${apiScore}/100
+            - Dependencies: ${depScore}/100
+
+            ### Action Required
+            Please review the full audit report in the workflow artifacts.
+
+            [View Workflow Run](${workflowUrl})
+            `,
+              labels: ['security', 'audit', 'priority: high']
+            });

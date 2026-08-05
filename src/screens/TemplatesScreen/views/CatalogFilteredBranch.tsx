@@ -1,0 +1,54 @@
+/**
+ * CatalogFilteredBranch — keyed filtered list with enter/exit on category switch.
+ */
+
+import { StyleSheet } from 'react-native';
+import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated';
+import type { Doc } from '../../../../convex/_generated/dataModel';
+import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import {
+  durations,
+  enterEasing,
+  exitEasing,
+} from '../../../theme/animations';
+import { CatalogFilteredList } from './CatalogFilteredList';
+
+interface CatalogFilteredBranchProps {
+  importedTemplateIds: Set<string>;
+  importingTemplateId: string | null;
+  onImport: (template: Doc<'templates'>) => void;
+  onPreview: (template: Doc<'templates'>) => void;
+  selectedCategoryId: string;
+  templates: Doc<'templates'>[];
+}
+
+export function CatalogFilteredBranch(p: CatalogFilteredBranchProps) {
+  const reduceMotion = useReduceMotion();
+  const entering = reduceMotion
+    ? undefined
+    : FadeInDown.duration(durations.enter).easing(enterEasing);
+  const exiting = reduceMotion
+    ? undefined
+    : FadeOut.duration(durations.quick).easing(exitEasing);
+
+  return (
+    <Animated.View
+      key={p.selectedCategoryId}
+      entering={entering}
+      exiting={exiting}
+      style={s.branch}
+    >
+      <CatalogFilteredList
+        importedTemplateIds={p.importedTemplateIds}
+        importingTemplateId={p.importingTemplateId}
+        templates={p.templates}
+        onImport={p.onImport}
+        onPreview={p.onPreview}
+      />
+    </Animated.View>
+  );
+}
+
+const s = StyleSheet.create({
+  branch: { flex: 1 },
+});

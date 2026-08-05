@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archived Habits — Prominent Resume CTA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E2DB;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 780px;
+      background: #F5F1ED;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(45,42,38,0.08),
+        0 24px 80px rgba(45,42,38,0.14),
+        0 8px 24px rgba(45,42,38,0.08);
+      position: relative;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 54px;
+      padding: 14px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F5F1ED;
+    }
+    .status-bar .time {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1F2937;
+      letter-spacing: 0.02em;
+    }
+    .status-icons {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    /* Header */
+    .page-header {
+      padding: 8px 20px 16px;
+      background: #F5F1ED;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+    }
+    .back-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #1F2937;
+      transition: background 0.15s ease;
+    }
+    .back-btn:hover { background: rgba(31,41,55,0.06); }
+    .header-title {
+      font-family: 'Literata', serif !important;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1F2937;
+      letter-spacing: -0.01em;
+    }
+    .header-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(31,41,55,0.08);
+      color: #6B7280;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      min-width: 24px;
+      height: 24px;
+      border-radius: 12px;
+      padding: 0 8px;
+    }
+    .header-subtitle {
+      text-align: center;
+      color: #6B7280;
+      font-size: 14px;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+
+    /* Cards container */
+    .cards-container {
+      padding: 0 16px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Habit card */
+    .habit-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(45,42,38,0.06);
+      position: relative;
+      transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+    .habit-card:hover {
+      box-shadow: 0 2px 8px rgba(45,42,38,0.1);
+    }
+    .habit-card.removing {
+      transform: translateY(-20px) scale(0.95);
+      opacity: 0;
+      max-height: 0;
+      padding: 0 20px;
+      margin-bottom: -12px;
+      overflow: hidden;
+      transition: transform 0.4s ease, opacity 0.35s ease, max-height 0.45s ease 0.1s, padding 0.45s ease 0.1s, margin 0.45s ease 0.1s;
+    }
+
+    /* Success flash overlay */
+    .success-flash {
+      position: absolute;
+      inset: 0;
+      background: rgba(5,150,105,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      border-radius: 16px;
+      z-index: 5;
+    }
+    .success-flash.active {
+      animation: flashIn 0.5s ease forwards;
+    }
+    .success-flash .check-icon {
+      color: #059669;
+      transform: scale(0);
+    }
+    .success-flash.active .check-icon {
+      animation: checkPop 0.4s ease 0.1s forwards;
+    }
+
+    @keyframes flashIn {
+      0% { opacity: 0; }
+      40% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+    @keyframes checkPop {
+      0% { transform: scale(0) rotate(-20deg); }
+      60% { transform: scale(1.2) rotate(5deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    /* Trash / delete button */
+    .delete-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: #9CA3AF;
+      transition: color 0.2s ease, background 0.2s ease;
+      z-index: 3;
+    }
+    .delete-btn:hover {
+      color: #B53030;
+      background: rgba(181,48,48,0.06);
+    }
+
+    /* Delete confirmation inline */
+    .delete-confirm {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(4px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 16px;
+      z-index: 6;
+      animation: fadeInConfirm 0.2s ease;
+    }
+    .delete-confirm.show {
+      display: flex;
+    }
+    @keyframes fadeInConfirm {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .delete-confirm-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1F2937;
+    }
+    .delete-confirm-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .delete-confirm-btn {
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .delete-confirm-btn:active { transform: scale(0.96); }
+    .delete-confirm-btn.yes {
+      background: #B53030;
+      color: #FFFFFF;
+    }
+    .delete-confirm-btn.yes:hover { background: #9B2828; }
+    .delete-confirm-btn.no {
+      background: rgba(31,41,55,0.06);
+      color: #6B7280;
+    }
+    .delete-confirm-btn.no:hover { background: rgba(31,41,55,0.1); }
+
+    /* Card content */
+    .card-emoji {
+      font-size: 48px;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .card-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1F2937;
+      text-align: center;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+    }
+    .card-date {
+      font-size: 13px;
+      color: #6B7280;
+      text-align: center;
+      margin-bottom: 14px;
+      font-weight: 400;
+    }
+
+    /* Stat pills */
+    .stat-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 10px;
+      background: #F9F7F5;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #4B5563;
+      white-space: nowrap;
+    }
+    .stat-pill .stat-label {
+      color: #9CA3AF;
+      font-weight: 400;
+      margin-right: 1px;
+    }
+    .stat-pill .stat-value {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    /* Resume button */
+    .resume-btn {
+      width: 100%;
+      height: 44px;
+      background: #059669;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+      transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 1px 3px rgba(5,150,105,0.2);
+      letter-spacing: 0.01em;
+    }
+    .resume-btn:hover {
+      background: #047857;
+      box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+    }
+    .resume-btn:active {
+      transform: scale(0.97);
+      background: #047857;
+    }
+    .resume-btn .btn-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Home indicator */
+    .home-indicator {
+      height: 34px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+      background: #F5F1ED;
+    }
+    .home-indicator-bar {
+      width: 134px;
+      height: 5px;
+      background: #1F2937;
+      border-radius: 100px;
+      opacity: 0.2;
+    }
+
+    /* Entrance animations */
+    .habit-card {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    .habit-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="status-icons">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#1F2937"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="#1F2937"/><rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#1F2937"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#1F2937"/></svg>
+        <svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M7.5 3.5C9.3 3.5 10.9 4.2 12.1 5.3L13.5 3.9C11.9 2.4 9.8 1.5 7.5 1.5C5.2 1.5 3.1 2.4 1.5 3.9L2.9 5.3C4.1 4.2 5.7 3.5 7.5 3.5ZM7.5 7.5C8.3 7.5 9.1 7.8 9.7 8.3L7.5 10.5L5.3 8.3C5.9 7.8 6.7 7.5 7.5 7.5Z" fill="#1F2937"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0" y="1" width="21" height="10" rx="2" stroke="#1F2937" stroke-opacity="0.35"/><rect x="1.5" y="2.5" width="16" height="7" rx="1" fill="#1F2937"/><rect x="22" y="4" width="2" height="4" rx="1" fill="#1F2937" fill-opacity="0.4"/></svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-row">
+        <button class="back-btn" aria-label="Go back">
+          <i data-lucide="arrow-left" style="width:22px;height:22px;"></i>
+        </button>
+        <span class="header-title">Archived Habits</span>
+        <span class="header-count" id="habitCount">4</span>
+      </div>
+      <p class="header-subtitle">Ready to pick back up?</p>
+    </div>
+
+    <!-- Cards -->
+    <div class="cards-container" id="cardsContainer">
+
+      <!-- Card 1 -->
+      <div class="habit-card" data-id="1">
+        <div class="success-flash"><i data-lucide="check" class="check-icon" style="width:40px;height:40px;stroke-width:3;"></i></div>
+        <div class="delete-confirm">
+          <span class="delete-confirm-text">Delete permanently?</span>
+          <div class="delete-confirm-actions">
+            <button class="delete-confirm-btn yes" onclick="confirmDelete(this)">Yes</button>
+            <button class="delete-confirm-btn no" onclick="cancelDelete(this)">No</button>
+          </div>
+        </div>
+        <button class="delete-btn" onclick="showDeleteConfirm(this)" aria-label="Delete habit">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+        <div class="card-emoji">&#x1F9D8;</div>
+        <div class="card-name">Morning Meditation</div>
+        <div class="card-date">Archived 34 days ago</div>
+        <div class="stat-row">
+          <span class="stat-pill"><span class="stat-label">Strength</span> <span class="stat-value">72%</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x1F525; 45d</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x2713; 234</span></span>
+        </div>
+        <button class="resume-btn" onclick="resumeHabit(this)">
+          <i data-lucide="rotate-ccw" class="btn-icon"></i>
+          Resume This Habit
+        </button>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="habit-card" data-id="2">
+        <div class="success-flash"><i data-lucide="check" class="check-icon" style="width:40px;height:40px;stroke-width:3;"></i></div>
+        <div class="delete-confirm">
+          <span class="delete-confirm-text">Delete permanently?</span>
+          <div class="delete-confirm-actions">
+            <button class="delete-confirm-btn yes" onclick="confirmDelete(this)">Yes</button>
+            <button class="delete-confirm-btn no" onclick="cancelDelete(this)">No</button>
+          </div>
+        </div>
+        <button class="delete-btn" onclick="showDeleteConfirm(this)" aria-label="Delete habit">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+        <div class="card-emoji">&#x1F4D6;</div>
+        <div class="card-name">Read 30 Minutes</div>
+        <div class="card-date">Archived 20 days ago</div>
+        <div class="stat-row">
+          <span class="stat-pill"><span class="stat-label">Strength</span> <span class="stat-value">58%</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x1F525; 28d</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x2713; 156</span></span>
+        </div>
+        <button class="resume-btn" onclick="resumeHabit(this)">
+          <i data-lucide="rotate-ccw" class="btn-icon"></i>
+          Resume This Habit
+        </button>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="habit-card" data-id="3">
+        <div class="success-flash"><i data-lucide="check" class="check-icon" style="width:40px;height:40px;stroke-width:3;"></i></div>
+        <div class="delete-confirm">
+          <span class="delete-confirm-text">Delete permanently?</span>
+          <div class="delete-confirm-actions">
+            <button class="delete-confirm-btn yes" onclick="confirmDelete(this)">Yes</button>
+            <button class="delete-confirm-btn no" onclick="cancelDelete(this)">No</button>
+          </div>
+        </div>
+        <button class="delete-btn" onclick="showDeleteConfirm(this)" aria-label="Delete habit">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+        <div class="card-emoji">&#x1F976;</div>
+        <div class="card-name">Cold Shower</div>
+        <div class="card-date">Archived 11 days ago</div>
+        <div class="stat-row">
+          <span class="stat-pill"><span class="stat-label">Strength</span> <span class="stat-value">35%</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x1F525; 12d</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x2713; 89</span></span>
+        </div>
+        <button class="resume-btn" onclick="resumeHabit(this)">
+          <i data-lucide="rotate-ccw" class="btn-icon"></i>
+          Resume This Habit
+        </button>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="habit-card" data-id="4">
+        <div class="success-flash"><i data-lucide="check" class="check-icon" style="width:40px;height:40px;stroke-width:3;"></i></div>
+        <div class="delete-confirm">
+          <span class="delete-confirm-text">Delete permanently?</span>
+          <div class="delete-confirm-actions">
+            <button class="delete-confirm-btn yes" onclick="confirmDelete(this)">Yes</button>
+            <button class="delete-confirm-btn no" onclick="cancelDelete(this)">No</button>
+          </div>
+        </div>
+        <button class="delete-btn" onclick="showDeleteConfirm(this)" aria-label="Delete habit">
+          <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+        </button>
+        <div class="card-emoji">&#x270D;&#xFE0F;</div>
+        <div class="card-name">Daily Journal</div>
+        <div class="card-date">Archived 3 days ago</div>
+        <div class="stat-row">
+          <span class="stat-pill"><span class="stat-label">Strength</span> <span class="stat-value">85%</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x1F525; 67d</span></span>
+          <span class="stat-pill"><span class="stat-value">&#x2713; 312</span></span>
+        </div>
+        <button class="resume-btn" onclick="resumeHabit(this)">
+          <i data-lucide="rotate-ccw" class="btn-icon"></i>
+          Resume This Habit
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Home Indicator -->
+    <div class="home-indicator">
+      <div class="home-indicator-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      // Stagger card entrance
+      const cards = document.querySelectorAll('.habit-card');
+      cards.forEach((card, i) => {
+        setTimeout(() => card.classList.add('visible'), 80 + i * 100);
+      });
+    });
+
+    // Update the count badge
+    function updateCount() {
+      const remaining = document.querySelectorAll('.habit-card:not(.removing):not(.deleted)').length;
+      document.getElementById('habitCount').textContent = remaining;
+    }
+
+    // Resume habit — green flash then slide away
+    function resumeHabit(btn) {
+      const card = btn.closest('.habit-card');
+      const flash = card.querySelector('.success-flash');
+
+      // Show green check flash
+      flash.classList.add('active');
+
+      // After flash, slide card away
+      setTimeout(() => {
+        card.style.maxHeight = card.offsetHeight + 'px';
+        // Force reflow
+        card.offsetHeight;
+        card.classList.add('removing');
+        updateCount();
+
+        // Remove from DOM after animation
+        setTimeout(() => {
+          card.classList.add('deleted');
+          card.style.display = 'none';
+          checkEmpty();
+        }, 500);
+      }, 550);
+    }
+
+    // Show inline delete confirmation
+    function showDeleteConfirm(btn) {
+      const card = btn.closest('.habit-card');
+      const confirm = card.querySelector('.delete-confirm');
+      confirm.classList.add('show');
+    }
+
+    // Cancel delete
+    function cancelDelete(btn) {
+      const confirm = btn.closest('.delete-confirm');
+      confirm.classList.remove('show');
+    }
+
+    // Confirm delete — remove card
+    function confirmDelete(btn) {
+      const card = btn.closest('.habit-card');
+      card.style.maxHeight = card.offsetHeight + 'px';
+      card.offsetHeight;
+      card.classList.add('removing');
+      updateCount();
+      setTimeout(() => {
+        card.classList.add('deleted');
+        card.style.display = 'none';
+        checkEmpty();
+      }, 500);
+    }
+
+    // Check if all cards are gone — show empty state
+    function checkEmpty() {
+      const remaining = document.querySelectorAll('.habit-card:not(.deleted)').length;
+      if (remaining === 0) {
+        const container = document.getElementById('cardsContainer');
+        container.innerHTML = `
+          <div style="text-align:center; padding:60px 20px; opacity:0; animation: fadeUp 0.4s ease 0.1s forwards;">
+            <div style="font-size:48px; margin-bottom:12px;">&#x1F389;</div>
+            <div style="font-size:17px; font-weight:600; color:#1F2937; margin-bottom:6px;">All caught up!</div>
+            <div style="font-size:14px; color:#6B7280;">No archived habits remaining.</div>
+          </div>
+        `;
+        // Add the fadeUp keyframe if not present
+        if (!document.getElementById('emptyAnim')) {
+          const style = document.createElement('style');
+          style.id = 'emptyAnim';
+          style.textContent = `@keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }`;
+          document.head.appendChild(style);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

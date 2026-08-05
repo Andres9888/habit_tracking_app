@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar Heatmap V4 - Traditional 1 Month</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1c1917; }
+
+    /* Cell intensity based on streak length */
+    .cell-empty { background: #f5f5f4; }
+    .cell-day-1-6 { background: #6ee7b7; }
+    .cell-day-7-13 { background: #34d399; }
+    .cell-day-14-29 { background: #10b981; }
+    .cell-day-30-plus { background: #059669; }
+
+    .cell-today-pending {
+      background: #fef3c7;
+      border: 2px solid #fbbf24;
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+    .cell-today-done {
+      background: #10b981;
+      border: 2px solid #fbbf24;
+    }
+    .cell-future {
+      background: #fafaf9;
+      border: 1px dashed #d6d3d1;
+      opacity: 0.4;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+      50% { transform: scale(1.05); box-shadow: 0 0 0 4px rgba(251, 191, 36, 0); }
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, rgba(236, 253, 245, 0.3) 0%, white 50%, rgba(204, 251, 241, 0.3) 100%);
+    }
+
+    /* Hover states */
+    .cell:hover:not(.cell-future) {
+      transform: scale(1.1);
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+
+    /* Entry animation */
+    @keyframes cellFadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .cell {
+      animation: cellFadeIn 0.2s ease-out backwards;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    /* Stagger by week rows */
+    .week-row-0 .cell { animation-delay: 0s; }
+    .week-row-1 .cell { animation-delay: 0.05s; }
+    .week-row-2 .cell { animation-delay: 0.1s; }
+    .week-row-3 .cell { animation-delay: 0.15s; }
+    .week-row-4 .cell { animation-delay: 0.2s; }
+  </style>
+</head>
+<body class="min-h-screen p-6 flex items-center justify-center">
+
+  <!-- Phone Frame -->
+  <div class="w-[390px] bg-stone-100 rounded-[3rem] p-3 shadow-2xl">
+    <div class="bg-stone-50 rounded-[2.5rem] overflow-hidden min-h-[780px]">
+
+      <!-- Status Bar Mock -->
+      <div class="h-12 flex items-center justify-center">
+        <div class="w-24 h-6 bg-stone-900 rounded-full"></div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="px-4 pb-8 space-y-4">
+
+        <!-- Screen Header -->
+        <div class="flex items-center gap-3 py-2">
+          <div class="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center">
+            <svg class="w-4 h-4 text-stone-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+          </div>
+          <div class="flex-1 text-center">
+            <span class="text-2xl mr-2">🏃</span>
+            <span class="text-lg font-bold text-stone-800">Morning Run</span>
+          </div>
+          <div class="w-8"></div>
+        </div>
+
+        <!-- Calendar Heatmap V4 - Traditional 1 Month -->
+        <div class="rounded-2xl overflow-hidden shadow-sm gradient-bg">
+          <div class="p-4">
+
+            <!-- Header with Month Navigation -->
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <div class="h-8 w-8 flex items-center justify-center rounded-lg bg-emerald-100">
+                  <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </div>
+                <span class="text-lg font-bold text-stone-800">Activity</span>
+              </div>
+
+              <!-- Month Navigation -->
+              <div class="flex items-center gap-2">
+                <button class="p-1 hover:bg-stone-100 rounded">
+                  <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                  </svg>
+                </button>
+                <span class="text-sm font-semibold text-stone-700 min-w-[100px] text-center">December 2025</span>
+                <button class="p-1 hover:bg-stone-100 rounded opacity-30" disabled>
+                  <svg class="w-5 h-5 text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Day Labels -->
+            <div class="grid grid-cols-7 gap-1 mb-2">
+              <span class="text-[10px] font-semibold text-stone-400 text-center">S</span>
+              <span class="text-[10px] font-semibold text-stone-400 text-center">M</span>
+              <span class="text-[10px] font-semibold text-stone-400 text-center">T</span>
+              <span class="text-[10px] font-semibold text-stone-400 text-center">W</span>
+              <span class="text-[10px] font-semibold text-stone-400 text-center">T</span>
+              <span class="text-[10px] font-semibold text-stone-400 text-center">F</span>
+              <span class="text-[10px] font-semibold text-stone-400 text-center">S</span>
+            </div>
+
+            <!-- Traditional Calendar Grid -->
+            <!-- Week 1: Dec starts on Monday (empty Sunday) -->
+            <div class="grid grid-cols-7 gap-1 mb-1 week-row-0">
+              <div class="aspect-square rounded-lg"></div> <!-- Empty -->
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">1</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">2</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-empty flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-400 absolute top-1">3</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">4</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">5</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">6</span>
+              </div>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="grid grid-cols-7 gap-1 mb-1 week-row-1">
+              <div class="cell aspect-square rounded-lg cell-empty flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-400 absolute top-1">7</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">8</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">9</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">10</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-empty flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-400 absolute top-1">11</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">12</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">13</span>
+              </div>
+            </div>
+
+            <!-- Week 3 -->
+            <div class="grid grid-cols-7 gap-1 mb-1 week-row-2">
+              <div class="cell aspect-square rounded-lg cell-day-1-6 flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">14</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">15</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">16</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">17</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">18</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">19</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-empty flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-400 absolute top-1">20</span>
+              </div>
+            </div>
+
+            <!-- Week 4 (Current) -->
+            <div class="grid grid-cols-7 gap-1 mb-1 week-row-3">
+              <div class="cell aspect-square rounded-lg cell-day-1-6 flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">21</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">22</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">23</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-empty flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-400 absolute top-1">24</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-day-30-plus flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">25</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-today-done flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-white absolute top-1">26</span>
+                <svg class="w-5 h-5 text-white absolute" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-future flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-300 absolute top-1">27</span>
+              </div>
+            </div>
+
+            <!-- Week 5 -->
+            <div class="grid grid-cols-7 gap-1 week-row-4">
+              <div class="cell aspect-square rounded-lg cell-future flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-300 absolute top-1">28</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-future flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-300 absolute top-1">29</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-future flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-300 absolute top-1">30</span>
+              </div>
+              <div class="cell aspect-square rounded-lg cell-future flex items-center justify-center relative">
+                <span class="text-[10px] font-medium text-stone-300 absolute top-1">31</span>
+              </div>
+              <div class="aspect-square rounded-lg"></div>
+              <div class="aspect-square rounded-lg"></div>
+              <div class="aspect-square rounded-lg"></div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="mt-4 flex items-center justify-center gap-4 py-2 bg-white/60 rounded-lg">
+              <div class="flex items-center gap-1.5">
+                <div class="h-3 w-3 rounded-sm bg-emerald-500"></div>
+                <span class="text-xs font-medium text-stone-700">17 days</span>
+              </div>
+              <span class="text-stone-300">•</span>
+              <span class="text-xs font-semibold text-emerald-600">68% this month</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Interactive Insight Card with Mini Chart -->
+        <div class="rounded-xl bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200 p-4">
+          <div class="flex items-start gap-3 mb-3">
+            <div class="h-8 w-8 flex items-center justify-center rounded-lg bg-violet-100 flex-shrink-0">
+              <span class="text-base">💡</span>
+            </div>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-violet-800 mb-1">Pattern Detected</p>
+              <p class="text-xs text-violet-600 leading-relaxed mb-2">
+                Sundays are your challenge day <span class="font-semibold">(62% success)</span>.
+              </p>
+
+              <!-- Mini bar chart integrated -->
+              <div class="flex gap-1 mb-3">
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-amber-400 rounded-t" style="height: 62%"></div>
+                  </div>
+                  <span class="text-[8px] text-amber-600 font-semibold mt-0.5">S</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-emerald-500 rounded-t" style="height: 94%"></div>
+                  </div>
+                  <span class="text-[8px] text-emerald-600 font-semibold mt-0.5">M</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-emerald-400 rounded-t" style="height: 88%"></div>
+                  </div>
+                  <span class="text-[8px] text-stone-500 mt-0.5">T</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-emerald-400 rounded-t" style="height: 82%"></div>
+                  </div>
+                  <span class="text-[8px] text-stone-500 mt-0.5">W</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-emerald-400 rounded-t" style="height: 85%"></div>
+                  </div>
+                  <span class="text-[8px] text-stone-500 mt-0.5">T</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-emerald-400 rounded-t" style="height: 79%"></div>
+                  </div>
+                  <span class="text-[8px] text-stone-500 mt-0.5">F</span>
+                </div>
+                <div class="flex-1 flex flex-col items-center">
+                  <div class="w-full h-10 bg-stone-100 rounded-t flex items-end justify-center pb-0.5">
+                    <div class="w-2/3 bg-amber-300 rounded-t" style="height: 68%"></div>
+                  </div>
+                  <span class="text-[8px] text-amber-500 mt-0.5">S</span>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="flex gap-2">
+                <button class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-violet-100 hover:bg-violet-200 rounded-lg text-xs font-medium text-violet-700 transition-colors">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                  </svg>
+                  Set Reminder
+                </button>
+                <button class="flex items-center justify-center gap-1 px-3 py-2 bg-white hover:bg-violet-50 rounded-lg text-xs font-medium text-violet-600 border border-violet-200 transition-colors">
+                  💡 Tips
+                </button>
+              </div>
+            </div>
+            <button class="text-stone-400 hover:text-stone-600 transition-colors p-1">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Optional: "View Year" Toggle -->
+        <button class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-white/80 hover:bg-white border border-stone-200 rounded-xl text-sm font-medium text-stone-600 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          View Full Year
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

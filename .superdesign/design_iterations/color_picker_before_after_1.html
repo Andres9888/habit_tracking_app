@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Picker - Before & After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #1a1a2e; }
+    .phone-frame {
+      width: 375px;
+      height: 700px;
+      background: #f8fafc;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .gradient-picker {
+      background: linear-gradient(to right,
+        hsl(0, 100%, 50%),
+        hsl(60, 100%, 50%),
+        hsl(120, 100%, 50%),
+        hsl(180, 100%, 50%),
+        hsl(240, 100%, 50%),
+        hsl(300, 100%, 50%),
+        hsl(360, 100%, 50%)
+      );
+    }
+    .saturation-picker {
+      background: linear-gradient(to bottom, transparent, #000),
+                  linear-gradient(to right, #fff, hsl(200, 100%, 50%));
+    }
+    .hue-slider {
+      background: linear-gradient(to right,
+        hsl(0, 100%, 50%),
+        hsl(60, 100%, 50%),
+        hsl(120, 100%, 50%),
+        hsl(180, 100%, 50%),
+        hsl(240, 100%, 50%),
+        hsl(300, 100%, 50%),
+        hsl(360, 100%, 50%)
+      );
+    }
+    .label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-8">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Color Picker Redesign</h1>
+  <p class="text-gray-400 mb-8">Before & After Comparison</p>
+
+  <div class="flex gap-12 flex-wrap justify-center">
+
+    <!-- BEFORE: Current Implementation -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="label text-red-400">BEFORE (Current - Causes Freezing)</div>
+
+      <div class="phone-frame">
+        <div class="notch"></div>
+
+        <!-- Modal Overlay -->
+        <div class="absolute inset-0 bg-black/50 flex items-end">
+          <!-- Bottom Sheet -->
+          <div class="w-full bg-white rounded-t-3xl p-5 pb-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-lg font-semibold text-gray-900">Pick a color</span>
+              <button class="bg-gray-900 text-white text-sm font-semibold px-4 py-2 rounded-full">Done</button>
+            </div>
+
+            <!-- Large Preview (wastes space) -->
+            <div class="h-16 rounded-2xl mb-4" style="background: #3b82f6;"></div>
+
+            <!-- Hex Text (unnecessary) -->
+            <div class="text-center text-gray-500 text-sm mb-4">#3B82F6</div>
+
+            <!-- PROBLEM: Large Panel1 Gradient Picker -->
+            <div class="relative mb-4">
+              <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full z-10">
+                ⚠️ FREEZES APP
+              </div>
+              <div class="saturation-picker h-48 rounded-2xl border-2 border-red-300">
+                <!-- Picker cursor -->
+                <div class="absolute top-1/3 left-2/3 w-6 h-6 border-4 border-white rounded-full shadow-lg" style="background: #3b82f6;"></div>
+              </div>
+            </div>
+
+            <!-- Brightness Slider -->
+            <div class="h-6 rounded-full bg-gradient-to-r from-black via-blue-500 to-white mb-4"></div>
+
+            <!-- Swatches (duplicated from main screen) -->
+            <div class="flex gap-2 justify-center flex-wrap">
+              <div class="w-10 h-10 rounded-full bg-red-500"></div>
+              <div class="w-10 h-10 rounded-full bg-orange-500"></div>
+              <div class="w-10 h-10 rounded-full bg-yellow-500"></div>
+              <div class="w-10 h-10 rounded-full bg-green-500"></div>
+              <div class="w-10 h-10 rounded-full bg-blue-500 ring-2 ring-gray-900 ring-offset-2"></div>
+              <div class="w-10 h-10 rounded-full bg-purple-500"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center max-w-xs">
+        <p class="text-red-400 text-sm font-medium mb-1">Problems:</p>
+        <ul class="text-gray-400 text-xs text-left list-disc pl-4 space-y-1">
+          <li>Panel1 fires onChange on every pixel = freezing</li>
+          <li>Too much UI for simple color selection</li>
+          <li>Duplicates preset colors already on main screen</li>
+          <li>220px gradient picker is overkill</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AFTER: New Implementation -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="label text-green-400">AFTER (Proposed - Fast & Simple)</div>
+
+      <div class="phone-frame">
+        <div class="notch"></div>
+
+        <!-- Main Screen (StyleSection) -->
+        <div class="pt-12 px-4">
+          <!-- Style Section Card -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <h3 class="text-base font-bold text-slate-800 mb-4">🎨 Style it</h3>
+
+            <!-- Icon Row -->
+            <div class="flex items-center justify-between bg-slate-50 rounded-xl p-3 mb-5">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background: #3b82f620;">
+                  <span class="text-2xl">💪</span>
+                </div>
+                <div>
+                  <div class="text-base font-medium text-slate-800">Icon</div>
+                  <div class="text-xs text-slate-500">Tap to change</div>
+                </div>
+              </div>
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+
+            <!-- Color Section -->
+            <div>
+              <div class="text-sm font-semibold text-slate-600 mb-3">Color</div>
+
+              <!-- Preset Colors (PRIMARY - no modal needed!) -->
+              <div class="flex gap-3 mb-4 flex-wrap">
+                <div class="w-10 h-10 rounded-full bg-red-500 cursor-pointer hover:scale-110 transition-transform"></div>
+                <div class="w-10 h-10 rounded-full bg-orange-500 cursor-pointer hover:scale-110 transition-transform"></div>
+                <div class="w-10 h-10 rounded-full bg-amber-400 cursor-pointer hover:scale-110 transition-transform"></div>
+                <div class="w-10 h-10 rounded-full bg-emerald-500 cursor-pointer hover:scale-110 transition-transform"></div>
+                <div class="w-10 h-10 rounded-full bg-blue-500 ring-[3px] ring-slate-800 cursor-pointer">
+                  <div class="w-full h-full flex items-center justify-center text-white text-xs font-bold">✓</div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-violet-500 cursor-pointer hover:scale-110 transition-transform"></div>
+                <div class="w-10 h-10 rounded-full bg-pink-500 cursor-pointer hover:scale-110 transition-transform"></div>
+                <div class="w-10 h-10 rounded-full bg-slate-700 cursor-pointer hover:scale-110 transition-transform"></div>
+              </div>
+
+              <!-- Custom Color Button -->
+              <div class="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-3 cursor-pointer hover:bg-slate-100 transition-colors">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                  </svg>
+                  <span class="text-sm font-medium text-slate-700">Custom color</span>
+                </div>
+                <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm" style="background: #3b82f6;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Green badge -->
+          <div class="mt-4 bg-green-100 text-green-700 text-xs font-medium px-3 py-2 rounded-lg text-center">
+            ✅ 90% of users pick from presets - no modal needed!
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center max-w-xs">
+        <p class="text-green-400 text-sm font-medium mb-1">Improvements:</p>
+        <ul class="text-gray-400 text-xs text-left list-disc pl-4 space-y-1">
+          <li>Preset colors on main screen - instant selection</li>
+          <li>Custom color is progressive disclosure</li>
+          <li>No modal for common use case</li>
+          <li>Haptic feedback on tap</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Color Modal (Only when needed) -->
+  <div class="mt-8 flex flex-col items-center gap-4">
+    <div class="label text-blue-400">CUSTOM COLOR MODAL (Only when "Custom color" is tapped)</div>
+
+    <div class="phone-frame">
+      <div class="notch"></div>
+
+      <!-- Modal Overlay -->
+      <div class="absolute inset-0 bg-black/50 flex items-end">
+        <!-- Bottom Sheet - Compact! -->
+        <div class="w-full bg-white rounded-t-3xl p-5 pb-8">
+          <!-- Drag Handle -->
+          <div class="flex justify-center mb-4">
+            <div class="w-10 h-1 bg-gray-300 rounded-full"></div>
+          </div>
+
+          <!-- Header -->
+          <div class="flex justify-between items-center mb-5">
+            <span class="text-lg font-semibold text-gray-900">Custom Color</span>
+            <button class="text-gray-500 text-sm">Cancel</button>
+          </div>
+
+          <!-- Compact Preview -->
+          <div class="flex items-center gap-4 mb-5">
+            <div class="w-16 h-16 rounded-2xl shadow-inner" style="background: #8b5cf6;"></div>
+            <div>
+              <div class="text-2xl font-bold text-gray-900">#8B5CF6</div>
+              <div class="text-sm text-gray-500">Violet</div>
+            </div>
+          </div>
+
+          <!-- Simple Hue Slider (updates only on release) -->
+          <div class="mb-4">
+            <div class="text-xs font-medium text-gray-500 mb-2">HUE</div>
+            <div class="relative">
+              <div class="hue-slider h-12 rounded-2xl"></div>
+              <!-- Slider thumb -->
+              <div class="absolute top-1/2 -translate-y-1/2 w-6 h-10 bg-white rounded-lg shadow-lg border-2 border-gray-200" style="left: 75%;"></div>
+            </div>
+          </div>
+
+          <!-- Saturation Slider -->
+          <div class="mb-4">
+            <div class="text-xs font-medium text-gray-500 mb-2">SATURATION</div>
+            <div class="relative">
+              <div class="h-12 rounded-2xl" style="background: linear-gradient(to right, #e5e5e5, #8b5cf6);"></div>
+              <div class="absolute top-1/2 -translate-y-1/2 w-6 h-10 bg-white rounded-lg shadow-lg border-2 border-gray-200" style="left: 85%;"></div>
+            </div>
+          </div>
+
+          <!-- Brightness Slider -->
+          <div class="mb-6">
+            <div class="text-xs font-medium text-gray-500 mb-2">BRIGHTNESS</div>
+            <div class="relative">
+              <div class="h-12 rounded-2xl" style="background: linear-gradient(to right, #000, #8b5cf6);"></div>
+              <div class="absolute top-1/2 -translate-y-1/2 w-6 h-10 bg-white rounded-lg shadow-lg border-2 border-gray-200" style="left: 70%;"></div>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <button class="w-full bg-gray-900 text-white font-semibold py-4 rounded-2xl">
+            Use This Color
+          </button>
+
+          <!-- Performance Note -->
+          <div class="mt-3 text-center text-xs text-gray-400">
+            ⚡ Sliders only update on release - no freezing
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center max-w-sm">
+      <p class="text-blue-400 text-sm font-medium mb-1">Key Differences:</p>
+      <ul class="text-gray-400 text-xs text-left list-disc pl-4 space-y-1">
+        <li>3 simple sliders instead of complex 2D gradient</li>
+        <li>Updates only on touch END (no continuous onChange)</li>
+        <li>Compact layout - less overwhelming</li>
+        <li>Clear "Use This Color" CTA</li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>

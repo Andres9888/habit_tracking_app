@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habits — Dark Mode Homepage</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #0a0a1a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .phone-frame {
+        width: 393px;
+        height: 852px;
+        background: #111827;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+      }
+      .status-bar {
+        height: 54px;
+        padding: 14px 28px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #e5e7eb;
+      }
+      .status-icons {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 13px;
+      }
+
+      .screen {
+        padding: 0 20px;
+        height: calc(100% - 54px);
+        overflow-y: auto;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 0 14px;
+      }
+      /* Progress ring */
+      .ring-wrap {
+        width: 72px;
+        height: 72px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring-bg {
+        fill: none;
+        stroke: #1f2937;
+        stroke-width: 5;
+      }
+      .ring-fill {
+        fill: none;
+        stroke: #34d399;
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-dasharray: 201;
+        stroke-dashoffset: 50.25; /* 75% */
+        filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.4));
+      }
+      .ring-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+      .ring-pct {
+        font-size: 18px;
+        font-weight: 800;
+        color: #e5e7eb;
+        letter-spacing: -0.5px;
+        line-height: 1;
+      }
+      .ring-frac {
+        font-size: 10px;
+        color: #6b7280;
+        font-weight: 600;
+      }
+
+      .header-info {
+        flex: 1;
+      }
+      .header-day {
+        font-family: 'Literata', serif;
+        font-size: 22px;
+        font-weight: 800;
+        color: #e5e7eb;
+        letter-spacing: -0.5px;
+      }
+      .header-date {
+        font-size: 13px;
+        color: #6b7280;
+        font-weight: 500;
+        margin-top: 1px;
+      }
+      .header-streak {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 5px;
+        background: rgba(251, 191, 36, 0.12);
+        border: 1px solid rgba(251, 191, 36, 0.2);
+        border-radius: 8px;
+        padding: 2px 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fbbf24;
+      }
+
+      /* Timeline */
+      .timeline {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 0 14px;
+      }
+      .t-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+      }
+      .t-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #4b5563;
+        text-transform: uppercase;
+      }
+      .t-dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .t-dot.done {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+      }
+      .t-dot.done::after {
+        content: '✓';
+      }
+      .t-dot.today {
+        background: #e5e7eb;
+        color: #111827;
+        box-shadow: 0 0 12px rgba(229, 231, 235, 0.2);
+      }
+      .t-dot.future {
+        background: #1f2937;
+        color: #374151;
+      }
+      .t-dot.partial {
+        background: rgba(251, 191, 36, 0.12);
+        color: #fbbf24;
+      }
+
+      /* Divider */
+      .divider {
+        height: 1px;
+        background: #1f2937;
+        margin: 4px 0 12px;
+      }
+
+      /* Cards */
+      .habit-card {
+        background: #1f2937;
+        border-radius: 14px;
+        padding: 13px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #2d3748;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.15s ease;
+      }
+      .habit-card:hover {
+        border-color: #374151;
+      }
+      .habit-card.done {
+        background: rgba(16, 185, 129, 0.06);
+        border-color: rgba(16, 185, 129, 0.15);
+      }
+
+      .accent-line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+      }
+      .accent-line.green {
+        background: #10b981;
+      }
+      .accent-line.amber {
+        background: #f59e0b;
+      }
+      .accent-line.blue {
+        background: #3b82f6;
+      }
+      .accent-line.purple {
+        background: #8b5cf6;
+      }
+
+      .h-emoji {
+        font-size: 22px;
+      }
+      .h-info {
+        flex: 1;
+      }
+      .h-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #e5e7eb;
+      }
+      .h-name.struck {
+        color: #6b7280;
+        text-decoration: line-through;
+        text-decoration-color: #374151;
+      }
+      .h-meta {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 1px;
+      }
+      .h-meta .fire {
+        color: #fbbf24;
+        font-weight: 700;
+      }
+
+      .h-check {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid #374151;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .h-check.done {
+        background: #10b981;
+        border-color: #10b981;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.3);
+      }
+      .h-check.done::after {
+        content: '✓';
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      /* Nudge */
+      .nudge {
+        margin: 6px 0 8px;
+        padding: 11px 14px;
+        border-radius: 12px;
+        background: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nudge-icon {
+        font-size: 18px;
+      }
+      .nudge-text {
+        font-size: 13px;
+        color: #34d399;
+        font-weight: 500;
+      }
+      .nudge-text strong {
+        font-weight: 700;
+        color: #6ee7b7;
+      }
+
+      /* Bottom bar */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 8px 20px 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(17, 24, 39, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(55, 65, 81, 0.4);
+      }
+      .bb-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(31, 41, 55, 0.8);
+        border: 1px solid rgba(55, 65, 81, 0.5);
+      }
+      .bb-icon svg {
+        width: 18px;
+        height: 18px;
+        stroke: #9ca3af;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .bb-add {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #10b981, #059669);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+        margin-top: -14px;
+        border: 3px solid rgba(17, 24, 39, 0.9);
+      }
+      .bb-add svg {
+        width: 22px;
+        height: 22px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+
+      .design-label {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 999;
+        backdrop-filter: blur(10px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="design-label">v9 — Dark Mode Homepage</div>
+    <div class="phone-frame">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <span>●●●●</span><span>WiFi</span><span>🔋</span>
+        </div>
+      </div>
+      <div class="screen">
+        <div class="header">
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 72 72">
+              <circle class="ring-bg" cx="36" cy="36" r="32" />
+              <circle class="ring-fill" cx="36" cy="36" r="32" />
+            </svg>
+            <div class="ring-center">
+              <div class="ring-pct">67%</div>
+              <div class="ring-frac">4/6</div>
+            </div>
+          </div>
+          <div class="header-info">
+            <div class="header-day">Tuesday</div>
+            <div class="header-date">February 25, 2026</div>
+            <div class="header-streak">🔥 12 day streak</div>
+          </div>
+        </div>
+
+        <div class="timeline">
+          <div class="t-day">
+            <span class="t-label">M</span>
+            <div class="t-dot done"></div>
+          </div>
+          <div class="t-day">
+            <span class="t-label">T</span>
+            <div class="t-dot done"></div>
+          </div>
+          <div class="t-day">
+            <span class="t-label">W</span>
+            <div class="t-dot done"></div>
+          </div>
+          <div class="t-day">
+            <span class="t-label">T</span>
+            <div class="t-dot done"></div>
+          </div>
+          <div class="t-day">
+            <span class="t-label">F</span>
+            <div class="t-dot done"></div>
+          </div>
+          <div class="t-day">
+            <span class="t-label">S</span>
+            <div class="t-dot partial">½</div>
+          </div>
+          <div class="t-day">
+            <span class="t-label" style="color: #e5e7eb">Tu</span>
+            <div class="t-dot today">25</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="habit-card done">
+          <div class="accent-line green"></div>
+          <span class="h-emoji">🏃</span>
+          <div class="h-info">
+            <div class="h-name struck">Morning Run</div>
+            <div class="h-meta"><span class="fire">🔥 12</span> · 6:42 AM</div>
+          </div>
+          <div class="h-check done"></div>
+        </div>
+
+        <div class="habit-card done">
+          <div class="accent-line blue"></div>
+          <span class="h-emoji">🧘</span>
+          <div class="h-info">
+            <div class="h-name struck">Meditate</div>
+            <div class="h-meta"><span class="fire">🔥 8</span> · 7:15 AM</div>
+          </div>
+          <div class="h-check done"></div>
+        </div>
+
+        <div class="habit-card done">
+          <div class="accent-line green"></div>
+          <span class="h-emoji">💧</span>
+          <div class="h-info">
+            <div class="h-name struck">Drink 2L Water</div>
+            <div class="h-meta">2:30 PM</div>
+          </div>
+          <div class="h-check done"></div>
+        </div>
+
+        <div class="habit-card done">
+          <div class="accent-line purple"></div>
+          <span class="h-emoji">📖</span>
+          <div class="h-info">
+            <div class="h-name struck">Read 20 Pages</div>
+            <div class="h-meta">3:45 PM</div>
+          </div>
+          <div class="h-check done"></div>
+        </div>
+
+        <div class="nudge">
+          <span class="nudge-icon">⚡</span>
+          <div class="nudge-text">
+            <strong>2 more</strong> for streak day 13!
+          </div>
+        </div>
+
+        <div class="habit-card">
+          <div class="accent-line amber"></div>
+          <span class="h-emoji">✍️</span>
+          <div class="h-info">
+            <div class="h-name">Journal</div>
+            <div class="h-meta">Evening · 10 min</div>
+          </div>
+          <div class="h-check"></div>
+        </div>
+
+        <div class="habit-card">
+          <div class="accent-line amber"></div>
+          <span class="h-emoji">🎸</span>
+          <div class="h-info">
+            <div class="h-name">Practice Guitar</div>
+            <div class="h-meta">Anytime · 15 min</div>
+          </div>
+          <div class="h-check"></div>
+        </div>
+
+        <div style="height: 100px"></div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="bb-icon">
+          <svg>
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <div class="bb-add">
+          <svg><path d="M12 5v14M5 12h14" /></svg>
+        </div>
+        <div class="bb-icon">
+          <svg>
+            <path
+              d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

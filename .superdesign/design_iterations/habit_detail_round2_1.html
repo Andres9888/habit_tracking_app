@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Detail — Round 2 Before/After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F0ECE4; --surface:#FAF8F5; --ink:#1C1A17; --muted:#8A8175;
+    --line:#E7E1D6; --green:#3F6F52; --green-soft:#5C8A6E; --amber:#B6852E;
+    --danger:#B4574A; --card-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 24px rgba(0,0,0,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;padding:40px 20px 80px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto}
+  h1{font-family:'Fraunces',serif;font-weight:600;font-size:34px;letter-spacing:-.02em;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:15px;margin-bottom:8px}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:34px}
+  .legend b{color:var(--ink)}
+  .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;background:#EBE5D9;color:#7A7061}
+  .tag.a{background:#DCEBE1;color:#3F6F52}
+  .tag.b{background:#E6E2F2;color:#5B4E8C}
+  .tag.c{background:#F3E6D6;color:#9A6E22}
+
+  .change{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px 28px 30px;margin-bottom:26px;box-shadow:var(--card-shadow)}
+  .chead{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;flex-wrap:wrap}
+  .chead .n{font-family:'Fraunces',serif;font-size:22px;font-weight:600}
+  .chead .lever{margin-left:auto;font-size:12px;color:var(--muted);font-family:'Inter'}
+  .why{font-size:14px;color:#5A544A;line-height:1.5;margin:8px 0 20px;max-width:900px}
+  .why b{color:var(--ink)}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .col-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .col.after .col-label{color:var(--green)}
+
+  /* phone card fragment */
+  .frag{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .frag.dim{opacity:.92}
+  .hicon{width:44px;height:44px;border-radius:13px;background:linear-gradient(150deg,#4C7C60,#365A44);display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;margin-bottom:10px}
+  .hname{font-family:'Fraunces',serif;font-size:20px;font-weight:600}
+  .badge{display:inline-block;font-size:11px;color:var(--muted);background:#F1ECE2;padding:3px 9px;border-radius:20px;margin-top:6px}
+  .hctx{font-size:13px;margin-top:12px;line-height:1.4}
+  .hctx.bad{color:var(--danger)}
+  .hctx.good{color:var(--green-soft)}
+  .hctx.mute{color:var(--muted)}
+  .total{font-size:12px;color:var(--muted);margin-top:14px}
+  .total b{font-family:'Fraunces',serif;font-size:26px;color:var(--ink);display:block;font-weight:600}
+  .btn{display:block;text-align:center;background:var(--green);color:#fff;font-weight:600;font-size:15px;padding:13px;border-radius:12px;margin-top:14px}
+  .btn.ghost{background:#F2EEE6;color:var(--muted)}
+  .paused-bar{display:flex;align-items:center;gap:10px;background:#F4F0E8;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:14px}
+  .paused-bar .pdot{width:8px;height:8px;border-radius:50%;background:var(--amber)}
+  .paused-bar .plabel{font-size:14px;color:#6B6355;font-weight:500}
+  .paused-bar .resume{margin-left:auto;color:var(--green);font-weight:600;font-size:14px}
+
+  .beat{margin-top:14px;padding:12px 14px;background:#F6F1E8;border-radius:12px;font-size:13px;color:#6B6355;display:flex;align-items:center;gap:8px}
+  .beat .share{margin-left:auto;color:var(--green);font-weight:600;font-size:13px}
+
+  .yearstrip{margin-top:16px}
+  .cells{display:flex;gap:3px;margin-bottom:8px}
+  .cells i{width:9px;height:9px;border-radius:2px;background:#E5DFD3;display:block}
+  .cells i.on{background:var(--green-soft)}
+  .cells i.on2{background:#8FB39B}
+  .ycap{font-size:12px}
+  .ycap.bad{color:var(--danger)}
+  .ycap.good{color:var(--muted)}
+
+  .row{display:flex;align-items:center;gap:10px;padding:13px 2px;border-top:1px solid var(--line);font-size:14px}
+  .row .chev{margin-left:auto;color:var(--muted)}
+  .row.science{font-family:'Fraunces',serif;font-size:15px;color:#3A362F}
+  .row .rlabel{color:#4A453C}
+  .row .rval{color:var(--muted);font-size:13px}
+
+  .stack .blk{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;font-size:13px}
+  .stack .blk .bt{font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:2px}
+  .stack .blk .bm{color:var(--muted);font-size:12px}
+  .stack .blk.goal{background:#F4F7F2;border-color:#DCE7DC}
+  .stack .blk.moved{outline:2px solid var(--green);outline-offset:2px}
+  .arrowlbl{font-size:11px;color:var(--green);font-weight:600;margin-top:6px}
+  .none{font-size:13px;color:#B7AF9F;font-style:italic;padding:10px 0}
+  @media(max-width:760px){.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Habit Detail — Round 2</h1>
+  <div class="sub">Before / After for the 7 visible changes. Non-visible items (#3 optimistic backfill, #9 dead-code delete) omitted — no pixels change.</div>
+  <div class="legend">
+    <span><span class="tag a">A</span> frictionless tap</span>
+    <span><span class="tag b">B</span> progress felt</span>
+    <span><span class="tag c">C</span> deepen investment</span>
+    <span style="margin-left:auto">Mock only — copy/spacing approximate</span>
+  </div>
+
+  <!-- 1 -->
+  <div class="change">
+    <div class="chead"><span class="n">1 · Hero context line</span><span class="tag b">B</span><span class="lever">broken-streak reframe</span></div>
+    <div class="why"><b>Why:</b> at streak 0 with a 66-day goal the hero restates the full distance — "66 days to your 66-day goal" — the most accusatory line at the highest-churn moment. Reframe onto the surviving asset: best streak still stands. Turns a wall into a foothold.</div>
+    <div class="cols">
+      <div class="col before"><div class="col-label">Before</div>
+        <div class="frag">
+          <div class="hicon">☕</div><div class="hname">Morning Meditation</div>
+          <div class="badge">after coffee</div>
+          <div class="hctx bad">66 days to your 66-day goal</div>
+          <div class="total"><b>142</b>total completions</div>
+        </div>
+      </div>
+      <div class="col after"><div class="col-label">After</div>
+        <div class="frag">
+          <div class="hicon">☕</div><div class="hname">Morning Meditation</div>
+          <div class="badge">after coffee</div>
+          <div class="hctx good">Day 1 again — best 9 still stands</div>
+          <div class="total"><b>142</b>total completions</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="change">
+    <div class="chead"><span class="n">2 · YearStrip caption</span><span class="tag b">B</span><span class="tag c">C</span><span class="lever">count, not %</span></div>
+    <div class="why"><b>Why:</b> "48% this year" is the falling-ratio "ruined number" round-1 removed from the heatmap crown — it crept back here. A raw count only grows; every completion adds to a pile of visible sunk cost.</div>
+    <div class="cols">
+      <div class="col before"><div class="col-label">Before</div>
+        <div class="frag"><div class="yearstrip">
+          <div class="cells"><i class="on"></i><i></i><i class="on2"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on2"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on2"></i><i class="on"></i></div>
+          <div class="ycap bad">48% this year · tap to jump</div>
+        </div></div>
+      </div>
+      <div class="col after"><div class="col-label">After</div>
+        <div class="frag"><div class="yearstrip">
+          <div class="cells"><i class="on"></i><i></i><i class="on2"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on2"></i><i class="on"></i><i></i><i class="on"></i><i></i><i class="on2"></i><i class="on"></i></div>
+          <div class="ycap good">142 days this year · tap to jump</div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="change">
+    <div class="chead"><span class="n">4 · Paused-state correctness</span><span class="tag" style="background:#EDE4D4;color:#8A6B24">trust</span><span class="lever">Resume inline</span></div>
+    <div class="why"><b>Why:</b> a paused habit's detail looks fully active — the Complete button invites a toggle the server treats as paused, contradicting the paused pill already on home. Swap in a quiet Paused bar + inline Resume; suppress MilestoneBeat.</div>
+    <div class="cols">
+      <div class="col before"><div class="col-label">Before</div>
+        <div class="frag">
+          <div class="hicon">🏃</div><div class="hname">Evening Run</div>
+          <div class="badge">paused</div>
+          <div class="hctx mute">Picking back up when you're ready</div>
+          <a class="btn">Complete today</a>
+          <div class="beat">🎉 30-day milestone!</div>
+        </div>
+      </div>
+      <div class="col after"><div class="col-label">After</div>
+        <div class="frag dim">
+          <div class="hicon">🏃</div><div class="hname">Evening Run</div>
+          <div class="badge">paused</div>
+          <div class="hctx mute">Picking back up when you're ready</div>
+          <div class="paused-bar"><span class="pdot"></span><span class="plabel">Paused</span><span class="resume">Resume ›</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="change">
+    <div class="chead"><span class="n">6 · Share on MilestoneBeat</span><span class="tag b">B</span><span class="lever">identity + viral</span></div>
+    <div class="why"><b>Why:</b> milestone completions dead-end in a caption — the share pipeline never fires from detail. Append a quiet Share on milestone days only (7/30/100/365 + completed today). Fires once per crossing, not on undo churn.</div>
+    <div class="cols">
+      <div class="col before"><div class="col-label">Before</div>
+        <div class="frag"><div class="beat">🔥 100-day streak — you're unstoppable</div></div>
+      </div>
+      <div class="col after"><div class="col-label">After</div>
+        <div class="frag"><div class="beat">🔥 100-day streak — you're unstoppable<span class="share">Share ›</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 + 7 rows -->
+  <div class="change">
+    <div class="chead"><span class="n">5 + 7 · End-of-scroll rows</span><span class="tag a">A</span><span class="tag c">C</span><span class="lever">reminder + science door</span></div>
+    <div class="why"><b>Why:</b> two dormant levers already in the data, shown nowhere. The reminder row is the only in-context path to the most retention-correlated setting; the science door (template habits only) deepens investment without resurrecting removed motivation prompts.</div>
+    <div class="cols">
+      <div class="col before"><div class="col-label">Before — nothing after Goal card</div>
+        <div class="frag"><div class="none">— end of scroll —</div></div>
+      </div>
+      <div class="col after"><div class="col-label">After</div>
+        <div class="frag">
+          <div class="row science"><span>The science behind this habit</span><span class="chev">›</span></div>
+          <div class="row"><span class="rlabel">Reminds daily at 7:00 AM</span><span class="chev">›</span></div>
+        </div>
+        <div class="arrowlbl">Science door hidden entirely for non-template habits</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="change">
+    <div class="chead"><span class="n">8 · Section order</span><span class="tag b">B</span><span class="tag c">C</span><span class="lever">medium-confidence bet</span></div>
+    <div class="why"><b>Why:</b> Goal moves daily (ticks with the streak) and carries the broken-streak save, yet sits ~3 screen-heights down. Strength moves weekly — a natural closer. Promote Goal above Strength. <b>Cheapest to judge right here</b> — cut if it reads wrong.</div>
+    <div class="cols">
+      <div class="col before"><div class="col-label">Before</div>
+        <div class="frag stack">
+          <div class="blk"><div class="bt">Calendar</div><div class="bm">month grid · year strip</div></div>
+          <div class="blk"><div class="bt">Strength</div><div class="bm">curve · weekly drift</div></div>
+          <div class="blk goal"><div class="bt">Goal</div><div class="bm">66-day · daily ticks</div></div>
+        </div>
+      </div>
+      <div class="col after"><div class="col-label">After</div>
+        <div class="frag stack">
+          <div class="blk"><div class="bt">Calendar</div><div class="bm">month grid · year strip</div></div>
+          <div class="blk goal moved"><div class="bt">Goal ↑</div><div class="bm">66-day · daily ticks</div></div>
+          <div class="blk"><div class="bt">Strength</div><div class="bm">curve · weekly drift</div></div>
+        </div>
+        <div class="arrowlbl">Goal promoted — daily-moving surface closer to the fold</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

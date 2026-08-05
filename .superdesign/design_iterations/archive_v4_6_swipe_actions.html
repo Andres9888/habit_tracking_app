@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive v4.6 — Swipe Actions</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background:#E8E4E0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .viewport {
+    width:390px;
+    min-height:100vh;
+    background:#F5F1ED;
+    position:relative;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  .sticky-header {
+    position:sticky; top:0; z-index:50;
+    background:#F5F1ED;
+    padding:16px 20px 14px;
+    border-bottom:1px solid transparent;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .sticky-header.scrolled {
+    border-bottom-color:#DDD8D2;
+    box-shadow:0 2px 8px rgba(45,42,38,0.04);
+  }
+  .header-icon-btn {
+    width:36px; height:36px; border-radius:10px;
+    background:rgba(0,0,0,0.04); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:#2D2A26; transition:background 0.15s;
+  }
+  .header-icon-btn:hover { background:rgba(0,0,0,0.08); }
+  .page-title {
+    font-family:'Literata',serif;
+    font-size:24px; font-weight:700; color:#2D2A26;
+    line-height:1.25; letter-spacing:-0.3px;
+    margin-top:8px;
+  }
+  .page-subtitle {
+    font-size:14px; color:#6E6660; font-weight:400;
+    margin-top:4px; letter-spacing:-0.1px;
+  }
+  .rationale {
+    background:#FFFBEE; border:1px solid #F0E5B8; border-radius:12px;
+    margin:12px 20px 12px; padding:10px 12px;
+    font-size:12px; color:#7A6B2E; line-height:1.45;
+  }
+  .rationale strong { color:#5C5120; font-weight:600; }
+
+  .hint-chip {
+    display:flex; align-items:center; gap:8px;
+    margin:0 20px 16px;
+    padding:9px 12px;
+    background:rgba(5,150,105,0.08);
+    border:1px solid rgba(5,150,105,0.18);
+    border-radius:999px;
+    font-size:12.5px; color:#055F49; font-weight:500;
+    transition:opacity 0.25s, transform 0.25s, margin 0.3s, padding 0.3s, height 0.3s;
+  }
+  .hint-chip .hint-text { flex:1; line-height:1.3; letter-spacing:-0.1px; }
+  .hint-chip .hint-close {
+    width:22px; height:22px; border-radius:50%;
+    background:rgba(5,150,105,0.12); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:#055F49; flex-shrink:0;
+  }
+  .hint-chip .hint-close:hover { background:rgba(5,150,105,0.22); }
+  .hint-chip.dismissed {
+    opacity:0; transform:translateY(-6px);
+    height:0; margin:0 20px; padding:0 12px; overflow:hidden; border-width:0;
+  }
+
+  .swipe-wrap {
+    position:relative; margin:0 20px 10px;
+    border-radius:16px; overflow:hidden;
+    animation:cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .swipe-wrap.removing-right { animation:outRight 0.3s ease-out forwards; pointer-events:none; }
+  .swipe-wrap.removing-left { animation:outLeft 0.3s ease-out forwards; pointer-events:none; }
+  @keyframes cardIn {
+    from { opacity:0; transform:translateY(10px) scale(0.98); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes outRight { to { opacity:0; transform:translateX(420px); max-height:0; margin-bottom:0; } }
+  @keyframes outLeft  { to { opacity:0; transform:translateX(-420px); max-height:0; margin-bottom:0; } }
+
+  .rail {
+    position:absolute; top:0; bottom:0; width:100%;
+    display:flex; align-items:center;
+    font-weight:600; font-size:14px; color:#fff;
+    letter-spacing:-0.1px;
+  }
+  .rail-resume { left:0; background:#059669; justify-content:flex-start; padding-left:20px; }
+  .rail-delete { right:0; background:#DC2626; justify-content:flex-end; padding-right:20px; }
+  .rail-delete.confirm {
+    justify-content:flex-end; gap:6px; padding-right:10px;
+  }
+  .rail-label { display:flex; align-items:center; gap:6px; }
+  .confirm-btn {
+    height:34px; padding:0 14px; border-radius:10px; border:none;
+    font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+    cursor:pointer; display:flex; align-items:center; gap:4px;
+  }
+  .confirm-cancel { background:rgba(255,255,255,0.22); color:#fff; }
+  .confirm-cancel:hover { background:rgba(255,255,255,0.32); }
+  .confirm-delete { background:#fff; color:#B91C1C; }
+  .confirm-delete:hover { background:#FEE2E2; }
+
+  .habit-card {
+    position:relative; z-index:2;
+    background:#FFFFFF;
+    border-radius:16px;
+    padding:0 16px 0 20px;
+    height:72px;
+    display:flex; align-items:center; gap:12px;
+    box-shadow:0 2px 8px rgba(45,42,38,0.05);
+    touch-action:pan-y;
+    transition:transform 0.25s cubic-bezier(0.34,1.2,0.64,1);
+    user-select:none;
+  }
+  .habit-card.dragging { transition:none; }
+  .habit-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:4px; border-radius:16px 0 0 16px;
+    background:var(--accent,#059669);
+  }
+  .habit-emoji {
+    width:40px; height:40px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; flex-shrink:0;
+  }
+  .habit-meta { flex:1; min-width:0; }
+  .habit-name {
+    font-size:15.5px; font-weight:600; color:#2D2A26;
+    line-height:1.2; letter-spacing:-0.1px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .habit-date {
+    font-size:12px; color:#9CA3AF; margin-top:3px;
+  }
+  .strength-pill {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:5px 10px; border-radius:999px;
+    font-size:12px; font-weight:600;
+    flex-shrink:0;
+  }
+
+  .toast {
+    position:fixed; bottom:40px; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:#059669; color:#fff;
+    font-size:14px; font-weight:600;
+    padding:10px 18px; border-radius:999px;
+    box-shadow:0 6px 20px rgba(5,150,105,0.35);
+    opacity:0; transition:opacity 0.3s, transform 0.3s;
+    z-index:100; display:flex; align-items:center; gap:6px;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .toast.danger { background:#DC2626; box-shadow:0 6px 20px rgba(220,38,38,0.35); }
+</style>
+</head>
+<body>
+<div class="viewport" id="viewport">
+  <div class="sticky-header" id="stickyHeader">
+    <button class="header-icon-btn" aria-label="Back">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+    </button>
+    <h1 class="page-title">Archived Habits</h1>
+    <p class="page-subtitle" id="subtitle">5 habits archived · swipe to resume or delete</p>
+  </div>
+
+  <div class="rationale">
+    <strong>v4.6 — Swipe actions.</strong> Cards today carry Resume + Delete buttons always-on (visual noise). The iOS mental model for archive/restore lists = swipe (Mail, Reminders). Cleaner card + gesture-based speed for iOS-native feel.
+  </div>
+
+  <div class="hint-chip" id="hintChip">
+    <i data-lucide="lightbulb" style="width:14px;height:14px;color:#059669;flex-shrink:0;"></i>
+    <span class="hint-text">Swipe right to resume · Swipe left to delete</span>
+    <button class="hint-close" onclick="dismissHint()" aria-label="Dismiss hint">
+      <i data-lucide="x" style="width:12px;height:12px;"></i>
+    </button>
+  </div>
+
+  <div id="list" style="padding-bottom:40px;">
+
+    <div class="swipe-wrap" data-id="1">
+      <div class="rail rail-resume"><span class="rail-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span></div>
+      <div class="rail rail-delete"><span class="rail-label"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</span></div>
+      <div class="habit-card" data-name="Morning Meditation" style="--accent:#7C3AED;">
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">🧘</div>
+        <div class="habit-meta">
+          <div class="habit-name">Morning Meditation</div>
+          <div class="habit-date">Archived today</div>
+        </div>
+        <div class="strength-pill" style="background:rgba(124,58,237,0.10);color:#7C3AED;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>72%
+        </div>
+      </div>
+    </div>
+
+    <div class="swipe-wrap" data-id="2">
+      <div class="rail rail-resume"><span class="rail-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span></div>
+      <div class="rail rail-delete"><span class="rail-label"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</span></div>
+      <div class="habit-card" data-name="Read 30 Minutes" style="--accent:#059669;">
+        <div class="habit-emoji" style="background:rgba(5,150,105,0.10);">📖</div>
+        <div class="habit-meta">
+          <div class="habit-name">Read 30 Minutes</div>
+          <div class="habit-date">5 days ago</div>
+        </div>
+        <div class="strength-pill" style="background:rgba(5,150,105,0.10);color:#059669;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>58%
+        </div>
+      </div>
+    </div>
+
+    <div class="swipe-wrap" data-id="3">
+      <div class="rail rail-resume"><span class="rail-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span></div>
+      <div class="rail rail-delete"><span class="rail-label"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</span></div>
+      <div class="habit-card" data-name="Cold Shower" style="--accent:#0D9488;">
+        <div class="habit-emoji" style="background:rgba(13,148,136,0.10);">🧊</div>
+        <div class="habit-meta">
+          <div class="habit-name">Cold Shower</div>
+          <div class="habit-date">20 days ago</div>
+        </div>
+        <div class="strength-pill" style="background:rgba(13,148,136,0.10);color:#0D9488;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>35%
+        </div>
+      </div>
+    </div>
+
+    <div class="swipe-wrap" data-id="4">
+      <div class="rail rail-resume"><span class="rail-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span></div>
+      <div class="rail rail-delete"><span class="rail-label"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</span></div>
+      <div class="habit-card" data-name="Daily Journal" style="--accent:#7C3AED;">
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">✍️</div>
+        <div class="habit-meta">
+          <div class="habit-name">Daily Journal</div>
+          <div class="habit-date">34 days ago</div>
+        </div>
+        <div class="strength-pill" style="background:rgba(124,58,237,0.10);color:#7C3AED;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>85%
+        </div>
+      </div>
+    </div>
+
+    <div class="swipe-wrap" data-id="5">
+      <div class="rail rail-resume"><span class="rail-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span></div>
+      <div class="rail rail-delete"><span class="rail-label"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</span></div>
+      <div class="habit-card" data-name="Push-ups" style="--accent:#E11D48;">
+        <div class="habit-emoji" style="background:rgba(225,29,72,0.10);">💪</div>
+        <div class="habit-meta">
+          <div class="habit-name">Push-ups</div>
+          <div class="habit-date">67 days ago</div>
+        </div>
+        <div class="strength-pill" style="background:rgba(225,29,72,0.10);color:#E11D48;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>12%
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <i data-lucide="check-circle" style="width:16px;height:16px;" id="toastIcon"></i>
+  <span id="toastText">Restored!</span>
+</div>
+
+<script>
+  lucide.createIcons();
+  const viewport = document.getElementById('viewport');
+  const stickyHeader = document.getElementById('stickyHeader');
+  viewport.addEventListener('scroll', () => {
+    stickyHeader.classList.toggle('scrolled', viewport.scrollTop > 8);
+  });
+
+  function dismissHint() {
+    document.getElementById('hintChip').classList.add('dismissed');
+  }
+
+  function showToast(msg, danger) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastText').textContent = msg;
+    t.classList.toggle('danger', !!danger);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+  function updateSubtitle() {
+    const n = document.querySelectorAll('.swipe-wrap:not(.removing-right):not(.removing-left)').length;
+    document.getElementById('subtitle').textContent = n === 0
+      ? 'No archived habits'
+      : n + ' habit' + (n===1?'':'s') + ' archived · swipe to resume or delete';
+  }
+
+  const THRESHOLD = 0.4; // 40% of width
+  const CONFIRM_OFFSET = -140; // holds left rail open for confirm buttons
+
+  document.querySelectorAll('.swipe-wrap').forEach(wrap => {
+    const card = wrap.querySelector('.habit-card');
+    const deleteRail = wrap.querySelector('.rail-delete');
+    let startX = 0, currentX = 0, dx = 0, dragging = false;
+    let inConfirm = false;
+
+    function setTransform(x) { card.style.transform = 'translateX(' + x + 'px)'; }
+    function resetCard() {
+      card.classList.remove('dragging');
+      setTransform(0);
+      inConfirm = false;
+      renderRails();
+    }
+    function renderRails() {
+      if (inConfirm) {
+        deleteRail.classList.add('confirm');
+        deleteRail.innerHTML = '<button class="confirm-btn confirm-cancel">Cancel</button><button class="confirm-btn confirm-delete"><i data-lucide="trash-2" style="width:13px;height:13px;"></i>Delete</button>';
+        lucide.createIcons();
+        deleteRail.querySelector('.confirm-cancel').onclick = (e) => { e.stopPropagation(); resetCard(); };
+        deleteRail.querySelector('.confirm-delete').onclick = (e) => { e.stopPropagation(); commitDelete(); };
+      } else {
+        deleteRail.classList.remove('confirm');
+        deleteRail.innerHTML = '<span class="rail-label"><i data-lucide="trash-2" style="width:16px;height:16px;"></i> Delete</span>';
+        lucide.createIcons();
+      }
+    }
+    function commitResume() {
+      const name = card.getAttribute('data-name');
+      wrap.classList.add('removing-right');
+      showToast(name + ' restored!');
+      setTimeout(() => { wrap.remove(); updateSubtitle(); }, 320);
+    }
+    function commitDelete() {
+      const name = card.getAttribute('data-name');
+      wrap.classList.add('removing-left');
+      showToast(name + ' deleted', true);
+      setTimeout(() => { wrap.remove(); updateSubtitle(); }, 320);
+    }
+
+    function onDown(e) {
+      if (inConfirm) return;
+      dragging = true;
+      startX = e.clientX;
+      currentX = startX;
+      dx = 0;
+      card.classList.add('dragging');
+      card.setPointerCapture && card.setPointerCapture(e.pointerId);
+    }
+    function onMove(e) {
+      if (!dragging) return;
+      currentX = e.clientX;
+      dx = currentX - startX;
+      setTransform(dx);
+    }
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      card.classList.remove('dragging');
+      const width = wrap.offsetWidth;
+      const pct = dx / width;
+      if (pct > THRESHOLD) {
+        setTransform(width + 20);
+        setTimeout(commitResume, 150);
+      } else if (pct < -THRESHOLD) {
+        // enter confirm state, hold card offset
+        inConfirm = true;
+        renderRails();
+        setTransform(CONFIRM_OFFSET);
+      } else {
+        setTransform(0);
+      }
+    }
+
+    card.addEventListener('pointerdown', onDown);
+    card.addEventListener('pointermove', onMove);
+    card.addEventListener('pointerup', onUp);
+    card.addEventListener('pointercancel', onUp);
+
+    // tap outside card while in confirm = cancel
+    wrap.addEventListener('click', (e) => {
+      if (inConfirm && !deleteRail.contains(e.target) && !card.contains(e.target)) {
+        resetCard();
+      }
+    });
+    document.addEventListener('pointerdown', (e) => {
+      if (inConfirm && !wrap.contains(e.target)) resetCard();
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Archive — Decision Queue</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Literata:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .app-frame {
+      width: 390px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .literata { font-family: 'Literata', serif !important; }
+
+    /* Card slide animations */
+    @keyframes slideOutLeft {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(-120%); opacity: 0; }
+    }
+    @keyframes slideOutRight {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(120%); opacity: 0; }
+    }
+    @keyframes slideInFromRight {
+      0% { transform: translateX(120%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    @keyframes slideInFromLeft {
+      0% { transform: translateX(-120%); opacity: 0; }
+      100% { transform: translateX(0); opacity: 1; }
+    }
+    .slide-out-left {
+      animation: slideOutLeft 300ms ease-in forwards;
+    }
+    .slide-out-right {
+      animation: slideOutRight 300ms ease-in forwards;
+    }
+    .slide-in-from-right {
+      animation: slideInFromRight 300ms ease-out forwards;
+    }
+    .slide-in-from-left {
+      animation: slideInFromLeft 300ms ease-out forwards;
+    }
+
+    /* Completion checkmark animation */
+    @keyframes scaleIn {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.15); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .scale-in {
+      animation: scaleIn 400ms ease-out forwards;
+    }
+
+    /* Progress bar transition */
+    .progress-fill {
+      transition: width 400ms ease-out;
+    }
+
+    /* Button hover states */
+    .btn-resume:hover { background: #047857 !important; }
+    .btn-resume:active { transform: scale(0.97); }
+    .btn-delete:hover { background: rgba(181, 48, 48, 0.06) !important; }
+    .btn-delete:active { transform: scale(0.97); }
+    .skip-link:hover { color: #6E6660 !important; }
+  </style>
+</head>
+<body>
+  <div class="app-frame" id="app">
+    <!-- Header -->
+    <div style="padding: 16px 20px 0 20px; display: flex; align-items: center; justify-content: space-between;">
+      <button onclick="window.history.back()" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer;">
+        <i data-lucide="arrow-left" style="width: 22px; height: 22px; color: #2D2A26;"></i>
+      </button>
+      <h1 class="literata" style="font-size: 22px; font-weight: 700; color: #2D2A26;">Archived Habits</h1>
+      <button onclick="document.getElementById('app').innerHTML = ''" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer;">
+        <i data-lucide="x" style="width: 22px; height: 22px; color: #2D2A26;"></i>
+      </button>
+    </div>
+
+    <!-- Progress section -->
+    <div style="padding: 20px 24px 0 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span id="progress-label" style="font-size: 13px; color: #6E6660;">0 of 5 decided</span>
+      </div>
+      <div style="width: 100%; height: 4px; background: #EDEAE5; border-radius: 9999px; overflow: hidden;">
+        <div id="progress-bar" class="progress-fill" style="width: 0%; height: 100%; background: #059669; border-radius: 9999px;"></div>
+      </div>
+    </div>
+
+    <!-- Card container -->
+    <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; position: relative;">
+      <div id="card-container" style="width: 100%; position: relative;">
+        <!-- Card gets rendered here by JS -->
+      </div>
+
+      <!-- Completion state (hidden initially) -->
+      <div id="completion-state" style="display: none; text-align: center; width: 100%;">
+        <div class="scale-in" style="width: 80px; height: 80px; border-radius: 50%; background: #059669; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px auto;">
+          <i data-lucide="check" style="width: 40px; height: 40px; color: #FFFFFF;"></i>
+        </div>
+        <h2 class="literata" style="font-size: 22px; font-weight: 700; color: #2D2A26; margin-bottom: 8px;">All done!</h2>
+        <p style="font-size: 14px; color: #6E6660;">You've reviewed all your archived habits.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const habits = [
+      {
+        emoji: '📚',
+        name: 'Read 30 Minutes',
+        archivedDate: 'Archived Jan 12, 2026',
+        bgTint: 'rgba(139, 92, 246, 0.10)',
+        stats: [
+          { label: 'Best Streak', value: '21 days', icon: 'flame' },
+          { label: 'Total', value: '147 days', icon: 'calendar-check' },
+          { label: 'Rate', value: '68%', icon: 'percent' },
+        ],
+      },
+      {
+        emoji: '🧘',
+        name: 'Morning Meditation',
+        archivedDate: 'Archived Feb 3, 2026',
+        bgTint: 'rgba(16, 185, 129, 0.10)',
+        stats: [
+          { label: 'Best Streak', value: '34 days', icon: 'flame' },
+          { label: 'Total', value: '210 days', icon: 'calendar-check' },
+          { label: 'Rate', value: '82%', icon: 'percent' },
+        ],
+      },
+      {
+        emoji: '💧',
+        name: 'Drink 8 Glasses',
+        archivedDate: 'Archived Nov 28, 2025',
+        bgTint: 'rgba(59, 130, 246, 0.10)',
+        stats: [
+          { label: 'Best Streak', value: '12 days', icon: 'flame' },
+          { label: 'Total', value: '89 days', icon: 'calendar-check' },
+          { label: 'Rate', value: '41%', icon: 'percent' },
+        ],
+      },
+      {
+        emoji: '🏃',
+        name: 'Run 5K',
+        archivedDate: 'Archived Dec 15, 2025',
+        bgTint: 'rgba(245, 158, 11, 0.10)',
+        stats: [
+          { label: 'Best Streak', value: '8 days', icon: 'flame' },
+          { label: 'Total', value: '52 days', icon: 'calendar-check' },
+          { label: 'Rate', value: '33%', icon: 'percent' },
+        ],
+      },
+      {
+        emoji: '✍️',
+        name: 'Journal Entry',
+        archivedDate: 'Archived Mar 1, 2026',
+        bgTint: 'rgba(236, 72, 153, 0.10)',
+        stats: [
+          { label: 'Best Streak', value: '15 days', icon: 'flame' },
+          { label: 'Total', value: '103 days', icon: 'calendar-check' },
+          { label: 'Rate', value: '56%', icon: 'percent' },
+        ],
+      },
+    ];
+
+    let currentIndex = 0;
+    let decided = 0;
+
+    function renderCard(habit, animClass) {
+      const container = document.getElementById('card-container');
+      const card = document.createElement('div');
+      card.id = 'active-card';
+      if (animClass) card.classList.add(animClass);
+      card.style.cssText = `
+        background: #FFFFFF;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(45, 42, 38, 0.08);
+        width: 100%;
+      `;
+      card.innerHTML = `
+        <!-- Emoji -->
+        <div style="display: flex; justify-content: center; margin-bottom: 16px;">
+          <div style="width: 64px; height: 64px; border-radius: 50%; background: ${habit.bgTint}; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 48px; line-height: 1;">${habit.emoji}</span>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <h2 class="literata" style="font-size: 20px; font-weight: 700; color: #2D2A26; text-align: center; margin-bottom: 4px;">
+          ${habit.name}
+        </h2>
+
+        <!-- Date -->
+        <p style="font-size: 14px; color: #6E6660; text-align: center; margin-bottom: 20px;">
+          ${habit.archivedDate}
+        </p>
+
+        <!-- Stats badges -->
+        <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;">
+          ${habit.stats.map(s => `
+            <div style="background: #F9F7F5; border-radius: 12px; padding: 10px 14px; text-align: center; flex: 1;">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 4px; margin-bottom: 4px;">
+                <i data-lucide="${s.icon}" style="width: 13px; height: 13px; color: #9CA3AF;"></i>
+                <span style="font-size: 11px; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.04em;">${s.label}</span>
+              </div>
+              <span style="font-size: 16px; font-weight: 600; color: #2D2A26;">${s.value}</span>
+            </div>
+          `).join('')}
+        </div>
+
+        <!-- Action buttons -->
+        <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+          <button class="btn-resume" onclick="handleResume()" style="
+            flex: 2;
+            height: 44px;
+            background: #059669;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 150ms, transform 100ms;
+          ">
+            <i data-lucide="play" style="width: 16px; height: 16px; color: #FFFFFF;"></i>
+            Resume
+          </button>
+          <button class="btn-delete" onclick="handleDelete()" style="
+            flex: 1;
+            height: 44px;
+            background: transparent;
+            color: #B53030;
+            border: 1px solid #B53030;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: background 150ms, transform 100ms;
+          ">
+            <i data-lucide="trash-2" style="width: 16px; height: 16px; color: #B53030;"></i>
+            Delete
+          </button>
+        </div>
+
+        <!-- Skip link -->
+        <div style="text-align: center;">
+          <a class="skip-link" href="#" onclick="handleSkip(event)" style="
+            font-size: 14px;
+            color: #9CA3AF;
+            text-decoration: none;
+            transition: color 150ms;
+          ">Skip for now</a>
+        </div>
+      `;
+      container.innerHTML = '';
+      container.appendChild(card);
+      lucide.createIcons();
+    }
+
+    function updateProgress() {
+      const pct = (decided / habits.length) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+      document.getElementById('progress-label').textContent = `${decided} of ${habits.length} decided`;
+    }
+
+    function advance(slideOutDir) {
+      decided++;
+      updateProgress();
+
+      const card = document.getElementById('active-card');
+      if (!card) return;
+
+      const outClass = slideOutDir === 'left' ? 'slide-out-left' : 'slide-out-right';
+      card.classList.add(outClass);
+
+      setTimeout(() => {
+        currentIndex++;
+        if (currentIndex < habits.length) {
+          const inClass = slideOutDir === 'left' ? 'slide-in-from-right' : 'slide-in-from-left';
+          renderCard(habits[currentIndex], inClass);
+        } else {
+          showCompletion();
+        }
+      }, 300);
+    }
+
+    function handleResume() {
+      advance('left');
+    }
+
+    function handleDelete() {
+      advance('right');
+    }
+
+    function handleSkip(e) {
+      e.preventDefault();
+      // Skip doesn't count as "decided" — move habit to end
+      const skipped = habits.splice(currentIndex, 1)[0];
+      habits.push(skipped);
+
+      const card = document.getElementById('active-card');
+      if (!card) return;
+      card.classList.add('slide-out-left');
+
+      setTimeout(() => {
+        if (currentIndex < habits.length - (habits.length - decided)) {
+          renderCard(habits[currentIndex], 'slide-in-from-right');
+        }
+      }, 300);
+    }
+
+    function showCompletion() {
+      document.getElementById('card-container').style.display = 'none';
+      const comp = document.getElementById('completion-state');
+      comp.style.display = 'block';
+      // Re-init lucide for the check icon in completion
+      setTimeout(() => lucide.createIcons(), 50);
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      renderCard(habits[currentIndex], 'slide-in-from-right');
+      updateProgress();
+    });
+  </script>
+</body>
+</html>

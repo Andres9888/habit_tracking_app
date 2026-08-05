@@ -1,0 +1,14 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- White background -->
+  <rect width="1024" height="1024" fill="#FFFFFF"/>
+  
+  <!-- Chain Link 1 (left/top) -->
+  <g transform="translate(280, 320) rotate(-45 80 80)">
+    <rect x="0" y="20" width="160" height="120" rx="60" ry="60" fill="none" stroke="#059669" stroke-width="40"/>
+  </g>
+  
+  <!-- Chain Link 2 (right/bottom) -->
+  <g transform="translate(544, 584) rotate(-45 80 80)">
+    <rect x="0" y="20" width="160" height="120" rx="60" ry="60" fill="none" stroke="#059669" stroke-width="40"/>
+  </g>
+</svg>

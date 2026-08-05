@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Consistency Plan — Before / After</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: #1A1816; color: #F5F1ED; }
+  h1, h2 { font-family: 'Literata', serif; }
+
+  .phone-frame {
+    width: 375px;
+    height: 680px;
+    border-radius: 40px;
+    border: 3px solid #3D3833;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .phone-screen::-webkit-scrollbar { display: none; }
+
+  .before-bg { background: #F5F1ED; }
+  .after-bg { background: #F5F1ED; }
+
+  .badge-critical { background: #B53030; color: white; }
+  .badge-high { background: #9A5504; color: white; }
+  .badge-medium { background: #3872B8; color: white; }
+  .badge-low { background: #524D47; color: white; }
+  .badge-fixed { background: #059669; color: white; }
+
+  .score-ring {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px; font-weight: 700;
+  }
+
+  .token-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #3D3833, transparent);
+    margin: 48px 0;
+  }
+
+  .finding-card {
+    background: #2D2A26;
+    border: 1px solid #3D3833;
+    border-radius: 12px;
+    padding: 24px;
+  }
+
+  .arrow-indicator {
+    display: flex; align-items: center; justify-content: center;
+    width: 48px; height: 48px;
+    font-size: 24px;
+    color: #059669;
+    flex-shrink: 0;
+  }
+
+  .metric-bar {
+    height: 8px;
+    border-radius: 4px;
+    background: #3D3833;
+    overflow: hidden;
+  }
+  .metric-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+
+  .comparison-row {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr;
+    align-items: start;
+    gap: 16px;
+  }
+
+  .fade-in { animation: fadeIn 0.4s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div style="padding: 64px 48px 32px; text-align: center;">
+  <p style="font-size: 13px; letter-spacing: 2px; color: #6B6560; text-transform: uppercase; margin-bottom: 16px;">Design Consistency Remediation Plan</p>
+  <h1 style="font-size: 42px; font-weight: 700; letter-spacing: -1px; margin-bottom: 12px;">Before &amp; After</h1>
+  <p style="font-size: 17px; color: #C4BFB7; max-width: 600px; margin: 0 auto;">
+    12 findings across the codebase. Here's what each fix looks like — from token violations to visual bugs.
+  </p>
+</div>
+
+<!-- Score Cards -->
+<div style="display: flex; gap: 24px; justify-content: center; padding: 24px 48px 48px; flex-wrap: wrap;">
+  <div style="text-align: center;">
+    <div class="score-ring" style="background: conic-gradient(#9A5504 0% 79%, #3D3833 79% 100%); margin: 0 auto 12px;">
+      <div style="width: 96px; height: 96px; border-radius: 50%; background: #1A1816; display: flex; align-items: center; justify-content: center;">
+        <span style="color: #9A5504;">19</span><span style="color: #6B6560; font-size: 16px;">/24</span>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: #6B6560;">Mar 19 Score</p>
+  </div>
+  <div style="display: flex; align-items: center; color: #059669; font-size: 32px; padding: 0 16px;">&#8594;</div>
+  <div style="text-align: center;">
+    <div class="score-ring" style="background: conic-gradient(#059669 0% 87.5%, #3D3833 87.5% 100%); margin: 0 auto 12px;">
+      <div style="width: 96px; height: 96px; border-radius: 50%; background: #1A1816; display: flex; align-items: center; justify-content: center;">
+        <span style="color: #059669;">21</span><span style="color: #6B6560; font-size: 16px;">/24</span>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: #6B6560;">Current Score</p>
+  </div>
+  <div style="display: flex; align-items: center; color: #059669; font-size: 32px; padding: 0 16px;">&#8594;</div>
+  <div style="text-align: center;">
+    <div class="score-ring" style="background: conic-gradient(#10B981 0% 95.8%, #3D3833 95.8% 100%); margin: 0 auto 12px;">
+      <div style="width: 96px; height: 96px; border-radius: 50%; background: #1A1816; display: flex; align-items: center; justify-content: center;">
+        <span style="color: #10B981;">23</span><span style="color: #6B6560; font-size: 16px;">/24</span>
+      </div>
+    </div>
+    <p style="font-size: 13px; color: #6B6560;">After Remediation</p>
+  </div>
+</div>
+
+<!-- Token Adoption Dashboard -->
+<div style="padding: 0 48px 48px; max-width: 900px; margin: 0 auto;">
+  <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 24px; letter-spacing: -0.35px;">Token Adoption Rates</h2>
+
+  <!-- Colors -->
+  <div style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <span style="font-size: 14px;">Colors (useThemeColors)</span>
+      <span style="font-size: 14px; font-family: 'JetBrains Mono'; color: #10B981;">65% &#8594; 78%</span>
+    </div>
+    <div class="metric-bar">
+      <div class="metric-fill" style="width: 65%; background: linear-gradient(90deg, #059669 65%, rgba(16,185,129,0.3) 65%, rgba(16,185,129,0.3) 78%);"></div>
+    </div>
+  </div>
+
+  <!-- Typography -->
+  <div style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <span style="font-size: 14px;">Typography (fontSize tokens)</span>
+      <span style="font-size: 14px; font-family: 'JetBrains Mono'; color: #F59E0B;">46% &#8594; 72%</span>
+    </div>
+    <div class="metric-bar">
+      <div class="metric-fill" style="width: 46%; background: linear-gradient(90deg, #9A5504 46%, rgba(245,158,11,0.2) 46%, rgba(245,158,11,0.2) 72%);"></div>
+    </div>
+  </div>
+
+  <!-- fontWeight -->
+  <div style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <span style="font-size: 14px;">Typography (fontWeight tokens)</span>
+      <span style="font-size: 14px; font-family: 'JetBrains Mono'; color: #B53030;">20% &#8594; 60%</span>
+    </div>
+    <div class="metric-bar">
+      <div class="metric-fill" style="width: 20%; background: linear-gradient(90deg, #B53030 20%, rgba(181,48,48,0.2) 20%, rgba(181,48,48,0.2) 60%);"></div>
+    </div>
+  </div>
+
+  <!-- Icons -->
+  <div style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <span style="font-size: 14px;">Icon Sizes (iconSizes tokens)</span>
+      <span style="font-size: 14px; font-family: 'JetBrains Mono'; color: #B53030;">0% &#8594; 55%</span>
+    </div>
+    <div class="metric-bar">
+      <div class="metric-fill" style="width: 0%; background: linear-gradient(90deg, #B53030 0%, rgba(181,48,48,0.2) 0%, rgba(16,185,129,0.2) 55%);"></div>
+    </div>
+  </div>
+
+  <!-- Shadows -->
+  <div style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <span style="font-size: 14px;">Shadows (shadows.* tokens)</span>
+      <span style="font-size: 14px; font-family: 'JetBrains Mono'; color: #B53030;">15% &#8594; 40%</span>
+    </div>
+    <div class="metric-bar">
+      <div class="metric-fill" style="width: 15%; background: linear-gradient(90deg, #B53030 15%, rgba(181,48,48,0.2) 15%, rgba(245,158,11,0.2) 40%);"></div>
+    </div>
+  </div>
+
+  <!-- Border Radius -->
+  <div style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <span style="font-size: 14px;">Border Radius (borderRadius.* tokens)</span>
+      <span style="font-size: 14px; font-family: 'JetBrains Mono'; color: #F59E0B;">50% &#8594; 70%</span>
+    </div>
+    <div class="metric-bar">
+      <div class="metric-fill" style="width: 50%; background: linear-gradient(90deg, #9A5504 50%, rgba(245,158,11,0.2) 50%, rgba(245,158,11,0.2) 70%);"></div>
+    </div>
+  </div>
+
+  <p style="font-size: 12px; color: #6B6560; margin-top: 8px;">Solid = current | Faded = after remediation waves 1-3</p>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ============================================ -->
+<!-- WAVE 1: Quick Wins -->
+<!-- ============================================ -->
+
+<div style="padding: 0 48px; max-width: 1200px; margin: 0 auto;">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 32px;">
+    <span style="background: #059669; color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px;">WAVE 1</span>
+    <h2 style="font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Quick Wins</h2>
+    <span style="font-size: 14px; color: #6B6560;">~2 hours total</span>
+  </div>
+
+  <!-- Finding 1: borderRadius 999 Bug -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-high" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">HIGH</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #1: borderRadius: 999 Bug</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">5 instances &middot; 5 min fix</span>
+    </div>
+
+    <div class="comparison-row">
+      <!-- Before -->
+      <div>
+        <p style="font-size: 11px; color: #B53030; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Before</p>
+        <div style="background: #F5F1ED; border-radius: 16px; padding: 24px;">
+          <p style="font-size: 13px; color: #524D47; margin-bottom: 12px;">ColorPickerSection</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div style="width: 44px; height: 44px; border-radius: 999px; background: #059669; border: 3px solid #F5F1ED; box-shadow: 0 0 0 2px #059669;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 999px; background: #3B82F6; border: 3px solid #F5F1ED;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 999px; background: #EF4444; border: 3px solid #F5F1ED;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 999px; background: #F59E0B; border: 3px solid #F5F1ED;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 999px; background: #8B5CF6; border: 3px solid #F5F1ED;"></div>
+          </div>
+          <div style="margin-top: 12px; padding: 8px 12px; background: #FEE2E2; border-radius: 8px;">
+            <code style="font-family: 'JetBrains Mono'; font-size: 12px; color: #B53030;">borderRadius: 999</code>
+            <p style="font-size: 11px; color: #B53030; margin-top: 4px;">May not be fully circular on large elements</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-indicator">&#8594;</div>
+
+      <!-- After -->
+      <div>
+        <p style="font-size: 11px; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">After</p>
+        <div style="background: #F5F1ED; border-radius: 16px; padding: 24px;">
+          <p style="font-size: 13px; color: #524D47; margin-bottom: 12px;">ColorPickerSection</p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div style="width: 44px; height: 44px; border-radius: 9999px; background: #059669; border: 3px solid #F5F1ED; box-shadow: 0 0 0 2px #059669;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 9999px; background: #3B82F6; border: 3px solid #F5F1ED;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 9999px; background: #EF4444; border: 3px solid #F5F1ED;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 9999px; background: #F59E0B; border: 3px solid #F5F1ED;"></div>
+            <div style="width: 44px; height: 44px; border-radius: 9999px; background: #8B5CF6; border: 3px solid #F5F1ED;"></div>
+          </div>
+          <div style="margin-top: 12px; padding: 8px 12px; background: #D1FAE5; border-radius: 8px;">
+            <code style="font-family: 'JetBrains Mono'; font-size: 12px; color: #059669;">borderRadius: borderRadius.full</code>
+            <p style="font-size: 11px; color: #047857; margin-top: 4px;">Uses theme token, guaranteed circular</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finding 2: Icon Sizes -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-high" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">HIGH</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #2: Adopt iconSizes Tokens</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">460 instances &middot; ~1 hour codemod</span>
+    </div>
+
+    <div class="comparison-row">
+      <!-- Before -->
+      <div>
+        <p style="font-size: 11px; color: #B53030; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Before — 14 different sizes</p>
+        <div style="background: #F5F1ED; border-radius: 16px; padding: 24px;">
+          <div style="display: flex; align-items: end; gap: 8px; margin-bottom: 16px;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 10px; height: 10px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #6B6560; font-family: 'JetBrains Mono';">10</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 11px; height: 11px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #B53030; font-family: 'JetBrains Mono';">11</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 12px; height: 12px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #B53030; font-family: 'JetBrains Mono';">12</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 14px; height: 14px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #B53030; font-family: 'JetBrains Mono';">14</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 16px; height: 16px; background: #524D47; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #6B6560; font-family: 'JetBrains Mono';">16</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 18px; height: 18px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #B53030; font-family: 'JetBrains Mono';">18</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 20px; height: 20px; background: #524D47; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #6B6560; font-family: 'JetBrains Mono';">20</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 22px; height: 22px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #B53030; font-family: 'JetBrains Mono';">22</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 24px; height: 24px; background: #524D47; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #6B6560; font-family: 'JetBrains Mono';">24</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 28px; height: 28px; background: #B53030; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #B53030; font-family: 'JetBrains Mono';">28</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 32px; height: 32px; background: #524D47; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #6B6560; font-family: 'JetBrains Mono';">32</span>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #B53030;">Red = not in token scale. 180+ usages off-scale.</p>
+        </div>
+      </div>
+
+      <div class="arrow-indicator">&#8594;</div>
+
+      <!-- After -->
+      <div>
+        <p style="font-size: 11px; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">After — 6 token sizes</p>
+        <div style="background: #F5F1ED; border-radius: 16px; padding: 24px;">
+          <div style="display: flex; align-items: end; gap: 16px; margin-bottom: 16px;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 10px; height: 10px; background: #059669; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #059669; font-family: 'JetBrains Mono';">micro</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 16px; height: 16px; background: #059669; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #059669; font-family: 'JetBrains Mono';">small</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 20px; height: 20px; background: #059669; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #059669; font-family: 'JetBrains Mono';">medium</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 24px; height: 24px; background: #059669; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #059669; font-family: 'JetBrains Mono';">large</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 32px; height: 32px; background: #059669; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #059669; font-family: 'JetBrains Mono';">xl</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <div style="width: 48px; height: 48px; background: #059669; border-radius: 2px;"></div>
+              <span style="font-size: 9px; color: #059669; font-family: 'JetBrains Mono';">xxl</span>
+            </div>
+          </div>
+          <p style="font-size: 11px; color: #047857;">All on-scale. size={14} &#8594; small, size={18} &#8594; medium, size={28} &#8594; xl</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finding 3: SyncStatus Colors -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-medium" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">MEDIUM</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #3: SyncStatus Hardcoded Colors</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">5 files &middot; isolated module</span>
+    </div>
+
+    <div class="comparison-row">
+      <!-- Before -->
+      <div>
+        <p style="font-size: 11px; color: #B53030; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Before — Raw Tailwind Hex</p>
+        <div style="background: #F5F1ED; border-radius: 16px; padding: 16px;">
+          <!-- Conflict toast -->
+          <div style="background: #fffbeb; border: 1px solid #fcd34d; border-radius: 12px; padding: 12px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">&#9888;</span>
+              <div>
+                <p style="font-size: 13px; font-weight: 600; color: #92400e;">Sync Conflict</p>
+                <p style="font-size: 12px; color: #d97706;">Resolve before continuing</p>
+              </div>
+            </div>
+          </div>
+          <!-- Synced toast -->
+          <div style="background: #f0fdf4; border: 1px solid #dcfce7; border-radius: 12px; padding: 12px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">&#10003;</span>
+              <p style="font-size: 13px; font-weight: 600; color: #166534;">Synced</p>
+            </div>
+          </div>
+          <!-- Offline -->
+          <div style="background: #fafaf9; border: 1px solid #e7e5e4; border-radius: 12px; padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">&#9737;</span>
+              <p style="font-size: 13px; font-weight: 500; color: #78716c;">Offline mode</p>
+            </div>
+          </div>
+          <div style="margin-top: 8px;">
+            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+              <span class="token-chip" style="background: #fffbeb; color: #92400e; border: 1px solid #fcd34d;">#fffbeb</span>
+              <span class="token-chip" style="background: #f0fdf4; color: #166534; border: 1px solid #dcfce7;">#f0fdf4</span>
+              <span class="token-chip" style="background: #fafaf9; color: #78716c; border: 1px solid #e7e5e4;">#fafaf9</span>
+            </div>
+            <p style="font-size: 10px; color: #B53030; margin-top: 6px;">Standard Tailwind palette — mismatches warm stone neutrals</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-indicator">&#8594;</div>
+
+      <!-- After -->
+      <div>
+        <p style="font-size: 11px; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">After — Theme Tokens</p>
+        <div style="background: #F5F1ED; border-radius: 16px; padding: 16px;">
+          <!-- Conflict toast -->
+          <div style="background: #FEF3E6; border: 1px solid #E8B94D; border-radius: 12px; padding: 12px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">&#9888;</span>
+              <div>
+                <p style="font-size: 13px; font-weight: 600; color: #8B6208;">Sync Conflict</p>
+                <p style="font-size: 12px; color: #9A5504;">Resolve before continuing</p>
+              </div>
+            </div>
+          </div>
+          <!-- Synced toast -->
+          <div style="background: #D4F0E2; border: 1px solid #A7F3D0; border-radius: 12px; padding: 12px; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">&#10003;</span>
+              <p style="font-size: 13px; font-weight: 600; color: #15793C;">Synced</p>
+            </div>
+          </div>
+          <!-- Offline -->
+          <div style="background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 12px; padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 16px;">&#9737;</span>
+              <p style="font-size: 13px; font-weight: 500; color: #6B6560;">Offline mode</p>
+            </div>
+          </div>
+          <div style="margin-top: 8px;">
+            <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+              <span class="token-chip" style="background: #FEF3E6; color: #8B6208; border: 1px solid #E8B94D;">streak.light</span>
+              <span class="token-chip" style="background: #D4F0E2; color: #15793C; border: 1px solid #A7F3D0;">status.success</span>
+              <span class="token-chip" style="background: #FAF8F5; color: #6B6560; border: 1px solid #DDD8D2;">gray.50</span>
+            </div>
+            <p style="font-size: 10px; color: #047857; margin-top: 6px;">Warm stone tones match app aesthetic</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finding 4: strokeWidth -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-low" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">LOW</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #4: Eliminate strokeWidth 2.25</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">6 files &middot; 15 min</span>
+    </div>
+
+    <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+      <div style="text-align: center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#F5F1ED" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <p style="font-size: 12px; color: #059669; margin-top: 4px;">2.0 (default)</p>
+      </div>
+      <div style="text-align: center; opacity: 0.4;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#B53030" stroke-width="2.25"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <p style="font-size: 12px; color: #B53030; margin-top: 4px; text-decoration: line-through;">2.25 (remove)</p>
+      </div>
+      <div style="text-align: center;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#F5F1ED" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <p style="font-size: 12px; color: #059669; margin-top: 4px;">2.5 (emphasis)</p>
+      </div>
+      <div style="text-align: center;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5F1ED" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        <p style="font-size: 12px; color: #6B6560; margin-top: 4px;">3.0 (checkmarks)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ============================================ -->
+<!-- WAVE 2: Systematic Migration -->
+<!-- ============================================ -->
+
+<div style="padding: 0 48px; max-width: 1200px; margin: 0 auto;">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 32px;">
+    <span style="background: #9A5504; color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px;">WAVE 2</span>
+    <h2 style="font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Systematic Token Migration</h2>
+    <span style="font-size: 14px; color: #6B6560;">~4 hours</span>
+  </div>
+
+  <!-- Typography Before/After -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-critical" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">CRITICAL</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #5: Typography Token Adoption</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">328 raw fontSize + 229 raw fontWeight</span>
+    </div>
+
+    <div class="comparison-row">
+      <!-- Before -->
+      <div>
+        <p style="font-size: 11px; color: #B53030; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Before — Raw values everywhere</p>
+        <div style="background: #2D2A26; border-radius: 12px; padding: 16px; font-family: 'JetBrains Mono'; font-size: 12px; line-height: 2;">
+          <div><span style="color: #6B6560;">// ErrorFallback.styles.ts</span></div>
+          <div><span style="color: #C4BFB7;">fontSize:</span> <span style="color: #B53030;">28</span>, <span style="color: #C4BFB7;">fontWeight:</span> <span style="color: #B53030;">'800'</span></div>
+          <div><span style="color: #6B6560;">// CtaButton.styles.ts</span></div>
+          <div><span style="color: #C4BFB7;">fontSize:</span> <span style="color: #B53030;">16</span>, <span style="color: #C4BFB7;">fontWeight:</span> <span style="color: #B53030;">'700'</span></div>
+          <div><span style="color: #6B6560;">// NextHabitSuggestion</span></div>
+          <div><span style="color: #C4BFB7;">fontSize:</span> <span style="color: #B53030;">22</span>, <span style="color: #B53030;">17</span>, <span style="color: #B53030;">13</span>, <span style="color: #B53030;">10</span>...</div>
+        </div>
+      </div>
+
+      <div class="arrow-indicator">&#8594;</div>
+
+      <!-- After -->
+      <div>
+        <p style="font-size: 11px; color: #059669; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">After — Spread typography tokens</p>
+        <div style="background: #2D2A26; border-radius: 12px; padding: 16px; font-family: 'JetBrains Mono'; font-size: 12px; line-height: 2;">
+          <div><span style="color: #6B6560;">// ErrorFallback.styles.ts</span></div>
+          <div><span style="color: #C4BFB7;">...</span><span style="color: #059669;">typography.heading1</span></div>
+          <div><span style="color: #6B6560;">// CtaButton.styles.ts</span></div>
+          <div><span style="color: #C4BFB7;">...</span><span style="color: #059669;">typography.button</span></div>
+          <div><span style="color: #6B6560;">// NextHabitSuggestion</span></div>
+          <div><span style="color: #059669;">typography.heading2</span>, <span style="color: #059669;">.body</span>, <span style="color: #059669;">.caption</span>, <span style="color: #059669;">.tabBar</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Type Scale Reference -->
+    <div style="margin-top: 20px; background: #F5F1ED; border-radius: 12px; padding: 24px;">
+      <p style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">Design System Type Scale</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'Literata'; font-size: 34px; font-weight: 700; color: #2D2A26; letter-spacing: -0.85px; line-height: 1.2;">Display Large</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">34px Literata Bold</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'Literata'; font-size: 22px; font-weight: 700; color: #2D2A26; letter-spacing: -0.35px;">Heading 1</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">22px Literata Bold</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'DM Sans'; font-size: 22px; font-weight: 600; color: #3D3833; letter-spacing: -0.35px;">Heading 2</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">22px DM Sans Semibold</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'DM Sans'; font-size: 20px; font-weight: 600; color: #3D3833; letter-spacing: -0.2px;">Heading 3</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">20px DM Sans Semibold</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'DM Sans'; font-size: 17px; font-weight: 400; color: #524D47;">Body text for primary content</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">17px DM Sans Regular</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'DM Sans'; font-size: 14px; font-weight: 400; color: #6B6560;">Body small secondary info</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">14px DM Sans Regular</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'DM Sans'; font-size: 13px; font-weight: 500; color: #6E6660; letter-spacing: 0.12px;">Caption &middot; metadata &middot; timestamps</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">13px DM Sans Medium</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 16px;">
+          <span style="font-family: 'DM Sans'; font-size: 10px; font-weight: 500; color: #C4BFB7; letter-spacing: 0.1px;">TAB BAR LABELS</span>
+          <span style="font-family: 'JetBrains Mono'; font-size: 11px; color: #6B6560;">10px DM Sans Medium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shadow tokens -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-medium" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">MEDIUM</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #6: Shadow Token Adoption</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">15% &#8594; 40% adoption target</span>
+    </div>
+
+    <div style="background: #F5F1ED; border-radius: 16px; padding: 24px;">
+      <p style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;">5-Level Elevation System</p>
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <div style="width: 100px; height: 80px; background: white; border-radius: 12px; box-shadow: 0 1px 3px rgba(45,42,38,0.04); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 11px; color: #524D47; font-weight: 600;">subtle</span>
+          <span style="font-size: 10px; color: #C4BFB7;">Level 0</span>
+        </div>
+        <div style="width: 100px; height: 80px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(45,42,38,0.06); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 11px; color: #524D47; font-weight: 600;">card</span>
+          <span style="font-size: 10px; color: #C4BFB7;">Level 1</span>
+        </div>
+        <div style="width: 100px; height: 80px; background: white; border-radius: 12px; box-shadow: 0 4px 16px rgba(45,42,38,0.08); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 11px; color: #524D47; font-weight: 600;">FAB</span>
+          <span style="font-size: 10px; color: #C4BFB7;">Level 2</span>
+        </div>
+        <div style="width: 100px; height: 80px; background: white; border-radius: 12px; box-shadow: 0 8px 24px rgba(45,42,38,0.1); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 11px; color: #524D47; font-weight: 600;">modal</span>
+          <span style="font-size: 10px; color: #C4BFB7;">Level 3</span>
+        </div>
+        <div style="width: 100px; height: 80px; background: white; border-radius: 12px; box-shadow: 0 12px 32px rgba(45,42,38,0.14); display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <span style="font-size: 11px; color: #524D47; font-weight: 600;">alert</span>
+          <span style="font-size: 10px; color: #C4BFB7;">Level 4</span>
+        </div>
+      </div>
+      <p style="font-size: 12px; color: #524D47; margin-top: 16px;">All use warm <code style="font-family: 'JetBrains Mono'; background: #EDEAE5; padding: 2px 6px; border-radius: 4px; font-size: 11px;">#2D2A26</code> shadow tint instead of pure black. 427 inline definitions should use <code style="font-family: 'JetBrains Mono'; background: #EDEAE5; padding: 2px 6px; border-radius: 4px; font-size: 11px;">...shadows.card</code> spread.</p>
+    </div>
+  </div>
+
+  <!-- Tailwind config fix -->
+  <div class="finding-card" style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px;">
+      <span class="badge-medium" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px;">MEDIUM</span>
+      <h3 style="font-size: 17px; font-weight: 600;">Fix #7: Tailwind Config Alignment</h3>
+      <span style="margin-left: auto; font-size: 13px; color: #6B6560;">2 mismatches</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      <div style="background: #3D3833; border-radius: 8px; padding: 16px;">
+        <p style="font-size: 11px; color: #B53030; margin-bottom: 8px;">tailwind.config.js</p>
+        <code style="font-family: 'JetBrains Mono'; font-size: 12px; color: #C4BFB7;">
+          borderRadius.card: <span style="color: #B53030;">12px</span><br>
+          accent: <span style="color: #B53030;">#10B981</span>
+        </code>
+      </div>
+      <div style="background: #3D3833; border-radius: 8px; padding: 16px;">
+        <p style="font-size: 11px; color: #059669; margin-bottom: 8px;">theme/spacing.ts</p>
+        <code style="font-family: 'JetBrains Mono'; font-size: 12px; color: #C4BFB7;">
+          borderRadius.card: <span style="color: #059669;">16px</span><br>
+          primary[600]: <span style="color: #059669;">#059669</span>
+        </code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ============================================ -->
+<!-- WAVE 3: Long Tail -->
+<!-- ============================================ -->
+
+<div style="padding: 0 48px 64px; max-width: 1200px; margin: 0 auto;">
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 32px;">
+    <span style="background: #524D47; color: white; font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 6px;">WAVE 3</span>
+    <h2 style="font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Long-Tail Cleanup</h2>
+    <span style="font-size: 14px; color: #6B6560;">~8 hours (can be spread over multiple PRs)</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+    <div class="finding-card">
+      <span class="badge-low" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">LOW</span>
+      <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Custom text-[Npx]</h3>
+      <p style="font-size: 32px; font-weight: 700; font-family: 'JetBrains Mono'; color: #9A5504; margin-bottom: 4px;">192</p>
+      <p style="font-size: 13px; color: #6B6560;">NativeWind arbitrary values in 95 files. Map to standard Tailwind text scale.</p>
+    </div>
+    <div class="finding-card">
+      <span class="badge-low" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">LOW</span>
+      <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">Button Padding Sprawl</h3>
+      <p style="font-size: 32px; font-weight: 700; font-family: 'JetBrains Mono'; color: #9A5504; margin-bottom: 4px;">10+</p>
+      <p style="font-size: 13px; color: #6B6560;">Distinct padding combos. Needs Button component with sm/md/lg variants.</p>
+    </div>
+    <div class="finding-card">
+      <span class="badge-low" style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; display: inline-block; margin-bottom: 8px;">LOW</span>
+      <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px;">NativeWind + StyleSheet</h3>
+      <p style="font-size: 32px; font-weight: 700; font-family: 'JetBrains Mono'; color: #524D47; margin-bottom: 4px;">382</p>
+      <p style="font-size: 13px; color: #6B6560;">Files mixing both systems. Architectural — prefer StyleSheet for new code.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<div style="padding: 32px 48px; border-top: 1px solid #3D3833; text-align: center;">
+  <p style="font-size: 13px; color: #6B6560;">
+    Generated from <code style="font-family: 'JetBrains Mono'; font-size: 12px;">DESIGN_CONSISTENCY_REVIEW.md</code> &middot; April 5, 2026
+  </p>
+</div>
+
+</body>
+</html>

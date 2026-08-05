@@ -1,0 +1,1537 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay — UX Expert Evaluation: V1 B+D Hybrid</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1816;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ── Warm Stone Design System Tokens ── */
+      :root {
+        --canvas: #f5f1ed;
+        --shelf: #f0ede8;
+        --card: #edeae5;
+        --surface: #edeae5;
+        --border: #ddd8d2;
+        --border-subtle: #e5e2de;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --text-muted: #c4bfb7;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --streak-100: #fef3cd;
+        --streak-300: #e8b94d;
+        --streak-500: #8b6208;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --gray-500: #6b6560;
+        --gray-600: #524d47;
+        --gray-800: #2d2a26;
+        --ring-track: #e5e2de;
+      }
+
+      /* ── Evaluation Header ── */
+      .eval-header {
+        background: linear-gradient(
+          135deg,
+          #1a1816 0%,
+          #2d2a26 50%,
+          #3d3833 100%
+        );
+        border-bottom: 1px solid rgba(232, 185, 77, 0.15);
+        padding: 48px 40px 40px;
+      }
+      .eval-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(232, 185, 77, 0.08);
+        border: 1px solid rgba(232, 185, 77, 0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--streak-300);
+        margin-bottom: 20px;
+      }
+      .eval-title {
+        font-family: 'Literata', serif !important;
+        font-size: 32px;
+        font-weight: 700;
+        color: #faf8f5;
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        margin-bottom: 8px;
+      }
+      .eval-subtitle {
+        font-size: 15px;
+        color: var(--text-muted);
+        letter-spacing: -0.2px;
+        max-width: 600px;
+        line-height: 1.5;
+      }
+
+      /* ── Phone Frame ── */
+      .phone-frame {
+        width: 393px;
+        min-height: 700px;
+        background: var(--canvas);
+        border-radius: 40px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1px rgba(221, 216, 210, 0.3),
+          0 25px 80px rgba(0, 0, 0, 0.4),
+          0 8px 20px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        position: relative;
+      }
+      .phone-notch {
+        width: 126px;
+        height: 34px;
+        background: #1a1816;
+        border-radius: 0 0 20px 20px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 10;
+      }
+      .phone-content {
+        padding: 0;
+        margin-top: -2px;
+      }
+
+      /* ── Timeline Shelf ── */
+      .timeline-shelf {
+        background: var(--shelf);
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        padding: 16px 16px 12px;
+      }
+
+      /* ── Progress Header ── */
+      .progress-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 12px;
+      }
+
+      /* ── Completion Ring ── */
+      .completion-ring {
+        width: 64px;
+        height: 64px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .completion-ring svg {
+        transform: rotate(-90deg);
+      }
+      .ring-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 800;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+      }
+
+      /* ── Greeting ── */
+      .greeting-text {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+        line-height: 1.3;
+      }
+      .greeting-dash {
+        color: var(--text-tertiary);
+      }
+      .greeting-progress {
+        color: var(--emerald-600);
+      }
+      .greeting-date {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-tertiary);
+        margin-top: 3px;
+      }
+
+      /* ── Strip Navigation ── */
+      .strip-nav {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .nav-btn {
+        width: 26px;
+        height: 26px;
+        border-radius: 13px;
+        background: var(--card);
+        border: 1px solid var(--gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          opacity 0.15s ease;
+        flex-shrink: 0;
+      }
+      .nav-btn:hover {
+        transform: scale(1.08);
+      }
+      .nav-btn:active {
+        transform: scale(0.85);
+      }
+      .nav-btn.disabled {
+        opacity: 0.3;
+        pointer-events: none;
+      }
+      .nav-btn svg {
+        width: 14px;
+        height: 14px;
+        stroke: var(--gray-500);
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      /* ── Day Strip ── */
+      .day-strip {
+        display: flex;
+        flex: 1;
+        gap: 0;
+      }
+      .day-cell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        position: relative;
+      }
+      .day-weekday {
+        font-size: 10px;
+        line-height: 14px;
+        color: var(--text-muted);
+        font-weight: 400;
+        text-align: center;
+      }
+      .day-weekday.today {
+        font-weight: 700;
+        color: var(--text-secondary);
+      }
+      .day-number-wrap {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .day-number {
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: 600;
+        text-align: center;
+      }
+      /* Default day */
+      .day-number-wrap.default {
+        background: var(--card);
+      }
+      .day-number-wrap.default .day-number {
+        color: var(--gray-600);
+      }
+      /* Today */
+      .day-number-wrap.today {
+        background: var(--gray-800);
+        box-shadow: 0 2px 4px rgba(45, 42, 38, 0.15);
+      }
+      .day-number-wrap.today .day-number {
+        color: #fff;
+        font-weight: 700;
+      }
+      /* Complete */
+      .day-number-wrap.complete {
+        background: var(--emerald-500);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+      }
+      .day-number-wrap.complete .day-number {
+        color: #fff;
+        font-weight: 700;
+      }
+      /* Future */
+      .day-number-wrap.future {
+        background: var(--card);
+      }
+      .day-number-wrap.future .day-number {
+        color: var(--gray-300);
+      }
+
+      /* Completion dot */
+      .comp-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        margin-top: 4px;
+      }
+      .comp-dot.none {
+        background: var(--gray-200);
+      }
+      .comp-dot.partial {
+        background: var(--streak-300);
+        width: 6px;
+        height: 6px;
+      }
+      .comp-dot.complete-dot {
+        background: var(--emerald-500);
+        width: 8px;
+        height: 8px;
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+      .comp-dot.future-dot {
+        background: var(--card);
+      }
+
+      /* Check badge */
+      .check-badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 16px;
+        height: 16px;
+        background: var(--emerald-600);
+        border-radius: 50%;
+        border: 2px solid var(--shelf);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .check-badge svg {
+        width: 8px;
+        height: 8px;
+        stroke: white;
+        stroke-width: 3;
+        fill: none;
+      }
+
+      /* Streak connector */
+      .streak-connector {
+        position: absolute;
+        height: 3px;
+        background: rgba(16, 185, 129, 0.25);
+        border-radius: 1.5px;
+        top: calc(
+          14px + 2px + 20px - 1.5px
+        ); /* weekday(14) + gap(2) + radius(20) - half height */
+        left: calc(50% + 20px);
+        right: calc(-50% + 20px);
+        z-index: 0;
+      }
+
+      /* ── Habit Cards ── */
+      .habits-area {
+        padding: 16px 16px 24px;
+      }
+      .habit-card {
+        background: #ffffff;
+        border: 1px solid var(--border-subtle);
+        border-radius: 16px;
+        min-height: 76px;
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.04),
+          0 1px 2px rgba(0, 0, 0, 0.02);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.15s ease;
+      }
+      .habit-card:hover {
+        transform: translateY(-1px);
+      }
+      .habit-emoji {
+        font-size: 26px;
+        flex-shrink: 0;
+      }
+      .habit-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: -0.41px;
+        line-height: 22px;
+      }
+      .habit-meta {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+        letter-spacing: -0.08px;
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-left: auto;
+        transition: all 0.2s ease;
+      }
+      .habit-check.done {
+        background: var(--emerald-500);
+        border-color: var(--emerald-500);
+      }
+      .habit-check.done svg {
+        stroke: white;
+      }
+      .habit-accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 0 2px 2px 0;
+      }
+      .habit-card.completed .habit-name {
+        opacity: 0.55;
+        text-decoration: line-through;
+      }
+
+      /* ── UX Annotation System ── */
+      .annotation-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 50;
+      }
+      .annotation {
+        position: absolute;
+        pointer-events: auto;
+      }
+      .ann-marker {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+      .ann-marker:hover {
+        transform: scale(1.15);
+      }
+      .ann-marker.pass {
+        background: var(--emerald-500);
+        color: white;
+      }
+      .ann-marker.improve {
+        background: var(--streak-300);
+        color: var(--gray-800);
+      }
+      .ann-marker.warn {
+        background: #e74c3c;
+        color: white;
+      }
+      .ann-line {
+        position: absolute;
+        border: 1px dashed;
+        opacity: 0.4;
+      }
+
+      /* ── Evaluation Cards ── */
+      .eval-section {
+        padding: 40px;
+      }
+      .eval-card {
+        background: #232120;
+        border: 1px solid rgba(221, 216, 210, 0.08);
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 20px;
+        transition: border-color 0.2s ease;
+      }
+      .eval-card:hover {
+        border-color: rgba(221, 216, 210, 0.15);
+      }
+      .eval-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .eval-card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .eval-card-title {
+        font-family: 'Literata', serif !important;
+        font-size: 18px;
+        font-weight: 700;
+        color: #faf8f5;
+        letter-spacing: -0.3px;
+      }
+      .eval-card-body {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text-muted);
+      }
+      .eval-card-body strong {
+        color: #faf8f5;
+        font-weight: 600;
+      }
+
+      /* ── Score Pills ── */
+      .score-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .score-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .score-pill.high {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--emerald-500);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      .score-pill.medium {
+        background: rgba(232, 185, 77, 0.1);
+        color: var(--streak-300);
+        border: 1px solid rgba(232, 185, 77, 0.2);
+      }
+      .score-pill.low {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.2);
+      }
+
+      /* ── Refinement Table ── */
+      .refine-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 12px;
+      }
+      .refine-table th {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--text-tertiary);
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(221, 216, 210, 0.1);
+      }
+      .refine-table td {
+        font-size: 13px;
+        color: var(--text-muted);
+        padding: 10px 12px;
+        border-bottom: 1px solid rgba(221, 216, 210, 0.05);
+        vertical-align: top;
+      }
+      .refine-table td:first-child {
+        color: #faf8f5;
+        font-weight: 500;
+      }
+
+      /* ── Verdict Banner ── */
+      .verdict {
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.08),
+          rgba(232, 185, 77, 0.06)
+        );
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 16px;
+        padding: 32px;
+        text-align: center;
+        margin-top: 16px;
+      }
+      .verdict-score {
+        font-family: 'Literata', serif !important;
+        font-size: 52px;
+        font-weight: 800;
+        color: var(--emerald-500);
+        line-height: 1;
+        margin-bottom: 8px;
+      }
+      .verdict-label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #faf8f5;
+        letter-spacing: -0.2px;
+      }
+      .verdict-detail {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-top: 6px;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulseGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
+        50% {
+          box-shadow: 0 0 16px 4px rgba(16, 185, 129, 0.15);
+        }
+      }
+      @keyframes ringProgress {
+        from {
+          stroke-dashoffset: 186.92;
+        }
+        to {
+          stroke-dashoffset: 74.77;
+        }
+      }
+      @keyframes markerPulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+      .animate-in {
+        animation: fadeInUp 0.6s ease-out forwards;
+      }
+      .delay-1 {
+        animation-delay: 0.1s;
+        opacity: 0;
+      }
+      .delay-2 {
+        animation-delay: 0.2s;
+        opacity: 0;
+      }
+      .delay-3 {
+        animation-delay: 0.3s;
+        opacity: 0;
+      }
+      .delay-4 {
+        animation-delay: 0.4s;
+        opacity: 0;
+      }
+      .delay-5 {
+        animation-delay: 0.5s;
+        opacity: 0;
+      }
+      .delay-6 {
+        animation-delay: 0.6s;
+        opacity: 0;
+      }
+      .ring-animate {
+        animation: ringProgress 0.8s ease-out 0.4s forwards;
+      }
+      .marker-pulse {
+        animation: markerPulse 2s ease-in-out infinite;
+      }
+
+      /* ── Layout ── */
+      .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 460px;
+        gap: 60px;
+        align-items: start;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 48px 40px;
+      }
+      @media (max-width: 900px) {
+        .main-grid {
+          grid-template-columns: 1fr;
+          padding: 32px 20px;
+        }
+        .phone-frame {
+          margin: 0 auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- EVALUATION HEADER                                       -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <header class="eval-header">
+      <div style="max-width: 1100px; margin: 0 auto">
+        <div class="eval-badge">
+          <span style="font-size: 13px">&#9733;</span>
+          UX Expert Evaluation
+        </div>
+        <h1 class="eval-title">CalendarTimeline V1 — B+D Hybrid</h1>
+        <p class="eval-subtitle">
+          Progress-first greeting, tinted shelf zone, flanking StripNav arrows,
+          64px CompletionRing. Evaluated against the warm stone design system
+          and monetization potential.
+        </p>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- MAIN LAYOUT: Phone + Evaluation Cards                   -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="main-grid">
+      <!-- ── Phone Mockup ── -->
+      <div style="position: relative">
+        <div class="phone-frame animate-in delay-1">
+          <div class="phone-notch"></div>
+          <div class="phone-content">
+            <!-- Status Bar -->
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 24px 4px;
+                color: var(--text-primary);
+                font-size: 13px;
+                font-weight: 600;
+              "
+            >
+              <span>4:32 PM</span>
+              <div style="display: flex; gap: 4px; align-items: center">
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none">
+                  <rect
+                    x="0"
+                    y="8"
+                    width="3"
+                    height="4"
+                    rx="0.5"
+                    fill="#2D2A26"
+                  />
+                  <rect
+                    x="4"
+                    y="5"
+                    width="3"
+                    height="7"
+                    rx="0.5"
+                    fill="#2D2A26"
+                  />
+                  <rect
+                    x="8"
+                    y="2"
+                    width="3"
+                    height="10"
+                    rx="0.5"
+                    fill="#2D2A26"
+                  />
+                  <rect
+                    x="12"
+                    y="0"
+                    width="3"
+                    height="12"
+                    rx="0.5"
+                    fill="#2D2A26"
+                    opacity="0.3"
+                  />
+                </svg>
+                <svg width="24" height="12" viewBox="0 0 24 12">
+                  <rect
+                    x="0.5"
+                    y="0.5"
+                    width="21"
+                    height="11"
+                    rx="2"
+                    stroke="#2D2A26"
+                    fill="none"
+                    stroke-opacity="0.35"
+                  />
+                  <rect
+                    x="2"
+                    y="2"
+                    width="15"
+                    height="8"
+                    rx="1"
+                    fill="#10B981"
+                  />
+                  <rect
+                    x="22"
+                    y="4"
+                    width="2"
+                    height="4"
+                    rx="1"
+                    fill="#2D2A26"
+                    opacity="0.3"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <!-- ════════════════════════════════════ -->
+            <!-- TINTED SHELF (CalendarTimeline)       -->
+            <!-- ════════════════════════════════════ -->
+            <div class="timeline-shelf" id="shelf">
+              <!-- Progress Header: Ring + Greeting -->
+              <div class="progress-header" id="progressHeader">
+                <!-- CompletionRing 64px -->
+                <div class="completion-ring" id="ring">
+                  <svg width="64" height="64" viewBox="0 0 64 64">
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="29.75"
+                      fill="transparent"
+                      stroke="#E5E2DE"
+                      stroke-width="4.5"
+                    />
+                    <circle
+                      cx="32"
+                      cy="32"
+                      r="29.75"
+                      fill="transparent"
+                      stroke="#10B981"
+                      stroke-width="4.5"
+                      stroke-dasharray="186.92"
+                      stroke-dashoffset="186.92"
+                      stroke-linecap="round"
+                      class="ring-animate"
+                    />
+                  </svg>
+                  <div class="ring-text">3/5</div>
+                </div>
+
+                <!-- ProgressGreeting -->
+                <div style="flex: 1" id="greeting">
+                  <div class="greeting-text">
+                    Good afternoon<span class="greeting-dash"> &mdash; </span
+                    ><span class="greeting-progress">3 of 5 done</span>
+                  </div>
+                  <div class="greeting-date">Tue, February 25</div>
+                </div>
+              </div>
+
+              <!-- StripNav: [<] [day cells] [>] -->
+              <div class="strip-nav" id="stripNav">
+                <button class="nav-btn" id="navLeft">
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="15 18 9 12 15 6" />
+                  </svg>
+                </button>
+
+                <div class="day-strip" id="dayStrip">
+                  <!-- Mon 17 — complete -->
+                  <div class="day-cell">
+                    <span class="day-weekday">Mon</span>
+                    <div class="day-number-wrap complete">
+                      <div class="check-badge">
+                        <svg viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      </div>
+                      <span class="day-number">17</span>
+                    </div>
+                    <div
+                      class="comp-dot complete-dot"
+                      style="margin-top: 4px"
+                    ></div>
+                    <div class="streak-connector"></div>
+                  </div>
+
+                  <!-- Tue 18 — complete -->
+                  <div class="day-cell">
+                    <span class="day-weekday">Tue</span>
+                    <div class="day-number-wrap complete">
+                      <div class="check-badge">
+                        <svg viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      </div>
+                      <span class="day-number">18</span>
+                    </div>
+                    <div
+                      class="comp-dot complete-dot"
+                      style="margin-top: 4px"
+                    ></div>
+                    <div class="streak-connector"></div>
+                  </div>
+
+                  <!-- Wed 19 — complete -->
+                  <div class="day-cell">
+                    <span class="day-weekday">Wed</span>
+                    <div class="day-number-wrap complete">
+                      <div class="check-badge">
+                        <svg viewBox="0 0 24 24">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                      </div>
+                      <span class="day-number">19</span>
+                    </div>
+                    <div
+                      class="comp-dot complete-dot"
+                      style="margin-top: 4px"
+                    ></div>
+                  </div>
+
+                  <!-- Thu 20 — partial -->
+                  <div class="day-cell">
+                    <span class="day-weekday">Thu</span>
+                    <div class="day-number-wrap default">
+                      <span class="day-number">20</span>
+                    </div>
+                    <div class="comp-dot partial" style="margin-top: 4px"></div>
+                  </div>
+
+                  <!-- Fri 21 — none -->
+                  <div class="day-cell">
+                    <span class="day-weekday">Fri</span>
+                    <div class="day-number-wrap default">
+                      <span class="day-number">21</span>
+                    </div>
+                    <div class="comp-dot none" style="margin-top: 4px"></div>
+                  </div>
+
+                  <!-- Sat 22 — TODAY (partial: 3/5) -->
+                  <div class="day-cell">
+                    <span class="day-weekday today">Today</span>
+                    <div class="day-number-wrap today">
+                      <span class="day-number">22</span>
+                    </div>
+                    <div class="comp-dot partial" style="margin-top: 4px"></div>
+                  </div>
+
+                  <!-- Sun 23 — future -->
+                  <div class="day-cell">
+                    <span class="day-weekday" style="color: var(--gray-300)"
+                      >Sun</span
+                    >
+                    <div class="day-number-wrap future">
+                      <span class="day-number">23</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="nav-btn disabled" id="navRight">
+                  <svg viewBox="0 0 24 24">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- ════════════════════════════════════ -->
+            <!-- HABIT CARDS AREA                      -->
+            <!-- ════════════════════════════════════ -->
+            <div class="habits-area" id="habitsArea">
+              <!-- Card 1: Done -->
+              <div class="habit-card completed">
+                <div
+                  class="habit-accent"
+                  style="background: var(--emerald-500)"
+                ></div>
+                <span class="habit-emoji">&#x1F4D6;</span>
+                <div style="flex: 1">
+                  <div class="habit-name">Read 20 pages</div>
+                  <div class="habit-meta">3-day streak &bull; Strong</div>
+                </div>
+                <div class="habit-check done">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Card 2: Done -->
+              <div class="habit-card completed">
+                <div
+                  class="habit-accent"
+                  style="background: var(--emerald-500)"
+                ></div>
+                <span class="habit-emoji">&#x1F9D8;</span>
+                <div style="flex: 1">
+                  <div class="habit-name">Meditate 10 min</div>
+                  <div class="habit-meta">6-day streak &bull; Automatic</div>
+                </div>
+                <div class="habit-check done">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Card 3: Done -->
+              <div class="habit-card completed">
+                <div
+                  class="habit-accent"
+                  style="background: var(--emerald-500)"
+                ></div>
+                <span class="habit-emoji">&#x1F3CB;</span>
+                <div style="flex: 1">
+                  <div class="habit-name">Exercise 30 min</div>
+                  <div class="habit-meta">3-day streak &bull; Building</div>
+                </div>
+                <div class="habit-check done">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="white"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+
+              <!-- Card 4: Pending -->
+              <div class="habit-card">
+                <div
+                  class="habit-accent"
+                  style="background: var(--streak-300)"
+                ></div>
+                <span class="habit-emoji">&#x1F4DD;</span>
+                <div style="flex: 1">
+                  <div class="habit-name">Journal entry</div>
+                  <div class="habit-meta">1-day streak &bull; Starting</div>
+                </div>
+                <div class="habit-check">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--border)"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  ></svg>
+                </div>
+              </div>
+
+              <!-- Card 5: Pending -->
+              <div class="habit-card">
+                <div
+                  class="habit-accent"
+                  style="background: var(--streak-300)"
+                ></div>
+                <span class="habit-emoji">&#x1F4A7;</span>
+                <div style="flex: 1">
+                  <div class="habit-name">Drink 8 glasses water</div>
+                  <div class="habit-meta">0-day streak &bull; Starting</div>
+                </div>
+                <div class="habit-check">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--border)"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                  ></svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── UX Annotation Markers (overlaid on phone) ── -->
+        <div class="annotation-layer">
+          <!-- A: Ring -->
+          <div class="annotation" style="top: 108px; left: 18px">
+            <div
+              class="ann-marker pass marker-pulse"
+              title="Ring: Clear progress signal at T+0"
+            >
+              A
+            </div>
+          </div>
+          <!-- B: Greeting -->
+          <div class="annotation" style="top: 100px; right: -14px">
+            <div
+              class="ann-marker pass"
+              title="Greeting: Triggers completion bias"
+            >
+              B
+            </div>
+          </div>
+          <!-- C: StripNav arrows -->
+          <div class="annotation" style="top: 182px; left: -10px">
+            <div
+              class="ann-marker pass"
+              title="StripNav: Discoverable navigation"
+            >
+              C
+            </div>
+          </div>
+          <!-- D: Shelf boundary -->
+          <div class="annotation" style="top: 238px; right: -14px">
+            <div
+              class="ann-marker improve"
+              title="Shelf: Consider fade instead of hard edge"
+            >
+              D
+            </div>
+          </div>
+          <!-- E: Card spacing -->
+          <div class="annotation" style="top: 280px; left: -10px">
+            <div
+              class="ann-marker pass"
+              title="Spacing: 16px gap, aligned padding grid"
+            >
+              E
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Evaluation Panel ── -->
+      <div style="display: flex; flex-direction: column; gap: 20px">
+        <!-- Score Overview -->
+        <div class="eval-card animate-in delay-2">
+          <div class="eval-card-header">
+            <div
+              class="eval-card-icon"
+              style="background: rgba(16, 185, 129, 0.1)"
+            >
+              &#x2728;
+            </div>
+            <div class="eval-card-title">Overall Assessment</div>
+          </div>
+          <div class="eval-card-body">
+            The V1 B+D Hybrid successfully delivers a
+            <strong>progress-first information hierarchy</strong> that triggers
+            completion bias on every app open. The tinted shelf creates visual
+            zone separation without the heaviness of a card wrapper. StripNav
+            arrows make navigation discoverable for the first time.
+          </div>
+          <div class="score-row">
+            <div class="score-pill high">Visual Hierarchy: 9/10</div>
+            <div class="score-pill high">Navigation: 8/10</div>
+            <div class="score-pill high">Consistency: 9/10</div>
+            <div class="score-pill medium">Premium Zone: 7/10</div>
+          </div>
+        </div>
+
+        <!-- What Works -->
+        <div class="eval-card animate-in delay-3">
+          <div class="eval-card-header">
+            <div
+              class="eval-card-icon"
+              style="background: rgba(16, 185, 129, 0.1)"
+            >
+              &#x2705;
+            </div>
+            <div class="eval-card-title">What Works</div>
+          </div>
+          <div class="eval-card-body">
+            <strong>A. CompletionRing (64px)</strong> — The enlarged ring
+            provides an immediate visual anchor. At 64px it commands attention
+            without overwhelming. The emerald progress stroke + warm stone track
+            (#E5E2DE) is chromatic harmony with the design system.<br /><br />
+            <strong>B. Progress-first greeting</strong> — "Good afternoon
+            &mdash; 3 of 5 done" exploits <strong>completion bias</strong>:
+            users see they're 60% done and feel pulled to finish. The
+            three-state logic (none/partial/all done) provides contextually
+            appropriate messaging at every stage.<br /><br />
+            <strong>C. StripNav arrows</strong> — 26px circular buttons with
+            warm stone fill make navigation
+            <strong>visually discoverable</strong> for the first time. The
+            disabled forward arrow at 30% opacity clearly communicates temporal
+            boundaries. This directly addresses the "hidden navigation"
+            problem.<br /><br />
+            <strong>E. Padding alignment</strong> — 16px (px-4) now matches
+            habit card margins, creating a unified vertical rhythm across the
+            entire page.
+          </div>
+        </div>
+
+        <!-- Refinements -->
+        <div class="eval-card animate-in delay-4">
+          <div class="eval-card-header">
+            <div
+              class="eval-card-icon"
+              style="background: rgba(232, 185, 77, 0.1)"
+            >
+              &#x1F527;
+            </div>
+            <div class="eval-card-title">Potential Refinements</div>
+          </div>
+          <div class="eval-card-body">
+            <table class="refine-table">
+              <thead>
+                <tr>
+                  <th style="width: 32%">Area</th>
+                  <th>Observation</th>
+                  <th style="width: 18%">Priority</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>D.</strong> Shelf bottom edge</td>
+                  <td>
+                    The 16px radius cutoff creates a visible boundary. Consider
+                    a 2px gradient fade or remove the radius for a more seamless
+                    transition.
+                  </td>
+                  <td>
+                    <span
+                      class="score-pill medium"
+                      style="font-size: 10px; padding: 3px 8px"
+                      >Low</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Ring celebration timing</td>
+                  <td>
+                    The 1.35x pulse fires instantly on 5/5. A 200ms delay after
+                    the last tap would feel more intentional, like the UI is
+                    "recognizing" the achievement.
+                  </td>
+                  <td>
+                    <span
+                      class="score-pill medium"
+                      style="font-size: 10px; padding: 3px 8px"
+                      >Low</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Day cell "Today" label</td>
+                  <td>
+                    Using "Today" instead of the weekday abbreviation is
+                    excellent UX. Consider a subtle amber dot or underline below
+                    the "Today" text to create stronger visual anchoring to the
+                    dark cell below.
+                  </td>
+                  <td>
+                    <span
+                      class="score-pill medium"
+                      style="font-size: 10px; padding: 3px 8px"
+                      >Low</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>StripNav arrow feedback</td>
+                  <td>
+                    The 0.85 press scale is good. Adding a subtle chevron
+                    translation (2px in arrow direction) during press would
+                    reinforce directionality.
+                  </td>
+                  <td>
+                    <span
+                      class="score-pill medium"
+                      style="font-size: 10px; padding: 3px 8px"
+                      >Micro</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Monetization -->
+        <div class="eval-card animate-in delay-5">
+          <div class="eval-card-header">
+            <div
+              class="eval-card-icon"
+              style="background: rgba(123, 82, 196, 0.1)"
+            >
+              &#x1F4B0;
+            </div>
+            <div class="eval-card-title">Monetization Potential</div>
+          </div>
+          <div class="eval-card-body">
+            The tinted shelf creates a natural
+            <strong>"premium zone"</strong> architecture. The current free tier
+            delivers ring + greeting + strip. Premium features can expand the
+            shelf without restructuring: <br /><br />
+            <strong>Tier 1 (Free):</strong> Ring, greeting, 7-day strip,
+            arrows<br />
+            <strong>Tier 2 (Pro):</strong> + Weekly trend sparkline, streak
+            calendar<br />
+            <strong>Tier 3 (Premium):</strong> + AI insights, mood correlation,
+            habit analytics <br /><br />
+            The <strong>InlineTrialBar</strong> already sits inside the shelf,
+            creating a natural conversion point. Users who see "3 of 5 done" are
+            in a <strong>high-engagement moment</strong> &mdash; ideal for
+            "Unlock insights about your streak" conversion messaging.
+          </div>
+          <div class="score-row">
+            <div class="score-pill high">Expansion Ready</div>
+            <div class="score-pill high">Conversion Positioned</div>
+            <div class="score-pill medium">Needs A/B Testing</div>
+          </div>
+        </div>
+
+        <!-- Final Verdict -->
+        <div class="verdict animate-in delay-6">
+          <div class="verdict-score">8.5</div>
+          <div class="verdict-label">Ship-Ready — Minor Polish Optional</div>
+          <div class="verdict-detail">
+            V1 B+D Hybrid successfully balances visual hierarchy, navigation
+            discoverability, and monetization architecture. The warm stone
+            palette is cohesive across shelf, day cells, arrows, and cards. All
+            refinements are low-priority polish, not structural issues.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- DESIGN SYSTEM AUDIT                                     -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="eval-section" style="max-width: 1100px; margin: 0 auto">
+      <div class="eval-card animate-in delay-3">
+        <div class="eval-card-header">
+          <div
+            class="eval-card-icon"
+            style="background: rgba(16, 185, 129, 0.1)"
+          >
+            &#x1F3A8;
+          </div>
+          <div class="eval-card-title">Design System Consistency Audit</div>
+        </div>
+        <div class="eval-card-body">
+          <table class="refine-table">
+            <thead>
+              <tr>
+                <th style="width: 22%">Element</th>
+                <th style="width: 26%">Token Used</th>
+                <th style="width: 26%">Expected</th>
+                <th>Verdict</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Canvas background</td>
+                <td>#F5F1ED (light.background)</td>
+                <td>#F5F1ED</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Shelf background</td>
+                <td>#F0EDE8 (light.gradientMid)</td>
+                <td>#F0EDE8</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Day cell surface</td>
+                <td>#EDEAE5 (light.card)</td>
+                <td>#EDEAE5</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Ring track</td>
+                <td>#E5E2DE (custom)</td>
+                <td>light.card or border</td>
+                <td>
+                  <span
+                    class="score-pill medium"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Close</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Primary text</td>
+                <td>#2D2A26 (text.primary)</td>
+                <td>#2D2A26</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Tertiary text</td>
+                <td>#6E6660 (text.tertiary)</td>
+                <td>#6E6660</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Nav button border</td>
+                <td>#DDD8D2 (gray.200)</td>
+                <td>#DDD8D2 (border)</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Progress emerald</td>
+                <td>#10B981 (primary.500)</td>
+                <td>#10B981</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Card surface</td>
+                <td>#FFFFFF (HabitCard)</td>
+                <td>#FFFFFF</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Card border</td>
+                <td>#E5E2DE (1px)</td>
+                <td>#E5E2DE (REDESIGN_COLORS.neutral)</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Card radius</td>
+                <td>16px (borderRadius.large)</td>
+                <td>16px</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+              <tr>
+                <td>Font family</td>
+                <td>DM Sans (fontFamilies.primary.text)</td>
+                <td>DM Sans</td>
+                <td>
+                  <span
+                    class="score-pill high"
+                    style="font-size: 10px; padding: 3px 8px"
+                    >Match</span
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            style="margin-top: 16px; font-size: 13px; color: var(--text-muted)"
+          >
+            <strong style="color: #faf8f5">Result:</strong> 11/12 exact matches,
+            1 close match (ring track uses #E5E2DE which is 1 shade warmer than
+            the system border token #DDD8D2 — acceptable for visual softness on
+            the ring).
+            <strong style="color: var(--emerald-500)"
+              >Design system compliance: 97%.</strong
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height: 60px"></div>
+  </body>
+</html>

@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>Archived Habits - Time-Grouped Sections</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #E8E0D8 !important;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 32px 0;
+  }
+  .screen {
+    width: 390px;
+    min-height: 100vh;
+    background: #F5F1ED;
+    position: relative;
+    overflow-x: hidden;
+    padding-bottom: 40px;
+  }
+
+  /* Header */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #F5F1ED;
+    padding: 16px 20px 12px;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #2D2A26;
+    transition: background 0.2s;
+  }
+  .back-btn:hover {
+    background: rgba(45,42,38,0.06);
+  }
+  .header-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #2D2A26 !important;
+    line-height: 1.2 !important;
+  }
+  .select-toggle {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #059669 !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .select-toggle:hover {
+    background: rgba(5,150,105,0.08);
+  }
+  .header-subtitle {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    color: #6E6660 !important;
+    padding-left: 52px;
+    margin-top: 2px;
+  }
+
+  /* Section */
+  .section {
+    margin: 0 20px 16px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: fadeInUp 0.4s ease-out forwards;
+  }
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.25s; }
+  .section:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9CA3AF !important;
+  }
+  .section-count {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #059669 !important;
+    background: rgba(5,150,105,0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .section-chevron {
+    color: #9CA3AF;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .section-chevron.collapsed {
+    transform: rotate(-90deg);
+  }
+  .section-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .restore-all-btn {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #059669 !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+  .restore-all-btn:hover {
+    background: rgba(5,150,105,0.08);
+  }
+
+  /* Card container */
+  .card-container {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.25s ease;
+  }
+  .card-container.collapsed-content {
+    max-height: 0 !important;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  /* Habit row */
+  .habit-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    height: 64px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.3s ease, opacity 0.3s ease;
+    position: relative;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  .habit-row.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .habit-row:hover {
+    background: rgba(45,42,38,0.02);
+  }
+  .habit-row.removing {
+    transform: translateX(100%);
+    opacity: 0;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: transform 0.35s ease, opacity 0.3s ease, height 0.3s ease 0.15s, padding 0.3s ease 0.15s;
+  }
+  .habit-divider {
+    height: 1px;
+    background: #DDD8D2;
+    margin-left: 68px;
+    margin-right: 16px;
+  }
+  .habit-divider.removing {
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.2s, height 0.2s;
+  }
+
+  .emoji-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #F5F1ED;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+  .habit-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .habit-name {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #2D2A26 !important;
+    line-height: 1.3 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .habit-time {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    color: #9CA3AF !important;
+    line-height: 1.3 !important;
+  }
+  .resume-pill {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #059669 !important;
+    background: rgba(5,150,105,0.08);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .resume-pill:hover {
+    background: rgba(5,150,105,0.15);
+  }
+  .resume-pill:active {
+    transform: scale(0.95);
+  }
+
+  /* Expanded detail */
+  .habit-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+    background: #FAFAF8;
+    padding: 0 16px;
+  }
+  .habit-detail.expanded {
+    max-height: 200px;
+    padding: 12px 16px 16px;
+  }
+  .stat-badges {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .stat-badge {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #DDD8D2;
+    border-radius: 10px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .stat-badge-value {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #2D2A26 !important;
+    line-height: 1.2 !important;
+  }
+  .stat-badge-label {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    color: #9CA3AF !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.4 !important;
+  }
+  .detail-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .full-resume-btn {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #FFFFFF !important;
+    background: #059669;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .full-resume-btn:hover {
+    background: #047857;
+  }
+  .full-resume-btn:active {
+    transform: scale(0.97);
+  }
+  .delete-link {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #B53030 !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    transition: opacity 0.2s;
+  }
+  .delete-link:hover {
+    opacity: 0.7;
+  }
+
+  /* Delete confirmation */
+  .delete-confirm {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  .delete-confirm.active {
+    display: flex;
+  }
+  .confirm-text {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12px !important;
+    color: #B53030 !important;
+  }
+  .confirm-btn {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .confirm-yes {
+    background: #B53030;
+    color: #FFFFFF !important;
+  }
+  .confirm-no {
+    background: #DDD8D2;
+    color: #2D2A26 !important;
+  }
+
+  /* Footer */
+  .footer-delete {
+    text-align: center;
+    padding: 24px 20px 16px;
+  }
+  .footer-delete-btn {
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #B53030 !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .footer-delete-btn:hover {
+    background: rgba(181,48,48,0.06);
+  }
+</style>
+</head>
+<body>
+
+<div class="screen">
+  <!-- Sticky Header -->
+  <div class="header">
+    <div class="header-top">
+      <div class="header-left">
+        <button class="back-btn" aria-label="Go back">
+          <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+        </button>
+        <h1 class="header-title">Your Archived Habits</h1>
+      </div>
+      <button class="select-toggle" id="selectToggle">Select</button>
+    </div>
+    <p class="header-subtitle" id="habitCount">6 habits resting here</p>
+  </div>
+
+  <!-- Sections Container -->
+  <div id="sectionsContainer">
+
+    <!-- THIS WEEK -->
+    <div class="section" data-section="this-week">
+      <div class="section-header" onclick="toggleSection('this-week')">
+        <div class="section-header-left">
+          <span class="section-label">This Week</span>
+          <span class="section-count" data-count="this-week">2</span>
+          <i data-lucide="chevron-down" class="section-chevron" data-chevron="this-week" style="width:16px;height:16px;"></i>
+        </div>
+        <div class="section-header-right">
+          <button class="restore-all-btn" onclick="event.stopPropagation(); restoreAllInSection('this-week')">Restore All</button>
+        </div>
+      </div>
+      <div class="card-container" data-card="this-week">
+        <div class="habit-row" data-habit="meditation" onclick="toggleDetail(this)">
+          <div class="emoji-circle">🧘</div>
+          <div class="habit-info">
+            <div class="habit-name">Morning Meditation</div>
+            <div class="habit-time">2 days ago</div>
+          </div>
+          <button class="resume-pill" onclick="event.stopPropagation(); restoreHabit(this.closest('.habit-row'))">Resume</button>
+        </div>
+        <div class="habit-detail" data-detail="meditation">
+          <div class="stat-badges">
+            <div class="stat-badge">
+              <div class="stat-badge-value">72%</div>
+              <div class="stat-badge-label">Completion</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">18</div>
+              <div class="stat-badge-label">Best Streak</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">54</div>
+              <div class="stat-badge-label">Total Days</div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="full-resume-btn" onclick="event.stopPropagation(); restoreHabit(this.closest('.card-container').querySelector('[data-habit=meditation]'))">Resume Habit</button>
+            <button class="delete-link" onclick="event.stopPropagation(); showDeleteConfirm(this)">delete permanently</button>
+            <div class="delete-confirm">
+              <span class="confirm-text">Sure?</span>
+              <button class="confirm-btn confirm-yes" onclick="event.stopPropagation(); deleteHabit(this.closest('.card-container').querySelector('[data-habit=meditation]'))">Yes</button>
+              <button class="confirm-btn confirm-no" onclick="event.stopPropagation(); hideDeleteConfirm(this)">No</button>
+            </div>
+          </div>
+        </div>
+        <div class="habit-divider"></div>
+        <div class="habit-row" data-habit="reading" onclick="toggleDetail(this)">
+          <div class="emoji-circle">📖</div>
+          <div class="habit-info">
+            <div class="habit-name">Read 30 Minutes</div>
+            <div class="habit-time">5 days ago</div>
+          </div>
+          <button class="resume-pill" onclick="event.stopPropagation(); restoreHabit(this.closest('.habit-row'))">Resume</button>
+        </div>
+        <div class="habit-detail" data-detail="reading">
+          <div class="stat-badges">
+            <div class="stat-badge">
+              <div class="stat-badge-value">58%</div>
+              <div class="stat-badge-label">Completion</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">11</div>
+              <div class="stat-badge-label">Best Streak</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">32</div>
+              <div class="stat-badge-label">Total Days</div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="full-resume-btn" onclick="event.stopPropagation(); restoreHabit(this.closest('.card-container').querySelector('[data-habit=reading]'))">Resume Habit</button>
+            <button class="delete-link" onclick="event.stopPropagation(); showDeleteConfirm(this)">delete permanently</button>
+            <div class="delete-confirm">
+              <span class="confirm-text">Sure?</span>
+              <button class="confirm-btn confirm-yes" onclick="event.stopPropagation(); deleteHabit(this.closest('.card-container').querySelector('[data-habit=reading]'))">Yes</button>
+              <button class="confirm-btn confirm-no" onclick="event.stopPropagation(); hideDeleteConfirm(this)">No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THIS MONTH -->
+    <div class="section" data-section="this-month">
+      <div class="section-header" onclick="toggleSection('this-month')">
+        <div class="section-header-left">
+          <span class="section-label">This Month</span>
+          <span class="section-count" data-count="this-month">2</span>
+          <i data-lucide="chevron-down" class="section-chevron" data-chevron="this-month" style="width:16px;height:16px;"></i>
+        </div>
+        <div class="section-header-right">
+          <button class="restore-all-btn" onclick="event.stopPropagation(); restoreAllInSection('this-month')">Restore All</button>
+        </div>
+      </div>
+      <div class="card-container" data-card="this-month">
+        <div class="habit-row" data-habit="coldshower" onclick="toggleDetail(this)">
+          <div class="emoji-circle">🧊</div>
+          <div class="habit-info">
+            <div class="habit-name">Cold Shower</div>
+            <div class="habit-time">20 days ago</div>
+          </div>
+          <button class="resume-pill" onclick="event.stopPropagation(); restoreHabit(this.closest('.habit-row'))">Resume</button>
+        </div>
+        <div class="habit-detail" data-detail="coldshower">
+          <div class="stat-badges">
+            <div class="stat-badge">
+              <div class="stat-badge-value">35%</div>
+              <div class="stat-badge-label">Completion</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">5</div>
+              <div class="stat-badge-label">Best Streak</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">21</div>
+              <div class="stat-badge-label">Total Days</div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="full-resume-btn" onclick="event.stopPropagation(); restoreHabit(this.closest('.card-container').querySelector('[data-habit=coldshower]'))">Resume Habit</button>
+            <button class="delete-link" onclick="event.stopPropagation(); showDeleteConfirm(this)">delete permanently</button>
+            <div class="delete-confirm">
+              <span class="confirm-text">Sure?</span>
+              <button class="confirm-btn confirm-yes" onclick="event.stopPropagation(); deleteHabit(this.closest('.card-container').querySelector('[data-habit=coldshower]'))">Yes</button>
+              <button class="confirm-btn confirm-no" onclick="event.stopPropagation(); hideDeleteConfirm(this)">No</button>
+            </div>
+          </div>
+        </div>
+        <div class="habit-divider"></div>
+        <div class="habit-row" data-habit="journal" onclick="toggleDetail(this)">
+          <div class="emoji-circle">✍️</div>
+          <div class="habit-info">
+            <div class="habit-name">Daily Journal</div>
+            <div class="habit-time">23 days ago</div>
+          </div>
+          <button class="resume-pill" onclick="event.stopPropagation(); restoreHabit(this.closest('.habit-row'))">Resume</button>
+        </div>
+        <div class="habit-detail" data-detail="journal">
+          <div class="stat-badges">
+            <div class="stat-badge">
+              <div class="stat-badge-value">85%</div>
+              <div class="stat-badge-label">Completion</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">30</div>
+              <div class="stat-badge-label">Best Streak</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">89</div>
+              <div class="stat-badge-label">Total Days</div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="full-resume-btn" onclick="event.stopPropagation(); restoreHabit(this.closest('.card-container').querySelector('[data-habit=journal]'))">Resume Habit</button>
+            <button class="delete-link" onclick="event.stopPropagation(); showDeleteConfirm(this)">delete permanently</button>
+            <div class="delete-confirm">
+              <span class="confirm-text">Sure?</span>
+              <button class="confirm-btn confirm-yes" onclick="event.stopPropagation(); deleteHabit(this.closest('.card-container').querySelector('[data-habit=journal]'))">Yes</button>
+              <button class="confirm-btn confirm-no" onclick="event.stopPropagation(); hideDeleteConfirm(this)">No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- OLDER (collapsed by default) -->
+    <div class="section" data-section="older">
+      <div class="section-header" onclick="toggleSection('older')">
+        <div class="section-header-left">
+          <span class="section-label">Older</span>
+          <span class="section-count" data-count="older">2</span>
+          <i data-lucide="chevron-down" class="section-chevron collapsed" data-chevron="older" style="width:16px;height:16px;"></i>
+        </div>
+        <div class="section-header-right">
+          <button class="restore-all-btn" onclick="event.stopPropagation(); restoreAllInSection('older')">Restore All</button>
+        </div>
+      </div>
+      <div class="card-container collapsed-content" data-card="older" style="max-height:0;">
+        <div class="habit-row" data-habit="pushups" onclick="toggleDetail(this)">
+          <div class="emoji-circle">💪</div>
+          <div class="habit-info">
+            <div class="habit-name">Push-ups</div>
+            <div class="habit-time">67 days ago</div>
+          </div>
+          <button class="resume-pill" onclick="event.stopPropagation(); restoreHabit(this.closest('.habit-row'))">Resume</button>
+        </div>
+        <div class="habit-detail" data-detail="pushups">
+          <div class="stat-badges">
+            <div class="stat-badge">
+              <div class="stat-badge-value">12%</div>
+              <div class="stat-badge-label">Completion</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">3</div>
+              <div class="stat-badge-label">Best Streak</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">8</div>
+              <div class="stat-badge-label">Total Days</div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="full-resume-btn" onclick="event.stopPropagation(); restoreHabit(this.closest('.card-container').querySelector('[data-habit=pushups]'))">Resume Habit</button>
+            <button class="delete-link" onclick="event.stopPropagation(); showDeleteConfirm(this)">delete permanently</button>
+            <div class="delete-confirm">
+              <span class="confirm-text">Sure?</span>
+              <button class="confirm-btn confirm-yes" onclick="event.stopPropagation(); deleteHabit(this.closest('.card-container').querySelector('[data-habit=pushups]'))">Yes</button>
+              <button class="confirm-btn confirm-no" onclick="event.stopPropagation(); hideDeleteConfirm(this)">No</button>
+            </div>
+          </div>
+        </div>
+        <div class="habit-divider"></div>
+        <div class="habit-row" data-habit="water" onclick="toggleDetail(this)">
+          <div class="emoji-circle">💧</div>
+          <div class="habit-info">
+            <div class="habit-name">Drink Water</div>
+            <div class="habit-time">83 days ago</div>
+          </div>
+          <button class="resume-pill" onclick="event.stopPropagation(); restoreHabit(this.closest('.habit-row'))">Resume</button>
+        </div>
+        <div class="habit-detail" data-detail="water">
+          <div class="stat-badges">
+            <div class="stat-badge">
+              <div class="stat-badge-value">45%</div>
+              <div class="stat-badge-label">Completion</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">14</div>
+              <div class="stat-badge-label">Best Streak</div>
+            </div>
+            <div class="stat-badge">
+              <div class="stat-badge-value">47</div>
+              <div class="stat-badge-label">Total Days</div>
+            </div>
+          </div>
+          <div class="detail-actions">
+            <button class="full-resume-btn" onclick="event.stopPropagation(); restoreHabit(this.closest('.card-container').querySelector('[data-habit=water]'))">Resume Habit</button>
+            <button class="delete-link" onclick="event.stopPropagation(); showDeleteConfirm(this)">delete permanently</button>
+            <div class="delete-confirm">
+              <span class="confirm-text">Sure?</span>
+              <button class="confirm-btn confirm-yes" onclick="event.stopPropagation(); deleteHabit(this.closest('.card-container').querySelector('[data-habit=water]'))">Yes</button>
+              <button class="confirm-btn confirm-no" onclick="event.stopPropagation(); hideDeleteConfirm(this)">No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer delete all -->
+  <div class="footer-delete">
+    <button class="footer-delete-btn" id="deleteAllBtn" onclick="showDeleteAllConfirm()">Delete All Archived Habits</button>
+  </div>
+</div>
+
+<script>
+  // Initialize Lucide icons
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    // Stagger entrance of rows
+    const sections = document.querySelectorAll('.section');
+    sections.forEach((section, si) => {
+      const rows = section.querySelectorAll('.habit-row');
+      rows.forEach((row, ri) => {
+        setTimeout(() => {
+          row.classList.add('visible');
+        }, (si * 200) + (ri * 80) + 150);
+      });
+    });
+  });
+
+  // Track section states
+  const sectionStates = {
+    'this-week': true,
+    'this-month': true,
+    'older': false
+  };
+
+  function toggleSection(sectionId) {
+    const card = document.querySelector(`[data-card="${sectionId}"]`);
+    const chevron = document.querySelector(`[data-chevron="${sectionId}"]`);
+    const isOpen = sectionStates[sectionId];
+
+    if (isOpen) {
+      // Collapse
+      card.style.maxHeight = card.scrollHeight + 'px';
+      requestAnimationFrame(() => {
+        card.classList.add('collapsed-content');
+        card.style.maxHeight = '0';
+      });
+      chevron.classList.add('collapsed');
+      sectionStates[sectionId] = false;
+    } else {
+      // Expand
+      card.classList.remove('collapsed-content');
+      card.style.maxHeight = card.scrollHeight + 'px';
+      chevron.classList.remove('collapsed');
+      sectionStates[sectionId] = true;
+      // After transition, remove max-height to allow detail expand
+      setTimeout(() => {
+        if (sectionStates[sectionId]) {
+          card.style.maxHeight = 'none';
+        }
+      }, 360);
+      // Animate rows in
+      const rows = card.querySelectorAll('.habit-row');
+      rows.forEach((row, i) => {
+        row.classList.remove('visible');
+        setTimeout(() => row.classList.add('visible'), i * 80 + 50);
+      });
+    }
+  }
+
+  // Initialize expanded sections
+  document.addEventListener('DOMContentLoaded', () => {
+    ['this-week', 'this-month'].forEach(id => {
+      const card = document.querySelector(`[data-card="${id}"]`);
+      card.style.maxHeight = 'none';
+    });
+  });
+
+  function toggleDetail(row) {
+    const habitId = row.dataset.habit;
+    const detail = document.querySelector(`[data-detail="${habitId}"]`);
+    const allDetails = document.querySelectorAll('.habit-detail');
+
+    // Close any other open detail
+    allDetails.forEach(d => {
+      if (d !== detail) d.classList.remove('expanded');
+    });
+
+    detail.classList.toggle('expanded');
+  }
+
+  function restoreHabit(row) {
+    if (!row) return;
+    const section = row.closest('.section');
+    const sectionId = section.dataset.section;
+    const habitId = row.dataset.habit;
+    const detail = document.querySelector(`[data-detail="${habitId}"]`);
+
+    // Close detail if open
+    if (detail) detail.classList.remove('expanded');
+
+    // Slide out row
+    row.classList.add('removing');
+    if (detail) {
+      detail.style.maxHeight = '0';
+      detail.style.padding = '0';
+      detail.style.opacity = '0';
+      detail.style.transition = 'all 0.3s ease';
+    }
+
+    // Handle divider removal
+    const nextAfterDetail = detail ? detail.nextElementSibling : row.nextElementSibling;
+    const prevElement = row.previousElementSibling;
+
+    if (nextAfterDetail && nextAfterDetail.classList.contains('habit-divider')) {
+      nextAfterDetail.classList.add('removing');
+    } else if (prevElement && prevElement.classList.contains('habit-divider')) {
+      prevElement.classList.add('removing');
+    }
+
+    setTimeout(() => {
+      // Remove divider
+      const nextDiv = detail ? detail.nextElementSibling : row.nextElementSibling;
+      const prevDiv = row.previousElementSibling;
+      if (nextDiv && nextDiv.classList.contains('habit-divider')) {
+        nextDiv.remove();
+      } else if (prevDiv && prevDiv.classList.contains('habit-divider')) {
+        prevDiv.remove();
+      }
+      row.remove();
+      if (detail) detail.remove();
+      updateSectionCount(sectionId);
+      updateTotalCount();
+      cleanupDividers(section);
+    }, 400);
+  }
+
+  function restoreAllInSection(sectionId) {
+    const card = document.querySelector(`[data-card="${sectionId}"]`);
+    const rows = card.querySelectorAll('.habit-row');
+    const staggerDelay = 80;
+
+    rows.forEach((row, i) => {
+      setTimeout(() => {
+        const habitId = row.dataset.habit;
+        const detail = document.querySelector(`[data-detail="${habitId}"]`);
+        row.classList.add('removing');
+        if (detail) {
+          detail.style.maxHeight = '0';
+          detail.style.padding = '0';
+          detail.style.opacity = '0';
+          detail.style.transition = 'all 0.3s ease';
+        }
+      }, i * staggerDelay);
+    });
+
+    // Remove dividers
+    const dividers = card.querySelectorAll('.habit-divider');
+    dividers.forEach((d, i) => {
+      setTimeout(() => d.classList.add('removing'), i * staggerDelay);
+    });
+
+    // Cleanup
+    setTimeout(() => {
+      card.innerHTML = '';
+      updateSectionCount(sectionId);
+      updateTotalCount();
+      checkEmpty();
+    }, rows.length * staggerDelay + 400);
+  }
+
+  function deleteHabit(row) {
+    if (!row) return;
+    const section = row.closest('.section');
+    const sectionId = section.dataset.section;
+    const habitId = row.dataset.habit;
+    const detail = document.querySelector(`[data-detail="${habitId}"]`);
+
+    // Red flash then remove
+    row.style.background = 'rgba(181,48,48,0.06)';
+    setTimeout(() => {
+      row.classList.add('removing');
+      if (detail) {
+        detail.style.maxHeight = '0';
+        detail.style.padding = '0';
+        detail.style.opacity = '0';
+        detail.style.transition = 'all 0.3s ease';
+      }
+
+      const nextSibling = detail ? detail.nextElementSibling : row.nextElementSibling;
+      if (nextSibling && nextSibling.classList.contains('habit-divider')) {
+        nextSibling.classList.add('removing');
+      }
+
+      setTimeout(() => {
+        const dividerToRemove = detail ? detail.nextElementSibling : row.nextElementSibling;
+        if (dividerToRemove && dividerToRemove.classList.contains('habit-divider')) {
+          dividerToRemove.remove();
+        }
+        row.remove();
+        if (detail) detail.remove();
+        updateSectionCount(sectionId);
+        updateTotalCount();
+        cleanupDividers(section);
+        checkEmpty();
+      }, 400);
+    }, 200);
+  }
+
+  function showDeleteConfirm(btn) {
+    const actions = btn.closest('.detail-actions');
+    btn.style.display = 'none';
+    actions.querySelector('.delete-confirm').classList.add('active');
+  }
+
+  function hideDeleteConfirm(btn) {
+    const actions = btn.closest('.detail-actions');
+    actions.querySelector('.delete-confirm').classList.remove('active');
+    actions.querySelector('.delete-link').style.display = '';
+  }
+
+  function showDeleteAllConfirm() {
+    const btn = document.getElementById('deleteAllBtn');
+    if (btn.dataset.confirming === 'true') {
+      // Delete everything
+      const allSections = document.querySelectorAll('.section');
+      let delay = 0;
+      allSections.forEach(section => {
+        const sectionId = section.dataset.section;
+        setTimeout(() => restoreAllInSection(sectionId), delay);
+        delay += 200;
+      });
+      btn.textContent = 'Delete All Archived Habits';
+      btn.dataset.confirming = 'false';
+    } else {
+      btn.textContent = 'Tap again to confirm deletion';
+      btn.dataset.confirming = 'true';
+      setTimeout(() => {
+        if (btn.dataset.confirming === 'true') {
+          btn.textContent = 'Delete All Archived Habits';
+          btn.dataset.confirming = 'false';
+        }
+      }, 3000);
+    }
+  }
+
+  function updateSectionCount(sectionId) {
+    const card = document.querySelector(`[data-card="${sectionId}"]`);
+    const count = card.querySelectorAll('.habit-row').length;
+    const badge = document.querySelector(`[data-count="${sectionId}"]`);
+    if (badge) badge.textContent = count;
+
+    // Hide section if empty
+    if (count === 0) {
+      const section = document.querySelector(`[data-section="${sectionId}"]`);
+      section.style.transition = 'opacity 0.3s, max-height 0.3s';
+      section.style.opacity = '0';
+      section.style.maxHeight = '0';
+      section.style.overflow = 'hidden';
+      section.style.marginBottom = '0';
+      setTimeout(() => section.remove(), 350);
+    }
+  }
+
+  function updateTotalCount() {
+    const total = document.querySelectorAll('.habit-row').length;
+    const subtitle = document.getElementById('habitCount');
+    if (total === 0) {
+      subtitle.textContent = 'No archived habits';
+    } else if (total === 1) {
+      subtitle.textContent = '1 habit resting here';
+    } else {
+      subtitle.textContent = `${total} habits resting here`;
+    }
+  }
+
+  function cleanupDividers(section) {
+    const card = section.querySelector('.card-container');
+    if (!card) return;
+    // Remove leading dividers
+    while (card.firstElementChild && card.firstElementChild.classList.contains('habit-divider')) {
+      card.firstElementChild.remove();
+    }
+    // Remove trailing dividers
+    while (card.lastElementChild && card.lastElementChild.classList.contains('habit-divider')) {
+      card.lastElementChild.remove();
+    }
+    // Remove consecutive dividers
+    const children = Array.from(card.children);
+    for (let i = children.length - 1; i > 0; i--) {
+      if (children[i].classList.contains('habit-divider') && children[i-1].classList.contains('habit-divider')) {
+        children[i].remove();
+      }
+    }
+  }
+
+  function checkEmpty() {
+    const remaining = document.querySelectorAll('.section').length;
+    if (remaining === 0) {
+      const container = document.getElementById('sectionsContainer');
+      container.innerHTML = `
+        <div style="text-align:center; padding:60px 40px; opacity:0; animation: fadeInUp 0.4s ease-out 0.2s forwards;">
+          <div style="font-size:48px; margin-bottom:16px;">🌿</div>
+          <div style="font-family:'Literata',serif; font-size:18px; font-weight:700; color:#2D2A26; margin-bottom:8px;">All Clear</div>
+          <div style="font-family:'DM Sans',sans-serif; font-size:14px; color:#6E6660;">No archived habits remaining.</div>
+        </div>
+      `;
+      document.querySelector('.footer-delete').style.display = 'none';
+    }
+  }
+</script>
+
+</body>
+</html>
