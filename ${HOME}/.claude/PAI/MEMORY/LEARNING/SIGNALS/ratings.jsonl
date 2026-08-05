@@ -1,0 +1,5 @@
+{"timestamp":"2026-05-25T06:26:41-07:00","rating":5,"session_id":"4a0765cd-c96e-4629-a600-ab5b3a85356a","source":"implicit","sentiment_summary":"User providing system setup instructions, no satisfaction signal","confidence":0.85}
+{"timestamp":"2026-05-25T06:36:58-07:00","rating":5,"session_id":"4a0765cd-c96e-4629-a600-ab5b3a85356a","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T11:44:13-07:00","rating":5,"session_id":"4a0765cd-c96e-4629-a600-ab5b3a85356a","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T11:48:16-07:00","rating":5,"session_id":"4a0765cd-c96e-4629-a600-ab5b3a85356a","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T12:25:41-07:00","rating":6,"session_id":"4a0765cd-c96e-4629-a600-ab5b3a85356a","source":"implicit","sentiment_summary":"Ready to merge; satisfied enough to proceed forward","confidence":0.7}
