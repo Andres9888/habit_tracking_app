@@ -90,8 +90,9 @@ describe('useHabitsListState - Offline Detection (Code Verification)', () => {
     });
 
     it('should import useOptimisticToggleMutation', () => {
-      expect(useHabitsListStateSource).toContain(
-        "import { useOptimisticToggleMutation } from '../../../lib/optimistic'"
+      expect(useHabitsListStateSource).toContain('useOptimisticToggleMutation');
+      expect(useHabitsListStateSource).toMatch(
+        /from '\.\.\/\.\.\/\.\.\/lib\/optimistic'/
       );
     });
   });

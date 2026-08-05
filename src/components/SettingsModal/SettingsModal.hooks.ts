@@ -4,7 +4,8 @@ import { api } from '../../../convex/_generated/api';
 import type { SettingsModalSettingsDocument } from './types';
 import { DEFAULT_SETTINGS } from '../../../convex/settings/types';
 import { sanitizeSettingsPayload } from '../../lib/settings/sanitizeSettingsPayload';
-import { updateSettingsWithFallback } from '../../lib/settings/updateSettingsWithFallback';
+import { updateSettingsOfflineAware } from '../../lib/settings/updateSettingsOfflineAware';
+import { useIsOnline } from '../../contexts/NetworkStatusContext';
 import { createSettingsUpdaters } from './SettingsModal.settingsUpdaters';
 import { useSettingsLocalPrefs } from './useSettingsLocalPrefs';
 
@@ -27,6 +28,7 @@ export const useSettingsModalLogic = ({
   >('none');
   const settings = settingsDocument;
   const updateSettings = useMutation(api.settings.update);
+  const isOnline = useIsOnline();
   const localPrefs = useSettingsLocalPrefs(settings);
 
   useEffect(() => {
@@ -55,12 +57,13 @@ export const useSettingsModalLogic = ({
           ? (DEFAULT_SETTINGS as Record<string, unknown>)
           : (settings as Record<string, unknown>);
 
-      await updateSettingsWithFallback(
+      await updateSettingsOfflineAware(
         updateSettings,
-        sanitizeSettingsPayload({ ...baseSettings, ...patch })
+        sanitizeSettingsPayload({ ...baseSettings, ...patch }),
+        isOnline
       );
     },
-    [settings, updateSettings]
+    [settings, updateSettings, isOnline]
   );
 
   const updaters = createSettingsUpdaters(update, {

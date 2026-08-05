@@ -1,5 +1,6 @@
 import { optimisticStore } from '../../../optimistic/store';
 import { optimisticHabitCreationStore } from '../../../../features/habits/hooks/optimisticHabitCreationStore';
+import { optimisticHabitUpdateStore } from '../../../../features/habits/hooks/optimisticHabitUpdateStore';
 import type { OfflineOperation } from '../../queue';
 import {
   rehydrateOptimisticFromQueue,
@@ -13,6 +14,7 @@ describe('rehydrateOptimisticFromQueue', () => {
     jest.useFakeTimers();
     optimisticStore.reset();
     optimisticHabitCreationStore.reset();
+    optimisticHabitUpdateStore.reset();
   });
 
   afterEach(() => {
@@ -122,6 +124,72 @@ describe('rehydrateOptimisticFromQueue', () => {
     expect(snapshot.operations.get('pause_1')?.payload).toMatchObject({
       habitName: 'Read',
     });
+  });
+
+  it('hides a habit for a pending removeHabit via the archive slot', () => {
+    rehydrateOptimisticFromQueue([
+      {
+        createdAt: Date.now(),
+        id: 'remove_1',
+        payload: { habitId, habitName: 'Read' },
+        retryCount: 0,
+        status: 'pending',
+        type: 'removeHabit',
+      },
+    ]);
+
+    expect(optimisticStore.getHiddenHabitIdsSnapshot().has(habitId)).toBe(true);
+  });
+
+  it('mirrors a pending updateHabit into the update store', () => {
+    rehydrateOptimisticFromQueue([
+      {
+        createdAt: Date.now(),
+        id: 'update_1',
+        payload: { habitId, updates: { name: 'Renamed' } },
+        retryCount: 0,
+        status: 'pending',
+        type: 'updateHabit',
+      },
+    ]);
+
+    expect(optimisticHabitUpdateStore.getSnapshot().get(habitId)).toEqual({
+      name: 'Renamed',
+    });
+  });
+
+  it('drops a ghost create/update record on terminal failure', () => {
+    optimisticHabitCreationStore.addWithId('op_create', {
+      color: '#fff',
+      name: 'Ghost',
+      remindersEnabled: false,
+      tempId: 'temp_habit_ghost',
+    });
+    optimisticHabitUpdateStore.addWithId('op_update', habitId, {
+      name: 'Ghost edit',
+    });
+
+    syncOptimisticFromQueueEvent(
+      {
+        error: 'final',
+        operationId: 'op_create',
+        timestamp: Date.now(),
+        type: 'operation:failed-final',
+      },
+      {} as never
+    );
+    syncOptimisticFromQueueEvent(
+      {
+        error: 'final',
+        operationId: 'op_update',
+        timestamp: Date.now(),
+        type: 'operation:failed-final',
+      },
+      {} as never
+    );
+
+    expect(optimisticHabitCreationStore.getSnapshot()).toHaveLength(0);
+    expect(optimisticHabitUpdateStore.getSnapshot().size).toBe(0);
   });
 
   it('does not rollback optimistic state for transient failures', () => {

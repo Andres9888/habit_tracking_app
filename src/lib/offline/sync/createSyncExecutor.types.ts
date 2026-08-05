@@ -1,4 +1,5 @@
 import type { Id } from '../../../../convex/_generated/dataModel';
+import type { ProgressEmojiSet } from '../../../utils/progressEmojis';
 
 export interface ConvexMutations {
   toggleHabit: (args: {
@@ -15,6 +16,7 @@ export interface ConvexMutations {
     goalDuration?: number;
     notes?: string;
     preferredTime?: string;
+    progressEmojis?: ProgressEmojiSet;
     remindersEnabled?: boolean;
     reminderTime?: string;
     reminderSound?: string;
@@ -28,11 +30,19 @@ export interface ConvexMutations {
     iconColor?: string;
     notes?: string;
     preferredTime?: string;
+    frequency?: string;
+    daysOfWeek?: number[];
+    goalDuration?: number;
+    strengthAlgorithm?: 'forgiving' | 'balanced' | 'strict';
+    progressEmojis?: ProgressEmojiSet;
     remindersEnabled?: boolean;
     reminderTime?: string;
     reminderSound?: string;
   }) => Promise<unknown>;
   archiveHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  unarchiveHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
   pauseHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  resumeHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
   removeHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  updateSettings: (args: Record<string, unknown>) => Promise<unknown>;
 }

@@ -109,6 +109,7 @@ export type QueueStateListener = () => void;
 
 // Re-export types used by this module
 export type {
+  CreateHabitPayload,
   OfflineOperation,
   OfflineOperationType,
   OfflineQueueState,
@@ -118,4 +119,6 @@ export type {
   QueueOperationOptions,
   QueueOperationResult,
   ToggleCompletionPayload,
+  UpdateHabitPayload,
+  UpdateSettingsPayload,
 } from '../queue';

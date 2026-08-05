@@ -28,3 +28,15 @@ export function usePendingToggles(): Map<string, boolean> {
     () => optimisticStore.getPendingTogglesSnapshot()
   );
 }
+
+/**
+ * Subscribe to the set of habit ids that should be hidden from the main list
+ * (pending archive or pause). Referentially stable across unrelated notifies.
+ */
+export function usePendingHiddenHabitIds(): ReadonlySet<string> {
+  return useSyncExternalStore(
+    (onStoreChange) => optimisticStore.subscribe(onStoreChange),
+    () => optimisticStore.getHiddenHabitIdsSnapshot(),
+    () => optimisticStore.getHiddenHabitIdsSnapshot()
+  );
+}

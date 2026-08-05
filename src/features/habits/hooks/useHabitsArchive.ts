@@ -4,7 +4,8 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { logInteraction } from '../../../lib/analytics/interactions';
-import { optimisticStore } from '../../../lib/optimistic';
+import { optimisticStore, runOfflineAwareMutation } from '../../../lib/optimistic';
+import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { showGenericError } from '../../../utils/errorAlerts';
 import { ERROR_MESSAGES } from '../../../constants/errorMessages';
 
@@ -14,34 +15,35 @@ export interface UseHabitsArchiveResult {
 
 export function useHabitsArchive(habits: Habit[]): UseHabitsArchiveResult {
   const archiveHabitMutation = useMutation(api.habits.archive);
+  const isOnline = useIsOnline();
 
-  // Latest-ref: habits gets a new identity on every toggle; reading it through
-  // a ref keeps handleArchive stable so memo'd habit cards don't re-render.
-  const habitsRef = useRef(habits);
-  habitsRef.current = habits;
+  // Latest-ref: habits/isOnline get a new identity on every toggle; reading
+  // them through a ref keeps handleArchive stable so memo'd habit cards don't
+  // re-render.
+  const depsRef = useRef({ habits, isOnline });
+  depsRef.current = { habits, isOnline };
 
   const handleArchive = useCallback(
     async (habitId: Id<'habits'>) => {
-      const habit = habitsRef.current.find((h) => h._id === habitId);
+      const { habits: currentHabits, isOnline: online } = depsRef.current;
+      const habit = currentHabits.find((h) => h._id === habitId);
       const habitName = habit?.name ?? 'Habit';
+      const payload = { habitId, habitName, toArchived: true as const };
 
-      // Apply optimistic update immediately
-      const operationId = optimisticStore.addArchive({
-        habitId,
-        habitName,
-        toArchived: true,
+      await runOfflineAwareMutation({
+        addOptimistic: () => optimisticStore.addArchive(payload),
+        addOptimisticWithId: (id) => optimisticStore.addArchiveWithId(id, payload),
+        isOnline: online,
+        onError: (error) => {
+          if (__DEV__)
+            console.error('[useHabitsArchive] Archive failed:', error);
+          showGenericError(ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED);
+        },
+        queuePayload: { habitId, habitName },
+        queueType: 'archiveHabit',
+        serverMutation: () => archiveHabitMutation({ habitId }),
       });
-
-      try {
-        await archiveHabitMutation({ habitId });
-        optimisticStore.confirm(operationId);
-        logInteraction('habit_archived', { habitId, habitName });
-      } catch (error) {
-        // Rollback on failure
-        optimisticStore.fail(operationId, error as Error);
-        if (__DEV__) console.error('[useHabitsArchive] Archive failed:', error);
-        showGenericError(ERROR_MESSAGES.DATA_OPS.ARCHIVE_HABIT_FAILED);
-      }
+      logInteraction('habit_archived', { habitId, habitName });
     },
     [archiveHabitMutation]
   );

@@ -14,6 +14,7 @@ import type {
 } from './types';
 import { getToggleDedupeKey } from './helpers';
 import { handleReplace, handleNewOperation } from './enqueueHandlers';
+import { coalesceUpdate } from './coalesceUpdate';
 
 type StateGetter = () => OfflineQueueState;
 type StateSetter = (state: OfflineQueueState) => void;
@@ -63,6 +64,18 @@ export function createEnqueue(
           getState
         );
       }
+    }
+
+    // updateHabit / updateSettings coalesce onto an existing pending op so a
+    // burst of offline edits replays as a single last-write-wins operation.
+    if (!allowDuplicate && (type === 'updateHabit' || type === 'updateSettings')) {
+      const coalesced = coalesceUpdate(type, payload, {
+        emit,
+        getState,
+        notify,
+        setState,
+      });
+      if (coalesced) return coalesced;
     }
 
     return handleNewOperation(

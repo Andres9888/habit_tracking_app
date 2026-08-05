@@ -5,8 +5,28 @@
  * when connectivity returns. See spec: docs/offline-habit-sync.md
  */
 
-import type { Id } from '../../../../convex/_generated/dataModel';
 import type { ErrorCategory } from '../types';
+import type {
+  ArchiveHabitPayload,
+  CreateHabitPayload,
+  OfflineOperationPayload,
+  PauseHabitPayload,
+  RemoveHabitPayload,
+  ToggleCompletionPayload,
+  UpdateHabitPayload,
+  UpdateSettingsPayload,
+} from './payloads';
+
+export type {
+  ArchiveHabitPayload,
+  CreateHabitPayload,
+  OfflineOperationPayload,
+  PauseHabitPayload,
+  RemoveHabitPayload,
+  ToggleCompletionPayload,
+  UpdateHabitPayload,
+  UpdateSettingsPayload,
+} from './payloads';
 
 /**
  * Status of an offline operation in the queue
@@ -26,112 +46,8 @@ export type OfflineOperationType =
   | 'updateHabit'
   | 'archiveHabit'
   | 'pauseHabit'
-  | 'removeHabit';
-
-/**
- * Payload for toggle completion operation
- */
-export interface ToggleCompletionPayload {
-  /** ID of the habit being toggled */
-  habitId: Id<'habits'>;
-  /** Date string in YYYY-MM-DD format */
-  date: string;
-  /** Whether the habit is being marked complete (true) or incomplete (false) */
-  toCompleted: boolean;
-}
-
-/**
- * Payload for create habit operation
- */
-export interface CreateHabitPayload {
-  /** Temporary local ID for optimistic updates (format: temp_{timestamp}_{random}) */
-  tempId: string;
-  /** Habit name */
-  name: string;
-  /** Optional icon/emoji */
-  icon?: string;
-  /** Optional color */
-  color?: string;
-  /** Optional icon color */
-  iconColor?: string;
-  /** Optional notes */
-  notes?: string;
-  /** Optional preferred time */
-  preferredTime?: string;
-  /** Optional frequency/cadence */
-  frequency?: string;
-  /** Optional weekly day selection */
-  daysOfWeek?: number[];
-  /** Optional streak goal */
-  goalDuration?: number;
-  /** Optional strength algorithm */
-  strengthAlgorithm?: 'forgiving' | 'balanced' | 'strict';
-  /** Whether reminders are enabled */
-  remindersEnabled?: boolean;
-  /** Optional reminder time */
-  reminderTime?: string;
-  /** Optional reminder sound */
-  reminderSound?: string;
-}
-
-/**
- * Payload for update habit operation
- */
-export interface UpdateHabitPayload {
-  /** ID of the habit being updated */
-  habitId: Id<'habits'>;
-  /** Updated fields */
-  updates: {
-    name?: string;
-    icon?: string;
-    color?: string;
-    iconColor?: string;
-    notes?: string;
-    preferredTime?: string;
-    remindersEnabled?: boolean;
-    reminderTime?: string;
-    reminderSound?: string;
-  };
-}
-
-/**
- * Payload for archive habit operation
- */
-export interface ArchiveHabitPayload {
-  /** ID of the habit being archived */
-  habitId: Id<'habits'>;
-  /** Display name captured at enqueue time */
-  habitName?: string;
-}
-
-/**
- * Payload for pause habit operation
- */
-export interface PauseHabitPayload {
-  /** ID of the habit being paused */
-  habitId: Id<'habits'>;
-  /** Display name captured at enqueue time */
-  habitName?: string;
-}
-
-/**
- * Payload for remove habit operation
- */
-export interface RemoveHabitPayload {
-  /** ID of the habit being removed */
-  habitId: Id<'habits'>;
-}
-
-/**
- * Union of all offline operation payloads
- */
-export type OfflineOperationPayload =
-  | ToggleCompletionPayload
-  | CreateHabitPayload
-  | UpdateHabitPayload
-  | ArchiveHabitPayload
-  | PauseHabitPayload
-  | RemoveHabitPayload;
+  | 'removeHabit'
+  | 'updateSettings';
 
 /**
  * A single offline operation in the queue
@@ -161,7 +77,9 @@ export interface OfflineOperation<
             ? PauseHabitPayload
             : T extends 'removeHabit'
               ? RemoveHabitPayload
-              : OfflineOperationPayload;
+              : T extends 'updateSettings'
+                ? UpdateSettingsPayload
+                : OfflineOperationPayload;
 
   /** Current status of the operation */
   status: OfflineOperationStatus;
@@ -191,3 +109,4 @@ export type UpdateHabitOperation = OfflineOperation<'updateHabit'>;
 export type ArchiveHabitOperation = OfflineOperation<'archiveHabit'>;
 export type PauseHabitOperation = OfflineOperation<'pauseHabit'>;
 export type RemoveHabitOperation = OfflineOperation<'removeHabit'>;
+export type UpdateSettingsOperation = OfflineOperation<'updateSettings'>;

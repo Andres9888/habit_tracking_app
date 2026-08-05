@@ -8,11 +8,15 @@ import {
   clearLegacyOptimisticStore,
   clearOptimisticStoreForScope,
 } from '../../lib/optimistic/store/persistence';
+import { optimisticHabitCreationStore } from '../../features/habits/hooks/optimisticHabitCreationStore';
+import { optimisticHabitUpdateStore } from '../../features/habits/hooks/optimisticHabitUpdateStore';
 import { clearQueryCacheForScope, resetQueryCache } from '../../lib/queryCache';
 
 export async function clearSessionData(scope: string): Promise<void> {
   getOfflineQueueManager().clear({ persist: false });
   optimisticStore.reset();
+  optimisticHabitCreationStore.reset();
+  optimisticHabitUpdateStore.reset();
   resetQueryCache();
 
   await Promise.allSettled([

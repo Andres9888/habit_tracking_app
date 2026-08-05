@@ -23,9 +23,16 @@
 
 export { optimisticStore } from './store';
 
+export { runOfflineAwareMutation } from './runOfflineAwareMutation';
+export type {
+  OfflineAwareMutationOptions,
+  OfflineAwareMutationResult,
+} from './runOfflineAwareMutation';
+
 export {
   useOptimisticStore,
   usePendingToggles,
+  usePendingHiddenHabitIds,
   useHasPendingOperations,
   useOptimisticToggle,
   useOptimisticArchive,

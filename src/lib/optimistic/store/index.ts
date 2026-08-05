@@ -21,6 +21,25 @@ const togglesEqual = (
   return true;
 };
 
+const setsEqual = (a: ReadonlySet<string>, b: ReadonlySet<string>): boolean => {
+  if (a.size !== b.size) return false;
+  for (const value of a) if (!b.has(value)) return false;
+  return true;
+};
+
+// Habits with a pending archive/pause (true) should disappear from the main
+// list immediately — even offline, where no server refresh will drop them.
+const computeHiddenHabitIds = (state: OptimisticStore): Set<string> => {
+  const hidden = new Set<string>();
+  for (const [habitId, toArchived] of state.pendingArchives) {
+    if (toArchived) hidden.add(habitId);
+  }
+  for (const [habitId, toPaused] of state.pendingPauses) {
+    if (toPaused) hidden.add(habitId);
+  }
+  return hidden;
+};
+
 function createOptimisticStore(): OptimisticStoreAPI {
   const state: OptimisticStore = {
     operations: new Map(),
@@ -54,11 +73,16 @@ function createOptimisticStore(): OptimisticStoreAPI {
   // pendingToggles only ever holds a handful of in-flight entries, so the
   // shallow compare on each notify is negligible.
   let togglesSnapshot: Map<string, boolean> = new Map(state.pendingToggles);
+  let hiddenSnapshot: Set<string> = computeHiddenHabitIds(state);
 
   const notify = () => {
     snapshot = buildSnapshot();
     if (!togglesEqual(togglesSnapshot, state.pendingToggles)) {
       togglesSnapshot = new Map(state.pendingToggles);
+    }
+    const nextHidden = computeHiddenHabitIds(state);
+    if (!setsEqual(hiddenSnapshot, nextHidden)) {
+      hiddenSnapshot = nextHidden;
     }
     for (const listener of listeners) listener();
   };
@@ -67,6 +91,7 @@ function createOptimisticStore(): OptimisticStoreAPI {
   const stateManagement = createStateManagement(state, notify);
   snapshot = buildSnapshot();
   togglesSnapshot = new Map(state.pendingToggles);
+  hiddenSnapshot = computeHiddenHabitIds(state);
 
   return {
     getSnapshot(): OptimisticStore {
@@ -75,6 +100,10 @@ function createOptimisticStore(): OptimisticStoreAPI {
 
     getPendingTogglesSnapshot(): Map<string, boolean> {
       return togglesSnapshot;
+    },
+
+    getHiddenHabitIdsSnapshot(): Set<string> {
+      return hiddenSnapshot;
     },
 
     subscribe(listener: StoreListener): () => void {

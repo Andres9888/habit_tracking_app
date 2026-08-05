@@ -12,6 +12,9 @@ import {
 } from '../../utils/notifications';
 import { showSaveError } from '../../utils/errorAlerts';
 import type { ProgressEmojiSet } from '../../utils/progressEmojis';
+import { isNetworkError } from '../../lib/offline';
+import { enqueueHabitUpdate } from '../../features/habits/hooks/offlineHabitMutations';
+import { useIsOnline } from '../../contexts/NetworkStatusContext';
 
 interface UseSaveHandlerProps {
   habitId: Id<'habits'> | null;
@@ -39,6 +42,7 @@ export function useHabitSaveHandler({
   onSuccess,
 }: UseSaveHandlerProps) {
   const updateHabit = useMutation(api.habits.update);
+  const isOnline = useIsOnline();
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = useCallback(async () => {
@@ -81,22 +85,44 @@ export function useHabitSaveHandler({
         await cancelHabitReminder(String(habitId));
       }
 
-      await updateHabit({
-        habitId,
-        icon: selectedEmoji ?? undefined,
+      const updates = {
         color: selectedColor,
+        goalDuration: streakGoal > 0 ? streakGoal : undefined,
+        icon: selectedEmoji ?? undefined,
         iconColor: selectedColor,
         name: fullName,
         progressEmojis,
-        remindersEnabled: enableReminders,
         reminderSound: enableReminders ? 'default' : undefined,
         reminderTime: enableReminders ? reminderTimeString : undefined,
-        goalDuration: streakGoal > 0 ? streakGoal : undefined,
+        remindersEnabled: enableReminders,
         strengthAlgorithm,
-      });
+      };
 
+      if (!isOnline) {
+        enqueueHabitUpdate(habitId, updates);
+        onSuccess();
+        return;
+      }
+
+      await updateHabit({ habitId, ...updates });
       onSuccess();
     } catch (error) {
+      if (isNetworkError(error)) {
+        enqueueHabitUpdate(habitId, {
+          color: selectedColor,
+          goalDuration: streakGoal > 0 ? streakGoal : undefined,
+          icon: selectedEmoji ?? undefined,
+          iconColor: selectedColor,
+          name: fullName,
+          progressEmojis,
+          reminderSound: enableReminders ? 'default' : undefined,
+          reminderTime: enableReminders ? reminderTimeString : undefined,
+          remindersEnabled: enableReminders,
+          strengthAlgorithm,
+        });
+        onSuccess();
+        return;
+      }
       if (__DEV__) console.error('Failed to save habit:', error);
       showSaveError(() => void handleSave());
     } finally {
@@ -113,6 +139,7 @@ export function useHabitSaveHandler({
     streakGoal,
     strengthAlgorithm,
     progressEmojis,
+    isOnline,
     updateHabit,
     onSuccess,
   ]);

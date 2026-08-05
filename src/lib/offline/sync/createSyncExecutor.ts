@@ -6,6 +6,7 @@ import type {
   RemoveHabitOperation,
   ToggleCompletionOperation,
   UpdateHabitOperation,
+  UpdateSettingsOperation,
 } from '../queue';
 import {
   archiveHabit,
@@ -14,6 +15,7 @@ import {
   removeHabit,
   toggleCompletion,
   updateHabit,
+  updateSettings,
 } from './createSyncExecutorHandlers';
 import type { ConvexMutations } from './createSyncExecutor.types';
 
@@ -50,6 +52,10 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       }
       case 'removeHabit': {
         await removeHabit(operation as RemoveHabitOperation, mutations);
+        break;
+      }
+      case 'updateSettings': {
+        await updateSettings(operation as UpdateSettingsOperation, mutations);
         break;
       }
       default: {

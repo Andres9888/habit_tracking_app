@@ -2,7 +2,11 @@
  * Optimistic update hooks
  */
 
-export { useOptimisticStore, usePendingToggles } from './useOptimisticStore';
+export {
+  useOptimisticStore,
+  usePendingToggles,
+  usePendingHiddenHabitIds,
+} from './useOptimisticStore';
 
 export {
   useHasPendingOperations,

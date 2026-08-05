@@ -34,7 +34,11 @@ import { useHabitsArchive } from './useHabitsArchive';
 import { useHabitDelete } from './useHabitDelete';
 import { useRewardToast } from './useRewardToast';
 import { useHabitsListHeaderStats } from './useHabitsListHeaderStats';
-import { useOptimisticToggleMutation } from '../../../lib/optimistic';
+import {
+  useOptimisticToggleMutation,
+  usePendingHiddenHabitIds,
+} from '../../../lib/optimistic';
+import { usePendingHabitUpdates } from './optimisticHabitUpdateStore';
 import { useOptimisticDragEnd } from './useOptimisticDragEnd';
 import { useIsOnline } from '../../../contexts/NetworkStatusContext';
 import { useToggleHabitWithTimezone } from '../../../hooks/useToggleHabitWithTimezone';
@@ -138,7 +142,24 @@ export function useHabitsListState(): HabitsListState {
   );
   const habitsFromQuery = habitsValidation.limited;
   const pendingCreatedHabits = usePendingCreatedHabits();
+  const hiddenHabitIds = usePendingHiddenHabitIds();
+  const pendingHabitUpdates = usePendingHabitUpdates();
   const isHabitsLoading = habitsQuery === undefined;
+
+  // Offline archive/pause/delete hide a habit optimistically; offline edits
+  // patch it in place — neither has a server refresh to reflect the change.
+  const visibleHabitsFromQuery = useMemo(() => {
+    if (hiddenHabitIds.size === 0 && pendingHabitUpdates.size === 0) {
+      return habitsFromQuery;
+    }
+    const result: Habit[] = [];
+    for (const habit of habitsFromQuery) {
+      if (hiddenHabitIds.has(habit._id)) continue;
+      const patch = pendingHabitUpdates.get(habit._id);
+      result.push(patch ? { ...habit, ...(patch as Partial<Habit>) } : habit);
+    }
+    return result;
+  }, [habitsFromQuery, hiddenHabitIds, pendingHabitUpdates]);
 
   // Warn if habits array was limited
   if (habitsValidation.warning && __DEV__) {
@@ -198,22 +219,22 @@ export function useHabitsListState(): HabitsListState {
 
   const habitsWithOptimisticCreates = useMemo(() => {
     if (pendingCreatedHabits.length === 0) {
-      return habitsFromQuery;
+      return visibleHabitsFromQuery;
     }
 
     let maxOrder = 0;
-    for (const habit of habitsFromQuery) {
+    for (const habit of visibleHabitsFromQuery) {
       maxOrder = Math.max(maxOrder, habit.order ?? maxOrder);
     }
 
     return [
-      ...habitsFromQuery,
+      ...visibleHabitsFromQuery,
       ...pendingCreatedHabits.map((habit, index) => ({
         ...habit,
         order: habit.order ?? maxOrder + index + 1,
       })),
     ];
-  }, [habitsFromQuery, pendingCreatedHabits]);
+  }, [visibleHabitsFromQuery, pendingCreatedHabits]);
 
   useEffect(() => {
     const timers = cleanupTimersRef.current;

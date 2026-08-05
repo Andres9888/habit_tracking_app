@@ -5,6 +5,7 @@ import type {
   RemoveHabitOperation,
   ToggleCompletionOperation,
   UpdateHabitOperation,
+  UpdateSettingsOperation,
 } from '../queue';
 import type { ConvexMutations } from './createSyncExecutor.types';
 import { normalizeReminderTime } from './normalizeReminderTime';
@@ -32,6 +33,7 @@ export async function createHabit(
     goalDuration: payload.goalDuration,
     notes: payload.notes,
     preferredTime: payload.preferredTime,
+    progressEmojis: payload.progressEmojis,
     remindersEnabled: payload.remindersEnabled,
     reminderTime: normalizeReminderTime(payload.reminderTime),
     reminderSound: payload.reminderSound,
@@ -62,14 +64,24 @@ export async function archiveHabit(
   operation: ArchiveHabitOperation,
   mutations: ConvexMutations
 ) {
-  await mutations.archiveHabit({ habitId: operation.payload.habitId });
+  const { habitId, toArchived } = operation.payload;
+  if (toArchived === false) {
+    await mutations.unarchiveHabit({ habitId });
+  } else {
+    await mutations.archiveHabit({ habitId });
+  }
 }
 
 export async function pauseHabit(
   operation: PauseHabitOperation,
   mutations: ConvexMutations
 ) {
-  await mutations.pauseHabit({ habitId: operation.payload.habitId });
+  const { habitId, toPaused } = operation.payload;
+  if (toPaused === false) {
+    await mutations.resumeHabit({ habitId });
+  } else {
+    await mutations.pauseHabit({ habitId });
+  }
 }
 
 export async function removeHabit(
@@ -77,4 +89,11 @@ export async function removeHabit(
   mutations: ConvexMutations
 ) {
   await mutations.removeHabit({ habitId: operation.payload.habitId });
+}
+
+export async function updateSettings(
+  operation: UpdateSettingsOperation,
+  mutations: ConvexMutations
+) {
+  await mutations.updateSettings(operation.payload.settings);
 }

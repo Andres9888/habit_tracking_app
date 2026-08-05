@@ -5,20 +5,24 @@ import { api } from '../../../../convex/_generated/api';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { Habit } from '../types';
 import { triggerHaptic } from '@/utils/haptics';
-import { cancelHabitReminder } from '@/utils/notifications';
 import { logInteraction } from '../../../lib/analytics/interactions';
+import { useIsOnline } from '../../../contexts/NetworkStatusContext';
+import { deleteHabitOffline } from './offlineHabitMutations';
 
 export function useHabitDelete(habits: Habit[]) {
   const removeHabit = useMutation(api.habits.remove);
+  const isOnline = useIsOnline();
 
-  // Latest-ref: habits gets a new identity on every toggle; reading it through
-  // a ref keeps handleDelete stable so memo'd habit cards don't re-render.
-  const habitsRef = useRef(habits);
-  habitsRef.current = habits;
+  // Latest-ref: habits/isOnline get a new identity on every toggle; reading
+  // them through a ref keeps handleDelete stable so memo'd habit cards don't
+  // re-render.
+  const depsRef = useRef({ habits, isOnline });
+  depsRef.current = { habits, isOnline };
 
   const handleDelete = useCallback(
     (habitId: Id<'habits'>) => {
-      const habit = habitsRef.current.find((h) => h._id === habitId);
+      const { habits: currentHabits, isOnline: online } = depsRef.current;
+      const habit = currentHabits.find((h) => h._id === habitId);
       const habitName = habit?.name ?? 'Habit';
 
       triggerHaptic('heavy');
@@ -32,16 +36,23 @@ export function useHabitDelete(habits: Habit[]) {
             text: 'Delete Forever',
             style: 'destructive',
             onPress: async () => {
-              try {
-                await cancelHabitReminder(String(habitId));
-                await removeHabit({ habitId });
-                triggerHaptic('success');
-                logInteraction('habit_deleted', { habitId, habitName });
-              } catch (error_) {
-                if (__DEV__) console.error('[useHabitDelete] Delete failed:', error_);
-                triggerHaptic('error');
-                Alert.alert('Error', `Failed to delete "${habitName}". Please try again.`);
-              }
+              await deleteHabitOffline({
+                habitId,
+                habitName,
+                isOnline: online,
+                onError: (error_) => {
+                  if (__DEV__)
+                    console.error('[useHabitDelete] Delete failed:', error_);
+                  triggerHaptic('error');
+                  Alert.alert(
+                    'Error',
+                    `Failed to delete "${habitName}". Please try again.`
+                  );
+                },
+                removeMutation: removeHabit,
+              });
+              triggerHaptic('success');
+              logInteraction('habit_deleted', { habitId, habitName });
             },
           },
         ],

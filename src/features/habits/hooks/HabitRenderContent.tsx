@@ -117,9 +117,11 @@ function HabitRenderContentComponent({
     [isOptimisticHabit, toggleHabit]
   );
 
-  // Animated style for the active drag state — no scale to avoid GPU blur
+  // Animated style for the active drag state — no scale to avoid GPU blur.
+  // Not-yet-synced (offline-created) habits are dimmed to signal a pending sync.
+  const restingOpacity = isOptimisticHabit ? 0.6 : 1;
   const activeStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(isActive ? 0.92 : 1, { duration: 150 }),
+    opacity: withTiming(isActive ? 0.92 : restingOpacity, { duration: 150 }),
     ...(isActive
       ? {
           shadowColor: '#000',
