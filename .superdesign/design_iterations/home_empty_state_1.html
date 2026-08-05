@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ChainDay — Home Empty State (Mock 1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    /* Pulled from src/theme/colors/core.ts + semantic.ts */
+    --bg: #F5F1ED;            /* warm parchment canvas */
+    --surface: #EDEAE5;       /* card lift */
+    --surface-2: #FAF8F5;     /* muted surface */
+    --border: #DDD8D2;
+    --border-soft: #E8E3DC;
+    --text-900: #1A1816;
+    --text-800: #2D2A26;      /* foreground */
+    --text-700: #3D3833;      /* headings */
+    --text-600: #524D47;
+    --text-500: #6B6560;
+    --text-400: #6E6660;      /* hint */
+
+    --primary-50: #ECFDF5;
+    --primary-100: #D1FAE5;
+    --primary-300: #6EE7B7;
+    --primary-500: #10B981;
+    --primary-600: #059669;   /* CTA fill */
+    --primary-700: #047857;
+    --primary-800: #065F46;
+
+    --streak-100: #FEF3CD;
+    --streak-300: #E8B94D;
+    --streak-500: #8B6208;
+    --streak-600: #936A08;
+    --streak-700: #7D5907;
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    --shadow-card: 0 1px 2px rgba(26, 24, 22, 0.04), 0 6px 16px -4px rgba(26, 24, 22, 0.06);
+    --shadow-cta: 0 2px 4px rgba(5, 150, 105, 0.18), 0 8px 20px -6px rgba(5, 150, 105, 0.28);
+    --shadow-pop: 0 10px 32px -8px rgba(26, 24, 22, 0.22);
+
+    --font-display: 'Literata', Georgia, serif;
+    --font-text: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #eae5de;
+    font-family: var(--font-text);
+    color: var(--text-800);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .page {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 24px;
+    flex-wrap: wrap;
+  }
+
+  .caption {
+    max-width: 300px;
+    font-size: 13px;
+    color: #6b665f;
+    line-height: 1.5;
+    padding-top: 48px;
+  }
+  .caption h1 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: #2b2824;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .caption p + p { margin-top: 10px; }
+  .caption code {
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    background: #e2ddd5;
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .caption ul { margin: 8px 0 0 16px; padding: 0; }
+  .caption li { margin: 4px 0; }
+
+  /* ── iPhone 14 Pro frame ───────────────────────────────── */
+  .phone {
+    width: 393px;
+    height: 852px;
+    background: var(--bg);
+    border-radius: 52px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-pop), 0 0 0 10px #1a1816, 0 0 0 11px #0f0e0d;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Status bar */
+  .status {
+    height: 54px;
+    padding: 18px 30px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-800);
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+  }
+  .status .right { display: flex; gap: 6px; align-items: center; }
+  .status .right svg { width: 17px; height: 17px; stroke-width: 2.25; }
+  .notch {
+    position: absolute;
+    top: 11px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 35px;
+    background: #1a1816;
+    border-radius: 20px;
+    z-index: 20;
+  }
+
+  /* Scrollable body */
+  .screen {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 20px 120px;
+  }
+  .screen::-webkit-scrollbar { width: 0; }
+
+  /* ── Greeting ─────────────────────────────────────────── */
+  .greeting {
+    padding: 16px 4px 8px;
+  }
+  .greeting .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary-700);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .greeting .eyebrow .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--primary-500);
+  }
+  .greeting h1 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text-900);
+    margin-top: 8px;
+    letter-spacing: -0.015em;
+  }
+  .greeting h1 em {
+    font-style: italic;
+    color: var(--primary-700);
+    font-weight: 500;
+  }
+  .greeting p.sub {
+    font-size: 15px;
+    color: var(--text-500);
+    margin-top: 8px;
+    line-height: 1.45;
+  }
+
+  /* ── Ghost chain preview ──────────────────────────────── */
+  .ghost-card {
+    margin-top: 22px;
+    background: var(--surface-2);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 18px 16px;
+    position: relative;
+  }
+  .ghost-card::after {
+    content: "PREVIEW";
+    position: absolute;
+    top: 12px; right: 14px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-400);
+  }
+  .ghost-card .row1 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ghost-emoji {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    display: grid; place-items: center;
+    font-size: 22px;
+  }
+  .ghost-meta { flex: 1; min-width: 0; }
+  .ghost-meta .name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-700);
+  }
+  .ghost-meta .strength {
+    font-size: 12px;
+    color: var(--text-500);
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .streak-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--streak-100);
+    color: var(--streak-700);
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .streak-pill svg { width: 11px; height: 11px; }
+  .chain-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+    align-items: center;
+  }
+  .link {
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: var(--primary-600);
+    display: grid; place-items: center;
+    color: #fff;
+    font-weight: 600; font-size: 12px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.1);
+  }
+  .link.empty {
+    background: transparent;
+    border: 1.5px dashed var(--border);
+    color: var(--text-400);
+  }
+  .link.today {
+    background: #fff;
+    border: 1.5px solid var(--primary-600);
+    color: var(--primary-700);
+    position: relative;
+  }
+  .link.today::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 12px;
+    border: 2px solid var(--primary-300);
+    animation: pulse 2s ease-in-out infinite;
+    opacity: .6;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(0.95); opacity: 0.5; }
+    50% { transform: scale(1.05); opacity: 0.25; }
+  }
+  .ghost-card .hint {
+    font-size: 12px;
+    color: var(--text-500);
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-style: italic;
+  }
+  .ghost-card .hint svg { width: 12px; height: 12px; stroke-width: 2.5; }
+
+  /* ── Primary CTA ──────────────────────────────────────── */
+  .cta-primary {
+    margin-top: 20px;
+    width: 100%;
+    height: 56px;
+    background: var(--primary-600);
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    font-family: var(--font-text);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    box-shadow: var(--shadow-cta);
+    transition: transform 120ms ease, box-shadow 180ms ease;
+  }
+  .cta-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(5, 150, 105, 0.22), 0 12px 26px -6px rgba(5, 150, 105, 0.35);
+  }
+  .cta-primary svg { width: 20px; height: 20px; stroke-width: 2.5; }
+
+  .cta-secondary {
+    margin-top: 12px;
+    width: 100%;
+    text-align: center;
+    color: var(--primary-700);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 0;
+    letter-spacing: -0.005em;
+  }
+  .cta-secondary svg { width: 14px; height: 14px; vertical-align: -2px; margin-left: 2px; }
+
+  /* ── Section: Get started in 2 minutes ────────────────── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 32px 2px 14px;
+  }
+  .section-head .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+  }
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-600);
+    letter-spacing: -0.005em;
+  }
+
+  .motivation-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .mot-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 120px;
+    position: relative;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 220ms ease, border-color 180ms ease;
+  }
+  .mot-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card);
+    border-color: #C9C4BC;
+  }
+  .mot-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    color: #fff;
+  }
+  .mot-icon svg { width: 18px; height: 18px; stroke-width: 2.25; }
+  .mot-icon.vision { background: linear-gradient(135deg, #6D3AC7, #8563C7); }
+  .mot-icon.woop { background: linear-gradient(135deg, #047857, #10B981); }
+  .mot-icon.why { background: linear-gradient(135deg, #8B6208, #E8B94D); }
+  .mot-icon.intent { background: linear-gradient(135deg, #3872B8, #60A5FA); }
+  .mot-card .label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-800);
+    line-height: 1.25;
+  }
+  .mot-card .sub {
+    font-size: 12px;
+    color: var(--text-500);
+    line-height: 1.35;
+  }
+  .mot-card .time {
+    margin-top: auto;
+    font-size: 11px;
+    color: var(--text-400);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mot-card .time svg { width: 11px; height: 11px; }
+
+  .motivation-row.span4 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .mot-card.full { grid-column: 1 / -1; min-height: auto; flex-direction: row; align-items: center; gap: 12px; padding: 14px; }
+  .mot-card.full .mot-icon { flex-shrink: 0; }
+  .mot-card.full .body { flex: 1; min-width: 0; }
+  .mot-card.full .chev { color: var(--text-400); flex-shrink: 0; }
+
+  /* ── Bottom action bar ────────────────────────────────── */
+  .bottom-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 92px;
+    background: linear-gradient(180deg, rgba(245, 241, 237, 0) 0%, var(--bg) 30%);
+    padding: 0 24px 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    z-index: 10;
+  }
+  .bb-icon {
+    width: 48px; height: 48px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    display: grid; place-items: center;
+    color: var(--text-600);
+    position: relative;
+    box-shadow: 0 2px 6px -2px rgba(26, 24, 22, 0.08);
+  }
+  .bb-icon svg { width: 22px; height: 22px; stroke-width: 2; }
+  .bb-icon .badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--primary-500);
+    border: 2px solid #fff;
+  }
+  .fab {
+    width: 64px; height: 64px;
+    border-radius: 22px;
+    background: var(--primary-600);
+    color: #fff;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 16px -4px rgba(5, 150, 105, 0.35);
+    position: relative;
+    animation: fabNudge 3.5s ease-in-out 1.5s 2;
+  }
+  @keyframes fabNudge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); box-shadow: 0 8px 22px -4px rgba(5, 150, 105, 0.55); }
+  }
+  .fab svg { width: 28px; height: 28px; stroke-width: 2.5; }
+  .fab .ring {
+    position: absolute; inset: -8px;
+    border-radius: 28px;
+    border: 2px solid var(--primary-300);
+    opacity: 0;
+    animation: fabRing 2.4s ease-out 2.3s 1;
+  }
+  @keyframes fabRing {
+    0% { opacity: 0.7; transform: scale(0.9); }
+    100% { opacity: 0; transform: scale(1.3); }
+  }
+
+  /* ── Annotations for designer review ──────────────────── */
+  .annot {
+    position: absolute;
+    background: #fffbe8;
+    border: 1px solid #f5d96d;
+    color: #6b5a10;
+    border-radius: 6px;
+    padding: 3px 7px;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-text);
+    white-space: nowrap;
+    box-shadow: 0 4px 10px -2px rgba(0,0,0,.18);
+    z-index: 30;
+    letter-spacing: 0.01em;
+  }
+  .annot::before {
+    content: ""; position: absolute;
+    width: 0; height: 0;
+  }
+
+  .fade-in {
+    animation: fade 480ms ease 0ms both;
+  }
+  .fade-in.d1 { animation-delay: 80ms; }
+  .fade-in.d2 { animation-delay: 160ms; }
+  .fade-in.d3 { animation-delay: 240ms; }
+  .fade-in.d4 { animation-delay: 320ms; }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="caption">
+    <h1>Home — new user, zero habits</h1>
+    <p><strong>What this fixes:</strong></p>
+    <ul>
+      <li><code>02 H1</code> — no empty state on home (blank cream)</li>
+      <li><code>04 H4/H5</code> — motivation surfaces (Vision, WOOP, Why) have no entry points; built, tested, orphaned</li>
+      <li><code>02 H4 / 01 H2</code> — primary CTA now reads as a CTA (solid, high contrast), not a phantom disabled affordance</li>
+      <li><code>04 H1</code> — onboarding carousel becomes skippable noise once this screen teaches the metaphor</li>
+    </ul>
+    <p>Tokens pulled from <code>src/theme/colors/core.ts</code> + <code>semantic.ts</code>; fonts Literata + DM Sans via Google Fonts; no new colors introduced.</p>
+    <p><strong>Motion:</strong> 480ms fade-up on first paint (staggered 80ms per section); FAB nudges twice on mount (3.5s, 7s) to teach its role; "today" link on ghost card pulses softly (2s loop, ≤0.6 opacity). All follow the existing <code>src/theme/animations.ts</code> language (280ms springs, damping-18).</p>
+    <p><strong>Note:</strong> This is rendered in Chrome web — iOS native fonts and rendering may shift slightly. Open as a first-pass only.</p>
+  </div>
+
+  <div class="phone">
+    <div class="notch"></div>
+
+    <div class="status">
+      <span>9:41</span>
+      <div class="right">
+        <i data-lucide="signal"></i>
+        <i data-lucide="wifi"></i>
+        <i data-lucide="battery-full"></i>
+      </div>
+    </div>
+
+    <div class="screen">
+
+      <div class="greeting fade-in">
+        <div class="eyebrow"><span class="dot"></span> Good morning, Andres</div>
+        <h1>Let's build your <em>first chain</em>.</h1>
+        <p class="sub">A habit becomes real after seven days. Pick one thing you'll show up for, tomorrow and the day after.</p>
+      </div>
+
+      <div class="ghost-card fade-in d1">
+        <div class="row1">
+          <div class="ghost-emoji">🌱</div>
+          <div class="ghost-meta">
+            <div class="name">Your habit here</div>
+            <div class="strength">
+              <span class="streak-pill"><i data-lucide="flame"></i> day 1 of 7</span>
+              <span>&middot; forms a chain</span>
+            </div>
+          </div>
+        </div>
+        <div class="chain-row">
+          <div class="link">✓</div>
+          <div class="link">✓</div>
+          <div class="link">✓</div>
+          <div class="link today">•</div>
+          <div class="link empty">—</div>
+          <div class="link empty">—</div>
+          <div class="link empty">—</div>
+        </div>
+        <div class="hint"><i data-lucide="sparkles"></i> This is what a habit card looks like once you start.</div>
+      </div>
+
+      <button class="cta-primary fade-in d2">
+        <i data-lucide="plus"></i> Create your first habit
+      </button>
+      <div class="cta-secondary fade-in d2">
+        or start from a template <i data-lucide="arrow-right"></i>
+      </div>
+
+      <div class="section-head fade-in d3">
+        <span class="line"></span>
+        <h2>Get grounded in 2 minutes</h2>
+        <span class="line"></span>
+      </div>
+
+      <div class="motivation-row fade-in d4">
+        <div class="mot-card">
+          <div class="mot-icon woop">
+            <i data-lucide="compass"></i>
+          </div>
+          <div class="label">Plan with WOOP</div>
+          <div class="sub">Turn a wish into an "if-then" plan that survives the bad days.</div>
+          <div class="time"><i data-lucide="clock-4"></i> 3 min</div>
+        </div>
+        <div class="mot-card">
+          <div class="mot-icon vision">
+            <i data-lucide="image"></i>
+          </div>
+          <div class="label">Picture the year</div>
+          <div class="sub">A 6-tile vision board you'll see every time you open the app.</div>
+          <div class="time"><i data-lucide="clock-4"></i> 4 min</div>
+        </div>
+      </div>
+
+      <div class="motivation-row fade-in d4" style="margin-top: 10px;">
+        <div class="mot-card full">
+          <div class="mot-icon why">
+            <i data-lucide="heart"></i>
+          </div>
+          <div class="body">
+            <div class="label">Find your why</div>
+            <div class="sub">One sentence. Shown back to you every time you're about to skip a day.</div>
+          </div>
+          <i data-lucide="chevron-right" class="chev"></i>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bottom action bar (unchanged layout, annotated amber-dot-fix) -->
+    <div class="bottom-bar">
+      <div class="bb-icon">
+        <i data-lucide="settings"></i>
+      </div>
+      <div class="fab">
+        <div class="ring"></div>
+        <i data-lucide="plus"></i>
+      </div>
+      <div class="bb-icon">
+        <i data-lucide="book-open"></i>
+        <div class="badge"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption">
+    <h1>Design decisions, in brief</h1>
+    <p><strong>Greeting over skeleton.</strong> The "Good morning, Andres" eyebrow uses the primary color at 700 so it reads as a signal, not decoration. Pairs with a Literata headline that names the metaphor ("first chain") so we teach the product language on the first surface.</p>
+    <p><strong>Ghost card teaches the payoff.</strong> A dashed preview card shows exactly what a populated habit will look like at day 4 — a completed chain with today pulsing. This does the work the onboarding carousel was supposed to do, in the context of real use, not a detachable tutorial.</p>
+    <p><strong>Single primary CTA.</strong> Filled green (<code>#059669</code>), 56px tall, the one unambiguous next step. Secondary template link in text-weight green underneath. Zero ambiguity about where to tap.</p>
+    <p><strong>Motivation surfaces earn their entry.</strong> Three cards (WOOP, Vision, Why) sit under an optional "Get grounded in 2 minutes" divider — a side-path for users who want the motivational scaffolding before the mechanical one. Card rows are 120px min-height + have explicit time costs so users know what they're committing to. Lucide icons on filled gradient tiles (not emoji) for category identity.</p>
+    <p><strong>FAB teaches itself.</strong> Two scale-nudge animations at t=1.5s and t=7s + a single expanding ring on first mount draw the eye to the FAB if the user doesn't engage the primary CTA. The amber dot on the templates icon becomes green (primary-500) because this IS new content, aligning semantics.</p>
+    <p><strong>What I'd want to test:</strong> whether the ghost card reads as "preview, not real" at a glance, or if users try to tap it. Dashed border + "PREVIEW" eyebrow + zero shadow are the current cues. If user tests show confusion, add a light grayscale to the card and a subtle "tap to see filled version" affordance.</p>
+  </div>
+
+</div>
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>

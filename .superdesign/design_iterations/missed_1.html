@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ChainDay — What we missed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED; --surface: #EDEAE5; --surface-2: #FAF8F5;
+    --border: #DDD8D2; --border-soft: #E8E3DC;
+    --t900: #1A1816; --t800: #2D2A26; --t700: #3D3833; --t600: #524D47; --t500: #6B6560; --t400: #6E6660;
+    --p50: #ECFDF5; --p100: #D1FAE5; --p300: #6EE7B7; --p500: #10B981; --p600: #059669; --p700: #047857; --p800: #065F46;
+    --s100: #FEF3CD; --s500: #8B6208; --s700: #7D5907;
+    --warn: #9A5504; --warn-bg: #FEF3C7;
+    --danger: #B4321E;
+    --f-disp: 'Literata', Georgia, serif;
+    --f-text: 'DM Sans', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #e4ded5; font-family: var(--f-text); color: var(--t800); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 56px 40px 80px; }
+
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--danger); }
+  h1 { font-family: var(--f-disp); font-size: 42px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; margin-top: 8px; color: var(--t900); }
+  h1 em { font-style: italic; color: var(--danger); font-weight: 500; }
+  p.lede { font-size: 16px; color: var(--t500); max-width: 780px; margin-top: 14px; line-height: 1.55; }
+
+  .tldr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 28px; }
+  .tldr .card { background: #fff; border: 1px solid var(--border-soft); border-radius: 14px; padding: 16px 18px; }
+  .tldr .card .n { font-family: var(--f-disp); font-size: 34px; font-weight: 600; color: var(--t900); line-height: 1; }
+  .tldr .card .lbl { font-size: 12px; color: var(--t500); margin-top: 6px; }
+  .tldr .card.a { border-left: 3px solid var(--p600); }
+  .tldr .card.b { border-left: 3px solid var(--s500); }
+  .tldr .card.c { border-left: 3px solid var(--danger); }
+
+  .item {
+    margin-top: 36px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    padding: 24px 28px;
+    position: relative;
+  }
+  .item.deferred { background: #fffef5; border-color: #f0e4b8; }
+  .item-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+  .item-head .tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; background: var(--surface); color: var(--t600); }
+  .item-head .tag.b0 { background: #fde4dd; color: var(--danger); }
+  .item-head .tag.b1 { background: var(--p100); color: var(--p800); }
+  .item-head .tag.b2 { background: var(--s100); color: var(--s700); }
+  .item-head h2 { font-family: var(--f-disp); font-size: 22px; font-weight: 600; color: var(--t900); letter-spacing: -.015em; }
+  .item-head .ref { margin-left: auto; font-family: ui-monospace, monospace; font-size: 11.5px; color: var(--t500); background: var(--surface); padding: 3px 8px; border-radius: 4px; }
+
+  .row {
+    display: grid; grid-template-columns: 1fr 1fr 1.2fr;
+    gap: 22px; align-items: start;
+    margin-top: 14px;
+  }
+  .col-lbl { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .col-lbl.t { color: var(--danger); }
+  .col-lbl.t::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--danger); }
+  .col-lbl.a { color: var(--p700); }
+  .col-lbl.a::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--p500); }
+  .col-lbl.w::before { content: "▼"; font-size: 8px; color: var(--t500); }
+  .col-lbl.w { color: var(--t500); }
+
+  .photo {
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -8px rgba(26,24,22,.18), 0 0 0 1px rgba(26,24,22,.05);
+    aspect-ratio: 393 / 440;
+    background: var(--surface);
+  }
+  .photo img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top; }
+  .photo.short { aspect-ratio: 393 / 300; }
+  .photo.tall { aspect-ratio: 393 / 640; }
+
+  .sketch {
+    background: var(--bg);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 8px 24px -8px rgba(5,150,105,.22), 0 0 0 1px rgba(5,150,105,.12);
+    aspect-ratio: 393 / 440;
+    position: relative; overflow: hidden;
+    font-size: 12px;
+  }
+  .sketch.short { aspect-ratio: 393 / 300; }
+  .sketch.tall { aspect-ratio: 393 / 640; }
+
+  .why-txt {
+    font-size: 13.5px; color: var(--t600); line-height: 1.55;
+  }
+  .why-txt strong { color: var(--t900); font-weight: 600; }
+  .why-txt p + p { margin-top: 8px; }
+  .why-txt .file { font-family: ui-monospace, monospace; font-size: 11.5px; background: var(--surface); padding: 1px 5px; border-radius: 3px; color: var(--t700); }
+
+  /* Specific sketches */
+  .emoji-grid-good {
+    display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+    background: #fff; border-radius: 10px; padding: 10px; margin-top: 18px;
+  }
+  .emoji-grid-good .e {
+    aspect-ratio: 1; display: grid; place-items: center;
+    font-size: 15px; border-radius: 7px;
+  }
+  .emoji-grid-good .e.sel { background: var(--p100); box-shadow: inset 0 0 0 1.5px var(--p600); }
+
+  .featured-good {
+    background: linear-gradient(135deg, var(--p600), var(--p800));
+    border-radius: 14px; padding: 14px; color: #fff; margin-top: 10px;
+  }
+  .featured-good .ch { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; background: rgba(255,255,255,.22); padding: 3px 8px; border-radius: 999px; display: inline-block; }
+  .featured-good h3 { font-family: var(--f-disp); font-size: 15px; font-weight: 600; margin-top: 8px; line-height: 1.2; }
+  .featured-good .btn { display: inline-flex; align-items: center; gap: 4px; background: #fff; color: var(--p800); padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-top: 10px; }
+  .featured-good .btn svg { width: 10px; height: 10px; stroke-width: 2.5; }
+
+  .goal-card-good {
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: 10px; padding: 12px;
+    display: flex; flex-direction: column; gap: 6px;
+    position: relative;
+    margin-top: 10px;
+  }
+  .goal-card-good .gi { width: 22px; height: 22px; border-radius: 6px; background: var(--p600); display: grid; place-items: center; color: #fff; }
+  .goal-card-good .gi svg { width: 12px; height: 12px; }
+  .goal-card-good .t { font-size: 12px; font-weight: 600; color: var(--t800); }
+  .goal-card-good .n { font-size: 10.5px; color: var(--t500); }
+  .goal-card-good .chev { position: absolute; bottom: 10px; right: 10px; color: var(--t400); }
+  .goal-card-good .chev svg { width: 13px; height: 13px; stroke-width: 2.25; }
+
+  .trending-good {
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: 12px; padding: 12px;
+    margin-top: 10px;
+  }
+  .trending-good .row1 { display: flex; gap: 8px; align-items: center; }
+  .trending-good .em { width: 32px; height: 32px; border-radius: 9px; background: var(--surface-2); display: grid; place-items: center; font-size: 16px; }
+  .trending-good .nm { font-size: 13px; font-weight: 600; color: var(--t800); }
+  .trending-good .meta { font-size: 10.5px; color: var(--t500); margin-top: 2px; }
+  .trending-good .bot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border-soft); }
+  .trending-good .pill { background: var(--s100); color: var(--s700); font-size: 9.5px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
+  .trending-good .add { width: 28px; height: 28px; border-radius: 50%; background: var(--p600); color: #fff; display: grid; place-items: center; }
+  .trending-good .add svg { width: 14px; height: 14px; stroke-width: 2.5; }
+
+  .search-good {
+    background: #fff; border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--t400);
+    margin-top: 16px;
+    box-shadow: 0 0 0 3px var(--p100);
+  }
+  .search-good svg { width: 15px; height: 15px; color: var(--t500); }
+
+  .mot-row-good { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .mot-good { background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; }
+  .mot-good .ic { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; color: #fff; }
+  .mot-good .ic svg { width: 13px; height: 13px; }
+  .mot-good .ic.w { background: linear-gradient(135deg, var(--p700), var(--p500)); }
+  .mot-good .ic.v { background: linear-gradient(135deg, #6D3AC7, #8563C7); }
+  .mot-good .lbl { font-size: 11.5px; font-weight: 600; color: var(--t800); margin-top: 6px; line-height: 1.2; }
+  .mot-good .sub { font-size: 9.5px; color: var(--t500); margin-top: 2px; }
+
+  .annot {
+    position: absolute; background: #fffbe8; border: 1px solid #f5d96d;
+    border-radius: 4px; padding: 2px 6px; font-size: 9px; font-weight: 700;
+    color: #6b5a10; z-index: 5; white-space: nowrap;
+    box-shadow: 0 3px 8px -2px rgba(0,0,0,.15);
+  }
+
+  .dec-badge {
+    position: absolute; top: 16px; right: 20px;
+    background: #fef3c7; color: #92400e;
+    font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    padding: 4px 10px; border-radius: 999px;
+  }
+
+  .foot { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 13px; color: var(--t500); line-height: 1.55; }
+  .foot strong { color: var(--t700); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">Still open · audit 2026-04-21</div>
+  <h1>Seven items the branch <em>hasn't touched yet.</em></h1>
+  <p class="lede">Everything already verified-by-grep against the repo. Two of the eight are held intentionally — waiting on your call on copy change and dead-component deletion.</p>
+
+  <div class="tldr">
+    <div class="card a"><div class="n">3</div><div class="lbl">surgical diffs in Library polish (D)</div></div>
+    <div class="card b"><div class="n">1</div><div class="lbl">cross-cutting wire-up (C — motivation entries)</div></div>
+    <div class="card c"><div class="n">2</div><div class="lbl">deferred — need your decision (tagline, onboarding)</div></div>
+  </div>
+
+  <!-- ─── B1: Emoji grid ─── -->
+  <div class="item">
+    <div class="item-head">
+      <span class="tag b0">Bucket B · P0</span>
+      <h2>Emoji grid collapses to single column on web</h2>
+      <span class="ref">02 H2</span>
+    </div>
+
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo"><img src="../../.context/designer-review/screenshots/02-create-habit/step-03-emoji-grid.png" alt="Emoji grid vertical column" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Proposed</div>
+        <div class="sketch">
+          <div style="font-size:10px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--t500);">Choose an icon</div>
+          <div class="emoji-grid-good">
+            <div class="e sel">🏃</div><div class="e">🌱</div><div class="e">💧</div><div class="e">📖</div><div class="e">🧘</div><div class="e">🥗</div><div class="e">💪</div>
+            <div class="e">☀️</div><div class="e">🌙</div><div class="e">✍️</div><div class="e">🎨</div><div class="e">🎸</div><div class="e">🧠</div><div class="e">💤</div>
+            <div class="e">🎯</div><div class="e">🫁</div><div class="e">👥</div><div class="e">🔬</div><div class="e">🔄</div><div class="e">🌅</div><div class="e">✨</div>
+          </div>
+          <div class="annot" style="top: 46px; right: 16px;">7-col grid</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why</div>
+        <div class="why-txt">
+          <p>The grid is currently one emoji per row. Finding 🏃 in a list of 60+ means scrolling like a timeline. <strong>Time-to-first-habit is gated on this.</strong></p>
+          <p><strong>Fix:</strong> explicit <code class="file">numColumns={7}</code> on the FlatList (or <code class="file">grid-template-columns: repeat(7, 1fr)</code> on web). 1-line diff.</p>
+          <p><strong>Caveat:</strong> worth verifying on native iOS first — column collapse may be web-only. Source file unmodified: <span class="file">src/components/CreateHabitModal/components/EmojiPicker/EmojiGrid.tsx</span>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── D1: Featured CTA pill ─── -->
+  <div class="item">
+    <div class="item-head">
+      <span class="tag b2">Bucket D · P2</span>
+      <h2>Featured goal CTA pill reads as disabled</h2>
+      <span class="ref">03 H3</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo"><img src="../../.context/designer-review/screenshots/04-templates/browse.png" alt="Featured card with ghost pill" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Proposed</div>
+        <div class="sketch">
+          <div class="featured-good">
+            <div class="ch">Today's pick · 4:23pm</div>
+            <h3>Wind down for deeper sleep</h3>
+            <div style="font-size:11px; opacity:.85; margin-top:4px;">7 small habits that cut cortisol and ease you into rest.</div>
+            <div class="btn">Start here <i data-lucide="arrow-right"></i></div>
+          </div>
+          <div class="annot" style="top: 40px; right: 16px;">Filled — unambiguous</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why</div>
+        <div class="why-txt">
+          <p>Current pill is <code class="file">rgba(255,255,255,0.55)</code> on a mint hero — <strong>reads disabled.</strong> An arrow is the only clickability cue.</p>
+          <p><strong>Fix:</strong> fill the pill solid (<code class="file">backgroundColor: goal.textColor</code>, white text) <em>or</em> remove the pill and let the card carry the tap with a chevron in the corner.</p>
+          <p>File: <span class="file">src/screens/TemplatesScreen/components/GoalCollectionGrid/FeaturedGoalCard.tsx:60-70</span> — still at ghost-pill state as of this audit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── D2: Text arrow chevron ─── -->
+  <div class="item">
+    <div class="item-head">
+      <span class="tag b2">Bucket D · P2</span>
+      <h2>2×2 goal grid chevron is a text arrow on a circle</h2>
+      <span class="ref">03 H4</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo"><img src="../../.context/designer-review/screenshots/04-templates/browse.png" alt="Text arrow chevron on goal cards" style="object-position: center;" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Proposed</div>
+        <div class="sketch">
+          <div style="font-family:var(--f-disp); font-size:14px; font-weight:600; color:var(--t800);">Browse by goal</div>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-top:8px;">
+            <div class="goal-card-good"><div class="gi"><i data-lucide="activity"></i></div><div class="t">Move more</div><div class="n">61 habits</div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+            <div class="goal-card-good"><div class="gi" style="background:var(--s500);"><i data-lucide="moon"></i></div><div class="t">Sleep better</div><div class="n">28 habits</div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+            <div class="goal-card-good"><div class="gi" style="background:#6D3AC7;"><i data-lucide="brain"></i></div><div class="t">Calmer mind</div><div class="n">42 habits</div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+            <div class="goal-card-good"><div class="gi" style="background:#3872B8;"><i data-lucide="book-open"></i></div><div class="t">Learn daily</div><div class="n">19 habits</div><div class="chev"><i data-lucide="chevron-right"></i></div></div>
+          </div>
+          <div class="annot" style="bottom: 16px; right: 16px;">Lucide chevrons</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why</div>
+        <div class="why-txt">
+          <p>Current chevron is a <code class="file">→</code> text glyph inside a circle, centered via <code class="file">lineHeight</code>. Renders <strong>font-dependent and off-center</strong> on web.</p>
+          <p><strong>Fix:</strong> <code class="file">&lt;ChevronRight size=&#123;14&#125; /&gt;</code> inside the circle View. Same visual intent, pixel-correct.</p>
+          <p>File: <span class="file">src/screens/TemplatesScreen/components/GoalCollectionGrid/GoalCollectionGrid.styles.ts:9-22</span> — <code class="file">arrow:</code> / <code class="file">arrowFeatured:</code> styles still present.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── D3: Trending card height ─── -->
+  <div class="item">
+    <div class="item-head">
+      <span class="tag b2">Bucket D · P2</span>
+      <h2>Trending card Add button falls below the fold</h2>
+      <span class="ref">03 H2</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo"><img src="../../.context/designer-review/screenshots/04-templates/scrolled.png" alt="Trending cards with clipped Add buttons" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Proposed</div>
+        <div class="sketch">
+          <div style="font-family:var(--f-disp); font-size:14px; font-weight:600; color:var(--t800);">Trending</div>
+          <div class="trending-good">
+            <div class="row1">
+              <div class="em">🚶</div>
+              <div>
+                <div class="nm">7,000 Steps</div>
+                <div class="meta">Walk daily · Lancet-backed</div>
+              </div>
+            </div>
+            <div class="bot">
+              <span class="pill">SCIENCE-BACKED</span>
+              <div class="add"><i data-lucide="plus"></i></div>
+            </div>
+          </div>
+          <div class="trending-good">
+            <div class="row1">
+              <div class="em">📵</div>
+              <div>
+                <div class="nm">Phone-free first hour</div>
+                <div class="meta">Mornings · 91 tracking</div>
+              </div>
+            </div>
+            <div class="bot">
+              <span class="pill">SCIENCE-BACKED</span>
+              <div class="add"><i data-lucide="plus"></i></div>
+            </div>
+          </div>
+          <div class="annot" style="top: 100px; right: 16px;">Add above fold</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why</div>
+        <div class="why-txt">
+          <p>Trending cards render tall enough that the <code class="file">bottomRow</code> (science pill + Add) sits below the 852-px fold. Users in browse state <strong>can't add from Trending without a detour.</strong></p>
+          <p><strong>Fix:</strong> tighten card padding so total height ≤ 200px including padding. Keep the horizontal Trending strip but make the card work above-fold.</p>
+          <p>File: <span class="file">src/screens/TemplatesScreen/components/TrendingCard/TrendingCard.tsx:77-87</span> — <code class="file">bottomRow</code> unmodified.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── D4: Search focus ring ─── -->
+  <div class="item">
+    <div class="item-head">
+      <span class="tag b2">Bucket D · P2</span>
+      <h2>Search input focus ring is default-browser blue</h2>
+      <span class="ref">03 H1</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo short"><img src="../../.context/designer-review/screenshots/04-templates/search-typing.png" alt="Default browser blue focus ring" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Proposed</div>
+        <div class="sketch short">
+          <div style="font-family:var(--f-disp); font-size:14px; font-weight:600; color:var(--t800);">Library</div>
+          <div style="font-size:11px; color:var(--t500); margin-top:2px;">240 habits, science-backed.</div>
+          <div class="search-good">
+            <i data-lucide="search"></i>
+            <span>exercise<span style="display:inline-block; width:1.5px; height:13px; background:var(--p600); vertical-align:middle; margin-left:1px; animation:blink 1s infinite;"></span></span>
+          </div>
+          <div class="annot" style="top: 60px; right: 16px;">App-styled ring</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why</div>
+        <div class="why-txt">
+          <p>Default browser outline is <strong>2-px blue rectangle</strong> inside a pill-shaped search container. Blue is not in the palette. Sharp corners don't match the pill.</p>
+          <p><strong>Fix:</strong> <code class="file">outlineStyle: 'none'</code> on the TextInput, add <code class="file">boxShadow: 0 0 0 3px primary[100]</code> on the wrapper on focus.</p>
+          <p>File: <span class="file">src/screens/TemplatesScreen/components/SearchBar.tsx:44-52</span> — unchanged. Same pattern applies to every TextInput in the app.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── C1: Motivation entries ─── -->
+  <div class="item">
+    <div class="item-head">
+      <span class="tag b1">Bucket C · P1</span>
+      <h2>Motivation system has no entry points</h2>
+      <span class="ref">04 H4 · 04 H5</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo tall"><img src="../../.context/designer-review/screenshots/03-settings/main.png" alt="Settings — no motivation surface" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Proposed</div>
+        <div class="sketch tall">
+          <div style="font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--p700); display:flex; align-items:center; gap:6px;"><span style="width:5px; height:5px; border-radius:50%; background:var(--p500);"></span>Good morning, Andres</div>
+          <div style="font-family:var(--f-disp); font-size:17px; font-weight:600; color:var(--t900); margin-top:6px;">Let's build your <em style="font-style:italic; color:var(--p700); font-weight:500;">first chain</em>.</div>
+          <div style="font-size:11px; color:var(--t500); margin-top:6px;">Or, if you want some scaffolding first…</div>
+          <div style="display:flex; align-items:center; gap:6px; margin-top:16px;">
+            <span style="flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--border) 50%, transparent);"></span>
+            <span style="font-family:var(--f-disp); font-size:11px; font-weight:600; color:var(--t600);">Get grounded in 2 minutes</span>
+            <span style="flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--border) 50%, transparent);"></span>
+          </div>
+          <div class="mot-row-good">
+            <div class="mot-good">
+              <div class="ic w"><i data-lucide="compass"></i></div>
+              <div class="lbl">Plan with WOOP</div>
+              <div class="sub">Wish → obstacle → plan</div>
+              <div style="font-size:9px; color:var(--t400); margin-top:6px;">⏱ 3 min</div>
+            </div>
+            <div class="mot-good">
+              <div class="ic v"><i data-lucide="image"></i></div>
+              <div class="lbl">Picture the year</div>
+              <div class="sub">6-tile vision board</div>
+              <div style="font-size:9px; color:var(--t400); margin-top:6px;">⏱ 4 min</div>
+            </div>
+          </div>
+          <div class="mot-good" style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+            <div class="ic" style="background:linear-gradient(135deg, var(--s500), #E8B94D); flex-shrink:0;"><i data-lucide="heart"></i></div>
+            <div style="flex:1;">
+              <div class="lbl">Find your why</div>
+              <div class="sub">One sentence, shown back on skip-days.</div>
+            </div>
+            <i data-lucide="chevron-right" style="color:var(--t400); width:12px; height:12px;"></i>
+          </div>
+          <div class="annot" style="top: 196px; right: 16px;">3 orphans, now<br/>discoverable</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why</div>
+        <div class="why-txt">
+          <p>WOOPSection, VisionBoardSection, YourWhySection are <strong>built, tested, shipped to prod</strong> — and not mounted anywhere the user can reach. Three components, zero entry points.</p>
+          <p>Gollwitzer's implementation-intentions research shows a <strong>2–3× lift in habit survival</strong> when users pre-commit to a specific plan. WOOP is the app's vehicle for that. Making it invisible is leaving the retention upside on the floor.</p>
+          <p><strong>Fix:</strong> 3 entry cards on the home empty state (surface shown at left) + a matching row in Settings. Each opens the existing Workshop component in a modal.</p>
+          <p>Files to touch: the new home empty state + <span class="file">SettingsModal</span> (add a section). Workshop components stay as-is.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── A1: Tagline (deferred) ─── -->
+  <div class="item deferred">
+    <div class="dec-badge">Your call</div>
+    <div class="item-head">
+      <span class="tag b0">Bucket A · P0</span>
+      <h2>Welcome screen tagline is generic</h2>
+      <span class="ref">04 M1</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo tall"><img src="../../.context/designer-review/screenshots/08-welcome-and-onboarding/welcome-real.png" alt="Welcome — Build habits that last" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Suggested</div>
+        <div class="sketch tall" style="display:flex; flex-direction:column; justify-content:center; align-items:center; padding:40px 24px;">
+          <div style="width:70px; height:70px; border-radius:18px; background:var(--p600); display:grid; place-items:center; color:#fff; margin-bottom:20px;"><i data-lucide="link-2" style="width:34px; height:34px; stroke-width:2;"></i></div>
+          <div style="font-family:var(--f-disp); font-size:26px; font-weight:600; color:var(--t900); letter-spacing:-.015em; text-align:center;">One small thing,<br/><em style="color:var(--p700); font-weight:500;">day after day.</em></div>
+          <div style="font-size:12.5px; color:var(--t500); margin-top:10px; text-align:center; line-height:1.45;">ChainDay turns today's choice into a habit that sticks a month from now.</div>
+          <div class="annot" style="top: 240px; right: 16px;">Concrete promise</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why deferred</div>
+        <div class="why-txt">
+          <p><strong>"Build habits that last"</strong> is unchanged — I won't swap user-facing copy without your approval.</p>
+          <p>Suggested: <em>"One small thing, day after day."</em> — concrete action + rhythm, not a generic benefit promise. Distinguishes ChainDay from every other habit app whose tagline is some variant of "make better habits."</p>
+          <p>Say the word and I'll swap it in <span class="file">src/screens/auth/WelcomeScreen.tsx:52-54</span> (or give me different copy).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── A2: Onboarding (deferred) ─── -->
+  <div class="item deferred">
+    <div class="dec-badge">Your call</div>
+    <div class="item-head">
+      <span class="tag b0">Bucket A · P0</span>
+      <h2>Dead onboarding carousel</h2>
+      <span class="ref">04 H1</span>
+    </div>
+    <div class="row">
+      <div>
+        <div class="col-lbl t">Today</div>
+        <div class="photo"><img src="../../.context/designer-review/screenshots/08-welcome-and-onboarding/onboarding-slide-1.png" alt="Onboarding slide — never seen" /></div>
+      </div>
+      <div>
+        <div class="col-lbl a">Options</div>
+        <div class="sketch">
+          <div style="font-family:var(--f-disp); font-size:15px; font-weight:600; color:var(--t900); letter-spacing:-.01em;">Three paths forward</div>
+          <div style="margin-top:14px; padding:12px 14px; background:#fff; border:1px solid var(--border-soft); border-radius:10px;">
+            <div style="font-size:12px; font-weight:600; color:var(--t800);">A · Delete it</div>
+            <div style="font-size:11px; color:var(--t500); margin-top:3px; line-height:1.4;">Auto-skipped today. Users never see it. <span class="file" style="font-size:10.5px;">OnboardingScreen</span> + 3 slide files removed.</div>
+          </div>
+          <div style="margin-top:8px; padding:12px 14px; background:#fff; border:1px solid var(--border-soft); border-radius:10px;">
+            <div style="font-size:12px; font-weight:600; color:var(--t800);">B · Repurpose</div>
+            <div style="font-size:11px; color:var(--t500); margin-top:3px; line-height:1.4;">Move the 3 slides' copy into the home empty state so the teaching actually lands.</div>
+          </div>
+          <div style="margin-top:8px; padding:12px 14px; background:#fff; border:1px solid var(--border-soft); border-radius:10px;">
+            <div style="font-size:12px; font-weight:600; color:var(--t800);">C · Leave it</div>
+            <div style="font-size:11px; color:var(--t500); margin-top:3px; line-height:1.4;">Dead code but cheap. Revisit when you decide to fix onboarding.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="col-lbl w">Why deferred</div>
+        <div class="why-txt">
+          <p>Per the rule "never remove components as a fix" — I don't delete shipped components without your sign-off, even when they're unreachable.</p>
+          <p>The 3 slides were built with care (fade timings, per-slide copy, strength-meter illustration). The question is whether that work finds a home (B) or gets retired (A).</p>
+          <p>My recommendation: <strong>B — repurpose</strong>. Slide 1 ("build a chain") and the strength meter illustration both fit inside the home empty state naturally. Slide 3 (templates) already points at something we show there.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p><strong>How this audit was produced.</strong> Walked the original 5-bucket plan, ran <code>git status</code> + targeted <code>grep</code> against each named file to confirm current state. Everything flagged above is <em>not yet shipped in this branch</em> (grep-verified), separate from what <em>is</em> shipped (<code>git diff</code>-verified): SaveButton, HabitsApp, WelcomeScreen, SocialSignInButton, BottomActionBar, categoryMeta, AuthGate, .env.local.</p>
+  </div>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ChainDay — Bucket E · Semantic cleanups + revert</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED; --surface: #EDEAE5; --surface-2: #FAF8F5;
+    --border: #DDD8D2; --border-soft: #E8E3DC;
+    --t900: #1A1816; --t800: #2D2A26; --t700: #3D3833; --t600: #524D47; --t500: #6B6560; --t400: #6E6660;
+    --p100: #D1FAE5; --p500: #10B981; --p600: #059669; --p700: #047857;
+    --warn: #9A5504; --warn-bg: #FEF3C7;
+    --danger: #B4321E;
+    --f-disp: 'Literata', Georgia, serif;
+    --f-text: 'DM Sans', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #e4ded5; font-family: var(--f-text); color: var(--t800); -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 56px 40px 80px; }
+  .kicker { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--p700); }
+  h1 { font-family: var(--f-disp); font-size: 40px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; margin-top: 8px; color: var(--t900); }
+  h1 em { font-style: italic; color: var(--p700); font-weight: 500; }
+  p.lede { font-size: 16px; color: var(--t500); max-width: 720px; margin-top: 14px; line-height: 1.55; }
+
+  .section { margin-top: 48px; }
+  .section h2 { font-family: var(--f-disp); font-size: 24px; font-weight: 600; color: var(--t900); letter-spacing: -.015em; }
+  .section .sub { font-size: 14px; color: var(--t500); margin-top: 4px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 24px; align-items: stretch; }
+  .col-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .col-label.today { color: var(--danger); }
+  .col-label.today::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+  .col-label.after { color: var(--p700); }
+  .col-label.after::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--p500); }
+
+  .card {
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: 16px; padding: 24px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .card.before { border-left: 3px solid var(--danger); }
+  .card.after { border-left: 3px solid var(--p500); }
+
+  /* Bottom bar visual */
+  .bar {
+    background: var(--bg);
+    border-radius: 20px;
+    padding: 24px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 12px -4px rgba(26,24,22,.08);
+  }
+  .bbi {
+    width: 48px; height: 48px; border-radius: 16px;
+    background: #fff; border: 1px solid var(--border-soft);
+    display: grid; place-items: center;
+    color: var(--t600); position: relative;
+    box-shadow: 0 2px 6px -2px rgba(26,24,22,.08);
+  }
+  .bbi svg { width: 22px; height: 22px; stroke-width: 2; }
+  .bbi .dot {
+    position: absolute; top: 8px; right: 8px;
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid #fff;
+  }
+  .bbi .dot.amber { background: var(--warn); }
+  .bbi .dot.green { background: var(--p500); }
+  .fab {
+    width: 60px; height: 60px; border-radius: 20px;
+    background: var(--p600); color: #fff;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 16px -4px rgba(5,150,105,.35);
+  }
+  .fab svg { width: 26px; height: 26px; stroke-width: 2.5; }
+
+  .legend {
+    font-size: 12px; color: var(--t600); line-height: 1.55;
+  }
+  .legend .k {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--warn-bg); color: var(--warn);
+    padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;
+    font-family: ui-monospace, monospace;
+  }
+  .legend .k.good {
+    background: var(--p100); color: var(--p700);
+  }
+
+  /* Code block */
+  .code {
+    background: #1a1816; border-radius: 12px;
+    padding: 16px 18px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 12px; line-height: 1.55;
+    color: #e6ddd0;
+    overflow-x: auto;
+  }
+  .code .com { color: #7a6f5f; font-style: italic; }
+  .code .kw { color: #f5c889; }
+  .code .str { color: #a8d89a; }
+  .code .del { color: #f0a0a0; }
+  .code .del::before { content: "- "; color: var(--danger); }
+  .code .add { color: #a0f0c0; }
+  .code .add::before { content: "+ "; color: var(--p500); }
+  .code .ctx::before { content: "  "; }
+  .code .line { display: block; white-space: pre; }
+
+  /* Why */
+  .why {
+    margin-top: 28px;
+    background: #fffef8;
+    border: 1px solid #f0e4b8;
+    border-radius: 16px;
+    padding: 24px 28px;
+  }
+  .why h3 { font-family: var(--f-disp); font-size: 20px; font-weight: 600; color: var(--t900); letter-spacing: -.01em; }
+  .why p { font-size: 14.5px; color: var(--t600); line-height: 1.6; margin-top: 10px; }
+  .why p strong { color: var(--t900); font-weight: 600; }
+  .why .pts { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .why .pt {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 14px; background: #fff; border-radius: 10px; border: 1px solid #f0e4b8;
+  }
+  .why .pt .ic { width: 32px; height: 32px; border-radius: 10px; background: var(--p100); color: var(--p700); display: grid; place-items: center; flex-shrink: 0; }
+  .why .pt .ic svg { width: 16px; height: 16px; }
+  .why .pt .txt { font-size: 13px; color: var(--t700); line-height: 1.45; }
+  .why .pt .txt strong { color: var(--t900); font-weight: 600; display: block; margin-bottom: 2px; }
+
+  .status {
+    margin-top: 32px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 12px;
+    padding: 18px 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .status .ic { width: 40px; height: 40px; border-radius: 50%; background: var(--p600); color: #fff; display: grid; place-items: center; flex-shrink: 0; }
+  .status .ic svg { width: 22px; height: 22px; stroke-width: 2.5; }
+  .status h4 { font-family: var(--f-disp); font-size: 15px; font-weight: 600; color: var(--p800, #065F46); }
+  .status p { font-size: 13px; color: var(--t600); margin-top: 2px; line-height: 1.4; }
+
+  .files {
+    margin-top: 18px; font-size: 12px; color: var(--t500); line-height: 1.7;
+  }
+  .files strong { color: var(--t700); font-weight: 600; }
+  .files code { font-family: ui-monospace, monospace; font-size: 11.5px; background: var(--surface); padding: 2px 6px; border-radius: 4px; color: var(--t700); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="kicker">Bucket E · Polish pass · P2</div>
+  <h1>Semantic cleanups <em>+ revert</em>.</h1>
+  <p class="lede">Two small changes. The first aligns a color token with what it's actually communicating. The second removes the temporary audit-only bypass so auth can't be circumvented in production.</p>
+
+  <!-- ─── Change 1: notification dot ─── -->
+  <div class="section">
+    <h2>1 · Notification dot hue</h2>
+    <div class="sub">Bottom action bar — templates icon "new content" indicator</div>
+
+    <div class="row">
+      <div>
+        <div class="col-label today">Today</div>
+        <div class="card before">
+          <div class="bar">
+            <div class="bbi"><i data-lucide="settings"></i></div>
+            <div class="fab"><i data-lucide="plus"></i></div>
+            <div class="bbi"><i data-lucide="book-open"></i><span class="dot amber"></span></div>
+          </div>
+          <div class="legend">Dot pulls from <span class="k">colors.warning</span> (<strong>#9A5504</strong>, brown/amber). The token is named <em>warning</em>; the dot is trying to communicate <em>new content</em>. Two different meanings, one color.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label after">After</div>
+        <div class="card after">
+          <div class="bar">
+            <div class="bbi"><i data-lucide="settings"></i></div>
+            <div class="fab"><i data-lucide="plus"></i></div>
+            <div class="bbi"><i data-lucide="book-open"></i><span class="dot green"></span></div>
+          </div>
+          <div class="legend">Dot now uses <span class="k good">colors.primary[500]</span> (<strong>#10B981</strong>, green). Same color the app uses everywhere else for <em>primary / action available</em>. Semantic and palette aligned in one change.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code" style="margin-top: 20px;">
+      <span class="com line">// src/features/habits/components/BottomActionBar/BottomActionBar.styles.ts</span>
+      <span class="ctx line">  notifDot: {</span>
+      <span class="del line">    backgroundColor: colors.warning,</span>
+      <span class="add line">    backgroundColor: colors.primary[500],</span>
+      <span class="ctx line">    borderRadius: NOTIF_SIZE / 2,</span>
+      <span class="ctx line">    ...</span>
+      <span class="ctx line">  },</span>
+    </div>
+  </div>
+
+  <!-- ─── Change 2: revert bypass ─── -->
+  <div class="section">
+    <h2>2 · Revert the audit-only auth bypass</h2>
+    <div class="sub">AuthGate + .env.local — cleanup of review-time tooling</div>
+
+    <div class="row">
+      <div>
+        <div class="col-label today">Today (branch state)</div>
+        <div class="card before">
+          <div class="code" style="flex: 1;">
+            <span class="com line">// AuthGate.tsx</span>
+            <span class="ctx line">if (process.env.EXPO_PUBLIC_DESIGNER_REVIEW</span>
+            <span class="ctx line">  _BYPASS === '1') {</span>
+            <span class="ctx line">  const pathname = ...;</span>
+            <span class="ctx line">  let screen = &lt;HabitsApp /&gt;;</span>
+            <span class="ctx line">  if (pathname.includes('__welcome'))</span>
+            <span class="ctx line">    screen = &lt;WelcomeScreen /&gt;;</span>
+            <span class="ctx line">  // ... renders screen without auth</span>
+            <span class="ctx line">  return ...;</span>
+            <span class="ctx line">}</span>
+            <span class="com line">// .env.local</span>
+            <span class="ctx line">EXPO_PUBLIC_DESIGNER_REVIEW_BYPASS=1</span>
+          </div>
+          <div class="legend"><strong>Any environment setting this env var skips auth entirely.</strong> Intended only for the review-pass screenshots. Must not ship.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="col-label after">After</div>
+        <div class="card after">
+          <div class="code" style="flex: 1;">
+            <span class="com line">// AuthGate.tsx</span>
+            <span class="ctx line">if (!isLoaded || (isSignedIn &&</span>
+            <span class="ctx line">    onboardingComplete === null)) {</span>
+            <span class="ctx line">  return &lt;BrandedLoadingScreen /&gt;;</span>
+            <span class="ctx line">}</span>
+            <span class="ctx line">const screenKey = getScreenKey(...);</span>
+            <span class="ctx line">// normal flow: welcome → onboarding → app</span>
+            <span class="com line"> </span>
+            <span class="com line">// .env.local</span>
+            <span class="ctx line"># (line removed — not gitignored leak)</span>
+          </div>
+          <div class="legend">Block gone. Env var removed. <span class="k good">grep DESIGNER_REVIEW_BYPASS</span> → zero matches.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="files">
+      <strong>Changed:</strong>
+      <code>src/components/auth/AuthGate.tsx</code> (removed 11-line bypass block + unused <code>type ReactElement</code> import) &nbsp;·&nbsp;
+      <code>.env.local</code> (removed trailing <code>EXPO_PUBLIC_DESIGNER_REVIEW_BYPASS=1</code>)
+    </div>
+  </div>
+
+  <!-- ─── Why ─── -->
+  <div class="why">
+    <h3>Why both changes, now</h3>
+    <p>Small, but both are the kind of issues that <strong>compound in cost if they aren't fixed before ship</strong>. They're also cheap to fix — under five lines of diff between them — so there's no reason to defer.</p>
+    <div class="pts">
+      <div class="pt">
+        <div class="ic"><i data-lucide="alert-triangle"></i></div>
+        <div class="txt"><strong>Semantics have a half-life.</strong> Every time the amber dot fires for "new content," users learn that amber = nudge. The first time <em>warning</em> actually means warning — streak at risk, data loss, payment failure — it won't land. Fix it while the user base is still small.</div>
+      </div>
+      <div class="pt">
+        <div class="ic"><i data-lucide="lock"></i></div>
+        <div class="txt"><strong>Ship safety.</strong> The bypass was a review-pass tool. Anyone who sets an env var gets past auth. Not a theoretical risk — it would ship <em>disabled auth</em>. Revert is non-negotiable before merge.</div>
+      </div>
+      <div class="pt">
+        <div class="ic"><i data-lucide="layout-grid"></i></div>
+        <div class="txt"><strong>Palette discipline.</strong> Every time a token is used for a meaning it doesn't own, the design system erodes. Swap costs five characters; not swapping costs every future audit.</div>
+      </div>
+      <div class="pt">
+        <div class="ic"><i data-lucide="check-square"></i></div>
+        <div class="txt"><strong>Zero user-facing cost.</strong> No UX regression, no layout change, no copy change. Both are internal hygiene.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Status ─── -->
+  <div class="status">
+    <div class="ic"><i data-lucide="check"></i></div>
+    <div>
+      <h4>Already landed in this branch.</h4>
+      <p>Both changes are committed in-tree; grep confirms zero bypass references; green dot will render on next signed-in session.</p>
+    </div>
+  </div>
+
+</div>
+<script>lucide.createIcons();</script>
+</body>
+</html>

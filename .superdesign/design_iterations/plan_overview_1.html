@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ChainDay — Designer Review Plan (Storyboard)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED; --surface: #EDEAE5; --surface-2: #FAF8F5;
+    --border: #DDD8D2; --border-soft: #E8E3DC;
+    --t900: #1A1816; --t800: #2D2A26; --t700: #3D3833; --t600: #524D47; --t500: #6B6560; --t400: #6E6660;
+    --p50: #ECFDF5; --p100: #D1FAE5; --p300: #6EE7B7; --p500: #10B981; --p600: #059669; --p700: #047857; --p800: #065F46;
+    --s100: #FEF3CD; --s300: #E8B94D; --s500: #8B6208; --s600: #936A08; --s700: #7D5907;
+    --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px;
+    --sh-card: 0 1px 2px rgba(26,24,22,.04), 0 6px 16px -4px rgba(26,24,22,.06);
+    --sh-cta: 0 2px 4px rgba(5,150,105,.18), 0 8px 20px -6px rgba(5,150,105,.28);
+    --sh-phone: 0 30px 60px -16px rgba(26,24,22,.35), 0 0 0 10px #1a1816, 0 0 0 11px #0f0e0d;
+    --f-disp: 'Literata', Georgia, serif;
+    --f-text: 'DM Sans', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #e4ded5; font-family: var(--f-text); color: var(--t800); -webkit-font-smoothing: antialiased; }
+
+  /* ── Page chrome ──────────────────────────────── */
+  .hero {
+    padding: 56px 32px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .hero .kicker { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--p700); }
+  .hero h1 { font-family: var(--f-disp); font-size: 42px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; margin-top: 8px; color: var(--t900); }
+  .hero h1 em { font-style: italic; color: var(--p700); font-weight: 500; }
+  .hero p.lede { font-size: 17px; color: var(--t500); max-width: 760px; margin-top: 16px; line-height: 1.55; }
+  .hero .meta { display: flex; gap: 24px; margin-top: 22px; flex-wrap: wrap; }
+  .hero .meta .m { display: flex; align-items: center; gap: 10px; }
+  .hero .meta svg { width: 18px; height: 18px; color: var(--p700); stroke-width: 2; }
+  .hero .meta span { font-size: 13px; color: var(--t600); font-weight: 500; }
+  .hero .meta strong { color: var(--t800); font-weight: 600; }
+
+  .priority-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    max-width: 1280px; margin: 32px auto 0; padding: 0 32px;
+  }
+  .p-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 2px 6px -2px rgba(26,24,22,.05);
+  }
+  .p-card .tier { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .p-card.p0 .tier { color: #b4321e; }
+  .p-card.p1 .tier { color: var(--p700); }
+  .p-card.p2 .tier { color: var(--s700); }
+  .p-card.p3 .tier { color: var(--t500); }
+  .p-card h3 { font-family: var(--f-disp); font-size: 16px; margin-top: 4px; color: var(--t800); font-weight: 600; }
+  .p-card ul { margin-top: 8px; padding-left: 16px; }
+  .p-card li { font-size: 12px; color: var(--t600); line-height: 1.45; margin: 3px 0; }
+
+  /* ── Storyboard ──────────────────────────────── */
+  .storyboard {
+    display: flex;
+    gap: 52px;
+    padding: 60px 40px 80px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    align-items: flex-start;
+  }
+  .frame-wrap {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 420px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 20px;
+  }
+  .frame-label {
+    display: flex; align-items: center; gap: 10px;
+    align-self: flex-start;
+    padding-left: 12px;
+  }
+  .frame-label .step {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--p600); color: #fff;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: 13px;
+    box-shadow: 0 2px 4px rgba(5,150,105,.3);
+  }
+  .frame-label h4 { font-family: var(--f-disp); font-size: 18px; color: var(--t800); letter-spacing: -.01em; font-weight: 600; }
+  .frame-label .fixes { font-size: 11px; color: var(--t500); margin-top: 2px; }
+  .frame-label .fixes code {
+    background: #fffbe8; color: #6b5a10;
+    font-family: ui-monospace, monospace; font-size: 10.5px;
+    padding: 1px 5px; border-radius: 4px;
+    border: 1px solid #f5d96d;
+    margin-right: 3px;
+  }
+
+  /* ── Phone frame ──────────────────────────────── */
+  .phone {
+    width: 393px; height: 852px;
+    background: var(--bg);
+    border-radius: 52px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--sh-phone);
+    display: flex; flex-direction: column;
+  }
+  .notch {
+    position: absolute; top: 11px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 35px;
+    background: #1a1816; border-radius: 20px; z-index: 20;
+  }
+  .status {
+    height: 54px; padding: 18px 30px 0;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    font-size: 15px; font-weight: 600; color: var(--t800);
+    letter-spacing: -.02em; flex-shrink: 0;
+  }
+  .status .right { display: flex; gap: 6px; align-items: center; }
+  .status .right svg { width: 17px; height: 17px; stroke-width: 2.25; }
+
+  .screen { flex: 1; overflow: hidden; position: relative; padding: 8px 20px 0; }
+  .screen.scroll { overflow-y: auto; padding-bottom: 120px; }
+  .screen.scroll::-webkit-scrollbar { width: 0; }
+
+  /* Shared pill / button */
+  .cta-primary {
+    width: 100%; height: 54px;
+    background: var(--p600); color: #fff;
+    border: none; border-radius: 16px;
+    font-family: var(--f-text); font-size: 16px; font-weight: 600;
+    letter-spacing: -.005em;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    cursor: pointer; box-shadow: var(--sh-cta);
+    transition: transform 120ms ease;
+  }
+  .cta-primary.sm { height: 48px; font-size: 15px; border-radius: 14px; }
+  .cta-primary:hover { transform: translateY(-1px); }
+  .cta-primary svg { width: 20px; height: 20px; stroke-width: 2.5; }
+
+  .bottom-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 92px;
+    background: linear-gradient(180deg, rgba(245,241,237,0), var(--bg) 30%);
+    padding: 0 24px 24px;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    z-index: 10;
+  }
+  .bb-icon {
+    width: 48px; height: 48px; border-radius: 16px;
+    background: #fff; border: 1px solid var(--border-soft);
+    display: grid; place-items: center;
+    color: var(--t600);
+    box-shadow: 0 2px 6px -2px rgba(26,24,22,.08);
+    position: relative;
+  }
+  .bb-icon svg { width: 22px; height: 22px; stroke-width: 2; }
+  .bb-icon .badge {
+    position: absolute; top: 8px; right: 8px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--p500); border: 2px solid #fff;
+  }
+  .fab {
+    width: 64px; height: 64px; border-radius: 22px;
+    background: var(--p600); color: #fff;
+    display: grid; place-items: center;
+    box-shadow: 0 6px 16px -4px rgba(5,150,105,.35);
+  }
+  .fab svg { width: 28px; height: 28px; stroke-width: 2.5; }
+
+  /* ── S1: Welcome ─────────────────────────────── */
+  .s1 .hero-art {
+    height: 280px;
+    background: linear-gradient(180deg, #EDEAE5 0%, var(--bg) 100%);
+    margin: 0 -20px;
+    position: relative; overflow: hidden;
+    display: grid; place-items: center;
+  }
+  .s1 .chain-illus {
+    display: flex; gap: 8px;
+  }
+  .s1 .chain-illus .l {
+    width: 28px; height: 28px; border-radius: 10px;
+    background: var(--p600);
+    display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 13px;
+    box-shadow: 0 2px 6px -1px rgba(5,150,105,.35);
+  }
+  .s1 .chain-illus .l.g { background: linear-gradient(135deg, var(--p600), var(--p700)); }
+  .s1 .chain-illus .l.empty { background: transparent; border: 1.5px dashed var(--border); color: var(--t400); box-shadow: none; }
+  .s1 h1 {
+    font-family: var(--f-disp); font-size: 28px; line-height: 1.15; font-weight: 600;
+    letter-spacing: -.015em; color: var(--t900); margin-top: 28px; text-align: center;
+  }
+  .s1 h1 em { font-style: italic; color: var(--p700); font-weight: 500; }
+  .s1 .sub {
+    font-size: 15px; color: var(--t500); text-align: center;
+    margin-top: 10px; line-height: 1.45; padding: 0 10px;
+  }
+  .s1 .social-proof {
+    margin: 18px auto 0;
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    padding: 6px 14px 6px 10px;
+    box-shadow: 0 2px 4px rgba(26,24,22,.04);
+  }
+  .s1 .social-proof .stars { display: flex; gap: 1px; color: var(--s500); }
+  .s1 .social-proof .stars svg { width: 12px; height: 12px; }
+  .s1 .social-proof .text { font-size: 12px; color: var(--t700); font-weight: 600; }
+  .s1 .social-proof .text span { color: var(--t500); font-weight: 400; }
+  .s1 .center-row { text-align: center; margin-top: 20px; }
+  .s1 .auth-row { display: flex; flex-direction: column; gap: 10px; margin-top: 24px; }
+  .s1 .btn-apple {
+    width: 100%; height: 52px;
+    background: #000; color: #fff;
+    border-radius: 14px; border: none;
+    font-family: var(--f-text); font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer;
+  }
+  .s1 .btn-apple svg { width: 18px; height: 18px; color: #fff; }
+  .s1 .btn-google {
+    width: 100%; height: 52px;
+    background: #fff; color: #1a1816;
+    border-radius: 14px; border: 1px solid var(--border);
+    font-family: var(--f-text); font-size: 15px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: pointer;
+  }
+  .s1 .g-logo {
+    width: 18px; height: 18px;
+    background:
+      radial-gradient(circle at 70% 50%, #FBBC05 0 100%),
+      radial-gradient(circle at 30% 80%, #34A853 0 100%),
+      radial-gradient(circle at 30% 20%, #EA4335 0 100%),
+      radial-gradient(circle at 70% 50%, #4285F4 0 100%);
+    background-blend-mode: normal;
+    border-radius: 50%;
+    position: relative;
+  }
+  .s1 .g-logo::after {
+    content: "G"; position: absolute; inset: 0;
+    display: grid; place-items: center;
+    color: #fff; font-weight: 700; font-size: 11px;
+  }
+  .s1 .legal {
+    text-align: center;
+    font-size: 11px;
+    color: var(--t400);
+    line-height: 1.5;
+    margin-top: 20px;
+    padding: 0 20px 20px;
+  }
+  .s1 .legal a { color: var(--t500); text-decoration: underline; }
+
+  /* ── S2: Home empty ───────────────────────────── */
+  .s2 .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--p700); display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+  .s2 .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--p500); }
+  .s2 h1 { font-family: var(--f-disp); font-size: 26px; font-weight: 600; line-height: 1.2; color: var(--t900); margin-top: 8px; letter-spacing: -.015em; }
+  .s2 h1 em { font-style: italic; color: var(--p700); font-weight: 500; }
+  .s2 p.sub { font-size: 14.5px; color: var(--t500); margin-top: 8px; line-height: 1.45; }
+  .s2 .ghost-card {
+    margin-top: 18px;
+    background: var(--surface-2);
+    border: 1px dashed var(--border);
+    border-radius: var(--r-lg);
+    padding: 16px;
+    position: relative;
+  }
+  .s2 .ghost-card::after { content: "PREVIEW"; position: absolute; top: 10px; right: 12px; font-size: 9px; font-weight: 700; letter-spacing: .12em; color: var(--t400); }
+  .s2 .row1 { display: flex; align-items: center; gap: 12px; }
+  .s2 .emoji { width: 44px; height: 44px; border-radius: 12px; background: #fff; border: 1px solid var(--border-soft); display: grid; place-items: center; font-size: 22px; }
+  .s2 .name { font-size: 15px; font-weight: 600; color: var(--t700); }
+  .s2 .streak-pill { display: inline-flex; align-items: center; gap: 4px; background: var(--s100); color: var(--s700); padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; margin-top: 4px; }
+  .s2 .streak-pill svg { width: 10px; height: 10px; }
+  .s2 .chain { display: flex; gap: 5px; margin-top: 12px; }
+  .s2 .link { width: 24px; height: 24px; border-radius: 7px; background: var(--p600); color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+  .s2 .link.empty { background: transparent; border: 1.5px dashed var(--border); color: var(--t400); }
+  .s2 .link.today { background: #fff; border: 1.5px solid var(--p600); color: var(--p700); }
+  .s2 .hint { font-size: 11.5px; color: var(--t500); margin-top: 10px; font-style: italic; }
+  .s2 .cta-wrap { margin-top: 18px; }
+  .s2 .sec-link { text-align: center; color: var(--p700); font-size: 13.5px; font-weight: 600; margin-top: 10px; padding: 8px; }
+  .s2 .divider { display: flex; align-items: center; gap: 10px; margin: 26px 2px 14px; }
+  .s2 .divider .l { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border) 30%, var(--border) 70%, transparent); }
+  .s2 .divider h2 { font-family: var(--f-disp); font-size: 13.5px; font-weight: 600; color: var(--t600); }
+  .s2 .mot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .s2 .mot {
+    background: #fff; border: 1px solid var(--border-soft); border-radius: 14px;
+    padding: 12px; min-height: 110px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .s2 .mot .ic { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+  .s2 .mot .ic svg { width: 16px; height: 16px; }
+  .s2 .mot .ic.woop { background: linear-gradient(135deg, var(--p700), var(--p500)); }
+  .s2 .mot .ic.vis { background: linear-gradient(135deg, #6D3AC7, #8563C7); }
+  .s2 .mot .label { font-size: 13px; font-weight: 600; color: var(--t800); line-height: 1.25; }
+  .s2 .mot .sub { font-size: 11.5px; color: var(--t500); line-height: 1.35; }
+  .s2 .mot .time { margin-top: auto; font-size: 10.5px; color: var(--t400); display: flex; align-items: center; gap: 4px; }
+  .s2 .mot .time svg { width: 10px; height: 10px; }
+
+  /* ── S3: Create Habit — save fixed ─────────────── */
+  .s3 .modal-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 6px 2px 18px;
+  }
+  .s3 .modal-head .cancel { font-size: 15px; color: var(--t500); font-weight: 500; }
+  .s3 .modal-head .title { font-family: var(--f-disp); font-weight: 600; font-size: 17px; color: var(--t800); }
+  .s3 .modal-head .save {
+    background: var(--p600); color: #fff;
+    padding: 8px 18px; border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    box-shadow: var(--sh-cta);
+  }
+  .s3 .handle { width: 40px; height: 4px; background: var(--border); border-radius: 999px; margin: 8px auto 2px; }
+  .s3 .sheet { padding-top: 4px; }
+  .s3 label { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--t500); margin-top: 18px; display: block; }
+  .s3 .input-field {
+    margin-top: 8px;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 16px; color: var(--t800);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .s3 .input-field .placeholder { color: var(--t800); font-weight: 500; }
+  .s3 .input-field .cursor { display: inline-block; width: 2px; height: 18px; background: var(--p600); animation: blink 1s infinite; vertical-align: middle; margin-left: 1px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .s3 .emoji-grid {
+    margin-top: 8px;
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px;
+  }
+  .s3 .emoji-grid .e {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background 120ms;
+  }
+  .s3 .emoji-grid .e.selected { background: var(--p100); box-shadow: inset 0 0 0 2px var(--p600); }
+  .s3 .emoji-grid .e:hover { background: var(--surface-2); }
+  .s3 .color-row {
+    margin-top: 8px;
+    display: flex; gap: 10px; justify-content: space-between;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px;
+  }
+  .s3 .color-row .c {
+    width: 32px; height: 32px; border-radius: 50%;
+    cursor: pointer; position: relative;
+  }
+  .s3 .color-row .c.selected::after {
+    content: ""; position: absolute; inset: -4px;
+    border: 2px solid var(--p600); border-radius: 50%;
+  }
+  .s3 .advanced {
+    margin-top: 18px;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .s3 .advanced .ltext { font-size: 14.5px; font-weight: 500; color: var(--t700); }
+  .s3 .advanced .rtext { font-size: 12px; color: var(--t500); display: flex; align-items: center; gap: 4px; }
+
+  /* ── S4: Populated home ─────────────────────────── */
+  .s4 .hdr {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    padding: 14px 4px 8px;
+  }
+  .s4 .hdr .date { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--p700); }
+  .s4 .hdr h1 { font-family: var(--f-disp); font-size: 24px; font-weight: 600; color: var(--t900); margin-top: 6px; letter-spacing: -.015em; }
+  .s4 .hdr .progress {
+    width: 54px; height: 54px;
+    background: conic-gradient(var(--p600) 0 240deg, var(--border-soft) 240deg 360deg);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    position: relative;
+  }
+  .s4 .hdr .progress::after {
+    content: ""; position: absolute; inset: 5px;
+    background: var(--bg); border-radius: 50%;
+  }
+  .s4 .hdr .progress .text {
+    position: relative; z-index: 1; font-size: 11px; font-weight: 700; color: var(--p700);
+  }
+  .s4 .habit-card {
+    margin-top: 10px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    padding: 14px;
+    display: flex; gap: 12px; align-items: center;
+    box-shadow: 0 1px 2px rgba(26,24,22,.03);
+  }
+  .s4 .h-emoji { width: 48px; height: 48px; border-radius: 14px; background: var(--surface-2); display: grid; place-items: center; font-size: 24px; }
+  .s4 .h-meta { flex: 1; min-width: 0; }
+  .s4 .h-name { font-size: 15px; font-weight: 600; color: var(--t800); }
+  .s4 .h-chain { display: flex; gap: 4px; margin-top: 8px; align-items: center; }
+  .s4 .h-chain .d { width: 14px; height: 14px; border-radius: 4px; background: var(--p600); }
+  .s4 .h-chain .d.empty { background: var(--surface); }
+  .s4 .h-chain .d.today { background: #fff; border: 1.5px solid var(--p600); }
+  .s4 .h-chain .streak { margin-left: 6px; font-size: 11px; color: var(--s700); font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+  .s4 .h-chain .streak svg { width: 10px; height: 10px; }
+  .s4 .check {
+    width: 40px; height: 40px; border-radius: 12px;
+    border: 2px solid var(--p600);
+    display: grid; place-items: center;
+    color: var(--p600);
+  }
+  .s4 .check.done {
+    background: var(--p600); color: #fff;
+  }
+  .s4 .check svg { width: 20px; height: 20px; stroke-width: 2.5; }
+  .s4 .reorder-hint {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 11.5px; color: var(--t400);
+    font-style: italic;
+  }
+  .s4 .reorder-hint svg { width: 12px; height: 12px; vertical-align: -2px; margin-right: 2px; }
+
+  /* ── S5: Library browse ─────────────────────────── */
+  .s5 .hdr { padding: 14px 4px 16px; }
+  .s5 .hdr h1 { font-family: var(--f-disp); font-size: 24px; font-weight: 600; color: var(--t900); letter-spacing: -.015em; }
+  .s5 .hdr p { font-size: 14px; color: var(--t500); margin-top: 4px; }
+  .s5 .search {
+    margin-top: 12px;
+    background: #fff; border: 1px solid var(--border); border-radius: 14px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; color: var(--t400);
+  }
+  .s5 .search svg { width: 18px; height: 18px; color: var(--t500); }
+  .s5 .featured {
+    margin-top: 14px;
+    background: linear-gradient(135deg, var(--p600), var(--p800));
+    border-radius: 20px;
+    padding: 20px;
+    color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .s5 .featured::before {
+    content: ""; position: absolute; top: -40%; right: -20%; width: 70%; height: 160%;
+    background: radial-gradient(circle, rgba(255,255,255,.12), transparent 70%);
+    pointer-events: none;
+  }
+  .s5 .featured .badge { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; background: rgba(255,255,255,.2); padding: 4px 10px; border-radius: 999px; display: inline-block; color: #fff; }
+  .s5 .featured h2 { font-family: var(--f-disp); font-size: 22px; font-weight: 600; margin-top: 14px; line-height: 1.2; letter-spacing: -.015em; }
+  .s5 .featured p { font-size: 13.5px; opacity: .85; margin-top: 6px; line-height: 1.45; }
+  .s5 .featured .btn {
+    margin-top: 16px;
+    background: #fff; color: var(--p800);
+    padding: 10px 18px; border-radius: 12px;
+    font-size: 13.5px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+  }
+  .s5 .featured .btn svg { width: 14px; height: 14px; stroke-width: 2.5; }
+  .s5 .goals { margin-top: 20px; }
+  .s5 .goals-head { display: flex; justify-content: space-between; align-items: baseline; padding: 0 2px; }
+  .s5 .goals-head h3 { font-family: var(--f-disp); font-size: 16px; font-weight: 600; color: var(--t800); }
+  .s5 .goals-head .see { font-size: 12.5px; color: var(--p700); font-weight: 600; }
+  .s5 .goal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .s5 .gc {
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: 14px; padding: 14px;
+    display: flex; flex-direction: column; gap: 6px; min-height: 96px;
+    position: relative;
+  }
+  .s5 .gc .gi { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: #fff; }
+  .s5 .gc .gi svg { width: 16px; height: 16px; }
+  .s5 .gc.c1 .gi { background: var(--p600); }
+  .s5 .gc.c2 .gi { background: var(--s600); }
+  .s5 .gc.c3 .gi { background: #6D3AC7; }
+  .s5 .gc.c4 .gi { background: #3872B8; }
+  .s5 .gc .t { font-size: 13.5px; font-weight: 600; color: var(--t800); }
+  .s5 .gc .n { font-size: 11.5px; color: var(--t500); margin-top: auto; }
+  .s5 .gc .chev { position: absolute; bottom: 12px; right: 12px; color: var(--t400); }
+  .s5 .gc .chev svg { width: 14px; height: 14px; stroke-width: 2.25; }
+
+  /* ── Annotations callouts ─────────────────────────── */
+  .callouts {
+    max-width: 1280px;
+    margin: 0 auto 80px;
+    padding: 0 32px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+  }
+  .co {
+    background: #fffbe8;
+    border: 1px solid #f5d96d;
+    border-radius: 14px;
+    padding: 16px 18px;
+  }
+  .co h5 { font-family: var(--f-disp); font-size: 14.5px; color: var(--t800); font-weight: 600; }
+  .co .tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #6b5a10; margin-bottom: 4px; }
+  .co p { font-size: 12.5px; color: var(--t600); line-height: 1.5; margin-top: 6px; }
+  .co p + p { margin-top: 6px; }
+  .co code { font-family: ui-monospace, monospace; font-size: 11px; background: #f5e9a8; padding: 1px 4px; border-radius: 3px; }
+
+  .foot {
+    max-width: 1280px; margin: 0 auto 60px; padding: 0 32px;
+    font-size: 12.5px; color: var(--t500); line-height: 1.55;
+    border-top: 1px solid var(--border); padding-top: 24px;
+  }
+  .foot strong { color: var(--t700); }
+  .foot code { font-family: ui-monospace, monospace; font-size: 11.5px; background: var(--surface); padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ── Hero ──────────────────────────────────── -->
+<div class="hero">
+  <div class="kicker">Designer Review · April 2026</div>
+  <h1>What I'd change across the app, <em>in one storyboard</em>.</h1>
+  <p class="lede">Five screens, walked end-to-end as a new user would meet them. Every fix traces back to a finding in <code style="font-family:ui-monospace,monospace;font-size:15px;background:#eae5de;padding:1px 6px;border-radius:4px;">.context/designer-review/0[1-4]-*.md</code> — no decorative changes. Tokens used are from <code style="font-family:ui-monospace,monospace;font-size:15px;background:#eae5de;padding:1px 6px;border-radius:4px;">src/theme/colors/core.ts</code>; no new hexes are introduced.</p>
+  <div class="meta">
+    <div class="m"><i data-lucide="check-circle-2"></i><span><strong>5 H-findings</strong> fixed directly</span></div>
+    <div class="m"><i data-lucide="trending-up"></i><span><strong>3 orphaned components</strong> re-entered into the app</span></div>
+    <div class="m"><i data-lucide="palette"></i><span><strong>0 new colors</strong> introduced</span></div>
+    <div class="m"><i data-lucide="layout"></i><span><strong>1 dead flow</strong> (onboarding carousel) made skippable</span></div>
+  </div>
+</div>
+
+<!-- ── Priority strip ──────────────────────────── -->
+<div class="priority-strip">
+  <div class="p-card p0">
+    <div class="tier">P0 · ship first</div>
+    <h3>Stop scaring users off</h3>
+    <ul>
+      <li>Solid save button (01 H2 / 02 H4)</li>
+      <li>Visible Apple sign-in (04 H3)</li>
+      <li>Home empty state that teaches (02 H1)</li>
+    </ul>
+  </div>
+  <div class="p-card p1">
+    <div class="tier">P1 · this sprint</div>
+    <h3>Restore orphaned paths</h3>
+    <ul>
+      <li>Vision / WOOP / Why entry points (04 H4-5)</li>
+      <li>Social proof on welcome (04 H2)</li>
+      <li>Trending card add button above fold (03 H2)</li>
+    </ul>
+  </div>
+  <div class="p-card p2">
+    <div class="tier">P2 · palette pass</div>
+    <h3>Tokenize the templates surface</h3>
+    <ul>
+      <li>Remove 14 raw hexes (01 H1)</li>
+      <li>Featured CTA pill → filled (03 H3)</li>
+      <li>Text-arrow → Lucide chevron (03 H4)</li>
+    </ul>
+  </div>
+  <div class="p-card p3">
+    <div class="tier">P3 · progression</div>
+    <h3>Character earns its screen</h3>
+    <ul>
+      <li>Achievement ladder beyond 3 (03 C3)</li>
+      <li>Attributes scale past 20 days (03 C2)</li>
+      <li>XP curve, not flat 120/level (03 C5)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── Storyboard ──────────────────────────────── -->
+<div class="storyboard">
+
+  <!-- S1: Welcome ───────────────────────────────── -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <div class="step">1</div>
+      <div>
+        <h4>Welcome — first paint</h4>
+        <div class="fixes"><code>04 H2</code> <code>04 H3</code> <code>04 M1</code></div>
+      </div>
+    </div>
+
+    <div class="phone s1">
+      <div class="notch"></div>
+      <div class="status">
+        <span>9:41</span>
+        <div class="right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div>
+      </div>
+      <div class="screen">
+        <div class="hero-art">
+          <div class="chain-illus">
+            <div class="l g">✓</div>
+            <div class="l g">✓</div>
+            <div class="l g">✓</div>
+            <div class="l g">✓</div>
+            <div class="l g">✓</div>
+            <div class="l g">✓</div>
+            <div class="l empty">7</div>
+          </div>
+        </div>
+        <h1>One small thing,<br/><em>day after day.</em></h1>
+        <p class="sub">ChainDay turns a choice you make today into a habit that sticks a month from now.</p>
+        <div class="center-row">
+          <div class="social-proof">
+            <div class="stars">
+              <i data-lucide="star" fill="currentColor"></i>
+              <i data-lucide="star" fill="currentColor"></i>
+              <i data-lucide="star" fill="currentColor"></i>
+              <i data-lucide="star" fill="currentColor"></i>
+              <i data-lucide="star" fill="currentColor"></i>
+            </div>
+            <div class="text">4.8 <span>&middot; 12,400 reviews</span></div>
+          </div>
+        </div>
+        <div class="auth-row">
+          <button class="btn-apple">
+            <i data-lucide="apple"></i> Continue with Apple
+          </button>
+          <button class="btn-google">
+            <span class="g-logo"></span> Continue with Google
+          </button>
+        </div>
+        <div class="legal">
+          By continuing you agree to our <a>Terms</a> and <a>Privacy Policy</a>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S2: Home empty ─────────────────────────────── -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <div class="step">2</div>
+      <div>
+        <h4>Home — zero habits</h4>
+        <div class="fixes"><code>02 H1</code> <code>04 H4</code> <code>04 H5</code> <code>04 H1</code></div>
+      </div>
+    </div>
+
+    <div class="phone s2">
+      <div class="notch"></div>
+      <div class="status">
+        <span>9:41</span>
+        <div class="right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div>
+      </div>
+      <div class="screen scroll">
+        <div class="eyebrow"><span class="dot"></span> Good morning, Andres</div>
+        <h1>Let's build your <em>first chain</em>.</h1>
+        <p class="sub">A habit becomes real after seven days. Pick one you'll show up for tomorrow.</p>
+
+        <div class="ghost-card">
+          <div class="row1">
+            <div class="emoji">🌱</div>
+            <div>
+              <div class="name">Your habit here</div>
+              <div class="streak-pill"><i data-lucide="flame"></i> day 1 of 7</div>
+            </div>
+          </div>
+          <div class="chain">
+            <div class="link">✓</div>
+            <div class="link">✓</div>
+            <div class="link">✓</div>
+            <div class="link today">•</div>
+            <div class="link empty">—</div>
+            <div class="link empty">—</div>
+            <div class="link empty">—</div>
+          </div>
+          <div class="hint">This is what a habit card looks like once you start.</div>
+        </div>
+
+        <div class="cta-wrap">
+          <button class="cta-primary"><i data-lucide="plus"></i> Create your first habit</button>
+          <div class="sec-link">or start from a template →</div>
+        </div>
+
+        <div class="divider">
+          <span class="l"></span>
+          <h2>Get grounded in 2 minutes</h2>
+          <span class="l"></span>
+        </div>
+
+        <div class="mot-row">
+          <div class="mot">
+            <div class="ic woop"><i data-lucide="compass"></i></div>
+            <div class="label">Plan with WOOP</div>
+            <div class="sub">Wish → outcome → obstacle → plan.</div>
+            <div class="time"><i data-lucide="clock-4"></i> 3 min</div>
+          </div>
+          <div class="mot">
+            <div class="ic vis"><i data-lucide="image"></i></div>
+            <div class="label">Picture the year</div>
+            <div class="sub">6-tile vision you'll see every open.</div>
+            <div class="time"><i data-lucide="clock-4"></i> 4 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bb-icon"><i data-lucide="settings"></i></div>
+        <div class="fab"><i data-lucide="plus"></i></div>
+        <div class="bb-icon"><i data-lucide="book-open"></i><div class="badge"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S3: Create Habit ────────────────────────────── -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <div class="step">3</div>
+      <div>
+        <h4>Create habit — save enabled</h4>
+        <div class="fixes"><code>01 H2</code> <code>02 H4</code> <code>02 H2</code></div>
+      </div>
+    </div>
+
+    <div class="phone s3">
+      <div class="notch"></div>
+      <div class="status">
+        <span>9:41</span>
+        <div class="right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div>
+      </div>
+      <div class="screen scroll" style="padding-top: 0;">
+        <div class="handle"></div>
+        <div class="modal-head">
+          <span class="cancel">Cancel</span>
+          <span class="title">New habit</span>
+          <span class="save">Save</span>
+        </div>
+
+        <div class="sheet">
+          <label>What are you showing up for?</label>
+          <div class="input-field">
+            <span class="placeholder">Morning run</span>
+            <span class="cursor"></span>
+          </div>
+
+          <label>Emoji</label>
+          <div class="emoji-grid">
+            <div class="e">🌱</div><div class="e">💧</div><div class="e">📖</div>
+            <div class="e selected">🏃</div><div class="e">🧘</div><div class="e">🥗</div>
+            <div class="e">💪</div>
+            <div class="e">☀️</div><div class="e">🌙</div><div class="e">✍️</div>
+            <div class="e">🎨</div><div class="e">🎸</div><div class="e">🧠</div>
+            <div class="e">💤</div>
+          </div>
+
+          <label>Color</label>
+          <div class="color-row">
+            <div class="c selected" style="background: var(--p600);"></div>
+            <div class="c" style="background: var(--s600);"></div>
+            <div class="c" style="background: #6D3AC7;"></div>
+            <div class="c" style="background: #3872B8;"></div>
+            <div class="c" style="background: #B4321E;"></div>
+            <div class="c" style="background: var(--t600);"></div>
+          </div>
+
+          <label>Frequency</label>
+          <div class="input-field" style="justify-content: space-between;">
+            <span class="placeholder">Every day</span>
+            <i data-lucide="chevron-down" style="color: var(--t400); width: 18px; height: 18px;"></i>
+          </div>
+
+          <div class="advanced">
+            <span class="ltext">Advanced</span>
+            <span class="rtext">Growth type, streak goal <i data-lucide="chevron-down" style="width: 14px; height: 14px;"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S4: Populated home ──────────────────────────── -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <div class="step">4</div>
+      <div>
+        <h4>Home — day 4, three habits</h4>
+        <div class="fixes"><code>02 mid</code> habit-card weight + chain clarity</div>
+      </div>
+    </div>
+
+    <div class="phone s4">
+      <div class="notch"></div>
+      <div class="status">
+        <span>9:41</span>
+        <div class="right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div>
+      </div>
+      <div class="screen scroll">
+        <div class="hdr">
+          <div>
+            <div class="date">Tuesday · Apr 21</div>
+            <h1>Today</h1>
+          </div>
+          <div class="progress"><div class="text">2/3</div></div>
+        </div>
+
+        <div class="habit-card">
+          <div class="h-emoji">🏃</div>
+          <div class="h-meta">
+            <div class="h-name">Morning run</div>
+            <div class="h-chain">
+              <div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div>
+              <div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div>
+              <div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div>
+              <span class="streak"><i data-lucide="flame"></i> 12d</span>
+            </div>
+          </div>
+          <div class="check done"><i data-lucide="check"></i></div>
+        </div>
+
+        <div class="habit-card">
+          <div class="h-emoji">📖</div>
+          <div class="h-meta">
+            <div class="h-name">Read 20 pages</div>
+            <div class="h-chain">
+              <div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div>
+              <span class="streak"><i data-lucide="flame"></i> 4d</span>
+            </div>
+          </div>
+          <div class="check done"><i data-lucide="check"></i></div>
+        </div>
+
+        <div class="habit-card">
+          <div class="h-emoji">🧘</div>
+          <div class="h-meta">
+            <div class="h-name">Meditate</div>
+            <div class="h-chain">
+              <div class="d today"></div>
+            </div>
+          </div>
+          <div class="check"><i data-lucide="check"></i></div>
+        </div>
+
+        <div class="reorder-hint">
+          <i data-lucide="grip-vertical"></i> long-press to reorder
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bb-icon"><i data-lucide="settings"></i></div>
+        <div class="fab"><i data-lucide="plus"></i></div>
+        <div class="bb-icon"><i data-lucide="book-open"></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S5: Library browse ──────────────────────────── -->
+  <div class="frame-wrap">
+    <div class="frame-label">
+      <div class="step">5</div>
+      <div>
+        <h4>Library — tokenized palette</h4>
+        <div class="fixes"><code>01 H1</code> <code>03 H2</code> <code>03 H3</code> <code>03 H4</code></div>
+      </div>
+    </div>
+
+    <div class="phone s5">
+      <div class="notch"></div>
+      <div class="status">
+        <span>9:41</span>
+        <div class="right"><i data-lucide="signal"></i><i data-lucide="wifi"></i><i data-lucide="battery-full"></i></div>
+      </div>
+      <div class="screen scroll">
+        <div class="hdr">
+          <h1>Library</h1>
+          <p>240 science-backed habits, organized by what you want to change.</p>
+        </div>
+
+        <div class="search">
+          <i data-lucide="search"></i>
+          <span>Search habits</span>
+        </div>
+
+        <div class="featured">
+          <span class="badge">Today's pick · 4:23pm</span>
+          <h2>Wind down for deeper sleep</h2>
+          <p>7 small habits that cut cortisol and ease you into rest.</p>
+          <div class="btn">Start here <i data-lucide="arrow-right"></i></div>
+        </div>
+
+        <div class="goals">
+          <div class="goals-head">
+            <h3>Browse by goal</h3>
+            <span class="see">See all</span>
+          </div>
+          <div class="goal-grid">
+            <div class="gc c1">
+              <div class="gi"><i data-lucide="activity"></i></div>
+              <div class="t">Move more</div>
+              <div class="n">61 habits</div>
+              <div class="chev"><i data-lucide="chevron-right"></i></div>
+            </div>
+            <div class="gc c2">
+              <div class="gi"><i data-lucide="moon"></i></div>
+              <div class="t">Sleep better</div>
+              <div class="n">28 habits</div>
+              <div class="chev"><i data-lucide="chevron-right"></i></div>
+            </div>
+            <div class="gc c3">
+              <div class="gi"><i data-lucide="brain"></i></div>
+              <div class="t">Calmer mind</div>
+              <div class="n">42 habits</div>
+              <div class="chev"><i data-lucide="chevron-right"></i></div>
+            </div>
+            <div class="gc c4">
+              <div class="gi"><i data-lucide="book-open"></i></div>
+              <div class="t">Learn daily</div>
+              <div class="n">19 habits</div>
+              <div class="chev"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom-bar">
+        <div class="bb-icon"><i data-lucide="settings"></i></div>
+        <div class="fab"><i data-lucide="plus"></i></div>
+        <div class="bb-icon"><i data-lucide="book-open"></i></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Callouts ──────────────────────────────── -->
+<div class="callouts">
+  <div class="co">
+    <div class="tag">Screen 1 · Welcome</div>
+    <h5>Three fixes stacked</h5>
+    <p><strong>Social proof</strong> (review 04 H2) uses the existing <code>SocialProofBadge</code> component. <strong>Apple button</strong> (04 H3) renders with solid black fill + white Apple glyph so the label can't go invisible on any rendering surface. <strong>Tagline</strong> (04 M1) is replaced with a concrete promise — "One small thing, day after day" — not generic wellness-app boilerplate.</p>
+  </div>
+  <div class="co">
+    <div class="tag">Screen 2 · Home empty</div>
+    <h5>Teaches the metaphor in context</h5>
+    <p>Ghost card + "PREVIEW" eyebrow do the work the auto-skipped onboarding carousel was supposed to do. WOOP and Vision re-enter here as secondary paths — users who want scaffolding before the first habit get a route to it; users who don't can tap the solid green CTA and move on.</p>
+  </div>
+  <div class="co">
+    <div class="tag">Screen 3 · Create habit</div>
+    <h5>Save reads as save</h5>
+    <p><code>Save</code> pill is filled <code>primary[600]</code> the moment the name field has content. Emoji grid uses explicit <code>grid-template-columns: repeat(7, 1fr)</code> — fixes the column-collapse regression on web (02 H2), also hardens the native rendering. Advanced stays collapsed by default with a single summary row instead of three sub-pickers.</p>
+  </div>
+  <div class="co">
+    <div class="tag">Screen 4 · Populated home</div>
+    <h5>Chain visualization scales</h5>
+    <p>12-day chain shows as 12 discrete dots — small enough to fit the card, large enough to count. Today's dot uses the ring treatment already in the codebase. The 2-of-3 progress ring in the header gives a daily summary without a separate chart. Reorder affordance is called out in footer text instead of hidden in a long-press.</p>
+  </div>
+  <div class="co">
+    <div class="tag">Screen 5 · Library</div>
+    <h5>One palette, no free-range hex</h5>
+    <p>Goal-card icon tiles pull from four existing token roles: <code>primary[600]</code> (movement), <code>streak[600]</code> (rest/gold), <code>premium[500]</code> (mind/purple), <code>info[500]</code> (learning/blue). Replaces 14 raw hexes in <code>categoryMeta.ts</code>. Featured CTA is filled white-on-dark (unambiguous), not a ghost pill. Grid chevrons are Lucide icons, not styled text arrows.</p>
+  </div>
+  <div class="co">
+    <div class="tag">What's next</div>
+    <h5>Three screens not drawn yet</h5>
+    <p><strong>Analytics</strong> — needs low-data variants (03 A2) before it's worth mocking. <strong>Character</strong> — the progression curve fix (03 C2, C3, C5) is the substance; the visual is less urgent. <strong>Habit detail</strong> — populated detail was unreachable in the review pass; would design it after a fixture pass with real data. I'd tackle these after the 5 screens above ship.</p>
+  </div>
+</div>
+
+<!-- ── Footer ──────────────────────────────── -->
+<div class="foot">
+  <p><strong>Rendering caveat.</strong> This is Chrome at desktop; on native iOS the fonts, shadow falloff, and ghost-card dashed border will differ slightly. Safe for intent review; validate final pixel values on-device once the expo-crypto iOS build failure is resolved. Files referenced live in <code>src/theme/</code>, <code>src/components/</code>, <code>src/screens/</code>, and <code>src/features/habits/</code>.</p>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

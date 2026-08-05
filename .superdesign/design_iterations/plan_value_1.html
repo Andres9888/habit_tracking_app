@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ChainDay — Plan & Value</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;0,600;0,700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED; --surface: #EDEAE5; --surface-2: #FAF8F5;
+    --border: #DDD8D2; --border-soft: #E8E3DC;
+    --t900: #1A1816; --t800: #2D2A26; --t700: #3D3833; --t600: #524D47; --t500: #6B6560; --t400: #6E6660;
+    --p100: #D1FAE5; --p500: #10B981; --p600: #059669; --p700: #047857; --p800: #065F46;
+    --s100: #FEF3CD; --s300: #E8B94D; --s500: #8B6208; --s600: #936A08; --s700: #7D5907;
+    --danger: #B4321E;
+    --f-disp: 'Literata', Georgia, serif;
+    --f-text: 'DM Sans', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #e4ded5; font-family: var(--f-text); color: var(--t800); -webkit-font-smoothing: antialiased; }
+
+  /* Hero */
+  .hero { max-width: 1400px; margin: 0 auto; padding: 60px 40px 32px; }
+  .hero .kicker { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--p700); }
+  .hero h1 { font-family: var(--f-disp); font-size: 44px; font-weight: 600; letter-spacing: -.02em; line-height: 1.08; margin-top: 8px; color: var(--t900); }
+  .hero h1 em { font-style: italic; color: var(--p700); font-weight: 500; }
+  .hero p.lede { font-size: 17px; color: var(--t500); max-width: 780px; margin-top: 14px; line-height: 1.55; }
+
+  .tldr {
+    max-width: 1400px; margin: 18px auto 0; padding: 0 40px;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+  }
+  .tldr .card {
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .tldr .card .tag { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--t500); }
+  .tldr .card h4 { font-family: var(--f-disp); font-size: 15px; font-weight: 600; color: var(--t800); margin-top: 4px; line-height: 1.2; }
+  .tldr .card .metric { margin-top: 8px; font-size: 13px; color: var(--p700); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .tldr .card .metric svg { width: 14px; height: 14px; }
+
+  /* Bucket */
+  .bucket { max-width: 1400px; margin: 64px auto 0; padding: 0 40px; }
+  .bucket .head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+  .bucket .head .step { width: 38px; height: 38px; border-radius: 50%; background: var(--p700); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 16px; }
+  .bucket .head h2 { font-family: var(--f-disp); font-size: 28px; font-weight: 600; color: var(--t900); letter-spacing: -.015em; }
+  .bucket .head .prio { margin-left: auto; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+  .bucket .head .prio.p0 { background: #fde4dd; color: var(--danger); }
+  .bucket .head .prio.p1 { background: var(--p100); color: var(--p800); }
+  .bucket .head .prio.p2 { background: var(--s100); color: var(--s700); }
+
+  .row {
+    display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 28px; align-items: start;
+  }
+  .row > div { min-width: 0; }
+  .col-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--t500); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .col-label.today { color: var(--danger); }
+  .col-label.today::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--danger); }
+  .col-label.after { color: var(--p700); }
+  .col-label.after::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--p500); }
+  .col-label.why::before { content: "▼"; font-size: 9px; color: var(--t500); }
+  .col-label.why { color: var(--t500); }
+
+  .frame {
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px -10px rgba(26,24,22,.2), 0 0 0 1px rgba(26,24,22,.08);
+    aspect-ratio: 393 / 682;
+  }
+  .frame img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: top; }
+
+  .sketch {
+    background: var(--bg);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px -10px rgba(5,150,105,.25), 0 0 0 1px rgba(5,150,105,.15);
+    aspect-ratio: 393 / 682;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .sketch h3 { font-family: var(--f-disp); font-size: 17px; font-weight: 600; color: var(--t900); line-height: 1.2; letter-spacing: -.015em; }
+  .sketch h3 em { font-style: italic; color: var(--p700); font-weight: 500; }
+  .sketch .eyebrow { font-size: 11px; font-weight: 600; color: var(--p700); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .sketch .eyebrow::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--p500); }
+  .sketch .sub { color: var(--t500); margin-top: 8px; line-height: 1.45; font-size: 12.5px; }
+  .sketch .sub em { color: var(--p700); font-style: italic; font-weight: 500; }
+  .sketch .dash-card {
+    background: var(--surface-2); border: 1px dashed var(--border);
+    border-radius: 14px; padding: 12px; margin-top: 12px; position: relative;
+  }
+  .sketch .dash-card::after { content: "PREVIEW"; position: absolute; top: 8px; right: 10px; font-size: 8px; font-weight: 700; letter-spacing: .12em; color: var(--t400); }
+  .sketch .dash-card .row1 { display: flex; gap: 8px; align-items: center; }
+  .sketch .dash-card .em { width: 32px; height: 32px; background: #fff; border-radius: 10px; display: grid; place-items: center; font-size: 18px; border: 1px solid var(--border-soft); }
+  .sketch .dash-card .nm { font-weight: 600; font-size: 12px; color: var(--t700); }
+  .sketch .dash-card .streak { font-size: 10px; color: var(--s700); margin-top: 2px; }
+  .sketch .chain { display: flex; gap: 4px; margin-top: 10px; }
+  .sketch .chain .l { width: 18px; height: 18px; border-radius: 5px; background: var(--p600); color: #fff; display: grid; place-items: center; font-size: 10px; font-weight: 700; }
+  .sketch .chain .l.e { background: transparent; border: 1.5px dashed var(--border); color: var(--t400); }
+  .sketch .chain .l.t { background: #fff; border: 1.5px solid var(--p600); color: var(--p700); }
+  .sketch .cta {
+    width: 100%; background: var(--p600); color: #fff;
+    height: 42px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 13px; font-weight: 600; margin-top: 14px;
+    box-shadow: 0 2px 6px -1px rgba(5,150,105,.35);
+  }
+  .sketch .cta svg { width: 14px; height: 14px; stroke-width: 2.5; }
+  .sketch .social-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #fff; border: 1px solid var(--border-soft);
+    border-radius: 999px; padding: 4px 10px; font-size: 10.5px;
+    font-weight: 600; color: var(--t700);
+    margin-top: 10px;
+  }
+  .sketch .social-pill .stars { color: var(--s500); font-size: 10px; }
+  .sketch .apple-btn {
+    background: #000; color: #fff;
+    height: 40px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 13px; font-weight: 600; margin-top: 12px;
+  }
+  .sketch .apple-btn svg { width: 14px; height: 14px; color: #fff; }
+  .sketch .mot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .sketch .mot { background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; }
+  .sketch .mot .ic { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; color: #fff; }
+  .sketch .mot .ic svg { width: 12px; height: 12px; }
+  .sketch .mot .ic.w { background: linear-gradient(135deg, var(--p700), var(--p500)); }
+  .sketch .mot .ic.v { background: linear-gradient(135deg, #6D3AC7, #8563C7); }
+  .sketch .mot .lbl { font-size: 11px; font-weight: 600; color: var(--t800); margin-top: 6px; line-height: 1.2; }
+  .sketch .mot .sub { font-size: 9.5px; color: var(--t500); margin-top: 2px; }
+
+  /* Why */
+  .why {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 16px;
+    padding: 20px 22px;
+    position: relative;
+  }
+  .why h3 { font-family: var(--f-disp); font-size: 19px; font-weight: 600; color: var(--t900); letter-spacing: -.01em; }
+  .why .lede { font-size: 14px; color: var(--t600); line-height: 1.55; margin-top: 10px; }
+  .why .lede strong { color: var(--t800); font-weight: 600; }
+  .why .metrics { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .why .metric {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 12px;
+    background: var(--surface-2); border-radius: 10px;
+    font-size: 13px;
+  }
+  .why .metric .ic {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    display: grid; place-items: center; color: var(--p700);
+    background: var(--p100);
+  }
+  .why .metric .ic svg { width: 14px; height: 14px; }
+  .why .metric .txt { flex: 1; color: var(--t700); line-height: 1.4; }
+  .why .metric .txt strong { color: var(--t900); font-weight: 600; }
+  .why .evidence {
+    margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-soft);
+    font-size: 12px; color: var(--t500); line-height: 1.5;
+  }
+  .why .evidence strong { color: var(--t600); font-weight: 600; }
+  .why .evidence code { font-family: ui-monospace, monospace; font-size: 11px; background: var(--surface); padding: 1px 5px; border-radius: 3px; color: var(--t700); }
+
+  /* Annotations on sketches */
+  .ann { position: absolute; background: #fffbe8; border: 1px solid #f5d96d; border-radius: 5px; padding: 2px 6px; font-size: 9px; font-weight: 700; color: #6b5a10; letter-spacing: .02em; z-index: 5; white-space: nowrap; box-shadow: 0 3px 8px -2px rgba(0,0,0,.15); }
+
+  .foot {
+    max-width: 1400px; margin: 80px auto 60px; padding: 24px 40px 0;
+    font-size: 13px; color: var(--t500); line-height: 1.55;
+    border-top: 1px solid var(--border);
+  }
+  .foot strong { color: var(--t700); }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="kicker">Plan & Value · What we're changing and why</div>
+  <h1>Five buckets. Two user behaviours we're<br/>unblocking: <em>activate and stick.</em></h1>
+  <p class="lede">Each row below pairs what a real user sees today (screenshots from the review pass) with what the proposed change looks like, and the specific behaviour we expect to improve. No decorative changes — every bucket traces to findings in <code style="background:#eae5de;padding:1px 5px;border-radius:4px;font-family:ui-monospace,monospace;font-size:14px;">.context/designer-review/</code>.</p>
+</div>
+
+<div class="tldr">
+  <div class="card">
+    <div class="tag">A · P0</div>
+    <h4>First-run experience</h4>
+    <div class="metric"><i data-lucide="trending-up"></i>Activation ↑</div>
+  </div>
+  <div class="card">
+    <div class="tag">B · P0</div>
+    <h4>Primary CTA clarity</h4>
+    <div class="metric"><i data-lucide="check-circle-2"></i>Completion ↑</div>
+  </div>
+  <div class="card">
+    <div class="tag">C · P1</div>
+    <h4>Orphaned motivation</h4>
+    <div class="metric"><i data-lucide="compass"></i>Retention ↑</div>
+  </div>
+  <div class="card">
+    <div class="tag">D · P2</div>
+    <h4>Library tokenization</h4>
+    <div class="metric"><i data-lucide="gem"></i>Trust ↑</div>
+  </div>
+  <div class="card">
+    <div class="tag">E · P2</div>
+    <h4>Semantic cleanups</h4>
+    <div class="metric"><i data-lucide="alert-circle"></i>Confusion ↓</div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────────── -->
+<!-- Bucket A -->
+<div class="bucket">
+  <div class="head">
+    <div class="step">A</div>
+    <h2>First-run experience</h2>
+    <div class="prio p0">P0 · ship first</div>
+  </div>
+
+  <div class="row">
+    <div>
+      <div class="col-label today">Today</div>
+      <div class="frame">
+        <img src="../../.context/designer-review/screenshots/00-initial/habits-list-empty.png" alt="Current home — empty cream" />
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">A new user who finished sign-up lands here: an empty cream expanse, no greeting, no CTA, no explanation of the chain metaphor. The welcome screen they just left had no social proof and (on web) an invisible Apple button.</div>
+    </div>
+
+    <div>
+      <div class="col-label after">Proposed</div>
+      <div class="sketch">
+        <div class="eyebrow">Good morning, Andres</div>
+        <h3>Let's build your <em>first chain</em>.</h3>
+        <div class="sub">A habit becomes real after <em>seven days</em>. Pick one you'll show up for tomorrow.</div>
+        <div class="dash-card">
+          <div class="row1">
+            <div class="em">🌱</div>
+            <div>
+              <div class="nm">Your habit here</div>
+              <div class="streak">🔥 day 1 of 7</div>
+            </div>
+          </div>
+          <div class="chain">
+            <div class="l">✓</div><div class="l">✓</div><div class="l">✓</div>
+            <div class="l t">•</div>
+            <div class="l e">—</div><div class="l e">—</div><div class="l e">—</div>
+          </div>
+        </div>
+        <div class="cta"><i data-lucide="plus"></i> Create your first habit</div>
+        <div style="text-align:center; color: var(--p700); font-size: 11.5px; font-weight: 600; margin-top: 8px;">or start from a template →</div>
+        <div class="social-pill" style="margin-top: 14px;">
+          <span class="stars">⭐</span> <strong>10,000+</strong> building habits
+        </div>
+        <div class="apple-btn"><i data-lucide="apple"></i> Continue with Apple</div>
+
+        <div class="ann" style="top: 100px; right: 16px;">Teaches the metaphor</div>
+        <div class="ann" style="top: 260px; left: 16px;">Solid — not a phantom</div>
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">Greeting + ghost-card preview + unambiguous primary CTA on Home. Welcome gets visible Apple button + social proof pill (component already exists, was never mounted).</div>
+    </div>
+
+    <div>
+      <div class="col-label why">Why it matters</div>
+      <div class="why">
+        <h3>The first 30 seconds decide whether you get a habit tracked at all.</h3>
+        <p class="lede">A new user who signs up and sees a blank screen has nothing to tap. The onboarding carousel that was supposed to teach the chain metaphor is <strong>auto-skipped</strong> — users have never seen it. The burden of teaching + activating shifts to the first post-auth surface, which today does neither.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="ic"><i data-lucide="user-plus"></i></div>
+            <div class="txt"><strong>Activation:</strong> % of new users who create a habit in session 1. Expected lift from giving them a button to press and a preview of what they're building.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="apple"></i></div>
+            <div class="txt"><strong>Sign-up funnel:</strong> The Apple button's label is currently invisible on web. Anyone who prefers Apple → Google auth skews the data or bounces. Fix is pure blocker-removal.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="shield-check"></i></div>
+            <div class="txt"><strong>Trust:</strong> <code>SocialProofBadge</code> is built, tested, and wired to copy "10,000+ people building better habits" — but isn't mounted anywhere. Free credibility lift, zero build cost.</div>
+          </div>
+        </div>
+
+        <div class="evidence"><strong>Findings:</strong> <code>02 H1</code> (no empty state), <code>04 H1</code> (dead onboarding), <code>04 H2</code> (no social proof), <code>04 H3</code> (invisible Apple label). <strong>Status:</strong> empty state + Apple button + social proof already landed in this branch — verified in browser at <code>http://localhost:8081</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bucket B -->
+<div class="bucket">
+  <div class="head">
+    <div class="step">B</div>
+    <h2>Primary CTA clarity</h2>
+    <div class="prio p0">P0 · ship first</div>
+  </div>
+
+  <div class="row">
+    <div>
+      <div class="col-label today">Today</div>
+      <div class="frame">
+        <img src="../../.context/designer-review/screenshots/02-create-habit/step-02-name-typed.png" alt="Create habit with disabled save" />
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">The Save button in the create-habit sheet reads white-on-stone-gray at ~1.8:1 contrast — users can't tell if it's a CTA or decoration. Same pattern shows up on the Library featured pill ("Start here" as a ghost button that looks disabled).</div>
+    </div>
+
+    <div>
+      <div class="col-label after">Proposed</div>
+      <div class="sketch" style="padding: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft);">
+          <span style="font-size: 13px; color: var(--t500);">Cancel</span>
+          <span style="font-family: var(--f-disp); font-weight: 600; font-size: 15px;">New habit</span>
+          <span style="background: var(--p600); color: #fff; padding: 6px 14px; border-radius: 10px; font-size: 12px; font-weight: 600; box-shadow: 0 2px 4px rgba(5,150,105,.3);">Save</span>
+        </div>
+        <div style="margin-top: 16px; font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--t500);">What are you showing up for?</div>
+        <div style="background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 6px; font-size: 14px; font-weight: 500;">Morning run<span style="display:inline-block; width:2px; height:16px; background: var(--p600); vertical-align:middle; margin-left:2px; animation: blink 1s infinite;"></span></div>
+        <div style="margin-top: 16px; font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--t500);">Emoji</div>
+        <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-top: 6px;">
+          <div style="aspect-ratio: 1; background: var(--p100); border-radius: 8px; display: grid; place-items: center; font-size: 16px; box-shadow: inset 0 0 0 1.5px var(--p600);">🏃</div>
+          <div style="aspect-ratio: 1; display: grid; place-items: center; font-size: 16px;">🌱</div>
+          <div style="aspect-ratio: 1; display: grid; place-items: center; font-size: 16px;">💧</div>
+          <div style="aspect-ratio: 1; display: grid; place-items: center; font-size: 16px;">📖</div>
+          <div style="aspect-ratio: 1; display: grid; place-items: center; font-size: 16px;">🧘</div>
+          <div style="aspect-ratio: 1; display: grid; place-items: center; font-size: 16px;">🥗</div>
+          <div style="aspect-ratio: 1; display: grid; place-items: center; font-size: 16px;">💪</div>
+        </div>
+        <div class="ann" style="top: 16px; right: 16px;">Solid green — unambiguous</div>
+        <div class="ann" style="bottom: 150px; left: 16px;">7-col grid explicit</div>
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">Save pill fills to <code>primary[600]</code> with CTA shadow the moment there's content. Emoji grid forced to <code>numColumns={7}</code> so it doesn't collapse to a vertical column on web.</div>
+    </div>
+
+    <div>
+      <div class="col-label why">Why it matters</div>
+      <div class="why">
+        <h3>Users abandon forms when they can't tell if the submit button works.</h3>
+        <p class="lede">Create-habit is the single most-used flow in the app. A Save button that reads as disabled forces users to <strong>tap-and-hope</strong> — and some just close the modal thinking the form isn't done. This shows up as creation attempts that don't convert.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="ic"><i data-lucide="edit-3"></i></div>
+            <div class="txt"><strong>Create-to-save conversion:</strong> % of users who open the modal AND submit. The fix makes the next step unambiguous.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="zap"></i></div>
+            <div class="txt"><strong>Time-to-first-habit:</strong> On web today, the emoji grid collapses to a single column — scrolling 60+ emojis to find 🏃 takes real time. Native iOS may not share this regression; worth verifying before shipping to both.</div>
+          </div>
+        </div>
+
+        <div class="evidence"><strong>Findings:</strong> <code>01 H2</code> + <code>02 H4</code> (phantom save button — flagged by two independent reviewers), <code>02 H2</code> (emoji column collapse), <code>03 H3</code> (featured pill reads disabled). <strong>Files:</strong> <code>CreateHabitModal/components/ModalHeader/SaveButton.tsx:42-51</code>, <code>EmojiPicker/EmojiGrid.tsx</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bucket C -->
+<div class="bucket">
+  <div class="head">
+    <div class="step">C</div>
+    <h2>Restore orphaned motivation</h2>
+    <div class="prio p1">P1 · this sprint</div>
+  </div>
+
+  <div class="row">
+    <div>
+      <div class="col-label today">Today</div>
+      <div class="frame">
+        <img src="../../.context/designer-review/screenshots/03-settings/main.png" alt="Settings — motivation entry points absent" />
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">Vision Board, WOOP (Wish-Outcome-Obstacle-Plan), and "Find Your Why" are science-backed motivation components that <strong>exist, are tested, and were shipped to prod</strong> — but nothing links to them. Settings doesn't surface them. The empty state doesn't surface them. Users never find them.</div>
+    </div>
+
+    <div>
+      <div class="col-label after">Proposed</div>
+      <div class="sketch" style="padding: 18px;">
+        <div class="eyebrow">Good morning, Andres</div>
+        <h3>Let's build your <em>first chain</em>.</h3>
+        <div class="sub">Or, if you want some scaffolding first…</div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 18px;">
+          <span style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border) 50%, transparent);"></span>
+          <span style="font-family: var(--f-disp); font-size: 12px; font-weight: 600; color: var(--t600);">Get grounded in 2 minutes</span>
+          <span style="flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border) 50%, transparent);"></span>
+        </div>
+        <div class="mot-row">
+          <div class="mot">
+            <div class="ic w"><i data-lucide="compass"></i></div>
+            <div class="lbl">Plan with WOOP</div>
+            <div class="sub">Wish → obstacle → plan</div>
+            <div style="font-size: 9px; color: var(--t400); margin-top: 8px;">⏱ 3 min</div>
+          </div>
+          <div class="mot">
+            <div class="ic v"><i data-lucide="image"></i></div>
+            <div class="lbl">Picture the year</div>
+            <div class="sub">6-tile vision board</div>
+            <div style="font-size: 9px; color: var(--t400); margin-top: 8px;">⏱ 4 min</div>
+          </div>
+        </div>
+        <div class="mot" style="margin-top: 8px; flex-direction: row; display: flex; align-items: center; gap: 10px;">
+          <div class="ic" style="background: linear-gradient(135deg, var(--s500), var(--s300)); flex-shrink: 0;"><i data-lucide="heart"></i></div>
+          <div style="flex: 1;">
+            <div class="lbl">Find your why</div>
+            <div class="sub">One sentence. Shown back to you on skip-days.</div>
+          </div>
+          <i data-lucide="chevron-right" style="color: var(--t400); width: 14px; height: 14px;"></i>
+        </div>
+
+        <div class="ann" style="top: 200px; right: 16px;">3 orphaned features,<br/>now discoverable</div>
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">Three cards in the Home empty state + a matching row in Settings. Each opens the existing <code>Workshop/WOOPSection</code>, <code>VisionBoardSection</code>, <code>YourWhySection</code> in a modal — no new content to build.</div>
+    </div>
+
+    <div>
+      <div class="col-label why">Why it matters</div>
+      <div class="why">
+        <h3>Pre-commitment predicts habit survival better than the habit itself.</h3>
+        <p class="lede">Gollwitzer's if-then planning research (implementation intentions) shows a <strong>2–3× stickiness lift</strong> when users commit to a specific plan before starting. WOOP, Vision Board, and Why are the app's vehicles for that — but they're invisible today.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="ic"><i data-lucide="anchor"></i></div>
+            <div class="txt"><strong>Day-7 retention:</strong> Users who complete a WOOP or Vision Board exercise before their first habit should return on day 7 at higher rates than control.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="package"></i></div>
+            <div class="txt"><strong>ROI on built work:</strong> Three components shipped to production with tests. Zero entry points = zero value. This bucket is pure activation of sunk work.</div>
+          </div>
+        </div>
+
+        <div class="evidence"><strong>Findings:</strong> <code>04 H4</code> (no motivation entries in Settings), <code>04 H5</code> (Workshop components orphaned). <strong>Files:</strong> <code>src/components/MotivationSystem/Workshop/</code> (WOOPSection, VisionBoardSection, YourWhySection).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bucket D -->
+<div class="bucket">
+  <div class="head">
+    <div class="step">D</div>
+    <h2>Tokenize the Library surface</h2>
+    <div class="prio p2">P2 · polish pass</div>
+  </div>
+
+  <div class="row">
+    <div>
+      <div class="col-label today">Today</div>
+      <div class="frame">
+        <img src="../../.context/designer-review/screenshots/04-templates/browse.png" alt="Library — 14 raw hexes, drift everywhere" />
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">Category icons use <strong>14 hand-picked hex values</strong> (blues, purples, magentas, teals) that bypass the warm-earth token system. Chevrons are styled <code>→</code> text (drift by font). Featured "Start here" reads as a ghost pill. Trending cards' Add button falls below the fold on 852-px viewports.</div>
+    </div>
+
+    <div>
+      <div class="col-label after">Proposed</div>
+      <div class="sketch" style="padding: 16px;">
+        <div style="font-family: var(--f-disp); font-weight: 600; font-size: 18px; color: var(--t900); letter-spacing: -.015em;">Library</div>
+        <div style="font-size: 11.5px; color: var(--t500); margin-top: 2px;">240 habits, organized by what you want to change.</div>
+        <div style="background: linear-gradient(135deg, var(--p600), var(--p800)); border-radius: 14px; padding: 14px; color: #fff; margin-top: 12px; position: relative; overflow: hidden;">
+          <div style="font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; background: rgba(255,255,255,.2); padding: 3px 8px; border-radius: 999px; display: inline-block;">Today's pick · 4:23pm</div>
+          <div style="font-family: var(--f-disp); font-size: 15px; font-weight: 600; margin-top: 8px;">Wind down for deeper sleep</div>
+          <div style="background: #fff; color: var(--p800); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; margin-top: 10px; display: inline-flex; align-items: center; gap: 4px;">Start here <i data-lucide="arrow-right" style="width:10px; height:10px;"></i></div>
+        </div>
+        <div style="margin-top: 14px; font-family: var(--f-disp); font-size: 13px; font-weight: 600; color: var(--t800);">Browse by goal</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
+          <div style="background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; position: relative;">
+            <div style="width: 22px; height: 22px; border-radius: 6px; background: var(--p600); display: grid; place-items: center; color: #fff;"><i data-lucide="activity" style="width:12px; height:12px;"></i></div>
+            <div style="font-size: 11px; font-weight: 600; color: var(--t800); margin-top: 6px;">Move more</div>
+            <div style="font-size: 9.5px; color: var(--t500);">61 habits</div>
+            <i data-lucide="chevron-right" style="position: absolute; bottom: 8px; right: 8px; width: 12px; height: 12px; color: var(--t400);"></i>
+          </div>
+          <div style="background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; position: relative;">
+            <div style="width: 22px; height: 22px; border-radius: 6px; background: var(--s600); display: grid; place-items: center; color: #fff;"><i data-lucide="moon" style="width:12px; height:12px;"></i></div>
+            <div style="font-size: 11px; font-weight: 600; color: var(--t800); margin-top: 6px;">Sleep better</div>
+            <div style="font-size: 9.5px; color: var(--t500);">28 habits</div>
+            <i data-lucide="chevron-right" style="position: absolute; bottom: 8px; right: 8px; width: 12px; height: 12px; color: var(--t400);"></i>
+          </div>
+          <div style="background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; position: relative;">
+            <div style="width: 22px; height: 22px; border-radius: 6px; background: #6D3AC7; display: grid; place-items: center; color: #fff;"><i data-lucide="brain" style="width:12px; height:12px;"></i></div>
+            <div style="font-size: 11px; font-weight: 600; color: var(--t800); margin-top: 6px;">Calmer mind</div>
+            <div style="font-size: 9.5px; color: var(--t500);">42 habits</div>
+            <i data-lucide="chevron-right" style="position: absolute; bottom: 8px; right: 8px; width: 12px; height: 12px; color: var(--t400);"></i>
+          </div>
+          <div style="background: #fff; border: 1px solid var(--border-soft); border-radius: 10px; padding: 10px; position: relative;">
+            <div style="width: 22px; height: 22px; border-radius: 6px; background: #3872B8; display: grid; place-items: center; color: #fff;"><i data-lucide="book-open" style="width:12px; height:12px;"></i></div>
+            <div style="font-size: 11px; font-weight: 600; color: var(--t800); margin-top: 6px;">Learn daily</div>
+            <div style="font-size: 9.5px; color: var(--t500);">19 habits</div>
+            <i data-lucide="chevron-right" style="position: absolute; bottom: 8px; right: 8px; width: 12px; height: 12px; color: var(--t400);"></i>
+          </div>
+        </div>
+        <div class="ann" style="top: 110px; right: 12px;">Filled CTA</div>
+        <div class="ann" style="bottom: 20px; left: 12px;">4 tokens, not 14 hex</div>
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">14 hex values collapse to 4 token references: <code>primary[600]</code>, <code>streak[600]</code>, <code>premium[500]</code>, <code>info[500]</code>. Featured CTA fills white-on-dark. Chevrons become Lucide icons. Trending cards get shorter so Add sits above the fold.</div>
+    </div>
+
+    <div>
+      <div class="col-label why">Why it matters</div>
+      <div class="why">
+        <h3>Users perceive polish before they perceive features.</h3>
+        <p class="lede">The Library is the pitch surface — where prospective users decide "is this a serious app?" Fourteen uncoordinated hex values signal <strong>amateur hour</strong>; one palette signals care. The team has already done the work (semantic tokens exist, documented, WCAG-checked) — this bucket just aligns the Library to the system the rest of the app already uses.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="ic"><i data-lucide="gem"></i></div>
+            <div class="txt"><strong>Perceived quality:</strong> Template previews are App Store screenshot material. Consistent palette = screenshots users can show a friend without apologizing.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="shield"></i></div>
+            <div class="txt"><strong>Dark-mode future-proofing:</strong> Token-bound colors automatically adapt; raw hex doesn't. Any dark-mode work later is free once Library is tokenized.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="eye"></i></div>
+            <div class="txt"><strong>Import CTA visibility:</strong> Trending cards lose the Add button below the fold — users can't add from browse state. Shortening the card reclaims a primary conversion surface.</div>
+          </div>
+        </div>
+
+        <div class="evidence"><strong>Findings:</strong> <code>01 H1</code> (14 raw hexes), <code>03 H2</code> (Trending add below fold), <code>03 H3</code> (featured CTA as ghost), <code>03 H4</code> (text-arrow chevrons). <strong>Files:</strong> <code>TemplatesScreen/data/categoryMeta.ts:14-29</code>, <code>GoalCollectionGrid/FeaturedGoalCard.tsx:60-70</code>, <code>TrendingCard/TrendingCard.tsx:77-87</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bucket E -->
+<div class="bucket">
+  <div class="head">
+    <div class="step">E</div>
+    <h2>Semantic cleanups + revert</h2>
+    <div class="prio p2">P2 · polish pass</div>
+  </div>
+
+  <div class="row">
+    <div>
+      <div class="col-label today">Today</div>
+      <div class="frame" style="aspect-ratio: 393 / 300; align-self: flex-start;">
+        <img src="../../.context/designer-review/screenshots/01-bottom-action-bar/bottom-bar-closeup.png" alt="Bottom bar — amber notification dot" style="object-position: bottom;" />
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">The bottom bar's templates icon carries an <strong>amber/brown dot</strong> pulled from <code>colors.warning</code>. The token is named after "warning" — the dot is trying to say "new content". Two different meanings, one color. Users learn the wrong mapping.</div>
+      <div style="margin-top: 18px; padding: 12px 14px; background: #fde4dd; border: 1px solid #f5c4b8; border-radius: 10px; font-size: 12px; color: #6b1a0c; line-height: 1.5;">
+        <strong>Also in this bucket:</strong> revert <code>EXPO_PUBLIC_DESIGNER_REVIEW_BYPASS</code> env var + AuthGate block. <em>Must not ship with bypass in place</em> — effectively disables auth.
+      </div>
+    </div>
+
+    <div>
+      <div class="col-label after">Proposed</div>
+      <div style="background: var(--bg); border-radius: 24px; padding: 40px 24px 32px; box-shadow: 0 10px 30px -10px rgba(5,150,105,.25), 0 0 0 1px rgba(5,150,105,.15); aspect-ratio: 393 / 300; display: flex; align-items: flex-end; justify-content: space-between;">
+        <div style="width: 52px; height: 52px; border-radius: 16px; background: #fff; border: 1px solid var(--border-soft); display: grid; place-items: center; color: var(--t600); box-shadow: 0 2px 6px -2px rgba(26,24,22,.08);">
+          <i data-lucide="settings" style="width:22px; height:22px;"></i>
+        </div>
+        <div style="width: 68px; height: 68px; border-radius: 22px; background: var(--p600); color: #fff; display: grid; place-items: center; box-shadow: 0 6px 16px -4px rgba(5,150,105,.35);">
+          <i data-lucide="plus" style="width:28px; height:28px; stroke-width: 2.5;"></i>
+        </div>
+        <div style="width: 52px; height: 52px; border-radius: 16px; background: #fff; border: 1px solid var(--border-soft); display: grid; place-items: center; color: var(--t600); box-shadow: 0 2px 6px -2px rgba(26,24,22,.08); position: relative;">
+          <i data-lucide="book-open" style="width:22px; height:22px;"></i>
+          <span style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--p500); border: 2px solid #fff;"></span>
+        </div>
+      </div>
+      <div style="font-size: 12px; color: var(--t500); margin-top: 10px; line-height: 1.5;">Templates notification dot: <code>colors.warning</code> → <code>colors.primary[500]</code>. Same semantic this dot is trying to convey ("new content") now uses the color the app already uses everywhere else for "primary / action available".</div>
+    </div>
+
+    <div>
+      <div class="col-label why">Why it matters</div>
+      <div class="why">
+        <h3>Every semantic mismatch is a future UX tax.</h3>
+        <p class="lede">The warning color is going to show up somewhere that actually means "warning" (streak at risk, data loss, premium cap). When it does, users who were trained to read amber as "new content" will <strong>misread the warning</strong> — or dismiss it, assuming it's another notification nudge.</p>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="ic"><i data-lucide="alert-triangle"></i></div>
+            <div class="txt"><strong>Warning reads correctly when it fires:</strong> future streak-at-risk / data-loss / cap messages land with attention, not tuned-out recognition.</div>
+          </div>
+          <div class="metric">
+            <div class="ic"><i data-lucide="lock"></i></div>
+            <div class="txt"><strong>Ship safety:</strong> The <code>DESIGNER_REVIEW_BYPASS</code> in AuthGate was a tool for the audit. Leaving it in a release means anyone who sets the env var gets in without auth.</div>
+          </div>
+        </div>
+
+        <div class="evidence"><strong>Findings:</strong> <code>01 H3</code> (semantic misuse of warning color), <code>03 H3</code> (same pattern in Library featured CTA). <strong>Files:</strong> <code>BottomActionBar/BottomActionBar.styles.ts</code>, <code>AuthGate.tsx</code>, <code>.env.local</code>. <strong>Checklist:</strong> <code>.context/designer-review/REVERT-CHECKLIST.md</code>.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <p><strong>Scope discipline.</strong> Five buckets. Every change cites a finding. No speculative redesigns, no "while we're in there" refactors. Buckets A–B shipped in this branch already (Welcome fixes + empty state); Buckets C–E remain. <strong>Open decisions for Andres:</strong> (1) tagline copy — swap "Build habits that last" or keep? (2) onboarding carousel — delete the dead slides or repurpose them inline? <strong>Next:</strong> say the word, I'll pick up Bucket B (Save button + emoji grid) or C (motivation entries) next.</p>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
