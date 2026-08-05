@@ -37,12 +37,14 @@ export function useCenteredPlaceholderCaretInset(
   const onPlaceholderTextLayout = (event: TextLayoutEvent) => {
     const line = event.nativeEvent.lines[0];
     if (!line) return;
+
+    const centeredTextStart =
+      (fieldWidth - Math.min(line.width, fieldWidth)) / 2;
+
     setCaretInset(
       Math.max(
         HABIT_NAME_INPUT_HORIZONTAL_PADDING,
-        HABIT_NAME_INPUT_HORIZONTAL_PADDING +
-          line.x -
-          HABIT_NAME_PLACEHOLDER_CARET_GAP
+        centeredTextStart - HABIT_NAME_PLACEHOLDER_CARET_GAP
       )
     );
   };
