@@ -7,7 +7,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useAppTheme } from '../../../theme';
+import { withAlpha } from '@/theme/colors';
+import { lightenColor } from '../../CreateHabitModal/components/StickyCreateBar/colorUtils';
 import { heroStyles } from '../styles';
 import { HeroMetaPills } from './HeroMetaPills';
 import { buildHeroGradient } from '../utils/heroGradient';
@@ -19,7 +20,6 @@ export function HeroSection({
   iconAnimatedStyle,
   iconGlowStyle,
 }: HeroSectionProps) {
-  const theme = useAppTheme();
   const baseGradient = buildHeroGradient(iconColor);
   // First stop is transparent so the ScrollView's header-matching background
   // shows through — prevents alpha-stacking that makes the hero top read
@@ -42,28 +42,25 @@ export function HeroSection({
           <Animated.View
             style={[
               heroStyles.iconGlow,
-              { backgroundColor: iconColor, shadowColor: iconColor },
+              {
+                backgroundColor: withAlpha(iconColor, 0.18),
+                shadowColor: iconColor,
+              },
               iconGlowStyle,
             ]}
           />
-          <View
+          <LinearGradient
             testID='templates-preview-icon'
-            style={[
-              heroStyles.iconContainer,
-              { backgroundColor: `${iconColor}20` },
-            ]}
+            colors={[lightenColor(iconColor, 25), iconColor]}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            style={heroStyles.iconContainer}
           >
             <Text style={heroStyles.iconText}>{template?.icon ?? '✨'}</Text>
-          </View>
+          </LinearGradient>
         </Animated.View>
 
-        <Text
-          testID='templates-preview-name'
-          style={[
-            heroStyles.templateName,
-            { fontFamily: theme.custom.fontFamilies.primary.text },
-          ]}
-        >
+        <Text testID='templates-preview-name' style={heroStyles.templateName}>
           {template?.name ?? 'Template'}
         </Text>
 

@@ -1,5 +1,5 @@
 /**
- * Section label for science drill-down blocks — Literata heading + leading glyph.
+ * Section label for science drill-down blocks — DM Sans heading + leading glyph.
  */
 
 import React from 'react';

@@ -63,7 +63,6 @@ export function PreviewContent({
         createPressHandlers={createPressHandlers}
         customizeButtonScale={customizeButtonScale}
         customizeButtonStyle={animatedStyles.customizeButtonStyle}
-        iconColor={iconColor}
         importButtonScale={importButtonScale}
         importButtonStyle={animatedStyles.importButtonStyle}
         isImported={isImported}

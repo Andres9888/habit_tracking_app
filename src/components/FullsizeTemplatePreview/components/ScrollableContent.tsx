@@ -93,10 +93,7 @@ export function ScrollableContent({
           />
         </View>
         <View style={{ backgroundColor: colors.gray[50] }}>
-          <DescriptionSection
-            description={template?.description ?? ''}
-            iconColor={iconColor}
-          />
+          <DescriptionSection description={template?.description ?? ''} />
           <View ref={scienceRef} onLayout={scrollToScience}>
             <ScienceDrilldown template={template} />
           </View>
