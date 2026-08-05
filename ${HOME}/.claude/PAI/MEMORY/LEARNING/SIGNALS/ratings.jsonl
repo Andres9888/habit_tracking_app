@@ -1,0 +1,9 @@
+{"timestamp":"2026-05-24T09:13:55-07:00","rating":5,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Inference failed: Failed to parse JSON response","confidence":0.3}
+{"timestamp":"2026-05-24T09:16:33-07:00","rating":5,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-24T09:16:51-07:00","rating":5,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-24T09:22:21-07:00","rating":3,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Solution missed application consistency requirement","confidence":0.88}
+{"timestamp":"2026-05-24T09:23:28-07:00","rating":6,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Accepted explanation, moving forward with revised approach","confidence":0.85}
+{"timestamp":"2026-05-24T09:33:42-07:00","rating":4,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Asking for clarification on scope of changes","confidence":0.75}
+{"timestamp":"2026-05-24T09:34:41-07:00","rating":5,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Asking to verify app-wide consistency; neutral task continuation","confidence":0.85}
+{"timestamp":"2026-05-24T09:41:47-07:00","rating":4,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Terse follow-up requesting clarification on changes made","confidence":0.72}
+{"timestamp":"2026-05-24T09:43:39-07:00","rating":5,"session_id":"0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}

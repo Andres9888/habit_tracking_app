@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Solution missed application consistency requirement",
+  "detailed_context": "User explicitly rejected the previous implementation ('I don't really like this') and clarified actual requirements: animations should align with existing app patterns, be subtle/non-jarring, and ideally extended across the application for consistency. The assistant's approach was too narrow and didn't consider the broader design system. User is constructive but clearly dissatisfied—this is a corrections-needed scenario where the solution direction was fundamentally misaligned with expectations.",
+  "session_id": "0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef",
+  "captured_at": "2026-05-24T16:22:31.981Z",
+  "transcript_source": "0c52c651-c1e7-4ff2-9823-3f5ae39ef7ef.jsonl"
+}
