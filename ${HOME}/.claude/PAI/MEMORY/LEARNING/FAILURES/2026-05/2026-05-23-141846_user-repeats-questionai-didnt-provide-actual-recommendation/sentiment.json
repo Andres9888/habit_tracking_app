@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "User repeats question—AI didn't provide actual recommendation",
+  "detailed_context": "User asked 'what do you recommend?' and the AI acknowledged a problem (Simple=Zap reads 'intense' instead of 'forgiving') but never actually provided a recommendation to fix it. By repeating the same question, the user signals frustration that the previous response was incomplete—it identified the issue but didn't answer what should be done instead. This is a clear miss that requires a substantive recommendation.",
+  "session_id": "3e57e2cd-de4d-407d-8a2c-920855ac0535",
+  "captured_at": "2026-05-23T21:18:46.238Z",
+  "transcript_source": "3e57e2cd-de4d-407d-8a2c-920855ac0535.jsonl"
+}

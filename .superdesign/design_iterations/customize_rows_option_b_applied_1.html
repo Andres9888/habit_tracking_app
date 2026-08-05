@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Option B applied — full phone view</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-app: #ECE7D6;
+    --parchment: #F4EFE3;
+    --card: #FBF7EC;
+    --ink: #1F2419;
+    --ink-soft: #5A604F;
+    --ink-mute: #8A8F7C;
+    --rule: #E6DECB;
+    --primary: #0F7A4E;
+    --primary-deep: #0B5E3C;
+    --primary-icon: #047857;
+    --neutral-tile: #EDE7D6;     /* the new shared tile color */
+    --pill-mint-bg: #D8F0DD;
+    --pill-mint-fg: #2C5E3C;
+    --pill-cream-bg: #F4E9D2;
+    --pill-cream-fg: #6B5B2E;
+    --cta: #1D7558;
+    --cta-soft: #B9D8C8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-app); font-family: 'Inter', system-ui, sans-serif; color: var(--ink); }
+  body { min-height: 100vh; display: grid; place-items: start center; padding: 40px 16px 80px; }
+
+  .stage { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 820px; width: 100%; }
+  @media (max-width: 760px) { .stage { grid-template-columns: 1fr; } }
+  .stage h2 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-mute); margin: 0 0 12px; text-align: center;
+  }
+
+  .phone {
+    background: var(--parchment);
+    border-radius: 36px;
+    padding: 0;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.04), 0 30px 60px -25px rgba(0,0,0,0.25);
+    border: 1px solid #DCD3BC;
+    overflow: hidden;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .status {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 8px; font-size: 13px; font-weight: 600;
+  }
+  .notch { width: 80px; height: 22px; background: #000; border-radius: 999px; }
+  .status .right { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px 8px;
+  }
+  .x { font-size: 18px; color: var(--ink-soft); }
+  .cta {
+    background: var(--cta-soft); color: var(--cta);
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; font-weight: 700;
+  }
+
+  .swatches { display: flex; gap: 12px; justify-content: center; padding: 10px 0 14px; }
+  .sw { width: 28px; height: 28px; border-radius: 999px; }
+  .sw.blue { background: #2563EB; }
+  .sw.purple { background: #7C3AED; }
+  .sw.pink { background: #EC4899; }
+  .sw.gray { background: #6B7280; }
+
+  .reminder {
+    margin: 6px 14px 18px; background: var(--card);
+    border-radius: 18px; border: 1px solid var(--rule);
+    padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+  }
+  .reminder .ico {
+    width: 32px; height: 32px; border-radius: 10px;
+    background: var(--neutral-tile); display: grid; place-items: center; font-size: 16px;
+  }
+  .reminder .lbl { flex: 1; font-weight: 600; font-size: 14px; }
+  .toggle {
+    width: 42px; height: 24px; background: #C7BFA8; border-radius: 999px; position: relative;
+  }
+  .toggle::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; background: #fff; border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .section-label {
+    text-align: center; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--ink-mute); margin: 4px 0 10px;
+  }
+
+  .pills { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; padding: 0 14px; }
+  .pill { font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px; }
+  .pill.mint { background: var(--pill-mint-bg); color: var(--pill-mint-fg); }
+  .pill.cream { background: var(--pill-cream-bg); color: var(--pill-cream-fg); }
+
+  .hide-btn {
+    margin: 4px 14px 12px;
+    background: var(--cta);
+    color: #fff; text-align: center;
+    padding: 14px; border-radius: 14px;
+    font-weight: 700; font-size: 14px; letter-spacing: 0.04em;
+  }
+
+  .helper {
+    text-align: center; font-size: 12px; color: var(--ink-soft);
+    margin: 4px 14px 14px;
+  }
+
+  .rows { padding: 0 14px 16px; }
+  .row {
+    display: flex; gap: 14px; padding: 16px 4px; align-items: flex-start;
+    border-top: 1px solid var(--rule);
+  }
+  .row:first-child { border-top: 0; }
+  .tile {
+    width: 36px; height: 36px; flex: 0 0 36px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 18px;
+    background: var(--neutral-tile);
+    color: var(--primary-icon);
+  }
+  .body { flex: 1; min-width: 0; }
+  .title { font-size: 16px; font-weight: 700; color: var(--ink); margin: 0 0 2px; }
+  .meta { font-size: 13px; color: var(--ink-soft); margin: 0 0 4px; }
+  .desc { font-size: 13px; color: var(--ink-soft); line-height: 1.45; margin: 0; }
+  .edit { font-size: 14px; font-weight: 600; color: var(--cta); white-space: nowrap; align-self: center; }
+  .edit::after { content: " ›"; }
+
+  .caption { text-align: center; font-size: 12px; color: var(--ink-mute); margin-top: 14px; line-height: 1.5; }
+  .caption b { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- BEFORE (current) -->
+  <div>
+    <h2>Before — Current</h2>
+    <div class="phone">
+      <div class="status"><span>9:41</span><div class="notch"></div><span class="right">●●●● ▮▮▮▮</span></div>
+      <div class="topbar"><span class="x">✕</span><span class="cta">Create Habit</span></div>
+      <div class="swatches"><div class="sw blue"></div><div class="sw purple"></div><div class="sw pink"></div><div class="sw gray"></div></div>
+      <div class="reminder">
+        <div class="ico" style="background:#D8F0DD;color:#2C5E3C">🔔</div>
+        <span class="lbl">Daily Reminder</span>
+        <div class="toggle"></div>
+      </div>
+      <div class="section-label">MORE TO CUSTOMIZE</div>
+      <div class="pills">
+        <span class="pill mint">🌱 Simple</span>
+        <span class="pill cream">🏅 Ranks</span>
+        <span class="pill cream">🎯 No goal set</span>
+      </div>
+      <div class="hide-btn">HIDE OPTIONS ⌃</div>
+      <p class="helper">Tap any option below to customize how this habit grows.</p>
+      <div class="rows">
+        <div class="row">
+          <div class="tile" style="background:#D1FAE5;color:#047857">🌱</div>
+          <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p><p class="desc">How your habit's strength grows and resets when you miss days.</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+        <div class="row">
+          <div class="tile" style="background:#D1FAE5;color:#047857">🏅</div>
+          <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p><p class="desc">The 5-stage emoji progression shown on your habit's strength bar.</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+        <div class="row">
+          <div class="tile" style="background:#FEF3C7;color:#92400E">🎯</div>
+          <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p><p class="desc">A motivational target — purely visual, no penalty if you miss it.</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+      </div>
+    </div>
+    <p class="caption">Two mint tiles + one gold tile. <b>Streak Goal looks like a different feature family.</b></p>
+  </div>
+
+  <!-- AFTER (Option B applied) -->
+  <div>
+    <h2>After — Option B applied</h2>
+    <div class="phone">
+      <div class="status"><span>9:41</span><div class="notch"></div><span class="right">●●●● ▮▮▮▮</span></div>
+      <div class="topbar"><span class="x">✕</span><span class="cta">Create Habit</span></div>
+      <div class="swatches"><div class="sw blue"></div><div class="sw purple"></div><div class="sw pink"></div><div class="sw gray"></div></div>
+      <div class="reminder">
+        <div class="ico">🔔</div>
+        <span class="lbl">Daily Reminder</span>
+        <div class="toggle"></div>
+      </div>
+      <div class="section-label">MORE TO CUSTOMIZE</div>
+      <div class="pills">
+        <span class="pill mint">🌱 Simple</span>
+        <span class="pill cream">🏅 Ranks</span>
+        <span class="pill cream">🎯 No goal set</span>
+      </div>
+      <div class="hide-btn">HIDE OPTIONS ⌃</div>
+      <p class="helper">Tap any option below to customize how this habit grows.</p>
+      <div class="rows">
+        <div class="row">
+          <div class="tile">🌱</div>
+          <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p><p class="desc">How your habit's strength grows and resets when you miss days.</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+        <div class="row">
+          <div class="tile">🏅</div>
+          <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p><p class="desc">The 5-stage emoji progression shown on your habit's strength bar.</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+        <div class="row">
+          <div class="tile">🎯</div>
+          <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p><p class="desc">A motivational target — purely visual, no penalty if you miss it.</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+      </div>
+    </div>
+    <p class="caption">All three tiles share the same neutral parchment. <b>Pills carry the per-feature color; tiles stay quiet.</b></p>
+  </div>
+
+</div>
+
+</body>
+</html>

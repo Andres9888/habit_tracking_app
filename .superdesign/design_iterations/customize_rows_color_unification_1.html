@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MORE TO CUSTOMIZE — squircle color unification</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #F4EFE3;
+    --parchment-card: #FBF7EC;
+    --ink: #1F2419;
+    --ink-soft: #5A604F;
+    --ink-mute: #8A8F7C;
+    --rule: #E6DECB;
+    --primary: #0F7A4E;
+    --primary-100: #D1FAE5;
+    --primary-700: #047857;
+    --gold-100: #FEF3C7;
+    --gold-700: #92400E;
+    --neutral-tile: #EDE7D6;
+    --neutral-tile-icon: #5A604F;
+    --tinted-border: rgba(15, 122, 78, 0.28);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #ECE7D6; font-family: 'Inter', system-ui, sans-serif; color: var(--ink); }
+  body { padding: 32px 24px 64px; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .sub { color: var(--ink-soft); margin: 0 0 28px; font-size: 14px; max-width: 880px; }
+  .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .col h2 { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 10px; }
+  .col .verdict { font-size: 12px; color: var(--ink-mute); margin: 8px 4px 0; line-height: 1.5; }
+  .phone {
+    background: var(--parchment);
+    border-radius: 22px;
+    padding: 18px 14px 22px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.04), 0 18px 40px -20px rgba(0,0,0,0.18);
+    border: 1px solid #DCD3BC;
+  }
+  .label { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--ink-mute); text-align: center; margin: 4px 0 10px; }
+  .pills { display: flex; gap: 6px; justify-content: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .pill { font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; }
+  .pill.mint { background: #D8F0DD; color: #2C5E3C; }
+  .pill.cream { background: #F4E9D2; color: #6B5B2E; }
+  .row {
+    display: flex; gap: 12px; padding: 14px 12px; align-items: flex-start;
+    border-top: 1px solid var(--rule);
+  }
+  .row:first-child { border-top: 0; }
+  .tile {
+    width: 36px; height: 36px; flex: 0 0 36px; border-radius: 12px;
+    display: grid; place-items: center; font-size: 18px;
+  }
+  .body { flex: 1; min-width: 0; }
+  .title { font-size: 15px; font-weight: 700; color: var(--ink); margin: 0 0 2px; }
+  .meta { font-size: 12px; color: var(--ink-soft); margin: 0 0 4px; }
+  .desc { font-size: 12px; color: var(--ink-soft); line-height: 1.4; margin: 0; }
+  .edit { font-size: 13px; font-weight: 600; color: var(--primary); white-space: nowrap; align-self: center; }
+  .edit::after { content: " ›"; }
+
+  /* CURRENT */
+  .cur-strength { background: var(--primary-100); color: var(--primary-700); }
+  .cur-growth   { background: var(--primary-100); color: var(--primary-700); }
+  .cur-streak   { background: var(--gold-100);    color: var(--gold-700); }
+
+  /* A — all mint */
+  .a-tile { background: var(--primary-100); color: var(--primary-700); }
+
+  /* B — neutral parchment tile */
+  .b-tile { background: var(--neutral-tile); color: var(--primary-700); }
+
+  /* C — tinted border, no fill */
+  .c-tile { background: transparent; border: 1.25px solid var(--tinted-border); color: var(--primary-700); }
+
+  .footer-note { max-width: 1400px; margin: 28px auto 0; font-size: 12px; color: var(--ink-mute); text-align: center; }
+  .legend-key { display: inline-block; width: 10px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<h1>MORE TO CUSTOMIZE — squircle color unification</h1>
+<p class="sub">Today the three customization rows use two different squircle color families (mint + gold), which reads like they're different kinds of things. The pills above each row already carry the per-feature accent color, so the squircle's job is just to anchor the row. Three unification options vs. current.</p>
+
+<div class="grid">
+
+  <!-- CURRENT -->
+  <div class="col">
+    <h2>Current (mismatched)</h2>
+    <div class="phone">
+      <div class="label">MORE TO CUSTOMIZE</div>
+      <div class="pills">
+        <span class="pill mint">🌱 Simple</span>
+        <span class="pill cream">🏅 Ranks</span>
+        <span class="pill cream">🎯 No goal set</span>
+      </div>
+      <div class="row">
+        <div class="tile cur-strength">🌱</div>
+        <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p><p class="desc">How your habit's strength grows and resets when you miss days.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile cur-growth">🏅</div>
+        <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p><p class="desc">The 5-stage emoji progression shown on your habit's strength bar.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile cur-streak">🎯</div>
+        <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p><p class="desc">A motivational target — purely visual, no penalty if you miss it.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+    </div>
+    <p class="verdict">2 mint + 1 gold. Streak Goal looks like it belongs to a different feature family.</p>
+  </div>
+
+  <!-- A — all mint -->
+  <div class="col">
+    <h2>Option A — all mint</h2>
+    <div class="phone">
+      <div class="label">MORE TO CUSTOMIZE</div>
+      <div class="pills">
+        <span class="pill mint">🌱 Simple</span>
+        <span class="pill cream">🏅 Ranks</span>
+        <span class="pill cream">🎯 No goal set</span>
+      </div>
+      <div class="row">
+        <div class="tile a-tile">🌱</div>
+        <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p><p class="desc">How your habit's strength grows and resets when you miss days.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile a-tile">🏅</div>
+        <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p><p class="desc">The 5-stage emoji progression shown on your habit's strength bar.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile a-tile">🎯</div>
+        <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p><p class="desc">A motivational target — purely visual, no penalty if you miss it.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+    </div>
+    <p class="verdict">On-brand, energetic. Risk: mint pill above + mint tile below doubles the green for "Simple" row.</p>
+  </div>
+
+  <!-- B — neutral parchment -->
+  <div class="col">
+    <h2>Option B — neutral parchment</h2>
+    <div class="phone">
+      <div class="label">MORE TO CUSTOMIZE</div>
+      <div class="pills">
+        <span class="pill mint">🌱 Simple</span>
+        <span class="pill cream">🏅 Ranks</span>
+        <span class="pill cream">🎯 No goal set</span>
+      </div>
+      <div class="row">
+        <div class="tile b-tile">🌱</div>
+        <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p><p class="desc">How your habit's strength grows and resets when you miss days.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile b-tile">🏅</div>
+        <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p><p class="desc">The 5-stage emoji progression shown on your habit's strength bar.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile b-tile">🎯</div>
+        <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p><p class="desc">A motivational target — purely visual, no penalty if you miss it.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+    </div>
+    <p class="verdict">Quietest. Lets the pills do the color work. Reads as "neutral container, the EDIT is the action."</p>
+  </div>
+
+  <!-- C — tinted outline -->
+  <div class="col">
+    <h2>Option C — outline only</h2>
+    <div class="phone">
+      <div class="label">MORE TO CUSTOMIZE</div>
+      <div class="pills">
+        <span class="pill mint">🌱 Simple</span>
+        <span class="pill cream">🏅 Ranks</span>
+        <span class="pill cream">🎯 No goal set</span>
+      </div>
+      <div class="row">
+        <div class="tile c-tile">🌱</div>
+        <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p><p class="desc">How your habit's strength grows and resets when you miss days.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile c-tile">🏅</div>
+        <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p><p class="desc">The 5-stage emoji progression shown on your habit's strength bar.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+      <div class="row">
+        <div class="tile c-tile">🎯</div>
+        <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p><p class="desc">A motivational target — purely visual, no penalty if you miss it.</p></div>
+        <span class="edit">EDIT</span>
+      </div>
+    </div>
+    <p class="verdict">Most minimal. Risk: outline tiles can feel like "disabled" or empty states.</p>
+  </div>
+
+</div>
+
+<p class="footer-note">All four panels share the exact same parchment card, row spacing, typography, pills, and EDIT chevron — only the squircle tile color changes.</p>
+
+</body>
+</html>

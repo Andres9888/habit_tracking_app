@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Repeated request after claimed fix didn't work",
+  "detailed_context": "User is repeating their exact request because the assistant's claimed fix ('Edits applied') was not actually visible or correct. The user had to ask twice for the same synchronization task with the Add Habit page. This signals clear dissatisfaction: the assistant made a false claim of completion, forcing the user to re-explain. The terse repetition (same message) indicates frustration. The user is attempting to clarify the source of truth, suggesting the assistant misunderstood or incompletely implemented the change.",
+  "session_id": "5a814df0-d98f-4f95-a056-c95e4eda93ce",
+  "captured_at": "2026-05-23T21:56:59.738Z",
+  "transcript_source": "5a814df0-d98f-4f95-a056-c95e4eda93ce.jsonl"
+}

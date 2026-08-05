@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Strength Curve — Icon Mock</title>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #ffffff;
+        --text: #2d2a26;
+        --muted: #6b6560;
+        --border: #e6dfd6;
+
+        --orange-bg: #ffe8de;
+        --orange-fg: #7a2e0a;
+
+        --green-bg: #d1fae5;
+        --green-fg: #047857;
+
+        --purple-bg: #eee7fa;
+        --purple-fg: #6d3ac7;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+      }
+      .page {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 32px 24px 64px;
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 0 0 4px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 14px;
+        margin: 0 0 24px;
+      }
+      .section-title {
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin: 28px 0 10px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+      }
+      .chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        padding: 14px 0 4px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1;
+      }
+      .chip svg {
+        width: 12px;
+        height: 12px;
+        stroke-width: 2.5;
+      }
+      .chip-orange { background: var(--orange-bg); color: var(--orange-fg); }
+      .chip-green { background: var(--green-bg); color: var(--green-fg); }
+      .chip-purple { background: var(--purple-bg); color: var(--purple-fg); }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .col-head {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--muted);
+        text-align: center;
+        margin: 0 0 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      .label {
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .stack .chip { align-self: center; }
+
+      .variant-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .variant {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12px 8px;
+        border: 1px dashed var(--border);
+        border-radius: 12px;
+      }
+      .variant .name {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .legend {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Strength Curve — chip icon options</h1>
+      <p class="sub">"More to customize" chips, current vs proposed.</p>
+
+      <div class="section-title">Current (after picker alignment)</div>
+      <div class="card">
+        <div class="chip-row">
+          <span class="chip chip-orange"><i data-lucide="zap"></i> Simple</span>
+          <span class="chip chip-green"><i data-lucide="activity"></i> Average</span>
+          <span class="chip chip-purple"><i data-lucide="mountain"></i> Complex</span>
+        </div>
+        <p class="legend">Simple uses <code>Zap</code> (electric bolt) — reads as "intense," wrong vibe.</p>
+      </div>
+
+      <div class="section-title">Proposed A — topography / growth story</div>
+      <div class="card">
+        <div class="chip-row">
+          <span class="chip chip-orange"><i data-lucide="sprout"></i> Simple</span>
+          <span class="chip chip-green"><i data-lucide="trending-up"></i> Average</span>
+          <span class="chip chip-purple"><i data-lucide="mountain"></i> Complex</span>
+        </div>
+        <p class="legend">Sprout → TrendingUp → Mountain. Tells a clean "small → climb → peak" story.</p>
+      </div>
+
+      <div class="section-title">Proposed B — terrain effort</div>
+      <div class="card">
+        <div class="chip-row">
+          <span class="chip chip-orange"><i data-lucide="footprints"></i> Simple</span>
+          <span class="chip chip-green"><i data-lucide="activity"></i> Average</span>
+          <span class="chip chip-purple"><i data-lucide="mountain"></i> Complex</span>
+        </div>
+        <p class="legend">A walk → steady pace → mountain. Keeps current Activity for middle.</p>
+      </div>
+
+      <div class="section-title">Proposed C — light → balance → heavy</div>
+      <div class="card">
+        <div class="chip-row">
+          <span class="chip chip-orange"><i data-lucide="feather"></i> Simple</span>
+          <span class="chip chip-green"><i data-lucide="scale"></i> Average</span>
+          <span class="chip chip-purple"><i data-lucide="mountain"></i> Complex</span>
+        </div>
+        <p class="legend">Feather (light/forgiving) → Scale (balanced) → Mountain. Most literal to the mode names.</p>
+      </div>
+
+      <div class="section-title">Single-axis alternates for SIMPLE</div>
+      <div class="card">
+        <div class="variant-row">
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="sprout"></i> Simple</span>
+            <span class="name">Sprout</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="feather"></i> Simple</span>
+            <span class="name">Feather</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="footprints"></i> Simple</span>
+            <span class="name">Footprints</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="leaf"></i> Simple</span>
+            <span class="name">Leaf</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="smile"></i> Simple</span>
+            <span class="name">Smile</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="hand-heart"></i> Simple</span>
+            <span class="name">HandHeart</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="wind"></i> Simple</span>
+            <span class="name">Wind</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-orange"><i data-lucide="waves"></i> Simple</span>
+            <span class="name">Waves</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">Single-axis alternates for AVERAGE</div>
+      <div class="card">
+        <div class="variant-row">
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="trending-up"></i> Average</span>
+            <span class="name">TrendingUp</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="activity"></i> Average</span>
+            <span class="name">Activity (current)</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="scale"></i> Average</span>
+            <span class="name">Scale</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="gauge"></i> Average</span>
+            <span class="name">Gauge</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="tree-deciduous"></i> Average</span>
+            <span class="name">TreeDeciduous</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="trees"></i> Average</span>
+            <span class="name">Trees</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="line-chart"></i> Average</span>
+            <span class="name">LineChart</span>
+          </div>
+          <div class="variant">
+            <span class="chip chip-green"><i data-lucide="bar-chart-3"></i> Average</span>
+            <span class="name">BarChart3</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="legend" style="margin-top: 28px">My pick: Proposed A — Sprout / TrendingUp / Mountain.</p>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

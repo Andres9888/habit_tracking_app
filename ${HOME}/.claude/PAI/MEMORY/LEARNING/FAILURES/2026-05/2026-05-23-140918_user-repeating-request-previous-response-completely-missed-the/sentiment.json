@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "User repeating request; previous response completely missed the mark",
+  "detailed_context": "The user asked for 'different variants for copy' with context about 'No goal probably best.' The assistant's previous response about 'Chip sits in row with Forgiving, Custom, 7-day' appears disconnected from this request. Now the user is repeating the exact same request verbatim, a strong signal the prior output failed to address what they asked for. This is a major miss requiring immediate course correction.",
+  "session_id": "c29953d3-4923-4d09-93ed-a17d51de1a54",
+  "captured_at": "2026-05-23T21:09:18.284Z",
+  "transcript_source": "c29953d3-4923-4d09-93ed-a17d51de1a54.jsonl"
+}

@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Create Habit — Tier 1 unification (before / after)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-app: #ECE7D6;
+    --parchment: #F5F1ED;     /* colors.background */
+    --card: #EDEAE5;          /* colors.card / surface (L1) */
+    --card-border: #DDD8D2;   /* colors.cardBorder */
+    --ink: #2D2A26;           /* text.primary */
+    --ink-soft: #524D47;      /* text.secondary */
+    --ink-mute: #6E6660;      /* text.tertiary */
+    --rule: #DDD8D2;
+    --primary-100: #D1FAE5;
+    --primary-500: #10B981;
+    --primary-600: #059669;
+    --primary-700: #047857;
+    --gold-100: #FEF3C7;
+    --gold-700: #92400E;
+    --shadow-subtle: 0 1px 2px rgba(20, 16, 8, 0.04);
+    --shadow-card:   0 1px 3px rgba(20, 16, 8, 0.06), 0 2px 6px rgba(20, 16, 8, 0.04);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-app); font-family: 'Inter', system-ui, sans-serif; color: var(--ink); }
+  body { padding: 32px 16px 80px; }
+
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; letter-spacing: -0.01em; text-align: center; }
+  .sub { color: var(--ink-soft); margin: 0 auto 24px; font-size: 14px; max-width: 720px; text-align: center; }
+
+  .stage {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 36px;
+    max-width: 880px; margin: 0 auto;
+  }
+  @media (max-width: 820px) { .stage { grid-template-columns: 1fr; } }
+
+  .col h2 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-mute); margin: 0 0 14px; text-align: center;
+  }
+
+  .phone {
+    background: var(--parchment);
+    border-radius: 36px;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.04), 0 30px 60px -25px rgba(0,0,0,0.25);
+    border: 1px solid #DCD3BC;
+    overflow: hidden;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .status {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px 8px; font-size: 13px; font-weight: 600;
+  }
+  .notch { width: 80px; height: 22px; background: #000; border-radius: 999px; }
+  .status .right { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px 8px; }
+  .x { font-size: 18px; color: var(--ink-soft); }
+  .cta {
+    background: #B9D8C8; color: #1D7558;
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; font-weight: 700;
+  }
+
+  .swatches { display: flex; gap: 12px; justify-content: center; padding: 10px 0 14px; }
+  .sw { width: 28px; height: 28px; border-radius: 999px; }
+  .sw.blue { background: #2563EB; }
+  .sw.purple { background: #7C3AED; }
+  .sw.pink { background: #EC4899; }
+  .sw.gray { background: #6B7280; }
+
+  /* CARD — shared treatment in AFTER, drifted in BEFORE */
+  .card {
+    margin: 8px 14px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+  }
+  .card.padded { padding: 14px 16px; }
+
+  /* DAILY REMINDER */
+  .reminder { display: flex; align-items: center; gap: 12px; }
+  .reminder .lbl { flex: 1; font-weight: 600; font-size: 14px; }
+  .toggle { width: 42px; height: 24px; background: #C7BFA8; border-radius: 999px; position: relative; }
+  .toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: #fff; border-radius: 999px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+
+  /* ICON CONTAINERS */
+  .ico-pill {
+    width: 40px; height: 40px; border-radius: 999px;
+    background: var(--primary-100); color: var(--primary-700);
+    display: grid; place-items: center; font-size: 18px;
+  }
+  .ico-tile {
+    width: 36px; height: 36px; border-radius: 12px;
+    background: var(--card); color: var(--primary-700);
+    display: grid; place-items: center; font-size: 18px;
+  }
+  .ico-tile.on-card {
+    background: var(--parchment);
+  }
+
+  /* TIME PRESETS */
+  .presets { display: flex; gap: 8px; margin-top: 10px; }
+  .preset {
+    flex: 1; height: 44px; display: grid; place-items: center;
+    font-size: 13px; font-weight: 600;
+  }
+  /* Before — hardcoded hex, rounded-xl (12px) */
+  .preset.before-on  { background: #ECFDF5; color: #059669; border: 2px solid #10B981; border-radius: 12px; }
+  .preset.before-off { background: #f5f5f4; color: #57534e; border: 1px solid transparent; border-radius: 12px; }
+  /* After — theme tokens, rounded-2xl (16px) */
+  .preset.after-on   { background: var(--primary-100); color: var(--primary-700); border: 2px solid var(--primary-500); border-radius: 16px; }
+  .preset.after-off  { background: var(--card); color: var(--ink-soft); border: 1px solid var(--card-border); border-radius: 16px; }
+
+  /* MORE TO CUSTOMIZE shell */
+  .section-label {
+    text-align: center; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.16em; color: var(--ink-mute); margin: 4px 0 10px;
+  }
+  .pills { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; padding: 0 14px; }
+  .pill { font-size: 12px; font-weight: 600; padding: 6px 11px; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px; }
+  .pill.mint { background: #D8F0DD; color: #2C5E3C; }
+  .pill.cream { background: #F4E9D2; color: #6B5B2E; }
+  .hide-btn {
+    margin: 4px 14px 12px;
+    background: #1D7558;
+    color: #fff; text-align: center;
+    padding: 14px; border-radius: 14px;
+    font-weight: 700; font-size: 14px; letter-spacing: 0.04em;
+  }
+  .helper { text-align: center; font-size: 12px; color: var(--ink-soft); margin: 4px 14px 14px; }
+
+  /* ROWS */
+  .rows-before { padding: 0 14px 16px; }
+  .row-before {
+    display: flex; gap: 14px; padding: 14px 16px; margin: 8px 0;
+    background: var(--parchment);  /* third treatment in BEFORE */
+    border: 1px solid var(--card-border);
+    border-radius: 18px;
+    align-items: flex-start;
+  }
+  .rows-after .row-after {
+    display: flex; gap: 14px; padding: 14px 0;
+    border-top: 1px solid var(--rule);
+    align-items: flex-start;
+  }
+  .rows-after .row-after:first-child { border-top: 0; }
+  .body { flex: 1; min-width: 0; }
+  .title { font-size: 15px; font-weight: 700; color: var(--ink); margin: 0 0 2px; }
+  .meta { font-size: 12px; color: var(--ink-soft); margin: 0 0 4px; }
+  .desc { font-size: 12px; color: var(--ink-soft); line-height: 1.4; margin: 0; }
+  .edit { font-size: 13px; font-weight: 600; color: #1D7558; white-space: nowrap; align-self: center; }
+  .edit::after { content: " ›"; }
+
+  .annot {
+    margin: 14px auto 0; padding: 12px 16px; max-width: 380px;
+    background: rgba(29, 117, 88, 0.06);
+    border-left: 3px solid #1D7558;
+    border-radius: 0 8px 8px 0;
+    font-size: 12px; color: var(--ink-soft); line-height: 1.5;
+  }
+  .annot b { color: var(--ink); }
+  .annot.bad { background: rgba(170, 90, 40, 0.06); border-left-color: #B45309; }
+
+  .legend {
+    max-width: 880px; margin: 36px auto 0;
+    background: #fff; border: 1px solid var(--card-border); border-radius: 14px;
+    padding: 20px 24px; font-size: 13px; color: var(--ink-soft);
+  }
+  .legend h3 { margin: 0 0 8px; font-size: 14px; color: var(--ink); }
+  .legend ul { margin: 0; padding-left: 18px; line-height: 1.8; }
+  .legend code { background: var(--card); padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+
+  /* Subtle shadows for cards in BEFORE to show drift */
+  .shadow-subtle { box-shadow: var(--shadow-subtle); }
+  .shadow-card { box-shadow: var(--shadow-card); }
+</style>
+</head>
+<body>
+
+<h1>Create Habit — Tier 1 polish pass</h1>
+<p class="sub">Three changes: (1) unify the three card treatments on the page, (2) fix the time-preset buttons to use theme tokens + matching radius, (3) standardize the bell icon container to match the new squircle tile pattern.</p>
+
+<div class="stage">
+
+  <!-- ============= BEFORE ============= -->
+  <div class="col">
+    <h2>Before</h2>
+    <div class="phone">
+      <div class="status"><span>9:41</span><div class="notch"></div><span class="right">●●●● ▮▮▮▮</span></div>
+      <div class="topbar"><span class="x">✕</span><span class="cta">Create Habit</span></div>
+      <div class="swatches"><div class="sw blue"></div><div class="sw purple"></div><div class="sw pink"></div><div class="sw gray"></div></div>
+
+      <!-- Daily Reminder — uses rounded-full bell pill, primary[100] -->
+      <div class="card padded shadow-subtle">
+        <div class="reminder">
+          <div class="ico-pill">🔔</div>
+          <span class="lbl">Daily Reminder</span>
+          <div class="toggle"></div>
+        </div>
+        <div class="presets">
+          <div class="preset before-on">Morning</div>
+          <div class="preset before-off">Midday</div>
+          <div class="preset before-off">Evening</div>
+        </div>
+      </div>
+
+      <!-- MORE TO CUSTOMIZE shell — different shadow (card vs subtle), white in light mode -->
+      <div class="card shadow-card" style="background:#FFFFFF;">
+        <div style="padding:14px 16px;">
+          <div class="section-label" style="margin:0 0 10px">MORE TO CUSTOMIZE</div>
+          <div class="pills" style="padding:0">
+            <span class="pill mint">🌱 Simple</span>
+            <span class="pill cream">🏅 Ranks</span>
+            <span class="pill cream">🎯 No goal</span>
+          </div>
+          <div class="hide-btn" style="margin:8px 0 0">HIDE OPTIONS ⌃</div>
+        </div>
+      </div>
+
+      <p class="helper">Tap any option below to customize how this habit grows.</p>
+
+      <!-- THREE ROWS as separate cards w/ borders (third treatment) -->
+      <div class="rows-before">
+        <div class="row-before">
+          <div class="ico-tile">🌱</div>
+          <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+        <div class="row-before">
+          <div class="ico-tile">🏅</div>
+          <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+        <div class="row-before">
+          <div class="ico-tile">🎯</div>
+          <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p></div>
+          <span class="edit">EDIT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="annot bad">
+      <b>3 different card treatments stacked.</b> Daily Reminder is parchment+subtle-shadow. MORE TO CUSTOMIZE shell is white+card-shadow. AdvancedOptionRows are parchment+no-shadow with their own borders. The eye searches for hierarchy that isn't there. Plus: round bell pill clashes with squircle tiles, time presets have wrong radius and hardcoded hex.
+    </div>
+  </div>
+
+  <!-- ============= AFTER ============= -->
+  <div class="col">
+    <h2>After — Tier 1 applied</h2>
+    <div class="phone">
+      <div class="status"><span>9:41</span><div class="notch"></div><span class="right">●●●● ▮▮▮▮</span></div>
+      <div class="topbar"><span class="x">✕</span><span class="cta">Create Habit</span></div>
+      <div class="swatches"><div class="sw blue"></div><div class="sw purple"></div><div class="sw pink"></div><div class="sw gray"></div></div>
+
+      <!-- Daily Reminder — bell becomes 36 squircle, presets get rounded-2xl + tokens -->
+      <div class="card padded shadow-subtle">
+        <div class="reminder">
+          <div class="ico-tile on-card">🔔</div>
+          <span class="lbl">Daily Reminder</span>
+          <div class="toggle"></div>
+        </div>
+        <div class="presets">
+          <div class="preset after-on">Morning</div>
+          <div class="preset after-off">Midday</div>
+          <div class="preset after-off">Evening</div>
+        </div>
+      </div>
+
+      <!-- MORE TO CUSTOMIZE shell — same treatment as Reminder -->
+      <div class="card shadow-subtle">
+        <div style="padding:14px 16px;">
+          <div class="section-label" style="margin:0 0 10px">MORE TO CUSTOMIZE</div>
+          <div class="pills" style="padding:0">
+            <span class="pill mint">🌱 Simple</span>
+            <span class="pill cream">🏅 Ranks</span>
+            <span class="pill cream">🎯 No goal</span>
+          </div>
+          <div class="hide-btn" style="margin:8px 0 0">HIDE OPTIONS ⌃</div>
+        </div>
+
+        <p class="helper" style="margin:0 16px 6px;">Tap any option below to customize how this habit grows.</p>
+
+        <!-- ROWS — now interior dividers, no nested cards -->
+        <div class="rows-after" style="padding:0 16px 14px;">
+          <div class="row-after">
+            <div class="ico-tile on-card">🌱</div>
+            <div class="body"><p class="title">Strength Curve</p><p class="meta">Simple · ~18-day build</p></div>
+            <span class="edit">EDIT</span>
+          </div>
+          <div class="row-after">
+            <div class="ico-tile on-card">🏅</div>
+            <div class="body"><p class="title">Growth Icons</p><p class="meta">Ranks · 5 stages</p></div>
+            <span class="edit">EDIT</span>
+          </div>
+          <div class="row-after">
+            <div class="ico-tile on-card">🎯</div>
+            <div class="body"><p class="title">Streak Goal</p><p class="meta">No goal set</p></div>
+            <span class="edit">EDIT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annot">
+      <b>One card treatment.</b> Daily Reminder and MORE TO CUSTOMIZE share the same parchment + 1px border + subtle shadow + 18px radius. Expanded rows live <i>inside</i> the customize card as interior list items with simple dividers — they're not cards. Bell now matches the other squircle tiles. Time presets use theme tokens and the page's standard 16px radius.
+    </div>
+  </div>
+
+</div>
+
+<div class="legend">
+  <h3>What changed (3 files, ~30 lines)</h3>
+  <ul>
+    <li><b>AdvancedOptionsSection.tsx</b> — collapse-shell uses the same surface as the Reminder card (drop the white/card-shadow override). Expanded rows lose their individual borders and shadows; they become interior list items separated by 1px dividers.</li>
+    <li><b>AdvancedOptionRow.tsx</b> — drop the per-row border + outer radius; add a top divider via <code>borderTopWidth: 1</code> on every row except the first.</li>
+    <li><b>ToggleRow.tsx</b> (the bell card) — bell container becomes 36×36 <code>rounded-xl</code> <code>colors.surface</code> with <code>colors.primary[700]</code> icon, matching the squircle pattern just shipped.</li>
+    <li><b>PresetButton.tsx</b> — replace hardcoded hexes (<code>#ECFDF5</code>, <code>#f5f5f4</code>, <code>#10B981</code>, <code>#059669</code>) with <code>colors.primary[100]</code> / <code>colors.card</code> / <code>colors.primary[500]</code> / <code>colors.primary[700]</code>; bump radius from <code>rounded-xl</code> to <code>rounded-2xl</code>.</li>
+  </ul>
+  <p style="margin:14px 0 0">No new theme tokens needed. No behavior change. Pure visual unification.</p>
+</div>
+
+</body>
+</html>
