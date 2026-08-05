@@ -147,7 +147,7 @@ export {
 
 export {
   useDraftStorage,
-  type DraftData,
+  type StoredDraft as DraftData,
   type UseDraftStorageReturn,
 } from './useDraftStorage';
 

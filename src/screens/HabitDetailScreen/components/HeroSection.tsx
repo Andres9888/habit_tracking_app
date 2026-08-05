@@ -59,7 +59,7 @@ export function HeroSection({
         >
           <LinearGradient
             className='absolute inset-0 rounded-full'
-            colors={badgeGradient as unknown as string[]}
+            colors={badgeGradient}
             end={{ x: 1, y: 0 }}
             start={{ x: 0, y: 0 }}
           />

@@ -137,9 +137,11 @@ export function mapOAuthError(error: unknown): MappedError {
   const clerkError = extractClerkError(error);
   const errorCode = (clerkError?.code ?? 'unknown') as OAuthErrorCode;
 
-  // Get message from map, or use Clerk's message, or fallback
+  // Preserve Clerk-provided detail when there is no recognized code mapping.
+  const mappedMessage =
+    clerkError?.code !== undefined ? OAUTH_ERROR_MESSAGES[errorCode] : undefined;
   const message =
-    OAUTH_ERROR_MESSAGES[errorCode] ??
+    mappedMessage ??
     clerkError?.message ??
     OAUTH_ERROR_MESSAGES.unknown;
 

@@ -2,7 +2,8 @@
  * Streak calculation helpers for analytics
  */
 
-import { Id } from '../_generated/dataModel';
+import type { Id } from '../_generated/dataModel';
+import type { QueryCtx } from '../_generated/server';
 
 interface StreakResult {
   currentStreak: number;
@@ -60,18 +61,18 @@ function computeStreakFromDates(sortedDates: string[]): StreakResult {
  * Kept for backward compatibility with non-batch callers.
  */
 export async function getStreaksForHabit(
-  ctx: unknown,
+  ctx: QueryCtx,
   habitId: Id<'habits'>,
   _userId: string
 ): Promise<StreakResult> {
   const trackings = await ctx.db
     .query('tracking')
-    .withIndex('by_habit_and_date', (q: unknown) => q.eq('habitId', habitId))
+    .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
     .collect();
 
   const sortedDates = trackings
-    .filter((t: unknown) => t.completed)
-    .map((t: unknown) => t.date as string)
+    .filter((t) => t.completed)
+    .map((t) => t.date)
     .sort();
 
   return computeStreakFromDates(sortedDates);
@@ -86,7 +87,7 @@ export async function getStreaksForHabit(
  * O(N) queries to O(1) query for the analytics screens.
  */
 export async function getStreaksForHabitsBatch(
-  ctx: unknown,
+  ctx: QueryCtx,
   habitIds: Id<'habits'>[]
 ): Promise<Map<string, StreakResult>> {
   const results = new Map<string, StreakResult>();
@@ -104,7 +105,7 @@ export async function getStreaksForHabitsBatch(
 
   const allTrackings = await ctx.db
     .query('tracking')
-    .withIndex('by_user_and_date', (q: unknown) => q.eq('userId', identity.subject))
+    .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
     .collect();
 
   // Group completed trackings by habitId

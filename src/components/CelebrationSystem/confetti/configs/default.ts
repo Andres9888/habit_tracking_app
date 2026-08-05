@@ -1,7 +1,7 @@
-import type { BurstConfig } from '../types';
+import type { BurstConfig, ConfettiPhysics } from '../types';
 import { colors } from '@/theme/colors';
 
-const DEFAULT_PHYSICS = {
+const DEFAULT_PHYSICS: ConfettiPhysics = {
   drag: 0.99,
   gravity: 200,
   rotation: { velocity: [-180, 180] },

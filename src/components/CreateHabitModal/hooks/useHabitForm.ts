@@ -27,7 +27,7 @@ export const useHabitForm = ({ habitToEdit }: UseHabitFormOptions) => {
     debounceMs: 500,
     initialValue: state.habitName,
     showErrorsAfterBlur: true,
-    validate: validateHabitName,
+    validate: (value) => validateHabitName(value ?? ''),
   });
 
   // Sync validation state with form state

@@ -34,7 +34,7 @@ export function ImageGrid({
           key={image?.id || `empty-${index}`}
           image={image || undefined}
           index={index}
-          isLoading={isUploading && !image ? index === images.length : null}
+          isLoading={Boolean(isUploading && !image && index === images.length)}
           onPress={() => {
             if (image) {
               onViewImage(image);

@@ -43,21 +43,18 @@ export function useButtonConfig(
 
   const sizeConfigs: Record<ButtonSize, SizeConfig> = {
     large: {
-      fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: 17,
       height: 56,
       iconSize: 24,
       paddingHorizontal: mergedTheme.spacing?.xl ?? 24,
     },
     medium: {
-      fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: 17,
       height: mergedTheme.componentSpacing?.button?.height ?? 44,
       iconSize: 20,
       paddingHorizontal: mergedTheme.spacing?.lg ?? 16,
     },
     small: {
-      fontFamily: fontFamilies?.primary?.text ?? fallbackFontFamilyText,
       fontSize: 14,
       height: 44,
       iconSize: 16,

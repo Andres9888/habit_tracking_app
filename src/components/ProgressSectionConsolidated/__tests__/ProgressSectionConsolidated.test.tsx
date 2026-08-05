@@ -36,19 +36,21 @@ jest
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
+  const Reanimated = jest.requireActual('react-native-reanimated/mock');
   const { View, Text, Pressable, ScrollView } = require('react-native');
-
   const Animated = {
-    View,
-    Text,
+    ...Reanimated.default,
     Pressable,
     ScrollView,
+    Text,
+    View,
     createAnimatedComponent: (Component: React.ComponentType) => Component,
   };
 
   return {
     __esModule: true,
     default: Animated,
+    ...Reanimated,
     ...Animated,
     useSharedValue: (initialValue: number) => ({ value: initialValue }),
     useAnimatedProps: () => ({}),
@@ -67,11 +69,6 @@ jest.mock('react-native-reanimated', () => {
       cubic: () => 0,
       inOut: () => () => 0,
       ease: () => 0,
-    },
-    FadeInDown: {
-      delay: () => ({
-        springify: () => ({}),
-      }),
     },
   };
 });
@@ -104,17 +101,22 @@ jest.mock('lucide-react-native', () => {
   const React = require('react');
   const { View } = require('react-native');
 
-  const createIconComponent = (name: string) => (props: { size?: number }) =>
-    React.createElement(View, { testID: `lucide-${name}`, ...props });
+  const createIconComponent =
+    (name: string) => (props: Record<string, unknown>) =>
+      React.createElement(View, { testID: `lucide-${name}`, ...props });
 
-  return {
-    ChevronRight: createIconComponent('chevron-right'),
-    TrendingUp: createIconComponent('trending-up'),
-    TrendingDown: createIconComponent('trending-down'),
-    Minus: createIconComponent('minus'),
-    BarChart3: createIconComponent('bar-chart-3'),
-    CheckCircle2: createIconComponent('check-circle-2'),
-  };
+  return new Proxy(
+    {},
+    {
+      get: (_target, prop) => {
+        if (prop === '__esModule') {
+          return true;
+        }
+
+        return createIconComponent(String(prop));
+      },
+    }
+  );
 });
 
 

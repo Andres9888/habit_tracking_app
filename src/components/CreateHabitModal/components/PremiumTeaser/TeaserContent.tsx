@@ -38,8 +38,8 @@ export function TeaserContent({ suggestions }: TeaserContentProps) {
             <Text className='mr-2' style={{ color: colors.status.premium }}>•</Text>
             <Text
               className='text-sm'
-              style={{ color: colors.status.premiumText }}
               style={{
+                color: colors.status.premiumText,
                 textShadowColor: 'rgba(124, 58, 237, 0.5)',
                 textShadowOffset: { height: 0, width: 0 },
                 textShadowRadius: 4,

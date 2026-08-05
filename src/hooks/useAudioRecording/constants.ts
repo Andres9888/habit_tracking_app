@@ -36,7 +36,7 @@ export const RECORDING_OPTIONS = {
     bitsPerSecond: 128_000,
     mimeType: 'audio/webm',
   },
-};
+} as unknown as Audio.RecordingOptions;
 
 /**
  * Maximum recording duration in seconds (5 minutes as per spec)

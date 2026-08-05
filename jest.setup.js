@@ -12,6 +12,22 @@ if (typeof global.structuredClone === 'undefined') {
   global.structuredClone = (obj) => JSON.parse(JSON.stringify(obj));
 }
 
+if (typeof global.window === 'undefined') {
+  global.window = global;
+}
+
+if (typeof global.window.dispatchEvent !== 'function') {
+  global.window.dispatchEvent = jest.fn();
+}
+
+if (typeof global.window.addEventListener !== 'function') {
+  global.window.addEventListener = jest.fn();
+}
+
+if (typeof global.window.removeEventListener !== 'function') {
+  global.window.removeEventListener = jest.fn();
+}
+
 // Mock Expo modules
 jest.mock('expo-font');
 jest.mock('expo-asset');
@@ -47,6 +63,37 @@ jest.mock('expo-network', () => ({
     UNKNOWN: 'UNKNOWN',
   },
 }));
+
+// Mock react-native-safe-area-context
+jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
+  const { View } = require('react-native');
+  const insets = { top: 0, right: 0, bottom: 0, left: 0 };
+  const frame = { x: 0, y: 0, width: 390, height: 844 };
+  const SafeAreaInsetsContext = React.createContext(insets);
+  const SafeAreaFrameContext = React.createContext(frame);
+
+  return {
+    SafeAreaConsumer: ({ children }) => children(insets),
+    SafeAreaFrameContext,
+    SafeAreaInsetsContext,
+    SafeAreaProvider: ({ children, initialMetrics }) => (
+      <SafeAreaFrameContext.Provider
+        value={initialMetrics?.frame ?? frame}
+      >
+        <SafeAreaInsetsContext.Provider
+          value={initialMetrics?.insets ?? insets}
+        >
+          {children}
+        </SafeAreaInsetsContext.Provider>
+      </SafeAreaFrameContext.Provider>
+    ),
+    SafeAreaView: View,
+    initialWindowMetrics: { frame, insets },
+    useSafeAreaFrame: () => React.useContext(SafeAreaFrameContext),
+    useSafeAreaInsets: () => React.useContext(SafeAreaInsetsContext),
+  };
+});
 
 // Mock react-native-gesture-handler
 jest.mock('react-native-gesture-handler', () => {

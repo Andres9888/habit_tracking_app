@@ -41,6 +41,9 @@ export interface ModalProps {
 
   /** Skip open/close entrance animations (instant show/hide) */
   skipAnimation?: boolean;
+
+  /** Hint to screen readers that the modal traps focus */
+  accessibilityViewIsModal?: boolean;
 }
 
 export interface ModalAnimationValues {

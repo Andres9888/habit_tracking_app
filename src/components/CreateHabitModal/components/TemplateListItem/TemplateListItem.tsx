@@ -91,8 +91,10 @@ const TemplateListItemComponent = ({
           accessibilityLabel={`View science for ${template.name}`}
           accessibilityRole='button'
           className='h-11 w-11 items-center justify-center rounded-full'
-          style={{ backgroundColor: themeColors.status.infoLight }}
-          style={scienceAnimatedStyle}
+          style={[
+            { backgroundColor: themeColors.status.infoLight },
+            scienceAnimatedStyle,
+          ]}
           onPress={() => {
             triggerSelection();
             onViewScience(template);

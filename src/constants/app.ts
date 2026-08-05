@@ -94,6 +94,9 @@ export const MAX_EMAIL_LENGTH = 254;
 /** Maximum habit name length */
 export const MAX_HABIT_NAME_LENGTH = 100;
 
+/** Minimum habit name length after trimming */
+export const MIN_HABIT_NAME_LENGTH = 1;
+
 /** Maximum length for long text fields */
 export const MAX_LONG_TEXT_LENGTH = 5000;
 
@@ -119,6 +122,9 @@ export const MIN_COMPLETIONS_FOR_RATING = 5;
 
 /** Maximum days to look back for streak calculation (> 1 year) */
 export const STREAK_MAX_LOOKBACK_DAYS = 400;
+
+/** Guardrail for rendering very large habit lists in a single pass */
+export const MAX_HABITS_RENDER_LIMIT = 500;
 
 // ============================================================================
 // INPUT CHARACTER LIMITS (UI Feedback Thresholds)

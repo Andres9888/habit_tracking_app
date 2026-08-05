@@ -42,24 +42,12 @@ describe('DetailLoadingState component', () => {
     'screens/HabitDetailScreen/components/DetailLoadingState.tsx'
   );
 
-  it('uses ActivityIndicator', () => {
-    expect(source).toMatch(/ActivityIndicator/);
+  it('uses HabitDetailSkeleton', () => {
+    expect(source).toMatch(/HabitDetailSkeleton/);
   });
 
-  it('uses theme color for spinner', () => {
-    expect(source).toMatch(/colors\.gray\[500\]/);
-  });
-
-  it('uses theme background color', () => {
-    expect(source).toMatch(/colors\.light\.background/);
-  });
-
-  it('has accessibility role progressbar', () => {
-    expect(source).toMatch(/accessibilityRole='progressbar'/);
-  });
-
-  it('has accessibility label', () => {
-    expect(source).toMatch(/accessibilityLabel='Loading habit details'/);
+  it('keeps the loading component as a minimal skeleton wrapper', () => {
+    expect(source).toMatch(/return <HabitDetailSkeleton \/>/);
   });
 });
 
@@ -78,29 +66,28 @@ describe('HabitEditScreen modal null pattern (intentional)', () => {
 
   it('returns null when not visible (modal not mounted)', () => {
     expect(source).toMatch(
-      /if\s*\(!visible\s*\|\|\s*!habitId\)\s*return\s+null/
+      /if\s*\(!props\.visible\s*\|\|\s*!props\.habitId\)\s*return\s+null/
     );
   });
 
-  it('has documentation comment explaining the null pattern', () => {
-    expect(source).toMatch(/Modal pattern.*return null.*modal.*doesn't mount/i);
+  it('wraps the mounted screen in ScreenErrorBoundary after the guard', () => {
+    expect(source).toMatch(/<ScreenErrorBoundary/);
   });
 });
 
-describe('CharacterScreen loading state documentation', () => {
+describe('CharacterScreen data loading flow', () => {
   const source = readSource('screens/CharacterScreen/CharacterScreen.tsx');
 
-  it('uses mock data (no async fetch yet)', () => {
-    expect(source).toMatch(/MOCK_CHARACTER_DATA/);
+  it('uses useHabitData for live habit and tracking data', () => {
+    expect(source).toMatch(/useHabitData/);
   });
 
-  it('has loading state documentation comment', () => {
-    expect(source).toMatch(
-      /Loading state.*mock data|When connected to real data.*ActivityIndicator/
-    );
+  it('derives the character summary from habit data', () => {
+    expect(source).toMatch(/buildDateRange/);
+    expect(source).toMatch(/buildCharacterData/);
   });
 
   it('uses theme background color', () => {
-    expect(source).toMatch(/colors\.light\.background/);
+    expect(source).toMatch(/colors\.background/);
   });
 });

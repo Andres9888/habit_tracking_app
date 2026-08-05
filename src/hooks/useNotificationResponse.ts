@@ -11,6 +11,14 @@ import type { NotificationResponse } from 'expo-notifications';
 
 type NotificationsModule = typeof import('expo-notifications');
 
+async function loadNotificationsModule(): Promise<NotificationsModule> {
+  if (process.env.JEST_WORKER_ID) {
+    return require('expo-notifications') as NotificationsModule;
+  }
+
+  return import('expo-notifications');
+}
+
 export interface NotificationResponseHandler {
   /** Called when a habit notification is tapped */
   onHabitNotificationTap: (habitId: string) => void;
@@ -50,7 +58,7 @@ export function useNotificationResponse(handlers: NotificationResponseHandler) {
       let Notifications: NotificationsModule;
 
       try {
-        Notifications = await import('expo-notifications');
+        Notifications = await loadNotificationsModule();
       } catch (error) {
         if (__DEV__) {
           console.warn(

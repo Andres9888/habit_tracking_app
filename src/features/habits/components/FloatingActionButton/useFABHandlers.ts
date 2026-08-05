@@ -64,7 +64,7 @@ export function useFABHandlers({
       Animated.timing(rippleOpacity, {
         duration: FAB.rippleOpacityDuration,
         easing: Easing.out(Easing.ease),
-        toValue: SCALE.transparent,
+        toValue: 0,
         useNativeDriver: true,
       }),
     ]).start();

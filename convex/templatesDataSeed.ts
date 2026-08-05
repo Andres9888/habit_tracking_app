@@ -6,6 +6,7 @@
 import { v } from 'convex/values';
 import { internalMutation, query } from './_generated/server';
 import type { Id } from './_generated/dataModel';
+import type { MutationCtx } from './_generated/server';
 
 // Frequency constants
 const FREQUENCY_DAILY = 'daily';
@@ -40,12 +41,12 @@ type TemplateInsert = {
 };
 
 const _insertTemplateIfMissing = async (
-  ctx: { db: { insert: unknown; query: unknown } },
+  ctx: Pick<MutationCtx, 'db'>,
   template: TemplateInsert
 ) => {
   const existing = await ctx.db
     .query('templates')
-    .filter((q: unknown) => q.eq(q.field('name'), template.name))
+    .filter((q) => q.eq(q.field('name'), template.name))
     .first();
 
   if (existing) return;
@@ -164,7 +165,7 @@ export const seedTemplates = internalMutation({
     const insertWithTracking = async (template: TemplateInsert) => {
       const existing = await ctx.db
         .query('templates')
-        .filter((q: unknown) => q.eq(q.field('name'), template.name))
+        .filter((q) => q.eq(q.field('name'), template.name))
         .first();
 
       if (existing) {
@@ -1789,7 +1790,7 @@ export const seedAdditionalTemplates = internalMutation({
     const insertWithTracking = async (template: TemplateInsert) => {
       const existing = await ctx.db
         .query('templates')
-        .filter((q: unknown) => q.eq(q.field('name'), template.name))
+        .filter((q) => q.eq(q.field('name'), template.name))
         .first();
 
       if (existing) {
@@ -4172,7 +4173,7 @@ export const seedUniqueTemplates = internalMutation({
     const insertWithTracking = async (template: TemplateInsert) => {
       const existing = await ctx.db
         .query('templates')
-        .filter((q: unknown) => q.eq(q.field('name'), template.name))
+        .filter((q) => q.eq(q.field('name'), template.name))
         .first();
 
       if (existing) {

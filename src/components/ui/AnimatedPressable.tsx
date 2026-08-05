@@ -53,16 +53,22 @@ export interface AnimatedPressableProps extends PressableProps {
  * </AnimatedPressable>
  * ```
  */
-export function AnimatedPressable({
-  animationConfig,
-  disableAnimation = false,
-  disableFocusRing = false,
-  children,
-  style,
-  onPressIn,
-  onPressOut,
-  ...pressableProps
-}: AnimatedPressableProps) {
+export const AnimatedPressable = React.forwardRef<
+  React.ElementRef<typeof Pressable>,
+  AnimatedPressableProps
+>(function AnimatedPressable(
+  {
+    animationConfig,
+    disableAnimation = false,
+    disableFocusRing = false,
+    children,
+    style,
+    onPressIn,
+    onPressOut,
+    ...pressableProps
+  },
+  ref
+) {
   const { animatedStyle, pressHandlers } = usePressAnimation(animationConfig);
   const { focusStyle, focusHandlers } = useFocusRing({
     compact: true,
@@ -97,6 +103,7 @@ export function AnimatedPressable({
 
   return (
     <AnimatedPressableBase
+      ref={ref}
       {...pressableProps}
       {...(disableFocusRing ? {} : focusHandlers)}
       hitSlop={pressableProps.hitSlop ?? defaultHitSlop}
@@ -107,6 +114,6 @@ export function AnimatedPressable({
       {children}
     </AnimatedPressableBase>
   );
-}
+});
 
 export default AnimatedPressable;

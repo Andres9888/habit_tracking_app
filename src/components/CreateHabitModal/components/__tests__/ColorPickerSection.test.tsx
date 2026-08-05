@@ -76,11 +76,14 @@ describe('ColorPickerSection - V9 Redesign', () => {
       expect(getByLabelText('Choose custom color')).toBeDefined();
     });
 
-    it('should render color swatches in a single row container', () => {
+    it('should render color swatches across two centered rows', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
-      const row = getByTestId('color-picker-row');
-      expect(row.props.style.flexDirection).toBe('row');
-      expect(row.props.style.justifyContent).toBe('space-between');
+      const row1 = getByTestId('color-picker-row-1');
+      const row2 = getByTestId('color-picker-row-2');
+      expect(row1.props.style.flexDirection).toBe('row');
+      expect(row1.props.style.justifyContent).toBe('center');
+      expect(row2.props.style.flexDirection).toBe('row');
+      expect(row2.props.style.justifyContent).toBe('center');
     });
   });
 
@@ -105,21 +108,18 @@ describe('ColorPickerSection - V9 Redesign', () => {
       expect(emeraldButton.props.accessibilityState?.selected).toBe(false);
     });
 
-    it('should have white border ring on selected color (V9 box-shadow style)', () => {
+    it('should keep the selected swatch marked as selected via accessibility state', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
 
       const emeraldSwatch = getByTestId('color-swatch-10B981');
-      // V9: Uses 3px white border for box-shadow ring effect
-      expect(emeraldSwatch.props.style.borderWidth).toBe(3);
-      expect(emeraldSwatch.props.style.borderColor).toBe('#ffffff');
+      expect(emeraldSwatch.props.accessibilityState?.selected).toBe(true);
     });
 
-    it('should NOT have border on unselected colors', () => {
+    it('should keep unselected swatches marked as unselected', () => {
       const { getByTestId } = render(<ColorPickerSection {...defaultProps} />);
 
       const redSwatch = getByTestId('color-swatch-EF4444');
-      // V9: Unselected colors have no border (undefined)
-      expect(redSwatch.props.style.borderWidth).toBeUndefined();
+      expect(redSwatch.props.accessibilityState?.selected).toBe(false);
     });
   });
 

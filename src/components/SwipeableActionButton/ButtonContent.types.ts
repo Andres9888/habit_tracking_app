@@ -3,6 +3,7 @@ import React from 'react';
 export interface ButtonContentProps {
   Icon: React.ComponentType<{
     className?: string;
+    color?: string;
     size?: number;
     strokeWidth?: number;
   }>;

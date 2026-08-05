@@ -20,8 +20,8 @@ describe('AuthError', () => {
     });
 
     it('renders the dismiss button', () => {
-      const { getByText } = render(<AuthError {...defaultProps} />);
-      expect(getByText('Dismiss')).toBeTruthy();
+      const { getByLabelText } = render(<AuthError {...defaultProps} />);
+      expect(getByLabelText('Dismiss error')).toBeTruthy();
     });
 
     it('renders with custom error messages', () => {
@@ -35,15 +35,16 @@ describe('AuthError', () => {
 
   describe('Interactions', () => {
     it('calls onDismiss when dismiss button is pressed', () => {
-      const { getByText } = render(<AuthError {...defaultProps} />);
-      fireEvent.press(getByText('Dismiss'));
+      const { getByLabelText } = render(<AuthError {...defaultProps} />);
+      fireEvent.press(getByLabelText('Dismiss error'));
       expect(mockOnDismiss).toHaveBeenCalledTimes(1);
     });
 
     it('calls onDismiss only once per press', () => {
-      const { getByText } = render(<AuthError {...defaultProps} />);
-      fireEvent.press(getByText('Dismiss'));
-      fireEvent.press(getByText('Dismiss'));
+      const { getByLabelText } = render(<AuthError {...defaultProps} />);
+      const dismissButton = getByLabelText('Dismiss error');
+      fireEvent.press(dismissButton);
+      fireEvent.press(dismissButton);
       expect(mockOnDismiss).toHaveBeenCalledTimes(2);
     });
   });
@@ -55,8 +56,8 @@ describe('AuthError', () => {
     });
 
     it('has button role on dismiss', () => {
-      const { getByRole } = render(<AuthError {...defaultProps} />);
-      expect(getByRole('button')).toBeTruthy();
+      const { getByLabelText } = render(<AuthError {...defaultProps} />);
+      expect(getByLabelText('Dismiss error').props.accessibilityRole).toBe('button');
     });
 
     it('has accessible label on dismiss button', () => {

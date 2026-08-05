@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from '../../../../constants/errorMessages';
 import { mapOAuthError, MappedError } from '../mapOAuthError';
 
 describe('mapOAuthError', () => {
@@ -9,7 +10,7 @@ describe('mapOAuthError', () => {
       expect(result.isCancellation).toBe(true);
       expect(result.shouldRedirect).toBe(false);
       expect(result.code).toBe('oauth_access_denied');
-      expect(result.message).toBe('Sign in was cancelled.');
+      expect(result.message).toBe(ERROR_MESSAGES.AUTH.SIGN_IN_CANCELLED);
     });
 
     it('maps user_cancelled as cancellation', () => {
@@ -28,7 +29,7 @@ describe('mapOAuthError', () => {
 
       expect(result.shouldRedirect).toBe(true);
       expect(result.isCancellation).toBe(false);
-      expect(result.message).toBe('You are already signed in.');
+      expect(result.message).toBe(ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN);
     });
 
     it('maps session_exists for redirect', () => {
@@ -36,7 +37,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.shouldRedirect).toBe(true);
-      expect(result.message).toBe('You already have an active session.');
+      expect(result.message).toBe(ERROR_MESSAGES.AUTH.SIGN_IN_ALREADY_SIGNED_IN);
     });
   });
 
@@ -46,7 +47,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.message).toBe(
-        'Unable to verify your account. Please try again.'
+        ERROR_MESSAGES.AUTH.SIGN_IN_EXTERNAL_ACCOUNT_NOT_FOUND
       );
       expect(result.isCancellation).toBe(false);
       expect(result.shouldRedirect).toBe(false);
@@ -56,15 +57,16 @@ describe('mapOAuthError', () => {
       const error = { errors: [{ code: 'external_account_exists' }] };
       const result = mapOAuthError(error);
 
-      expect(result.message).toContain('already linked to another user');
+      expect(result.message).toBe(
+        ERROR_MESSAGES.AUTH.SIGN_IN_EXTERNAL_ACCOUNT_EXISTS
+      );
     });
 
     it('maps email_address_not_found with alternative suggestion', () => {
       const error = { errors: [{ code: 'email_address_not_found' }] };
       const result = mapOAuthError(error);
 
-      expect(result.message).toContain("couldn't retrieve your email");
-      expect(result.message).toContain('different sign-in method');
+      expect(result.message).toBe(ERROR_MESSAGES.AUTH.SIGN_IN_EMAIL_NOT_FOUND);
     });
   });
 
@@ -74,9 +76,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.code).toBe('network_error');
-      expect(result.message).toBe(
-        'Please check your internet connection and try again.'
-      );
+      expect(result.message).toBe(ERROR_MESSAGES.NETWORK.CONNECTION_ISSUE);
     });
 
     it('detects network error from message containing "fetch"', () => {
@@ -100,10 +100,10 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.code).toBe('some_unknown_code');
-      expect(result.message).toBe('Failed to sign in. Please try again.');
+      expect(result.message).toBe(ERROR_MESSAGES.AUTH.SIGN_IN_FAILED);
     });
 
-    it('handles error without code using Clerk message', () => {
+    it('handles error without code using the Clerk message', () => {
       const error = { errors: [{ message: 'Custom Clerk message' }] };
       const result = mapOAuthError(error);
 
@@ -115,7 +115,7 @@ describe('mapOAuthError', () => {
       const result = mapOAuthError(error);
 
       expect(result.code).toBe('unknown');
-      expect(result.message).toBe('Failed to sign in. Please try again.');
+      expect(result.message).toBe(ERROR_MESSAGES.AUTH.SIGN_IN_FAILED);
       expect(result.isCancellation).toBe(false);
       expect(result.shouldRedirect).toBe(false);
     });

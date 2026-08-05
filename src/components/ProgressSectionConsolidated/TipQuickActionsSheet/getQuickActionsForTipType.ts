@@ -18,6 +18,7 @@ const quickActionHandlers: Record<TipType, ActionHandler> = {
   lowStreak: () => getLowStreakActions(),
   goodStreak: (_, currentStreak) => getGoodStreakActions(currentStreak),
   weekStreak: () => getWeekStreakActions(),
+  noData: () => getDefaultActions(),
 };
 
 export function getQuickActionsForTipType(

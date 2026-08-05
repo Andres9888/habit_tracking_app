@@ -72,7 +72,7 @@ export const SmartSuggestions = ({ onPick, query }: SmartSuggestionsProps) => {
               key={`${suggestion.emoji}-${suggestion.name}`}
               color={suggestion.color}
               emoji={suggestion.emoji}
-              isHighlighted={index === 0 ? query.trim().length >= 2 : null}
+              isHighlighted={index === 0 && query.trim().length >= 2}
               name={suggestion.name}
               onPick={handlePick}
             />

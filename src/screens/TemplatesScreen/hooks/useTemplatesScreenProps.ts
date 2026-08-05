@@ -65,9 +65,15 @@ export function useTemplatesScreenProps() {
   });
 
   const viewNav = useViewNavigation();
-  const packConfirm = usePackConfirm(data.isPremiumUser, () =>
-    state.setShowPaywall(true)
-  );
+  const packConfirm = usePackConfirm({
+    allTemplates: data.allTemplates,
+    importTemplate: data.importTemplate,
+    onComplete: (count) => {
+      state.setToastMessage(`${count} habits imported`);
+      state.setShowToast(true);
+    },
+    setImportedIds: state.setImportedTemplateIds,
+  });
   const mainBrowseData = useMainBrowseData({
     allTemplates: data.allTemplates,
     isPremiumUser: data.isPremiumUser,

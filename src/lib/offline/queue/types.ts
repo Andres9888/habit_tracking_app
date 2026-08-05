@@ -110,16 +110,23 @@ export interface RemoveHabitPayload {
   habitId: Id<'habits'>;
 }
 
+export interface OfflineOperationPayloadMap {
+  toggleCompletion: ToggleCompletionPayload;
+  createHabit: CreateHabitPayload;
+  updateHabit: UpdateHabitPayload;
+  archiveHabit: ArchiveHabitPayload;
+  pauseHabit: PauseHabitPayload;
+  removeHabit: RemoveHabitPayload;
+}
+
 /**
  * Union of all offline operation payloads
  */
-export type OfflineOperationPayload = 
-  | ToggleCompletionPayload
-  | CreateHabitPayload
-  | UpdateHabitPayload
-  | ArchiveHabitPayload
-  | PauseHabitPayload
-  | RemoveHabitPayload;
+export type OfflineOperationPayload =
+  OfflineOperationPayloadMap[OfflineOperationType];
+
+export type OfflineOperationPayloadByType<T extends OfflineOperationType> =
+  OfflineOperationPayloadMap[T];
 
 /**
  * A single offline operation in the queue
@@ -127,9 +134,7 @@ export type OfflineOperationPayload =
  * Represents a mutation that occurred while offline and needs to sync
  * when connectivity returns. Operations are processed FIFO.
  */
-export interface OfflineOperation<
-  T extends OfflineOperationType = OfflineOperationType,
-> {
+interface OfflineOperationBase<T extends OfflineOperationType> {
   /** Unique operation ID (format: op_{timestamp}_{random}) */
   id: string;
 
@@ -137,19 +142,7 @@ export interface OfflineOperation<
   type: T;
 
   /** Operation payload (type depends on operation type) */
-  payload: T extends 'toggleCompletion'
-    ? ToggleCompletionPayload
-    : T extends 'createHabit'
-    ? CreateHabitPayload
-    : T extends 'updateHabit'
-    ? UpdateHabitPayload
-    : T extends 'archiveHabit'
-    ? ArchiveHabitPayload
-    : T extends 'pauseHabit'
-    ? PauseHabitPayload
-    : T extends 'removeHabit'
-    ? RemoveHabitPayload
-    : OfflineOperationPayload;
+  payload: OfflineOperationPayloadByType<T>;
 
   /** Current status of the operation */
   status: OfflineOperationStatus;
@@ -169,6 +162,10 @@ export interface OfflineOperation<
   /** Error category from last failed attempt */
   lastErrorCategory?: ErrorCategory;
 }
+
+export type OfflineOperation<
+  T extends OfflineOperationType = OfflineOperationType,
+> = T extends OfflineOperationType ? OfflineOperationBase<T> : never;
 
 /**
  * Typed helpers for specific operations

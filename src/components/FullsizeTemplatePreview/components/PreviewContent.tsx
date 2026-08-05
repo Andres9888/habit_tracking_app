@@ -65,7 +65,7 @@ export function PreviewContent({
       />
       <ConfettiOverlay
         ref={confettiRef}
-        visible={isImported ? !reducedMotion : null}
+        visible={Boolean(isImported && !reducedMotion)}
       />
     </Animated.View>
   );

@@ -1,8 +1,11 @@
 import type {
   OfflineOperation,
+  OfflineOperationPayloadByType,
+  OfflineOperationType,
   OfflineQueueState,
   QueueEvent,
   QueueOperationResult,
+  ToggleCompletionOperation,
   ToggleCompletionPayload,
 } from './types';
 import { calculateStats, generateOperationId } from './helpers';
@@ -21,8 +24,8 @@ export function handleReplace(
   emit: EmitFn,
   getState: StateGetter
 ): QueueOperationResult {
-  const existing = state.operations[existingIdx];
-  const updated: OfflineOperation = {
+  const existing = state.operations[existingIdx] as ToggleCompletionOperation;
+  const updated: ToggleCompletionOperation = {
     ...existing,
     payload,
     retryCount: 0,
@@ -42,24 +45,24 @@ export function handleReplace(
   return { operationId: existing.id, replaced: true, success: true };
 }
 
-export function handleNewOperation(
+export function handleNewOperation<T extends OfflineOperationType>(
   state: OfflineQueueState,
-  type: 'toggleCompletion',
-  payload: ToggleCompletionPayload,
+  type: T,
+  payload: OfflineOperationPayloadByType<T>,
   setState: StateSetter,
   notify: NotifyFn,
   emit: EmitFn,
   getState: StateGetter
 ): QueueOperationResult {
   const id = generateOperationId();
-  const operation: OfflineOperation = {
+  const operation: OfflineOperation<T> = {
     createdAt: Date.now(),
     id,
     payload,
     retryCount: 0,
     status: 'pending',
     type,
-  };
+  } as OfflineOperation<T>;
   setState({ ...state, operations: [...state.operations, operation] });
   notify();
   emit({

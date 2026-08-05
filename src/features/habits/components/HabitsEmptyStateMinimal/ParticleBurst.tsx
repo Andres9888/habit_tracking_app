@@ -47,11 +47,6 @@ export function ParticleBurst({
     const configs: ParticleConfig[] = [];
     const { count, colors, staggerDelay } = PARTICLE_BURST;
 
-    // Guard against undefined or empty colors array
-    if (!colors || colors.length === 0) {
-      return configs;
-    }
-
     for (let i = 0; i < count; i++) {
       // 45° apart starting from 0° (right), converted to radians
       const angle = (i * 45 * Math.PI) / 180;

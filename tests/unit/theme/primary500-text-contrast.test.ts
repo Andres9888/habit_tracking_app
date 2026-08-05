@@ -50,34 +50,36 @@ const BUTTON_CONFIG_FILE = {
   file: 'components/Button/useButtonConfig.ts',
   description: 'Secondary and ghost button text',
 };
+const BUTTON_VARIANT_STYLES_FILE =
+  'components/Button/buttonVariantStyles.ts';
 
 /**
- * Tailwind-based components where text-emerald-500 was replaced
- * with text-emerald-700 for readable text on white/light backgrounds.
+ * Semantic success text tokens and hardcoded primary-700 values used for
+ * readable text on light backgrounds.
  */
 const TAILWIND_TEXT_FILES = [
   {
     file: 'components/HabitCalendarModal/StatsCard.tsx',
     description: 'Completion percentage stat',
-    pattern: 'text-emerald-700',
-    antiPattern: 'text-emerald-500',
+    pattern: 'colors.status.successText',
+    antiPattern: '#10b981',
   },
   {
     file: 'components/HabitCalendarModal/ActivityLog.tsx',
     description: 'Completed activity timestamp',
-    pattern: 'text-emerald-700',
-    antiPattern: 'text-emerald-500',
+    pattern: '#047857',
+    antiPattern: "style={{ color: activity.completed ? '#10b981'",
   },
   {
-    file: 'components/CreateHabitModal/components/MinimalReminderToggle.tsx',
+    file: 'components/CreateHabitModal/components/ReminderSelector/ReminderOptionButton.tsx',
     description: 'Enabled reminder time text',
-    pattern: 'text-emerald-700',
-    antiPattern: 'text-emerald-500',
+    pattern: '#047857',
+    antiPattern: "style={{ color: isSelected ? '#10B981'",
   },
   {
     file: 'components/QuickStatsStrip/QuickStatsStrip.tsx',
     description: 'Success rate stat card color',
-    pattern: 'text-emerald-700',
+    pattern: 'themeColors.status.successText',
     antiPattern: 'text-emerald-500',
   },
 ];
@@ -116,33 +118,43 @@ describe('Primary-500 contrast: StyleSheet text uses primary-700', () => {
 
 describe('Primary-500 contrast: Button config uses primary-700 for text', () => {
   it('secondary variant text uses primary[700]', () => {
-    const content = fs.readFileSync(
+    const configContent = fs.readFileSync(
       path.join(SRC_ROOT, BUTTON_CONFIG_FILE.file),
       'utf-8'
     );
-    const textMatches = content.match(/text:.*colors\.primary\[\d+\]/g) ?? [];
-    for (const match of textMatches) {
-      expect(match).toContain('primary[700]');
-      expect(match).not.toContain('primary[500]');
-    }
+    const stylesContent = fs.readFileSync(
+      path.join(SRC_ROOT, BUTTON_VARIANT_STYLES_FILE),
+      'utf-8'
+    );
+    expect(configContent).toMatch(
+      /primaryText:\s*mergedTheme\.colors\?\.primary\?\.\[700\]/
+    );
+    expect(stylesContent).toMatch(/text:\s*\{\s*color:\s*colors\.primaryText/);
   });
 
   it('primary variant container still uses primary[500] for background', () => {
-    const content = fs.readFileSync(
+    const configContent = fs.readFileSync(
       path.join(SRC_ROOT, BUTTON_CONFIG_FILE.file),
       'utf-8'
     );
-    expect(content).toContain(
-      'backgroundColor: theme.custom.colors.primary[500]'
+    const stylesContent = fs.readFileSync(
+      path.join(SRC_ROOT, BUTTON_VARIANT_STYLES_FILE),
+      'utf-8'
+    );
+    expect(configContent).toMatch(
+      /primary:\s*mergedTheme\.colors\?\.primary\?\.\[500\]/
+    );
+    expect(stylesContent).toMatch(
+      /backgroundColor:\s*colors\.primary/
     );
   });
 
   it('secondary variant border still uses primary[500]', () => {
     const content = fs.readFileSync(
-      path.join(SRC_ROOT, BUTTON_CONFIG_FILE.file),
+      path.join(SRC_ROOT, BUTTON_VARIANT_STYLES_FILE),
       'utf-8'
     );
-    expect(content).toContain('borderColor: theme.custom.colors.primary[500]');
+    expect(content).toMatch(/borderColor:\s*colors\.primary/);
   });
 });
 

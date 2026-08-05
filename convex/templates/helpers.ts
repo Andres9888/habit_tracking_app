@@ -1,18 +1,19 @@
 /**
  * Template helper functions
  */
+import type { MutationCtx } from '../_generated/server';
 import type { TemplateInsert } from './types';
 
 /**
  * Insert a template if it doesn't already exist
  */
 export const insertTemplateIfMissing = async (
-  ctx: { db: { insert: unknown; query: unknown } },
+  ctx: Pick<MutationCtx, 'db'>,
   template: TemplateInsert
 ) => {
   const existing = await ctx.db
     .query('templates')
-    .filter((q: unknown) => q.eq(q.field('name'), template.name))
+    .filter((q) => q.eq(q.field('name'), template.name))
     .first();
 
   if (existing) return;

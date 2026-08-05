@@ -40,9 +40,13 @@ jest.mock('clsx', () => ({
 
 // Mock react-native-reanimated
 jest.mock('react-native-reanimated', () => {
+  const Reanimated = jest.requireActual('react-native-reanimated/mock');
   const View = require('react-native').View;
   return {
+    __esModule: true,
+    ...Reanimated,
     default: {
+      ...Reanimated.default,
       View,
       createAnimatedComponent: (Component: React.ComponentType<unknown>) => Component,
     },

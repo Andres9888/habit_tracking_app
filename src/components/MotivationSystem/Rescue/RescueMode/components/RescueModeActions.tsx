@@ -48,8 +48,11 @@ export function RescueModeActions({
   return (
     <View
       className='border-t px-4 pt-4'
-      style={{ borderTopColor: colors.status.errorLight, backgroundColor: colors.card }}
-      style={{ paddingBottom: Math.max(insets.bottom, 16) }}
+      style={{
+        backgroundColor: colors.card,
+        borderTopColor: colors.status.errorLight,
+        paddingBottom: Math.max(insets.bottom, 16),
+      }}
     >
       {/* Just 2 Min - Primary CTA */}
       <AnimatedContent

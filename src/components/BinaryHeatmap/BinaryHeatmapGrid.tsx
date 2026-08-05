@@ -29,6 +29,7 @@ const DAY_FULL_NAMES = [
 export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
   gridData,
   habitColor,
+  onCellPress,
 }: BinaryHeatmapGridProps) {
   const { weeks, monthLabels } = gridData;
 
@@ -77,6 +78,7 @@ export const BinaryHeatmapGrid = memo(function BinaryHeatmapGrid({
                 key={`row-${dayIndex}`}
                 dayIndex={dayIndex}
                 habitColor={habitColor}
+                onCellPress={onCellPress}
                 row={row}
               />
             ))}

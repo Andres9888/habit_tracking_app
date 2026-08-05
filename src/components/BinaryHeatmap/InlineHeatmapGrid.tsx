@@ -47,6 +47,7 @@ export const InlineHeatmapGrid = memo(function InlineHeatmapGrid({
       <ScrollView
         ref={scrollRef}
         horizontal
+        accessibilityLabel='Habit completion heatmap grid'
         contentContainerStyle={{ width: gridContentWidth }}
         showsHorizontalScrollIndicator={false}
         onContentSizeChange={() =>

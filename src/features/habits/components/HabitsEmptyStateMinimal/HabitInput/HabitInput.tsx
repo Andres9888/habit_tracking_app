@@ -75,10 +75,11 @@ export const HabitInput = forwardRef<TextInput, HabitInputProps>(
           returnKeyType='done'
           selectionColor={colors.inputCaret}
           style={getInputTextStyle(colors.inputText)}
+          testID='habit-input'
           value={value}
           {...buildTextInputHintProps(
-            rotatingPrompt.isActive ? '' : COPY.inputPlaceholder,
-            colors.inputPlaceholder
+            COPY.inputPlaceholder,
+            rotatingPrompt.isActive ? 'transparent' : colors.inputPlaceholder
           )}
           onBlur={handleBlur}
           onChangeText={onChangeText}

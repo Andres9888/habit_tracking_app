@@ -97,7 +97,7 @@ export function determineBurstType(context: CompletionContext): BurstType {
  * Check if a streak value is a milestone
  */
 export function isStreakMilestone(streak: number): boolean {
-  return STREAK_MILESTONES.includes(streak as unknown);
+  return STREAK_MILESTONES.some((milestone) => milestone === streak);
 }
 
 /**

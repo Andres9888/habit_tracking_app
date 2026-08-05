@@ -45,9 +45,9 @@ export const useSettingsModalLogic = ({
   useEffect(() => {
     if (settings) {
       setDarkModeState(normalizeDarkModePreference(settings.darkMode));
-      setReduceMotionState(settings.reduceMotion);
-      setHighContrastModeState(settings.highContrastMode);
-      setUseDyslexicFontState(settings.useDyslexicFont);
+      setReduceMotionState(settings.reduceMotion ?? false);
+      setHighContrastModeState(settings.highContrastMode ?? false);
+      setUseDyslexicFontState(settings.useDyslexicFont ?? false);
       setCompactViewState(settings.compactView ?? false);
       setShowGradientFillState(settings.showGradientFill ?? true);
     }

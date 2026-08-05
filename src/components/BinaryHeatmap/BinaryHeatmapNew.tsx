@@ -8,10 +8,11 @@
 import React, { memo, useState, useMemo, useCallback, useRef } from 'react';
 import { View, Text } from 'react-native';
 
-import type { BinaryHeatmapProps, BinaryDay } from './types';
+import type { BinaryHeatmapProps, BinaryDay, TimeRange } from './types';
 import { HeatmapLegend } from './HeatmapLegend';
 import { HeatmapTooltip } from './HeatmapTooltip';
 import { InlineHeatmapGrid } from './InlineHeatmapGrid';
+import { TimeRangeToggle } from './TimeRangeToggle';
 import { generateBinaryGrid } from './utils';
 import { styles } from './BinaryHeatmapNew.styles';
 import { createDayLookupMap } from './cellHelpers';
@@ -22,18 +23,23 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
   habitCreatedAt,
   habitColor,
   currentStreak: _currentStreak,
-  timeRange = '6m',
+  timeRange: controlledTimeRange,
   title = 'Activity',
   showCompletionRate = true,
   onDayPress,
+  onTimeRangeChange,
 }: BinaryHeatmapProps) {
   const [tooltipDay, setTooltipDay] = useState<BinaryDay | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [internalTimeRange, setInternalTimeRange] = useState<TimeRange>(
+    controlledTimeRange ?? '3m'
+  );
+  const activeTimeRange = controlledTimeRange ?? internalTimeRange;
 
   const gridData = useMemo(
-    () => generateBinaryGrid(timeRange, completedDates, habitCreatedAt),
-    [timeRange, completedDates, habitCreatedAt]
+    () => generateBinaryGrid(activeTimeRange, completedDates, habitCreatedAt),
+    [activeTimeRange, completedDates, habitCreatedAt]
   );
 
   const dayLookupMap = useMemo(
@@ -61,11 +67,31 @@ export const BinaryHeatmap = memo(function BinaryHeatmap({
     setTooltipDay(null);
   }, []);
 
+  const handleTimeRangeChange = useCallback(
+    (nextRange: TimeRange) => {
+      if (controlledTimeRange === undefined) {
+        setInternalTimeRange(nextRange);
+      }
+
+      onTimeRangeChange?.(nextRange);
+    },
+    [controlledTimeRange, onTimeRangeChange]
+  );
+
   return (
-    <View style={styles.container}>
+    <View
+      accessible
+      accessibilityLabel='Habit completion heatmap'
+      accessibilityRole='summary'
+      style={styles.container}
+    >
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{title}</Text>
       </View>
+      <TimeRangeToggle
+        value={activeTimeRange}
+        onChange={handleTimeRangeChange}
+      />
       <View style={styles.gridWrapper}>
         <InlineHeatmapGrid
           habitColor={habitColor}

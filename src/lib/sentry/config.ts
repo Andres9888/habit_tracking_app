@@ -46,9 +46,12 @@ function getEnvironment(): SentryConfig['environment'] {
  */
 function getRelease(): string {
   const version = Constants.expoConfig?.version ?? '1.0.0';
+  const platformConfig = (
+    Constants.expoConfig as unknown as Record<string, unknown> | undefined
+  )?.[nativeHandsetKey] as { versionCode?: number | string } | undefined;
   const buildNumber =
     Constants.expoConfig?.ios?.buildNumber ??
-    Constants.expoConfig?.[nativeHandsetKey]?.versionCode ??
+    platformConfig?.versionCode ??
     '1';
   return `daily-habits@${version}+${buildNumber}`;
 }

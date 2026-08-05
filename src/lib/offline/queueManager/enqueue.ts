@@ -4,10 +4,11 @@
  */
 
 import type {
+  OfflineOperationPayloadByType,
+  OfflineOperationType,
   OfflineQueueState,
   QueueEvent,
   QueueOperationOptions,
-  ToggleCompletionPayload,
   QueueOperationResult,
 } from './types';
 import { getToggleDedupeKey } from './helpers';
@@ -24,31 +25,38 @@ export function createEnqueue(
   notify: NotifyFn,
   emit: EmitFn
 ) {
-  return function enqueue(
-    type: 'toggleCompletion',
-    payload: ToggleCompletionPayload,
+  return function enqueue<T extends OfflineOperationType>(
+    type: T,
+    payload: OfflineOperationPayloadByType<T>,
     options: QueueOperationOptions = {}
   ): QueueOperationResult {
     const state = getState();
     const { allowDuplicate = false } = options;
-    const dedupeKey = getToggleDedupeKey(payload.habitId, payload.date);
-    const existingIdx = state.operations.findIndex(
-      (op) =>
-        op.type === 'toggleCompletion' &&
-        getToggleDedupeKey(op.payload.habitId, op.payload.date) === dedupeKey
-    );
-
-    if (existingIdx !== -1 && !allowDuplicate) {
-      return handleReplace(
-        state,
-        existingIdx,
-        payload,
-        setState,
-        notify,
-        emit,
-        getState
+    if (type === 'toggleCompletion') {
+      const togglePayload = payload as OfflineOperationPayloadByType<'toggleCompletion'>;
+      const dedupeKey = getToggleDedupeKey(
+        togglePayload.habitId,
+        togglePayload.date
       );
+      const existingIdx = state.operations.findIndex(
+        (op) =>
+          op.type === 'toggleCompletion' &&
+          getToggleDedupeKey(op.payload.habitId, op.payload.date) === dedupeKey
+      );
+
+      if (existingIdx !== -1 && !allowDuplicate) {
+        return handleReplace(
+          state,
+          existingIdx,
+          togglePayload,
+          setState,
+          notify,
+          emit,
+          getState
+        );
+      }
     }
+
     return handleNewOperation(
       state,
       type,

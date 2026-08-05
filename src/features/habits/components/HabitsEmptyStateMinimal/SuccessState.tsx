@@ -59,7 +59,7 @@ export function SuccessState({
 
   return (
     <Pressable
-      accessible={autoTransition ? !!onTransitionComplete : null}
+      accessible={Boolean(autoTransition && onTransitionComplete)}
       accessibilityHint={
         autoTransition && onTransitionComplete
           ? 'Double tap to skip celebration and continue immediately'

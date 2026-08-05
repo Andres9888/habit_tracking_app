@@ -10,6 +10,7 @@
 export { useDraftStorage, default } from './useDraftStorage';
 export type {
   DraftContentType,
+  StoredDraft,
   UseDraftStorageOptions,
   UseDraftStorageReturn,
 } from './types';

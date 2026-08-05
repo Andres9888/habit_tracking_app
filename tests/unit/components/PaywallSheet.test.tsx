@@ -5,11 +5,31 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { PaywallSheet } from '../../../src/components/PaywallSheet';
 import { PAYWALL_PERKS } from '../../../src/screens/TemplatesScreen/data/paywallPerks';
 
 let lastModalProps: Record<string, unknown> = {};
+const mockPurchasePackage = jest.fn(async () => true);
+
+function createDeferred<T>() {
+  let resolve!: (value: T) => void;
+  let reject!: (reason?: unknown) => void;
+  const promise = new Promise<T>((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  return { promise, reject, resolve };
+}
+
+jest.mock('../../../src/hooks/usePremium', () => ({
+  usePremium: () => ({
+    monthlyPackage: { identifier: 'monthly' },
+    priceString: '$6.99/month',
+    purchasePackage: mockPurchasePackage,
+  }),
+}));
 
 jest.mock('../../../src/components/Modal', () => {
   const { View } = require('react-native');
@@ -76,16 +96,29 @@ describe('PaywallSheet', () => {
 
   it('calls onPurchaseSuccess and onClose when CTA is pressed', async () => {
     const { getByTestId } = render(<PaywallSheet {...defaultProps} />);
-    await fireEvent.press(getByTestId('templates-paywall-cta'));
-    expect(defaultProps.onPurchaseSuccess).toHaveBeenCalledTimes(1);
-    expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+    fireEvent.press(getByTestId('templates-paywall-cta'));
+
+    await waitFor(() => {
+      expect(defaultProps.onPurchaseSuccess).toHaveBeenCalledTimes(1);
+      expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
+    });
   });
 
   it('shows Processing text when purchasing', async () => {
-    const { getByTestId, getByText } = render(<PaywallSheet {...defaultProps} />);
+    const deferredPurchase = createDeferred<boolean>();
+    mockPurchasePackage.mockImplementationOnce(() => deferredPurchase.promise);
+
+    const { getByTestId, getByText, queryByText } = render(<PaywallSheet {...defaultProps} />);
     expect(getByText('Upgrade to Premium')).toBeTruthy();
-    await fireEvent.press(getByTestId('templates-paywall-cta'));
-    expect(getByText('Upgrade to Premium')).toBeTruthy();
+    fireEvent.press(getByTestId('templates-paywall-cta'));
+
+    expect(getByText('Processing...')).toBeTruthy();
+    expect(queryByText('Upgrade to Premium')).toBeNull();
+
+    await act(async () => {
+      deferredPurchase.resolve(true);
+      await deferredPurchase.promise;
+    });
   });
 
   it('renders nothing when visible is false', () => {

@@ -57,7 +57,6 @@ export function DetailHero({ habit }: DetailHeroProps) {
       {(habit.currentStreak ?? 0) > 0 ? <Animated.View
           accessibilityLabel={`Current streak: ${habit.currentStreak} days`}
           accessibilityLiveRegion='polite'
-          accessibilityRole='status'
           className='mt-3 flex-row items-center gap-1.5 rounded-full px-4 py-2'
           entering={STREAK_ENTERING}
           style={[

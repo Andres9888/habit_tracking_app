@@ -50,11 +50,14 @@ export const SPRING_BOUNCY: WithSpringConfig = makeReadOnlySpringConfig(
   springs.bouncy as WithSpringConfig
 );
 
+type SpringKey = keyof typeof springs;
+type SpringsMap = Readonly<Record<SpringKey, WithSpringConfig>>;
+
 /**
  * Re-export canonical springs as a read-only-ready object for downstream
  * modules that rely on `Springs.button`, `Springs.gentle`, etc.
  */
-export const Springs: typeof springs = {
+export const Springs: SpringsMap = {
   standard: SPRING_STANDARD,
   bottomSheet: makeReadOnlySpringConfig(
     springs.bottomSheet as WithSpringConfig

@@ -90,7 +90,7 @@ function DraggableHabitCardComponent(props: DraggableHabitCardProps) {
         accessibilityHint={props.showSelectionOverlay ? 'Tap to toggle selection' : `Tap to view details${hasSwipeActions ? ', swipe left for actions' : ''}`}
         accessibilityLabel={`${props.habit.name}, ${props.streak} day streak`}
         accessibilityRole='button'
-        style={[pressableStyle, { flex: 1 }]}
+        style={({ pressed }) => [{ flex: 1 }, pressableStyle({ pressed })]}
         onLongPress={props.showSelectionOverlay ? undefined : props.handleLongPress}
         onPress={handlePress}
         onPressIn={props.showSelectionOverlay ? undefined : props.handlePressIn}

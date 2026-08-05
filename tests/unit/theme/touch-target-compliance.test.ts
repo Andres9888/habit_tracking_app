@@ -52,9 +52,9 @@ const TINY_BUTTON_FILES = [
  */
 const MEDIUM_BUTTON_FILES = [
   {
-    file: 'components/StatsNotesModal/NotesList/components/NotesHeader.tsx',
-    description: 'Add button (36pt visual)',
-    minHitSlop: 6,
+    file: 'components/BinaryHeatmap/StatsRow.tsx',
+    description: 'Settings button (36pt visual)',
+    minHitSlop: 8,
   },
 ];
 

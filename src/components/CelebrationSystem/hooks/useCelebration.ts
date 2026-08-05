@@ -9,7 +9,7 @@ import { useState, useCallback } from 'react';
 
 import type { BurstType } from '../confetti/types';
 
-interface UseCelebrationOptions {
+export interface UseCelebrationOptions {
   /** Whether reduced motion is preferred */
   shouldReduceMotion?: boolean;
 

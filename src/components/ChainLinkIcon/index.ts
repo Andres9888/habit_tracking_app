@@ -1,1 +1,1 @@
-export { ChainLinkIcon, default } from './ChainLinkIcon';
+export { ChainLinkIcon } from './ChainLinkIcon';

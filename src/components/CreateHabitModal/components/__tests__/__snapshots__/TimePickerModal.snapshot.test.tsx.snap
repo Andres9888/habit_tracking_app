@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`TimePickerModal Snapshots Hidden State iOS modal hidden when visible=false 1`] = `null`;
+
 exports[`TimePickerModal Snapshots Native Handset Platform renders Native Handset picker (no modal wrapper) 1`] = `
 <View
   testID="mock-datetime-picker"
@@ -21,7 +23,26 @@ exports[`TimePickerModal Snapshots Native Handset Platform renders Native Handse
 
 exports[`TimePickerModal Snapshots Native Handset Platform returns null when not visible on Native Handset 1`] = `null`;
 
-exports[`TimePickerModal Snapshots Hidden State iOS modal hidden when visible=false 1`] = `null`;
+exports[`TimePickerModal Snapshots Native handset platform renders the native picker without a modal wrapper 1`] = `
+<View
+  testID="mock-datetime-picker"
+>
+  <Text>
+    Display: 
+    clock
+  </Text>
+  <Text>
+    Mode: 
+    time
+  </Text>
+  <Text>
+    Value: 
+    2024-06-15T03:00:00.000Z
+  </Text>
+</View>
+`;
+
+exports[`TimePickerModal Snapshots Native handset platform returns null when not visible on the native picker path 1`] = `null`;
 
 exports[`TimePickerModal Snapshots iOS Platform renders iOS modal at evening time (8:00 PM) 1`] = `
 <Modal

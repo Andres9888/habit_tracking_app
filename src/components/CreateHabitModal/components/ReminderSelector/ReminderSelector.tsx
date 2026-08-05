@@ -51,8 +51,7 @@ function ReminderSelectorComponent({
       <Text
         accessibilityRole='text'
         className='mb-3 text-[13px] font-semibold uppercase'
-        style={{ color: themeColors.text.secondary }}
-        style={{ letterSpacing: 0.5 }}
+        style={{ color: themeColors.text.secondary, letterSpacing: 0.5 }}
       >
         {STRINGS.CREATE_HABIT.remindersLabel}
       </Text>

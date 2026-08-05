@@ -11,7 +11,9 @@ import {
 } from './InlineHint.styles';
 
 interface TemplatesButtonProps {
-  animatedStyle: ReturnType<typeof Animated.useAnimatedStyle>;
+  animatedStyle: ReturnType<
+    typeof import('react-native-reanimated').useAnimatedStyle
+  >;
   colors: {
     badgeBackground: string;
     ctaText: string;

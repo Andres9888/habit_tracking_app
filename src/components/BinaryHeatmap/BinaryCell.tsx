@@ -8,6 +8,7 @@
  */
 
 import React, { memo } from 'react';
+import { Pressable } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 
 import type { BinaryCellProps } from './types';
@@ -21,6 +22,7 @@ export const BinaryCell = memo(function BinaryCell({
   day,
   index,
   habitColor,
+  onPress,
 }: BinaryCellProps) {
   const reduceMotion = useReduceMotion();
   const staggerDelay = reduceMotion ? 0 : index * ANIMATION.CELL_STAGGER_DELAY;
@@ -66,24 +68,26 @@ export const BinaryCell = memo(function BinaryCell({
 
   // Interactive cells (done, missed, today)
   return (
-    <Animated.View
-      accessible
-      accessibilityHint={day.isToday ? 'Today' : 'Tap to toggle completion'}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole='button'
-      accessibilityState={{ selected: day.completed }}
-      entering={fadeInAnimation}
-      style={[
-        styles.cell,
-        styles.cellInner,
-        { backgroundColor: bgColor },
-        cellState === 'today' && {
-          backgroundColor: day.completed ? bgColor : COLORS.CARD_BACKGROUND,
-          borderColor: habitColor,
-          borderWidth: COLORS.TODAY_RING_WIDTH,
-        },
-      ]}
-    />
+    <Animated.View entering={fadeInAnimation}>
+      <Pressable
+        accessible
+        accessibilityHint={day.isToday ? 'Today' : 'Tap to toggle completion'}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole='button'
+        accessibilityState={{ selected: day.completed }}
+        style={[
+          styles.cell,
+          styles.cellInner,
+          { backgroundColor: bgColor },
+          cellState === 'today' && {
+            backgroundColor: day.completed ? bgColor : COLORS.CARD_BACKGROUND,
+            borderColor: habitColor,
+            borderWidth: COLORS.TODAY_RING_WIDTH,
+          },
+        ]}
+        onPress={() => onPress?.(day.date, day.completed)}
+      />
+    </Animated.View>
   );
 });
 

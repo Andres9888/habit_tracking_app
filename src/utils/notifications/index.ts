@@ -15,20 +15,36 @@ export {
   getNextReminderRelativeTime,
 } from './relativeTimeFormatter';
 
+async function loadPermissionsModule() {
+  if (process.env.JEST_WORKER_ID) {
+    return require('./permissions') as typeof import('./permissions');
+  }
+
+  return import('./permissions');
+}
+
+async function loadHabitRemindersModule() {
+  if (process.env.JEST_WORKER_ID) {
+    return require('./habitReminders') as typeof import('./habitReminders');
+  }
+
+  return import('./habitReminders');
+}
+
 export async function ensureNotificationPermissions(): Promise<boolean> {
-  const mod = await import('./permissions');
+  const mod = await loadPermissionsModule();
   return mod.ensureNotificationPermissions();
 }
 
 export async function cancelHabitReminder(habitId: string): Promise<void> {
-  const mod = await import('./habitReminders');
+  const mod = await loadHabitRemindersModule();
   return mod.cancelHabitReminder(habitId);
 }
 
 export async function scheduleHabitReminder(
   ...args: Parameters<typeof import('./habitReminders').scheduleHabitReminder>
 ): ReturnType<typeof import('./habitReminders').scheduleHabitReminder> {
-  const mod = await import('./habitReminders');
+  const mod = await loadHabitRemindersModule();
   return mod.scheduleHabitReminder(...args);
 }
 

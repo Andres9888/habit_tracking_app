@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import { format } from 'date-fns';
 import { useCalendarTimelineSetup } from './CalendarTimeline.derived';
 import { getShelfStyle } from './CalendarTimeline.styles';
 import type { CalendarTimelineProps } from './CalendarTimeline.types';
@@ -10,7 +9,7 @@ import {
   InlineTrialBar,
   MiniCalendarPopup,
   StripNav,
-  WeekNavRow,
+  WeekNavigationHeader,
 } from './components';
 
 const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
@@ -25,6 +24,9 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
   isDayPressEnabled,
   disableFutureDayPress = true,
   onJumpToToday,
+  completedToday = 0,
+  totalHabits = 0,
+  currentStreak = 0,
   trialDaysRemaining,
   onUpgrade,
   completionIcon,
@@ -39,23 +41,7 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
     onNextWeek
   );
 
-  const isViewingPast = canNavigateForward && !!onJumpToToday;
   if (!tl.firstDate || !tl.lastDate || !tl.currentDate) return null;
-
-  const monthFormat = isViewingPast ? 'MMM' : 'MMMM';
-  const monthName = format(
-    isViewingPast ? tl.firstDate : tl.currentDate,
-    monthFormat
-  );
-  let dateSuffix: string;
-  if (isViewingPast && tl.lastDate) {
-    const sameMonth = tl.firstDate.getMonth() === tl.lastDate.getMonth();
-    dateSuffix = sameMonth
-      ? `${format(tl.firstDate, 'd')} – ${format(tl.lastDate, 'd')}`
-      : `${format(tl.firstDate, 'd')} – ${format(tl.lastDate, 'MMM d')}`;
-  } else {
-    dateSuffix = format(tl.currentDate, 'd');
-  }
 
   return (
     <View style={getShelfStyle(tl.isDark)} className='pb-4 pt-2'>
@@ -72,10 +58,13 @@ const CalendarTimelineComponent: React.FC<CalendarTimelineProps> = ({
             collapsable={false}
             style={{ paddingHorizontal: 40 }}
           >
-            <WeekNavRow
-              dateSuffix={dateSuffix}
-              isViewingPast={isViewingPast}
-              monthName={monthName}
+            <WeekNavigationHeader
+              canNavigateForward={canNavigateForward}
+              completedToday={completedToday}
+              currentDate={tl.currentDate}
+              currentStreak={currentStreak}
+              dateRangeText={tl.dateRangeText}
+              totalHabits={totalHabits}
               onDateRangePress={tl.openCalendar}
               onJumpToToday={onJumpToToday}
             />

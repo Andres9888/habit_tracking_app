@@ -7,7 +7,7 @@
 
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
-import type { ToggleMutationResult } from '../../../lib/optimistic';
+import type { ToggleMutationResult as OptimisticToggleMutationResult } from '../../../lib/optimistic';
 import type {
   Habit,
   HabitSettings,
@@ -17,7 +17,7 @@ import type {
 } from '../types';
 
 /** Result of toggling a habit completion */
-export type ToggleMutationResult = { success: boolean; error?: string };
+export type ToggleMutationResult = OptimisticToggleMutationResult;
 
 export interface HabitsListState {
   celebrationsEnabled: boolean;

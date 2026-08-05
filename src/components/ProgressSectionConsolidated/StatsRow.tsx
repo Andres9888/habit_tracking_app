@@ -31,7 +31,7 @@ export function StatsRow({
           <StatCard
             config={card}
             index={index + indexOffset}
-            isInteractive={card.id === 'focusDay' ? !!onFocusDayPress : null}
+            isInteractive={card.id === 'focusDay' && !!onFocusDayPress}
             reduceMotion={reduceMotion}
             onHapticFeedback={onHapticFeedback}
             onPress={card.id === 'focusDay' ? onFocusDayPress : undefined}

@@ -1,5 +1,6 @@
 import { Text, View } from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import type { SemanticColors } from '../../../theme/darkColors';
 import { fontFamilies } from '@/theme/typography';
 
 interface LegendItem {
@@ -12,22 +13,22 @@ interface LegendItem {
  * Gets legend items with theme-aware colors for dark mode support.
  * Uses semantic colors from the theme system.
  */
-function getLegendItems(colors: unknown): LegendItem[] {
+function getLegendItems(colors: SemanticColors): LegendItem[] {
   return [
     {
       label: 'Completed',
-      indicatorColor: colors.success?.[500] || '#10B981',
-      textColor: colors.success?.[700] || '#047857',
+      indicatorColor: colors.primary[500],
+      textColor: colors.status.successText,
     },
     {
       label: 'Missed',
-      indicatorColor: colors.error?.[400] || '#F87171',
-      textColor: colors.error?.[500] || '#EF4444',
+      indicatorColor: colors.status.error,
+      textColor: colors.status.errorText,
     },
     {
       label: 'Today',
-      indicatorColor: colors.success?.[500] || '#10B981',
-      textColor: colors.success?.[600] || '#059669',
+      indicatorColor: colors.primary[500],
+      textColor: colors.status.success,
     },
     {
       label: 'Upcoming',
@@ -59,7 +60,6 @@ export function CalendarLegend() {
       {legendItems.map(({ label, indicatorColor, textColor }) => (
         <View
           key={label}
-          accessibilityRole='listitem'
           className='flex-row items-center gap-1.5'
         >
           <View

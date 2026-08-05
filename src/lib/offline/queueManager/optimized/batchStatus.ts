@@ -46,22 +46,21 @@ export function createMarkFailedBatch(
     };
 
     const now = Date.now();
-    const newOperations: OfflineOperation<'toggleCompletion'>[] =
-      state.operations.map((op) => {
-        if (idsToUpdate.has(op.id)) {
-          result.succeeded.push(op.id);
-          idsToUpdate.delete(op.id);
-          return {
-            ...op,
-            lastAttemptAt: now,
-            lastError: error,
-            lastErrorCategory: category,
-            retryCount: op.retryCount + 1,
-            status: 'failed' as const,
-          };
-        }
-        return op;
-      });
+    const newOperations: OfflineOperation[] = state.operations.map((op) => {
+      if (idsToUpdate.has(op.id)) {
+        result.succeeded.push(op.id);
+        idsToUpdate.delete(op.id);
+        return {
+          ...op,
+          lastAttemptAt: now,
+          lastError: error,
+          lastErrorCategory: category,
+          retryCount: op.retryCount + 1,
+          status: 'failed' as const,
+        };
+      }
+      return op;
+    });
 
     result.notFound = [...idsToUpdate];
 

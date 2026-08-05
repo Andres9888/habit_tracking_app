@@ -23,4 +23,3 @@ export {
   type VisualizationData as ActivationVisualizationData,
 } from './Activation';
 export * from './Rescue';
-export * from './Reward';

@@ -192,8 +192,7 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       }
 
       default: {
-        const exhaustive: never = operation.type;
-        throw new Error(`Unknown operation type: ${exhaustive}`);
+        throw new Error(`Unknown operation type: ${(operation as { type: string }).type}`);
       }
     }
   };

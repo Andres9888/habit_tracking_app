@@ -440,17 +440,15 @@ describe('streakCalculator', () => {
       );
     });
 
-    it('returns 0 when most recent is not within today', () => {
+    it('returns 0 when the most recent completion is older than yesterday', () => {
       const completedDates = new Set([
         '2026-01-20',
         '2026-01-21',
         '2026-01-22',
       ]);
 
-      // Note: This function counts from most recent <= today backward
-      // If there's a gap from most recent to today, it still counts the streak
-      // This matches src/utils/streak.ts behavior
-      expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(3);
+      // Current streak stays active only if the last completion was today or yesterday.
+      expect(computeCurrentStreakFromDates(completedDates, todayDate)).toBe(0);
     });
 
     it('handles single isolated completion', () => {

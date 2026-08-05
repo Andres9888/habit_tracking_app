@@ -26,6 +26,7 @@ export function Modal({
   style,
   respectReduceMotion = true,
   skipAnimation = false,
+  accessibilityViewIsModal = true,
 }: ModalProps) {
   const reduceMotion = skipAnimation || useReduceMotion(respectReduceMotion);
   const animationValues = useModalAnimations({
@@ -102,7 +103,7 @@ export function Modal({
 
   return (
     <RNModal
-      accessibilityViewIsModal
+      accessibilityViewIsModal={accessibilityViewIsModal}
       statusBarTranslucent
       transparent
       animationType='none'

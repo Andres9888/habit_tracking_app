@@ -170,7 +170,9 @@ describe('useOfflineQueue', () => {
         new Error('Storage full')
       );
 
-      await expect(saveQueueIndex(['id1'])).rejects.toThrow('Storage full');
+      await expect(saveQueueIndex(['id1'])).rejects.toThrow(
+        'Failed to save queue index'
+      );
     });
   });
 

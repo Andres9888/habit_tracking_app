@@ -77,7 +77,7 @@ const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
     />
     <SparkleBurst
       color={accentColor}
-      isActive={activeBurst === dateString ? celebrationsEnabled : null}
+      isActive={activeBurst === dateString && celebrationsEnabled}
       reduceMotion={shouldReduceMotion}
       onComplete={onBurstComplete}
     />

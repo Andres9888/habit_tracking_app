@@ -27,8 +27,10 @@ export function TipCardContent({
   return (
     <View
       className='flex-row items-center gap-3 rounded-xl border p-3'
-      style={{ borderColor: themeColors.status.premiumLight }}
-      style={{ backgroundColor: COLORS.cardBackground }}
+      style={{
+        backgroundColor: COLORS.cardBackground,
+        borderColor: themeColors.status.premiumLight,
+      }}
     >
       {/* Icon Container */}
       <View

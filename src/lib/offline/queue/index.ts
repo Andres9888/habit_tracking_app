@@ -8,6 +8,7 @@
 export type {
   OfflineOperation,
   OfflineOperationPayload,
+  OfflineOperationPayloadByType,
   OfflineOperationStatus,
   OfflineOperationType,
   ToggleCompletionOperation,

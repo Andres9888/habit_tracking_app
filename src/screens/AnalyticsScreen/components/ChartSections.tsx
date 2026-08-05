@@ -25,6 +25,7 @@ export const ChartSections = memo(function ChartSections({
   const strengthAccessibilityLabel = strengthDistribution
     ? `Habit strength distribution: ${strengthDistribution.automatic.count} automatic, ${strengthDistribution.strong.count} strong, ${strengthDistribution.developing.count} developing, ${strengthDistribution.building.count} building, ${strengthDistribution.starting.count} starting habits`
     : 'Loading chart';
+  const latestTrendPoint = trendData?.at(-1);
 
   if (isLoading) return <><ChartLoadingSkeleton /><ChartLoadingSkeleton /><ChartLoadingSkeleton /></>;
 
@@ -58,7 +59,7 @@ export const ChartSections = memo(function ChartSections({
           accessible
           accessibilityLabel={
             trendData && trendData.length > 0
-              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(trendData.at(-1).averageStrength)}%`
+              ? `Trend chart showing ${trendData.length} days of data. Latest average strength: ${Math.round(latestTrendPoint?.averageStrength ?? 0)}%`
               : 'No trend data available'
           }
         >

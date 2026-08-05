@@ -17,6 +17,7 @@ import { STRENGTH_LEVEL_CONFIG } from './constants';
 import { getStrengthLevel, getStrengthColor } from './utils';
 import { useStrengthAnimation } from './useStrengthAnimation';
 import { CompactIndicator } from './CompactIndicator';
+import { FullIndicator } from './FullIndicator';
 import { GraphIndicator } from './GraphIndicator';
 
 function HabitStrengthIndicatorComponent({
@@ -61,7 +62,7 @@ function HabitStrengthIndicatorComponent({
   }
 
   if (variant === 'full') {
-    return <CompactIndicator {...variantProps} />;
+    return <FullIndicator {...variantProps} />;
   }
 
   if (variant === 'graph') {

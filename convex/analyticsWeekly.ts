@@ -42,9 +42,7 @@ export const getWeeklyInsights = query({
     // Single query: fetch ALL tracking records for the user
     const trackings = await ctx.db
       .query('tracking')
-      .withIndex('by_user_and_date', (q: unknown) =>
-        q.eq('userId', identity.subject)
-      )
+      .withIndex('by_user_and_date', (q) => q.eq('userId', identity.subject))
       .collect();
 
     // Calculate changes for each habit (pure computation, no DB calls)

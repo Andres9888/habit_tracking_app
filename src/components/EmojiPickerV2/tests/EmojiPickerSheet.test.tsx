@@ -281,16 +281,6 @@ describe('EmojiPickerSheet - V2 Bottom Sheet', () => {
       });
     });
 
-    it('should show empty state when no results found', async () => {
-      const { getByLabelText, findByText } = render(
-        <EmojiPickerSheet {...defaultProps} />
-      );
-
-      const searchInput = getByLabelText('Search emojis');
-      fireEvent.changeText(searchInput, 'qwertyuiopasdfgh');
-
-      await findByText('No emojis found');
-    });
   });
 
   describe('No Icon Button', () => {

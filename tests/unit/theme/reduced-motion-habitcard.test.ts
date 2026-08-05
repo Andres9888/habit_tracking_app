@@ -44,6 +44,7 @@ describe('HabitCard reduced motion — celebration', () => {
     const cardScale = makeMockSharedValue(1);
     const setShowConfetti = jest.fn();
     const setShowFloatingXP = jest.fn();
+    const scheduleFloatingXPHide = jest.fn();
     const setXPPosition = jest.fn();
 
     const trigger = createCelebrationTrigger({
@@ -53,6 +54,7 @@ describe('HabitCard reduced motion — celebration', () => {
       reduceMotion: true,
       rippleOpacity: rippleOpacity as unknown,
       rippleScale: rippleScale as unknown,
+      scheduleFloatingXPHide,
       setShowConfetti,
       setShowFloatingXP,
       setXPPosition,
@@ -68,6 +70,7 @@ describe('HabitCard reduced motion — celebration', () => {
     expect(setShowConfetti).toHaveBeenCalledWith(false);
     // XP should still show (it's informational, not animated)
     expect(setShowFloatingXP).toHaveBeenCalledWith(true);
+    expect(scheduleFloatingXPHide).toHaveBeenCalledTimes(1);
   });
 
   it('createCelebrationTrigger plays animations when reduceMotion=false', () => {
@@ -78,6 +81,7 @@ describe('HabitCard reduced motion — celebration', () => {
     const cardScale = makeMockSharedValue(1);
     const setShowConfetti = jest.fn();
     const setShowFloatingXP = jest.fn();
+    const scheduleFloatingXPHide = jest.fn();
     const setXPPosition = jest.fn();
 
     const { withTiming } = require('react-native-reanimated');
@@ -89,6 +93,7 @@ describe('HabitCard reduced motion — celebration', () => {
       reduceMotion: false,
       rippleOpacity: rippleOpacity as unknown,
       rippleScale: rippleScale as unknown,
+      scheduleFloatingXPHide,
       setShowConfetti,
       setShowFloatingXP,
       setXPPosition,
@@ -100,6 +105,7 @@ describe('HabitCard reduced motion — celebration', () => {
     expect(withTiming).toHaveBeenCalled();
     // Confetti should show
     expect(setShowConfetti).toHaveBeenCalledWith(true);
+    expect(scheduleFloatingXPHide).toHaveBeenCalledTimes(1);
   });
 
   it('createUncheckTrigger skips animation when reduceMotion=true', () => {

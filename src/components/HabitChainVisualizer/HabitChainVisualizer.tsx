@@ -44,9 +44,11 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
         accentColor={accentColor}
         connectorColor={connectorColor}
         currentStreak={currentStreak}
-        visible={
-          showConnectors && isConnectedToPreviousWeek ? state.isCompleted(0) : null
-        }
+        visible={Boolean(
+          showConnectors &&
+            isConnectedToPreviousWeek &&
+            state.isCompleted(0)
+        )}
       />
       <ChainDayList
         accentColor={accentColor}

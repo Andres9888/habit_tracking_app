@@ -63,7 +63,7 @@ export function EnhancedReminderSelector(
   return (
     <View className='mb-6' testID='enhanced-reminder-selector'>
       <ToggleRow enabled={enabled} onToggle={(v) => void handleToggle(v)} />
-      <PermissionBanner visible={enabled ? permissionDenied : null} />
+      <PermissionBanner visible={Boolean(enabled && permissionDenied)} />
 
       {enabled ? <View className='mt-4'>
           <View className='mb-4 flex-row gap-3' testID='preset-buttons'>

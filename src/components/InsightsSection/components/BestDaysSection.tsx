@@ -47,7 +47,8 @@ export function BestDaysSection({
               index={index}
               isBest={bestDay?.dayIndex === day.dayIndex}
               isWorst={
-                worstDay?.dayIndex === day.dayIndex ? day.rate < (bestDay?.rate ?? 100) : null
+                worstDay?.dayIndex === day.dayIndex &&
+                day.rate < (bestDay?.rate ?? 100)
               }
               maxRate={maxRate}
             />
