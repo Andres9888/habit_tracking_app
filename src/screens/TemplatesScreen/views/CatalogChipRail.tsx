@@ -3,12 +3,19 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { ScrollView, type LayoutChangeEvent } from 'react-native';
+import {
+  ScrollView,
+  type LayoutChangeEvent,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+} from 'react-native';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { CatalogFilterChip } from './CatalogFilterChip';
 import { styles as s } from './CatalogChipRail.styles';
 
 export const CATALOG_ALL_ID = 'all';
+
+const EDGE_PAD = 12;
 
 export interface CatalogChipItem {
   categoryId: string;
@@ -33,14 +40,38 @@ export function CatalogChipRail({
   const scrollRef = useRef<ScrollView>(null);
   const chipLayouts = useRef<Record<string, ChipLayout>>({});
   const pendingScrollId = useRef<string | null>(null);
+  const scrollXRef = useRef(0);
+  const viewportWidthRef = useRef(0);
+  const contentWidthRef = useRef(0);
 
-  const scrollToChip = (chipId: string) => {
+  const ensureChipVisible = (chipId: string): boolean => {
     const layout = chipLayouts.current[chipId];
-    if (!layout || !scrollRef.current) return false;
-    scrollRef.current.scrollTo({
-      animated: true,
-      x: Math.max(0, layout.x - 12),
-    });
+    const scroll = scrollRef.current;
+    const viewport = viewportWidthRef.current;
+    if (!layout || !scroll || viewport <= 0) return false;
+
+    const contentW = contentWidthRef.current;
+    const maxX = Math.max(0, contentW - viewport);
+    const scrollX = scrollXRef.current;
+    const chipLeft = layout.x;
+    const chipRight = layout.x + layout.width;
+    const visibleLeft = scrollX + EDGE_PAD;
+    const visibleRight = scrollX + viewport - EDGE_PAD;
+
+    let nextX = scrollX;
+    if (chipLeft < visibleLeft) {
+      nextX = chipLeft - EDGE_PAD;
+    } else if (chipRight > visibleRight) {
+      nextX = chipRight - viewport + EDGE_PAD;
+    } else {
+      return true;
+    }
+
+    nextX = Math.min(Math.max(0, nextX), maxX);
+    if (Math.abs(nextX - scrollX) < 0.5) return true;
+
+    scroll.scrollTo({ animated: true, x: nextX });
+    scrollXRef.current = nextX;
     return true;
   };
 
@@ -51,18 +82,38 @@ export function CatalogChipRail({
         x: nativeEvent.layout.x,
         width: nativeEvent.layout.width,
       };
-      // A selected chip can lay out after the scroll effect ran (e.g. when an
-      // off-screen category is opened from another screen). Honor the pending
-      // scroll once its layout is finally measured.
-      if (pendingScrollId.current === chipId && scrollToChip(chipId)) {
+      if (
+        pendingScrollId.current === chipId &&
+        ensureChipVisible(chipId)
+      ) {
         pendingScrollId.current = null;
       }
     };
 
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    scrollXRef.current = e.nativeEvent.contentOffset.x;
+  };
+
+  const handleViewportLayout = (e: LayoutChangeEvent) => {
+    viewportWidthRef.current = e.nativeEvent.layout.width;
+    if (pendingScrollId.current) {
+      if (ensureChipVisible(pendingScrollId.current)) {
+        pendingScrollId.current = null;
+      }
+    }
+  };
+
+  const handleContentSizeChange = (w: number) => {
+    contentWidthRef.current = w;
+    if (pendingScrollId.current) {
+      if (ensureChipVisible(pendingScrollId.current)) {
+        pendingScrollId.current = null;
+      }
+    }
+  };
+
   useEffect(() => {
-    // Scroll now if the chip is already measured; otherwise defer until its
-    // onLayout fires.
-    pendingScrollId.current = scrollToChip(selectedCategoryId)
+    pendingScrollId.current = ensureChipVisible(selectedCategoryId)
       ? null
       : selectedCategoryId;
   }, [selectedCategoryId]);
@@ -74,6 +125,10 @@ export function CatalogChipRail({
       showsHorizontalScrollIndicator={false}
       style={[s.rail, { borderBottomColor: colors.border }]}
       contentContainerStyle={s.content}
+      scrollEventThrottle={16}
+      onScroll={handleScroll}
+      onLayout={handleViewportLayout}
+      onContentSizeChange={handleContentSizeChange}
     >
       <CatalogFilterChip
         chipId={CATALOG_ALL_ID}

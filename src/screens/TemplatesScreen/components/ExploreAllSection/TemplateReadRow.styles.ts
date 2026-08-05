@@ -1,12 +1,12 @@
 /**
- * Styles for TemplateReadRow — Version B "confidence-first" card:
- * full-width read, an always-on "Why it works" teaser, a meta-chip row, and
- * a footer that pairs a "How it works" detail affordance with + Add.
+ * Styles for TemplateReadRow — full-width habit card: icon + serif name, a
+ * description with inline "Details ›" affordance, a "Start small" teaser, and a
+ * foot row pairing the duration pill with the + Add button.
  */
 
 import { StyleSheet } from 'react-native';
 import { borderRadius, shadows, spacing } from '../../../../theme/spacing';
-import { fontWeights, typography } from '../../../../theme/typography';
+import { fontFamilies, fontWeights, typography } from '../../../../theme/typography';
 
 export const s = StyleSheet.create({
   card: { borderRadius: borderRadius.large, overflow: 'hidden' },
@@ -18,51 +18,38 @@ export const s = StyleSheet.create({
     marginVertical: spacing.sm,
   },
   chip: {
+    alignItems: 'center',
     alignSelf: 'flex-start',
     borderRadius: borderRadius.full,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: 4,
-  },
-  chipRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-    marginTop: spacing.md,
-    paddingHorizontal: spacing.base,
+    gap: 5,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 5,
   },
   chipText: {
     ...typography.caption,
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: fontWeights.semibold,
   },
   description: { ...typography.bodySmall, marginTop: spacing.sm },
+  // Inline "Details ›" affordance under the description.
+  details: {
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    gap: 2,
+    marginTop: spacing.sm,
+  },
+  detailsText: { ...typography.caption, fontWeight: fontWeights.semibold },
   emoji: { fontSize: 22 },
-  // Footer: "How it works" detail affordance (left) + Add pill (right).
-  footChev: {
+  // Foot row: duration pill (left) + Add pill (right).
+  foot: {
     alignItems: 'center',
-    borderRadius: 9,
-    height: 28,
-    justifyContent: 'center',
-    width: 28,
-  },
-  footCopy: {
-    alignItems: 'center',
-    flex: 1,
     flexDirection: 'row',
-    gap: spacing.sm,
-    marginRight: spacing.base,
-  },
-  footTitle: { ...typography.bodySmall, fontWeight: fontWeights.semibold },
-  footer: {
-    alignItems: 'center',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    gap: spacing.md,
     justifyContent: 'space-between',
-    marginHorizontal: spacing.base,
     marginTop: spacing.md,
     paddingBottom: spacing.base,
-    paddingTop: spacing.md,
+    paddingHorizontal: spacing.base,
   },
   iconBox: {
     alignItems: 'center',
@@ -73,13 +60,20 @@ export const s = StyleSheet.create({
     width: 44,
   },
   header: { padding: spacing.base, paddingBottom: 0 },
-  name: { ...typography.body, flex: 1, fontWeight: fontWeights.semibold },
+  name: {
+    ...typography.heading3,
+    flex: 1,
+    fontFamily: fontFamilies.primary.display,
+    fontSize: 18,
+    fontWeight: fontWeights.semibold,
+    letterSpacing: -0.36,
+  },
   titleRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: spacing.md,
   },
-  // Always-on "Why it works" teaser panel.
+  // Always-on "Why it works" / "Start small" teaser panel.
   teaser: {
     borderRadius: borderRadius.medium,
     borderWidth: 1,
@@ -88,12 +82,16 @@ export const s = StyleSheet.create({
     padding: spacing.md,
   },
   teaserLabel: {
+    fontFamily: fontFamilies.monospace,
     fontSize: 10,
-    fontWeight: fontWeights.bold,
+    fontWeight: fontWeights.semibold,
     letterSpacing: 0.8,
     marginBottom: 5,
     textTransform: 'uppercase',
   },
-  teaserText: { ...typography.caption, lineHeight: 19 },
-  textMin: { minWidth: 0 },
+  teaserText: {
+    ...typography.bodySmall,
+    fontWeight: fontWeights.medium,
+    lineHeight: 20,
+  },
 });

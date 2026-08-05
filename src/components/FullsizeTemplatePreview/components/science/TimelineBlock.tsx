@@ -5,13 +5,28 @@
 
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Clock } from 'lucide-react-native';
+import { Check, Clock } from 'lucide-react-native';
 
 import { colors } from '@/theme';
 import { SecLabel } from './SecLabel';
 import { scienceStyles as s } from '../../styles/science.styles';
-import { scienceBlockStyles as b } from '../../styles/scienceBlocks.styles';
+import { scienceTimelineStyles as b } from '../../styles/scienceTimeline.styles';
 import type { Template } from '../../../../types/template';
+import type { TimelineEntry } from '../../../../../convex/templates/types';
+
+function lastNonPeakIndex(timeline: TimelineEntry[]): number {
+  for (let i = timeline.length - 1; i >= 0; i -= 1) {
+    if (!timeline[i].peak) return i;
+  }
+  return -1;
+}
+
+// Earlier non-peak nodes read as "already settled" (a checkmark); the
+// non-peak node right before the peak reads as the current milestone.
+function dotVariant(timeline: TimelineEntry[], index: number): 'done' | 'current' | 'peak' {
+  if (timeline[index].peak) return 'peak';
+  return index === lastNonPeakIndex(timeline) ? 'current' : 'done';
+}
 
 export function TimelineBlock({ template }: { template: Template }) {
   const timeline = template?.timeline;
@@ -26,17 +41,21 @@ export function TimelineBlock({ template }: { template: Template }) {
           <View style={b.spine} />
           {timeline.map((node, i) => {
             const last = i === timeline.length - 1;
+            const variant = dotVariant(timeline, i);
             return (
-              <View key={i} style={[b.tlRow, { paddingBottom: last ? 0 : 16 }]}>
+              <View key={i} style={[b.tlRow, { paddingBottom: last ? 0 : 20 }]}>
                 <View
                   style={[
                     b.tlDot,
-                    node.peak
-                      ? { backgroundColor: colors.streak[300], borderColor: colors.streak[300] }
-                      : { backgroundColor: '#FFFFFF', borderColor: colors.primary[600] },
+                    variant === 'peak' && b.tlDotPeak,
+                    variant === 'done' && b.tlDotDone,
+                    variant === 'current' && b.tlDotCurrent,
                   ]}
                 >
-                  {node.peak ? <Text style={{ fontSize: 9 }}>💎</Text> : null}
+                  {variant === 'peak' ? <Text style={{ fontSize: 15 }}>💎</Text> : null}
+                  {variant === 'done' ? (
+                    <Check color='#FFFFFF' size={14} strokeWidth={3} />
+                  ) : null}
                 </View>
                 <View style={{ flex: 1, minWidth: 0 }}>
                   <Text

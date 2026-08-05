@@ -18,7 +18,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     gap: spacing.sm,
-    paddingHorizontal: spacing.base,
+    paddingLeft: spacing.base,
+    paddingRight: spacing.base + spacing.sm,
     paddingVertical: spacing.sm,
   },
   // flexGrow: 0 overrides ScrollView's default flexGrow: 1, which otherwise

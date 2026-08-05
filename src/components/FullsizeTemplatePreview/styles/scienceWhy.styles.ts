@@ -81,11 +81,4 @@ export const scienceWhyStyles = StyleSheet.create({
     letterSpacing: -0.2,
     lineHeight: 27,
   },
-  whyEvidence: {
-    color: colors.gray[600],
-    fontFamily: fontFamilies.primary.text,
-    fontSize: typography.bodySmall.fontSize,
-    lineHeight: 20,
-    marginTop: spacing.md,
-  },
 });

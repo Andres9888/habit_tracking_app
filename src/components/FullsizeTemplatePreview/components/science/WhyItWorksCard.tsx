@@ -12,6 +12,7 @@ import { iconSizes } from '@/theme/iconSizes';
 import { triggerHaptic } from '@/utils/haptics';
 import { AnimatedPressable } from '@/components/ui/AnimatedPressable';
 import { scienceWhyStyles as s } from '../../styles/scienceWhy.styles';
+import { scienceWhyEvidenceStyles as ev } from '../../styles/scienceWhyEvidence.styles';
 import { ScienceVideoEmbed } from '../ScienceVideoEmbed';
 import { scienceTheme } from './scienceTheme';
 import type { Template } from '../../../../types/template';
@@ -21,6 +22,10 @@ export function WhyItWorksCard({ template }: { template: Template }) {
   const lead = template?.lead;
   const evidence = template?.evidence ?? template?.scientificReference;
   const paper = template?.scientificLink;
+  const citeSource = template?.sources?.[0];
+  const citation = citeSource
+    ? [citeSource.authors, citeSource.journal, citeSource.year].filter(Boolean).join(' · ')
+    : undefined;
   return (
     <View style={s.whyCard}>
       <View style={[s.whyAccentBar, { backgroundColor: t.accent }]} />
@@ -53,7 +58,13 @@ export function WhyItWorksCard({ template }: { template: Template }) {
       <View style={s.whyBody}>
         <Text style={[s.whyOverline, { color: t.accent }]}>Why it works</Text>
         {lead ? <Text style={s.whyLead}>{lead}</Text> : null}
-        {evidence ? <Text style={s.whyEvidence}>{evidence}</Text> : null}
+        {evidence ? (
+          <View style={ev.whyEvidenceBox}>
+            <Text style={ev.whyEvidenceLabel}>From the research</Text>
+            <Text style={ev.whyEvidence}>{evidence}</Text>
+            {citation ? <Text style={ev.whyEvidenceCite}>{citation}</Text> : null}
+          </View>
+        ) : null}
         {template?.youtubeLink ? (
           <View style={{ marginTop: 16 }}>
             <ScienceVideoEmbed template={template} />

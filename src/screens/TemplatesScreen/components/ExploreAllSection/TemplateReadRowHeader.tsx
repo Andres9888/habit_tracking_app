@@ -1,11 +1,13 @@
 /**
- * Top row of TemplateReadRow (Version B) — icon, name, description.
- * Full-width reading column; meta chips and Add live below in their own rows.
+ * Top block of TemplateReadRow — icon, serif name, description, and a small
+ * inline "Details ›" affordance. The whole block opens the detail view.
  */
 
 import { Pressable, Text, View } from 'react-native';
+import { ChevronRight } from 'lucide-react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useThemeColors } from '../../../../theme/ThemeContext';
+import { iconSizes } from '@/theme/iconSizes';
 import { s } from './TemplateReadRow.styles';
 
 interface TemplateReadRowHeaderProps {
@@ -22,6 +24,7 @@ export function TemplateReadRowHeader({
 
   return (
     <Pressable
+      accessibilityHint='Opens science and how it works'
       accessibilityLabel={`${item.name} habit`}
       accessibilityRole='button'
       style={s.header}
@@ -44,6 +47,16 @@ export function TemplateReadRowHeader({
       >
         {item.description}
       </Text>
+      <View style={s.details}>
+        <Text style={[s.detailsText, { color: colors.text.tertiary }]}>
+          Details
+        </Text>
+        <ChevronRight
+          color={colors.text.tertiary}
+          size={iconSizes.small - 2}
+          strokeWidth={2.2}
+        />
+      </View>
     </Pressable>
   );
 }

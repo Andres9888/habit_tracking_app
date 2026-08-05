@@ -46,5 +46,5 @@ export function useHeaderTintAnimation(headerTint: string) {
     };
   });
 
-  return { scrollHandler, onHeroLayout, animatedBgStyle };
+  return { scrollHandler, onHeroLayout, animatedBgStyle, scrollY };
 }

@@ -3,7 +3,7 @@
  */
 
 import { useEffect } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, Text } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -13,9 +13,8 @@ import { Check } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { springs } from '../../../../theme/animations';
-import { borderRadius, spacing } from '../../../../theme/spacing';
-import { typography, fontWeights } from '../../../../theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
+import { s } from './ListCardAddButton.styles';
 import type { ListCardAddButtonProps } from './TemplateListCard.types';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -60,6 +59,9 @@ export function ListCardAddButton({
             ? colors.primary[100]
             : colors.primary[600],
         },
+        // Duolingo press-depth: hard 3px underledge on the active regular CTA.
+        isRegular && !isImported && { shadowColor: colors.primary[700] },
+        isRegular && !isImported && s.buttonRegularShadow,
         animatedStyle,
       ]}
       onPress={(event) => {
@@ -80,30 +82,10 @@ export function ListCardAddButton({
           <Text style={[lblStyle, { color: colors.primary[700] }]}>Added</Text>
         </>
       ) : (
-        <Text style={[lblStyle, { color: colors.text.inverse }]}>+ Add</Text>
+        <Text style={[lblStyle, { color: colors.text.inverse }]}>
+          {isRegular ? 'Add habit' : '+ Add'}
+        </Text>
       )}
     </AnimatedPressable>
   );
 }
-
-const s = StyleSheet.create({
-  button: {
-    alignItems: 'center',
-    borderRadius: borderRadius.full,
-    flexDirection: 'row',
-    gap: spacing.xs,
-    height: 30,
-    justifyContent: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  buttonRegular: {
-    height: 40,
-    minWidth: 72,
-    paddingHorizontal: 14,
-  },
-  label: {
-    ...typography.caption,
-    fontWeight: fontWeights.bold,
-  },
-  labelRegular: { fontSize: 14 },
-});
