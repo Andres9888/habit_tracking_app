@@ -1,6 +1,5 @@
 /**
- * Science drill-down — block styles: "How it becomes automatic" strength
- * explainer and "The research" sources list.
+ * Science drill-down — "The research" sources list styles.
  */
 
 import { StyleSheet } from 'react-native';
@@ -10,34 +9,6 @@ import { spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
 export const scienceResearchStyles = StyleSheet.create({
-  // Strength explainer
-  strIntro: {
-    color: colors.gray[700],
-    ...typography.bodySmall,
-    lineHeight: 21,
-    marginBottom: spacing.base,
-  },
-  strTrack: { alignItems: 'flex-start', flexDirection: 'row' },
-  strConnector: { borderRadius: 1, flex: 1, height: 2, marginTop: 17, opacity: 0.45 },
-  strNode: { alignItems: 'center', width: 46 },
-  strCircle: {
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    borderWidth: 1.5,
-    height: 36,
-    justifyContent: 'center',
-    width: 36,
-  },
-  strEmoji: { fontSize: 16 },
-  strLabel: {
-    color: colors.gray[500],
-    fontSize: 9,
-    fontWeight: fontWeights.semibold,
-    lineHeight: 11,
-    marginTop: 5,
-    textAlign: 'center',
-  },
   // Sources
   sourceRow: {
     flexDirection: 'row',

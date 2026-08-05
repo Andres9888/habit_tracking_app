@@ -1,8 +1,8 @@
 /**
- * ScrollableContent - Scrollable area with hero, description, evidence section
+ * ScrollableContent — hero, description, decision group, then science group.
  */
 
-import React, { useCallback, useEffect, useRef } from 'react';
+import React from 'react';
 import { View, type LayoutChangeEvent } from 'react-native';
 import Animated, {
   type useAnimatedScrollHandler,
@@ -11,8 +11,10 @@ import { colors } from '@/theme/colors';
 import type { TemplatePreviewAnchor } from '@/screens/TemplatesScreen/TemplatesScreen.types';
 import { HeroSection } from './HeroSection';
 import { DescriptionSection } from './DescriptionSection';
+import { DecisionDrilldown } from './DecisionDrilldown';
 import { ScienceDrilldown } from './science/ScienceDrilldown';
 import { layoutStyles } from '../styles';
+import { useScienceAnchor } from '../hooks/useScienceAnchor';
 import type { Template } from '../../../types/template';
 import type { ViewStyle } from 'react-native';
 
@@ -36,42 +38,12 @@ export function ScrollableContent({
   iconGlowStyle,
   initialAnchor = 'top',
   overscrollTint,
-  reducedMotion = false,
   scrollHandler,
   visible = true,
   onHeroLayout,
 }: ScrollableContentProps) {
-  const scrollRef = useRef<Animated.ScrollView>(null);
-  const contentRef = useRef<View>(null);
-  const scienceRef = useRef<View>(null);
-  const hasScrolledRef = useRef(false);
-
-  useEffect(() => {
-    hasScrolledRef.current = false;
-  }, [template?._id, initialAnchor, visible]);
-
-  const scrollToScience = useCallback(() => {
-    if (
-      !visible ||
-      initialAnchor !== 'science' ||
-      hasScrolledRef.current ||
-      !scienceRef.current ||
-      !contentRef.current
-    ) {
-      return;
-    }
-
-    scienceRef.current.measureLayout(
-      contentRef.current,
-      (_x, y) => {
-        // Jump, don't animate: the modal entrance already provides the
-        // transition, and an animated catch-up scroll reads as lag.
-        scrollRef.current?.scrollTo({ animated: false, y });
-        hasScrolledRef.current = true;
-      },
-      () => {}
-    );
-  }, [initialAnchor, reducedMotion, visible]);
+  const { scrollRef, contentRef, scienceRef, onScienceLayout } =
+    useScienceAnchor({ template, initialAnchor, visible });
 
   return (
     <Animated.ScrollView
@@ -97,7 +69,8 @@ export function ScrollableContent({
             description={template?.description ?? ''}
             iconColor={iconColor}
           />
-          <View ref={scienceRef} onLayout={scrollToScience}>
+          <DecisionDrilldown template={template} />
+          <View ref={scienceRef} onLayout={onScienceLayout}>
             <ScienceDrilldown template={template} />
           </View>
           <View style={layoutStyles.bottomSpacer} />

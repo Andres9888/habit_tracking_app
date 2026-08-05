@@ -21,6 +21,11 @@ export function WhyItWorksCard({ template }: { template: Template }) {
   const lead = template?.lead;
   const evidence = template?.evidence ?? template?.scientificReference;
   const paper = template?.scientificLink;
+
+  // Data gate: without a lead or any evidence the card is an empty shell —
+  // a badge and an overline with nothing under them.
+  if (!lead && !evidence) return null;
+
   return (
     <View style={s.whyCard}>
       <View style={[s.whyAccentBar, { backgroundColor: t.accent }]} />
@@ -31,13 +36,19 @@ export function WhyItWorksCard({ template }: { template: Template }) {
         style={s.whyHeader}
       >
         <View style={s.whyBadge}>
-          <ShieldCheck color={t.accent} size={iconSizes.small - 1} strokeWidth={2.2} />
-          <Text style={[s.whyBadgeText, { color: t.accent }]}>Science-backed</Text>
+          <ShieldCheck
+            color={t.accent}
+            size={iconSizes.small - 1}
+            strokeWidth={2.2}
+          />
+          <Text style={[s.whyBadgeText, { color: t.accent }]}>
+            Science-backed
+          </Text>
         </View>
         {paper ? (
           <AnimatedPressable
-            accessibilityLabel="Read the research paper"
-            accessibilityRole="link"
+            accessibilityLabel='Read the research paper'
+            accessibilityRole='link'
             hitSlop={6}
             style={[s.whyReadBtn, { borderColor: `${t.accent}40` }]}
             onPress={() => {
@@ -45,7 +56,11 @@ export function WhyItWorksCard({ template }: { template: Template }) {
               void Linking.openURL(paper);
             }}
           >
-            <FileText color={t.accent} size={iconSizes.small - 1} strokeWidth={2} />
+            <FileText
+              color={t.accent}
+              size={iconSizes.small - 1}
+              strokeWidth={2}
+            />
             <Text style={[s.whyReadText, { color: t.accent }]}>Read paper</Text>
           </AnimatedPressable>
         ) : null}
