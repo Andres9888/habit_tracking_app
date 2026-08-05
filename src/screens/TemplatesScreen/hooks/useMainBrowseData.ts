@@ -30,6 +30,28 @@ export function useMainBrowseData({
   isPremiumUser,
   userHabitCount,
 }: UseMainBrowseDataOptions) {
+  const templatesByCategory = useMemo(() => {
+    if (!allTemplates) return new Map<string, Doc<'templates'>[]>();
+
+    const grouped = new Map<string, Doc<'templates'>[]>();
+    for (const template of allTemplates) {
+      const existing = grouped.get(template.category);
+      if (existing) {
+        existing.push(template);
+      } else {
+        grouped.set(template.category, [template]);
+      }
+    }
+
+    for (const templates of grouped.values()) {
+      templates.sort(
+        (a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0)
+      );
+    }
+
+    return grouped;
+  }, [allTemplates]);
+
   const popularTemplates = useMemo(() => {
     if (!allTemplates) return [];
     const sorted = [...allTemplates].sort(
@@ -42,10 +64,10 @@ export function useMainBrowseData({
   }, [allTemplates, importedTemplateIds]);
 
   const categoryList = useMemo(() => {
-    if (!allTemplates) return [];
-    const ids = [...new Set(allTemplates.map((t) => t.category))].sort();
-    return ids
-      .map((id) => {
+    if (templatesByCategory.size === 0) return [];
+
+    return [...templatesByCategory.entries()]
+      .map(([id, catTemplates]) => {
         const meta: CategoryMeta = CATEGORY_META[id] ?? {
           bgColor: '#F3F4F6',
           borderColor: '#E5E7EB',
@@ -54,9 +76,7 @@ export function useMainBrowseData({
           label: id,
           textColor: '#374151',
         };
-        const catTemplates = allTemplates.filter((t) => t.category === id);
-        const previewEmojis = [...catTemplates]
-          .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
+        const previewEmojis = catTemplates
           .slice(0, PREVIEW_EMOJI_LIMIT)
           .map((t) => t.icon);
         const popularityScore = catTemplates.reduce(
@@ -82,7 +102,7 @@ export function useMainBrowseData({
         return a.label.localeCompare(b.label);
       })
       .map(({ popularityScore: _popularityScore, ...category }) => category);
-  }, [allTemplates]);
+  }, [templatesByCategory]);
 
   const quickFilterCategories = useMemo(
     () =>

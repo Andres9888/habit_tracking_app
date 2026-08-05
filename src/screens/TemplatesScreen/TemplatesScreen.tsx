@@ -32,6 +32,17 @@ interface TemplatesScreenContentProps {
   onViewHabit?: (habitId: Id<'habits'>) => void;
 }
 
+function buildCategoryCounts(templates: Doc<'templates'>[] | undefined) {
+  const counts = new Map<string, number>();
+  if (!templates) return counts;
+
+  for (const template of templates) {
+    counts.set(template.category, (counts.get(template.category) ?? 0) + 1);
+  }
+
+  return counts;
+}
+
 function TemplatesScreenContent({
   onCloseLibrary,
   onViewHabit,
@@ -83,20 +94,26 @@ function TemplatesScreenContent({
   );
 
   const featuredGoalId = useMemo(() => getFeaturedGoalId(), []);
+  const templateCountsByCategory = useMemo(
+    () => buildCategoryCounts(data.allTemplates),
+    [data.allTemplates]
+  );
   const habitCountsByGoalId = useMemo(() => {
     const counts: Record<string, number> = {};
     GOAL_COLLECTIONS.forEach((goal) => {
-      counts[goal.id] =
-        data.allTemplates?.filter((t) => goal.categories.includes(t.category))
-          .length ?? 0;
+      counts[goal.id] = goal.categories.reduce(
+        (sum, category) => sum + (templateCountsByCategory.get(category) ?? 0),
+        0
+      );
     });
     return counts;
-  }, [data.allTemplates]);
+  }, [templateCountsByCategory]);
   const featuredStarterTemplates = useMemo(() => {
     const featured = GOAL_COLLECTIONS.find((g) => g.id === featuredGoalId);
     if (!featured || !data.allTemplates) return [];
+    const featuredCategories = new Set(featured.categories);
     return [...data.allTemplates]
-      .filter((t) => featured.categories.includes(t.category))
+      .filter((t) => featuredCategories.has(t.category))
       .sort((a, b) => (b.popularityScore ?? 0) - (a.popularityScore ?? 0))
       .slice(0, 3);
   }, [data.allTemplates, featuredGoalId]);
