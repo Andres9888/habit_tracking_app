@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — What Shipped (Before / After)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --bg:#F4F1EC; --surface:#FAF8F5; --inset:#EDEAE5; --line:#E7E2DA;
+    --text:#2D2A26; --text2:#7A736A; --text3:#B8B0A6; --green:#059669;
+    --greenText:#047857; --red:#C4362B; --redBg:#FBEBE9; --clockBg:#EAE6DF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);
+    padding:32px 16px;line-height:1.4}
+  h1{font-family:'Fraunces',serif;font-weight:600;text-align:center;font-size:26px;margin-bottom:6px}
+  .sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:32px}
+  .grid{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;max-width:900px;margin:0 auto}
+  .col{flex:1;min-width:320px;max-width:410px}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:14px}
+  .tag.before{background:#EDE7DE;color:#8A8177}
+  .tag.after{background:#E7F5EF;color:var(--greenText)}
+  .phone{background:var(--bg);border-radius:22px;padding:18px 14px}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--text2);margin:0 4px 10px}
+
+  /* profile hero card */
+  .hero{background:var(--surface);border-radius:16px;border:1px solid var(--line);
+    overflow:hidden;margin-bottom:26px}
+  .hero.soft{box-shadow:0 6px 14px rgba(45,42,38,.07)}          /* before: floatingActionButton @0.07 */
+  .hero.card{box-shadow:0 1px 3px rgba(45,42,38,.06),0 6px 16px rgba(45,42,38,.05)} /* after: shadows.card */
+  .heroTop{display:flex;align-items:center;gap:16px;padding:16px 16px 12px;position:relative}
+  .avatar{width:60px;height:60px;border-radius:999px;flex-shrink:0;position:relative;
+    background:linear-gradient(135deg,#047857,#059669);display:flex;align-items:center;
+    justify-content:center;color:#fff;font-family:'Fraunces',serif;font-size:24px;font-weight:600}
+  .cam{position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:999px;
+    background:var(--text);border:2px solid var(--surface);display:flex;align-items:center;justify-content:center}
+  .name{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+  .email{font-size:13px;color:var(--text2);margin-top:2px}
+  .streak{font-size:13px;font-weight:700;color:#B4550E;margin-top:8px}
+  .pencil{position:absolute;top:16px;right:16px}
+  .stats{display:flex;padding:16px 8px;border-top:1px solid var(--line);text-align:center}
+  .stat{flex:1;position:relative}
+  .stat+.stat::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:1px;background:var(--line)}
+  .stat b{font-family:'Fraunces',serif;font-size:18px;font-weight:700;display:block}
+  .stat span{font-size:11px;color:var(--text2)}
+
+  /* account rows */
+  .card{background:var(--surface);border-radius:16px;border:1px solid var(--line);
+    box-shadow:0 1px 3px rgba(45,42,38,.06),0 6px 16px rgba(45,42,38,.05);
+    overflow:hidden;margin-bottom:12px}
+  .row{display:flex;align-items:center;gap:12px;padding:13px 14px}
+  .row+.row{border-top:1px solid var(--line)}
+  .ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0}
+  .lbl{flex:1;font-size:15px;font-weight:600}
+  .chev{color:var(--text3)}
+  .eyebrow{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--text2);padding:0 4px 6px}
+  .danger .lbl{color:var(--red)}
+
+  .why{background:#FFFDF8;border:1px solid var(--line);border-left:3px solid var(--green);
+    border-radius:10px;padding:14px 16px;font-size:13px;color:#5C554C;margin:36px auto 20px;
+    max-width:852px}
+  .why b{color:var(--text)}
+  .why li{margin:5px 0}
+  .why ul{margin:6px 0 0 18px}
+  .mark{background:#FFF4D6;padding:0 3px;border-radius:3px}
+</style>
+</head>
+<body>
+<h1>Settings — What Shipped</h1>
+<p class="sub">Actual code changes (Track A polish + Track B account). tsc 0 errors.</p>
+
+<div class="grid">
+  <!-- BEFORE -->
+  <div class="col">
+    <span class="tag before">Before</span>
+    <div class="phone">
+      <div class="kicker">Profile</div>
+      <div class="hero soft">
+        <div class="heroTop">
+          <div class="avatar">A<span class="cam"><i data-lucide="camera" style="color:#fff;width:12px"></i></span></div>
+          <div style="flex:1">
+            <div class="name">Andres</div>
+            <div class="email">andres9888@gmail.com</div>
+            <div class="streak">🔥 12-day streak</div>
+          </div>
+          <div class="pencil"><i data-lucide="pencil" style="color:var(--text3);width:18px"></i></div>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>4</b><span>Active Habits</span></div>
+          <div class="stat"><b>9</b><span>Flawless Days</span></div>
+          <div class="stat"><b>318</b><span>Lifetime</span></div>
+        </div>
+      </div>
+
+      <div class="kicker">Account</div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="log-out" style="color:#8A8177;width:17px"></i></div>
+          <div class="lbl">Sign Out</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+        <div class="row">
+          <div class="ico" style="background:var(--redBg)"><i data-lucide="trash-2" style="color:var(--red);width:17px"></i></div>
+          <div class="lbl">Delete account</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="col">
+    <span class="tag after">After</span>
+    <div class="phone">
+      <div class="kicker">Profile</div>
+      <div class="hero card">
+        <div class="heroTop">
+          <div class="avatar">A<span class="cam"><i data-lucide="camera" style="color:#fff;width:12px"></i></span></div>
+          <div style="flex:1">
+            <div class="name">Andres</div>
+            <div class="email">andres9888@gmail.com</div>
+            <div class="streak">🔥 12-day streak</div>
+          </div>
+          <!-- pencil removed -->
+        </div>
+        <div class="stats">
+          <div class="stat"><b>4</b><span>Active Habits</span></div>
+          <div class="stat"><b>9</b><span>Flawless Days</span></div>
+          <div class="stat"><b>318</b><span>Lifetime</span></div>
+        </div>
+      </div>
+
+      <div class="kicker">Account</div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="log-out" style="color:#8A8177;width:17px"></i></div>
+          <div class="lbl">Sign Out</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+      </div>
+      <div class="eyebrow">Danger zone</div>
+      <div class="card danger">
+        <div class="row">
+          <div class="ico" style="background:var(--redBg)"><i data-lucide="trash-2" style="color:var(--red);width:17px"></i></div>
+          <div class="lbl">Delete account</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px;color:#D9A8A2"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="why">
+  <b>What changed &amp; why</b>
+  <ul>
+    <li><b>Pencil removed</b> from profile hero. Avatar was already tappable with a camera badge — the separate <span class="mark">✎</span> called the same photo picker. Two affordances, one action → dropped the redundant one.</li>
+    <li><b>Card shadow normalized.</b> Profile card used a one-off soft shadow (<code>floatingActionButton</code> @ opacity 0.07); switched to <code>shadows.card</code> — the exact shadow every other settings card uses. Subtle: hero now sits at the same depth as its siblings instead of floating differently.</li>
+    <li><b>Delete account split into its own “Danger zone” card.</b> It was one tap below Sign Out in the same card, visually identical weight. Now it's a separated card with a “Danger zone” eyebrow + red destructive icon — harder to hit by accident.</li>
+    <li><b>Section-header type unified</b> (not pictured): static + collapsible headers were 15.5px/−0.1 vs 15px/−0.2; now share one <code>settingsSectionTitle</code> token. Plus removed two dead search components.</li>
+  </ul>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

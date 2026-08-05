@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --bg:#F4F1EC; --surface:#FAF8F5; --inset:#EDEAE5; --line:#E7E2DA;
+    --text:#2D2A26; --text2:#7A736A; --green:#059669; --greenText:#047857;
+    --greenBg:#E7F5EF; --amber:#B4780E; --amberBg:#FBF1DD;
+    --red:#C4362B; --redBg:#FBEBE9; --clockBg:#EAE6DF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);
+    padding:32px 16px;line-height:1.4}
+  h1{font-family:'Fraunces',serif;font-weight:600;text-align:center;font-size:26px;margin-bottom:6px}
+  .sub{text-align:center;color:var(--text2);font-size:14px;margin-bottom:32px}
+  .grid{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;max-width:920px;margin:0 auto}
+  .col{flex:1;min-width:320px;max-width:420px}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:12px}
+  .tag.before{background:#EDE7DE;color:#8A8177}
+  .tag.after{background:var(--greenBg);color:var(--greenText)}
+  .phone{background:var(--bg);border-radius:22px;padding:16px 14px;
+    border:1px solid var(--line)}
+  .kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--green);margin:0 4px 8px}
+  .card{background:var(--surface);border-radius:16px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(45,42,38,.06),0 6px 16px rgba(45,42,38,.05);
+    margin-bottom:20px}
+  .row{display:flex;align-items:center;gap:12px;padding:13px 14px}
+  .row+.row{border-top:1px solid var(--line)}
+  .ico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0}
+  .lbl{flex:1;font-size:15.5px;font-weight:600}
+  .val{font-size:15px;color:var(--text2);font-weight:500}
+  .chev{color:#B8B0A6}
+  .inset{background:var(--inset)}
+  .upsell{padding:12px 14px;border-top:1px solid var(--line);font-size:13.5px;
+    font-weight:500;color:var(--green)}
+  .dead{opacity:.9}
+  .sublabel{font-size:12.5px;color:var(--text2);margin-top:2px;font-weight:400}
+  .stat-row{display:flex;justify-content:space-around;padding:16px 8px;text-align:center}
+  .stat b{font-family:'Fraunces',serif;font-size:22px;font-weight:600;display:block}
+  .stat span{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.05em}
+  .skel{display:inline-block;height:22px;width:34px;border-radius:6px;
+    background:linear-gradient(90deg,#EDE7DE,#F5F1EA,#EDE7DE);
+    background-size:200% 100%;animation:sh 1.3s infinite}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+    color:var(--red);padding:12px 14px 6px}
+  .danger .lbl{color:var(--red)}
+  .why{background:#FFFDF8;border:1px solid var(--line);border-left:3px solid var(--green);
+    border-radius:10px;padding:12px 14px;font-size:13px;color:#5C554C;margin:0 auto 40px;
+    max-width:872px}
+  .why b{color:var(--text)}
+  .why ul{margin:6px 0 0 18px}
+  .why li{margin:3px 0}
+  .badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;
+    background:var(--amberBg);color:var(--amber);letter-spacing:.04em}
+  .greenpill{font-size:11.5px;font-weight:600;color:var(--greenText);background:var(--greenBg);
+    padding:2px 8px;border-radius:999px}
+</style>
+</head>
+<body>
+<h1>Settings — Before &amp; After</h1>
+<p class="sub">Track C reminders + Track B account danger zone / stats</p>
+
+<div class="grid">
+  <!-- BEFORE -->
+  <div class="col">
+    <span class="tag before">Before</span>
+    <div class="phone">
+      <div class="kicker">Reminders</div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="clock" style="color:#8A7A55;width:18px"></i></div>
+          <div class="lbl">Reminder time</div>
+          <div class="val">9:00 AM</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+        <div class="upsell dead">Want a different time per habit? Learn more →</div>
+      </div>
+
+      <div class="kicker" style="color:var(--text2)">Account</div>
+      <div class="card">
+        <div class="stat-row">
+          <div class="stat"><b>0</b><span>Habits</span></div>
+          <div class="stat"><b>0</b><span>Day streak</span></div>
+          <div class="stat"><b>0</b><span>Completed</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="log-out" style="color:#8A8177;width:18px"></i></div>
+          <div class="lbl">Sign Out</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="trash-2" style="color:#8A8177;width:18px"></i></div>
+          <div class="lbl">Delete account</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="col">
+    <span class="tag after">After</span>
+    <div class="phone">
+      <div class="kicker">Reminders</div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="clock" style="color:#8A7A55;width:18px"></i></div>
+          <div class="lbl">Reminder time<div class="sublabel">Default for all habits</div></div>
+          <div class="val">9:00 AM</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+        <div class="row">
+          <div class="ico" style="background:var(--greenBg)"><i data-lucide="bell-ring" style="color:var(--green);width:18px"></i></div>
+          <div class="lbl">Per-habit times<div class="sublabel">3 habits use custom times</div></div>
+          <span class="greenpill">Manage</span>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+      </div>
+      <p style="font-size:11.5px;color:var(--text2);margin:-12px 4px 20px">Free users see this row as “Want a different time per habit?” → opens paywall.</p>
+
+      <div class="kicker" style="color:var(--text2)">Account</div>
+      <div class="card">
+        <div class="stat-row">
+          <div class="stat"><span class="skel"></span><span style="display:block;margin-top:6px">Habits</span></div>
+          <div class="stat"><span class="skel"></span><span style="display:block;margin-top:6px">Day streak</span></div>
+          <div class="stat"><span class="skel"></span><span style="display:block;margin-top:6px">Completed</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="row">
+          <div class="ico" style="background:var(--clockBg)"><i data-lucide="log-out" style="color:#8A8177;width:18px"></i></div>
+          <div class="lbl">Sign Out</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px"></i>
+        </div>
+      </div>
+      <div class="card danger">
+        <div class="eyebrow">Danger zone</div>
+        <div class="row">
+          <div class="ico" style="background:var(--redBg)"><i data-lucide="trash-2" style="color:var(--red);width:18px"></i></div>
+          <div class="lbl">Delete account</div>
+          <i data-lucide="chevron-right" class="chev" style="width:18px;color:#D9A8A2"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="why">
+  <b>Why these changes</b>
+  <ul>
+    <li><b>Dead upsell → live row.</b> The “Learn more →” link currently dead-ends. Backend already supports per-habit times (schema + scheduler exist). After: premium users get a real <b>“3 habits use custom times → Manage”</b> deep-link; free users get the same row wired to open the paywall.</li>
+    <li><b>Global time labeled.</b> Adds “Default for all habits” so the two reminder rows read as a hierarchy, not duplicates.</li>
+    <li><b>Danger zone separated.</b> Delete account was visually identical to Sign Out — one tap from irreversible. After: its own card, red “Danger zone” eyebrow, destructive-tinted icon + label.</li>
+    <li><b>Stats skeleton.</b> Stats flash 0/0/0 before the query loads, reading as “new user.” After: shimmer placeholder until real values arrive.</li>
+  </ul>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>
