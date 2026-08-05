@@ -5,6 +5,7 @@
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
 import { enforceRateLimit } from './lib/rateLimit';
+import { getStorageMetadata } from './storageMetadata';
 import { getInvalidImageUploadReason } from './storageValidation';
 import {
   claimStorageForUser,
@@ -44,11 +45,21 @@ async function deleteStoredProfileImage(
 
   try {
     await ctx.storage.delete(storageId);
-    await releaseStorageForUser(ctx, storageId, userId);
   } catch {
     // Best-effort cleanup when the blob is already gone.
   }
+  await releaseStorageForUser(ctx, storageId, userId);
 }
+
+const updateFailureValidator = v.object({
+  error: v.string(),
+  ok: v.literal(false),
+});
+
+const updateSuccessValidator = v.object({
+  imageUrl: v.string(),
+  ok: v.literal(true),
+});
 
 export const updateProfileImage = mutation({
   args: { storageId: v.id('_storage') },
@@ -68,13 +79,18 @@ export const updateProfileImage = mutation({
       throw new Error('Not authorized to use this uploaded file');
     }
 
-    const metadata = await ctx.storage.getMetadata(args.storageId);
+    const metadata = await getStorageMetadata(ctx, args.storageId);
     const validationError = getInvalidImageUploadReason(metadata);
     if (validationError) {
       if (metadata) {
-        await ctx.storage.delete(args.storageId);
+        try {
+          await ctx.storage.delete(args.storageId);
+        } catch {
+          // The orphan sweep handles any file left behind.
+        }
       }
-      throw new Error(validationError);
+      await releaseStorageForUser(ctx, args.storageId, identity.subject);
+      return { error: validationError, ok: false as const };
     }
 
     const imageUrl = await ctx.storage.getUrl(args.storageId);
@@ -82,20 +98,22 @@ export const updateProfileImage = mutation({
       throw new Error('Uploaded file was not found');
     }
 
-    await deleteStoredProfileImage(
-      ctx,
-      user.profileImageStorageId,
-      identity.subject
-    );
+    if (user.profileImageStorageId !== args.storageId) {
+      await deleteStoredProfileImage(
+        ctx,
+        user.profileImageStorageId,
+        identity.subject
+      );
+    }
 
     await ctx.db.patch(user._id, {
       imageUrl,
       profileImageStorageId: args.storageId,
     });
 
-    return { imageUrl };
+    return { imageUrl, ok: true as const };
   },
-  returns: v.object({ imageUrl: v.string() }),
+  returns: v.union(updateSuccessValidator, updateFailureValidator),
 });
 
 export const clearProfileImage = mutation({

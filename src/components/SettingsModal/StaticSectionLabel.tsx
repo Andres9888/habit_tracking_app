@@ -1,4 +1,7 @@
-/** StaticSectionLabel - iOS grouped-list section label: serif title + trailing green glyph */
+/** StaticSectionLabel — editorial section heading: serif title, optional badge.
+ *  The trailing green glyph was dropped: at heading scale it read as decoration
+ *  competing with the row icon tiles below it. `icon` stays in the props so
+ *  collapsible sections (which do use a glyph) share one call signature. */
 import { ReactNode } from 'react';
 import { Text, View } from 'react-native';
 import { typography, fontWeights } from '@/theme/typography';
@@ -28,9 +31,6 @@ export function StaticSectionLabel({
       >
         {title}
       </Text>
-      {icon ? (
-        <View className='items-center justify-center'>{icon}</View>
-      ) : null}
       {subtitle ? (
         <Text
           className='ml-2 rounded-full px-2 py-0.5'

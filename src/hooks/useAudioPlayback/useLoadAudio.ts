@@ -5,7 +5,11 @@
  */
 
 import { useCallback } from 'react';
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import {
+  createAudioPlayer,
+  type AudioPlayer,
+  type AudioStatus,
+} from 'expo-audio';
 import type { PlaybackStatus } from './types';
 import {
   STATUS_UPDATE_INTERVAL_MS,
@@ -18,11 +22,11 @@ export interface UseLoadAudioOptions {
 }
 
 export interface UseLoadAudioDeps {
-  soundRef: React.MutableRefObject<Audio.Sound | null>;
+  soundRef: React.MutableRefObject<AudioPlayer | null>;
   wasPlayingBeforeInterruptionRef: React.MutableRefObject<boolean>;
   setStatus: React.Dispatch<React.SetStateAction<PlaybackStatus>>;
   configureAudioMode: () => Promise<void>;
-  onPlaybackStatusUpdate: (status: AVPlaybackStatus) => void;
+  onPlaybackStatusUpdate: (status: AudioStatus) => void;
 }
 
 export interface UseLoadAudioReturn {
@@ -54,7 +58,7 @@ export function useLoadAudio(
       try {
         // Unload any existing audio first
         if (soundRef.current) {
-          await soundRef.current.unloadAsync();
+          soundRef.current.remove();
           soundRef.current = null;
         }
 
@@ -73,16 +77,13 @@ export function useLoadAudio(
         await configureAudioMode();
 
         // Create and load sound
-        const { sound } = await Audio.Sound.createAsync(
+        const player = createAudioPlayer(
           { uri },
-          {
-            progressUpdateIntervalMillis: STATUS_UPDATE_INTERVAL_MS,
-            shouldPlay: autoPlayOnLoad,
-          },
-          onPlaybackStatusUpdate
+          { updateInterval: STATUS_UPDATE_INTERVAL_MS }
         );
-
-        soundRef.current = sound;
+        player.addListener('playbackStatusUpdate', onPlaybackStatusUpdate);
+        soundRef.current = player;
+        if (autoPlayOnLoad) player.play();
 
         setStatus((prev) => ({
           ...prev,
@@ -115,7 +116,7 @@ export function useLoadAudio(
   const unloadAudio = useCallback(async (): Promise<void> => {
     if (soundRef.current) {
       try {
-        await soundRef.current.unloadAsync();
+        soundRef.current.remove();
       } catch {
         // Ignore unload errors
       }

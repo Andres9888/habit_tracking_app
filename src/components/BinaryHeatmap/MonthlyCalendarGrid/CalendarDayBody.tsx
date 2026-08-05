@@ -1,24 +1,25 @@
 import React, { memo } from 'react';
 import { View, StyleSheet, type ViewStyle, type TextStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import type { AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import { borderRadius } from '@/theme/spacing';
 import { CalendarDayBodyConnector } from './CalendarDayBodyConnector';
 import { CalendarDayNumber } from './CalendarDayNumber';
 
 interface CalendarDayBodyProps {
-  cellPopStyle: ViewStyle;
+  cellPopStyle: AnimatedStyle<ViewStyle>;
   connectorStyle: 'none' | 'small' | 'full';
   dayNumber: number | string;
   fillMounted: boolean;
-  fillStyle: ViewStyle;
+  fillStyle: AnimatedStyle<ViewStyle>;
   habitColor: string;
   isToday: boolean;
   joinRight: boolean;
   showCompleted: boolean;
   showDot: boolean;
   staticTextColor: string;
-  textStyle: TextStyle;
+  textStyle: AnimatedStyle<TextStyle>;
   useSolidCompletedFill: boolean;
 }
 

@@ -3,7 +3,7 @@
  */
 import { StyleSheet } from 'react-native';
 import { typography } from '../../../theme/typography';
-import { borderRadius, spacing } from '../../../theme/spacing';
+import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 
 export const styles = StyleSheet.create({
   skeletonSubtitle: {
@@ -25,14 +25,14 @@ export const styles = StyleSheet.create({
   },
   statCard: {
     borderRadius: borderRadius.card,
-    elevation: 3,
+    borderWidth: 1,
     flex: 1,
     margin: spacing.sm,
     minWidth: '45%',
     padding: spacing.lg,
-    shadowOffset: { height: 4, width: 0 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
+    // Paper fill sits close to the canvas, so the card needs the deeper lift
+    // (and a hairline border) to read as an object. Matches Settings.
+    ...shadows.cardLifted,
   },
   statCardEmoji: {
     fontSize: typography.heading1.fontSize,

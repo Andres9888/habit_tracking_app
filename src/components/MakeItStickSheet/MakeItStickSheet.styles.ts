@@ -8,7 +8,7 @@ import { fontFamilies, typography } from '../../theme/typography';
 
 export const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 100,
   },
   cueHelp: {

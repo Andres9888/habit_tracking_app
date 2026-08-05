@@ -4,10 +4,11 @@
  */
 
 import { v } from 'convex/values';
-import { internalMutation, query } from './_generated/server';
+import { internalMutation, internalQuery, query } from './_generated/server';
 import type { MutationCtx } from './_generated/server';
 import type { Id } from './_generated/dataModel';
 import { PRUNED_TEMPLATE_NAMES } from './templates/curatedRemovals';
+import { SCIENCE_ENRICHMENT } from './templates/scienceEnrichment.data';
 
 // Frequency constants
 const FREQUENCY_DAILY = 'daily';
@@ -84,7 +85,11 @@ const _insertTemplateIfMissing = async (
 
   if (existing) return;
 
-  await ctx.db.insert('templates', template);
+  // Fresh installs pick up authored science drill-down content here; existing
+  // installs get it via templates/patchScienceEnrichment. Inline fields on the
+  // template win, so a hand-tuned seed entry is never overwritten.
+  const authored = SCIENCE_ENRICHMENT[template.name];
+  await ctx.db.insert('templates', authored ? { ...authored, ...template } : template);
 };
 
 const normalizeTemplateName = (name: string) => name.trim().toLowerCase();
@@ -2065,7 +2070,7 @@ export const getPopular = query({
 /**
  * Query: Get template usage statistics
  */
-export const getUsageStats = query({
+export const getUsageStats = internalQuery({
   args: { templateId: v.id('templates') },
   handler: async (ctx, args) => {
     const usage = await ctx.db

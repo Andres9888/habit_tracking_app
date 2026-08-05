@@ -10,16 +10,22 @@ import { styles as s } from './CatalogChipRail.styles';
 
 interface CatalogFilterChipProps {
   chipId: string;
+  /** Match count for the active search. Undefined while browsing idle. */
+  count?: number;
   isSelected: boolean;
   label: string;
+  /** Emoji-free label for screen readers. Falls back to `label`. */
+  spokenLabel?: string;
   onLayout: (chipId: string) => (event: LayoutChangeEvent) => void;
   onSelect: (chipId: string) => void;
 }
 
 export function CatalogFilterChip({
   chipId,
+  count,
   isSelected,
   label,
+  spokenLabel,
   onLayout,
   onSelect,
 }: CatalogFilterChipProps) {
@@ -36,20 +42,35 @@ export function CatalogFilterChip({
         borderColor: palette.chipIdle,
       };
   const labelColor = isSelected ? palette.textInverse : palette.textSecondary;
+  const hasCount = count !== undefined;
+  // Zero-match chips stay in the rail rather than unmounting — the rail must
+  // not reflow mid-search — but dim to read as unavailable.
+  const isEmptyMatch = hasCount && count === 0;
+  const a11yLabel = spokenLabel ?? label;
 
   return (
     <View onLayout={onLayout(chipId)}>
       <AnimatedPressable
+        accessibilityLabel={
+          hasCount
+            ? `${a11yLabel}, ${count} ${count === 1 ? 'match' : 'matches'}`
+            : a11yLabel
+        }
         accessibilityRole='button'
         accessibilityState={{ selected: isSelected }}
         hitSlop={0}
-        style={[s.chip, chipColors]}
+        style={[s.chip, chipColors, isEmptyMatch && s.chipEmpty]}
         onPress={() => {
           void triggerHaptic('selection');
           onSelect(chipId);
         }}
       >
-        <Text style={[s.chipLabel, { color: labelColor }]}>{label}</Text>
+        <Text style={[s.chipLabel, { color: labelColor }]}>
+          {label}
+          {hasCount ? (
+            <Text style={s.chipCount}>{`  ${count}`}</Text>
+          ) : null}
+        </Text>
       </AnimatedPressable>
     </View>
   );

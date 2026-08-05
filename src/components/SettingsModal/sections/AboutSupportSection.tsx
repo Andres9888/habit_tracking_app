@@ -1,4 +1,6 @@
-/** AboutSupportSection — Rate, Share, Feedback, What's New (Privacy/Terms/Version live in the footer) */
+/** AboutSupportSection — Support: one action per row (mock: 44px targets).
+ *  Rate and Share are separate rows again, and What's New sits here rather than
+ *  hiding in the footer link line. */
 import {
   Heart,
   MessageSquare,
@@ -15,16 +17,16 @@ interface Props {
   sectionIconColor: string;
   onRate: () => void;
   onShare: () => void;
-  onFeedback: () => void;
   onWhatsNew: () => void;
+  onFeedback: () => void;
 }
 
 export function AboutSupportSection({
   sectionIconColor,
   onRate,
   onShare,
-  onFeedback,
   onWhatsNew,
+  onFeedback,
 }: Props) {
   const { settings } = useThemeColors();
   const iconSize = iconSizes.small;
@@ -44,23 +46,23 @@ export function AboutSupportSection({
       <SettingsRow
         icon={<Share2 color={settings.share.icon} size={iconSize} />}
         iconBackgroundColor={settings.share.bg}
-        label='Share with Friends'
+        label='Share with a friend'
         type='navigation'
         onPress={onShare}
       />
       <SettingsRow
-        icon={<MessageSquare color={settings.feedback.icon} size={iconSize} />}
-        iconBackgroundColor={settings.feedback.bg}
-        label='Send Feedback'
-        type='navigation'
-        onPress={onFeedback}
-      />
-      <SettingsRow
         icon={<Sparkles color={settings.whatsNew.icon} size={iconSize} />}
         iconBackgroundColor={settings.whatsNew.bg}
-        label="What's New"
+        label="What's new"
         type='navigation'
         onPress={onWhatsNew}
+      />
+      <SettingsRow
+        icon={<MessageSquare color={settings.feedback.icon} size={iconSize} />}
+        iconBackgroundColor={settings.feedback.bg}
+        label='Send feedback'
+        type='navigation'
+        onPress={onFeedback}
       />
     </SettingsSection>
   );

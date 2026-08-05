@@ -13,7 +13,7 @@
 
 import React from 'react';
 import { View, ScrollView, Keyboard } from 'react-native';
-import type ViewShot from 'react-native-view-shot';
+import type { ViewShotRef } from 'react-native-view-shot';
 import { Modal } from '../Modal';
 import { Button } from '../Button/Button';
 import { useShareCard } from './useShareCard';
@@ -67,7 +67,7 @@ export function ShareCardGenerator({
             showUserName={showUserName}
             strengthPercentage={data.strengthPercentage}
             userName={data.userName}
-            viewShotRef={viewShotRef as React.RefObject<ViewShot>}
+            viewShotRef={viewShotRef as React.RefObject<ViewShotRef | null>}
           />
         </View>
 

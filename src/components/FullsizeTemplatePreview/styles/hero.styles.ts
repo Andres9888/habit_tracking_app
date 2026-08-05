@@ -1,16 +1,20 @@
 /**
  * Hero section styles for FullsizeTemplatePreview
+ *
+ * Layout only — colors come from `useDetailPalette()` at the call site so the
+ * hero adapts to dark mode.
  */
 
 import { StyleSheet } from 'react-native';
 
-import { colors } from '@/theme';
-import { borderRadius, spacing } from '../../../theme/spacing';
+import { spacing } from '../../../theme/spacing';
+import { fontFamilies, fontWeights } from '../../../theme/typography';
 import {
-  typography,
-  fontFamilies,
-  fontWeights,
-} from '../../../theme/typography';
+  HERO_DESCRIPTION,
+  HERO_ICON_TEXT_SIZE,
+  HERO_TITLE,
+  PILL_TEXT_SIZE,
+} from '../FullsizeTemplatePreview.constants';
 
 export const heroStyles = StyleSheet.create({
   descriptionSection: {
@@ -19,49 +23,35 @@ export const heroStyles = StyleSheet.create({
     paddingTop: 20,
   },
   descriptionText: {
-    color: colors.gray[500],
     fontFamily: fontFamilies.primary.text,
-    fontSize: typography.body.fontSize,
-    lineHeight: 26,
+    ...HERO_DESCRIPTION,
     textAlign: 'center',
   },
-  heroContent: {
-    alignItems: 'center',
-  },
+  heroContent: { alignItems: 'center' },
   heroGradient: {
     overflow: 'hidden',
-    paddingBottom: 28,
-    paddingHorizontal: 20,
-    paddingTop: 16,
+    paddingBottom: 26,
+    paddingHorizontal: 24,
+    paddingTop: 4,
     position: 'relative',
   },
-  iconContainer: {
+  iconText: { fontSize: HERO_ICON_TEXT_SIZE },
+  iconTile: {
     alignItems: 'center',
-    borderRadius: borderRadius.xl,
-    height: 96,
+    borderRadius: 24,
+    elevation: 3,
+    height: 88,
     justifyContent: 'center',
-    width: 96,
-  },
-  iconGlow: {
-    borderRadius: borderRadius.full,
-    height: 96,
-    opacity: 0.3,
-    position: 'absolute',
-    shadowOffset: { height: 0, width: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 24,
-    width: 96,
-  },
-  iconText: {
-    fontSize: typography.displayLarge.fontSize,
-  },
-  iconWrapper: {
-    marginBottom: 20,
-    position: 'relative',
+    marginBottom: 16,
+    shadowColor: 'rgba(122,86,50,0.4)',
+    shadowOffset: { height: 2, width: 0 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    width: 88,
   },
   metadataPill: {
     alignItems: 'center',
-    borderRadius: borderRadius.medium,
+    borderRadius: 999,
     borderWidth: 1,
     flexDirection: 'row',
     gap: 6,
@@ -69,27 +59,26 @@ export const heroStyles = StyleSheet.create({
     paddingVertical: 8,
   },
   metadataPillText: {
-    fontFamily: fontFamilies.monospace,
-    fontSize: typography.caption.fontSize,
+    fontFamily: fontFamilies.primary.text,
+    fontSize: PILL_TEXT_SIZE,
     fontWeight: fontWeights.semibold,
   },
   pillsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: 8,
     justifyContent: 'center',
     paddingHorizontal: 4,
   },
   templateName: {
-    ...typography.heading1,
     alignSelf: 'stretch',
-    color: colors.gray[900],
-    letterSpacing: -0.5,
+    fontFamily: fontFamilies.primary.display,
+    fontWeight: fontWeights.bold,
     marginBottom: 16,
     textAlign: 'center',
+    ...HERO_TITLE,
   },
   tagline: {
-    color: colors.gray[600],
     fontFamily: fontFamilies.primary.text,
     fontSize: 15.5,
     lineHeight: 21,

@@ -46,7 +46,7 @@ export const fabRingStyles = StyleSheet.create({
     width: 24,
   },
   ringOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
   },

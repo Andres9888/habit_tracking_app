@@ -1,4 +1,8 @@
-import { ArrowUpDown, SlidersHorizontal, Volume2 } from 'lucide-react-native';
+/** BehaviorSection — Habits: sort order + archive + export.
+ *  Completion sound lives under Reminders; export folded back in here per the
+ *  mock's 3B grouping (6 cards, not 7). */
+import { useState } from 'react';
+import { ArrowUpDown, SlidersHorizontal } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { SettingsRow } from '../SettingsRow';
 import { SettingsSection } from '../SettingsSection';
@@ -8,31 +12,19 @@ import {
   getSortFamily,
   SORT_FAMILIES,
 } from '../SortOrderPicker.constants';
-import { SoundPicker } from '../SoundPicker';
 import { HabitDataRows } from './HabitDataRows';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { rowMatchesQuery, useSettingsSearch } from '../search';
 import type { HabitSortMode } from '../../../features/habits/types';
-import type { SettingsContentProps } from '../SettingsContent.types';
 
 interface BehaviorSectionProps {
   sectionIconColor: string;
   habitSortMode: string;
   onChangeHabitSortMode: (mode: HabitSortMode) => void;
-  completionSoundEnabled: boolean;
-  completionSoundType: SettingsContentProps['completionSoundType'];
-  onChangeCompletionSoundEnabled: SettingsContentProps['onChangeCompletionSoundEnabled'];
-  onChangeCompletionSoundType: SettingsContentProps['onChangeCompletionSoundType'];
   archivedHabitsCount?: number;
   onOpenArchivedHabits: () => void;
-  onExportHabitsData?: SettingsContentProps['onExportHabitsData'];
+  onExportHabitsData?: () => void | Promise<void>;
 }
-
-const SOUND_LABELS = {
-  chime: 'Ding',
-  pop: 'Pop',
-  success: 'Rise',
-} as const;
 
 function getSortSummary(mode: HabitSortMode) {
   const family = getSortFamily(mode);
@@ -44,6 +36,10 @@ export function BehaviorSection(p: BehaviorSectionProps) {
   const { settings: icons } = useThemeColors();
   const iconSize = iconSizes.small;
   const { query } = useSettingsSearch();
+  // The two-tier picker used to render permanently expanded — the tallest block
+  // on the page for a preference most people set once. Now it opens on tap,
+  // matching Calendar look and Theme.
+  const [sortExpanded, setSortExpanded] = useState(false);
 
   return (
     <SettingsSection
@@ -54,35 +50,15 @@ export function BehaviorSection(p: BehaviorSectionProps) {
         icon={<ArrowUpDown color={icons.sort.icon} size={iconSize} />}
         iconBackgroundColor={icons.sort.bg}
         label='Sort order'
-        showChevron
         subtitle='How habits are ordered'
-        type='info'
+        type='selection'
         value={getSortSummary(p.habitSortMode as HabitSortMode)}
+        onPress={() => setSortExpanded((open) => !open)}
       />
-      {rowMatchesQuery(query, 'Sort order') ? (
+      {sortExpanded && rowMatchesQuery(query, 'Sort order') ? (
         <SortOrderPicker
           selected={p.habitSortMode as HabitSortMode}
           onSelect={p.onChangeHabitSortMode}
-        />
-      ) : null}
-      <SettingsRow
-        icon={<Volume2 color={icons.sound.icon} size={iconSize} />}
-        iconBackgroundColor={icons.sound.bg}
-        label='Completion sound'
-        subtitle='Play sound when checking off'
-        type='selection'
-        value={
-          p.completionSoundEnabled ? SOUND_LABELS[p.completionSoundType] : 'Off'
-        }
-        onPress={() =>
-          void p.onChangeCompletionSoundEnabled(!p.completionSoundEnabled)
-        }
-      />
-      {rowMatchesQuery(query, 'Completion sound') ? (
-        <SoundPicker
-          selected={p.completionSoundType}
-          visible={p.completionSoundEnabled}
-          onSelect={(v) => void p.onChangeCompletionSoundType(v)}
         />
       ) : null}
       <HabitDataRows

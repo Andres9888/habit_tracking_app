@@ -2,7 +2,7 @@
  * Single week column in the heatmap grid
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import type { HeatmapData } from './ComplianceHeatmap.types';
 import { styles } from './ComplianceHeatmap.styles';
@@ -13,7 +13,13 @@ interface WeekColumnProps {
   onDayPress?: (day: HeatmapData) => void;
 }
 
-export function WeekColumn({ week, onDayPress }: WeekColumnProps) {
+// memo: a year-long heatmap is ~52 columns x 7 cells in a plain (non-virtualized)
+// ScrollView. `weeks` is memoized upstream in useComplianceHeatmap, so these
+// boundaries actually hold and the grid stops rebuilding on every parent render.
+export const WeekColumn = memo(function WeekColumn({
+  week,
+  onDayPress,
+}: WeekColumnProps) {
   return (
     <View style={styles.weekColumn}>
       {week.map((day, dayIndex) => (
@@ -21,4 +27,4 @@ export function WeekColumn({ week, onDayPress }: WeekColumnProps) {
       ))}
     </View>
   );
-}
+});

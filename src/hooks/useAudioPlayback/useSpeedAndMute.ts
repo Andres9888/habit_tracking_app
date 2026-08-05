@@ -5,7 +5,7 @@
  */
 
 import { useCallback } from 'react';
-import { Audio } from 'expo-av';
+import type { AudioPlayer } from 'expo-audio';
 import type { PlaybackSpeed, PlaybackStatus } from './types';
 
 export interface UseSpeedAndMuteOptions {
@@ -13,7 +13,7 @@ export interface UseSpeedAndMuteOptions {
 }
 
 export interface UseSpeedAndMuteDeps {
-  soundRef: React.MutableRefObject<Audio.Sound | null>;
+  soundRef: React.MutableRefObject<AudioPlayer | null>;
   isMuted: boolean;
   setStatus: React.Dispatch<React.SetStateAction<PlaybackStatus>>;
 }
@@ -41,7 +41,7 @@ export function useSpeedAndMute(
       if (!soundRef.current) return;
 
       try {
-        await soundRef.current.setRateAsync(speed, true);
+        soundRef.current.setPlaybackRate(speed, 'high');
         setStatus((prev) => ({ ...prev, speed }));
       } catch (error) {
         const errorMessage =
@@ -65,7 +65,7 @@ export function useSpeedAndMute(
 
     try {
       const newMuted = !isMuted;
-      await soundRef.current.setIsMutedAsync(newMuted);
+      soundRef.current.muted = newMuted;
       setStatus((prev) => ({ ...prev, isMuted: newMuted }));
     } catch (error) {
       const errorMessage =

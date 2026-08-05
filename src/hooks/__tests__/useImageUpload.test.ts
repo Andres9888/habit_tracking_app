@@ -51,6 +51,7 @@ describe('useImageUpload', () => {
     jest.clearAllMocks();
     mockValidateImageUpload.mockResolvedValue({
       contentType: 'image/jpeg',
+      ok: true,
       size: 50000,
       storageId: 'storage-id-123',
     });
@@ -316,9 +317,10 @@ describe('useImageUpload', () => {
 
     it('sets error when server-side validation fails', async () => {
       mockGenerateUploadUrl.mockResolvedValueOnce('https://upload-url.test');
-      mockValidateImageUpload.mockRejectedValueOnce(
-        new Error('Unsupported image format. Use JPEG, PNG, WebP, or HEIC.')
-      );
+      mockValidateImageUpload.mockResolvedValueOnce({
+        error: 'Unsupported image format. Use JPEG, PNG, WebP, or HEIC.',
+        ok: false,
+      });
 
       mockFetch.mockResolvedValueOnce({
         ok: true,

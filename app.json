@@ -8,18 +8,11 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#059669"
-    },
     "assetBundlePatterns": ["assets/*", "assets/sounds/*"],
-    "jsEngine": "hermes",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.chainday.app",
       "buildNumber": "16",
-      "usesAppleSignIn": true,
       "infoPlist": {
         "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.",
         "BGTaskSchedulerPermittedIdentifiers": [
@@ -41,23 +34,45 @@
       ],
       "package": "com.chainday.app"
     },
-    "supportUrl": "https://chainday.app/support",
-    "privacyUrl": "https://chainday.app/privacy",
     "web": {
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
     "extra": {
+      "privacyUrl": "https://chainday.app/privacy",
+      "supportUrl": "https://chainday.app/support",
       "eas": {
         "projectId": "32c36f06-6185-42ca-aee8-5a939ad68d75"
       }
     },
     "plugins": [
-      "expo-font",
+      [
+        "expo-font",
+        {
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Literata",
+                "fontDefinitions": [
+                  {
+                    "path": "node_modules/@expo-google-fonts/literata/700Bold/Literata_700Bold.ttf",
+                    "weight": 700
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "node_modules/@expo-google-fonts/literata/700Bold/Literata_700Bold.ttf"
+            ]
+          }
+        }
+      ],
       "expo-notifications",
       "expo-web-browser",
       [
-        "expo-av",
+        "expo-audio",
         {
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice note recordings."
         }
@@ -79,7 +94,21 @@
       "@sentry/react-native",
       "./plugins/withPrivacyManifest.cjs",
       "@react-native-community/datetimepicker",
-      "expo-background-task"
+      "expo-background-task",
+      "expo-image",
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-status-bar",
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#059669",
+          "image": "./assets/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
     ],
     "owner": "andres9888"
   }

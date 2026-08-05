@@ -5,8 +5,29 @@
 
 import { v } from 'convex/values';
 import { mutation } from './_generated/server';
-import { getInvalidImageUploadReason } from './storageValidation';
-import { claimStorageForUser, getStorageOwner } from './storageOwnership';
+import { enforceRateLimit } from './lib/rateLimit';
+import { getStorageMetadata } from './storageMetadata';
+import {
+  getInvalidImageUploadReason,
+  MAX_OWNED_UPLOADS_PER_USER,
+} from './storageValidation';
+import {
+  claimStorageForUser,
+  getStorageOwner,
+  releaseStorageForUser,
+} from './storageOwnership';
+
+const validationFailureValidator = v.object({
+  error: v.string(),
+  ok: v.literal(false),
+});
+
+const validationSuccessValidator = v.object({
+  contentType: v.string(),
+  ok: v.literal(true),
+  size: v.number(),
+  storageId: v.id('_storage'),
+});
 
 /**
  * Generate a signed upload URL for file storage
@@ -19,6 +40,8 @@ export const generateUploadUrl = mutation({
     if (!identity) {
       throw new Error('Unauthenticated: Must be logged in to upload files');
     }
+
+    await enforceRateLimit(ctx, identity.subject, 'storage.generateUploadUrl');
 
     return await ctx.storage.generateUploadUrl();
   },
@@ -35,23 +58,56 @@ export const validateImageUpload = mutation({
       throw new Error('Unauthenticated: Must be logged in to upload files');
     }
 
+    await enforceRateLimit(
+      ctx,
+      identity.subject,
+      'storage.validateImageUpload'
+    );
+
     const owner = await getStorageOwner(ctx, args.storageId);
     if (owner && owner.userId !== identity.subject) {
       throw new Error('Not authorized to use this uploaded file');
     }
 
-    const metadata = await ctx.storage.getMetadata(args.storageId);
+    const metadata = await getStorageMetadata(ctx, args.storageId);
     const validationError = getInvalidImageUploadReason(metadata);
 
     if (validationError) {
       if (metadata) {
-        await ctx.storage.delete(args.storageId);
+        try {
+          await ctx.storage.delete(args.storageId);
+        } catch {
+          // A scheduled orphan sweep retries deletion after transient failures.
+        }
       }
-      throw new Error(validationError);
+      if (owner?.userId === identity.subject) {
+        await releaseStorageForUser(ctx, args.storageId, identity.subject);
+      }
+      // Returning instead of throwing lets the deletion/ownership cleanup commit.
+      return { error: validationError, ok: false as const };
     }
 
     if (!metadata) {
-      throw new Error('Uploaded file was not found');
+      return { error: 'Uploaded file was not found', ok: false as const };
+    }
+
+    if (!owner) {
+      const ownedUploads = await ctx.db
+        .query('storageOwnership')
+        .withIndex('by_user_id', (q) => q.eq('userId', identity.subject))
+        .take(MAX_OWNED_UPLOADS_PER_USER);
+      if (ownedUploads.length >= MAX_OWNED_UPLOADS_PER_USER) {
+        try {
+          await ctx.storage.delete(args.storageId);
+        } catch {
+          // The orphan sweep handles any file left behind.
+        }
+        return {
+          error:
+            'Upload limit reached. Remove an existing image and try again.',
+          ok: false as const,
+        };
+      }
     }
 
     await claimStorageForUser(ctx, args.storageId, identity.subject);
@@ -65,13 +121,10 @@ export const validateImageUpload = mutation({
 
     return {
       contentType,
+      ok: true as const,
       size: metadata.size,
       storageId: args.storageId,
     };
   },
-  returns: v.object({
-    contentType: v.string(),
-    size: v.number(),
-    storageId: v.id('_storage'),
-  }),
+  returns: v.union(validationSuccessValidator, validationFailureValidator),
 });

@@ -9,12 +9,9 @@ import { iconSizes } from '@/theme/iconSizes';
 import { ScreenHeader } from '../ScreenHeader';
 import { ModalCloseButton } from '../ui/ModalCloseButton';
 import { CalendarPreview } from './CalendarPreview';
-import { CompletionIconSettingsRow } from './CompletionIconSettingsRow';
-import { ConnectorStyleSettingsRow } from './ConnectorStyleSettingsRow';
-import { DayMarkerShapeSettingsRow } from './DayMarkerShapeSettingsRow';
+import { CalendarLookRows } from './components/CalendarLookRows';
 import { SettingsRow } from './SettingsRow';
 import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
-import { AppearanceChainRows } from './sections/AppearanceChainRows';
 import { getRaisedSurface } from './raisedSurface';
 import { useThemeColors } from '../../theme/ThemeContext';
 import type { CalendarLookPageProps } from './CalendarLookPage.types';
@@ -60,23 +57,7 @@ export function CalendarLookPage(p: CalendarLookPageProps) {
               showGradientFill={p.showGradientFill}
               connectorStyle={p.connectorStyle}
             />
-            <DayMarkerShapeSettingsRow
-              selected={p.dayShape}
-              onSelect={p.onChangeDayShape}
-            />
-            <AppearanceChainRows
-              showGradientFill={p.showGradientFill}
-              onChangeShowGradientFill={p.onChangeShowGradientFill}
-            />
-            <ConnectorStyleSettingsRow
-              dayShape={p.dayShape}
-              selected={p.connectorStyle}
-              onSelect={p.onChangeConnectorStyle}
-            />
-            <CompletionIconSettingsRow
-              selected={p.habitCompletionIcon}
-              onSelect={p.onChangeHabitCompletionIcon}
-            />
+            <CalendarLookRows {...p} />
             <SettingsRow
               icon={
                 <Calendar

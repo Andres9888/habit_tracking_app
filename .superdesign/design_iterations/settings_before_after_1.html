@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Settings — Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #EFE9E3;
+    --canvas: #F5F1ED;
+    --card: #FFFFFF;
+    --border: #DDD8D2;
+    --ink: #1A1816;
+    --ink-2: #55504A;
+    --ink-3: #8B857D;
+    --primary: #059669;
+    --primary-tint: #E6F4EF;
+    --gold: #B4884A;
+    --gold-tint: #F7EFE1;
+    --premium: #6D5BD0;
+    --premium-tint: #EEEAFB;
+    --dark-card: #211F1D;
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 !important;
+    background: var(--bg) !important;
+    font-family: 'Inter', system-ui, sans-serif !important;
+    color: var(--ink) !important;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1 { font-size: 30px !important; font-weight: 700 !important; letter-spacing: -0.02em; margin: 0 0 6px !important; }
+  .sub { color: var(--ink-2); font-size: 15px; margin: 0 0 40px; max-width: 720px; line-height: 1.55; }
+  h2 { font-size: 19px !important; font-weight: 650 !important; margin: 0 0 4px !important; letter-spacing: -0.01em; }
+  .scenario { margin-bottom: 64px; }
+  .scenario > p.note { color: var(--ink-2); font-size: 14px; margin: 0 0 22px; max-width: 780px; line-height: 1.55; }
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .tag.before { background: #E6DFD8; color: #6B635A; }
+  .tag.after { background: var(--primary-tint); color: #04724F; }
+  .phone {
+    width: 320px; max-width: 100%; background: var(--canvas);
+    border: 1px solid var(--border); border-radius: 30px; padding: 14px 12px 18px;
+    box-shadow: 0 12px 32px -14px rgba(26,24,22,0.28);
+  }
+  .status { display: flex; justify-content: center; margin-bottom: 10px; }
+  .notch { width: 92px; height: 5px; border-radius: 999px; background: #D6D0C8; }
+  .modal-title { display: flex; align-items: center; justify-content: space-between; padding: 4px 4px 12px; }
+  .modal-title span { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .x { width: 26px; height: 26px; border-radius: 999px; background: #E9E3DC; color: var(--ink-3); font-size: 14px; display:flex; align-items:center; justify-content:center; }
+  .search {
+    display: flex; align-items: center; gap: 8px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; margin-bottom: 12px;
+    font-size: 14px;
+  }
+  .search .q { color: var(--ink); font-weight: 500; }
+  .search .caret { width: 1.5px; height: 15px; background: var(--primary); display: inline-block; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; }
+  .sec-head { display: flex; align-items: center; gap: 9px; padding: 12px 14px 8px; }
+  .ico { width: 26px; height: 26px; border-radius: 9px; background: var(--primary-tint); display: flex; align-items: center; justify-content: center; font-size: 13px; }
+  .sec-head b { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+  .row { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-top: 1px solid #F0ECE7; }
+  .row:first-of-type { border-top: none; }
+  .row .lbl { flex: 1; min-width: 0; }
+  .row .lbl b { display: block; font-size: 14.5px; font-weight: 550; }
+  .row .lbl small { display: block; font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  .val { font-size: 13px; color: var(--ink-3); font-weight: 500; }
+  .chev { color: #C3BCB3; font-size: 15px; }
+  .toggle { width: 40px; height: 23px; border-radius: 999px; background: #DDD8D2; position: relative; flex: none; }
+  .toggle.on { background: var(--primary); }
+  .toggle i { position: absolute; top: 2.5px; left: 2.5px; width: 18px; height: 18px; border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+  .toggle.on i { left: auto; right: 2.5px; }
+  .crown { font-size: 11px; font-weight: 700; color: var(--premium); background: var(--premium-tint); padding: 3px 8px; border-radius: 999px; letter-spacing: .02em; }
+  .empty { text-align: center; padding: 34px 18px; color: var(--ink-3); }
+  .empty .big { font-size: 26px; margin-bottom: 8px; }
+  .empty p { margin: 0; font-size: 13.5px; line-height: 1.5; }
+  .hit { background: #FBF6E9; }
+  .hit mark { background: #F2E2B8; color: var(--ink); padding: 0 2px; border-radius: 3px; }
+  .breadcrumb { font-size: 11px; color: var(--ink-3); margin-top: 3px; display: block; }
+  .darkcard { background: var(--dark-card); border-radius: var(--radius); padding: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .darkcard .cbox { width: 38px; height: 38px; border-radius: 12px; background: rgba(180,136,74,.22); display:flex; align-items:center; justify-content:center; }
+  .darkcard b { color: #FBF7F2; font-size: 15px; display: block; font-weight: 600; }
+  .darkcard small { color: #A9A199; font-size: 12px; }
+  .pill { margin-left: auto; background: var(--gold); color: #1A1816; font-weight: 650; font-size: 12.5px; padding: 8px 15px; border-radius: 999px; }
+  .weekgrid { display: flex; gap: 6px; padding: 4px 14px 14px; }
+  .weekgrid div { flex: 1; text-align: center; font-size: 11px; font-weight: 600; color: var(--ink-3); background: #F5F1ED; border-radius: 8px; padding: 7px 0; }
+  .weekgrid div.hi { background: var(--primary-tint); color: #04724F; }
+  .seg { display: flex; gap: 6px; padding: 0 14px 14px; }
+  .seg span { flex: 1; text-align: center; font-size: 12.5px; font-weight: 600; padding: 8px 0; border-radius: 10px; background: #F5F1ED; color: var(--ink-2); }
+  .seg span.sel { background: var(--primary); color: #fff; }
+  .callout { border-left: 3px solid var(--primary); background: #fff; border-radius: 0 12px 12px 0; padding: 12px 14px; font-size: 13.5px; color: var(--ink-2); margin-top: 18px; line-height: 1.5; }
+  .callout b { color: var(--ink); }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; border-radius: 12px; overflow: hidden; font-size: 13.5px; }
+  th, td { text-align: left; padding: 11px 13px; border-bottom: 1px solid #F0ECE7; }
+  th { background: #F7F3EF; font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+  td b { font-weight: 600; }
+  .lo { color: #8B857D; } .mid { color: #B4884A; } .hi2 { color: #04724F; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Settings — before / after</h1>
+  <p class="sub">Three candidate changes, rendered against the app's real warm-minimal tokens (<code>#F5F1ED</code> canvas, forest-green primary, stone borders). Left column is what ships today, right column is the proposal.</p>
+
+  <!-- SCENARIO 1 -->
+  <div class="scenario">
+    <h2>1 &nbsp;·&nbsp; Search that actually finds settings</h2>
+    <p class="note">Today search matches a hand-maintained list of 10 top-level labels (<code>settingsSearchSections.ts</code>). Rows living on the Calendar-look sub-page are invisible, and there are no synonyms — typing "dark" returns nothing even though Theme is one tap away.</p>
+    <div class="pair">
+      <div class="col">
+        <div class="tag before">Before</div>
+        <div class="phone">
+          <div class="status"><div class="notch"></div></div>
+          <div class="modal-title"><span>Settings</span><div class="x">×</div></div>
+          <div class="search"><span>🔍</span><span class="q">dark</span><span class="caret"></span></div>
+          <div class="card">
+            <div class="empty">
+              <div class="big">🔍</div>
+              <p>No settings found<br /><span style="font-size:12px">Try a different search term</span></p>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-3);text-align:center;padding:4px 10px;line-height:1.5">
+            "shape", "gradient", "haptics", "sunday"<br />all return nothing too
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="tag after">After</div>
+        <div class="phone">
+          <div class="status"><div class="notch"></div></div>
+          <div class="modal-title"><span>Settings</span><div class="x">×</div></div>
+          <div class="search"><span>🔍</span><span class="q">dark</span><span class="caret"></span></div>
+          <div class="card">
+            <div class="row hit">
+              <div class="ico">🎨</div>
+              <div class="lbl"><b>Theme</b><small><mark>dark</mark> mode · appearance · night</small><span class="breadcrumb">Look &amp; Feel</span></div>
+              <div class="val">System</div><div class="chev">›</div>
+            </div>
+            <div class="row hit">
+              <div class="ico">🔗</div>
+              <div class="lbl"><b>Gradient fill</b><small>looks best in <mark>dark</mark> mode</small><span class="breadcrumb">Look &amp; Feel › Calendar look</span></div>
+              <div class="toggle on"><i></i></div>
+            </div>
+            <div class="row hit">
+              <div class="ico">⬛</div>
+              <div class="lbl"><b>Day marker shape</b><small>square · circle · rounded</small><span class="breadcrumb">Look &amp; Feel › Calendar look</span></div>
+              <div class="val">Square</div><div class="chev">›</div>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-3);text-align:center;padding:4px 10px;line-height:1.5">
+            Index auto-derived from the row registry.<br />Tapping a sub-page hit deep-links and flashes the row.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout"><b>What changes in code:</b> replace the hand-kept label array with a generated index (label + keyword aliases + section + optional sub-page route), and give search results a deep-link target. Kills the "keep in sync" comment that's already in the file.</div>
+  </div>
+
+  <!-- SCENARIO 2 -->
+  <div class="scenario">
+    <h2>2 &nbsp;·&nbsp; Locked features visible in place (the revenue one)</h2>
+    <p class="note">Free users currently learn what Premium unlocks from one banner near the footer. The settings they can't use are simply absent, so the value is abstract. Showing them locked-but-visible turns settings into a conversion surface with intent already in the room.</p>
+    <div class="pair">
+      <div class="col">
+        <div class="tag before">Before</div>
+        <div class="phone">
+          <div class="status"><div class="notch"></div></div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🔔</div><b>Reminders</b></div>
+            <div class="row"><div class="lbl"><b>Daily reminder</b><small>Nudge at a set time</small></div><div class="toggle on"><i></i></div></div>
+            <div class="row"><div class="lbl"><b>Sounds &amp; haptics</b></div><div class="toggle"><i></i></div></div>
+          </div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🗓</div><b>Habits</b></div>
+            <div class="row"><div class="lbl"><b>Sort order</b></div><div class="val">Manual</div><div class="chev">›</div></div>
+            <div class="row"><div class="lbl"><b>Archived habits</b></div><div class="val">3</div><div class="chev">›</div></div>
+          </div>
+          <div class="darkcard">
+            <div class="cbox">👑</div>
+            <div><b>Chain Day Premium</b><small>Unlimited habits &amp; reminders</small></div>
+            <div class="pill">Upgrade</div>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-3);text-align:center;padding:4px 10px;line-height:1.5">
+            One generic banner. Nothing shows<br />what is actually being missed.
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="tag after">After</div>
+        <div class="phone">
+          <div class="status"><div class="notch"></div></div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🔔</div><b>Reminders</b></div>
+            <div class="row"><div class="lbl"><b>Daily reminder</b><small>Nudge at a set time</small></div><div class="toggle on"><i></i></div></div>
+            <div class="row"><div class="lbl"><b>Sounds &amp; haptics</b></div><div class="toggle"><i></i></div></div>
+            <div class="row" style="background:#FCFBFE">
+              <div class="lbl"><b>Per-habit reminder times</b><small>Different nudge for each habit</small></div>
+              <span class="crown">👑 PRO</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🗓</div><b>Habits</b></div>
+            <div class="row"><div class="lbl"><b>Sort order</b></div><div class="val">Manual</div><div class="chev">›</div></div>
+            <div class="row"><div class="lbl"><b>Archived habits</b></div><div class="val">3</div><div class="chev">›</div></div>
+            <div class="row" style="background:#FCFBFE">
+              <div class="lbl"><b>Habit limit</b><small>You're using 5 of 5</small></div>
+              <span class="crown">👑 PRO</span>
+            </div>
+          </div>
+          <div class="darkcard">
+            <div class="cbox">👑</div>
+            <div><b>Unlock 2 things you just tapped</b><small>Per-habit reminders · unlimited habits</small></div>
+            <div class="pill">Upgrade</div>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-3);text-align:center;padding:4px 10px;line-height:1.5">
+            Tapping a PRO row opens the paywall<br />with that feature pre-highlighted.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout"><b>Note:</b> the exact locked rows shown here are illustrative — the real list should be whatever the entitlement check actually gates. The pattern is what matters: locked ≠ hidden, and the paywall opens with context.</div>
+  </div>
+
+  <!-- SCENARIO 3 -->
+  <div class="scenario">
+    <h2>3 &nbsp;·&nbsp; Week start day + inline value previews</h2>
+    <p class="note">There is no week-start setting anywhere in the app. For anyone outside the US-Sunday convention, the calendar reads wrong every single day — the highest-frequency papercut a habit calendar can have. Same pass: rows show their current value so you can read state without opening each one.</p>
+    <div class="pair">
+      <div class="col">
+        <div class="tag before">Before</div>
+        <div class="phone">
+          <div class="status"><div class="notch"></div></div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🎨</div><b>Look &amp; Feel</b></div>
+            <div class="row"><div class="lbl"><b>Theme</b></div><div class="chev">›</div></div>
+            <div class="row"><div class="lbl"><b>Calendar look</b></div><div class="chev">›</div></div>
+            <div class="row"><div class="lbl"><b>Compact habit cards</b></div><div class="toggle"><i></i></div></div>
+          </div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🗓</div><b>Your calendar today</b></div>
+            <div class="weekgrid">
+              <div class="hi">S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+            </div>
+            <div style="font-size:11.5px;color:var(--ink-3);padding:0 14px 14px;line-height:1.5">
+              Always Sunday-first. No setting exists to change it.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="tag after">After</div>
+        <div class="phone">
+          <div class="status"><div class="notch"></div></div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🎨</div><b>Look &amp; Feel</b></div>
+            <div class="row"><div class="lbl"><b>Theme</b></div><div class="val">System</div><div class="chev">›</div></div>
+            <div class="row"><div class="lbl"><b>Calendar look</b></div><div class="val">Square · Chain</div><div class="chev">›</div></div>
+            <div class="row"><div class="lbl"><b>Compact habit cards</b></div><div class="toggle"><i></i></div></div>
+          </div>
+          <div class="card">
+            <div class="sec-head"><div class="ico">🗓</div><b>Week starts on</b></div>
+            <div class="seg"><span>Sunday</span><span class="sel">Monday</span><span>Saturday</span></div>
+            <div class="weekgrid">
+              <div class="hi">M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--ink-3);text-align:center;padding:4px 10px;line-height:1.5">
+            Defaults from device locale on first run,<br />so most users never touch it.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="callout"><b>Blast radius warning:</b> week-start is not a settings-only change — it threads into the calendar grid, streak boundary math, and any weekly stats. That's the real cost of this one, and it needs test coverage on the streak logic.</div>
+  </div>
+</div>
+</body>
+</html>

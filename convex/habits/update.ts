@@ -10,6 +10,7 @@ import {
 } from '../habitStrength';
 import { enforceRateLimit } from '../lib/rateLimit';
 import { updateHabitArgs } from './types';
+import { getTrackingCutoffKey } from './utils';
 import { validateDaysOfWeek, validateHabitUpdateFields } from './validation';
 
 export const update = mutation({
@@ -61,9 +62,12 @@ export const update = mutation({
     if (args.strengthAlgorithm !== undefined) {
       const updatedHabit = await ctx.db.get(habitId);
       if (updatedHabit) {
+        // Bounded — see getTrackingCutoffKey. Only strength is derived here.
         const tracking = await ctx.db
           .query('tracking')
-          .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
+          .withIndex('by_habit_and_date', (q) =>
+            q.eq('habitId', habitId).gte('date', getTrackingCutoffKey())
+          )
           .collect();
 
         const mode = resolveAlgorithmMode(updatedHabit.strengthAlgorithm);

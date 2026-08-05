@@ -1,7 +1,7 @@
 /**
  * Permission utilities for microphone access
  *
- * Story T10.2: Audio recording integration (expo-av)
+ * Story T10.2: Audio recording integration (expo-audio)
  */
 
 import { Platform, Linking, Alert } from 'react-native';

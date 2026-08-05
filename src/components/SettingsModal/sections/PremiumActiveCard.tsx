@@ -6,9 +6,14 @@ import { typography, fontWeights } from '@/theme/typography';
 import { SettingsSection } from '../SettingsSection';
 import { SettingsRow } from '../SettingsRow';
 import { useThemeColors } from '../../../theme/ThemeContext';
+import { AnnualUpgradeRow } from './AnnualUpgradeRow';
 import { handleManageSubscription } from './PremiumStatus.helpers';
 
-export function PremiumActiveCard() {
+interface PremiumActiveCardProps {
+  onUpgrade?: () => void;
+}
+
+export function PremiumActiveCard({ onUpgrade }: PremiumActiveCardProps) {
   const { colors: themeColors, settings } = useThemeColors();
 
   return (
@@ -58,6 +63,7 @@ export function PremiumActiveCard() {
           </Text>
         </View>
       </View>
+      <AnnualUpgradeRow onUpgrade={onUpgrade} />
       <SettingsRow
         icon={
           <Settings color={settings.manageSub.icon} size={iconSizes.small} />

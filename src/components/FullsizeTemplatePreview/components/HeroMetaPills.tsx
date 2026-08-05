@@ -1,66 +1,56 @@
 /**
- * Hero metadata pills — frequency, category, duration, growth, popularity.
+ * Hero metadata chips — cadence+duration, category, difficulty.
+ *
+ * The "Habit Detail" mock shows a 3-chip row; popularity moved out of the hero
+ * so the chips describe the commitment, not the crowd.
  */
 
 import React from 'react';
 import { View } from 'react-native';
-import { Clock, Sparkles, Sprout, Users } from 'lucide-react-native';
+import { Clock, Sprout, Tag } from 'lucide-react-native';
 
 import { iconSizes } from '@/theme/iconSizes';
 import { getGrowthTypeMeta } from '@/utils/growthTypeMeta';
 import { heroStyles } from '../styles';
+import { useDetailPalette } from '../detailPalette';
 import {
   FREQUENCY_LABELS,
   CATEGORY_LABELS,
   CATEGORY_DURATION_DEFAULTS,
 } from '../FullsizeTemplatePreview.constants';
-import { formatPopularity } from '../../../screens/TemplatesScreen/components/TrendingCard/formatPopularity';
 import { MetadataPill } from './MetadataPill';
 import type { Template } from '../../../types/template';
 
 interface HeroMetaPillsProps {
   template: Template;
-  iconColor: string;
 }
 
-export function HeroMetaPills({ template, iconColor }: HeroMetaPillsProps) {
+export function HeroMetaPills({ template }: HeroMetaPillsProps) {
+  const palette = useDetailPalette();
+  const iconProps = {
+    color: palette.textSecondary,
+    size: iconSizes.small,
+    strokeWidth: 2,
+  };
+
   const frequency =
     FREQUENCY_LABELS[template?.frequency] || template?.frequency || 'Daily';
   const category =
     CATEGORY_LABELS[template?.category] || template?.category || 'General';
-  const duration = CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
-  const popularity = template?.popularityScore ?? 0;
+  const duration = template?.estimatedMinutes
+    ? `${template.estimatedMinutes} min`
+    : CATEGORY_DURATION_DEFAULTS[template?.category] || '5-10 min';
   const growthMeta = getGrowthTypeMeta(template?.growthType);
 
   return (
     <View testID='templates-preview-pills' style={heroStyles.pillsRow}>
-      <MetadataPill
-        icon={<Clock color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-        iconColor={iconColor}
-      >
-        {frequency}
+      <MetadataPill icon={<Clock {...iconProps} />}>
+        {`${frequency} · ${duration}`}
       </MetadataPill>
-      <MetadataPill
-        icon={<Sparkles color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-        iconColor={iconColor}
-      >
-        {category}
-      </MetadataPill>
-      <MetadataPill iconColor={iconColor}>{`⏱️ ${duration}`}</MetadataPill>
+      <MetadataPill icon={<Tag {...iconProps} />}>{category}</MetadataPill>
       {growthMeta ? (
-        <MetadataPill
-          icon={<Sprout color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-          iconColor={iconColor}
-        >
+        <MetadataPill icon={<Sprout {...iconProps} />}>
           {`${growthMeta.label} · ~${growthMeta.days}d`}
-        </MetadataPill>
-      ) : null}
-      {popularity > 0 ? (
-        <MetadataPill
-          icon={<Users color={iconColor} size={iconSizes.small} strokeWidth={2} />}
-          iconColor={iconColor}
-        >
-          {formatPopularity(popularity)}
         </MetadataPill>
       ) : null}
     </View>

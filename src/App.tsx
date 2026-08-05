@@ -1,6 +1,9 @@
 import '../global.css';
 
-import { Literata_700Bold } from '@expo-google-fonts/literata';
+// Deep import, not the package barrel: `@expo-google-fonts/literata` re-exports
+// all 16 weights via top-level `require()`, and Metro does not tree-shake, so
+// the barrel ships ~3.9MB of unused TTFs. This subpath pulls only the one face.
+import { Literata_700Bold } from '@expo-google-fonts/literata/700Bold';
 import { useFonts } from 'expo-font';
 import { Text as RNText, TextInput as RNTextInput } from 'react-native';
 import { AppProviders } from './app/AppProviders';

@@ -1,11 +1,29 @@
 #!/bin/bash
 # Security audit script to find mutations/queries without auth checks
+set -euo pipefail
 
 echo "=== SECURITY AUDIT: Authentication Checks ==="
 echo ""
 
 # Find all files with mutations or queries
 FILES=$(grep -rl "export const .* = \(mutation\|query\|internalMutation\|internalQuery\)" convex/ --include="*.ts" | grep -v node_modules | grep -v test | grep -v _generated)
+
+is_intentionally_public() {
+  case "$1::$2" in
+    convex/categories.ts::list) return 0 ;;
+    convex/templates/queries.ts::list) return 0 ;;
+    convex/templates/queries.ts::getById) return 0 ;;
+    convex/templates/queries.ts::getPopular) return 0 ;;
+    convex/templates/queries.ts::getTemplateCount) return 0 ;;
+    convex/templates/queries.ts::listTemplateNames) return 0 ;;
+    convex/templatesDataSeed.ts::list) return 0 ;;
+    convex/templatesDataSeed.ts::getById) return 0 ;;
+    convex/templatesDataSeed.ts::getPopular) return 0 ;;
+    convex/templatesDataSeed.ts::getTemplateCount) return 0 ;;
+    convex/templatesDataSeed.ts::listTemplateNames) return 0 ;;
+    *) return 1 ;;
+  esac
+}
 
 for file in $FILES; do
   # Get all exported mutation/query names
@@ -19,6 +37,10 @@ for file in $FILES; do
     if [[ "$FUNCTION_TYPE" == "internalMutation" ]] || [[ "$FUNCTION_TYPE" == "internalQuery" ]]; then
       continue
     fi
+
+    if is_intentionally_public "$file" "$export_name"; then
+      continue
+    fi
     
     # Extract function content (rough approximation)
     START_LINE=$(grep -n "^export const $export_name = " "$file" | cut -d: -f1)
@@ -28,7 +50,7 @@ for file in $FILES; do
       CONTENT=$(tail -n +$START_LINE "$file" | head -n 80)
       
       # Check for auth patterns
-      if ! echo "$CONTENT" | grep -q "getUserIdentity\|checkPremium"; then
+      if ! echo "$CONTENT" | grep -q "getUserIdentity\|getAuthenticatedUser\|checkPremium"; then
         echo "⚠️  MISSING AUTH: $file :: $export_name ($FUNCTION_TYPE)"
       fi
     fi

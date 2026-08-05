@@ -14,9 +14,12 @@ export const insertTemplateIfMissing = async (
 ) => {
   if (PRUNED_TEMPLATE_NAMES.has(normalizeTemplateName(template.name))) return;
 
+  // `.withIndex`, not `.filter`: Convex's `.filter` scans every row it is
+  // handed, so seeding the ~318-template catalog was quadratic (each insert
+  // rescanned the whole growing table).
   const existing = await ctx.db
     .query('templates')
-    .filter((q) => q.eq(q.field('name'), template.name))
+    .withIndex('by_name', (q) => q.eq('name', template.name))
     .first();
 
   if (existing) return;

@@ -9,7 +9,6 @@ import type { PressHandlers } from '../FullsizeTemplatePreview.types';
 
 export interface FooterSectionProps {
   templateName: string;
-  iconColor: string;
   isImporting: boolean;
   isImported: boolean;
   bottomInset: number;

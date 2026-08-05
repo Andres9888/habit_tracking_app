@@ -1,4 +1,4 @@
-/** SettingsContent - Settings layout: Profile → Look & Feel → Habits → Reminders → Data & Privacy → About & Support */
+/** SettingsContent - Settings layout: Profile → Look & Feel → Reminders → Habits → Premium → Support */
 import { View } from 'react-native';
 import Animated, {
   useAnimatedScrollHandler,
@@ -12,7 +12,9 @@ import { useThemeColors } from '../../theme/ThemeContext';
 import type { SettingsContentProps } from './types';
 import { SCROLL_STYLES } from './SettingsContent.constants';
 import { SettingsSectionList } from './components/SettingsSectionList';
-// Search field temporarily removed — filter plumbing retained (see SPEC_03).
+import { SettingsToastProvider } from './SettingsToast';
+// No search field — filter plumbing retained so rows/sections can self-filter
+// if a search entry point ever returns.
 import { SettingsSearchProvider } from './search';
 
 const useSectionIconColor = () => {
@@ -38,43 +40,48 @@ export function SettingsContent(p: SettingsContentProps) {
   const actions = useAccountActions();
 
   return (
-    <View style={SCROLL_STYLES.wrapper}>
-      <Animated.View
-        style={[
-          { height: 1, backgroundColor: themeColors.border },
-          borderStyle,
-        ]}
-      />
-      <Animated.ScrollView
-        className='flex-1 px-4'
-        contentContainerStyle={{ paddingBottom: bottomPadding, paddingTop: 4 }}
-        keyboardShouldPersistTaps='handled'
-        scrollEventThrottle={16}
-        showsVerticalScrollIndicator={false}
-        style={{ backgroundColor: themeColors.background }}
-        onScroll={scrollHandler}
-      >
-        <SettingsSearchProvider query=''>
-          <View style={{ gap: airy.sectionGap }}>
-            <SettingsSectionList
-              {...p}
-              sectionIconColor={sectionIconColor}
-              isDeletingAccount={actions.isDeletingAccount}
-              onDeleteAccount={actions.handleDeleteAccount}
-              onFeedback={actions.handleFeedback}
-              onPrivacy={actions.openPrivacy}
-              onRate={actions.handleRateApp}
-              onShare={actions.handleShare}
-              onTerms={actions.openTerms}
-              onWhatsNew={actions.handleWhatsNew}
-            />
-          </View>
-        </SettingsSearchProvider>
-      </Animated.ScrollView>
-      <FeedbackModal
-        visible={actions.showFeedbackModal}
-        onClose={actions.closeFeedback}
-      />
-    </View>
+    <SettingsToastProvider>
+      <View style={SCROLL_STYLES.wrapper}>
+        <Animated.View
+          style={[
+            { height: 1, backgroundColor: themeColors.border },
+            borderStyle,
+          ]}
+        />
+        <Animated.ScrollView
+          className='flex-1 px-4'
+          contentContainerStyle={{
+            paddingBottom: bottomPadding,
+            paddingTop: 4,
+          }}
+          keyboardShouldPersistTaps='handled'
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          style={{ backgroundColor: themeColors.background }}
+          onScroll={scrollHandler}
+        >
+          <SettingsSearchProvider query=''>
+            <View style={{ gap: airy.sectionGap }}>
+              <SettingsSectionList
+                {...p}
+                sectionIconColor={sectionIconColor}
+                isDeletingAccount={actions.isDeletingAccount}
+                onDeleteAccount={actions.handleDeleteAccount}
+                onFeedback={actions.handleFeedback}
+                onPrivacy={actions.openPrivacy}
+                onRate={actions.handleRateApp}
+                onShare={actions.handleShare}
+                onTerms={actions.openTerms}
+                onWhatsNew={actions.handleWhatsNew}
+              />
+            </View>
+          </SettingsSearchProvider>
+        </Animated.ScrollView>
+        <FeedbackModal
+          visible={actions.showFeedbackModal}
+          onClose={actions.closeFeedback}
+        />
+      </View>
+    </SettingsToastProvider>
   );
 }

@@ -21,7 +21,11 @@ interface ThemePickerProps {
 
 export function ThemePicker({ selected, onSelect }: ThemePickerProps) {
   const { colors, isDark } = useThemeColors();
-  const { accent, selectedBg, containerBg } = getSegmentedControlColors(isDark);
+  const {
+    containerBg,
+    selectedBg,
+    accent: selectedFg,
+  } = getSegmentedControlColors(isDark);
 
   const handleSelect = (key: DarkModePreference) => {
     if (key === selected) return;
@@ -32,7 +36,7 @@ export function ThemePicker({ selected, onSelect }: ThemePickerProps) {
   return (
     <View
       accessibilityRole='radiogroup'
-      className='flex-row rounded-xl p-[3px]'
+      className='flex-row rounded-full p-[3px]'
       style={{ backgroundColor: containerBg, gap: 2 }}
     >
       {OPTIONS.map(({ key, label, Icon }) => {
@@ -43,17 +47,17 @@ export function ThemePicker({ selected, onSelect }: ThemePickerProps) {
             accessibilityLabel={label}
             accessibilityRole='radio'
             accessibilityState={{ selected: isSelected }}
-            className='items-center justify-center rounded-lg'
+            className='items-center justify-center rounded-full'
             hitSlop={8}
             style={{
               width: 40,
-              height: 36,
+              height: 34,
               backgroundColor: isSelected ? selectedBg : 'transparent',
             }}
             onPress={() => handleSelect(key)}
           >
             <Icon
-              color={isSelected ? accent : colors.text.secondary}
+              color={isSelected ? selectedFg : colors.text.secondary}
               size={iconSizes.small}
               strokeWidth={isSelected ? 2.5 : 2}
             />

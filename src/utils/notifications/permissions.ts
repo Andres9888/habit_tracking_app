@@ -37,6 +37,27 @@ function isNotificationsPermissionGranted(permissions: unknown): boolean {
   return false;
 }
 
+/**
+ * Status-only check — never prompts. Used by the settings permission guard,
+ * which must not trigger an OS dialog just by rendering.
+ *
+ * Returns `true` when the status can't be read: an unverifiable permission is
+ * not evidence of a denied one, and a false warning is worse than none.
+ */
+export async function hasNotificationPermissions(): Promise<boolean> {
+  if (Platform.OS === 'web') {
+    return false;
+  }
+
+  try {
+    const permissions = await Notifications.getPermissionsAsync();
+    return isNotificationsPermissionGranted(permissions);
+  } catch (error) {
+    if (__DEV__) console.error('hasNotificationPermissions failed', error);
+    return true;
+  }
+}
+
 export async function ensureNotificationPermissions(): Promise<boolean> {
   if (Platform.OS === 'web') {
     return false;

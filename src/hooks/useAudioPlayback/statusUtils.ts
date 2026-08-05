@@ -4,13 +4,13 @@
  * Type guards and status checking utilities for audio playback.
  */
 
-import type { AVPlaybackStatus, AVPlaybackStatusSuccess } from 'expo-av';
+import type { AudioStatus } from 'expo-audio';
 
 /**
  * Check if status is a success status with required fields
  */
 export function isPlaybackStatusSuccess(
-  status: AVPlaybackStatus
-): status is AVPlaybackStatusSuccess {
+  status: AudioStatus
+): boolean {
   return status.isLoaded;
 }

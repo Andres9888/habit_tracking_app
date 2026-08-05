@@ -1,5 +1,14 @@
 /**
- * Imported-template-id set with a one-time merge of server-known ids.
+ * Imported-template-id sets for the catalog.
+ *
+ * Two sets with different jobs:
+ * - `importedTemplateIds` (live): seeded once from the server, then grown
+ *   optimistically on import. Drives pill/disabled/animation state.
+ * - `frozenImportedIds` (snapshot): captured once from the first *defined*
+ *   server response and never grown. Grouping/ordering uses this so a habit
+ *   added this session stays in its category section (it isn't in the
+ *   snapshot); it only moves to the "Added" section on the next mount, when
+ *   the snapshot re-seeds from the server.
  */
 
 import { useEffect, useRef, useState } from 'react';
@@ -7,17 +16,27 @@ import { useEffect, useRef, useState } from 'react';
 export function useImportedTemplateIdsSync(
   initialImportedIds: Set<string> | undefined
 ) {
+  const hasInitialSnapshot = initialImportedIds !== undefined;
   const [importedTemplateIds, setImportedTemplateIds] = useState<Set<string>>(
-    new Set()
+    () => new Set(initialImportedIds ?? [])
   );
-  const syncedRef = useRef(false);
+  const [frozenImportedIds, setFrozenImportedIds] = useState<Set<string>>(
+    () => new Set(initialImportedIds ?? [])
+  );
+  const [isImportedStateReady, setIsImportedStateReady] =
+    useState(hasInitialSnapshot);
+  const syncedRef = useRef(hasInitialSnapshot);
+  const frozenRef = useRef(hasInitialSnapshot);
 
   useEffect(() => {
-    if (
-      initialImportedIds &&
-      initialImportedIds.size > 0 &&
-      !syncedRef.current
-    ) {
+    // Freeze on the first defined response, even when empty — grouping needs a
+    // definitive "nothing added" answer, not an indefinite wait.
+    if (initialImportedIds !== undefined && !frozenRef.current) {
+      frozenRef.current = true;
+      setFrozenImportedIds(new Set(initialImportedIds));
+      setIsImportedStateReady(true);
+    }
+    if (initialImportedIds !== undefined && !syncedRef.current) {
       syncedRef.current = true;
       setImportedTemplateIds((prev) => {
         const merged = new Set(prev);
@@ -27,5 +46,10 @@ export function useImportedTemplateIdsSync(
     }
   }, [initialImportedIds]);
 
-  return { importedTemplateIds, setImportedTemplateIds };
+  return {
+    frozenImportedIds,
+    importedTemplateIds,
+    isImportedStateReady,
+    setImportedTemplateIds,
+  };
 }

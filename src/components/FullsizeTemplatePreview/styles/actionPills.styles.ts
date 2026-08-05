@@ -4,7 +4,8 @@
 
 import { StyleSheet } from 'react-native';
 
-import { colors } from '@/theme';
+import { colors } from '@/theme/colors';
+import { withAlpha } from '@/theme/colors';
 import { borderRadius, shadows, spacing } from '../../../theme/spacing';
 import { fontFamilies, fontWeights, typography } from '@/theme/typography';
 
@@ -32,7 +33,7 @@ export const actionPillsStyles = StyleSheet.create({
   outline: {
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderColor: 'rgba(5,150,105,0.3)',
+    borderColor: withAlpha(colors.primary[600], 0.3),
     borderRadius: borderRadius.full,
     borderWidth: 1,
     flexDirection: 'row',

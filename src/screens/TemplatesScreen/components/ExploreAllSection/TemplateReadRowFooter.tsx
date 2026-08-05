@@ -1,13 +1,14 @@
 /**
- * Bottom rail of the Habit Browser card. Left: a meta pill (duration ·
- * frequency). Right: the labeled Add / Added pill that creates the habit.
+ * Bottom rail of the Habit Browser card. Left: the meta line (duration ·
+ * frequency) as plain text. Right: the labeled Add / Added pill that creates
+ * the habit — the only control in the rail.
  */
 
 import { memo, useCallback } from 'react';
 import { Text, View } from 'react-native';
 import type { Doc } from '../../../../../convex/_generated/dataModel';
 import { useBrowserPalette } from '../../browserPalette';
-import { getTemplateMetaLabel } from '../HabitTemplateCard/templateMeta';
+import { getTemplateMetaLabel } from './templateMeta';
 import { TemplateReadRowAddButton } from './TemplateReadRowAddButton';
 import { s } from './TemplateReadRow.styles';
 
@@ -31,14 +32,12 @@ function TemplateReadRowFooterImpl({
   return (
     <View style={s.footer}>
       {metaLabel ? (
-        <View style={[s.metaPill, { backgroundColor: palette.metaPillBg }]}>
-          <Text
-            numberOfLines={1}
-            style={[s.metaPillText, { color: palette.textSecondary }]}
-          >
-            🕐 {metaLabel}
-          </Text>
-        </View>
+        <Text
+          numberOfLines={1}
+          style={[s.metaText, { color: palette.textSecondary }]}
+        >
+          {metaLabel}
+        </Text>
       ) : null}
       <View style={s.addSlot}>
         <TemplateReadRowAddButton

@@ -29,22 +29,17 @@ jest.mock('expo-image', () => ({
 }));
 
 // Audio (completion sounds)
-jest.mock('expo-av', () => ({
-  Audio: {
-    Sound: {
-      createAsync: jest.fn(async () => ({
-        sound: {
-          playAsync: jest.fn(async () => {}),
-          unloadAsync: jest.fn(async () => {}),
-          setPositionAsync: jest.fn(async () => {}),
-          replayAsync: jest.fn(async () => {}),
-        },
-      })),
-    },
-    setAudioModeAsync: jest.fn(async () => {}),
-  },
-  InterruptionModeIOS: { DoNotMix: 0, DuckOthers: 1, MixWithOthers: 2 },
-  InterruptionModeAndroid: { DoNotMix: 1, DuckOthers: 2 },
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: jest.fn(() => ({
+    addListener: jest.fn(),
+    pause: jest.fn(),
+    play: jest.fn(),
+    remove: jest.fn(),
+    seekTo: jest.fn(async () => {}),
+    setPlaybackRate: jest.fn(),
+    volume: 1,
+  })),
+  setAudioModeAsync: jest.fn(async () => {}),
 }));
 
 // Confetti / celebration

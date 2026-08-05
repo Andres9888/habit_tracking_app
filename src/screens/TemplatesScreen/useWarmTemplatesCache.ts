@@ -1,20 +1,28 @@
 /**
- * Warms the template library query cache before the library modal opens.
+ * Warms the public template catalog after the main screen has settled.
  *
- * The templates modal mounts its screen (and its Convex subscriptions) only
- * when visible, so the first-ever open would otherwise wait on a full
- * templates.list round-trip. Mounting this hook alongside the habits screen
- * keeps both subscriptions live and the persisted cache fresh, making the
- * library open instantly.
+ * Keep exactly one catalog subscription alive from the habits screen. Imported
+ * IDs are user-specific and inexpensive, so TemplatesScreen requests them only
+ * when the library actually opens.
  */
+import { useEffect, useState } from 'react';
 import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
+import { scheduleWhenIdle } from '../../lib/timing/scheduleWhenIdle';
 
 export function useWarmTemplatesCache() {
-  useCachedQuery(api.templates.list, {}, { entryName: 'templates.list' });
-  useCachedQuery(
-    api.templates.getImportedTemplateIds,
-    {},
-    { entryName: 'templates.getImportedTemplateIds' }
+  const [shouldWarm, setShouldWarm] = useState(false);
+
+  useEffect(
+    () =>
+      scheduleWhenIdle(() => setShouldWarm(true), {
+        fallbackDelayMs: 1200,
+        timeoutMs: 3000,
+      }),
+    []
   );
+
+  useCachedQuery(api.templates.list, shouldWarm ? {} : 'skip', {
+    entryName: 'templates.list',
+  });
 }

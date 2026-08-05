@@ -1,5 +1,8 @@
 import type { Doc, Id } from '../_generated/dataModel';
-import { calculateHabitChanges } from './weeklyHelpers';
+import {
+  buildWeeklyCompletionIndex,
+  calculateHabitChanges,
+} from './weeklyHelpers';
 
 const habitId = 'habit_1' as Id<'habits'>;
 const habit = { _id: habitId, name: 'Run' };
@@ -28,9 +31,7 @@ describe('calculateHabitChanges', () => {
     ];
     const result = calculateHabitChanges(
       habit,
-      trackings,
-      oneWeekAgoKey,
-      twoWeeksAgoKey,
+      buildWeeklyCompletionIndex(trackings, oneWeekAgoKey, twoWeeksAgoKey),
       3
     );
     expect(result.thisWeek).toBe(1);
@@ -45,9 +46,7 @@ describe('calculateHabitChanges', () => {
     const trackings = [tracking('2026-06-05', false), otherHabit];
     const result = calculateHabitChanges(
       habit,
-      trackings,
-      oneWeekAgoKey,
-      twoWeeksAgoKey,
+      buildWeeklyCompletionIndex(trackings, oneWeekAgoKey, twoWeeksAgoKey),
       0
     );
     expect(result.thisWeek).toBe(0);

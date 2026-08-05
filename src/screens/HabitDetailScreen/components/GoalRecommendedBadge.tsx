@@ -19,7 +19,10 @@ interface GoalRecommendedBadgeProps {
   recommended: boolean;
 }
 
-export function GoalRecommendedBadge({ accent, recommended }: GoalRecommendedBadgeProps) {
+export function GoalRecommendedBadge({
+  accent,
+  recommended,
+}: GoalRecommendedBadgeProps) {
   const { colors } = useThemeColors();
   return (
     <View

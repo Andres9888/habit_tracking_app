@@ -86,7 +86,7 @@ export function GradientShimmerSkeleton({
         ]}
         end={{ x: 1, y: 0.5 }}
         start={{ x: 0, y: 0.5 }}
-        style={[StyleSheet.absoluteFillObject, styles.gradient, animatedStyle]}
+        style={[StyleSheet.absoluteFill, styles.gradient, animatedStyle]}
       />
     </View>
   );

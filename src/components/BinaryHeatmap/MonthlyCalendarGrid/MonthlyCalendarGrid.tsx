@@ -1,6 +1,6 @@
 import { useThemeColors } from '@/theme';
 import { format } from 'date-fns';
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
 import { AnimatedWeeksGrid } from './AnimatedWeeksGrid';
@@ -48,6 +48,23 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
       useSolidCompletedFill,
     });
   const monthKey = format(currentMonth, 'yyyy-MM');
+  // Memoized because AnimatedWeeksGrid and CalendarDay are both memo()'d and
+  // this object is forwarded to every day cell. As an inline literal it changed
+  // identity every render, so all ~42 animated cells re-rendered each time.
+  const textColors = useMemo(
+    () => ({
+      inverse: colors.text.inverse,
+      muted: colors.gray[300],
+      primary: colors.text.primary,
+      tertiary: colors.text.tertiary,
+    }),
+    [
+      colors.text.inverse,
+      colors.gray,
+      colors.text.primary,
+      colors.text.tertiary,
+    ]
+  );
   const handleDayPress = useCallback(
     (dateString: string, completed: boolean) => {
       if (pendingToggleDate) return;
@@ -80,12 +97,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
             monthKey={monthKey}
             pendingToggleDate={pendingToggleDate}
             shape={dayShape}
-            textColors={{
-              inverse: colors.text.inverse,
-              muted: colors.gray[300],
-              primary: colors.text.primary,
-              tertiary: colors.text.tertiary,
-            }}
+            textColors={textColors}
             useSolidCompletedFill={useSolidCompletedFill}
             weeks={weeks}
             onPress={handleDayPress}

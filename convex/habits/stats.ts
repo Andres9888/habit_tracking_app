@@ -5,6 +5,7 @@
 import { v } from 'convex/values';
 import { query } from '../_generated/server';
 import { calculateStreakFromHistory } from '../streakUtils/historyCalculation';
+import { getTrackingCutoffKey } from './utils';
 
 export const getStats = query({
   args: { habitId: v.id('habits') },
@@ -19,9 +20,13 @@ export const getStats = query({
       throw new Error('Not authorized to view this habit stats');
     }
 
+    // Bounded — see getTrackingCutoffKey. This query returns only the current
+    // streak and a 30-day consistency figure, both well inside the window.
     const tracking = await ctx.db
       .query('tracking')
-      .withIndex('by_habit_and_date', (q) => q.eq('habitId', args.habitId))
+      .withIndex('by_habit_and_date', (q) =>
+        q.eq('habitId', args.habitId).gte('date', getTrackingCutoffKey())
+      )
       .collect();
 
     // Use the canonical streak utility (timezone-safe, grace-period-aware)

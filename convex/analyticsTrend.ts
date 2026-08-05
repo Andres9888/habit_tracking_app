@@ -19,17 +19,22 @@ export function computeTrend(
   const habitIds = new Set(activeHabits.map((h) => h._id));
   const trendData: Array<{ date: string; averageStrength: number }> = [];
 
+  // Bucket once, then O(1) per day — see the same fix in analyticsCompliance.
+  const completionsByDate = new Map<string, number>();
+  for (const t of trackings) {
+    if (!t.completed || !habitIds.has(t.habitId)) continue;
+    completionsByDate.set(t.date, (completionsByDate.get(t.date) ?? 0) + 1);
+  }
+
   for (let i = 29; i >= 0; i--) {
     const date = getDaysAgo(i);
     const dateStr = getDateString(date);
 
-    const dayCompletions = trackings.filter(
-      (t) => t.date === dateStr && t.completed && habitIds.has(t.habitId)
-    );
+    const completedCount = completionsByDate.get(dateStr) ?? 0;
 
     const completionRate =
       activeHabits.length > 0
-        ? (dayCompletions.length / activeHabits.length) * 100
+        ? (completedCount / activeHabits.length) * 100
         : 0;
 
     trendData.push({

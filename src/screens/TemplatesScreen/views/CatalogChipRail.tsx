@@ -12,6 +12,8 @@ export const CATALOG_ALL_ID = 'all';
 
 export interface CatalogChipItem {
   categoryId: string;
+  /** Match count for the active search. Undefined while browsing idle. */
+  count?: number;
   icon: string;
   label: string;
 }
@@ -19,6 +21,8 @@ export interface CatalogChipItem {
 interface CatalogChipRailProps {
   categories: CatalogChipItem[];
   selectedCategoryId: string;
+  /** Total matches across the catalog, shown on "All" during a search. */
+  totalCount?: number;
   onSelectCategory: (categoryId: string) => void;
 }
 
@@ -27,6 +31,7 @@ type ChipLayout = { width: number; x: number };
 export function CatalogChipRail({
   categories,
   selectedCategoryId,
+  totalCount,
   onSelectCategory,
 }: CatalogChipRailProps) {
   const palette = useBrowserPalette();
@@ -77,6 +82,7 @@ export function CatalogChipRail({
     >
       <CatalogFilterChip
         chipId={CATALOG_ALL_ID}
+        count={totalCount}
         isSelected={selectedCategoryId === CATALOG_ALL_ID}
         label='All'
         onLayout={handleChipLayout}
@@ -86,8 +92,12 @@ export function CatalogChipRail({
         <CatalogFilterChip
           key={category.categoryId}
           chipId={category.categoryId}
+          count={category.count}
           isSelected={selectedCategoryId === category.categoryId}
           label={`${category.icon} ${category.label}`}
+          // Visual label carries the emoji; the spoken one must not, or
+          // VoiceOver reads "flexed biceps Health, 4 matches".
+          spokenLabel={category.label}
           onLayout={handleChipLayout}
           onSelect={onSelectCategory}
         />

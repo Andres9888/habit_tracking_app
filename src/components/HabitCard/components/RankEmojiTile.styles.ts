@@ -7,7 +7,7 @@ export const baseStyles = StyleSheet.create({
     textAlign: 'center',
   },
   gradientLayer: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
   },
   highlight: {
     position: 'absolute',

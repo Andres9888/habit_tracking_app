@@ -3,7 +3,7 @@
  */
 
 import React, { useCallback } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, type ViewStyle } from 'react-native';
 import Animated, { type AnimatedStyle } from 'react-native-reanimated';
 import { styles } from './styles';
 import { triggerHaptic } from '@/utils/haptics';
@@ -13,8 +13,8 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 interface ActionButtonsProps {
   onShare?: () => void;
   onClose: () => void;
-  shareButtonAnimatedStyle: AnimatedStyle;
-  continueButtonAnimatedStyle: AnimatedStyle;
+  shareButtonAnimatedStyle: AnimatedStyle<ViewStyle>;
+  continueButtonAnimatedStyle: AnimatedStyle<ViewStyle>;
 }
 
 export function ActionButtons({

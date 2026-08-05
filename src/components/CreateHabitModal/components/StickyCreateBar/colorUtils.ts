@@ -34,6 +34,26 @@ export function darkenColor(hex: string, percent: number = 20): string {
 }
 
 /**
+ * Creates a lighter shade of a hex color (mixes toward white) for gradient effect
+ * @param hex - The hex color (e.g., '#F59E0B')
+ * @param percent - How much lighter (0-100), default 25%
+ * @returns The lighter hex color
+ */
+export function lightenColor(hex: string, percent: number = 25): string {
+  const color = hex.replace('#', '');
+
+  const r = Number.parseInt(color.slice(0, 2), 16);
+  const g = Number.parseInt(color.slice(2, 4), 16);
+  const b = Number.parseInt(color.slice(4, 6), 16);
+
+  const lighterR = Math.min(255, Math.floor(r + (255 - r) * (percent / 100)));
+  const lighterG = Math.min(255, Math.floor(g + (255 - g) * (percent / 100)));
+  const lighterB = Math.min(255, Math.floor(b + (255 - b) * (percent / 100)));
+
+  return `#${toHex(lighterR)}${toHex(lighterG)}${toHex(lighterB)}`;
+}
+
+/**
  * Get gradient colors based on button state
  */
 export function getGradientColors(

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Habit Detail — app consistency options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================================
+   EVERY colour below is copied from source — provenance in comments.
+   src/theme/colors/core.ts, src/theme/darkColors.ts, src/theme/spacing.ts,
+   src/theme/airyScale.ts, src/components/HabitCard/HabitCard.colors.ts,
+   and the three screen palettes (insightPalette / detailPalette / browserPalette).
+   ============================================================================ */
+:root{
+  /* light — core.ts:99-107, darkColors.ts:167-186 */
+  --canvas:#F5F1ED;        /* light.background — warm parchment (L0) */
+  --card-l1:#EDEAE5;       /* light.card — home habit card fill */
+  --card-white:#FFFFFF;    /* light.cardElevated — "Habit Detail hero/section cards" */
+  --card-paper:#F8F5F1;    /* cardPaper — Habit Browser / template card fill */
+  --surface-muted:#FAF8F5; /* light.surfaceMuted — home card tray */
+  --border:#DDD8D2;        /* border / gray[200] */
+  --ink:#2D2A26;           /* text.primary / gray[800] */
+  --ink-2:#6B6560;         /* text.secondary / gray[500] */
+  --ink-3:#6E6660;         /* text.tertiary / gray[400] */
+
+  /* greens — core.ts:118-125, :189 */
+  --cta:#059669;           /* primary[600] — "Buttons, CTA fills" */
+  --cta-text:#047857;      /* primary[700] */
+  --success:#15793C;       /* colors.success — checkmarks, completions */
+
+  /* burnished gold — core.ts:135-140 */
+  --gold-100:#FEF3CD;
+  --gold-300:#E8B94D;      /* what detailPalette.gold uses */
+
+  /* current insightPalette.ts literals — the values under review */
+  --cur-green:#0C7C59;
+  --cur-amber-bar:#E5893B;
+  --cur-dial-arc:#F5A25B;
+  --cur-green-soft:#8FC3AB;
+  --cur-cell-empty:#F0EDE4;
+  --cur-band-muted:#5A6B5D;
+  --cur-band-hairline:#C9D6CB;
+
+  /* geometry — airyScale.ts:18-24 (AIRY_SCALE = true), spacing.ts:114-121 */
+  --r-card:24px;   /* borderRadius.large = airy.cardRadius */
+  --r-btn:14px;    /* borderRadius.medium = airy.buttonRadius */
+  --r-tile:13px;   /* airy.tileRadius */
+  --r-modal:28px;  /* borderRadius.xl */
+  --sh-card:0 2px 8px rgba(45,42,38,.06);   /* shadows.card */
+  --sh-subtle:0 1px 3px rgba(45,42,38,.04); /* shadows.subtle */
+
+  --sans:'DM Sans',system-ui,sans-serif;
+  --serif:'Literata',Georgia,serif;  /* fontFamilies.primary.display */
+  --mono:'JetBrains Mono',monospace; /* fontFamilies.monospace */
+}
+*{box-sizing:border-box}
+body{margin:0;background:#E4E0DA;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;transition:background .2s}
+
+/* dark scope — darkColors.ts:63-77, :145-157 */
+.dark{
+  --canvas:#111827; --card-l1:#1F2937; --card-white:#1F2937; --card-paper:#374151;
+  --surface-muted:#1F2937; --border:#374151;
+  --ink:#F9FAFB; --ink-2:#9CA3AF; --ink-3:#8E95A2;
+  --cta:#34D399; --cta-text:#A7F3D0; --success:#4ADE9E; --gold-300:#FBBF24;
+  --cur-green:#34D399; --cur-cell-empty:rgba(249,250,251,.10);
+  --cur-band-muted:#9CA3AF; --cur-band-hairline:rgba(249,250,251,.20);
+  --gold-100:rgba(251,191,36,.16);
+}
+
+header.top{padding:34px 28px 10px;max-width:1560px;margin:0 auto}
+header.top h1{font-family:var(--serif);font-weight:700;font-size:30px;margin:0}
+header.top p{color:#4A453F;font-size:14.5px;line-height:1.65;margin:11px 0 0;max-width:80ch}
+code{font-family:var(--mono);font-size:.86em;background:rgba(45,42,38,.07);padding:1px 5px;border-radius:4px}
+.dark code{background:rgba(255,255,255,.1)}
+
+section.row{max-width:1560px;margin:0 auto;padding:26px 28px 42px}
+section.row>h2{font-family:var(--serif);font-size:21px;font-weight:600;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+section.row>h2 .n{background:var(--ink);color:var(--canvas);font-family:var(--sans);font-size:12px;font-weight:700;border-radius:999px;width:23px;height:23px;display:grid;place-items:center;flex:none}
+section.row>.q{color:#4A453F;font-size:14px;line-height:1.62;margin:0 0 20px;max-width:92ch}
+.divider{height:1px;background:rgba(45,42,38,.13);max-width:1560px;margin:0 auto}
+
+.frames{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.opt{width:390px;flex:none}
+.opt>.cap{display:flex;align-items:baseline;gap:8px;margin-bottom:9px;flex-wrap:wrap}
+.opt>.cap b{font-size:13.5px}
+.tag{font-family:var(--mono);font-size:10.5px;color:#5C574F;background:rgba(45,42,38,.06);padding:2px 7px;border-radius:5px}
+.rec{background:var(--success);color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:999px;text-transform:uppercase}
+.opt>.note{font-size:12.5px;color:#4A453F;line-height:1.58;margin:10px 2px 0}
+
+.ph{width:390px;background:var(--canvas);border-radius:var(--r-modal);overflow:hidden;box-shadow:0 10px 34px rgba(45,42,38,.17)}
+.status{display:flex;justify-content:space-between;align-items:center;padding:13px 24px 2px;font-size:13.5px;font-weight:600;color:var(--ink)}
+.bat{display:flex;gap:5px;align-items:center}
+.bat i{width:16px;height:10px;border-radius:2px;background:currentColor;display:block}
+.bat u{width:22px;height:10px;border-radius:3px;border:1px solid currentColor;opacity:.5;display:block}
+
+.hero{padding:0 0 20px}
+.wash-green  {background:linear-gradient(180deg,#E3EDE6 0%,#EDF0E9 70%,var(--canvas) 100%)}
+.wash-neutral{background:linear-gradient(180deg,var(--canvas) 0%,#EDE8E0 70%,var(--canvas) 100%)}
+.wash-peach  {background:linear-gradient(180deg,#F6DEC8 0%,#F3E3D2 62%,var(--canvas) 100%)}
+.dark .wash-green  {background:linear-gradient(180deg,#163237 0%,#13212D 70%,var(--canvas) 100%)}
+.dark .wash-neutral{background:linear-gradient(180deg,#1B2230 0%,#161C27 70%,var(--canvas) 100%)}
+.dark .wash-peach  {background:linear-gradient(180deg,#362D23 0%,#1F2025 62%,var(--canvas) 100%)}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:9px 20px 0;gap:10px}
+.hdr .x{width:36px;height:36px;border-radius:999px;border:1px solid var(--cur-band-hairline);display:grid;place-items:center;font-size:15px;color:var(--cur-band-muted);flex:none}
+.hdr .ed{font-size:13.5px;font-weight:600;border:1px solid var(--cur-band-hairline);border-radius:999px;padding:8px 16px;color:var(--cur-band-muted);flex:none}
+.hdr .ttl{flex:1;text-align:center;font-size:15px;font-weight:600;color:var(--ink)}
+.hdr .ttl.serif{font-family:var(--serif);font-size:17px}
+
+.htop{display:flex;align-items:center;gap:18px;padding:17px 20px 0}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}
+.htop h1{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.12;margin:7px 0 0;color:var(--ink)}
+.dial{position:relative;width:84px;height:84px;flex:none}
+.dial .v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.dial .v b{font-family:var(--serif);font-size:22px;font-weight:700;line-height:1;color:var(--ink)}
+.dial .v s{text-decoration:none;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--cur-band-muted);margin-top:3px}
+.arc{transform:rotate(-90deg);transform-origin:42px 42px}
+.arc.anim{animation:draw 1.15s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes draw{from{stroke-dasharray:0 226}}
+
+.why{display:flex;align-items:flex-start;gap:9px;margin:15px 20px 0;padding:13px 15px;border-radius:var(--r-tile)}
+.why p{font-size:13.5px;line-height:1.5;margin:0;color:var(--cur-band-muted)}
+.why p b{color:var(--ink)}
+.cta{margin:17px 20px 0;border-radius:var(--r-btn);padding:17px;text-align:center;font-size:17px;font-weight:700;color:#F5F1ED}
+.twomin{text-align:center;margin-top:11px;font-size:13.5px;font-weight:600}
+
+.dcard{margin:12px 20px 0;border:1px solid var(--border);border-radius:var(--r-card);padding:18px;box-shadow:var(--sh-subtle)}
+.eyerow{display:flex;justify-content:space-between;align-items:baseline}
+.eyerow .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.eyerow .rt{font-size:12px;color:var(--ink-3)}
+.dots{display:flex;justify-content:space-between;margin-top:13px}
+.dots .d{display:flex;flex-direction:column;align-items:center;gap:7px}
+.dots .d span{font-size:11px;color:var(--ink-3)}
+.dots .d i{width:34px;height:34px;border-radius:999px;display:grid;place-items:center;font-size:14px;color:#fff;font-style:normal}
+.statrail{display:flex;margin-top:15px;border-top:1px solid var(--border);padding-top:5px}
+.statrail .c{flex:1;padding:11px 0;text-align:center}
+.statrail .c b{font-size:23px;font-weight:700;line-height:1;display:block;color:var(--ink)}
+.statrail .c b.serif{font-family:var(--serif)}
+.statrail .c b.mono{font-family:var(--mono);font-size:21px}
+.statrail .c span{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:5px;display:block}
+.statrail .hair{width:1px;background:var(--border);margin:10px 0}
+.bar{height:7px;border-radius:999px;background:var(--cur-cell-empty);margin-top:4px;overflow:hidden}
+.bar>i{display:block;height:100%;border-radius:999px;width:75%}
+.barcap{font-size:12.5px;color:var(--ink-2);margin:8px 0 0;text-align:center}
+
+.wk{display:flex;justify-content:space-between;align-items:flex-end;gap:7px;margin-top:15px}
+.wk .b{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.wk .b i{width:100%;border-radius:8px;display:block}
+.wk .b span{font-size:11px;color:var(--ink-3)}
+
+/* real home habit card — HabitCard.styles.ts:29-38, airyScale.ts:26-28 */
+.ctxlabel{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);padding:16px 20px 0}
+.tray{background:var(--surface-muted);border-radius:var(--r-modal);margin:10px 12px;padding:12px}
+.hcard{background:var(--card-l1);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-card);min-height:88px;padding:16px;display:flex;align-items:center;gap:13px}
+.hcard .ic{width:42px;height:42px;border-radius:var(--r-tile);background:var(--gold-100);display:grid;place-items:center;font-size:20px;flex:none}
+.nm{font-size:16px;font-weight:600;color:var(--ink)}
+.mt{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.hcard .rg{width:30px;height:30px;border-radius:999px;border:2px solid var(--cta);flex:none;margin-left:auto}
+/* Habit Browser card — browserPalette.ts:54 cardPaper */
+.bcard{background:var(--card-paper);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-card);padding:16px;display:flex;align-items:center;gap:13px;margin:0 12px 14px}
+.bcard .ic{width:42px;height:42px;border-radius:var(--r-tile);background:#F8E9CE;display:grid;place-items:center;font-size:20px;flex:none}
+.dark .bcard .ic{background:rgba(251,191,36,.18)}
+
+.seamwrap{border-radius:var(--r-modal);overflow:hidden;box-shadow:0 10px 34px rgba(45,42,38,.17);width:390px}
+.pulled{height:60px;display:grid;place-items:center;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;color:#7A736A;text-align:center;padding:0 16px}
+.seam-bad{background:var(--canvas)}
+.seam-good{background:#E3EDE6}
+.dark .seam-good{background:#16302A}
+
+.pairwrap{width:100%;border-top:1px solid rgba(45,42,38,.11);padding-top:22px;margin-top:4px}
+.dark .pairwrap{border-top-color:rgba(255,255,255,.12)}
+.pairwrap:first-child{border-top:0;padding-top:0}
+.pairwrap>h3{font-size:15px;font-weight:700;margin:0 0 7px}
+.pairwrap>p{font-size:13px;line-height:1.6;color:#4A453F;margin:0 0 15px;max-width:96ch}
+.pairgrid{display:flex;gap:22px;flex-wrap:wrap}
+
+.legend{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+.sw{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;color:#4A453F;background:rgba(255,255,255,.62);border:1px solid rgba(45,42,38,.1);border-radius:7px;padding:5px 9px}
+.sw i{width:14px;height:14px;border-radius:4px;display:block;border:1px solid rgba(45,42,38,.14)}
+
+.notecard{border:1px solid var(--border);border-radius:var(--r-card);padding:18px;background:var(--card-white);box-shadow:var(--sh-subtle)}
+.notecard p{font-size:13px;line-height:1.62;color:#4A453F;margin:9px 0 0}
+.dark .notecard p{color:#AFA9A1}
+
+.toggle{position:fixed;right:20px;bottom:20px;z-index:50;display:flex;gap:8px}
+.toggle button{font-family:var(--sans);font-size:13px;font-weight:600;border:1px solid rgba(45,42,38,.18);background:#fff;color:#2D2A26;border-radius:999px;padding:10px 17px;cursor:pointer;box-shadow:0 4px 16px rgba(45,42,38,.16)}
+.toggle button[aria-pressed="true"]{background:#2D2A26;color:#fff;border-color:#2D2A26}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Habit Detail — does it match the rest of the app?</h1>
+  <p><b>Architecturally yes, chromatically no.</b> Each row shows the current build first, then the alternatives, with a <b>real home habit card</b> (<code>#EDEAE5</code>) and <b>Habit Browser card</b> (<code>#F8F5F1</code>) in frame so you judge against the actual neighbours, not in isolation. Rows 1–2 are taste calls. Row 3 is not — every "after" there is an existing token, an existing primitive, or a documented rule. Dark toggle bottom-right.</p>
+  <p style="font-size:13px;color:#5C574F;border-left:3px solid #E8B94D;padding-left:12px;margin-top:14px"><b>Provenance:</b> 42 of the 57 hex values here are copied from source (<code>src/theme/</code>, <code>HabitCard.colors.ts</code>, the three screen palettes, the spec doc). Of the rest, 10 are this page's own chrome — body background, prose grey, BEFORE/AFTER labels — and <b>4 are invented</b>: the dark-mode wash stops <code>#16302A</code>/<code>#14211E</code> (green) and <code>#1B2230</code>/<code>#161C27</code> (neutral). They have to be, because the current code builds its dark stops with <code>withAlpha(green, 0.2)</code> rather than opaque hex — which is itself finding 3g below. Treat the dark washes as indicative only; the light column is exact.</p>
+</header>
+
+<div class="divider"></div>
+
+<section class="row">
+  <h2><span class="n">1</span> Hero wash</h2>
+  <p class="q">The wash is the one thing that visually separates this screen from the rest of the app. <code>docs/human-optimized-frontend-spec.md:48</code> says background gradients should be neutral <code>parchment → #EDE8E0</code>. Every other structural wash in the app is neutral (Welcome) or warm (template drill-down) — <b>green is new</b>. The counter-argument is real though: <code>FullsizeTemplatePreview</code> already establishes "one fixed tinted wash per drill-down surface", so only the hue family is unprecedented.</p>
+  <div class="frames" id="row1"></div>
+  <div class="legend">
+    <span class="sw"><i style="background:linear-gradient(180deg,#E3EDE6,#EDF0E9)"></i>A current #E3EDE6→#EDF0E9</span>
+    <span class="sw"><i style="background:linear-gradient(180deg,#F5F1ED,#EDE8E0)"></i>B spec #F5F1ED→#EDE8E0</span>
+    <span class="sw"><i style="background:linear-gradient(180deg,#F6DEC8,#F3E3D2)"></i>C sibling #F6DEC8→#F3E3D2</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="row">
+  <h2><span class="n">2</span> Card fill</h2>
+  <p class="q">Three fills are live in the app right now: home <code>#EDEAE5</code>, Habit Browser and template <code>#F8F5F1</code>, habit detail <code>#FFFFFF</code>. White is <b>not</b> drift — <code>core.ts:101</code> defines <code>cardElevated</code> with the comment <i>"Pure white card — Habit Detail hero/section cards"</i>, and spec:37 lists surface cream as <code>#FFFFFF</code>. But <code>b8f32131f</code> moved template cards off white for a stated reason and repurposed <code>cardElevated</code> in the same commit. Watch the two context cards at the bottom of each frame — that's the list→detail transition.</p>
+  <div class="frames" id="row2"></div>
+  <div class="legend">
+    <span class="sw"><i style="background:#FFFFFF"></i>A #FFFFFF light.cardElevated</span>
+    <span class="sw"><i style="background:#F8F5F1"></i>B #F8F5F1 cardPaper</span>
+    <span class="sw"><i style="background:#EDEAE5"></i>C #EDEAE5 light.card</span>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="row">
+  <h2><span class="n">3</span> Consistency wins</h2>
+  <p class="q">Six before/after pairs. These aren't preferences — each "after" is already in the codebase somewhere.</p>
+  <div id="row3"></div>
+</section>
+
+<div class="divider"></div>
+
+<section class="row">
+  <h2><span class="n">4</span> Not visual — decide on the code argument</h2>
+  <p class="q">Nothing to look at, listed so the picture is complete.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;max-width:1180px" id="row4"></div>
+</section>
+
+<div class="toggle">
+  <button id="bLight" aria-pressed="true">Light</button>
+  <button id="bDark" aria-pressed="false">Dark</button>
+</div>
+
+<script>
+const ARC = 226; // 2πr, r=36 — matches HeroStrengthDial
+
+const status = () => `<div class="status"><span>9:41</span><div class="bat"><i></i><u></u></div></div>`;
+
+function dial(arc, pct, word, animate){
+  return `<div class="dial">
+    <svg width="84" height="84" viewBox="0 0 84 84">
+      <circle cx="42" cy="42" r="36" fill="none" stroke="#D3DFD5" stroke-width="7"></circle>
+      <circle class="arc${animate?' anim':''}" cx="42" cy="42" r="36" fill="none" stroke="${arc}"
+        stroke-width="7" stroke-linecap="round" stroke-dasharray="${(pct/100)*ARC} ${ARC}"></circle>
+    </svg>
+    <div class="v"><b>${pct}</b><s>${word}</s></div>
+  </div>`;
+}
+
+function hero(o){
+  o = o || {};
+  const g = o.green || 'var(--cur-green)';
+  return `${status()}
+  <div class="hdr">
+    <div class="x">✕</div>
+    ${o.showTitle ? `<div class="ttl${o.serifTitle?' serif':''}">Wake-Up Movement</div>` : `<div style="flex:1"></div>`}
+    <div class="ed">Edit</div>
+  </div>
+  <div class="htop">
+    <div style="flex:1;min-width:0">
+      <div class="eyebrow" style="color:${g}">Daily habit</div>
+      <h1>Wake-Up Movement</h1>
+    </div>
+    ${dial(o.arc || 'var(--cur-dial-arc)', 68, 'Steady', !!o.animate)}
+  </div>
+  <div class="why" style="background:${o.whyBg || 'rgba(12,124,89,.08)'}">
+    <span style="font-size:13px;margin-top:2px">◎</span>
+    <p><b>Your why:</b> "Have energy for the kids before the day takes over."</p>
+  </div>
+  <div class="cta" style="background:${o.cta || g}">✓&ensp;Complete today</div>
+  <div class="twomin" style="color:${o.cta || g}">Only have 2 minutes? →</div>`;
+}
+
+function progress(o){
+  o = o || {};
+  const g = o.green || 'var(--cur-green)';
+  const amber = o.amber || 'var(--cur-amber-bar)';
+  const cls = o.mono ? 'mono' : 'serif';
+  const done = o.success || g;
+  const day = (l,s)=>{
+    const st = {done:`background:${done}`, today:`border:2px solid ${g}`,
+                missed:`border:1.5px dashed #D9B8A6`, empty:`background:var(--cur-cell-empty)`}[s];
+    return `<div class="d"><span${s==='today'?` style="color:${g};font-weight:700"`:''}>${l}</span><i style="${st}">${s==='done'?'✓':''}</i></div>`;
+  };
+  return `<div class="dcard" style="background:${o.card||'var(--card-white)'}">
+    <div class="eyerow"><span class="lbl" style="color:${g}">Progress</span><span class="rt">2 of 7 this week</span></div>
+    <div class="dots">${day('M','missed')}${day('T','done')}${day('W','missed')}${day('T','today')}${day('F','empty')}${day('S','empty')}${day('S','empty')}</div>
+    <div class="statrail">
+      <div class="c"><b class="${cls}" style="color:${amber}">9</b><span>Current streak</span></div>
+      <div class="hair"></div>
+      <div class="c"><b class="${cls}" style="color:${done}">12</b><span>Longest</span></div>
+      <div class="hair"></div>
+      <div class="c"><b class="${cls}">148</b><span>Days this year</span></div>
+    </div>
+    <div class="bar"><i style="background:${amber}"></i></div>
+    <p class="barcap">3 days from your best streak ever</p>
+  </div>`;
+}
+
+function oneFix(o){
+  o = o || {};
+  const g = o.green || 'var(--cur-green)';
+  const amber = o.amber || 'var(--cur-amber-bar)';
+  const bars = [[52,g],[60,g],[46,g],[56,g],[15,amber],[39,'var(--cur-green-soft)'],[35,'var(--cur-green-soft)']];
+  const lbl = ['M','T','W','T','F','S','S'];
+  return `<div class="dcard" style="background:${o.card||'var(--card-white)'}">
+    <div class="eyerow"><span class="lbl" style="color:${g}">↗ One fix to try</span></div>
+    <p style="font-family:var(--serif);font-size:19px;line-height:1.35;margin:11px 0 0;color:var(--ink)">Fridays are where it slips.</p>
+    <div class="wk">${bars.map((b,i)=>`<div class="b"><i style="height:${b[0]}px;background:${b[1]}"></i><span${i===4?` style="color:${amber};font-weight:700"`:''}>${lbl[i]}</span></div>`).join('')}</div>
+  </div>`;
+}
+
+const homeCtx = () => `<div class="ctxlabel">↓ real home habit card · #EDEAE5</div>
+  <div class="tray"><div class="hcard">
+    <div class="ic">🏃</div>
+    <div><div class="nm">Wake-Up Movement</div><div class="mt">9 day streak · daily</div></div>
+    <div class="rg"></div>
+  </div></div>`;
+
+const browserCtx = () => `<div class="ctxlabel" style="padding-top:2px">↓ Habit Browser card · #F8F5F1</div>
+  <div class="bcard" style="margin-top:10px"><div class="ic">📚</div>
+    <div><div class="nm" style="font-size:15px">Read before bed</div><div class="mt">Evening · 10 min</div></div>
+  </div>`;
+
+const opt = (cap, tag, rec, body, note) => `<div class="opt">
+  <div class="cap"><b>${cap}</b><span class="tag">${tag}</span>${rec?`<span class="rec">recommend</span>`:''}</div>
+  ${body}${note?`<p class="note">${note}</p>`:''}</div>`;
+
+/* ---- row 1 ---- */
+const r1 = (wash) => `<div class="ph">
+  <div class="hero ${wash}">${hero({animate:true})}</div>
+  ${progress({})}
+  ${homeCtx()}
+</div>`;
+
+document.getElementById('row1').innerHTML = [
+  opt('A · current green','#E3EDE6 → #EDF0E9',false, r1('wash-green'),
+    'Faithful to the mock. But no other structural wash in the app is green, and the spec asks for neutral.'),
+  opt('B · neutral, per spec','#F5F1ED → #EDE8E0',true, r1('wash-neutral'),
+    'spec:48. The band stops being the odd screen out, and green starts reading as <i>meaning</i> — CTA, dial, completed cells — rather than decoration. Also makes the ≤8% accent cap easier to honour.'),
+  opt('C · warm, like template detail','#F6DEC8 → #F3E3D2',false, r1('wash-peach'),
+    'Reuses <code>detailPalette.heroGradient</code> so habit-detail and template-detail read as one drill-down class. Most internally consistent, furthest from the mock.')
+].join('');
+
+/* ---- row 2 ---- */
+const r2 = (fill) => `<div class="ph">
+  <div class="hero wash-green">${hero({})}</div>
+  ${progress({card:fill})}
+  ${oneFix({card:fill})}
+  ${homeCtx()}
+  ${browserCtx()}
+</div>`;
+
+document.getElementById('row2').innerHTML = [
+  opt('A · white (current)','light.cardElevated #FFFFFF',false, r2('var(--card-white)'),
+    'Sanctioned — the token comment scopes it to this screen and spec:37 lists cream #FFFFFF. Highest contrast on parchment, but note the step down to the #EDEAE5 home card below it.'),
+  opt('B · warm paper','cardPaper #F8F5F1',true, r2('var(--card-paper)'),
+    'Matches Habit Browser and template detail. Commit <code>b8f32131f</code>: "~50% warmth between white and canvas so the card reads raised without merging" — and it repurposed <code>cardElevated</code> in the same breath. Smoothest list→detail transition here.'),
+  opt('C · home surface','light.card #EDEAE5',false, r2('var(--card-l1)'),
+    'Zero surface shift from the list. Darkest option — insight cards start flattening against the canvas and the dashed note slot nearly vanishes.')
+].join('');
+
+/* ---- row 3 ---- */
+function pair(title, why, beforeTag, beforeBody, afterTag, afterBody){
+  return `<div class="pairwrap">
+    <h3>${title}</h3>
+    <p>${why}</p>
+    <div class="pairgrid">
+      <div class="opt"><div class="cap"><b style="font-size:12.5px;color:#8A5340">BEFORE</b><span class="tag">${beforeTag}</span></div>${beforeBody}</div>
+      <div class="opt"><div class="cap"><b style="font-size:12.5px;color:#15793C">AFTER</b><span class="tag">${afterTag}</span></div>${afterBody}</div>
+    </div>
+  </div>`;
+}
+
+const cardsOnly = (o) => `<div class="ph"><div class="hero wash-green" style="padding-bottom:4px">${status()}</div>${progress(o)}${oneFix(o)}<div style="height:14px"></div></div>`;
+const heroOnly  = (o) => `<div class="ph"><div class="hero wash-green">${hero(o)}</div></div>`;
+
+document.getElementById('row3').innerHTML = [
+  pair('3a · Streak accent — orange → burnished gold',
+    'The palette carries <b>three</b> amber one-offs (<code>#E5893B</code>, <code>#B0723A</code>, <code>#F5A25B</code>), and <code>#E5893B</code> is duplicated raw in <code>WeekdayBars.tsx:43</code>. The app\'s accent is burnished gold — <code>streak[300] #E8B94D</code>, which is exactly what the sibling <code>detailPalette.gold</code> uses; spec:36 says <code>#E8A838</code>. Watch the streak numeral, the milestone bar and the Friday bar.',
+    '#E5893B orange', cardsOnly({}),
+    'streak[300] #E8B94D', cardsOnly({amber:'var(--gold-300)'})),
+
+  pair('3b · Greens — one value doing two documented roles',
+    '<code>src/theme/README.md</code> says <i>"do not collapse the greens"</i>, and <code>semantic.ts:9-14</code> separates CTA <code>#059669</code> from success <code>#15793C</code> ("checkmarks, task completions"). A single <code>#0C7C59</code> currently does both and matches neither. Compare the CTA fill against the completed cells.',
+    '#0C7C59 for both', `<div class="ph"><div class="hero wash-green">${hero({})}</div>${progress({})}<div style="height:14px"></div></div>`,
+    'CTA #059669 · done #15793C', `<div class="ph"><div class="hero wash-green">${hero({green:'var(--cta)'})}</div>${progress({green:'var(--cta)',success:'var(--success)'})}<div style="height:14px"></div></div>`),
+
+  pair('3c · Header title — the app\'s only non-serif ScreenHeader',
+    '<code>DetailBandHeader.tsx:85-89</code> overrides <code>titleStyle</code> to <code>typography.body</code> (DM Sans). Every other <code>ScreenHeader</code> gets serif via <code>typography.heading1</code> — Analytics, Character, Habit library, Settings. Ironic on the one screen whose whole identity is serif. Shown pinned, as it appears on scroll.',
+    'typography.body (DM Sans)', heroOnly({showTitle:true}),
+    'typography.heading1 (Literata)', heroOnly({showTitle:true,serifTitle:true})),
+
+  pair('3d · Stat numerals — serif fork vs the shared StatColumn',
+    '<code>ui/StatColumn</code>\'s docstring is literally <i>"the detail-page stat idiom: mono number over a lowercase label"</i>, and <code>WeekStatsRow</code> is a parallel implementation of it. But serif numerals already exist in <code>SettingsModal/ProfileStatItem.tsx</code> — so this is a genuine split, not an error. If serif wins, add <code>suffix?</code> to <code>StatColumn</code> and consume it instead of keeping the fork.',
+    'serif (current fork)', cardsOnly({}),
+    'mono (ui/StatColumn)', cardsOnly({mono:true})),
+
+  pair('3e · Overscroll seam — a bug, not a preference',
+    '<code>FullsizeTemplatePreview/components/PreviewContent.tsx:29-30</code> states the invariant: <i>"Header tint, hero stop 0 and the ScrollView overscroll tint must all read the same value or scrolling shows a seam at the hero boundary."</i> The <code>ScrollView</code> in <code>HabitDetailContent.tsx</code> has no background, so pulling down exposes parchment behind the tinted hero. Two-line fix, using the sibling\'s technique.',
+    'no ScrollView background', `<div class="seamwrap"><div class="pulled seam-bad">↕ pulled down — canvas #F5F1ED shows through</div><div class="hero wash-green">${hero({})}</div></div>`,
+    'backgroundColor = hero stop 0', `<div class="seamwrap"><div class="pulled seam-good">↕ pulled down — overscroll tint matches</div><div class="hero wash-green">${hero({})}</div></div>`),
+
+  pair('3f · Strength ring — 7th implementation, and the only static one',
+    'Shared <code>components/StrengthRing</code> animates its fill via <code>useStrengthRingAnimation</code>, carries <code>accessibilityRole="progressbar"</code>, and documents <code>size:\'medium\'</code> as "for detail screens". <code>HeroStrengthDial</code> forks it at a hardcoded 84px with no animation at all. The fork exists only because <code>StrengthRing</code> hardcodes its track colour — adding <code>arcColor?</code>/<code>trackColor?</code> is less code than a second SVG. Reload the page to replay.',
+    'static', heroOnly({}),
+    'animated fill', heroOnly({animate:true})),
+
+  pair('3g · Dark wash stops must be opaque, not alpha',
+    '<code>detailPalette.ts:63-69</code> pre-blends its dark stops to opaque hex with an explicit reason: <i>"the header tint, hero stop 0 and the ScrollView overscroll tint all read this value — an alpha stop would composite three times"</i>. <code>insightPalette</code>\'s <code>bandTokens</code> builds dark stops as <code>withAlpha(green, 0.2)</code> and <code>DetailBandHeader</code> reads <code>wash[0]</code> — exactly that three-reader situation. Because no opaque dark green stop exists in source yet, the two frames below are the only <b>invented</b> values in this mock. Switch to dark to compare.',
+    'withAlpha(green, .2) ×3 readers', `<div class="seamwrap"><div class="pulled seam-bad">↕ alpha stop composites per reader</div><div class="hero wash-green">${hero({})}</div></div>`,
+    'pre-blended opaque hex', `<div class="seamwrap"><div class="pulled seam-good">↕ single opaque value everywhere</div><div class="hero wash-green">${hero({})}</div></div>`)
+].join('');
+
+/* ---- row 4 ---- */
+document.getElementById('row4').innerHTML = [
+  ['Primitive reuse','<code>HeaderButton</code> hand-rolls <code>Animated.createAnimatedComponent</code> + <code>withSpring(0.92)</code> — exactly what <code>ui/AnimatedPressable</code> exists to eliminate — and loses <code>useFocusRing</code> doing it. <code>InsightPill</code> uses a bare <code>Pressable</code> with <b>no press feedback at all</b>. <code>HabitNoteCard</code> hand-sets <code>placeholderTextColor</code>, the single thing <code>ThemedTextInput</code> does.'],
+  ['Typography scale','This screen holds <b>7 of the 8</b> fractional <code>fontSize</code> values in the entire codebase (<code>13.5</code>, <code>12.5</code>) and sits at ~33% token adoption vs ~69% app-wide. Off-scale radii too: <code>16</code>, <code>13</code>, <code>8</code> where <code>borderRadius.medium</code>=14, <code>airy.tileRadius</code>=13, <code>borderRadius.small</code>=10.'],
+  ['Local duplication','The 6-property card block appears <b>verbatim 5×</b> in this one screen, and there are three separate section-header components (<code>CardEyebrow</code>, <code>SectionHeading</code>, <code>InsightCardHeader</code>). <code>useHeaderTintAnimation</code> in <code>FullsizeTemplatePreview/hooks/</code> is already generic — it should move to <code>src/hooks/</code> and replace the hand-rolled <code>PIN_OFFSET = 96</code> threshold.'],
+  ['Missing test','All three screen palettes export a pure builder "for unit tests". Only <code>detailPalette</code> has one. Adding <code>insightPalette</code> cases — CTA green ≠ success green, card resolves to the chosen token, dark stops are opaque hex — locks in whatever gets decided above.']
+].map(([h,b])=>`<div class="notecard"><div class="eyerow"><span class="lbl" style="color:var(--cta-text)">${h}</span></div><p>${b}</p></div>`).join('');
+
+/* ---- dark toggle ---- */
+const bL=document.getElementById('bLight'), bD=document.getElementById('bDark');
+function setMode(dark){
+  bL.setAttribute('aria-pressed',String(!dark));
+  bD.setAttribute('aria-pressed',String(dark));
+  document.documentElement.classList.toggle('dark',dark);
+  document.body.classList.toggle('dark',dark);
+  document.body.style.background = dark ? '#070C15' : '#E4E0DA';
+  document.querySelectorAll('header.top h1, section.row>h2, .pairwrap>h3').forEach(e=>e.style.color = dark?'#F2EFEA':'#2D2A26');
+  document.querySelectorAll('header.top p, section.row>.q, .pairwrap>p, .opt>.note').forEach(e=>e.style.color = dark?'#AFA9A1':'#4A453F');
+  document.querySelectorAll('.tag').forEach(e=>{e.style.color=dark?'#B9B4AC':'#5C574F';e.style.background=dark?'rgba(255,255,255,.09)':'rgba(45,42,38,.06)';});
+  document.querySelectorAll('.sw').forEach(e=>{e.style.background=dark?'rgba(255,255,255,.07)':'rgba(255,255,255,.62)';e.style.color=dark?'#C6C1B9':'#4A453F';});
+  document.querySelectorAll('.divider').forEach(e=>e.style.background=dark?'rgba(255,255,255,.12)':'rgba(45,42,38,.13)');
+}
+bL.onclick=()=>setMode(false);
+bD.onclick=()=>setMode(true);
+</script>
+</body>
+</html>

@@ -7,6 +7,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Text, View } from 'react-native';
 
+import { useRetryConvexAuth } from '../../providers/ConvexAuthReady.context';
 import { useThemeColors } from '../../theme/ThemeContext';
 import { SkeletonLoader } from '../SkeletonLoader';
 import { LoadingTimeoutCard } from './LoadingTimeoutCard';
@@ -28,6 +29,7 @@ export function BrandedLoadingScreen() {
   const [timedOut, setTimedOut] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { colors } = useThemeColors();
+  const retryConvexAuth = useRetryConvexAuth();
 
   useEffect(() => {
     timerRef.current = setTimeout(() => setTimedOut(true), LOADING_TIMEOUT_MS);
@@ -37,9 +39,10 @@ export function BrandedLoadingScreen() {
   }, []);
 
   const handleRetry = useCallback(() => {
+    retryConvexAuth();
     setTimedOut(false);
     timerRef.current = setTimeout(() => setTimedOut(true), LOADING_TIMEOUT_MS);
-  }, []);
+  }, [retryConvexAuth]);
 
   return (
     <View

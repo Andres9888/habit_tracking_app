@@ -3,7 +3,7 @@
  */
 
 import { StyleSheet } from 'react-native';
-import { colors } from '@/theme';
+import { colors } from '@/theme/colors';
 
 export const layoutStyles = StyleSheet.create({
   bottomSpacer: {

@@ -2,6 +2,7 @@
  * Habit Utility Functions
  * Date handling utilities for habits module
  */
+import type { MutationCtx, QueryCtx } from '../_generated/server';
 
 /**
  * Get today's date as YYYY-MM-DD string in local timezone.
@@ -79,7 +80,61 @@ export function maxDateKey(a: string, b: string): string {
   return a > b ? a : b;
 }
 
+/**
+ * How far back strength/streak reads look. See getTrackingCutoffKey.
+ */
+export const RECALC_TRACKING_LOOKBACK_DAYS = 400;
+
+/**
+ * Lower bound for `by_habit_and_date` range reads over the `tracking` table.
+ *
+ * Every strength/streak read must use this. Unbounded, the read is the habit's
+ * entire history, so a single toggle's cost grows linearly with account age (a
+ * 3-year-old habit reads ~1,100 rows per tap) and eventually trips Convex's
+ * per-transaction document read limit.
+ *
+ * 400 days covers the longest window any consumer needs: the momentum strength
+ * model decays to its floor well inside a year, and a streak is broken by any
+ * uncompleted day, so older rows cannot affect the current values. The one
+ * exception is `bestStreak`, which may have been set outside the window — call
+ * sites must guard it with `Math.max(computed, habit.bestStreak ?? 0)` rather
+ * than overwriting.
+ *
+ * @returns Cutoff date key in YYYY-MM-DD format
+ */
+export function getTrackingCutoffKey(): string {
+  const cutoff = new Date();
+  cutoff.setUTCDate(cutoff.getUTCDate() - RECALC_TRACKING_LOOKBACK_DAYS);
+  return cutoff.toISOString().slice(0, 10);
+}
+
+/**
+ * Read the highest `order` value across a user's habits.
+ *
+ * Prefer this over `findMaxOrder(await …collect())` when the caller does not
+ * otherwise need the habit documents: the `by_userId_and_order` index makes
+ * this a single-row read instead of loading every habit doc (each ~70 fields)
+ * just to take a maximum.
+ *
+ * @returns The maximum order value, or -1 if the user has no habits
+ */
+export async function findMaxOrderForUser(
+  ctx: QueryCtx | MutationCtx,
+  userId: string
+): Promise<number> {
+  const highest = await ctx.db
+    .query('habits')
+    .withIndex('by_userId_and_order', (q) => q.eq('userId', userId))
+    .order('desc')
+    .first();
+  return highest?.order ?? -1;
+}
+
 /** Find the maximum order value in a list of habits.
+ *
+ * Use only when the caller already holds the habit documents for another
+ * reason; otherwise use `findMaxOrderForUser`.
+ *
  * @param habits - Array of habit objects with optional order field
  * @returns The maximum order value, or -1 if no habits
  */

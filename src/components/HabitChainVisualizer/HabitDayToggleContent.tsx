@@ -31,14 +31,14 @@ export const HabitDayToggleContent: React.FC<Props> = ({
     <Animated.View
       pointerEvents='none'
       style={[
-        StyleSheet.absoluteFillObject,
+        StyleSheet.absoluteFill,
         { backgroundColor: FORGE_FLASH_COLOR, opacity: forgeFlash },
       ]}
     />
     {missed ? (
       <View
         pointerEvents='none'
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         className='items-center justify-center'
       >
         <Unlink color={MISSED_BORDER} size={iconSizes.medium} strokeWidth={2.5} />

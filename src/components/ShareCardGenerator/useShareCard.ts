@@ -4,7 +4,7 @@
  */
 
 import { useState, useRef } from 'react';
-import ViewShot from 'react-native-view-shot';
+import type { ViewShotRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import type {
   SharePlatform,
@@ -20,7 +20,7 @@ import {
 import { ERROR_MESSAGES } from '../../constants/errorMessages';
 
 export function useShareCard(data: ShareCardData) {
-  const viewShotRef = useRef<ViewShot>(null);
+  const viewShotRef = useRef<ViewShotRef>(null);
 
   const [selectedGradient, setSelectedGradient] = useState(0);
   const [personalMessage, setPersonalMessage] = useState('');

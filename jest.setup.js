@@ -92,9 +92,13 @@ jest.mock('react-native-gesture-handler', () => {
 });
 
 // Mock @expo/vector-icons
-jest.mock('@expo/vector-icons', () => ({
-  Feather: 'Feather',
-}));
+jest.mock(
+  '@expo/vector-icons',
+  () => ({
+    Feather: 'Feather',
+  }),
+  { virtual: true }
+);
 
 // Mock Convex
 jest.mock('convex/react', () => ({

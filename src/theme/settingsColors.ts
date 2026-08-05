@@ -33,14 +33,15 @@ const darkTint: IconColor = { icon: '#34D399', bg: 'rgba(52,211,153,0.14)' };
 const darkDestructive: IconColor = { icon: '#FCA5A5', bg: '#4B1F1F' };
 
 /**
- * Two-tone scannability: green = a row that CHANGES app state, warm-stone
- * neutral = a purely NAVIGATIONAL row (Support links). Two calm warm tones
- * carrying meaning — not a return to the saturated rainbow.
+ * Two-tone scannability: green = a row that CHANGES app state, warm AMBER =
+ * a purely NAVIGATIONAL row (Support links). Amber matches the Habit Browser's
+ * icon tile, and unlike the previous stone grey it actually looks like a chosen
+ * colour rather than a desaturated version of the card behind it.
  */
-const lightNeutral: IconColor = { icon: '#6B6560', bg: '#E9E4DD' };
+const lightNeutral: IconColor = { icon: '#8A6A33', bg: '#F4E7D2' };
 const darkNeutral: IconColor = {
-  icon: '#A8A29E',
-  bg: 'rgba(168,162,158,0.14)',
+  icon: '#E8C88A',
+  bg: 'rgba(232,200,138,0.14)',
 };
 
 const buildSettingsColors = (

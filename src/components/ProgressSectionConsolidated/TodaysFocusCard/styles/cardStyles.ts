@@ -31,7 +31,7 @@ export const cardStyles = StyleSheet.create({
     width: 200,
   },
   shimmerOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     zIndex: 1,
   },
   textContainer: {

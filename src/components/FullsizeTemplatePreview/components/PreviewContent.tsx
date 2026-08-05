@@ -5,7 +5,7 @@
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import { layoutStyles } from '../styles';
-import { buildHeroGradient } from '../utils/heroGradient';
+import { useDetailPalette } from '../detailPalette';
 import { useHeaderTintAnimation } from '../hooks/useHeaderTintAnimation';
 import { ModalHeader } from './ModalHeader';
 import { ScrollableContent } from './ScrollableContent';
@@ -17,7 +17,6 @@ export function PreviewContent({
   createPressHandlers,
   customizeButtonScale,
   handlers,
-  iconColor,
   importButtonScale,
   insets,
   initialAnchor = 'top',
@@ -27,7 +26,10 @@ export function PreviewContent({
   template,
   visible,
 }: PreviewContentProps) {
-  const headerTint = buildHeroGradient(iconColor)[0];
+  // Header tint, hero stop 0 and the ScrollView overscroll tint must all read
+  // the same value or scrolling shows a seam at the hero boundary.
+  const palette = useDetailPalette();
+  const headerTint = palette.heroGradient[0];
   const { scrollHandler, onHeroLayout, animatedBgStyle } =
     useHeaderTintAnimation(headerTint);
   return (
@@ -47,8 +49,6 @@ export function PreviewContent({
       />
       <ScrollableContent
         iconAnimatedStyle={animatedStyles.iconAnimatedStyle}
-        iconColor={iconColor}
-        iconGlowStyle={animatedStyles.iconGlowStyle}
         initialAnchor={initialAnchor}
         overscrollTint={headerTint}
         reducedMotion={reducedMotion}
@@ -63,7 +63,6 @@ export function PreviewContent({
         createPressHandlers={createPressHandlers}
         customizeButtonScale={customizeButtonScale}
         customizeButtonStyle={animatedStyles.customizeButtonStyle}
-        iconColor={iconColor}
         importButtonScale={importButtonScale}
         importButtonStyle={animatedStyles.importButtonStyle}
         isImported={isImported}

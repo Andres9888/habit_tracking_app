@@ -3,18 +3,11 @@
 import { usePremium } from '@/hooks/usePremium';
 import { PremiumUpsellCard } from './PremiumUpsellCard';
 import { TrialCard } from './TrialCard';
+import { daysLeftUntil } from './trialDaysLeft';
 
 interface ProSettingsCardProps {
   isPremium: boolean;
   onUpgrade?: () => void;
-}
-
-function daysLeftUntil(expirationDate: Date | null): number {
-  if (!expirationDate) return 0;
-  return Math.max(
-    0,
-    Math.ceil((expirationDate.getTime() - Date.now()) / 86_400_000)
-  );
 }
 
 export function ProSettingsCard({

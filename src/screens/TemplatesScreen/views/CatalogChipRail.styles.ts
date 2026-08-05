@@ -9,6 +9,11 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7,
   },
+  chipCount: {
+    fontWeight: fontWeights.bold,
+    opacity: 0.7,
+  },
+  chipEmpty: { opacity: 0.45 },
   chipLabel: {
     ...typography.caption,
     fontSize: 12,

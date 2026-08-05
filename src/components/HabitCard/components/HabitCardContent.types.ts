@@ -1,4 +1,5 @@
 import type { AnimatedStyle, SharedValue } from 'react-native-reanimated';
+import type { ViewStyle } from 'react-native';
 import type { AppTheme } from '../../../theme';
 import type { CompletionIconType } from './StatusIndicator';
 
@@ -11,11 +12,11 @@ export interface HabitCardContentProps {
   completed: boolean;
   atRisk: boolean;
   theme: AppTheme;
-  entranceContentStyle: AnimatedStyle;
+  entranceContentStyle: AnimatedStyle<ViewStyle>;
   checkmarkAnimatedStyle: AnimatedStyle<{
     transform: ({ scale: number } | { rotate: string })[];
   }>;
-  rippleAnimatedStyle: AnimatedStyle;
+  rippleAnimatedStyle: AnimatedStyle<ViewStyle>;
   /** Type of completion icon to display - T014 */
   completionIcon?: CompletionIconType;
   /** Whether there are pending offline operations - T014 */

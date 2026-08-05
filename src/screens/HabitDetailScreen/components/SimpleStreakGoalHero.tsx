@@ -38,12 +38,13 @@ export function SimpleStreakGoalHero({
     currentStreak,
     streakGoal
   );
-  const { barStyle, daysText, isGoalReached, streakText } = useStreakGoalAnimation(
-    overallPercent,
-    daysRemaining,
-    currentStreak,
-    streakGoal
-  );
+  const { barStyle, daysText, isGoalReached, streakText } =
+    useStreakGoalAnimation(
+      overallPercent,
+      daysRemaining,
+      currentStreak,
+      streakGoal
+    );
   const goalLabel = `${streakGoal} ${streakGoal === 1 ? 'day' : 'days'}`;
 
   return (

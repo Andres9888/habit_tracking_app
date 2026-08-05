@@ -1,10 +1,11 @@
-/** AccountGroupCard — optional uppercase eyebrow + raised rounded card of rows */
+/** AccountGroupCard — optional serif heading + raised rounded card of rows.
+ *  Shares `settingsSectionTitle` with the main settings page: drilling into
+ *  Account shouldn't leave the design system behind. */
 import type { ReactNode } from 'react';
 import { Text, View } from 'react-native';
-import { shadows } from '@/theme';
-import { typography, fontWeights } from '../../theme/typography';
 import { useThemeColors } from '../../theme/ThemeContext';
-import { getRaisedSurface } from './raisedSurface';
+import { getRaisedSurface, settingsCardShadow } from './raisedSurface';
+import { settingsSectionTitle } from './settingsSectionTitleStyle';
 import { SettingsRowDividerProvider } from './SettingsRow/SettingsRowDivider.provider';
 
 interface Props {
@@ -19,14 +20,8 @@ export function AccountGroupCard({ title, children }: Props) {
     <View className='gap-2'>
       {title ? (
         <Text
-          className='px-1'
-          style={{
-            ...typography.caption,
-            fontWeight: fontWeights.semibold,
-            textTransform: 'uppercase',
-            letterSpacing: 0.7,
-            color: themeColors.text.secondary,
-          }}
+          className='px-2'
+          style={{ ...settingsSectionTitle, color: themeColors.text.primary }}
         >
           {title}
         </Text>
@@ -37,7 +32,7 @@ export function AccountGroupCard({ title, children }: Props) {
           backgroundColor: getRaisedSurface(isDark),
           borderColor: themeColors.border,
           borderWidth: 1,
-          ...shadows.card,
+          ...settingsCardShadow,
         }}
       >
         <SettingsRowDividerProvider>{children}</SettingsRowDividerProvider>

@@ -53,6 +53,7 @@ jest.mock('react-native-reanimated', () => {
   const Animated = {
     View: AnimatedView,
     Text: AnimatedText,
+    ScrollView: createAnimatedComponent(require('react-native').ScrollView),
     createAnimatedComponent,
   };
 
@@ -60,6 +61,7 @@ jest.mock('react-native-reanimated', () => {
     ...Animated,
     default: Animated,
     useAnimatedStyle: () => ({}),
+    useAnimatedScrollHandler: () => jest.fn(),
     useSharedValue: (initial: number) => ({ value: initial }),
     withSpring: (value: number) => value,
     withDelay: (_delay: number, value: number) => value,
@@ -68,10 +70,13 @@ jest.mock('react-native-reanimated', () => {
     withRepeat: (value: number) => value,
     Easing: {
       out: () => (x: number) => x,
+      in: () => (x: number) => x,
       inOut: () => (x: number) => x,
       ease: (x: number) => x,
+      cubic: (x: number) => x,
     },
     interpolate: () => 0,
+    interpolateColor: () => '#000',
     runOnJS: (fn: Function) => fn,
   };
 });
@@ -613,10 +618,10 @@ describe('FullsizeTemplatePreview', () => {
   });
 
   describe('Tips for Success Section', () => {
-    it('renders tips section when tips are provided', () => {
+    it('renders how-to-start from tips when howToStart is absent', () => {
       const template = createMockTemplate();
       // Add tips to the template
-      (template as unknown).tips = [
+      (template as unknown as { tips: string[] }).tips = [
         'Start with just 2 minutes and gradually increase',
         'Practice at the same time each day',
         'Use a timer to stay focused',
@@ -632,15 +637,15 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByText('TIPS FOR SUCCESS')).toBeTruthy();
+      expect(getByText('How to start')).toBeTruthy();
       expect(getByText('Start with just 2 minutes and gradually increase')).toBeTruthy();
       expect(getByText('Practice at the same time each day')).toBeTruthy();
       expect(getByText('Use a timer to stay focused')).toBeTruthy();
     });
 
-    it('does not render tips section when tips array is empty', () => {
+    it('does not render how-to-start when tips array is empty', () => {
       const template = createMockTemplate();
-      (template as unknown).tips = [];
+      (template as unknown as { tips: string[] }).tips = [];
 
       const { queryByText } = render(
         <FullsizeTemplatePreview
@@ -652,10 +657,10 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
+      expect(queryByText('How to start')).toBeNull();
     });
 
-    it('does not render tips section when tips is undefined', () => {
+    it('does not render how-to-start when tips is undefined', () => {
       const template = createMockTemplate();
       // tips is not set (undefined)
 
@@ -669,12 +674,12 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(queryByText('TIPS FOR SUCCESS')).toBeNull();
+      expect(queryByText('How to start')).toBeNull();
     });
 
     it('renders numbered tips with correct order', () => {
       const template = createMockTemplate();
-      (template as unknown).tips = ['First tip', 'Second tip'];
+      (template as unknown as { tips: string[] }).tips = ['First tip', 'Second tip'];
 
       const { getByText } = render(
         <FullsizeTemplatePreview
@@ -692,11 +697,29 @@ describe('FullsizeTemplatePreview', () => {
       expect(getByText('Second tip')).toBeTruthy();
     });
 
-    it('has accessible tips section with count', () => {
-      const template = createMockTemplate();
-      (template as unknown).tips = ['Tip one', 'Tip two', 'Tip three'];
+    it('places decision sections before science when both are present', () => {
+      const template = createMockTemplate({
+        startSmallVersion: 'One mindful breath.',
+        benefitDetails: [
+          {
+            icon: 'wave',
+            title: 'Calmer days',
+            description: 'Lower reactivity',
+          },
+        ],
+        howToStart: ['Sit quietly', 'Breathe slowly'],
+        lead: 'Meditation regulates stress.',
+        evidence: 'Goyal et al., 2014',
+        timeline: [
+          {
+            when: 'Week 1',
+            title: 'Effortful',
+            description: 'Building the cue',
+          },
+        ],
+      } as Partial<Doc<'templates'>>);
 
-      const { getByLabelText } = render(
+      const { toJSON, getByText } = render(
         <FullsizeTemplatePreview
           template={template}
           visible={true}
@@ -706,7 +729,21 @@ describe('FullsizeTemplatePreview', () => {
         />
       );
 
-      expect(getByLabelText('Tips for success: 3 tips available')).toBeTruthy();
+      expect(getByText("What you'll feel")).toBeTruthy();
+      expect(getByText('Start small')).toBeTruthy();
+      expect(getByText('How to start')).toBeTruthy();
+      expect(getByText('Why it works')).toBeTruthy();
+
+      const tree = JSON.stringify(toJSON());
+      expect(tree.indexOf("What you'll feel")).toBeLessThan(
+        tree.indexOf('Start small')
+      );
+      expect(tree.indexOf('Start small')).toBeLessThan(
+        tree.indexOf('How to start')
+      );
+      expect(tree.indexOf('How to start')).toBeLessThan(
+        tree.indexOf('Why it works')
+      );
     });
   });
 

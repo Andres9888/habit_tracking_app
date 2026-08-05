@@ -17,6 +17,7 @@ export function MainBrowseView(p: MainBrowseViewProps) {
       <View style={s.body}>
         <CatalogView
           allTemplates={p.allTemplates}
+          frozenImportedIds={p.frozenImportedIds}
           importedTemplateIds={p.importedTemplateIds}
           importingTemplateId={p.importingTemplateId}
           onBack={p.onClose}

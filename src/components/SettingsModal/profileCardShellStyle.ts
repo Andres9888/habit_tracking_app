@@ -1,6 +1,5 @@
-import { shadows } from '../../theme/spacing';
 import type { SemanticColors } from '../../theme/darkColors';
-import { getRaisedSurface } from './raisedSurface';
+import { getRaisedSurface, settingsCardShadow } from './raisedSurface';
 
 export function getProfileCardShellStyle(
   themeColors: SemanticColors,
@@ -10,6 +9,6 @@ export function getProfileCardShellStyle(
     backgroundColor: getRaisedSurface(isDark),
     borderColor: themeColors.border,
     borderWidth: 1,
-    ...shadows.card,
+    ...settingsCardShadow,
   };
 }

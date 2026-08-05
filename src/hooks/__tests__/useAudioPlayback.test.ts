@@ -13,7 +13,7 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react-native';
 
-// Mock expo-av
+// Mock expo-audio
 const mockSetAudioModeAsync = jest.fn();
 const mockPlayAsync = jest.fn();
 const mockPauseAsync = jest.fn();
@@ -23,33 +23,25 @@ const mockSetRateAsync = jest.fn();
 const mockSetIsMutedAsync = jest.fn();
 
 const mockSound = {
-  playAsync: mockPlayAsync,
-  pauseAsync: mockPauseAsync,
-  unloadAsync: mockUnloadAsync,
-  setPositionAsync: mockSetPositionAsync,
-  setRateAsync: mockSetRateAsync,
-  setIsMutedAsync: mockSetIsMutedAsync,
+  addListener: jest.fn(),
+  play: mockPlayAsync,
+  pause: mockPauseAsync,
+  remove: mockUnloadAsync,
+  seekTo: mockSetPositionAsync,
+  setPlaybackRate: mockSetRateAsync,
 };
+Object.defineProperty(mockSound, 'muted', {
+  configurable: true,
+  get: () => false,
+  set: mockSetIsMutedAsync,
+});
 
 const mockCreateAsync = jest.fn();
 
-jest.mock('expo-av', () => ({
-  Audio: {
-    setAudioModeAsync: (options: unknown) => mockSetAudioModeAsync(options),
-    Sound: {
-      createAsync: (source: unknown, status: unknown, callback: unknown) =>
-        mockCreateAsync(source, status, callback),
-    },
-  },
-  InterruptionModeIOS: {
-    DoNotMix: 1,
-    DuckOthers: 2,
-    MixWithOthers: 0,
-  },
-  InterruptionModeAndroid: {
-    DoNotMix: 1,
-    DuckOthers: 2,
-  },
+jest.mock('expo-audio', () => ({
+  createAudioPlayer: (source: unknown, options: unknown) =>
+    mockCreateAsync(source, options),
+  setAudioModeAsync: (options: unknown) => mockSetAudioModeAsync(options),
 }));
 
 import { useAudioPlayback, PLAYBACK_SPEEDS } from '../useAudioPlayback';
@@ -63,13 +55,14 @@ describe('useAudioPlayback', () => {
 
     // Default mock implementations
     mockSetAudioModeAsync.mockResolvedValue(undefined);
-    mockCreateAsync.mockImplementation((_source, _status, callback) => {
+    mockSound.addListener.mockImplementation((_event, callback) => {
       statusCallback = callback;
-      return Promise.resolve({ sound: mockSound });
+      return { remove: jest.fn() };
     });
-    mockPlayAsync.mockResolvedValue(undefined);
-    mockPauseAsync.mockResolvedValue(undefined);
-    mockUnloadAsync.mockResolvedValue(undefined);
+    mockCreateAsync.mockReturnValue(mockSound);
+    mockPlayAsync.mockReturnValue(undefined);
+    mockPauseAsync.mockReturnValue(undefined);
+    mockUnloadAsync.mockReturnValue(undefined);
     mockSetPositionAsync.mockResolvedValue(undefined);
     mockSetRateAsync.mockResolvedValue(undefined);
     mockSetIsMutedAsync.mockResolvedValue(undefined);
@@ -111,17 +104,13 @@ describe('useAudioPlayback', () => {
 
       expect(mockSetAudioModeAsync).toHaveBeenCalledWith(
         expect.objectContaining({
-          allowsRecordingIOS: false,
-          playsInSilentModeIOS: true,
+          allowsRecording: false,
+          playsInSilentMode: true,
         })
       );
       expect(mockCreateAsync).toHaveBeenCalledWith(
         { uri: 'file:///test.m4a' },
-        expect.objectContaining({
-          progressUpdateIntervalMillis: 100,
-          shouldPlay: false,
-        }),
-        expect.any(Function)
+        expect.objectContaining({ updateInterval: 100 })
       );
       expect(result.current.status.audioUri).toBe('file:///test.m4a');
       expect(result.current.status.state).toBe('ready');
@@ -136,18 +125,14 @@ describe('useAudioPlayback', () => {
         await result.current.loadAudio('file:///test.m4a');
       });
 
-      expect(mockCreateAsync).toHaveBeenCalledWith(
-        expect.any(Object),
-        expect.objectContaining({
-          shouldPlay: true,
-        }),
-        expect.any(Function)
-      );
+      expect(mockPlayAsync).toHaveBeenCalled();
     });
 
     it('handles load error', async () => {
       const onError = jest.fn();
-      mockCreateAsync.mockRejectedValue(new Error('Load failed'));
+      mockCreateAsync.mockImplementationOnce(() => {
+        throw new Error('Load failed');
+      });
 
       const { result } = renderHook(() => useAudioPlayback({ onError }));
 
@@ -218,12 +203,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 5000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 5,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -246,12 +231,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 60000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 60,
+          duration: 60,
           didJustFinish: true,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -277,12 +262,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 0,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 0,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -291,7 +276,7 @@ describe('useAudioPlayback', () => {
         await result.current.seekToProgress(0.5);
       });
 
-      expect(mockSetPositionAsync).toHaveBeenCalledWith(30000); // 50% of 60000
+      expect(mockSetPositionAsync).toHaveBeenCalledWith(30);
     });
 
     it('seeks to specific seconds', async () => {
@@ -305,12 +290,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 0,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 0,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -319,7 +304,7 @@ describe('useAudioPlayback', () => {
         await result.current.seekToSeconds(15);
       });
 
-      expect(mockSetPositionAsync).toHaveBeenCalledWith(15000);
+      expect(mockSetPositionAsync).toHaveBeenCalledWith(15);
     });
 
     it('seeks forward by default 10 seconds', async () => {
@@ -333,12 +318,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 10000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 10,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -347,7 +332,7 @@ describe('useAudioPlayback', () => {
         await result.current.seekForward();
       });
 
-      expect(mockSetPositionAsync).toHaveBeenCalledWith(20000); // 10 + 10 seconds
+      expect(mockSetPositionAsync).toHaveBeenCalledWith(20);
     });
 
     it('seeks backward by default 10 seconds', async () => {
@@ -361,12 +346,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 30000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 30,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -375,7 +360,7 @@ describe('useAudioPlayback', () => {
         await result.current.seekBackward();
       });
 
-      expect(mockSetPositionAsync).toHaveBeenCalledWith(20000); // 30 - 10 seconds
+      expect(mockSetPositionAsync).toHaveBeenCalledWith(20);
     });
 
     it('clamps seek to valid range', async () => {
@@ -389,12 +374,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 0,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 0,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -403,7 +388,7 @@ describe('useAudioPlayback', () => {
         await result.current.seekToSeconds(100);
       });
 
-      expect(mockSetPositionAsync).toHaveBeenCalledWith(60000); // Clamped to duration
+      expect(mockSetPositionAsync).toHaveBeenCalledWith(60);
     });
   });
 
@@ -419,7 +404,7 @@ describe('useAudioPlayback', () => {
         await result.current.setSpeed(1.5);
       });
 
-      expect(mockSetRateAsync).toHaveBeenCalledWith(1.5, true);
+      expect(mockSetRateAsync).toHaveBeenCalledWith(1.5, 'high');
       expect(result.current.status.speed).toBe(1.5);
     });
 
@@ -466,12 +451,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 30000, // 30 seconds
-          durationMillis: 60000, // 60 seconds
+          playing: true,
+          currentTime: 30, // 30 seconds
+          duration: 60, // 60 seconds
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -495,12 +480,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 60000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 60,
+          duration: 60,
           didJustFinish: true,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -549,7 +534,9 @@ describe('useAudioPlayback', () => {
   describe('Error handling', () => {
     it('handles play error', async () => {
       const onError = jest.fn();
-      mockPlayAsync.mockRejectedValue(new Error('Play failed'));
+      mockPlayAsync.mockImplementationOnce(() => {
+        throw new Error('Play failed');
+      });
 
       const { result } = renderHook(() => useAudioPlayback({ onError }));
 
@@ -603,12 +590,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 0,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 0,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -657,12 +644,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 65000, // 1:05
-          durationMillis: 185000, // 3:05
+          playing: false,
+          currentTime: 65, // 1:05
+          duration: 185, // 3:05
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -693,12 +680,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 10000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 10,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -708,12 +695,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 15000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 15,
+          duration: 60,
           didJustFinish: false, // Not finished naturally
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -735,12 +722,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 30000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 30,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -750,12 +737,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 30000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 30,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -778,12 +765,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 10000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 10,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -791,12 +778,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 15000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 15,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -825,12 +812,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 10000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 10,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -856,24 +843,24 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 10000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 10,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 15000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 15,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -904,12 +891,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 55000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 55,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -917,12 +904,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: false,
-          positionMillis: 60000,
-          durationMillis: 60000,
+          playing: false,
+          currentTime: 60,
+          duration: 60,
           didJustFinish: true, // Finished naturally
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 
@@ -944,12 +931,12 @@ describe('useAudioPlayback', () => {
       await act(async () => {
         statusCallback?.({
           isLoaded: true,
-          isPlaying: true,
-          positionMillis: 10000,
-          durationMillis: 60000,
+          playing: true,
+          currentTime: 10,
+          duration: 60,
           didJustFinish: false,
           isBuffering: false,
-          isMuted: false,
+          mute: false,
         });
       });
 

@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     width: 120,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     justifyContent: 'center',

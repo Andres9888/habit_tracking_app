@@ -1,1 +1,0 @@
-export { DetailsChevron } from './DetailsChevron';

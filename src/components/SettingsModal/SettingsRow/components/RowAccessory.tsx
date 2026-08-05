@@ -1,8 +1,8 @@
-import { Text, View } from 'react-native';
-import { typography, fontWeights } from '@/theme/typography';
+import { View } from 'react-native';
 import { AnimatedToggle } from './AnimatedToggle';
 import { RowChevron } from './RowChevron';
-import { SettingsCountBadge } from '../../SettingsCountBadge';
+import { RowCount } from './RowCount';
+import { ValuePill } from './ValuePill';
 import type { SettingsRowColors } from '../SettingsRow.colors';
 import type { SettingsRowProps } from '../SettingsRow.types';
 
@@ -41,55 +41,36 @@ export function RowAccessory({
   if (type === 'selection') {
     return (
       <View className='flex-row items-center gap-1'>
-        <Text
-          style={{
-            ...typography.body,
-            fontWeight: fontWeights.medium,
-            color: colors.value,
-          }}
-        >
-          {value as string}
-        </Text>
+        <ValuePill colors={colors} value={value as string} />
         <RowChevron color={colors.chevron} />
       </View>
     );
   }
 
   if (type === 'info' && typeof value === 'string') {
-    const valueText = (
-      <Text
-        className='ml-3'
-        numberOfLines={1}
-        style={{
-          ...typography.bodySmall,
-          fontWeight: fontWeights.medium,
-          color: colors.value,
-          flexShrink: 1,
-          maxWidth: 140,
-          textAlign: 'right',
-        }}
-      >
-        {value}
-      </Text>
+    const valueNode = (
+      <View className='ml-3 shrink'>
+        <ValuePill colors={colors} value={value} />
+      </View>
     );
 
     if (showChevron) {
       return (
         <View className='flex-row items-center gap-1'>
-          {valueText}
+          {valueNode}
           <RowChevron color={colors.chevron} />
         </View>
       );
     }
 
-    return valueText;
+    return valueNode;
   }
 
   if (type === 'navigation') {
     return (
       <View className='flex-row items-center gap-2'>
         {badge != null && badge > 0 ? (
-          <SettingsCountBadge count={badge} />
+          <RowCount color={colors.valueText} count={badge} />
         ) : null}
         <RowChevron color={colors.chevron} />
       </View>

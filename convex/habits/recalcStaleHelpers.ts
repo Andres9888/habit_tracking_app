@@ -5,15 +5,11 @@ import {
   resolveAlgorithmMode,
 } from '../habitStrength';
 import { calculateStreakFromHistory } from '../streakUtils';
-import { getTodayForTimezone, maxDateKey } from './utils';
-
-const RECALC_TRACKING_LOOKBACK_DAYS = 400;
-
-function getTrackingCutoffKey(): string {
-  const cutoff = new Date();
-  cutoff.setUTCDate(cutoff.getUTCDate() - RECALC_TRACKING_LOOKBACK_DAYS);
-  return cutoff.toISOString().slice(0, 10);
-}
+import {
+  getTodayForTimezone,
+  getTrackingCutoffKey,
+  maxDateKey,
+} from './utils';
 
 export async function recalculateHabitStrength(
   ctx: MutationCtx,

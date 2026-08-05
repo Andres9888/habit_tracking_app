@@ -1,28 +1,38 @@
 /**
- * HabitDetailContent - Scrollspy layout: Hero → sticky tabs → Calendar + Strength + Goal stacked.
- * Tabs act as anchors, not gatekeepers. Every progress surface is visible in one scroll.
+ * HabitDetailContent — the redesigned detail stack (Claude Design, "Habit Flow
+ * Prototype" in project "Habit insights page redesign"):
+ *
+ *   hero wash → Progress → What we're noticing → Your month → note → pause
+ *
+ * Insight-first rather than data-first: the raw calendar, strength curve and
+ * goal card live behind "View history ›" (see HabitDetailHistory).
  */
-import { useRef } from 'react';
-import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
-import ErrorBoundary from '../../../components/ErrorBoundary';
-import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
+import { useCallback } from 'react';
+import {
+  ScrollView,
+  View,
+  type NativeSyntheticEvent,
+  type NativeScrollEvent,
+} from 'react-native';
+import { format } from 'date-fns';
 import type { Habit } from '../../../features/habits/types';
-import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
-import { useThemeColors } from '../../../theme';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
-import { CalendarTabContent } from './CalendarTabContent';
-import { DetailHeroSection } from './DetailHeroSection';
-import { DetailViewTabs, type DetailView } from './DetailViewTabs';
-import { GoalTabContent } from './GoalTabContent';
-import { useDetailScrollSpy } from './useDetailScrollSpy';
+import { isMissedYesterday, useHabitInsights } from '../insights';
+import { useInsightPalette } from '../insightPalette';
+import { DetailHeroBanner } from './DetailHeroBanner';
+import { HabitDetailSections } from './HabitDetailSections';
+
+/** Scroll depth at which the header swaps to the pinned habit title. */
+const PIN_OFFSET = 96;
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
   habit: Habit;
   isCompletedToday: boolean;
   pendingToggleDate?: string | null;
-  totalCompletions: number;
+  visible?: boolean;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
+  onEdit?: () => void;
   onPinnedChange?: (pinned: boolean) => void;
 }
 
@@ -31,77 +41,73 @@ export function HabitDetailContent({
   habit,
   isCompletedToday,
   pendingToggleDate = null,
-  totalCompletions,
+  visible = true,
   onDayPress,
+  onEdit,
   onPinnedChange,
 }: HabitDetailContentProps) {
-  const { colors } = useThemeColors();
-  const scrollRef = useRef<ScrollView>(null);
-  const { activeView, handleScroll, handleSectionLayout, scrollToView } =
-    useDetailScrollSpy(scrollRef, { onPinnedChange });
-  const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
-  const isTodayToggling = pendingToggleDate === getLocalDateString();
-  const progressEmojis = useProgressEmojis(habit);
+  const palette = useInsightPalette();
+  const wash = isCompletedToday
+    ? palette.bandGradientDone
+    : palette.bandGradient;
+  const insights = useHabitInsights({
+    daysOfWeek: habit.daysOfWeek,
+    enabled: visible,
+    habitCreatedAt: habit.createdAt,
+    habitId: habit._id,
+    reminderTime: habit.reminderTime,
+  });
 
-  const makeSectionLayoutHandler =
-    (view: DetailView) => (event: LayoutChangeEvent) => {
-      handleSectionLayout(view, event.nativeEvent.layout.y);
-    };
+  const handleScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      onPinnedChange?.(event.nativeEvent.contentOffset.y > PIN_OFFSET);
+    },
+    [onPinnedChange]
+  );
 
   return (
+    // The ScrollView takes the hero's FIRST gradient stop, and the sections
+    // below take the page background. Without this, bouncing at the top exposes
+    // the background behind the tinted hero — the seam that
+    // FullsizeTemplatePreview/components/PreviewContent.tsx:29-30 warns about.
+    // This is also why every band stop must be opaque hex, never withAlpha:
+    // the header tint, hero stop 0 and this overscroll tint all read wash[0].
     <ScrollView
-      ref={scrollRef}
       bounces
       className='flex-1'
-      contentContainerClassName='pb-16'
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
-      stickyHeaderIndices={[1]}
+      style={{ backgroundColor: wash[0] }}
       onScroll={handleScroll}
     >
-      <DetailHeroSection
+      <DetailHeroBanner
+        completedAtLabel={
+          insights.todayCompletedAt
+            ? format(new Date(insights.todayCompletedAt), 'h:mm a')
+            : undefined
+        }
+        daysDone={insights.yearCompletions}
         habit={habit}
         isCompletedToday={isCompletedToday}
-        isToggling={isTodayToggling}
-        totalCompletions={totalCompletions}
+        isMissedYesterday={isMissedYesterday({
+          completedDates: insights.doneDates,
+          daysOfWeek: habit.daysOfWeek,
+          isCompletedToday,
+        })}
+        isToggling={pendingToggleDate === getLocalDateString()}
         onDayPress={onDayPress}
       />
-      <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
-
-      <View
-        className='mx-5 mt-4'
-        onLayout={makeSectionLayoutHandler('calendar')}
-      >
-        <CalendarTabContent
+      <View style={{ backgroundColor: palette.bandGradient[2] }}>
+        <HabitDetailSections
           completedDates={completedDates}
           habit={habit}
-          habitColor={habitColor}
+          insights={insights}
+          isCompletedToday={isCompletedToday}
           pendingToggleDate={pendingToggleDate}
           onDayPress={onDayPress}
+          onEdit={onEdit}
         />
       </View>
-
-      <View className='mx-5 mt-5' onLayout={makeSectionLayoutHandler('goal')}>
-        <GoalTabContent habit={habit} />
-      </View>
-
-      {habit.createdAt ? (
-        <View
-          className='mx-5 mt-5'
-          onLayout={makeSectionLayoutHandler('strength')}
-        >
-          <ErrorBoundary>
-            <HabitStrengthSection
-              completedDates={completedDates}
-              habitColor={habit.color ?? habit.iconColor}
-              habitCreatedAt={habit.createdAt}
-              habitId={habit._id}
-              habitStrength={habit.strength}
-              progressEmojis={progressEmojis}
-            />
-          </ErrorBoundary>
-        </View>
-      ) : null}
     </ScrollView>
   );
 }

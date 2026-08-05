@@ -8,6 +8,7 @@
 import React from 'react';
 import { Pressable, type PressableProps, type GestureResponderEvent } from 'react-native';
 import Animated from 'react-native-reanimated';
+import type { AnimatedProps } from 'react-native-reanimated';
 import {
   usePressAnimation,
   type PressAnimationConfig,
@@ -16,7 +17,9 @@ import { useFocusRing } from '../../utils/accessibility';
 
 const AnimatedPressableBase = Animated.createAnimatedComponent(Pressable);
 
-export interface AnimatedPressableProps extends PressableProps {
+export interface AnimatedPressableProps
+  extends Omit<PressableProps, 'style'> {
+  style?: AnimatedProps<PressableProps>['style'];
   /**
    * Press animation configuration (optional)
    */

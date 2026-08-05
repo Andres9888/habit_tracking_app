@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Library drill-down — flows, pains, results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --canvas:#F5F1ED;--card:#F8F5F1;--border:#DDD8D2;--divider:#EFEAE4;--raised:#FFF;
+    --iconTile:#FAF7F0;--chipBg:rgba(250,247,240,.75);--chipBorder:rgba(255,255,255,.55);
+    --text1:#2D2A26;--text2:#6B6560;--text3:#6E6660;--quiet:#9CA3AF;
+    --green:#15793C;--greenTint:#DCF7E4;--greenSoft:#EAF6EC;--gold:#E8B94D;--goldFill:#F2E3B8;
+    --addBg:#2FA36F;--addedBg:#DDF2E4;--addedFg:#157A4E;--hero0:#F6DEC8;--hero1:#F3E3D2;
+    --pg:#232120;--pg2:#2C2926;--line:#3B3733;--ink:#EDE8E2;--dim:#A29B93;
+    --hl:#7FD0A3;--dead:#E06B5A;--warn:#D7A93F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--pg)!important;font-family:'DM Sans',sans-serif!important;color:var(--ink);padding:30px 22px 70px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1400px;margin:0 auto}
+  h1{font-family:'Literata',serif!important;font-size:27px;font-weight:700;letter-spacing:-.4px;margin-bottom:7px}
+  .sub{color:var(--dim);font-size:14.5px;line-height:22px;max-width:840px}
+  .hint{margin-top:14px;display:inline-flex;align-items:center;gap:8px;background:var(--pg2);border:1px solid var(--line);border-radius:999px;padding:8px 15px;font-size:13px;color:#C9C2BA}
+  .hint b{color:var(--hl)}
+
+  .grid{display:grid;grid-template-columns:400px 414px 1fr;gap:30px;margin-top:28px;align-items:start}
+  @media(max-width:1300px){.grid{grid-template-columns:1fr 414px;}.panel-why{grid-column:1/-1}}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+  .panel{background:var(--pg2);border:1px solid var(--line);border-radius:20px;padding:20px}
+  .panel h2{font-family:'Literata',serif!important;font-size:16px;font-weight:700;margin-bottom:4px}
+  .panel .cap{font-size:12.5px;color:var(--dim);line-height:18px;margin-bottom:16px}
+
+  /* flow rail */
+  .flowgrp{margin-bottom:20px}
+  .grplab{font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#7E766E;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .step{
+    display:flex;gap:11px;align-items:flex-start;background:#332F2B;border:1px solid var(--line);
+    border-radius:13px;padding:11px 13px;margin-bottom:8px;cursor:pointer;transition:.16s;position:relative
+  }
+  .step:hover{border-color:#5A544D;transform:translateX(2px)}
+  .step.on{background:#1E3B2C;border-color:var(--hl)}
+  .step.dead{opacity:.62;border-style:dashed;border-color:#5E3A33}
+  .step.dead.on{background:#3B241F;border-color:var(--dead)}
+  .num{width:21px;height:21px;border-radius:11px;background:#4A443E;color:#E4DED7;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px}
+  .step.on .num{background:var(--hl);color:#16261E}
+  .step.dead.on .num{background:var(--dead);color:#2A1512}
+  .stitle{font-size:13.5px;font-weight:600;line-height:18px}
+  .sdesc{font-size:11.5px;color:var(--dim);line-height:16px;margin-top:2px}
+  .flag{display:inline-block;margin-top:5px;font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:2px 7px;border-radius:999px;background:#5E3A33;color:#FFBCAF}
+  .arrowdown{height:11px;margin:-4px 0 -3px 23px;border-left:2px dotted #4A443E}
+
+  /* phone */
+  .phonecol{position:sticky;top:24px}
+  .phone{width:414px;height:840px;border-radius:46px;background:#0F0E0D;padding:11px;box-shadow:0 26px 60px rgba(0,0,0,.55);position:relative}
+  .notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:118px;height:27px;background:#0F0E0D;border-radius:0 0 16px 16px;z-index:60}
+  .screen{width:100%;height:100%;border-radius:36px;overflow:hidden;background:var(--canvas);position:relative;display:flex;flex-direction:column}
+  .scroll{flex:1;overflow-y:auto;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#CFC7BE transparent}
+  .scroll::-webkit-scrollbar{width:5px}.scroll::-webkit-scrollbar-thumb{background:#CFC7BE;border-radius:3px}
+
+  .modal-head{position:sticky;top:0;z-index:50;background:var(--hero0);display:flex;align-items:center;justify-content:space-between;padding:36px 16px 8px}
+  .circ{width:34px;height:34px;border-radius:17px;background:rgba(250,247,240,.7);display:flex;align-items:center;justify-content:center;color:var(--text1)}
+  .circ.ghost{opacity:.28;border:1.5px dashed #B4695C}
+  .hero{background:linear-gradient(180deg,var(--hero0) 0%,var(--hero1) 62%,var(--canvas) 100%);padding:4px 24px 26px;text-align:center}
+  .tile{width:88px;height:88px;border-radius:24px;background:var(--iconTile);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 2px 10px rgba(122,86,50,.35)}
+  .htitle{font-family:'Literata',serif!important;font-size:30px;font-weight:700;letter-spacing:-.4px;line-height:36px;color:var(--text1);margin-bottom:16px}
+  .htag{font-size:15.5px;line-height:21px;color:var(--text2);max-width:300px;margin:-6px auto 16px}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1px solid var(--chipBorder);background:var(--chipBg);padding:8px 14px;font-size:14px;font-weight:600;color:var(--text2)}
+  .desc{padding:20px 20px 24px;font-size:17px;line-height:26px;color:var(--text2);text-align:center}
+  .startsmall{padding:0 20px 24px}
+  .ssbox{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+  .sslab{font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text3)}
+  .sstext{font-size:15px;line-height:22px;color:var(--text1);margin-top:6px}
+
+  .stack{padding:0 18px 30px;display:flex;flex-direction:column;gap:26px}
+  .seclabel{display:flex;align-items:center;gap:8px;margin:0 2px 10px;font-size:13px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text1)}
+  .seclabel .ic{color:var(--green);display:flex}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px}
+  .flush{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+  .why{background:var(--card);border:1px solid var(--border);border-radius:22px;overflow:hidden;position:relative}
+  .whybar{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green);z-index:2}
+  .whyhead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px 14px 18px;border-bottom:1px solid var(--border);background:linear-gradient(150deg,var(--greenTint),var(--greenSoft))}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:var(--raised);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--green)}
+  .readbtn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid rgba(21,121,60,.3);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--green)}
+  .whybody{padding:16px 16px 16px 18px}
+  .overline{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+  .lead{font-family:'Literata',serif!important;font-size:17px;line-height:26px;letter-spacing:-.2px;color:var(--text1)}
+  .evid{font-size:14px;line-height:20px;color:var(--text2);margin-top:12px}
+  .brow{display:flex;align-items:center;gap:12px;padding:13px 16px}
+  .brow+.brow{border-top:1px solid var(--divider)}
+  .bic{width:38px;height:38px;border-radius:12px;background:var(--addedBg);display:flex;align-items:center;justify-content:center;color:var(--addedFg);flex:0 0 auto}
+  .bt{font-size:15px;font-weight:600;line-height:20px;color:var(--text1)}
+  .bd{font-size:12px;line-height:16px;color:var(--text2);margin-top:1px}
+  .tl{position:relative}
+  .spine{position:absolute;left:7px;top:8px;bottom:14px;width:2px;background:var(--border)}
+  .tlrow{display:flex;gap:16px;padding-bottom:16px}.tlrow:last-child{padding-bottom:0}
+  .dot{width:16px;height:16px;border-radius:8px;border:2px solid var(--addBg);background:var(--card);margin-top:3px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:9px;z-index:1}
+  .dot.peak{background:var(--goldFill);border-color:var(--gold)}
+  .tlw{font-family:'JetBrains Mono',monospace!important;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--green)}
+  .tlw.peak{color:#B98C1E}
+  .tlt{font-size:15px;font-weight:600;line-height:20px;color:var(--text1);margin-top:2px}
+  .tld{font-size:12px;line-height:18px;color:var(--text2);margin-top:2px}
+  .step2{display:flex;gap:12px;padding-bottom:14px}.step2:last-of-type{padding-bottom:0}
+  .snum2{width:26px;height:26px;border-radius:13px;background:var(--addedBg);color:var(--addedFg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex:0 0 auto;margin-top:1px}
+  .stx{font-size:15px;line-height:22px;color:var(--text1)}
+  .cad{display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);margin-top:16px;padding-top:16px}
+  .cad .lab{font-size:14px;font-weight:700;color:#B98C1E}
+  .cad .val{font-size:14px;color:var(--text2);margin-left:auto}
+  .strin{font-size:14px;line-height:21px;color:var(--text2)}
+  .strtrack{display:flex;align-items:flex-start;margin-top:16px}
+  .strnode{display:flex;flex-direction:column;align-items:center;gap:6px;width:56px;flex:0 0 auto}
+  .strc{width:34px;height:34px;border-radius:17px;background:var(--raised);border:2px solid;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .strl{font-size:10px;color:var(--text3);text-align:center}
+  .strcon{height:2px;flex:1;margin-top:16px}
+  .srow{display:flex;gap:12px;padding:14px 16px}
+  .snum{font-family:'JetBrains Mono',monospace!important;font-size:12px;font-weight:700;color:var(--quiet);flex:0 0 auto}
+  .st{font-size:14px;line-height:19px;color:var(--text1)}
+  .sm{font-size:12px;line-height:17px;color:var(--text3);margin-top:3px}
+  .sm i{font-style:italic}
+  .disc{font-size:12px;color:var(--quiet);margin:10px 4px 0;line-height:17px}
+  .footer{border-top:1px solid var(--border);background:var(--canvas);padding:14px 20px 22px;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:40}
+  .cta{width:100%;background:var(--addBg);color:#fff;border-radius:16px;padding:17px;text-align:center;font-size:17px;font-weight:700;box-shadow:0 6px 16px rgba(21,122,78,.28)}
+  .cta.added{background:var(--addedBg);color:var(--addedFg);box-shadow:none;display:flex;align-items:center;justify-content:center;gap:8px}
+  .cust{font-size:15px;font-weight:600;color:var(--text2);padding:6px}
+
+  /* highlight target */
+  .zone{scroll-margin-top:96px;border-radius:20px;transition:box-shadow .25s,background .25s;position:relative}
+  .zone.lit{box-shadow:0 0 0 3px var(--hl),0 0 0 11px rgba(127,208,163,.18)}
+  .zone.lit.bad{box-shadow:0 0 0 3px var(--dead),0 0 0 11px rgba(224,107,90,.18)}
+  .zone.lit::before{
+    content:attr(data-note);position:absolute;top:-11px;left:12px;z-index:12;
+    background:var(--hl);color:#16261E;font-size:10px;font-weight:700;letter-spacing:.5px;
+    text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap
+  }
+  .zone.lit.bad::before{background:var(--dead);color:#2A1512}
+
+  /* why-panel cards */
+  .pr{background:#332F2B;border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:10px;transition:.18s;cursor:pointer}
+  .pr:hover{border-color:#5A544D}
+  .pr.on{background:#1E3B2C;border-color:var(--hl)}
+  .pr h3{font-size:13.5px;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:8px}
+  .pr h3 .g{color:var(--hl);display:flex}
+  .row{display:flex;gap:9px;font-size:12px;line-height:17.5px;margin-top:6px}
+  .rl{flex:0 0 46px;font-weight:700;font-size:9.5px;letter-spacing:.7px;text-transform:uppercase;padding-top:2px}
+  .rl.pain{color:#E9A091}.rl.res{color:#8FD9B2}
+  .rt{color:#C9C2BA;flex:1}
+  .divider{height:1px;background:var(--line);margin:18px 0}
+  .foot{max-width:1400px;margin:34px auto 0;background:var(--pg2);border:1px solid var(--line);border-radius:20px;padding:24px 26px}
+  .foot h2{font-family:'Literata',serif!important;font-size:18px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;padding:9px 11px;color:#8E8880;font-weight:600;font-size:11px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--line)}
+  td{padding:10px 11px;border-bottom:1px solid #2E2B27;color:#C5BEB6;line-height:19px;vertical-align:top}
+  td:first-child{white-space:nowrap;font-weight:700;color:#F0EBE4}
+  code{font-family:'JetBrains Mono',monospace!important;font-size:11.5px;color:#9FD8B8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Habit Library drill-down — how a user actually moves through it</h1>
+  <p class="sub">Every path below is traced from the shipping code, not assumed. Click any flow step or any section card to light up the part of the screen it touches. The phone scrolls itself to the right place.</p>
+  <div class="hint"><i data-lucide="mouse-pointer-click" style="width:15px;height:15px"></i><span>Click a <b>step</b> on the left or a <b>section</b> on the right</span></div>
+
+  <div class="grid">
+
+    <!-- ============ FLOW RAIL ============ -->
+    <div class="panel">
+      <h2>The flows</h2>
+      <p class="cap">Entry → the page → exit. Two paths are wired but unreachable.</p>
+
+      <div class="flowgrp">
+        <div class="grplab"><i data-lucide="log-in" style="width:13px;height:13px"></i>Getting in</div>
+        <div class="step" data-z="hero" data-note="Lands here">
+          <div class="num">1</div>
+          <div><div class="stitle">Taps a browse card</div><div class="sdesc">Whole card is the target. Fires <code>details_opened</code>, opens at top.</div></div>
+        </div>
+        <div class="step" data-z="hero" data-note="Lands here">
+          <div class="num">2</div>
+          <div><div class="stitle">Taps the card header</div><div class="sdesc">The single labelled screen-reader stop for the same action.</div></div>
+        </div>
+        <div class="step dead" data-z="footer" data-note="Never opens this page" data-bad="1">
+          <div class="num">✕</div>
+          <div><div class="stitle">Quick-adds from the card footer</div><div class="sdesc">Adds straight from the list — the drill-down is skipped entirely.</div><span class="flag">bypasses page</span></div>
+        </div>
+        <div class="step dead" data-z="why" data-note="Unreachable" data-bad="1">
+          <div class="num">✕</div>
+          <div><div class="stitle">Deep-link to the science</div><div class="sdesc"><code>initialAnchor='science'</code> jumps past the hero. Fully built — no caller passes it.</div><span class="flag">dead code</span></div>
+        </div>
+      </div>
+
+      <div class="flowgrp">
+        <div class="grplab"><i data-lucide="scroll-text" style="width:13px;height:13px"></i>Reading down</div>
+        <div class="step" data-z="hero" data-note="2-second filter"><div class="num">3</div><div><div class="stitle">Sizes up the cost</div><div class="sdesc">Icon, name, tagline, and the three commitment pills.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="desc" data-note="What am I doing?"><div class="num">4</div><div><div class="stitle">Reads what it actually is</div><div class="sdesc">One plain paragraph, no claims yet.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="ss" data-note="Floor version"><div class="num">5</div><div><div class="stitle">Sees the laughably-easy floor</div><div class="sdesc">Start small. Moved here from browse cards, where it repeated dozens of times.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="why" data-note="Earns belief"><div class="num">6</div><div><div class="stitle">Checks whether it's real</div><div class="sdesc">Mechanism, badge, cited stat. Badge only appears with actual evidence.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="benefits" data-note="Creates want"><div class="num">7</div><div><div class="stitle">Decides whether they want it</div><div class="sdesc">Mechanism translated into outcomes a person cares about.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="timeline" data-note="Prevents quitting"><div class="num">8</div><div><div class="stitle">Learns what the middle feels like</div><div class="sdesc">Week 2 is set up in advance so it doesn't read as failure.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="how" data-note="Kills friction"><div class="num">9</div><div><div class="stitle">Gets a first action for today</div><div class="sdesc">Small enough to do now. Without it, added ≠ started.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="strength" data-note="Bridge to the app"><div class="num">10</div><div><div class="stitle">Connects it to the streak mechanic</div><div class="sdesc">The stages they'll see on the habit card after adding.</div></div></div>
+        <div class="arrowdown"></div>
+        <div class="step" data-z="research" data-note="For the skeptic"><div class="num">11</div><div><div class="stitle">Verifies, or just notices it's there</div><div class="sdesc">Most never tap it. Its presence is the point.</div></div></div>
+      </div>
+
+      <div class="flowgrp">
+        <div class="grplab"><i data-lucide="log-out" style="width:13px;height:13px"></i>Getting out</div>
+        <div class="step" data-z="footer" data-note="Stays open after adding"><div class="num">12</div><div><div class="stitle">Adds the habit</div><div class="sdesc">Button becomes an "Added" pill. Modal does <em>not</em> close — user still has to tap ✕.</div><span class="flag">no auto-close</span></div></div>
+        <div class="step" data-z="footer" data-note="Leaves for the editor"><div class="num">13</div><div><div class="stitle">Customizes first</div><div class="sdesc">Closes this modal, opens the customize sheet. Nothing added yet.</div></div></div>
+        <div class="step" data-z="research" data-note="Leaves the app"><div class="num">14</div><div><div class="stitle">Opens a paper</div><div class="sdesc">External browser. Two buttons currently lead to the same URL.</div></div></div>
+        <div class="step" data-z="head" data-note="Back to browsing"><div class="num">15</div><div><div class="stitle">Closes with ✕</div><div class="sdesc">Returns to the library, nothing added.</div></div></div>
+        <div class="step dead" data-z="head" data-note="Never rendered" data-bad="1"><div class="num">✕</div><div><div class="stitle">Back arrow</div><div class="sdesc">Header renders it only when <code>onBack</code> is passed. The modal host never passes it.</div><span class="flag">dead code</span></div></div>
+      </div>
+    </div>
+
+    <!-- ============ PHONE ============ -->
+    <div class="phonecol">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="scroll" id="scroll">
+            <div class="modal-head zone" id="z-head" data-note="">
+              <div class="circ ghost"><i data-lucide="chevron-left" style="width:19px;height:19px"></i></div>
+              <div class="circ"><i data-lucide="x" style="width:19px;height:19px"></i></div>
+            </div>
+
+            <div class="zone" id="z-hero">
+              <div class="hero">
+                <div class="tile">🫁</div>
+                <div class="htitle">Box Breathing (4-4-4-4)</div>
+                <div class="htag">A four-count breath cycle that turns down stress on demand.</div>
+                <div class="pills">
+                  <span class="pill"><i data-lucide="clock" style="width:15px;height:15px"></i>Daily · 5 min</span>
+                  <span class="pill"><i data-lucide="tag" style="width:15px;height:15px"></i>Breathing</span>
+                  <span class="pill"><i data-lucide="sprout" style="width:15px;height:15px"></i>Simple · ~30d</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="zone" id="z-desc"><div class="desc">Four equal counts — in, hold, out, hold — to steady your nervous system in under two minutes.</div></div>
+
+            <div class="zone" id="z-ss">
+              <div class="startsmall"><div class="ssbox">
+                <div class="sslab">Start small</div>
+                <div class="sstext">One round. Four counts in, four out — that already counts.</div>
+              </div></div>
+            </div>
+
+            <div class="stack">
+              <div class="zone" id="z-why">
+                <div class="why">
+                  <div class="whybar"></div>
+                  <div class="whyhead">
+                    <span class="badge"><i data-lucide="shield-check" style="width:13px;height:13px"></i>Science-backed</span>
+                    <span class="readbtn"><i data-lucide="file-text" style="width:13px;height:13px"></i>Read paper</span>
+                  </div>
+                  <div class="whybody">
+                    <div class="overline">Why it works</div>
+                    <div class="lead">Slowing your breath to roughly six cycles a minute, with an extended exhale, increases vagal tone — the parasympathetic brake on your stress response.</div>
+                    <div class="evid">A 2018 review in Frontiers in Human Neuroscience found slow-breathing practices increase parasympathetic activity and are associated with reduced anxiety and improved emotional control.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="zone" id="z-benefits">
+                <div class="seclabel"><span class="ic"><i data-lucide="sparkles" style="width:16px;height:16px"></i></span>What you&rsquo;ll feel</div>
+                <div class="flush">
+                  <div class="brow"><div class="bic"><i data-lucide="waves" style="width:19px;height:19px"></i></div><div><div class="bt">Calmer within a minute</div><div class="bd">Heart rate and muscle tension drop while you breathe.</div></div></div>
+                  <div class="brow"><div class="bic"><i data-lucide="target" style="width:19px;height:19px"></i></div><div><div class="bt">Clearer thinking under pressure</div><div class="bd">Less reactivity when something goes wrong.</div></div></div>
+                  <div class="brow"><div class="bic"><i data-lucide="leaf" style="width:19px;height:19px"></i></div><div><div class="bt">A portable reset</div><div class="bd">Works anywhere, needs nothing, nobody can tell.</div></div></div>
+                </div>
+              </div>
+
+              <div class="zone" id="z-timeline">
+                <div class="seclabel"><span class="ic"><i data-lucide="clock" style="width:16px;height:16px"></i></span>What to expect</div>
+                <div class="card"><div class="tl">
+                  <div class="spine"></div>
+                  <div class="tlrow"><div class="dot"></div><div><div class="tlw">First round</div><div class="tlt">Body settles</div><div class="tld">The relaxation response begins within a few cycles.</div></div></div>
+                  <div class="tlrow"><div class="dot"></div><div><div class="tlw">Week 2</div><div class="tlt">You reach for it</div><div class="tld">It starts showing up automatically in stressful moments.</div></div></div>
+                  <div class="tlrow"><div class="dot peak">💎</div><div><div class="tlw peak">~30 days</div><div class="tlt">Automatic</div><div class="tld">Slower breathing becomes your default under load.</div></div></div>
+                </div></div>
+              </div>
+
+              <div class="zone" id="z-how">
+                <div class="seclabel"><span class="ic"><i data-lucide="check-circle-2" style="width:16px;height:16px"></i></span>How to start</div>
+                <div class="card">
+                  <div class="step2"><div class="snum2">1</div><div class="stx">Inhale 4, hold 4, exhale 4, hold 4. That is one round.</div></div>
+                  <div class="step2"><div class="snum2">2</div><div class="stx">Start with four rounds — under two minutes.</div></div>
+                  <div class="step2"><div class="snum2">3</div><div class="stx">Anchor it to a trigger: before meetings, or the moment you feel tension.</div></div>
+                  <div class="cad"><i data-lucide="repeat" style="width:15px;height:15px;color:#B98C1E"></i><span class="lab">Suggested cadence</span><span class="val">Daily · 5 min</span></div>
+                </div>
+              </div>
+
+              <div class="zone" id="z-strength">
+                <div class="seclabel"><span class="ic"><i data-lucide="link-2" style="width:16px;height:16px"></i></span>How it becomes automatic</div>
+                <div class="card">
+                  <div class="strin">Every day you keep the chain, this habit gets stronger — climbing five stages from Starting to Automatic. Most daily habits cross into automatic around 66 days.</div>
+                  <div class="strtrack">
+                    <div class="strnode"><div class="strc" style="border-color:#9CA3AF">🥉</div><div class="strl">Starting</div></div>
+                    <div class="strcon" style="background:#60A5FA"></div>
+                    <div class="strnode"><div class="strc" style="border-color:#60A5FA">🥈</div><div class="strl">Building</div></div>
+                    <div class="strcon" style="background:#34D399"></div>
+                    <div class="strnode"><div class="strc" style="border-color:#34D399">🥇</div><div class="strl">Developing</div></div>
+                    <div class="strcon" style="background:#FBBF24"></div>
+                    <div class="strnode"><div class="strc" style="border-color:#FBBF24">🏆</div><div class="strl">Strong</div></div>
+                    <div class="strcon" style="background:#A78BFA"></div>
+                    <div class="strnode"><div class="strc" style="border-color:#A78BFA">💎</div><div class="strl">Automatic</div></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="zone" id="z-research">
+                <div class="seclabel"><span class="ic"><i data-lucide="quote" style="width:17px;height:17px"></i></span>The research</div>
+                <div class="flush"><div class="srow"><span class="snum">01</span><div>
+                  <div class="st">How breath-control can change your life: a systematic review on psycho-physiological correlates of slow breathing</div>
+                  <div class="sm">Zaccaro A, et al. · <i>Frontiers in Human Neuroscience</i> · 2018</div>
+                </div></div></div>
+                <div class="disc">Summaries are educational, not medical advice.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer zone" id="z-footer">
+            <div class="cta">Add this habit</div>
+            <div class="cust">Customize</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PAIN → RESULT ============ -->
+    <div class="panel panel-why">
+      <h2>What each section is for</h2>
+      <p class="cap">The pain it removes, and the result the user gets.</p>
+
+      <div class="pr" data-z="hero" data-note="2-second filter">
+        <h3><span class="g"><i data-lucide="scan-eye" style="width:15px;height:15px"></i></span>Hero &amp; commitment pills</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">Adding habits that never fit the day they actually have — then feeling like a failure when they lapse.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">Bails in two seconds on anything too expensive. Every habit they do add is one they can afford.</span></div>
+      </div>
+
+      <div class="pr" data-z="desc" data-note="Removes ambiguity">
+        <h3><span class="g"><i data-lucide="text" style="width:15px;height:15px"></i></span>Description</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">A name that sounds appealing but leaves them unsure what they'd literally be doing.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">Knows the actual activity before anything asks for trust or commitment.</span></div>
+      </div>
+
+      <div class="pr" data-z="ss" data-note="Floor version">
+        <h3><span class="g"><i data-lucide="feather" style="width:15px;height:15px"></i></span>Start small</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">All-or-nothing thinking — a bad day becomes a skipped day, a skipped day becomes a dead habit.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">A floor so low it survives bad days. The streak holds, so the habit does.</span></div>
+      </div>
+
+      <div class="pr" data-z="why" data-note="Earns belief">
+        <h3><span class="g"><i data-lucide="shield-check" style="width:15px;height:15px"></i></span>Why it works</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">Wellness advice they can't tell apart from marketing, so none of it gets real effort.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">A mechanism they believe. Believed habits get pushed through the boring weeks; assigned ones don't.</span></div>
+      </div>
+
+      <div class="pr" data-z="benefits" data-note="Creates want">
+        <h3><span class="g"><i data-lucide="sparkles" style="width:15px;height:15px"></i></span>What you'll feel</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">Knowing something is good for them and still not wanting to do it.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">Mechanism becomes a payoff they actually want — the difference between should and will.</span></div>
+      </div>
+
+      <div class="pr" data-z="timeline" data-note="Prevents quitting">
+        <h3><span class="g"><i data-lucide="clock" style="width:15px;height:15px"></i></span>What to expect</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">Quitting in week 2 because nothing has visibly changed and it feels like proof it doesn't work.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">Week 2 was predicted, so it reads as on-track instead of failure. This is the section that saves habits.</span></div>
+      </div>
+
+      <div class="pr" data-z="how" data-note="Kills friction">
+        <h3><span class="g"><i data-lucide="check-circle-2" style="width:15px;height:15px"></i></span>How to start</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">A library of added habits that were never once performed.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">A first rep small enough to do today, anchored to an existing trigger. Added becomes started.</span></div>
+      </div>
+
+      <div class="pr" data-z="strength" data-note="Bridge to the app">
+        <h3><span class="g"><i data-lucide="link-2" style="width:15px;height:15px"></i></span>How it becomes automatic</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">Daily check-ins that feel like chore-logging with no visible destination.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">Each check-in reads as climbing toward Automatic. Turns tracking into progress.</span></div>
+      </div>
+
+      <div class="pr" data-z="research" data-note="For the skeptic">
+        <h3><span class="g"><i data-lucide="quote" style="width:15px;height:15px"></i></span>The research</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">No way to check a claim, so every claim gets discounted.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">The skeptic verifies and converts; everyone else is reassured the page isn't invented.</span></div>
+      </div>
+
+      <div class="pr" data-z="footer" data-note="The decision">
+        <h3><span class="g"><i data-lucide="plus-circle" style="width:15px;height:15px"></i></span>Add / Customize</h3>
+        <div class="row"><span class="rl pain">Pain</span><span class="rt">Wanting the habit but not on the offered terms — and having no option but yes or leave.</span></div>
+        <div class="row"><span class="rl res">Result</span><span class="rt">One clear commit, one escape hatch. Fewer abandons at the last step.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <h2>What the flow trace turned up</h2>
+    <table>
+      <thead><tr><th>Finding</th><th>Where</th><th>Why it matters to a user</th></tr></thead>
+      <tbody>
+        <tr><td>Science deep-link is dead</td><td><code>ScrollableContent.tsx:52-73</code></td><td>The jump-to-science path is fully built and no caller passes <code>'science'</code>. A "see the evidence" affordance on browse cards would land skeptics directly on the section written for them.</td></tr>
+        <tr><td>Back button never renders</td><td><code>TemplateModals.tsx:52-60</code></td><td><code>onBack</code> is never passed, so the header's left slot is always empty. Users arriving from a category have only ✕, which drops them out of the drill-down rather than back a level.</td></tr>
+        <tr><td>Modal stays open after adding</td><td><code>FooterPrimaryAction.tsx:37-61</code></td><td>The CTA turns into "Added" and nothing else happens. The user's goal is met but the flow doesn't acknowledge it — they must find ✕ themselves.</td></tr>
+        <tr><td>Quick-add bypasses the page</td><td><code>TemplateReadRow.tsx</code> footer</td><td>Users can add from the list without ever seeing the timeline or start-small. They get the habit with none of the framing that keeps it alive past week 2.</td></tr>
+        <tr><td>Start small wasn't in my first review</td><td><code>StartSmallSection.tsx</code></td><td>I missed it earlier. It sits between description and the science stack and is one of the strongest anti-quit sections on the page.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+  const scroll = document.getElementById('scroll');
+  function clearAll(){
+    document.querySelectorAll('.zone').forEach(z=>{z.classList.remove('lit','bad');z.removeAttribute('data-note')});
+    document.querySelectorAll('.step,.pr').forEach(s=>s.classList.remove('on'));
+  }
+  function activate(el){
+    const id=el.dataset.z, note=el.dataset.note||'', bad=el.dataset.bad==='1';
+    clearAll(); el.classList.add('on');
+    const zone=document.getElementById('z-'+id);
+    if(!zone) return;
+    zone.setAttribute('data-note',note);
+    zone.classList.add('lit'); if(bad) zone.classList.add('bad');
+    if(id==='footer'||id==='head'){ if(id==='head') scroll.scrollTo({top:0,behavior:'smooth'}); }
+    else { zone.scrollIntoView({behavior:'smooth',block:'center'}); }
+  }
+  document.querySelectorAll('.step,.pr').forEach(el=>el.addEventListener('click',()=>activate(el)));
+</script>
+</body>
+</html>

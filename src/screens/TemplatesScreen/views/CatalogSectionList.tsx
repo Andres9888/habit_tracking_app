@@ -4,7 +4,7 @@
  * followed by full-width HabitTemplateCard rows (matching the rest of the app).
  */
 
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, type ReactElement } from 'react';
 import type { SectionListRenderItem } from 'react-native';
 import { SectionList, StyleSheet, View } from 'react-native';
 import type { Doc } from '../../../../convex/_generated/dataModel';
@@ -18,6 +18,8 @@ interface CatalogSectionListProps {
   groups: CategoryGroup[];
   importedTemplateIds: Set<string>;
   importingTemplateId: string | null;
+  /** Rendered when a search clears every section. */
+  listEmptyComponent?: ReactElement;
   onImport: (template: Doc<'templates'>) => void;
   onPreview: (template: Doc<'templates'>) => void;
 }
@@ -35,6 +37,7 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
     groups,
     importedTemplateIds,
     importingTemplateId,
+    listEmptyComponent,
     onImport,
     onPreview,
   } = p;
@@ -51,6 +54,11 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
     [groups]
   );
 
+  // One card shape for every habit, added or not. A compact variant for the
+  // "Added" group was tried and reverted: it rendered the same entity two
+  // different ways depending on where it sat, dropped the description that
+  // makes an added habit recognisable, and gave the habits the user actually
+  // committed to the smaller treatment.
   const renderItem: SectionListRenderItem<
     Doc<'templates'>,
     CatalogSection
@@ -85,7 +93,12 @@ export function CatalogSectionList(p: CatalogSectionListProps) {
       contentContainerStyle={s.list}
       initialNumToRender={6}
       keyboardDismissMode='on-drag'
+      // Without this, the first tap on a card or Add button while the search
+      // keyboard is up is consumed by the dismiss and never reaches the row —
+      // the button reads as broken and the user has to tap twice.
+      keyboardShouldPersistTaps='handled'
       keyExtractor={(item) => item._id}
+      ListEmptyComponent={listEmptyComponent}
       maxToRenderPerBatch={6}
       removeClippedSubviews
       renderItem={renderItem}

@@ -4,67 +4,8 @@
  */
 import { v } from 'convex/values';
 import { mutation, query } from '../_generated/server';
-import type { MutationCtx } from '../_generated/server';
-import type { Id } from '../_generated/dataModel';
-import { calculateStreakFromHistory } from '../streakUtils';
 import { fullHabitValidator } from './types';
-import { getTodayForTimezone, maxDateKey } from './utils';
-import {
-  calculateMomentumStrengthSnapshot,
-  resolveAlgorithmMode,
-} from '../habitStrength';
-
-/**
- * Internal function to recalculate streak and strength after pause/resume
- */
-async function recalculateOnPauseChange(
-  ctx: MutationCtx,
-  habitId: Id<'habits'>,
-  timezone?: string
-): Promise<void> {
-  const habit = await ctx.db.get(habitId);
-  if (!habit) return;
-
-  const allTracking = await ctx.db
-    .query('tracking')
-    .withIndex('by_habit_and_date', (q) => q.eq('habitId', habitId))
-    .collect();
-
-  const today = getTodayForTimezone(timezone);
-  let maxTrackingDateKey = today;
-  for (const record of allTracking) {
-    maxTrackingDateKey = maxDateKey(maxTrackingDateKey, record.date);
-  }
-  const evaluationDateKey = maxDateKey(today, maxTrackingDateKey);
-
-  const tracking = allTracking.map((r) => ({ completed: r.completed, date: r.date }));
-
-  // Resolve algorithm mode from per-habit setting, fallback 'balanced'
-  const mode = resolveAlgorithmMode(habit.strengthAlgorithm);
-
-  const snapshot = calculateMomentumStrengthSnapshot({
-    habitCreatedAt: habit.createdAt,
-    mode,
-    throughDate: evaluationDateKey,
-    tracking,
-  });
-
-  // Pass pause info to exclude paused periods from streak
-  const streakData = calculateStreakFromHistory(tracking, evaluationDateKey, {
-    pausedAt: habit.pausedAt,
-    resumedAt: habit.resumedAt,
-    timezone,
-  });
-
-  await ctx.db.patch(habitId, {
-    bestStreak: streakData.bestStreak,
-    currentStreak: streakData.currentStreak,
-    lastCompletedDate: streakData.lastCompletedDate,
-    strength: snapshot.strength,
-    strengthLevel: snapshot.strengthLevel,
-    strengthUpdatedAt: Date.now(),
-  });
-}
+import { recalculateOnPauseChange } from './pauseHelpers';
 
 export const pause = mutation({
   args: {
@@ -156,10 +97,14 @@ export const listPaused = query({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return [];
+    // Indexed, not filtered: Convex's `.filter` scans every row the index
+    // returned, so this previously read all of the user's habits to return the
+    // paused subset.
     return await ctx.db
       .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .filter((q) => q.eq(q.field('paused'), true))
+      .withIndex('by_userId_and_paused', (q) =>
+        q.eq('userId', identity.subject).eq('paused', true)
+      )
       .order('desc')
       .collect();
   },

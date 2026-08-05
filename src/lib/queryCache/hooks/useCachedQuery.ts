@@ -84,6 +84,7 @@ export function useCachedQuery<Query extends FunctionReference<'query'>>(
       live,
       previousLive: previousLive.current,
       requestedArgs: stableArgs.current,
+      serveCachedWhileSkipped: options.serveCachedWhileSkipped,
     })
   );
 }

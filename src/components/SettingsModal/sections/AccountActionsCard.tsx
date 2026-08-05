@@ -1,5 +1,5 @@
-/** AccountActionsCard — Edit profile, Email, Restore purchases group */
-import { Mail, RotateCcw, SquarePen } from 'lucide-react-native';
+/** AccountActionsCard — Change photo, Email, Restore purchases group */
+import { Image as ImageIcon, Mail, RotateCcw } from 'lucide-react-native';
 import { iconSizes } from '@/theme/iconSizes';
 import { useThemeColors } from '../../../theme/ThemeContext';
 import { SettingsRow } from '../SettingsRow';
@@ -18,9 +18,9 @@ export function AccountActionsCard() {
   return (
     <AccountGroupCard title='Account'>
       <SettingsRow
-        icon={<SquarePen color={settings.user.icon} size={size} />}
+        icon={<ImageIcon color={settings.user.icon} size={size} />}
         iconBackgroundColor={settings.user.bg}
-        label='Edit profile'
+        label='Change photo'
         type='navigation'
         onPress={openPhotoPicker}
       />
@@ -28,6 +28,7 @@ export function AccountActionsCard() {
         icon={<Mail color={settings.user.icon} size={size} />}
         iconBackgroundColor={settings.user.bg}
         label='Email'
+        subtitle='Managed by your sign-in provider'
         type='info'
         value={email ?? '—'}
       />

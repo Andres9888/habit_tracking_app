@@ -1,17 +1,22 @@
 /**
- * DetailCompleteButton — C1 "Settled" full-width bar inside the hero card.
- * Rest: outlined bar with an empty check-well waiting to be filled.
- * Done: settles into a deep fill; the well flips to a medallion with a check.
- * The whole bar toggles in both states (tap the done bar to un-mark).
+ * DetailCompleteButton — the "Complete today" bar inside the hero.
+ *
+ * 'onBand' (the hero's tone, per the Habit Flow Prototype) is a filled green
+ * block with cream ink: the single loudest thing on the screen. 'onSurface'
+ * keeps the older outlined treatment for use on a cream card.
+ *
+ * Both tones animate rest → done, though the hero swaps in HeroCheckInCard once
+ * today is logged, so the done state is mostly a safety net there.
  */
 import { Check } from 'lucide-react-native';
 import { Pressable, Text, View } from 'react-native';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { durations } from '../../../theme/animations';
-import { fontWeights, typography } from '../../../theme/typography';
+import { typography } from '../../../theme/typography';
 import { withAlpha } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme';
 import { useReduceMotion } from '../../../hooks/useReduceMotion';
+import { BAND_FG, useInsightPalette } from '../insightPalette';
 import { useDetailCompleteButtonAnimation } from './DetailCompleteButton.hooks';
 import { styles } from './DetailCompleteButton.styles';
 
@@ -21,26 +26,32 @@ const AnimatedText = Animated.createAnimatedComponent(Text);
 interface DetailCompleteButtonProps {
   disabled?: boolean;
   isCompletedToday: boolean;
+  /** 'onSurface' (default) sits on a cream card; 'onBand' on the hero wash. */
+  tone?: 'onSurface' | 'onBand';
   onPress: () => void;
 }
 
 export function DetailCompleteButton({
   disabled = false,
   isCompletedToday,
+  tone = 'onSurface',
   onPress,
 }: DetailCompleteButtonProps) {
   const { colors } = useThemeColors();
+  const palette = useInsightPalette();
   const reduceMotion = useReduceMotion();
+  const onBand = tone === 'onBand';
+  const green = onBand ? palette.ctaGreen : colors.primary[700];
   const { checkStyle, containerStyle, labelStyle, pressHandlers, wellStyle } =
     useDetailCompleteButtonAnimation(isCompletedToday, {
-      doneBg: colors.primary[700],
-      doneText: colors.text.inverse,
-      restBg: colors.card,
-      restBorder: colors.primary[600],
-      restText: colors.primary[700],
-      wellDoneBg: colors.card,
-      wellRestBg: withAlpha(colors.card, 0),
-      wellRestRing: withAlpha(colors.primary[600], 0.45),
+      doneBg: green,
+      doneText: BAND_FG,
+      restBg: onBand ? green : colors.card,
+      restBorder: onBand ? green : colors.primary[600],
+      restText: onBand ? BAND_FG : colors.primary[700],
+      wellDoneBg: BAND_FG,
+      wellRestBg: withAlpha(BAND_FG, 0),
+      wellRestRing: withAlpha(onBand ? BAND_FG : colors.primary[600], 0.55),
     });
 
   const labelEnter = reduceMotion
@@ -49,12 +60,12 @@ export function DetailCompleteButton({
   const labelExit = reduceMotion
     ? undefined
     : FadeOut.duration(durations.quick);
-  const label = isCompletedToday ? 'Done today' : 'Mark as done';
+  const label = isCompletedToday ? 'Done today' : 'Complete today';
 
   return (
     <AnimatedPressable
       accessibilityLabel={
-        isCompletedToday ? 'Done today, tap to undo' : 'Mark as done for today'
+        isCompletedToday ? 'Done today, tap to undo' : 'Complete today'
       }
       accessibilityRole='button'
       accessibilityState={{ checked: isCompletedToday }}
@@ -62,7 +73,7 @@ export function DetailCompleteButton({
       disabled={disabled}
       style={[
         containerStyle,
-        styles.container,
+        onBand ? styles.bandContainer : styles.container,
         { opacity: disabled ? 0.6 : 1 },
       ]}
       onPress={onPress}
@@ -71,7 +82,7 @@ export function DetailCompleteButton({
     >
       <Animated.View style={[styles.well, wellStyle]}>
         <Animated.View style={checkStyle}>
-          <Check color={colors.primary[700]} size={15} strokeWidth={3} />
+          <Check color={green} size={15} strokeWidth={3} />
         </Animated.View>
       </Animated.View>
       <AnimatedText
@@ -83,7 +94,7 @@ export function DetailCompleteButton({
           typography.body,
           styles.label,
           labelStyle,
-          { fontWeight: fontWeights.semibold },
+          onBand ? styles.bandLabel : null,
         ]}
       >
         {label}

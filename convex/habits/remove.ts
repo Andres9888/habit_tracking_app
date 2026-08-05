@@ -5,7 +5,7 @@
  */
 import { v } from 'convex/values';
 import { mutation } from '../_generated/server';
-import { findMaxOrder } from './utils';
+import { findMaxOrderForUser } from './utils';
 
 const UNDO_RETENTION_MS = 15 * 60 * 1000;
 
@@ -190,11 +190,9 @@ export const restore = mutation({
       throw new Error('Deleted habit data is corrupted');
     }
 
-    const userHabits = await ctx.db
-      .query('habits')
-      .withIndex('by_userId', (q) => q.eq('userId', identity.subject))
-      .collect();
-    const maxOrder = findMaxOrder(userHabits);
+    // Single indexed read — no need to load every habit document just to take
+    // the maximum order.
+    const maxOrder = await findMaxOrderForUser(ctx, identity.subject);
 
     const habitId = await ctx.db.insert('habits', {
       ...payload.habit,

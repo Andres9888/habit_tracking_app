@@ -1,7 +1,5 @@
 /** Sort family segmented control for inline sort picker */
 import { Pressable, Text, View } from 'react-native';
-import { GripVertical } from 'lucide-react-native';
-import { iconSizes } from '@/theme/iconSizes';
 import { typography, fontWeights } from '@/theme/typography';
 import { triggerHaptic } from '@/utils/haptics';
 import { useThemeColors } from '../../../theme/ThemeContext';
@@ -54,26 +52,20 @@ export function SortFamilyPicker({
             style={{ backgroundColor: on ? selectedBg : 'transparent' }}
             onPress={() => handleFamilySelect(key)}
           >
-            {key === 'manual' ? (
-              <GripVertical
-                color={on ? accent : colors.text.secondary}
-                size={iconSizes.small}
-                strokeWidth={on ? 2.5 : 2}
-              />
-            ) : (
-              <Text
-                adjustsFontSizeToFit
-                minimumFontScale={0.85}
-                numberOfLines={1}
-                style={{
-                  ...typography.caption,
-                  color: on ? accent : colors.text.secondary,
-                  fontWeight: on ? fontWeights.semibold : fontWeights.regular,
-                }}
-              >
-                {label}
-              </Text>
-            )}
+            {/* All four segments are labelled text (mock): a bare grip icon
+                read as a drag handle rather than a sort mode. */}
+            <Text
+              adjustsFontSizeToFit
+              minimumFontScale={0.85}
+              numberOfLines={1}
+              style={{
+                ...typography.caption,
+                color: on ? accent : colors.text.secondary,
+                fontWeight: on ? fontWeights.semibold : fontWeights.regular,
+              }}
+            >
+              {label}
+            </Text>
           </Pressable>
         );
       })}

@@ -1,12 +1,13 @@
 /**
- * Lifted settings-card surface.
+ * Settings-facing aliases for the shared paper surface.
  *
- * Light mode floats cards on a lighter parchment (gray-50) above the warm
- * background for real, layered depth. Dark mode keeps the already-elevated
- * card surface (a lighter gray-50 would collapse onto the canvas background).
+ * The definitions live in `theme/surfaces` + `theme/spacing` so Settings,
+ * Analytics and the Habit Browser can't drift apart; these re-exports keep the
+ * settings call sites reading in their own vocabulary.
  */
-import { darkColors, lightColors } from '@/theme/darkColors';
+import { shadows } from '@/theme/spacing';
+import { getPaperSurface } from '@/theme/surfaces';
 
-export function getRaisedSurface(isDark: boolean): string {
-  return isDark ? darkColors.card : lightColors.gray[50];
-}
+export const getRaisedSurface = getPaperSurface;
+
+export const settingsCardShadow = shadows.cardLifted;

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain Day Settings — UX Review: Before / After</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0!important;background:#23221E!important;color:#F2EFE8!important;font-family:'DM Sans',system-ui,sans-serif!important}
+  .wrap{padding:40px 44px 80px}
+  .eyebrow{font-size:11px!important;font-weight:700!important;letter-spacing:3px!important;color:#7FC49A!important;text-transform:uppercase!important}
+  h1{font-family:Literata,Georgia,serif!important;font-size:32px!important;font-weight:700!important;margin:10px 0 8px!important;color:#F2EFE8!important}
+  .lede{font-size:13.5px!important;line-height:1.65!important;color:#9B978A!important;max-width:720px;margin:0!important}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:12px;color:#C9C5B8}
+  .key{display:flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .stage{display:flex;gap:34px;align-items:flex-start;margin-top:34px;flex-wrap:wrap}
+
+  .col{flex:none;width:392px}
+  .colhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .colhead b{font-size:15px}
+  .tag{font-size:10.5px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+  .tag.before{background:#4A2F2A;color:#F0B9AA}
+  .tag.after{background:#1B4436;color:#9BD9B4}
+  .metric{font-size:12px;color:#9B978A;margin-left:auto}
+
+  .phone{background:#F5F1ED;border-radius:22px;overflow:hidden;box-shadow:0 14px 50px rgba(0,0,0,.5);padding-bottom:18px;color:#2D2A26}
+  .status{display:flex;justify-content:space-between;align-items:center;padding:13px 22px 2px;font-size:13px;font-weight:600;color:#2D2A26}
+  .hdr{display:flex;justify-content:space-between;align-items:flex-start;padding:14px 20px 12px}
+  .kick{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#047857}
+  .title{font-family:Literata,Georgia,serif;font-size:33px;font-weight:700;color:#2D2A26;margin-top:6px;line-height:1.15}
+  .x{width:38px;height:38px;border-radius:50%;background:#EDEAE5;display:flex;align-items:center;justify-content:center;color:#524D47;font-size:17px}
+
+  .seclabel{font-family:Literata,Georgia,serif;font-size:19px;font-weight:700;letter-spacing:-0.3px;color:#2D2A26;margin:16px 22px 8px}
+  .card{margin:0 16px;background:#FAF8F5;border:1px solid #DDD8D2;border-radius:20px;overflow:hidden;box-shadow:0 2px 10px -6px rgba(26,24,22,.18)}
+  .row{display:flex;align-items:center;gap:13px;padding:13px 15px;position:relative}
+  .row+.row{border-top:1px solid rgba(45,42,38,.08)}
+  .chip{width:38px;height:38px;border-radius:12px;background:#E2F1EA;display:flex;align-items:center;justify-content:center;flex:none;color:#047857;font-size:15px}
+  .chip.stone{background:#E9E4DD;color:#6B6560}
+  .chip.amber{background:#F8E9CE;color:#7A5A22}
+  .rl{flex:1;min-width:0}
+  .rt{font-size:15.5px;font-weight:600;color:#2D2A26}
+  .rs{font-size:12.5px;color:#6B6560;margin-top:2px}
+  .val{font-size:14px;color:#6B6560;flex:none}
+  .chev{color:#A39F92;font-size:18px;flex:none;font-weight:400}
+  .chev.open{transform:rotate(90deg);color:#047857}
+  .tog{width:50px;height:30px;border-radius:15px;background:#CFC9C1;position:relative;flex:none}
+  .tog.on{background:#047857}
+  .tog i{position:absolute;top:2px;left:2px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .tog.on i{left:auto;right:2px}
+  .seg{display:flex;background:rgba(0,0,0,.05);border-radius:12px;padding:3px;gap:2px;flex:none}
+  .seg span{width:34px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#7C7869}
+  .seg span.sel{background:rgba(5,150,105,.12);color:#047857}
+  .inset{background:rgba(0,0,0,.02);border-top:1px solid rgba(45,42,38,.08);padding:10px 15px}
+  .inset-card{background:#FAF8F5;border:1px solid #DDD8D2;border-radius:14px;overflow:hidden}
+  .inset-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;font-size:14px;font-weight:500;color:#2D2A26}
+  .inset-row.misaligned{padding-left:4px}
+  .inset-val{color:#6B6560;font-weight:500}
+  .tray{background:rgba(0,0,0,.02);border-top:1px solid rgba(45,42,38,.08);padding:10px 15px}
+  .pills{display:flex;gap:7px;flex-wrap:wrap}
+  .pill{font-size:12px;padding:7px 12px;border-radius:9px;background:rgba(0,0,0,.05);color:#6B6560}
+  .pill.sel{background:rgba(5,150,105,.12);color:#047857;font-weight:600}
+
+  .prem{margin:16px 16px 0;background:linear-gradient(135deg,#0D2119,#173A2A);border:1px solid rgba(189,236,207,.24);border-radius:20px;display:flex;align-items:center;gap:13px;padding:13px 15px}
+  .prem .chip{background:rgba(250,248,245,.12);color:#BDECCF}
+  .prem .rt{color:#FFF8E9;font-size:16px}
+  .prem .rs{color:rgba(240,249,243,.76)}
+  .up{background:#D7F7DF;color:#10251D;font-size:14px;font-weight:600;padding:9px 17px;border-radius:20px;flex:none}
+  .foot{text-align:center;font-size:12px;color:#6E6660;margin-top:18px}
+
+  .issue{position:relative}
+  .issue::after{content:'';position:absolute;inset:0;background:rgba(197,74,53,.07);pointer-events:none}
+  .mark{position:absolute;top:50%;right:10px;transform:translateY(-50%);font-size:9px;font-weight:700;letter-spacing:1.2px;padding:3px 7px;border-radius:5px;z-index:3}
+  .mark.bad{background:#B5432E;color:#fff}
+  .mark.good{background:#9BD9B4;color:#0C2B21}
+  .issue .tog,.issue .chev,.issue .val,.issue .seg{margin-right:58px}
+  .fix .tog,.fix .chev,.fix .val{margin-right:58px}
+
+  .why{flex:1;min-width:330px;max-width:460px;display:flex;flex-direction:column;gap:12px;position:sticky;top:28px}
+  .wcard{background:#2C2B26;border-radius:13px;padding:14px 16px;border-left:3px solid #7FC49A}
+  .wcard.warn{border-left-color:#E0A03C}
+  .wcard.soft{border-left-color:#6E7C74}
+  .wh{font-size:13.5px;font-weight:700;color:#F2EFE8;display:flex;align-items:center;gap:8px}
+  .num{width:19px;height:19px;border-radius:50%;background:#7FC49A;color:#0C2B21;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+  .wcard.warn .num{background:#E0A03C}
+  .wcard.soft .num{background:#6E7C74;color:#F2EFE8}
+  .wb{font-size:12.5px;line-height:1.62;color:#C9C5B8;margin-top:7px}
+  .wb em{color:#F2EFE8;font-style:normal;font-weight:600}
+  .totals{background:#1B4436;border-radius:13px;padding:14px 16px;font-size:12.5px;line-height:1.6;color:#CFE9D8}
+  .totals b{color:#fff}
+
+  .tabs{display:flex;gap:8px;margin-top:22px}
+  .tab{font-size:12px;font-weight:600;padding:8px 14px;border-radius:999px;background:#2C2B26;color:#9B978A;border:1px solid #3A3832;cursor:pointer}
+  .tab.on{background:#1B4436;color:#9BD9B4;border-color:#2A5C48}
+  .panel{display:none}
+  .panel.on{display:flex}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Chain Day · Settings UX review</div>
+  <h1>Before / after — remaining polish</h1>
+  <p class="lede">Prune pass already shipped (growth icons, always-open sort, app lock stub). This mock shows the <em style="color:#F2EFE8;font-style:normal;font-weight:600">next</em> pass: regroup misplaced controls, fix misleading copy, and tighten disclosure affordances. No redesign — same cards, clearer jobs.</p>
+
+  <div class="legend">
+    <div class="key"><span class="dot" style="background:#B5432E"></span> friction (before)</div>
+    <div class="key"><span class="dot" style="background:#9BD9B4"></span> change (after)</div>
+    <div class="key"><span class="dot" style="background:#DDD8D2"></span> unchanged</div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-panel="main" type="button">Main settings</button>
+    <button class="tab" data-panel="account" type="button">Account sub-page</button>
+  </div>
+
+  <div class="stage panel on" id="panel-main">
+
+    <div class="col">
+      <div class="colhead"><b>Before</b><span class="tag before">ships today</span><span class="metric">IA muddle</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x">✕</div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="chip amber" style="width:50px;height:50px;border-radius:13px;font-family:Literata,serif;font-size:18px;font-weight:700">AG</div>
+            <div class="rl"><div class="rt" style="font-family:Literata,serif;font-size:19px">Andres Gutierrez</div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel</div>
+        <div class="card">
+          <div class="row"><div class="chip">▦</div><div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip">☾</div><div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg"><span>☀</span><span>☾</span><span class="sel">▯</span></div></div>
+          <div class="row"><div class="chip">▤</div><div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div><div class="tog"><i></i></div></div>
+        </div>
+
+        <div class="seclabel">Reminders</div>
+        <div class="card">
+          <div class="row"><div class="chip">🔔</div><div class="rl"><div class="rt">Streak reminders</div><div class="rs">Nudge before an active streak slips</div></div><div class="tog on"><i></i></div></div>
+          <div class="inset">
+            <div class="inset-card">
+              <div class="inset-row misaligned issue">
+                <span>Remind me at</span>
+                <span class="inset-val">8:00 PM ›</span>
+                <span class="mark bad">ALIGN</span>
+              </div>
+            </div>
+          </div>
+          <div class="row issue">
+            <div class="chip stone">🔊</div>
+            <div class="rl"><div class="rt">Completion sound</div><div class="rs">Play a sound when you check off</div></div>
+            <div class="tog on"><i></i></div>
+            <span class="mark bad">WRONG SECTION</span>
+          </div>
+          <div class="tray">
+            <div class="pills"><span class="pill sel">Ding</span><span class="pill">Pop</span><span class="pill">Rise</span></div>
+          </div>
+        </div>
+
+        <div class="seclabel">Habits</div>
+        <div class="card">
+          <div class="row issue">
+            <div class="chip">⇅</div>
+            <div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div>
+            <div class="val">Manual</div>
+            <span class="mark bad">NO DISCLOSURE</span>
+          </div>
+          <div class="row"><div class="chip">📖</div><div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div><div class="val" style="background:#E2F1EA;color:#047857;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px">3</div><div class="chev">›</div></div>
+          <div class="row issue">
+            <div class="chip">⤓</div>
+            <div class="rl"><div class="rt">Export my data</div><div class="rs">Download habits as CSV or JSON</div></div>
+            <div class="chev">›</div>
+            <span class="mark bad">OVERPROMISE</span>
+          </div>
+        </div>
+
+        <div class="prem">
+          <div class="chip">♛</div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">Unlimited habits &amp; reminders</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support</div>
+        <div class="card">
+          <div class="row"><div class="chip stone">★</div><div class="rl"><div class="rt">Rate Chain Day</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip stone">↗</div><div class="rl"><div class="rt">Share with a friend</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip stone">✦</div><div class="rl"><div class="rt">What's new</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip stone">💬</div><div class="rl"><div class="rt">Send feedback</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="foot">Privacy · Terms · v2.4.1 (42)</div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead"><b>After</b><span class="tag after">proposed</span><span class="metric">same features, clearer jobs</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr">
+          <div><div class="kick">Chain Day</div><div class="title">Settings</div></div>
+          <div class="x">✕</div>
+        </div>
+
+        <div class="card" style="margin-top:2px">
+          <div class="row">
+            <div class="chip amber" style="width:50px;height:50px;border-radius:13px;font-family:Literata,serif;font-size:18px;font-weight:700">AG</div>
+            <div class="rl"><div class="rt" style="font-family:Literata,serif;font-size:19px">Andres Gutierrez</div><div class="rs">Edit name, photo &amp; account</div></div>
+            <div class="chev">›</div>
+          </div>
+        </div>
+
+        <div class="seclabel">Look &amp; Feel</div>
+        <div class="card">
+          <div class="row"><div class="chip">▦</div><div class="rl"><div class="rt">Calendar look</div><div class="rs">Day shape, fill, chain style &amp; preview</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip">☾</div><div class="rl"><div class="rt">Theme</div></div>
+            <div class="seg"><span>☀</span><span>☾</span><span class="sel">▯</span></div></div>
+          <div class="row"><div class="chip">▤</div><div class="rl"><div class="rt">Compact habit cards</div><div class="rs">Fit more on screen</div></div><div class="tog"><i></i></div></div>
+        </div>
+
+        <div class="seclabel">Reminders</div>
+        <div class="card">
+          <div class="row fix">
+            <div class="chip">🔔</div>
+            <div class="rl"><div class="rt">Streak reminders</div><div class="rs">Every day at 8:00 PM</div></div>
+            <div class="tog on"><i></i></div>
+            <span class="mark good">LIVE VALUE</span>
+          </div>
+          <div class="inset">
+            <div class="inset-card">
+              <div class="inset-row fix" style="gap:12px;justify-content:flex-start">
+                <div class="chip" style="width:32px;height:32px;border-radius:10px;font-size:13px">🕐</div>
+                <span style="flex:1;font-weight:600">Remind me at</span>
+                <span class="inset-val">8:00 PM</span>
+                <span class="chev">›</span>
+                <span class="mark good">ALIGNED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="seclabel">Habits</div>
+        <div class="card">
+          <div class="row fix">
+            <div class="chip">⇅</div>
+            <div class="rl"><div class="rt">Sort order</div><div class="rs">How habits are ordered</div></div>
+            <div class="val">Manual</div>
+            <div class="chev open">›</div>
+            <span class="mark good">DISCLOSURE</span>
+          </div>
+          <div class="tray">
+            <div class="pills"><span class="pill sel">Manual</span><span class="pill">Name</span><span class="pill">Strength</span><span class="pill">Streak</span></div>
+          </div>
+          <div class="row fix">
+            <div class="chip stone">🔊</div>
+            <div class="rl"><div class="rt">Completion sound</div><div class="rs">Play when you check off a habit</div></div>
+            <div class="tog on"><i></i></div>
+            <span class="mark good">MOVED</span>
+          </div>
+          <div class="tray">
+            <div class="pills"><span class="pill sel">Ding</span><span class="pill">Pop</span><span class="pill">Rise</span></div>
+          </div>
+          <div class="row"><div class="chip">📖</div><div class="rl"><div class="rt">Archived habits</div><div class="rs">View and restore hidden habits</div></div><div class="val" style="background:#E2F1EA;color:#047857;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px">3</div><div class="chev">›</div></div>
+          <div class="row fix">
+            <div class="chip">⤓</div>
+            <div class="rl"><div class="rt">Export my data</div><div class="rs">Share a CSV of your habits</div></div>
+            <div class="chev">›</div>
+            <span class="mark good">HONEST COPY</span>
+          </div>
+        </div>
+
+        <div class="prem">
+          <div class="chip">♛</div>
+          <div class="rl"><div class="rt">Chain Day Premium</div><div class="rs">Unlimited habits &amp; reminders</div></div>
+          <div class="up">Upgrade</div>
+        </div>
+
+        <div class="seclabel">Support</div>
+        <div class="card">
+          <div class="row"><div class="chip stone">★</div><div class="rl"><div class="rt">Rate Chain Day</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip stone">↗</div><div class="rl"><div class="rt">Share with a friend</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip stone">✦</div><div class="rl"><div class="rt">What's new</div></div><div class="chev">›</div></div>
+          <div class="row"><div class="chip stone">💬</div><div class="rl"><div class="rt">Send feedback</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="foot">Privacy · Terms · v2.4.1 (42)</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <div class="wcard">
+        <div class="wh"><span class="num">1</span> Move completion sound → Habits</div>
+        <div class="wb">Sound on check-off is <em>habit feedback</em>, not a push reminder. Sitting under Reminders forces users hunting for “sound” to open the wrong mental model. Code already comments this as a historical artifact.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">2</span> Honest export subtitle</div>
+        <div class="wb">Today the row says <em>“CSV or JSON”</em> then immediately toasts “Export started…” with no format picker. Either ship a format sheet, or tell the truth about what you export. Prefer honest single-format copy until a picker exists.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">3</span> Sort disclosure chevron</div>
+        <div class="wb">Sort expands inline on tap, but the row looks like a static value — no open/closed cue. Rotate the chevron (or swap value→chevron) so expansion matches Calendar look / navigation rows.</div>
+      </div>
+      <div class="wcard">
+        <div class="wh"><span class="num">4</span> Align “Remind me at”</div>
+        <div class="wb">Nested time row has no icon tile, so its left edge sits flush and breaks the icon column rhythm. Add a small clock tile so the inset card matches every other interactive row.</div>
+      </div>
+      <div class="wcard soft">
+        <div class="wh"><span class="num">5</span> Live value on streak toggle</div>
+        <div class="wb">Subtitle can carry the live time (“Every day at 8:00 PM” / “Off”) instead of static marketing copy — readable without expanding the inset.</div>
+      </div>
+      <div class="totals">
+        <b>Scope of this pass:</b> IA + interaction + honest copy.<br>
+        Support rows and visual system stay as-is (serif labels already ship).<br>
+        <b>Zero features cut</b> — sound just moves; export still exports.
+      </div>
+    </div>
+  </div>
+
+  <div class="stage panel" id="panel-account">
+
+    <div class="col">
+      <div class="colhead"><b>Before</b><span class="tag before">Account page</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr" style="padding-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:22px;color:#6B6560">‹</div>
+            <div class="title" style="font-size:28px;margin:0">Account</div>
+          </div>
+          <div class="x">✕</div>
+        </div>
+
+        <div class="card" style="margin-top:4px;padding:18px 16px">
+          <div style="display:flex;gap:14px;align-items:center">
+            <div class="chip amber" style="width:56px;height:56px;border-radius:14px;font-family:Literata,serif;font-size:20px;font-weight:700">AG</div>
+            <div>
+              <div style="font-family:Literata,serif;font-size:20px;font-weight:700">Andres Gutierrez</div>
+              <div style="font-size:13px;color:#6B6560;margin-top:2px">andres@example.com</div>
+              <div style="font-size:12px;color:#8B857D;margin-top:4px">Member since Mar 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="seclabel">Account</div>
+        <div class="card">
+          <div class="row"><div class="chip">🖼</div><div class="rl"><div class="rt">Change photo</div></div><div class="chev">›</div></div>
+          <div class="row issue">
+            <div class="chip">✉</div>
+            <div class="rl"><div class="rt">Email</div><div class="rs">Managed by your sign-in provider</div></div>
+            <div class="val" style="font-size:12px;max-width:90px;overflow:hidden;text-overflow:ellipsis">andres@…</div>
+            <span class="mark bad">LOOKS TAPPABLE</span>
+          </div>
+          <div class="row"><div class="chip stone">↺</div><div class="rl"><div class="rt">Restore purchases</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="row"><div class="chip stone">↪</div><div class="rl"><div class="rt">Sign out</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div style="height:40px"></div>
+        <div class="card">
+          <div class="row"><div class="chip" style="background:#FEE2E2;color:#B53030">🗑</div><div class="rl"><div class="rt" style="color:#B53030">Delete account</div></div><div class="chev">›</div></div>
+        </div>
+        <div class="foot issue" style="position:relative">Chain Day · Version 2.4.1 (42)<span class="mark bad" style="position:static;margin-left:8px;transform:none">DUPLICATE</span></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead"><b>After</b><span class="tag after">Account page</span></div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>▮▮▮ ⏻</span></div>
+        <div class="hdr" style="padding-bottom:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:22px;color:#6B6560">‹</div>
+            <div class="title" style="font-size:28px;margin:0">Account</div>
+          </div>
+          <div class="x">✕</div>
+        </div>
+
+        <div class="card" style="margin-top:4px;padding:18px 16px">
+          <div style="display:flex;gap:14px;align-items:center">
+            <div class="chip amber" style="width:56px;height:56px;border-radius:14px;font-family:Literata,serif;font-size:20px;font-weight:700">AG</div>
+            <div>
+              <div style="font-family:Literata,serif;font-size:20px;font-weight:700">Andres Gutierrez</div>
+              <div style="font-size:13px;color:#6B6560;margin-top:2px">andres@example.com</div>
+              <div style="font-size:12px;color:#8B857D;margin-top:4px">Member since Mar 2025 · Managed by Apple</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="seclabel">Account</div>
+        <div class="card">
+          <div class="row"><div class="chip">🖼</div><div class="rl"><div class="rt">Change photo</div></div><div class="chev">›</div></div>
+          <div class="row fix">
+            <div class="chip stone">↺</div>
+            <div class="rl"><div class="rt">Restore purchases</div></div>
+            <div class="chev">›</div>
+            <span class="mark good">EMAIL IN HERO</span>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <div class="row"><div class="chip stone">↪</div><div class="rl"><div class="rt">Sign out</div></div><div class="chev">›</div></div>
+        </div>
+
+        <div style="height:40px"></div>
+        <div class="card">
+          <div class="row"><div class="chip" style="background:#FEE2E2;color:#B53030">🗑</div><div class="rl"><div class="rt" style="color:#B53030">Delete account</div></div><div class="chev">›</div></div>
+        </div>
+        <div class="foot" style="opacity:.45">Support screenshots: use main Settings footer</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <div class="wcard warn">
+        <div class="wh"><span class="num">6</span> Drop the fake-action Email row</div>
+        <div class="wb">Email already shows on the profile hero. Nesting a non-pressable <em>info</em> row between Change photo and Restore purchases trains people to tap dead controls. Keep provider note as a quiet hero caption.</div>
+      </div>
+      <div class="wcard soft">
+        <div class="wh"><span class="num">7</span> One version string</div>
+        <div class="wb">Version already lives in the main Settings footer (Privacy · Terms · version). Repeating it on Account burns scroll for no new job — keep one canonical place for support screenshots.</div>
+      </div>
+      <div class="totals">
+        <b>Account after:</b> fewer rows, every row does something.<br>
+        Danger zone spacing stays (56pt intentional dead space).
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const panels = {
+    main: document.getElementById('panel-main'),
+    account: document.getElementById('panel-account'),
+  };
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((t) => t.classList.remove('on'));
+      tab.classList.add('on');
+      Object.values(panels).forEach((p) => p.classList.remove('on'));
+      panels[tab.dataset.panel].classList.add('on');
+    });
+  });
+</script>
+</body>
+</html>

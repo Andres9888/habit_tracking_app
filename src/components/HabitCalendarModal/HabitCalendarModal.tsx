@@ -33,6 +33,7 @@ export default function HabitCalendarModal({
     onOpenMotivationTab,
     toggleHabit,
     tracking,
+    visible,
   });
   const isStickyCalendarHeader = false;
   const showStickyHeader = Boolean(isStickyCalendarHeader);

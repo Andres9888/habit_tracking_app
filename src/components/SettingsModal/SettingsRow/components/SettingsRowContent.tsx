@@ -12,6 +12,7 @@ interface SettingsRowContentProps {
   iconBackgroundColor: SettingsRowProps['iconBackgroundColor'];
   isInteractiveInfo: boolean;
   label: SettingsRowProps['label'];
+  labelColor?: SettingsRowProps['labelColor'];
   onToggle: (value: boolean) => void;
   pulseStyle: ReturnType<typeof useAnimatedStyle>;
   secondaryTextColor: string;
@@ -31,6 +32,7 @@ export function SettingsRowContent({
   iconBackgroundColor,
   isInteractiveInfo,
   label,
+  labelColor,
   onToggle,
   pulseStyle,
   rightAccessory,
@@ -71,7 +73,7 @@ export function SettingsRowContent({
       <RowLabel
         isInteractiveInfo={isInteractiveInfo}
         label={label}
-        labelColor={colors.label}
+        labelColor={labelColor ?? colors.label}
         secondaryTextColor={secondaryTextColor}
         subtitle={subtitle}
         type={type}

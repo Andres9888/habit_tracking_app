@@ -120,6 +120,23 @@ export const shadows = {
     shadowRadius: 8,
   },
 
+  /**
+   * Level 1.5 – cards whose fill sits close to the canvas behind them.
+   *
+   * `card` assumes the surface already contrasts with its background. On the
+   * warm-paper surfaces (settings, analytics) the fill is only a few steps off
+   * the canvas, so at 0.06 the card dissolves into the page and the border ends
+   * up doing all the work. This deeper, softer shadow is what makes same-family
+   * surfaces read as objects.
+   */
+  cardLifted: {
+    elevation: 4,
+    shadowColor: '#2D2A26',
+    shadowOffset: { height: 4, width: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 16,
+  },
+
   /** Level 2 – FAB, pressed cards */
   floatingActionButton: {
     elevation: 6,

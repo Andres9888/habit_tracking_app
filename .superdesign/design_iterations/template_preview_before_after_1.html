@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Template Preview — Before / After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --cream:#F7F4EF; --body:#FAF8F5; --hero:#F6E3D2;
+    --ink:#2B2622; --ink2:#6B625A; --ink3:#9A9088;
+    --line:#E7E0D7;
+    --green:#1E9E63; --green-d:#0F6B41; --green-bg:#E4F5EC; --green-line:#BFE6D2;
+    --gold:#B8860B; --red:#C2453B; --amber:#B4791F;
+    --shadow:0 1px 3px rgba(43,38,34,.07), 0 8px 24px rgba(43,38,34,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#EFEBE4;font-family:'Inter',system-ui,sans-serif;color:var(--ink);padding:40px 24px 80px}
+  .wrap{max-width:1180px;margin:0 auto}
+  h1{font-family:'Literata',serif;font-size:34px;letter-spacing:-.5px;margin-bottom:6px}
+  .sub{color:var(--ink2);font-size:15px;margin-bottom:36px;max-width:760px;line-height:1.6}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+  @media(max-width:900px){.cols{grid-template-columns:1fr}}
+  .colhead{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .tagb{background:#F3D9D6;color:var(--red);font-size:11px;font-weight:700;letter-spacing:.08em;padding:5px 10px;border-radius:6px}
+  .taga{background:var(--green-bg);color:var(--green-d);font-size:11px;font-weight:700;letter-spacing:.08em;padding:5px 10px;border-radius:6px}
+  .colhead h2{font-size:17px;font-weight:600}
+
+  /* phone */
+  .phone{width:100%;max-width:392px;margin:0 auto;border-radius:38px;background:var(--body);
+         box-shadow:var(--shadow);overflow:hidden;position:relative;border:1px solid var(--line)}
+  .status{background:var(--hero);padding:12px 22px 2px;display:flex;justify-content:space-between;
+          font-size:12px;font-weight:600;color:var(--ink2)}
+  .heroblk{background:var(--hero);padding:8px 22px 22px;text-align:center;position:relative}
+  .xbtn{position:absolute;right:16px;top:2px;width:30px;height:30px;border-radius:50%;
+        background:rgba(255,255,255,.5);display:grid;place-items:center;color:var(--ink2);font-size:15px}
+  .tile{background:#FFFDFA;border-radius:22px;display:grid;place-items:center;margin:0 auto;
+        box-shadow:0 2px 10px rgba(122,86,50,.22)}
+  .tile.lg{width:82px;height:82px;font-size:40px;margin-bottom:14px}
+  .tile.sm{width:58px;height:58px;font-size:28px;margin-bottom:10px}
+  .ttl{font-family:'Literata',serif;font-weight:700;letter-spacing:-.4px}
+  .ttl.lg{font-size:29px;line-height:34px;margin-bottom:8px}
+  .ttl.sm{font-size:23px;line-height:28px;margin-bottom:5px}
+  .tag{color:var(--ink2);font-size:15px;margin-bottom:14px}
+  .tag.sm{font-size:14px;margin-bottom:11px}
+  .pills{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+  .pill{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.9);border-radius:999px;
+        padding:7px 13px;font-size:13.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:6px}
+  .pill.bad{background:#FBE4E1;border-color:#F0BDB6;color:var(--red)}
+  .pill.good{background:#E9F6EF;border-color:var(--green-line);color:var(--green-d)}
+
+  .bodyblk{padding:18px 22px 12px;background:var(--body)}
+  .desc{font-size:16.5px;line-height:26px;text-align:center;color:var(--ink2)}
+  .desc.strike{color:#B4A99E}
+  .oneline{font-size:15px;line-height:23px;text-align:center;color:var(--ink2)}
+
+  .card{border-radius:16px;border:1px solid var(--green-line);overflow:hidden;margin:0 22px 12px;
+        border-left:4px solid var(--green)}
+  .cardtop{background:var(--green-bg);padding:11px 13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .badge{background:#fff;border-radius:999px;padding:6px 12px;font-size:11.5px;font-weight:700;
+         letter-spacing:.07em;color:var(--green-d);display:flex;gap:6px;align-items:center}
+  .paper{border:1px solid var(--green-line);border-radius:999px;padding:6px 12px;font-size:12.5px;
+         font-weight:600;color:var(--green-d);display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.5)}
+  .cardbody{padding:12px 14px;background:#FCFBF8}
+  .seclabel{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--green-d);margin-bottom:6px}
+  .mech{font-family:'Literata',serif;font-size:15.5px;line-height:23px;color:var(--ink)}
+  .clip{position:relative;max-height:34px;overflow:hidden}
+  .clip::after{content:'';position:absolute;inset:auto 0 0 0;height:22px;
+               background:linear-gradient(transparent,#FCFBF8)}
+
+  .ramp{margin:0 22px 12px;border:1px solid var(--line);border-radius:16px;padding:12px 14px;background:#FFFDFA}
+  .ramprow{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink)}
+  .step{background:#F1EDE6;border-radius:8px;padding:5px 9px;font-size:12.5px}
+  .step.now{background:var(--green-bg);color:var(--green-d);border:1px solid var(--green-line)}
+  .arrow{color:var(--ink3);font-size:12px}
+  .learn{margin:0 22px 10px;border:1px solid var(--line);border-radius:14px;padding:11px 14px;background:#FFFDFA;
+         display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--ink2)}
+
+  .stack{margin:0 22px;display:flex;flex-direction:column;gap:8px}
+  .ghost{border:1px dashed var(--line);border-radius:12px;padding:11px 13px;font-size:13px;color:var(--ink3);background:#FBF9F6}
+
+  .footer{position:relative;padding:14px 22px 18px;background:linear-gradient(transparent,var(--body) 26%)}
+  .cta{background:var(--green);color:#fff;border-radius:999px;padding:16px;text-align:center;
+       font-size:17px;font-weight:700;box-shadow:0 6px 16px rgba(30,158,99,.28)}
+  .ctasub{text-align:center;font-size:12.5px;color:var(--ink2);margin-top:8px}
+  .cust{text-align:center;font-size:14.5px;font-weight:600;color:var(--ink2);margin-top:10px}
+  .fold{border-top:2px dashed #D9A441;margin:0;position:relative}
+  .fold span{position:absolute;right:12px;top:-9px;background:#D9A441;color:#fff;font-size:10px;
+             font-weight:700;letter-spacing:.06em;padding:2px 8px;border-radius:5px}
+
+  /* callouts */
+  .notes{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+  .note{display:flex;gap:9px;font-size:13.5px;line-height:20px;background:#fff;border:1px solid var(--line);
+        border-radius:11px;padding:10px 12px;color:var(--ink2)}
+  .note b{color:var(--ink)}
+  .n{flex:0 0 20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff}
+  .nb{background:var(--red)} .na{background:var(--green)}
+
+  /* table */
+  .why{margin-top:52px;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{background:#FBF9F6;text-align:left;padding:13px 16px;font-size:11px;letter-spacing:.09em;
+     font-weight:700;color:var(--ink2);border-bottom:1px solid var(--line)}
+  td{padding:14px 16px;border-bottom:1px solid #F2EDE6;vertical-align:top;line-height:20px;color:var(--ink2)}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+  code{background:#F3EFE8;border-radius:5px;padding:2px 6px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;color:#6B4B2A}
+  .sev{font-size:10.5px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:5px;white-space:nowrap}
+  .s1{background:#F8DCD8;color:var(--red)} .s2{background:#FBEDD2;color:var(--amber)}
+  .s3{background:#E7EDF6;color:#3B5C8A}
+  h3{font-family:'Literata',serif;font-size:22px;margin:48px 0 12px;letter-spacing:-.3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Template preview — before / after</h1>
+  <p class="sub">Screen: <code>src/components/FullsizeTemplatePreview/</code>. Left is what ships today. Right is the proposed change. Dashed gold line marks the fold on an iPhone 15 Pro.</p>
+
+  <div class="cols">
+    <!-- ============ BEFORE ============ -->
+    <div>
+      <div class="colhead"><span class="tagb">BEFORE</span><h2>Ships today</h2></div>
+      <div class="phone">
+        <div class="status"><span>7:50</span><span>◦◦◦ ⏺ ▮</span></div>
+        <div class="heroblk">
+          <div class="xbtn">✕</div>
+          <div class="tile lg">🏋️</div>
+          <div class="ttl lg">Resistance Training for Brain</div>
+          <div class="tag">Lift, for cognition.</div>
+          <div class="pills">
+            <span class="pill bad">🕐 Weekly · 25 min</span>
+            <span class="pill">🏷 Health &amp; Fitness</span>
+            <span class="pill bad">🌱 Complex · ~120d</span>
+          </div>
+        </div>
+        <div class="bodyblk">
+          <p class="desc">Progressive resistance training 2–3x weekly specifically for brain health. Studies show muscle mass is directly linked to brain volume and cognitive function.</p>
+        </div>
+        <div class="card">
+          <div class="cardtop">
+            <span class="badge">🛡 SCIENCE-BACKED</span>
+            <span class="paper">📄 Read paper</span>
+          </div>
+          <div class="cardbody">
+            <div class="seclabel">WHY IT WORKS</div>
+            <div class="mech clip">Resistance training shows cognitive benefit through BDNF upregulation and…</div>
+          </div>
+        </div>
+        <div class="fold"><span>FOLD</span></div>
+        <div class="footer" style="margin-top:-58px">
+          <div class="cta">Add this habit</div>
+          <div class="cust">Customize</div>
+        </div>
+        <div class="stack" style="padding-bottom:18px">
+          <div class="ghost">What you'll feel — 4 benefit rows</div>
+          <div class="ghost">What to expect — 5-node timeline, 💎 at ~120d</div>
+          <div class="ghost">How to start — 3 numbered steps</div>
+          <div class="ghost">How it becomes automatic — explainer</div>
+          <div class="ghost">The research — sources + disclaimer</div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="note"><span class="n nb">1</span><div><b>Chip contradicts the copy.</b> Chip says “Weekly”, description says “2–3x weekly”. The chip is the first cost signal a user reads.</div></div>
+        <div class="note"><span class="n nb">2</span><div><b>“~120d” front-loads the scariest number</b> before anything reframes it — and it's fake precision.</div></div>
+        <div class="note"><span class="n nb">3</span><div><b>Category chip burns a slot.</b> Nobody rejects a habit for its taxonomy. Time-of-day is the missing cost answer.</div></div>
+        <div class="note"><span class="n nb">4</span><div><b>The differentiator is under the fold.</b> The CTA overlaps the science card mid-sentence — user is asked to commit before any trust lands.</div></div>
+        <div class="note"><span class="n nb">5</span><div><b>Dose ambiguity.</b> Page argues “start with 10 seconds”, button commits to 25 min × 3/wk. Day-1 miss shows as failure.</div></div>
+      </div>
+    </div>
+
+    <!-- ============ AFTER ============ -->
+    <div>
+      <div class="colhead"><span class="taga">AFTER</span><h2>Proposed</h2></div>
+      <div class="phone">
+        <div class="status"><span>7:50</span><span>◦◦◦ ⏺ ▮</span></div>
+        <div class="heroblk">
+          <div class="xbtn">✕</div>
+          <div class="tile sm">🏋️</div>
+          <div class="ttl sm">Resistance Training for Your Brain</div>
+          <div class="tag sm">Lift, for cognition.</div>
+          <div class="pills">
+            <span class="pill good">🕐 2–3x/week · 25 min</span>
+            <span class="pill">🌅 Morning</span>
+          </div>
+        </div>
+        <div class="bodyblk" style="padding-bottom:14px">
+          <p class="oneline">Progressive resistance training, 2–3x weekly, targeted at brain health.</p>
+        </div>
+        <div class="card">
+          <div class="cardtop">
+            <span class="badge">🛡 SCIENCE-BACKED</span>
+            <span class="paper">📄 Read paper</span>
+          </div>
+          <div class="cardbody">
+            <div class="seclabel">WHY IT WORKS</div>
+            <div class="mech">Lifting raises BDNF — the growth factor tied to memory and learning.</div>
+          </div>
+        </div>
+        <div class="ramp">
+          <div class="ramprow" style="margin-bottom:8px">How it ramps</div>
+          <div class="ramprow">
+            <span class="step now">Wk 1 · 5 min</span><span class="arrow">→</span>
+            <span class="step">Wk 2 · 12 min</span><span class="arrow">→</span>
+            <span class="step">Wk 4 · 25 min</span>
+          </div>
+        </div>
+        <div class="learn"><span>Learn more — benefits, timeline, research</span><span>›</span></div>
+        <div class="fold"><span>FOLD</span></div>
+        <div class="footer">
+          <div class="cta">Start with 5 minutes</div>
+          <div class="ctasub">Builds to 25 min by week 4</div>
+          <div class="cust">Customize</div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="note"><span class="n na">1</span><div><b>Chip tells the truth.</b> <code>2–3x/week · 25 min</code> derived from the same field the description uses — one source, no contradiction.</div></div>
+        <div class="note"><span class="n na">2</span><div><b>Duration moved out of the hero.</b> “Feels automatic ~week 4” lives inside Learn more, where there's room to reframe it.</div></div>
+        <div class="note"><span class="n na">3</span><div><b>Time-of-day replaces category.</b> Answers the third real cost question: which part of my day does this take?</div></div>
+        <div class="note"><span class="n na">4</span><div><b>Badge + mechanism land above the fold.</b> Smaller tile and title buy ~120px; trust arrives before the ask.</div></div>
+        <div class="note"><span class="n na">5</span><div><b>The button does the arguing.</b> Add commits to the starter dose and auto-ramps — “start tiny” becomes behavior, not copy.</div></div>
+        <div class="note"><span class="n na">6</span><div><b>Five stacked blocks → one disclosure.</b> Content is intact for the 20% who scroll; it stops taxing the 80% who don't.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WHAT WE'RE IMPLEMENTING ============ -->
+  <h3>What we're implementing</h3>
+  <div class="why">
+    <table>
+      <tr>
+        <th style="width:78px">Priority</th><th style="width:26%">Change</th>
+        <th style="width:30%">File</th><th>Why</th>
+      </tr>
+      <tr>
+        <td><span class="sev s1">P0 · BUG</span></td>
+        <td><b>Frequency chip reflects real cadence</b><br>“Weekly” → “2–3x/week”</td>
+        <td><code>components/HeroMetaPills.tsx:36</code><br><code>FullsizeTemplatePreview.constants.ts:28</code> <span style="color:var(--ink3)">(FREQUENCY_LABELS)</span></td>
+        <td>Chip reads <code>FREQUENCY_LABELS[template.frequency]</code>, which flattens to “Weekly”. The description says 2–3x. Users plan their week off that chip — it's wrong data, not a style nit.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s1">P0</span></td>
+        <td><b>Add commits to starter dose</b> with auto-ramp; CTA label states it</td>
+        <td><code>components/FooterPrimaryAction.tsx</code><br><code>components/FooterSection.tsx:16</code></td>
+        <td>The page's whole “How to start” argument is that you begin tiny. The button ignores it and schedules the full dose, so the tracker marks a miss on day 1. This is the one change that makes the page's promise true.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s2">P1</span></td>
+        <td><b>Drop the <code>~120d</code> growth chip</b> from the hero</td>
+        <td><code>components/HeroMetaPills.tsx:51-55</code><br><code>utils/growthTypeMeta.ts</code> <span style="color:var(--ink3)">(complex→120)</span></td>
+        <td>Hardcoded 120d presented as precision. Habit-formation research spans 18–254 days (median 66) — false precision damages the exact credibility the science badge is buying. Keep the value for post-add pacing.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s2">P1</span></td>
+        <td><b>Category chip → time-of-day chip</b></td>
+        <td><code>components/HeroMetaPills.tsx:50</code></td>
+        <td>Three chips should answer how often / how long / when. Category answers none of them — it's list-filter metadata that already did its job on the previous screen.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s2">P1</span></td>
+        <td><b>Compress hero</b> — tile 88→58, title 30→23, tighter padding</td>
+        <td><code>styles/hero.styles.ts</code> <span style="color:var(--ink3)">(iconTile, heroGradient)</span><br><code>FullsizeTemplatePreview.constants.ts:9,15</code></td>
+        <td>Hero + description currently consume the entire first screen, so the sticky CTA overlaps the science card mid-headline. Recovers ~120px — enough to land the badge and one mechanism line above the fold.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s2">P1</span></td>
+        <td><b>Collapse 4 of 6 science blocks</b> behind “Learn more”; add ramp row</td>
+        <td><code>components/science/ScienceDrilldown.tsx:23-32</code></td>
+        <td>Six stacked blocks assume a reader who scrolls the whole page. Progressive disclosure keeps every block for the skeptic while the default path stays ~1.5 screens.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s3">P2</span></td>
+        <td><b>Trim description; drop the causal overclaim</b></td>
+        <td><code>components/DescriptionSection.tsx</code></td>
+        <td>“Muscle mass is directly linked to brain volume” states causation for a correlational finding, and it duplicates <code>WhyItWorksCard</code>. Overclaiming in the one app that cites papers is a self-inflicted wound.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s3">P2</span></td>
+        <td><b>Move the week-2 warning post-add</b> — fire as an in-app nudge in week 2</td>
+        <td><code>components/science/TimelineBlock.tsx</code> → habit lifecycle</td>
+        <td>Same content, better timing. Read at browse time it's forgotten; delivered in week 2 it reframes the exact moment people quit.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s3">P2</span></td>
+        <td><b>“Read paper” opens an in-app sheet</b>, not the browser</td>
+        <td><code>components/science/WhyItWorksCard.tsx:84</code></td>
+        <td>Currently ejects the user out of the flow at the moment they're leaning in.</td>
+      </tr>
+      <tr>
+        <td><span class="sev s3">P2</span></td>
+        <td><b>Title grammar</b> — “for Brain” → “for Your Brain”</td>
+        <td>template content (Convex)</td>
+        <td>Reads machine-translated. Cheap fix, disproportionate credibility cost.</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>The one-line rationale</h3>
+  <p class="sub" style="margin-bottom:0">The page today is built to <b>persuade</b> — six sequential blocks, each removing a reason to say no. Most users give it about five seconds. The change keeps every argument but reorders for how the screen is actually used: <b>tell the truth about cost, prove it fast, commit small.</b> Persuasion moves from copy into behavior — the ramping button — and the long-form case moves behind one disclosure for the minority who want it.</p>
+</div>
+</body>
+</html>

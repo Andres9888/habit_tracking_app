@@ -11,6 +11,7 @@ import { useAnimatedStyle } from 'react-native-reanimated';
 import { fontWeights, typography } from '@/theme/typography';
 import { StrengthFillBackground } from '../HabitCard/components/StrengthFillBackground';
 import type { CompletionIcon, DayShape } from '../HabitChainVisualizer/types';
+import { CalendarPreviewLegend } from './CalendarPreviewLegend';
 import {
   CalendarPreviewWeek,
   PREVIEW_STRENGTH_PERCENT,
@@ -67,7 +68,9 @@ export function CalendarPreview(p: Props) {
         overflow: 'hidden',
       }}
     >
-      <Text style={[LABEL_STYLE, { color: colors.primary[700] }]}>Preview</Text>
+      <Text style={[LABEL_STYLE, { color: colors.primary[700] }]}>
+        Live preview
+      </Text>
       <View
         style={{
           marginHorizontal: 8,
@@ -91,6 +94,7 @@ export function CalendarPreview(p: Props) {
           dayShape={p.dayShape}
         />
       </View>
+      <CalendarPreviewLegend showGradientFill={p.showGradientFill} />
     </LinearGradient>
   );
 }

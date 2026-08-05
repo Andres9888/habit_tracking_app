@@ -1,11 +1,5 @@
-import { useState } from 'react';
-import { format } from 'date-fns';
-import { getEmojiAndName } from '../DraggableHabit/DraggableHabit.hooks';
-import {
-  calculateBestStreak,
-  calculateCompletionPercentage,
-} from '../../utils/habitCalculations';
-import { buildScheduleLabel, getLatestMissedBadge } from './utils';
+import { useCallback, useMemo, useState } from 'react';
+import { deriveHabitCalendarData } from './deriveHabitCalendarData';
 import type { CalendarView, Habit, TrackingEntry } from './types';
 import type { Id } from '../../../convex/_generated/dataModel';
 
@@ -15,6 +9,7 @@ interface UseHabitCalendarModalProps {
   toggleHabit: (args: { habitId: Id<'habits'>; date: string }) => void;
   onClose: () => void;
   onOpenMotivationTab?: () => void;
+  visible: boolean;
 }
 
 export function useHabitCalendarModal({
@@ -23,59 +18,53 @@ export function useHabitCalendarModal({
   toggleHabit,
   onClose,
   onOpenMotivationTab,
+  visible,
 }: UseHabitCalendarModalProps) {
   const [showEditScreen, setShowEditScreen] = useState(false);
   const [calendarView, setCalendarView] = useState<CalendarView>('month');
 
-  const todayDateString = format(new Date(), 'yyyy-MM-dd');
-
-  if (!habit) {
-    return { isValid: false } as const;
-  }
-
-  const { emoji, name } = getEmojiAndName(habit.name);
-  const scheduleLabel = buildScheduleLabel(habit);
-  const habitTrackingEntries = tracking.filter((t) => t.habitId === habit._id);
-  const habitTracking = habitTrackingEntries.map((t) => ({
-    completed: t.completed,
-    date: t.date,
-  }));
-  const todayTracking = habitTrackingEntries.find((t) => t.date === todayDateString);
-  const isTodayCompleted = Boolean(todayTracking?.completed);
-  const recentMissBadge = getLatestMissedBadge(habitTrackingEntries, todayDateString);
-  const bestStreak = calculateBestStreak(habitTracking);
-  const completionPercentage = calculateCompletionPercentage(
-    habit.createdAt || Date.now(),
-    habitTracking
+  // This modal stays mounted while closed so RN's <Modal> keeps its slide-out
+  // animation, which means it re-renders on every HabitsApp render — i.e. on
+  // every habit toggle and every week change. Deriving here (a tracking filter,
+  // a map, a best-streak scan and a completion-percentage scan) was therefore
+  // running constantly for a screen nobody was looking at. Gate on `visible`
+  // and memoize so a closed modal costs nothing.
+  const derived = useMemo(
+    () => (visible && habit ? deriveHabitCalendarData(habit, tracking) : null),
+    [habit, tracking, visible]
   );
 
-  const handleEditPress = () => setShowEditScreen(true);
-  const handleCloseEdit = () => setShowEditScreen(false);
-  const handleQuickLogPress = () => {
-    if (isTodayCompleted) return;
-    toggleHabit({ date: todayDateString, habitId: habit._id });
-  };
-  const handleOpenAdvancedFeatures = () => {
+  const handleEditPress = useCallback(() => setShowEditScreen(true), []);
+  const handleCloseEdit = useCallback(() => setShowEditScreen(false), []);
+  const handleQuickLogPress = useCallback(() => {
+    if (!habit || !derived || derived.isTodayCompleted) return;
+    toggleHabit({ date: derived.todayDateString, habitId: habit._id });
+  }, [derived, habit, toggleHabit]);
+  const handleOpenAdvancedFeatures = useCallback(() => {
     setShowEditScreen(false);
     onClose();
     onOpenMotivationTab?.();
-  };
+  }, [onClose, onOpenMotivationTab]);
+
+  if (!derived) {
+    return { isValid: false } as const;
+  }
 
   return {
-    bestStreak,
-    completionPercentage,
+    bestStreak: derived.bestStreak,
     calendarView,
-    emoji,
-    habitTrackingEntries,
-    handleEditPress,
+    completionPercentage: derived.completionPercentage,
+    emoji: derived.emoji,
+    habitTrackingEntries: derived.habitTrackingEntries,
     handleCloseEdit,
-    isTodayCompleted,
+    handleEditPress,
     handleOpenAdvancedFeatures,
-    isValid: true,
     handleQuickLogPress,
-    name,
-    recentMissBadge,
-    scheduleLabel,
+    isTodayCompleted: derived.isTodayCompleted,
+    isValid: true,
+    name: derived.name,
+    recentMissBadge: derived.recentMissBadge,
+    scheduleLabel: derived.scheduleLabel,
     setCalendarView,
     showEditScreen,
   } as const;

@@ -3,7 +3,7 @@
  * and per-import feedback identifiers.
  */
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import type { TemplateToastData } from '../../../components/TemplateAddedToast';
 
@@ -22,7 +22,26 @@ export function useFeedbackState() {
   >(null);
   const [sessionImportCount, setSessionImportCount] = useState(0);
 
+  // Clearing feedback means clearing all five pieces of it. Exposed as one
+  // call so callers can't half-dismiss it (toast gone, variant still set).
+  const dismissFeedback = useCallback(() => {
+    setShowToast(false);
+    setShowCelebration(false);
+    setFeedbackHabitId(null);
+    setFeedbackVariant(null);
+    setToastOnAction(null);
+  }, []);
+
+  const showFeedbackError = useCallback((message: string) => {
+    setToastTemplateData(null);
+    setToastOnAction(null);
+    setToastMessage(message);
+    setShowToast(true);
+  }, []);
+
   return {
+    dismissFeedback,
+    showFeedbackError,
     feedbackHabitId,
     feedbackVariant,
     sessionImportCount,

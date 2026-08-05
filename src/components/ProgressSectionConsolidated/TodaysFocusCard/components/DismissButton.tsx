@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, type PressableStateCallbackType } from 'react-native';
 
 import { AnimatedPressable } from '../../../ui/AnimatedPressable';
 import type { FocusState } from '../../TodaysFocusCardTypes';
@@ -33,7 +33,10 @@ export function DismissButton({
       accessibilityHint='Dismiss celebration and continue'
       accessibilityLabel='Continue'
       accessibilityRole='button'
-      style={({ pressed }) => [styles.dismissButton, { opacity: pressed ? 0.7 : 1 }]}
+      style={({ pressed }: PressableStateCallbackType) => [
+        styles.dismissButton,
+        { opacity: pressed ? 0.7 : 1 },
+      ]}
       onPress={onPress}
     >
       <Text style={[styles.dismissText, { color: subTextColor }]}>

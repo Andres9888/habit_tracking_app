@@ -13,6 +13,11 @@ import { DangerZoneFooter } from './components/DangerZoneFooter';
 import { LoadingState } from './components/LoadingState';
 import type { ArchivedHabitsModalProps, ArchivedHabit } from './types';
 
+// Module scope, not an inline arrow: as an inline function this was a new
+// *component type* on every render, so React unmounted and remounted every
+// separator in the list each time.
+const ItemSeparator = () => <View style={{ height: 14 }} />;
+
 export default function ArchivedHabitsModal({
   onBack,
 }: ArchivedHabitsModalProps) {
@@ -87,7 +92,7 @@ export default function ArchivedHabitsModal({
           }}
           data={state.archivedHabits}
           extraData={extraData}
-          ItemSeparatorComponent={() => <View style={{ height: 14 }} />}
+          ItemSeparatorComponent={ItemSeparator}
           keyExtractor={keyExtractor}
           ListFooterComponent={ListFooter}
           renderItem={renderItem}

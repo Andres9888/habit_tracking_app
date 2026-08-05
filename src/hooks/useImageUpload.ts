@@ -162,7 +162,10 @@ export function useImageUpload(): UseImageUploadReturn {
 
         // Step 5: Parse the storage ID from the response
         const { storageId } = await uploadResponse.json();
-        await validateImageUpload({ storageId });
+        const validation = await validateImageUpload({ storageId });
+        if (!validation.ok) {
+          throw new Error(validation.error);
+        }
 
         // The URL will be the upload response but we typically get
         // the final URL via a query. For now, return the storage ID.
