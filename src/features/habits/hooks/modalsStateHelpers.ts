@@ -4,8 +4,31 @@ import { getLocalDateString } from '@/utils/getLocalDateString';
  */
 
 import type { Habit } from '../types';
+import type { ModalVisibilityState } from './useModalVisibilityState';
 import type { useHabitSelectionState } from './useHabitSelectionState';
 import { useHabitStateSync } from './useHabitStateSync';
+
+type TrackingModalVisibility = Pick<
+  ModalVisibilityState,
+  | 'isHabitCalendarOpen'
+  | 'isHabitDetailOpen'
+  | 'showEditScreen'
+  | 'showQuickActions'
+>;
+
+export function shouldLoadModalTracking({
+  isHabitCalendarOpen,
+  isHabitDetailOpen,
+  showEditScreen,
+  showQuickActions,
+}: TrackingModalVisibility): boolean {
+  return (
+    isHabitCalendarOpen ||
+    isHabitDetailOpen ||
+    showEditScreen ||
+    showQuickActions
+  );
+}
 
 export function generateDateStrings(days: number): string[] {
   return Array.from({ length: days }, (_, i) => {

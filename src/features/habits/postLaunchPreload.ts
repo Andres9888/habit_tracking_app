@@ -1,9 +1,8 @@
 /**
  * Post-launch preload for secondary app surfaces.
  *
- * Goal: keep the first Habits screen paint fast, then warm the
- * paywall/settings/templates code paths in the background so opening
- * them later does not incur first-load delay.
+ * Keep the create and paywall paths warm without pulling the hidden Settings
+ * and Templates trees into the home-screen startup window.
  */
 
 import Constants, { ExecutionEnvironment } from 'expo-constants';
@@ -16,9 +15,6 @@ function shouldSkipPreload(): boolean {
   return Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
 }
 
-// React tree warm mounts are scheduled separately and intentionally still run
-// in Expo Go, where this module preload is unavailable.
-
 export function preloadPostLaunchAppParts(): Promise<void> {
   if (shouldSkipPreload()) {
     return Promise.resolve();
@@ -29,11 +25,7 @@ export function preloadPostLaunchAppParts(): Promise<void> {
   preloadPromise = Promise.allSettled([
     import('../../components/CreateHabitModal'),
     import('../../components/RevenueCatPaywall'),
-    import('../../components/SettingsModal'),
-    import('../../screens/TemplatesScreen'),
     import('./components/HabitsModals/CreateHabitModalSection'),
-    import('./components/HabitsModals/SettingsModalSection'),
-    import('./components/HabitsModals/TemplatesModalSection'),
   ]).then(() => {});
 
   return preloadPromise;

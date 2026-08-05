@@ -23,6 +23,7 @@ import { buildModalsSettersArg } from './buildModalsSettersArg';
 import {
   generateDateStrings,
   getTodayMidnight,
+  shouldLoadModalTracking,
   useSyncAllHabitStates,
 } from './modalsStateHelpers';
 import { getLocalDateString } from '@/utils/getLocalDateString';
@@ -47,7 +48,7 @@ export function useHabitsModalsState({
     settings,
     celebrationsEnabled,
     reduceMotionPreference,
-  } = useHabitsSettings();
+  } = useHabitsSettings(visibility.isSettingsOpen);
 
   const {
     pauseHabit,
@@ -62,12 +63,20 @@ export function useHabitsModalsState({
     useState<boolean>();
 
   const todayKey = getLocalDateString();
-  const trackingDates = useMemo(() => generateDateStrings(365), [todayKey]);
+  const modalTrackingEnabled = shouldLoadModalTracking(visibility);
+  const trackingDates = useMemo(
+    () => (modalTrackingEnabled ? generateDateStrings(365) : []),
+    [modalTrackingEnabled, todayKey]
+  );
   const todayMidnight = useMemo(() => getTodayMidnight(), [todayKey]);
 
   const { tracking, getStreak, isCompleted } = useHabitsTracking(
     trackingDates,
-    todayMidnight
+    todayMidnight,
+    {
+      enabled: modalTrackingEnabled,
+      retainLastResult: true,
+    }
   );
 
   // Wrap toggle mutation as plain async function

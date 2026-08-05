@@ -1,10 +1,10 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 
 import { api } from '../../../../convex/_generated/api';
 import { useCachedQuery } from '../../../lib/queryCache';
 import type { Id } from '../../../../convex/_generated/dataModel';
 import { usePendingToggles } from '../../../lib/optimistic';
-import type { HabitStatus } from '../types';
+import type { HabitStatus, HabitTrackingEntry } from '../types';
 import {
   buildCompletedDatesByHabit,
   buildDateStatusCache,
@@ -15,7 +15,19 @@ import {
 } from './useHabitsTracking.helpers';
 import { useTrackingWindow } from './useTrackingWindow';
 
-export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
+interface UseHabitsTrackingOptions {
+  enabled?: boolean;
+  retainLastResult?: boolean;
+}
+
+export function useHabitsTracking(
+  extendedDateStrings: string[],
+  today: Date,
+  {
+    enabled = true,
+    retainLastResult = false,
+  }: UseHabitsTrackingOptions = {}
+) {
   const stableToday = useMemo(
     () => normalizeToday(today),
     [today.getDate(), today.getFullYear(), today.getMonth()]
@@ -30,10 +42,21 @@ export function useHabitsTracking(extendedDateStrings: string[], today: Date) {
     () => buildTrackingQueryArgs(windowStart, windowEnd),
     [windowStart, windowEnd]
   );
-  const tracking =
-    useCachedQuery(api.habits.getTracking, queryArgs, {
+  const liveTracking = useCachedQuery(
+    api.habits.getTracking,
+    enabled ? queryArgs : 'skip',
+    {
       entryName: 'habits.getTracking',
-    }) ?? [];
+    }
+  );
+  const lastTrackingRef = useRef<HabitTrackingEntry[]>([]);
+  if (retainLastResult && liveTracking !== undefined) {
+    lastTrackingRef.current = liveTracking;
+  }
+  // Modal consumers keep their last snapshot through exit animations, while
+  // the main list preserves its existing empty fallback during a cache miss.
+  const tracking =
+    liveTracking ?? (retainLastResult ? lastTrackingRef.current : []);
   const pendingToggles = usePendingToggles();
   const completedDatesByHabit = useMemo(() => {
     return buildCompletedDatesByHabit(tracking, pendingToggles);

@@ -27,7 +27,6 @@ import { useHapticFeedback } from '../../hooks/useHapticFeedback';
 import { useHabitsAppHandlers } from './useHabitsAppHandlers';
 import { useBottomBarProps } from './useBottomBarProps';
 import { schedulePostLaunchAppPreload } from './postLaunchPreload';
-import { useTemplatesWarmup } from './hooks/useTemplatesWarmup';
 import { enterEasing } from '../../theme/animations';
 
 const ENTERING = FadeInDown.duration(280).easing(enterEasing);
@@ -38,7 +37,6 @@ function HabitsAppContent() {
   useEffect(() => {
     return schedulePostLaunchAppPreload();
   }, []);
-  useTemplatesWarmup();
 
   const [overlaysMounted, setOverlaysMounted] = useState(false);
   useEffect(() => {

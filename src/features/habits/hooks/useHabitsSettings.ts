@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useQuery } from 'convex/react';
+import { useMemo, useRef } from 'react';
 import { api } from '../../../../convex/_generated/api';
 import { useCachedQuery } from '../../../lib/queryCache';
 import type { CompletionSoundType } from '../../../../convex/settings/types';
@@ -22,7 +23,9 @@ export interface HabitsSettingsResult {
  * Fetches and derives settings state for habits feature.
  * Extracted from useHabitsModalsState for decomposition.
  */
-export function useHabitsSettings(): HabitsSettingsResult {
+export function useHabitsSettings(
+  loadArchivedCount = false
+): HabitsSettingsResult {
   const settingsQuery = useCachedQuery(
     api.settings.get,
     {},
@@ -30,17 +33,19 @@ export function useHabitsSettings(): HabitsSettingsResult {
       entryName: 'settings.get',
     }
   );
-  const archivedHabits = useCachedQuery(
-    api.habits.listArchived,
-    {},
-    {
-      entryName: 'habits.listArchived',
-    }
+  const liveArchivedHabitsCount = useQuery(
+    api.habits.listArchivedCount,
+    loadArchivedCount ? {} : 'skip'
   );
+  const lastArchivedHabitsCountRef = useRef(0);
+  if (liveArchivedHabitsCount !== undefined) {
+    lastArchivedHabitsCountRef.current = liveArchivedHabitsCount;
+  }
   const settings = (settingsQuery ?? DEFAULT_SETTINGS) as
     | HabitsSettingsDocument
     | undefined;
-  const archivedHabitsCount = archivedHabits?.length ?? 0;
+  const archivedHabitsCount =
+    liveArchivedHabitsCount ?? lastArchivedHabitsCountRef.current;
 
   return useMemo(
     () => ({
