@@ -7,8 +7,11 @@ import type { HabitStatus } from '../types';
 
 type StatusGetter = (habitId: string, dateString: string) => HabitStatus;
 
+// Only the date arithmetic is cached. A previous result cache keyed on the
+// getHabitStatus identity was always cold — that identity is recreated on every
+// toggle — so it cost a string concat and a Map allocation per card per render
+// and never returned a hit. getHabitStatus is an O(1) Set lookup on its own.
 const nextDateStringCache = new Map<string, string | null>();
-const connectionCache = new WeakMap<StatusGetter, Map<string, boolean>>();
 // The `null` (future-date) entries below depend on "today", so the cache is
 // only valid for a single calendar day. Drop it when the day rolls over,
 // otherwise a value cached as null before midnight stays stale afterward.
@@ -55,16 +58,5 @@ export function getNextWeekConnection(
   const nextDateString = getNextDateString(lastDateString);
   if (!nextDateString) return false;
 
-  let getterCache = connectionCache.get(getHabitStatus);
-  if (!getterCache) {
-    getterCache = new Map();
-    connectionCache.set(getHabitStatus, getterCache);
-  }
-  const cacheKey = `${habitId}|${nextDateString}`;
-  const cached = getterCache.get(cacheKey);
-  if (cached !== undefined) return cached;
-
-  const result = getHabitStatus(habitId, nextDateString) === 'done';
-  getterCache.set(cacheKey, result);
-  return result;
+  return getHabitStatus(habitId, nextDateString) === 'done';
 }

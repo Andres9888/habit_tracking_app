@@ -26,6 +26,10 @@ interface Props {
   connectorStyle: 'none' | 'small' | 'full';
 }
 
+// Static preview: the cells are display-only, so a shared no-op keeps every
+// ChainDayItem's memo intact.
+const noop = () => {};
+
 export function CalendarPreviewWeek(p: Props) {
   const reduceMotion = useReducedMotion() ?? false;
 
@@ -37,12 +41,12 @@ export function CalendarPreviewWeek(p: Props) {
           accentColor={p.accentColor}
           accessibilityHint=''
           accessibilityLabel=''
-          activeBurst={null}
-          celebrationsEnabled={false}
+          burstActive={false}
           completed={d.completed}
           completionIcon={p.completionIcon}
           dateString={`preview-${i}`}
           disabled={false}
+          index={i}
           isToday={false}
           missed={false}
           shape={p.dayShape}
@@ -51,8 +55,8 @@ export function CalendarPreviewWeek(p: Props) {
             p.connectorStyle !== 'none' && d.completed && DAYS[i + 1]?.completed
           )}
           strengthPercent={d.strength}
-          onBurstComplete={() => {}}
-          onPress={() => {}}
+          onBurstComplete={noop}
+          onToggle={noop}
         />
       ))}
     </View>

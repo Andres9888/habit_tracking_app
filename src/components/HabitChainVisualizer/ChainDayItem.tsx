@@ -1,9 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { SparkleBurst } from '../microinteractions/SparkleBurst';
 import { DayConnector } from './DayConnector';
 import { HabitDayToggle } from './HabitDayToggle';
-import type { CompletionIcon, DayShape } from './types';
+import type { ChainDayItemProps } from './ChainDayItem.types';
 
 const styles = StyleSheet.create({
   connectorContainer: {
@@ -21,77 +21,66 @@ const styles = StyleSheet.create({
   },
 });
 
-interface ChainDayItemProps {
-  accentColor: string;
-  activeBurst: string | null;
-  celebrationsEnabled: boolean;
-  completionIcon: CompletionIcon;
-  completed: boolean;
-  strengthPercent: number;
-  dateString: string;
-  disabled: boolean;
-  isToday: boolean;
-  missed: boolean;
-  onBurstComplete: () => void;
-  onPress: () => void;
-  shape: DayShape;
-  shouldReduceMotion: boolean;
-  showConnector: boolean;
-  accessibilityHint: string;
-  accessibilityLabel: string;
-}
-
 const ChainDayItemComponent: React.FC<ChainDayItemProps> = ({
   accentColor,
-  activeBurst,
-  celebrationsEnabled,
+  burstActive,
   completionIcon,
   completed,
   strengthPercent,
   dateString,
   disabled,
+  index,
   isToday,
   missed,
   onBurstComplete,
-  onPress,
+  onToggle,
   shape,
   shouldReduceMotion,
   showConnector,
   accessibilityHint,
   accessibilityLabel,
-}) => (
-  <View className='relative flex-1 items-center'>
-    <HabitDayToggle
-      accentColor={accentColor}
-      accessibilityHint={accessibilityHint}
-      accessibilityLabel={accessibilityLabel}
-      completed={completed}
-      completionIcon={completionIcon}
-      strengthPercent={strengthPercent}
-      dateString={dateString}
-      disabled={disabled}
-      isToday={isToday}
-      missed={missed}
-      shape={shape}
-      onPress={onPress}
-    />
-    <SparkleBurst
-      color={accentColor}
-      isActive={activeBurst === dateString ? celebrationsEnabled : false}
-      reduceMotion={shouldReduceMotion}
-      onComplete={onBurstComplete}
-    />
-    {showConnector ? (
-      <View pointerEvents='none' style={styles.connectorContainer}>
-        <DayConnector
-          visible
-          accentColor={accentColor}
-          strengthPercent={strengthPercent}
-          style={styles.dayConnector}
-        />
-      </View>
-    ) : null}
-  </View>
-);
+}) => {
+  // Built here rather than in ChainDayList so the parent doesn't hand every
+  // sibling a fresh closure on each render, which voided this component's memo.
+  const handlePress = useCallback(
+    () => onToggle(dateString, completed, disabled, index),
+    [onToggle, dateString, completed, disabled, index]
+  );
+
+  return (
+    <View className='relative flex-1 items-center'>
+      <HabitDayToggle
+        accentColor={accentColor}
+        accessibilityHint={accessibilityHint}
+        accessibilityLabel={accessibilityLabel}
+        completed={completed}
+        completionIcon={completionIcon}
+        strengthPercent={strengthPercent}
+        dateString={dateString}
+        disabled={disabled}
+        isToday={isToday}
+        missed={missed}
+        shape={shape}
+        onPress={handlePress}
+      />
+      <SparkleBurst
+        color={accentColor}
+        isActive={burstActive}
+        reduceMotion={shouldReduceMotion}
+        onComplete={onBurstComplete}
+      />
+      {showConnector ? (
+        <View pointerEvents='none' style={styles.connectorContainer}>
+          <DayConnector
+            visible
+            accentColor={accentColor}
+            strengthPercent={strengthPercent}
+            style={styles.dayConnector}
+          />
+        </View>
+      ) : null}
+    </View>
+  );
+};
 
 export const ChainDayItem = memo(ChainDayItemComponent);

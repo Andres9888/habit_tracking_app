@@ -7,8 +7,11 @@ import type { HabitStatus } from '../types';
 
 type StatusGetter = (habitId: string, dateString: string) => HabitStatus;
 
+// Only the date arithmetic is cached. A previous result cache keyed on the
+// getHabitStatus identity was always cold — that identity is recreated on every
+// toggle — so it cost a string concat and a Map allocation per card per render
+// and never returned a hit. getHabitStatus is an O(1) Set lookup on its own.
 const previousDateStringCache = new Map<string, string | null>();
-const connectionCache = new WeakMap<StatusGetter, Map<string, boolean>>();
 
 function getPreviousDateString(firstDateString: string): string | null {
   const cached = previousDateStringCache.get(firstDateString);
@@ -39,16 +42,5 @@ export function getPreviousWeekConnection(
   const previousDateString = getPreviousDateString(firstDateString);
   if (!previousDateString) return false;
 
-  let getterCache = connectionCache.get(getHabitStatus);
-  if (!getterCache) {
-    getterCache = new Map();
-    connectionCache.set(getHabitStatus, getterCache);
-  }
-  const cacheKey = `${habitId}|${previousDateString}`;
-  const cached = getterCache.get(cacheKey);
-  if (cached !== undefined) return cached;
-
-  const result = getHabitStatus(habitId, previousDateString) === 'done';
-  getterCache.set(cacheKey, result);
-  return result;
+  return getHabitStatus(habitId, previousDateString) === 'done';
 }

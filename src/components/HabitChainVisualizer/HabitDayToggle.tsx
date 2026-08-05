@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Animated, Pressable } from 'react-native';
 import Reanimated from 'react-native-reanimated';
 import clsx from 'clsx';
@@ -13,6 +13,7 @@ import {
   getBackgroundColor,
   getBorderColor,
   getOuterFrame,
+  getPressableStyle,
   MISSED_BG,
   MISSED_BORDER,
 } from './habitDayToggleStyles';
@@ -21,7 +22,7 @@ import { getMaterialTier } from './materialTier';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
+const HabitDayToggleComponent: React.FC<HabitDayToggleProps> = ({
   accentColor,
   accessibilityHint,
   accessibilityLabel,
@@ -84,13 +85,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           accessibilityState={{ disabled }}
           className={clsx('items-center justify-center')}
           disabled={disabled}
-          style={{
-            borderRadius,
-            flex: 1,
-            opacity: disabled ? 0.5 : 1,
-            overflow: 'hidden',
-            transform: [{ scale: combinedScale }],
-          }}
+          style={getPressableStyle(borderRadius, disabled, combinedScale)}
           onPress={handlePress}
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
@@ -108,3 +103,8 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     </Animated.View>
   );
 };
+
+// Each cell runs a Reanimated tier interpolation plus two animated styles, so
+// re-rendering all seven on an unrelated toggle is the single most expensive
+// avoidable cost in the chain.
+export const HabitDayToggle = memo(HabitDayToggleComponent);

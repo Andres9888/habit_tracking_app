@@ -1,3 +1,4 @@
+import type { Animated } from 'react-native';
 import type { MaterialTier } from './materialTier';
 import { LEGENDARY_CELL_BACKGROUND } from './materialTier';
 
@@ -63,5 +64,19 @@ export function getOuterFrame({
     borderWidth: missed || !completed || tierName === 'legendary' ? 2 : 0,
     height: 44,
     width: 44,
+  };
+}
+
+export function getPressableStyle(
+  borderRadius: number,
+  disabled: boolean,
+  scale: Animated.AnimatedInterpolation<number> | Animated.Value
+) {
+  return {
+    borderRadius,
+    flex: 1,
+    opacity: disabled ? 0.5 : 1,
+    overflow: 'hidden' as const,
+    transform: [{ scale }],
   };
 }

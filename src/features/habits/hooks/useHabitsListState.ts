@@ -380,6 +380,17 @@ export function useHabitsListState(): HabitsListState {
       const currentlyCompleted = isCompleted(args.habitId, args.date);
       const habit = habitsById.get(args.habitId);
 
+      // Kick off the mutation FIRST. useOptimisticToggleMutation writes to the
+      // optimistic store synchronously before it awaits the server, so the dot
+      // flips on this tick instead of waiting on the strength math below.
+      const togglePromise = baseToggleHabit(args);
+
+      // Audio is part of the same immediate feedback burst as the dot flip and
+      // the haptic - it must not wait on the server round-trip.
+      if (!currentlyCompleted) {
+        playCompletionSound();
+      }
+
       if (habit) {
         const currentStrength =
           predictedStrengths.get(args.habitId)?.strength ?? habit.strength ?? 0;
@@ -439,15 +450,7 @@ export function useHabitsListState(): HabitsListState {
         );
       }
 
-      // Call the original toggle function
-      const result = await baseToggleHabit(args);
-
-      // Play sound if marking as complete (not uncompleting)
-      if (!currentlyCompleted) {
-        playCompletionSound();
-      }
-
-      return result;
+      return await togglePromise;
     },
     [playCompletionSound]
   );

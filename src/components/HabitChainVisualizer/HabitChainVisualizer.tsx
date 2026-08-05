@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import { View } from 'react-native';
 import { ChainConnector } from './ChainConnector';
 import { ChainDayList } from './ChainDayList';
 import { useChainVisualizerState } from './useChainVisualizerState';
 import type { HabitChainVisualizerProps } from './types';
 
-export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
+const HabitChainVisualizerComponent: React.FC<HabitChainVisualizerProps> = ({
   accentColor,
   celebrationsEnabled = true,
   completionIcon = 'chain',
@@ -79,3 +79,7 @@ export const HabitChainVisualizer: React.FC<HabitChainVisualizerProps> = ({
     </View>
   );
 };
+
+// Without this, memo(ChainDayList) below never bails out: an unmemoized parent
+// re-renders on every CardContent render and hands down fresh child props.
+export const HabitChainVisualizer = memo(HabitChainVisualizerComponent);
