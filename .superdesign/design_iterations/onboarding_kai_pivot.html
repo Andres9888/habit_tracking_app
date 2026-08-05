@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChainDay onboarding — Kai's pivot (3 existing + 4 new)</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1a1a1a; color: #eee;
+      padding: 32px 16px; min-height: 100vh;
+    }
+    h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    h2 {
+      font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: #10b981; margin: 36px 0 4px;
+    }
+    .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+    .top-note { color: #ccc; font-size: 14px; margin-bottom: 24px; max-width: 1100px;
+      background: #2a2a2a; border-radius: 12px; padding: 16px; line-height: 1.55; }
+    .top-note b { color: #fff; }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 1500px;
+      margin: 0 auto 32px;
+    }
+    @media (max-width: 1300px) { .row { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 950px) { .row { grid-template-columns: repeat(2, 1fr); } }
+
+    .card { background: #252525; border-radius: 18px; padding: 14px; }
+    .card.kept { box-shadow: 0 0 0 2px #10b981; }
+    .card.new { box-shadow: 0 0 0 2px #f59e0b; }
+
+    .phone {
+      width: 100%; aspect-ratio: 375/812;
+      border-radius: 30px; overflow: hidden;
+      position: relative; background: #F3EEE5;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+    }
+    .phone::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 28%; height: 4.5%;
+      background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+    }
+    .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+    .body { flex: 1; display: flex; flex-direction: column; }
+    .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    .topbar {
+      display: flex; align-items: center;
+      font-size: 9px; color: #888;
+      gap: 6px; margin-bottom: 6%;
+    }
+    .topbar .progress { flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px; }
+    .topbar .progress::after {
+      content: ''; display: block; height: 100%;
+      background: #059669; width: var(--p, 50%);
+    }
+
+    .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.5px; color: #111; text-align: center; }
+    .h-mid { font-weight: 800; font-size: 4.4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+    .sub { font-size: 1.3vw; color: #555; line-height: 1.45; }
+    .sub-c { text-align: center; }
+
+    .cta-ghost {
+      background: transparent; color: #888;
+      font-size: 0.95vw; text-align: center;
+      font-weight: 500; letter-spacing: 1.2px;
+      text-transform: uppercase; padding: 10px;
+    }
+    .pulse { height: 2px; width: 22px; background: #10b981; opacity: 0.7; border-radius: 2px; margin: 5px auto 0; }
+    .cta {
+      background: #059669; color: #fff;
+      padding: 11px 14px; border-radius: 12px;
+      font-weight: 600; font-size: 1vw;
+      text-align: center;
+    }
+
+    .label { color: #fff; font-weight: 600; margin-top: 10px; font-size: 12px; }
+    .label-new { color: #f59e0b; }
+    .label-kept { color: #10b981; }
+    .desc { color: #999; font-size: 11px; margin-top: 3px; line-height: 1.4; }
+    .badge {
+      display: inline-block; font-size: 9px;
+      padding: 1px 7px; border-radius: 8px;
+      font-weight: 600; letter-spacing: 0.5px;
+      margin-left: 4px;
+    }
+    .badge-new { background: #f59e0b; color: #000; }
+    .badge-kept { background: #10b981; color: #000; }
+
+    /* ==== existing screen visuals (problem + solution intro) ==== */
+    .blind-path {
+      position: relative; margin: 6% 0; padding: 14px;
+      background: #FAF6EE; border: 1.5px dashed #C8C4B8;
+      border-radius: 12px;
+    }
+    .blind-path .question { font-size: 1.4vw; color: #999; font-style: italic; text-align: center; line-height: 1.6; }
+    .blind-path .question b { color: #555; font-style: normal; font-weight: 700; }
+    .lost-line { font-size: 1.6vw; color: #B45309; font-weight: 800; text-align: center; margin-top: 5%; letter-spacing: -0.3px; }
+
+    .map-path { background: #FAF6EE; border-radius: 12px; padding: 12px; margin: 5% 0 4%; }
+    .map-path-header { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+    .map-path-icon {
+      width: 24px; height: 24px;
+      border-radius: 8px; background: #FEF3C7;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1vw;
+    }
+    .map-path-name { font-weight: 700; font-size: 1.05vw; color: #111; flex: 1; }
+    .map-path-len { color: #B87333; font-size: 0.85vw; font-weight: 700; }
+    .path-bar { position: relative; height: 8px; background: #E5E1D8; border-radius: 4px; margin: 8px 0; }
+    .path-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, #B87333, #6B7280, #D4A23F);
+      border-radius: 4px;
+    }
+    .path-tier { position: absolute; top: -1px; width: 10px; height: 10px; border-radius: 2px; transform: translateX(-50%); }
+    .path-tier.copper { background: #B87333; }
+    .path-tier.iron { background: #6B7280; }
+    .path-tier.gold { background: #D4A23F; }
+    .path-marker {
+      position: absolute; top: -3px;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2.5px solid #059669;
+      z-index: 2; transform: translateX(-50%);
+    }
+    .way-row { display: flex; justify-content: space-between; font-size: 0.7vw; margin-top: 8px; font-weight: 700; }
+    .way-row .copper { color: #B87333; }
+    .way-row .iron { color: #6B7280; }
+    .way-row .gold { color: #D4A23F; }
+
+    .benefit-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 4%; }
+    .benefit-line { display: flex; align-items: flex-start; gap: 8px; font-size: 1vw; color: #444; line-height: 1.35; }
+    .benefit-line .ico {
+      width: 20px; height: 20px;
+      border-radius: 5px; background: #FEF3C7;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95vw; flex-shrink: 0;
+    }
+    .benefit-line b { font-weight: 800; color: #111; }
+    .benefit-line .feat { color: #888; font-weight: 500; }
+
+    /* ==== new screen visuals ==== */
+    /* screen 4 — three example routes */
+    .route-list { margin: 7% 0 5%; display: flex; flex-direction: column; gap: 12px; }
+    .route-line { }
+    .route-meta {
+      display: flex; justify-content: space-between;
+      font-size: 0.95vw; margin-bottom: 4px;
+    }
+    .route-meta .name { color: #888; font-weight: 600; }
+    .route-meta .days { color: #B87333; font-weight: 700; }
+
+    /* screen 5 — Detour visualization */
+    .detour-box {
+      background: #FAF6EE; border-radius: 12px;
+      padding: 14px; margin: 7% 0 5%;
+    }
+    .detour-row {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.9vw; color: #777;
+      margin-bottom: 6px;
+    }
+    .detour-row .day { font-weight: 700; color: #111; font-size: 1vw; }
+    .detour-row .strength { color: #059669; font-weight: 700; font-size: 1vw; }
+    .strength-bar {
+      position: relative; height: 10px;
+      background: #E5E1D8; border-radius: 5px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      position: absolute; left: 0; top: 0; bottom: 0;
+      background: linear-gradient(90deg, #059669, #10b981);
+      width: 78%;
+    }
+    .strength-dip {
+      position: absolute; top: 0; bottom: 0;
+      left: 38%; width: 6%;
+      background: #FAF6EE;
+    }
+    .detour-bottom {
+      display: flex; justify-content: space-between;
+      font-size: 0.75vw; color: #888;
+      margin-top: 6px;
+    }
+    .detour-bottom .marked { color: #059669; font-weight: 700; }
+
+    /* screen 6 — three slots */
+    .slot-stack { margin: 6% 0 5%; display: flex; flex-direction: column; gap: 7px; }
+    .slot {
+      background: #FAF6EE; border-radius: 11px;
+      padding: 10px 12px;
+      border: 1px solid #E5E1D8;
+      display: flex; align-items: center;
+      gap: 8px;
+      font-size: 1vw;
+    }
+    .slot.locked { background: transparent; color: #B5B0A0; border-style: dashed; }
+    .slot .num {
+      width: 22px; height: 22px;
+      border-radius: 50%; background: #FEF3C7;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85vw; color: #92400E;
+    }
+    .slot.locked .num { background: transparent; border: 1px dashed #B5B0A0; color: #B5B0A0; }
+    .slot .label-text { font-weight: 600; color: #111; }
+    .slot.locked .label-text { color: #B5B0A0; font-style: italic; font-weight: 500; }
+
+    /* screen 7 — start CTA + first route teaser */
+    .first-card {
+      background: #FAF6EE;
+      border-radius: 14px;
+      padding: 12px;
+      margin: 6% 0 7%;
+      box-shadow: 0 1px 0 0 #E5E1D8;
+    }
+    .first-card .header {
+      display: flex; align-items: center; gap: 7px;
+      margin-bottom: 9px;
+    }
+    .first-card .ico-box {
+      width: 28px; height: 28px;
+      border-radius: 8px; background: #FEF3C7;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1vw;
+    }
+    .first-card .name {
+      font-weight: 800; font-size: 1.15vw; color: #111; flex: 1;
+    }
+    .first-card .meta {
+      font-size: 0.8vw; font-weight: 700; color: #B87333;
+    }
+
+  </style>
+</head>
+<body>
+
+<h1>Onboarding — Kai's pivot</h1>
+<div class="top-note">
+  <b>What stays:</b> screens 1–3 (Hey / blind / map) — already loved.
+  <br>
+  <b>What's new:</b> 4 follow-on screens that <b>extend the GPS metaphor</b> instead of stacking "you will…" promises. Each new screen reveals one concrete fact about how the map works, building toward a natural call to action.
+</div>
+
+<h2>ACT 1 — Hook (steps 1–3) — KEPT</h2>
+<div class="act-sub">From new_opening_hook_2. No change.</div>
+
+<div class="row">
+
+  <!-- 1 — Welcome -->
+  <div class="card kept">
+    <div class="phone">
+      <div class="screen">
+        <div class="body">
+          <div class="center">
+            <div class="h-big" style="font-size: 9vw; letter-spacing: -3px;">Hey.</div>
+          </div>
+          <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-kept">1 — Welcome <span class="badge badge-kept">KEPT</span></div>
+    <div class="desc">"Hey." centered. Pulse below ghost CTA.</div>
+  </div>
+
+  <!-- 2 — Problem -->
+  <div class="card kept">
+    <div class="phone">
+      <div class="screen">
+        <div class="body">
+          <div class="center">
+            <div class="h-big" style="font-size: 5vw;">You're building<br/>habits blind.</div>
+            <div class="blind-path">
+              <div class="question">"How long?"<br/><b>You don't know.</b></div>
+              <div class="question" style="margin-top: 8px;">"How hard?"<br/><b>You don't know.</b></div>
+              <div class="question" style="margin-top: 8px;">"How close am I?"<br/><b>You don't know.</b></div>
+            </div>
+            <div class="lost-line">You're lost.</div>
+            <div class="sub sub-c" style="max-width: 88%; font-size: 1.1vw; margin-top: 3%;">No map. No markers. So you quit.</div>
+          </div>
+          <div class="cta-ghost">Tap to continue</div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-kept">2 — Problem <span class="badge badge-kept">KEPT</span></div>
+    <div class="desc">3 unanswered questions → diagnosis → consequence.</div>
+  </div>
+
+  <!-- 3 — Solution intro -->
+  <div class="card kept">
+    <div class="phone">
+      <div class="screen">
+        <div class="body">
+          <div class="center">
+            <div class="h-big" style="font-size: 5vw;">We give you<br/>the map.</div>
+            <div class="map-path">
+              <div class="map-path-header">
+                <div class="map-path-icon">🚶</div>
+                <div class="map-path-name">10-minute walk</div>
+                <div class="map-path-len">21 days</div>
+              </div>
+              <div class="path-bar">
+                <div class="path-fill" style="width: 33%;"></div>
+                <div class="path-tier copper" style="left: 25%;"></div>
+                <div class="path-tier iron" style="left: 65%;"></div>
+                <div class="path-tier gold" style="left: 100%;"></div>
+                <div class="path-marker" style="left: 33%;"></div>
+              </div>
+              <div class="way-row">
+                <span class="copper">Copper</span>
+                <span class="iron">Iron Ridge</span>
+                <span class="gold">Gold Summit</span>
+              </div>
+            </div>
+            <div class="benefit-stack">
+              <div class="benefit-line">
+                <div class="ico">⏱</div>
+                <div><b>Know how long, how hard.</b><br/><span class="feat">Science-backed length, per habit.</span></div>
+              </div>
+              <div class="benefit-line">
+                <div class="ico">📍</div>
+                <div><b>Know where you are. Know what to climb to.</b><br/><span class="feat">Named markers: Copper, Iron Ridge, Gold Summit.</span></div>
+              </div>
+              <div class="benefit-line">
+                <div class="ico">🔗</div>
+                <div><b>Watch your chain transform.</b><br/><span class="feat">Every 20% — proof, not numbers.</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="cta-ghost">Tap to continue</div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-kept">3 — Solution intro <span class="badge badge-kept">KEPT</span></div>
+    <div class="desc">Map visual + 3 benefit lines.</div>
+  </div>
+
+  <div></div>
+</div>
+
+<h2>ACT 2 — Map deep-dive (steps 4–7) — NEW</h2>
+<div class="act-sub">Each screen reveals one concrete fact about how the map works. No "you will…" promises — just the mechanic shown plainly. Progress chrome appears starting here.</div>
+
+<div class="row">
+
+  <!-- 4 — Every habit is a route -->
+  <div class="card new">
+    <div class="phone">
+      <div class="screen">
+        <div class="topbar"><span>4 / 7</span><div class="progress" style="--p: 57%"></div></div>
+        <div class="body">
+          <div>
+            <div class="h-mid">Every habit<br/>is a route.</div>
+            <div class="sub" style="margin-top: 8px;">Each habit has a known length and three named waypoints. The harder the habit, the longer the route.</div>
+            <div class="route-list">
+              <div class="route-line">
+                <div class="route-meta"><span class="name">Easy · 10-min walk</span><span class="days">21 days</span></div>
+                <div class="path-bar">
+                  <div class="path-tier copper" style="left: 25%;"></div>
+                  <div class="path-tier iron" style="left: 65%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                </div>
+              </div>
+              <div class="route-line">
+                <div class="route-meta"><span class="name">Medium · meditation</span><span class="days">66 days</span></div>
+                <div class="path-bar">
+                  <div class="path-tier copper" style="left: 12%;"></div>
+                  <div class="path-tier iron" style="left: 35%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                </div>
+              </div>
+              <div class="route-line">
+                <div class="route-meta"><span class="name">Hard · daily writing</span><span class="days">120+ days</span></div>
+                <div class="path-bar">
+                  <div class="path-tier copper" style="left: 8%;"></div>
+                  <div class="path-tier iron" style="left: 25%;"></div>
+                  <div class="path-tier gold" style="left: 60%;"></div>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.75vw; padding: 0 4px;">
+              <span class="copper" style="color: #B87333; font-weight: 700;">Copper</span>
+              <span class="iron" style="color: #6B7280; font-weight: 700;">Iron Ridge</span>
+              <span class="gold" style="color: #D4A23F; font-weight: 700;">Gold Summit</span>
+            </div>
+          </div>
+          <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-new">4 — Routes have length <span class="badge badge-new">NEW</span></div>
+    <div class="desc">Establishes the route framing. Three example difficulties — short, medium, long. Tier vocabulary planted.</div>
+  </div>
+
+  <!-- 5 — Miss a day? Detour -->
+  <div class="card new">
+    <div class="phone">
+      <div class="screen">
+        <div class="topbar"><span>5 / 7</span><div class="progress" style="--p: 71%"></div></div>
+        <div class="body">
+          <div>
+            <div class="h-mid">Miss a day?<br/>Detour.</div>
+            <div class="sub" style="margin-top: 8px;">Most apps put you back at zero. Here, your strength holds. The route just gets longer.</div>
+            <div class="detour-box">
+              <div class="detour-row">
+                <span class="day">Day 42 · Iron Ridge</span>
+                <span class="strength">strength 78</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill"></div>
+                <div class="strength-dip"></div>
+              </div>
+              <div class="detour-bottom">
+                <span>Day 1</span>
+                <span>Detour day 31</span>
+                <span class="marked">Today</span>
+              </div>
+            </div>
+            <div class="sub sub-c" style="text-align: center; font-size: 1vw; color: #777; margin-top: 5%;">A streak app would have you back at 0.<br/>Your route is 2 days longer. That's it.</div>
+          </div>
+          <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-new">5 — Detour, not reset <span class="badge badge-new">NEW</span></div>
+    <div class="desc">The single biggest differentiator made tangible. The dip is small. The route lengthens. Strength keeps. Direct refutation of the streak-app failure mode.</div>
+  </div>
+
+  <!-- 6 — Three at a time -->
+  <div class="card new">
+    <div class="phone">
+      <div class="screen">
+        <div class="topbar"><span>6 / 7</span><div class="progress" style="--p: 86%"></div></div>
+        <div class="body">
+          <div>
+            <div class="h-mid">Three routes.<br/>No more.</div>
+            <div class="sub" style="margin-top: 8px;">You pick three to start. New slots unlock once your routes are holding. Most apps let you stack ten and burn out by week three.</div>
+            <div class="slot-stack">
+              <div class="slot"><span class="num">1</span><span class="label-text">10-minute walk</span></div>
+              <div class="slot"><span class="num">2</span><span class="label-text">Meditation</span></div>
+              <div class="slot"><span class="num">3</span><span class="label-text">Read 10 pages</span></div>
+              <div class="slot locked"><span class="num">4</span><span class="label-text">unlocks once routes hold</span></div>
+              <div class="slot locked"><span class="num">5</span><span class="label-text">unlocks once routes hold</span></div>
+            </div>
+          </div>
+          <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-new">6 — Three. No more <span class="badge badge-new">NEW</span></div>
+    <div class="desc">Hard limit shown plainly. Locked slots create anticipation rather than guilt. "Once routes hold" plants the strength concept again.</div>
+  </div>
+
+  <!-- 7 — Pick your first route -->
+  <div class="card new">
+    <div class="phone">
+      <div class="screen">
+        <div class="topbar"><span>7 / 7</span><div class="progress" style="--p: 100%"></div></div>
+        <div class="body">
+          <div>
+            <div class="h-mid">Pick your<br/>first route.</div>
+            <div class="sub" style="margin-top: 8px;">Start with one. Add up to two more once you're walking.</div>
+            <div class="first-card">
+              <div class="header">
+                <div class="ico-box">🚶</div>
+                <div class="name">10-minute walk</div>
+                <div class="meta">21 days</div>
+              </div>
+              <div class="path-bar">
+                <div class="path-tier copper" style="left: 25%;"></div>
+                <div class="path-tier iron" style="left: 65%;"></div>
+                <div class="path-tier gold" style="left: 100%;"></div>
+              </div>
+              <div class="way-row">
+                <span class="copper">Copper</span>
+                <span class="iron">Iron Ridge</span>
+                <span class="gold">Gold Summit</span>
+              </div>
+            </div>
+            <div class="sub sub-c" style="text-align: center; font-size: 1vw; color: #777;">Or browse the library →</div>
+          </div>
+          <div style="margin-top: auto;"><div class="cta">Start this route</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-new">7 — Start the route <span class="badge badge-new">NEW</span></div>
+    <div class="desc">Action moment. One route preselected — easiest possible commitment. Library link is the explore-more escape hatch. Solid CTA replaces ghost CTA — first real "do" of the flow.</div>
+  </div>
+
+</div>
+
+<div class="top-note" style="margin-top: 36px;">
+  <b>Why this differs from the benefit-driven mock</b>
+  <ul style="margin: 8px 0 0 18px;">
+    <li><b>One metaphor, not four.</b> Every new screen is a piece of the route system. Reader builds a single mental model instead of collecting four unrelated promises.</li>
+    <li><b>Mechanic-led, not promise-led.</b> "You won't quit on day 42" is a promise. "Miss a day? Detour. Day 31. Strength 78." is the actual thing — you can <i>see</i> what happens.</li>
+    <li><b>Ends in action, not a Continue.</b> Screen 7 is a real start — pick the easiest route, walk it. The hook ends with the user already on the map, not still being sold.</li>
+    <li><b>Name capture moves later.</b> Personalization waits until after the user is moving. Asking for a name during the sell feels like data gathering; asking after they've started a route feels like onboarding the user, not the metric.</li>
+  </ul>
+</div>
+
+</body>
+</html>

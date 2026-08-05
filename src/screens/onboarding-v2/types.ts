@@ -6,39 +6,19 @@ export type StepId =
   | 'welcome'
   | 'problem'
   | 'solutionIntro'
-  | 'name'
-  | 'goal'
-  | 'painPoints'
-  | 'socialProof'
-  | 'solution'
-  | 'categoryPreference'
-  | 'processing'
-  | 'appDemo'
-  | 'planPreview'
-  | 'firstCheckIn'
-  | 'celebration'
-  | 'notificationPriming'
-  | 'accountCreation'
-  | 'paywall';
+  | 'strengthHolds'
+  | 'watchTransform'
+  | 'onePeak'
+  | 'pickFirstRoute';
 
 export const STEP_SEQUENCE: readonly StepId[] = [
   'welcome',
   'problem',
   'solutionIntro',
-  'name',
-  'goal',
-  'painPoints',
-  'socialProof',
-  'solution',
-  'categoryPreference',
-  'processing',
-  'appDemo',
-  'planPreview',
-  'firstCheckIn',
-  'celebration',
-  'notificationPriming',
-  'accountCreation',
-  'paywall',
+  'strengthHolds',
+  'watchTransform',
+  'onePeak',
+  'pickFirstRoute',
 ] as const;
 
 export interface OnboardingAnswers {

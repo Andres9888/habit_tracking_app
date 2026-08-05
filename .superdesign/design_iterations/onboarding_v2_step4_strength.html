@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay — Onboarding copy updates (screens 3, 4, 7)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1300px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 900px; margin: 0 auto 28px; line-height: 1.55; }
+      .lede code { color: #10b981; }
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+      .card h3 {
+        font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: #10b981; margin-bottom: 4px;
+      }
+      .card p.note { font-size: 12px; color: #aaa; margin-bottom: 12px; line-height: 1.5; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 9px; color: #888;
+        gap: 6px;
+        margin-bottom: 6%;
+      }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+        position: relative; overflow: hidden;
+      }
+      .topbar .progress > i {
+        position: absolute; inset: 0;
+        background: #059669;
+      }
+
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.6px; color: #111; text-align: center; }
+      .h-mid { font-weight: 800; font-size: 4.6vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .sub { font-size: 1.55vw; color: #555; line-height: 1.5; margin-top: 12px; }
+      .sub-c { text-align: center; }
+      .em { color: #059669; font-weight: 800; }
+      .strike { text-decoration: line-through; color: #999; font-weight: 600; }
+      .pop { color: #B45309; font-weight: 800; }
+      .new-line { background: rgba(5, 150, 105, 0.08); border-radius: 6px; padding: 2px 6px; }
+
+      /* split for screen 4 */
+      .split {
+        display: flex; gap: 2.4vw; margin-top: 3vw;
+      }
+      .split > .col {
+        flex: 1; background: #FAF6EE; border-radius: 10px; padding: 2.6vw 2.4vw;
+        border: 1px solid #ECE6D9;
+      }
+      .split > .col .label { font-size: 1.35vw; color: #888; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; }
+      .split > .col .num {
+        font-size: 5.2vw; font-weight: 800; line-height: 1; letter-spacing: -1px;
+        margin-top: 0.4vw;
+      }
+      .split > .col .delta { font-size: 1.4vw; margin-top: 1.2vw; font-weight: 700; }
+      .caption {
+        font-size: 1.45vw; color: #555;
+        text-align: center; margin-top: 2vw;
+        font-weight: 600;
+      }
+      .pos-line {
+        font-size: 1.45vw; color: #555; line-height: 1.5;
+        margin-top: 2.2vw; font-weight: 500;
+        text-align: center;
+      }
+      .pos-line .em { font-weight: 800; }
+
+      /* benefit rows for screen 3 */
+      .benefit-list { margin-top: 2.4vw; }
+      .benefit {
+        display: flex; gap: 2.4vw; padding: 2vw 0;
+        border-top: 1px solid #ECE6D9;
+      }
+      .benefit:first-child { border-top: none; }
+      .benefit .icon { font-size: 4.2vw; line-height: 1; flex-shrink: 0; width: 6vw; text-align: center; }
+      .benefit .body { display: flex; flex-direction: column; gap: 0.4vw; }
+      .benefit .b-title { font-size: 1.85vw; font-weight: 800; color: #111; line-height: 1.15; letter-spacing: -0.4px; }
+      .benefit .b-feat { font-size: 1.4vw; color: #777; line-height: 1.4; }
+
+      /* library reassurance for screen 3 */
+      .reassure {
+        background: #F3EEE5; border: 1px dashed #B87333;
+        border-radius: 10px;
+        padding: 2.4vw 2.6vw;
+        margin-top: 2.6vw;
+        font-size: 1.55vw;
+        color: #5C3D17; line-height: 1.4;
+        text-align: center; font-weight: 600;
+      }
+      .reassure b { color: #B87333; font-weight: 800; }
+
+      /* map preview placeholder */
+      .map-preview {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        height: 18vw;
+        margin-top: 2.6vw;
+        position: relative; overflow: hidden;
+      }
+      .map-preview::before {
+        content: '';
+        position: absolute; left: 8%; right: 8%; top: 50%;
+        height: 3px; transform: translateY(-50%);
+        background: repeating-linear-gradient(90deg, #B87333, #B87333 6px, transparent 6px, transparent 12px);
+        border-radius: 2px;
+      }
+      .map-preview .pin {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 3.2vw; height: 3.2vw; border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+      }
+      .map-preview .pin.copper { left: 22%; background: #B87333; }
+      .map-preview .pin.iron   { left: 52%; background: #6B7280; }
+      .map-preview .pin.gold   { left: 82%; background: #D4A017; }
+      .map-preview .pin-label {
+        position: absolute; top: calc(50% + 3vw);
+        font-size: 1.15vw; font-weight: 700;
+        transform: translateX(-50%); letter-spacing: 0.8px;
+        text-transform: uppercase;
+      }
+      .map-preview .pin-label.copper { left: 22%; color: #B87333; }
+      .map-preview .pin-label.iron   { left: 52%; color: #6B7280; }
+      .map-preview .pin-label.gold   { left: 82%; color: #D4A017; }
+
+      /* first-route card for screen 7 */
+      .route-card {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        padding: 3.2vw 3.4vw;
+        margin-top: 3vw;
+      }
+      .route-card .route-head {
+        display: flex; align-items: center; gap: 2.4vw;
+      }
+      .route-icon {
+        width: 9vw; height: 9vw; border-radius: 50%;
+        background: #ECFDF5; border: 1px solid #BBF7D0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 4vw;
+        flex-shrink: 0;
+      }
+      .route-info .route-name { font-size: 2.4vw; font-weight: 800; color: #111; letter-spacing: -0.4px; line-height: 1.1; }
+      .route-info .route-meta { font-size: 1.4vw; color: #777; margin-top: 0.8vw; line-height: 1.4; }
+      .route-tiers {
+        display: flex; align-items: center; gap: 1vw;
+        margin-top: 2.6vw;
+      }
+      .route-tiers .seg {
+        flex: 1; height: 6px; border-radius: 3px;
+      }
+      .route-tiers .seg.copper { background: #B87333; }
+      .route-tiers .seg.iron   { background: #6B7280; }
+      .route-tiers .seg.gold   { background: #D4A017; opacity: 0.35; }
+      .route-tier-row {
+        display: flex; justify-content: space-between;
+        margin-top: 1vw; padding: 0 0.4vw;
+        font-size: 1.15vw; font-weight: 700; letter-spacing: 0.4px;
+      }
+
+      /* CTAs */
+      .cta-stack { margin-top: auto; }
+      .cta-primary {
+        background: #059669; color: #fff;
+        padding: 3.4vw 4vw; border-radius: 12px;
+        font-weight: 800; font-size: 2.1vw;
+        text-align: center; letter-spacing: 0.2px;
+      }
+      .cta-secondary {
+        background: transparent; color: #5C3D17;
+        padding: 2.6vw 4vw;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 700; font-size: 1.6vw;
+        margin-top: 1.6vw;
+        border: 1px solid #B87333;
+      }
+      .cta-secondary b { color: #B87333; }
+
+      .tap {
+        font-size: 1.3vw; color: #888;
+        text-transform: uppercase; letter-spacing: 2px;
+        font-weight: 600; text-align: center;
+      }
+
+      /* legend */
+      .legend {
+        max-width: 1300px; margin: 0 auto;
+        padding: 14px 18px;
+        background: #252525; border-radius: 14px;
+        font-size: 12px; color: #aaa; line-height: 1.6;
+      }
+      .legend b { color: #10b981; }
+      .legend code {
+        background: rgba(255,255,255,0.06); padding: 1px 6px;
+        border-radius: 4px; color: #ddd;
+      }
+      .change-pill {
+        display: inline-block;
+        background: rgba(5, 150, 105, 0.18);
+        color: #10b981;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: 700; font-size: 11px;
+        margin-right: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ChainDay onboarding — copy updates across 3 screens</h1>
+    <p class="lede">
+      Final pass on three connected updates: screen 3 adds library reassurance early,
+      screen 4 lands the strength explainer with the no-zero anchor, screen 7 promotes
+      the library escape hatch from a tertiary link to a real secondary action.
+      Highlighted lines (<span style="background: rgba(5, 150, 105, 0.08); padding: 1px 4px; border-radius: 3px;">cream pill</span>) are new copy.
+    </p>
+
+    <div class="row">
+      <!-- ============== Screen 3 — solutionIntro w/ library line ============== -->
+      <div class="card">
+        <h3>Screen 3 · solutionIntro</h3>
+        <p class="note">
+          <span class="change-pill">+library line</span>
+          Adds reassurance 4 screens before commit. Defuses "I need to come prepared" anxiety.
+        </p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar" style="visibility:hidden">
+              <span>3 / 7</span><span class="progress"><i style="width: 43%"></i></span><span>Map</span>
+            </div>
+
+            <div class="h-big">We give you<br/>the map.</div>
+
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long, how hard.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers: Copper, Iron, Gold.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">🔗</div>
+                <div class="body">
+                  <div class="b-title">Watch your chain transform.</div>
+                  <div class="b-feat">Every tier, a visible upgrade — proof, not numbers.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="reassure">
+              Don't have a habit in mind?<br/>
+              <b>We have 253 ready to go.</b>
+            </div>
+
+            <div class="cta-stack">
+              <div class="tap">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== Screen 4 — strengthHolds (final copy) ============== -->
+      <div class="card">
+        <h3>Screen 4 · strengthHolds</h3>
+        <p class="note">
+          <span class="change-pill">final copy</span>
+          Keeps no-zero anchor. Defines strength as "automatic." Positions streaks + strength as both.
+        </p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar">
+              <span>4 / 7</span><span class="progress"><i style="width: 57%"></i></span><span>Strength</span>
+            </div>
+
+            <div class="h-mid">
+              You won't end up<br/>back at <span class="em">zero.</span>
+            </div>
+            <div class="sub">
+              Streaks count days. <b>Strength counts how automatic the habit has become.</b>
+              Skips dent it — never reset it.
+            </div>
+
+            <div class="split">
+              <div class="col">
+                <div class="label">Streak</div>
+                <div class="num strike">30</div>
+                <div class="delta pop">→ 0 (resets)</div>
+              </div>
+              <div class="col">
+                <div class="label">Strength</div>
+                <div class="num em">78</div>
+                <div class="delta em">→ 76 (dents)</div>
+              </div>
+            </div>
+
+            <div class="caption">Same missed day. Different consequence.</div>
+
+            <div class="pos-line">
+              You get both. Streaks for the <span class="em">vibes</span>.<br/>
+              Strength for the <span class="em">science</span>.
+            </div>
+
+            <div class="cta-stack">
+              <div class="tap">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============== Screen 7 — pickFirstRoute w/ promoted library ============== -->
+      <div class="card">
+        <h3>Screen 7 · pickFirstRoute</h3>
+        <p class="note">
+          <span class="change-pill">promoted library</span>
+          Library was a buried tertiary link. Now a real secondary action with the count (253).
+        </p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar">
+              <span>7 / 7</span><span class="progress"><i style="width: 100%"></i></span><span>Pick</span>
+            </div>
+
+            <div class="h-mid">Pick your<br/>first route.</div>
+            <div class="sub">
+              Start with one. We've picked the easiest — a 10-minute walk.
+              Add more once you're walking.
+            </div>
+
+            <div class="route-card">
+              <div class="route-head">
+                <div class="route-icon">🚶</div>
+                <div class="route-info">
+                  <div class="route-name">10-minute walk</div>
+                  <div class="route-meta">Easy · 21 days to Gold · ~10 min/day</div>
+                </div>
+              </div>
+              <div class="route-tiers">
+                <div class="seg copper"></div>
+                <div class="seg iron"></div>
+                <div class="seg gold"></div>
+              </div>
+              <div class="route-tier-row">
+                <span style="color:#B87333">Copper</span>
+                <span style="color:#6B7280">Iron</span>
+                <span style="color:#D4A017">Gold</span>
+              </div>
+            </div>
+
+            <div class="cta-stack">
+              <div class="cta-primary">Start this route</div>
+              <div class="cta-secondary">
+                Don't know yet? <b>Browse 253 ready-made →</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <b>What changed</b><br/>
+      <span class="change-pill">screen 3</span>
+        Added library reassurance card under benefits. <code>"Don't have a habit in mind? We have 253 ready to go."</code> — defuses prep anxiety 4 screens before the commit.<br/>
+      <span class="change-pill">screen 4</span>
+        Headline kept (<code>"You won't end up back at zero."</code>). Subhead now defines strength as "<b>how automatic the habit has become</b>" — concrete, no jargon. Visual: streak 30 → 0 vs strength 78 → 76. Footer: <code>"You get both. Streaks for the vibes. Strength for the science."</code><br/>
+      <span class="change-pill">screen 7</span>
+        Promoted <code>"Or browse the library →"</code> from tiny gray text to a real secondary action below the primary CTA. Concrete count (253) earns the click.
+    </div>
+  </body>
+</html>

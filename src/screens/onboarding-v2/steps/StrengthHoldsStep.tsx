@@ -2,7 +2,7 @@ import { Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
 import { PrimaryCTA } from '../components/PrimaryCTA';
-import { StreakVsStrengthSplit } from '../components/StreakVsStrengthSplit';
+import { StreakStrengthPanel } from '../components/StreakStrengthPanel';
 import { StepComponentProps } from '../types';
 
 export function StrengthHoldsStep({ onNext }: StepComponentProps) {
@@ -21,7 +21,8 @@ export function StrengthHoldsStep({ onNext }: StepComponentProps) {
             lineHeight: 44,
           }}
         >
-          You won&rsquo;t end up{'\n'}back at zero.
+          You won&rsquo;t end up{'\n'}back at{' '}
+          <Text style={{ color: '#059669' }}>zero.</Text>
         </Text>
         <Text
           style={{
@@ -33,24 +34,13 @@ export function StrengthHoldsStep({ onNext }: StepComponentProps) {
         >
           Streaks count days. <Text style={{ fontWeight: '700' }}>Strength counts how automatic the habit has become.</Text> Skips dent it — never reset it.
         </Text>
-        <StreakVsStrengthSplit />
-        <Text
-          style={{
-            color: colors.text.secondary,
-            fontSize: 13,
-            fontWeight: '600',
-            marginTop: 14,
-            textAlign: 'center',
-          }}
-        >
-          Same missed day. Different consequence.
-        </Text>
+        <StreakStrengthPanel />
         <Text
           style={{
             color: colors.text.tertiary,
             fontSize: 13,
             lineHeight: 20,
-            marginTop: 12,
+            marginTop: 16,
             textAlign: 'center',
           }}
         >

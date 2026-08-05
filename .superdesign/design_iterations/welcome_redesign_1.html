@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay — Welcome Redesign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700;7..72,800&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1a1a;
+        min-height: 100vh;
+        padding: 40px 24px;
+      }
+      h1, .headline { font-family: 'Literata', serif !important; }
+
+      .wrap {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(375px, 1fr));
+        gap: 32px;
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .phone {
+        width: 375px;
+        height: 812px;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        margin: 0 auto;
+        box-shadow:
+          0 0 0 2px rgba(255,255,255,0.06),
+          0 25px 60px -12px rgba(0,0,0,0.7);
+      }
+      .phone::before {
+        content: '';
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 120px; height: 32px;
+        background: #000;
+        border-radius: 0 0 20px 20px;
+        z-index: 30;
+      }
+
+      .screen {
+        position: absolute; inset: 0;
+        background: #F3EEE5;
+        padding: 56px 24px 24px;
+        display: flex; flex-direction: column;
+      }
+
+      /* Status bar */
+      .status {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0 8px 0 8px;
+        font-weight: 600; font-size: 16px;
+        color: #111;
+      }
+
+      /* Logo */
+      .logo {
+        width: 108px; height: 108px;
+        border-radius: 26px;
+        background: linear-gradient(135deg, #059669 0%, #10b981 55%, #34d399 100%);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 12px 32px -12px rgba(5,150,105,0.55);
+      }
+      .logo svg { width: 56px; height: 56px; color: #fff; }
+
+      .logo-sm {
+        width: 92px; height: 92px; border-radius: 22px;
+      }
+      .logo-sm svg { width: 48px; height: 48px; }
+
+      /* Begin button */
+      .cta {
+        background: #059669;
+        color: #fff;
+        padding: 17px 24px;
+        border-radius: 16px;
+        font-weight: 600; font-size: 17px;
+        text-align: center;
+        letter-spacing: -0.2px;
+      }
+
+      /* Card header */
+      .label {
+        display: block;
+        color: #999; font-size: 12px; font-weight: 500;
+        margin-bottom: 12px; text-align: center;
+        letter-spacing: 0.5px; text-transform: uppercase;
+      }
+
+      /* ========= VARIANT A: current ========= */
+      .v-a .progress-wrap {
+        margin-top: 12px;
+      }
+      .v-a .progress-text {
+        text-align: center; font-size: 13px; color: #6B7280;
+        margin-bottom: 8px;
+      }
+      .v-a .progress-bar {
+        height: 2px; background: #E5E1D8; border-radius: 1px;
+      }
+
+      .v-a .content {
+        display: flex; flex-direction: column; align-items: center;
+        padding-top: 88px;
+      }
+      .v-a .headline {
+        font-size: 30px; font-weight: 800;
+        color: #111;
+        margin-top: 48px; letter-spacing: -0.5px;
+      }
+      .v-a .sub {
+        font-size: 17px; color: #555;
+        margin-top: 12px; text-align: center;
+      }
+      .v-a .cta-wrap {
+        margin-top: auto;
+      }
+
+      /* ========= VARIANT B: proposed ========= */
+      .v-b .screen {
+        background:
+          radial-gradient(ellipse 520px 480px at 50% 42%, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0.05) 40%, rgba(243,238,229,0) 70%),
+          linear-gradient(180deg, #F6F1E8 0%, #EFE9DD 100%);
+        padding: 56px 24px 32px;
+      }
+
+      .v-b .status-subtle {
+        color: #111;
+      }
+
+      /* No progress bar on step 1 */
+
+      .v-b .content {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 0;
+      }
+      .v-b .wordmark {
+        font-family: 'Literata', serif;
+        font-size: 28px; font-weight: 700;
+        color: #0f3d2e; letter-spacing: -0.5px;
+        margin-top: 18px;
+      }
+      .v-b .tagline {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px; font-weight: 500;
+        color: #5a7a6c; letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-top: 6px;
+      }
+      .v-b .rule {
+        width: 40px; height: 3px;
+        background: #0f3d2e;
+        border-radius: 2px;
+        margin-top: 36px; opacity: 0.4;
+      }
+      .v-b .headline {
+        font-size: 38px; font-weight: 700;
+        line-height: 1.1;
+        color: #111;
+        margin-top: 32px; text-align: center;
+        letter-spacing: -1px;
+        max-width: 280px;
+      }
+      .v-b .sub {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 16px; color: #555;
+        margin-top: 14px; text-align: center;
+        line-height: 1.45; max-width: 260px;
+      }
+      .v-b .cta-wrap { margin-top: 8px; }
+
+      .caption {
+        color: #999; font-size: 13px;
+        text-align: center; margin-top: 16px;
+        font-family: 'DM Sans';
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+
+      <!-- =============== VARIANT A: CURRENT =============== -->
+      <div>
+        <span class="label">A — Current</span>
+        <div class="phone v-a">
+          <div class="screen">
+            <div class="status">
+              <span>2:07</span>
+              <span>●●●● 📶 🔋</span>
+            </div>
+            <div class="progress-wrap">
+              <div class="progress-text">1 / 14</div>
+              <div class="progress-bar"></div>
+            </div>
+            <div class="content">
+              <div class="logo">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                </svg>
+              </div>
+              <h1 class="headline">You're here.</h1>
+              <div class="sub">That's the hardest part.</div>
+              <div class="cta-wrap" style="width:100%;">
+                <div class="cta">Begin</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">Top-anchored content, floating CTA, flat cream, no brand moment</div>
+      </div>
+
+      <!-- =============== VARIANT B1-serif =============== -->
+      <div>
+        <span class="label">B1 — "Hey." (serif)</span>
+        <div class="phone v-b">
+          <div class="screen">
+            <div class="status">
+              <span class="status-subtle">2:07</span>
+              <span>●●●● 📶 🔋</span>
+            </div>
+            <div class="content">
+              <div class="logo">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                </svg>
+              </div>
+              <h1 style="font-family: 'Literata', serif !important; font-size: 72px; font-weight: 700; margin-top: 40px; letter-spacing: -2px; color: #111;">Hey.</h1>
+            </div>
+            <div class="cta-wrap">
+              <div class="cta">Begin</div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">Literata serif. Warmer, editorial, less "app-y."</div>
+      </div>
+
+      <!-- =============== VARIANT B1-sans =============== -->
+      <div>
+        <span class="label">B1 — "Hey." (sans)</span>
+        <div class="phone v-b">
+          <div class="screen">
+            <div class="status">
+              <span class="status-subtle">2:07</span>
+              <span>●●●● 📶 🔋</span>
+            </div>
+            <div class="content">
+              <div class="logo">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+                </svg>
+              </div>
+              <h1 style="font-family: 'DM Sans', sans-serif !important; font-size: 72px; font-weight: 800; margin-top: 40px; letter-spacing: -3px; color: #111;">Hey.</h1>
+            </div>
+            <div class="cta-wrap">
+              <div class="cta">Begin</div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">DM Sans bold. Matches existing app typography.</div>
+      </div>
+
+    </div>
+
+    <!-- ====== ICON EXPLORATION ROW ====== -->
+    <div style="max-width:1280px; margin: 48px auto 0; padding: 24px; background:#222; border-radius:16px;">
+      <div style="color:#eee; font-family: 'DM Sans'; margin-bottom: 20px; font-size: 15px;">
+        Icon alternatives — same gradient, same size, different mark
+      </div>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
+
+        <!-- Icon 1: current Link -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto;">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">1. Link (current)</div>
+        </div>
+
+        <!-- Icon 2: single larger chain link ring -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto;">
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <rect x="4" y="7" width="16" height="10" rx="5" stroke="currentColor" fill="none"/>
+            </svg>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">2. Single chain link</div>
+        </div>
+
+        <!-- Icon 3: three connected dots / chain segments -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto;">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 48 48">
+              <circle cx="10" cy="24" r="5" fill="currentColor"/>
+              <circle cx="24" cy="24" r="5" fill="currentColor"/>
+              <circle cx="38" cy="24" r="5" fill="currentColor"/>
+              <line x1="15" y1="24" x2="19" y2="24" stroke="currentColor" stroke-width="2.5"/>
+              <line x1="29" y1="24" x2="33" y2="24" stroke="currentColor" stroke-width="2.5"/>
+            </svg>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">3. Chain segments</div>
+        </div>
+
+        <!-- Icon 4: infinity loop -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto;">
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 12a3 3 0 013-3c1 0 1.5.5 2 1l4 5c.5.5 1 1 2 1a3 3 0 100-6 3 3 0 00-2 1l-4 5c-.5.5-1 1-2 1a3 3 0 110-6z"/>
+            </svg>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">4. Infinity (ongoing)</div>
+        </div>
+
+        <!-- Icon 5: chain C shape / claddagh -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto;">
+            <svg fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 48 48">
+              <path d="M20 10 a14 14 0 0 0 0 28 M28 10 a14 14 0 0 1 0 28" stroke="currentColor" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">5. Parens / brackets</div>
+        </div>
+
+        <!-- Icon 6: a single bold 'C' wordmark -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto;">
+            <span style="font-family: 'Literata', serif; font-size: 72px; font-weight: 800; color: white; line-height: 0.8;">C</span>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">6. Letter mark "C"</div>
+        </div>
+
+        <!-- Icon 7: copper-iron-gold gradient chain dots -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto; background: linear-gradient(135deg, #B87333 0%, #9CA3AF 50%, #D4A23F 100%);">
+            <svg fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+              <rect x="4" y="9" width="16" height="6" rx="3" fill="none"/>
+            </svg>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">7. Material gradient</div>
+        </div>
+
+        <!-- Icon 8: Placeholder for Nano Banana -->
+        <div style="text-align:center;">
+          <div class="logo" style="margin: 0 auto; background: repeating-linear-gradient(45deg, #059669 0 10px, #10b981 10px 20px); display:flex; align-items:center; justify-content:center;">
+            <span style="font-size: 44px;">🍌</span>
+          </div>
+          <div style="color:#999; font-size: 12px; margin-top:10px; font-family: 'DM Sans';">8. Generate w/ Nano Banana</div>
+        </div>
+
+      </div>
+    </div>
+
+  </body>
+</html>

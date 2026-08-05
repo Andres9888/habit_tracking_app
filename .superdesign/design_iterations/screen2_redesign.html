@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen 2 (problem) — design variants</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1300px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.6; }
+      .lede code { color: #10b981; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+      .card h3 {
+        font-size: 12px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: #10b981; margin-bottom: 4px;
+      }
+      .card p.note { font-size: 12px; color: #aaa; margin-bottom: 12px; line-height: 1.55; min-height: 56px; }
+      .card .pros {
+        font-size: 11px; color: #10b981; margin-top: 12px; line-height: 1.5;
+      }
+      .card .cons {
+        font-size: 11px; color: #B45309; margin-top: 4px; line-height: 1.5;
+      }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+      .center {
+        flex: 1; display: flex;
+        flex-direction: column; align-items: center;
+        justify-content: center;
+      }
+
+      .h-big { font-weight: 800; font-size: 6.4vw; line-height: 1.05; letter-spacing: -1.6px; color: #111; text-align: center; }
+
+      /* CTA bottom-right */
+      .cta-bottomright {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text { font-size: 1.6vw; color: #555; font-weight: 600; }
+      .cta-bottomright .arrow { font-size: 2vw; color: #555; font-weight: 600; }
+
+      /* ===== Variant A — foggy map (mirror of screen 3) ===== */
+      .foggy-map {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px dashed #C8C4B8;
+        border-radius: 12px;
+        height: 18vw; margin: 4vw 0 3vw;
+        position: relative; overflow: hidden;
+        width: 100%;
+      }
+      .foggy-map::before {
+        content: ''; position: absolute;
+        left: 6%; right: 6%; top: 50%;
+        height: 3px; transform: translateY(-50%);
+        background: repeating-linear-gradient(90deg, #C8C4B8, #C8C4B8 5px, transparent 5px, transparent 10px);
+        opacity: 0.5;
+      }
+      .foggy-map .start-pin {
+        position: absolute; top: 50%; left: 8%;
+        transform: translate(-50%, -50%);
+        width: 3vw; height: 3vw; border-radius: 50%;
+        background: #B45309;
+        box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.18);
+        z-index: 2;
+      }
+      .foggy-map .you-label {
+        position: absolute; top: calc(50% + 3vw); left: 8%;
+        transform: translateX(-50%);
+        font-size: 1.1vw; color: #B45309;
+        font-weight: 700; letter-spacing: 0.6px;
+        text-transform: uppercase;
+      }
+      .foggy-map .qmark {
+        position: absolute;
+        font-size: 3.6vw; color: rgba(180, 83, 9, 0.32);
+        font-weight: 800; font-family: serif;
+      }
+      .foggy-map .qmark.q1 { top: 20%; left: 32%; }
+      .foggy-map .qmark.q2 { top: 60%; left: 50%; }
+      .foggy-map .qmark.q3 { top: 25%; left: 72%; font-size: 2.6vw; }
+      .foggy-map .fog {
+        position: absolute; top: 0; right: 0; bottom: 0;
+        width: 70%;
+        background: linear-gradient(90deg, rgba(243, 238, 229, 0) 0%, rgba(243, 238, 229, 0.6) 50%, #F3EEE5 95%);
+      }
+      .lost-line {
+        font-size: 2.8vw; color: #B45309;
+        font-weight: 800; text-align: center;
+        letter-spacing: -0.4px;
+      }
+      .quit-line {
+        font-size: 1.7vw; color: #555;
+        text-align: center; margin-top: 1vw;
+        line-height: 1.4;
+      }
+
+      /* ===== Variant B — icon rows ===== */
+      .icon-row-list {
+        margin: 4vw 0 3vw;
+        display: flex; flex-direction: column; gap: 1.6vw;
+        width: 100%;
+      }
+      .icon-row {
+        display: flex; align-items: center;
+        gap: 3vw;
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 10px;
+        padding: 2.4vw 3vw;
+      }
+      .icon-row .iicon {
+        width: 6vw; height: 6vw;
+        border-radius: 50%;
+        background: #F3EEE5; border: 1px dashed #C8C4B8;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.6vw;
+        flex-shrink: 0;
+      }
+      .icon-row .q { flex: 1; font-size: 2vw; color: #111; font-weight: 800; letter-spacing: -0.3px; font-style: italic; }
+      .icon-row .ans {
+        font-size: 1.5vw; color: #999;
+        font-weight: 700; letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+
+      /* ===== Variant C — polished dashed box (current concept) ===== */
+      .dashed-box {
+        background: #FAF6EE;
+        border: 1.5px dashed #C8C4B8;
+        border-radius: 14px;
+        padding: 4vw 4vw;
+        margin: 4vw 0 3vw;
+        display: flex; flex-direction: column;
+        gap: 2.6vw;
+      }
+      .dashed-q-pair {
+        text-align: center;
+      }
+      .dashed-q-pair .q {
+        font-size: 2.2vw; color: #777;
+        font-style: italic; font-weight: 500;
+        line-height: 1.2;
+      }
+      .dashed-q-pair .a {
+        font-size: 2.2vw; color: #111;
+        font-weight: 800; letter-spacing: -0.3px;
+        margin-top: 0.4vw; line-height: 1.1;
+      }
+      .dashed-divider {
+        height: 1px; background: #ECE6D9;
+        margin: 0 auto; width: 30%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Screen 2 (problem) — design variants</h1>
+    <p class="lede">
+      Headline kept (<code>"You're building habits blind."</code>). Three visual treatments
+      for the unknowns. Each preserves the screen 2 → 3 payoff (uncertainty → answered) but
+      with different aesthetics.
+    </p>
+
+    <div class="row">
+      <!-- ============== Variant A — foggy map ============== -->
+      <div class="card">
+        <h3>A · Foggy map</h3>
+        <p class="note">Mirror of screen 3's map preview but blank/foggy. "You are here" pin at start; question marks scattered in fog. Sets up the visual that screen 3 will fill with markers.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center" style="padding-top: 4vw; justify-content: flex-start;">
+              <div class="h-big">You're building<br/>habits blind.</div>
+              <div class="foggy-map">
+                <div class="start-pin"></div>
+                <div class="you-label">You</div>
+                <div class="qmark q1">?</div>
+                <div class="qmark q2">?</div>
+                <div class="qmark q3">?</div>
+                <div class="fog"></div>
+              </div>
+              <div class="lost-line">You're lost.</div>
+              <div class="quit-line">No map. No markers. So you quit.</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="pros">+ Strongest screen 2 → 3 narrative payoff</div>
+        <div class="pros">+ Most "illustrative" of the 3 — feels like an image, not text</div>
+        <div class="cons">− Adds a custom visual component to maintain</div>
+      </div>
+
+      <!-- ============== Variant B — icon rows ============== -->
+      <div class="card">
+        <h3>B · Icon rows</h3>
+        <p class="note">Three labeled unknowns with icons. Reads like a checklist of missing answers. Most legible / scannable.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center" style="padding-top: 4vw; justify-content: flex-start;">
+              <div class="h-big">You're building<br/>habits blind.</div>
+              <div class="icon-row-list">
+                <div class="icon-row">
+                  <div class="iicon">⏱</div>
+                  <div class="q">"How long?"</div>
+                  <div class="ans">— ?</div>
+                </div>
+                <div class="icon-row">
+                  <div class="iicon">💪</div>
+                  <div class="q">"How hard?"</div>
+                  <div class="ans">— ?</div>
+                </div>
+                <div class="icon-row">
+                  <div class="iicon">📍</div>
+                  <div class="q">"How close am I?"</div>
+                  <div class="ans">— ?</div>
+                </div>
+              </div>
+              <div class="lost-line">You're lost.</div>
+              <div class="quit-line">No map. No markers. So you quit.</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="pros">+ Icons echo screen 3's benefit row icons (⏱ 📍 🔗) — visual continuity</div>
+        <div class="pros">+ Most modern / scannable</div>
+        <div class="cons">− Three rows take more vertical space; risk of feeling busy</div>
+      </div>
+
+      <!-- ============== Variant C — polished dashed box ============== -->
+      <div class="card">
+        <h3>C · Polished dashed box</h3>
+        <p class="note">Current concept refined. Bigger box, better hierarchy on each Q/A pair, divider lines between. Same structure, just more breathing room.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center" style="padding-top: 4vw; justify-content: flex-start;">
+              <div class="h-big">You're building<br/>habits blind.</div>
+              <div class="dashed-box">
+                <div class="dashed-q-pair">
+                  <div class="q">"How long?"</div>
+                  <div class="a">You don't know.</div>
+                </div>
+                <div class="dashed-divider"></div>
+                <div class="dashed-q-pair">
+                  <div class="q">"How hard?"</div>
+                  <div class="a">You don't know.</div>
+                </div>
+                <div class="dashed-divider"></div>
+                <div class="dashed-q-pair">
+                  <div class="q">"How close am I?"</div>
+                  <div class="a">You don't know.</div>
+                </div>
+              </div>
+              <div class="lost-line">You're lost.</div>
+              <div class="quit-line">No map. No markers. So you quit.</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="pros">+ Smallest delta from current — easy to ship</div>
+        <div class="pros">+ Keeps the strong "You don't know." repetition</div>
+        <div class="cons">− Most text-heavy; doesn't feel like an illustration</div>
+      </div>
+    </div>
+
+    <p style="text-align:center; color:#666; font-size:11px; max-width:900px; margin: 28px auto 0;">
+      All three keep the same headline + bottom captions ("You're lost." / "No map. No markers. So you quit.") and the bottom-right "tap to continue →" CTA. Only the central visual differs.
+    </p>
+  </body>
+</html>

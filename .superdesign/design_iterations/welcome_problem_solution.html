@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onboarding — Problem + Solution variations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h2 { font-size: 18px; margin-bottom: 6px; font-weight: 700; color: #fff; }
+      .pair-label { color: #999; font-size: 13px; margin-bottom: 16px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 900px;
+        margin: 0 auto 56px;
+      }
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 36px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 16px 38px -12px rgba(0,0,0,0.6);
+      }
+      .phone::before {
+        content: '';
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 28%; height: 4.5%;
+        background: #000;
+        border-radius: 0 0 18px 18px;
+        z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 12% 8% 8%;
+        display: flex; flex-direction: column;
+      }
+
+      /* Top counter bar (small but present from step 2 onward) */
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 11px; color: #888;
+        gap: 8px;
+        margin-bottom: 8%;
+      }
+      .topbar .counter { font-weight: 500; }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+        overflow: hidden;
+      }
+      .topbar .progress::after {
+        content: ''; display: block; height: 100%;
+        background: #059669;
+        width: var(--progress, 14%);
+      }
+
+      /* Body container - center the content */
+      .body {
+        flex: 1; display: flex; flex-direction: column;
+        justify-content: center; align-items: center;
+        gap: 8%;
+      }
+
+      .headline-sans {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 800;
+        font-size: 5vw;
+        line-height: 0.95;
+        letter-spacing: -2px;
+        color: #111;
+        text-align: center;
+      }
+      .headline-serif {
+        font-family: 'Literata', serif;
+        font-weight: 700;
+        font-size: 5vw;
+        line-height: 1.05;
+        letter-spacing: -1.5px;
+        color: #111;
+        text-align: center;
+      }
+      .sub {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 1.5vw;
+        color: #555;
+        line-height: 1.45;
+        max-width: 78%;
+        text-align: center;
+      }
+
+      .footer {
+        text-align: center;
+        color: #888;
+        font-size: 1vw;
+        font-weight: 500;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+        padding-bottom: 4%;
+      }
+
+      /* Visuals */
+      .streak-broken {
+        position: relative;
+        width: 38%; aspect-ratio: 1;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .streak-broken .num {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 8vw; font-weight: 800; color: #C0392B;
+        opacity: 0.4;
+        letter-spacing: -3px;
+      }
+      .streak-broken::after {
+        content: '';
+        position: absolute; top: 50%; left: 0; right: 0;
+        height: 4px; background: #C0392B;
+        transform: rotate(-15deg);
+        border-radius: 2px;
+      }
+
+      .streak-line {
+        width: 70%; height: 35%;
+        position: relative;
+      }
+      .streak-line svg { width: 100%; height: 100%; }
+
+      .chain-flow {
+        display: flex; align-items: center;
+        gap: 4%;
+      }
+      .chain-flow img {
+        width: 14vw; aspect-ratio: 1;
+        border-radius: 22%;
+        object-fit: cover;
+        box-shadow: 0 8px 16px -8px rgba(5,150,105,0.4);
+      }
+
+      .icon-hero {
+        width: 36%; aspect-ratio: 1;
+        border-radius: 22%;
+        overflow: hidden;
+        box-shadow: 0 14px 34px -12px rgba(5,150,105,0.5);
+      }
+      .icon-hero img { width: 100%; height: 100%; object-fit: cover; }
+
+      .strength-bar {
+        width: 80%;
+      }
+      .strength-bar svg { width: 100%; height: auto; }
+
+      .caption {
+        color: #aaa; font-size: 12px;
+        margin-top: 14px;
+        text-align: center;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- ============== VARIATION 1: Direct ============== -->
+    <h2>V1 — Direct</h2>
+    <div class="pair-label">Plain-spoken. The mechanic IS the pitch.</div>
+    <div class="row">
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span class="counter">2 / 14</span><div class="progress" style="--progress: 14%"></div></div>
+            <div class="body">
+              <div class="streak-broken"><span class="num">42</span></div>
+              <h1 class="headline-sans">Miss a day.<br/>Lose everything.<br/>Quit.</h1>
+              <div class="sub">That's how every other habit app works.</div>
+            </div>
+            <div class="footer">Continue</div>
+          </div>
+        </div>
+        <div class="caption"><b>Problem (Step 2)</b> — broken streak counter "42" with strikethrough. Punchy three-line headline.</div>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span class="counter">3 / 14</span><div class="progress" style="--progress: 21%"></div></div>
+            <div class="body">
+              <div class="icon-hero"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg" alt="chain"/></div>
+              <h1 class="headline-sans">Your chain<br/>doesn't break.</h1>
+              <div class="sub">Strength dips. Your tier holds. Every day adds weight to it.</div>
+            </div>
+            <div class="footer">Continue</div>
+          </div>
+        </div>
+        <div class="caption"><b>Solution (Step 3)</b> — chain icon as proof, then the contrast headline.</div>
+      </div>
+    </div>
+
+    <!-- ============== VARIATION 2: Recognition (emotional) ============== -->
+    <h2>V2 — Recognition</h2>
+    <div class="pair-label">Acknowledges prior failure. More emotional, more honest-emotional register.</div>
+    <div class="row">
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span class="counter">2 / 14</span><div class="progress" style="--progress: 14%"></div></div>
+            <div class="body">
+              <div class="streak-line">
+                <svg viewBox="0 0 200 100" preserveAspectRatio="none">
+                  <path d="M10 90 Q60 40 100 25 L120 22 L121 90 L130 90 L140 88" stroke="#C0392B" stroke-width="3" fill="none" stroke-linecap="round"/>
+                  <line x1="118" y1="0" x2="125" y2="100" stroke="#C0392B" stroke-width="2.5" stroke-dasharray="4 4"/>
+                  <text x="50" y="20" fill="#999" font-family="DM Sans" font-size="9" font-weight="500">Day 1</text>
+                  <text x="125" y="20" fill="#C0392B" font-family="DM Sans" font-size="9" font-weight="600">Day 42 — break</text>
+                </svg>
+              </div>
+              <h1 class="headline-serif">You've done this<br/>before.</h1>
+              <div class="sub">Day 42 broke. You started over. You stopped.</div>
+            </div>
+            <div class="footer">Continue</div>
+          </div>
+        </div>
+        <div class="caption"><b>Problem (Step 2)</b> — line graph that climbs then crashes. Serif headline = quieter, more reflective.</div>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span class="counter">3 / 14</span><div class="progress" style="--progress: 21%"></div></div>
+            <div class="body">
+              <div class="icon-hero"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg" alt="chain"/></div>
+              <h1 class="headline-serif">This time,<br/>your chain holds.</h1>
+              <div class="sub">Strength dips when you miss a day. The chain doesn't reset. It just shifts material.</div>
+            </div>
+            <div class="footer">Continue</div>
+          </div>
+        </div>
+        <div class="caption"><b>Solution (Step 3)</b> — "this time" picks up the recognition thread. Same icon as Welcome.</div>
+      </div>
+    </div>
+
+    <!-- ============== VARIATION 3: Comparison ============== -->
+    <h2>V3 — Side-by-side mechanic</h2>
+    <div class="pair-label">Show the difference visually. Most "demo-y" but cleanest mental model.</div>
+    <div class="row">
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span class="counter">2 / 14</span><div class="progress" style="--progress: 14%"></div></div>
+            <div class="body">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:14px;">
+                <div style="font-family: 'DM Sans'; font-size: 4vw; color: #999; font-weight: 600; letter-spacing: -1px;">streak: 42</div>
+                <div style="font-size: 8vw; color: #C0392B; font-weight: 800; letter-spacing: -3px; line-height: 1;">→ 0</div>
+              </div>
+              <h1 class="headline-sans">A streak.<br/>A counter.<br/>Then zero.</h1>
+              <div class="sub">One missed day, and you're back to nothing.</div>
+            </div>
+            <div class="footer">Continue</div>
+          </div>
+        </div>
+        <div class="caption"><b>Problem (Step 2)</b> — "42 → 0" the moment of reset. Three-beat headline.</div>
+      </div>
+      <div>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span class="counter">3 / 14</span><div class="progress" style="--progress: 21%"></div></div>
+            <div class="body">
+              <div class="chain-flow">
+                <img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg" style="opacity: 0.45;"/>
+                <img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg" style="opacity: 0.7;"/>
+                <img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/>
+              </div>
+              <h1 class="headline-sans">Strength.<br/>Tiers.<br/>Growth you see.</h1>
+              <div class="sub">Copper → iron → gold. You watch the habit becoming you.</div>
+            </div>
+            <div class="footer">Continue</div>
+          </div>
+        </div>
+        <div class="caption"><b>Solution (Step 3)</b> — three icons in a row of increasing opacity = visible growth.</div>
+      </div>
+    </div>
+
+    <!-- Note -->
+    <div style="max-width: 900px; margin: 0 auto 32px; background:#2a2a2a; border-radius:12px; padding:18px; color:#ccc; font-size:14px; line-height:1.55;">
+      <b style="color:#fff;">Notes:</b>
+      <ul style="margin:10px 0 0 16px;">
+        <li>All three variations push Name to step 4 per your call (strict Prayer Lock pattern).</li>
+        <li>Progress bar appears starting at step 2 since Welcome stays bare.</li>
+        <li>"Continue" footer is a placeholder — could be tap-anywhere like Welcome, or a real CTA. We can decide once positioning is locked.</li>
+        <li>Visuals on Problem screens are HTML approximations — final implementation would be Reanimated SVG (counter ticking up then breaking, or graph drawing then crashing).</li>
+      </ul>
+    </div>
+  </body>
+</html>

@@ -51,6 +51,8 @@ const applicationTables = {
 
     archivedAt: v.optional(v.number()),
 
+    benefits: v.optional(v.array(v.string())),
+
     bestStreak: v.optional(v.number()),
 
     // ISO date string (YYYY-MM-DD)
@@ -143,6 +145,8 @@ const applicationTables = {
     reminderTime: v.optional(v.string()),
 
     resumedAt: v.optional(v.number()),
+
+    scienceNote: v.optional(v.string()),
 
     // Habit Strength System (Klein et al., 2011; Zhang et al., 2021)
     // Computed habit strength (0-1)
@@ -395,6 +399,7 @@ const applicationTables = {
     habitCompletionIcon: v.optional(
       v.union(v.literal('chain'), v.literal('checkbox'))
     ),
+    habitGroupBy: v.optional(v.string()),
     habitSortMode: v.optional(
       v.union(
         v.literal('manual'),

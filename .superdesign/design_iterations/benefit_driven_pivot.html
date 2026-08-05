@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benefit-Driven Pivot — what a fully aligned flow looks like</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+      h2 {
+        font-size: 13px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #10b981;
+        margin: 32px 0 4px;
+      }
+      .top-note { color: #999; font-size: 13px; margin-bottom: 20px; max-width: 1100px; }
+      .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        max-width: 1500px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1300px) { .row { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 950px) { .row { grid-template-columns: repeat(2, 1fr); } }
+
+      .card { background: #252525; border-radius: 16px; padding: 12px; }
+      .card.new { box-shadow: 0 0 0 2px #10b981; }
+      .card.cut { opacity: 0.4; box-shadow: 0 0 0 2px #C0392B; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 9px; color: #888; gap: 6px;
+        margin-bottom: 6%;
+      }
+      .topbar .progress { flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px; }
+      .topbar .progress::after {
+        content: ''; display: block; height: 100%;
+        background: #059669; width: var(--p, 40%);
+      }
+      .body { flex: 1; display: flex; flex-direction: column; }
+
+      .h-mid {
+        font-weight: 800; font-size: 4.4vw;
+        line-height: 1.1; letter-spacing: -1px;
+        color: #111;
+      }
+      .h-big {
+        font-weight: 800; font-size: 5.5vw;
+        line-height: 1.05; letter-spacing: -1.5px;
+        color: #111; text-align: center;
+      }
+      .sub { font-size: 1.3vw; color: #555; line-height: 1.45; }
+      .sub-c { text-align: center; }
+      .cta {
+        background: #059669; color: #fff;
+        padding: 11px 16px; border-radius: 12px;
+        font-weight: 600; font-size: 1.1vw;
+        text-align: center; margin-top: 8px;
+      }
+      .label { color: #fff; font-weight: 600; margin-top: 10px; font-size: 12px; }
+      .label-new { color: #10b981; }
+      .label-cut { color: #C0392B; }
+      .desc { color: #999; font-size: 11px; margin-top: 3px; line-height: 1.4; }
+      .badge {
+        display: inline-block; font-size: 9px;
+        padding: 1px 7px; border-radius: 8px;
+        font-weight: 600; letter-spacing: 0.5px;
+        margin-left: 4px;
+      }
+      .badge-new { background: #10b981; color: #fff; }
+      .badge-cut { background: #C0392B; color: #fff; }
+
+      /* visual blocks */
+      .strength-viz {
+        background: #FAF6EE; border-radius: 12px;
+        padding: 14px; margin: 6% 0;
+      }
+      .strength-bar-bg {
+        background: #E5E1D8; height: 8px;
+        border-radius: 4px; overflow: hidden;
+        position: relative;
+      }
+      .strength-bar-fill {
+        background: linear-gradient(90deg, #B87333, #D4A23F);
+        height: 100%; width: 78%;
+      }
+      .strength-bar-dip {
+        position: absolute; top: 0;
+        left: 70%; width: 2%; height: 100%;
+        background: #C0392B;
+      }
+      .strength-label {
+        display: flex; justify-content: space-between;
+        font-size: 1vw; color: #777;
+        margin-top: 6px;
+      }
+
+      .tier-row {
+        display: flex; gap: 6%;
+        align-items: center; justify-content: center;
+        margin: 5% 0;
+      }
+      .tier-cell {
+        flex: 1; aspect-ratio: 1;
+        border-radius: 22%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1vw; font-weight: 700; color: #fff;
+        max-width: 22%;
+      }
+      .tier-cell.copper { background: #B87333; }
+      .tier-cell.iron { background: #6B7280; }
+      .tier-cell.gold { background: #D4A23F; }
+      .tier-arrow { font-size: 1.5vw; color: #888; }
+
+      .focus-stack {
+        display: flex; flex-direction: column; gap: 4%;
+        margin: 6% 0; align-items: center;
+      }
+      .focus-card {
+        background: #FAF6EE; border: 1px solid #E5E1D8;
+        border-radius: 12px;
+        padding: 8px 14px; min-width: 60%;
+        text-align: center;
+        font-size: 1.2vw; font-weight: 600; color: #111;
+      }
+      .focus-card.dim {
+        opacity: 0.35; font-size: 1vw;
+      }
+
+      .timeline {
+        position: relative; margin: 6% 0;
+        padding: 14px 0;
+      }
+      .timeline::before {
+        content: ''; position: absolute;
+        left: 0; right: 0; top: 50%;
+        height: 2px;
+        background: linear-gradient(90deg, #B87333 0%, #6B7280 50%, #D4A23F 100%);
+      }
+      .timeline-row {
+        display: flex; justify-content: space-between;
+        position: relative;
+      }
+      .timeline-dot {
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #B87333;
+        z-index: 2;
+      }
+      .timeline-dot:nth-child(2) { border-color: #6B7280; }
+      .timeline-dot:nth-child(3) { border-color: #D4A23F; }
+      .timeline-labels {
+        display: flex; justify-content: space-between;
+        font-size: 0.95vw; color: #555; margin-top: 8px;
+        font-weight: 600;
+      }
+
+      /* paywall variants */
+      .paywall-tile {
+        background: #FAF6EE; border-radius: 12px;
+        padding: 14px; margin-bottom: 6px;
+      }
+      .paywall-tile.featured {
+        border: 1.5px solid #10b981; background: #ECFDF5;
+      }
+      .price-name { font-weight: 700; font-size: 1.2vw; color: #111; }
+      .price-amt { font-size: 1.4vw; font-weight: 800; color: #111; margin-top: 4px; }
+      .price-trial { font-size: 0.95vw; color: #065F46; }
+      .legal { font-size: 0.85vw; color: #888; text-align: center; margin-top: 8px; }
+
+      .note {
+        max-width: 1500px; margin: 32px auto 0;
+        background:#2a2a2a; border-radius:12px;
+        padding:18px; color:#ccc;
+        font-size:14px; line-height:1.55;
+      }
+      .note b { color:#fff; }
+
+      .compare {
+        max-width: 1500px; margin: 0 auto 32px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        background: #2a2a2a;
+        border-radius: 12px;
+        padding: 18px;
+      }
+      .compare h3 { color: #fff; font-size: 14px; margin-bottom: 10px; }
+      .compare-side { color: #ccc; font-size: 13px; line-height: 1.55; }
+      .compare-side ol { margin-left: 18px; }
+      .compare-side li { margin-bottom: 4px; }
+      .compare-side .removed { text-decoration: line-through; color: #C0392B; opacity: 0.7; }
+      .compare-side .added { color: #10b981; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+
+    <h1>Benefit-driven pivot — what the video actually prescribes for habit trackers</h1>
+    <div class="top-note">
+      The Jordan Morgan video uses "habit tracker" as the canonical example for the <b>benefit-driven flow</b>, not the questionnaire flow. (Questionnaire example list: fitness/calorie/sleep trackers — habit tracker isn't in it.) A pure-benefit-driven ChainDay would compress the questionnaire middle to almost nothing and lean entirely on showing transformations, with a softer paywall that lets users into the app first.
+    </div>
+
+    <div class="compare">
+      <div class="compare-side">
+        <h3>Current (18 steps, hybrid questionnaire)</h3>
+        <ol>
+          <li>Welcome — Hey.</li>
+          <li>Problem — Miss a day. Lose everything.</li>
+          <li>Solution Intro — Watch a habit become you.</li>
+          <li>Name</li>
+          <li class="removed">Goal — questionnaire</li>
+          <li class="removed">Pain Points — multi-select</li>
+          <li>Social Proof — Seinfeld</li>
+          <li class="removed">Pain Amplification — tap-through</li>
+          <li class="removed">Solution — personalized fix mapping</li>
+          <li class="removed">Category Preference</li>
+          <li class="removed">Processing — spinner</li>
+          <li>App Demo — pick 3</li>
+          <li>Plan Preview</li>
+          <li>First Check-In</li>
+          <li>Celebration</li>
+          <li>Notifications</li>
+          <li>Account</li>
+          <li>Paywall — HARD</li>
+        </ol>
+      </div>
+      <div class="compare-side">
+        <h3>Benefit-driven pivot (16 steps)</h3>
+        <ol>
+          <li>Welcome — Hey.</li>
+          <li>Problem — Miss a day. Lose everything.</li>
+          <li>Solution Intro — Watch a habit become you.</li>
+          <li class="added">Benefit 1 — Strength holds</li>
+          <li class="added">Benefit 2 — Material growth</li>
+          <li class="added">Benefit 3 — Three. Deep. Before more.</li>
+          <li class="added">Benefit 4 — Milestones</li>
+          <li>Social Proof — Seinfeld</li>
+          <li>Name</li>
+          <li>Pick Habits — pick 3 (no category step)</li>
+          <li>Plan Preview</li>
+          <li>First Check-In</li>
+          <li>Celebration</li>
+          <li>Notifications</li>
+          <li>Account</li>
+          <li class="added">Paywall — SOFT (trial-first, app accessible)</li>
+        </ol>
+      </div>
+    </div>
+
+    <h2>The 4 NEW benefit screens (4–7)</h2>
+    <div class="act-sub">Each shows ONE feature as a transformation outcome — exactly what the video prescribes. The mechanic appears as supporting visual / detail.</div>
+    <div class="row">
+
+      <!-- Benefit 1: Strength holds -->
+      <div class="card new">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>4 / 16</span><div class="progress" style="--p: 25%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid">You won't quit<br/>on day 42 again.</div>
+                <div class="sub" style="margin-top: 8px;">Most apps reset your streak when you miss a day. ChainDay shows the gap, but your strength holds.</div>
+                <div class="strength-viz">
+                  <div style="font-size: 1.1vw; font-weight: 700; color: #111; margin-bottom: 8px;">Day 42 — strength: 78</div>
+                  <div class="strength-bar-bg">
+                    <div class="strength-bar-fill"></div>
+                    <div class="strength-bar-dip"></div>
+                  </div>
+                  <div class="strength-label">
+                    <span>Day 1</span><span>Detour day 31</span><span>Today · Iron Ridge</span>
+                  </div>
+                </div>
+                <div style="font-size: 1.1vw; color: #777; margin-top: 6px;">A streak app would have you back at 0.</div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-new">4 — Benefit: Strength holds <span class="badge badge-new">NEW</span></div>
+        <div class="desc">Visual: strength bar at 78 with a small notch where they missed. Outcome lead, mechanic support.</div>
+      </div>
+
+      <!-- Benefit 2: Material growth -->
+      <div class="card new">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>5 / 16</span><div class="progress" style="--p: 31%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid">You'll watch<br/>it become real.</div>
+                <div class="sub" style="margin-top: 8px;">The chain doesn't show a number. It shows what your habit is made of.</div>
+                <div class="tier-row">
+                  <div class="tier-cell copper" style="font-size: 0.85vw;">Copper<br/>Crossing</div>
+                  <span class="tier-arrow">→</span>
+                  <div class="tier-cell iron" style="font-size: 0.85vw;">Iron<br/>Ridge</div>
+                  <span class="tier-arrow">→</span>
+                  <div class="tier-cell gold" style="font-size: 0.85vw;">Gold<br/>Summit</div>
+                </div>
+                <div style="font-size: 1.1vw; color: #777; text-align: center;">Three named waypoints on every route. Earned, not arbitrary.</div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-new">5 — Benefit: Material growth (named waypoints) <span class="badge badge-new">NEW</span></div>
+        <div class="desc">Tiers renamed as waypoints: Copper Crossing → Iron Ridge → Gold Summit. Concrete proof of growth, with the GPS metaphor's vocabulary established before Plan Preview.</div>
+      </div>
+
+      <!-- Benefit 3: Three habits, deep -->
+      <div class="card new">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>6 / 16</span><div class="progress" style="--p: 37%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid">You'll finish<br/>what you started.</div>
+                <div class="sub" style="margin-top: 8px;">Pick three habits to begin. Add more once they're holding. Most habit apps let you stack ten and burn out by week three.</div>
+                <div class="focus-stack">
+                  <div class="focus-card">10-min walk</div>
+                  <div class="focus-card">Meditation</div>
+                  <div class="focus-card">10 pages</div>
+                  <div class="focus-card dim">+ habit (locked)</div>
+                  <div class="focus-card dim">+ habit (locked)</div>
+                </div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-new">6 — Benefit: Three. Deep. <span class="badge badge-new">NEW</span></div>
+        <div class="desc">Visual: 3 active habits + 2 dimmed locked slots. Shows the focus mechanic.</div>
+      </div>
+
+      <!-- Benefit 4: Milestones — now path-flavored with countdown framing -->
+      <div class="card new">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>7 / 16</span><div class="progress" style="--p: 43%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid">Every habit<br/>is a route.</div>
+                <div class="sub" style="margin-top: 8px;">Each habit is a route with a known length. Three named waypoints — Copper, Iron Ridge, Gold Summit. Each day, one closer.</div>
+                <!-- Three example paths at three difficulties -->
+                <div style="margin-top: 6%;">
+                  <!-- Easy: 21 days -->
+                  <div style="margin-bottom: 18px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95vw; color: #666; margin-bottom: 4px;">
+                      <span style="color: #888; font-weight: 600;">Easy · walk</span>
+                      <span style="color: #B87333; font-weight: 700;">21 days</span>
+                    </div>
+                    <div style="position: relative; height: 8px; background: #E5E1D8; border-radius: 4px;">
+                      <div style="position: absolute; top: -1px; left: 25%; width: 10px; height: 10px; border-radius: 2px; background: #B87333; transform: translateX(-50%);"></div>
+                      <div style="position: absolute; top: -1px; left: 60%; width: 10px; height: 10px; border-radius: 2px; background: #6B7280; transform: translateX(-50%);"></div>
+                      <div style="position: absolute; top: -1px; left: 100%; width: 10px; height: 10px; border-radius: 2px; background: #D4A23F; transform: translateX(-50%);"></div>
+                    </div>
+                  </div>
+                  <!-- Medium: 66 days -->
+                  <div style="margin-bottom: 18px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95vw; color: #666; margin-bottom: 4px;">
+                      <span style="color: #888; font-weight: 600;">Medium · meditation</span>
+                      <span style="color: #B87333; font-weight: 700;">66 days</span>
+                    </div>
+                    <div style="position: relative; height: 8px; background: #E5E1D8; border-radius: 4px;">
+                      <div style="position: absolute; top: -1px; left: 12%; width: 10px; height: 10px; border-radius: 2px; background: #B87333; transform: translateX(-50%);"></div>
+                      <div style="position: absolute; top: -1px; left: 35%; width: 10px; height: 10px; border-radius: 2px; background: #6B7280; transform: translateX(-50%);"></div>
+                      <div style="position: absolute; top: -1px; left: 100%; width: 10px; height: 10px; border-radius: 2px; background: #D4A23F; transform: translateX(-50%);"></div>
+                    </div>
+                  </div>
+                  <!-- Hard: 120+ days -->
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.95vw; color: #666; margin-bottom: 4px;">
+                      <span style="color: #888; font-weight: 600;">Hard · daily writing</span>
+                      <span style="color: #B87333; font-weight: 700;">120+ days</span>
+                    </div>
+                    <div style="position: relative; height: 8px; background: #E5E1D8; border-radius: 4px;">
+                      <div style="position: absolute; top: -1px; left: 8%; width: 10px; height: 10px; border-radius: 2px; background: #B87333; transform: translateX(-50%);"></div>
+                      <div style="position: absolute; top: -1px; left: 25%; width: 10px; height: 10px; border-radius: 2px; background: #6B7280; transform: translateX(-50%);"></div>
+                      <div style="position: absolute; top: -1px; left: 60%; width: 10px; height: 10px; border-radius: 2px; background: #D4A23F; transform: translateX(-50%);"></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.75vw; margin-top: 8px; padding: 0 4px;">
+                  <span style="color: #B87333; font-weight: 700;">Copper</span>
+                  <span style="color: #6B7280; font-weight: 700;">Iron Ridge</span>
+                  <span style="color: #D4A23F; font-weight: 700;">Gold Summit</span>
+                </div>
+                <div style="font-size: 1vw; color: #777; text-align: center; margin-top: 6%; line-height: 1.4;">Miss a day? Detour. We recalculate the route.</div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-new">7 — Benefit: Routes (Habit Map) <span class="badge badge-new">NEW</span></div>
+        <div class="desc">Three example routes at three difficulties, with named waypoints labeled (Copper / Iron Ridge / Gold Summit). Detour-on-miss reframes the pause-on-miss model in GPS voice. The "novelty fades" pain addressed structurally — every route has known length and earned waypoints.</div>
+      </div>
+    </div>
+
+    <h2>The cut screens (5 questionnaire steps removed)</h2>
+    <div class="act-sub">These are the screens that disappear in the benefit-driven pivot. The video says questionnaire-pattern is for fitness/calorie/sleep apps — not habit trackers.</div>
+    <div class="row">
+      <div class="card cut">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>5 / 18</span><div class="progress" style="--p: 28%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid" style="font-size: 3.6vw;">What are you<br/>here for, Andres?</div>
+                <div class="sub" style="margin-top: 6px;">Pick one to start.</div>
+                <div style="margin-top:12%; padding: 14px; background: #FAF6EE; border-radius: 12px; text-align: center; font-size: 1.2vw; color: #C0392B; font-weight: 700;">CUT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-cut">Goal <span class="badge badge-cut">CUT</span></div>
+        <div class="desc">Goal capture is questionnaire-pattern. Skipped — user picks templates directly.</div>
+      </div>
+
+      <div class="card cut">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>6 / 18</span><div class="progress" style="--p: 33%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid" style="font-size: 3vw;">What usually stops you?</div>
+                <div style="margin-top:12%; padding: 14px; background: #FAF6EE; border-radius: 12px; text-align: center; font-size: 1.2vw; color: #C0392B; font-weight: 700;">CUT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-cut">Pain Points <span class="badge badge-cut">CUT</span></div>
+        <div class="desc">Q&A about pain becomes redundant — the 4 benefit screens already address each pain via transformation.</div>
+      </div>
+
+      <div class="card cut">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>8 / 18</span><div class="progress" style="--p: 44%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid">Does this<br/>sound like you?</div>
+                <div style="margin-top:12%; padding: 14px; background: #FAF6EE; border-radius: 12px; text-align: center; font-size: 1.2vw; color: #C0392B; font-weight: 700;">CUT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-cut">Pain Amplification <span class="badge badge-cut">CUT</span></div>
+        <div class="desc">Tap-through pain reflection. Benefit-driven flow doesn't dwell on user pain after Solution Intro.</div>
+      </div>
+
+      <div class="card cut">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>10 / 18</span><div class="progress" style="--p: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid" style="font-size: 3.6vw;">Which categories?</div>
+                <div style="margin-top:12%; padding: 14px; background: #FAF6EE; border-radius: 12px; text-align: center; font-size: 1.2vw; color: #C0392B; font-weight: 700;">CUT</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-cut">Category Preference <span class="badge badge-cut">CUT</span></div>
+        <div class="desc">Category-narrowing. Direct template picker shows curated set — no pre-narrowing needed.</div>
+      </div>
+    </div>
+
+    <h2>The soft paywall (replaces the hard paywall)</h2>
+    <div class="act-sub">Per the video: "a hard pay wall here can get mixed results and Apple can even reject it. You need to give users a bit more time in your app first." Soft paywall = let user enter the app, see Day 2-3, then convert.</div>
+    <div class="row">
+      <div class="card new">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>16 / 16</span><div class="progress" style="--p: 100%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-mid">Use it free<br/>for 7 days.</div>
+                <div class="sub" style="margin-top: 8px;">No credit card. Full access. After 7 days, choose a plan or stay on the free tier (3 habits).</div>
+                <div style="margin-top: 6%;">
+                  <div class="paywall-tile featured">
+                    <div class="price-name">7-day free trial</div>
+                    <div class="price-trial">No card. Full access. Cancel anytime.</div>
+                  </div>
+                  <div class="paywall-tile">
+                    <div class="price-name">Free forever</div>
+                    <div class="price-trial" style="color: #777;">Up to 3 habits. No tier upgrades after iron.</div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: auto;">
+                <div class="cta">Start free trial</div>
+                <div style="text-align: center; padding: 8px; color: #888; font-size: 1vw; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Stay on free tier</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label label-new">16 — Soft paywall <span class="badge badge-new">NEW</span></div>
+        <div class="desc">Trial-first, no card, full access. Free tier escape hatch (3 habits). Apple-safer per the video. User actually uses the app first.</div>
+      </div>
+      <div></div><div></div><div></div>
+    </div>
+
+    <div class="note">
+      <b>Tradeoffs of the benefit-driven pivot:</b>
+      <ul style="margin: 10px 0 0 18px;">
+        <li><b style="color:#10b981;">Wins:</b> Aligned with the video's habit-tracker prescription. Less Q&A friction (5 fewer steps). Lower Apple App Review risk on the paywall. User experiences the product before paying. Each benefit screen is a standalone hook that could also work as a paid-ad creative.</li>
+        <li><b style="color:#C0392B;">Losses:</b> No personalized "Here's what you're getting" beat (we lose the per-pain mapping that solutions.ts provides). No commitment-by-investment effect (questionnaire's classic conversion lever). Soft paywall converts at lower rates initially but retains better.</li>
+        <li><b style="color:#f59e0b;">What stays the same:</b> Welcome (1), Problem (2), Solution Intro (3), Social Proof (8), Name (9), Pick Habits ≈ App Demo (10), Plan Preview (11), First Check-In (12), Celebration (13), Notifications (14), Account (15).</li>
+      </ul>
+      <br>
+      <b>The honest call:</b> the video's prescription is benefit-driven for habit trackers. But the questionnaire pattern works too — it's been proven by Prayer Lock, Fastic, Finch, etc. What we have now is workable. The question is whether you want the speed/honesty of benefit-driven or the conversion-by-investment of questionnaire. Both are valid; only one matches the specific advice in the video you shared.
+    </div>
+
+  </body>
+</html>

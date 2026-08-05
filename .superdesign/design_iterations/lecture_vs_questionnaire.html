@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lecture arc + 1 pick · vs · Full questionnaire (skill blueprint)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 18px 64px;
+      }
+
+      h1 { font-size: 22px; font-weight: 800; margin: 0 auto 6px; max-width: 1500px; }
+      .lede { color: #aaa; font-size: 13px; line-height: 1.6; max-width: 1100px; margin: 0 auto 32px; }
+      .lede code { color: #B87333; }
+      .lede strong { color: #fff; }
+
+      .section {
+        max-width: 1500px;
+        margin: 0 auto 44px;
+        background: #252525;
+        border-radius: 18px;
+        padding: 22px 22px 26px;
+      }
+      .section.opt-a { border-left: 4px solid #B87333; }
+      .section.opt-b { border-left: 4px solid #5b6470; opacity: 0.95; }
+
+      .section-head {
+        display: flex; align-items: baseline; gap: 12px;
+        margin-bottom: 6px;
+      }
+      .section-head h2 { font-size: 17px; font-weight: 800; color: #fff; }
+      .section-head .tag {
+        font-size: 9.5px; font-weight: 800; letter-spacing: 0.8px;
+        text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
+      }
+      .section-head .tag.rec { background: rgba(74,222,128,0.18); color: #86EFAC; }
+      .section-head .tag.alt { background: rgba(140,140,140,0.18); color: #aaa; }
+      .section-head .count { font-size: 11px; color: #888; margin-left: auto; font-weight: 600; }
+
+      .section-sub { font-size: 12px; color: #aaa; line-height: 1.55; margin-bottom: 18px; max-width: 900px; }
+      .section-sub strong { color: #ddd; }
+
+      .strip {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 12px;
+      }
+      .strip.b13 {
+        grid-template-columns: repeat(7, 1fr);
+        margin-bottom: 12px;
+      }
+      .strip.b13.row2 {
+        grid-template-columns: repeat(6, 1fr);
+        margin-left: calc((100% / 7 + 12px) * 0.5);
+        max-width: calc(100% - (100% / 7 + 12px) * 0.5);
+      }
+      @media (max-width: 1180px) {
+        .strip { grid-template-columns: repeat(4, 1fr); }
+        .strip.b13, .strip.b13.row2 { grid-template-columns: repeat(4, 1fr); margin-left: 0; max-width: 100%; }
+      }
+      @media (max-width: 720px) {
+        .strip, .strip.b13, .strip.b13.row2 { grid-template-columns: repeat(2, 1fr); margin-left: 0; max-width: 100%; }
+      }
+
+      .item {
+        display: flex; flex-direction: column; gap: 6px;
+      }
+      .label-row {
+        display: flex; align-items: center; gap: 5px;
+        font-size: 10.5px; font-weight: 800; color: #fff;
+      }
+      .label-row .num {
+        background: #B87333; color: #fff;
+        width: 18px; height: 18px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 9.5px; font-weight: 800;
+        flex-shrink: 0;
+      }
+      .label-row .num.alt { background: #5b6470; }
+      .label-row .ttl { line-height: 1.15; }
+      .label-row .new { background: rgba(74,222,128,0.18); color: #86EFAC; padding: 1px 5px; border-radius: 4px; font-size: 8.5px; letter-spacing: 0.6px; text-transform: uppercase; margin-left: 3px; }
+      .label-row .pers { background: rgba(184,115,51,0.22); color: #D49860; padding: 1px 5px; border-radius: 4px; font-size: 8.5px; letter-spacing: 0.6px; text-transform: uppercase; margin-left: 3px; }
+
+      .phone {
+        aspect-ratio: 375/812;
+        border-radius: 14px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 1.5px rgba(255,255,255,0.05), 0 6px 14px -8px rgba(0,0,0,0.6);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4%;
+        background: #000; border-radius: 0 0 8px 8px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 13% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+
+      .h-mega { font-size: 22px; font-weight: 800; line-height: 1; letter-spacing: -1px; color: #111; text-align: center; }
+      .h-big { font-size: 11px; font-weight: 800; line-height: 1.15; letter-spacing: -0.3px; color: #111; text-align: center; }
+      .h-med { font-size: 10px; font-weight: 800; line-height: 1.2; color: #111; text-align: center; }
+      .h-left { font-size: 10.5px; font-weight: 800; line-height: 1.2; color: #111; text-align: left; }
+      .copper { color: #B87333; }
+      .iron { color: #595959; }
+      .gold { color: #B7A234; }
+
+      .body {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+      }
+      .body.left { align-items: stretch; justify-content: flex-start; gap: 4px; }
+      .body.top { justify-content: flex-start; padding-top: 6%; }
+
+      .sub-tiny {
+        font-size: 7.5px; color: #777;
+        text-align: center; line-height: 1.3;
+        margin-top: 4px; max-width: 90%;
+      }
+
+      /* Generic visuals used across phones */
+      .pill { background: #FAF6EE; border: 0.8px solid #ECE6D9; border-radius: 5px; padding: 3px 4px; font-size: 7px; color: #444; }
+      .pill.sel { border-color: #B87333; background: #FFF8EC; color: #B87333; font-weight: 800; }
+      .pill-row { display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+
+      .chip-grid-mini {
+        display: grid; grid-template-columns: 1fr 1fr;
+        gap: 3px; margin-top: 5px;
+      }
+      .chip-mini {
+        background: #FAF6EE; border: 0.8px solid #ECE6D9;
+        border-radius: 4px; padding: 3px 3px;
+        font-size: 6.5px; color: #555; font-weight: 700;
+        text-align: center;
+      }
+      .chip-mini.sel { border-color: #B87333; background: #FFF8EC; color: #B87333; box-shadow: 0 0 0 1px rgba(184,115,51,0.15); }
+
+      .bar {
+        position: relative; height: 4px; background: #ECE6D9; border-radius: 2px;
+        margin: 6px 0 3px;
+      }
+      .bar::before {
+        content: ''; position: absolute; left: 0; top: 0;
+        width: 25%; height: 100%; background: #B87333; border-radius: 2px;
+      }
+      .bar.iron::before { width: 60%; background: linear-gradient(90deg, #B87333, #595959); }
+      .bar.gold::before { width: 95%; background: linear-gradient(90deg, #B87333, #595959 60%, #B7A234); }
+
+      .bar-row {
+        display: flex; justify-content: space-between;
+        font-size: 5.5px; font-weight: 800;
+      }
+
+      .check-row {
+        display: flex; align-items: center; gap: 3px;
+        background: #FAF6EE; border: 0.6px solid #ECE6D9; border-radius: 4px;
+        padding: 3px 4px; font-size: 6.5px; color: #444;
+        margin-bottom: 3px;
+      }
+      .check-row .box { width: 7px; height: 7px; border: 1px solid #B87333; border-radius: 1.5px; flex-shrink: 0; }
+      .check-row .box.checked { background: #B87333; }
+      .check-row .box.checked::after { content: '✓'; color: #fff; font-size: 5.5px; line-height: 7px; display: block; text-align: center; }
+
+      .test-card {
+        background: #FAF6EE; border: 0.6px solid #ECE6D9; border-radius: 5px;
+        padding: 4px; font-size: 6px; color: #555; line-height: 1.3;
+        margin-bottom: 3px;
+      }
+      .test-card .name { color: #B87333; font-weight: 800; font-size: 5.5px; }
+      .stars { color: #B7A234; font-size: 6px; letter-spacing: 0.5px; }
+
+      .tinder-card {
+        position: absolute; inset: 25% 12%; background: #FAF6EE;
+        border: 0.8px solid #ECE6D9; border-radius: 8px;
+        padding: 12% 8%; display: flex; align-items: center; justify-content: center;
+        font-size: 9px; font-weight: 700; color: #111; text-align: center; line-height: 1.3;
+        box-shadow: 0 4px 8px -2px rgba(0,0,0,0.1);
+      }
+      .swipe-hint {
+        position: absolute; bottom: 12%; left: 0; right: 0;
+        display: flex; justify-content: space-around;
+        font-size: 6.5px; color: #888;
+      }
+      .swipe-hint .x { color: #B45309; font-weight: 800; }
+      .swipe-hint .y { color: #4d8e4d; font-weight: 800; }
+
+      .processing-spinner {
+        width: 24px; height: 24px; border: 2px solid #ECE6D9;
+        border-top-color: #B87333; border-radius: 50%;
+        margin: 6px auto 4px;
+      }
+
+      .plan-row {
+        display: flex; gap: 3px; align-items: center;
+        background: #FAF6EE; border: 0.6px solid #ECE6D9; border-radius: 4px;
+        padding: 3px 4px; font-size: 6.5px; color: #111; font-weight: 700;
+        margin-bottom: 2px;
+      }
+      .plan-row .dot { width: 5px; height: 5px; border-radius: 50%; background: #B87333; }
+
+      .notif-bell { font-size: 22px; text-align: center; color: #B87333; margin: 4px 0; }
+
+      .auth-btn {
+        background: #111; color: #fff;
+        border-radius: 4px; padding: 4px;
+        font-size: 6px; text-align: center; font-weight: 700;
+        margin-bottom: 2px;
+      }
+      .auth-btn.alt { background: #fff; color: #111; border: 0.6px solid #ddd; }
+
+      .price-card {
+        background: #FAF6EE; border: 1.2px solid #B87333; border-radius: 6px;
+        padding: 5px; font-size: 6.5px; color: #111; text-align: center;
+        margin: 4px 0;
+      }
+      .price-card .big { font-size: 9px; font-weight: 800; color: #B87333; line-height: 1.1; }
+
+      .cta-mini {
+        background: #B87333; color: #fff; border-radius: 4px;
+        padding: 3px; font-size: 6.5px; font-weight: 800;
+        text-align: center; margin-top: auto;
+      }
+
+      .pers-marker {
+        position: absolute; top: 5%; right: 5%;
+        background: rgba(184,115,51,0.92); color: #fff;
+        font-size: 5.5px; font-weight: 800; letter-spacing: 0.4px;
+        text-transform: uppercase; padding: 1.5px 4px; border-radius: 999px;
+        z-index: 25;
+      }
+
+      .demo-card {
+        background: #FAF6EE; border: 0.8px solid #ECE6D9; border-radius: 6px;
+        padding: 5px; margin-bottom: 3px;
+        font-size: 7px; color: #444;
+      }
+      .demo-card .ttl { font-size: 7.5px; font-weight: 800; color: #111; }
+      .demo-card .meta { color: #888; margin-top: 1px; font-size: 6px; }
+
+      .map-row {
+        display: flex; gap: 4px; align-items: center;
+        background: #FAF6EE; border: 0.6px solid #ECE6D9; border-radius: 4px;
+        padding: 3px 4px; margin-bottom: 3px;
+      }
+      .map-row .nm { font-size: 6.5px; font-weight: 800; color: #111; flex-shrink: 0; min-width: 28px; }
+      .map-row .progress { flex: 1; height: 3px; background: #ECE6D9; border-radius: 1.5px; position: relative; }
+      .map-row .progress::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; background: #B87333; border-radius: 1.5px; }
+      .map-row .progress.q1::before { width: 30%; }
+      .map-row .progress.q2::before { width: 60%; background: linear-gradient(90deg, #B87333, #595959); }
+      .map-row .progress.q3::before { width: 90%; background: linear-gradient(90deg, #B87333, #595959, #B7A234); }
+      .map-row .pct { font-size: 5.5px; color: #888; font-weight: 700; min-width: 14px; }
+
+      /* Compare table */
+      .compare {
+        max-width: 1100px; margin: 0 auto;
+        background: #252525; border-radius: 18px;
+        padding: 22px 24px;
+      }
+      .compare h2 { color: #fff; font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+      .compare table { width: 100%; border-collapse: collapse; font-size: 12px; }
+      .compare th, .compare td { padding: 10px 12px; text-align: left; vertical-align: top; line-height: 1.5; }
+      .compare th { color: #fff; font-weight: 800; background: #1f1f1f; font-size: 11px; }
+      .compare th.A { color: #D49860; }
+      .compare th.B { color: #B0B6BF; }
+      .compare td { color: #ccc; border-bottom: 1px solid #2e2e2e; }
+      .compare td.dim { color: #888; font-weight: 700; width: 22%; }
+      .compare tr:last-child td { border-bottom: none; }
+      .compare strong { color: #fff; }
+      .compare .yes { color: #86EFAC; font-weight: 800; }
+      .compare .no { color: #FCA5A5; font-weight: 800; }
+      .compare .meh { color: #D4B66B; font-weight: 800; }
+    </style>
+  </head>
+  <body>
+
+    <h1>Two flows side-by-side — your call</h1>
+    <p class="lede">
+      <strong>Option A:</strong> the lecture arc you're building, with one personal pick at slot 4 and the next three slots <em>using</em> that pick.
+      <strong>Option B:</strong> the full skill blueprint — what the questionnaire pattern in <code>app-onboarding-questionnaire</code> recommends (and roughly what you shipped + then deleted in PR #1327).
+      Phones are stylised — copy is directional, not final.
+    </p>
+
+    <!-- ============================================== -->
+    <!-- OPTION A — Lecture arc + 1 pick + personalize -->
+    <!-- ============================================== -->
+    <div class="section opt-a">
+      <div class="section-head">
+        <h2>Option A · Lecture arc + 1 pick + personalized payoff</h2>
+        <span class="tag rec">Recommended</span>
+        <span class="count">7 screens · 1 input</span>
+      </div>
+      <p class="section-sub">
+        Keeps the story arc that makes <strong>Copper / Iron / Gold</strong> teachable. One personal pick at slot 4 turns slots 5–7 from generic explanation into <strong>"watch <em>your</em> walk climb"</strong>. The questionnaire stays a single-question dose — not a survey.
+      </p>
+
+      <div class="strip">
+
+        <!-- 1 — Hook -->
+        <div class="item">
+          <div class="label-row"><span class="num">1</span><span class="ttl">Hook</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body"><div class="h-mega">Stuck?</div></div>
+            <div class="cta-mini">Show me why →</div>
+          </div></div>
+        </div>
+
+        <!-- 2 — Pain -->
+        <div class="item">
+          <div class="label-row"><span class="num">2</span><span class="ttl">Sharpened pain</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="h-big">Day 5: <span class="copper">skipped.</span><br/>Day 6: <span class="copper">deleted.</span></div>
+              <div class="sub-tiny" style="margin-top:8px;color:#B45309;font-weight:800">You're building habits blind.</div>
+              <div class="sub-tiny">No map. No markers.</div>
+            </div>
+            <div class="cta-mini">Show me the map →</div>
+          </div></div>
+        </div>
+
+        <!-- 3 — Map -->
+        <div class="item">
+          <div class="label-row"><span class="num">3</span><span class="ttl">Tightened map</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+              <div class="bar gold"></div>
+              <div class="bar-row" style="margin-bottom:6px"><span class="copper">Copper</span><span class="iron">Iron</span><span class="gold">Gold</span></div>
+              <div class="sub-tiny" style="font-weight:700;color:#111">Know how long.</div>
+              <div class="sub-tiny" style="font-weight:700;color:#111;margin-top:2px">Know where you are.</div>
+            </div>
+            <div class="cta-mini">Pick my first habit →</div>
+          </div></div>
+        </div>
+
+        <!-- 4 — Pick -->
+        <div class="item">
+          <div class="label-row"><span class="num">4</span><span class="ttl">Pick</span><span class="new">New</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">What's the<br/>one habit?</div>
+              <div class="sub-tiny" style="text-align:left;margin-top:3px">Just a tap.</div>
+              <div class="chip-grid-mini">
+                <div class="chip-mini sel">Walk</div>
+                <div class="chip-mini">Meditate</div>
+                <div class="chip-mini">Read</div>
+                <div class="chip-mini">Workout</div>
+                <div class="chip-mini">Practice</div>
+                <div class="chip-mini">Other</div>
+              </div>
+            </div>
+            <div class="cta-mini">Continue with Walk →</div>
+          </div></div>
+        </div>
+
+        <!-- 5 — Personalized strength preview -->
+        <div class="item">
+          <div class="label-row"><span class="num">5</span><span class="ttl">Your strength</span><span class="pers">Uses pick</span></div>
+          <div class="phone">
+            <div class="pers-marker">Walk</div>
+            <div class="screen">
+              <div class="body">
+                <div class="h-big">Your walk has<br/><span class="copper">tiers.</span></div>
+                <div class="sub-tiny">Day 0 → Copper. Day 21 → Iron. Day 60 → Gold.</div>
+                <div class="bar"></div>
+                <div class="bar-row"><span class="copper">●Today</span><span class="iron">21d</span><span class="gold">60d</span></div>
+              </div>
+              <div class="cta-mini">Watch it climb →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 — Watch transform -->
+        <div class="item">
+          <div class="label-row"><span class="num">6</span><span class="ttl">Watch transform</span><span class="pers">Uses pick</span></div>
+          <div class="phone">
+            <div class="pers-marker">Walk</div>
+            <div class="screen">
+              <div class="body">
+                <div class="h-big">Skip a day?<br/>It <span class="copper">dents.</span></div>
+                <div class="sub-tiny">Doesn't reset. Strength stays earned.</div>
+                <div class="bar iron" style="margin-top:8px"></div>
+                <div class="sub-tiny" style="margin-top:4px;font-weight:800;color:#B87333">Day 18 of 21 to Iron</div>
+              </div>
+              <div class="cta-mini">Start my walk →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 — Start / pick first route -->
+        <div class="item">
+          <div class="label-row"><span class="num">7</span><span class="ttl">Start</span><span class="pers">Uses pick</span></div>
+          <div class="phone">
+            <div class="pers-marker">Walk</div>
+            <div class="screen">
+              <div class="body">
+                <div class="h-big">Ready for<br/>day <span class="copper">1?</span></div>
+                <div class="sub-tiny">10-min walk · 21 days to Iron · keeps growing</div>
+                <div class="bar" style="margin-top:8px"></div>
+                <div class="bar-row"><span class="copper">●Day 1</span><span class="iron">Iron</span><span class="gold">Gold</span></div>
+              </div>
+              <div class="cta-mini">Begin →</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- OPTION B — Full skill blueprint -->
+    <!-- ============================================== -->
+    <div class="section opt-b">
+      <div class="section-head">
+        <h2>Option B · Full questionnaire (skill blueprint)</h2>
+        <span class="tag alt">Skill default</span>
+        <span class="count">13 screens · 5–6 inputs</span>
+      </div>
+      <p class="section-sub">
+        Generic best-practice for subscription apps (Headspace / Noom / Duolingo). Front-loads <strong>5+ input screens</strong> before the user has seen the strength mechanic in motion. This is roughly what you shipped in PR #1327 and then deleted on this branch.
+      </p>
+
+      <div class="strip b13">
+
+        <!-- 1 Welcome -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">1</span><span class="ttl">Welcome</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="h-big">Habits, finally<br/><span class="copper">measurable.</span></div>
+              <div class="bar" style="margin:8px 0;width:80%"></div>
+              <div class="sub-tiny">Strength, not streaks.</div>
+            </div>
+            <div class="cta-mini">Get started →</div>
+          </div></div>
+        </div>
+
+        <!-- 2 Goal -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">2</span><span class="ttl">Goal</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">What are you<br/>trying to build?</div>
+              <div style="margin-top:4px">
+                <div class="check-row"><div class="box checked"></div>Move more</div>
+                <div class="check-row"><div class="box"></div>Calm mind</div>
+                <div class="check-row"><div class="box"></div>Read more</div>
+                <div class="check-row"><div class="box"></div>Skill / craft</div>
+                <div class="check-row"><div class="box"></div>Other</div>
+              </div>
+            </div>
+            <div class="cta-mini">Continue →</div>
+          </div></div>
+        </div>
+
+        <!-- 3 Pain points -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">3</span><span class="ttl">Pain points</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">What stops<br/>you?</div>
+              <div style="margin-top:4px">
+                <div class="check-row"><div class="box checked"></div>Skip → guilt → quit</div>
+                <div class="check-row"><div class="box checked"></div>Streaks reset</div>
+                <div class="check-row"><div class="box"></div>No motivation</div>
+                <div class="check-row"><div class="box"></div>Forget</div>
+                <div class="check-row"><div class="box"></div>Bored fast</div>
+              </div>
+            </div>
+            <div class="cta-mini">Continue →</div>
+          </div></div>
+        </div>
+
+        <!-- 4 Social proof -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">4</span><span class="ttl">Social proof</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">10,000+ are<br/>tracking strength.</div>
+              <div style="margin-top:4px">
+                <div class="test-card"><div class="name">M.K · Beginner</div><div class="stars">★★★★★</div>"First app that didn't make me feel like a failure."</div>
+                <div class="test-card"><div class="name">J.L · Returner</div><div class="stars">★★★★★</div>"Skips don't reset. Game changer."</div>
+              </div>
+            </div>
+            <div class="cta-mini">Continue →</div>
+          </div></div>
+        </div>
+
+        <!-- 5 Tinder pain amp -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">5</span><span class="ttl">Tinder pains</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="h-med">Which feels<br/>true?</div>
+              <div class="tinder-card">"I quit on day 6 every time."</div>
+              <div class="swipe-hint"><span class="x">✗ no</span><span class="y">✓ yes</span></div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- 6 Personalized solution -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">6</span><span class="ttl">Solution</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">Here's how<br/>we fix it.</div>
+              <div style="margin-top:4px;font-size:6px;color:#666">Skip → guilt → quit</div>
+              <div style="font-size:7px;font-weight:800;color:#B87333;line-height:1.3">→ Strength dents, not resets</div>
+              <div style="margin-top:4px;font-size:6px;color:#666">Streaks reset</div>
+              <div style="font-size:7px;font-weight:800;color:#B87333;line-height:1.3">→ Tier ladder, not counter</div>
+            </div>
+            <div class="cta-mini">Continue →</div>
+          </div></div>
+        </div>
+
+        <!-- 7 Categories -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">7</span><span class="ttl">Categories</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">Pick<br/>categories.</div>
+              <div class="chip-grid-mini" style="margin-top:4px">
+                <div class="chip-mini sel">Health</div>
+                <div class="chip-mini">Mind</div>
+                <div class="chip-mini sel">Learn</div>
+                <div class="chip-mini">Work</div>
+                <div class="chip-mini">Craft</div>
+                <div class="chip-mini">Social</div>
+              </div>
+            </div>
+            <div class="cta-mini">Continue →</div>
+          </div></div>
+        </div>
+
+      </div>
+
+      <div class="strip b13 row2">
+        <!-- 8 Processing -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">8</span><span class="ttl">Processing</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="processing-spinner"></div>
+              <div class="h-med">Building your<br/>map…</div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- 9 App demo -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">9</span><span class="ttl">App demo</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">Pick 3<br/>to try.</div>
+              <div style="margin-top:4px">
+                <div class="demo-card"><div class="ttl">10-min walk</div><div class="meta">21 days · easy</div></div>
+                <div class="demo-card" style="border-color:#B87333;background:#FFF8EC"><div class="ttl">Meditate</div><div class="meta">66 days · medium ✓</div></div>
+                <div class="demo-card"><div class="ttl">Read 10 pgs</div><div class="meta">30 days · easy</div></div>
+              </div>
+            </div>
+            <div class="cta-mini">Pick 2 more →</div>
+          </div></div>
+        </div>
+
+        <!-- 10 Plan preview -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">10</span><span class="ttl">Plan preview</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">Your<br/>plan.</div>
+              <div style="margin-top:4px">
+                <div class="map-row"><span class="nm">Walk</span><div class="progress q1"></div><span class="pct">21d</span></div>
+                <div class="map-row"><span class="nm">Med</span><div class="progress q2"></div><span class="pct">66d</span></div>
+                <div class="map-row"><span class="nm">Read</span><div class="progress q1"></div><span class="pct">30d</span></div>
+              </div>
+            </div>
+            <div class="cta-mini">Continue →</div>
+          </div></div>
+        </div>
+
+        <!-- 11 Notification priming -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">11</span><span class="ttl">Notif priming</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="notif-bell">🔔</div>
+              <div class="h-med">Never miss<br/>your check-in.</div>
+              <div class="sub-tiny">Quiet nudge. No spam.</div>
+            </div>
+            <div class="cta-mini">Enable →</div>
+          </div></div>
+        </div>
+
+        <!-- 12 Account -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">12</span><span class="ttl">Account</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body left top">
+              <div class="h-left">Save your<br/>plan.</div>
+              <div style="margin-top:4px">
+                <div class="auth-btn">  Sign in with Apple</div>
+                <div class="auth-btn alt">Sign in with Google</div>
+                <div class="auth-btn alt">Email</div>
+              </div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- 13 Paywall -->
+        <div class="item">
+          <div class="label-row"><span class="num alt">13</span><span class="ttl">Paywall</span></div>
+          <div class="phone"><div class="screen">
+            <div class="body">
+              <div class="h-med">Unlock your<br/>full path.</div>
+              <div class="price-card"><div>Free for 7 days</div><div class="big">$39 / yr</div></div>
+              <div class="sub-tiny">Cancel anytime</div>
+            </div>
+            <div class="cta-mini">Start free trial →</div>
+          </div></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- COMPARE TABLE -->
+    <!-- ============================================== -->
+    <div class="compare">
+      <h2>How they differ where it matters</h2>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="A">A · Lecture + 1 pick</th>
+            <th class="B">B · Full questionnaire</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="dim">Total screens</td>
+            <td>7</td>
+            <td>13</td>
+          </tr>
+          <tr>
+            <td class="dim">Input screens</td>
+            <td>1 (one tap)</td>
+            <td>5–6 (goal, pains, tinder, categories, demo, account)</td>
+          </tr>
+          <tr>
+            <td class="dim">Time to first input</td>
+            <td>~25–35 s (slot 4)</td>
+            <td>~10–15 s (slot 2)</td>
+          </tr>
+          <tr>
+            <td class="dim">When the strength mechanic is shown</td>
+            <td><span class="yes">Slot 3 (early)</span> — and again personalized in 5/6/7</td>
+            <td><span class="meh">Slot 10 plan preview</span> — buried after a survey</td>
+          </tr>
+          <tr>
+            <td class="dim">Personalization depth</td>
+            <td><strong>Deep on one axis</strong> (the user's habit drives slots 5/6/7)</td>
+            <td><strong>Wide & shallow</strong> (each answer touches one screen, then nothing)</td>
+          </tr>
+          <tr>
+            <td class="dim">Risk: feels like a survey</td>
+            <td><span class="yes">Low</span></td>
+            <td><span class="no">High</span> — the deletion in PR #1327 was a vote against this feel</td>
+          </tr>
+          <tr>
+            <td class="dim">Risk: under-explains the mechanic</td>
+            <td><span class="yes">Low</span> — lecture frames Copper / Iron / Gold by slot 3</td>
+            <td><span class="no">Higher</span> — tiers don't appear until plan preview</td>
+          </tr>
+          <tr>
+            <td class="dim">Conversion ceiling at paywall</td>
+            <td><span class="meh">Moderate</span> — less sunk cost (1 input)</td>
+            <td><span class="yes">Higher in theory</span> — more sunk cost, IF users finish</td>
+          </tr>
+          <tr>
+            <td class="dim">Drop-off risk pre-paywall</td>
+            <td><span class="yes">Low</span> — fewer steps</td>
+            <td><span class="no">High</span> — every input screen sheds users</td>
+          </tr>
+          <tr>
+            <td class="dim">Day-1 retention setup</td>
+            <td><span class="yes">Strong</span> — habit pre-picked, no empty-state</td>
+            <td><span class="yes">Strong</span> — full plan pre-built</td>
+          </tr>
+          <tr>
+            <td class="dim">Reuse from PR #1327 work</td>
+            <td><span class="meh">Partial</span> — pick screen + processing reusable</td>
+            <td><span class="yes">High</span> — most of it already shipped once</td>
+          </tr>
+          <tr>
+            <td class="dim">Aligns with current branch direction</td>
+            <td><span class="yes">Yes</span> — extends what you're building</td>
+            <td><span class="no">No</span> — undoes the deletion you just made</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:11.5px;color:#aaa;margin-top:14px;line-height:1.65">
+        <strong style="color:#fff">My read:</strong>
+        A is the right shape for <em>this</em> app because the mechanic (strength tiers) is novel and needs early teaching. B is the right shape when the mechanic is familiar (meditation, calorie counting, language) and the question is which flavour the user wants. You're in the first camp. The hybrid — <strong>steal the pain-points multi-select format from B (slot 3) and the notification priming pattern (slot 11)</strong> — gives you most of B's conversion levers without the survey feel.
+      </p>
+    </div>
+
+  </body>
+</html>

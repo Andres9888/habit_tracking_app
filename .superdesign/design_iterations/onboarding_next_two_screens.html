@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Next 2 onboarding screens — Always One Peak + Pick First Route</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1a1a1a; color: #eee;
+      padding: 32px 16px; min-height: 100vh;
+    }
+    h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+    h2 {
+      font-size: 13px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px;
+      color: #10b981; margin: 36px 0 4px;
+    }
+    .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+    .top-note { color: #ccc; font-size: 14px; margin-bottom: 24px; max-width: 1100px;
+      background: #2a2a2a; border-radius: 12px; padding: 16px; line-height: 1.55; }
+    .top-note b { color: #fff; }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1300px;
+      margin: 0 auto 32px;
+    }
+    @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+    .card { background: #252525; border-radius: 18px; padding: 14px; }
+    .card.built { box-shadow: 0 0 0 2px #10b981; opacity: 0.5; }
+    .card.new { box-shadow: 0 0 0 2px #f59e0b; }
+    .card.action { box-shadow: 0 0 0 2px #6366f1; }
+
+    .phone {
+      width: 100%; aspect-ratio: 375/812;
+      border-radius: 30px; overflow: hidden;
+      position: relative; background: #F3EEE5;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+    }
+    .phone::before {
+      content: ''; position: absolute; top: 0; left: 50%;
+      transform: translateX(-50%); width: 28%; height: 4.5%;
+      background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+    }
+    .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+    .body { flex: 1; display: flex; flex-direction: column; }
+
+    .topbar {
+      display: flex; align-items: center;
+      font-size: 9px; color: #888;
+      gap: 6px; margin-bottom: 6%;
+    }
+    .topbar .progress { flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px; }
+    .topbar .progress::after {
+      content: ''; display: block; height: 100%;
+      background: #059669; width: var(--p, 50%);
+    }
+
+    .h-mid { font-weight: 800; font-size: 4.4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+    .sub { font-size: 1.3vw; color: #555; line-height: 1.45; }
+    .sub-c { text-align: center; }
+
+    .cta {
+      background: #059669; color: #fff;
+      padding: 11px 14px; border-radius: 12px;
+      font-weight: 600; font-size: 1vw;
+      text-align: center;
+    }
+
+    .label { color: #fff; font-weight: 600; margin-top: 10px; font-size: 12px; }
+    .label-built { color: #10b981; }
+    .label-new { color: #f59e0b; }
+    .label-action { color: #818cf8; }
+    .desc { color: #999; font-size: 11px; margin-top: 3px; line-height: 1.4; }
+    .badge {
+      display: inline-block; font-size: 9px;
+      padding: 1px 7px; border-radius: 8px;
+      font-weight: 600; letter-spacing: 0.5px;
+      margin-left: 4px;
+    }
+    .badge-built { background: #10b981; color: #000; }
+    .badge-new { background: #f59e0b; color: #000; }
+    .badge-action { background: #6366f1; color: #fff; }
+
+    /* Always One Peak — 3 example routes */
+    .route-list { margin: 6% 0 5%; display: flex; flex-direction: column; gap: 12px; }
+    .route-meta { display: flex; justify-content: space-between; font-size: 0.95vw; margin-bottom: 4px; }
+    .route-meta .name { color: #888; font-weight: 600; }
+    .route-meta .days { color: #B87333; font-weight: 700; }
+    .path-bar { position: relative; height: 8px; background: #E5E1D8; border-radius: 4px; }
+    .path-tier { position: absolute; top: -1px; width: 10px; height: 10px; border-radius: 2px; transform: translateX(-50%); }
+    .path-tier.copper { background: #B87333; }
+    .path-tier.iron { background: #6B7280; }
+    .path-tier.gold { background: #D4A23F; }
+    .way-row { display: flex; justify-content: space-between; font-size: 0.7vw; margin-top: 8px; font-weight: 700; }
+    .way-row .copper { color: #B87333; }
+    .way-row .iron { color: #6B7280; }
+    .way-row .gold { color: #D4A23F; }
+
+    /* Pick First Route — first habit teaser */
+    .first-card {
+      background: #FAF6EE; border-radius: 14px;
+      padding: 12px; margin: 6% 0 7%;
+      box-shadow: 0 1px 0 0 #E5E1D8;
+    }
+    .first-card .header {
+      display: flex; align-items: center; gap: 7px;
+      margin-bottom: 9px;
+    }
+    .first-card .ico-box {
+      width: 28px; height: 28px;
+      border-radius: 8px; background: #FEF3C7;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1vw;
+    }
+    .first-card .name { font-weight: 800; font-size: 1.15vw; color: #111; flex: 1; }
+    .first-card .meta { font-size: 0.8vw; font-weight: 700; color: #B87333; }
+  </style>
+</head>
+<body>
+
+<h1>Next 2 onboarding screens</h1>
+<div class="top-note">
+  <b>Where they fit:</b> Welcome → Problem → Map → Strength holds → Transform <b>→ [#6 Always One Peak] → [#7 Pick First Route]</b>.
+  <br><br>
+  <b>#6 fills the empty 4th-benefit slot</b> (vacated when we dropped Three Deep). It maps to a feature ChainDay <i>actually has</i>: routes with known length and named waypoints.
+  <br>
+  <b>#7 is the action screen</b> — converts intent to action, first real "do" of the flow.
+</div>
+
+<h2>The next two screens</h2>
+<div class="act-sub">Both render after the existing 5 screens. Progress chrome shown.</div>
+
+<div class="row">
+
+  <!-- 6 — Always One Peak (NEW) -->
+  <div class="card new">
+    <div class="phone">
+      <div class="screen">
+        <div class="topbar"><span>6 / 7</span><div class="progress" style="--p: 86%"></div></div>
+        <div class="body">
+          <div>
+            <div class="h-mid">Always one peak<br/>to chase.</div>
+            <div class="sub" style="margin-top: 8px;">Each route is sized to the habit. After Gold, the next route waits. Novelty isn't your job to find — it's structural.</div>
+            <div class="route-list">
+              <div>
+                <div class="route-meta"><span class="name">Easy · 10-min walk</span><span class="days">21 days</span></div>
+                <div class="path-bar">
+                  <div class="path-tier copper" style="left: 25%;"></div>
+                  <div class="path-tier iron" style="left: 65%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="route-meta"><span class="name">Medium · meditation</span><span class="days">66 days</span></div>
+                <div class="path-bar">
+                  <div class="path-tier copper" style="left: 12%;"></div>
+                  <div class="path-tier iron" style="left: 35%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="route-meta"><span class="name">Hard · daily writing</span><span class="days">120+ days</span></div>
+                <div class="path-bar">
+                  <div class="path-tier copper" style="left: 8%;"></div>
+                  <div class="path-tier iron" style="left: 25%;"></div>
+                  <div class="path-tier gold" style="left: 60%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="way-row">
+              <span class="copper">Copper</span>
+              <span class="iron">Iron</span>
+              <span class="gold">Gold</span>
+            </div>
+          </div>
+          <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-new">6 — Always One Peak <span class="badge badge-new">NEW</span></div>
+    <div class="desc">Three example routes at three difficulties. Each habit has known length + 3 named waypoints. Pain killed: "Novelty wears off."</div>
+  </div>
+
+  <!-- 7 — Pick First Route (ACTION) -->
+  <div class="card action">
+    <div class="phone">
+      <div class="screen">
+        <div class="topbar"><span>7 / 7</span><div class="progress" style="--p: 100%"></div></div>
+        <div class="body">
+          <div>
+            <div class="h-mid">Pick your<br/>first route.</div>
+            <div class="sub" style="margin-top: 8px;">Start with one. We've picked the easiest — a 10-minute walk. Add more once you're walking.</div>
+            <div class="first-card">
+              <div class="header">
+                <div class="ico-box">🚶</div>
+                <div class="name">10-minute walk</div>
+                <div class="meta">21 days</div>
+              </div>
+              <div class="path-bar">
+                <div class="path-tier copper" style="left: 25%;"></div>
+                <div class="path-tier iron" style="left: 65%;"></div>
+                <div class="path-tier gold" style="left: 100%;"></div>
+              </div>
+              <div class="way-row">
+                <span class="copper">Copper</span>
+                <span class="iron">Iron</span>
+                <span class="gold">Gold</span>
+              </div>
+            </div>
+            <div class="sub sub-c" style="text-align: center; font-size: 1vw; color: #777;">Or browse the library →</div>
+          </div>
+          <div style="margin-top: auto;"><div class="cta">Start this route</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="label label-action">7 — Pick First Route <span class="badge badge-action">ACTION</span></div>
+    <div class="desc">First real "do" of the flow. Easiest route preselected — lowest friction commitment. Library link is the explore-more escape hatch. CTA flips from "Continue" to "Start this route" — language signals real action.</div>
+  </div>
+
+  <div></div>
+</div>
+
+<div class="top-note" style="margin-top: 20px;">
+  <b>Why this order matters</b>
+  <ul style="margin: 8px 0 0 18px;">
+    <li><b>#6 closes the benefit case.</b> "You won't quit. It transforms. There's always more." Three benefits is the standard count for benefit-driven onboarding (Calm, Headspace, Duolingo).</li>
+    <li><b>#7 ends the hook with action.</b> Day-1 commitment is industry's strongest D7 retention predictor (3–5× lift). Without it, the next session starts cold.</li>
+    <li><b>Both feature-aligned.</b> Routes have length, waypoints exist, library is browsable — these screens promise things ChainDay already does.</li>
+  </ul>
+</div>
+
+</body>
+</html>

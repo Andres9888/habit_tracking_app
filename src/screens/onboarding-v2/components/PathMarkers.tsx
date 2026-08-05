@@ -1,8 +1,8 @@
 import { View } from 'react-native';
 
-const COPPER = '#B87333';
-const IRON = '#6B7280';
-const GOLD = '#D4A23F';
+export const COPPER = '#B87333';
+export const IRON = '#6B7280';
+export const GOLD = '#D4A23F';
 
 export function TierMarker({
   tier,

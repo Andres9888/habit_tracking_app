@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay — Onboarding v2 full flow (7 screens)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; max-width: 1300px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 32px; line-height: 1.6; }
+      .lede code { color: #10b981; }
+
+      .act-header {
+        max-width: 1300px; margin: 36px auto 14px;
+        display: flex; align-items: center; gap: 14px;
+      }
+      .act-header .num {
+        font-size: 11px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #10b981;
+        padding: 4px 10px;
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        border-radius: 999px;
+      }
+      .act-header .name { font-size: 18px; font-weight: 800; color: #eee; }
+      .act-header .subtitle { font-size: 13px; color: #888; flex: 1; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 28px;
+      }
+      .row.solo { grid-template-columns: minmax(0, 460px); justify-content: center; }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+      .card h3 {
+        font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: #10b981; margin-bottom: 4px;
+      }
+      .card p.note { font-size: 12px; color: #aaa; margin-bottom: 12px; line-height: 1.5; }
+
+      .change-pill {
+        display: inline-block;
+        background: rgba(5, 150, 105, 0.18);
+        color: #10b981;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: 700; font-size: 10px;
+        letter-spacing: 0.4px;
+        margin-right: 6px; margin-bottom: 4px;
+      }
+      .change-pill.warn { background: rgba(180, 83, 9, 0.22); color: #F59E0B; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 9px; color: #888;
+        gap: 6px;
+        margin-bottom: 6%;
+      }
+      .topbar.hidden { visibility: hidden; }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+        position: relative; overflow: hidden;
+      }
+      .topbar .progress > i {
+        position: absolute; inset: 0;
+        background: #059669;
+      }
+
+      .h-hello { font-weight: 800; font-size: 11vw; line-height: 1; letter-spacing: -3px; color: #111; text-align: center; }
+      .h-big { font-weight: 800; font-size: 6.2vw; line-height: 1.05; letter-spacing: -1.6px; color: #111; text-align: center; }
+      .h-mid { font-weight: 800; font-size: 4.6vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .sub { font-size: 1.55vw; color: #555; line-height: 1.5; margin-top: 12px; }
+      .sub-c { text-align: center; }
+      .em { color: #059669; font-weight: 800; }
+      .strike { text-decoration: line-through; color: #999; font-weight: 600; }
+      .pop { color: #B45309; font-weight: 800; }
+
+      /* shared center container */
+      .center {
+        flex: 1; display: flex;
+        flex-direction: column; align-items: center;
+        justify-content: center;
+      }
+
+      /* ===== Screen 1 — welcome ===== */
+      .welcome-cta {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 1.2vw; padding-bottom: 4vw;
+      }
+      .welcome-cta .tap {
+        font-size: 1.3vw; color: #888;
+        text-transform: uppercase; letter-spacing: 2px;
+        font-weight: 600;
+      }
+      .welcome-cta .underline {
+        height: 3px; width: 9vw;
+        background: #059669; opacity: 0.7; border-radius: 2px;
+      }
+
+      /* ===== Screen 2 — problem (BlindPathBlock fake) ===== */
+      .blind-path {
+        position: relative;
+        margin: 4vw 0 3vw;
+        height: 16vw;
+      }
+      .blind-path .pin {
+        position: absolute; top: 50%; left: 12%;
+        transform: translateY(-50%);
+        width: 3vw; height: 3vw; border-radius: 50%;
+        background: #B45309;
+        box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.18);
+      }
+      .blind-path .trail {
+        position: absolute; top: 50%; left: 17%; right: 8%;
+        height: 3px; transform: translateY(-50%);
+        background: linear-gradient(90deg,
+          rgba(180, 83, 9, 0.6) 0%,
+          rgba(180, 83, 9, 0.4) 30%,
+          rgba(180, 83, 9, 0.18) 55%,
+          rgba(180, 83, 9, 0) 95%);
+        border-radius: 2px;
+      }
+      .blind-path .fog {
+        position: absolute; top: 0; right: 0; bottom: 0;
+        width: 55%;
+        background: linear-gradient(90deg, rgba(243, 238, 229, 0) 0%, #F3EEE5 75%);
+      }
+      .blind-path .question {
+        position: absolute; top: 32%; right: 14%;
+        font-size: 4vw; color: rgba(180, 83, 9, 0.4);
+        font-weight: 800;
+        font-family: serif;
+      }
+      .lost-line {
+        font-size: 2.6vw; color: #B45309;
+        font-weight: 800; text-align: center;
+        letter-spacing: -0.4px; margin-top: 1vw;
+      }
+      .quit-line {
+        font-size: 1.7vw; color: #555;
+        text-align: center; margin-top: 1vw;
+        max-width: 78%; line-height: 1.4;
+      }
+
+      /* ===== Screen 3 — solutionIntro ===== */
+      .map-preview {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        height: 16vw;
+        margin-top: 2.4vw;
+        position: relative; overflow: hidden;
+      }
+      .map-preview::before {
+        content: '';
+        position: absolute; left: 8%; right: 8%; top: 50%;
+        height: 3px; transform: translateY(-50%);
+        background: repeating-linear-gradient(90deg, #B87333, #B87333 6px, transparent 6px, transparent 12px);
+        border-radius: 2px;
+      }
+      .map-preview .pin {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 3vw; height: 3vw; border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+      }
+      .map-preview .pin.copper { left: 22%; background: #B87333; }
+      .map-preview .pin.iron   { left: 52%; background: #6B7280; }
+      .map-preview .pin.gold   { left: 82%; background: #D4A017; }
+      .map-preview .pin-label {
+        position: absolute; top: calc(50% + 2.6vw);
+        font-size: 1.05vw; font-weight: 700;
+        transform: translateX(-50%); letter-spacing: 0.6px;
+        text-transform: uppercase;
+      }
+      .map-preview .pin-label.copper { left: 22%; color: #B87333; }
+      .map-preview .pin-label.iron   { left: 52%; color: #6B7280; }
+      .map-preview .pin-label.gold   { left: 82%; color: #D4A017; }
+      .benefit-list { margin-top: 2.2vw; }
+      .benefit {
+        display: flex; gap: 2.4vw; padding: 1.6vw 0;
+        border-top: 1px solid #ECE6D9;
+      }
+      .benefit:first-child { border-top: none; }
+      .benefit .icon { font-size: 3.6vw; line-height: 1; flex-shrink: 0; width: 5.2vw; text-align: center; }
+      .benefit .body { display: flex; flex-direction: column; gap: 0.4vw; }
+      .benefit .b-title { font-size: 1.65vw; font-weight: 800; color: #111; line-height: 1.15; letter-spacing: -0.3px; }
+      .benefit .b-feat { font-size: 1.25vw; color: #777; line-height: 1.4; }
+      .reassure {
+        background: #F3EEE5; border: 1px dashed #B87333;
+        border-radius: 10px;
+        padding: 1.8vw 2.2vw;
+        margin-top: 2.2vw;
+        font-size: 1.4vw;
+        color: #5C3D17; line-height: 1.4;
+        text-align: center; font-weight: 600;
+      }
+      .reassure b { color: #B87333; font-weight: 800; }
+
+      /* ===== Screen 4 — strengthHolds ===== */
+      .split { display: flex; gap: 2.4vw; margin-top: 3vw; }
+      .split > .col {
+        flex: 1; background: #FAF6EE; border-radius: 10px;
+        padding: 2.6vw 2.4vw;
+        border: 1px solid #ECE6D9;
+      }
+      .split > .col .label { font-size: 1.35vw; color: #888; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; }
+      .split > .col .num {
+        font-size: 5.2vw; font-weight: 800; line-height: 1; letter-spacing: -1px;
+        margin-top: 0.4vw;
+      }
+      .split > .col .delta { font-size: 1.4vw; margin-top: 1.2vw; font-weight: 700; }
+      .caption {
+        font-size: 1.4vw; color: #555;
+        text-align: center; margin-top: 2vw;
+        font-weight: 600;
+      }
+      .pos-line {
+        font-size: 1.4vw; color: #555; line-height: 1.5;
+        margin-top: 2vw; font-weight: 500;
+        text-align: center;
+      }
+      .pos-line .em { font-weight: 800; }
+
+      /* ===== Screen 5 — watchTransform (TierProgression fake) ===== */
+      .tier-prog {
+        display: flex; align-items: center; justify-content: space-between;
+        margin: 3vw 0 2vw;
+        gap: 1.4vw;
+      }
+      .tier-prog .link {
+        flex: 1; height: 5.4vw; border-radius: 2vw;
+        position: relative;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.2vw; color: #fff;
+        font-weight: 800;
+      }
+      .tier-prog .link.copper { background: linear-gradient(180deg, #C68C57, #8C5524); }
+      .tier-prog .link.iron   { background: linear-gradient(180deg, #8B95A2, #4F5862); }
+      .tier-prog .link.gold   { background: linear-gradient(180deg, #E8C158, #B58917); }
+      .tier-prog .arrow {
+        flex: 0 0 auto; color: #B87333; font-size: 2.6vw;
+        font-weight: 800; opacity: 0.6;
+      }
+      .tier-labels {
+        display: flex; justify-content: space-between;
+        font-size: 1.15vw; font-weight: 700; letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 0 0.4vw;
+      }
+      .tier-labels span:nth-child(1) { color: #B87333; }
+      .tier-labels span:nth-child(2) { color: #6B7280; }
+      .tier-labels span:nth-child(3) { color: #D4A017; }
+
+      /* ===== Screen 6 — onePeak (RouteRows fake) ===== */
+      .route-list { margin-top: 2.6vw; display: flex; flex-direction: column; gap: 1.6vw; }
+      .route-row {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 10px;
+        padding: 2vw 2.4vw;
+      }
+      .route-row .name { font-size: 1.6vw; font-weight: 700; color: #111; }
+      .route-row .name .meta { color: #888; font-weight: 500; margin-left: 0.6vw; }
+      .route-row .scale {
+        position: relative; height: 6px; background: #E5E1D8; border-radius: 3px;
+        margin-top: 1.2vw;
+      }
+      .route-row .scale .dot {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 2vw; height: 2vw; border-radius: 50%;
+        border: 2px solid #FAF6EE;
+      }
+      .route-row .scale .dot.copper { background: #B87333; }
+      .route-row .scale .dot.iron   { background: #6B7280; }
+      .route-row .scale .dot.gold   { background: #D4A017; }
+      .route-row.medium .scale .gold { opacity: 0.5; }
+      .route-row.hard .scale .iron { opacity: 0.5; }
+      .route-row.hard .scale .gold { opacity: 0.3; }
+      .route-tier-axis {
+        display: flex; justify-content: space-between;
+        font-size: 1.1vw; font-weight: 700; letter-spacing: 0.4px;
+        text-transform: uppercase;
+        padding: 0 0.4vw; margin-top: 1.6vw;
+      }
+      .route-tier-axis span:nth-child(1) { color: #B87333; }
+      .route-tier-axis span:nth-child(2) { color: #6B7280; }
+      .route-tier-axis span:nth-child(3) { color: #D4A017; }
+
+      /* ===== Screen 7 — pickFirstRoute ===== */
+      .route-card {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        padding: 3vw 3.2vw;
+        margin-top: 2.6vw;
+      }
+      .route-card .route-head { display: flex; align-items: center; gap: 2.2vw; }
+      .route-icon {
+        width: 8.4vw; height: 8.4vw; border-radius: 50%;
+        background: #ECFDF5; border: 1px solid #BBF7D0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 3.6vw;
+        flex-shrink: 0;
+      }
+      .route-info .route-name { font-size: 2.2vw; font-weight: 800; color: #111; letter-spacing: -0.4px; line-height: 1.1; }
+      .route-info .route-meta { font-size: 1.3vw; color: #777; margin-top: 0.7vw; line-height: 1.4; }
+      .route-tiers {
+        display: flex; align-items: center; gap: 1vw;
+        margin-top: 2.2vw;
+      }
+      .route-tiers .seg { flex: 1; height: 6px; border-radius: 3px; }
+      .route-tiers .seg.copper { background: #B87333; }
+      .route-tiers .seg.iron   { background: #6B7280; }
+      .route-tiers .seg.gold   { background: #D4A017; opacity: 0.35; }
+      .route-tier-row {
+        display: flex; justify-content: space-between;
+        margin-top: 0.9vw; padding: 0 0.4vw;
+        font-size: 1.05vw; font-weight: 700; letter-spacing: 0.4px;
+      }
+
+      /* CTAs */
+      .cta-stack { margin-top: auto; }
+      .cta-primary {
+        background: #059669; color: #fff;
+        padding: 3.2vw 4vw; border-radius: 12px;
+        font-weight: 800; font-size: 2vw;
+        text-align: center; letter-spacing: 0.2px;
+      }
+      .cta-secondary {
+        background: transparent; color: #5C3D17;
+        padding: 2.4vw 4vw;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: 700; font-size: 1.5vw;
+        margin-top: 1.4vw;
+        border: 1px solid #B87333;
+      }
+      .cta-secondary b { color: #B87333; }
+      .tap {
+        font-size: 1.25vw; color: #888;
+        text-transform: uppercase; letter-spacing: 2px;
+        font-weight: 600; text-align: center;
+      }
+
+      /* Purpose footer below each phone — the "why" */
+      .purpose {
+        margin-top: 12px;
+        font-size: 12px; line-height: 1.55;
+        color: #ccc;
+      }
+      .purpose b { color: #fff; font-weight: 800; }
+      .purpose .label {
+        font-size: 10px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1px;
+        color: #888; display: block; margin-bottom: 4px;
+      }
+
+      /* legend at bottom */
+      .legend {
+        max-width: 1300px; margin: 36px auto 0;
+        padding: 18px 22px;
+        background: #252525; border-radius: 14px;
+        font-size: 12px; color: #aaa; line-height: 1.7;
+      }
+      .legend b { color: #10b981; }
+      .legend code {
+        background: rgba(255,255,255,0.06); padding: 1px 6px;
+        border-radius: 4px; color: #ddd;
+      }
+      .legend h4 {
+        color: #eee; font-size: 14px; font-weight: 800;
+        margin-bottom: 8px;
+      }
+      .legend .gap-list li {
+        margin: 6px 0; padding-left: 14px; position: relative;
+      }
+      .legend .gap-list li::before {
+        content: '·'; position: absolute; left: 0; color: #F59E0B; font-weight: 800;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>ChainDay onboarding v2 — full flow (7 screens)</h1>
+    <p class="lede">
+      Three acts: <b>Hook</b> (no progress chrome — feels like a story, not a form),
+      <b>Mechanism</b> (progress on, teaching the system),
+      <b>Commit</b> (one tap to start). Each card shows the planned screen + its purpose
+      below. Pills indicate copy updates we just agreed on:
+      <span class="change-pill">copy update</span>
+      <span class="change-pill warn">unresolved</span>
+    </p>
+
+    <!-- ============================================ -->
+    <!-- ACT 1 — HOOK -->
+    <!-- ============================================ -->
+    <div class="act-header">
+      <span class="num">Act 1</span>
+      <span class="name">Hook</span>
+      <span class="subtitle">3 screens. No progress bar. Set tone, plant the map metaphor, promise the solution.</span>
+    </div>
+    <div class="row">
+      <!-- Screen 1 -->
+      <div class="card">
+        <h3>Screen 1 · welcome</h3>
+        <p class="note">Minimal hook. Calm. Sets a non-aggressive tone.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar hidden"><span></span><span class="progress"></span><span></span></div>
+            <div class="center">
+              <div class="h-hello">Hey.</div>
+            </div>
+            <div class="welcome-cta">
+              <div class="tap">Tap to begin</div>
+              <div class="underline"></div>
+            </div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Lower the cost of starting.</b> No question, no form, no commitment — just one word and an invitation to tap. Signals that this app isn't going to bombard you. Trust before features.
+        </div>
+      </div>
+
+      <!-- Screen 2 -->
+      <div class="card">
+        <h3>Screen 2 · problem</h3>
+        <p class="note">Pain frame. Plants the map metaphor. Externalizes blame.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar hidden"><span></span><span class="progress"></span><span></span></div>
+            <div class="center" style="justify-content: flex-start; padding-top: 6vw;">
+              <div class="h-big">You're building<br/>habits blind.</div>
+              <div class="blind-path" style="width: 100%;">
+                <div class="pin"></div>
+                <div class="trail"></div>
+                <div class="fog"></div>
+                <div class="question">?</div>
+              </div>
+              <div class="lost-line">You're lost.</div>
+              <div class="quit-line">No map. No markers. So you quit.</div>
+            </div>
+            <div class="cta-stack">
+              <div class="tap">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Diagnose, don't scold.</b> Tells the user the reason they've quit before isn't them — it's that no one gave them a path. The "blind path" visual is the metaphor every later screen pays off (map → markers → tiers → routes).
+        </div>
+      </div>
+
+      <!-- Screen 3 -->
+      <div class="card">
+        <h3>Screen 3 · solutionIntro
+          <span class="change-pill" style="margin-left: 6px;">+library line</span>
+        </h3>
+        <p class="note">Solution promise. Introduces the 3 load-bearing ideas the next screens unpack.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar hidden"><span></span><span class="progress"></span><span></span></div>
+            <div class="h-big">We give you<br/>the map.</div>
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers: Copper, Iron, Gold.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">🔗</div>
+                <div class="body">
+                  <div class="b-title">Watch your chain transform.</div>
+                  <div class="b-feat">Every tier, a visible upgrade.</div>
+                </div>
+              </div>
+            </div>
+            <div class="reassure">
+              Don't have a habit in mind?<br/>
+              <b>We have 253 ready to go.</b>
+            </div>
+            <div class="cta-stack">
+              <div class="tap">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Promise the solution + defuse prep anxiety early.</b> The 3 benefits seed every Act 2 screen. The library line ("253 ready to go") tells anxious users they don't need to come prepared — 4 screens before they're asked to commit.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ACT 2 — MECHANISM -->
+    <!-- ============================================ -->
+    <div class="act-header">
+      <span class="num">Act 2</span>
+      <span class="name">Mechanism</span>
+      <span class="subtitle">3 screens. Each unpacks one promise from Act 1: strength · transformation · always-a-next-peak.</span>
+    </div>
+    <div class="row">
+      <!-- Screen 4 -->
+      <div class="card">
+        <h3>Screen 4 · strengthHolds
+          <span class="change-pill" style="margin-left: 6px;">final copy</span>
+        </h3>
+        <p class="note">Defines strength as "automatic." Positions streaks + strength as both.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>4 / 7</span><span class="progress"><i style="width: 57%"></i></span><span>Strength</span></div>
+            <div class="h-mid">You won't end up<br/>back at <span class="em">zero.</span></div>
+            <div class="sub">
+              Streaks count days. <b>Strength counts how automatic the habit has become.</b>
+              Skips dent it — never reset it.
+            </div>
+            <div class="split">
+              <div class="col">
+                <div class="label">Streak</div>
+                <div class="num strike">30</div>
+                <div class="delta pop">→ 0 (resets)</div>
+              </div>
+              <div class="col">
+                <div class="label">Strength</div>
+                <div class="num em">78</div>
+                <div class="delta em">→ 76 (dents)</div>
+              </div>
+            </div>
+            <div class="caption">Same missed day. Different consequence.</div>
+            <div class="pos-line">
+              You get both. Streaks for the <span class="em">vibes</span>.<br/>
+              Strength for the <span class="em">science</span>.
+            </div>
+            <div class="cta-stack"><div class="tap">Tap to continue</div></div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Explain habit strength + protect against quit-on-miss.</b> The no-zero anchor is the user-facing promise; "automatic" is the load-bearing word. Keeps streaks (users like them) but adds the deeper signal so missing one day doesn't feel catastrophic.
+        </div>
+      </div>
+
+      <!-- Screen 5 -->
+      <div class="card">
+        <h3>Screen 5 · watchTransform
+          <span class="change-pill warn" style="margin-left: 6px;">unresolved: 20% vs tier</span>
+        </h3>
+        <p class="note">Explains the tier transformation. Trophy logic for invisible compounding.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>5 / 7</span><span class="progress"><i style="width: 71%"></i></span><span>Transform</span></div>
+            <div class="h-mid">You'll watch it<br/>transform.</div>
+            <div class="sub">
+              The chain doesn't show a number. <b>At every tier</b>, it visibly upgrades —
+              earned, not arbitrary.
+            </div>
+            <div class="tier-prog">
+              <div class="link copper">◇</div>
+              <span class="arrow">›</span>
+              <div class="link iron">◇</div>
+              <span class="arrow">›</span>
+              <div class="link gold">◇</div>
+            </div>
+            <div class="tier-labels"><span>Copper</span><span>Iron</span><span>Gold</span></div>
+            <div class="caption" style="margin-top: 3vw;">Real material. Real progress you can see.</div>
+            <div class="cta-stack"><div class="tap">Tap to continue</div></div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Make compounding legible.</b> Habits compound but you can't feel daily progress. Tier upgrades substitute a near-term visible reward for a far-term invisible one. <i>Open question: drop the "20%" framing — does the upgrade fire at every tier (3 stops) or every 20% (5 stops)? We agreed to anchor to tiers; copy reflects that here.</i>
+        </div>
+      </div>
+
+      <!-- Screen 6 -->
+      <div class="card">
+        <h3>Screen 6 · onePeak</h3>
+        <p class="note">Per-habit calibration + always-a-next-tier. Anti-burnout, anti-plateau.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>6 / 7</span><span class="progress"><i style="width: 86%"></i></span><span>Routes</span></div>
+            <div class="h-mid">Always one peak<br/>to chase.</div>
+            <div class="sub">
+              Each route is sized to the habit. After Gold, the next route waits.
+              Novelty isn't your job to find — it's structural.
+            </div>
+            <div class="route-list">
+              <div class="route-row">
+                <div class="name">Easy <span class="meta">· 10-min walk · 21 days</span></div>
+                <div class="scale">
+                  <span class="dot copper" style="left: 25%"></span>
+                  <span class="dot iron" style="left: 65%"></span>
+                  <span class="dot gold" style="left: 100%"></span>
+                </div>
+              </div>
+              <div class="route-row medium">
+                <div class="name">Medium <span class="meta">· meditation · 66 days</span></div>
+                <div class="scale">
+                  <span class="dot copper" style="left: 12%"></span>
+                  <span class="dot iron" style="left: 35%"></span>
+                  <span class="dot gold" style="left: 100%"></span>
+                </div>
+              </div>
+              <div class="route-row hard">
+                <div class="name">Hard <span class="meta">· daily writing · 120+</span></div>
+                <div class="scale">
+                  <span class="dot copper" style="left: 8%"></span>
+                  <span class="dot iron" style="left: 25%"></span>
+                  <span class="dot gold" style="left: 60%"></span>
+                </div>
+              </div>
+            </div>
+            <div class="route-tier-axis"><span>Copper</span><span>Iron</span><span>Gold</span></div>
+            <div class="cta-stack" style="margin-top: 2.4vw;">
+              <div class="cta-primary">Continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Calibrate expectations + remove the "what's next?" cliff.</b> Different habits take different time; the app sizes the route. After Gold there's another peak. Together with screen 4, this is the "you can't really fail" message — it just takes longer or shorter.
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ACT 3 — COMMIT -->
+    <!-- ============================================ -->
+    <div class="act-header">
+      <span class="num">Act 3</span>
+      <span class="name">Commit</span>
+      <span class="subtitle">1 screen. Convert intent to action with the lowest possible friction.</span>
+    </div>
+    <div class="row">
+      <div class="card">
+        <h3>Screen 7 · pickFirstRoute
+          <span class="change-pill" style="margin-left: 6px;">promoted library</span>
+        </h3>
+        <p class="note">Defaults to easiest possible habit. Library is now a real secondary action with the count.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>7 / 7</span><span class="progress"><i style="width: 100%"></i></span><span>Pick</span></div>
+            <div class="h-mid">Pick your<br/>first route.</div>
+            <div class="sub">
+              Start with one. We've picked the easiest — a 10-minute walk.
+              Add more once you're walking.
+            </div>
+            <div class="route-card">
+              <div class="route-head">
+                <div class="route-icon">🚶</div>
+                <div class="route-info">
+                  <div class="route-name">10-minute walk</div>
+                  <div class="route-meta">Easy · 21 days to Gold · ~10 min/day</div>
+                </div>
+              </div>
+              <div class="route-tiers">
+                <div class="seg copper"></div>
+                <div class="seg iron"></div>
+                <div class="seg gold"></div>
+              </div>
+              <div class="route-tier-row">
+                <span style="color:#B87333">Copper</span>
+                <span style="color:#6B7280">Iron</span>
+                <span style="color:#D4A017">Gold</span>
+              </div>
+            </div>
+            <div class="cta-stack">
+              <div class="cta-primary">Start this route</div>
+              <div class="cta-secondary">Don't know yet? <b>Browse 253 ready-made →</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="purpose">
+          <span class="label">Purpose</span>
+          <b>Convert with near-zero friction.</b> Pre-picks the easiest possible habit so committing requires one tap. The library is no longer a buried tertiary link — it's a real secondary CTA for the user who finished Acts 1+2 thinking "okay, I'm in, but I want to pick my own."
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- LEGEND -->
+    <!-- ============================================ -->
+    <div class="legend">
+      <h4>The "why" pattern across the flow</h4>
+      <p>
+        Screen 2 plants a metaphor (<b>blind path</b>). Screen 3 promises a fix (<b>map</b>) +
+        seeds the 3 ideas. Screens 4–6 each unpack one of those ideas. Screen 7 collects the commit.
+        Every Act 2 screen pays off one promise from screen 3, so the flow feels coherent rather than
+        like a list of features.
+      </p>
+
+      <h4 style="margin-top: 14px;">Open issues to resolve</h4>
+      <ul class="gap-list">
+        <li><b>Screen 5 "20% vs every tier"</b> — the existing copy says "every 20% of the route," which implies 5 stops, conflicting with Copper/Iron/Gold (3 stops). Mock here shows the proposed fix (anchor to tiers). Decide: drop the 20%, or commit to 5 tiers and add Bronze/Silver.</li>
+        <li><b>Screen 3 + screen 6 overlap</b> — both surface Copper/Iron/Gold. Screen 3 introduces them; screen 6 calibrates them per-habit. Not redundant if framed as "what they are" (3) → "how they fit your habit" (6), but copy needs to make the distinction explicit.</li>
+        <li><b>Name + goal capture is gone</b> — <code>OnboardingAnswers</code> still has <code>name</code> and <code>goal</code> fields, but no step writes to them. Either add a name screen back or remove the dead fields.</li>
+      </ul>
+    </div>
+  </body>
+</html>

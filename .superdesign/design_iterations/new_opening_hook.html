@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New opening hook — habits without a map</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+      h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #10b981; margin: 32px 0 4px; }
+      .top-note { color: #999; font-size: 13px; margin-bottom: 24px; max-width: 1100px; }
+      .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 16px; padding: 14px; }
+      .card.winner { box-shadow: 0 0 0 2px #10b981; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 28px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+      .body { flex: 1; display: flex; flex-direction: column; }
+      .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.5px; color: #111; text-align: center; }
+      .h-mid { font-weight: 800; font-size: 4.4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .sub { font-size: 1.4vw; color: #555; line-height: 1.45; }
+      .sub-c { text-align: center; }
+      .cta-ghost {
+        background: transparent;
+        color: #888; font-size: 0.95vw;
+        text-align: center; font-weight: 500;
+        letter-spacing: 1.2px; text-transform: uppercase;
+        padding: 10px;
+      }
+      .pulse { height: 2px; width: 22px; background: #10b981; opacity: 0.7; border-radius: 2px; margin: 5px auto 0; }
+      .label { color: #fff; font-weight: 600; margin-top: 12px; font-size: 13px; }
+      .desc { color: #999; font-size: 11.5px; margin-top: 4px; line-height: 1.45; }
+      .label-act { color: #f59e0b; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+
+      /* visual: blind path (problem screens) */
+      .blind-path {
+        position: relative;
+        margin: 6% 0;
+        padding: 14px;
+        background: #FAF6EE;
+        border: 1.5px dashed #C8C4B8;
+        border-radius: 12px;
+      }
+      .blind-path .question {
+        font-size: 1.4vw;
+        color: #999;
+        font-style: italic;
+        text-align: center;
+        line-height: 1.6;
+      }
+      .blind-path .question b {
+        color: #555;
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      /* visual: GPS path (solution screens) */
+      .map-path {
+        background: #FAF6EE;
+        border-radius: 12px;
+        padding: 12px;
+        margin: 6% 0;
+      }
+      .map-path-header {
+        display: flex; align-items: center; gap: 7px;
+        margin-bottom: 8px;
+      }
+      .map-path-icon {
+        width: 24px; height: 24px;
+        border-radius: 8px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1vw;
+      }
+      .map-path-name { font-weight: 700; font-size: 1.05vw; color: #111; flex: 1; }
+      .map-path-len { color: #B87333; font-size: 0.85vw; font-weight: 700; }
+      .path-bar {
+        position: relative; height: 8px;
+        background: #E5E1D8; border-radius: 4px;
+        margin: 8px 0;
+      }
+      .path-fill {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        background: linear-gradient(90deg, #B87333, #6B7280, #D4A23F);
+        border-radius: 4px;
+      }
+      .path-tier {
+        position: absolute; top: -1px;
+        width: 10px; height: 10px;
+        border-radius: 2px;
+        transform: translateX(-50%);
+      }
+      .path-tier.copper { background: #B87333; }
+      .path-tier.iron { background: #6B7280; }
+      .path-tier.gold { background: #D4A23F; }
+      .path-marker {
+        position: absolute; top: -3px;
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2.5px solid #059669;
+        z-index: 2;
+        transform: translateX(-50%);
+      }
+      .way-row {
+        display: flex; justify-content: space-between;
+        font-size: 0.7vw; margin-top: 8px;
+        font-weight: 700;
+      }
+      .way-row .copper { color: #B87333; }
+      .way-row .iron { color: #6B7280; }
+      .way-row .gold { color: #D4A23F; }
+
+      /* twenty percent indicator */
+      .pct-row {
+        display: flex; align-items: center; gap: 6px;
+        margin-top: 10px;
+        font-size: 0.95vw; color: #555;
+      }
+      .pct-cell {
+        width: 14px; height: 14px;
+        border-radius: 4px;
+        background: #B87333;
+      }
+      .pct-cell.iron { background: #6B7280; }
+      .pct-cell.gold { background: #D4A23F; }
+      .pct-cell.empty { background: #E5E1D8; }
+
+      .note {
+        max-width: 1100px; margin: 16px auto 0;
+        background:#2a2a2a; border-radius:12px;
+        padding:18px; color:#ccc;
+        font-size:14px; line-height:1.55;
+      }
+      .note b { color:#fff; }
+      .note ul { margin: 8px 0 0 18px; }
+      .note li { margin-bottom: 4px; }
+    </style>
+  </head>
+  <body>
+
+    <h1>New opening hook — "habits without a map"</h1>
+    <div class="top-note">
+      Three versions of the first 3 screens, all anchored on your positioning: the problem isn't streaks resetting — it's that you're building habits blind, with no map and no markers. The solution is per-habit difficulty + named waypoints + 20% milestones. Same hook, three voices.
+    </div>
+
+    <!-- ====== Version 1: Direct ====== -->
+    <h2>Version 1 — Direct ("You're building blind")</h2>
+    <div class="act-sub">Names the problem plainly. Solution is concrete: route, length, waypoints.</div>
+    <div class="row">
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 9vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 1</span> · Welcome</div>
+        <div class="desc">Same as current. Pure greeting.</div>
+      </div>
+
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">You're building<br/>habits blind.</div>
+                <div class="blind-path">
+                  <div class="question">"How long?"<br/><b>You don't know.</b></div>
+                  <div class="question" style="margin-top: 8px;">"How hard?"<br/><b>You don't know.</b></div>
+                  <div class="question" style="margin-top: 8px;">"How close am I?"<br/><b>You don't know.</b></div>
+                </div>
+                <div class="sub sub-c" style="max-width: 88%; font-size: 1.2vw;">No map. No markers. So you quit.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 2</span> · Problem</div>
+        <div class="desc">Three questions the user has had before. Visual: dashed-border card with unknown answers. Punchline: "no map, no markers, so you quit."</div>
+      </div>
+
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">We give you<br/>the map.</div>
+                <div class="map-path">
+                  <div class="map-path-header">
+                    <div class="map-path-icon">🚶</div>
+                    <div class="map-path-name">10-minute walk</div>
+                    <div class="map-path-len">21 days</div>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-fill" style="width: 33%;"></div>
+                    <div class="path-tier copper" style="left: 25%;"></div>
+                    <div class="path-tier iron" style="left: 65%;"></div>
+                    <div class="path-tier gold" style="left: 100%;"></div>
+                    <div class="path-marker" style="left: 33%;"></div>
+                  </div>
+                  <div class="way-row">
+                    <span class="copper">Copper</span>
+                    <span class="iron">Iron Ridge</span>
+                    <span class="gold">Gold Summit</span>
+                  </div>
+                  <div class="pct-row">
+                    <div class="pct-cell"></div>
+                    <div class="pct-cell iron"></div>
+                    <div class="pct-cell empty"></div>
+                    <div class="pct-cell empty"></div>
+                    <div class="pct-cell empty"></div>
+                    <span style="margin-left: 4px; font-weight: 600;">+1 link every 20%</span>
+                  </div>
+                </div>
+                <div class="sub sub-c" style="max-width: 90%; font-size: 1.15vw;">Per-habit difficulty. Named waypoints. Visible chain upgrade every 20%.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 3</span> · Solution</div>
+        <div class="desc">Visual answers all three problem questions in one beat. Path bar (length), waypoints (markers), 20% chain cells (progress signal). One screen, one promise.</div>
+      </div>
+    </div>
+
+    <!-- ====== Version 2: Honest-emotional ====== -->
+    <h2>Version 2 — Honest-emotional ("Like a trip without directions")</h2>
+    <div class="act-sub">Metaphor-led. Less attack on the user, more recognition. Same data underneath.</div>
+    <div class="row">
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 9vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 1</span> · Welcome</div>
+        <div class="desc">Unchanged.</div>
+      </div>
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 4.6vw;">A new habit<br/>is a new<br/>destination.</div>
+                <div class="sub sub-c" style="margin-top: 6%; max-width: 85%; font-size: 1.2vw;">Different distance. Different terrain. Different time.</div>
+                <div class="blind-path" style="margin-top: 8%;">
+                  <div class="question" style="font-size: 1.2vw;">But you can't see it.<br/>You don't know how far.<br/>You give up.</div>
+                </div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 2</span> · Problem</div>
+        <div class="desc">Metaphor first ("destination"), then the gap ("but you can't see it"). Quieter, more reflective. Lands the same point as V1's questions but less interrogative.</div>
+      </div>
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">Now you can.</div>
+                <div class="map-path">
+                  <div class="map-path-header">
+                    <div class="map-path-icon">🚶</div>
+                    <div class="map-path-name">Your route</div>
+                    <div class="map-path-len">21 days</div>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-fill" style="width: 33%;"></div>
+                    <div class="path-tier copper" style="left: 25%;"></div>
+                    <div class="path-tier iron" style="left: 65%;"></div>
+                    <div class="path-tier gold" style="left: 100%;"></div>
+                    <div class="path-marker" style="left: 33%;"></div>
+                  </div>
+                  <div class="way-row">
+                    <span class="copper">Copper</span>
+                    <span class="iron">Iron Ridge</span>
+                    <span class="gold">Gold Summit</span>
+                  </div>
+                </div>
+                <div class="sub sub-c" style="max-width: 88%; font-size: 1.15vw;">Every habit gets a route. You see the distance, the markers, and where you stand right now.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 3</span> · Solution</div>
+        <div class="desc">"Now you can." answers the previous screen's "you can't." Same map visual, slightly quieter. No 20%-cell row — that comes later in flow.</div>
+      </div>
+    </div>
+
+    <!-- ====== Version 3: Question-led ====== -->
+    <h2>Version 3 — Question-led ("Where am I?")</h2>
+    <div class="act-sub">Frames the problem as a single unanswered question — the user's own.</div>
+    <div class="row">
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 9vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 1</span> · Welcome</div>
+        <div class="desc">Unchanged.</div>
+      </div>
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5.5vw;">"Where<br/>am I?"</div>
+                <div class="sub sub-c" style="margin-top: 6%; max-width: 90%; font-size: 1.2vw;">The question every habit app fails to answer. Day 12. Day 30. Day 60. You can't tell if you're close, halfway, or just starting.</div>
+                <div class="sub sub-c" style="margin-top: 5%; max-width: 80%; font-size: 1.1vw; color: #999;">So you quit.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 2</span> · Problem</div>
+        <div class="desc">Single question in quotes — the user's own voice. Body explains why current apps don't answer it. Pure copy, no visual. Pull-quote register.</div>
+      </div>
+
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">Always know<br/>where you are.</div>
+                <div class="map-path">
+                  <div class="map-path-header">
+                    <div class="map-path-icon">🚶</div>
+                    <div class="map-path-name">10-minute walk</div>
+                    <div class="map-path-len">Day 7 · 21 total</div>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-fill" style="width: 33%;"></div>
+                    <div class="path-tier copper" style="left: 25%;"></div>
+                    <div class="path-tier iron" style="left: 65%;"></div>
+                    <div class="path-tier gold" style="left: 100%;"></div>
+                    <div class="path-marker" style="left: 33%;"></div>
+                  </div>
+                  <div class="way-row">
+                    <span class="copper">Copper · D5</span>
+                    <span class="iron">Iron · D14</span>
+                    <span class="gold">Gold · D21</span>
+                  </div>
+                  <div style="font-size: 0.95vw; color: #059669; font-weight: 600; margin-top: 8px;">📍 You're at Day 7. Iron Ridge in 7 days.</div>
+                </div>
+                <div class="sub sub-c" style="max-width: 88%; font-size: 1.15vw;">Every habit, every day. You're never wandering.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 3</span> · Solution</div>
+        <div class="desc">"Always know where you are." Direct answer to step 2's question. Map shows position explicitly: "📍 You're at Day 7. Iron Ridge in 7 days."</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>How they differ:</b>
+      <ul>
+        <li><b>V1 — Direct:</b> Three rapid-fire questions ("How long? How hard? How close?"). Most assertive opening. Solution screen is the densest — visual answers all three at once.</li>
+        <li><b>V2 — Honest-emotional:</b> Metaphor-led. "A new habit is a new destination." Quieter, more reflective. Solution: "Now you can." Cleanest tonally with the rest of the app's voice.</li>
+        <li><b>V3 — Question-led:</b> Single quoted question — "Where am I?" — your user's own voice. Pure-copy problem screen, no visual. Solution screen explicitly answers with a position pin: "📍 You're at Day 7."</li>
+      </ul>
+      <br>
+      <b>What's the same across all three:</b>
+      <ul>
+        <li>Welcome stays as "Hey."</li>
+        <li>Solution screens use the same Habit Map visual we already shipped</li>
+        <li>Anti-streak attack copy is gone — replaced by "you can't see, now you can" framing</li>
+      </ul>
+      <br>
+      <b>My recommendation:</b> V2 (Honest-emotional) for ChainDay's voice. Metaphor opens with warmth ("destination"), problem lands without attacking the user, solution closes with the same map visual that recurs throughout the rest of the flow. V1 is sharper but more interrogative — risks feeling like a sales pitch. V3 is poetic but the solution screen risks reading too feature-y for the opener.
+    </div>
+
+  </body>
+</html>

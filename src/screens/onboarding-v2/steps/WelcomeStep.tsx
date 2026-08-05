@@ -9,12 +9,12 @@ export function WelcomeStep({ onNext }: StepComponentProps) {
   return (
     <Pressable
       accessibilityHint="Activates to begin onboarding"
-      accessibilityLabel="Tap to begin"
+      accessibilityLabel="Tap to continue"
       accessibilityRole="button"
       onPress={onNext}
       style={{ flex: 1 }}
     >
-      <View style={{ alignItems: 'center', flex: 1, justifyContent: 'space-between' }}>
+      <View style={{ flex: 1, justifyContent: 'space-between' }}>
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
           <Text
             accessibilityRole="header"
@@ -26,31 +26,37 @@ export function WelcomeStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            Hey.
+            Hey
           </Text>
         </View>
-        <View style={{ alignItems: 'center', paddingBottom: 16 }}>
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: 6,
+            justifyContent: 'flex-end',
+            paddingBottom: 16,
+            paddingRight: 4,
+          }}
+        >
           <Text
             style={{
-              color: colors.text.tertiary,
-              fontSize: 13,
+              color: colors.text.secondary,
+              fontSize: 14,
               fontWeight: '500',
-              letterSpacing: 1.5,
-              textTransform: 'uppercase',
             }}
           >
-            Tap to begin
+            tap to continue
           </Text>
-          <View
+          <Text
             style={{
-              backgroundColor: colors.primary[600],
-              borderRadius: 2,
-              height: 3,
-              marginTop: 8,
-              opacity: 0.7,
-              width: 36,
+              color: '#B87333',
+              fontSize: 16,
+              fontWeight: '700',
             }}
-          />
+          >
+            →
+          </Text>
         </View>
       </View>
     </Pressable>

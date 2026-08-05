@@ -1,40 +1,20 @@
 import { ComponentType } from 'react';
 
 import { StepComponentProps, StepId } from '../types';
-import { AccountCreationStep } from './AccountCreationStep';
-import { AppDemoStep } from './AppDemoStep';
-import { CategoryPreferenceStep } from './CategoryPreferenceStep';
-import { CelebrationStep } from './CelebrationStep';
-import { FirstCheckInStep } from './FirstCheckInStep';
-import { GoalStep } from './GoalStep';
-import { NameStep } from './NameStep';
-import { NotificationPrimingStep } from './NotificationPrimingStep';
-import { PainPointsStep } from './PainPointsStep';
-import { PaywallStep } from './PaywallStep';
-import { PlanPreviewStep } from './PlanPreviewStep';
+import { OnePeakStep } from './OnePeakStep';
+import { PickFirstRouteStep } from './PickFirstRouteStep';
 import { ProblemStep } from './ProblemStep';
-import { ProcessingStep } from './ProcessingStep';
-import { SocialProofStep } from './SocialProofStep';
 import { SolutionIntroStep } from './SolutionIntroStep';
-import { SolutionStep } from './SolutionStep';
+import { StrengthHoldsStep } from './StrengthHoldsStep';
+import { WatchItTransformStep } from './WatchItTransformStep';
 import { WelcomeStep } from './WelcomeStep';
 
 export const STEP_REGISTRY: Record<StepId, ComponentType<StepComponentProps>> = {
-  accountCreation: AccountCreationStep,
-  appDemo: AppDemoStep,
-  categoryPreference: CategoryPreferenceStep,
-  celebration: CelebrationStep,
-  firstCheckIn: FirstCheckInStep,
-  goal: GoalStep,
-  name: NameStep,
-  notificationPriming: NotificationPrimingStep,
-  painPoints: PainPointsStep,
-  paywall: PaywallStep,
-  planPreview: PlanPreviewStep,
+  onePeak: OnePeakStep,
+  pickFirstRoute: PickFirstRouteStep,
   problem: ProblemStep,
-  processing: ProcessingStep,
-  socialProof: SocialProofStep,
-  solution: SolutionStep,
   solutionIntro: SolutionIntroStep,
+  strengthHolds: StrengthHoldsStep,
+  watchTransform: WatchItTransformStep,
   welcome: WelcomeStep,
 };

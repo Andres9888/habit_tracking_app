@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen 4 — current vs full-width redesign</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.55; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      @media (max-width: 850px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+      .card h3 {
+        font-size: 12px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: #10b981; margin-bottom: 4px;
+      }
+      .card p.note { font-size: 12px; color: #aaa; margin-bottom: 12px; line-height: 1.5; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 10px; color: #888;
+        gap: 8px; margin-bottom: 6%;
+      }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+        position: relative; overflow: hidden;
+      }
+      .topbar .progress > i {
+        position: absolute; inset: 0;
+        background: #059669; width: 57%;
+      }
+      .h-mid { font-weight: 800; font-size: 5.4vw; line-height: 1.08; letter-spacing: -1.2px; color: #111; }
+      .h-mid .em { color: #059669; }
+      .sub {
+        font-size: 1.85vw; color: #555; line-height: 1.5;
+        margin-top: 2vw;
+      }
+      .sub b { color: #111; font-weight: 800; }
+      .em { color: #059669; font-weight: 800; }
+      .strike { text-decoration: line-through; color: #999; font-weight: 600; }
+      .pop { color: #B45309; font-weight: 800; }
+
+      /* Variant 1: Current — side-by-side cards */
+      .split { display: flex; gap: 2.4vw; margin-top: 3vw; }
+      .split > .col {
+        flex: 1; background: #FAF6EE; border-radius: 10px;
+        padding: 2.6vw 2.4vw;
+        border: 1px solid #ECE6D9;
+      }
+      .split > .col .label { font-size: 1.4vw; color: #888; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; }
+      .split > .col .num {
+        font-size: 6vw; font-weight: 800; line-height: 1; letter-spacing: -1px;
+        margin-top: 0.8vw;
+      }
+      .split > .col .delta { font-size: 1.5vw; margin-top: 1.5vw; font-weight: 700; }
+
+      /* Variant 2: Proposed — full-width stacked rows */
+      .panel {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 12px; margin-top: 3vw;
+        overflow: hidden;
+      }
+      .panel-row {
+        padding: 2.6vw 3vw;
+      }
+      .panel-row + .panel-row {
+        border-top: 1px solid #ECE6D9;
+      }
+      .panel-head {
+        display: flex; align-items: baseline; justify-content: space-between;
+        margin-bottom: 1.6vw;
+      }
+      .panel-head .label {
+        font-size: 1.5vw; color: #555; font-weight: 800;
+        letter-spacing: 0.8px; text-transform: uppercase;
+      }
+      .panel-head .values {
+        font-size: 2.6vw; font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .panel-head .values .from { color: #999; text-decoration: line-through; }
+      .panel-head .values .arrow { color: #777; margin: 0 0.8vw; }
+      .panel-head .values .to-pop { color: #B45309; }
+      .panel-head .values .to-em { color: #059669; }
+      .bar {
+        height: 8px; background: #E5E1D8; border-radius: 4px;
+        position: relative; overflow: visible;
+      }
+      .bar .fill {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        border-radius: 4px;
+      }
+      .bar.streak .fill {
+        background: linear-gradient(90deg, #B45309, #B45309);
+        width: 95%;
+      }
+      .bar.streak::after {
+        content: '✕';
+        position: absolute; right: -2px; top: 50%;
+        transform: translateY(-50%);
+        font-size: 2.4vw; color: #B45309;
+        font-weight: 800;
+        background: #F3EEE5;
+        padding: 0 0.4vw;
+      }
+      .bar.strength .fill {
+        background: linear-gradient(90deg, #10b981, #059669);
+        width: 76%;
+      }
+      .bar.strength::before {
+        content: '';
+        position: absolute; left: 78%;
+        top: -2px; bottom: -2px; width: 2px;
+        background: #FAF6EE;
+        z-index: 2;
+      }
+      .panel-row .delta-line {
+        font-size: 1.4vw; color: #777; font-weight: 700;
+        margin-top: 1.4vw;
+        letter-spacing: 0.4px;
+      }
+      .panel-row .delta-line .pop { color: #B45309; }
+      .panel-row .delta-line .em { color: #059669; }
+
+      /* common bottom */
+      .pos-line {
+        font-size: 1.5vw; color: #555; line-height: 1.5;
+        margin-top: 2.4vw; font-weight: 600;
+        text-align: center;
+      }
+      .pos-line .em { font-weight: 800; }
+      .caption {
+        font-size: 1.5vw; color: #555;
+        text-align: center; margin-top: 2vw;
+        font-weight: 700;
+      }
+      .cta-stack { margin-top: auto; }
+      .cta-primary {
+        background: #059669; color: #fff;
+        padding: 3.4vw 4vw; border-radius: 12px;
+        font-weight: 800; font-size: 2vw;
+        text-align: center;
+      }
+
+      .legend {
+        max-width: 1100px; margin: 28px auto 0;
+        padding: 16px 20px;
+        background: #252525; border-radius: 14px;
+        font-size: 12px; color: #aaa; line-height: 1.7;
+      }
+      .legend b { color: #10b981; }
+    </style>
+  </head>
+  <body>
+    <h1>Screen 4 (strengthHolds) — current vs full-width redesign</h1>
+    <p class="lede">
+      Left: what's in the simulator now (two narrow side-by-side cards).
+      Right: proposed redesign — single full-width comparison panel that matches
+      the visual rhythm of <code>SolutionMapPreview</code>, <code>TierProgression</code>,
+      and <code>RouteRows</code> on the other screens.
+    </p>
+
+    <div class="row">
+      <!-- ===== Variant 1: Current ===== -->
+      <div class="card">
+        <h3>A · Current (in simulator)</h3>
+        <p class="note">Two side-by-side cards. Reads like a data comparison; visual rhythm fights the rest of the flow.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar">
+              <span>‹ Back</span>
+              <span class="progress"><i></i></span>
+              <span>4 / 7</span>
+            </div>
+            <div class="h-mid">You won't end up<br/>back at <span class="em">zero.</span></div>
+            <div class="sub">
+              Streaks count days. <b>Strength counts how automatic the habit has become.</b>
+              Skips dent it — never reset it.
+            </div>
+            <div class="split">
+              <div class="col">
+                <div class="label">Streak</div>
+                <div class="num strike" style="color:#999">30</div>
+                <div class="delta pop">→ 0 (resets)</div>
+              </div>
+              <div class="col">
+                <div class="label">Strength</div>
+                <div class="num em">78</div>
+                <div class="delta em">→ 76 (dents)</div>
+              </div>
+            </div>
+            <div class="caption">Same missed day. Different consequence.</div>
+            <div class="pos-line">
+              You get both. Streaks for the <span class="em">vibes</span>.<br/>
+              Strength for the <span class="em">science</span>.
+            </div>
+            <div class="cta-stack"><div class="cta-primary">Continue</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== Variant 2: Proposed ===== -->
+      <div class="card">
+        <h3>B · Proposed — full-width panel</h3>
+        <p class="note">Stacked rows in one panel. Each row has bar + values. Bar visualizes the difference: streak shatters at the end (✕), strength dips (notch). Full-width matches the rest of onboarding.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar">
+              <span>‹ Back</span>
+              <span class="progress"><i></i></span>
+              <span>4 / 7</span>
+            </div>
+            <div class="h-mid">You won't end up<br/>back at <span class="em">zero.</span></div>
+            <div class="sub">
+              Streaks count days. <b>Strength counts how automatic the habit has become.</b>
+              Skips dent it — never reset it.
+            </div>
+
+            <div class="panel">
+              <div class="panel-row">
+                <div class="panel-head">
+                  <span class="label">Streak</span>
+                  <span class="values">
+                    <span class="from">30</span>
+                    <span class="arrow">→</span>
+                    <span class="to-pop">0</span>
+                  </span>
+                </div>
+                <div class="bar streak"><span class="fill"></span></div>
+                <div class="delta-line">One missed day · <span class="pop">resets to zero</span></div>
+              </div>
+              <div class="panel-row">
+                <div class="panel-head">
+                  <span class="label">Strength</span>
+                  <span class="values">
+                    <span style="color:#111">78</span>
+                    <span class="arrow">→</span>
+                    <span class="to-em">76</span>
+                  </span>
+                </div>
+                <div class="bar strength"><span class="fill"></span></div>
+                <div class="delta-line">Same missed day · <span class="em">just a dent</span></div>
+              </div>
+            </div>
+
+            <div class="pos-line">
+              You get both. Streaks for the <span class="em">vibes</span>.<br/>
+              Strength for the <span class="em">science</span>.
+            </div>
+            <div class="cta-stack"><div class="cta-primary">Continue</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <b>Why the proposed direction works better</b>
+      <ul style="margin-top: 8px; padding-left: 22px;">
+        <li>Single full-width visual — matches BlindPathBlock, SolutionMapPreview, TierProgression, RouteRows on other screens.</li>
+        <li>Bars carry the metaphor: streak ends with ✕ (resets), strength has a tiny notch (dents but holds). Visual does the work the cards' delta text was doing.</li>
+        <li>"Same missed day. Different consequence." caption gets absorbed into the per-row delta lines — less floating text below the visual.</li>
+        <li>Vertical rhythm matches the rest of the flow — no narrow-cards-with-gap awkwardness.</li>
+      </ul>
+    </div>
+  </body>
+</html>

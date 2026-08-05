@@ -9,15 +9,12 @@ import { STEP_REGISTRY } from './steps/stepRegistry';
 import { StepId } from './types';
 import { useOnboardingV2State } from './useOnboardingV2State';
 
-// Hide progress chrome on screens meant to feel like moments rather than
-// a form: the pre-questionnaire hook + personalization (welcome → problem
-// → solution → name) and the post-plan emotional peak (celebration).
+// Hide progress chrome on every step in the trimmed flow — it's a 3-screen
+// hook, not a form, so progress affordance would feel out of place.
 const STEPS_WITHOUT_PROGRESS: ReadonlySet<StepId> = new Set([
   'welcome',
   'problem',
   'solutionIntro',
-  'name',
-  'celebration',
 ]);
 
 interface OnboardingFlowV2Props {

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome — Icon Variations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 40px 24px;
+        min-height: 100vh;
+      }
+      h2 { font-size: 20px; margin-bottom: 20px; font-weight: 700; }
+      .section { max-width: 1500px; margin: 0 auto 48px; }
+
+      /* Gallery of raw icons */
+      .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+      .tile {
+        background: #252525;
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+      }
+      .tile.winner { box-shadow: 0 0 0 2px #10b981; }
+      .tile img {
+        width: 100%; aspect-ratio: 1; border-radius: 22px;
+        object-fit: cover; display: block;
+      }
+      .tile .label {
+        color: #fff; font-weight: 600; margin-top: 14px; font-size: 14px;
+      }
+      .tile .desc {
+        color: #999; font-size: 12px; margin-top: 6px; line-height: 1.4;
+      }
+      .tile .badge {
+        display: inline-block;
+        background: #10b981; color: #fff;
+        font-size: 10px; padding: 2px 8px;
+        border-radius: 10px; margin-top: 6px;
+        font-weight: 600; letter-spacing: 0.5px;
+      }
+
+      /* Welcome screen preview with each icon */
+      .phones { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 24px; }
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 36px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 20px 50px -12px rgba(0,0,0,0.7);
+      }
+      .phone::before {
+        content: '';
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 30%; height: 5%;
+        background: #000;
+        border-radius: 0 0 18px 18px;
+        z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 10% 6% 6%;
+        display: flex; flex-direction: column;
+        background:
+          radial-gradient(ellipse 70% 55% at 50% 42%, rgba(16,185,129,0.14) 0%, rgba(16,185,129,0.03) 50%, rgba(243,238,229,0) 75%),
+          linear-gradient(180deg, #F6F1E8 0%, #EFE9DD 100%);
+      }
+      .content {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+      }
+      .icon-wrap {
+        width: 40%; aspect-ratio: 1;
+        border-radius: 22%;
+        overflow: hidden;
+        box-shadow: 0 12px 28px -10px rgba(5,150,105,0.35);
+      }
+      .icon-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .hey {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 800;
+        font-size: 3.5vw;
+        letter-spacing: -2px;
+        color: #111;
+        margin-top: 10%;
+      }
+      .begin {
+        background: #059669; color: #fff;
+        padding: 14px 20px;
+        border-radius: 14px;
+        font-weight: 600; font-size: 1vw;
+        text-align: center;
+      }
+      .caption {
+        color: #777; font-size: 12px;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .note {
+        background: #2a2a2a; border-radius: 12px;
+        padding: 20px; color: #ccc;
+        font-size: 14px; line-height: 1.55;
+        margin-top: 24px;
+      }
+      .note b { color: #fff; }
+    </style>
+  </head>
+  <body>
+
+    <div class="section">
+      <h2>C-v3 — chain order decision</h2>
+      <div class="gallery">
+        <div class="tile winner">
+          <img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg" alt="C v3 gold-top"/>
+          <div class="label">C-v3 — Gold top</div>
+          <span class="badge">ORIGINAL</span>
+          <div class="desc">Copper bottom (foundation) → iron → gold top (peak). Reads as "growing up to gold" spatially. Copper is dominant in foreground.</div>
+        </div>
+        <div class="tile">
+          <img src="../../.context/generated-icons/chainday-icon-concept-c-v3-flipped.jpg" alt="C v3 gold-bottom"/>
+          <div class="label">C-v3 — Gold bottom</div>
+          <span class="badge" style="background:#B87333">FLIPPED</span>
+          <div class="desc">Copper top (small start) → iron → gold bottom (dominant, large). Reads top-to-bottom as "copper → iron → gold" progression. Gold is the visual anchor.</div>
+        </div>
+        <div class="tile">
+          <img src="../../.context/generated-icons/chainday-icon-concept-c-v2.jpg" alt="C v2"/>
+          <div class="label">C-v2 (backup)</div>
+          <div class="desc">Vertical stacked version. Good App Store icon candidate — scales well at small sizes.</div>
+        </div>
+        <div class="tile">
+          <img src="../../.context/generated-icons/chainday-icon-concept-c-v4.jpg" alt="C v4"/>
+          <div class="label">C-v4 (backup)</div>
+          <div class="desc">Flat 2D version. Alternative if 3D rendering feels too skeuomorphic.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>On the Welcome screen</h2>
+      <div class="phones" style="grid-template-columns: repeat(2, 1fr); max-width: 800px; margin-left: auto; margin-right: auto;">
+        <div>
+          <div class="phone" style="box-shadow: 0 0 0 2px #10b981, 0 20px 50px -12px rgba(0,0,0,0.7);">
+            <div class="screen">
+              <div class="content">
+                <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg" alt="C v3"/></div>
+                <div class="hey">Hey.</div>
+              </div>
+              <div class="begin">Begin</div>
+            </div>
+          </div>
+          <div class="caption">C-v3 — Gold top</div>
+        </div>
+        <div>
+          <div class="phone" style="box-shadow: 0 0 0 2px #B87333, 0 20px 50px -12px rgba(0,0,0,0.7);">
+            <div class="screen">
+              <div class="content">
+                <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3-flipped.jpg" alt="C v3 flipped"/></div>
+                <div class="hey">Hey.</div>
+              </div>
+              <div class="begin">Begin</div>
+            </div>
+          </div>
+          <div class="caption">C-v3 — Gold bottom</div>
+        </div>
+      </div>
+
+      <div class="note">
+        <b>My honest read:</b> <b>C-v2</b> is the strongest. It fixes the split-link defect from the original C (which was the actual problem — not a style issue), keeps the vertical "growth" composition you liked, and the metallic premium feel actually works as "forged chain" — consistent with the copper → iron → gold tier materials throughout your app. C-v3 is gorgeous but the diagonal feels restless for a welcome moment. C-v4 is flatter/cleaner but feels less distinctive — you've seen a dozen flat icons like this.
+        <br><br>
+        <b>What's still left to decide:</b> (1) Which variation to commit to. (2) Whether the chain order should read gold-top → copper-bottom (current) or flip it so copper is at top and you "grow up to gold" (more intuitive growth metaphor for Western reading). I can regenerate flipped if that's what you want.
+      </div>
+    </div>
+
+  </body>
+</html>

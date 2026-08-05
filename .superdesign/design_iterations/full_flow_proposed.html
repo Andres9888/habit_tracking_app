@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay — proposed full flow for max conversion + retention</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.6; }
+      .lede code { color: #B87333; }
+
+      h2 {
+        font-size: 18px; font-weight: 800; color: #eee;
+        max-width: 1400px; margin: 36px auto 14px;
+        padding-bottom: 8px; border-bottom: 1px solid #333;
+      }
+
+      /* ============ Summary table ============ */
+      .summary {
+        max-width: 1400px; margin: 0 auto 24px;
+        background: #252525; border-radius: 14px;
+        overflow: hidden;
+      }
+      table { width: 100%; border-collapse: collapse; font-size: 12px; }
+      thead { background: #1f1f1f; }
+      th {
+        text-align: left; padding: 12px 14px;
+        color: #aaa; font-weight: 800;
+        font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+        border-bottom: 1px solid #333;
+      }
+      td {
+        padding: 11px 14px; color: #ddd;
+        border-bottom: 1px solid #2c2c2c;
+        vertical-align: top; line-height: 1.5;
+      }
+      tr:last-child td { border-bottom: none; }
+      td.num { font-family: 'JetBrains Mono', monospace; color: #888; font-weight: 700; width: 38px; }
+      td.name { font-weight: 800; color: #fff; white-space: nowrap; }
+      td.purpose { color: #ccc; }
+      .pill {
+        display: inline-block; padding: 2px 8px; border-radius: 999px;
+        font-size: 10px; font-weight: 800; letter-spacing: 0.4px;
+      }
+      .pill.current { background: rgba(140,140,140,0.18); color: #aaa; }
+      .pill.new { background: rgba(184, 115, 51, 0.22); color: #D49860; }
+      .pill.moved { background: rgba(96, 165, 250, 0.18); color: #93C5FD; }
+      .pill.gap { background: rgba(220, 38, 38, 0.18); color: #FCA5A5; }
+      .pill.win { background: rgba(16, 185, 129, 0.18); color: #6EE7B7; }
+      .impact { font-size: 11px; line-height: 1.45; }
+      .impact .conv { color: #D49860; display: block; margin-bottom: 2px; }
+      .impact .ret { color: #6EE7B7; display: block; }
+
+      /* ============ Visual flow ============ */
+      .flow {
+        max-width: 1400px; margin: 0 auto 24px;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+      @media (max-width: 1100px) { .flow { grid-template-columns: repeat(4, 1fr); } }
+      @media (max-width: 700px) { .flow { grid-template-columns: repeat(3, 1fr); } }
+      .step-tile {
+        background: #252525; border-radius: 10px; padding: 10px;
+        position: relative; min-height: 110px;
+        display: flex; flex-direction: column; gap: 4px;
+      }
+      .step-tile.act-onboarding { border-left: 3px solid #B87333; }
+      .step-tile.act-activation { border-left: 3px solid #16A34A; }
+      .step-tile.act-conversion { border-left: 3px solid #D4A017; }
+      .step-tile.act-app { border-left: 3px solid #6B7280; }
+      .step-tile .step-num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px; color: #888; font-weight: 700;
+      }
+      .step-tile .step-name {
+        font-size: 13px; font-weight: 800; color: #fff;
+        line-height: 1.15;
+      }
+      .step-tile .step-headline {
+        font-size: 11px; color: #aaa;
+        font-style: italic;
+        line-height: 1.3;
+        flex: 1;
+      }
+      .step-tile .step-pill {
+        align-self: flex-start;
+        font-size: 9px; padding: 1px 6px;
+      }
+      .act-divider {
+        grid-column: 1 / -1;
+        font-size: 10px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #aaa;
+        margin-top: 12px; margin-bottom: 4px;
+        display: flex; align-items: center; gap: 10px;
+      }
+      .act-divider .badge {
+        display: inline-block; padding: 3px 10px; border-radius: 999px;
+        font-size: 10px;
+      }
+      .act-divider .badge.onboarding { background: rgba(184,115,51,0.18); color: #D49860; border: 1px solid rgba(184,115,51,0.4); }
+      .act-divider .badge.activation { background: rgba(22,163,74,0.18); color: #6EE7B7; border: 1px solid rgba(22,163,74,0.4); }
+      .act-divider .badge.conversion { background: rgba(212,160,23,0.18); color: #FACC15; border: 1px solid rgba(212,160,23,0.4); }
+      .act-divider .badge.app { background: rgba(107,114,128,0.18); color: #d1d5db; border: 1px solid rgba(107,114,128,0.4); }
+      .act-divider .desc { color: #888; font-size: 11px; font-weight: 500; letter-spacing: 0.4px; text-transform: none; }
+
+      /* ============ New-screen detail phones ============ */
+      .new-screens {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      @media (max-width: 1100px) { .new-screens { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 700px) { .new-screens { grid-template-columns: 1fr; } }
+      .new-card {
+        background: #252525; border-radius: 18px; padding: 12px;
+      }
+      .new-card h3 {
+        font-size: 11px; font-weight: 800; letter-spacing: 1px;
+        text-transform: uppercase; color: #D49860; margin-bottom: 4px;
+      }
+      .new-card .why {
+        font-size: 11px; color: #aaa; line-height: 1.5;
+        margin-bottom: 10px;
+      }
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 24px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 30%; height: 4%;
+        background: #000; border-radius: 0 0 14px 14px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+      .h-mid { font-weight: 800; font-size: 4.4vw; line-height: 1.1; letter-spacing: -0.8px; color: #111; }
+      .sub { font-size: 1.4vw; color: #555; line-height: 1.4; margin-top: 1.2vw; }
+      .copper { color: #B87333; }
+      .green { color: #059669; }
+      .cta-bottomright {
+        margin-top: auto;
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text { font-size: 1.4vw; color: #555; font-weight: 600; }
+      .cta-bottomright .arrow { font-size: 1.8vw; color: #B87333; font-weight: 700; }
+      .cta-primary {
+        background: #059669; color: #fff;
+        padding: 3vw 4vw; border-radius: 10px;
+        font-weight: 800; font-size: 1.7vw;
+        text-align: center; margin-top: auto;
+      }
+
+      /* check-in */
+      .checkin-card {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        padding: 3vw 3vw; margin-top: 3vw;
+        text-align: center;
+      }
+      .checkin-icon {
+        width: 14vw; height: 14vw; border-radius: 50%;
+        background: #ECFDF5; border: 2px solid #10B981;
+        margin: 0 auto;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 6vw;
+      }
+      .checkin-name { font-size: 2vw; font-weight: 800; color: #111; margin-top: 1.4vw; }
+      .checkin-meta { font-size: 1.2vw; color: #777; margin-top: 0.4vw; }
+      .checkin-tap { font-size: 1.3vw; color: #999; margin-top: 1vw; }
+
+      /* celebration */
+      .celebrate-chain {
+        margin: 4vw 0 2vw; text-align: center;
+        font-size: 6vw;
+      }
+      .celebrate-chain .link {
+        display: inline-block; margin: 0 0.4vw;
+      }
+      .celebrate-chain .link.first {
+        color: #B87333;
+      }
+      .celebrate-msg {
+        font-size: 1.6vw; color: #555;
+        text-align: center; line-height: 1.5;
+        margin-top: 1.4vw;
+      }
+      .celebrate-msg b { color: #B87333; }
+
+      /* notification */
+      .notif-mock {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 2.6vw 3vw;
+        margin: 3vw 0; box-shadow: 0 4px 12px -4px rgba(0,0,0,0.12);
+      }
+      .notif-row {
+        display: flex; align-items: flex-start; gap: 2vw;
+      }
+      .notif-icon {
+        width: 5vw; height: 5vw; border-radius: 1vw;
+        background: linear-gradient(180deg, #10B981, #059669);
+        flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2vw;
+      }
+      .notif-body .notif-app { font-size: 1.1vw; color: #777; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; }
+      .notif-body .notif-title { font-size: 1.5vw; color: #111; font-weight: 800; margin-top: 0.4vw; }
+      .notif-body .notif-text { font-size: 1.3vw; color: #555; margin-top: 0.4vw; line-height: 1.4; }
+
+      /* paywall */
+      .paywall-feature {
+        display: flex; gap: 2vw; align-items: center;
+        padding: 1.6vw 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      .paywall-feature:last-child { border-bottom: none; }
+      .paywall-feature .check {
+        width: 3vw; height: 3vw; border-radius: 50%;
+        background: #ECFDF5;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0; font-size: 1.6vw; color: #059669;
+      }
+      .paywall-feature .ftext { font-size: 1.4vw; color: #ddd; line-height: 1.3; }
+      .paywall-price {
+        font-size: 4vw; font-weight: 800;
+        text-align: center; color: #fff;
+        margin-top: 2vw;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .paywall-price .small { font-size: 1.6vw; color: #aaa; font-weight: 600; }
+
+      /* Recommendation block */
+      .recos {
+        max-width: 1400px; margin: 0 auto;
+        padding: 18px 22px;
+        background: #252525; border-radius: 14px;
+        font-size: 12px; color: #ccc; line-height: 1.7;
+      }
+      .recos b { color: #B87333; }
+      .recos h3 { color: #fff; font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+      .recos h3:not(:first-child) { margin-top: 14px; }
+      .recos ul { padding-left: 22px; }
+      .recos li { margin: 4px 0; }
+    </style>
+  </head>
+  <body>
+    <h1>ChainDay — proposed full flow for max conversion + retention</h1>
+    <p class="lede">
+      Reference doc. Current onboarding-v2 has <code>7</code> onboarding screens followed by paywall + app.
+      Proposed flow adds <code>4</code> high-impact activation screens that were deleted from earlier
+      onboarding versions, and re-orders auth + paywall to convert at the emotional peak.
+      Color-coded by act: <span class="pill new">Onboarding</span> <span class="pill win">Activation</span>
+      <span class="pill" style="background: rgba(212,160,23,0.18); color: #FACC15;">Conversion</span>
+      <span class="pill" style="background: rgba(107,114,128,0.18); color: #d1d5db;">App</span>
+    </p>
+
+    <h2>1. All screens in proposed sequence</h2>
+    <div class="summary">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Screen</th>
+            <th>Purpose</th>
+            <th>Status</th>
+            <th>Conversion / retention impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="num">1</td>
+            <td class="name">welcome</td>
+            <td class="purpose">"Hey" — set tone, low-friction entry</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="ret">↑ Trust signal — sets non-aggressive tone</span></td>
+          </tr>
+          <tr>
+            <td class="num">2</td>
+            <td class="name">problem</td>
+            <td class="purpose">Diagnose pain (you're building habits blind)</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="conv">↑ Emotional stakes</span><span class="ret">↑ Sets up payoff for screens 3–6</span></td>
+          </tr>
+          <tr>
+            <td class="num">3</td>
+            <td class="name">solutionIntro</td>
+            <td class="purpose">Promise the map — Copper / Iron / Gold</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="conv">↑ Pivot to relief</span><span class="ret">↑ Seeds 3 retention features</span></td>
+          </tr>
+          <tr>
+            <td class="num">4</td>
+            <td class="name">strengthHolds</td>
+            <td class="purpose">Strength holds (no zero reset)</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="conv">↑ Addresses #1 quit anxiety</span><span class="ret">↑↑ Retention killer prevention</span></td>
+          </tr>
+          <tr>
+            <td class="num">5</td>
+            <td class="name">watchTransform</td>
+            <td class="purpose">Tier transformation visual reward</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="ret">↑ Future-pull / dopamine setup</span></td>
+          </tr>
+          <tr>
+            <td class="num">6</td>
+            <td class="name">onePeak</td>
+            <td class="purpose">Per-habit calibration, always-a-next-peak</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="ret">↑ Anti-burnout / anti-plateau</span></td>
+          </tr>
+          <tr>
+            <td class="num">7</td>
+            <td class="name">pickFirstRoute<sup style="color:#FCA5A5">⚠</sup></td>
+            <td class="purpose">Commit + actually create the habit (currently doesn't!)</td>
+            <td><span class="pill gap">FIX NEEDED</span></td>
+            <td class="impact"><span class="conv">↑ Conversion to commit</span><span class="ret">↑↑↑ Lands in app with habit pre-created (eliminates empty state regression)</span></td>
+          </tr>
+          <tr>
+            <td class="num">8</td>
+            <td class="name">firstCheckIn</td>
+            <td class="purpose">User taps "Check in" → first chain link forged</td>
+            <td><span class="pill new">RE-ADD</span></td>
+            <td class="impact"><span class="conv">↑ Sunk cost commitment</span><span class="ret">↑↑↑ Immediate dopamine; user has done the action once before paywall</span></td>
+          </tr>
+          <tr>
+            <td class="num">9</td>
+            <td class="name">notificationPriming</td>
+            <td class="purpose">Ask for push permission, framed around streak protection</td>
+            <td><span class="pill new">RE-ADD</span></td>
+            <td class="impact"><span class="ret">↑↑↑ Single biggest retention factor — push enabled = 40–60% better day-30 retention</span></td>
+          </tr>
+          <tr>
+            <td class="num">10</td>
+            <td class="name">celebration</td>
+            <td class="purpose">"You earned link 1." Visual chain link 1 ignited</td>
+            <td><span class="pill new">RE-ADD</span></td>
+            <td class="impact"><span class="conv">↑ Emotional peak before paywall</span><span class="ret">↑↑ First win cemented in memory</span></td>
+          </tr>
+          <tr>
+            <td class="num">11</td>
+            <td class="name">auth (sign-in / sign-up)</td>
+            <td class="purpose">"Save your progress" — auth at the moment of caring</td>
+            <td><span class="pill moved">MOVED</span></td>
+            <td class="impact"><span class="conv">↑↑↑ Auth-after-value converts 2–3x better than auth-first</span></td>
+          </tr>
+          <tr>
+            <td class="num">12</td>
+            <td class="name">paywall</td>
+            <td class="purpose">Premium offer at emotional peak</td>
+            <td><span class="pill moved">MOVED</span></td>
+            <td class="impact"><span class="conv">↑↑ Best moment for paywall is right after a win</span></td>
+          </tr>
+          <tr>
+            <td class="num">13</td>
+            <td class="name">HabitsApp</td>
+            <td class="purpose">Main app — chain has 1 link, habit ready</td>
+            <td><span class="pill current">CURRENT</span></td>
+            <td class="impact"><span class="ret">↑↑ User lands with progress, not empty state</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>2. Visual flow (color-coded by act)</h2>
+    <div class="flow">
+      <div class="act-divider">
+        <span class="badge onboarding">Onboarding</span>
+        <span class="desc">Tell the story · 7 screens · No commit yet</span>
+      </div>
+      <div class="step-tile act-onboarding"><div class="step-num">1</div><div class="step-name">welcome</div><div class="step-headline">"Hey"</div><span class="pill current step-pill">CURRENT</span></div>
+      <div class="step-tile act-onboarding"><div class="step-num">2</div><div class="step-name">problem</div><div class="step-headline">"You're building habits blind."</div><span class="pill current step-pill">CURRENT</span></div>
+      <div class="step-tile act-onboarding"><div class="step-num">3</div><div class="step-name">solutionIntro</div><div class="step-headline">"Now you can see."</div><span class="pill current step-pill">CURRENT</span></div>
+      <div class="step-tile act-onboarding"><div class="step-num">4</div><div class="step-name">strengthHolds</div><div class="step-headline">"You won't end up back at zero."</div><span class="pill current step-pill">CURRENT</span></div>
+      <div class="step-tile act-onboarding"><div class="step-num">5</div><div class="step-name">watchTransform</div><div class="step-headline">"You'll watch it transform."</div><span class="pill current step-pill">CURRENT</span></div>
+      <div class="step-tile act-onboarding"><div class="step-num">6</div><div class="step-name">onePeak</div><div class="step-headline">"Always one peak to chase."</div><span class="pill current step-pill">CURRENT</span></div>
+      <div class="step-tile act-onboarding"><div class="step-num">7</div><div class="step-name">pickFirstRoute</div><div class="step-headline">"Pick your first route." (creates habit)</div><span class="pill gap step-pill">FIX</span></div>
+
+      <div class="act-divider">
+        <span class="badge activation">Activation</span>
+        <span class="desc">Make them DO something · Forge link 1 · 3 screens</span>
+      </div>
+      <div class="step-tile act-activation"><div class="step-num">8</div><div class="step-name">firstCheckIn</div><div class="step-headline">"Tap to forge your first link"</div><span class="pill new step-pill">RE-ADD</span></div>
+      <div class="step-tile act-activation"><div class="step-num">9</div><div class="step-name">notificationPriming</div><div class="step-headline">"Don't let life break your chain"</div><span class="pill new step-pill">RE-ADD</span></div>
+      <div class="step-tile act-activation"><div class="step-num">10</div><div class="step-name">celebration</div><div class="step-headline">"You earned link 1." 🎉</div><span class="pill new step-pill">RE-ADD</span></div>
+
+      <div class="act-divider">
+        <span class="badge conversion">Conversion</span>
+        <span class="desc">Capture + monetize at peak · 2 screens</span>
+      </div>
+      <div class="step-tile act-conversion"><div class="step-num">11</div><div class="step-name">auth</div><div class="step-headline">"Save your progress" — sign in / up</div><span class="pill moved step-pill">MOVED</span></div>
+      <div class="step-tile act-conversion"><div class="step-num">12</div><div class="step-name">paywall</div><div class="step-headline">Premium offer (post-emotional peak)</div><span class="pill moved step-pill">MOVED</span></div>
+
+      <div class="act-divider">
+        <span class="badge app">App</span>
+        <span class="desc">User lives here · Chain link 1 already forged</span>
+      </div>
+      <div class="step-tile act-app"><div class="step-num">13</div><div class="step-name">HabitsApp</div><div class="step-headline">Today's check-in waiting · chain at 1</div><span class="pill current step-pill">CURRENT</span></div>
+    </div>
+
+    <h2>3. New screens — quick visual sketches</h2>
+    <div class="new-screens">
+      <!-- Screen 8 — first check-in -->
+      <div class="new-card">
+        <h3>8 · firstCheckIn</h3>
+        <div class="why">User taps a literal check-in for their habit. The action makes the commitment real. No words can replace this.</div>
+        <div class="phone">
+          <div class="screen">
+            <div style="text-align: center; font-size: 1.2vw; color: #888; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Day 1 · Copper</div>
+            <div class="h-mid" style="text-align: center; margin-top: 4vw;">Forge your<br/>first <span class="copper">link.</span></div>
+            <div class="checkin-card">
+              <div class="checkin-icon">🚶</div>
+              <div class="checkin-name">10-minute walk</div>
+              <div class="checkin-meta">Today · ~10 min</div>
+            </div>
+            <div class="checkin-tap" style="text-align: center; margin-top: 3vw;">Tap when done →</div>
+            <div class="cta-primary" style="margin-top: 4vw;">✓ I did it</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 9 — notification priming -->
+      <div class="new-card">
+        <h3>9 · notificationPriming</h3>
+        <div class="why">Ask AFTER the user has invested. Frame around streak protection. Single biggest retention factor for habit apps.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-mid" style="text-align: center; margin-top: 4vw;">Don't let life<br/>break your <span class="copper">chain.</span></div>
+            <div class="sub" style="text-align: center; margin-top: 1.4vw;">A gentle nudge at the right time keeps your strength growing.</div>
+            <div class="notif-mock">
+              <div class="notif-row">
+                <div class="notif-icon">⛓</div>
+                <div class="notif-body">
+                  <div class="notif-app">ChainDay · now</div>
+                  <div class="notif-title">2 minutes for your walk?</div>
+                  <div class="notif-text">Day 4 of 21 · Copper tier</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-primary">Allow notifications</div>
+            <div style="text-align: center; margin-top: 1.4vw; font-size: 1.3vw; color: #777; font-weight: 600;">Maybe later</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 10 — celebration -->
+      <div class="new-card">
+        <h3>10 · celebration</h3>
+        <div class="why">First chain link visualized + lit up. Emotional peak before paywall hits next.</div>
+        <div class="phone">
+          <div class="screen">
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div style="font-size: 1.4vw; color: #B87333; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">Link 1 · Copper</div>
+              <div class="celebrate-chain">
+                <span class="link first">⛓</span>
+              </div>
+              <div class="h-mid" style="text-align: center;">You did it.</div>
+              <div class="celebrate-msg">Your chain just <b>started.</b><br/>20 more days to Iron.</div>
+            </div>
+            <div class="cta-primary">Continue</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 11 — auth (moved) -->
+      <div class="new-card">
+        <h3>11 · auth (moved)</h3>
+        <div class="why">Sign in / up at the moment they care — to save what they've already built. Auth-after-value converts 2–3x.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-mid" style="text-align: center; margin-top: 6vw;">Save your<br/><span class="copper">progress.</span></div>
+            <div class="sub" style="text-align: center; margin-top: 1.4vw;">Don't lose your link. Sign in to keep your chain growing across devices.</div>
+            <div style="margin-top: 6vw; display: flex; flex-direction: column; gap: 2vw;">
+              <div style="background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 2.4vw; text-align: center; font-size: 1.6vw; font-weight: 700;">Continue with Apple</div>
+              <div style="background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 2.4vw; text-align: center; font-size: 1.6vw; font-weight: 700;">Continue with Google</div>
+              <div style="background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 2.4vw; text-align: center; font-size: 1.6vw; font-weight: 700;">Email</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">skip for now</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 36px;">4. Recommendations to lock in max conversion + retention</h2>
+    <div class="recos">
+      <h3>Critical fixes (highest impact)</h3>
+      <ul>
+        <li><b>Wire pickFirstRoute (#7) to actually create the habit.</b> Currently the user emotionally commits but no Convex write happens — they land in empty state and have to repeat the action. This single fix is probably the highest-ROI item in the whole flow.</li>
+        <li><b>Re-add notificationPriming (#9).</b> Push notifications enabled vs disabled is the single largest retention gap in habit apps. Day-30 retention typically swings 40–60% on this alone.</li>
+        <li><b>Re-add firstCheckIn (#8) + celebration (#10).</b> Activation moments. The user does the action once before paywall hits — sunk cost + dopamine create the conditions for higher conversion.</li>
+      </ul>
+
+      <h3>Structural moves (high impact)</h3>
+      <ul>
+        <li><b>Move auth (#11) from BEFORE onboarding to AFTER activation.</b> Auth-first walls drop 50–80% of organic visitors. Let users see value, do the action, earn link 1 — then ask for sign-in to "save your progress." Conversion rate on auth typically rises 2–3x in this position.</li>
+        <li><b>Move paywall (#12) from immediate-post-onboarding to post-celebration.</b> Best moment for a paywall is at the emotional peak after a win, not before any commitment.</li>
+      </ul>
+
+      <h3>Optional but worth considering</h3>
+      <ul>
+        <li><b>Add social proof somewhere in the flow.</b> "X habits forged today" or a single testimonial. Best placements: between solutionIntro (#3) and strengthHolds (#4), or on the celebration screen (#10).</li>
+        <li><b>Capture name + goal somewhere.</b> Currently <code>OnboardingAnswers.name</code> and <code>goal</code> are dead fields. Could thread name into screen 4 ("Andres, you won't end up back at zero") for personalization.</li>
+        <li><b>Adopt copper accent on Hook act.</b> See <code>copper_accent_pattern.html</code> mock — minor but real visual cohesion improvement.</li>
+      </ul>
+
+      <h3>Honest tradeoff to discuss</h3>
+      <ul>
+        <li>Going from 7 → 13 screens is a +85% length increase. That's the right move ONLY if (a) the new screens are conversion- + retention-positive (they are, based on the impact ratings), and (b) abandonment doesn't spike in the new screens. Realistic data: in well-designed activation flows, longer onboarding with action moments OUTPERFORMS shorter onboarding without them. Headspace, Calm, Duolingo all use this pattern.</li>
+      </ul>
+    </div>
+  </body>
+</html>

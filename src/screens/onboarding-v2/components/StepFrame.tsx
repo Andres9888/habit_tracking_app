@@ -59,7 +59,16 @@ export function StepFrame({
           <ProgressBar current={currentStep} total={totalSteps} />
         </>
       )}
-      <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 24 }}>{children}</View>
+      <View
+        style={{
+          flex: 1,
+          paddingBottom: insets.bottom + 8,
+          paddingHorizontal: 24,
+          paddingTop: 24,
+        }}
+      >
+        {children}
+      </View>
       {footer ? (
         <View style={{ paddingBottom: insets.bottom + 12, paddingHorizontal: 24, paddingTop: 12 }}>
           {footer}

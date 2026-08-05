@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>First Check-In + Celebration — All Variations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+      h2 {
+        font-size: 13px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #10b981;
+        margin: 32px 0 4px;
+      }
+      .sub-line { color: #999; font-size: 13px; margin-bottom: 18px; }
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1400px;
+        margin: 0 auto 30px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+      .card {
+        background: #252525;
+        border-radius: 18px;
+        padding: 14px;
+      }
+      .card.winner { box-shadow: 0 0 0 2px #10b981; }
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 32px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 14px 32px -12px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: '';
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 28%; height: 4.5%;
+        background: #000;
+        border-radius: 0 0 18px 18px;
+        z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 9px; color: #888;
+        gap: 6px;
+        margin-bottom: 6%;
+      }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+      }
+      .topbar .progress::after {
+        content: ''; display: block; height: 100%;
+        background: #059669;
+      }
+      .body { flex: 1; display: flex; flex-direction: column; }
+
+      .h-mid {
+        font-weight: 800;
+        font-size: 4.4vw;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        color: #111;
+      }
+      .h-big {
+        font-weight: 800;
+        font-size: 5.5vw;
+        line-height: 1.05;
+        letter-spacing: -1.5px;
+        color: #111;
+        text-align: center;
+      }
+      .sub { font-size: 1.4vw; color: #555; line-height: 1.45; }
+      .cta {
+        background: #059669; color: #fff;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-weight: 600; font-size: 1.1vw;
+        text-align: center;
+        margin-top: 10px;
+      }
+      .cta.disabled { background: #C8C4B8; }
+      .cta.brand-outline {
+        background: transparent;
+        border: 1.5px solid #059669;
+        color: #059669;
+      }
+
+      .label { color: #fff; font-weight: 600; margin-top: 12px; font-size: 13px; }
+      .desc { color: #999; font-size: 11.5px; margin-top: 4px; line-height: 1.4; }
+      .badge {
+        display: inline-block; background: #10b981; color: #fff;
+        font-size: 10px; padding: 2px 8px; border-radius: 10px;
+        font-weight: 600; letter-spacing: 0.5px; margin-left: 4px;
+      }
+
+      /* tags & accents */
+      .day-tag {
+        display: inline-block;
+        background: rgba(184, 115, 51, 0.15);
+        color: #8B5A2B;
+        font-size: 1vw; font-weight: 700;
+        letter-spacing: 1.5px; text-transform: uppercase;
+        padding: 4px 10px; border-radius: 10px;
+        margin-bottom: 4%;
+      }
+      .day-tag.green {
+        background: rgba(16,185,129,0.15);
+        color: #065F46;
+      }
+
+      /* habit cards */
+      .habit-card {
+        background: #FAF6EE;
+        border: 1px solid #E5E1D8;
+        border-radius: 12px;
+        padding: 11px;
+        margin-bottom: 6px;
+        display: flex; align-items: center; gap: 9px;
+      }
+      .habit-card.tapped {
+        background: #ECFDF5;
+        border-color: #10b981;
+      }
+      .habit-card.dim { opacity: 0.4; }
+      .habit-icon {
+        width: 32px; height: 32px;
+        border-radius: 11px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5vw;
+        flex-shrink: 0;
+      }
+      .habit-card.tapped .habit-icon {
+        background: #10b981; color: #fff;
+      }
+      .habit-name { font-weight: 600; font-size: 1.3vw; color: #111; }
+      .habit-meta { font-size: 0.95vw; color: #888; margin-top: 1px; }
+
+      /* copper cell */
+      .copper-cell {
+        width: 22%; aspect-ratio: 1;
+        border-radius: 22%;
+        background: linear-gradient(135deg, #B87333 0%, #D4A23F 100%);
+        box-shadow:
+          0 0 0 5px rgba(184, 115, 51, 0.15),
+          0 0 0 12px rgba(184, 115, 51, 0.08),
+          0 12px 26px -10px rgba(184, 115, 51, 0.5);
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 5%;
+      }
+      .copper-cell .check-big { font-size: 3.5vw; color: #fff; font-weight: 800; }
+
+      /* confetti */
+      .confetti {
+        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none;
+        background-image:
+          radial-gradient(circle at 15% 12%, #F2B84B 2px, transparent 3px),
+          radial-gradient(circle at 85% 18%, #B87333 2px, transparent 3px),
+          radial-gradient(circle at 25% 25%, #10b981 2px, transparent 3px),
+          radial-gradient(circle at 75% 35%, #F59E0B 2px, transparent 3px),
+          radial-gradient(circle at 10% 50%, #B87333 1.5px, transparent 2.5px),
+          radial-gradient(circle at 90% 55%, #10b981 1.5px, transparent 2.5px),
+          radial-gradient(circle at 50% 8%, #F2B84B 1.5px, transparent 2.5px),
+          radial-gradient(circle at 65% 88%, #B87333 1.5px, transparent 2.5px);
+      }
+
+      /* chain preview row */
+      .chain-row {
+        display: flex; gap: 3px;
+        align-items: center; justify-content: center;
+        margin: 5% 0;
+      }
+      .chain-cell {
+        width: 7%; aspect-ratio: 1;
+        border-radius: 24%;
+        background: rgba(184, 115, 51, 0.15);
+        border: 1.5px dashed #C8C4B8;
+      }
+      .chain-cell.filled {
+        background: linear-gradient(135deg, #B87333, #D4A23F);
+        border: 0;
+        box-shadow: 0 4px 8px -3px rgba(184, 115, 51, 0.5);
+      }
+
+      /* gradient bg for full-bleed celebration */
+      .full-bleed {
+        background:
+          radial-gradient(ellipse 80% 60% at 50% 38%, rgba(184, 115, 51, 0.25) 0%, rgba(244, 162, 63, 0.1) 35%, rgba(243, 238, 229, 0) 70%),
+          linear-gradient(180deg, #FCF7E8 0%, #F3EEE5 100%);
+      }
+
+      /* commit button on direction 14C */
+      .pulse-cta {
+        background: #059669; color: #fff;
+        padding: 14px;
+        border-radius: 14px;
+        font-weight: 700; font-size: 1.3vw;
+        text-align: center;
+        position: relative;
+      }
+      .pulse-cta::before {
+        content: ''; position: absolute;
+        inset: -4px;
+        border-radius: 16px;
+        border: 2px solid #10b981;
+        opacity: 0.3;
+      }
+
+      /* legend block */
+      .note {
+        max-width: 1400px; margin: 0 auto 24px;
+        background:#2a2a2a; border-radius:12px;
+        padding:16px; color:#ccc;
+        font-size:13px; line-height:1.55;
+      }
+      .note b { color:#fff; }
+    </style>
+  </head>
+  <body>
+
+    <h1>First Check-In + Celebration — all directions</h1>
+
+    <h2>STEP 14 — First Check-In · 3 directions</h2>
+    <div class="sub-line">Each direction is a different way to ask the user to "begin." Pick which fits the register.</div>
+
+    <div class="row">
+      <!-- 14A: Tap one -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>14 / 18</span><div class="progress" style="--progress: 78%"></div></div>
+            <div class="body">
+              <div>
+                <div class="day-tag">Day 1 starts now</div>
+                <div class="h-mid">Tap a habit<br/>to begin.</div>
+                <div class="sub" style="margin-top: 8px;">The chain starts the moment you tap.</div>
+                <div style="margin-top: 6%;">
+                  <div class="habit-card"><div class="habit-icon">🚶</div><div><div class="habit-name">10-minute walk</div><div class="habit-meta">Mornings</div></div></div>
+                  <div class="habit-card"><div class="habit-icon">🧘</div><div><div class="habit-name">Meditation</div><div class="habit-meta">Evenings</div></div></div>
+                  <div class="habit-card"><div class="habit-icon">📖</div><div><div class="habit-name">10 pages</div><div class="habit-meta">Evenings</div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">14A — Tap one (my pick) <span class="badge">RECOMMENDED</span></div>
+        <div class="desc">User taps any single habit to advance. Cards ARE the CTA. Lowest friction. Picks the one they'll do today.</div>
+      </div>
+
+      <!-- 14B: Tap all 3 -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>14 / 18</span><div class="progress" style="--progress: 78%"></div></div>
+            <div class="body">
+              <div>
+                <div class="day-tag green">Locked in · 1 of 3</div>
+                <div class="h-mid">Commit to<br/>each one.</div>
+                <div class="sub" style="margin-top: 8px;">Tap to commit. The chain begins when you've signed off on all three.</div>
+                <div style="margin-top: 6%;">
+                  <div class="habit-card tapped"><div class="habit-icon">✓</div><div><div class="habit-name">10-minute walk</div><div class="habit-meta">✓ Committed</div></div></div>
+                  <div class="habit-card"><div class="habit-icon">🧘</div><div><div class="habit-name">Meditation</div><div class="habit-meta">Evenings · Tap to commit</div></div></div>
+                  <div class="habit-card"><div class="habit-icon">📖</div><div><div class="habit-name">10 pages</div><div class="habit-meta">Evenings · Tap to commit</div></div></div>
+                </div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta disabled">Continue (1 of 3)</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">14B — Tap all 3 (deeper commitment)</div>
+        <div class="desc">User must tap ALL three before advancing. Cialdini "commitment device" — heavier emotional cost, but stickier. Risk: friction kills conversion.</div>
+      </div>
+
+      <!-- 14C: Single intent button (no per-habit) -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>14 / 18</span><div class="progress" style="--progress: 78%"></div></div>
+            <div class="body">
+              <div>
+                <div class="day-tag">Day 1</div>
+                <div class="h-mid">Are you ready,<br/>Andres?</div>
+                <div class="sub" style="margin-top: 8px;">Walks. Meditation. Reading. The chain begins the moment you say go.</div>
+                <div style="margin-top: 8%;">
+                  <div class="habit-card" style="background:#FAF6EE;border:0;"><div class="habit-icon" style="background:transparent;font-size:2vw;">🚶</div><div><div class="habit-name">10-minute walk</div></div></div>
+                  <div class="habit-card" style="background:#FAF6EE;border:0;"><div class="habit-icon" style="background:transparent;font-size:2vw;">🧘</div><div><div class="habit-name">Meditation</div></div></div>
+                  <div class="habit-card" style="background:#FAF6EE;border:0;"><div class="habit-icon" style="background:transparent;font-size:2vw;">📖</div><div><div class="habit-name">10 pages</div></div></div>
+                </div>
+              </div>
+              <div style="margin-top: auto;"><div class="pulse-cta">Begin Day 1</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">14C — Single intent button</div>
+        <div class="desc">No per-habit picker. Just "yes, I'm ready." Habits shown as a list, not interactive. Lowest decision load. Doesn't capture which habit they'll start with.</div>
+      </div>
+    </div>
+
+    <h2>STEP 15 — Celebration · 4 directions</h2>
+    <div class="sub-line">All 4 use confetti on entry + name in headline. Differ in visual ambition.</div>
+
+    <div class="row">
+      <!-- 15A: Minimal -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="confetti"></div>
+            <div class="body" style="position: relative; z-index: 2;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="copper-cell"><div class="check-big">✓</div></div>
+                <div class="day-tag">Day 1</div>
+                <div class="h-big">Andres,<br/>your chain<br/>has begun.</div>
+                <div class="sub" style="text-align: center; margin-top: 5%; max-width: 80%;">Come back tomorrow. That's all Day 2 takes.</div>
+              </div>
+              <div class="cta">Continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">15A — Minimal</div>
+        <div class="desc">Single copper Day-1 cell, name-led headline, simple sub. Most restrained. Honest-emotional default.</div>
+      </div>
+
+      <!-- 15B: With reassurance line -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="confetti"></div>
+            <div class="body" style="position: relative; z-index: 2;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="copper-cell"><div class="check-big">✓</div></div>
+                <div class="day-tag">Day 1</div>
+                <div class="h-big" style="font-size: 5.2vw;">Andres,<br/>your chain has begun.</div>
+                <div class="sub" style="text-align: center; margin-top: 4%; max-width: 85%;">Come back tomorrow. That's all Day 2 takes.</div>
+                <div style="background: #FEF3C7; padding: 9px 14px; border-radius: 12px; margin-top: 5%; font-size: 1.15vw; color: #8B5A2B; text-align: center;">
+                  ⛓️ The chain holds for the messy ones.
+                </div>
+              </div>
+              <div class="cta">Continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">15B — With reassurance callout</div>
+        <div class="desc">15A + a copper-toned reassurance line under the headline. Reinforces the differentiation at the peak.</div>
+      </div>
+
+      <!-- 15C: Chain preview -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="confetti"></div>
+            <div class="body" style="position: relative; z-index: 2;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="day-tag">Day 1</div>
+                <div class="h-big" style="font-size: 5.2vw; margin-top: 2%;">Andres,<br/>your chain<br/>has begun.</div>
+                <div class="chain-row">
+                  <div class="chain-cell filled"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                </div>
+                <div class="sub" style="text-align: center; margin-top: 1%; max-width: 80%;">One link forged. Six until copper holds for good.</div>
+              </div>
+              <div class="cta">Continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">15C — Chain preview <span class="badge">MY PICK</span></div>
+        <div class="desc">Replaces the single Day-1 cell with a 7-cell chain preview — first cell filled copper, rest empty/dashed. Shows what tomorrow looks like. Forward-looking, less retrospective. The "one filled / six empty" narrative.</div>
+      </div>
+
+      <!-- 15D: Full-bleed gradient -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen full-bleed">
+            <div class="confetti"></div>
+            <div class="body" style="position: relative; z-index: 2;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="copper-cell" style="width: 28%;"><div class="check-big" style="font-size: 4.2vw;">✓</div></div>
+                <div class="h-big" style="font-size: 6vw;">Day 1.</div>
+                <div class="h-big" style="font-size: 4.2vw; color: #8B5A2B; margin-top: 2%;">Andres, you started.</div>
+              </div>
+              <div class="cta">Continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">15D — Full-bleed gradient</div>
+        <div class="desc">Warm copper-tinted background gradient. Bigger copper cell. Two-line headline: "Day 1. Andres, you started." Most ambient/cinematic. Risk: warmer/glowier might break the restrained register.</div>
+      </div>
+
+      <!-- 15E: Year preview -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body" style="position: relative; z-index: 2;">
+              <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div class="day-tag">Day 1</div>
+                <div class="h-big" style="font-size: 5vw;">Andres,<br/>this is<br/>your start.</div>
+                <div style="display:grid; grid-template-columns: repeat(13, 1fr); gap: 1px; max-width: 75%; margin-top: 5%;">
+                  <div style="aspect-ratio:1; background:linear-gradient(135deg,#B87333,#D4A23F); border-radius:2px;"></div>
+                  <!-- 12 more empty cells in row 1, then more rows -->
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                  <div style="aspect-ratio:1; background:#E5E1D8; border-radius:2px;"></div>
+                </div>
+                <div class="sub" style="text-align: center; margin-top: 4%; max-width: 80%;">Day 1 of however far you take it. Copper today. Gold someday.</div>
+              </div>
+              <div class="cta">Continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">15E — Year preview</div>
+        <div class="desc">A full-year row of cells (only Day 1 filled copper). Aspirational scale. Big visual gesture but might feel like overpromising.</div>
+      </div>
+
+      <div></div>
+    </div>
+
+    <div class="note">
+      <b>How to read these:</b>
+      <br><br>
+      <b>Step 14 (Check-in):</b> the question is "what does the user actually do here?" 14A (tap one) is lowest friction and most realistic — they pick the habit they'll start with. 14B (tap all 3) is more committed but adds friction; works if you want a Cialdini-style commitment device. 14C (single intent button) is the most ceremonial — no per-habit picker, just "I'm ready."
+      <br><br>
+      <b>Step 15 (Celebration):</b> 15A is the most restrained. 15B adds a value-prop reinforcement. 15C (my pick) replaces the single cell with a 7-cell chain preview that shows what's coming next — forward-looking, narrative. 15D pushes warmth/cinematic. 15E goes wide on aspiration with a year-grid.
+      <br><br>
+      <b>My recommendation:</b> 14A + 15C. The check-in is honest and frictionless; the celebration shows the user what they're building (one link of seven for the copper tier), which makes the moment forward-looking rather than just retrospective.
+    </div>
+
+  </body>
+</html>

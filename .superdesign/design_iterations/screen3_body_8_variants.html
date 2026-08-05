@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen 3 — 8 body variants</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.6; }
+      .lede code { color: #B87333; }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 16px;
+        max-width: 1400px;
+        margin: 0 auto 32px;
+      }
+      .card { background: #252525; border-radius: 16px; padding: 12px; }
+      .card h3 {
+        font-size: 13px; font-weight: 800; color: #fff;
+        margin-bottom: 4px; line-height: 1.3;
+      }
+      .card .lever {
+        font-size: 9px; font-weight: 800; color: #F59E0B;
+        text-transform: uppercase; letter-spacing: 0.6px;
+        margin-bottom: 8px;
+      }
+      .card p.note {
+        font-size: 11px; color: #aaa;
+        margin-bottom: 10px; line-height: 1.45;
+        min-height: 50px;
+      }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 22px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 8px 18px -8px rgba(0,0,0,0.5);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 14px 14px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+
+      .h-big {
+        font-weight: 800; font-size: 6.4vw; line-height: 1.05;
+        letter-spacing: -1.6px; color: #111;
+        text-align: center; margin-top: 4vw;
+      }
+      .copper { color: #B87333; }
+      .em { color: #B87333; font-weight: 800; }
+
+      /* Map */
+      .map-preview {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        height: 13vw; margin: 3vw 0 2vw;
+        position: relative; overflow: hidden;
+      }
+      .map-preview::before {
+        content: '';
+        position: absolute; left: 8%; right: 8%; top: 50%;
+        height: 3px; transform: translateY(-50%);
+        background: repeating-linear-gradient(90deg, #B87333, #B87333 6px, transparent 6px, transparent 12px);
+      }
+      .map-preview .pin {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 2.6vw; height: 2.6vw; border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .map-preview .pin.copper { left: 22%; background: #B87333; }
+      .map-preview .pin.iron   { left: 52%; background: #6B7280; }
+      .map-preview .pin.gold   { left: 82%; background: #D4A017; }
+      .map-preview .pin-label {
+        position: absolute; top: calc(50% + 2.4vw);
+        font-size: 1vw; font-weight: 700;
+        transform: translateX(-50%); letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .map-preview .pin-label.copper { left: 22%; color: #B87333; }
+      .map-preview .pin-label.iron   { left: 52%; color: #6B7280; }
+      .map-preview .pin-label.gold   { left: 82%; color: #D4A017; }
+      .map-preview.annotated { height: 22vw; }
+      .map-preview.annotated .pin-label { top: calc(50% + 2.8vw); font-size: 1.15vw; }
+      .map-preview.annotated .ann {
+        position: absolute; font-size: 1vw; color: #555;
+        font-weight: 600; line-height: 1.3;
+      }
+      .map-preview.annotated .ann.top {
+        top: 8%; left: 50%; transform: translateX(-50%);
+      }
+      .map-preview.annotated .ann.left { top: 14%; left: 8%; }
+      .map-preview.annotated .ann.right { top: 14%; right: 8%; text-align: right; }
+
+      /* Benefits */
+      .benefit-list { margin-top: 1.6vw; }
+      .benefit {
+        display: flex; gap: 2.4vw; padding: 1.4vw 0;
+        border-top: 1px solid #ECE6D9;
+        align-items: flex-start;
+      }
+      .benefit:first-child { border-top: none; }
+      .benefit .icon {
+        font-size: 3.2vw; line-height: 1;
+        flex-shrink: 0; width: 4.6vw; text-align: center;
+        margin-top: 0.4vw;
+      }
+      .benefit .body { display: flex; flex-direction: column; gap: 0.4vw; flex: 1; }
+      .benefit .b-title { font-size: 1.7vw; font-weight: 800; color: #111; line-height: 1.2; letter-spacing: -0.3px; }
+      .benefit .b-feat { font-size: 1.25vw; color: #777; line-height: 1.45; }
+
+      /* Variant E — identity rungs */
+      .id-rungs { margin: 3vw 0 2vw; display: flex; flex-direction: column; gap: 1.2vw; }
+      .id-rung {
+        display: flex; align-items: center; gap: 2vw;
+        padding: 1.6vw 2vw;
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 8px;
+      }
+      .id-rung .pip {
+        width: 3.2vw; height: 3.2vw; border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .id-rung.copper .pip { background: #B87333; }
+      .id-rung.iron .pip { background: #6B7280; }
+      .id-rung.gold .pip { background: #D4A017; }
+      .id-rung .iname {
+        font-size: 1.5vw; font-weight: 800; flex: 1;
+        letter-spacing: -0.2px;
+      }
+      .id-rung.copper .iname { color: #B87333; }
+      .id-rung.iron .iname { color: #6B7280; }
+      .id-rung.gold .iname { color: #D4A017; }
+      .id-rung .verb {
+        font-size: 2vw; font-weight: 800; color: #111;
+        font-family: 'Literata', serif;
+        font-style: italic;
+      }
+
+      /* Variant F — science badge */
+      .science-badge {
+        display: inline-flex; align-items: center; gap: 0.8vw;
+        background: #ECFDF5; border: 1px solid #BBF7D0;
+        padding: 0.8vw 1.6vw; border-radius: 999px;
+        font-size: 1.1vw; color: #047857; font-weight: 700;
+        margin-top: 2vw;
+      }
+      .science-badge .shield { font-size: 1.3vw; }
+      .citation {
+        font-size: 1vw; color: #888; font-style: italic;
+        text-align: center; margin-top: 1.4vw;
+      }
+
+      /* Variant G — single promise */
+      .single-promise {
+        margin: 4vw 0 2vw;
+        font-size: 2.3vw; color: #111;
+        font-weight: 600; line-height: 1.4;
+        text-align: center; padding: 0 2vw;
+      }
+      .single-promise b { font-weight: 800; }
+
+      /* Variant H — big number */
+      .big-number {
+        text-align: center; margin: 2vw 0 0;
+      }
+      .big-number .n {
+        font-size: 24vw; font-weight: 800; line-height: 0.85;
+        color: #B87333; letter-spacing: -3px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .big-number .unit {
+        font-size: 2vw; color: #555; font-weight: 700;
+        letter-spacing: 0.4px; text-transform: uppercase;
+        margin-top: 0.4vw;
+      }
+      .big-number .sub {
+        font-size: 1.3vw; color: #777;
+        margin-top: 1.4vw; line-height: 1.4;
+      }
+      .big-number .sub b { color: #111; font-weight: 800; }
+
+      /* Variant I — real route card */
+      .route-card-mock {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        padding: 2.4vw 2.8vw; margin: 3vw 0 2vw;
+      }
+      .route-card-mock .head {
+        display: flex; align-items: center; gap: 2vw; margin-bottom: 1.6vw;
+      }
+      .route-card-mock .ico {
+        width: 7vw; height: 7vw; border-radius: 50%;
+        background: #ECFDF5; border: 1px solid #BBF7D0;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 3vw;
+      }
+      .route-card-mock .info .nm { font-size: 1.8vw; font-weight: 800; color: #111; }
+      .route-card-mock .info .meta { font-size: 1.1vw; color: #777; margin-top: 0.4vw; }
+      .route-card-mock .progress {
+        height: 6px; background: #E5E1D8; border-radius: 3px;
+        position: relative; margin-top: 1.6vw;
+      }
+      .route-card-mock .progress .fill {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        width: 22%;
+        background: #B87333; border-radius: 3px;
+      }
+      .route-card-mock .progress .marker {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 1.6vw; height: 1.6vw; border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .route-card-mock .progress .marker.iron { left: 65%; background: #6B7280; }
+      .route-card-mock .progress .marker.gold { left: 100%; background: #D4A017; }
+      .route-card-mock .axis {
+        display: flex; justify-content: space-between;
+        margin-top: 0.6vw; padding: 0 0.4vw;
+        font-size: 1vw; font-weight: 700;
+      }
+      .route-card-mock .axis .a-day { color: #888; }
+      .route-card-mock .axis .a-iron { color: #6B7280; }
+      .route-card-mock .axis .a-gold { color: #D4A017; }
+
+      /* Variant J — three-step */
+      .three-step {
+        margin: 3vw 0 2vw;
+        display: flex; flex-direction: column; gap: 2vw;
+      }
+      .step-row {
+        display: flex; gap: 2vw; align-items: flex-start;
+      }
+      .step-row .num {
+        width: 5vw; height: 5vw; border-radius: 50%;
+        background: #FAF6EE; border: 1.5px solid #B87333;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.8vw; font-weight: 800; color: #B87333;
+        flex-shrink: 0;
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .step-row .stext {
+        font-size: 1.6vw; color: #111;
+        font-weight: 600; line-height: 1.4;
+        flex: 1;
+      }
+      .step-row .stext b { color: #B87333; font-weight: 800; }
+
+      .cta-bottomright {
+        margin-top: auto;
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text { font-size: 1.5vw; color: #555; font-weight: 600; }
+      .cta-bottomright .arrow { font-size: 1.8vw; color: #B87333; font-weight: 700; }
+
+      .legend {
+        max-width: 1400px; margin: 28px auto 0;
+        padding: 18px 22px;
+        background: #252525; border-radius: 14px;
+        font-size: 12px; color: #ccc; line-height: 1.7;
+      }
+      .legend b { color: #B87333; }
+      .legend code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; color: #ddd; }
+      .legend h3 { color: #fff; font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+      .winner {
+        background: linear-gradient(135deg, rgba(184,115,51,0.18), rgba(184,115,51,0.06));
+        border: 1px solid rgba(184,115,51,0.4);
+        padding: 16px 20px; border-radius: 12px;
+        max-width: 1400px; margin: 0 auto 20px;
+        font-size: 13px; color: #fff; line-height: 1.6;
+      }
+      .winner h2 { font-size: 16px; font-weight: 800; color: #D49860; margin-bottom: 6px; }
+    </style>
+  </head>
+  <body>
+    <h1>Screen 3 — 8 body variants (headline locked: "Here's your map.")</h1>
+    <p class="lede">
+      Eight fresh angles for the body. Each tries a different conversion or retention lever.
+      Each card is labeled with the lever it's leaning into.
+    </p>
+
+    <div class="grid">
+      <!-- ============ B: Chain folded ============ -->
+      <div class="card">
+        <h3>B · Chain folded into markers</h3>
+        <div class="lever">Lever: structural cleanup</div>
+        <p class="note">2 benefits. Chain absorbed into markers (markers ARE chain states). Smallest delta from current.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span><span class="pin-label iron">Iron</span><span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers — <span class="em">Copper, Iron, Gold</span> — and your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ C: Punchier titles + numbers ============ -->
+      <div class="card">
+        <h3>C · Punchier titles + number anchors</h3>
+        <div class="lever">Lever: memorability</div>
+        <p class="note">Same 2-benefit structure as B but titles sharper and sub-lines lead with concrete numbers (21 / 66 / 120+).</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span><span class="pin-label iron">Iron</span><span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">A real timeline.</div>
+                  <div class="b-feat"><span class="em">21</span> days for walks. <span class="em">66</span> for meditation. <span class="em">120+</span> for writing.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Every step has a name.</div>
+                  <div class="b-feat"><span class="em">Copper</span> → <span class="em">Iron</span> → <span class="em">Gold</span>. Your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ E: Identity framing ============ -->
+      <div class="card">
+        <h3>E · Identity rungs</h3>
+        <div class="lever">Lever: identity priming · retention</div>
+        <p class="note">Reframes Copper / Iron / Gold as identity stages. Identity-based motivation = strongest long-term retention driver (James Clear).</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span><span class="pin-label iron">Iron</span><span class="pin-label gold">Gold</span>
+            </div>
+            <div class="id-rungs">
+              <div class="id-rung copper">
+                <div class="pip"></div>
+                <div class="iname">Copper</div>
+                <div class="verb">trying.</div>
+              </div>
+              <div class="id-rung iron">
+                <div class="pip"></div>
+                <div class="iname">Iron</div>
+                <div class="verb">doing.</div>
+              </div>
+              <div class="id-rung gold">
+                <div class="pip"></div>
+                <div class="iname">Gold</div>
+                <div class="verb">being.</div>
+              </div>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ F: Science authority ============ -->
+      <div class="card">
+        <h3>F · Science authority</h3>
+        <div class="lever">Lever: credibility</div>
+        <p class="note">Anchors with research citation. Builds trust through authority. Best for skeptical/educated users.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div style="text-align: center; margin-top: 1.4vw;">
+              <span class="science-badge">
+                <span class="shield">🛡</span> Science-backed
+              </span>
+            </div>
+            <div class="map-preview">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span><span class="pin-label iron">Iron</span><span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Sized to research.</div>
+                  <div class="b-feat">Habits become automatic around day 66 — your route is sized accordingly.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Tiers you'll feel.</div>
+                  <div class="b-feat">Each tier is a milestone in habit consolidation, named so you remember it.</div>
+                </div>
+              </div>
+            </div>
+            <div class="citation">— Lally et al., 2010</div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ G: Single promise ============ -->
+      <div class="card">
+        <h3>G · One sentence promise</h3>
+        <div class="lever">Lever: minimalism</div>
+        <p class="note">No benefit list. Single sentence promise + the visual. Trust the headline + map to do the work.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span><span class="pin-label iron">Iron</span><span class="pin-label gold">Gold</span>
+            </div>
+            <div class="single-promise">
+              You'll know <b>how long</b>, <b>where you are</b>,<br/>
+              and <b>when you upgrade.</b>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ H: Big number anchor ============ -->
+      <div class="card">
+        <h3>H · Big number anchor</h3>
+        <div class="lever">Lever: visceral specificity</div>
+        <p class="note">"21" as the centerpiece. Concrete day count anchors the entire screen. Visual hierarchy is unmistakable.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="big-number">
+              <div class="n">21</div>
+              <div class="unit">Days to your first peak</div>
+              <div class="sub">A 10-min walk takes <b>21 days</b> to Gold.<br/>Other habits, longer. <b>Your chain</b> transforms at each tier.</div>
+            </div>
+            <div class="map-preview" style="margin-top: 3vw;">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ I: Real route example ============ -->
+      <div class="card">
+        <h3>I · Real route example</h3>
+        <div class="lever">Lever: concrete proof</div>
+        <p class="note">Replaces abstract map preview with a specific, working route example (10-min walk). Most concrete; most "the app already shows me."</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div style="text-align: center; font-size: 1.2vw; color: #888; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-top: 2.4vw;">A real route</div>
+            <div class="route-card-mock">
+              <div class="head">
+                <div class="ico">🚶</div>
+                <div class="info">
+                  <div class="nm">10-minute walk</div>
+                  <div class="meta">Easy · 21 days to Gold</div>
+                </div>
+              </div>
+              <div class="progress">
+                <div class="fill"></div>
+                <div class="marker iron"></div>
+                <div class="marker gold"></div>
+              </div>
+              <div class="axis">
+                <span class="a-day">Today</span>
+                <span class="a-iron">Iron · Day 14</span>
+                <span class="a-gold">Gold · Day 21</span>
+              </div>
+            </div>
+            <div style="font-size: 1.4vw; color: #555; text-align: center; line-height: 1.5; margin-top: 1.4vw;">
+              Each habit gets its own route, sized to it.<br/>
+              <span class="em">Copper, Iron, Gold</span> — every step earned.
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ J: Three-step numbered ============ -->
+      <div class="card">
+        <h3>J · Three-step numbered</h3>
+        <div class="lever">Lever: clarity</div>
+        <p class="note">Numbered list pattern. Maps explicitly to screen 2's three questions in the same order. Easy to scan.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span><span class="pin-label iron">Iron</span><span class="pin-label gold">Gold</span>
+            </div>
+            <div class="three-step">
+              <div class="step-row">
+                <div class="num">1</div>
+                <div class="stext"><b>Sized to your habit.</b> 21 days for walks. 66 for meditation.</div>
+              </div>
+              <div class="step-row">
+                <div class="num">2</div>
+                <div class="stext"><b>Named markers.</b> Copper → Iron → Gold.</div>
+              </div>
+              <div class="step-row">
+                <div class="num">3</div>
+                <div class="stext"><b>Chain transforms</b> at every tier — visible upgrade.</div>
+              </div>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="winner">
+      <h2>🏆 My pick after 8 variants: <code style="color: #fff; background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px;">Variant E — Identity rungs</code></h2>
+      <p>
+        <b>Why:</b> Identity-based motivation is the strongest long-term retention lever in habit science.
+        Reframing Copper / Iron / Gold as <em>trying → doing → being</em> gives the user a transformation
+        they can map themselves onto immediately. Every screen of onboarding is selling them on what
+        they'll <em>become</em> — this is the only variant that explicitly says it.
+      </p>
+      <p style="margin-top: 8px;">
+        <b>Conversion:</b> 🟢 sharp emotional hook — "I want to be at Gold = being" is a stronger pull than "I want to know how long."<br/>
+        <b>Retention:</b> 🟢🟢 highest of the 8. Identity attachment compounds week over week — every check-in reinforces "I'm becoming a [meditator/runner/writer]." James Clear / Atomic Habits framework.<br/>
+        <b>Trade-off:</b> drops the duration explainer — "how long" gets answered later (or becomes a benefit on screen 6 instead).
+      </p>
+      <h3 style="margin-top: 12px;">Runner-up: <code style="color: #B87333;">Variant C</code> — punchier titles + number anchors. Best for users who want concrete answers, less aspirational pull.</h3>
+    </div>
+
+    <div class="legend">
+      <h3>Quick comparison</h3>
+      <p>
+        <b>B</b> safest · <b>C</b> sharpest copy · <b>E</b> deepest emotional pull · <b>F</b> most credible · <b>G</b> most minimal · <b>H</b> most visceral · <b>I</b> most concrete · <b>J</b> easiest to scan
+      </p>
+      <p style="margin-top: 8px;">
+        Each variant trades different things. <b>E (identity)</b> wins on long-term retention, but loses some upfront concreteness vs <b>C</b> or <b>I</b>. If you care more about conversion at THIS screen specifically, lean <b>C</b>. If you care about retention 30 days from now, lean <b>E</b>.
+      </p>
+    </div>
+  </body>
+</html>

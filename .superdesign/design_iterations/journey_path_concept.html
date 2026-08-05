@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Journey/Path concept — onboarding + home</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+      h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #10b981; margin: 32px 0 4px; }
+      .top-note { color: #999; font-size: 13px; margin-bottom: 24px; max-width: 1100px; }
+      .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        max-width: 1500px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1300px) { .row { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 950px) { .row { grid-template-columns: repeat(2, 1fr); } }
+
+      .row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 800px;
+        margin: 0 auto 32px;
+      }
+
+      .card { background: #252525; border-radius: 16px; padding: 12px; }
+      .card.winner { box-shadow: 0 0 0 2px #10b981; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 28px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+      .body { flex: 1; display: flex; flex-direction: column; }
+      .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .h-mid { font-weight: 800; font-size: 4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.5px; color: #111; text-align: center; }
+      .h-left { font-weight: 800; font-size: 3.4vw; line-height: 1.1; letter-spacing: -0.8px; color: #111; }
+      .sub { font-size: 1.3vw; color: #555; line-height: 1.45; }
+      .sub-c { text-align: center; }
+      .cta {
+        background: #059669; color: #fff;
+        padding: 11px 16px; border-radius: 12px;
+        font-weight: 600; font-size: 1.1vw;
+        text-align: center; margin-top: 8px;
+      }
+      .cta-ghost {
+        background: transparent;
+        color: #888; font-size: 0.95vw;
+        text-align: center; font-weight: 500;
+        letter-spacing: 1.2px; text-transform: uppercase;
+        padding: 10px;
+      }
+      .pulse { height: 2px; width: 22px; background: #10b981; opacity: 0.7; border-radius: 2px; margin: 5px auto 0; }
+      .label { color: #fff; font-weight: 600; margin-top: 10px; font-size: 13px; }
+      .desc { color: #999; font-size: 11px; margin-top: 4px; line-height: 1.4; }
+
+      /* path visualization */
+      .path-group {
+        margin: 5% 0;
+      }
+      .path-label-row {
+        display: flex; justify-content: space-between;
+        font-size: 0.95vw; color: #666;
+        margin-bottom: 4px;
+      }
+      .path-label-row .difficulty {
+        color: #888; font-weight: 600;
+      }
+      .path-label-row .duration {
+        color: #B87333; font-weight: 700;
+      }
+      .path-bar {
+        position: relative;
+        height: 10px;
+        background: #E5E1D8;
+        border-radius: 5px;
+        margin-bottom: 14px;
+      }
+      .path-fill {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        background: linear-gradient(90deg, #B87333 0%, #6B7280 50%, #D4A23F 100%);
+        border-radius: 5px;
+      }
+      .path-marker {
+        position: absolute; top: -4px;
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        background: #fff;
+        border: 3px solid #059669;
+        box-shadow: 0 0 0 3px rgba(5,150,105,0.2);
+        z-index: 2;
+      }
+      .path-tier {
+        position: absolute; top: -2px;
+        width: 14px; height: 14px;
+        border-radius: 3px;
+        z-index: 1;
+        transform: translateX(-50%);
+      }
+      .path-tier.copper { background: #B87333; }
+      .path-tier.iron { background: #6B7280; }
+      .path-tier.gold { background: #D4A23F; }
+      .path-tier-label {
+        position: absolute; top: 18px;
+        font-size: 0.7vw; color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+      .path-day-label {
+        position: absolute;
+        font-size: 0.75vw; color: #888;
+        margin-top: 4px;
+      }
+      .path-day-label.start { left: 0; }
+      .path-day-label.end { right: 0; }
+
+      /* habit picker with timeline badges */
+      .habit-pick-card {
+        background: #FAF6EE;
+        border: 1.5px solid #E5E1D8;
+        border-radius: 11px;
+        padding: 9px 12px;
+        margin-bottom: 5px;
+      }
+      .habit-pick-card.selected {
+        background: #ECFDF5; border-color: #10b981;
+      }
+      .habit-pick-row {
+        display: flex; align-items: center; gap: 9px;
+      }
+      .habit-icon {
+        width: 30px; height: 30px;
+        border-radius: 9px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3vw; flex-shrink: 0;
+      }
+      .habit-name { font-weight: 600; font-size: 1.15vw; color: #111; }
+      .habit-meta { font-size: 0.85vw; color: #888; margin-top: 1px; }
+      .duration-badge {
+        background: rgba(184, 115, 51, 0.12);
+        color: #8B5A2B;
+        font-size: 0.85vw;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 8px;
+        margin-left: auto;
+      }
+      .difficulty-dots {
+        display: flex; gap: 2px; margin-top: 4px;
+      }
+      .dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: #C8C4B8;
+      }
+      .dot.filled { background: #B87333; }
+
+      /* in-app map view */
+      .app-header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 4px 0; margin-bottom: 4%;
+      }
+      .app-title { font-weight: 800; font-size: 1.5vw; color: #111; }
+      .app-day { font-size: 0.95vw; color: #888; }
+
+      .map-card {
+        background: #FAF6EE;
+        border: 1px solid #E5E1D8;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 8px;
+      }
+      .map-card .habit-icon {
+        width: 26px; height: 26px;
+      }
+      .map-card-header {
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 10px;
+      }
+      .map-habit-name {
+        font-weight: 700; font-size: 1.2vw; color: #111;
+        flex: 1;
+      }
+      .map-strength {
+        font-size: 0.95vw; color: #B87333; font-weight: 700;
+      }
+      .map-progress-text {
+        display: flex; justify-content: space-between;
+        font-size: 0.85vw; color: #777;
+        margin-top: 8px;
+      }
+      .map-progress-text .now { font-weight: 700; color: #059669; }
+
+      /* chain inline (rides on the path) */
+      .chain-on-path {
+        display: flex; gap: 1.5px;
+        margin: 8px 0 4px;
+      }
+      .chain-cell {
+        flex: 1;
+        height: 10px;
+        border-radius: 2px;
+        background: #B87333;
+      }
+      .chain-cell.iron { background: #6B7280; }
+      .chain-cell.gold { background: #D4A23F; }
+      .chain-cell.empty { background: #E5E1D8; }
+      .chain-cell.missed { background: #C0392B; opacity: 0.4; }
+
+      .compare-table {
+        max-width: 1300px;
+        margin: 0 auto 24px;
+        background: #2a2a2a;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .compare-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .compare-table th, .compare-table td {
+        padding: 11px 13px; text-align: left;
+        border-bottom: 1px solid #1a1a1a; vertical-align: top;
+      }
+      .compare-table th { background: #1a1a1a; color: #fff; font-weight: 700; }
+      .compare-table td.metric { color: #999; font-weight: 500; }
+
+      .note {
+        max-width: 1300px; margin: 0 auto;
+        background:#2a2a2a; border-radius:12px;
+        padding:18px; color:#ccc;
+        font-size:14px; line-height:1.55;
+      }
+      .note b { color:#fff; }
+      .note ul { margin: 8px 0 0 18px; }
+      .note li { margin-bottom: 4px; }
+    </style>
+  </head>
+  <body>
+
+    <h1>Journey/Path concept — refined: countdown to habit formed</h1>
+    <div class="top-note">
+      Every habit is a <b>countdown</b> to "habit formed". Each consistent day moves you one closer. Miss a day = pause, not setback. Strength holds, chain shows the gap, journey continues. Some are 21 days, some are 66, some are 120+ — based on per-habit difficulty (Lally 2010 range: 18–254). The user sees the whole map: where they started, where they are, where they're going. Chain + strength become <b>coordinates on the path</b>, not their own thing.
+    </div>
+
+    <h2>Onboarding (5 steps with path framing)</h2>
+    <div class="act-sub">Welcome → Path metaphor (NEW) → Pick a habit (with timeline badges) → Account → Drop into app with their map.</div>
+    <div class="row">
+
+      <!-- 1: Welcome -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 8vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">1 — Welcome</div>
+        <div class="desc">Same as current. Pure greeting.</div>
+      </div>
+
+      <!-- 2: Path metaphor -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div>
+                <div class="h-mid" style="text-align: center; font-size: 4.4vw;">Every day,<br/>one closer.</div>
+                <div class="sub sub-c" style="margin-top: 8px; max-width: 90%; margin-left: auto; margin-right: auto; font-size: 1.2vw;">Some habits take 21 days to form. Some 66. Some 120+. Each consistent day, one closer.</div>
+                <div class="path-group" style="margin-top: 8%;">
+                  <div class="path-label-row">
+                    <span class="difficulty">Easy · 10-min walk</span>
+                    <span class="duration">~21 days</span>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-tier copper" style="left: 20%;"></div>
+                    <div class="path-tier iron" style="left: 60%;"></div>
+                    <div class="path-tier gold" style="left: 100%;"></div>
+                  </div>
+                  <div class="path-label-row">
+                    <span class="difficulty">Medium · Meditation</span>
+                    <span class="duration">~66 days</span>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-tier copper" style="left: 12%;"></div>
+                    <div class="path-tier iron" style="left: 35%;"></div>
+                    <div class="path-tier gold" style="left: 80%;"></div>
+                  </div>
+                  <div class="path-label-row">
+                    <span class="difficulty">Hard · Daily writing</span>
+                    <span class="duration">~120+ days</span>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-tier copper" style="left: 8%;"></div>
+                    <div class="path-tier iron" style="left: 25%;"></div>
+                    <div class="path-tier gold" style="left: 60%;"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">2 — Path metaphor</div>
+        <div class="desc">Three example paths at three difficulties. Tier landmarks (copper/iron/gold) appear at proportional positions. Sets honest expectations: no false 21-day promises, no scary 1-year ones.</div>
+      </div>
+
+      <!-- 3: Pick a habit with timeline -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div>
+                <div class="h-left">Pick your<br/>first path.</div>
+                <div class="sub" style="margin-top: 6px;">Each habit takes a different time. Pick one to start.</div>
+                <div style="margin-top: 5%;">
+                  <div class="habit-pick-card selected">
+                    <div class="habit-pick-row">
+                      <div class="habit-icon">🚶</div>
+                      <div style="flex:1;">
+                        <div class="habit-name">10-minute walk</div>
+                        <div class="habit-meta">Mornings</div>
+                      </div>
+                      <div class="duration-badge">~21 days</div>
+                    </div>
+                    <div class="difficulty-dots"><div class="dot filled"></div><div class="dot"></div><div class="dot"></div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-pick-row">
+                      <div class="habit-icon">🧘</div>
+                      <div style="flex:1;">
+                        <div class="habit-name">5-min meditation</div>
+                        <div class="habit-meta">Anytime</div>
+                      </div>
+                      <div class="duration-badge">~66 days</div>
+                    </div>
+                    <div class="difficulty-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-pick-row">
+                      <div class="habit-icon">📖</div>
+                      <div style="flex:1;">
+                        <div class="habit-name">Read 10 pages</div>
+                        <div class="habit-meta">Evenings</div>
+                      </div>
+                      <div class="duration-badge">~45 days</div>
+                    </div>
+                    <div class="difficulty-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot"></div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-pick-row">
+                      <div class="habit-icon">✍️</div>
+                      <div style="flex:1;">
+                        <div class="habit-name">Daily writing</div>
+                        <div class="habit-meta">Mornings</div>
+                      </div>
+                      <div class="duration-badge">~120 days</div>
+                    </div>
+                    <div class="difficulty-dots"><div class="dot filled"></div><div class="dot filled"></div><div class="dot filled"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: auto;">
+                <div class="cta">Continue</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">3 — Pick your first path</div>
+        <div class="desc">Each habit shows estimated path length + difficulty dots (1=easy, 3=hard). User commits with eyes open. Lally 2010 ranges underlie the estimates.</div>
+      </div>
+
+      <!-- 4: Account -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-mid" style="text-align: center; font-size: 3.8vw;">Save your<br/>journey.</div>
+                <div class="sub sub-c" style="margin-top: 8px; max-width: 80%; font-size: 1.2vw;">So your progress isn't tied to this phone.</div>
+                <div style="width: 100%; margin-top: 8%;">
+                  <div style="background: #000; color: #fff; padding: 12px; border-radius: 11px; text-align: center; font-weight: 600; font-size: 1.1vw; margin-bottom: 6px;">  Sign in with Apple</div>
+                  <div style="background: #fff; color: #111; padding: 12px; border-radius: 11px; text-align: center; font-weight: 600; font-size: 1.1vw; border: 1.5px solid #E5E1D8; margin-bottom: 6px;">G  Continue with Google</div>
+                  <div class="cta-ghost" style="font-size: 0.95vw;">Maybe later</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">4 — Account</div>
+        <div class="desc">Same OAuth pattern, copy shifts to "Save your journey" to fit the path metaphor.</div>
+      </div>
+
+      <!-- 5: Day 1 / drop into app -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">Today</div>
+                <div class="app-day">20 days until habit</div>
+              </div>
+              <div class="map-card">
+                <div class="map-card-header">
+                  <div class="habit-icon">🚶</div>
+                  <div class="map-habit-name">10-minute walk</div>
+                  <div class="map-strength">Day 1</div>
+                </div>
+                <div class="path-bar" style="margin-bottom: 0;">
+                  <div class="path-fill" style="width: 5%;"></div>
+                  <div class="path-tier copper" style="left: 25%;"></div>
+                  <div class="path-tier iron" style="left: 60%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                  <div class="path-marker" style="left: 4%;"></div>
+                </div>
+                <div class="map-progress-text">
+                  <span class="now">20 days to go</span>
+                  <span>Iron in 11</span>
+                  <span>Habit formed in 20</span>
+                </div>
+              </div>
+              <div style="margin-top: auto; padding: 12px; background: #ECFDF5; border-radius: 11px; border: 1px solid #10b981;">
+                <div style="font-size: 1vw; font-weight: 700; color: #065F46;">Tap your habit when you do it.</div>
+                <div style="font-size: 0.95vw; color: #065F46; margin-top: 2px;">Each day brings you one closer. Miss a day = pause, not penalty.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">5 — Drop into app (with their path)</div>
+        <div class="desc">User sees their full 21-day path. "Day 1 of 21" sets scope. Tier landmarks visible. Marker shows current position. The whole journey is visible from day 1.</div>
+      </div>
+    </div>
+
+    <h2>In-app: home / map view</h2>
+    <div class="act-sub">Path becomes the home metaphor. User sees all their journeys at a glance, can tap into any for the zoom-in.</div>
+    <div class="row-2">
+
+      <!-- Home with multiple paths -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">Today</div>
+                <div class="app-day">Mar 24</div>
+              </div>
+
+              <!-- Habit 1: 10-min walk, day 14 of 21 (66%) -->
+              <div class="map-card">
+                <div class="map-card-header">
+                  <div class="habit-icon">🚶</div>
+                  <div class="map-habit-name">10-minute walk</div>
+                  <div class="map-strength">7 days to go</div>
+                </div>
+                <div class="path-bar" style="margin-bottom: 0;">
+                  <div class="path-fill" style="width: 66%;"></div>
+                  <div class="path-tier copper" style="left: 25%;"></div>
+                  <div class="path-tier iron" style="left: 60%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                  <div class="path-marker" style="left: 64%;"></div>
+                </div>
+                <div class="map-progress-text">
+                  <span class="now">Day 14 · iron</span>
+                  <span>7 days until habit forms</span>
+                </div>
+                <div class="chain-on-path">
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell missed"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                </div>
+              </div>
+
+              <!-- Habit 2: meditation, day 9 of 66 (14%) -->
+              <div class="map-card">
+                <div class="map-card-header">
+                  <div class="habit-icon">🧘</div>
+                  <div class="map-habit-name">5-min meditation</div>
+                  <div class="map-strength" style="color: #888;">57 days to go</div>
+                </div>
+                <div class="path-bar" style="margin-bottom: 0;">
+                  <div class="path-fill" style="width: 14%;"></div>
+                  <div class="path-tier copper" style="left: 12%;"></div>
+                  <div class="path-tier iron" style="left: 35%;"></div>
+                  <div class="path-tier gold" style="left: 80%;"></div>
+                  <div class="path-marker" style="left: 13%;"></div>
+                </div>
+                <div class="map-progress-text">
+                  <span class="now">Day 9 · copper</span>
+                  <span>57 days until habit forms</span>
+                </div>
+              </div>
+
+              <!-- Habit 3: writing, day 3 of 120 (2.5%) -->
+              <div class="map-card">
+                <div class="map-card-header">
+                  <div class="habit-icon">✍️</div>
+                  <div class="map-habit-name">Daily writing</div>
+                  <div class="map-strength" style="color: #888;">117 days to go</div>
+                </div>
+                <div class="path-bar" style="margin-bottom: 0;">
+                  <div class="path-fill" style="width: 3%;"></div>
+                  <div class="path-tier copper" style="left: 8%;"></div>
+                  <div class="path-tier iron" style="left: 25%;"></div>
+                  <div class="path-tier gold" style="left: 60%;"></div>
+                  <div class="path-marker" style="left: 2%;"></div>
+                </div>
+                <div class="map-progress-text">
+                  <span class="now">Day 3 · just started</span>
+                  <span>117 days until habit forms</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">Home — three paths at a glance</div>
+        <div class="desc">User sees all habits as paths simultaneously. Different difficulties = different scales. Marker shows where each is.</div>
+      </div>
+
+      <!-- Habit detail / zoomed path -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">10-minute walk</div>
+                <div class="app-day">Day 14</div>
+              </div>
+              <div style="background: #FAF6EE; border-radius: 14px; padding: 14px; margin-bottom: 10px;">
+                <div style="font-size: 0.85vw; color: #888; text-transform: uppercase; letter-spacing: 1.2px;">Countdown to habit</div>
+                <div style="display: flex; gap: 14px; align-items: baseline; margin-top: 4px;">
+                  <div style="font-size: 2.6vw; font-weight: 800; color: #6B7280;">7 days</div>
+                  <div style="font-size: 1.1vw; color: #888;">until habit forms</div>
+                </div>
+                <div class="path-bar" style="margin: 14px 0;">
+                  <div class="path-fill" style="width: 66%;"></div>
+                  <div class="path-tier copper" style="left: 25%;"></div>
+                  <div class="path-tier iron" style="left: 60%;"></div>
+                  <div class="path-tier gold" style="left: 100%;"></div>
+                  <div class="path-marker" style="left: 64%;"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85vw; color: #777; margin-top: 6px;">
+                  <span>Day 1</span>
+                  <span style="color: #B87333;">Copper · D6</span>
+                  <span style="color: #6B7280; font-weight: 700;">Iron · D14 ✓</span>
+                  <span style="color: #D4A23F;">Gold · D21</span>
+                </div>
+              </div>
+
+              <div style="background: #FAF6EE; border-radius: 14px; padding: 12px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div style="font-weight: 700; font-size: 1.1vw; color: #111;">Strength</div>
+                  <div style="font-weight: 800; font-size: 1.4vw; color: #6B7280;">66 / 100</div>
+                </div>
+                <div style="background: #E5E1D8; height: 6px; border-radius: 3px; margin-top: 6px; overflow: hidden;">
+                  <div style="background: linear-gradient(90deg, #B87333, #6B7280); height: 100%; width: 66%;"></div>
+                </div>
+              </div>
+
+              <div style="background: #FAF6EE; border-radius: 14px; padding: 12px;">
+                <div style="font-size: 0.85vw; color: #888; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">Chain — last 21 days</div>
+                <div class="chain-on-path">
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell missed"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell iron"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                  <div class="chain-cell empty"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85vw; color: #777; margin-top: 6px;">
+                  <span>1 missed day</span>
+                  <span style="color: #6B7280; font-weight: 700;">Material upgraded D9</span>
+                </div>
+              </div>
+
+              <div class="cta" style="margin-top: 12px;">Mark today done ✓</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">Habit detail — the zoomed path</div>
+        <div class="desc">Where you are (D14 of 21, iron-tier). Strength as a number. Chain showing the daily history with one missed day visible. The full picture in one view.</div>
+      </div>
+    </div>
+
+    <h2>The model — how the pieces fit</h2>
+    <div class="compare-table">
+      <table>
+        <tbody>
+          <tr><td class="metric">Countdown</td><td>"X days until habit forms." Set by per-habit difficulty (easy ~21d, medium ~66d, hard ~120d). From Lally 2010: 18–254 days range.</td></tr>
+          <tr><td class="metric">Day-by-day advance</td><td>Each consistent check-in decrements the countdown by 1. Missed days don't advance — they pause. Resume = pick up where you left off, no penalty added.</td></tr>
+          <tr><td class="metric">Chain</td><td>The trail you've walked — daily check-in dots laid along the path. Filled = done, dim = missed, empty = future.</td></tr>
+          <tr><td class="metric">Strength (0–100)</td><td>How securely your foothold is at this point. Driven by recent consistency. Dips when you miss, doesn't reset.</td></tr>
+          <tr><td class="metric">Tier landmarks</td><td>Copper / Iron / Gold appear at strength thresholds. Gold = countdown hits 0 = habit formed. Tiers gain meaning as journey waypoints.</td></tr>
+          <tr><td class="metric">Difficulty (1–3 dots)</td><td>Per-habit. Sets the countdown length. Shown on selection so user commits with eyes open.</td></tr>
+          <tr><td class="metric">Habit formed</td><td>When the countdown reaches 0, the habit is permanently "formed." Gold tier locked in. No more countdown — just maintenance. User crossed the bridge.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <b>What this refined concept does for ChainDay:</b>
+      <ul>
+        <li><b>Directional, not bookkeeping.</b> "7 days until habit forms" tells the user where they're going. "Day 14 of 21" just states position. The countdown is purpose-led — it pulls forward.</li><li><b>Honest expectations from day 1.</b> User picks "daily writing" knowing it's a 120-day countdown. No "21 days to form a habit" lie. Lally 2010 range is 18–254 — we're the only habit app honest about that.</li><li><b>Pause, not penalty, on miss.</b> Missed day = countdown pauses. Resume = it picks up. The chain still shows the gap. Strength still dips slightly. But you don't lose ground on the destination.</li>
+        <li><b>Addresses "novelty fades" directly.</b> The pain point from <code>painPoints.ts</code> ("The novelty wears off before the habit does") becomes structural: the path has length, the user knows where they are, the slog has shape.</li>
+        <li><b>Unifies what already exists.</b> Chain + strength + tiers all stay. They become positional measurements on a journey, which is conceptually richer than three independent metrics.</li>
+        <li><b>Differentiates from streak apps cleanly.</b> Streak counters say "X days in a row." Paths say "Day 14 of 21 on this journey, with 1 missed day along the way." More honest, more navigable.</li>
+        <li><b>Makes the in-app home visualization compelling.</b> Three paths at three scales = a real "map of my growth." This is the kind of view people screenshot and share.</li>
+      </ul>
+      <br>
+      <b>Open questions / risks:</b>
+      <ul>
+        <li>What happens when a user finishes a path? Habit "graduates" → permanent? Or path extends to a longer journey (e.g., 21d → 66d for "still building")?</li>
+        <li>Lally 2010 ranges are real but per-individual, not per-habit category. We'd need to defensibly assign difficulties to templates. Likely defensible: research-backed for ~10 templates, "estimate" disclaimer for the rest.</li>
+        <li>Marker doesn't move backward on miss — but should the path get <i>longer</i> if you miss too many? (Probably no — that punishes, defeating the point.)</li>
+        <li>Visual scale problem: a 21-day path next to a 120-day path — same physical bar width but very different days/pixel. Could feel inconsistent.</li>
+      </ul>
+    </div>
+
+  </body>
+</html>

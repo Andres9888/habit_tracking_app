@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
+import { BlindPathBlock } from '../components/BlindPathBlock';
 import { StepComponentProps } from '../types';
 
 export function ProblemStep({ onNext }: StepComponentProps) {
@@ -8,84 +9,62 @@ export function ProblemStep({ onNext }: StepComponentProps) {
 
   return (
     <Pressable accessibilityRole="button" onPress={onNext} style={{ flex: 1 }}>
-      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: 24 }}>
+      <View style={{ flex: 1, justifyContent: 'space-between', paddingTop: 16 }}>
         <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-          <View style={{ alignItems: 'center', marginBottom: 40 }}>
-            <Text
-              style={{
-                color: colors.text.tertiary,
-                fontSize: 14,
-                fontWeight: '500',
-                letterSpacing: 1,
-                textTransform: 'uppercase',
-              }}
-            >
-              Streak
-            </Text>
-            <View style={{ alignItems: 'center', marginTop: 8, position: 'relative' }}>
-              <Text
-                style={{
-                  color: '#C0392B',
-                  fontSize: 96,
-                  fontWeight: '800',
-                  letterSpacing: -4,
-                  lineHeight: 100,
-                  opacity: 0.45,
-                }}
-              >
-                42
-              </Text>
-              <View
-                style={{
-                  backgroundColor: '#C0392B',
-                  borderRadius: 2,
-                  height: 4,
-                  position: 'absolute',
-                  top: '50%',
-                  transform: [{ rotate: '-15deg' }],
-                  width: '120%',
-                }}
-              />
-            </View>
-          </View>
           <Text
             accessibilityRole="header"
             style={{
               color: colors.text.primary,
-              fontSize: 40,
+              fontSize: 52,
               fontWeight: '800',
               letterSpacing: -1.5,
-              lineHeight: 44,
+              lineHeight: 56,
               textAlign: 'center',
             }}
           >
-            Miss a day.{'\n'}Lose everything.{'\n'}Quit.
+            You&rsquo;re building{'\n'}habits{' '}
+            <Text style={{ color: '#B87333' }}>blind.</Text>
+          </Text>
+          <BlindPathBlock />
+          <Text
+            style={{
+              color: '#B45309',
+              fontSize: 20,
+              fontWeight: '800',
+              letterSpacing: -0.4,
+              marginTop: 18,
+              textAlign: 'center',
+            }}
+          >
+            You&rsquo;re lost.
           </Text>
           <Text
             style={{
               color: colors.text.secondary,
-              fontSize: 16,
-              lineHeight: 22,
-              marginTop: 20,
+              fontSize: 14,
+              lineHeight: 21,
+              marginTop: 10,
               maxWidth: 300,
               textAlign: 'center',
             }}
           >
-            That&rsquo;s how every other habit app works.
+            No map. No markers. So you quit.
           </Text>
         </View>
-        <View style={{ alignItems: 'center', paddingBottom: 16 }}>
-          <Text
-            style={{
-              color: colors.text.tertiary,
-              fontSize: 13,
-              fontWeight: '500',
-              letterSpacing: 1.5,
-              textTransform: 'uppercase',
-            }}
-          >
-            Tap to continue
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: 6,
+            justifyContent: 'flex-end',
+            paddingBottom: 16,
+            paddingRight: 4,
+          }}
+        >
+          <Text style={{ color: colors.text.secondary, fontSize: 14, fontWeight: '500' }}>
+            tap to continue
           </Text>
+          <Text style={{ color: '#B87333', fontSize: 16, fontWeight: '700' }}>→</Text>
         </View>
       </View>
     </Pressable>

@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen 2 — fresh variants for conversion + retention</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1300px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.6; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+      .card h3 {
+        font-size: 12px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: #10b981; margin-bottom: 4px;
+      }
+      .card .lever {
+        font-size: 11px; font-weight: 700; color: #F59E0B;
+        text-transform: uppercase; letter-spacing: 0.6px;
+        margin-bottom: 8px;
+      }
+      .card p.note { font-size: 12px; color: #aaa; margin-bottom: 12px; line-height: 1.55; min-height: 64px; }
+      .card .pros { font-size: 11px; color: #10b981; margin-top: 12px; line-height: 1.5; }
+      .card .cons { font-size: 11px; color: #B45309; margin-top: 4px; line-height: 1.5; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+      .center {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; justify-content: flex-start;
+        padding-top: 4vw;
+      }
+      .h-big { font-weight: 800; font-size: 6.4vw; line-height: 1.05; letter-spacing: -1.6px; color: #111; text-align: center; }
+      .quit-line {
+        font-size: 1.7vw; color: #555;
+        text-align: center; margin-top: 1vw;
+        line-height: 1.4; max-width: 88%;
+      }
+      .quit-line .pop { color: #B45309; font-weight: 800; }
+      .cta-bottomright {
+        margin-top: auto;
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text { font-size: 1.6vw; color: #555; font-weight: 600; }
+      .cta-bottomright .arrow { font-size: 2vw; color: #555; font-weight: 600; }
+
+      /* ============ Variant: Streak Shattered ============ */
+      .streak-mock {
+        margin: 4vw 0 2vw; width: 100%;
+      }
+      .streak-frame {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 16px;
+        padding: 3vw;
+        box-shadow: 0 8px 18px -8px rgba(0,0,0,0.18);
+        position: relative;
+      }
+      .streak-frame::before {
+        content: '';
+        position: absolute; top: -1.4vw; left: 6vw;
+        width: 1.4vw; height: 1.4vw; border-radius: 0.4vw;
+        background: #fff; transform: rotate(45deg);
+        border-left: 1px solid #ddd; border-top: 1px solid #ddd;
+      }
+      .streak-frame .ohno {
+        font-size: 2vw; color: #DC2626; font-weight: 800;
+        text-align: center; margin-bottom: 1.4vw;
+      }
+      .streak-frame .num {
+        font-size: 6vw; color: #DC2626; font-weight: 800;
+        text-align: center; line-height: 1;
+        font-family: 'JetBrains Mono', monospace;
+        letter-spacing: -1.5px;
+      }
+      .streak-frame .num .strike { text-decoration: line-through; color: #999; font-size: 3vw; margin-right: 1vw; }
+      .streak-frame .label {
+        font-size: 1.35vw; color: #6b6b6b; font-weight: 600;
+        text-align: center; margin-top: 0.6vw;
+        letter-spacing: 0.4px; text-transform: uppercase;
+      }
+      .streak-frame .reset-msg {
+        font-size: 1.5vw; color: #555;
+        text-align: center; margin-top: 2vw;
+        line-height: 1.4;
+      }
+      .sound-fam {
+        font-size: 1.6vw; color: #B45309;
+        text-align: center; font-weight: 800;
+        margin-top: 2vw; font-style: italic;
+      }
+
+      /* ============ Variant: Future You ============ */
+      .future-you {
+        margin: 4vw 0 2vw;
+        width: 100%;
+        display: flex; flex-direction: column; align-items: center;
+        gap: 2vw;
+      }
+      .silhouette-wrap {
+        position: relative;
+        width: 30vw; height: 30vw;
+      }
+      .silhouette {
+        width: 100%; height: 100%;
+        background: #FAF6EE;
+        border: 1.5px dashed #C8C4B8;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 8vw; color: #C8C4B8; font-weight: 800;
+        font-family: serif;
+        position: relative;
+      }
+      .silhouette::before {
+        content: '';
+        position: absolute; top: 16%; left: 50%;
+        transform: translateX(-50%);
+        width: 30%; height: 30%; border-radius: 50%;
+        background: #E5E1D8;
+      }
+      .silhouette::after {
+        content: '';
+        position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 70%; height: 50%;
+        background: #E5E1D8;
+        border-top-left-radius: 50%; border-top-right-radius: 50%;
+      }
+      .silhouette .qmark {
+        position: absolute; top: 22%; left: 50%;
+        transform: translateX(-50%);
+        font-size: 8vw; color: rgba(180, 83, 9, 0.6);
+        font-weight: 800; font-family: serif;
+        z-index: 2;
+      }
+      .future-you .label-block {
+        text-align: center;
+      }
+      .future-you .label-line {
+        font-size: 2vw; color: #111;
+        font-weight: 800; line-height: 1.2;
+        letter-spacing: -0.3px;
+      }
+      .future-you .sub-line {
+        font-size: 1.4vw; color: #777;
+        font-style: italic; margin-top: 0.6vw;
+      }
+
+      /* ============ Variant: Day-5 Wall ============ */
+      .day-strip {
+        margin: 4vw 0 2vw;
+        width: 100%;
+      }
+      .day-row {
+        display: flex; align-items: center;
+        gap: 1.2vw;
+        margin-bottom: 1.6vw;
+      }
+      .day-pill {
+        flex-shrink: 0;
+        width: 8vw; height: 8vw;
+        border-radius: 50%;
+        background: #DCFCE7;
+        border: 1.5px solid #16A34A;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.6vw; color: #16A34A; font-weight: 800;
+        font-family: 'JetBrains Mono', monospace;
+        position: relative;
+      }
+      .day-pill.faded {
+        background: #FAF6EE;
+        border-color: rgba(200, 196, 184, 0.5);
+        color: #B0AB9D;
+        opacity: 0.4;
+      }
+      .day-pill.checked::after {
+        content: '✓';
+        position: absolute; top: -1vw; right: -1vw;
+        font-size: 2vw; color: #16A34A; font-weight: 800;
+      }
+      .day-strip .row-1 {
+        display: flex; gap: 1.2vw;
+        flex-wrap: nowrap; justify-content: center;
+      }
+      .wall-block {
+        margin-top: 2.4vw;
+        padding: 2.4vw 3vw;
+        background: rgba(180, 83, 9, 0.08);
+        border-left: 3px solid #B45309;
+        border-radius: 6px;
+      }
+      .wall-block .wall-line {
+        font-size: 2vw; color: #B45309;
+        font-weight: 800; letter-spacing: -0.2px;
+      }
+      .wall-block .wall-sub {
+        font-size: 1.4vw; color: #777;
+        margin-top: 0.6vw; font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Screen 2 — fresh variants for conversion + retention</h1>
+    <p class="lede">
+      Three new directions, each leaning into a specific lever I haven't tried yet:
+      <b style="color: #F59E0B;">pain demonstration</b>,
+      <b style="color: #F59E0B;">identity priming</b>,
+      <b style="color: #F59E0B;">universal dropoff moment</b>.
+    </p>
+
+    <div class="row">
+      <!-- ============ Variant 1: Streak Shattered ============ -->
+      <div class="card">
+        <h3>D · Streak Shattered</h3>
+        <div class="lever">Lever: pain demonstration · conversion</div>
+        <p class="note">Mock-up of a generic competitor habit app showing the moment the streak resets to 0. The user sees the literal pain pattern that screen 4's "your strength holds" later answers.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center">
+              <div class="h-big">You're building<br/>habits blind.</div>
+              <div class="streak-mock">
+                <div class="streak-frame">
+                  <div class="ohno">⚠ Streak broken</div>
+                  <div class="num"><span class="strike">23</span> 0</div>
+                  <div class="label">Day Streak</div>
+                  <div class="reset-msg">You missed yesterday.<br/>Start over from Day 1.</div>
+                </div>
+                <div class="sound-fam">Sound familiar?</div>
+              </div>
+              <div class="quit-line">
+                Most habit apps make missing a day a punishment.<br/>
+                <span class="pop">So most people quit.</span>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="pros">+ Most visceral — shows the EXACT pain users have felt</div>
+        <div class="pros">+ Direct screen 4 setup ("your strength holds")</div>
+        <div class="cons">− Shows competitor-style UI which feels meta</div>
+        <div class="cons">− Risk: too negative-framed for opener</div>
+      </div>
+
+      <!-- ============ Variant 2: Future You ============ -->
+      <div class="card">
+        <h3>E · Future You</h3>
+        <div class="lever">Lever: identity priming · retention</div>
+        <p class="note">Faded silhouette of "future you" with a "?" over the head. The deepest motivation — who you become — surfaced upfront. Identity-based habit formation is the strongest long-term retention driver.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center">
+              <div class="h-big">Who are you<br/>becoming?</div>
+              <div class="future-you">
+                <div class="silhouette-wrap">
+                  <div class="silhouette">
+                    <div class="qmark">?</div>
+                  </div>
+                </div>
+                <div class="label-block">
+                  <div class="label-line">90 days from now.</div>
+                  <div class="sub-line">A runner? A meditator? A reader?</div>
+                </div>
+              </div>
+              <div class="quit-line">
+                Most habit apps just count days.<br/>
+                <span class="pop">They never tell you who you're becoming.</span>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="pros">+ Strongest long-term retention driver (identity > goals)</div>
+        <div class="pros">+ Differentiated headline question — invites curiosity</div>
+        <div class="cons">− Headline shift moves away from "blind" metaphor</div>
+        <div class="cons">− Less concrete than other variants</div>
+      </div>
+
+      <!-- ============ Variant 3: Day-5 Wall ============ -->
+      <div class="card">
+        <h3>F · Day-5 Wall</h3>
+        <div class="lever">Lever: universal dropoff moment · conversion</div>
+        <p class="note">Visual of days 1–5 with checkmarks (the "honeymoon" of any habit attempt), then a hard wall. The single moment where 80% of attempts die — surfaced as a visual.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center">
+              <div class="h-big">You always make it<br/>to Day 5.</div>
+              <div class="day-strip">
+                <div class="row-1">
+                  <div class="day-pill checked">1</div>
+                  <div class="day-pill checked">2</div>
+                  <div class="day-pill checked">3</div>
+                  <div class="day-pill checked">4</div>
+                  <div class="day-pill checked">5</div>
+                  <div class="day-pill faded">6</div>
+                  <div class="day-pill faded">7</div>
+                </div>
+                <div class="wall-block">
+                  <div class="wall-line">Then what?</div>
+                  <div class="wall-sub">— You don't know. So you stop.</div>
+                </div>
+              </div>
+              <div class="quit-line">
+                <span class="pop">80% of habit attempts die between day 5 and day 14.</span>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+        <div class="pros">+ Universally relatable — every user has had this moment</div>
+        <div class="pros">+ Concrete stat anchors with credibility</div>
+        <div class="pros">+ Visual is unique — no other habit app shows this</div>
+        <div class="cons">− Headline shift loses "blind/map" metaphor</div>
+        <div class="cons">− Need a real source for the 80% stat</div>
+      </div>
+    </div>
+
+    <p style="text-align:center; color:#666; font-size:11px; max-width: 900px; margin: 28px auto 0;">
+      Each variant trades the "blind/map" metaphor for a sharper conversion or retention lever.
+      The trade-off: stronger emotional hit on screen 2, but weaker narrative payoff to screen 3's "we give you the map" reveal.
+    </p>
+  </body>
+</html>

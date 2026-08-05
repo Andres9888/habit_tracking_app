@@ -1,7 +1,7 @@
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { useThemeColors } from '@/theme/ThemeContext';
 
-import { BenefitRow } from '../components/BenefitRow';
+import { NumberedSteps } from '../components/NumberedSteps';
 import { SolutionMapPreview } from '../components/SolutionMapPreview';
 import { StepComponentProps } from '../types';
 
@@ -27,66 +27,27 @@ export function SolutionIntroStep({ onNext }: StepComponentProps) {
               textAlign: 'center',
             }}
           >
-            We give you{'\n'}the map.
+            Here&rsquo;s your{'\n'}
+            <Text style={{ color: '#B87333' }}>map.</Text>
           </Text>
           <SolutionMapPreview />
-          <View style={{ marginTop: 8 }}>
-            <BenefitRow
-              benefit="Know how long, how hard."
-              feature="Science-backed length, per habit."
-              icon="⏱"
-            />
-            <BenefitRow
-              benefit="Know where you are. Know what to climb to."
-              feature="Named markers: Copper, Iron, Gold."
-              icon="📍"
-            />
-            <BenefitRow
-              benefit="Watch your chain transform."
-              feature="Every 20% of the way, a visible upgrade — proof, not numbers."
-              icon="🔗"
-            />
-          </View>
-          <View
-            style={{
-              backgroundColor: '#F3EEE5',
-              borderColor: '#B87333',
-              borderRadius: 10,
-              borderStyle: 'dashed',
-              borderWidth: 1,
-              marginTop: 18,
-              paddingHorizontal: 16,
-              paddingVertical: 14,
-            }}
-          >
-            <Text
-              style={{
-                color: '#5C3D17',
-                fontSize: 14,
-                fontWeight: '600',
-                lineHeight: 20,
-                textAlign: 'center',
-              }}
-            >
-              Don&rsquo;t have a habit in mind?{'\n'}
-              <Text style={{ color: '#B87333', fontWeight: '800' }}>
-                We have 253 ready to go.
-              </Text>
-            </Text>
-          </View>
+          <NumberedSteps />
         </ScrollView>
-        <View style={{ alignItems: 'center', paddingBottom: 16, paddingTop: 12 }}>
-          <Text
-            style={{
-              color: colors.text.tertiary,
-              fontSize: 13,
-              fontWeight: '500',
-              letterSpacing: 1.5,
-              textTransform: 'uppercase',
-            }}
-          >
-            Tap to continue
+        <View
+          style={{
+            alignItems: 'center',
+            flexDirection: 'row',
+            gap: 6,
+            justifyContent: 'flex-end',
+            paddingBottom: 16,
+            paddingRight: 4,
+            paddingTop: 12,
+          }}
+        >
+          <Text style={{ color: colors.text.secondary, fontSize: 14, fontWeight: '500' }}>
+            tap to continue
           </Text>
+          <Text style={{ color: '#B87333', fontSize: 16, fontWeight: '700' }}>→</Text>
         </View>
       </View>
     </Pressable>

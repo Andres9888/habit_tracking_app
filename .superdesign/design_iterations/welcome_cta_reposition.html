@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hook-act CTA reposition — bottom-right arrow</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.55; }
+      .section-label {
+        max-width: 1100px; margin: 28px auto 14px;
+        display: flex; align-items: center; gap: 14px;
+      }
+      .section-label .num {
+        font-size: 11px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #10b981;
+        padding: 4px 10px;
+        border: 1px solid rgba(16, 185, 129, 0.4);
+        border-radius: 999px;
+      }
+      .section-label .name { font-size: 15px; font-weight: 800; color: #eee; }
+      .section-label .subtitle { font-size: 13px; color: #888; flex: 1; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        max-width: 900px;
+        margin: 0 auto 28px;
+      }
+      .row.three {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1300px;
+      }
+      @media (max-width: 850px) {
+        .row, .row.three { grid-template-columns: 1fr; }
+      }
+
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+      .card h3 {
+        font-size: 12px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1.5px;
+        color: #10b981; margin-bottom: 4px;
+      }
+      .card p.note { font-size: 12px; color: #aaa; margin-bottom: 12px; line-height: 1.5; }
+      .change-pill {
+        display: inline-block;
+        background: rgba(5, 150, 105, 0.18);
+        color: #10b981;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-weight: 700; font-size: 10px;
+        letter-spacing: 0.4px; margin-left: 6px;
+      }
+      .change-pill.muted { background: rgba(140,140,140,0.18); color: #aaa; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+      .center {
+        flex: 1; display: flex;
+        flex-direction: column; align-items: center;
+        justify-content: center;
+      }
+
+      /* HEADERS */
+      .h-hello { font-weight: 800; font-size: 11vw; line-height: 1; letter-spacing: -3px; color: #111; text-align: center; }
+      .h-mid { font-weight: 800; font-size: 6.2vw; line-height: 1.05; letter-spacing: -1.6px; color: #111; text-align: center; }
+      .h-mid-3 { font-weight: 800; font-size: 5vw; line-height: 1.05; letter-spacing: -1.4px; color: #111; text-align: center; }
+
+      /* Current centered "tap to begin" + underline */
+      .cta-centered {
+        display: flex; flex-direction: column; align-items: center;
+        gap: 1.2vw; padding-bottom: 4vw;
+      }
+      .cta-centered .text {
+        font-size: 1.3vw; color: #888;
+        text-transform: uppercase; letter-spacing: 2px;
+        font-weight: 600;
+      }
+      .cta-centered .underline {
+        height: 3px; width: 9vw;
+        background: #059669; opacity: 0.7; border-radius: 2px;
+      }
+
+      /* Proposed: bottom-right with arrow */
+      .cta-bottomright {
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text {
+        font-size: 1.6vw; color: #555;
+        font-weight: 600;
+      }
+      .cta-bottomright .arrow {
+        font-size: 2vw; color: #555;
+        font-weight: 600;
+      }
+
+      /* Screen 2 specifics */
+      .blind-path {
+        position: relative;
+        margin: 4vw 0 3vw;
+        height: 16vw; width: 100%;
+      }
+      .blind-path .pin {
+        position: absolute; top: 50%; left: 12%;
+        transform: translateY(-50%);
+        width: 3vw; height: 3vw; border-radius: 50%;
+        background: #B45309;
+        box-shadow: 0 0 0 4px rgba(180, 83, 9, 0.18);
+      }
+      .blind-path .trail {
+        position: absolute; top: 50%; left: 17%; right: 8%;
+        height: 3px; transform: translateY(-50%);
+        background: linear-gradient(90deg,
+          rgba(180, 83, 9, 0.6) 0%,
+          rgba(180, 83, 9, 0.4) 30%,
+          rgba(180, 83, 9, 0.18) 55%,
+          rgba(180, 83, 9, 0) 95%);
+        border-radius: 2px;
+      }
+      .blind-path .fog {
+        position: absolute; top: 0; right: 0; bottom: 0;
+        width: 55%;
+        background: linear-gradient(90deg, rgba(243, 238, 229, 0) 0%, #F3EEE5 75%);
+      }
+      .blind-path .question {
+        position: absolute; top: 28%; right: 14%;
+        font-size: 4vw; color: rgba(180, 83, 9, 0.4);
+        font-weight: 800;
+        font-family: serif;
+      }
+      .lost-line {
+        font-size: 2.6vw; color: #B45309;
+        font-weight: 800; text-align: center;
+        letter-spacing: -0.4px; margin-top: 1vw;
+      }
+      .quit-line {
+        font-size: 1.7vw; color: #555;
+        text-align: center; margin-top: 1vw;
+        max-width: 78%; line-height: 1.4;
+      }
+
+      /* Screen 3 specifics — abbreviated */
+      .map-preview {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        height: 14vw; margin-top: 2vw;
+        position: relative; overflow: hidden;
+      }
+      .map-preview::before {
+        content: '';
+        position: absolute; left: 8%; right: 8%; top: 50%;
+        height: 3px; transform: translateY(-50%);
+        background: repeating-linear-gradient(90deg, #B87333, #B87333 6px, transparent 6px, transparent 12px);
+      }
+      .map-preview .pin {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 2.6vw; height: 2.6vw; border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .map-preview .pin.copper { left: 22%; background: #B87333; }
+      .map-preview .pin.iron   { left: 52%; background: #6B7280; }
+      .map-preview .pin.gold   { left: 82%; background: #D4A017; }
+      .benefit-mini {
+        font-size: 1.5vw; color: #555;
+        margin-top: 1.6vw; line-height: 1.5;
+        text-align: center;
+      }
+      .benefit-mini b { color: #111; font-weight: 800; }
+
+      .footer-block { margin-top: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>Hook-act CTA reposition — bottom-right with arrow</h1>
+    <p class="lede">
+      Mock based on your reference image. Replaces centered "Tap to begin" + underline
+      with a single right-aligned line ending in an arrow. Eye lands on the headline,
+      then drops bottom-right naturally — the arrow signals "next" without needing
+      the green underline affordance.
+    </p>
+
+    <!-- ============== Screen 1 — current vs proposed ============== -->
+    <div class="section-label">
+      <span class="num">Compare</span>
+      <span class="name">Screen 1 · welcome</span>
+      <span class="subtitle">Current vs proposed</span>
+    </div>
+
+    <div class="row">
+      <!-- Current -->
+      <div class="card">
+        <h3>A · Current <span class="change-pill muted">in simulator</span></h3>
+        <p class="note">Centered "Tap to begin" with green underline. Reads as ceremonious — almost button-like.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center">
+              <div class="h-hello">Hey</div>
+            </div>
+            <div class="cta-centered">
+              <div class="text">Tap to begin</div>
+              <div class="underline"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Proposed -->
+      <div class="card">
+        <h3>B · Proposed <span class="change-pill">bottom-right + arrow</span></h3>
+        <p class="note">Right-aligned with "→". Casual, less ceremonious. Arrow does the affordance work the underline did. Matches your reference image layout (with our cream BG instead of orange).</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center">
+              <div class="h-hello">Hey</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to begin</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============== Screens 2 + 3 — proposed pattern extended ============== -->
+    <div class="section-label">
+      <span class="num">Extend</span>
+      <span class="name">Hook act consistency</span>
+      <span class="subtitle">Screens 2 and 3 with the same bottom-right arrow pattern</span>
+    </div>
+
+    <div class="row three">
+      <div class="card">
+        <h3>Screen 1 · welcome <span class="change-pill">proposed</span></h3>
+        <p class="note">"tap to begin →"</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center">
+              <div class="h-hello">Hey</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to begin</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Screen 2 · problem <span class="change-pill">proposed</span></h3>
+        <p class="note">"tap to continue →"</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center" style="padding-top: 6vw; justify-content: flex-start;">
+              <div class="h-big">You're building<br/>habits blind.</div>
+              <div class="blind-path" style="margin-top: 4vw;">
+                <div class="pin"></div>
+                <div class="trail"></div>
+                <div class="fog"></div>
+                <div class="question">?</div>
+              </div>
+              <div class="lost-line">You're lost.</div>
+              <div class="quit-line">No map. No markers. So you quit.</div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Screen 3 · solutionIntro <span class="change-pill">proposed</span></h3>
+        <p class="note">"tap to continue →"</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="center" style="padding-top: 6vw; justify-content: flex-start;">
+              <div class="h-mid-3">We give you<br/>the map.</div>
+              <div class="map-preview">
+                <span class="pin copper"></span>
+                <span class="pin iron"></span>
+                <span class="pin gold"></span>
+              </div>
+              <div class="benefit-mini">⏱  <b>Know how long.</b></div>
+              <div class="benefit-mini">📍  <b>Know where you are.</b></div>
+              <div class="benefit-mini">🔗  <b>Watch your chain transform.</b></div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align:center; color:#666; font-size:11px; max-width:900px; margin: 28px auto 0;">
+      Decision needed: apply pattern to screens 1+2+3 (recommended for hook-act consistency), or just screen 1?
+    </p>
+  </body>
+</html>

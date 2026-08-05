@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen 3 — headline reword variants</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1300px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.6; }
+      .lede code { color: #B87333; }
+
+      .section-label {
+        max-width: 1300px; margin: 28px auto 12px;
+        font-size: 11px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #B87333;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        max-width: 1300px;
+        margin: 0 auto 24px;
+      }
+      .row.two {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 880px;
+      }
+      @media (max-width: 1100px) { .row, .row.two { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 700px) { .row, .row.two { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 16px; padding: 12px; }
+      .card .rank {
+        font-size: 10px; font-weight: 800; letter-spacing: 1px;
+        text-transform: uppercase; color: #B87333;
+        margin-bottom: 4px;
+      }
+      .card h3 {
+        font-size: 14px; font-weight: 800; color: #fff;
+        margin-bottom: 6px; line-height: 1.3;
+      }
+      .card p.note { font-size: 11px; color: #aaa; margin-bottom: 10px; line-height: 1.5; min-height: 32px; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 26px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 10px 24px -10px rgba(0,0,0,0.5);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 16px 16px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+
+      .h-big {
+        font-weight: 800; font-size: 6.4vw; line-height: 1.05;
+        letter-spacing: -1.6px; color: #111;
+        text-align: center; margin-top: 4vw;
+      }
+      .h-big.smaller { font-size: 5.6vw; letter-spacing: -1.4px; }
+      .copper { color: #B87333; }
+
+      .map-preview {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px solid #ECE6D9;
+        border-radius: 12px;
+        height: 14vw; margin: 3vw 0 2vw;
+        position: relative; overflow: hidden;
+      }
+      .map-preview::before {
+        content: '';
+        position: absolute; left: 8%; right: 8%; top: 50%;
+        height: 3px; transform: translateY(-50%);
+        background: repeating-linear-gradient(90deg, #B87333, #B87333 6px, transparent 6px, transparent 12px);
+      }
+      .map-preview .pin {
+        position: absolute; top: 50%; transform: translate(-50%, -50%);
+        width: 2.6vw; height: 2.6vw; border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      .map-preview .pin.copper { left: 22%; background: #B87333; }
+      .map-preview .pin.iron   { left: 52%; background: #6B7280; }
+      .map-preview .pin.gold   { left: 82%; background: #D4A017; }
+      .map-preview .pin-label {
+        position: absolute; top: calc(50% + 2.4vw);
+        font-size: 1vw; font-weight: 700;
+        transform: translateX(-50%); letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .map-preview .pin-label.copper { left: 22%; color: #B87333; }
+      .map-preview .pin-label.iron   { left: 52%; color: #6B7280; }
+      .map-preview .pin-label.gold   { left: 82%; color: #D4A017; }
+
+      .benefit-list { margin-top: 1.6vw; }
+      .benefit {
+        display: flex; gap: 2.4vw; padding: 1.4vw 0;
+        border-top: 1px solid #ECE6D9;
+        align-items: flex-start;
+      }
+      .benefit:first-child { border-top: none; }
+      .benefit .icon {
+        font-size: 3.2vw; line-height: 1;
+        flex-shrink: 0; width: 4.6vw; text-align: center;
+        margin-top: 0.4vw;
+      }
+      .benefit .body { display: flex; flex-direction: column; gap: 0.4vw; flex: 1; }
+      .benefit .b-title { font-size: 1.7vw; font-weight: 800; color: #111; line-height: 1.2; letter-spacing: -0.3px; }
+      .benefit .b-feat { font-size: 1.25vw; color: #777; line-height: 1.45; }
+      .benefit .b-feat .em { color: #B87333; font-weight: 800; }
+
+      .cta-bottomright {
+        margin-top: auto;
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text { font-size: 1.5vw; color: #555; font-weight: 600; }
+      .cta-bottomright .arrow { font-size: 1.8vw; color: #B87333; font-weight: 700; }
+
+      .legend {
+        max-width: 1300px; margin: 28px auto 0;
+        padding: 16px 22px;
+        background: #252525; border-radius: 14px;
+        font-size: 12px; color: #aaa; line-height: 1.7;
+      }
+      .legend b { color: #B87333; }
+      .legend code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; color: #ddd; }
+    </style>
+  </head>
+  <body>
+    <h1>Screen 3 — headline reword variants</h1>
+    <p class="lede">
+      Same phone, same visual, same 2-benefit structure (Know how long / Named markers + chain).
+      Only the headline changes. Map preview directly below proves whatever the headline claims —
+      so the headline that pairs cleanest with "you literally see the map next" wins.
+    </p>
+
+    <div class="section-label">Top 3 picks</div>
+    <div class="row">
+      <!-- 1: Here's your map -->
+      <div class="card">
+        <div class="rank">🥇 Pick 1 of 5</div>
+        <h3>"Here's your map."</h3>
+        <p class="note">Three words. Possessive ("your"). Present tense — already done. Pairs literally with the visual right below.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers — <span class="em">Copper, Iron, Gold</span> — and your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2: Now you have a map -->
+      <div class="card">
+        <div class="rank">🥈 Pick 2 of 5</div>
+        <h3>"Now you have a map."</h3>
+        <p class="note">Strongest screen 2 mirror — "no map" → "now you have a map." Five words but reads naturally.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big smaller">Now you have<br/>a <span class="copper">map.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers — <span class="em">Copper, Iron, Gold</span> — and your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3: Every step is mapped -->
+      <div class="card">
+        <div class="rank">🥉 Pick 3 of 5</div>
+        <h3>"Every step is mapped."</h3>
+        <p class="note">Confident, complete. Sets up the named markers below — every step has a name.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big smaller">Every step<br/>is <span class="copper">mapped.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers — <span class="em">Copper, Iron, Gold</span> — and your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Alternates</div>
+    <div class="row two">
+      <!-- 4: We mapped the way -->
+      <div class="card">
+        <div class="rank">Alternate · 4 of 5</div>
+        <h3>"We mapped the way."</h3>
+        <p class="note">Keeps "we" framing but swaps the weak "give" for the active "mapped." Closest to current copy.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big smaller">We mapped<br/>the <span class="copper">way.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers — <span class="em">Copper, Iron, Gold</span> — and your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5: Your map is ready -->
+      <div class="card">
+        <div class="rank">Alternate · 5 of 5</div>
+        <h3>"Your map is ready."</h3>
+        <p class="note">Possessive + present tense + completion verb. Feels like an arrival.</p>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big smaller">Your map<br/>is <span class="copper">ready.</span></div>
+            <div class="map-preview">
+              <span class="pin copper"></span>
+              <span class="pin iron"></span>
+              <span class="pin gold"></span>
+              <span class="pin-label copper">Copper</span>
+              <span class="pin-label iron">Iron</span>
+              <span class="pin-label gold">Gold</span>
+            </div>
+            <div class="benefit-list">
+              <div class="benefit">
+                <div class="icon">⏱</div>
+                <div class="body">
+                  <div class="b-title">Know how long.</div>
+                  <div class="b-feat">Science-backed length, per habit.</div>
+                </div>
+              </div>
+              <div class="benefit">
+                <div class="icon">📍</div>
+                <div class="body">
+                  <div class="b-title">Know where you are.</div>
+                  <div class="b-feat">Named markers — <span class="em">Copper, Iron, Gold</span> — and your chain transforms at each.</div>
+                </div>
+              </div>
+            </div>
+            <div class="cta-bottomright">
+              <span class="text">tap to continue</span>
+              <span class="arrow">→</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <b>What's identical across all 5</b> — map preview visual, 2-benefit structure (chain folded into markers benefit), bottom-right copper arrow CTA.<br/>
+      <b>What changes</b> — only the headline word choice + emphasized last word in copper.<br/>
+      <b>My pick</b> — <code>"Here's your map."</code> The visual right below proves the claim instantly. "Here's" + visible map = no friction between promise and proof.
+    </div>
+  </body>
+</html>

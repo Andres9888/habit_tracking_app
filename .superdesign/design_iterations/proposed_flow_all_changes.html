@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposed flow — all 5 priority changes</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 18px 64px;
+      }
+
+      h1 { font-size: 22px; font-weight: 800; margin: 0 auto 6px; max-width: 1500px; }
+      .lede {
+        color: #aaa; font-size: 13px; line-height: 1.6;
+        max-width: 1100px; margin: 0 auto 28px;
+      }
+      .lede code { color: #B87333; }
+      .lede strong { color: #fff; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 22px;
+        max-width: 1500px;
+        margin: 0 auto 28px;
+      }
+      @media (max-width: 1180px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 700px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 18px; padding: 16px; }
+
+      .step-head {
+        display: flex; align-items: center; gap: 8px;
+        margin-bottom: 6px;
+      }
+      .step-num {
+        width: 24px; height: 24px; border-radius: 999px;
+        background: #B87333; color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; font-weight: 800;
+      }
+      .step-name { font-size: 13px; font-weight: 800; color: #fff; }
+      .step-tag {
+        margin-left: auto;
+        font-size: 9px; font-weight: 800; letter-spacing: 0.8px;
+        text-transform: uppercase; padding: 2px 7px; border-radius: 999px;
+        background: rgba(184,115,51,0.22); color: #D49860;
+      }
+      .step-tag.new { background: rgba(74,222,128,0.18); color: #86EFAC; }
+
+      .change-line {
+        font-size: 11px; color: #aaa; line-height: 1.5;
+        margin-bottom: 12px; min-height: 32px;
+      }
+      .change-line strong { color: #ddd; font-weight: 700; }
+      .change-line s { color: #666; }
+
+      /* Phone */
+      .phone {
+        width: 100%;
+        aspect-ratio: 375/812;
+        border-radius: 22px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.05), 0 10px 24px -12px rgba(0,0,0,0.6);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 26%; height: 4.2%;
+        background: #000; border-radius: 0 0 14px 14px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 12% 7% 6%;
+        display: flex; flex-direction: column;
+      }
+      .body {
+        flex: 1; display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+      }
+      .copper { color: #B87333; }
+
+      /* Screen 1 — single big word, recognition prompt */
+      .h-mega {
+        font-size: 17vw; font-weight: 800;
+        letter-spacing: -3.5px; color: #111;
+        text-align: center; line-height: 0.95;
+      }
+      @media (min-width: 760px) { .h-mega { font-size: 56px; } }
+
+      /* Screen 2 — sharpened pain */
+      .h-day {
+        font-size: 6.2vw; font-weight: 800;
+        line-height: 1.1; letter-spacing: -1px;
+        color: #111; text-align: center;
+      }
+      @media (min-width: 760px) { .h-day { font-size: 22px; } }
+      .h-day .copper { color: #B87333; }
+
+      .blind-block {
+        margin: 14px auto;
+        width: 78%; height: 4.5%;
+        background: linear-gradient(90deg, #ECE6D9 0%, #DDD3BE 100%);
+        border-radius: 8px; opacity: 0.6;
+      }
+      .diag-sub {
+        font-size: 3.2vw; font-weight: 700; color: #B45309;
+        text-align: center; margin-top: 4px;
+      }
+      @media (min-width: 760px) { .diag-sub { font-size: 11px; } }
+      .meta-line {
+        font-size: 2.8vw; color: #777;
+        text-align: center; margin-top: 6px; line-height: 1.4;
+        max-width: 88%;
+      }
+      @media (min-width: 760px) { .meta-line { font-size: 9.5px; } }
+
+      /* Screen 3 — tightened map */
+      .h-map {
+        font-size: 6vw; font-weight: 800;
+        line-height: 1.1; letter-spacing: -1px;
+        color: #111; text-align: center;
+      }
+      @media (min-width: 760px) { .h-map { font-size: 21px; } }
+
+      .map-preview {
+        background: #FAF6EE; border: 1px solid #ECE6D9;
+        border-radius: 8px; padding: 7% 6%;
+        margin: 10% auto 5%;
+      }
+      .map-preview .row-top {
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 2.3vw; font-weight: 700; color: #111;
+        margin-bottom: 5%;
+      }
+      @media (min-width: 760px) { .map-preview .row-top { font-size: 8.5px; } }
+      .map-preview .right { color: #B87333; }
+      .map-preview .bar {
+        position: relative; height: 4px; background: #ECE6D9; border-radius: 2px;
+        margin-bottom: 5%;
+      }
+      .map-preview .bar::before {
+        content: ''; position: absolute; left: 0; top: 0;
+        width: 25%; height: 100%; background: #B87333; border-radius: 2px;
+      }
+      .map-preview .ticks {
+        display: flex; justify-content: space-between;
+        font-size: 1.9vw; font-weight: 700;
+      }
+      @media (min-width: 760px) { .map-preview .ticks { font-size: 7px; } }
+      .map-preview .ticks .copper-tick { color: #B87333; }
+      .map-preview .ticks .iron-tick { color: #595959; }
+      .map-preview .ticks .gold-tick { color: #B7A234; }
+
+      .step-list { display: flex; flex-direction: column; gap: 3.5%; margin-top: 4%; }
+      .step-item { display: flex; gap: 8px; align-items: flex-start; }
+      .step-item .num {
+        flex-shrink: 0; width: 5vw; height: 5vw; border-radius: 50%;
+        border: 1.5px solid #B87333; background: #FAF6EE;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.6vw; font-weight: 800; color: #B87333;
+      }
+      @media (min-width: 760px) { .step-item .num { width: 18px; height: 18px; font-size: 9px; } }
+      .step-item .copy { flex: 1; }
+      .step-item .ttl { font-size: 2.8vw; font-weight: 800; color: #111; line-height: 1.2; }
+      .step-item .sub { font-size: 2.4vw; color: #777; line-height: 1.4; margin-top: 1.5%; }
+      @media (min-width: 760px) {
+        .step-item .ttl { font-size: 10px; }
+        .step-item .sub { font-size: 8.5px; }
+      }
+      .step-item .copper-em { color: #B87333; font-weight: 800; }
+
+      .dropped-note {
+        margin-top: 5%;
+        background: rgba(74,222,128,0.08);
+        border: 1px dashed rgba(74,222,128,0.35);
+        border-radius: 6px; padding: 2.5% 3%;
+        font-size: 2.1vw; color: #4ade80; text-align: center;
+        font-style: italic;
+      }
+      @media (min-width: 760px) { .dropped-note { font-size: 7.5px; } }
+
+      /* Screen 4 — pick your habit */
+      .h-pick {
+        font-size: 5.6vw; font-weight: 800;
+        line-height: 1.15; letter-spacing: -0.8px;
+        color: #111; text-align: left;
+      }
+      @media (min-width: 760px) { .h-pick { font-size: 19px; } }
+      .pick-sub {
+        font-size: 3vw; color: #777;
+        margin-top: 3%; line-height: 1.5;
+      }
+      @media (min-width: 760px) { .pick-sub { font-size: 10.5px; } }
+
+      .chip-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3.5%;
+        margin-top: 7%;
+      }
+      .chip {
+        background: #FAF6EE;
+        border: 1px solid #ECE6D9;
+        border-radius: 10px;
+        padding: 5% 5%;
+        display: flex; align-items: center; gap: 8px;
+      }
+      .chip.selected {
+        background: #FFF8EC;
+        border-color: #B87333;
+        box-shadow: 0 0 0 2px rgba(184,115,51,0.18);
+      }
+      .chip .marker {
+        width: 5vw; height: 5vw; min-width: 18px; min-height: 18px;
+        border-radius: 50%; background: #B87333;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 2.5vw; font-weight: 800; color: #fff;
+        flex-shrink: 0;
+      }
+      @media (min-width: 760px) {
+        .chip .marker { width: 20px; height: 20px; font-size: 9.5px; }
+      }
+      .chip.muted .marker { background: #C8B89A; }
+      .chip .label-row {
+        display: flex; flex-direction: column; gap: 1px; flex: 1;
+      }
+      .chip .name { font-size: 2.8vw; font-weight: 800; color: #111; line-height: 1.1; }
+      .chip .span { font-size: 2.2vw; color: #888; }
+      @media (min-width: 760px) {
+        .chip .name { font-size: 10px; }
+        .chip .span { font-size: 7.5px; }
+      }
+      .chip.custom { grid-column: span 2; justify-content: center; }
+      .chip.custom .name { color: #B87333; }
+
+      /* Bottom CTA — present on all 4 screens */
+      .cta-row {
+        display: flex; flex-direction: column;
+        gap: 4px; padding-bottom: 2px;
+      }
+      .cta-btn {
+        background: #B87333;
+        border-radius: 10px;
+        padding: 4% 5%;
+        text-align: center;
+        font-size: 3vw; font-weight: 800;
+        color: #fff; letter-spacing: -0.2px;
+      }
+      @media (min-width: 760px) { .cta-btn { font-size: 11px; padding: 12px; } }
+      .cta-btn .arr { color: #fff; margin-left: 4px; }
+      .cta-btn.disabled {
+        background: #D6CCB8; color: #fff; opacity: 0.7;
+      }
+
+      .tap-hint {
+        text-align: center;
+        font-size: 2.1vw; color: #999;
+        font-weight: 500;
+      }
+      @media (min-width: 760px) { .tap-hint { font-size: 8px; } }
+
+      /* Notes blocks */
+      .note {
+        margin-top: 12px;
+        background: rgba(184,115,51,0.07);
+        border-left: 2px solid #B87333;
+        padding: 8px 10px; border-radius: 0 6px 6px 0;
+      }
+      .note .label {
+        font-size: 9px; font-weight: 800; color: #B87333;
+        letter-spacing: 0.8px; text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .note p { font-size: 11px; color: #ccc; line-height: 1.5; }
+      .note p + p { margin-top: 4px; }
+      .note code { color: #B87333; background: rgba(184,115,51,0.1); padding: 1px 5px; border-radius: 4px; font-size: 10.5px; }
+
+      /* Footer summary */
+      .summary {
+        max-width: 1100px; margin: 0 auto;
+        background: #252525; border-radius: 16px;
+        padding: 20px 22px;
+      }
+      .summary h2 {
+        font-size: 14px; color: #fff; font-weight: 800;
+        margin-bottom: 12px;
+      }
+      .summary ol { padding-left: 22px; font-size: 12.5px; color: #ccc; line-height: 1.7; }
+      .summary ol li { margin-bottom: 6px; }
+      .summary ol li strong { color: #fff; }
+      .summary code { color: #B87333; background: rgba(184,115,51,0.1); padding: 1px 5px; border-radius: 4px; font-size: 11px; }
+
+      .alts-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+      .alts-row .pill {
+        background: #1f1f1f; border: 1px solid #444;
+        font-size: 10.5px; color: #B87333;
+        padding: 2px 8px; border-radius: 999px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h1>Proposed flow — all 5 priority changes</h1>
+    <p class="lede">
+      Walks through the new flow with every priority change applied:
+      <strong>(1)</strong> screen 1 single-word hook · <strong>(2)</strong> sharpened pain · <strong>(3)</strong> tightened map · <strong>(4)</strong> NEW pick-your-habit screen · <strong>(5)</strong> benefit-loaded primary CTA on every screen (tap-anywhere preserved as fallback).
+    </p>
+
+    <div class="row">
+
+      <!-- SCREEN 1 -->
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">1</div>
+          <div class="step-name">Hook</div>
+          <div class="step-tag">Reworded · CTA added</div>
+        </div>
+        <p class="change-line">Was <s>"Hey"</s>. Now a <strong>recognition prompt</strong> in one word — keeps the 72pt minimalism but earns screen 2's diagnosis instead of being a vibe.</p>
+
+        <div class="phone"><div class="screen">
+          <div class="body">
+            <div class="h-mega">Stuck?</div>
+          </div>
+          <div class="cta-row">
+            <div class="cta-btn">Show me why<span class="arr">→</span></div>
+            <div class="tap-hint">or tap anywhere</div>
+          </div>
+        </div></div>
+
+        <div class="note">
+          <div class="label">Copy alts (single-word, 72pt)</div>
+          <div class="alts-row">
+            <span class="pill">Stuck?</span>
+            <span class="pill">Lost?</span>
+            <span class="pill">Again?</span>
+            <span class="pill">Strength.</span>
+            <span class="pill">Map?</span>
+          </div>
+          <p style="margin-top:8px">Picked <code>Stuck?</code> — it's a question (invites a yes), pairs with screen 2's "blind" / "lost" language, and mirrors the actual reason someone opens a habit app.</p>
+        </div>
+      </div>
+
+      <!-- SCREEN 2 -->
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">2</div>
+          <div class="step-name">Sharpened pain</div>
+          <div class="step-tag">Copy + CTA added</div>
+        </div>
+        <p class="change-line">Specific behavior the user has lived. <strong>"Day 5: skipped. Day 6: deleted."</strong> Then the diagnosis ("blind") and the cause ("no map, no markers") drop in as the explanation.</p>
+
+        <div class="phone"><div class="screen">
+          <div class="body">
+            <div class="h-day">Day 5: <span class="copper">skipped.</span><br/>Day 6: <span class="copper">deleted.</span></div>
+            <div class="blind-block"></div>
+            <div class="diag-sub">You're building habits blind.</div>
+            <div class="meta-line">No map. No markers. So you quit.</div>
+          </div>
+          <div class="cta-row">
+            <div class="cta-btn">Show me the map<span class="arr">→</span></div>
+            <div class="tap-hint">or tap anywhere</div>
+          </div>
+        </div></div>
+
+        <div class="note">
+          <div class="label">Why it hits harder</div>
+          <p>The reader recognizes the moment — they've lived it. Specificity is unfakeable; metaphor is dismissable. "Blind" still does its work, but as a <em>diagnosis of the moment we just named</em>, not as the opening claim.</p>
+        </div>
+      </div>
+
+      <!-- SCREEN 3 -->
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">3</div>
+          <div class="step-name">Tightened map</div>
+          <div class="step-tag">Trimmed · CTA added</div>
+        </div>
+        <p class="change-line">Was <s>3 numbered points</s>. Now <strong>2 points</strong>. "Never back to zero" moved to a later screen where the strength bar can <em>show</em> it instead of <em>tell</em> it.</p>
+
+        <div class="phone"><div class="screen">
+          <div class="body">
+            <div class="h-map">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview" style="width: 100%;">
+              <div class="row-top"><span>10-min walk</span><span class="right">21 days</span></div>
+              <div class="bar"></div>
+              <div class="ticks">
+                <span class="copper-tick">Copper</span>
+                <span class="iron-tick">Iron</span>
+                <span class="gold-tick">Gold</span>
+              </div>
+            </div>
+            <div class="step-list">
+              <div class="step-item">
+                <div class="num">1</div>
+                <div class="copy">
+                  <div class="ttl">Know how long.</div>
+                  <div class="sub">Walks: <span class="copper-em">21 days</span>. Most habits: <span class="copper-em">66</span>. Complex: <span class="copper-em">120+</span>.</div>
+                </div>
+              </div>
+              <div class="step-item">
+                <div class="num">2</div>
+                <div class="copy">
+                  <div class="ttl">Know where you are.</div>
+                  <div class="sub">Your strength has a name: <span class="copper-em">Copper → Iron → Gold</span>.</div>
+                </div>
+              </div>
+            </div>
+            <div class="dropped-note">"Never back to zero" → moved to later screen (shown, not told)</div>
+          </div>
+          <div class="cta-row">
+            <div class="cta-btn">Pick my first habit<span class="arr">→</span></div>
+            <div class="tap-hint">or tap anywhere</div>
+          </div>
+        </div></div>
+
+        <div class="note">
+          <div class="label">Why drop point 3</div>
+          <p>"Never back to zero" is the most abstract of the three (strength as a non-resetting metric). Telling it cold lands flat. Land it later when the bar visibly fails to reset on a missed day — that's a 10× stronger payoff for the same idea.</p>
+        </div>
+      </div>
+
+      <!-- SCREEN 4 (NEW) -->
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">4</div>
+          <div class="step-name">Pick your habit</div>
+          <div class="step-tag new">NEW</div>
+        </div>
+        <p class="change-line">Highest-impact addition. <strong>One tap of personal investment</strong> before any further pitch. Every subsequent screen now reflects the user's choice back at them.</p>
+
+        <div class="phone"><div class="screen">
+          <div class="body" style="justify-content: flex-start; padding-top: 4%;">
+            <div style="width: 100%;">
+              <div class="h-pick">What's the one habit<br/>you've been trying<br/>to <span class="copper">build?</span></div>
+              <div class="pick-sub">Just a tap. You can change it later.</div>
+              <div class="chip-grid">
+                <div class="chip selected">
+                  <div class="marker">W</div>
+                  <div class="label-row">
+                    <div class="name">Walk</div>
+                    <div class="span">~21 days</div>
+                  </div>
+                </div>
+                <div class="chip muted">
+                  <div class="marker">M</div>
+                  <div class="label-row">
+                    <div class="name">Meditate</div>
+                    <div class="span">~66 days</div>
+                  </div>
+                </div>
+                <div class="chip muted">
+                  <div class="marker">R</div>
+                  <div class="label-row">
+                    <div class="name">Read</div>
+                    <div class="span">~30 days</div>
+                  </div>
+                </div>
+                <div class="chip muted">
+                  <div class="marker">X</div>
+                  <div class="label-row">
+                    <div class="name">Workout</div>
+                    <div class="span">~66 days</div>
+                  </div>
+                </div>
+                <div class="chip muted">
+                  <div class="marker">P</div>
+                  <div class="label-row">
+                    <div class="name">Practice</div>
+                    <div class="span">~120+ days</div>
+                  </div>
+                </div>
+                <div class="chip muted">
+                  <div class="marker">+</div>
+                  <div class="label-row">
+                    <div class="name">Something else</div>
+                    <div class="span">type your own</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="cta-row">
+            <div class="cta-btn">Continue with Walk<span class="arr">→</span></div>
+            <div class="tap-hint">CTA enables on selection</div>
+          </div>
+        </div></div>
+
+        <div class="note">
+          <div class="label">Why this is the biggest win</div>
+          <p>The first 3 screens are speaker → reader. This one flips to reader → product. Sunk-cost effect kicks in immediately, and every later screen ("watch your <em>walk</em> climb to Iron") personalizes for free. Also kills the empty-state cold-start at the home screen.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Summary -->
+    <div class="summary">
+      <h2>What's different vs. the current flow</h2>
+      <ol>
+        <li><strong>Screen 1:</strong> "Hey" → <code>Stuck?</code> (single word, recognition prompt). Adds primary CTA "Show me why →" with tap-anywhere preserved. <em>Files:</em> <code>WelcomeStep.tsx</code></li>
+        <li><strong>Screen 2:</strong> Headline becomes <code>Day 5: skipped. Day 6: deleted.</code> "You're building habits blind" demoted to subhead. Adds CTA "Show me the map →". <em>Files:</em> <code>ProblemStep.tsx</code></li>
+        <li><strong>Screen 3:</strong> Drops the third numbered point ("Never back to zero"). Two points + the map preview. Adds CTA "Pick my first habit →". <em>Files:</em> <code>SolutionIntroStep.tsx</code>, <code>NumberedSteps.tsx</code></li>
+        <li><strong>Screen 4 (NEW):</strong> Pick-your-habit chip grid + custom option. Selection enables CTA "Continue with [habit] →". <em>Files:</em> new <code>PickHabitStep.tsx</code> + register in <code>stepRegistry.ts</code> + add to <code>types.ts</code> StepId union.</li>
+        <li><strong>CTA pattern:</strong> Reuse the existing <code>PrimaryCTA</code> component already used in <code>OnePeakStep.tsx:61</code>. Tap-anywhere stays via the existing Pressable wrapper.</li>
+      </ol>
+      <p style="font-size:11.5px;color:#888;margin-top:14px;line-height:1.6">
+        <strong style="color:#aaa">Open question:</strong> Screen 1 single word is a placeholder. Other strong candidates: <code>Lost?</code>, <code>Again?</code>, <code>Strength.</code>, <code>Map?</code> — call it before I touch <code>WelcomeStep.tsx</code>.
+      </p>
+    </div>
+
+  </body>
+</html>

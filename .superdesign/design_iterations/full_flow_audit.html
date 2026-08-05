@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onboarding-v2 — full flow audit (current state + conversion analysis)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a; color: #eee;
+        padding: 32px 16px; min-height: 100vh;
+      }
+      h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; max-width: 1400px; margin-left: auto; margin-right: auto; }
+      .lede { color: #888; font-size: 13px; max-width: 1100px; margin: 0 auto 28px; line-height: 1.6; }
+      .lede code { color: #B87333; }
+
+      h2 {
+        font-size: 16px; font-weight: 800; color: #eee;
+        max-width: 1400px; margin: 32px auto 14px;
+        padding-bottom: 8px; border-bottom: 1px solid #333;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        max-width: 1400px;
+        margin: 0 auto 24px;
+      }
+      @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 800px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 500px) { .grid { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 14px; padding: 10px; }
+      .card h3 {
+        font-size: 12px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 1px;
+        color: #B87333; margin-bottom: 4px;
+      }
+      .card .subtitle {
+        font-size: 11px; color: #aaa;
+        margin-bottom: 10px; line-height: 1.4;
+      }
+      .verdict {
+        display: inline-block; padding: 2px 8px; border-radius: 999px;
+        font-size: 9px; font-weight: 800; letter-spacing: 0.6px;
+        margin-top: 8px; margin-right: 4px;
+      }
+      .verdict.keep { background: rgba(16,185,129,0.18); color: #6EE7B7; }
+      .verdict.drop { background: rgba(220,38,38,0.18); color: #FCA5A5; }
+      .verdict.merge { background: rgba(96,165,250,0.18); color: #93C5FD; }
+      .verdict.tweak { background: rgba(251,191,36,0.18); color: #FBBF24; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 22px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 6px 14px -6px rgba(0,0,0,0.5);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4%;
+        background: #000; border-radius: 0 0 12px 12px; z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 11% 7% 7%;
+        display: flex; flex-direction: column;
+      }
+
+      .h-hello { font-weight: 800; font-size: 11vw; line-height: 1; letter-spacing: -3px; color: #111; text-align: center; margin: auto 0; }
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.4px; color: #111; text-align: center; margin-top: 3vw; }
+      .h-mid { font-weight: 800; font-size: 5vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .copper { color: #B87333; }
+      .green { color: #059669; }
+      .amber { color: #B45309; font-weight: 800; }
+
+      /* CTA */
+      .cta-bottomright {
+        margin-top: auto;
+        display: flex; align-items: center; justify-content: flex-end;
+        gap: 1vw; padding: 0 1vw 4vw 0;
+      }
+      .cta-bottomright .text { font-size: 1.4vw; color: #555; font-weight: 600; }
+      .cta-bottomright .arrow { font-size: 1.7vw; color: #B87333; font-weight: 700; }
+      .cta-button {
+        background: #059669; color: #fff;
+        padding: 2.6vw 4vw; border-radius: 10px;
+        font-weight: 800; font-size: 1.7vw;
+        text-align: center; margin-top: auto;
+      }
+      .cta-secondary {
+        border: 1px solid #B87333; background: transparent;
+        padding: 2vw 4vw; border-radius: 10px;
+        font-weight: 700; font-size: 1.3vw; color: #5C3D17;
+        text-align: center; margin-top: 1.4vw;
+      }
+
+      /* Screen 2 — blind path */
+      .blind-path {
+        position: relative; margin: 3vw 0; height: 12vw; width: 100%;
+      }
+      .blind-path .pin { position: absolute; top: 50%; left: 12%; transform: translateY(-50%); width: 2.4vw; height: 2.4vw; border-radius: 50%; background: #B45309; box-shadow: 0 0 0 4px rgba(180,83,9,0.18); }
+      .blind-path .trail { position: absolute; top: 50%; left: 17%; right: 8%; height: 3px; transform: translateY(-50%); background: linear-gradient(90deg, rgba(180,83,9,0.6), rgba(180,83,9,0)); border-radius: 2px; }
+      .blind-path .fog { position: absolute; top: 0; right: 0; bottom: 0; width: 60%; background: linear-gradient(90deg, transparent, #F3EEE5); }
+      .blind-path .question { position: absolute; top: 28%; right: 14%; font-size: 3.4vw; color: rgba(180,83,9,0.4); font-weight: 800; font-family: serif; }
+
+      /* Screen 3 — map */
+      .map-preview {
+        background: linear-gradient(180deg, #FAF6EE, #F3EEE5);
+        border: 1px solid #ECE6D9; border-radius: 10px;
+        height: 11vw; margin: 2vw 0; position: relative; overflow: hidden;
+      }
+      .map-preview::before { content: ''; position: absolute; left: 8%; right: 8%; top: 50%; height: 2px; transform: translateY(-50%); background: repeating-linear-gradient(90deg, #B87333, #B87333 5px, transparent 5px, transparent 10px); }
+      .map-preview .pin { position: absolute; top: 50%; transform: translate(-50%,-50%); width: 2.2vw; height: 2.2vw; border-radius: 50%; border: 2px solid #fff; }
+      .map-preview .pin.copper { left: 22%; background: #B87333; }
+      .map-preview .pin.iron { left: 52%; background: #6B7280; }
+      .map-preview .pin.gold { left: 82%; background: #D4A017; }
+
+      /* Numbered steps */
+      .steps { margin-top: 1.4vw; gap: 1.2vw; display: flex; flex-direction: column; }
+      .step { display: flex; gap: 1.4vw; align-items: flex-start; }
+      .step .num { width: 4vw; height: 4vw; border-radius: 50%; background: #FAF6EE; border: 1px solid #B87333; display: flex; align-items: center; justify-content: center; font-size: 1.4vw; font-weight: 800; color: #B87333; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+      .step .body { flex: 1; }
+      .step .title { font-size: 1.4vw; font-weight: 800; color: #111; }
+      .step .sub { font-size: 1vw; color: #777; margin-top: 0.3vw; line-height: 1.4; }
+
+      /* Screen 4 — split visual */
+      .split { display: flex; gap: 1.6vw; margin: 2.6vw 0; }
+      .split-col { flex: 1; background: #FAF6EE; border: 1px solid #ECE6D9; border-radius: 8px; padding: 1.6vw; }
+      .split-col .lbl { font-size: 1vw; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+      .split-col .num { font-size: 4vw; font-weight: 800; line-height: 1; margin-top: 0.4vw; font-family: 'JetBrains Mono', monospace; }
+      .split-col .num.streak { color: #999; text-decoration: line-through; }
+      .split-col .num.strength { color: #059669; }
+      .split-col .delta { font-size: 1vw; margin-top: 0.8vw; font-weight: 700; }
+      .split-col .delta.pop { color: #B45309; }
+      .split-col .delta.em { color: #059669; }
+
+      /* Screen 5 — tier progression */
+      .tiers { display: flex; align-items: center; justify-content: space-between; margin: 3vw 0; gap: 1.4vw; }
+      .tiers .link { flex: 1; height: 4vw; border-radius: 1.4vw; }
+      .tiers .copper-link { background: linear-gradient(180deg, #C68C57, #8C5524); }
+      .tiers .iron-link { background: linear-gradient(180deg, #8B95A2, #4F5862); }
+      .tiers .gold-link { background: linear-gradient(180deg, #E8C158, #B58917); }
+      .tiers .arrow-x { color: #B87333; font-size: 2vw; font-weight: 800; opacity: 0.6; }
+
+      /* Screen 6 — routes */
+      .routes { margin: 2vw 0; display: flex; flex-direction: column; gap: 1.4vw; }
+      .route { background: #FAF6EE; border: 1px solid #ECE6D9; border-radius: 8px; padding: 1.4vw; }
+      .route .name { font-size: 1.4vw; font-weight: 700; color: #111; }
+      .route .scale { height: 4px; background: #E5E1D8; border-radius: 2px; margin-top: 1vw; position: relative; }
+      .route .dot { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 1.4vw; height: 1.4vw; border-radius: 50%; border: 2px solid #FAF6EE; }
+
+      /* Screen 7 — first route card */
+      .route-card { background: #FAF6EE; border: 1px solid #ECE6D9; border-radius: 10px; padding: 2.4vw; margin: 2vw 0; }
+      .route-card-head { display: flex; align-items: center; gap: 1.6vw; }
+      .route-card-icon { width: 6vw; height: 6vw; border-radius: 50%; background: #ECFDF5; border: 1px solid #BBF7D0; display: flex; align-items: center; justify-content: center; font-size: 2.6vw; }
+      .route-card-info .nm { font-size: 1.6vw; font-weight: 800; color: #111; }
+      .route-card-info .meta { font-size: 1vw; color: #777; margin-top: 0.4vw; }
+      .route-bar { height: 4px; background: #E5E1D8; border-radius: 2px; display: flex; gap: 1vw; margin-top: 1.6vw; }
+      .route-bar .seg { flex: 1; border-radius: 2px; }
+      .route-bar .seg.c { background: #B87333; }
+      .route-bar .seg.i { background: #6B7280; }
+      .route-bar .seg.g { background: #D4A017; opacity: 0.4; }
+
+      .sub-line { font-size: 1.05vw; color: #555; line-height: 1.4; text-align: center; margin-top: 1.4vw; max-width: 90%; align-self: center; }
+      .quit-line { font-size: 1.4vw; color: #555; text-align: center; margin-top: 1.4vw; line-height: 1.4; }
+
+      .recos { max-width: 1400px; margin: 0 auto; padding: 18px 22px; background: #252525; border-radius: 14px; font-size: 13px; color: #ccc; line-height: 1.7; }
+      .recos b { color: #B87333; }
+      .recos h3 { color: #fff; font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+      .recos h3:not(:first-child) { margin-top: 12px; }
+      .recos ul { padding-left: 22px; margin-top: 4px; }
+      .recos li { margin: 4px 0; }
+      .winner { background: linear-gradient(135deg, rgba(184,115,51,0.18), rgba(184,115,51,0.05)); border: 1px solid rgba(184,115,51,0.4); padding: 16px 20px; border-radius: 12px; max-width: 1400px; margin: 0 auto 20px; font-size: 13px; color: #fff; line-height: 1.6; }
+      .winner h2 { font-size: 16px; font-weight: 800; color: #D49860; margin-bottom: 6px; padding: 0; border: 0; }
+    </style>
+  </head>
+  <body>
+    <h1>Onboarding-v2 — full flow audit</h1>
+    <p class="lede">
+      All 7 current screens with verified copy from the codebase. Each card shows the screen, its
+      purpose, and a conversion verdict. Goal: <b style="color:#B87333">maximize conversion to screen 7's commit</b>.
+      <span class="verdict keep">KEEP</span>
+      <span class="verdict tweak">TWEAK</span>
+      <span class="verdict merge">MERGE</span>
+      <span class="verdict drop">DROP</span>
+    </p>
+
+    <h2>Current 7-screen flow</h2>
+    <div class="grid">
+      <!-- Screen 1 -->
+      <div class="card">
+        <h3>1 · welcome</h3>
+        <div class="subtitle">Tone-set hook. One word, one tap.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-hello">Hey</div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <span class="verdict keep">KEEP</span>
+        <div class="subtitle" style="margin-top:6px">Lowest friction, lowest commitment. Sets non-aggressive tone before any reading.</div>
+      </div>
+
+      <!-- Screen 2 -->
+      <div class="card">
+        <h3>2 · problem</h3>
+        <div class="subtitle">Diagnose pain. Plant "blind/map" metaphor.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">You're building<br/>habits <span class="copper">blind.</span></div>
+            <div class="blind-path"><span class="pin"></span><span class="trail"></span><span class="fog"></span><span class="question">?</span></div>
+            <div class="amber" style="text-align:center; font-size: 2vw">You're lost.</div>
+            <div class="quit-line">No map. No markers. So you quit.</div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <span class="verdict tweak">TWEAK</span>
+        <div class="subtitle" style="margin-top:6px"><b>Drop "You're lost"</b> (redundant with headline). Update closing line to externalize blame.</div>
+      </div>
+
+      <!-- Screen 3 -->
+      <div class="card">
+        <h3>3 · solutionIntro</h3>
+        <div class="subtitle">Promise the map. Define the system.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-big">Here's your<br/><span class="copper">map.</span></div>
+            <div class="map-preview"><span class="pin copper"></span><span class="pin iron"></span><span class="pin gold"></span></div>
+            <div class="steps">
+              <div class="step"><div class="num">1</div><div class="body"><div class="title">Know how long.</div><div class="sub">21 / 66 / 120+ days.</div></div></div>
+              <div class="step"><div class="num">2</div><div class="body"><div class="title">Know where you are.</div><div class="sub">Copper → Iron → Gold.</div></div></div>
+              <div class="step"><div class="num">3</div><div class="body"><div class="title">Never back to zero.</div><div class="sub">Habit strength holds.</div></div></div>
+            </div>
+            <div class="cta-bottomright"><span class="text">tap to continue</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <span class="verdict tweak">TWEAK</span>
+        <div class="subtitle" style="margin-top:6px"><b>Step 3 doesn't fit map metaphor.</b> Replace with "Know what's next" (always-a-next-peak) — pulls anti-plateau forward, frees screen 4 for actual strength deep-dive.</div>
+      </div>
+
+      <!-- Screen 4 -->
+      <div class="card">
+        <h3>4 · strengthHolds</h3>
+        <div class="subtitle">Strength concept + visual proof.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-mid" style="margin-top:3vw">You won't end up<br/>back at <span class="green">zero.</span></div>
+            <div class="split">
+              <div class="split-col"><div class="lbl">Streak</div><div class="num streak">30</div><div class="delta pop">→ 0</div></div>
+              <div class="split-col"><div class="lbl">Strength</div><div class="num strength">78</div><div class="delta em">→ 76</div></div>
+            </div>
+            <div class="sub-line">Same missed day. Different consequence.</div>
+            <div class="cta-button">Continue</div>
+          </div>
+        </div>
+        <span class="verdict drop">DROP</span>
+        <span class="verdict merge">OR MERGE</span>
+        <div class="subtitle" style="margin-top:6px"><b>Currently redundant with screen 3 step 3</b>. If we tweak screen 3 to drop strength teaser, this screen becomes the FIRST mention of strength → keep with strong content. Otherwise drop.</div>
+      </div>
+
+      <!-- Screen 5 -->
+      <div class="card">
+        <h3>5 · watchTransform</h3>
+        <div class="subtitle">Chain visual transformation.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-mid" style="margin-top:3vw">You'll watch it<br/>transform.</div>
+            <div class="tiers">
+              <div class="link copper-link"></div>
+              <span class="arrow-x">›</span>
+              <div class="link iron-link"></div>
+              <span class="arrow-x">›</span>
+              <div class="link gold-link"></div>
+            </div>
+            <div class="sub-line">Real material. Real progress you can see.</div>
+            <div class="cta-button">Continue</div>
+          </div>
+        </div>
+        <span class="verdict merge">MERGE INTO 4</span>
+        <div class="subtitle" style="margin-top:6px">Visual reward only. Could be folded into screen 4 as the "what tier looks like" panel — saves a screen.</div>
+      </div>
+
+      <!-- Screen 6 -->
+      <div class="card">
+        <h3>6 · onePeak</h3>
+        <div class="subtitle">Per-habit calibration + always-a-next-peak.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-mid" style="margin-top:3vw">Always one peak<br/>to chase.</div>
+            <div class="routes">
+              <div class="route"><div class="name">Easy · 21 days</div><div class="scale"><span class="dot" style="left:25%; background:#B87333"></span><span class="dot" style="left:65%; background:#6B7280"></span><span class="dot" style="left:100%; background:#D4A017"></span></div></div>
+              <div class="route"><div class="name">Medium · 66 days</div><div class="scale"><span class="dot" style="left:12%; background:#B87333"></span><span class="dot" style="left:35%; background:#6B7280"></span><span class="dot" style="left:100%; background:#D4A017; opacity:0.5"></span></div></div>
+              <div class="route"><div class="name">Hard · 120+ days</div><div class="scale"><span class="dot" style="left:8%; background:#B87333"></span><span class="dot" style="left:25%; background:#6B7280; opacity:0.5"></span><span class="dot" style="left:60%; background:#D4A017; opacity:0.3"></span></div></div>
+            </div>
+            <div class="cta-button">Continue</div>
+          </div>
+        </div>
+        <span class="verdict tweak">TWEAK</span>
+        <div class="subtitle" style="margin-top:6px">Unique content (different habits = different routes). If screen 3 step 3 takes "always a next peak", this becomes pure calibration — could even merge into screen 7 ("here's a route sized to you").</div>
+      </div>
+
+      <!-- Screen 7 -->
+      <div class="card">
+        <h3>7 · pickFirstRoute</h3>
+        <div class="subtitle">Convert intent to action.</div>
+        <div class="phone">
+          <div class="screen">
+            <div class="h-mid" style="margin-top:3vw">Pick your<br/>first route.</div>
+            <div class="route-card">
+              <div class="route-card-head">
+                <div class="route-card-icon">🚶</div>
+                <div class="route-card-info">
+                  <div class="nm">10-minute walk</div>
+                  <div class="meta">Easy · 21 days</div>
+                </div>
+              </div>
+              <div class="route-bar"><span class="seg c"></span><span class="seg i"></span><span class="seg g"></span></div>
+            </div>
+            <div class="cta-button">Start this route</div>
+            <div class="cta-secondary">Don't know yet? <b style="color:#B87333">Browse 253 →</b></div>
+          </div>
+        </div>
+        <span class="verdict keep">KEEP + FIX</span>
+        <div class="subtitle" style="margin-top:6px"><b>Critical:</b> currently doesn't actually create the habit (Convex write missing). User commits emotionally → lands in empty state. Wire the habit creation on tap.</div>
+      </div>
+    </div>
+
+    <div class="winner">
+      <h2>🎯 Recommended flow for max conversion: 5 screens</h2>
+      <p>Cut from 7 → 5 by tweaking screen 3 to absorb anti-plateau, dropping screen 4 (now redundant), folding screen 5's visual into screen 6.</p>
+      <ol style="margin: 8px 0 0 22px;">
+        <li><b>welcome</b> — "Hey" hook. <span style="color:#6EE7B7">unchanged</span></li>
+        <li><b>problem</b> — "You're building habits blind." <span style="color:#FBBF24">tweak: drop "You're lost", update closing line</span></li>
+        <li><b>solutionIntro</b> — "Here's your map." <span style="color:#FBBF24">tweak: step 3 → "Know what's next" (anti-plateau)</span></li>
+        <li><b>onePeak + transformation</b> — Combined: per-habit calibration shown with chain visual transforming. <span style="color:#93C5FD">merge 5+6</span></li>
+        <li><b>pickFirstRoute</b> — Commit moment. <span style="color:#FCA5A5">fix: wire habit creation</span></li>
+      </ol>
+      <p style="margin-top: 10px;">
+        <b>Why this maximizes conversion:</b> 5 screens vs 7 = 28% less friction. Each remaining screen is unique (no redundancy). Habit gets actually created on commit. Nothing valuable is lost — strength concept stays integrated into screen 3 step 3, deeper strength explainer can move into the app's first-check-in moment.
+      </p>
+    </div>
+
+    <h2>Detailed conversion analysis</h2>
+    <div class="recos">
+      <h3>Industry benchmarks</h3>
+      <ul>
+        <li>Top subscription apps (Headspace, Calm, Duolingo, Noom) average <b>5–9 onboarding screens</b>.</li>
+        <li>Each additional screen typically costs <b>5–10% conversion</b> at this stage. Going from 7 → 5 should lift conversion by ~10–20%.</li>
+        <li>Industry rule: every screen must EITHER teach a unique concept OR collect a unique data point. Redundancy kills conversion.</li>
+      </ul>
+
+      <h3>Where our 7-screen flow has friction</h3>
+      <ul>
+        <li><b>Screen 4 ↔ Screen 3 step 3</b> — both deliver "your strength holds, never back to zero." Two screens for one idea.</li>
+        <li><b>Screen 5</b> — pure visual reward. Beautiful but not load-bearing — could fold into 4 or 6.</li>
+        <li><b>Screen 7's commit doesn't actually persist</b> — biggest single drop-off potential since user lands in empty state.</li>
+      </ul>
+
+      <h3>Where the flow already converts well</h3>
+      <ul>
+        <li><b>Screen 1's "Hey"</b> — minimum-viable hook. Industry-standard low-friction entry.</li>
+        <li><b>Screen 2 → 3 narrative payoff</b> — "blind / no map" → "here's your map" is structurally satisfying.</li>
+        <li><b>Screen 7's library escape hatch</b> — gives commitment-anxious users an out without breaking flow.</li>
+      </ul>
+
+      <h3>What's notably MISSING vs proven flows</h3>
+      <ul>
+        <li><b>No notification permission ask</b> — biggest retention factor in the wild. Push enabled vs not = 40-60% retention swing. Should add post-commit.</li>
+        <li><b>No social proof anywhere</b> — no testimonials, user counts, or stats. Could add one screen between solutionIntro and onePeak ("12,000 chains forged") OR a single testimonial card on screen 7.</li>
+        <li><b>No first check-in moment</b> — user emotionally commits but doesn't *do* anything. A first-action moment + notification ask + paywall, all post-commit, would match top-tier flows. (Currently lives outside onboarding-v2 in the AuthGate flow.)</li>
+      </ul>
+
+      <h3>If conversion is the only goal: 5 screens. If retention matters too: 6–7 with the missing pieces added back</h3>
+      <ul>
+        <li>5-screen flow is fastest to commit but loses retention drivers (no notif, no first-check-in).</li>
+        <li>For BEST overall (conv + retention): 5 onboarding screens + 3 post-commit (firstCheckIn → notificationPriming → celebration) = 8 total but with full activation.</li>
+        <li>This matches the structure I outlined in <code>full_flow_proposed.html</code> — onboarding tells the story, activation acts on it.</li>
+      </ul>
+    </div>
+  </body>
+</html>

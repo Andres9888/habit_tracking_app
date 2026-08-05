@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChainDay onboarding — first 6 screens</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+      h2 {
+        font-size: 13px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 2px;
+        color: #10b981;
+        margin: 32px 0 4px;
+      }
+      .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 18px; padding: 14px; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 30px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+      .body { flex: 1; display: flex; flex-direction: column; }
+      .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 9px; color: #888;
+        gap: 6px;
+        margin-bottom: 6%;
+      }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+      }
+      .topbar .progress::after {
+        content: ''; display: block; height: 100%;
+        background: #059669;
+        width: var(--p, 50%);
+      }
+
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.5px; color: #111; text-align: center; }
+      .h-mid { font-weight: 800; font-size: 4.4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .h-left { font-weight: 800; font-size: 3.6vw; line-height: 1.1; letter-spacing: -0.8px; color: #111; }
+      .sub { font-size: 1.4vw; color: #555; line-height: 1.45; }
+      .sub-c { text-align: center; }
+
+      .cta {
+        background: #059669; color: #fff;
+        padding: 11px 14px;
+        border-radius: 12px;
+        font-weight: 600; font-size: 1vw;
+        text-align: center;
+      }
+      .cta-disabled { background: #C8C4B8; }
+      .cta-ghost {
+        background: transparent;
+        color: #888; font-size: 0.95vw;
+        text-align: center; font-weight: 500;
+        letter-spacing: 1.2px; text-transform: uppercase;
+        padding: 10px;
+      }
+      .pulse { height: 2px; width: 22px; background: #10b981; opacity: 0.7; border-radius: 2px; margin: 5px auto 0; }
+
+      .label { color: #fff; font-weight: 600; margin-top: 10px; font-size: 12px; }
+      .desc { color: #999; font-size: 11px; margin-top: 3px; line-height: 1.4; }
+
+      /* problem screen visuals */
+      .blind-path {
+        position: relative;
+        margin: 6% 0;
+        padding: 14px;
+        background: #FAF6EE;
+        border: 1.5px dashed #C8C4B8;
+        border-radius: 12px;
+      }
+      .blind-path .question { font-size: 1.4vw; color: #999; font-style: italic; text-align: center; line-height: 1.6; }
+      .blind-path .question b { color: #555; font-style: normal; font-weight: 700; }
+      .lost-line {
+        font-size: 1.6vw; color: #B45309; font-weight: 800;
+        text-align: center; margin-top: 5%; letter-spacing: -0.3px;
+      }
+
+      /* solution map */
+      .map-path { background: #FAF6EE; border-radius: 12px; padding: 12px; margin: 5% 0 4%; }
+      .map-path-header { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+      .map-path-icon {
+        width: 24px; height: 24px;
+        border-radius: 8px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1vw;
+      }
+      .map-path-name { font-weight: 700; font-size: 1.05vw; color: #111; flex: 1; }
+      .map-path-len { color: #B87333; font-size: 0.85vw; font-weight: 700; }
+      .path-bar { position: relative; height: 8px; background: #E5E1D8; border-radius: 4px; margin: 8px 0; }
+      .path-fill {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        background: linear-gradient(90deg, #B87333, #6B7280, #D4A23F);
+        border-radius: 4px;
+      }
+      .path-tier { position: absolute; top: -1px; width: 10px; height: 10px; border-radius: 2px; transform: translateX(-50%); }
+      .path-tier.copper { background: #B87333; }
+      .path-tier.iron { background: #6B7280; }
+      .path-tier.gold { background: #D4A23F; }
+      .path-marker {
+        position: absolute; top: -3px;
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2.5px solid #059669;
+        z-index: 2;
+        transform: translateX(-50%);
+      }
+      .way-row { display: flex; justify-content: space-between; font-size: 0.7vw; margin-top: 8px; font-weight: 700; }
+      .way-row .copper { color: #B87333; }
+      .way-row .iron { color: #6B7280; }
+      .way-row .gold { color: #D4A23F; }
+
+      .benefit-stack { display: flex; flex-direction: column; gap: 8px; margin-top: 4%; }
+      .benefit-line { display: flex; align-items: flex-start; gap: 8px; font-size: 1vw; color: #444; line-height: 1.35; }
+      .benefit-line .ico {
+        width: 20px; height: 20px;
+        border-radius: 5px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.95vw; flex-shrink: 0;
+      }
+      .benefit-line b { font-weight: 800; color: #111; }
+      .benefit-line .feat { color: #888; font-weight: 500; }
+
+      /* name input */
+      .input-line {
+        font-size: 2vw; font-weight: 600;
+        color: #111;
+        border-bottom: 2px solid #C8C4B8;
+        padding: 7px 4px;
+        margin: 5% 0;
+      }
+      .input-placeholder { color: #BBB; }
+
+      /* options */
+      .opt {
+        background: #FAF6EE;
+        border: 1px solid #E5E1D8;
+        border-radius: 10px;
+        padding: 7px 10px;
+        margin-bottom: 5px;
+        font-size: 1.15vw; color: #222;
+        display: flex; align-items: center; gap: 7px;
+      }
+      .opt.sel { background: #ECFDF5; border-color: #10b981; }
+      .opt-icon { font-size: 1.6vw; }
+      .opt-label { font-weight: 600; }
+      .opt-sub { font-size: 0.9vw; color: #777; margin-top: 1px; }
+    </style>
+  </head>
+  <body>
+
+    <h1>ChainDay onboarding — first 6 screens</h1>
+    <div class="act-sub">
+      Steps 1–3 use the <b>new opening hook</b> (Hey / blind / map). Steps 4–6 are the personalization + question bank from the full flow.
+    </div>
+
+    <h2>ACT 1 — Hook (steps 1–3) — NEW</h2>
+    <div class="act-sub">"You know what this app does within 3 screens." From new_opening_hook_2.</div>
+    <div class="row">
+
+      <!-- 1 — Welcome -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 9vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">1 — Welcome</div>
+        <div class="desc">"Hey." centered. Pulse below ghost CTA.</div>
+      </div>
+
+      <!-- 2 — Problem -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">You're building<br/>habits blind.</div>
+                <div class="blind-path">
+                  <div class="question">"How long?"<br/><b>You don't know.</b></div>
+                  <div class="question" style="margin-top: 8px;">"How hard?"<br/><b>You don't know.</b></div>
+                  <div class="question" style="margin-top: 8px;">"How close am I?"<br/><b>You don't know.</b></div>
+                </div>
+                <div class="lost-line">You're lost.</div>
+                <div class="sub sub-c" style="max-width: 88%; font-size: 1.1vw; margin-top: 3%;">No map. No markers. So you quit.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">2 — Problem</div>
+        <div class="desc">3 unanswered questions → diagnosis → consequence.</div>
+      </div>
+
+      <!-- 3 — Solution Intro -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">We give you<br/>the map.</div>
+                <div class="map-path">
+                  <div class="map-path-header">
+                    <div class="map-path-icon">🚶</div>
+                    <div class="map-path-name">10-minute walk</div>
+                    <div class="map-path-len">21 days</div>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-fill" style="width: 33%;"></div>
+                    <div class="path-tier copper" style="left: 25%;"></div>
+                    <div class="path-tier iron" style="left: 65%;"></div>
+                    <div class="path-tier gold" style="left: 100%;"></div>
+                    <div class="path-marker" style="left: 33%;"></div>
+                  </div>
+                  <div class="way-row">
+                    <span class="copper">Copper</span>
+                    <span class="iron">Iron Ridge</span>
+                    <span class="gold">Gold Summit</span>
+                  </div>
+                </div>
+                <div class="benefit-stack">
+                  <div class="benefit-line">
+                    <div class="ico">⏱</div>
+                    <div><b>Know how long, how hard.</b><br/><span class="feat">Science-backed length, per habit.</span></div>
+                  </div>
+                  <div class="benefit-line">
+                    <div class="ico">📍</div>
+                    <div><b>Know where you are. Know what to climb to.</b><br/><span class="feat">Named markers: Copper, Iron Ridge, Gold Summit.</span></div>
+                  </div>
+                  <div class="benefit-line">
+                    <div class="ico">🔗</div>
+                    <div><b>Watch your chain transform.</b><br/><span class="feat">Every 20% of the way, a visible upgrade — proof, not numbers.</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">3 — Solution Intro</div>
+        <div class="desc">Map visual + 3 benefit lines (each answers a problem-screen question).</div>
+      </div>
+
+    </div>
+
+    <h2>ACT 2 — Personalization (step 4)</h2>
+    <div class="act-sub">Single name capture. Powers personalization on later screens. No progress chrome yet.</div>
+    <div class="row">
+
+      <!-- 4 — Name -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div>
+                <div class="h-left">What should we<br/>call you?</div>
+                <div class="sub" style="margin-top: 6px;">Your chain is going to know your name.</div>
+                <div class="input-line"><span class="input-placeholder">Your name</span></div>
+              </div>
+              <div style="margin-top: auto;">
+                <div class="cta cta-disabled">Continue</div>
+                <div class="cta-ghost" style="font-size: 0.9vw; margin-top: 5px;">Skip for now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">4 — Name</div>
+        <div class="desc">Auto-focus input + skip.</div>
+      </div>
+
+      <div></div><div></div>
+    </div>
+
+    <h2>ACT 3 — Question Bank (steps 5–6)</h2>
+    <div class="act-sub">Self-discovery: what they want, what's stopped them. Progress chrome appears here.</div>
+    <div class="row">
+
+      <!-- 5 — Goal -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>5 / 17</span><div class="progress" style="--p: 29%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-left">What are you<br/>here for, Andres?</div>
+                <div class="sub" style="margin-top: 6px;">Pick one to start. You can add more later.</div>
+                <div style="margin-top: 5%;">
+                  <div class="opt sel"><span class="opt-icon">🏃</span><div><div class="opt-label">Movement</div><div class="opt-sub">Walks, stretching, workouts</div></div></div>
+                  <div class="opt"><span class="opt-icon">🧘</span><div><div class="opt-label">Mind</div><div class="opt-sub">Meditation, journaling, reading</div></div></div>
+                  <div class="opt"><span class="opt-icon">☀️</span><div><div class="opt-label">Morning routine</div><div class="opt-sub">A start-the-day ritual</div></div></div>
+                  <div class="opt"><span class="opt-icon">🌙</span><div><div class="opt-label">Sleep</div><div class="opt-sub">Winding down, off the phone</div></div></div>
+                </div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">5 — Goal</div>
+        <div class="desc">Single-select. Name appears for the first time.</div>
+      </div>
+
+      <!-- 6 — Pain Points -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>6 / 17</span><div class="progress" style="--p: 35%"></div></div>
+            <div class="body">
+              <div>
+                <div class="h-left" style="font-size: 3vw;">What usually stops you from sticking with a new habit?</div>
+                <div class="sub" style="margin-top: 6px;">Pick any that feel true. More than one is fine.</div>
+                <div style="margin-top: 5%;">
+                  <div class="opt sel"><div><div style="font-size: 1.1vw; line-height: 1.4;">"I quit when I miss a day and feel like I've lost everything."</div></div></div>
+                  <div class="opt sel"><div><div style="font-size: 1.1vw; line-height: 1.4;">"The app tracks that I showed up, but I can't tell if it's really sticking."</div></div></div>
+                  <div class="opt sel"><div><div style="font-size: 1.1vw; line-height: 1.4;">"I can't tell which habits to focus on, so I try too many at once."</div></div></div>
+                  <div class="opt sel"><div><div style="font-size: 1.1vw; line-height: 1.4;">"The novelty wears off before the habit does."</div></div></div>
+                </div>
+              </div>
+              <div style="margin-top: auto;"><div class="cta">Continue</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">6 — Pain Points</div>
+        <div class="desc">First-person quoted statements. Multi-select.</div>
+      </div>
+
+      <div></div>
+    </div>
+
+  </body>
+</html>

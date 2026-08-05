@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New opening hook — V1 iteration 2 (benefit-led)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+      h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #10b981; margin: 28px 0 4px; }
+      .top-note { color: #999; font-size: 13px; margin-bottom: 24px; max-width: 1100px; }
+      .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 1300px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1100px) { .row { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 750px) { .row { grid-template-columns: 1fr; } }
+
+      .card { background: #252525; border-radius: 16px; padding: 14px; }
+      .card.winner { box-shadow: 0 0 0 2px #10b981; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 28px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+      .body { flex: 1; display: flex; flex-direction: column; }
+      .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.5px; color: #111; text-align: center; }
+      .h-mid { font-weight: 800; font-size: 4.4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .sub { font-size: 1.4vw; color: #555; line-height: 1.45; }
+      .sub-c { text-align: center; }
+      .cta-ghost {
+        background: transparent;
+        color: #888; font-size: 0.95vw;
+        text-align: center; font-weight: 500;
+        letter-spacing: 1.2px; text-transform: uppercase;
+        padding: 10px;
+      }
+      .pulse { height: 2px; width: 22px; background: #10b981; opacity: 0.7; border-radius: 2px; margin: 5px auto 0; }
+      .label { color: #fff; font-weight: 600; margin-top: 12px; font-size: 13px; }
+      .desc { color: #999; font-size: 11.5px; margin-top: 4px; line-height: 1.45; }
+      .label-act { color: #f59e0b; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+      .delta {
+        display: inline-block;
+        background: #10b981; color: #000;
+        font-size: 10px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 1px;
+        padding: 2px 6px; border-radius: 4px;
+        margin-left: 6px;
+      }
+
+      /* visual: blind path (problem screens) */
+      .blind-path {
+        position: relative;
+        margin: 6% 0;
+        padding: 14px;
+        background: #FAF6EE;
+        border: 1.5px dashed #C8C4B8;
+        border-radius: 12px;
+      }
+      .blind-path .question {
+        font-size: 1.4vw;
+        color: #999;
+        font-style: italic;
+        text-align: center;
+        line-height: 1.6;
+      }
+      .blind-path .question b {
+        color: #555;
+        font-style: normal;
+        font-weight: 700;
+      }
+      .lost-line {
+        font-size: 1.6vw;
+        color: #B45309;
+        font-weight: 800;
+        text-align: center;
+        margin-top: 5%;
+        letter-spacing: -0.3px;
+      }
+
+      /* visual: GPS path (solution screens) */
+      .map-path {
+        background: #FAF6EE;
+        border-radius: 12px;
+        padding: 12px;
+        margin: 5% 0 4%;
+      }
+      .map-path-header {
+        display: flex; align-items: center; gap: 7px;
+        margin-bottom: 8px;
+      }
+      .map-path-icon {
+        width: 24px; height: 24px;
+        border-radius: 8px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1vw;
+      }
+      .map-path-name { font-weight: 700; font-size: 1.05vw; color: #111; flex: 1; }
+      .map-path-len { color: #B87333; font-size: 0.85vw; font-weight: 700; }
+      .path-bar {
+        position: relative; height: 8px;
+        background: #E5E1D8; border-radius: 4px;
+        margin: 8px 0;
+      }
+      .path-fill {
+        position: absolute; left: 0; top: 0; bottom: 0;
+        background: linear-gradient(90deg, #B87333, #6B7280, #D4A23F);
+        border-radius: 4px;
+      }
+      .path-tier {
+        position: absolute; top: -1px;
+        width: 10px; height: 10px;
+        border-radius: 2px;
+        transform: translateX(-50%);
+      }
+      .path-tier.copper { background: #B87333; }
+      .path-tier.iron { background: #6B7280; }
+      .path-tier.gold { background: #D4A23F; }
+      .path-marker {
+        position: absolute; top: -3px;
+        width: 14px; height: 14px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2.5px solid #059669;
+        z-index: 2;
+        transform: translateX(-50%);
+      }
+      .way-row {
+        display: flex; justify-content: space-between;
+        font-size: 0.7vw; margin-top: 8px;
+        font-weight: 700;
+      }
+      .way-row .copper { color: #B87333; }
+      .way-row .iron { color: #6B7280; }
+      .way-row .gold { color: #D4A23F; }
+
+      /* benefit rows under map */
+      .benefit-stack {
+        display: flex; flex-direction: column;
+        gap: 8px; margin-top: 4%;
+      }
+      .benefit-line {
+        display: flex; align-items: flex-start; gap: 8px;
+        font-size: 1vw; color: #444;
+        line-height: 1.35;
+      }
+      .benefit-line .ico {
+        width: 20px; height: 20px;
+        border-radius: 5px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.95vw;
+        flex-shrink: 0;
+        margin-top: 0px;
+      }
+      .benefit-line b {
+        font-weight: 800;
+        color: #111;
+      }
+      .benefit-line .feat {
+        color: #888;
+        font-weight: 500;
+      }
+
+      .note {
+        max-width: 1100px; margin: 16px auto 0;
+        background:#2a2a2a; border-radius:12px;
+        padding:18px; color:#ccc;
+        font-size:14px; line-height:1.55;
+      }
+      .note b { color:#fff; }
+      .note ul { margin: 8px 0 0 18px; }
+      .note li { margin-bottom: 4px; }
+      .note .strike { color: #777; text-decoration: line-through; }
+      .note .add { color: #10b981; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+
+    <h1>V1 — Direct (iteration 2): benefit-led solution</h1>
+    <div class="top-note">
+      Same V1 hook ("You're building habits blind"). Tighter problem with "You're lost." Solution screen rebuilt to lead with user benefits, not feature labels — each line answers "why does this matter to me?"
+    </div>
+
+    <h2>Iterated V1 — three screens</h2>
+    <div class="act-sub">Welcome unchanged. Problem gains "You're lost." beat. Solution lists 3 plain-language benefits under the map.</div>
+    <div class="row">
+
+      <!-- Step 1 — Welcome (unchanged) -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 9vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 1</span> · Welcome</div>
+        <div class="desc">Unchanged.</div>
+      </div>
+
+      <!-- Step 2 — Problem (with "You're lost") -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">You're building<br/>habits blind.</div>
+                <div class="blind-path">
+                  <div class="question">"How long?"<br/><b>You don't know.</b></div>
+                  <div class="question" style="margin-top: 8px;">"How hard?"<br/><b>You don't know.</b></div>
+                  <div class="question" style="margin-top: 8px;">"How close am I?"<br/><b>You don't know.</b></div>
+                </div>
+                <div class="lost-line">You're lost.</div>
+                <div class="sub sub-c" style="max-width: 88%; font-size: 1.1vw; margin-top: 3%;">No map. No markers. So you quit.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 2</span> · Problem <span class="delta">+ "You're lost"</span></div>
+        <div class="desc">Three questions still build the same way. New beat: "You're lost." sits in burnt-orange between questions and consequence — the diagnosis. "No map. No markers. So you quit." stays as the result.</div>
+      </div>
+
+      <!-- Step 3 — Solution (benefit-led) -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 5vw;">We give you<br/>the map.</div>
+                <div class="map-path">
+                  <div class="map-path-header">
+                    <div class="map-path-icon">🚶</div>
+                    <div class="map-path-name">10-minute walk</div>
+                    <div class="map-path-len">21 days</div>
+                  </div>
+                  <div class="path-bar">
+                    <div class="path-fill" style="width: 33%;"></div>
+                    <div class="path-tier copper" style="left: 25%;"></div>
+                    <div class="path-tier iron" style="left: 65%;"></div>
+                    <div class="path-tier gold" style="left: 100%;"></div>
+                    <div class="path-marker" style="left: 33%;"></div>
+                  </div>
+                  <div class="way-row">
+                    <span class="copper">Copper</span>
+                    <span class="iron">Iron Ridge</span>
+                    <span class="gold">Gold Summit</span>
+                  </div>
+                </div>
+                <div class="benefit-stack">
+                  <div class="benefit-line">
+                    <div class="ico">⏱</div>
+                    <div><b>Know how long, how hard.</b><br/><span class="feat">Science-backed length, per habit.</span></div>
+                  </div>
+                  <div class="benefit-line">
+                    <div class="ico">📍</div>
+                    <div><b>Know where you are. Know what to climb to.</b><br/><span class="feat">Named markers: Copper, Iron Ridge, Gold Summit.</span></div>
+                  </div>
+                  <div class="benefit-line">
+                    <div class="ico">🔗</div>
+                    <div><b>Watch your chain transform.</b><br/><span class="feat">Every 20% of the way, a visible upgrade — proof, not numbers.</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label"><span class="label-act">Step 3</span> · Solution <span class="delta">benefit-led</span></div>
+        <div class="desc">Map visual stays. Below it: three benefit lines, each pairing a user-facing payoff (bold) with the underlying feature (faded). Each one answers a problem-screen question.</div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>What changed from V1 original</b>
+      <ul>
+        <li><b>Problem screen:</b> Added "You're lost." as a burnt-orange diagnosis between the three questions and the consequence. Original kept its rhythm; new line gives the questions an emotional payoff before "so you quit."</li>
+        <li><b>Solution headline:</b> Unchanged — "We give you the map."</li>
+        <li><b>Solution map:</b> Same path bar, same tier markers (Copper / Iron Ridge / Gold Summit), same Day 1 marker. Removed the 20%-cell row from inside the map block — that idea is now elevated to its own benefit line below.</li>
+        <li><b>Solution sub-copy:</b> <span class="strike">"Per-habit difficulty. Named waypoints. Visible chain upgrade every 20%."</span> → <span class="add">three benefit rows with payoff + feature.</span></li>
+      </ul>
+      <br>
+      <b>Each benefit answers one problem-screen question</b>
+      <ul>
+        <li>"How long? How hard?" → <b>⏱ Know how long, how hard.</b> Science-backed length, per habit.</li>
+        <li>"How close am I?" → <b>📍 Know where you are. Know what to climb to.</b> Named markers: Copper, Iron Ridge, Gold Summit.</li>
+        <li>(Implicit need: don't quit between milestones) → <b>🔗 Watch your chain transform.</b> Every 20% of the way, a visible upgrade — proof, not numbers.</li>
+      </ul>
+      <br>
+      <b>Why row 2 lands harder now</b>
+      <ul>
+        <li>Two paired clauses: "Know where you are. Know what to climb to." — orientation first, then motivation. Same "Know X. Know Y." rhythm as row 1, so the three rows scan with shared shape.</li>
+        <li>"Climb to" carries energy that "what's next" doesn't — it implies an aspirational peak (Iron Ridge, Gold Summit), not just the next thing on a list.</li>
+        <li>Feature line names the markers — the map visual just above teaches the reader what Copper/Iron Ridge/Gold Summit mean. The line reinforces the visual instead of repeating it.</li>
+      </ul>
+      <br>
+      <b>Why row 3 lands harder now</b>
+      <ul>
+        <li>The benefit moved from "fast progress" (vague) to <b>"watch your chain transform"</b> (concrete sensory payoff). The user gets to <i>see something happen</i> — that's the actual win.</li>
+        <li>"Proof, not numbers" is the contrast — it tells the user what they've been getting from other apps (numbers ticking up) vs. what they get here (a chain that visibly changes).</li>
+        <li>No app-side change required. The chain already upgrades through tier levels every 20%; this copy just makes that benefit explicit.</li>
+      </ul>
+      <br>
+      <b>Alternate phrasings if you want to A/B</b>
+      <ul>
+        <li>Row 2 alt A: <b>"Know where you are."</b> alone (drop the second clause) — minimal, lets the named markers in the feature line carry the climb idea.</li>
+        <li>Row 2 alt B: <b>"Always have a peak to chase."</b> — pure motivation framing, drops orientation.</li>
+        <li>Row 3 alt A: <b>"Five visible wins per habit, not one."</b> Concrete number; works because 100% / 20% = 5 chain upgrades per habit. Stronger if you want to lean numerical.</li>
+        <li>Row 3 alt B: <b>"Always one upgrade away."</b> Pure motivation framing — what you're chasing, never how far you've come.</li>
+      </ul>
+      <br>
+      <b>Still open</b>
+      <ul>
+        <li>"You're lost." — burnt-orange a touch heavy? Could go quieter (#555, italic) if it should feel more like a confession than an alarm.</li>
+        <li>Whether to keep the 20%-cell visual at all on this screen, or save it for a later moment in the flow.</li>
+      </ul>
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimal 5-step onboarding + soft paywall</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h1 { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+      h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #10b981; margin: 32px 0 4px; }
+      .top-note { color: #999; font-size: 13px; margin-bottom: 24px; max-width: 1100px; }
+      .act-sub { color: #999; font-size: 13px; margin-bottom: 18px; max-width: 1100px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        max-width: 1500px;
+        margin: 0 auto 32px;
+      }
+      @media (max-width: 1300px) { .row { grid-template-columns: repeat(3, 1fr); } }
+      @media (max-width: 950px) { .row { grid-template-columns: repeat(2, 1fr); } }
+
+      .row-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        max-width: 1100px;
+        margin: 0 auto 32px;
+      }
+
+      .card { background: #252525; border-radius: 16px; padding: 12px; }
+      .card.winner { box-shadow: 0 0 0 2px #10b981; }
+
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 28px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 12px 28px -10px rgba(0,0,0,0.55);
+      }
+      .phone::before {
+        content: ''; position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%); width: 28%; height: 4.5%;
+        background: #000; border-radius: 0 0 18px 18px; z-index: 30;
+      }
+      .screen { position: absolute; inset: 0; padding: 11% 7% 7%; display: flex; flex-direction: column; }
+      .body { flex: 1; display: flex; flex-direction: column; }
+      .center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+      .h-mid { font-weight: 800; font-size: 4vw; line-height: 1.1; letter-spacing: -1px; color: #111; }
+      .h-big { font-weight: 800; font-size: 6vw; line-height: 1.05; letter-spacing: -1.5px; color: #111; text-align: center; }
+      .h-left { font-weight: 800; font-size: 3.4vw; line-height: 1.1; letter-spacing: -0.8px; color: #111; }
+      .sub { font-size: 1.3vw; color: #555; line-height: 1.45; }
+      .sub-c { text-align: center; }
+      .cta {
+        background: #059669; color: #fff;
+        padding: 11px 16px; border-radius: 12px;
+        font-weight: 600; font-size: 1.1vw;
+        text-align: center; margin-top: 8px;
+      }
+      .cta-ghost {
+        background: transparent;
+        color: #888; font-size: 0.95vw;
+        text-align: center; font-weight: 500;
+        letter-spacing: 1.2px; text-transform: uppercase;
+        padding: 10px;
+      }
+      .cta-ghost.link { text-transform: none; letter-spacing: 0; font-size: 1.1vw; color: #059669; font-weight: 600; }
+      .pulse { height: 2px; width: 22px; background: #10b981; opacity: 0.7; border-radius: 2px; margin: 5px auto 0; }
+      .label { color: #fff; font-weight: 600; margin-top: 10px; font-size: 13px; }
+      .desc { color: #999; font-size: 11px; margin-top: 4px; line-height: 1.4; }
+
+      /* combined problem + solution screen */
+      .combo-visual {
+        background: #FAF6EE; border-radius: 12px;
+        padding: 14px; margin: 5% 0;
+      }
+      .streak-vs-chain {
+        display: flex; gap: 14px; align-items: flex-start;
+      }
+      .streak-side, .chain-side {
+        flex: 1;
+        text-align: center;
+      }
+      .streak-side .label-small {
+        font-size: 0.85vw; color: #888;
+        text-transform: uppercase; letter-spacing: 1.2px;
+        margin-bottom: 6px;
+      }
+      .streak-num {
+        font-size: 4vw; font-weight: 800; color: #C0392B;
+        opacity: 0.5; line-height: 1;
+        position: relative;
+      }
+      .streak-num::after {
+        content: ''; position: absolute;
+        top: 50%; left: -10%; right: -10%;
+        height: 2px; background: #C0392B;
+        transform: rotate(-12deg);
+      }
+      .arrow-down { font-size: 1vw; color: #888; margin: 4px 0; }
+      .streak-zero { font-size: 2vw; color: #C0392B; font-weight: 700; }
+      .chain-cells {
+        display: flex; gap: 2px; justify-content: center;
+      }
+      .chain-cell {
+        width: 8%; aspect-ratio: 1;
+        border-radius: 22%;
+        background: #B87333;
+      }
+      .chain-cell.iron { background: #6B7280; }
+      .chain-cell.gold { background: #D4A23F; }
+      .chain-cell.dim { opacity: 0.3; background: #B87333; }
+      .strength-tiny {
+        font-size: 0.85vw; color: #555;
+        margin-top: 6px;
+      }
+      .strength-tiny b { color: #B87333; }
+
+      /* habit picker */
+      .habit-pick-list {
+        margin-top: 5%;
+      }
+      .habit-pick-card {
+        background: #FAF6EE;
+        border: 1.5px solid #E5E1D8;
+        border-radius: 11px;
+        padding: 9px 12px;
+        margin-bottom: 5px;
+        display: flex; align-items: center; gap: 9px;
+      }
+      .habit-pick-card.selected {
+        background: #ECFDF5; border-color: #10b981;
+      }
+      .habit-icon {
+        width: 30px; height: 30px;
+        border-radius: 9px;
+        background: #FEF3C7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.3vw; flex-shrink: 0;
+      }
+      .habit-name { font-weight: 600; font-size: 1.15vw; color: #111; }
+      .habit-meta { font-size: 0.85vw; color: #888; margin-top: 1px; }
+
+      /* account */
+      .auth-row {
+        background: #fff;
+        border: 1.5px solid #E5E1D8;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 7px;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        font-weight: 600; font-size: 1.1vw; color: #111;
+      }
+      .auth-row.apple { background: #000; color: #fff; border-color: #000; }
+      .auth-row.google { background: #fff; }
+
+      /* in-app preview */
+      .app-header {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 4px 0; margin-bottom: 4%;
+      }
+      .app-title { font-weight: 800; font-size: 1.5vw; color: #111; }
+      .app-day { font-size: 0.95vw; color: #888; }
+      .habit-row-app {
+        background: #FAF6EE;
+        border-radius: 10px;
+        padding: 9px 11px;
+        margin-bottom: 5px;
+        display: flex; align-items: center; gap: 9px;
+      }
+      .habit-row-app.locked {
+        background: rgba(184, 115, 51, 0.08);
+        border: 1.5px dashed rgba(184, 115, 51, 0.3);
+      }
+      .habit-name-row { font-weight: 600; font-size: 1.05vw; color: #111; }
+      .habit-meta-row { font-size: 0.85vw; color: #888; margin-top: 1px; }
+
+      /* upsell sheet */
+      .upsell-modal {
+        position: absolute; inset: 0;
+        background: rgba(0,0,0,0.45);
+        display: flex; align-items: flex-end;
+        z-index: 40;
+      }
+      .upsell-sheet {
+        background: #F3EEE5;
+        border-radius: 22px 22px 0 0;
+        padding: 20px 16px 18px;
+        width: 100%;
+      }
+      .upsell-handle {
+        width: 32px; height: 4px;
+        background: #C8C4B8;
+        border-radius: 2px;
+        margin: 0 auto 10px;
+      }
+      .upsell-title {
+        font-weight: 800; font-size: 2vw; color: #111;
+        line-height: 1.15; letter-spacing: -0.4px;
+      }
+      .upsell-sub {
+        font-size: 1vw; color: #555;
+        margin-top: 4px; line-height: 1.4;
+      }
+      .perk {
+        display: flex; gap: 6px;
+        margin-top: 5px;
+        font-size: 1vw; color: #444;
+      }
+      .perk-icon { color: #10b981; font-weight: 700; }
+
+      .compare-table {
+        max-width: 1300px;
+        margin: 0 auto 24px;
+        background: #2a2a2a;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .compare-table table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .compare-table th, .compare-table td {
+        padding: 11px 13px; text-align: left;
+        border-bottom: 1px solid #1a1a1a; vertical-align: top;
+      }
+      .compare-table th { background: #1a1a1a; color: #fff; font-weight: 700; }
+      .compare-table td.metric { color: #999; font-weight: 500; }
+
+      .note {
+        max-width: 1300px; margin: 0 auto;
+        background:#2a2a2a; border-radius:12px;
+        padding:18px; color:#ccc;
+        font-size:14px; line-height:1.55;
+      }
+      .note b { color:#fff; }
+      .note ul { margin: 8px 0 0 18px; }
+      .note li { margin-bottom: 4px; }
+
+      .arrow-flow {
+        font-size: 24px; color: #555;
+        text-align: center;
+        margin: 16px 0;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h1>Minimal 5-step onboarding + soft paywall</h1>
+    <div class="top-note">
+      One welcome, one combined hook screen, one habit picker, one account, drop into app. ~30 seconds end-to-end. Soft paywall lives in-app — triggered when user hits 3-habit cap or tries to upgrade past iron tier. Educational-flow per the Jordan Morgan video taxonomy. Pattern proven by HabitKit, Streaks, Way of Life.
+    </div>
+
+    <h2>The 5-step flow</h2>
+    <div class="act-sub">~30 seconds total. Welcome → combined Problem+Solution → pick one habit → account → drop into app.</div>
+    <div class="row">
+
+      <!-- 1: Welcome -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-big" style="font-size: 8vw; letter-spacing: -3px;">Hey.</div>
+              </div>
+              <div class="cta-ghost">Tap to begin<div class="pulse"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="label">1 — Welcome</div>
+        <div class="desc">Pure greeting. Whole screen tappable. (Same as current.)</div>
+      </div>
+
+      <!-- 2: Problem + Solution combined -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-mid" style="font-size: 4.4vw; text-align: center;">Streaks reset.<br/>Chains hold.</div>
+                <div class="combo-visual">
+                  <div class="streak-vs-chain">
+                    <div class="streak-side">
+                      <div class="label-small">Streak app</div>
+                      <div class="streak-num">42</div>
+                      <div class="arrow-down">▼</div>
+                      <div class="streak-zero">0</div>
+                    </div>
+                    <div class="chain-side">
+                      <div class="label-small" style="color: #8B5A2B;">ChainDay</div>
+                      <div class="chain-cells" style="margin-top: 12px;">
+                        <div class="chain-cell"></div>
+                        <div class="chain-cell"></div>
+                        <div class="chain-cell dim"></div>
+                        <div class="chain-cell"></div>
+                      </div>
+                      <div class="strength-tiny">Day 42 · <b>strength 78</b></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="sub sub-c" style="max-width: 88%; font-size: 1.2vw;">Miss a day, the chain shows it. Your strength holds. Watch a habit become you.</div>
+              </div>
+              <div class="cta-ghost">Tap to continue</div>
+            </div>
+          </div>
+        </div>
+        <div class="label">2 — Problem + Solution (combined)</div>
+        <div class="desc">Side-by-side: streak crashing 42 → 0 vs chain with 1 missed day, strength 78. The mechanic IS the visual.</div>
+      </div>
+
+      <!-- 3: Pick one habit -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div>
+                <div class="h-left">Pick one habit<br/>to start.</div>
+                <div class="sub" style="margin-top: 6px;">You can add more anytime. We recommend starting small.</div>
+                <div class="habit-pick-list">
+                  <div class="habit-pick-card selected">
+                    <div class="habit-icon">🚶</div>
+                    <div><div class="habit-name">10-minute walk</div><div class="habit-meta">Mornings</div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-icon">🧘</div>
+                    <div><div class="habit-name">5-min meditation</div><div class="habit-meta">Anytime</div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-icon">📖</div>
+                    <div><div class="habit-name">Read 10 pages</div><div class="habit-meta">Evenings</div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-icon">💧</div>
+                    <div><div class="habit-name">8 glasses of water</div><div class="habit-meta">Throughout day</div></div>
+                  </div>
+                  <div class="habit-pick-card">
+                    <div class="habit-icon">😴</div>
+                    <div><div class="habit-name">Phone away by 10pm</div><div class="habit-meta">Evenings</div></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top: auto;">
+                <div class="cta">Continue</div>
+                <div class="cta-ghost" style="font-size: 0.95vw;">I'll pick later</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">3 — Pick one habit</div>
+        <div class="desc">5-6 curated starters. Tap one. Skip is allowed — they can add in-app. Replaces all 5 questionnaire screens.</div>
+      </div>
+
+      <!-- 4: Account -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="center">
+                <div class="h-mid" style="text-align: center; font-size: 4vw;">Save your<br/>chain.</div>
+                <div class="sub sub-c" style="margin-top: 8px; max-width: 80%; font-size: 1.2vw;">So your progress isn't tied to this phone.</div>
+                <div style="width: 100%; margin-top: 8%;">
+                  <div class="auth-row apple">  Sign in with Apple</div>
+                  <div class="auth-row google">G  Continue with Google</div>
+                  <div class="cta-ghost" style="font-size: 0.95vw;">Maybe later</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">4 — Account</div>
+        <div class="desc">Fast OAuth. Skip allowed (anonymous local mode). Most users sign in for sync.</div>
+      </div>
+
+      <!-- 5: Drop into app -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">Today</div>
+                <div class="app-day">Day 1</div>
+              </div>
+              <div>
+                <div class="habit-row-app">
+                  <div class="habit-icon">🚶</div>
+                  <div style="flex: 1;"><div class="habit-name-row">10-minute walk</div><div class="habit-meta-row">Tap to mark done</div></div>
+                  <div style="width: 24px; height: 24px; border: 1.5px solid #C8C4B8; border-radius: 6px;"></div>
+                </div>
+                <div style="margin-top: 5%; padding: 12px; background: #FAF6EE; border: 1.5px dashed #E5E1D8; border-radius: 11px; text-align: center; color: #888; font-size: 1vw;">+ Add a habit</div>
+              </div>
+              <div style="margin-top: auto; padding: 14px; background: #ECFDF5; border-radius: 11px; border: 1px solid #10b981;">
+                <div style="font-size: 1vw; font-weight: 700; color: #065F46;">Day 1 starts now.</div>
+                <div style="font-size: 0.95vw; color: #065F46; margin-top: 2px;">Tap your habit when you do it. Come back tomorrow — that's all Day 2 takes.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">5 — Drop into app</div>
+        <div class="desc">Habit list with their pick. Day 1 banner explains what to do. No celebration screen yet — celebrate IN the app on first real check-in.</div>
+      </div>
+    </div>
+
+    <h2>The soft paywall — triggered in-app, not in onboarding</h2>
+    <div class="act-sub">Conversion happens here, not during onboarding. Three trigger moments shown.</div>
+    <div class="row-3">
+
+      <!-- Trigger 1: Hit 3-habit cap -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">Today</div>
+                <div class="app-day">Day 12</div>
+              </div>
+              <div class="habit-row-app">
+                <div class="habit-icon">🚶</div>
+                <div><div class="habit-name-row">10-minute walk</div><div class="habit-meta-row">✓ Day 12</div></div>
+              </div>
+              <div class="habit-row-app">
+                <div class="habit-icon">🧘</div>
+                <div><div class="habit-name-row">5-min meditation</div><div class="habit-meta-row">Day 8</div></div>
+              </div>
+              <div class="habit-row-app">
+                <div class="habit-icon">📖</div>
+                <div><div class="habit-name-row">10 pages</div><div class="habit-meta-row">Day 5</div></div>
+              </div>
+
+              <div class="upsell-modal">
+                <div class="upsell-sheet">
+                  <div class="upsell-handle"></div>
+                  <div class="upsell-title">Three first.<br/>Then more.</div>
+                  <div class="upsell-sub">You're holding three habits. Add more once they're solid — or upgrade now to unlock unlimited habits.</div>
+                  <div style="margin: 10px 0;">
+                    <div class="perk"><span class="perk-icon">✓</span><span><b>Unlimited habits</b></span></div>
+                    <div class="perk"><span class="perk-icon">✓</span><span>Tier upgrades past iron — gold + legendary</span></div>
+                    <div class="perk"><span class="perk-icon">✓</span><span>7-day free trial. Cancel anytime.</span></div>
+                  </div>
+                  <div class="cta">Start free trial</div>
+                  <div class="cta-ghost" style="font-size: 0.95vw;">Maybe later</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">A — Trigger: hit 3-habit cap</div>
+        <div class="desc">User taps "+ Add habit" while at 3 → bottom sheet. The cap echoes the focus mechanic, not a wall.</div>
+      </div>
+
+      <!-- Trigger 2: Reach iron tier -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">10-minute walk</div>
+                <div class="app-day">Day 62</div>
+              </div>
+              <div style="background: linear-gradient(135deg, #6B7280, #9CA3AF); border-radius: 12px; padding: 12px; color: #fff; margin-bottom: 6%;">
+                <div style="font-size: 0.85vw; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85;">Tier achieved</div>
+                <div style="font-size: 1.8vw; font-weight: 800; margin-top: 4px;">Iron.</div>
+                <div style="font-size: 1vw; margin-top: 4px; opacity: 0.92;">Sixty days. Most never reach this.</div>
+              </div>
+              <div style="font-weight: 600; font-size: 1vw; color: #888;">Strength: 60 / 100</div>
+              <div style="background: #E5E1D8; height: 8px; border-radius: 4px; margin-top: 4px; overflow: hidden;">
+                <div style="background: #6B7280; height: 100%; width: 60%;"></div>
+              </div>
+
+              <div style="background: linear-gradient(135deg, #B87333 0%, #D4A23F 100%); border-radius: 12px; padding: 14px; color: #fff; margin-top: 6%;">
+                <div style="font-size: 0.85vw; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.92;">Free tier ends here</div>
+                <div style="font-size: 1.6vw; font-weight: 800; margin-top: 4px;">Want to see gold?</div>
+                <div style="font-size: 1vw; margin-top: 4px; line-height: 1.4; opacity: 0.95;">Tier upgrades past iron unlock with Pro.</div>
+                <div style="background: #fff; color: #B87333; padding: 9px; border-radius: 9px; text-align: center; font-weight: 700; font-size: 1.05vw; margin-top: 8px;">Try Pro free for 7 days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">B — Trigger: reached iron tier</div>
+        <div class="desc">User celebrates iron at day 60. Below: aspirational gold prompt. Earned moment, not punitive.</div>
+      </div>
+
+      <!-- Trigger 3: Day 3 banner -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="body">
+              <div class="app-header">
+                <div class="app-title">Today</div>
+                <div class="app-day">Day 3</div>
+              </div>
+              <div style="background: #ECFDF5; border-radius: 12px; padding: 12px; border: 1px solid #10b981; margin-bottom: 5%;">
+                <div style="font-size: 1vw; font-weight: 700; color: #065F46;">3 days in. Want a head start?</div>
+                <div style="font-size: 0.95vw; color: #065F46; margin-top: 3px; line-height: 1.4;">Try Pro free for 7 days. Unlimited habits + tier upgrades. No card required.</div>
+                <div style="display: flex; gap: 6px; margin-top: 8px;">
+                  <div style="flex: 1; background: #059669; color: #fff; padding: 7px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.95vw;">Try free</div>
+                  <div style="flex: 1; background: transparent; border: 1px solid #C8C4B8; color: #777; padding: 7px; border-radius: 8px; text-align: center; font-weight: 600; font-size: 0.95vw;">Dismiss</div>
+                </div>
+              </div>
+              <div class="habit-row-app">
+                <div class="habit-icon">🚶</div>
+                <div><div class="habit-name-row">10-minute walk</div><div class="habit-meta-row">✓ Day 3</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="label">C — Trigger: Day 3 banner</div>
+        <div class="desc">After user has 3 days of consistent use, a non-blocking banner offers the trial. Dismissible. Shown once.</div>
+      </div>
+    </div>
+
+    <h2>Comparison: 3 paths</h2>
+    <div class="compare-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Current (17-step questionnaire, hard paywall)</th>
+            <th>5-step minimal + soft paywall</th>
+            <th>Pure HabitKit (3 steps)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="metric">Steps</td><td>17</td><td>5</td><td>2-3</td></tr>
+          <tr><td class="metric">Time to complete</td><td>5–8 min</td><td>~30 sec</td><td>~10 sec</td></tr>
+          <tr><td class="metric">Time to first chain link</td><td>5–8 min</td><td>~45 sec (first check-in in app)</td><td>~15 sec</td></tr>
+          <tr><td class="metric">Conversion lever</td><td>Time-investment commitment</td><td>Product-led + in-app upsells</td><td>Product-led + ads/limits</td></tr>
+          <tr><td class="metric">Apple App Review risk</td><td>Medium</td><td>Low</td><td>Lowest</td></tr>
+          <tr><td class="metric">Trial conversion (first paywall)</td><td>~10–15%</td><td>~5–8% at first trigger; +3–5% over 90d</td><td>~3–5%</td></tr>
+          <tr><td class="metric">Net 90-day LTV</td><td>Higher per-paid-user, lower total</td><td>Balanced — most LTV from retained free → paid</td><td>Lowest per-paid; highest total volume</td></tr>
+          <tr><td class="metric">Throwaway from current code</td><td>0</td><td>~70% (10 of 17 step files deleted, 5 repurposed)</td><td>~85% (most onboarding-v2 deleted)</td></tr>
+          <tr><td class="metric">Hook for skeptical "I've failed" users</td><td>Strong (questionnaire validates pain)</td><td>Strong (combo screen + product proves itself fast)</td><td>Weaker (no positioning at all)</td></tr>
+          <tr><td class="metric">Reusable as paid-ad creatives</td><td>Limited</td><td>The combo screen 2 reuses as ad</td><td>None</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      <b>Why the 5-step middle path:</b>
+      <ul>
+        <li><b>Welcome (1)</b> sets warmth in 1 second.</li>
+        <li><b>Problem + Solution combined (2)</b> shows the differentiation visually — streak counter at 0 next to a chain at strength 78. The mechanic IS the visual. Done in one screen instead of two.</li>
+        <li><b>Pick one habit (3)</b> replaces 5 questionnaire screens — Goal, Pain Points, Category, App Demo, Pain Amp — with one direct picker. Skip allowed.</li>
+        <li><b>Account (4)</b> moved up — gets sync set up before they're invested. OAuth-first, "Maybe later" allowed for anonymous local use.</li>
+        <li><b>Drop into app (5)</b> with Day 1 banner explaining the action. The chain visualization sells itself once they show up tomorrow.</li>
+      </ul>
+      <br>
+      <b>Conversion happens in-app, not in onboarding:</b>
+      <ul>
+        <li><b>Trigger A:</b> Hit 3-habit cap → upsell sheet. Echoes the "focus on three" honest-emotional voice.</li>
+        <li><b>Trigger B:</b> Reach iron tier → gold prompt. Aspirational, after a real achievement (~Day 60).</li>
+        <li><b>Trigger C:</b> Day 3 banner → soft trial offer. Non-blocking, dismissible, one-time.</li>
+      </ul>
+      <br>
+      <b>The implementation:</b> ~6-8 commits. Most onboarding-v2 step files get deleted; Welcome and Account survive; Plan Preview becomes the picker; new screen for combined Problem+Solution; soft paywall in-app via existing RevenueCatPaywall (just changes the trigger). The current 17-step flow in code becomes effectively unused.
+    </div>
+
+  </body>
+</html>

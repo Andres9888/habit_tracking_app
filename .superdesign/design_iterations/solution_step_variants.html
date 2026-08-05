@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solution Step — Transformation Variants</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h2 { font-size: 18px; margin-bottom: 6px; font-weight: 700; color: #fff; }
+      .pair-label { color: #999; font-size: 13px; margin-bottom: 18px; }
+
+      .row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 24px;
+        max-width: 1500px;
+        margin: 0 auto 56px;
+      }
+      .card {
+        background: #252525;
+        border-radius: 18px;
+        padding: 18px;
+      }
+      .card.winner { box-shadow: 0 0 0 2px #10b981; }
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 36px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 16px 38px -12px rgba(0,0,0,0.6);
+      }
+      .phone::before {
+        content: '';
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 28%; height: 4.5%;
+        background: #000;
+        border-radius: 0 0 18px 18px;
+        z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 9% 6% 6%;
+        display: flex; flex-direction: column;
+        background: #F3EEE5;
+      }
+      .topbar {
+        display: flex; align-items: center;
+        font-size: 10px; color: #888;
+        gap: 6px;
+        margin-bottom: 6%;
+      }
+      .topbar .progress {
+        flex: 1; height: 2px; background: #E5E1D8; border-radius: 1px;
+      }
+      .topbar .progress::after {
+        content: ''; display: block; height: 100%;
+        background: #059669;
+        width: var(--progress, 56%);
+      }
+      .body {
+        flex: 1;
+        display: flex; flex-direction: column;
+        gap: 4%;
+      }
+      .headline {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 800;
+        font-size: 6vw;
+        line-height: 1.05;
+        letter-spacing: -1.5px;
+        color: #111;
+      }
+      .sub {
+        font-size: 1.5vw;
+        color: #555;
+        line-height: 1.5;
+      }
+      .cta {
+        background: #059669; color: #fff;
+        padding: 14px 20px;
+        border-radius: 14px;
+        font-weight: 600; font-size: 1.2vw;
+        text-align: center;
+      }
+      .label {
+        color: #fff; font-weight: 600;
+        margin-top: 14px; font-size: 14px;
+      }
+      .desc { color: #888; font-size: 12px; margin-top: 6px; line-height: 1.4; }
+      .badge {
+        display: inline-block;
+        background: #10b981; color: #fff;
+        font-size: 10px; padding: 2px 8px;
+        border-radius: 10px; margin-top: 6px;
+        font-weight: 600; letter-spacing: 0.5px;
+      }
+
+      /* Variant 1: Outcome first */
+      .v1-card {
+        background: #FAF6EE;
+        border: 1px solid #E5E1D8;
+        border-radius: 14px;
+        padding: 14px;
+        margin-top: 16px;
+      }
+      .v1-row {
+        padding: 10px 0;
+        border-top: 1px solid #E5E1D8;
+      }
+      .v1-row:first-child { border-top: 0; padding-top: 0; }
+      .v1-outcome {
+        font-weight: 800;
+        font-size: 2vw;
+        color: #111;
+        letter-spacing: -0.3px;
+        line-height: 1.2;
+      }
+      .v1-mechanic {
+        font-size: 1.3vw;
+        color: #777;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
+      /* Variant 2: Then / Now */
+      .v2-row {
+        margin-top: 16px;
+      }
+      .v2-tag {
+        display: inline-block;
+        font-size: 1vw;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        padding: 3px 8px;
+        border-radius: 6px;
+        margin-right: 8px;
+      }
+      .v2-then-tag {
+        background: #F0E5DC; color: #8B6F5C;
+      }
+      .v2-now-tag {
+        background: #D1FAE5; color: #065F46;
+      }
+      .v2-then-text {
+        font-size: 1.5vw;
+        color: #888;
+        text-decoration: line-through;
+        margin: 6px 0 10px;
+        font-style: italic;
+      }
+      .v2-now-text {
+        font-size: 1.7vw;
+        color: #111;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+
+      /* Variant 3: Paragraph */
+      .v3-card {
+        background: #FAF6EE;
+        border-radius: 14px;
+        padding: 18px;
+        margin-top: 18px;
+      }
+      .v3-pull {
+        font-size: 1.6vw;
+        color: #111;
+        line-height: 1.55;
+      }
+      .v3-pull em {
+        background: linear-gradient(180deg, transparent 65%, #10b981 65%, #10b981 90%, transparent 90%);
+        font-style: normal;
+        padding: 0 2px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <h2>Step 9 — Solution. Three transformation-led rewrites.</h2>
+    <div class="pair-label">All three assume the user picked: "I quit when I miss a day" + "I can't tell if it's sticking."</div>
+
+    <div class="row">
+
+      <!-- ============== V0: Current ============== -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>9 / 16</span><div class="progress" style="--progress: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="headline" style="font-size: 5.5vw;">Here's what<br/>you're getting.</div>
+                <div class="sub" style="margin-top: 8px;">Each thing you told us — addressed directly.</div>
+              </div>
+              <div class="v1-card">
+                <div class="v1-row">
+                  <div style="font-size: 1.1vw; color: #999; margin-bottom: 3px;">You said: Miss a day, lose everything.</div>
+                  <div class="v1-outcome" style="font-size: 1.6vw;">Your strength dips. Your tier holds.</div>
+                </div>
+                <div class="v1-row">
+                  <div style="font-size: 1.1vw; color: #999; margin-bottom: 3px;">You said: Can't tell if it's sticking.</div>
+                  <div class="v1-outcome" style="font-size: 1.6vw;">Watch it go copper → iron → gold. Real strength, not a streak count.</div>
+                </div>
+              </div>
+              <div style="background: #D1FAE5; padding: 10px 14px; border-radius: 12px; margin-top: 12px; font-size: 1.2vw; color: #065F46;">⏱ Average habit forms in ~66 days. Plan for setbacks.</div>
+            </div>
+            <div class="cta">Continue</div>
+          </div>
+        </div>
+        <div class="label">V0 — Current (feature list)</div>
+        <div class="desc">Pain echo + mechanic. The video's "spec sheet" anti-pattern.</div>
+      </div>
+
+      <!-- ============== V1: Outcome first ============== -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>9 / 16</span><div class="progress" style="--progress: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="headline">What's different<br/>this time, Andres.</div>
+                <div class="sub" style="margin-top: 8px;">For each thing you told us — what changes for you.</div>
+              </div>
+              <div class="v1-card">
+                <div class="v1-row">
+                  <div class="v1-outcome">You won't quit on day 42 again.</div>
+                  <div class="v1-mechanic">Strength dips when you miss. Your tier holds.</div>
+                </div>
+                <div class="v1-row">
+                  <div class="v1-outcome">You'll see it sticking before anyone else does.</div>
+                  <div class="v1-mechanic">The chain upgrades — copper → iron → gold. Real growth, not a number.</div>
+                </div>
+              </div>
+              <div style="background: #D1FAE5; padding: 10px 14px; border-radius: 12px; margin-top: 12px; font-size: 1.2vw; color: #065F46;">⏱ Habits form in ~66 days. The chain holds for the messy ones.</div>
+            </div>
+            <div class="cta">Continue</div>
+          </div>
+        </div>
+        <div class="label">V1 — Outcome-first</div>
+        <div class="desc">Bold outcome ("You won't quit on day 42 again.") + small mechanic underneath. Transformation leads, mechanic supports.</div>
+      </div>
+
+      <!-- ============== V2: Then / Now ============== -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>9 / 16</span><div class="progress" style="--progress: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="headline">Andres,<br/>here's what<br/>changes.</div>
+              </div>
+              <div class="v2-row">
+                <div><span class="v2-tag v2-then-tag">Then</span></div>
+                <div class="v2-then-text">"I quit when I miss a day."</div>
+                <div><span class="v2-tag v2-now-tag">Now</span></div>
+                <div class="v2-now-text">You miss a day. The chain shows it. You keep going.</div>
+              </div>
+              <div class="v2-row" style="margin-top: 24px;">
+                <div><span class="v2-tag v2-then-tag">Then</span></div>
+                <div class="v2-then-text">"I can't tell if it's sticking."</div>
+                <div><span class="v2-tag v2-now-tag">Now</span></div>
+                <div class="v2-now-text">You watch it shift material. You see it sticking.</div>
+              </div>
+            </div>
+            <div class="cta">Continue</div>
+          </div>
+        </div>
+        <div class="label">V2 — Then / Now</div>
+        <div class="desc">Their pain (struck through) + the new state. More dramatic, more space-hungry. Reads as "you're not that person anymore."</div>
+      </div>
+
+      <!-- ============== V4: Hybrid (V1 + V2 strikethrough) ============== -->
+      <div class="card winner">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>9 / 16</span><div class="progress" style="--progress: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="headline">What's different<br/>this time, Andres.</div>
+              </div>
+              <div class="v1-card" style="background: #FAF6EE; padding: 6px 14px;">
+                <div style="padding: 14px 0; border-bottom: 1px solid #E5E1D8;">
+                  <div style="font-size: 1.1vw; color: #BBB; text-decoration: line-through; font-style: italic; margin-bottom: 6px;">"I quit when I miss a day."</div>
+                  <div class="v1-outcome" style="font-size: 2vw;">You won't quit on day 42 again.</div>
+                  <div class="v1-mechanic">Strength dips when you miss. Your tier holds.</div>
+                </div>
+                <div style="padding: 14px 0;">
+                  <div style="font-size: 1.1vw; color: #BBB; text-decoration: line-through; font-style: italic; margin-bottom: 6px;">"I can't tell if it's sticking."</div>
+                  <div class="v1-outcome" style="font-size: 2vw;">You'll see it sticking before anyone else does.</div>
+                  <div class="v1-mechanic">Watch the chain go copper → iron → gold.</div>
+                </div>
+              </div>
+              <div style="background: #D1FAE5; padding: 10px 14px; border-radius: 12px; margin-top: 12px; font-size: 1.2vw; color: #065F46;">⏱ Habits form in ~66 days. The chain holds for the messy ones.</div>
+            </div>
+            <div class="cta">Continue</div>
+          </div>
+        </div>
+        <div class="label">V4 — Hybrid (struck pain + outcome + mechanic) <span class="badge">NEW PICK</span></div>
+        <div class="desc">Three lines per pain: struck-through pain echo (V2 emotional kick), bold transformation outcome (V1 scan-friendly), small mechanic. Identity shift + scannability + low risk.</div>
+      </div>
+
+      <!-- ============== V3: Paragraph ============== -->
+      <div class="card">
+        <div class="phone">
+          <div class="screen">
+            <div class="topbar"><span>9 / 16</span><div class="progress" style="--progress: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="headline" style="font-size: 5.5vw;">Andres,<br/>here's what's<br/>different.</div>
+              </div>
+              <div class="v3-card">
+                <div class="v3-pull">
+                  You said you <em>quit when you miss a day</em>, and that you <em>can't tell if it's sticking</em>.
+                  <br/><br/>
+                  Both of those go away. Your strength dips when you miss — it doesn't reset. The tier you've built holds. And the chain upgrades from copper to gold as you stick. <strong>You'll see the habit happen.</strong>
+                </div>
+              </div>
+            </div>
+            <div class="cta">Continue</div>
+          </div>
+        </div>
+        <div class="label">V3 — Editorial paragraph</div>
+        <div class="desc">Single woven narrative. Most "honest-emotional" voice. Risk: more reading; less scannable.</div>
+      </div>
+
+    </div>
+
+    <h2 style="margin-top: 24px;">V4 with all 4 pain options rendered</h2>
+    <div class="pair-label">Worst-case render: user picked all 4 pains. Tests scrollability + tempo.</div>
+    <div class="row" style="grid-template-columns: minmax(360px, 600px); justify-content: center;">
+      <div class="card winner">
+        <div class="phone" style="aspect-ratio: 375/900;">
+          <div class="screen">
+            <div class="topbar"><span>9 / 16</span><div class="progress" style="--progress: 56%"></div></div>
+            <div class="body">
+              <div>
+                <div class="headline" style="font-size: 5vw;">What's different<br/>this time, Andres.</div>
+              </div>
+              <div class="v1-card" style="background: #FAF6EE; padding: 4px 12px;">
+                <!-- Pain 1: miss-a-day -->
+                <div style="padding: 11px 0; border-bottom: 1px solid #E5E1D8;">
+                  <div style="font-size: 1vw; color: #BBB; text-decoration: line-through; font-style: italic; margin-bottom: 4px;">"I quit when I miss a day."</div>
+                  <div class="v1-outcome" style="font-size: 1.7vw;">You won't quit on day 42 again.</div>
+                  <div class="v1-mechanic" style="font-size: 1.1vw;">Strength dips when you miss. Your tier holds.</div>
+                </div>
+                <!-- Pain 2: cant-tell-sticking -->
+                <div style="padding: 11px 0; border-bottom: 1px solid #E5E1D8;">
+                  <div style="font-size: 1vw; color: #BBB; text-decoration: line-through; font-style: italic; margin-bottom: 4px;">"I can't tell if it's sticking."</div>
+                  <div class="v1-outcome" style="font-size: 1.7vw;">You'll watch it become real.</div>
+                  <div class="v1-mechanic" style="font-size: 1.1vw;">The chain upgrades from copper to gold as you build.</div>
+                </div>
+                <!-- Pain 3: too-many-habits -->
+                <div style="padding: 11px 0; border-bottom: 1px solid #E5E1D8;">
+                  <div style="font-size: 1vw; color: #BBB; text-decoration: line-through; font-style: italic; margin-bottom: 4px;">"I try too many habits at once."</div>
+                  <div class="v1-outcome" style="font-size: 1.7vw;">You'll finish what you started.</div>
+                  <div class="v1-mechanic" style="font-size: 1.1vw;">Pick 3 to begin. Add more once they're holding.</div>
+                </div>
+                <!-- Pain 4: novelty-fades -->
+                <div style="padding: 11px 0;">
+                  <div style="font-size: 1vw; color: #BBB; text-decoration: line-through; font-style: italic; margin-bottom: 4px;">"The novelty wears off."</div>
+                  <div class="v1-outcome" style="font-size: 1.7vw;">Day 60 won't feel like a slog.</div>
+                  <div class="v1-mechanic" style="font-size: 1.1vw;">Each tier is a new milestone — copper, iron, gold, legendary.</div>
+                </div>
+              </div>
+              <div style="background: #D1FAE5; padding: 9px 12px; border-radius: 12px; margin-top: 10px; font-size: 1.1vw; color: #065F46;">⏱ Habits form in ~66 days. The chain holds for the messy ones.</div>
+            </div>
+            <div class="cta">Continue</div>
+          </div>
+        </div>
+        <div class="label">All 4 pains rendered (worst-case scroll)</div>
+      </div>
+    </div>
+
+    <h2 style="margin-top: 32px;">Alternative outcome lines per pain</h2>
+    <div class="pair-label">Pick which line goes in the bold middle slot for each pain. Default = column 1.</div>
+    <table style="width: 100%; max-width: 1400px; margin: 0 auto 32px; border-collapse: separate; border-spacing: 6px; color: #ddd;">
+      <thead>
+        <tr style="background: #2a2a2a;">
+          <th style="padding: 10px; text-align: left; font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 1px;">Pain</th>
+          <th style="padding: 10px; text-align: left; font-size: 13px; color: #10b981;">Default (in mock above)</th>
+          <th style="padding: 10px; text-align: left; font-size: 13px;">Alt 2</th>
+          <th style="padding: 10px; text-align: left; font-size: 13px;">Alt 3</th>
+        </tr>
+      </thead>
+      <tbody style="background: #252525;">
+        <tr>
+          <td style="padding: 12px; vertical-align: top; color: #999; font-size: 12px; border-bottom: 1px solid #333;">"I quit when I miss a day"</td>
+          <td style="padding: 12px; vertical-align: top; font-weight: 600; color: #10b981; border-bottom: 1px solid #333;">You won't quit on day 42 again.</td>
+          <td style="padding: 12px; vertical-align: top; border-bottom: 1px solid #333;">Missing a day won't undo a month.</td>
+          <td style="padding: 12px; vertical-align: top; border-bottom: 1px solid #333;">A bad week won't erase the good ones.</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; vertical-align: top; color: #999; font-size: 12px; border-bottom: 1px solid #333;">"I can't tell if it's sticking"</td>
+          <td style="padding: 12px; vertical-align: top; font-weight: 600; color: #10b981; border-bottom: 1px solid #333;">You'll watch it become real.</td>
+          <td style="padding: 12px; vertical-align: top; border-bottom: 1px solid #333;">You'll see it taking hold.</td>
+          <td style="padding: 12px; vertical-align: top; border-bottom: 1px solid #333;">You'll know it's working — no guessing.</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; vertical-align: top; color: #999; font-size: 12px; border-bottom: 1px solid #333;">"I try too many at once"</td>
+          <td style="padding: 12px; vertical-align: top; font-weight: 600; color: #10b981; border-bottom: 1px solid #333;">You'll finish what you started.</td>
+          <td style="padding: 12px; vertical-align: top; border-bottom: 1px solid #333;">You'll go deep on three before adding a fourth.</td>
+          <td style="padding: 12px; vertical-align: top; border-bottom: 1px solid #333;">You'll stop spreading thin.</td>
+        </tr>
+        <tr>
+          <td style="padding: 12px; vertical-align: top; color: #999; font-size: 12px;">"Novelty wears off"</td>
+          <td style="padding: 12px; vertical-align: top; font-weight: 600; color: #10b981;">Day 60 won't feel like a slog.</td>
+          <td style="padding: 12px; vertical-align: top;">The novelty changes shape, not fades.</td>
+          <td style="padding: 12px; vertical-align: top;">You'll keep finding reasons to show up.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="max-width: 1500px; margin: 0 auto; background:#2a2a2a; border-radius:12px; padding:18px; color:#ccc; font-size:14px; line-height:1.55;">
+      <b style="color:#fff;">Honest read:</b>
+      <br><br>
+      <b>V0 (current)</b> is the spec-sheet pattern. Pain echo + mechanic. The video's exact anti-pattern.
+      <br><br>
+      <b>V1 (outcome-first)</b> — my pick. Smallest scope: just rewrite the <code>fix</code> field in <code>solutions.ts</code> to be outcome-led, then the existing <code>SolutionRow</code> component swaps which line is bold. The mechanic gets demoted to subtext. Easiest to ship, lowest risk, high readability.
+      <br><br>
+      <b>V2 (then/now)</b> — strongest emotional kick but needs a new SolutionRow layout (two stacked label-text pairs per pain). More work, more dramatic.
+      <br><br>
+      <b>V3 (paragraph)</b> — most "honest-emotional" voice but breaks the per-pain mapping. Could feel less personal at scale (3+ pains in one paragraph gets long). Best for low-pain-count users.
+    </div>
+
+  </body>
+</html>

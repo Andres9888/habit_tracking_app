@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome — CTA Variations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #1a1a1a;
+        color: #eee;
+        padding: 32px 16px;
+        min-height: 100vh;
+      }
+      h2 { font-size: 18px; margin-bottom: 8px; font-weight: 700; }
+      .subtitle { color: #999; font-size: 13px; margin-bottom: 24px; }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+        max-width: 1500px;
+        margin: 0 auto;
+      }
+      @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+      @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+      .phone-card {
+        background: #252525;
+        border-radius: 18px;
+        padding: 18px;
+      }
+      .phone {
+        width: 100%; aspect-ratio: 375/812;
+        border-radius: 36px; overflow: hidden;
+        position: relative; background: #F3EEE5;
+        box-shadow: 0 0 0 2px rgba(255,255,255,0.06), 0 18px 40px -12px rgba(0,0,0,0.6);
+      }
+      .phone::before {
+        content: '';
+        position: absolute; top: 0; left: 50%;
+        transform: translateX(-50%);
+        width: 30%; height: 5%;
+        background: #000;
+        border-radius: 0 0 18px 18px;
+        z-index: 30;
+      }
+      .screen {
+        position: absolute; inset: 0;
+        padding: 9% 7% 7%;
+        display: flex; flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .icon-wrap {
+        width: 30%; aspect-ratio: 1;
+        border-radius: 22%;
+        overflow: hidden;
+        box-shadow: 0 10px 22px -8px rgba(0,0,0,0.25);
+      }
+      .icon-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+      .center {
+        flex: 1;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 7%;
+      }
+      .hey {
+        font-weight: 800;
+        font-size: 4vw;
+        letter-spacing: -2px;
+        color: #111;
+      }
+
+      .label {
+        color: #fff; font-weight: 600;
+        margin-top: 14px; font-size: 14px;
+      }
+      .desc { color: #888; font-size: 12px; margin-top: 4px; line-height: 1.4; }
+
+      /* ----- CTA STYLES ----- */
+      /* V1: full pill */
+      .cta-pill {
+        background: #059669; color: #fff;
+        padding: 14px 22px;
+        border-radius: 14px;
+        font-weight: 600; font-size: 1.2vw;
+        text-align: center;
+        width: 100%;
+      }
+      /* V2: centered compact pill */
+      .cta-compact {
+        background: #059669; color: #fff;
+        padding: 14px 36px;
+        border-radius: 999px;
+        font-weight: 600; font-size: 1.2vw;
+        text-align: center;
+      }
+      /* V3: ghost outline */
+      .cta-ghost {
+        background: transparent;
+        border: 1.5px solid #059669;
+        color: #059669;
+        padding: 13px 36px;
+        border-radius: 999px;
+        font-weight: 600; font-size: 1.2vw;
+        text-align: center;
+      }
+      /* V4: text only with chevron */
+      .cta-text {
+        color: #059669;
+        font-weight: 600;
+        font-size: 1.2vw;
+        letter-spacing: 0.3px;
+        padding: 14px;
+      }
+      /* V5: circle FAB */
+      .cta-fab {
+        background: #059669;
+        color: #fff;
+        width: 16%; aspect-ratio: 1;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 10px 22px -8px rgba(5,150,105,0.55);
+        font-size: 2vw;
+      }
+      /* V6: tap-anywhere instruction */
+      .cta-instruction {
+        color: #777;
+        font-size: 1.0vw;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        font-weight: 500;
+        padding: 14px;
+        position: relative;
+      }
+      .cta-instruction::before {
+        content: '';
+        position: absolute;
+        left: 50%; bottom: 0;
+        transform: translateX(-50%);
+        width: 24%; height: 3px;
+        background: rgba(5,150,105,0.4);
+        border-radius: 2px;
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.3; transform: translateX(-50%) scaleX(0.7); }
+        50% { opacity: 1; transform: translateX(-50%) scaleX(1.1); }
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Welcome screen — CTA variations (progress bar removed on all)</h2>
+    <div class="subtitle">Same icon + "Hey." composition. Only the bottom CTA differs.</div>
+
+    <div class="grid">
+
+      <!-- V1: Current full-width pill -->
+      <div class="phone-card">
+        <div class="phone">
+          <div class="screen">
+            <div></div>
+            <div class="center">
+              <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/></div>
+              <div class="hey">Hey.</div>
+            </div>
+            <div class="cta-pill">Begin</div>
+          </div>
+        </div>
+        <div class="label">V1 — Full-width pill (current)</div>
+        <div class="desc">Big and obvious. Reads as "form CTA." Safe but feels heavy.</div>
+      </div>
+
+      <!-- V2: Centered compact pill -->
+      <div class="phone-card">
+        <div class="phone">
+          <div class="screen">
+            <div></div>
+            <div class="center">
+              <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/></div>
+              <div class="hey">Hey.</div>
+            </div>
+            <div class="cta-compact">Begin</div>
+          </div>
+        </div>
+        <div class="label">V2 — Centered compact pill</div>
+        <div class="desc">Narrower, more "buttony" than form-like. Premium app default.</div>
+      </div>
+
+      <!-- V3: Ghost outline -->
+      <div class="phone-card">
+        <div class="phone">
+          <div class="screen">
+            <div></div>
+            <div class="center">
+              <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/></div>
+              <div class="hey">Hey.</div>
+            </div>
+            <div class="cta-ghost">Begin</div>
+          </div>
+        </div>
+        <div class="label">V3 — Ghost outline</div>
+        <div class="desc">Soft and quiet. Good for a welcome moment that doesn't push.</div>
+      </div>
+
+      <!-- V4: Text only with chevron -->
+      <div class="phone-card">
+        <div class="phone">
+          <div class="screen">
+            <div></div>
+            <div class="center">
+              <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/></div>
+              <div class="hey">Hey.</div>
+            </div>
+            <div class="cta-text">Begin →</div>
+          </div>
+        </div>
+        <div class="label">V4 — Text link with chevron</div>
+        <div class="desc">Most minimal. Reads as a hyperlink. Matches honest-emotional register best.</div>
+      </div>
+
+      <!-- V5: Circle FAB with arrow -->
+      <div class="phone-card">
+        <div class="phone">
+          <div class="screen">
+            <div></div>
+            <div class="center">
+              <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/></div>
+              <div class="hey">Hey.</div>
+            </div>
+            <div class="cta-fab">→</div>
+          </div>
+        </div>
+        <div class="label">V5 — Circle button with arrow</div>
+        <div class="desc">Iconographic. No words. Could feel cute or feel cryptic — depends on user.</div>
+      </div>
+
+      <!-- V6: Tap anywhere instruction -->
+      <div class="phone-card">
+        <div class="phone">
+          <div class="screen">
+            <div></div>
+            <div class="center">
+              <div class="icon-wrap"><img src="../../.context/generated-icons/chainday-icon-concept-c-v3.jpg"/></div>
+              <div class="hey">Hey.</div>
+            </div>
+            <div class="cta-instruction">TAP TO BEGIN</div>
+          </div>
+        </div>
+        <div class="label">V6 — Tap anywhere instruction</div>
+        <div class="desc">No button at all. Whole screen is tappable. The animated underline pulses softly.</div>
+      </div>
+
+    </div>
+  </body>
+</html>
