@@ -1,0 +1,5 @@
+{"timestamp":"2026-05-25T06:01:04-07:00","rating":5,"session_id":"77b55612-7517-4782-a882-42f6d2cc2bb6","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T06:20:32-07:00","rating":5,"session_id":"77b55612-7517-4782-a882-42f6d2cc2bb6","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T06:22:22-07:00","rating":5,"session_id":"77b55612-7517-4782-a882-42f6d2cc2bb6","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T06:24:08-07:00","rating":5,"session_id":"77b55612-7517-4782-a882-42f6d2cc2bb6","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
+{"timestamp":"2026-05-25T06:26:34-07:00","rating":5,"session_id":"77b55612-7517-4782-a882-42f6d2cc2bb6","source":"implicit","sentiment_summary":"Inference failed: Timeout after 15000ms","confidence":0.3}
