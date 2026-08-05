@@ -1,0 +1,8 @@
+{
+  "rating": 2,
+  "summary": "User frustrated; responses not helpful, needs different approach",
+  "detailed_context": "User expressed dissatisfaction ('not help with this'), the AI continued with an incomplete response, and user is now repeating the complaint. This indicates the AI's approach—likely recapping previous changes verbosely—isn't addressing what the user actually needs. Possible interpretations: user wants a different type of assistance (debugging, next steps, code review) or needs concise, targeted answers rather than summaries. The repetition suggests growing frustration.",
+  "session_id": "afd53c00-1af6-4c6b-a9fb-18e5866e8a2f",
+  "captured_at": "2026-05-25T18:38:29.288Z",
+  "transcript_source": "afd53c00-1af6-4c6b-a9fb-18e5866e8a2f.jsonl"
+}
