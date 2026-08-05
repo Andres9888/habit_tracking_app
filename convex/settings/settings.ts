@@ -13,6 +13,22 @@ import { DEFAULT_SETTINGS } from './types';
 import { toSettingsResponse } from './getResponse';
 import { settingsReturnValidator, updateArgsValidator } from './validators';
 
+/**
+ * Defense-in-depth: strip server-owned fields that must never be written from
+ * client-supplied settings input. `hasPremium` (entitlement) is owned solely by
+ * the RevenueCat webhook path (updateUserSettingsPremium); this guard ensures it
+ * can never be mass-assigned through `update`, even if it is accidentally
+ * re-added to `updateArgsValidator` in the future.
+ */
+function stripServerOwnedSettings<T extends Record<string, unknown>>(
+  value: T
+): Omit<T, 'hasPremium'> {
+  const { hasPremium: _hasPremium, ...rest } = value as T & {
+    hasPremium?: unknown;
+  };
+  return rest as Omit<T, 'hasPremium'>;
+}
+
 export const get = query({
   args: {},
   handler: async (ctx) => {
@@ -60,14 +76,14 @@ export const update = mutation({
       args.appIcon
     );
 
-    const normalizedArgs = {
+    const normalizedArgs = stripServerOwnedSettings({
       ...args,
       ...(args.streakReminderTime === undefined ? {} : { streakReminderTime }),
       ...(args.appIcon === undefined ? {} : { appIcon }),
       ...(args.darkMode === undefined
         ? {}
         : { darkMode: normalizeDarkMode(args.darkMode) }),
-    };
+    });
 
     if (!existing) {
       await ctx.db.insert('userSettings', {

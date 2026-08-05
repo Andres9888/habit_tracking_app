@@ -79,7 +79,11 @@ export const updateArgsValidator = {
       v.literal('streak_desc')
     )
   ),
-  hasPremium: v.optional(v.boolean()),
+  // SECURITY: `hasPremium` is an entitlement field and is intentionally NOT
+  // accepted by this client-facing mutation. It must be written ONLY by the
+  // signature-verified RevenueCat webhook path (grantPremium/revokePremium ->
+  // updateUserSettingsPremium). Re-adding it here would let any authenticated
+  // user self-grant premium via `api.settings.update({ hasPremium: true })`.
   progressEmojis: v.optional(progressEmojisValidator),
   customProgressEmojis: v.optional(progressEmojisValidator),
   reduceMotion: v.optional(v.boolean()),

@@ -55,9 +55,11 @@ export function sanitizeSettingsPayload(payload: unknown): UnknownRecord {
     output.completionSoundEnabled = source.completionSoundEnabled;
   }
 
-  if (isValidBoolean(source.hasPremium)) {
-    output.hasPremium = source.hasPremium;
-  }
+  // SECURITY: `hasPremium` is a server-owned entitlement field. It is returned
+  // by `api.settings.get` but must never be echoed back into `api.settings.update`
+  // (whose validator no longer accepts it — see convex/settings/validators.ts).
+  // Dropping it here keeps settings updates valid and removes the client vector
+  // for self-granting premium.
 
   if (isValidBoolean(source.reduceMotion)) {
     output.reduceMotion = source.reduceMotion;
