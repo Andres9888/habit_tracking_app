@@ -1,5 +1,5 @@
 /**
- * DetailViewTabs - Parchment-pill segmented control for Calendar / Strength / Goal.
+ * DetailViewTabs - Parchment-pill segmented control for Calendar / Strength / Time / Goals / Why.
  * Warm token track, card-color active pill with forest hairline + tonal shadow.
  * Designed to sit as a sticky header above the section stack.
  */
@@ -26,7 +26,8 @@ const TABS: Array<{ label: string; view: DetailView }> = [
   { label: 'Calendar', view: 'calendar' },
   { label: 'Strength', view: 'strength' },
   { label: 'Time', view: 'time' },
-  { label: 'Goal', view: 'goal' },
+  { label: 'Goals', view: 'goals' },
+  { label: 'Why', view: 'why' },
 ];
 const SPRING = { duration: 280, easing: Easing.out(Easing.cubic) };
 

@@ -1,18 +1,13 @@
 import { useState } from 'react';
-import { View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { shadows } from '../../../../theme/spacing';
 import { useThemeColors } from '../../../../theme/ThemeContext';
 import { computeProgressStats } from './computeProgressStats';
-import { DailyGoalCaption } from './DailyGoalCaption';
 import { LogTimeSheet } from './LogTimeSheet';
 import { TimeGoalsSheet } from './TimeGoalsSheet';
-import { TotalRow } from './TotalRow';
+import { useTimerOrchestration } from './useTimerOrchestration';
 import { useWeeklyTime } from './WeeklyTimeCard.hooks';
-import { WeeklyTimeCardHeader } from './WeeklyTimeCardHeader';
-import { WeeklyGoalStats } from './WeeklyGoalStats';
-import { WeeklyProgressBar } from './WeeklyProgressBar';
-import { WeeklyTimeBreakdown } from './WeeklyTimeBreakdown';
+import { WeeklyTimeCardBody } from './WeeklyTimeCardBody';
 import type { WeeklyTimeCardProps } from './WeeklyTimeCard.types';
 
 export function WeeklyTimeCard({
@@ -22,59 +17,58 @@ export function WeeklyTimeCard({
   weeklyMinutesGoal = 0,
 }: WeeklyTimeCardProps) {
   const { colors } = useThemeColors();
+  const accent = habitColor ?? colors.primary[600];
   const { closeEditor, days, editingDate, openEditor, todayKey, totalMinutes } =
     useWeeklyTime(habitId);
+  const todayPersistedMinutes = days.find((d) => d.isToday)?.minutes ?? 0;
+  const {
+    elapsedMin,
+    elapsedSec,
+    handleDiscard,
+    handleLog,
+    handleStart,
+    handleStop,
+    pendingMinutes,
+    running,
+  } = useTimerOrchestration({ habitId, todayKey, todayPersistedMinutes });
   const [goalsOpen, setGoalsOpen] = useState(false);
+
+  const runningMinutes = running ? elapsedMin : 0;
+  const displayTotal = totalMinutes + runningMinutes;
+  const displayDays = running
+    ? days.map((d) => (d.isToday ? { ...d, minutes: d.minutes + runningMinutes } : d))
+    : days;
   const initialMinutes = editingDate
     ? days.find((d) => d.date === editingDate)?.minutes ?? 0
     : 0;
-  const stats = computeProgressStats(days, totalMinutes, dailyMinutesGoal, weeklyMinutesGoal);
-  const cardStyle = { ...shadows.card, backgroundColor: colors.card };
+  const stats = computeProgressStats(displayDays, displayTotal, dailyMinutesGoal, weeklyMinutesGoal);
   const hasAnyGoal = dailyMinutesGoal > 0 || weeklyMinutesGoal > 0;
 
   return (
     <Animated.View
       className='overflow-hidden rounded-2xl shadow-sm'
       entering={FadeIn.duration(180)}
-      style={cardStyle}
+      style={{ ...shadows.card, backgroundColor: colors.card }}
     >
-      <View className='p-5'>
-        <WeeklyTimeCardHeader
-          hasAnyGoal={hasAnyGoal}
-          onGoalsPress={() => setGoalsOpen(true)}
-          onLogPress={() => openEditor(todayKey)}
-        />
-        <TotalRow totalMinutes={totalMinutes} />
-        {weeklyMinutesGoal > 0 ? (
-          <>
-            <WeeklyProgressBar
-              goalMinutes={weeklyMinutesGoal}
-              habitColor={habitColor}
-              totalMinutes={totalMinutes}
-            />
-            <WeeklyGoalStats
-              avgMinutesPerDay={stats.avgMinutesPerDay}
-              habitColor={habitColor}
-              remainingToWeekly={stats.remainingToWeekly}
-            />
-          </>
-        ) : null}
-        {dailyMinutesGoal > 0 ? (
-          <DailyGoalCaption
-            dailyGoal={dailyMinutesGoal}
-            daysHit={stats.daysHit}
-            habitColor={habitColor}
-            streak={stats.dailyStreak}
-            totalDays={days.length}
-          />
-        ) : null}
-        <WeeklyTimeBreakdown
-          dailyGoalMinutes={dailyMinutesGoal}
-          days={days}
-          habitColor={habitColor}
-          onDayPress={openEditor}
-        />
-      </View>
+      <WeeklyTimeCardBody
+        accent={accent}
+        dailyMinutesGoal={dailyMinutesGoal}
+        displayDays={displayDays}
+        displayTotal={displayTotal}
+        elapsedSec={elapsedSec}
+        hasAnyGoal={hasAnyGoal}
+        pendingMinutes={pendingMinutes}
+        running={running}
+        stats={stats}
+        weeklyMinutesGoal={weeklyMinutesGoal}
+        onDayPress={openEditor}
+        onDiscardPress={handleDiscard}
+        onGoalsPress={() => setGoalsOpen(true)}
+        onLogPress={() => openEditor(todayKey)}
+        onLogTimerPress={() => void handleLog()}
+        onStartPress={handleStart}
+        onStopPress={() => void handleStop()}
+      />
       <LogTimeSheet
         date={editingDate}
         habitId={habitId}

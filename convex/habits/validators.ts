@@ -53,6 +53,7 @@ export const fullHabitValidator = v.object({
   reminderSound: v.optional(v.string()),
   reminderTime: v.optional(v.string()),
   resumedAt: v.optional(v.number()),
+  scienceNote: v.optional(v.string()),
   strength: v.optional(v.number()),
   strengthAlgorithm: v.optional(
     v.union(v.literal('forgiving'), v.literal('balanced'), v.literal('strict'))

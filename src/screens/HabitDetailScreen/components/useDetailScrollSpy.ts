@@ -1,5 +1,5 @@
 /**
- * useDetailScrollSpy - Wires the Calendar/Strength/Goal sticky tabs to scroll position.
+ * useDetailScrollSpy - Wires the Calendar/Strength/Time/Goals/Why sticky tabs to scroll position.
  * - Tab tap: scrolls to section (with tab-bar offset)
  * - User scroll: infers active section from visible top
  * Suppresses scroll-driven updates briefly after a tap so the indicator
@@ -24,7 +24,7 @@ export function useDetailScrollSpy(
 ) {
   const { onPinnedChange } = options;
   const [activeView, setActiveView] = useState<DetailView>('calendar');
-  const sectionYsRef = useRef<Record<DetailView, number>>({ calendar: 0, goal: 0, strength: 0, time: 0 });
+  const sectionYsRef = useRef<Record<DetailView, number>>({ calendar: 0, goals: 0, strength: 0, time: 0, why: 0 });
   const pinnedRef = useRef(false);
   const suppressUntilRef = useRef(0);
   const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -64,7 +64,8 @@ export function useDetailScrollSpy(
       if (Date.now() < suppressUntilRef.current) return;
       const scrollY = rawY + ACTIVE_SECTION_THRESHOLD;
       let next: DetailView = 'calendar';
-      if (sections.goal > 0 && scrollY >= sections.goal) next = 'goal';
+      if (sections.why > 0 && scrollY >= sections.why) next = 'why';
+      else if (sections.goals > 0 && scrollY >= sections.goals) next = 'goals';
       else if (sections.time > 0 && scrollY >= sections.time) next = 'time';
       else if (sections.strength > 0 && scrollY >= sections.strength) next = 'strength';
       setActiveView((prev) => (prev === next ? prev : next));

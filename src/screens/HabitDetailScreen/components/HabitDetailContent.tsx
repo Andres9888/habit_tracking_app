@@ -1,5 +1,5 @@
 /**
- * HabitDetailContent - Scrollspy layout: Hero → sticky tabs → Calendar + Strength + Goal stacked.
+ * HabitDetailContent - Scrollspy layout: Hero → sticky tabs → Calendar + Strength + Time + Goals + Why stacked.
  * Tabs act as anchors, not gatekeepers. Every progress surface is visible in one scroll.
  */
 import { useRef } from 'react';
@@ -12,10 +12,11 @@ import type { Habit } from '../../../features/habits/types';
 import { CalendarTabContent } from './CalendarTabContent';
 import { DetailHero } from './DetailHero';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
-import { GoalTabContent } from './GoalTabContent';
+import { GoalsTabContent } from './GoalsTabContent';
+import { HabitWhyBenefitsCard } from './HabitWhyBenefitsCard';
+import { WeeklyTimeCard } from './WeeklyTimeCard';
 import { computeCompletionRate } from './HabitDetailContent.utils';
 import { useDetailScrollSpy } from './useDetailScrollSpy';
-import { WeeklyTimeCard } from './WeeklyTimeCard';
 
 interface HabitDetailContentProps {
   completedDates: Set<string>;
@@ -101,8 +102,16 @@ export function HabitDetailContent({
         </ErrorBoundary>
       </View>
 
-      <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('goal')}>
-        <GoalTabContent completionRate={completionRate} habit={habit} />
+      <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('goals')}>
+        <ErrorBoundary>
+          <GoalsTabContent completionRate={completionRate} habit={habit} />
+        </ErrorBoundary>
+      </View>
+
+      <View className='mx-4 mt-4' onLayout={makeSectionLayoutHandler('why')}>
+        <ErrorBoundary>
+          <HabitWhyBenefitsCard habit={habit} />
+        </ErrorBoundary>
       </View>
     </ScrollView>
   );

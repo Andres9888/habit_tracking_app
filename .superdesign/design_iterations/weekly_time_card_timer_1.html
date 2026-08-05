@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weekly Time Card — live timer states</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #fffdfa;
+        --surface: #edeae5;
+        --border: #e3ddd5;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #968e86;
+        --accent: #b8742d;
+        --accent-soft: rgba(184, 116, 45, 0.10);
+        --accent-soft2: rgba(184, 116, 45, 0.18);
+        --accent-strong: #9c5e1d;
+        --accent-ring: rgba(184, 116, 45, 0.55);
+        --success: #15793c;
+        --success-soft: rgba(21, 121, 60, 0.10);
+        --warning: #9a5504;
+        --shadow-card: 0 1px 2px rgba(45, 42, 38, 0.06),
+          0 4px 12px rgba(45, 42, 38, 0.05);
+      }
+      html, body {
+        background: #ece5dc;
+        font-family: "Inter", system-ui, -apple-system, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .display { font-family: "Literata", Georgia, serif !important; }
+      .mono { font-family: "JetBrains Mono", ui-monospace, monospace !important; }
+
+      .phone {
+        width: 380px;
+        background: var(--bg);
+        border-radius: 28px;
+        box-shadow: 0 18px 50px rgba(45, 42, 38, 0.16),
+          0 0 0 6px rgba(45, 42, 38, 0.04);
+        padding: 22px 16px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 16px;
+        box-shadow: var(--shadow-card);
+        padding: 18px;
+      }
+
+      /* day cells, copied from weekly_time_card_5.html */
+      .cell {
+        flex: 1;
+        text-align: center;
+        padding: 6px 0 4px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+      }
+      .cell.empty { border: 1px dashed rgba(45, 42, 38, 0.16); }
+      .cell.filled {
+        background: var(--accent-soft);
+        border-color: rgba(184, 116, 45, 0.18);
+      }
+      .cell.complete {
+        background: var(--accent-soft2);
+        border-color: var(--accent);
+      }
+      .cell.today { box-shadow: 0 0 0 1px var(--accent); }
+      .cell.running {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent), 0 0 12px rgba(184, 116, 45, 0.35);
+        animation: pulseToday 1.6s ease-in-out infinite;
+      }
+      @keyframes pulseToday {
+        0%, 100% { box-shadow: 0 0 0 1px var(--accent), 0 0 8px rgba(184, 116, 45, 0.20); }
+        50% { box-shadow: 0 0 0 1px var(--accent), 0 0 16px rgba(184, 116, 45, 0.50); }
+      }
+      .cell .day { font-size: 11px; font-weight: 500; color: var(--text-tertiary); }
+      .cell .val { font-size: 11px; font-weight: 600; margin-top: 1px; }
+      .cell .plus { font-size: 11px; color: var(--text-tertiary); margin-top: 1px; }
+
+      .week-bar {
+        height: 6px;
+        background: var(--surface);
+        border-radius: 99px;
+        overflow: hidden;
+      }
+      .week-bar > span { display: block; height: 100%; background: var(--accent); }
+      .week-bar.running > span {
+        background: linear-gradient(90deg, var(--accent), #d99550);
+      }
+
+      .stat-row {
+        background: rgba(184, 116, 45, 0.06);
+        border-radius: 10px;
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        color: var(--text-secondary);
+      }
+      .stat-row b { color: var(--text-primary); font-weight: 600; }
+
+      .pace-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .pace-good { background: rgba(21, 121, 60, 0.1); color: var(--success); }
+
+      .label-pill {
+        display: inline-block;
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        padding: 3px 10px;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border-radius: 999px;
+      }
+      .label-pill.accent { border-color: var(--accent); color: var(--accent); }
+
+      /* Header action button — mirrors the real WeeklyTimeCardHeader pattern */
+      .hdr-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+      .hdr-action.start { color: var(--accent-strong); }
+      .hdr-action.pause { color: var(--accent-strong); }
+
+      /* Timer band — appears at top of card while running */
+      .timer-band {
+        background: linear-gradient(135deg, #fff7ec 0%, #ffeed8 100%);
+        border: 1px solid rgba(184, 116, 45, 0.30);
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+      .timer-band::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(120% 80% at 0% 0%, rgba(184, 116, 45, 0.08), transparent 60%);
+        pointer-events: none;
+      }
+      .timer-band-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--accent-strong);
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+      }
+      .timer-band-label .dot {
+        width: 7px; height: 7px; border-radius: 99px;
+        background: var(--accent);
+        animation: pulseDot 1.2s ease-in-out infinite;
+      }
+      @keyframes pulseDot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(1.25); }
+      }
+      .timer-display {
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--text-primary);
+        letter-spacing: -0.02em;
+        line-height: 1;
+        margin-top: 4px;
+      }
+      .timer-sub {
+        font-size: 11px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .stop-btn {
+        background: var(--accent);
+        color: #fff;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 10px 18px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 6px rgba(184, 116, 45, 0.30);
+      }
+      .stop-btn .sq { width: 11px; height: 11px; background: #fff; border-radius: 2px; }
+
+      /* Confirmation band — replaces timer band briefly after stop */
+      .confirm-band {
+        background: linear-gradient(135deg, #e7f6ee 0%, #d6efe1 100%);
+        border: 1px solid rgba(21, 121, 60, 0.30);
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .check-circle {
+        width: 28px; height: 28px;
+        border-radius: 99px;
+        background: var(--success);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+      .undo-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 12px;
+        padding: 6px 12px;
+        border-radius: 999px;
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        color: var(--accent);
+        background: var(--card);
+        border: 1.5px solid var(--accent);
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(184, 116, 45, 0.18);
+        z-index: 10;
+      }
+
+      .legend {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen p-10">
+    <header class="mx-auto mb-10 max-w-7xl">
+      <p class="label-pill accent">Live timer · 3 states</p>
+      <h1 class="display mt-3 text-3xl font-bold tracking-tight">Weekly Time Card · with timer</h1>
+      <p class="mt-1 max-w-3xl text-sm" style="color: var(--text-secondary)">
+        Adds a Start/Stop timer that logs elapsed time to today on stop. Three states shown side-by-side.
+        Same component, same byDate data, same Convex mutation as the existing Log time sheet — only the entry path differs.
+      </p>
+    </header>
+
+    <section class="mx-auto grid max-w-7xl gap-8 lg:grid-cols-3">
+
+      <!-- ============================================================ -->
+      <!-- STATE A · IDLE -->
+      <!-- ============================================================ -->
+      <div>
+        <p class="label-pill mb-3">A · Idle (timer not running)</p>
+        <div class="phone">
+          <div class="card">
+            <!-- Header: existing actions + new "Start timer" -->
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">Last 7 days</h3>
+              <div class="flex items-center" style="gap: 14px">
+                <span class="hdr-action">⊕ Goals</span>
+                <span class="hdr-action start">▶ Start</span>
+                <span class="hdr-action">＋ Log</span>
+              </div>
+            </div>
+
+            <div class="mb-1 flex items-center gap-2">
+              <span class="text-[18px]">⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 15m</span>
+              <span class="text-[11px] ml-auto" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="text-[12px] font-semibold" style="color: var(--accent)">45%</span>
+            </div>
+            <div class="week-bar mb-2"><span style="width: 45%"></span></div>
+            <div class="stat-row mb-4">
+              <span><b>32m</b> avg/day</span>
+              <span class="pace-pill pace-good">▲ on pace</span>
+              <span><b>2h 45m</b> to go</span>
+            </div>
+
+            <div class="flex justify-between gap-1">
+              <div class="cell filled"><div class="day">T</div><div class="val">30m</div></div>
+              <div class="cell empty"><div class="day">W</div><div class="plus">＋</div></div>
+              <div class="cell filled"><div class="day">T</div><div class="val">45m</div></div>
+              <div class="cell filled"><div class="day">F</div><div class="val">1h</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell today empty"><div class="day">M</div><div class="plus">＋</div></div>
+            </div>
+          </div>
+        </div>
+        <p class="legend">One new header action: <b>▶ Start</b>. Card otherwise identical.</p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- STATE B · RUNNING -->
+      <!-- ============================================================ -->
+      <div class="relative">
+        <p class="label-pill accent mb-3">B · Running (live)</p>
+        <div class="phone">
+          <div class="card">
+            <!-- Timer band -->
+            <div class="timer-band">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="timer-band-label"><span class="dot"></span> Recording</div>
+                  <div class="mono timer-display">14:23</div>
+                  <div class="timer-sub">started at 9:14 am</div>
+                </div>
+                <div class="stop-btn"><span class="sq"></span>Stop</div>
+              </div>
+            </div>
+
+            <!-- Header: Start becomes Pause -->
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">Last 7 days</h3>
+              <div class="flex items-center" style="gap: 14px">
+                <span class="hdr-action">⊕ Goals</span>
+                <span class="hdr-action pause">⏸ Pause</span>
+                <span class="hdr-action">＋ Log</span>
+              </div>
+            </div>
+
+            <!-- Totals reflect optimistic running -->
+            <div class="mb-1 flex items-center gap-2">
+              <span class="text-[18px]">⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 29m</span>
+              <span class="text-[11px] ml-auto" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="text-[12px] font-semibold" style="color: var(--accent)">50%</span>
+            </div>
+            <div class="week-bar running mb-2"><span style="width: 50%"></span></div>
+            <div class="stat-row mb-4">
+              <span><b>35m</b> avg/day</span>
+              <span class="pace-pill pace-good">▲ on pace</span>
+              <span><b>2h 31m</b> to go</span>
+            </div>
+
+            <!-- Today bar pulses; live total appended -->
+            <div class="flex justify-between gap-1">
+              <div class="cell filled"><div class="day">T</div><div class="val">30m</div></div>
+              <div class="cell empty"><div class="day">W</div><div class="plus">＋</div></div>
+              <div class="cell filled"><div class="day">T</div><div class="val">45m</div></div>
+              <div class="cell filled"><div class="day">F</div><div class="val">1h</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell running"><div class="day">M</div><div class="val mono" style="color: var(--accent-strong)">14m</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="annotation" style="top: 86px; right: -54px">live MM:SS</div>
+        <div class="annotation" style="top: 162px; right: -54px">stop = log to today</div>
+        <div class="annotation" style="top: 358px; right: -54px">today pulses</div>
+
+        <p class="legend">Big timer band on top. Totals + today bar update live (optimistic). Tap Stop to log.</p>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- STATE C · JUST STOPPED -->
+      <!-- ============================================================ -->
+      <div>
+        <p class="label-pill mb-3">C · Just stopped (~4s)</p>
+        <div class="phone">
+          <div class="card">
+            <!-- Confirmation band -->
+            <div class="confirm-band">
+              <div class="check-circle">✓</div>
+              <div class="flex-1">
+                <div class="text-[13px] font-semibold" style="color: var(--text-primary)">Logged 14m to today</div>
+                <div class="text-[11px]" style="color: var(--text-secondary)">Total today: 14m</div>
+              </div>
+              <button class="undo-btn">Undo</button>
+            </div>
+
+            <!-- Header back to idle -->
+            <div class="mb-3 flex items-center justify-between">
+              <h3 class="text-base font-semibold">Last 7 days</h3>
+              <div class="flex items-center" style="gap: 14px">
+                <span class="hdr-action">⊕ Goals</span>
+                <span class="hdr-action start">▶ Start</span>
+                <span class="hdr-action">＋ Log</span>
+              </div>
+            </div>
+
+            <div class="mb-1 flex items-center gap-2">
+              <span class="text-[18px]">⏱️</span>
+              <span class="mono text-[26px] font-bold">2h 29m</span>
+              <span class="text-[11px] ml-auto" style="color: var(--text-secondary)">/ 5h</span>
+              <span class="text-[12px] font-semibold" style="color: var(--accent)">50%</span>
+            </div>
+            <div class="week-bar mb-2"><span style="width: 50%"></span></div>
+            <div class="stat-row mb-4">
+              <span><b>35m</b> avg/day</span>
+              <span class="pace-pill pace-good">▲ on pace</span>
+              <span><b>2h 31m</b> to go</span>
+            </div>
+
+            <div class="flex justify-between gap-1">
+              <div class="cell filled"><div class="day">T</div><div class="val">30m</div></div>
+              <div class="cell empty"><div class="day">W</div><div class="plus">＋</div></div>
+              <div class="cell filled"><div class="day">T</div><div class="val">45m</div></div>
+              <div class="cell filled"><div class="day">F</div><div class="val">1h</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell empty"><div class="day">S</div><div class="plus">＋</div></div>
+              <div class="cell today filled"><div class="day">M</div><div class="val">14m</div></div>
+            </div>
+          </div>
+        </div>
+        <p class="legend">Banner fades after ~4s, returning to State A. Undo within that window restores prior total.</p>
+      </div>
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- Decision summary -->
+    <!-- ============================================================ -->
+    <section class="mx-auto mt-14 max-w-7xl">
+      <h2 class="display text-xl font-bold">Decisions to confirm</h2>
+      <div class="mt-4 grid gap-4 lg:grid-cols-2">
+        <div class="card" style="padding: 16px">
+          <div class="text-[13px] font-semibold mb-1">Placement</div>
+          <p class="text-[12px]" style="color: var(--text-secondary)">
+            Header text action <b style="color: var(--text-primary)">▶ Start</b> when idle (low visual weight).
+            Full <b style="color: var(--text-primary)">timer band at top</b> when running (high visibility, hard to forget).
+            Confirmation band briefly replaces the timer band on stop.
+          </p>
+        </div>
+        <div class="card" style="padding: 16px">
+          <div class="text-[13px] font-semibold mb-1">Pause vs no-pause</div>
+          <p class="text-[12px]" style="color: var(--text-secondary)">
+            Shown with <b style="color: var(--text-primary)">⏸ Pause</b> in the header for completeness, but pause adds
+            persistence + UX edges (auto-resume on app return?). Recommend shipping <b style="color: var(--text-primary)">Start/Stop only</b>;
+            add Pause later if needed.
+          </p>
+        </div>
+        <div class="card" style="padding: 16px">
+          <div class="text-[13px] font-semibold mb-1">Optimistic live updates</div>
+          <p class="text-[12px]" style="color: var(--text-secondary)">
+            While running, the totals row, week-bar, avg/day, on-pace pill, and today's cell all reflect <code>persistedToday + (now − startedAt)</code>.
+            Recompute every 10s (cheap; whole tree already redraws on minute changes).
+          </p>
+        </div>
+        <div class="card" style="padding: 16px">
+          <div class="text-[13px] font-semibold mb-1">Persistence</div>
+          <p class="text-[12px]" style="color: var(--text-secondary)">
+            Store <code>{habitId, startedAt}</code> in AsyncStorage on Start; clear on Stop/cancel.
+            On app launch, if a record exists for the current habit, restore the band. Cross-day boundary: split into yesterday + today on stop.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto mt-10 mb-10 max-w-7xl">
+      <h2 class="display text-xl font-bold">Open questions</h2>
+      <ul class="mt-3 list-disc pl-5 text-sm" style="color: var(--text-secondary)">
+        <li><b style="color: var(--text-primary)">Pause:</b> ship in v1, or hold? Recommend hold.</li>
+        <li><b style="color: var(--text-primary)">Multiple habits running:</b> allow concurrent timers, or single-active? Recommend single-active.</li>
+        <li><b style="color: var(--text-primary)">Background behavior:</b> keep ticking when app is backgrounded — yes (we just compute from <code>startedAt</code>; no native timer needed).</li>
+        <li><b style="color: var(--text-primary)">Min-recordable:</b> ignore stops under 30s? Or always log?</li>
+        <li><b style="color: var(--text-primary)">Where Start lives outside this card:</b> floating action on Habits home, or only inside detail screen? Recommend detail-only for v1.</li>
+      </ul>
+    </section>
+
+    <footer class="mx-auto mt-2 mb-10 max-w-7xl text-xs" style="color: var(--text-tertiary)">
+      Same byDate data, same logTime mutation as <code>LogTimeSheet</code>. Estimated scope: a small <code>useTimer</code> hook (AsyncStorage-backed), a <code>TimerBand</code> component, +1 header action — ~150 LOC across 3 files. No schema changes.
+    </footer>
+  </body>
+</html>

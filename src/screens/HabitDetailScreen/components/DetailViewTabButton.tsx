@@ -7,7 +7,7 @@ import { Pressable, Text } from 'react-native';
 import { useThemeColors } from '@/theme';
 import { typography, fontWeights } from '@/theme/typography';
 
-export type DetailView = 'calendar' | 'strength' | 'time' | 'goal';
+export type DetailView = 'calendar' | 'strength' | 'time' | 'goals' | 'why';
 
 interface DetailViewTabButtonProps {
   accentColor: string;

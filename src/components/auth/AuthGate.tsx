@@ -3,7 +3,6 @@
  *
  * Authentication boundary that controls app access.
  * Shows WelcomeScreen for unauthenticated users,
- * OnboardingFlowV2 (Chain Builder) for first-time users after sign-up,
  * HabitsApp for authenticated users.
  * Syncs user to Convex database on sign-in.
  */
@@ -18,10 +17,6 @@ import { api } from '../../../convex/_generated/api';
 import HabitsApp from '../../features/habits/HabitsApp';
 import { useConvexAuthReady } from '../../providers';
 import { BrandedLoadingScreen } from './BrandedLoadingScreen';
-import {
-  OnboardingFlowV2,
-  useOnboardingV2Complete,
-} from '../../screens/onboarding-v2';
 import WelcomeScreen from '../../screens/auth/WelcomeScreen';
 import { RevenueCatPaywall } from '../RevenueCatPaywall';
 import { usePremium } from '../../hooks/usePremium';
@@ -30,15 +25,10 @@ import { enterEasing } from '../../theme/animations';
 const ENTER = FadeInDown.duration(280).easing(enterEasing);
 const EXIT = FadeOut.duration(300);
 
-type ScreenKey = 'welcome' | 'onboarding' | 'paywall' | 'app';
+type ScreenKey = 'welcome' | 'paywall' | 'app';
 
-function getScreenKey(
-  isSignedIn: boolean,
-  onboardingComplete: boolean,
-  hasEntitlement: boolean
-): ScreenKey {
+function getScreenKey(isSignedIn: boolean, hasEntitlement: boolean): ScreenKey {
   if (!isSignedIn) return 'welcome';
-  if (!onboardingComplete) return 'onboarding';
   return hasEntitlement ? 'app' : 'paywall';
 }
 
@@ -46,9 +36,6 @@ export function AuthGate() {
   const { isLoaded, isSignedIn } = useAuth();
   const isConvexReady = useConvexAuthReady();
   const getOrCreateUser = useMutation(api.users.getOrCreateUser);
-  const { complete: onboardingComplete, markComplete } = useOnboardingV2Complete(
-    isSignedIn ?? false
-  );
   const { isPremium, isLoading: isPremiumLoading } = usePremium();
 
   // TODO(paywall-gate): testing-only bypass — remove this state and pass
@@ -70,22 +57,14 @@ export function AuthGate() {
 
   // Wait for premium status to resolve before deciding paywall vs app, so the
   // paywall doesn't flash for users who already have an entitlement.
-  const isWaitingForPremium =
-    isSignedIn === true &&
-    onboardingComplete === true &&
-    isPremiumLoading;
+  const isWaitingForPremium = isSignedIn === true && isPremiumLoading;
 
-  if (
-    !isLoaded ||
-    (isSignedIn && onboardingComplete === null) ||
-    isWaitingForPremium
-  ) {
+  if (!isLoaded || isWaitingForPremium) {
     return <BrandedLoadingScreen />;
   }
 
   const screenKey = getScreenKey(
     isSignedIn ?? false,
-    onboardingComplete ?? false,
     isPremium || paywallDismissedForTesting
   );
 
@@ -98,14 +77,6 @@ export function AuthGate() {
           style={{ flex: 1 }}
         >
           <WelcomeScreen />
-        </Animated.View> : null}
-      {screenKey === 'onboarding' ? <Animated.View
-          key='onboarding'
-          entering={ENTER}
-          exiting={EXIT}
-          style={{ flex: 1 }}
-        >
-          <OnboardingFlowV2 onComplete={markComplete} />
         </Animated.View> : null}
       {screenKey === 'paywall' ? (
         <Animated.View
