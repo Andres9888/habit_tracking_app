@@ -6,7 +6,11 @@
  * animates to the tapped tab without bouncing through intermediate sections.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { NativeScrollEvent, NativeSyntheticEvent, ScrollView } from 'react-native';
+import type {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+} from 'react-native';
 import type { DetailView } from './DetailViewTabButton';
 
 const STICKY_HEADER_OFFSET = 52;
@@ -23,15 +27,22 @@ export function useDetailScrollSpy(
   options: Options = {}
 ) {
   const { onPinnedChange } = options;
-  const [activeView, setActiveView] = useState<DetailView>('calendar');
-  const sectionYsRef = useRef<Record<DetailView, number>>({ calendar: 0, goal: 0, strength: 0 });
+  const [activeView, setActiveView] = useState<DetailView>('strength');
+  const sectionYsRef = useRef<Record<DetailView, number>>({
+    calendar: 0,
+    goal: 0,
+    strength: 0,
+  });
   const pinnedRef = useRef(false);
   const suppressUntilRef = useRef(0);
-  const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const programmaticTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
 
   useEffect(() => {
     return () => {
-      if (programmaticTimerRef.current) clearTimeout(programmaticTimerRef.current);
+      if (programmaticTimerRef.current)
+        clearTimeout(programmaticTimerRef.current);
     };
   }, []);
 
@@ -54,8 +65,12 @@ export function useDetailScrollSpy(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const rawY = event.nativeEvent.contentOffset.y;
       const sections = sectionYsRef.current;
-      const heroBottom = sections.calendar - STICKY_HEADER_OFFSET;
-      const pinThreshold = heroBottom > 0 ? heroBottom - PIN_TITLE_THRESHOLD : 140;
+      // First scroll section = Strength when present, else Calendar.
+      const firstSectionY =
+        sections.strength > 0 ? sections.strength : sections.calendar;
+      const heroBottom = firstSectionY - STICKY_HEADER_OFFSET;
+      const pinThreshold =
+        heroBottom > 0 ? heroBottom - PIN_TITLE_THRESHOLD : 140;
       const nextPinned = rawY >= pinThreshold;
       if (nextPinned !== pinnedRef.current) {
         pinnedRef.current = nextPinned;
@@ -65,9 +80,10 @@ export function useDetailScrollSpy(
       const scrollY = rawY + ACTIVE_SECTION_THRESHOLD;
       // Order-agnostic: active = section with the greatest laid-out y still
       // above the scroll line. Survives Calendar/Goal/Strength reordering.
-      let next: DetailView = 'calendar';
+      // Goal has no tab, so it is excluded — scrolling into Goal keeps Calendar active.
+      let next: DetailView = 'strength';
       let bestY = -Infinity;
-      for (const view of ['calendar', 'goal', 'strength'] as DetailView[]) {
+      for (const view of ['strength', 'calendar'] as DetailView[]) {
         const y = sections[view];
         if (y > 0 && scrollY >= y && y > bestY) {
           next = view;

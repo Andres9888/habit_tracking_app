@@ -29,6 +29,8 @@ export interface MonthlyCalendarGridProps {
   useSolidCompletedFill?: boolean;
   /** Hide streak stat in insight strip (hero already shows streak). */
   showStreakInInsights?: boolean;
+  /** Render the month insight stat strip (strongest / rate / best run). */
+  showInsights?: boolean;
   pendingToggleDate?: string | null;
   onDayPress?: (date: string, completed: boolean) => void;
   /** Suppress the own card background/border/shadow/padding when embedded

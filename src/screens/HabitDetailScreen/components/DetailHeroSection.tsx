@@ -1,22 +1,24 @@
-/** DetailHeroSection - Fused hero (icon/name/streak/total/complete bar) plus milestone beat. */
+/** DetailHeroSection - Identity + primary action + compact Mon-Sun chain. */
 import { View } from 'react-native';
 import type { Habit } from '../../../features/habits/types';
 import { DetailHero } from './DetailHero';
-import { MilestoneBeat } from './MilestoneBeat';
+import { DetailWeekStrip } from './DetailWeekStrip';
 
 interface DetailHeroSectionProps {
+  completedDates: Set<string>;
   habit: Habit;
+  habitColor: string;
   isCompletedToday: boolean;
   isToggling: boolean;
-  totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
 }
 
 export function DetailHeroSection({
+  completedDates,
   habit,
+  habitColor,
   isCompletedToday,
   isToggling,
-  totalCompletions,
   onDayPress,
 }: DetailHeroSectionProps) {
   return (
@@ -25,12 +27,13 @@ export function DetailHeroSection({
         habit={habit}
         isCompletedToday={isCompletedToday}
         isToggling={isToggling}
-        totalCompletions={totalCompletions}
         onDayPress={onDayPress}
       />
-      <MilestoneBeat
-        currentStreak={habit.currentStreak ?? 0}
-        isCompletedToday={isCompletedToday}
+      <DetailWeekStrip
+        completedDates={completedDates}
+        habitColor={habitColor}
+        habitCreatedAt={habit.createdAt}
+        onDayPress={onDayPress}
       />
     </View>
   );

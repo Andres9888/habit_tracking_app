@@ -26,7 +26,12 @@ jest.mock('../../../../theme/ThemeContext', () => ({
         tertiary: '#999',
         inverse: '#fff',
       },
-      primary: { 100: '#e0f2fe', 500: '#3b82f6', 600: '#059669', 700: '#1d4ed8' },
+      primary: {
+        100: '#e0f2fe',
+        500: '#3b82f6',
+        600: '#059669',
+        700: '#1d4ed8',
+      },
     },
   }),
 }));
@@ -48,37 +53,30 @@ const mockHabit = {
 describe('DetailHero', () => {
   it('renders habit name', () => {
     const { getByText } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
+      <DetailHero habit={mockHabit} onDayPress={noop} />
     );
     expect(getByText('Morning Run')).toBeTruthy();
   });
 
-  it('renders habit icon with accessibility label', () => {
-    const { getByLabelText } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
+  it('renders the cadence kicker and primary status', () => {
+    const { getByText } = render(
+      <DetailHero habit={mockHabit} onDayPress={noop} />
     );
-    expect(getByLabelText('Habit icon: 🏃')).toBeTruthy();
+    expect(getByText('Daily')).toBeTruthy();
+    expect(getByText('Ready for today')).toBeTruthy();
   });
 
-  it('renders the total-completions number', () => {
+  it('renders the mock primary action', () => {
     const { getByText } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
+      <DetailHero habit={mockHabit} onDayPress={noop} />
     );
-    expect(getByText('89')).toBeTruthy();
-    expect(getByText('total')).toBeTruthy();
-  });
-
-  it('renders the fused complete bar', () => {
-    const { getByText } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
-    );
-    expect(getByText('Mark as done')).toBeTruthy();
+    expect(getByText('Complete today')).toBeTruthy();
   });
 
   it('shows fallback name when habit has no name', () => {
     const noNameHabit = { ...mockHabit, name: undefined, icon: undefined };
     const { getByText } = render(
-      <DetailHero habit={noNameHabit as never} totalCompletions={0} onDayPress={noop} />
+      <DetailHero habit={noNameHabit as never} onDayPress={noop} />
     );
     expect(getByText('Habit')).toBeTruthy();
   });
@@ -90,30 +88,23 @@ describe('DetailHero', () => {
       icon: '🧘',
     };
     const { getByText } = render(
-      <DetailHero habit={digitHabit as never} totalCompletions={0} onDayPress={noop} />
+      <DetailHero habit={digitHabit as never} onDayPress={noop} />
     );
     expect(getByText('5-Minute Meditation')).toBeTruthy();
   });
 
   it('has accessible header role on habit name', () => {
     const { getByRole } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
+      <DetailHero habit={mockHabit} onDayPress={noop} />
     );
     expect(getByRole('header')).toBeTruthy();
   });
 
-  it('surfaces an ongoing-streak note with best streak', () => {
+  it('settles to completed status without streak theater', () => {
     const { getByText } = render(
-      <DetailHero habit={mockHabit} totalCompletions={89} onDayPress={noop} />
+      <DetailHero habit={mockHabit} isCompletedToday onDayPress={noop} />
     );
-    expect(getByText('🔥 5-day streak · best 21')).toBeTruthy();
-  });
-
-  it('surfaces a personal-best note when current matches best', () => {
-    const recordHabit = { ...mockHabit, currentStreak: 21, bestStreak: 21 };
-    const { getByText } = render(
-      <DetailHero habit={recordHabit as never} totalCompletions={89} onDayPress={noop} />
-    );
-    expect(getByText('🔥 Longest streak yet')).toBeTruthy();
+    expect(getByText('Completed today')).toBeTruthy();
+    expect(getByText('Completed')).toBeTruthy();
   });
 });

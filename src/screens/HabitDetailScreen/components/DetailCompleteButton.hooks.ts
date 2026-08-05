@@ -1,8 +1,4 @@
-/**
- * DetailCompleteButton — C1 "Settled" animation.
- * Rest: white bar, green outline, empty check-well ring.
- * Done: deep settled fill, well flips to a light medallion with a check.
- */
+/** Complete-button state color + tactile 4px press motion. */
 import { useEffect, useRef } from 'react';
 import {
   interpolate,
@@ -16,13 +12,11 @@ import { runCompleteButtonTransition } from './runCompleteButtonTransition';
 
 interface CompleteButtonPalette {
   doneBg: string;
+  doneBorder: string;
   doneText: string;
   restBg: string;
   restBorder: string;
   restText: string;
-  wellDoneBg: string;
-  wellRestBg: string;
-  wellRestRing: string;
 }
 
 export function useDetailCompleteButtonAnimation(
@@ -32,20 +26,18 @@ export function useDetailCompleteButtonAnimation(
   const reduceMotion = useReduceMotion();
   const { pressHandlers, scale: pressScale } = useDetailPressAnimation();
   const completionProgress = useSharedValue(isCompletedToday ? 1 : 0);
-  const checkScale = useSharedValue(isCompletedToday ? 1 : 0);
   const isMountRef = useRef(true);
 
   useEffect(() => {
     const isMountTransition = isMountRef.current;
     isMountRef.current = false;
     runCompleteButtonTransition({
-      checkScale,
       completionProgress,
       isCompletedToday,
       isMountTransition,
       reduceMotion,
     });
-  }, [isCompletedToday, reduceMotion, completionProgress, checkScale]);
+  }, [isCompletedToday, reduceMotion, completionProgress]);
 
   const containerStyle = useAnimatedStyle(() => ({
     backgroundColor: interpolateColor(
@@ -56,9 +48,12 @@ export function useDetailCompleteButtonAnimation(
     borderColor: interpolateColor(
       completionProgress.value,
       [0, 1],
-      [palette.restBorder, palette.doneBg]
+      [palette.restBorder, palette.doneBorder]
     ),
-    transform: [{ scale: pressScale.value }],
+    transform: [
+      { translateY: interpolate(pressScale.value, [0.96, 1], [4, 0]) },
+      { scale: pressScale.value },
+    ],
   }));
 
   const labelStyle = useAnimatedStyle(() => ({
@@ -69,29 +64,9 @@ export function useDetailCompleteButtonAnimation(
     ),
   }));
 
-  const wellStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      completionProgress.value,
-      [0, 1],
-      [palette.wellRestBg, palette.wellDoneBg]
-    ),
-    borderColor: interpolateColor(
-      completionProgress.value,
-      [0, 1],
-      [palette.wellRestRing, palette.wellDoneBg]
-    ),
-  }));
-
-  const checkStyle = useAnimatedStyle(() => ({
-    opacity: checkScale.value,
-    transform: [{ scale: interpolate(checkScale.value, [0, 1], [0.6, 1]) }],
-  }));
-
   return {
-    checkStyle,
     containerStyle,
     labelStyle,
     pressHandlers,
-    wellStyle,
   };
 }

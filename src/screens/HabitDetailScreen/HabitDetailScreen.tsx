@@ -14,7 +14,6 @@ import { api } from '../../../convex/_generated/api';
 import { useCachedQuery } from '../../lib/queryCache';
 import {
   DetailLoadingState,
-  getHabitDisplayName,
   HabitDetailContent,
   HabitDetailModals,
   HeaderButton,
@@ -106,13 +105,13 @@ function HabitDetailScreenContent({
                       onPress={handleEdit}
                     />
                   }
-                  title={getHabitDisplayName(displayHabit)}
+                  title='Habit'
                   titleStyle={{
                     ...typography.body,
                     fontWeight: fontWeights.semibold,
                     letterSpacing: -0.2,
                   }}
-                  titleVisible={isTitlePinned}
+                  titleVisible
                   variant='transparent'
                   onBack={onClose}
                 />
@@ -125,7 +124,6 @@ function HabitDetailScreenContent({
                   }}
                   isCompletedToday={screenState.isCompletedToday}
                   pendingToggleDate={screenState.pendingToggleDate}
-                  totalCompletions={screenState.totalCompletions}
                   onDayPress={calendarHandlers.handleCalendarDayPress}
                   onPinnedChange={handlePinnedChange}
                 />

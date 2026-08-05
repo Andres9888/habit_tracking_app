@@ -68,7 +68,9 @@ export function DetailViewTabs({
         accessibilityRole='tablist'
         style={{
           backgroundColor: trackBg,
+          borderColor: colors.border,
           borderRadius: borderRadius.full,
+          borderWidth: 1,
           flexDirection: 'row',
           padding: PADDING,
           position: 'relative',

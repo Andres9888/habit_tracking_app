@@ -1,17 +1,11 @@
-/**
- * DetailCompleteButton — C1 "Settled" full-width bar inside the hero card.
- * Rest: outlined bar with an empty check-well waiting to be filled.
- * Done: settles into a deep fill; the well flips to a medallion with a check.
- * The whole bar toggles in both states (tap the done bar to un-mark).
- */
+/** Full-width Chain Day primary action; tapping Completed also undoes today. */
 import { Check } from 'lucide-react-native';
-import { Pressable, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { durations } from '../../../theme/animations';
+import { Pressable, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { fontWeights, typography } from '../../../theme/typography';
-import { withAlpha } from '../../../theme/colors';
+import { spacing } from '../../../theme/spacing';
+import { colors as palette } from '../../../theme/colors';
 import { useThemeColors } from '../../../theme';
-import { useReduceMotion } from '../../../hooks/useReduceMotion';
 import { useDetailCompleteButtonAnimation } from './DetailCompleteButton.hooks';
 import { styles } from './DetailCompleteButton.styles';
 
@@ -24,71 +18,61 @@ interface DetailCompleteButtonProps {
   onPress: () => void;
 }
 
+/**
+ * Chain Day primary control.
+ * Rest: filled forest-green button, white "Complete today" + check (tactile press).
+ * Done: settles to a light card with a green outline + green "Completed".
+ */
 export function DetailCompleteButton({
   disabled = false,
   isCompletedToday,
   onPress,
 }: DetailCompleteButtonProps) {
-  const { colors } = useThemeColors();
-  const reduceMotion = useReduceMotion();
-  const { checkStyle, containerStyle, labelStyle, pressHandlers, wellStyle } =
+  const { colors, isDark } = useThemeColors();
+  const { containerStyle, labelStyle, pressHandlers } =
     useDetailCompleteButtonAnimation(isCompletedToday, {
-      doneBg: colors.primary[700],
-      doneText: colors.text.inverse,
-      restBg: colors.card,
+      doneBg: isDark ? colors.card : palette.light.cardElevated,
+      doneBorder: colors.primary[600],
+      doneText: colors.primary[700],
+      restBg: colors.primary[600],
       restBorder: colors.primary[600],
-      restText: colors.primary[700],
-      wellDoneBg: colors.card,
-      wellRestBg: withAlpha(colors.card, 0),
-      wellRestRing: withAlpha(colors.primary[600], 0.45),
+      restText: colors.text.inverse,
     });
 
-  const labelEnter = reduceMotion
-    ? undefined
-    : FadeIn.duration(durations.quick);
-  const labelExit = reduceMotion
-    ? undefined
-    : FadeOut.duration(durations.quick);
-  const label = isCompletedToday ? 'Done today' : 'Mark as done';
+  const label = isCompletedToday ? 'Completed' : 'Complete today';
+  const checkColor = isCompletedToday
+    ? colors.primary[700]
+    : colors.text.inverse;
 
   return (
     <AnimatedPressable
       accessibilityLabel={
-        isCompletedToday ? 'Done today, tap to undo' : 'Mark as done for today'
+        isCompletedToday ? 'Completed today, tap to undo' : 'Complete today'
       }
       accessibilityRole='button'
       accessibilityState={{ checked: isCompletedToday }}
-      className='flex-row items-center'
+      className='flex-row items-center justify-center'
       disabled={disabled}
       style={[
         containerStyle,
         styles.container,
-        { opacity: disabled ? 0.6 : 1 },
+        { gap: spacing.sm, opacity: disabled ? 0.6 : 1 },
       ]}
       onPress={onPress}
       onPressIn={pressHandlers.onPressIn}
       onPressOut={pressHandlers.onPressOut}
     >
-      <Animated.View style={[styles.well, wellStyle]}>
-        <Animated.View style={checkStyle}>
-          <Check color={colors.primary[700]} size={15} strokeWidth={3} />
-        </Animated.View>
-      </Animated.View>
+      <Check color={checkColor} size={18} strokeWidth={2.6} />
       <AnimatedText
-        key={isCompletedToday ? 'done' : 'pending'}
-        entering={labelEnter}
-        exiting={labelExit}
         maxFontSizeMultiplier={2}
         style={[
-          typography.body,
-          styles.label,
+          typography.button,
           labelStyle,
-          { fontWeight: fontWeights.semibold },
+          { fontWeight: fontWeights.bold },
         ]}
       >
         {label}
       </AnimatedText>
-      <View style={styles.wellBalance} />
     </AnimatedPressable>
   );
 }

@@ -22,6 +22,7 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
   onCurrentMonthChange,
   useSolidCompletedFill = false,
   showStreakInInsights = true,
+  showInsights = true,
   pendingToggleDate = null,
   onDayPress,
   bare = false,
@@ -92,11 +93,13 @@ export const MonthlyCalendarGrid = memo(function MonthlyCalendarGrid({
           />
         </View>
       </GestureDetector>
-      <MonthInsightStrip
-        {...insights}
-        monthKey={monthKey}
-        showStreak={showStreakInInsights}
-      />
+      {showInsights ? (
+        <MonthInsightStrip
+          {...insights}
+          monthKey={monthKey}
+          showStreak={showStreakInInsights}
+        />
+      ) : null}
     </View>
   );
 });

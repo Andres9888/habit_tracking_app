@@ -12,21 +12,21 @@ jest.mock('../../../../theme/ThemeContext', () => ({
 }));
 
 describe('DetailCompleteButton', () => {
-  it('renders Mark as done and fires onPress when incomplete', () => {
+  it('renders Complete today and fires onPress when incomplete', () => {
     const onPress = jest.fn();
     const { getByText } = render(
       <DetailCompleteButton isCompletedToday={false} onPress={onPress} />
     );
-    fireEvent.press(getByText('Mark as done'));
+    fireEvent.press(getByText('Complete today'));
     expect(onPress).toHaveBeenCalledTimes(1);
   });
 
-  it('renders Done for Today when already completed', () => {
+  it('renders Completed when already completed', () => {
     const { getByText, getByLabelText } = render(
       <DetailCompleteButton isCompletedToday onPress={jest.fn()} />
     );
-    expect(getByText('Done for Today')).toBeTruthy();
-    expect(getByLabelText('Done for today, tap to undo')).toBeTruthy();
+    expect(getByText('Completed')).toBeTruthy();
+    expect(getByLabelText('Completed today, tap to undo')).toBeTruthy();
   });
 
   it('does not fire onPress while disabled', () => {
@@ -38,7 +38,7 @@ describe('DetailCompleteButton', () => {
         onPress={onPress}
       />
     );
-    fireEvent.press(getByText('Mark as done'));
+    fireEvent.press(getByText('Complete today'));
     expect(onPress).not.toHaveBeenCalled();
   });
 });

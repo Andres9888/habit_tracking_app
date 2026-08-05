@@ -1,17 +1,14 @@
-/**
- * HabitDetailContent - Scrollspy layout: Hero → sticky tabs → Calendar + Strength + Goal stacked.
- * Tabs act as anchors, not gatekeepers. Every progress surface is visible in one scroll.
- */
+/** HabitDetailContent - Sticky anchors + one calm progress scroll. */
 import { useRef } from 'react';
 import { ScrollView, View, type LayoutChangeEvent } from 'react-native';
 import ErrorBoundary from '../../../components/ErrorBoundary';
-import { HabitStrengthSection } from '../../../components/HabitStrengthSection';
 import type { Habit } from '../../../features/habits/types';
-import { useProgressEmojis } from '../../../hooks/useProgressEmojis';
 import { useThemeColors } from '../../../theme';
 import { getLocalDateString } from '../../../utils/getLocalDateString';
 import { CalendarTabContent } from './CalendarTabContent';
 import { DetailHeroSection } from './DetailHeroSection';
+import { DetailInsightsCard } from './DetailInsightsCard';
+import { DetailStrengthCard } from './DetailStrengthCard';
 import { DetailViewTabs, type DetailView } from './DetailViewTabs';
 import { GoalTabContent } from './GoalTabContent';
 import { useDetailScrollSpy } from './useDetailScrollSpy';
@@ -21,7 +18,6 @@ interface HabitDetailContentProps {
   habit: Habit;
   isCompletedToday: boolean;
   pendingToggleDate?: string | null;
-  totalCompletions: number;
   onDayPress: (dateString: string, isCompleted: boolean) => void;
   onPinnedChange?: (pinned: boolean) => void;
 }
@@ -31,7 +27,6 @@ export function HabitDetailContent({
   habit,
   isCompletedToday,
   pendingToggleDate = null,
-  totalCompletions,
   onDayPress,
   onPinnedChange,
 }: HabitDetailContentProps) {
@@ -41,7 +36,6 @@ export function HabitDetailContent({
     useDetailScrollSpy(scrollRef, { onPinnedChange });
   const habitColor = habit.color ?? habit.iconColor ?? colors.primary[700];
   const isTodayToggling = pendingToggleDate === getLocalDateString();
-  const progressEmojis = useProgressEmojis(habit);
 
   const makeSectionLayoutHandler =
     (view: DetailView) => (event: LayoutChangeEvent) => {
@@ -56,20 +50,46 @@ export function HabitDetailContent({
       contentContainerClassName='pb-16'
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
-      stickyHeaderIndices={[1]}
+      stickyHeaderIndices={[0]}
       onScroll={handleScroll}
     >
+      <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
       <DetailHeroSection
+        completedDates={completedDates}
         habit={habit}
+        habitColor={habitColor}
         isCompletedToday={isCompletedToday}
         isToggling={isTodayToggling}
-        totalCompletions={totalCompletions}
         onDayPress={onDayPress}
       />
-      <DetailViewTabs activeView={activeView} onViewChange={scrollToView} />
+
+      {habit.createdAt ? (
+        <View
+          className='mx-5 mt-4'
+          onLayout={makeSectionLayoutHandler('strength')}
+        >
+          <ErrorBoundary>
+            <DetailStrengthCard
+              completedDates={completedDates}
+              habitCreatedAt={habit.createdAt}
+              habitStrength={habit.strength}
+              isCompletedToday={isCompletedToday}
+            />
+          </ErrorBoundary>
+        </View>
+      ) : null}
+
+      <View className='mx-5 mt-5'>
+        <ErrorBoundary>
+          <DetailInsightsCard
+            completedDates={completedDates}
+            habitColor={habitColor}
+          />
+        </ErrorBoundary>
+      </View>
 
       <View
-        className='mx-5 mt-4'
+        className='mx-5 mt-5'
         onLayout={makeSectionLayoutHandler('calendar')}
       >
         <CalendarTabContent
@@ -82,26 +102,8 @@ export function HabitDetailContent({
       </View>
 
       <View className='mx-5 mt-5' onLayout={makeSectionLayoutHandler('goal')}>
-        <GoalTabContent habit={habit} />
+        <GoalTabContent completedDates={completedDates} habit={habit} />
       </View>
-
-      {habit.createdAt ? (
-        <View
-          className='mx-5 mt-5'
-          onLayout={makeSectionLayoutHandler('strength')}
-        >
-          <ErrorBoundary>
-            <HabitStrengthSection
-              completedDates={completedDates}
-              habitColor={habit.color ?? habit.iconColor}
-              habitCreatedAt={habit.createdAt}
-              habitId={habit._id}
-              habitStrength={habit.strength}
-              progressEmojis={progressEmojis}
-            />
-          </ErrorBoundary>
-        </View>
-      ) : null}
     </ScrollView>
   );
 }

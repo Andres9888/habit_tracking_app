@@ -12,10 +12,10 @@ export const PADDING = 3;
 export const TRACK_PADDING_TOP = 6;
 export const TRACK_PADDING_BOTTOM = 12;
 
+// Chain Day: two anchors only — Goal folds into the scroll as a card, no tab.
 export const TABS: Array<{ label: string; view: DetailView }> = [
-  { label: 'Calendar', view: 'calendar' },
-  { label: 'Goal', view: 'goal' },
   { label: 'Strength', view: 'strength' },
+  { label: 'Calendar', view: 'calendar' },
 ];
 
 export const INDICATOR_TIMING = {

@@ -1,12 +1,8 @@
 /** DetailCompleteButton state-transition animation runner (calm fade — no burst/pop). */
-import {
-  type SharedValue,
-  withTiming,
-} from 'react-native-reanimated';
-import { durations, enterEasing, exitEasing } from '../../../theme/animations';
+import { type SharedValue, withTiming } from 'react-native-reanimated';
+import { durations, enterEasing } from '../../../theme/animations';
 
 interface CompleteButtonTransitionParams {
-  checkScale: SharedValue<number>;
   completionProgress: SharedValue<number>;
   isCompletedToday: boolean;
   isMountTransition: boolean;
@@ -14,7 +10,6 @@ interface CompleteButtonTransitionParams {
 }
 
 export function runCompleteButtonTransition({
-  checkScale,
   completionProgress,
   isCompletedToday,
   isMountTransition,
@@ -24,17 +19,11 @@ export function runCompleteButtonTransition({
 
   if (reduceMotion || isMountTransition) {
     completionProgress.value = target;
-    checkScale.value = target;
     return;
   }
 
   completionProgress.value = withTiming(target, {
     duration: durations.standard,
     easing: enterEasing,
-  });
-
-  checkScale.value = withTiming(target, {
-    duration: durations.quick,
-    easing: isCompletedToday ? enterEasing : exitEasing,
   });
 }
