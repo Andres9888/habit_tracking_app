@@ -264,7 +264,7 @@ export function AdvancedOptionsSection({
               />
               <AdvancedOptionRow
                 accessibilityHint='Opens growth icons picker'
-                description="Five emojis that mark your habit's strength stages."
+                description="Your habit's icon upgrades as it grows stronger."
                 icon={
                   <Text style={{ fontSize: 18 }}>
                     {resolvedEmojis.starting}
