@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickStatsRow Redesign - Before/After</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #111 !important;
+      color: #e5e7eb !important;
+      padding: 32px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+    h1 { font-family: 'DM Sans', sans-serif !important; font-size: 24px !important; font-weight: 700 !important; color: #f9fafb !important; margin-bottom: 4px !important; }
+    .subtitle { color: #6b7280 !important; font-size: 13px !important; margin-bottom: 32px !important; }
+    .label-tag {
+      font-family: 'JetBrains Mono', monospace !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      padding: 3px 8px !important;
+      border-radius: 6px !important;
+      display: inline-block !important;
+      margin-bottom: 12px !important;
+    }
+    .tag-before { background: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; }
+    .tag-after { background: rgba(52, 211, 153, 0.15) !important; color: #34d399 !important; }
+
+    /* iPhone frame */
+    .phone-frame {
+      width: 393px;
+      background: linear-gradient(180deg, #F5F1ED 0%, #EBE6E0 50%, #F5F1ED 100%);
+      border-radius: 40px;
+      padding: 20px 0;
+      position: relative;
+      box-shadow: 0 0 0 3px #333, 0 8px 32px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+    .phone-frame-max {
+      width: 430px;
+    }
+    .phone-notch {
+      width: 120px;
+      height: 28px;
+      background: #111;
+      border-radius: 0 0 16px 16px;
+      margin: 0 auto 12px;
+    }
+
+    /* App content inside phone */
+    .screen-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 16px 12px;
+    }
+    .close-btn {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(61,56,51,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: #3D3833; font-size: 14px;
+    }
+    .edit-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 600;
+      color: #3D3833;
+      background: rgba(61,56,51,0.08);
+      padding: 6px 14px; border-radius: 20px;
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Hero */
+    .hero { text-align: center; padding: 0 16px 24px; }
+    .hero-icon {
+      width: 80px; height: 80px;
+      background: #FEF3C7;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 12px rgba(245,158,11,0.25);
+    }
+    .hero-name {
+      font-family: 'Literata', serif !important;
+      font-size: 34px !important;
+      font-weight: 700 !important;
+      color: #2D2A26 !important;
+      letter-spacing: -0.85px !important;
+    }
+    .hero-schedule {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 13px !important;
+      color: #6B6560 !important;
+      margin-top: 4px !important;
+      letter-spacing: 0.12px !important;
+    }
+
+    /* CURRENT: Pill stats */
+    .pills-row {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      justify-content: center;
+      padding: 8px 16px;
+    }
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 12px;
+      border-radius: 9999px;
+      background: #EDEAE5;
+    }
+    .stat-pill.active {
+      background: #D1FAE5;
+    }
+    .stat-pill .pill-emoji { font-size: 12px; }
+    .stat-pill .pill-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 700;
+      color: #6B6560;
+    }
+    .stat-pill.active .pill-value { color: #047857; }
+    .stat-pill .pill-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; color: #6E6660;
+    }
+    .stat-pill.active .pill-label { color: #059669; }
+
+    /* NEW: Stats card */
+    .stats-card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background: #EDEAE5;
+      border-radius: 16px;
+      margin: 8px 16px;
+      box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    }
+    .stat-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 8px;
+      gap: 2px;
+    }
+    .stat-separator {
+      width: 1px;
+      height: 32px;
+      background: #DDD8D2;
+    }
+    .stat-column .col-emoji { font-size: 18px; margin-bottom: 2px; }
+    .stat-column .col-emoji-active {
+      font-size: 18px;
+      margin-bottom: 2px;
+      background: #D1FAE5;
+      width: 30px; height: 30px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+    }
+    .stat-column .col-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px; font-weight: 700;
+      color: #2D2A26;
+    }
+    .stat-column .col-value-active {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px; font-weight: 700;
+      color: #047857;
+    }
+    .stat-column .col-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 500;
+      color: #6E6660;
+    }
+
+    /* Tabs (context) */
+    .tabs-container {
+      margin: 16px 16px 0;
+      background: #DDD8D2;
+      border-radius: 10px;
+      padding: 4px;
+      display: flex;
+    }
+    .tab-btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      color: #6B6560;
+      border-radius: 8px;
+    }
+    .tab-btn.active {
+      background: #fff;
+      font-weight: 600;
+      color: #2D2A26;
+      box-shadow: 0 2px 8px rgba(5,150,105,0.08);
+    }
+    .tab-hint {
+      font-size: 11px; color: #059669; font-weight: 600;
+    }
+
+    /* Comparison layout */
+    .comparison-row {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .phone-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Clip indicator */
+    .clip-indicator {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 24px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 10;
+    }
+    .clip-left { left: 0; background: linear-gradient(90deg, rgba(245,60,60,0.15), transparent); }
+    .clip-right { right: 0; background: linear-gradient(270deg, rgba(245,60,60,0.15), transparent); }
+    .clip-indicator span {
+      writing-mode: vertical-rl;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px; color: #f87171; font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .pills-wrapper {
+      position: relative;
+    }
+
+    /* Notes */
+    .note-section {
+      max-width: 860px;
+      width: 100%;
+      margin-top: 16px;
+    }
+    .note-card {
+      background: #1a1a2e;
+      border: 1px solid #2d2d44;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .note-card h3 {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px !important; font-weight: 600 !important;
+      color: #d1d5db !important; margin-bottom: 8px !important;
+    }
+    .note-card p {
+      font-size: 13px !important; color: #9ca3af !important; line-height: 1.6 !important;
+    }
+    .note-card ul {
+      margin: 8px 0 0 16px;
+      list-style: disc;
+    }
+    .note-card li {
+      font-size: 13px; color: #9ca3af; line-height: 1.8;
+    }
+    .note-card code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; background: rgba(255,255,255,0.06);
+      padding: 1px 5px; border-radius: 4px; color: #a5b4fc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>QuickStatsRow Redesign</h1>
+  <p class="subtitle">Habit Detail Screen &mdash; 3 stat pills &rarr; stats card with columns</p>
+
+  <!-- ========== BEFORE / AFTER ========== -->
+  <div class="comparison-row">
+
+    <!-- BEFORE -->
+    <div class="phone-wrapper">
+      <span class="label-tag tag-before">CURRENT (clips on Pro Max)</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="screen-header">
+          <div class="close-btn">&times;</div>
+          <div class="edit-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D3833" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Habit
+          </div>
+        </div>
+        <div class="hero">
+          <div class="hero-icon">📚</div>
+          <div class="hero-name">Read</div>
+          <div class="hero-schedule">Every day</div>
+        </div>
+
+        <!-- Current pills -->
+        <div class="pills-wrapper">
+          <div class="clip-indicator clip-left"><span>CLIP</span></div>
+          <div class="clip-indicator clip-right"><span>CLIP</span></div>
+          <div class="pills-row">
+            <div class="stat-pill active">
+              <span class="pill-emoji">🔥</span>
+              <span class="pill-value">12</span>
+              <span class="pill-label">streak</span>
+            </div>
+            <div class="stat-pill">
+              <span class="pill-emoji">⭐</span>
+              <span class="pill-value">24</span>
+              <span class="pill-label">best streak</span>
+            </div>
+            <div class="stat-pill">
+              <span class="pill-emoji">📅</span>
+              <span class="pill-value">142</span>
+              <span class="pill-label">completions</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs-container">
+          <div class="tab-btn active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendar <span class="tab-hint">142 days</span>
+          </div>
+          <div class="tab-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Strength <span class="tab-hint" style="color:#6B6560">67%</span>
+          </div>
+        </div>
+
+        <div style="height: 180px; margin: 16px; background: #EDEAE5; border-radius: 16px; opacity: 0.5; display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:13px; color:#6E6660;">Calendar heatmap...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="phone-wrapper">
+      <span class="label-tag tag-after">PROPOSED (stats card)</span>
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="screen-header">
+          <div class="close-btn">&times;</div>
+          <div class="edit-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D3833" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Habit
+          </div>
+        </div>
+        <div class="hero">
+          <div class="hero-icon">📚</div>
+          <div class="hero-name">Read</div>
+          <div class="hero-schedule">Every day</div>
+        </div>
+
+        <!-- NEW stats card -->
+        <div class="stats-card">
+          <div class="stat-column">
+            <div class="col-emoji-active">🔥</div>
+            <div class="col-value-active">12</div>
+            <div class="col-label">streak</div>
+          </div>
+          <div class="stat-separator"></div>
+          <div class="stat-column">
+            <div class="col-emoji">⭐</div>
+            <div class="col-value">24</div>
+            <div class="col-label">best streak</div>
+          </div>
+          <div class="stat-separator"></div>
+          <div class="stat-column">
+            <div class="col-emoji">📅</div>
+            <div class="col-value">142</div>
+            <div class="col-label">completions</div>
+          </div>
+        </div>
+
+        <div class="tabs-container">
+          <div class="tab-btn active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendar <span class="tab-hint">142 days</span>
+          </div>
+          <div class="tab-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Strength <span class="tab-hint" style="color:#6B6560">67%</span>
+          </div>
+        </div>
+
+        <div style="height: 180px; margin: 16px; background: #EDEAE5; border-radius: 16px; opacity: 0.5; display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:13px; color:#6E6660;">Calendar heatmap...</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== iPhone 16 Pro Max comparison ========== -->
+  <h1 style="margin-top: 24px;">iPhone 16 Pro Max (430px)</h1>
+  <p class="subtitle">The wider screen makes the card breathe more — no clipping possible</p>
+
+  <div class="comparison-row">
+    <div class="phone-wrapper">
+      <span class="label-tag tag-after">PRO MAX — proposed</span>
+      <div class="phone-frame phone-frame-max">
+        <div class="phone-notch"></div>
+        <div class="screen-header">
+          <div class="close-btn">&times;</div>
+          <div class="edit-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3D3833" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Edit Habit
+          </div>
+        </div>
+        <div class="hero">
+          <div class="hero-icon">📚</div>
+          <div class="hero-name">Read</div>
+          <div class="hero-schedule">Every day</div>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-column">
+            <div class="col-emoji-active">🔥</div>
+            <div class="col-value-active">12</div>
+            <div class="col-label">streak</div>
+          </div>
+          <div class="stat-separator"></div>
+          <div class="stat-column">
+            <div class="col-emoji">⭐</div>
+            <div class="col-value">24</div>
+            <div class="col-label">best streak</div>
+          </div>
+          <div class="stat-separator"></div>
+          <div class="stat-column">
+            <div class="col-emoji">📅</div>
+            <div class="col-value">142</div>
+            <div class="col-label">completions</div>
+          </div>
+        </div>
+
+        <div class="tabs-container">
+          <div class="tab-btn active">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D2A26" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Calendar <span class="tab-hint">142 days</span>
+          </div>
+          <div class="tab-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6B6560" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Strength <span class="tab-hint" style="color:#6B6560">67%</span>
+          </div>
+        </div>
+
+        <div style="height: 180px; margin: 16px; background: #EDEAE5; border-radius: 16px; opacity: 0.5; display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:13px; color:#6E6660;">Calendar heatmap...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== Design Notes ========== -->
+  <div class="note-section">
+    <div class="note-card">
+      <h3>What Changed</h3>
+      <ul>
+        <li>3 separate horizontal pills &rarr; 1 card with 3 equal <code>flex: 1</code> columns</li>
+        <li>Each column stacks vertically: emoji, value (large monospace), label</li>
+        <li>Thin 1px separators between columns using <code>colors.border</code></li>
+        <li>Card uses <code>borderRadius: 16</code> + <code>shadows.card</code> to match tabs and content cards</li>
+        <li>Active streak: green value text + subtle green circle behind emoji (not full-pill flood)</li>
+        <li>Values at 20px JetBrains Mono (up from 13px) &mdash; the primary data is now the hero of each column</li>
+      </ul>
+    </div>
+    <div class="note-card">
+      <h3>Why It Fits</h3>
+      <ul>
+        <li><strong>No clipping possible</strong> &mdash; <code>flex: 1</code> columns divide available width equally on any screen</li>
+        <li><strong>Visual consistency</strong> &mdash; card shape matches tabs card and heatmap/strength cards below</li>
+        <li><strong>Design tokens</strong> &mdash; uses <code>colors.card</code>, <code>borderRadius.card</code>, <code>shadows.card</code>, <code>fontFamilies.monospace</code></li>
+        <li><strong>Hierarchy</strong> &mdash; large numbers as focal point, emoji for visual interest, subtle labels for context</li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>

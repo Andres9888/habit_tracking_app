@@ -1,0 +1,42 @@
+{
+  "feature": "test",
+  "description": "Run test suite to verify all tests pass",
+  "created_at": "2026-01-06T02:12:57.509Z",
+  "updated_at": "2026-01-06T02:44:05.259Z",
+  "status": "backlog",
+  "planStatus": "pending",
+  "spec_name": "run-test-suite",
+  "workflow_type": "simple",
+  "total_phases": 1,
+  "recommended_workers": 1,
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Verification",
+      "description": "Run test suite to verify all tests pass",
+      "depends_on": [],
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Run npm test and verify all tests pass",
+          "service": "main",
+          "status": "in_progress",
+          "files_to_create": [],
+          "files_to_modify": [],
+          "patterns_from": [],
+          "verification": {
+            "type": "command",
+            "run": "npm test"
+          },
+          "notes": "REQUIRES MANUAL ACTION: npm command not allowed in sandbox. User must run `npm test` manually. Found 86 test files ready for execution. See build-progress.txt for details.",
+          "updated_at": "2026-01-06T02:20:14.823266+00:00"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "complexity": "simple",
+    "estimated_sessions": 1
+  },
+  "last_updated": "2026-01-06T02:20:14.823271+00:00"
+}

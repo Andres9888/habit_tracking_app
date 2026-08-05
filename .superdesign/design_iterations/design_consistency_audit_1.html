@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Consistency Audit — Before / After</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1A1816;
+      color: #F5F1ED;
+      padding: 32px;
+      line-height: 1.5;
+    }
+
+    h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #F5F1ED;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: #9CA3AF;
+      margin-bottom: 48px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #6EE7B7;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      font-size: 14px;
+      color: #9CA3AF;
+      margin-bottom: 32px;
+      max-width: 700px;
+    }
+
+    .issue-section {
+      margin-bottom: 64px;
+    }
+
+    /* Before / After comparison */
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .panel {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #374151;
+    }
+
+    .panel-header {
+      padding: 12px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-header.before {
+      background: rgba(220, 38, 38, 0.12);
+      color: #FCA5A5;
+      border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+    }
+
+    .panel-header.after {
+      background: rgba(5, 150, 105, 0.12);
+      color: #6EE7B7;
+      border-bottom: 1px solid rgba(5, 150, 105, 0.2);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: #F87171; }
+    .dot.green { background: #34D399; }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    /* iPhone frame for dark mode demos */
+    .phone-frame {
+      width: 320px;
+      margin: 0 auto;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Light mode frame */
+    .phone-light {
+      background: #F5F1ED;
+    }
+
+    .phone-dark {
+      background: #111827;
+    }
+
+    /* ----- Issue 1: DangerZone ----- */
+    .danger-zone-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.41px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .danger-zone-btn:active { transform: scale(0.97); }
+
+    .danger-zone-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .btn-archive-light-before {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #B45309;
+    }
+
+    .btn-archive-dark-before {
+      background: rgba(146,64,14,0.15);
+      border-color: rgba(146,64,14,0.3);
+      color: #FBBF24;
+    }
+
+    .btn-delete-light-before {
+      background: #FEF2F2;
+      border-color: #FECACA;
+      color: #DC2626;
+    }
+
+    .btn-delete-dark-before {
+      background: rgba(153,27,27,0.15);
+      border-color: rgba(153,27,27,0.3);
+      color: #F87171;
+    }
+
+    /* After - using theme tokens */
+    .btn-archive-light-after {
+      background: #FEF3C7;
+      border-color: #FDE68A;
+      color: #92400E;
+    }
+
+    .btn-archive-dark-after {
+      background: rgba(245,158,11,0.15);
+      border-color: rgba(245,158,11,0.25);
+      color: #FDE68A;
+    }
+
+    .btn-delete-light-after {
+      background: #FEE2E2;
+      border-color: #FCA5A5;
+      color: #B91C1C;
+    }
+
+    .btn-delete-dark-after {
+      background: rgba(239,68,68,0.15);
+      border-color: rgba(239,68,68,0.25);
+      color: #FCA5A5;
+    }
+
+    .btn-icon-archive-before-light svg { stroke: #d97706; }
+    .btn-icon-archive-before-dark svg { stroke: #FBBF24; }
+    .btn-icon-delete-before-light svg { stroke: #dc2626; }
+    .btn-icon-delete-before-dark svg { stroke: #F87171; }
+
+    .btn-icon-archive-after-light svg { stroke: #92400E; }
+    .btn-icon-archive-after-dark svg { stroke: #FDE68A; }
+    .btn-icon-delete-after-light svg { stroke: #B91C1C; }
+    .btn-icon-delete-after-dark svg { stroke: #FCA5A5; }
+
+    /* ----- Issue 2: Goal Collections ----- */
+    .goal-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .goal-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .goal-chip .emoji { font-size: 18px; }
+
+    /* Before - hardcoded, no dark mode */
+    .chip-sleep-before { background: #EFF6FF; color: #1E3A5F; }
+    .chip-energy-before { background: #FEF3C7; color: #78350F; }
+    .chip-stress-before { background: #F0FDF4; color: #14532D; }
+    .chip-productive-before { background: #FAF5FF; color: #581C87; }
+    .chip-health-before { background: #FFF1F2; color: #881337; }
+
+    /* After (dark mode adapted) */
+    .chip-sleep-after { background: rgba(59,130,246,0.15); color: #93C5FD; border-color: rgba(59,130,246,0.2); }
+    .chip-energy-after { background: rgba(245,158,11,0.15); color: #FDE68A; border-color: rgba(245,158,11,0.2); }
+    .chip-stress-after { background: rgba(5,150,105,0.15); color: #6EE7B7; border-color: rgba(5,150,105,0.2); }
+    .chip-productive-after { background: rgba(139,92,246,0.15); color: #C4B5FD; border-color: rgba(139,92,246,0.2); }
+    .chip-health-after { background: rgba(244,63,94,0.15); color: #FDA4AF; border-color: rgba(244,63,94,0.2); }
+
+    /* Light mode after (nearly same as before, just slightly refined) */
+    .chip-sleep-after-light { background: #EFF6FF; color: #1E3A5F; border-color: #BFDBFE; }
+    .chip-energy-after-light { background: #FEF3C7; color: #78350F; border-color: #FDE68A; }
+    .chip-stress-after-light { background: #F0FDF4; color: #14532D; border-color: #BBF7D0; }
+    .chip-productive-after-light { background: #FAF5FF; color: #581C87; border-color: #DDD6FE; }
+    .chip-health-after-light { background: #FFF1F2; color: #881337; border-color: #FECDD3; }
+
+    /* ----- Issue 3: White hardcoded ----- */
+    .fab-demo {
+      width: 56px;
+      height: 56px;
+      border-radius: 9999px;
+      background: #059669;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      margin: 0 auto;
+    }
+
+    .fab-demo svg {
+      width: 24px;
+      height: 24px;
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    .code-block {
+      background: #0D1117;
+      border: 1px solid #30363D;
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin-top: 12px;
+    }
+
+    .code-block .keyword { color: #FF7B72; }
+    .code-block .string { color: #A5D6FF; }
+    .code-block .comment { color: #8B949E; }
+    .code-block .token-name { color: #79C0FF; }
+    .code-block .hardcoded { color: #FFA657; background: rgba(255,166,87,0.12); padding: 1px 4px; border-radius: 3px; }
+    .code-block .fixed { color: #7EE787; background: rgba(126,231,135,0.12); padding: 1px 4px; border-radius: 3px; }
+    .code-block .strikethrough { text-decoration: line-through; opacity: 0.5; }
+
+    /* ----- Issue 4: Icon sizes ----- */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+
+    .icon-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 8px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid #374151;
+    }
+
+    .icon-cell.has-token { border-color: rgba(5,150,105,0.3); background: rgba(5,150,105,0.06); }
+    .icon-cell.no-token { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.06); }
+
+    .icon-cell .size-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: #D1D5DB;
+    }
+
+    .icon-cell .token-label {
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .icon-cell .token-label.exists { color: #6EE7B7; }
+    .icon-cell .token-label.missing { color: #FBBF24; }
+
+    .icon-placeholder {
+      background: #4B5563;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ----- Issue 5: Border Radius ----- */
+    .radius-comparison {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .radius-box {
+      width: 120px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      border: 1px solid;
+    }
+
+    .radius-box.before-box {
+      background: rgba(255,255,255,0.04);
+      border-color: #4B5563;
+      color: #9CA3AF;
+    }
+
+    .radius-box.after-box {
+      background: rgba(5,150,105,0.06);
+      border-color: rgba(5,150,105,0.3);
+      color: #6EE7B7;
+    }
+
+    .arrow {
+      font-size: 20px;
+      color: #6B7280;
+    }
+
+    /* ----- Summary scoreboard ----- */
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .score-card {
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid #374151;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .score-card .area {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .score-bar-track {
+      height: 6px;
+      background: #374151;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.5s ease;
+    }
+
+    .score-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .score-pct.excellent { color: #34D399; }
+    .score-pct.good { color: #FBBF24; }
+    .score-pct.needs-work { color: #F87171; }
+
+    /* Mode toggle strip */
+    .mode-strip {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .mode-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mode-tag.light { background: #F5F1ED; color: #2D2A26; }
+    .mode-tag.dark { background: #1F2937; color: #F9FAFB; border: 1px solid #374151; }
+
+    .callout {
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 3px solid;
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .callout.info {
+      background: rgba(59,130,246,0.08);
+      border-color: #60A5FA;
+      color: #93C5FD;
+    }
+
+    .callout.warning {
+      background: rgba(245,158,11,0.08);
+      border-color: #FBBF24;
+      color: #FDE68A;
+    }
+
+    .callout strong { font-weight: 600; }
+
+    .file-ref {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #79C0FF;
+      background: rgba(121,192,255,0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #2D3748;
+      margin: 48px 0;
+    }
+
+    @media (max-width: 768px) {
+      .comparison { grid-template-columns: 1fr; }
+      .icon-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Design Consistency Audit</h1>
+  <p class="subtitle">Visual comparison of current hardcoded values vs. theme token adoption. 5 issues found across ~100 files.</p>
+
+  <!-- SCOREBOARD -->
+  <div class="issue-section">
+    <div class="section-label">Overall Health</div>
+    <div class="scoreboard">
+      <div class="score-card">
+        <div class="area">Typography</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:98%;background:#34D399;"></div></div>
+        <div class="score-pct excellent">98% consistent</div>
+      </div>
+      <div class="score-card">
+        <div class="area">Spacing Grid</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:95%;background:#34D399;"></div></div>
+        <div class="score-pct excellent">95% consistent</div>
+      </div>
+      <div class="score-card">
+        <div class="area">Animation Springs</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:95%;background:#34D399;"></div></div>
+        <div class="score-pct excellent">95% consistent</div>
+      </div>
+      <div class="score-card">
+        <div class="area">Shadow Tokens</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:90%;background:#34D399;"></div></div>
+        <div class="score-pct excellent">90% consistent</div>
+      </div>
+      <div class="score-card">
+        <div class="area">Color Tokens</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:75%;background:#FBBF24;"></div></div>
+        <div class="score-pct good">75% — ~30 files with hardcoded colors</div>
+      </div>
+      <div class="score-card">
+        <div class="area">Border Radius</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:80%;background:#FBBF24;"></div></div>
+        <div class="score-pct good">80% — 37 hardcoded occurrences</div>
+      </div>
+      <div class="score-card">
+        <div class="area">Icon Sizes</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:60%;background:#F87171;"></div></div>
+        <div class="score-pct needs-work">60% — most icons use raw numbers</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ISSUE 1: DangerZone -->
+  <div class="issue-section">
+    <div class="section-label">Issue 1 &mdash; Hardcoded Status Colors</div>
+    <div class="section-title">DangerZone.tsx: Hardcoded rgba() &amp; hex vs. semantic status tokens</div>
+    <div class="section-desc">
+      The DangerZone component uses raw rgba() and hex colors that don't match the existing
+      <span class="file-ref">colors.status.warningLight</span> / <span class="file-ref">colors.status.errorLight</span> tokens already defined in darkColors.ts.
+    </div>
+
+    <div class="mode-strip">
+      <span class="mode-tag dark">Dark Mode</span>
+    </div>
+
+    <div class="comparison">
+      <div class="panel">
+        <div class="panel-header before"><span class="dot red"></span> Current &mdash; hardcoded rgba()</div>
+        <div class="panel-body" style="background:#111827;">
+          <div class="phone-frame phone-dark" style="padding:20px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="danger-zone-btn btn-archive-dark-before btn-icon-archive-before-dark">
+                <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+                Archive Habit
+              </div>
+              <div class="danger-zone-btn btn-delete-dark-before btn-icon-delete-before-dark">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+                Delete Habit
+              </div>
+            </div>
+            <div class="code-block" style="margin-top:20px;">
+              <span class="comment">// Current - hardcoded</span><br>
+              <span class="keyword">const</span> archiveBg = <span class="hardcoded">'rgba(146,64,14,0.15)'</span>;<br>
+              <span class="keyword">const</span> deleteBg = <span class="hardcoded">'rgba(153,27,27,0.15)'</span>;
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header after"><span class="dot green"></span> Fixed &mdash; using status tokens</div>
+        <div class="panel-body" style="background:#111827;">
+          <div class="phone-frame phone-dark" style="padding:20px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="danger-zone-btn btn-archive-dark-after btn-icon-archive-after-dark">
+                <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+                Archive Habit
+              </div>
+              <div class="danger-zone-btn btn-delete-dark-after btn-icon-delete-after-dark">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+                Delete Habit
+              </div>
+            </div>
+            <div class="code-block" style="margin-top:20px;">
+              <span class="comment">// Fixed - semantic tokens</span><br>
+              <span class="keyword">const</span> archiveBg = <span class="fixed">colors.status.warningLight</span>;<br>
+              <span class="keyword">const</span> deleteBg = <span class="fixed">colors.status.errorLight</span>;
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-strip">
+      <span class="mode-tag light">Light Mode</span>
+    </div>
+
+    <div class="comparison">
+      <div class="panel">
+        <div class="panel-header before"><span class="dot red"></span> Current &mdash; hardcoded hex</div>
+        <div class="panel-body" style="background:#F5F1ED;">
+          <div class="phone-frame phone-light" style="padding:20px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="danger-zone-btn btn-archive-light-before btn-icon-archive-before-light">
+                <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+                Archive Habit
+              </div>
+              <div class="danger-zone-btn btn-delete-light-before btn-icon-delete-before-light">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+                Delete Habit
+              </div>
+            </div>
+            <div class="code-block" style="margin-top:20px;">
+              <span class="keyword">const</span> archiveBg = <span class="hardcoded">'#FFFBEB'</span>;<br>
+              <span class="keyword">const</span> deleteBg = <span class="hardcoded">'#FEF2F2'</span>;
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header after"><span class="dot green"></span> Fixed &mdash; using status tokens</div>
+        <div class="panel-body" style="background:#F5F1ED;">
+          <div class="phone-frame phone-light" style="padding:20px;">
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="danger-zone-btn btn-archive-light-after btn-icon-archive-after-light">
+                <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+                Archive Habit
+              </div>
+              <div class="danger-zone-btn btn-delete-light-after btn-icon-delete-after-light">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+                Delete Habit
+              </div>
+            </div>
+            <div class="code-block" style="margin-top:20px;">
+              <span class="keyword">const</span> archiveBg = <span class="fixed">colors.status.warningLight</span>;<br>
+              <span class="keyword">const</span> deleteBg = <span class="fixed">colors.status.errorLight</span>;
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout info">
+      <strong>Key insight:</strong> The theme already has <span class="file-ref">status.warningLight</span> and <span class="file-ref">status.errorLight</span> tokens
+      in both light and dark palettes (darkColors.ts lines 80-98). DangerZone just doesn't use them.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ISSUE 2: Goal Collections -->
+  <div class="issue-section">
+    <div class="section-label">Issue 2 &mdash; Data File Colors Break Dark Mode</div>
+    <div class="section-title">goalCollections.ts: Hardcoded light-only palette</div>
+    <div class="section-desc">
+      Goal collection chips use hardcoded pastel backgrounds that look wrong on dark backgrounds.
+      These need theme-aware color mappings.
+    </div>
+
+    <div class="mode-strip">
+      <span class="mode-tag dark">Dark Mode</span>
+    </div>
+
+    <div class="comparison">
+      <div class="panel">
+        <div class="panel-header before"><span class="dot red"></span> Current &mdash; light-only colors on dark bg</div>
+        <div class="panel-body" style="background:#111827;">
+          <div style="padding:16px;">
+            <div class="goal-chips">
+              <div class="goal-chip chip-sleep-before"><span class="emoji">😴</span> Sleep Better</div>
+              <div class="goal-chip chip-energy-before"><span class="emoji">⚡</span> More Energy</div>
+              <div class="goal-chip chip-stress-before"><span class="emoji">🧘</span> Less Stress</div>
+              <div class="goal-chip chip-productive-before"><span class="emoji">🎯</span> Be Productive</div>
+              <div class="goal-chip chip-health-before"><span class="emoji">💪</span> Get Healthier</div>
+            </div>
+            <div class="callout warning" style="margin-top:16px;">
+              Light-mode pastels clash harshly with the dark background. High brightness contrast creates visual noise.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header after"><span class="dot green"></span> Fixed &mdash; dark-mode aware tokens</div>
+        <div class="panel-body" style="background:#111827;">
+          <div style="padding:16px;">
+            <div class="goal-chips">
+              <div class="goal-chip chip-sleep-after"><span class="emoji">😴</span> Sleep Better</div>
+              <div class="goal-chip chip-energy-after"><span class="emoji">⚡</span> More Energy</div>
+              <div class="goal-chip chip-stress-after"><span class="emoji">🧘</span> Less Stress</div>
+              <div class="goal-chip chip-productive-after"><span class="emoji">🎯</span> Be Productive</div>
+              <div class="goal-chip chip-health-after"><span class="emoji">💪</span> Get Healthier</div>
+            </div>
+            <div class="code-block" style="margin-top:16px;">
+              <span class="comment">// Theme-aware mapping function</span><br>
+              <span class="keyword">const</span> getGoalColors = (id, isDark) =&gt; {<br>
+              &nbsp;&nbsp;<span class="keyword">return</span> isDark<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;? <span class="fixed">goalDarkColors[id]</span><br>
+              &nbsp;&nbsp;&nbsp;&nbsp;: <span class="fixed">goalLightColors[id]</span>;<br>
+              };
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mode-strip">
+      <span class="mode-tag light">Light Mode</span>
+    </div>
+
+    <div class="comparison">
+      <div class="panel">
+        <div class="panel-header before"><span class="dot red"></span> Current (light mode &mdash; looks fine)</div>
+        <div class="panel-body" style="background:#F5F1ED;">
+          <div style="padding:16px;">
+            <div class="goal-chips">
+              <div class="goal-chip chip-sleep-before"><span class="emoji">😴</span> Sleep Better</div>
+              <div class="goal-chip chip-energy-before"><span class="emoji">⚡</span> More Energy</div>
+              <div class="goal-chip chip-stress-before"><span class="emoji">🧘</span> Less Stress</div>
+              <div class="goal-chip chip-productive-before"><span class="emoji">🎯</span> Be Productive</div>
+              <div class="goal-chip chip-health-before"><span class="emoji">💪</span> Get Healthier</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header after"><span class="dot green"></span> Fixed (light mode &mdash; subtle border added)</div>
+        <div class="panel-body" style="background:#F5F1ED;">
+          <div style="padding:16px;">
+            <div class="goal-chips">
+              <div class="goal-chip chip-sleep-after-light"><span class="emoji">😴</span> Sleep Better</div>
+              <div class="goal-chip chip-energy-after-light"><span class="emoji">⚡</span> More Energy</div>
+              <div class="goal-chip chip-stress-after-light"><span class="emoji">🧘</span> Less Stress</div>
+              <div class="goal-chip chip-productive-after-light"><span class="emoji">🎯</span> Be Productive</div>
+              <div class="goal-chip chip-health-after-light"><span class="emoji">💪</span> Get Healthier</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ISSUE 3: #FFFFFF hardcoded -->
+  <div class="issue-section">
+    <div class="section-label">Issue 3 &mdash; Hardcoded #FFFFFF (~30 files)</div>
+    <div class="section-title">White color bypasses colors.text.inverse token</div>
+    <div class="section-desc">
+      The theme defines <span class="file-ref">colors.text.inverse</span> as '#FFFFFF' in light mode and '#111827' in dark mode.
+      ~30 component files hardcode '#FFFFFF' instead, which would break if inverse text ever needs to adapt.
+    </div>
+
+    <div class="comparison" style="grid-template-columns:1fr;">
+      <div class="panel">
+        <div class="panel-header before"><span class="dot red"></span> Pattern found across 30+ files</div>
+        <div class="panel-body" style="background:#1F2937;">
+          <div style="display:flex;gap:48px;align-items:center;justify-content:center;flex-wrap:wrap;padding:16px;">
+
+            <div style="text-align:center;">
+              <div class="fab-demo">
+                <svg viewBox="0 0 24 24" style="stroke:#FFFFFF;"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+              <div style="margin-top:12px;">
+                <div class="code-block" style="display:inline-block;">
+                  <span class="hardcoded">color='#ffffff'</span>
+                </div>
+              </div>
+              <div style="font-size:12px;color:#6B7280;margin-top:4px;">ProgressRingFAB.tsx</div>
+            </div>
+
+            <div style="font-size:24px;color:#4B5563;">&#8594;</div>
+
+            <div style="text-align:center;">
+              <div class="fab-demo">
+                <svg viewBox="0 0 24 24" style="stroke:#FFFFFF;"><path d="M12 5v14M5 12h14"/></svg>
+              </div>
+              <div style="margin-top:12px;">
+                <div class="code-block" style="display:inline-block;">
+                  <span class="fixed">colors.text.inverse</span>
+                </div>
+              </div>
+              <div style="font-size:12px;color:#6B7280;margin-top:4px;">Same visual, maintainable token</div>
+            </div>
+
+          </div>
+
+          <div class="callout info" style="margin-top:16px;">
+            <strong>Files affected:</strong>
+            ProgressRingFAB, SocialSignInButton, QuickCompleteButton, SwipeableActionButton,
+            StreakMilestoneCelebration, StreakChain, TemplateAddedToast, NameInputSection,
+            EditHeader, HeroFooter, SettingsModal, NavigationButtons, and ~18 more.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ISSUE 4: Icon Sizes -->
+  <div class="issue-section">
+    <div class="section-label">Issue 4 &mdash; Icon Size Token Gaps</div>
+    <div class="section-title">iconSizes tokens exist but most icons use raw numbers</div>
+    <div class="section-desc">
+      The theme defines 6 icon size tokens (10, 16, 20, 24, 32, 48) but components frequently use
+      hardcoded numbers including sizes 12, 14, 18, 28 that have no matching token.
+    </div>
+
+    <div class="icon-grid">
+      <div class="icon-cell has-token">
+        <div class="icon-placeholder" style="width:10px;height:10px;"></div>
+        <div class="size-label">10px</div>
+        <div class="token-label exists">iconSizes.micro</div>
+      </div>
+      <div class="icon-cell no-token">
+        <div class="icon-placeholder" style="width:12px;height:12px;"></div>
+        <div class="size-label">12px</div>
+        <div class="token-label missing">No token</div>
+      </div>
+      <div class="icon-cell no-token">
+        <div class="icon-placeholder" style="width:14px;height:14px;"></div>
+        <div class="size-label">14px</div>
+        <div class="token-label missing">No token</div>
+      </div>
+      <div class="icon-cell has-token">
+        <div class="icon-placeholder" style="width:16px;height:16px;"></div>
+        <div class="size-label">16px</div>
+        <div class="token-label exists">iconSizes.small</div>
+      </div>
+      <div class="icon-cell no-token">
+        <div class="icon-placeholder" style="width:18px;height:18px;"></div>
+        <div class="size-label">18px</div>
+        <div class="token-label missing">No token</div>
+      </div>
+      <div class="icon-cell has-token">
+        <div class="icon-placeholder" style="width:20px;height:20px;"></div>
+        <div class="size-label">20px</div>
+        <div class="token-label exists">iconSizes.medium</div>
+      </div>
+    </div>
+
+    <div class="icon-grid" style="margin-top:16px;">
+      <div class="icon-cell has-token">
+        <div class="icon-placeholder" style="width:24px;height:24px;"></div>
+        <div class="size-label">24px</div>
+        <div class="token-label exists">iconSizes.large</div>
+      </div>
+      <div class="icon-cell no-token">
+        <div class="icon-placeholder" style="width:28px;height:28px;"></div>
+        <div class="size-label">28px</div>
+        <div class="token-label missing">No token</div>
+      </div>
+      <div class="icon-cell has-token">
+        <div class="icon-placeholder" style="width:32px;height:32px;"></div>
+        <div class="size-label">32px</div>
+        <div class="token-label exists">iconSizes.xl</div>
+      </div>
+      <div class="icon-cell has-token">
+        <div class="icon-placeholder" style="width:40px;height:40px;"></div>
+        <div class="size-label">48px</div>
+        <div class="token-label exists">iconSizes.xxl</div>
+      </div>
+      <div class="icon-cell" style="grid-column: span 2; background: transparent; border: none;">
+      </div>
+    </div>
+
+    <div class="callout warning" style="margin-top:24px;">
+      <strong>Decision needed:</strong> Should we add tokens for 12, 14, 18, 28? Or standardize those usages
+      to the nearest existing token? The 14px icons (undo arrows, trend arrows) and 18px icons (archive/delete toasts)
+      are used intentionally at those sizes for visual balance.
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ISSUE 5: Border Radius -->
+  <div class="issue-section">
+    <div class="section-label">Issue 5 &mdash; Hardcoded Border Radius (37 occurrences)</div>
+    <div class="section-title">borderRadius: 12 used instead of borderRadius.button token</div>
+    <div class="section-desc">
+      The theme defines <span class="file-ref">borderRadius.button = 12</span> and <span class="file-ref">borderRadius.card = 16</span>,
+      but 37 places hardcode the raw number. Values match today, but won't propagate if the design system changes.
+    </div>
+
+    <div style="display:flex;gap:32px;flex-wrap:wrap;justify-content:center;padding:24px 0;">
+
+      <div style="text-align:center;">
+        <div class="radius-box before-box" style="border-radius:12px;">borderRadius: 12</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:8px;">37 files</div>
+      </div>
+
+      <div style="display:flex;align-items:center;">
+        <span class="arrow">&#8594;</span>
+      </div>
+
+      <div style="text-align:center;">
+        <div class="radius-box after-box" style="border-radius:12px;">borderRadius.button</div>
+        <div style="font-size:12px;color:#6EE7B7;margin-top:8px;">Semantic token</div>
+      </div>
+
+      <div style="width:48px;"></div>
+
+      <div style="text-align:center;">
+        <div class="radius-box before-box" style="border-radius:16px;">borderRadius: 16</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:8px;">6 files</div>
+      </div>
+
+      <div style="display:flex;align-items:center;">
+        <span class="arrow">&#8594;</span>
+      </div>
+
+      <div style="text-align:center;">
+        <div class="radius-box after-box" style="border-radius:16px;">borderRadius.card</div>
+        <div style="font-size:12px;color:#6EE7B7;margin-top:8px;">Semantic token</div>
+      </div>
+
+    </div>
+
+    <div class="code-block" style="max-width:600px;">
+      <span class="comment">// Before (30+ files)</span><br>
+      style={{ <span class="strikethrough"><span class="hardcoded">borderRadius: 12</span></span> }}<br><br>
+      <span class="comment">// After</span><br>
+      style={{ borderRadius: <span class="fixed">borderRadius.button</span> }}
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- PRIORITY ORDER -->
+  <div class="issue-section">
+    <div class="section-label">Recommended Fix Order</div>
+    <div class="section-title">Priority roadmap</div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:24px;">
+
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="min-width:36px;height:36px;border-radius:8px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#FCA5A5;">P1</div>
+        <div>
+          <div style="font-weight:600;font-size:15px;">Replace hardcoded #FFFFFF with colors.text.inverse</div>
+          <div style="font-size:13px;color:#9CA3AF;margin-top:2px;">~30 files, mechanical find-replace. Biggest dark mode improvement for least effort.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="min-width:36px;height:36px;border-radius:8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#FDE68A;">P2</div>
+        <div>
+          <div style="font-weight:600;font-size:15px;">DangerZone + data file color tokens</div>
+          <div style="font-size:13px;color:#9CA3AF;margin-top:2px;">goalCollections.ts, featuredCollections.ts, SortBottomSheet/constants.ts, DangerZone.tsx. Fixes dark mode for templates screens.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="min-width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#93C5FD;">P3</div>
+        <div>
+          <div style="font-weight:600;font-size:15px;">Border radius token adoption</div>
+          <div style="font-size:13px;color:#9CA3AF;margin-top:2px;">37 occurrences, mechanical replacement. Low risk, high maintainability win.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:16px;align-items:flex-start;">
+        <div style="min-width:36px;height:36px;border-radius:8px;background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#C4B5FD;">P4</div>
+        <div>
+          <div style="font-weight:600;font-size:15px;">Icon size token adoption</div>
+          <div style="font-size:13px;color:#9CA3AF;margin-top:2px;">Requires deciding whether to add new tokens (14, 18) or standardize to nearest. Largest scope.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal tab — simpler, no extra wording</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px 80px !important; min-height: 100vh !important;
+  }
+  h1, h2, h3, h4 { font-family: 'Literata', serif !important; }
+
+  .row-wrap { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .phone-label { font-size: 13px; color: #A39C93; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 600; }
+  .phone-sub { font-size: 12px; color: #6D6761; text-align: center; max-width: 420px; line-height: 1.4; }
+
+  .phone {
+    width: 420px !important; height: 720px !important;
+    background: #F5F1ED !important; border-radius: 52px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    padding: 56px 0 0 !important; overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    padding: 0 28px !important;
+    z-index: 10 !important; font-size: 15px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+
+  /* Habit head */
+  .habit-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px 10px; }
+  .habit-emoji {
+    width: 48px; height: 48px; background: #F97316; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+  }
+  .habit-name { font-family: 'Literata', serif; font-size: 20px; font-weight: 600; color: #2D2A26; }
+  .habit-meta { font-size: 12px; color: #6D6761; margin-top: 2px; }
+
+  /* Tabs */
+  .tabs-wrap { padding: 8px 20px 14px; }
+  .tabs { background: #EDEAE5; border-radius: 12px; display: flex; padding: 4px; position: relative; }
+  .tab { flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 600; color: #6D6761; border-radius: 9px; }
+  .tab.active { color: #2D2A26; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+  /* Card */
+  .card {
+    background: #FFFFFF; border-radius: 20px; border: 1px solid #EBE5DE;
+    margin: 0 20px 14px; padding: 26px 20px 24px;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .card-title { font-family: 'Literata', serif; font-size: 18px; font-weight: 600; color: #2D2A26; }
+  .adjust-link {
+    font-size: 13px; font-weight: 600; color: #6D6761; text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  /* Hero — just the numbers */
+  .hero { display: flex; flex-direction: column; align-items: center; padding: 14px 0 8px; }
+  .hero-count {
+    font-family: 'Literata', serif; font-size: 96px; font-weight: 600; color: #2D2A26;
+    line-height: 1; letter-spacing: -3px;
+  }
+  .hero-target {
+    font-family: 'Literata', serif; font-size: 22px; font-weight: 500; color: #A39C93;
+    margin-top: 4px; letter-spacing: -0.5px;
+  }
+  .hero-target strong { color: #2D2A26; font-weight: 600; }
+
+  /* Progress bar — visual only, no labels */
+  .progress-wrap { margin-top: 22px; }
+  .progress-track {
+    height: 10px; background: #EDEAE5; border-radius: 9999px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; width: 71%;
+    background: linear-gradient(90deg, #F97316 0%, #FB923C 100%);
+    border-radius: 9999px;
+  }
+
+  /* Coach line — short, one line */
+  .coach {
+    margin: 0 20px; padding: 14px 16px;
+    background: linear-gradient(135deg, #FFF4E6 0%, #FFEDD5 100%);
+    border: 1px solid #FED7AA; border-radius: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .coach-icon {
+    width: 32px; height: 32px; border-radius: 9px; background: #FFFFFF;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); flex-shrink: 0;
+  }
+  .coach-text { font-size: 15px; font-weight: 600; color: #7C2D12; }
+
+  .doc-head { max-width: 720px; margin: 0 auto 40px; text-align: center; }
+  .doc-head .tag-dark {
+    background: rgba(255, 237, 213, 0.12); color: #FED7AA; padding: 6px 12px; border-radius: 9999px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .doc-head h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.5px; color: #FAF5EE; margin-top: 14px; }
+  .doc-head p { font-size: 14px; color: #A39C93; margin-top: 10px; line-height: 1.5; }
+  .doc-list { font-size: 13px; color: #C4BFB7; margin-top: 12px; line-height: 1.7; }
+  .doc-list span { color: #FED7AA; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <span class="tag-dark">Goals tab · stripped wording</span>
+  <h1>Numbers + one line</h1>
+  <p>The streak number anchored to the target. Progress bar with no label. One short coach line ("You got this"). Nothing else.</p>
+  <p class="doc-list">
+    Removed: <span>"of 100 days" label</span> · <span>"71% complete · 29 to go"</span> · <span>projected date</span> · <span>coach explanation copy</span>
+  </p>
+</div>
+
+<div class="row-wrap">
+
+  <div class="phone-col">
+    <div class="phone-label">Goal tab — stripped</div>
+    <div class="phone">
+      <div class="status-bar">
+        <span>9:41</span>
+        <span style="display: inline-flex; gap: 6px; align-items: center;">
+          <span>•••</span><span style="font-size: 12px;">📶</span><span style="font-size: 12px;">🔋</span>
+        </span>
+      </div>
+      <div class="phone-screen">
+        <div class="habit-head">
+          <div class="habit-emoji">🧘</div>
+          <div>
+            <div class="habit-name">10 min meditation</div>
+            <div class="habit-meta">Daily · forgiving</div>
+          </div>
+        </div>
+
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Goal</div>
+            <span class="adjust-link">Adjust</span>
+          </div>
+
+          <div class="hero">
+            <div class="hero-count">71</div>
+            <div class="hero-target">/ <strong>100</strong></div>
+          </div>
+
+          <div class="progress-wrap">
+            <div class="progress-track"><div class="progress-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="coach">
+          <div class="coach-icon">🔥</div>
+          <div class="coach-text">You got this.</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-sub">71 / 100. One short coach line. No percent, no days-to-go, no projected date, no milestones.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

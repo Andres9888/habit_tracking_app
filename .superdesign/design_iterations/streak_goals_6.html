@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Goal — Tab Placement</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important;
+    color: #FAF8F5 !important;
+    padding: 48px 24px !important;
+    min-height: 100vh !important;
+  }
+  h1,h2,h3,.serif { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone {
+    width: 375px !important; height: 760px !important;
+    background: #F5F1ED !important; border-radius: 40px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    overflow-y: auto !important; padding: 56px 0 24px !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+  .app-card {
+    background: #EDEAE5 !important; border: 1px solid #DDD8D2 !important; border-radius: 16px !important;
+  }
+
+  /* Detail screen header */
+  .detail-header {
+    display: flex; align-items: center; gap: 12px; padding: 0 20px 16px;
+  }
+  .back-btn { font-size: 20px; color: #6B6560; cursor: pointer; }
+  .habit-emoji-lg {
+    width: 40px; height: 40px; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .habit-name-lg {
+    font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #2D2A26;
+  }
+  .habit-substat { font-size: 12px; color: #8B6208; font-weight: 600; }
+
+  /* Quick stats row */
+  .quick-stats {
+    display: flex; gap: 8px; padding: 0 20px 20px;
+  }
+  .quick-stat {
+    flex: 1; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 12px;
+    padding: 10px 8px; text-align: center;
+  }
+  .quick-stat-val {
+    font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #2D2A26;
+  }
+  .quick-stat-lbl { font-size: 10px; color: #6B6560; margin-top: 2px; }
+
+  /* Tab bar */
+  .tab-bar {
+    display: flex; gap: 4px; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 12px; padding: 4px; margin: 0 20px 16px;
+  }
+  .tab {
+    flex: 1; padding: 10px 8px; text-align: center; border-radius: 8px;
+    font-size: 13px; font-weight: 500; color: #6B6560; cursor: pointer;
+    transition: all 0.2s; white-space: nowrap; display: flex;
+    align-items: center; justify-content: center; gap: 4px;
+  }
+  .tab.active {
+    background: #FAF8F5; color: #2D2A26; font-weight: 700;
+    box-shadow: 0 1px 3px rgba(45, 42, 38, 0.08);
+  }
+  .tab-hint { font-size: 10px; color: #C4BFB7; font-weight: 400; }
+  .tab.active .tab-hint { color: #8B6208; }
+
+  .variation-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .variation-number { font-size: 13px; font-weight: 600; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; }
+  .variation-title { font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #FAF8F5; margin-top: 4px; }
+  .variation-note { font-size: 13px; color: #6B6560; margin-top: 12px; max-width: 340px; line-height: 1.5; text-align: center; }
+  .variation-label { text-align: center; margin-bottom: 16px; }
+
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes progressFill { from { width: 0%; } }
+  @keyframes ringDraw { from { stroke-dashoffset: 264; } }
+  .fade-up { animation: fadeSlideUp 0.4s ease-out both; }
+  .fade-up-1 { animation-delay: 0.08s; }
+  .fade-up-2 { animation-delay: 0.16s; }
+  .fade-up-3 { animation-delay: 0.24s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align: center; margin-bottom: 40px;">
+  <p style="font-size: 13px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Chain Day</p>
+  <h1 style="font-family: 'Literata', serif; font-size: 32px; font-weight: 700; color: #FAF8F5; margin-top: 8px;">Goal — Third Tab on Detail Screen</h1>
+  <p style="font-size: 15px; color: #C4BFB7; margin-top: 8px;">Calendar | Strength | <span style="color: #FEF3CD; font-weight: 600;">Goal</span> — three states shown</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 48px; max-width: 1400px; margin: 0 auto;">
+
+<!-- ============================================ -->
+<!-- STATE 1: No Goal Set — Empty State          -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">State 1</div>
+    <div class="variation-title">No Goal Set</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="detail-header fade-up">
+        <span class="back-btn">‹</span>
+        <div class="habit-emoji-lg">🧘</div>
+        <div>
+          <div class="habit-name-lg">Meditate</div>
+          <div class="habit-substat">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <div class="quick-stats fade-up fade-up-1">
+        <div class="quick-stat">
+          <div class="quick-stat-val">23</div>
+          <div class="quick-stat-lbl">current<br>streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">23</div>
+          <div class="quick-stat-lbl">best<br>streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">47</div>
+          <div class="quick-stat-lbl">total<br>completions</div>
+        </div>
+      </div>
+
+      <div class="tab-bar fade-up fade-up-2">
+        <div class="tab">
+          Calendar
+          <span class="tab-hint">23d</span>
+        </div>
+        <div class="tab">
+          Strength
+          <span class="tab-hint">68%</span>
+        </div>
+        <div class="tab active">
+          Goal
+          <span class="tab-hint">—</span>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="fade-up fade-up-3" style="padding: 40px 24px; text-align: center;">
+        <div style="width: 72px; height: 72px; margin: 0 auto 20px; background: #FEF3CD; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 32px;">🎯</div>
+
+        <h2 style="font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #2D2A26; margin-bottom: 8px;">Set a streak goal</h2>
+        <p style="font-size: 14px; color: #6B6560; line-height: 1.5; margin-bottom: 24px;">Aim for a specific streak length.<br>66 days is the science-backed sweet spot for habit formation.</p>
+
+        <!-- Preset chips -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px;">
+          <div style="padding: 10px 18px; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 9999px; font-size: 14px; color: #6B6560; font-weight: 500; cursor: pointer;">7 days</div>
+          <div style="padding: 10px 18px; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 9999px; font-size: 14px; color: #6B6560; font-weight: 500;">21 days</div>
+          <div style="padding: 10px 18px; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 9999px; font-size: 14px; color: #6B6560; font-weight: 500;">30 days</div>
+          <div style="padding: 10px 20px; background: #FEF3CD; border: 1.5px solid #8B6208; border-radius: 9999px; font-size: 14px; color: #8B6208; font-weight: 700; position: relative;">
+            66 days
+            <div style="position: absolute; top: -10px; right: -6px; background: #8B6208; color: white; font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 600;">RECOMMENDED</div>
+          </div>
+          <div style="padding: 10px 18px; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 9999px; font-size: 14px; color: #6B6560; font-weight: 500;">100 days</div>
+          <div style="padding: 10px 18px; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 9999px; font-size: 14px; color: #6B6560; font-weight: 500;">1 year</div>
+        </div>
+
+        <!-- CTA -->
+        <div style="background: #059669; color: white; padding: 14px 24px; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer;">
+          Set Goal
+        </div>
+
+        <p style="font-size: 12px; color: #C4BFB7; margin-top: 16px; font-style: italic;">You can change this anytime in Edit</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">When no goal is set, the Goal tab becomes the entry point to set one. Inline preset chips with "66 days" highlighted as recommended (science-backed). Zero friction — pick and go.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- STATE 2: Active Goal — Dashboard View        -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">State 2</div>
+    <div class="variation-title">Active Goal · 66 days</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="detail-header fade-up">
+        <span class="back-btn">‹</span>
+        <div class="habit-emoji-lg">🧘</div>
+        <div>
+          <div class="habit-name-lg">Meditate</div>
+          <div class="habit-substat">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <div class="quick-stats fade-up fade-up-1">
+        <div class="quick-stat">
+          <div class="quick-stat-val">23</div>
+          <div class="quick-stat-lbl">current<br>streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">23</div>
+          <div class="quick-stat-lbl">best<br>streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">47</div>
+          <div class="quick-stat-lbl">total<br>completions</div>
+        </div>
+      </div>
+
+      <div class="tab-bar fade-up fade-up-2">
+        <div class="tab">
+          Calendar
+          <span class="tab-hint">23d</span>
+        </div>
+        <div class="tab">
+          Strength
+          <span class="tab-hint">68%</span>
+        </div>
+        <div class="tab active">
+          Goal
+          <span class="tab-hint">35%</span>
+        </div>
+      </div>
+
+      <!-- Goal dashboard content -->
+      <div class="fade-up fade-up-3" style="padding: 0 20px;">
+        <!-- Hero: Ring + numbers -->
+        <div class="app-card" style="padding: 20px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="position: relative; width: 96px; height: 96px; flex-shrink: 0;">
+              <svg width="96" height="96" viewBox="0 0 96 96">
+                <circle cx="48" cy="48" r="42" fill="none" stroke="#DDD8D2" stroke-width="6"/>
+                <circle cx="48" cy="48" r="42" fill="none" stroke="url(#grad1)" stroke-width="6" stroke-linecap="round"
+                  transform="rotate(-90 48 48)" stroke-dasharray="264" stroke-dashoffset="171.6"
+                  style="animation: ringDraw 1.2s ease-out both;"/>
+                <defs>
+                  <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#059669"/>
+                    <stop offset="100%" stop-color="#8B6208"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #2D2A26;">35%</span>
+              </div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 0.04em;">Days Complete</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #2D2A26; margin-top: 2px;">23 <span style="font-size: 14px; color: #C4BFB7;">/ 66</span></div>
+              <div style="font-size: 11px; color: #6B6560; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.04em;">Days Remaining</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #8B6208; margin-top: 2px;">43</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metrics grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #059669;">100%</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Completion<br>rate</div>
+          </div>
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #2D2A26;">23</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Current<br>streak</div>
+          </div>
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #2D2A26;">23</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Best<br>streak</div>
+          </div>
+        </div>
+
+        <!-- Milestones list -->
+        <div class="app-card" style="padding: 14px 16px; margin-bottom: 12px;">
+          <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #C4BFB7; margin-bottom: 10px;">Milestones</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #059669; flex: 1;">⚡ 7 days · Week Warrior</span>
+              <span class="mono" style="font-size: 11px; color: #059669;">✓</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #059669; flex: 1;">🔥 14 days · Two Week Titan</span>
+              <span class="mono" style="font-size: 11px; color: #059669;">✓</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #059669; flex: 1;">🏅 21 days · Habit Builder</span>
+              <span class="mono" style="font-size: 11px; color: #059669;">✓</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 8px; height: 8px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #8B6208; font-weight: 600; flex: 1;">🏆 30 days · Monthly Master</span>
+              <span class="mono" style="font-size: 11px; color: #8B6208;">7d</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; opacity: 0.35;">
+              <div style="width: 6px; height: 6px; background: #DDD8D2; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #C4BFB7; flex: 1;">💎 60 days · Two Month Diamond</span>
+              <span class="mono" style="font-size: 11px; color: #DDD8D2;">37d</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; opacity: 0.5;">
+              <div style="width: 8px; height: 8px; background: #FEF3CD; border: 1.5px solid #8B6208; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #8B6208; font-weight: 600; flex: 1;">🎯 66 days · Goal</span>
+              <span class="mono" style="font-size: 11px; color: #C4BFB7;">43d</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projected banner -->
+        <div class="app-card" style="padding: 12px 16px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 14px;">📅</span>
+          <span style="font-size: 12px; color: #6B6560;">On track to hit goal</span>
+          <span class="mono" style="font-size: 12px; font-weight: 600; color: #059669; margin-left: auto;">May 28</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">When a goal exists, the tab shows the full dashboard — ring, metrics grid, milestone list, projected completion date. Everything breathes on its own canvas without competing with calendar or strength views.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- STATE 3: Goal Reached — Celebration          -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">State 3</div>
+    <div class="variation-title">Goal Reached</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="detail-header fade-up">
+        <span class="back-btn">‹</span>
+        <div class="habit-emoji-lg">🧘</div>
+        <div>
+          <div class="habit-name-lg">Meditate</div>
+          <div class="habit-substat">🔥 66 day streak</div>
+        </div>
+      </div>
+
+      <div class="quick-stats fade-up fade-up-1">
+        <div class="quick-stat">
+          <div class="quick-stat-val">66</div>
+          <div class="quick-stat-lbl">current<br>streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">66</div>
+          <div class="quick-stat-lbl">best<br>streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">90</div>
+          <div class="quick-stat-lbl">total<br>completions</div>
+        </div>
+      </div>
+
+      <div class="tab-bar fade-up fade-up-2">
+        <div class="tab">
+          Calendar
+          <span class="tab-hint">66d</span>
+        </div>
+        <div class="tab">
+          Strength
+          <span class="tab-hint">94%</span>
+        </div>
+        <div class="tab active">
+          Goal
+          <span class="tab-hint" style="color: #059669; font-weight: 700;">✓</span>
+        </div>
+      </div>
+
+      <!-- Celebration content -->
+      <div class="fade-up fade-up-3" style="padding: 16px 20px 0;">
+        <!-- Hero banner -->
+        <div style="background: linear-gradient(135deg, #D1FAE5 0%, #FEF3CD 100%); border: 1.5px solid #059669; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 12px; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(5, 150, 105, 0.1) 0%, transparent 70%); border-radius: 50%;"></div>
+
+          <div style="font-size: 40px; margin-bottom: 8px;">🏆</div>
+          <div style="font-size: 11px; color: #047857; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;">Goal Complete</div>
+          <h2 style="font-family: 'Literata', serif; font-size: 26px; font-weight: 700; color: #2D2A26; margin: 6px 0 4px;">66 Days</h2>
+          <p style="font-size: 13px; color: #524D47; line-height: 1.5;">You've built the habit. It's yours now.</p>
+
+          <div style="display: flex; justify-content: center; gap: 4px; margin-top: 16px; font-size: 20px;">
+            <span>⚡</span><span>🔥</span><span>🏅</span><span>🏆</span>
+          </div>
+          <div style="font-size: 10px; color: #6B6560; margin-top: 4px;">All milestones earned</div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="app-card" style="padding: 16px 20px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-around; text-align: center;">
+            <div>
+              <div style="font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #2D2A26;">66</div>
+              <div style="font-size: 11px; color: #6B6560;">days<br>completed</div>
+            </div>
+            <div style="width: 1px; background: #DDD8D2;"></div>
+            <div>
+              <div style="font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #059669;">33h</div>
+              <div style="font-size: 11px; color: #6B6560;">time<br>invested</div>
+            </div>
+            <div style="width: 1px; background: #DDD8D2;"></div>
+            <div>
+              <div style="font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #2D2A26;">100%</div>
+              <div style="font-size: 11px; color: #6B6560;">completion<br>rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next goal CTA -->
+        <div class="app-card" style="padding: 16px 20px; margin-bottom: 12px;">
+          <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #C4BFB7; margin-bottom: 10px;">What's next</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #FAF8F5; border-radius: 10px; cursor: pointer;">
+              <span style="font-size: 16px;">💯</span>
+              <span style="flex: 1; font-size: 13px; color: #2D2A26;">Push for 100 days</span>
+              <span style="font-size: 11px; color: #8B6208;">+34d</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: #FAF8F5; border-radius: 10px; cursor: pointer;">
+              <span style="font-size: 16px;">👑</span>
+              <span style="flex: 1; font-size: 13px; color: #2D2A26;">Aim for a full year</span>
+              <span style="font-size: 11px; color: #8B6208;">+299d</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share -->
+        <div style="background: #059669; color: white; padding: 12px 16px; border-radius: 12px; text-align: center; font-size: 14px; font-weight: 600; cursor: pointer;">
+          Share your achievement
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">When goal is reached, celebration banner replaces the dashboard. Shows accumulated value (33h invested), all badges earned, and offers natural "what's next" goals to keep momentum. Shareable.</p>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div style="max-width: 900px; margin: 48px auto 0; padding: 24px; background: #2D2A26; border-radius: 16px;">
+  <h3 style="font-family: 'Literata', serif; font-size: 18px; color: #FAF8F5; margin-bottom: 12px;">Why a third tab?</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px; color: #C4BFB7; line-height: 1.5;">
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">✓ Clean separation</p>
+      <p>Goal is a different kind of data than Calendar (history) or Strength (analytics). Deserves its own canvas.</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">✓ Empty state = entry point</p>
+      <p>When no goal is set, the tab itself becomes the place to set one. Discoverable without clutter.</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">✓ Room to breathe</p>
+      <p>Dashboard can be rich without fighting QuickStatsRow or other sections for vertical space.</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">✓ Scales to celebration</p>
+      <p>When goal is reached, tab becomes a celebration screen with "what's next" momentum hooks.</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 32px 24px;">
+  <p style="font-size: 12px; color: #524D47;">Habit: 🧘 Meditate · Goal: 66 days · Three states shown</p>
+</div>
+
+</body>
+</html>

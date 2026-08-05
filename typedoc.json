@@ -1,0 +1,12 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["convex"],
+  "entryPointStrategy": "expand",
+  "tsconfig": "convex/tsconfig.json",
+  "out": "docs/api",
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "convex/_generated/**"],
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "githubPages": false
+}

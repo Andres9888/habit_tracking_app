@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Empty State Redesign</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #1a1a2e;
+        color: #1c1917;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px 80px;
+        min-height: 100vh;
+      }
+
+      h1 {
+        color: #faf9f7;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+
+      .subtitle {
+        color: #a8a29e;
+        font-size: 15px;
+        margin-bottom: 48px;
+        text-align: center;
+      }
+
+      .comparison {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 900px;
+      }
+
+      .phone-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .label {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding: 6px 16px;
+        border-radius: 20px;
+      }
+
+      .label.before {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+      }
+
+      .label.after {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+      }
+
+      .phone {
+        width: 375px;
+        height: 812px;
+        background: #faf9f7;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.4),
+          0 0 0 2px rgba(255, 255, 255, 0.1);
+      }
+
+      .status-bar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 8px;
+        background: #faf9f7;
+      }
+
+      .status-bar .time {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+
+      .notch {
+        width: 120px;
+        height: 34px;
+        background: #000;
+        border-radius: 0 0 20px 20px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 20px;
+        background: #faf9f7;
+      }
+
+      .header-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+
+      .header-icons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .header-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        position: relative;
+      }
+
+      .header-icon.templates {
+        background: #f5f3ff;
+      }
+
+      .header-icon.settings {
+        background: #f5f5f4;
+      }
+
+      .badge {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 10px;
+        height: 10px;
+        background: #7c3aed;
+        border-radius: 50%;
+        border: 2px solid #faf9f7;
+      }
+
+      .header-icon.hidden {
+        opacity: 0.15;
+      }
+
+      /* Content area */
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 24px;
+        overflow-y: auto;
+      }
+
+      /* Hero */
+      .hero-icon {
+        font-size: 48px;
+        margin-bottom: 20px;
+        animation: breathe 3s ease-in-out infinite;
+      }
+
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+      }
+
+      .headline {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1c1917;
+        text-align: center;
+        line-height: 1.3;
+        margin-bottom: 24px;
+      }
+
+      /* Input */
+      .input-field {
+        width: 100%;
+        max-width: 327px;
+        height: 48px;
+        border: 2px solid #e7e5e4;
+        border-radius: 14px;
+        padding: 0 16px;
+        font-size: 17px;
+        color: #78716c;
+        background: white;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+      }
+
+      /* Chips */
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 20px;
+        max-width: 327px;
+      }
+
+      .chip {
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: white;
+        border: 1.5px solid #e7e5e4;
+        font-size: 14px;
+        color: #44403c;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .chip:hover {
+        border-color: #059669;
+        background: #ecfdf5;
+      }
+
+      /* Primary CTA */
+      .cta-primary {
+        width: 100%;
+        max-width: 327px;
+        height: 52px;
+        border-radius: 14px;
+        background: #059669;
+        color: white;
+        font-size: 17px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+      }
+
+      .cta-primary.disabled {
+        background: #d6d3d1;
+        box-shadow: none;
+        color: #a8a29e;
+      }
+
+      /* ===== BEFORE: Old template section ===== */
+      .old-explore {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .old-explore-text {
+        font-size: 13px;
+        color: #78716c;
+      }
+
+      .old-pills {
+        display: flex;
+        gap: 10px;
+      }
+
+      .old-pill {
+        padding: 6px 12px;
+        border-radius: 16px;
+        background: rgba(5, 150, 105, 0.08);
+        border: 1px solid rgba(5, 150, 105, 0.2);
+        font-size: 13px;
+        color: #047857;
+        cursor: pointer;
+      }
+
+      /* ===== AFTER: New template section ===== */
+      .divider-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        max-width: 327px;
+        margin-bottom: 20px;
+      }
+
+      .divider-line {
+        flex: 1;
+        height: 1px;
+        background: #e7e5e4;
+      }
+
+      .divider-text {
+        font-size: 13px;
+        color: #a8a29e;
+        font-weight: 500;
+      }
+
+      /* Template showcase card */
+      .template-card {
+        width: 100%;
+        max-width: 327px;
+        background: white;
+        border-radius: 16px;
+        border: 1.5px solid #ede9fe;
+        padding: 16px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 8px rgba(124, 58, 237, 0.06);
+      }
+
+      .template-card:hover {
+        border-color: #7c3aed;
+        box-shadow: 0 4px 16px rgba(124, 58, 237, 0.12);
+      }
+
+      .template-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+
+      .template-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+
+      .template-card-badge {
+        font-size: 11px;
+        font-weight: 600;
+        color: #7c3aed;
+        background: #f5f3ff;
+        padding: 3px 8px;
+        border-radius: 8px;
+        letter-spacing: 0.3px;
+      }
+
+      .template-card-subtitle {
+        font-size: 13px;
+        color: #78716c;
+        margin-bottom: 14px;
+        line-height: 1.4;
+      }
+
+      /* Mini template previews */
+      .template-previews {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .template-mini {
+        flex: 1;
+        background: #faf9f7;
+        border-radius: 10px;
+        padding: 10px;
+        text-align: center;
+      }
+
+      .template-mini-emoji {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+
+      .template-mini-name {
+        font-size: 11px;
+        color: #44403c;
+        font-weight: 500;
+      }
+
+      .template-mini-meta {
+        font-size: 10px;
+        color: #a8a29e;
+        margin-top: 2px;
+      }
+
+      .template-card-cta {
+        width: 100%;
+        height: 40px;
+        border-radius: 10px;
+        background: #7c3aed;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        cursor: pointer;
+      }
+
+      /* Category chips */
+      .category-chips {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+        max-width: 327px;
+        overflow-x: auto;
+        width: 100%;
+      }
+
+      .category-chip {
+        padding: 6px 12px;
+        border-radius: 14px;
+        background: #f5f3ff;
+        border: 1px solid #ede9fe;
+        font-size: 12px;
+        color: #7c3aed;
+        font-weight: 500;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .category-chip:hover {
+        background: #ede9fe;
+        border-color: #7c3aed;
+      }
+
+      /* Template count */
+      .template-count {
+        font-size: 12px;
+        color: #a8a29e;
+        margin-bottom: 8px;
+      }
+
+      /* Callout annotations */
+      .callout {
+        position: absolute;
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        z-index: 20;
+      }
+
+      .callout.green {
+        background: rgba(16, 185, 129, 0.9);
+      }
+
+      .callout::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+      }
+
+      .callout-header {
+        top: 72px;
+        right: 55px;
+      }
+
+      .callout-pills {
+        bottom: 175px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .callout-template-card {
+        bottom: 100px;
+        right: 30px;
+      }
+
+      .callout-categories {
+        bottom: 238px;
+        left: 30px;
+      }
+
+      /* Scrollbar hide */
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Section title */
+      .section-title {
+        color: #faf9f7;
+        font-size: 20px;
+        font-weight: 700;
+        margin-top: 60px;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      /* Arrow */
+      .arrow {
+        font-size: 40px;
+        color: #10b981;
+        align-self: center;
+        margin-top: 80px;
+        display: none;
+      }
+
+      @media (min-width: 840px) {
+        .arrow {
+          display: block;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 839px) {
+        .comparison {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Empty State — Template Discoverability</h1>
+    <p class="subtitle">Making templates impossible to miss for new users</p>
+
+    <div class="comparison">
+      <!-- BEFORE -->
+      <div class="phone-wrapper">
+        <span class="label before">❌ CURRENT</span>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span class="time">2:00 PM</span></div>
+
+          <!-- No header shown -->
+
+          <div class="content">
+            <div class="hero-icon">🌱</div>
+
+            <div class="headline">
+              What's one small thing<br />you want to do daily?
+            </div>
+
+            <div class="input-field">Type your habit...</div>
+
+            <div class="chips">
+              <div class="chip">💧 Water</div>
+              <div class="chip">🚶 Walk</div>
+              <div class="chip">✍️ Write</div>
+              <div class="chip">🧘 Breathe</div>
+              <div class="chip">📖 Read</div>
+              <div class="chip">🤸 Stretch</div>
+            </div>
+
+            <div class="cta-primary disabled">Start my journey →</div>
+
+            <!-- Tiny buried template link -->
+            <div class="old-explore">
+              <span class="old-explore-text">or explore</span>
+              <div class="old-pills">
+                <span class="old-pill">📋 templates</span>
+                <span class="old-pill">✨ custom habit</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Callouts -->
+          <div class="callout callout-header">← Header hidden at 0 habits</div>
+          <div class="callout callout-pills">
+            ↑ 13px buried pills — easy to miss
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- AFTER -->
+      <div class="phone-wrapper">
+        <span class="label after">✅ PROPOSED</span>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="status-bar"><span class="time">2:00 PM</span></div>
+
+          <!-- Header visible now! -->
+          <div class="header">
+            <span class="header-title">Habits</span>
+            <div class="header-icons">
+              <div class="header-icon templates">
+                📖
+                <div class="badge"></div>
+              </div>
+              <div class="header-icon settings">⚙️</div>
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="hero-icon">🌱</div>
+
+            <div class="headline">
+              What's one small thing<br />you want to do daily?
+            </div>
+
+            <div class="input-field">Type your habit...</div>
+
+            <div class="chips">
+              <div class="chip">💧 Water</div>
+              <div class="chip">🚶 Walk</div>
+              <div class="chip">✍️ Write</div>
+              <div class="chip">🧘 Breathe</div>
+              <div class="chip">📖 Read</div>
+              <div class="chip">🤸 Stretch</div>
+            </div>
+
+            <div class="cta-primary disabled">Create habit →</div>
+
+            <!-- New: Divider -->
+            <div class="divider-row">
+              <div class="divider-line"></div>
+              <span class="divider-text">or start from a template</span>
+              <div class="divider-line"></div>
+            </div>
+
+            <!-- New: Category chips -->
+            <div class="category-chips">
+              <span class="category-chip">🌅 Morning</span>
+              <span class="category-chip">💪 Health</span>
+              <span class="category-chip">🧠 Mindful</span>
+              <span class="category-chip">📚 Learning</span>
+              <span class="category-chip">😴 Sleep</span>
+            </div>
+
+            <!-- New: Template showcase card -->
+            <div class="template-card">
+              <div class="template-card-header">
+                <span class="template-card-title">Popular Templates</span>
+                <span class="template-card-badge">55+ TEMPLATES</span>
+              </div>
+              <div class="template-card-subtitle">
+                Science-backed habits designed by researchers
+              </div>
+
+              <div class="template-previews">
+                <div class="template-mini">
+                  <div class="template-mini-emoji">☀️</div>
+                  <div class="template-mini-name">Morning Routine</div>
+                  <div class="template-mini-meta">5 habits</div>
+                </div>
+                <div class="template-mini">
+                  <div class="template-mini-emoji">🧘</div>
+                  <div class="template-mini-name">Mindfulness</div>
+                  <div class="template-mini-meta">4 habits</div>
+                </div>
+                <div class="template-mini">
+                  <div class="template-mini-emoji">💪</div>
+                  <div class="template-mini-name">Fitness</div>
+                  <div class="template-mini-meta">6 habits</div>
+                </div>
+              </div>
+
+              <div class="template-card-cta">Browse templates →</div>
+            </div>
+          </div>
+
+          <!-- Callouts -->
+          <div class="callout green callout-header">
+            Header visible! With badge →
+          </div>
+          <div class="callout green callout-categories">
+            Category chips for quick browse
+          </div>
+          <div class="callout green callout-template-card">
+            Prominent template card
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

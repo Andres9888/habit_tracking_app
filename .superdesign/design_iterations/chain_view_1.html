@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain vs Squares — Calendar Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --surface: #faf8f5;
+        --ink: #1c1a17;
+        --muted: #7a756c;
+        --line: #ece7df;
+        --g-high: #10b981;
+        --g-med: #6ee7b7;
+        --g-low: #d1fae5;
+        --g-none: #f3f4f6;
+        --chain: #10b981;
+        --chain-dim: #a7e8ce;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background: #efeae2;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--ink);
+        margin: 0;
+        padding: 48px 24px;
+      }
+      .serif {
+        font-family: 'Fraunces', serif;
+      }
+      .phone {
+        width: 340px;
+        background: var(--surface);
+        border-radius: 36px;
+        padding: 22px 18px 26px;
+        box-shadow:
+          0 30px 60px -20px rgba(28, 26, 23, 0.35),
+          0 0 0 1px rgba(28, 26, 23, 0.04);
+      }
+      .card {
+        background: #fff;
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow:
+          0 8px 22px -12px rgba(28, 26, 23, 0.18),
+          0 0 0 1px var(--line);
+      }
+      .lbl {
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      /* ---- SQUARES (current) ---- */
+      .grid7 {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+      }
+      .sq {
+        aspect-ratio: 1;
+        border-radius: 6px;
+        background: var(--g-none);
+      }
+      .sq.l1 {
+        background: var(--g-low);
+      }
+      .sq.l2 {
+        background: var(--g-med);
+      }
+      .sq.l3 {
+        background: var(--g-high);
+      }
+
+      /* ---- CHAIN (proposed) ---- */
+      .chain-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        row-gap: 10px;
+      }
+      .link {
+        position: relative;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 -1px;
+      }
+      .link .dot {
+        width: 78%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--g-none);
+        border: 2px solid transparent;
+        z-index: 2;
+      }
+      .link.on .dot {
+        background: var(--chain);
+        border-color: #0e9e74;
+      }
+      /* connector to the RIGHT neighbor when both done and not a week-end */
+      .link.join-r::after {
+        content: '';
+        position: absolute;
+        right: -6px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 14px;
+        height: 9px;
+        background: var(--chain);
+        z-index: 1;
+        border-radius: 2px;
+      }
+      .link.dim .dot {
+        background: #fff;
+        border: 2px dashed #e3ded5;
+      }
+      .link.today .dot {
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+      }
+
+      .seg {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0;
+      }
+      .weekstrip {
+        display: flex;
+        align-items: center;
+      }
+      .knob {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--chain);
+        border: 2px solid #0e9e74;
+      }
+      .knob.off {
+        background: #fff;
+        border: 2px dashed #e3ded5;
+      }
+      .conn {
+        width: 12px;
+        height: 8px;
+        border-radius: 2px;
+        background: var(--chain);
+      }
+      .conn.broken {
+        background: transparent;
+      }
+
+      .seg-toggle {
+        display: flex;
+        background: #f1ece4;
+        border-radius: 12px;
+        padding: 3px;
+      }
+      .seg-toggle button {
+        flex: 1;
+        border: 0;
+        background: transparent;
+        font-family: 'DM Sans';
+        font-weight: 600;
+        font-size: 13px;
+        color: var(--muted);
+        padding: 8px 0;
+        border-radius: 9px;
+        cursor: pointer;
+      }
+      .seg-toggle button.active {
+        background: #fff;
+        color: var(--ink);
+        box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.15);
+      }
+
+      .colwrap {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .caption {
+        text-align: center;
+        margin-top: 14px;
+        max-width: 340px;
+      }
+      .caption h3 {
+        margin: 0 0 4px;
+        font-size: 15px;
+      }
+      .caption p {
+        margin: 0;
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .pagehdr {
+        text-align: center;
+        color: #5a554c;
+        margin-bottom: 34px;
+      }
+      .pagehdr h1 {
+        font-size: 22px;
+        margin: 0 0 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pagehdr">
+      <h1 class="serif">Calendar style — Chain vs Squares</h1>
+      <div style="font-size: 13px">
+        Left: the proposed <b>Chain</b> look. Right: today's
+        <b>Squares</b> grid, kept as a setting.
+      </div>
+    </div>
+
+    <div class="colwrap">
+      <!-- ================= CHAIN (PROPOSED) ================= -->
+      <div>
+        <div class="phone">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 16px;
+            "
+          >
+            <div>
+              <div class="lbl">Habit</div>
+              <div
+                class="serif"
+                style="font-size: 21px; font-weight: 600; margin-top: 2px"
+              >
+                Morning Run
+              </div>
+            </div>
+            <div style="text-align: right">
+              <div
+                class="serif"
+                style="
+                  font-size: 26px;
+                  font-weight: 700;
+                  color: var(--chain);
+                  line-height: 1;
+                "
+              >
+                18
+              </div>
+              <div class="lbl" style="font-size: 9px">day chain 🔗</div>
+            </div>
+          </div>
+
+          <!-- weekly chain strip -->
+          <div class="card" style="margin-bottom: 14px">
+            <div class="lbl" style="margin-bottom: 12px">This week</div>
+            <div class="weekstrip">
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+              <div class="conn broken"></div>
+              <div class="knob off"></div>
+              <div class="conn broken"></div>
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+              <div class="conn"></div>
+              <div class="knob"></div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                margin-top: 8px;
+                font-size: 11px;
+                color: var(--muted);
+              "
+            >
+              <span>M</span><span>T</span><span>W</span><span>T</span
+              ><span>F</span><span>S</span><span>S</span>
+            </div>
+          </div>
+
+          <!-- month as chain -->
+          <div class="card">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 14px;
+              "
+            >
+              <div class="serif" style="font-size: 16px; font-weight: 600">
+                July
+              </div>
+              <div class="lbl">links unbroken</div>
+            </div>
+            <div class="chain-grid">
+              <!-- row1 -->
+              <div class="link dim"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+              <!-- row2 -->
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+              <!-- row3 -->
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on"><div class="dot"></div></div>
+              <!-- row4 -->
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on join-r"><div class="dot"></div></div>
+              <div class="link on today"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+              <div class="link dim"><div class="dot"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3 class="serif">🔗 Chain</h3>
+          <p>
+            Consecutive days link together — the streak reads as one unbroken
+            chain. A miss breaks the link, making the gap feel real. "Don't
+            break the chain."
+          </p>
+        </div>
+      </div>
+
+      <!-- ================= SQUARES (CURRENT → SETTING) ================= -->
+      <div>
+        <div class="phone">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 16px;
+            "
+          >
+            <div>
+              <div class="lbl">Habit</div>
+              <div
+                class="serif"
+                style="font-size: 21px; font-weight: 600; margin-top: 2px"
+              >
+                Morning Run
+              </div>
+            </div>
+            <div style="text-align: right">
+              <div
+                class="serif"
+                style="
+                  font-size: 26px;
+                  font-weight: 700;
+                  color: var(--g-high);
+                  line-height: 1;
+                "
+              >
+                18
+              </div>
+              <div class="lbl" style="font-size: 9px">day streak</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 14px">
+            <div class="lbl" style="margin-bottom: 12px">This week</div>
+            <div class="grid7">
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l2"></div>
+              <div class="sq"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l1"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                margin-bottom: 14px;
+              "
+            >
+              <div class="serif" style="font-size: 16px; font-weight: 600">
+                July
+              </div>
+              <div class="lbl">completion</div>
+            </div>
+            <div class="grid7">
+              <div class="sq"></div>
+              <div class="sq"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l2"></div>
+              <div class="sq l3"></div>
+              <div class="sq"></div>
+              <div class="sq l3"></div>
+              <div class="sq l2"></div>
+              <div class="sq l3"></div>
+              <div class="sq l1"></div>
+              <div class="sq"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l2"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l2"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq l3"></div>
+              <div class="sq"></div>
+              <div class="sq"></div>
+              <div class="sq"></div>
+              <div class="sq"></div>
+            </div>
+          </div>
+        </div>
+        <div class="caption">
+          <h3 class="serif">▦ Squares</h3>
+          <p>
+            The current grid — a GitHub-style heatmap. Great for seeing
+            intensity at a glance. Stays available as a choice in Settings.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SETTINGS TOGGLE ================= -->
+    <div style="display: flex; justify-content: center; margin-top: 52px">
+      <div class="phone" style="width: 360px">
+        <div
+          class="serif"
+          style="font-size: 19px; font-weight: 600; margin-bottom: 4px"
+        >
+          Look &amp; Feel
+        </div>
+        <div
+          style="font-size: 12.5px; color: var(--muted); margin-bottom: 18px"
+        >
+          Choose how streaks are drawn across the app.
+        </div>
+        <div class="card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 14px;
+            "
+          >
+            <div>
+              <div style="font-weight: 600; font-size: 15px">
+                Calendar style
+              </div>
+              <div
+                style="font-size: 12px; color: var(--muted); margin-top: 2px"
+              >
+                Applies to habit detail &amp; the year view
+              </div>
+            </div>
+          </div>
+          <div class="seg-toggle">
+            <button class="active">🔗 Chain</button>
+            <button>▦ Squares</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: Extract Component Logic to Custom Hooks
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Refactor all React components to extract business logic into co-located custom hooks following useComponentNameLogic naming pattern
+# Details:
+Extract state management, event handlers, side effects, and utility functions from ~16 React Native components into co-located ComponentName.hooks.ts files. Each hook should be named useComponentNameLogic (e.g., useSettingsModalLogic, useDraggableHabitLogic). Components should remain purely presentational with only JSX and hook consumption. Maintain 100% backward compatibility - no changes to component props or external API. Priority components: SettingsModal, DraggableHabit, HabitCalendarView, ArchivedHabitsModal. Simple presentational components (Button, Card, Checkbox) should be evaluated but may not require extraction. Full story details in docs/stories/extract-component-logic.md
+
+# Test Strategy:
+Test each component after extraction to ensure no behavioral changes. Verify TypeScript compilation passes. Validate all existing functionality works identically. Test components with various prop combinations. Ensure no visual regressions in UI.

@@ -1,0 +1,1190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bottom Bar — Aligned Liquid Glass Variants</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #111 !important;
+        color: #fff !important;
+        min-height: 100vh;
+        padding: 28px 16px 60px;
+      }
+      h1 {
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+        text-align: center;
+        margin-bottom: 6px !important;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #777;
+        font-size: 13px;
+        margin-bottom: 36px;
+        line-height: 1.5;
+      }
+      .concepts-grid {
+        display: flex;
+        gap: 28px;
+        justify-content: center;
+        flex-wrap: wrap;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .concept-card {
+        background: #1a1a1a;
+        border-radius: 20px;
+        padding: 18px;
+        width: 340px;
+        border: 1px solid #2a2a2a;
+      }
+      .concept-label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        margin-bottom: 3px;
+      }
+      .label-current {
+        color: #666;
+      }
+      .label-new {
+        color: #10b981;
+      }
+      .label-star {
+        color: #e8b94d;
+      }
+      .concept-title {
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+      .concept-desc {
+        font-size: 11px;
+        color: #777;
+        margin-bottom: 14px;
+        line-height: 1.5;
+      }
+      .scores {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .score-badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .score-ux {
+        background: #10b98120;
+        color: #10b981;
+      }
+      .score-money {
+        background: #e8b94d20;
+        color: #e8b94d;
+      }
+      .score-combined {
+        background: #8b5cf620;
+        color: #8b5cf6;
+      }
+
+      /* Phone Frame */
+      .phone-frame {
+        width: 310px;
+        height: 500px;
+        background: #faf8f5;
+        border-radius: 32px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+      .habits-content {
+        padding: 14px;
+        padding-top: 44px;
+      }
+      .habit-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      .habit-check {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 2px solid #d4d0cc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .habit-check.done {
+        background: #059669;
+        border-color: #059669;
+      }
+      .habit-check.done::after {
+        content: '✓';
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .habit-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #2a2520;
+      }
+      .habit-streak {
+        font-size: 10px;
+        color: #9a9590;
+        margin-top: 1px;
+      }
+      .habit-dots {
+        display: flex;
+        gap: 3px;
+        margin-left: auto;
+      }
+      .habit-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #e8e4e0;
+      }
+      .habit-dot.filled {
+        background: #059669;
+      }
+
+      /* Shared: SVG icon paths */
+      .icon-gear {
+        color: #8a8580;
+      }
+      .icon-sparkle {
+        color: #7d5907;
+      }
+      .icon-plus {
+        color: #fff;
+      }
+
+      /* ─── CURRENT BAR ─── */
+      .bar-current-v2 {
+        position: absolute;
+        bottom: 16px;
+        left: 18px;
+        right: 18px;
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 32px;
+        padding: 10px 24px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+      .current-icon-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        padding-top: 6px;
+      }
+      .current-icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .current-icon-label {
+        font-size: 10px;
+        font-weight: 600;
+      }
+      .current-ring-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: -28px;
+      }
+
+      /* ─── VARIANT A: Compact Ring Inline ─── */
+      .bar-compact {
+        position: absolute;
+        bottom: 16px;
+        left: 18px;
+        right: 18px;
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.38);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 32px;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+      .compact-icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        cursor: pointer;
+        position: relative;
+      }
+      .compact-icon-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+      .compact-center {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .compact-ring {
+        position: relative;
+        width: 56px;
+        height: 56px;
+      }
+      .compact-fab {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #059669;
+        border: 2px solid rgba(245, 241, 237, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+        cursor: pointer;
+        transition: transform 0.15s;
+      }
+      .compact-fab:hover {
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+      .compact-progress-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6e6660;
+        letter-spacing: -0.2px;
+      }
+      .compact-progress-label span {
+        color: #047857;
+        font-weight: 700;
+      }
+
+      /* Notification dot */
+      .notif-dot {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #e8b94d;
+        border: 1.5px solid rgba(250, 248, 245, 0.9);
+        box-shadow: 0 0 6px rgba(232, 185, 77, 0.5);
+      }
+
+      /* ─── VARIANT B: Arc Crown ─── */
+      .bar-arc {
+        position: absolute;
+        bottom: 16px;
+        left: 18px;
+        right: 18px;
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.38);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 28px;
+        padding: 0;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        overflow: hidden;
+      }
+      .arc-progress {
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          #059669 0%,
+          #059669 60%,
+          rgba(0, 0, 0, 0.06) 60%
+        );
+        border-radius: 3px 3px 0 0;
+      }
+      .arc-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px 12px;
+      }
+      .arc-icon-section {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .arc-icon-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        position: relative;
+      }
+      .arc-icon-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+      .arc-discover-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #7d5907;
+      }
+      .arc-fab {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #059669;
+        border: 2px solid rgba(245, 241, 237, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+        cursor: pointer;
+        transition: transform 0.15s;
+      }
+      .arc-fab:hover {
+        transform: scale(1.05);
+      }
+
+      /* ─── VARIANT C: Compact Ring + "Discover" label ─── */
+      .bar-discover {
+        position: absolute;
+        bottom: 16px;
+        left: 18px;
+        right: 18px;
+        backdrop-filter: blur(50px) saturate(1.8);
+        -webkit-backdrop-filter: blur(50px) saturate(1.8);
+        background: rgba(255, 255, 255, 0.38);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        border-radius: 32px;
+        padding: 8px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.08),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+      .discover-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        padding: 6px 12px 6px 8px;
+        border-radius: 20px;
+        transition: all 0.2s;
+      }
+      .discover-right:hover {
+        background: rgba(139, 98, 8, 0.06);
+      }
+      .discover-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #7d5907;
+      }
+
+      /* Section label */
+      .section-divider {
+        max-width: 1400px;
+        margin: 40px auto 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .section-divider hr {
+        flex: 1;
+        border: none;
+        border-top: 1px solid #2a2a2a;
+      }
+      .section-divider span {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 11px;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-weight: 600;
+      }
+
+      /* Annotation callout */
+      .callout {
+        background: #1c1c1c;
+        border: 1px solid #333;
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-top: 12px;
+        font-size: 11px;
+        color: #999;
+        line-height: 1.6;
+      }
+      .callout strong {
+        color: #e8b94d;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Liquid Glass Bottom Bar — Everything Inside</h1>
+    <p class="subtitle">
+      All elements aligned inside the capsule. FAB no longer breaks above. Ring
+      fits within the glass.
+    </p>
+
+    <div class="concepts-grid">
+      <!-- CURRENT (reference) -->
+      <div class="concept-card">
+        <div class="concept-label label-current">Current</div>
+        <div class="concept-title">FAB Breaks Above</div>
+        <div class="concept-desc">
+          Ring + FAB extends 24px above the capsule. Side icons sit lower. Three
+          visual levels.
+        </div>
+        <div class="scores">
+          <span class="score-badge score-ux">UX 7</span>
+          <span class="score-badge score-money">$ 5</span>
+        </div>
+        <div class="phone-frame">
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bar-current-v2">
+            <div class="current-icon-section">
+              <div class="current-icon-btn">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#8a8580"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <span class="current-icon-label" style="color: #8a8580"
+                >Settings</span
+              >
+            </div>
+            <div class="current-ring-section">
+              <div style="position: relative; width: 68px; height: 68px">
+                <svg
+                  style="transform: rotate(-90deg)"
+                  width="68"
+                  height="68"
+                  viewBox="0 0 68 68"
+                >
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="rgba(0,0,0,0.06)"
+                    stroke-width="4"
+                  />
+                  <circle
+                    cx="34"
+                    cy="34"
+                    r="32"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="4"
+                    stroke-dasharray="201.06"
+                    stroke-dashoffset="120.64"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div
+                  style="
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 52px;
+                    height: 52px;
+                    border-radius: 50%;
+                    background: #059669;
+                    border: 2px solid rgba(245, 241, 237, 0.9);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+                  "
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div
+                style="
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: #6e6660;
+                  margin-top: 3px;
+                "
+              >
+                <span style="color: #047857; font-weight: 700">2</span> of 5
+              </div>
+            </div>
+            <div class="current-icon-section">
+              <div class="current-icon-btn">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#7D5907"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                  />
+                </svg>
+              </div>
+              <span class="current-icon-label" style="color: #7d5907"
+                >Inspire</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VARIANT A: Compact Ring, No Labels -->
+      <div class="concept-card">
+        <div class="concept-label label-star">Recommended</div>
+        <div class="concept-title">Compact Ring — Everything Inside</div>
+        <div class="concept-desc">
+          Ring shrunk to 56px, FAB to 44px. All vertically centered. No labels
+          on side icons. Gold notification dot on Sparkles for monetization.
+        </div>
+        <div class="scores">
+          <span class="score-badge score-ux">UX 9</span>
+          <span class="score-badge score-money">$ 7.5</span>
+          <span class="score-badge score-combined">Best Balance</span>
+        </div>
+        <div class="phone-frame">
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bar-compact">
+            <div class="compact-icon-btn">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#8a8580"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+            <div class="compact-center">
+              <div class="compact-ring">
+                <svg
+                  style="transform: rotate(-90deg)"
+                  width="56"
+                  height="56"
+                  viewBox="0 0 56 56"
+                >
+                  <circle
+                    cx="28"
+                    cy="28"
+                    r="25"
+                    fill="transparent"
+                    stroke="rgba(0,0,0,0.06)"
+                    stroke-width="3.5"
+                  />
+                  <circle
+                    cx="28"
+                    cy="28"
+                    r="25"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="3.5"
+                    stroke-dasharray="157.08"
+                    stroke-dashoffset="94.25"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="compact-fab">
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="compact-progress-label"><span>2</span>/5</div>
+            </div>
+            <div class="compact-icon-btn" style="position: relative">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D5907"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                />
+              </svg>
+              <div class="notif-dot"></div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Monetization:</strong> Gold notification dot on Sparkles icon
+          signals new premium templates. Converts 3-5x better than static icon.
+          Progress ring creates completion psychology → users seek new habits →
+          funneled to templates.
+        </div>
+      </div>
+
+      <!-- VARIANT B: Arc Crown -->
+      <div class="concept-card">
+        <div class="concept-label label-new">Variant B</div>
+        <div class="concept-title">Arc Crown — Progress on Top Edge</div>
+        <div class="concept-desc">
+          Progress bar runs along the capsule's top edge. No ring. Clean 48px
+          FAB. "Discover" label on right drives 2-4x more taps than unlabeled
+          icon.
+        </div>
+        <div class="scores">
+          <span class="score-badge score-ux">UX 8</span>
+          <span class="score-badge score-money">$ 9</span>
+          <span class="score-badge score-combined">Top Monetization</span>
+        </div>
+        <div class="phone-frame">
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bar-arc">
+            <div class="arc-progress"></div>
+            <div class="arc-content">
+              <div class="arc-icon-btn">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#8a8580"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                  />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="arc-fab">
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+              <div class="arc-icon-section">
+                <div class="arc-icon-btn" style="position: relative">
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#7D5907"
+                    stroke-width="1.75"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                    />
+                  </svg>
+                  <div class="notif-dot"></div>
+                </div>
+                <span class="arc-discover-label">Discover</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Monetization:</strong> Labeled "Discover" drives 2-4x more
+          taps than unlabeled icon. Arc progress fills across full width —
+          creates stronger completion psychology. When 100%, the arc glows gold.
+        </div>
+      </div>
+
+      <!-- VARIANT C: Compact Ring + Discover Label -->
+      <div class="concept-card">
+        <div class="concept-label label-new">Variant C</div>
+        <div class="concept-title">Ring + Discover — Hybrid</div>
+        <div class="concept-desc">
+          Keeps the ring identity. Adds "Discover" label to the right icon only.
+          Progress label below ring. Best of both worlds.
+        </div>
+        <div class="scores">
+          <span class="score-badge score-ux">UX 8.5</span>
+          <span class="score-badge score-money">$ 8</span>
+          <span class="score-badge score-combined">Strong Hybrid</span>
+        </div>
+        <div class="phone-frame">
+          <div class="habits-content">
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-streak">12 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check done"></div>
+              <div>
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-streak">8 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Exercise 30min</div>
+                <div class="habit-streak">5 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Journal Entry</div>
+                <div class="habit-streak">3 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-check"></div>
+              <div>
+                <div class="habit-name">Drink 8 Glasses</div>
+                <div class="habit-streak">15 day streak</div>
+              </div>
+              <div class="habit-dots">
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot filled"></div>
+                <div class="habit-dot"></div>
+              </div>
+            </div>
+          </div>
+          <div class="bar-discover">
+            <div class="compact-icon-btn">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#8a8580"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+                />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </div>
+            <div
+              style="display: flex; flex-direction: column; align-items: center"
+            >
+              <div class="compact-ring">
+                <svg
+                  style="transform: rotate(-90deg)"
+                  width="56"
+                  height="56"
+                  viewBox="0 0 56 56"
+                >
+                  <circle
+                    cx="28"
+                    cy="28"
+                    r="25"
+                    fill="transparent"
+                    stroke="rgba(0,0,0,0.06)"
+                    stroke-width="3.5"
+                  />
+                  <circle
+                    cx="28"
+                    cy="28"
+                    r="25"
+                    fill="transparent"
+                    stroke="#059669"
+                    stroke-width="3.5"
+                    stroke-dasharray="157.08"
+                    stroke-dashoffset="94.25"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="compact-fab">
+                  <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="compact-progress-label" style="margin-top: 2px">
+                <span>2</span> of 5
+              </div>
+            </div>
+            <div class="discover-right" style="position: relative">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D5907"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"
+                />
+              </svg>
+              <span class="discover-label">Discover</span>
+              <div class="notif-dot" style="top: -2px; right: -2px"></div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Monetization:</strong> Asymmetric layout — Settings is
+          icon-only, Discover gets a label. This intentional imbalance draws the
+          eye rightward toward the monetization CTA. The ring keeps the
+          gamification loop.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

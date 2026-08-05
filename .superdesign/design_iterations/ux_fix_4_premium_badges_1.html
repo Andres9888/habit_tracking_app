@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P0 Fix #4 — Premium Lock Badges</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: #fff;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #8b5cf6;
+        margin-bottom: 8px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 40px;
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .phone-pair {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding: 4px 12px;
+        border: 1px solid #374151;
+        border-radius: 20px;
+      }
+      .phone-label.bad {
+        color: #ef4444;
+        border-color: #7f1d1d;
+      }
+      .phone-label.good {
+        color: #10b981;
+        border-color: #064e3b;
+      }
+
+      .phone {
+        width: 375px;
+        height: 780px;
+        background: #faf8f5;
+        border-radius: 40px;
+        border: 6px solid #2d2a26;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+      .status-bar {
+        height: 50px;
+        background: #faf8f5;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+      .notch {
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+      }
+      .screen-content {
+        padding: 16px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .screen-header {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+        margin-bottom: 16px;
+        padding: 0 4px;
+      }
+
+      /* Stat cards grid */
+      .stat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .stat-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.06);
+        position: relative;
+      }
+      .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .stat-icon {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 18px;
+      }
+
+      /* Chart cards */
+      .chart-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.06);
+        position: relative;
+      }
+      .chart-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Fake chart bars */
+      .chart-bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 6px;
+        height: 80px;
+        padding: 8px 0;
+      }
+      .chart-bar {
+        flex: 1;
+        border-radius: 4px 4px 0 0;
+        min-height: 8px;
+        background: #10b981;
+      }
+      .chart-bar.muted {
+        background: #e5e7eb;
+      }
+
+      /* Fake heatmap */
+      .heatmap {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 3px;
+      }
+      .heat-cell {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 3px;
+      }
+
+      /* Export button */
+      .export-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        position: relative;
+      }
+      .export-btn.no-badge {
+        background: #f5f3f0;
+        color: #2d2a26;
+      }
+      .export-btn.with-badge {
+        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+        color: #fff;
+      }
+
+      /* Premium lock badge */
+      .lock-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(139, 92, 246, 0.15);
+        color: #8b5cf6;
+      }
+      .lock-badge.inline {
+        font-size: 9px;
+        padding: 1px 5px;
+      }
+
+      /* Premium overlay on chart */
+      .premium-overlay {
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        background: rgba(250, 248, 245, 0.85);
+        backdrop-filter: blur(2px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        z-index: 2;
+      }
+      .premium-overlay .lock-icon {
+        font-size: 24px;
+      }
+      .premium-overlay .lock-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #8b5cf6;
+      }
+      .premium-overlay .upgrade-btn {
+        background: #8b5cf6;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 20px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        margin-top: 4px;
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px dashed;
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 10;
+      }
+      .annotation.bad {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+      }
+      .annotation.good {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #10b981;
+      }
+      .annotation.purple {
+        color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.1);
+        border-color: #8b5cf6;
+      }
+
+      .code-note {
+        background: #111827;
+        border: 1px solid #374151;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-top: 30px;
+        max-width: 500px;
+        text-align: left;
+      }
+      .code-note .cn-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: #ef4444;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .code-note code {
+        font-family: 'SF Mono', monospace;
+        font-size: 13px;
+        color: #e5e7eb;
+        line-height: 1.6;
+      }
+      .code-note .hl {
+        color: #ef4444;
+        font-weight: 600;
+      }
+      .code-note .fix {
+        color: #10b981;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">P0 Fix #4</div>
+    <div class="title">Premium Lock Badges + Fix Gating</div>
+    <div class="subtitle">
+      isPremiumUser is hardcoded to true — paywall never triggers. Fix: connect
+      to RevenueCat state. Also: add lock badges so free users know what's
+      premium before tapping.
+    </div>
+
+    <div class="phone-pair">
+      <!-- BEFORE -->
+      <div class="phone-col">
+        <div class="phone-label bad">Before — No Premium Indicators</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+              "
+            >
+              <div class="screen-header" style="margin: 0">Analytics</div>
+              <button class="export-btn no-badge" style="position: relative">
+                📤 Export
+                <div
+                  class="annotation bad"
+                  style="top: -26px; right: 0; font-size: 10px"
+                >
+                  No premium indicator
+                </div>
+              </button>
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Best Streak</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">💪</div>
+                <div class="stat-value">67%</div>
+                <div class="stat-label">Avg Strength</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">89%</div>
+                <div class="stat-label">Completion Rate</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">142</div>
+                <div class="stat-label">Total Completions</div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Strength Distribution</div>
+              <div class="chart-bars">
+                <div
+                  class="chart-bar"
+                  style="height: 30%; background: #65a30d"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 50%; background: #16a34a"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 80%; background: #0d9488"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 60%; background: #0891b2"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 40%; background: #059669"
+                ></div>
+              </div>
+              <div
+                class="annotation bad"
+                style="bottom: 8px; right: 8px; font-size: 10px"
+              >
+                Should be locked for free users
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Weekly Trend</div>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height: 40%"></div>
+                <div class="chart-bar" style="height: 55%"></div>
+                <div class="chart-bar" style="height: 65%"></div>
+                <div class="chart-bar" style="height: 50%"></div>
+                <div class="chart-bar" style="height: 70%"></div>
+                <div class="chart-bar" style="height: 85%"></div>
+                <div class="chart-bar" style="height: 90%"></div>
+              </div>
+            </div>
+
+            <div class="chart-card">
+              <div class="chart-title">Compliance Heatmap</div>
+              <div class="heatmap">
+                <div class="heat-cell" style="background: #d1fae5"></div>
+                <div class="heat-cell" style="background: #86efac"></div>
+                <div class="heat-cell" style="background: #10b981"></div>
+                <div class="heat-cell" style="background: #059669"></div>
+                <div class="heat-cell" style="background: #d1fae5"></div>
+                <div class="heat-cell" style="background: #86efac"></div>
+                <div class="heat-cell" style="background: #e5e7eb"></div>
+                <div class="heat-cell" style="background: #10b981"></div>
+                <div class="heat-cell" style="background: #86efac"></div>
+                <div class="heat-cell" style="background: #d1fae5"></div>
+                <div class="heat-cell" style="background: #10b981"></div>
+                <div class="heat-cell" style="background: #059669"></div>
+                <div class="heat-cell" style="background: #86efac"></div>
+                <div class="heat-cell" style="background: #10b981"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="phone-col">
+        <div class="phone-label good">After — Clear Premium Gating</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+              "
+            >
+              <div class="screen-header" style="margin: 0">Analytics</div>
+              <button class="export-btn with-badge">
+                📤 Export <span class="lock-badge inline">PRO</span>
+              </button>
+            </div>
+
+            <!-- Free tier stats (visible) -->
+            <div class="stat-grid">
+              <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value">24</div>
+                <div class="stat-label">Best Streak</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">💪</div>
+                <div class="stat-value">67%</div>
+                <div class="stat-label">Avg Strength</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">89%</div>
+                <div class="stat-label">Completion Rate</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">142</div>
+                <div class="stat-label">Total Completions</div>
+              </div>
+            </div>
+
+            <!-- Premium chart - with overlay -->
+            <div class="chart-card" style="overflow: hidden">
+              <div class="chart-title">
+                Strength Distribution
+                <span class="lock-badge">🔒 PRO</span>
+              </div>
+              <div class="chart-bars" style="filter: blur(3px); opacity: 0.5">
+                <div
+                  class="chart-bar"
+                  style="height: 30%; background: #65a30d"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 50%; background: #16a34a"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 80%; background: #0d9488"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 60%; background: #0891b2"
+                ></div>
+                <div
+                  class="chart-bar"
+                  style="height: 40%; background: #059669"
+                ></div>
+              </div>
+              <div class="premium-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-text">Premium Analytics</div>
+                <button
+                  class="premium-overlay .upgrade-btn"
+                  style="
+                    background: #8b5cf6;
+                    color: #fff;
+                    font-size: 13px;
+                    font-weight: 600;
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    border: none;
+                    cursor: pointer;
+                  "
+                >
+                  Unlock Pro
+                </button>
+              </div>
+            </div>
+
+            <!-- Premium chart - with overlay -->
+            <div class="chart-card" style="overflow: hidden">
+              <div class="chart-title">
+                Weekly Trend
+                <span class="lock-badge">🔒 PRO</span>
+              </div>
+              <div class="chart-bars" style="filter: blur(3px); opacity: 0.5">
+                <div class="chart-bar" style="height: 40%"></div>
+                <div class="chart-bar" style="height: 55%"></div>
+                <div class="chart-bar" style="height: 65%"></div>
+                <div class="chart-bar" style="height: 50%"></div>
+                <div class="chart-bar" style="height: 70%"></div>
+                <div class="chart-bar" style="height: 85%"></div>
+                <div class="chart-bar" style="height: 90%"></div>
+              </div>
+              <div class="premium-overlay">
+                <div class="lock-icon">🔒</div>
+                <div class="lock-text">Premium Analytics</div>
+                <button
+                  style="
+                    background: #8b5cf6;
+                    color: #fff;
+                    font-size: 13px;
+                    font-weight: 600;
+                    padding: 8px 20px;
+                    border-radius: 20px;
+                    border: none;
+                    cursor: pointer;
+                  "
+                >
+                  Unlock Pro
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="annotation good"
+              style="
+                position: relative;
+                display: inline-block;
+                left: 50%;
+                transform: translateX(-50%);
+                margin-top: 8px;
+              "
+            >
+              Users see value before paying
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-note">
+      <div class="cn-title">Root Cause — AnalyticsScreen.hooks.ts:20</div>
+      <code>
+        <span class="hl"
+          >const isPremiumUser = true; // TODO: connect to RevenueCat</span
+        ><br />
+        <span style="color: #6b7280">// Should be:</span><br />
+        <span class="fix">const { isPremiumUser } = usePremium();</span>
+      </code>
+    </div>
+  </body>
+</html>

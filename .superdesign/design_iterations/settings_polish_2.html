@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings UI Polish - Before/After</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif !important; }
+    body { background: #1a1a2e !important; min-height: 100vh; padding: 32px 16px; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,255,255,0.08);
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 10;
+    }
+
+    .phone-content {
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .phone-content::-webkit-scrollbar { display: none; }
+
+    /* Settings card styling */
+    .settings-card {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      gap: 16px;
+      position: relative;
+    }
+
+    .settings-row.bordered {
+      border-bottom: 1px solid;
+    }
+
+    .icon-container {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      padding: 0 4px;
+    }
+
+    .row-label {
+      font-size: 17px;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .row-value {
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    /* Toggle switch */
+    .toggle {
+      width: 51px;
+      height: 31px;
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .toggle .thumb {
+      width: 27px;
+      height: 27px;
+      border-radius: 14px;
+      position: absolute;
+      top: 2px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .toggle.on .thumb { left: 22px; }
+    .toggle.off .thumb { left: 2px; }
+
+    .badge {
+      min-width: 22px;
+      height: 22px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* Premium CTA */
+    .premium-cta {
+      border-radius: 16px;
+      padding: 20px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .premium-cta .shimmer {
+      position: absolute;
+      top: 0;
+      left: -200px;
+      width: 120px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer { to { left: 400px; } }
+
+    .pro-badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      font-size: 13px;
+      font-weight: 700;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    /* Change indicator */
+    .change-marker {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: #f59e0b;
+      z-index: 5;
+    }
+
+    .diff-highlight {
+      outline: 2px solid rgba(245, 158, 11, 0.4);
+      outline-offset: -2px;
+      border-radius: 16px;
+    }
+
+    /* Comparison label */
+    .comparison-label {
+      position: absolute;
+      top: 54px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 20;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .footer-text {
+      text-align: center;
+      font-size: 13px;
+      padding: 12px 16px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Title -->
+  <div style="text-align:center; margin-bottom: 32px;">
+    <h1 style="color: #f5f1ed; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">Settings UI Polish</h1>
+    <p style="color: #a8a29e; font-size: 15px; margin-top: 8px;">9 consistency fixes — Before & After comparison</p>
+  </div>
+
+  <!-- Side by side phones -->
+  <div style="display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;">
+
+    <!-- BEFORE -->
+    <div style="position: relative;">
+      <div class="comparison-label" style="background: #ef4444; color: #fff;">Before</div>
+      <div class="phone-frame" style="background: #111827;">
+        <div class="phone-notch"></div>
+        <div class="phone-content" style="background: #111827;">
+          <!-- Header - BEFORE: px-5 (20px) -->
+          <div style="padding: 54px 20px 16px 20px; background: #111827;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="width:44px; height:44px;"></div>
+              <span style="font-size:22px; font-weight:700; color:#F9FAFB; letter-spacing:-0.5px;">Settings</span>
+              <div style="width:44px; height:44px; border-radius:22px; background:#1F2937; display:flex; align-items:center; justify-content:center;">
+                <i data-lucide="x" style="color:#9CA3AF; width:24px; height:24px;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 4px 16px 24px 16px; display:flex; flex-direction:column; gap:20px;">
+
+            <!-- Preferences -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">Preferences</div>
+              <div class="settings-card" style="background:#1F2937;">
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#1e3a5f;"><i data-lucide="check" style="color:#38bdf8; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Checkbox style for completed habits</span>
+                  <div class="toggle on" style="background:#10B981;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#2e1f5e;"><i data-lucide="circle" style="color:#a78bfa; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Circular day markers</span>
+                  <div class="toggle off" style="background:#6B7280;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#052e2a;"><i data-lucide="droplets" style="color:#34d399; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Gradient fill for habit strength</span>
+                  <div class="toggle on" style="background:#10B981;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#0f4b55;"><i data-lucide="calendar" style="color:#22d3ee; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Sticky calendar header</span>
+                  <div class="toggle off" style="background:#6B7280;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#3d2e06;"><i data-lucide="volume-2" style="color:#fbbf24; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Play sound on habit completion</span>
+                  <div class="toggle on" style="background:#10B981;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data - BEFORE: Share2 icon for export (duplicate) -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">Data</div>
+              <div class="settings-card" style="background:#1F2937;">
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#1e1b4b;"><i data-lucide="arrow-up-down" style="color:#818cf8; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Sort Order</span>
+                  <span class="row-value" style="color:#9CA3AF;">Custom</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <!-- BEFORE: Share2 icon (same as Share with Friends) -->
+                <div class="settings-row bordered" style="border-color:#374151; position:relative;">
+                  <div class="change-marker"></div>
+                  <div class="icon-container" style="background:#052e2a;"><i data-lucide="share-2" style="color:#34d399; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Export habits & stats</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row" style="position:relative;">
+                  <div class="change-marker"></div>
+                  <div class="icon-container" style="background:#292524;"><i data-lucide="book-open" style="color:#a8a29e; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Archived Habits</span>
+                  <!-- BEFORE: gray[200] badge -->
+                  <div class="badge" style="background:#374151; color:#9CA3AF;">3</div>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium CTA - BEFORE: h-11 w-11 rounded-[14px] -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">Subscription</div>
+              <div class="premium-cta" style="background:linear-gradient(135deg, #2e1f5e, #1e1b4b, #312e81); box-shadow:0 4px 16px rgba(99,102,241,0.15); position:relative;">
+                <div class="shimmer"></div>
+                <div class="change-marker"></div>
+                <div style="display:flex; align-items:center; position:relative; z-index:2;">
+                  <!-- BEFORE: 44x44 rounded-[14px] -->
+                  <div style="width:44px; height:44px; border-radius:14px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; margin-right:14px; flex-shrink:0;">
+                    <i data-lucide="zap" style="color:#fff; width:20px; height:20px;"></i>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:17px; font-weight:700; color:#E0E7FF;">Upgrade to Premium</div>
+                    <div style="font-size:13px; color:rgba(224,231,255,0.6); margin-top:2px;">Unlock sounds, reminders & more</div>
+                  </div>
+                  <div class="pro-badge" style="color:#C4B5FD;">PRO</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- App - BEFORE: Share2 used for "Share with Friends" -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">App</div>
+              <div class="settings-card" style="background:#1F2937;">
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#3d2e06;"><i data-lucide="star" style="color:#fbbf24; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Rate Chain Day</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151; position:relative;">
+                  <div class="change-marker"></div>
+                  <div class="icon-container" style="background:#052e2a;"><i data-lucide="share-2" style="color:#34d399; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Share with Friends</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#2e1f5e;"><i data-lucide="message-square" style="color:#a78bfa; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Send Feedback</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#3b0764;"><i data-lucide="sparkles" style="color:#c084fc; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">What's New</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- About - BEFORE: "Made with" INSIDE card -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">About</div>
+              <div class="settings-card" style="background:#1F2937; position:relative;">
+                <div class="change-marker"></div>
+                <div class="settings-row">
+                  <div class="icon-container" style="background:#1e1b4b;"><i data-lucide="info" style="color:#818cf8; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Version</span>
+                  <span class="row-value" style="color:#9CA3AF;">1.0.0 (1)</span>
+                </div>
+                <!-- INSIDE the card -->
+                <div class="footer-text" style="color:#9CA3AF; padding-bottom:12px;">Made with ❤️ for better habits</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div style="position: relative;">
+      <div class="comparison-label" style="background: #10B981; color: #fff;">After</div>
+      <div class="phone-frame" style="background: #111827;">
+        <div class="phone-notch"></div>
+        <div class="phone-content" style="background: #111827;">
+          <!-- Header - AFTER: px-4 (16px) matching other modals -->
+          <div style="padding: 54px 16px 16px 16px; background: #111827;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div style="width:44px; height:44px;"></div>
+              <span style="font-size:22px; font-weight:700; color:#F9FAFB; letter-spacing:-0.5px;">Settings</span>
+              <div style="width:44px; height:44px; border-radius:22px; background:#1F2937; display:flex; align-items:center; justify-content:center;">
+                <i data-lucide="x" style="color:#9CA3AF; width:24px; height:24px;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 4px 16px 24px 16px; display:flex; flex-direction:column; gap:20px;">
+
+            <!-- Preferences (unchanged) -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">Preferences</div>
+              <div class="settings-card" style="background:#1F2937;">
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#1e3a5f;"><i data-lucide="check" style="color:#38bdf8; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Checkbox style for completed habits</span>
+                  <div class="toggle on" style="background:#10B981;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#2e1f5e;"><i data-lucide="circle" style="color:#a78bfa; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Circular day markers</span>
+                  <div class="toggle off" style="background:#6B7280;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#052e2a;"><i data-lucide="droplets" style="color:#34d399; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Gradient fill for habit strength</span>
+                  <div class="toggle on" style="background:#10B981;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#0f4b55;"><i data-lucide="calendar" style="color:#22d3ee; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Sticky calendar header</span>
+                  <div class="toggle off" style="background:#6B7280;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+                <div class="settings-row" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#3d2e06;"><i data-lucide="volume-2" style="color:#fbbf24; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Play sound on habit completion</span>
+                  <div class="toggle on" style="background:#10B981;"><div class="thumb" style="background:#F9FAFB;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data - AFTER: Download icon (distinct from Share) -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">Data</div>
+              <div class="settings-card" style="background:#1F2937;">
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#1e1b4b;"><i data-lucide="arrow-up-down" style="color:#818cf8; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Sort Order</span>
+                  <span class="row-value" style="color:#9CA3AF;">Custom</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <!-- AFTER: Download icon with new teal export color -->
+                <div class="settings-row bordered diff-highlight" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#134e4a;"><i data-lucide="download" style="color:#2dd4bf; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Export habits & stats</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row diff-highlight">
+                  <div class="icon-container" style="background:#292524;"><i data-lucide="book-open" style="color:#a8a29e; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Archived Habits</span>
+                  <!-- AFTER: semantic surface color -->
+                  <div class="badge" style="background:#1F2937; color:#9CA3AF;">3</div>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Premium CTA - AFTER: h-10 w-10 rounded-xl -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">Subscription</div>
+              <div class="premium-cta diff-highlight" style="background:linear-gradient(135deg, #2e1f5e, #1e1b4b, #312e81); box-shadow:0 4px 16px rgba(99,102,241,0.15);">
+                <div class="shimmer"></div>
+                <div style="display:flex; align-items:center; position:relative; z-index:2;">
+                  <!-- AFTER: 40x40 rounded-xl (matches standard) -->
+                  <div style="width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; margin-right:16px; flex-shrink:0;">
+                    <i data-lucide="zap" style="color:#fff; width:20px; height:20px;"></i>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:17px; font-weight:700; color:#E0E7FF;">Upgrade to Premium</div>
+                    <div style="font-size:13px; color:rgba(224,231,255,0.6); margin-top:2px;">Unlock sounds, reminders & more</div>
+                  </div>
+                  <div class="pro-badge" style="color:#C4B5FD;">PRO</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- App (Share2 now unique — only here) -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">App</div>
+              <div class="settings-card" style="background:#1F2937;">
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#3d2e06;"><i data-lucide="star" style="color:#fbbf24; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Rate Chain Day</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#052e2a;"><i data-lucide="share-2" style="color:#34d399; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Share with Friends</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row bordered" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#2e1f5e;"><i data-lucide="message-square" style="color:#a78bfa; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Send Feedback</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+                <div class="settings-row" style="border-color:#374151;">
+                  <div class="icon-container" style="background:#3b0764;"><i data-lucide="sparkles" style="color:#c084fc; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">What's New</span>
+                  <i data-lucide="chevron-right" style="color:#9CA3AF; width:16px; height:16px;"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- About - AFTER: "Made with" OUTSIDE card -->
+            <div>
+              <div class="section-title" style="color:#9CA3AF; margin-bottom:8px;">About</div>
+              <div class="settings-card diff-highlight" style="background:#1F2937;">
+                <div class="settings-row">
+                  <div class="icon-container" style="background:#1e1b4b;"><i data-lucide="info" style="color:#818cf8; width:16px; height:16px;"></i></div>
+                  <span class="row-label" style="color:#F9FAFB;">Version</span>
+                  <span class="row-value" style="color:#9CA3AF;">1.0.0 (1)</span>
+                </div>
+              </div>
+              <!-- OUTSIDE the card now -->
+              <div class="footer-text" style="color:#9CA3AF; padding-top:12px;">Made with ❤️ for better habits</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div style="text-align:center; margin-top:32px; display:flex; flex-direction:column; gap:16px; align-items:center;">
+    <div style="display:flex; gap:24px; flex-wrap:wrap; justify-content:center;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:8px; height:8px; border-radius:4px; background:#f59e0b;"></div>
+        <span style="color:#a8a29e; font-size:13px;">Changed element (Before)</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div style="width:24px; height:16px; border-radius:8px; outline:2px solid rgba(245,158,11,0.4);"></div>
+        <span style="color:#a8a29e; font-size:13px;">Highlighted change (After)</span>
+      </div>
+    </div>
+
+    <div style="max-width:600px; background:#1F2937; border-radius:16px; padding:20px; text-align:left;">
+      <h3 style="color:#F9FAFB; font-size:15px; font-weight:700; margin-bottom:12px;">Changes Summary</h3>
+      <div style="display:grid; gap:8px; font-size:13px; color:#9CA3AF;">
+        <div><span style="color:#10B981;">1.</span> Header padding: px-5 → px-4 (matches all modals)</div>
+        <div><span style="color:#10B981;">2.</span> Export icon: Share2 → Download (no more duplicate)</div>
+        <div><span style="color:#10B981;">3.</span> "Made with ❤️" moved outside card</div>
+        <div><span style="color:#10B981;">4.</span> SortPicker: hardcoded colors → theme tokens</div>
+        <div><span style="color:#10B981;">5.</span> SortPicker: check #22c55e → theme primary[500]</div>
+        <div><span style="color:#10B981;">6.</span> Reminders: inline styles → NativeWind classes</div>
+        <div><span style="color:#10B981;">7.</span> Premium CTA icon: 44×44 → 40×40 (standard)</div>
+        <div><span style="color:#10B981;">8.</span> Badge bg: gray[200] → semantic surface</div>
+        <div><span style="color:#10B981;">9.</span> No duplicate icons between Data & App</div>
+      </div>
+    </div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

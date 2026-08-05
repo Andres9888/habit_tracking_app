@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive v4 — Combined (Recommended)</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'DM Sans',sans-serif; background:#E8E4E0; min-height:100vh; display:flex; justify-content:center; }
+  .viewport { width:390px; min-height:100vh; background:#F5F1ED; position:relative; overflow-y:auto; overflow-x:hidden; }
+
+  /* Header — Back + Select (v4.5 tweak) */
+  .sticky-header { position:sticky; top:0; z-index:50; background:#F5F1ED; padding:16px 20px 14px; border-bottom:1px solid transparent; transition:border-color 0.2s, box-shadow 0.2s; }
+  .sticky-header.scrolled { border-bottom-color:#DDD8D2; box-shadow:0 2px 8px rgba(45,42,38,0.04); }
+  .header-row { display:flex; align-items:center; justify-content:space-between; }
+  .header-icon-btn { width:36px; height:36px; border-radius:10px; background:rgba(0,0,0,0.04); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#2D2A26; transition:background 0.15s; }
+  .header-icon-btn:hover { background:rgba(0,0,0,0.08); }
+  .select-btn { font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; color:#059669; background:transparent; border:none; cursor:pointer; padding:8px 10px; border-radius:8px; transition:background 0.15s; }
+  .select-btn:hover { background:rgba(5,150,105,0.08); }
+  .select-btn.cancel { color:#6E6660; }
+  .page-title { font-family:'Literata',serif; font-size:24px; font-weight:700; color:#2D2A26; line-height:1.25; letter-spacing:-0.3px; margin-top:8px; }
+  .page-subtitle { font-size:14px; color:#6E6660; font-weight:400; margin-top:4px; letter-spacing:-0.1px; }
+
+  /* Rationale banner */
+  .rationale { background:#FFFBEE; border:1px solid #F0E5B8; border-radius:12px; margin:12px 20px 16px; padding:10px 12px; font-size:12px; color:#7A6B2E; line-height:1.45; }
+  .rationale strong { color:#5C5120; font-weight:600; }
+  .rationale ul { margin:4px 0 0 16px; }
+  .rationale li { margin-top:2px; }
+
+  /* Proactive lock banner (v4.4 tweak) — hidden by default, shown with toggle */
+  .limit-banner { display:none; margin:0 20px 14px; padding:12px 14px; background:rgba(217,119,6,0.08); border:1px solid rgba(217,119,6,0.25); border-radius:14px; font-size:13px; color:#7A5A1E; line-height:1.4; align-items:flex-start; gap:10px; }
+  .limit-banner.on { display:flex; }
+  .limit-banner .lock-icon { width:28px; height:28px; border-radius:8px; background:rgba(217,119,6,0.15); color:#D97706; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .limit-banner .body { flex:1; }
+  .limit-banner strong { color:#5C4214; font-weight:600; }
+  .upgrade-btn { background:#D97706; color:#fff; border:none; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; padding:6px 12px; border-radius:999px; cursor:pointer; flex-shrink:0; transition:background 0.2s; white-space:nowrap; }
+  .upgrade-btn:hover { background:#B45309; }
+
+  /* Lock-state toggle */
+  .state-toggle { display:flex; gap:8px; margin:0 20px 14px; align-items:center; padding:8px 10px; background:#F0ECE6; border-radius:10px; font-size:12px; color:#6E6660; }
+  .state-toggle label { cursor:pointer; display:flex; align-items:center; gap:6px; }
+  .state-toggle input { accent-color:#D97706; }
+
+  /* Cards (v4.1 style — asymmetric CTAs) */
+  .habit-card { background:#FFFFFF; border-radius:20px; margin:0 20px 12px; padding:18px 18px 16px 22px; box-shadow:0 2px 8px rgba(45,42,38,0.05); position:relative; overflow:hidden; animation:cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; transition:border-color 0.2s, background 0.2s; border:1.5px solid transparent; }
+  .habit-card.removing { animation:cardOut 0.35s ease-out forwards; pointer-events:none; }
+  @keyframes cardIn { from { opacity:0; transform:translateY(12px) scale(0.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+  @keyframes cardOut { to { opacity:0; transform:translateX(40px); } }
+  .habit-card::before { content:''; position:absolute; left:0; top:0; bottom:0; width:4px; border-radius:20px 0 0 20px; background:var(--accent,#059669); }
+
+  /* Selection state (v4.5) */
+  .habit-card.selected { border-color:rgba(5,150,105,0.40); background:rgba(5,150,105,0.04); }
+  .checkbox { display:none; width:24px; height:24px; border-radius:50%; border:2px solid #DDD8D2; background:#fff; flex-shrink:0; margin-right:10px; align-items:center; justify-content:center; transition:background 0.15s, border-color 0.15s; }
+  .selection-mode .checkbox { display:flex; }
+  .habit-card.selected .checkbox { background:#059669; border-color:#059669; color:#fff; }
+
+  .card-header { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+  .habit-emoji { width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+  .habit-meta { flex:1; min-width:0; }
+  .habit-name { font-size:16px; font-weight:600; color:#2D2A26; line-height:1.25; letter-spacing:-0.1px; }
+  .habit-date { font-size:12.5px; color:#9CA3AF; margin-top:2px; }
+
+  /* Small delete icon — v4.1 asymmetric CTA */
+  .delete-icon-btn { width:32px; height:32px; border-radius:8px; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#C4BCB3; transition:background 0.15s, color 0.15s; flex-shrink:0; }
+  .delete-icon-btn:hover { background:#FDEBEB; color:#B53030; }
+  .delete-icon-btn.confirming { background:#B53030; color:#fff; }
+  .selection-mode .delete-icon-btn { display:none; }
+
+  .badges { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; padding-left:2px; }
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:4px 9px; border-radius:8px; font-size:12px; font-weight:500; }
+
+  /* Resume — big primary (v4.1) */
+  .resume-primary { width:100%; height:46px; border-radius:12px; background:#059669; color:#fff; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px; position:relative; overflow:hidden; transition:background 0.2s, transform 0.15s; box-shadow:0 2px 6px rgba(5,150,105,0.25); }
+  .resume-primary:hover { background:#047857; }
+  .resume-primary:active { transform:scale(0.985); }
+  .resume-primary .shimmer { position:absolute; top:0; left:-100%; width:60%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent); animation:shimmer 2.6s infinite; }
+  @keyframes shimmer { 0%{left:-60%;} 100%{left:160%;} }
+  .resume-primary.done { background:#047857; pointer-events:none; }
+
+  /* Locked state (v4.4) */
+  .locked .resume-primary { background:#EDE8E2; color:#6E6660; box-shadow:none; }
+  .locked .resume-primary:hover { background:#E3DED7; }
+  .locked .resume-primary .shimmer { display:none; }
+
+  /* Hide Resume button in selection mode */
+  .selection-mode .resume-primary { display:none; }
+
+  /* Bottom batch action bar (v4.5) */
+  .batch-bar { position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:390px; padding:14px 20px 22px; background:rgba(245,241,237,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid #DDD8D2; display:none; align-items:center; gap:10px; z-index:60; }
+  .batch-bar.on { display:flex; animation:slideUp 0.25s ease-out; }
+  @keyframes slideUp { from { transform:translateX(-50%) translateY(100%); } to { transform:translateX(-50%) translateY(0); } }
+  .batch-cancel { width:40px; height:40px; border-radius:10px; background:rgba(0,0,0,0.05); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#2D2A26; }
+  .batch-cancel:hover { background:rgba(0,0,0,0.1); }
+  .batch-count { flex:1; font-size:14px; font-weight:600; color:#2D2A26; text-align:center; }
+  .batch-restore { height:40px; padding:0 18px; border-radius:999px; background:#059669; color:#fff; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; border:none; cursor:pointer; display:flex; align-items:center; gap:6px; }
+  .batch-restore:hover { background:#047857; }
+  .batch-restore:disabled { background:#DDD8D2; color:#9C9488; cursor:not-allowed; }
+  .batch-delete { width:40px; height:40px; border-radius:10px; background:#FDEBEB; color:#B53030; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .batch-delete:hover { background:#F9D1D1; }
+  .batch-delete:disabled { background:#F5F1ED; color:#C4BCB3; cursor:not-allowed; }
+
+  /* Danger zone footer (v4.10) */
+  .danger-divider { display:flex; align-items:center; gap:10px; margin:28px 20px 14px; }
+  .danger-divider .line { flex:1; height:1px; background:#DDD8D2; }
+  .danger-divider .label { font-size:11px; font-weight:700; color:#9CA3AF; letter-spacing:0.14em; text-transform:uppercase; }
+  .danger-card { background:#FDEBEB; border:1px solid #F5C7C7; border-radius:16px; margin:0 20px 20px; padding:16px; }
+  .danger-title { font-size:14px; font-weight:600; color:#B53030; display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+  .danger-caption { font-size:13px; color:#7A4343; line-height:1.5; margin-bottom:12px; }
+  .danger-row { display:flex; justify-content:flex-end; }
+  .danger-btn { padding:8px 14px; border-radius:10px; border:1px solid #B53030; background:#fff; color:#B53030; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; transition:background 0.15s, color 0.15s; }
+  .danger-btn:hover { background:#B53030; color:#fff; }
+  .danger-confirm { display:none; align-items:center; gap:8px; }
+  .danger-confirm.on { display:flex; }
+  .danger-confirm-text { font-size:12.5px; color:#7A4343; flex:1; }
+  .danger-confirm-no { padding:6px 12px; border-radius:8px; background:#F5F1ED; color:#6E6660; font-size:12px; font-weight:600; border:none; cursor:pointer; }
+  .danger-confirm-yes { padding:6px 12px; border-radius:8px; background:#B53030; color:#fff; font-size:12px; font-weight:600; border:none; cursor:pointer; }
+  .danger-confirm-yes:hover { background:#9B2121; }
+  .danger-card.hide { display:none; }
+  .danger-divider.hide { display:none; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:88px; left:50%; transform:translateX(-50%) translateY(20px); background:#059669; color:#fff; font-size:14px; font-weight:600; padding:10px 18px; border-radius:999px; box-shadow:0 6px 20px rgba(5,150,105,0.35); opacity:0; transition:opacity 0.3s, transform 0.3s; z-index:100; display:flex; align-items:center; gap:6px; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .legend-chips { display:flex; gap:4px; flex-wrap:wrap; margin-top:6px; }
+  .legend-chip { font-size:10px; font-weight:600; color:#5C5120; background:rgba(217,119,6,0.12); padding:2px 7px; border-radius:999px; letter-spacing:0.03em; }
+</style>
+</head>
+<body>
+<div class="viewport" id="viewport">
+
+  <div class="sticky-header" id="stickyHeader">
+    <div class="header-row">
+      <button class="header-icon-btn" aria-label="Back"><i data-lucide="arrow-left" style="width:20px;height:20px;"></i></button>
+      <button class="select-btn" id="selectBtn" onclick="toggleSelectionMode()">Select</button>
+    </div>
+    <h1 class="page-title">Archived Habits</h1>
+    <p class="page-subtitle" id="subtitle">5 habits archived · tap Resume to bring them back</p>
+  </div>
+
+  <div class="rationale">
+    <strong>Combined mock — recommended implementation.</strong> This is what ships if we greenlight my top picks:
+    <ul>
+      <li><b>v4.1</b> — Big green Resume primary, tiny delete icon (asymmetric CTAs)</li>
+      <li><b>v4.4</b> — Proactive free-tier lock (toggle below to preview)</li>
+      <li><b>v4.5</b> — Header "Select" button unlocks existing batch feature</li>
+      <li><b>v4.10</b> — Danger-zone footer unlocks existing "Delete all"</li>
+    </ul>
+    <div class="legend-chips" style="margin-top:8px;">
+      <span class="legend-chip">3 of 4 wire up code that already exists</span>
+    </div>
+  </div>
+
+  <div class="state-toggle">
+    <label><input type="checkbox" id="lockToggle" onchange="toggleLockState(this.checked)"> Preview at-limit state (v4.4)</label>
+  </div>
+
+  <div class="limit-banner" id="limitBanner">
+    <div class="lock-icon"><i data-lucide="lock" style="width:16px;height:16px;"></i></div>
+    <div class="body">
+      You're at the free-tier limit of <strong>3 active habits</strong>. Upgrade to restore, or delete an active habit to make room.
+    </div>
+    <button class="upgrade-btn">Upgrade</button>
+  </div>
+
+  <div id="list">
+
+    <div class="habit-card" data-id="1" style="--accent:#7C3AED;">
+      <div class="card-header">
+        <div class="checkbox"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">🧘</div>
+        <div class="habit-meta">
+          <div class="habit-name">Morning Meditation</div>
+          <div class="habit-date">Archived today</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(124,58,237,0.10);color:#7C3AED;"><i data-lucide="zap" style="width:12px;height:12px;"></i>72%</div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;"><i data-lucide="flame" style="width:12px;height:12px;"></i>14d</div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><i data-lucide="check-circle" style="width:12px;height:12px;"></i>156</div>
+      </div>
+      <button class="resume-primary" onclick="resumeHabit(event,this,'Morning Meditation')">
+        <span class="shimmer"></span>
+        <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+        <span class="resume-label">Resume Habit</span>
+      </button>
+    </div>
+
+    <div class="habit-card" data-id="2" style="--accent:#059669;">
+      <div class="card-header">
+        <div class="checkbox"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div class="habit-emoji" style="background:rgba(5,150,105,0.10);">📖</div>
+        <div class="habit-meta">
+          <div class="habit-name">Read 30 Minutes</div>
+          <div class="habit-date">5 days ago</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><i data-lucide="zap" style="width:12px;height:12px;"></i>58%</div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;"><i data-lucide="flame" style="width:12px;height:12px;"></i>7d</div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><i data-lucide="check-circle" style="width:12px;height:12px;"></i>89</div>
+      </div>
+      <button class="resume-primary" onclick="resumeHabit(event,this,'Read 30 Minutes')">
+        <span class="shimmer"></span>
+        <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+        <span class="resume-label">Resume Habit</span>
+      </button>
+    </div>
+
+    <div class="habit-card" data-id="3" style="--accent:#0D9488;">
+      <div class="card-header">
+        <div class="checkbox"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div class="habit-emoji" style="background:rgba(13,148,136,0.10);">🧊</div>
+        <div class="habit-meta">
+          <div class="habit-name">Cold Shower</div>
+          <div class="habit-date">20 days ago</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(13,148,136,0.10);color:#0D9488;"><i data-lucide="zap" style="width:12px;height:12px;"></i>35%</div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;"><i data-lucide="flame" style="width:12px;height:12px;"></i>3d</div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><i data-lucide="check-circle" style="width:12px;height:12px;"></i>24</div>
+      </div>
+      <button class="resume-primary" onclick="resumeHabit(event,this,'Cold Shower')">
+        <span class="shimmer"></span>
+        <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+        <span class="resume-label">Resume Habit</span>
+      </button>
+    </div>
+
+    <div class="habit-card" data-id="4" style="--accent:#7C3AED;">
+      <div class="card-header">
+        <div class="checkbox"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">✍️</div>
+        <div class="habit-meta">
+          <div class="habit-name">Daily Journal</div>
+          <div class="habit-date">34 days ago</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(124,58,237,0.10);color:#7C3AED;"><i data-lucide="zap" style="width:12px;height:12px;"></i>85%</div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;"><i data-lucide="flame" style="width:12px;height:12px;"></i>42d</div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><i data-lucide="check-circle" style="width:12px;height:12px;"></i>312</div>
+      </div>
+      <button class="resume-primary" onclick="resumeHabit(event,this,'Daily Journal')">
+        <span class="shimmer"></span>
+        <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+        <span class="resume-label">Resume Habit</span>
+      </button>
+    </div>
+
+    <div class="habit-card" data-id="5" style="--accent:#E11D48;">
+      <div class="card-header">
+        <div class="checkbox"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+        <div class="habit-emoji" style="background:rgba(225,29,72,0.10);">💪</div>
+        <div class="habit-meta">
+          <div class="habit-name">Push-ups</div>
+          <div class="habit-date">67 days ago</div>
+        </div>
+        <button class="delete-icon-btn" onclick="deleteHabit(event,this)" aria-label="Delete"><i data-lucide="trash-2" style="width:16px;height:16px;"></i></button>
+      </div>
+      <div class="badges">
+        <div class="badge" style="background:rgba(225,29,72,0.10);color:#E11D48;"><i data-lucide="zap" style="width:12px;height:12px;"></i>12%</div>
+        <div class="badge" style="background:rgba(217,119,6,0.10);color:#D97706;"><i data-lucide="flame" style="width:12px;height:12px;"></i>1d</div>
+        <div class="badge" style="background:rgba(5,150,105,0.10);color:#059669;"><i data-lucide="check-circle" style="width:12px;height:12px;"></i>8</div>
+      </div>
+      <button class="resume-primary" onclick="resumeHabit(event,this,'Push-ups')">
+        <span class="shimmer"></span>
+        <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+        <span class="resume-label">Resume Habit</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Danger zone (v4.10) -->
+  <div class="danger-divider" id="dangerDivider">
+    <div class="line"></div>
+    <div class="label">Danger zone</div>
+    <div class="line"></div>
+  </div>
+  <div class="danger-card" id="dangerCard">
+    <div class="danger-title">
+      <i data-lucide="alert-triangle" style="width:16px;height:16px;"></i>
+      Clear all archived habits
+    </div>
+    <div class="danger-caption">This permanently deletes all <span id="dangerCount">5</span> archived habits and their tracking history. Cannot be undone.</div>
+    <div class="danger-row" id="dangerRow">
+      <button class="danger-btn" onclick="startClearAll()">Delete all (<span id="dangerBtnCount">5</span>)</button>
+    </div>
+    <div class="danger-confirm" id="dangerConfirm">
+      <div class="danger-confirm-text">Delete <span id="dangerConfirmCount">5</span> habits forever?</div>
+      <button class="danger-confirm-no" onclick="cancelClearAll()">Cancel</button>
+      <button class="danger-confirm-yes" onclick="confirmClearAll()">Yes, delete all</button>
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+</div>
+
+<!-- Batch action bar (v4.5) -->
+<div class="batch-bar" id="batchBar">
+  <button class="batch-cancel" onclick="toggleSelectionMode()" aria-label="Cancel"><i data-lucide="x" style="width:18px;height:18px;"></i></button>
+  <div class="batch-count"><span id="batchCount">0</span> selected</div>
+  <button class="batch-restore" id="batchRestoreBtn" onclick="batchRestore()" disabled>
+    <i data-lucide="rotate-ccw" style="width:15px;height:15px;"></i>
+    Restore
+  </button>
+  <button class="batch-delete" id="batchDeleteBtn" onclick="batchDelete()" disabled aria-label="Delete"><i data-lucide="trash-2" style="width:18px;height:18px;"></i></button>
+</div>
+
+<div class="toast" id="toast">
+  <i data-lucide="check-circle" style="width:16px;height:16px;"></i>
+  <span id="toastText">Restored!</span>
+</div>
+
+<script>
+  lucide.createIcons();
+  const viewport = document.getElementById('viewport');
+  const stickyHeader = document.getElementById('stickyHeader');
+  viewport.addEventListener('scroll', () => stickyHeader.classList.toggle('scrolled', viewport.scrollTop > 8));
+
+  let selectionMode = false;
+  let selectedIds = new Set();
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastText').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  function updateSubtitle() {
+    const n = document.querySelectorAll('.habit-card:not(.removing)').length;
+    document.getElementById('subtitle').textContent = n === 0
+      ? 'No archived habits' : n + ' habit' + (n===1?'':'s') + ' archived · tap Resume to bring ' + (n===1?'it':'them') + ' back';
+    document.getElementById('dangerCount').textContent = n;
+    document.getElementById('dangerBtnCount').textContent = n;
+    document.getElementById('dangerConfirmCount').textContent = n;
+    if (n === 0) {
+      document.getElementById('dangerCard').classList.add('hide');
+      document.getElementById('dangerDivider').classList.add('hide');
+    }
+  }
+
+  // v4.4 — lock state toggle
+  function toggleLockState(on) {
+    document.getElementById('limitBanner').classList.toggle('on', on);
+    document.querySelectorAll('.habit-card').forEach(c => c.classList.toggle('locked', on));
+    document.querySelectorAll('.resume-primary').forEach(btn => {
+      if (on) {
+        btn.innerHTML = '<i data-lucide="lock" style="width:16px;height:16px;"></i><span class="resume-label">Upgrade to restore</span>';
+      } else {
+        btn.innerHTML = '<span class="shimmer"></span><i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i><span class="resume-label">Resume Habit</span>';
+      }
+    });
+    lucide.createIcons();
+  }
+
+  function resumeHabit(event, btn, name) {
+    event.stopPropagation();
+    if (document.getElementById('lockToggle').checked) {
+      showToast('Upgrade required — tap the banner above');
+      return;
+    }
+    btn.classList.add('done');
+    btn.innerHTML = '<i data-lucide="check" style="width:17px;height:17px;"></i> Restored!';
+    lucide.createIcons();
+    const card = btn.closest('.habit-card');
+    setTimeout(() => {
+      card.classList.add('removing');
+      showToast(name + ' restored!');
+      setTimeout(() => { card.remove(); updateSubtitle(); }, 350);
+    }, 500);
+  }
+
+  function deleteHabit(event, btn) {
+    event.stopPropagation();
+    if (!btn.classList.contains('confirming')) {
+      btn.classList.add('confirming');
+      btn.innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i>';
+      lucide.createIcons();
+      setTimeout(() => {
+        if (btn.classList.contains('confirming')) {
+          btn.classList.remove('confirming');
+          btn.innerHTML = '<i data-lucide="trash-2" style="width:16px;height:16px;"></i>';
+          lucide.createIcons();
+        }
+      }, 2500);
+      return;
+    }
+    const card = btn.closest('.habit-card');
+    card.classList.add('removing');
+    setTimeout(() => { card.remove(); updateSubtitle(); }, 350);
+  }
+
+  // v4.5 — Selection mode
+  function toggleSelectionMode() {
+    selectionMode = !selectionMode;
+    selectedIds.clear();
+    document.body.classList.toggle('selection-mode', selectionMode);
+    document.getElementById('batchBar').classList.toggle('on', selectionMode);
+    document.querySelectorAll('.habit-card').forEach(c => c.classList.remove('selected'));
+    updateBatchCount();
+    const btn = document.getElementById('selectBtn');
+    btn.textContent = selectionMode ? 'Cancel' : 'Select';
+    btn.classList.toggle('cancel', selectionMode);
+    // wire up card taps while in selection mode
+    document.querySelectorAll('.habit-card').forEach(c => {
+      c.onclick = selectionMode ? (e) => {
+        if (e.target.closest('.delete-icon-btn') || e.target.closest('.resume-primary')) return;
+        const id = c.dataset.id;
+        if (selectedIds.has(id)) { selectedIds.delete(id); c.classList.remove('selected'); }
+        else { selectedIds.add(id); c.classList.add('selected'); }
+        updateBatchCount();
+      } : null;
+    });
+  }
+  function updateBatchCount() {
+    const n = selectedIds.size;
+    document.getElementById('batchCount').textContent = n;
+    document.getElementById('batchRestoreBtn').disabled = n === 0;
+    document.getElementById('batchDeleteBtn').disabled = n === 0;
+  }
+  function batchRestore() {
+    const count = selectedIds.size;
+    selectedIds.forEach(id => {
+      const c = document.querySelector('.habit-card[data-id="'+id+'"]');
+      if (c) { c.classList.add('removing'); setTimeout(() => c.remove(), 350); }
+    });
+    setTimeout(() => { toggleSelectionMode(); updateSubtitle(); showToast(count + ' habits restored!'); }, 400);
+  }
+  function batchDelete() {
+    const count = selectedIds.size;
+    selectedIds.forEach(id => {
+      const c = document.querySelector('.habit-card[data-id="'+id+'"]');
+      if (c) { c.classList.add('removing'); setTimeout(() => c.remove(), 350); }
+    });
+    setTimeout(() => { toggleSelectionMode(); updateSubtitle(); showToast(count + ' habits deleted'); }, 400);
+  }
+
+  // Initialize selection click handlers as no-op
+  document.querySelectorAll('.habit-card').forEach(c => c.onclick = null);
+
+  // v4.10 — Clear all
+  function startClearAll() {
+    document.getElementById('dangerRow').style.display = 'none';
+    document.getElementById('dangerConfirm').classList.add('on');
+    setTimeout(() => cancelClearAll(), 4000);
+  }
+  function cancelClearAll() {
+    document.getElementById('dangerRow').style.display = '';
+    document.getElementById('dangerConfirm').classList.remove('on');
+  }
+  function confirmClearAll() {
+    const cards = document.querySelectorAll('.habit-card:not(.removing)');
+    cards.forEach((c, i) => setTimeout(() => {
+      c.classList.add('removing');
+      setTimeout(() => c.remove(), 350);
+    }, i * 60));
+    setTimeout(() => { updateSubtitle(); showToast('All archived habits deleted'); cancelClearAll(); }, cards.length * 60 + 400);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design #9: Restore Last Hero + Compact List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #F5F1ED !important;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .header-title {
+      font-family: 'Literata', serif !important;
+    }
+
+    /* Hero card */
+    .hero-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .hero-card.removing {
+      transform: translateY(-40px);
+      opacity: 0;
+    }
+
+    .hero-inner {
+      background: #F0FDF4;
+      border-radius: 20px;
+    }
+
+    /* Stat badge */
+    .stat-badge {
+      background: #FFFFFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #374151;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .stat-badge .stat-label {
+      color: #9CA3AF;
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    /* Resume button */
+    .resume-btn {
+      background: #059669 !important;
+      color: #FFFFFF !important;
+      border: none;
+      border-radius: 12px;
+      height: 48px;
+      width: 100%;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .resume-btn:hover {
+      background: #047857 !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35);
+    }
+    .resume-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 6px rgba(5, 150, 105, 0.2);
+    }
+
+    /* Delete link */
+    .delete-link {
+      color: #B53030;
+      font-size: 13px;
+      font-weight: 400;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif !important;
+      transition: all 0.2s ease;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .delete-link:hover {
+      background: #FEF2F2;
+      color: #991B1B;
+    }
+
+    /* Inline confirm */
+    .inline-confirm {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #6B7280;
+      animation: fadeSlideIn 0.25s ease-out;
+    }
+    .inline-confirm.visible {
+      display: flex;
+    }
+    .confirm-yes {
+      color: #B53030;
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif !important;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .confirm-yes:hover { background: #FEF2F2; }
+    .confirm-cancel {
+      color: #6B7280;
+      font-weight: 500;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif !important;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .confirm-cancel:hover { background: #F3F4F6; }
+
+    /* Section label */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #9CA3AF;
+    }
+
+    /* Compact list */
+    .compact-row {
+      background: transparent;
+      padding: 14px 0;
+      border-bottom: 1px solid #E8E3DE;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .compact-row:last-child { border-bottom: none; }
+    .compact-row:hover {
+      background: rgba(255,255,255,0.6);
+      margin: 0 -16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+    }
+    .compact-row.removing {
+      transform: translateX(100px);
+      opacity: 0;
+    }
+    .compact-row.promoting {
+      transform: translateY(-20px) scale(1.02);
+      opacity: 0;
+    }
+
+    .compact-emoji {
+      font-size: 28px;
+      line-height: 1;
+      flex-shrink: 0;
+      width: 36px;
+      text-align: center;
+    }
+
+    .compact-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .compact-name {
+      font-weight: 500;
+      font-size: 15px;
+      color: #1F2937;
+      line-height: 1.3;
+    }
+    .compact-strength {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #6B7280;
+      background: #F3F4F6;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-top: 3px;
+    }
+
+    .compact-time {
+      font-size: 12px;
+      color: #9CA3AF;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .compact-actions {
+      display: flex;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .icon-btn.restore {
+      color: #059669;
+    }
+    .icon-btn.restore:hover {
+      background: #F0FDF4;
+      color: #047857;
+    }
+    .icon-btn.delete {
+      color: #B53030;
+    }
+    .icon-btn.delete:hover {
+      background: #FEF2F2;
+      color: #991B1B;
+    }
+
+    /* Row inline confirm */
+    .row-confirm {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: #FFFFFF;
+      padding: 6px 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      font-size: 12px;
+      animation: fadeSlideIn 0.2s ease-out;
+      z-index: 2;
+    }
+    .row-confirm.visible { display: flex; }
+
+    /* Particle burst */
+    .particle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    /* Empty state */
+    .empty-hero {
+      text-align: center;
+      padding: 40px 24px;
+      color: #9CA3AF;
+      animation: fadeSlideIn 0.4s ease-out;
+    }
+    .empty-hero .empty-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    /* Animations */
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes heroEntrance {
+      from { opacity: 0; transform: translateY(30px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes countPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .hero-animate-in {
+      animation: heroEntrance 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .count-pulse {
+      animation: countPulse 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Header -->
+    <div style="padding: 56px 24px 16px; display: flex; align-items: center; gap: 12px;">
+      <button onclick="window.history.back()" style="background: none; border: none; cursor: pointer; color: #1F2937; display: flex; align-items: center; padding: 4px;">
+        <i data-lucide="arrow-left" style="width: 22px; height: 22px;"></i>
+      </button>
+      <h1 class="header-title" style="font-size: 22px; font-weight: 600; color: #1F2937; flex: 1;">Archived Habits</h1>
+      <span id="totalCount" style="background: #E8E3DE; color: #6B7280; font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 20px; transition: all 0.3s;">4</span>
+    </div>
+
+    <!-- Hero Section -->
+    <div style="padding: 0 20px;">
+      <div class="section-label" style="margin-bottom: 10px; padding-left: 4px;">Most Recently Archived</div>
+      <div id="heroContainer">
+        <div class="hero-card hero-animate-in" id="heroCard">
+          <div class="hero-inner" style="padding: 28px 24px 24px;">
+            <!-- Large emoji -->
+            <div style="text-align: center; margin-bottom: 12px;">
+              <span id="heroEmoji" style="font-size: 56px; line-height: 1;">&#x270D;&#xFE0F;</span>
+            </div>
+            <!-- Habit name -->
+            <div id="heroName" style="text-align: center; font-size: 20px; font-weight: 700; color: #1F2937; margin-bottom: 4px;">Daily Journal</div>
+            <!-- Archived time -->
+            <div id="heroTime" style="text-align: center; font-size: 13px; color: #6B7280; margin-bottom: 18px;">Archived 3 days ago</div>
+            <!-- Stat row -->
+            <div id="heroStats" style="display: flex; justify-content: center; gap: 8px; margin-bottom: 22px; flex-wrap: wrap;">
+              <div class="stat-badge">
+                <span class="stat-label">Strength</span>
+                <span style="color: #059669; font-weight: 600;">85%</span>
+              </div>
+              <div class="stat-badge">
+                <span style="font-size: 13px;">&#x1F525;</span>
+                <span style="font-weight: 600;">67d</span>
+              </div>
+              <div class="stat-badge">
+                <span style="font-size: 13px;">&#x2713;</span>
+                <span style="font-weight: 600;">312</span>
+              </div>
+            </div>
+            <!-- Resume button -->
+            <button class="resume-btn" id="heroResumeBtn" onclick="resumeHero()">
+              <i data-lucide="rotate-ccw" style="width: 18px; height: 18px;"></i>
+              Resume This Habit
+            </button>
+            <!-- Delete link / confirm -->
+            <div style="text-align: center; margin-top: 10px;">
+              <button class="delete-link" id="heroDeleteLink" onclick="showHeroDeleteConfirm()">Delete instead</button>
+              <div class="inline-confirm" id="heroDeleteConfirm">
+                <span style="color: #6B7280; font-size: 13px;">Delete permanently?</span>
+                <button class="confirm-yes" onclick="deleteHero()">Yes, delete</button>
+                <button class="confirm-cancel" onclick="hideHeroDeleteConfirm()">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compact List -->
+    <div style="padding: 28px 20px 40px;">
+      <div class="section-label" style="margin-bottom: 8px; padding-left: 4px;">Older Archives</div>
+      <div id="compactList" style="padding: 0 4px;">
+        <!-- Row 1 -->
+        <div class="compact-row" id="row-1" data-emoji="&#x1F976;" data-name="Cold Shower" data-time="11 days ago" data-strength="35">
+          <span class="compact-emoji">&#x1F976;</span>
+          <div class="compact-info">
+            <div class="compact-name">Cold Shower</div>
+            <div class="compact-strength">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#9CA3AF" stroke-width="1.5" /><circle cx="5" cy="5" r="4" stroke="#059669" stroke-width="1.5" stroke-dasharray="25.13" stroke-dashoffset="16.33" transform="rotate(-90 5 5)" /></svg>
+              35%
+            </div>
+          </div>
+          <span class="compact-time">11 days ago</span>
+          <div class="compact-actions" id="actions-1">
+            <button class="icon-btn restore" onclick="restoreRow('row-1')" title="Restore">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+            </button>
+            <button class="icon-btn delete" onclick="showRowDeleteConfirm('row-1')" title="Delete">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+          <div class="row-confirm" id="confirm-1">
+            <span style="color: #6B7280;">Sure?</span>
+            <button class="confirm-yes" onclick="deleteRow('row-1')" style="font-size: 12px; padding: 2px 8px;">Yes</button>
+            <button class="confirm-cancel" onclick="hideRowDeleteConfirm('row-1')" style="font-size: 12px; padding: 2px 8px;">No</button>
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="compact-row" id="row-2" data-emoji="&#x1F4D6;" data-name="Read 30 Minutes" data-time="20 days ago" data-strength="58">
+          <span class="compact-emoji">&#x1F4D6;</span>
+          <div class="compact-info">
+            <div class="compact-name">Read 30 Minutes</div>
+            <div class="compact-strength">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#9CA3AF" stroke-width="1.5" /><circle cx="5" cy="5" r="4" stroke="#059669" stroke-width="1.5" stroke-dasharray="25.13" stroke-dashoffset="10.55" transform="rotate(-90 5 5)" /></svg>
+              58%
+            </div>
+          </div>
+          <span class="compact-time">20 days ago</span>
+          <div class="compact-actions" id="actions-2">
+            <button class="icon-btn restore" onclick="restoreRow('row-2')" title="Restore">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+            </button>
+            <button class="icon-btn delete" onclick="showRowDeleteConfirm('row-2')" title="Delete">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+          <div class="row-confirm" id="confirm-2">
+            <span style="color: #6B7280;">Sure?</span>
+            <button class="confirm-yes" onclick="deleteRow('row-2')" style="font-size: 12px; padding: 2px 8px;">Yes</button>
+            <button class="confirm-cancel" onclick="hideRowDeleteConfirm('row-2')" style="font-size: 12px; padding: 2px 8px;">No</button>
+          </div>
+        </div>
+
+        <!-- Row 3 -->
+        <div class="compact-row" id="row-3" data-emoji="&#x1F9D8;" data-name="Morning Meditation" data-time="34 days ago" data-strength="72">
+          <span class="compact-emoji">&#x1F9D8;</span>
+          <div class="compact-info">
+            <div class="compact-name">Morning Meditation</div>
+            <div class="compact-strength">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="#9CA3AF" stroke-width="1.5" /><circle cx="5" cy="5" r="4" stroke="#059669" stroke-width="1.5" stroke-dasharray="25.13" stroke-dashoffset="7.04" transform="rotate(-90 5 5)" /></svg>
+              72%
+            </div>
+          </div>
+          <span class="compact-time">34 days ago</span>
+          <div class="compact-actions" id="actions-3">
+            <button class="icon-btn restore" onclick="restoreRow('row-3')" title="Restore">
+              <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+            </button>
+            <button class="icon-btn delete" onclick="showRowDeleteConfirm('row-3')" title="Delete">
+              <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+          <div class="row-confirm" id="confirm-3">
+            <span style="color: #6B7280;">Sure?</span>
+            <button class="confirm-yes" onclick="deleteRow('row-3')" style="font-size: 12px; padding: 2px 8px;">Yes</button>
+            <button class="confirm-cancel" onclick="hideRowDeleteConfirm('row-3')" style="font-size: 12px; padding: 2px 8px;">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Particle container -->
+  <div class="particle-container" id="particleContainer"></div>
+
+  <script>
+    // Init Lucide icons
+    document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+
+    let totalCount = 4;
+
+    function updateCount() {
+      const el = document.getElementById('totalCount');
+      el.textContent = totalCount;
+      el.classList.add('count-pulse');
+      setTimeout(() => el.classList.remove('count-pulse'), 300);
+    }
+
+    // --- Green particle burst ---
+    function spawnParticles(originX, originY) {
+      const container = document.getElementById('particleContainer');
+      const colors = ['#059669', '#10B981', '#34D399', '#6EE7B7', '#A7F3D0', '#D1FAE5'];
+      for (let i = 0; i < 24; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 4 + Math.random() * 6;
+        const angle = (Math.PI * 2 * i) / 24 + (Math.random() - 0.5) * 0.4;
+        const distance = 60 + Math.random() * 100;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+        p.style.cssText = `
+          width: ${size}px; height: ${size}px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          left: ${originX}px; top: ${originY}px;
+          opacity: 1;
+          transition: all ${0.5 + Math.random() * 0.4}s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        `;
+        container.appendChild(p);
+        requestAnimationFrame(() => {
+          p.style.transform = `translate(${dx}px, ${dy}px) scale(0.2)`;
+          p.style.opacity = '0';
+        });
+        setTimeout(() => p.remove(), 1000);
+      }
+    }
+
+    // --- Hero actions ---
+    function resumeHero() {
+      const card = document.getElementById('heroCard');
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 3);
+
+      card.classList.add('removing');
+      totalCount--;
+      updateCount();
+
+      setTimeout(() => {
+        promoteNextToHero();
+      }, 500);
+    }
+
+    function showHeroDeleteConfirm() {
+      document.getElementById('heroDeleteLink').style.display = 'none';
+      document.getElementById('heroDeleteConfirm').classList.add('visible');
+    }
+
+    function hideHeroDeleteConfirm() {
+      document.getElementById('heroDeleteLink').style.display = '';
+      document.getElementById('heroDeleteConfirm').classList.remove('visible');
+    }
+
+    function deleteHero() {
+      const card = document.getElementById('heroCard');
+      if (!card) return;
+      card.style.transition = 'all 0.4s ease';
+      card.style.transform = 'scale(0.95)';
+      card.style.opacity = '0';
+      totalCount--;
+      updateCount();
+
+      setTimeout(() => {
+        promoteNextToHero();
+      }, 400);
+    }
+
+    function promoteNextToHero() {
+      const list = document.getElementById('compactList');
+      const rows = list.querySelectorAll('.compact-row:not(.removing)');
+
+      if (rows.length === 0) {
+        // Show empty state
+        document.getElementById('heroContainer').innerHTML = `
+          <div class="empty-hero">
+            <div class="empty-icon">&#x1F389;</div>
+            <div style="font-size: 16px; font-weight: 600; color: #6B7280; margin-bottom: 4px;">All clear!</div>
+            <div style="font-size: 13px; color: #9CA3AF;">No archived habits remaining.</div>
+          </div>
+        `;
+        document.querySelector('[style*="Older Archives"]')?.parentElement?.remove();
+        return;
+      }
+
+      const nextRow = rows[0];
+      const emoji = nextRow.dataset.emoji;
+      const name = nextRow.dataset.name;
+      const time = nextRow.dataset.time;
+      const strength = nextRow.dataset.strength;
+
+      // Animate row out (promote)
+      nextRow.classList.add('promoting');
+
+      setTimeout(() => {
+        nextRow.remove();
+
+        // Build new hero
+        document.getElementById('heroContainer').innerHTML = `
+          <div class="hero-card hero-animate-in" id="heroCard">
+            <div class="hero-inner" style="padding: 28px 24px 24px;">
+              <div style="text-align: center; margin-bottom: 12px;">
+                <span id="heroEmoji" style="font-size: 56px; line-height: 1;">${emoji}</span>
+              </div>
+              <div id="heroName" style="text-align: center; font-size: 20px; font-weight: 700; color: #1F2937; margin-bottom: 4px;">${name}</div>
+              <div id="heroTime" style="text-align: center; font-size: 13px; color: #6B7280; margin-bottom: 18px;">Archived ${time}</div>
+              <div id="heroStats" style="display: flex; justify-content: center; gap: 8px; margin-bottom: 22px; flex-wrap: wrap;">
+                <div class="stat-badge">
+                  <span class="stat-label">Strength</span>
+                  <span style="color: #059669; font-weight: 600;">${strength}%</span>
+                </div>
+              </div>
+              <button class="resume-btn" id="heroResumeBtn" onclick="resumeHero()">
+                <i data-lucide="rotate-ccw" style="width: 18px; height: 18px;"></i>
+                Resume This Habit
+              </button>
+              <div style="text-align: center; margin-top: 10px;">
+                <button class="delete-link" id="heroDeleteLink" onclick="showHeroDeleteConfirm()">Delete instead</button>
+                <div class="inline-confirm" id="heroDeleteConfirm">
+                  <span style="color: #6B7280; font-size: 13px;">Delete permanently?</span>
+                  <button class="confirm-yes" onclick="deleteHero()">Yes, delete</button>
+                  <button class="confirm-cancel" onclick="hideHeroDeleteConfirm()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+
+        // Check if list is now empty
+        const remaining = list.querySelectorAll('.compact-row:not(.removing)');
+        if (remaining.length === 0) {
+          document.getElementById('compactList').closest('div[style]').querySelector('.section-label')?.remove();
+        }
+      }, 350);
+    }
+
+    // --- Compact row actions ---
+    function restoreRow(id) {
+      const row = document.getElementById(id);
+      if (!row) return;
+      const rect = row.getBoundingClientRect();
+      spawnParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+      row.classList.add('removing');
+      totalCount--;
+      updateCount();
+
+      setTimeout(() => {
+        row.remove();
+        checkEmptyList();
+      }, 350);
+    }
+
+    function showRowDeleteConfirm(id) {
+      const num = id.split('-')[1];
+      document.getElementById('actions-' + num).style.display = 'none';
+      document.getElementById('confirm-' + num).classList.add('visible');
+    }
+
+    function hideRowDeleteConfirm(id) {
+      const num = id.split('-')[1];
+      document.getElementById('actions-' + num).style.display = '';
+      document.getElementById('confirm-' + num).classList.remove('visible');
+    }
+
+    function deleteRow(id) {
+      const row = document.getElementById(id);
+      if (!row) return;
+      row.style.transition = 'all 0.3s ease';
+      row.style.opacity = '0';
+      row.style.transform = 'scaleY(0.8)';
+      row.style.marginTop = '-' + row.offsetHeight + 'px';
+      totalCount--;
+      updateCount();
+
+      setTimeout(() => {
+        row.remove();
+        checkEmptyList();
+      }, 300);
+    }
+
+    function checkEmptyList() {
+      const list = document.getElementById('compactList');
+      if (!list) return;
+      const remaining = list.querySelectorAll('.compact-row');
+      if (remaining.length === 0) {
+        list.closest('div[style*="padding"]').style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>

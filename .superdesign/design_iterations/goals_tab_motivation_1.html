@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goals tab — motivation-first — iPhone 16 Pro Max</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px 80px !important; min-height: 100vh !important;
+  }
+  h1,h2,h3,h4 { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .row-wrap { display: flex; gap: 32px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+  .phone-col { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .phone-label { font-size: 13px; color: #A39C93; letter-spacing: 0.4px; text-transform: uppercase; font-weight: 600; }
+  .phone-sub { font-size: 12px; color: #6D6761; text-align: center; max-width: 420px; line-height: 1.4; }
+
+  .phone {
+    width: 420px !important; height: 900px !important;
+    background: #F5F1ED !important; border-radius: 52px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    padding: 56px 0 0 !important; overflow-y: auto !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: space-between !important;
+    padding: 0 28px !important;
+    z-index: 10 !important; font-size: 15px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+
+  /* Modal Header */
+  .modal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 20px 6px; border-bottom: 1px solid #EBE5DE;
+  }
+  .modal-title { font-family: 'Literata', serif; font-size: 18px; font-weight: 600; color: #2D2A26; }
+  .close-btn {
+    width: 32px; height: 32px; border-radius: 16px; background: #EDEAE5;
+    display: flex; align-items: center; justify-content: center; font-size: 18px; color: #6D6761;
+  }
+
+  /* Habit head */
+  .habit-head { display: flex; align-items: center; gap: 12px; padding: 14px 20px 10px; }
+  .habit-emoji {
+    width: 48px; height: 48px; background: #059669; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+  }
+  .habit-name { font-family: 'Literata', serif; font-size: 20px; font-weight: 600; color: #2D2A26; }
+  .habit-meta { font-size: 12px; color: #6D6761; margin-top: 2px; }
+
+  /* Tabs */
+  .tabs-wrap { padding: 8px 20px 14px; }
+  .tabs {
+    background: #EDEAE5; border-radius: 12px; display: flex; padding: 4px; position: relative;
+  }
+  .tab {
+    flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 600;
+    color: #6D6761; border-radius: 9px; z-index: 2; position: relative;
+  }
+  .tab.active { color: #2D2A26; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+
+  /* Shared card */
+  .card {
+    background: #FFFFFF; border-radius: 16px; border: 1px solid #EBE5DE;
+    margin: 0 20px 12px; padding: 16px;
+  }
+
+  /* WHY anchor */
+  .why-card {
+    background: linear-gradient(135deg, #FFF4E6 0%, #FFEDD5 100%);
+    border: 1px solid #FED7AA;
+    border-radius: 18px; margin: 14px 20px 14px; padding: 14px 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .why-icon {
+    width: 36px; height: 36px; border-radius: 10px; background: #FFFFFF;
+    display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(183,108,39,0.1);
+  }
+  .why-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #B45309; }
+  .why-text {
+    font-family: 'Literata', serif; font-size: 15px; line-height: 1.4; color: #44312A;
+    font-style: italic; margin-top: 2px;
+  }
+
+  /* CTA why (no why set) */
+  .why-cta {
+    background: #FAF5EF; border: 1px dashed #DDD3C5; border-radius: 14px;
+    margin: 14px 20px 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+  }
+  .why-cta-icon {
+    width: 28px; height: 28px; border-radius: 8px; background: #FFFFFF; border: 1px solid #E5DED4;
+    display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0;
+  }
+  .why-cta-title { font-size: 13px; font-weight: 600; color: #2D2A26; }
+  .why-cta-sub { font-size: 11px; color: #6D6761; margin-top: 1px; }
+  .why-cta-arrow { font-size: 18px; color: #A39C93; margin-left: auto; }
+
+  /* Hero (ring + metrics) */
+  .hero { display: flex; gap: 16px; align-items: center; }
+  .ring {
+    width: 86px; height: 86px; border-radius: 50%; flex-shrink: 0; position: relative;
+    background: conic-gradient(#F97316 0deg, #F97316 180deg, #FEE7CE 180deg);
+  }
+  .ring::before {
+    content: ''; position: absolute; inset: 9px; border-radius: 50%; background: #FFFFFF;
+  }
+  .ring-label {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2;
+  }
+  .ring-pct { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #2D2A26; }
+  .ring-pct-sub { font-size: 9px; color: #6D6761; margin-top: -1px; letter-spacing: 0.4px; text-transform: uppercase; }
+  .hero-right { flex: 1; }
+  .hero-count { font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; color: #2D2A26; }
+  .hero-count-denom { color: #C2BBB1; font-size: 14px; font-weight: 400; }
+  .hero-remaining { font-size: 12px; color: #F97316; font-weight: 600; margin-top: 1px; }
+  .progress-bar { height: 5px; background: #EFE9E1; border-radius: 99px; margin: 10px 0 8px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 50%; background: linear-gradient(90deg, #FB923C, #F97316); border-radius: 99px; }
+  .hero-meta { display: flex; justify-content: space-between; font-size: 11px; color: #6D6761; }
+
+  /* Coach line */
+  .coach {
+    display: flex; align-items: center; gap: 10px;
+    background: #FFF8EE; border: 1px solid #FDE4BD; border-radius: 14px;
+    padding: 10px 14px; margin-top: 12px;
+  }
+  .coach-emoji { font-size: 18px; }
+  .coach-text { font-size: 13px; color: #7C3F0A; font-weight: 500; flex: 1; line-height: 1.3; }
+
+  .coach.coach-reset { background: #FFF1EE; border-color: #FCD7CD; }
+  .coach.coach-reset .coach-text { color: #9A2C1A; }
+  .coach.coach-home { background: #FFE8DE; border-color: #F9B894; }
+  .coach.coach-home .coach-text { color: #7A2E0A; }
+  .coach.coach-done { background: #E7F6EE; border-color: #A7D9BE; }
+  .coach.coach-done .coach-text { color: #0F5E2C; }
+
+  /* Next milestone pill */
+  .next-pill {
+    background: linear-gradient(135deg, #FFE8C2 0%, #FDD28B 100%);
+    border-radius: 16px; padding: 12px 14px; margin: 0 20px 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .next-badge { font-size: 28px; }
+  .next-text-group { flex: 1; }
+  .next-label { font-size: 10px; color: #8A5A0D; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 700; }
+  .next-name { font-family: 'Literata', serif; font-size: 15px; font-weight: 600; color: #5E3F05; margin-top: 1px; }
+  .next-days { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #5E3F05; text-align: right; }
+  .next-days-label { font-size: 10px; color: #8A5A0D; text-align: right; }
+
+  /* Milestones row */
+  .milestones-card {
+    background: #FFFFFF; border-radius: 14px; border: 1px solid #EBE5DE;
+    margin: 0 20px 12px; padding: 12px 14px;
+  }
+  .milestones-label { font-size: 10px; letter-spacing: 0.6px; text-transform: uppercase; color: #8D8679; font-weight: 700; margin-bottom: 8px; }
+  .badges { display: flex; gap: 6px; }
+  .badge {
+    width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; border: 1px solid #EBE5DE; background: #FAF7F2;
+  }
+  .badge.done { background: #F0EEFD; border-color: #D4CBF5; }
+  .badge.current { background: #FFE8C2; border-color: #F0B964; box-shadow: 0 0 0 3px rgba(240,185,100,0.15); }
+  .badge.future { opacity: 0.5; }
+  .badge.goal { background: #FFFDE8; border-color: #F0D659; }
+
+  /* Projected banner */
+  .projected {
+    background: #F7F4EE; border: 1px solid #E7E0D5; border-radius: 12px;
+    margin: 0 20px 12px; padding: 12px 14px; display: flex; align-items: center;
+  }
+  .projected-label { font-size: 11px; color: #8D8679; }
+  .projected-date { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #059669; margin-left: auto; }
+
+  /* Adjust goal button */
+  .adjust-goal {
+    text-align: center; margin: 2px 20px 18px; padding: 10px;
+    font-size: 13px; color: #6D6761; font-weight: 600;
+    background: transparent; border: none;
+  }
+  .adjust-goal-underline { text-decoration: underline; text-decoration-color: #D4CBBE; text-underline-offset: 3px; }
+
+  /* EMPTY state */
+  .empty-wrap { padding: 30px 24px 20px; text-align: center; }
+  .empty-icon {
+    width: 72px; height: 72px; margin: 0 auto 18px; border-radius: 22px;
+    background: linear-gradient(135deg, #FFE8C2 0%, #FDD28B 100%);
+    display: flex; align-items: center; justify-content: center; font-size: 36px;
+    box-shadow: 0 4px 16px rgba(251,146,60,0.15);
+  }
+  .empty-title { font-family: 'Literata', serif; font-size: 22px; font-weight: 600; color: #2D2A26; margin-bottom: 6px; }
+  .empty-sub { font-size: 13px; color: #6D6761; line-height: 1.5; margin-bottom: 18px; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 16px; }
+  .chip {
+    padding: 9px 16px; border-radius: 99px; border: 1px solid #E5DED4; background: #FFFFFF;
+    font-size: 13px; font-weight: 600; color: #2D2A26; position: relative;
+  }
+  .chip.recommended { border: 1.5px solid #D4CBBE; background: #FFFFFF; }
+  .chip.recommended::after {
+    content: 'RECOMMENDED'; position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+    background: #2D2A26; color: #FFF; font-size: 8px; padding: 2px 6px; border-radius: 10px;
+    letter-spacing: 0.6px; font-weight: 700;
+  }
+  .chip.selected { background: #FFEDD5; border-color: #F97316; color: #7C3F0A; }
+  .primary-btn {
+    background: #059669; color: #FFFFFF; border-radius: 14px; padding: 13px 24px;
+    font-size: 14px; font-weight: 600; display: inline-block; margin-top: 4px;
+  }
+  .empty-helper { font-size: 11px; color: #8D8679; font-style: italic; margin-top: 14px; }
+  .empty-hook { font-size: 13px; color: #2D2A26; font-weight: 500; margin-bottom: 6px; }
+
+  /* SHEET overlay */
+  .sheet-overlay {
+    position: absolute; inset: 0; background: rgba(20,18,16,0.5); z-index: 20;
+    display: flex; align-items: flex-end;
+  }
+  .sheet {
+    width: 100%; background: #FFFFFF; border-top-left-radius: 26px; border-top-right-radius: 26px;
+    padding: 14px 20px 28px;
+  }
+  .sheet-handle { width: 40px; height: 4px; border-radius: 2px; background: #E5DED4; margin: 0 auto 14px; }
+  .sheet-title { font-family: 'Literata', serif; font-size: 17px; font-weight: 600; color: #2D2A26; text-align: center; margin-bottom: 4px; }
+  .sheet-sub { font-size: 12px; color: #6D6761; text-align: center; margin-bottom: 16px; }
+  .sheet-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 16px; }
+  .sheet-actions { display: flex; flex-direction: column; gap: 8px; }
+  .sheet-primary {
+    background: #059669; color: #FFFFFF; border-radius: 14px; padding: 13px 24px;
+    font-size: 14px; font-weight: 600; text-align: center;
+  }
+  .sheet-ghost {
+    color: #9C2515; border-radius: 14px; padding: 11px 24px;
+    font-size: 13px; font-weight: 600; text-align: center; background: transparent;
+  }
+
+  /* Section callouts (explainer) */
+  .callout {
+    position: absolute; background: #2D2A26; color: #FAF5EE; font-size: 11px;
+    padding: 6px 10px; border-radius: 8px; white-space: nowrap; font-weight: 500;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .callout-num {
+    display: inline-block; width: 16px; height: 16px; border-radius: 8px;
+    background: #F97316; color: #FFF; font-size: 10px; font-weight: 700; text-align: center; line-height: 16px;
+  }
+  .callout-left::after {
+    content: ''; position: absolute; left: -5px; top: 50%; transform: translateY(-50%);
+    border-width: 5px 5px 5px 0; border-style: solid; border-color: transparent #2D2A26 transparent transparent;
+  }
+
+  /* Header */
+  .doc-head {
+    text-align: center; max-width: 900px; margin: 0 auto 36px;
+  }
+  .doc-head h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.5px; color: #FAF5EE; }
+  .doc-head p { font-size: 14px; color: #A39C93; margin-top: 8px; line-height: 1.5; }
+  .doc-head .tag {
+    display: inline-block; background: #F97316; color: #1A1816; padding: 4px 10px; border-radius: 99px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 14px;
+  }
+
+  /* Legend */
+  .legend {
+    max-width: 960px; margin: 0 auto 36px; padding: 16px 20px;
+    background: #221F1C; border: 1px solid #2D2A26; border-radius: 16px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  }
+  .legend-item { display: flex; gap: 10px; align-items: flex-start; }
+  .legend-num {
+    width: 22px; height: 22px; border-radius: 11px; background: #F97316; color: #1A1816;
+    font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .legend-title { font-size: 13px; color: #FAF5EE; font-weight: 600; }
+  .legend-desc { font-size: 11px; color: #A39C93; line-height: 1.4; margin-top: 2px; }
+
+</style>
+</head>
+<body>
+
+<div class="doc-head">
+  <div class="tag">Goals tab · motivation-first</div>
+  <h1>From scoreboard → coach</h1>
+  <p>Three new additions on the active-goal state surface the user's <em>why</em>, nudge them based on where they are, and let them adjust without leaving.</p>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-num">1</div><div><div class="legend-title">Why anchor</div><div class="legend-desc">Surfaces the user's own `why`, `identity`, or WOOP wish — the data's already in the schema, just never shown.</div></div></div>
+  <div class="legend-item"><div class="legend-num">2</div><div><div class="legend-title">Coach line</div><div class="legend-desc">Single line below the ring that changes with progress %. Brackets: broken, &lt;10%, 10–40%, 40–70%, 70–95%, ≥100%.</div></div></div>
+  <div class="legend-item"><div class="legend-num">3</div><div><div class="legend-title">Adjust goal sheet</div><div class="legend-desc">Change or remove the goal without navigating to Edit. Reuses existing preset-chip component.</div></div></div>
+</div>
+
+<div class="row-wrap">
+
+  <!-- PHONE 1: EMPTY STATE -->
+  <div class="phone-col">
+    <div class="phone-label">Empty state</div>
+    <div class="phone">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen">
+        <div class="modal-header">
+          <div class="modal-title">Habit</div>
+          <div class="close-btn">×</div>
+        </div>
+        <div class="habit-head">
+          <div class="habit-emoji">🧘</div>
+          <div>
+            <div class="habit-name">Meditate</div>
+            <div class="habit-meta">No goal set</div>
+          </div>
+        </div>
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+        </div>
+
+        <div class="empty-wrap">
+          <div class="empty-icon">🎯</div>
+          <div class="empty-title">Set a streak goal</div>
+          <div class="empty-hook">Pick a target — we'll celebrate every milestone.</div>
+          <div class="empty-sub">66 days is the science-backed sweet spot.</div>
+          <div class="chips">
+            <div class="chip">7d</div>
+            <div class="chip">21d</div>
+            <div class="chip">30d</div>
+            <div class="chip selected recommended">66d</div>
+            <div class="chip">100d</div>
+            <div class="chip">1yr</div>
+          </div>
+          <a class="primary-btn">Set 66-day goal</a>
+          <div class="empty-helper">You can change this anytime</div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-sub">Copy tweak: adds a motivation hook line above the science line.</div>
+  </div>
+
+  <!-- PHONE 2: ACTIVE GOAL (with why + mid-progress coach) -->
+  <div class="phone-col" style="position: relative;">
+    <div class="phone-label">Active goal · with "why"</div>
+    <div class="phone">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen">
+        <div class="modal-header">
+          <div class="modal-title">Habit</div>
+          <div class="close-btn">×</div>
+        </div>
+        <div class="habit-head">
+          <div class="habit-emoji" style="background:#F97316;">🏃</div>
+          <div>
+            <div class="habit-name">Morning run</div>
+            <div class="habit-meta">12d / 30d goal</div>
+          </div>
+        </div>
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+        </div>
+
+        <!-- WHY anchor (1) -->
+        <div class="why-card">
+          <div class="why-icon">💭</div>
+          <div>
+            <div class="why-label">Your why</div>
+            <div class="why-text">"I want to be the kind of dad who plays with my kids without getting winded."</div>
+          </div>
+        </div>
+
+        <!-- Hero card + coach line (2) -->
+        <div class="card">
+          <div class="hero">
+            <div class="ring">
+              <div class="ring-label">
+                <div class="ring-pct">40%</div>
+                <div class="ring-pct-sub">done</div>
+              </div>
+            </div>
+            <div class="hero-right">
+              <div>
+                <span class="hero-count">12</span>
+                <span class="hero-count-denom">/ 30</span>
+              </div>
+              <div class="hero-remaining">18 to go</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:40%;"></div></div>
+              <div class="hero-meta"><span>86% rate</span><span>best: 17d</span></div>
+            </div>
+          </div>
+
+          <div class="coach">
+            <div class="coach-emoji">💪</div>
+            <div class="coach-text">Past halfway. Closer to goal than the start.</div>
+          </div>
+        </div>
+
+        <!-- Next milestone -->
+        <div class="next-pill">
+          <div class="next-badge">🥉</div>
+          <div class="next-text-group">
+            <div class="next-label">Next milestone</div>
+            <div class="next-name">21-day streak</div>
+          </div>
+          <div>
+            <div class="next-days">9d</div>
+            <div class="next-days-label">to go</div>
+          </div>
+        </div>
+
+        <!-- Milestones row -->
+        <div class="milestones-card">
+          <div class="milestones-label">Milestones on path</div>
+          <div class="badges">
+            <div class="badge done">✨</div>
+            <div class="badge done">🌱</div>
+            <div class="badge current">🥉</div>
+            <div class="badge future">🥈</div>
+            <div class="badge goal">🎯</div>
+          </div>
+        </div>
+
+        <!-- Projected -->
+        <div class="projected">
+          <div class="projected-label">On track to hit goal</div>
+          <div class="projected-date">May 7</div>
+        </div>
+
+        <!-- Adjust goal (3) -->
+        <button class="adjust-goal"><span class="adjust-goal-underline">Adjust goal</span></button>
+      </div>
+
+      <!-- Callouts -->
+      <div class="callout callout-left" style="top: 216px; left: 440px;"><span class="callout-num">1</span> Why anchor — pulled from `habit.why`</div>
+      <div class="callout callout-left" style="top: 425px; left: 440px;"><span class="callout-num">2</span> Coach line — 40% bracket</div>
+      <div class="callout callout-left" style="top: 810px; left: 440px;"><span class="callout-num">3</span> Adjust goal (opens sheet →)</div>
+    </div>
+    <div class="phone-sub">Full active state with why anchor, contextual coach line, and inline adjust action.</div>
+  </div>
+
+  <!-- PHONE 3: ADJUST SHEET OPEN -->
+  <div class="phone-col">
+    <div class="phone-label">Adjust sheet open</div>
+    <div class="phone">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen" style="filter: brightness(0.8);">
+        <div class="modal-header">
+          <div class="modal-title">Habit</div>
+          <div class="close-btn">×</div>
+        </div>
+        <div class="habit-head">
+          <div class="habit-emoji" style="background:#F97316;">🏃</div>
+          <div>
+            <div class="habit-name">Morning run</div>
+            <div class="habit-meta">12d / 30d goal</div>
+          </div>
+        </div>
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+        </div>
+        <div class="why-card" style="opacity: 0.6;">
+          <div class="why-icon">💭</div>
+          <div>
+            <div class="why-label">Your why</div>
+            <div class="why-text">"I want to be the kind of dad who plays with my kids without getting winded."</div>
+          </div>
+        </div>
+        <div class="card" style="opacity: 0.6;">
+          <div class="hero">
+            <div class="ring"><div class="ring-label"><div class="ring-pct">40%</div><div class="ring-pct-sub">done</div></div></div>
+            <div class="hero-right">
+              <div><span class="hero-count">12</span><span class="hero-count-denom">/ 30</span></div>
+              <div class="hero-remaining">18 to go</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:40%;"></div></div>
+              <div class="hero-meta"><span>86% rate</span><span>best: 17d</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet overlay -->
+      <div class="sheet-overlay">
+        <div class="sheet">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">Adjust your goal</div>
+          <div class="sheet-sub">Currently: 30-day streak</div>
+          <div class="sheet-chips">
+            <div class="chip">7d</div>
+            <div class="chip">21d</div>
+            <div class="chip selected">30d</div>
+            <div class="chip">66d</div>
+            <div class="chip">100d</div>
+            <div class="chip">1yr</div>
+          </div>
+          <div class="sheet-actions">
+            <div class="sheet-primary">Update goal</div>
+            <div class="sheet-ghost">Remove goal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="phone-sub">Bottom sheet reuses preset chips. Remove-goal double-tap confirms (no blocking alert).</div>
+  </div>
+
+</div>
+
+<!-- SECOND ROW: Edge states -->
+<div style="height: 48px;"></div>
+<div class="doc-head">
+  <h1 style="font-size: 24px;">Coach line — edge brackets</h1>
+  <p>Messaging adapts to the state users most need to hear something.</p>
+</div>
+
+<div class="row-wrap">
+
+  <!-- Broken streak -->
+  <div class="phone-col">
+    <div class="phone-label">Broken streak</div>
+    <div class="phone" style="height: 440px;">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen" style="padding-top: 60px;">
+        <div class="card" style="margin-top: 12px;">
+          <div class="hero">
+            <div class="ring" style="background: conic-gradient(#F97316 0deg, #F97316 0deg, #FEE7CE 0deg);">
+              <div class="ring-label">
+                <div class="ring-pct">0%</div>
+                <div class="ring-pct-sub">done</div>
+              </div>
+            </div>
+            <div class="hero-right">
+              <div><span class="hero-count">0</span><span class="hero-count-denom">/ 66</span></div>
+              <div class="hero-remaining">66 to go</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:0%;"></div></div>
+              <div class="hero-meta"><span>62% rate</span><span>best: 23d</span></div>
+            </div>
+          </div>
+          <div class="coach coach-reset">
+            <div class="coach-emoji">🔁</div>
+            <div class="coach-text">Reset happens. Today is day 1 again.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Just started -->
+  <div class="phone-col">
+    <div class="phone-label">Just started</div>
+    <div class="phone" style="height: 440px;">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen" style="padding-top: 60px;">
+        <div class="card" style="margin-top: 12px;">
+          <div class="hero">
+            <div class="ring" style="background: conic-gradient(#F97316 0deg, #F97316 14deg, #FEE7CE 14deg);">
+              <div class="ring-label">
+                <div class="ring-pct">5%</div>
+                <div class="ring-pct-sub">done</div>
+              </div>
+            </div>
+            <div class="hero-right">
+              <div><span class="hero-count">3</span><span class="hero-count-denom">/ 66</span></div>
+              <div class="hero-remaining">63 to go</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:5%;"></div></div>
+              <div class="hero-meta"><span>100% rate</span><span>best: 3d</span></div>
+            </div>
+          </div>
+          <div class="coach">
+            <div class="coach-emoji">🌱</div>
+            <div class="coach-text">First week is the hardest. Show up today.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Home stretch -->
+  <div class="phone-col">
+    <div class="phone-label">Home stretch</div>
+    <div class="phone" style="height: 440px;">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen" style="padding-top: 60px;">
+        <div class="card" style="margin-top: 12px;">
+          <div class="hero">
+            <div class="ring" style="background: conic-gradient(#F97316 0deg, #F97316 302deg, #FEE7CE 302deg);">
+              <div class="ring-label">
+                <div class="ring-pct">84%</div>
+                <div class="ring-pct-sub">done</div>
+              </div>
+            </div>
+            <div class="hero-right">
+              <div><span class="hero-count">56</span><span class="hero-count-denom">/ 66</span></div>
+              <div class="hero-remaining">10 to go</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:84%;"></div></div>
+              <div class="hero-meta"><span>94% rate</span><span>best: 56d</span></div>
+            </div>
+          </div>
+          <div class="coach coach-home">
+            <div class="coach-emoji">🔥</div>
+            <div class="coach-text">Don't break the chain now.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="phone-col">
+    <div class="phone-label">Goal complete</div>
+    <div class="phone" style="height: 440px;">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen" style="padding-top: 60px;">
+        <div class="card" style="margin-top: 12px;">
+          <div class="hero">
+            <div class="ring" style="background: conic-gradient(#10B981 0deg, #10B981 360deg, #FEE7CE 360deg);">
+              <div class="ring-label">
+                <div class="ring-pct" style="color:#059669;">100%</div>
+                <div class="ring-pct-sub">done</div>
+              </div>
+            </div>
+            <div class="hero-right">
+              <div><span class="hero-count" style="color:#059669;">66</span><span class="hero-count-denom">/ 66</span></div>
+              <div class="hero-remaining" style="color:#059669;">Completed!</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:100%; background:linear-gradient(90deg,#34D399,#10B981);"></div></div>
+              <div class="hero-meta"><span>98% rate</span><span>best: 66d</span></div>
+            </div>
+          </div>
+          <div class="coach coach-done">
+            <div class="coach-emoji">🏆</div>
+            <div class="coach-text">Goal crushed. Set a new one?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NO WHY set variant -->
+<div style="height: 48px;"></div>
+<div class="doc-head">
+  <h1 style="font-size: 24px;">When no "why" is set</h1>
+  <p>Subtle CTA to route the user to Edit. Never blocks the numbers they came for.</p>
+</div>
+
+<div class="row-wrap">
+  <div class="phone-col">
+    <div class="phone-label">No why — inline CTA</div>
+    <div class="phone" style="height: 520px;">
+      <div class="status-bar"><span>9:41</span><span>●●●●●</span></div>
+      <div class="phone-screen" style="padding-top: 60px;">
+        <div class="habit-head">
+          <div class="habit-emoji" style="background:#8B5CF6;">📚</div>
+          <div>
+            <div class="habit-name">Read 20 minutes</div>
+            <div class="habit-meta">8d / 21d goal</div>
+          </div>
+        </div>
+        <div class="tabs-wrap">
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+        </div>
+        <div class="why-cta">
+          <div class="why-cta-icon">✨</div>
+          <div>
+            <div class="why-cta-title">Add a reason</div>
+            <div class="why-cta-sub">People who write their why are 2× more likely to finish.</div>
+          </div>
+          <div class="why-cta-arrow">›</div>
+        </div>
+        <div class="card">
+          <div class="hero">
+            <div class="ring" style="background: conic-gradient(#F97316 0deg, #F97316 137deg, #FEE7CE 137deg);">
+              <div class="ring-label"><div class="ring-pct">38%</div><div class="ring-pct-sub">done</div></div>
+            </div>
+            <div class="hero-right">
+              <div><span class="hero-count">8</span><span class="hero-count-denom">/ 21</span></div>
+              <div class="hero-remaining">13 to go</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:38%;"></div></div>
+              <div class="hero-meta"><span>89% rate</span><span>best: 11d</span></div>
+            </div>
+          </div>
+          <div class="coach">
+            <div class="coach-emoji">📈</div>
+            <div class="coach-text">Momentum's on your side — keep the chain alive.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

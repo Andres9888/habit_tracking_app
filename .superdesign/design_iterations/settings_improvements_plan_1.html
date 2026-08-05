@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings Improvements — Plan & Mocks</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif !important;
+        background: #111827 !important;
+        color: #e5e7eb;
+        line-height: 1.5;
+        padding: 32px 20px 64px;
+      }
+      .page {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+      .hero {
+        margin-bottom: 40px;
+      }
+      .hero h1 {
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: #f9fafb !important;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px !important;
+      }
+      .hero p {
+        color: #9ca3af;
+        font-size: 15px;
+        max-width: 720px;
+      }
+      .hero .branch {
+        display: inline-block;
+        margin-top: 12px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: #1f2937;
+        border: 1px solid #374151;
+        font-size: 12px;
+        color: #34d399;
+        font-weight: 600;
+      }
+
+      .plan-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+        margin-bottom: 48px;
+      }
+      .plan-card {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 14px;
+        padding: 20px;
+      }
+      .plan-card .num {
+        width: 28px;
+        height: 28px;
+        border-radius: 14px;
+        background: #059669;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      .plan-card h3 {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #f3f4f6 !important;
+        margin-bottom: 6px !important;
+      }
+      .plan-card p {
+        font-size: 13px;
+        color: #9ca3af;
+        margin-bottom: 10px;
+      }
+      .plan-card .why {
+        font-size: 12px;
+        color: #6ee7b7;
+        background: #064e3b33;
+        border-radius: 8px;
+        padding: 8px 10px;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-right: 6px;
+        margin-bottom: 8px;
+      }
+      .tag-p0 {
+        background: #7f1d1d;
+        color: #fca5a5;
+      }
+      .tag-p1 {
+        background: #78350f;
+        color: #fcd34d;
+      }
+      .tag-p2 {
+        background: #1e3a5f;
+        color: #93c5fd;
+      }
+
+      .section-block {
+        margin-bottom: 56px;
+      }
+      .section-block > h2 {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #f9fafb !important;
+        margin-bottom: 6px !important;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .section-block > .rationale {
+        font-size: 14px;
+        color: #9ca3af;
+        margin-bottom: 20px;
+        max-width: 800px;
+      }
+      .compare {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      @media (max-width: 860px) {
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: #1f2937;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid #374151;
+      }
+      .panel-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .panel-label.before {
+        color: #f87171;
+      }
+      .panel-label.after {
+        color: #34d399;
+      }
+      .panel-label .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+      .panel-label.before .dot {
+        background: #ef4444;
+      }
+      .panel-label.after .dot {
+        background: #10b981;
+      }
+
+      .phone {
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+        background: #f5f5f4;
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      }
+      .phone-hdr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 52px 16px 12px;
+        background: #f5f5f4;
+      }
+      .phone-hdr span {
+        font-size: 17px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+      .phone-body {
+        padding: 0 16px 20px;
+      }
+
+      /* Profile hero card */
+      .hero-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, 0.06),
+          0 4px 16px rgba(0, 0, 0, 0.06);
+        margin-bottom: 16px;
+        position: relative;
+      }
+      .hero-card .chev {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        color: #a8a29e;
+        font-size: 18px;
+      }
+      .hero-top {
+        text-align: center;
+        padding: 20px 16px 8px;
+      }
+      .avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 36px;
+        margin: 0 auto 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, #047857, #059669);
+      }
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        border-radius: 36px;
+        object-fit: cover;
+      }
+      .name-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+      .pro {
+        font-size: 10px;
+        font-weight: 700;
+        color: #92400e;
+        background: #fef3c7;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .stats-row {
+        display: flex;
+        border-top: 1px solid rgba(0, 0, 0, 0.06);
+        padding: 16px 8px;
+      }
+      .stat {
+        flex: 1;
+        text-align: center;
+        position: relative;
+      }
+      .stat + .stat::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.08);
+      }
+      .stat-icon {
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+      .stat-val {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      .stat-lbl {
+        font-size: 11px;
+        color: rgba(0, 0, 0, 0.45);
+        margin-top: 2px;
+        line-height: 1.2;
+      }
+
+      /* Skeleton */
+      .skel {
+        background: linear-gradient(
+          90deg,
+          #e7e5e4 25%,
+          #f5f5f4 50%,
+          #e7e5e4 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.4s infinite;
+        border-radius: 6px;
+      }
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      .skel-circle {
+        width: 72px;
+        height: 72px;
+        border-radius: 36px;
+        margin: 0 auto 12px;
+      }
+      .skel-line {
+        height: 14px;
+        margin: 0 auto 6px;
+      }
+      .skel-stat {
+        height: 28px;
+        width: 32px;
+        margin: 0 auto 4px;
+      }
+
+      /* High contrast variant */
+      .phone.hc {
+        background: #000;
+      }
+      .phone.hc .phone-hdr {
+        background: #000;
+      }
+      .phone.hc .phone-hdr span {
+        color: #fff;
+      }
+      .phone.hc .hero-card {
+        background: #000;
+        border: 2px solid #fff;
+        box-shadow: none;
+      }
+      .phone.hc .name {
+        color: #fff;
+      }
+      .phone.hc .stats-row {
+        border-top-color: #fff;
+      }
+      .phone.hc .stat + .stat::before {
+        background: #fff;
+      }
+      .phone.hc .stat-lbl {
+        color: #d4d4d4;
+      }
+
+      /* Settings section */
+      .sec-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        margin-bottom: 12px;
+      }
+      .sec-hdr {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #f0ece8;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+      .sec-hdr .ico {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: #e2f1ea;
+        color: #047857;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-bottom: 1px solid #f5f5f4;
+      }
+      .row:last-child {
+        border-bottom: none;
+      }
+      .row-ico {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: #e2f1ea;
+        color: #047857;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .row-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .row-label {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+      .row-sub {
+        font-size: 12px;
+        color: #a8a29e;
+        margin-top: 1px;
+      }
+      .toggle {
+        width: 51px;
+        height: 31px;
+        border-radius: 16px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .toggle.on {
+        background: #059669;
+      }
+      .toggle.off {
+        background: #d6d3d1;
+      }
+      .toggle .thumb {
+        width: 27px;
+        height: 27px;
+        border-radius: 14px;
+        background: white;
+        position: absolute;
+        top: 2px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .toggle.on .thumb {
+        left: 22px;
+      }
+      .toggle.off .thumb {
+        left: 2px;
+      }
+      .new-badge {
+        font-size: 9px;
+        font-weight: 700;
+        color: #047857;
+        background: #d1fae5;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .divider-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #a8a29e;
+        padding: 10px 16px 6px;
+        background: #fafaf9;
+      }
+
+      .callout {
+        margin-top: 16px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .callout.bad {
+        background: #450a0a44;
+        border: 1px solid #7f1d1d;
+        color: #fca5a5;
+      }
+      .callout.good {
+        background: #064e3b44;
+        border: 1px solid #065f46;
+        color: #6ee7b7;
+      }
+
+      .arrow-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6b7280;
+        font-size: 24px;
+        padding: 8px 0;
+      }
+      @media (min-width: 861px) {
+        .compare-with-arrow {
+          display: grid;
+          grid-template-columns: 1fr 40px 1fr;
+          gap: 0;
+          align-items: start;
+        }
+        .compare-with-arrow .arrow-row {
+          padding-top: 120px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="hero">
+        <h1>Settings Improvements — Plan & Mocks</h1>
+        <p>
+          Proposed next pass on the settings modal. Builds on the profile hero
+          card already on branch
+          <code>cursor/settings-profile-stats-023e</code> (PR #1363). Three
+          tracks, ordered by impact vs. effort.
+        </p>
+        <span class="branch"
+          >Branch: cursor/settings-profile-stats-023e · Draft PR #1363</span
+        >
+      </div>
+
+      <div class="plan-grid">
+        <div class="plan-card">
+          <span class="tag tag-p0">Track 1 · P0</span>
+          <div class="num">1</div>
+          <h3>Profile hero polish</h3>
+          <p>
+            Loading skeleton, theme-aware stat colors, no “0” flash while Convex
+            loads.
+          </p>
+          <div class="why">
+            <strong>Why:</strong> Stats currently use hardcoded hex +
+            rgba(0,0,0,…) — breaks high contrast &amp; dark mode. Users briefly
+            see “0 / 0 / 0” on open.
+          </div>
+        </div>
+        <div class="plan-card">
+          <span class="tag tag-p1">Track 2 · P1</span>
+          <div class="num">2</div>
+          <h3>Accessibility section</h3>
+          <p>
+            Surface reduce motion, high contrast, dyslexic font — already in
+            Convex + hooks, hidden from UI.
+          </p>
+          <div class="why">
+            <strong>Why:</strong> Settings hooks persist these values but users
+            can’t change them. UX audit flagged missing a11y controls.
+          </div>
+        </div>
+        <div class="plan-card">
+          <span class="tag tag-p2">Track 3 · P2</span>
+          <div class="num">3</div>
+          <h3>Behavior toggles</h3>
+          <p>Celebrations + haptic feedback toggles in Behavior section.</p>
+          <div class="why">
+            <strong>Why:</strong> <code>celebrationsEnabled</code> exists in
+            schema; haptics are always on. Power users want control without
+            digging.
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACK 1 -->
+      <div class="section-block">
+        <h2>Track 1 — Profile hero polish</h2>
+        <p class="rationale">
+          Files: <code>ProfileStatsRow.tsx</code>,
+          <code>ProfileStatItem.tsx</code>, <code>useProfileStats.ts</code>,
+          <code>SettingsModalSkeleton.tsx</code>. Keep the Habit It three-color
+          stat scheme but move colors to theme tokens; show skeleton until
+          queries resolve.
+        </p>
+
+        <div class="compare-with-arrow">
+          <div class="panel">
+            <div class="panel-label before">
+              <span class="dot"></span> Before — loading flash
+            </div>
+            <div class="phone">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #a8a29e">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="hero-card">
+                  <span class="chev">›</span>
+                  <div class="hero-top">
+                    <div class="avatar">A</div>
+                    <div class="name-row"><span class="name">Andres</span></div>
+                  </div>
+                  <div class="stats-row">
+                    <div class="stat">
+                      <div class="stat-icon" style="color: #ea580c">◉</div>
+                      <div class="stat-val" style="color: #ea580c">0</div>
+                      <div class="stat-lbl">Active Habits</div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-icon" style="color: #16a34a">★</div>
+                      <div class="stat-val" style="color: #16a34a">0</div>
+                      <div class="stat-lbl">Flawless Days</div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-icon" style="color: #2563eb">✓</div>
+                      <div class="stat-val" style="color: #2563eb">0</div>
+                      <div class="stat-lbl">Lifetime Completions</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="sec-card" style="opacity: 0.5; height: 48px"></div>
+              </div>
+            </div>
+            <div class="callout bad">
+              Problem: Convex <code>habits.list</code> +
+              <code>getTracking</code> take ~200–800ms. Stats render as zeros,
+              then jump to real values — feels broken.
+            </div>
+          </div>
+
+          <div class="arrow-row">→</div>
+
+          <div class="panel">
+            <div class="panel-label after">
+              <span class="dot"></span> After — skeleton then values
+            </div>
+            <div class="phone">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #a8a29e">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="hero-card">
+                  <span class="chev">›</span>
+                  <div class="hero-top">
+                    <div class="skel skel-circle"></div>
+                    <div class="skel skel-line" style="width: 120px"></div>
+                  </div>
+                  <div class="stats-row">
+                    <div class="stat">
+                      <div class="skel skel-stat"></div>
+                      <div
+                        class="skel skel-line"
+                        style="width: 56px; margin-top: 6px"
+                      ></div>
+                    </div>
+                    <div class="stat">
+                      <div class="skel skel-stat"></div>
+                      <div
+                        class="skel skel-line"
+                        style="width: 56px; margin-top: 6px"
+                      ></div>
+                    </div>
+                    <div class="stat">
+                      <div class="skel skel-stat"></div>
+                      <div
+                        class="skel skel-line"
+                        style="width: 56px; margin-top: 6px"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="
+                    font-size: 11px;
+                    color: #78716c;
+                    text-align: center;
+                    margin-bottom: 12px;
+                  "
+                >
+                  ↓ resolves to real stats ↓
+                </div>
+                <div
+                  class="hero-card"
+                  style="transform: scale(0.92); opacity: 0.85"
+                >
+                  <div class="hero-top">
+                    <div class="avatar">A</div>
+                    <div class="name-row">
+                      <span class="name">Andres</span
+                      ><span class="pro">PRO</span>
+                    </div>
+                  </div>
+                  <div class="stats-row">
+                    <div class="stat">
+                      <div class="stat-icon" style="color: #ea580c">◉</div>
+                      <div class="stat-val" style="color: #ea580c">5</div>
+                      <div class="stat-lbl">Active Habits</div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-icon" style="color: #16a34a">★</div>
+                      <div class="stat-val" style="color: #16a34a">12</div>
+                      <div class="stat-lbl">Flawless Days</div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-icon" style="color: #2563eb">✓</div>
+                      <div class="stat-val" style="color: #2563eb">847</div>
+                      <div class="stat-lbl">Lifetime Completions</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="callout good">
+              Fix: <code>useProfileStats</code> returns <code>isLoading</code>;
+              hero shows shimmer placeholders. Fade-in when data arrives
+              (respects reduce motion).
+            </div>
+          </div>
+        </div>
+
+        <div class="compare" style="margin-top: 32px">
+          <div class="panel">
+            <div class="panel-label before">
+              <span class="dot"></span> Before — high contrast
+            </div>
+            <div class="phone hc">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #fff">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="hero-card">
+                  <div class="hero-top">
+                    <div class="avatar">A</div>
+                    <div class="name-row"><span class="name">Andres</span></div>
+                  </div>
+                  <div class="stats-row">
+                    <div class="stat">
+                      <div class="stat-val" style="color: #ea580c">5</div>
+                      <div class="stat-lbl">Active Habits</div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-val" style="color: #16a34a">12</div>
+                      <div class="stat-lbl" style="color: rgba(0, 0, 0, 0.45)">
+                        Flawless Days
+                      </div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-val" style="color: #2563eb">847</div>
+                      <div class="stat-lbl">Completions</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="callout bad">
+              Labels use <code>rgba(0,0,0,0.45)</code> — invisible on black
+              card. Dividers use black rgba too.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-label after">
+              <span class="dot"></span> After — theme tokens
+            </div>
+            <div class="phone hc">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #fff">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="hero-card">
+                  <div class="hero-top">
+                    <div class="avatar">A</div>
+                    <div class="name-row"><span class="name">Andres</span></div>
+                  </div>
+                  <div class="stats-row">
+                    <div class="stat">
+                      <div class="stat-val" style="color: #fb923c">5</div>
+                      <div class="stat-lbl" style="color: #d4d4d4">
+                        Active Habits
+                      </div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-val" style="color: #4ade80">12</div>
+                      <div class="stat-lbl" style="color: #d4d4d4">
+                        Flawless Days
+                      </div>
+                    </div>
+                    <div class="stat">
+                      <div class="stat-val" style="color: #60a5fa">847</div>
+                      <div class="stat-lbl" style="color: #d4d4d4">
+                        Completions
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="callout good">
+              Fix: <code>profileStatColors</code> in theme — light/dark/hc
+              variants. Border uses <code>themeColors.border</code>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACK 2 -->
+      <div class="section-block">
+        <h2>Track 2 — Accessibility section</h2>
+        <p class="rationale">
+          New collapsible subsection inside Appearance (or its own
+          “Accessibility” section). Wired to existing
+          <code>SettingsModal.hooks</code> setters — no schema changes.
+        </p>
+
+        <div class="compare">
+          <div class="panel">
+            <div class="panel-label before">
+              <span class="dot"></span> Before — hooks only
+            </div>
+            <div class="phone">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #a8a29e">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="sec-card">
+                  <div class="sec-hdr">
+                    <div class="ico">🎨</div>
+                    Appearance
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">☰</div>
+                    <div class="row-text">
+                      <div class="row-label">Compact habit cards</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">◻</div>
+                    <div class="row-text">
+                      <div class="row-label">Day marker shape</div>
+                    </div>
+                  </div>
+                  <div class="row" style="opacity: 0.4">
+                    <div class="row-text">
+                      <div
+                        class="row-label"
+                        style="font-style: italic; color: #a8a29e"
+                      >
+                        Reduce motion — in DB, no UI
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="callout bad">
+              3 settings persisted in Convex but unreachable: reduceMotion,
+              highContrastMode, useDyslexicFont.
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-label after">
+              <span class="dot"></span> After — accessibility rows
+            </div>
+            <div class="phone">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #a8a29e">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="sec-card">
+                  <div class="sec-hdr">
+                    <div class="ico">🎨</div>
+                    Appearance
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">☰</div>
+                    <div class="row-text">
+                      <div class="row-label">Compact habit cards</div>
+                      <div class="row-sub">Fit more on screen</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                  <div class="divider-label">Accessibility</div>
+                  <div class="row">
+                    <div class="row-ico">◎</div>
+                    <div class="row-text">
+                      <div class="row-label">
+                        Reduce motion<span class="new-badge">NEW</span>
+                      </div>
+                      <div class="row-sub">Minimize animations app-wide</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">◐</div>
+                    <div class="row-text">
+                      <div class="row-label">
+                        High contrast<span class="new-badge">NEW</span>
+                      </div>
+                      <div class="row-sub">Stronger borders and text</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">Aa</div>
+                    <div class="row-text">
+                      <div class="row-label">
+                        Dyslexia-friendly font<span class="new-badge">NEW</span>
+                      </div>
+                      <div class="row-sub">OpenDyslexic across the app</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="callout good">
+              Uses existing SettingsRow toggles + icon tint pattern. Dark mode
+              toggle stays hidden per spec until theme switching works.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRACK 3 -->
+      <div class="section-block">
+        <h2>Track 3 — Behavior toggles</h2>
+        <p class="rationale">
+          Add to existing Behavior section.
+          <code>celebrationsEnabled</code> already flows through
+          <code>SettingsModalSection</code>; haptics need a new persisted flag
+          or AsyncStorage pref.
+        </p>
+
+        <div class="compare">
+          <div class="panel">
+            <div class="panel-label before">
+              <span class="dot"></span> Before
+            </div>
+            <div class="phone">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #a8a29e">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="sec-card">
+                  <div class="sec-hdr">
+                    <div class="ico">⚙</div>
+                    Behavior
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">↕</div>
+                    <div class="row-text">
+                      <div class="row-label">Sort order</div>
+                      <div class="row-sub">Manual</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">🔊</div>
+                    <div class="row-text">
+                      <div class="row-label">Completion sound</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">📅</div>
+                    <div class="row-text">
+                      <div class="row-label">Sticky month header</div>
+                    </div>
+                    <div class="toggle on"><div class="thumb"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-label after"><span class="dot"></span> After</div>
+            <div class="phone">
+              <div class="phone-hdr">
+                <span>Settings</span><span style="color: #a8a29e">✕</span>
+              </div>
+              <div class="phone-body">
+                <div class="sec-card">
+                  <div class="sec-hdr">
+                    <div class="ico">⚙</div>
+                    Behavior
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">↕</div>
+                    <div class="row-text">
+                      <div class="row-label">Sort order</div>
+                      <div class="row-sub">Manual</div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">🎉</div>
+                    <div class="row-text">
+                      <div class="row-label">
+                        Celebrations<span class="new-badge">NEW</span>
+                      </div>
+                      <div class="row-sub">
+                        Confetti when you complete all habits
+                      </div>
+                    </div>
+                    <div class="toggle on"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">📳</div>
+                    <div class="row-text">
+                      <div class="row-label">
+                        Haptic feedback<span class="new-badge">NEW</span>
+                      </div>
+                      <div class="row-sub">
+                        Vibration on taps and completions
+                      </div>
+                    </div>
+                    <div class="toggle on"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">🔊</div>
+                    <div class="row-text">
+                      <div class="row-label">Completion sound</div>
+                    </div>
+                    <div class="toggle off"><div class="thumb"></div></div>
+                  </div>
+                  <div class="row">
+                    <div class="row-ico">📅</div>
+                    <div class="row-text">
+                      <div class="row-label">Sticky month header</div>
+                    </div>
+                    <div class="toggle on"><div class="thumb"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="callout good">
+              Celebrations: wire existing prop. Haptics: gate
+              <code>triggerHaptic()</code> behind new setting (local or Convex).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommended order -->
+      <div class="section-block">
+        <h2>Recommended implementation order</h2>
+        <p class="rationale" style="margin-bottom: 16px">
+          Track 1 completes PR #1363 polish. Tracks 2–3 are independent and can
+          ship as follow-up PRs.
+        </p>
+        <div class="plan-grid">
+          <div class="plan-card">
+            <h3>Step 1 · ~2h</h3>
+            <p>
+              Track 1: loading state + theme tokens for stats row + skeleton
+              update
+            </p>
+          </div>
+          <div class="plan-card">
+            <h3>Step 2 · ~1.5h</h3>
+            <p>
+              Track 2: wire accessibility toggles to existing hooks, pass
+              through SettingsContent
+            </p>
+          </div>
+          <div class="plan-card">
+            <h3>Step 3 · ~2h</h3>
+            <p>
+              Track 3: celebrations toggle (easy) + haptics setting (needs
+              schema decision)
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

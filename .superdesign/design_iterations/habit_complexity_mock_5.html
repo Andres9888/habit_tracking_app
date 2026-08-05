@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Growth Icons — Row subtitle variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F3F4F6;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --text-primary: #111827;
+    --text-secondary: #374151;
+    --text-tertiary: #6B7280;
+    --primary-700: #047857;
+    --primary-600: #059669;
+    --primary-100: #D1FAE5;
+    --streak-light: #FEF3C7;
+    --streak-text: #B45309;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.4;
+    padding: 40px 24px 80px;
+  }
+  .page { max-width: 1240px; margin: 0 auto; }
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .lead {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin: 0 0 28px;
+  }
+  h2 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin: 32px 0 12px;
+  }
+  .variant-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(380px, 1fr));
+    gap: 22px;
+  }
+  @media (max-width: 860px) { .variant-grid { grid-template-columns: 1fr; } }
+
+  .variant-card {
+    position: relative;
+    padding: 18px 16px 14px;
+    border-radius: 16px;
+    background: transparent;
+    border: 1px solid var(--border);
+  }
+  .variant-card.rec { border-color: var(--primary-700); border-width: 1.5px; }
+  .variant-label {
+    position: absolute;
+    top: -10px;
+    left: 14px;
+    background: var(--primary-700);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .variant-card.rec::after {
+    content: 'RECOMMENDED';
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    background: #DB2777;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+  }
+  .baseline .variant-label {
+    background: var(--text-tertiary);
+  }
+
+  /* Advanced section (mini) */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+  .adv-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 16px;
+    min-height: 64px;
+  }
+  .row-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .row-icon.algo { background: var(--primary-100); }
+  .row-icon.algo svg { width: 18px; height: 18px; stroke: var(--primary-600); }
+  .row-icon.growth { background: var(--streak-light); font-size: 18px; }
+  .row-icon.streak { background: var(--streak-light); }
+  .row-icon.streak svg { width: 18px; height: 18px; stroke: var(--streak-text); }
+  .row-body { flex: 1; min-width: 0; }
+  .row-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .row-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .row-sub.highlight { color: var(--primary-700); font-weight: 600; }
+  .row-chevron svg { width: 18px; height: 18px; stroke: var(--text-tertiary); }
+
+  .note {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 10px;
+    line-height: 1.55;
+    padding: 0 4px;
+  }
+  .note strong { color: var(--text-primary); }
+
+  .decision {
+    margin-top: 36px;
+    padding: 18px 22px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .decision h3 { margin: 0 0 6px; font-size: 14px; color: var(--text-primary); }
+  .decision code {
+    background: #F3F4F6;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: ui-monospace, Menlo, monospace;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <h1>Growth Icons — row subtitle variants</h1>
+  <p class="lead">Matches the pattern set by <code style="font-family: inherit; background: #F3F4F6; padding: 1px 6px; border-radius: 4px;">Growth Type · Textbook · ~66 days to automatic</code>. Each card shows the full Advanced stack with the Growth Icons subtitle swapped.</p>
+
+  <div class="variant-grid">
+
+    <!-- ——————————————————— BASELINE ——————————————————— -->
+    <div class="variant-card baseline">
+      <span class="variant-label">B · Current</span>
+      <div class="section-label">ADVANCED</div>
+      <div class="adv-stack">
+        <div class="row">
+          <div class="row-icon algo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Growth Type</div>
+            <div class="row-sub">Textbook · ~66 days to automatic</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="row">
+          <div class="row-icon growth">🌱</div>
+          <div class="row-body">
+            <div class="row-title">Growth Icons</div>
+            <div class="row-sub">Plants · 🌱 🌿 🌳 💪 ⚡</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+      <div class="note"><strong>Current.</strong> Shows preset + emoji preview. No mention of the 20% mechanic.</div>
+    </div>
+
+    <!-- ——————————————————— R1 ——————————————————— -->
+    <div class="variant-card rec">
+      <span class="variant-label">R1 · Levels up</span>
+      <div class="section-label">ADVANCED</div>
+      <div class="adv-stack">
+        <div class="row">
+          <div class="row-icon algo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Growth Type</div>
+            <div class="row-sub">Textbook · ~66 days to automatic</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="row">
+          <div class="row-icon growth">🌱</div>
+          <div class="row-body">
+            <div class="row-title">Growth Icons</div>
+            <div class="row-sub highlight">Plants · levels up every 20%</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+      <div class="note"><strong>"Levels up"</strong> — motivational, gaming nod, warmest tone. Echoes the sheet subtitle ("unlocks the next icon").</div>
+    </div>
+
+    <!-- ——————————————————— R2 ——————————————————— -->
+    <div class="variant-card">
+      <span class="variant-label">R2 · New icon</span>
+      <div class="section-label">ADVANCED</div>
+      <div class="adv-stack">
+        <div class="row">
+          <div class="row-icon algo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Growth Type</div>
+            <div class="row-sub">Textbook · ~66 days to automatic</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="row">
+          <div class="row-icon growth">🌱</div>
+          <div class="row-body">
+            <div class="row-title">Growth Icons</div>
+            <div class="row-sub highlight">Plants · new icon every 20%</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+      <div class="note"><strong>"New icon"</strong> — most literal, describes exactly what happens. Less motivational.</div>
+    </div>
+
+    <!-- ——————————————————— R3 ——————————————————— -->
+    <div class="variant-card">
+      <span class="variant-label">R3 · Advances</span>
+      <div class="section-label">ADVANCED</div>
+      <div class="adv-stack">
+        <div class="row">
+          <div class="row-icon algo"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <div class="row-body">
+            <div class="row-title">Growth Type</div>
+            <div class="row-sub">Textbook · ~66 days to automatic</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="row">
+          <div class="row-icon growth">🌱</div>
+          <div class="row-body">
+            <div class="row-title">Growth Icons</div>
+            <div class="row-sub highlight">Plants · advances every 20%</div>
+          </div>
+          <div class="row-chevron"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+      <div class="note"><strong>"Advances"</strong> — neutral, grown-up, no game vibe.</div>
+    </div>
+
+  </div>
+
+  <div class="decision">
+    <h3>How to respond</h3>
+    Reply <code>R1</code>, <code>R2</code>, or <code>R3</code>. Or keep the emoji preview by proposing a hybrid like <code>Plants · 🌱→⚡ every 20%</code> if you want the visual reference.
+  </div>
+
+</div>
+
+</body>
+</html>

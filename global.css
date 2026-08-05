@@ -1,0 +1,109 @@
+/**
+ * Global CSS for NativeWind / Tailwind CSS (web-only).
+ * SINGLE token source for web — src/theme/* mirrors these values on native.
+ * Warm Minimalism palette. Do not reintroduce src/index.css.
+ */
+
+/** @import must precede all other statements */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@6..72,600;6..72,700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/opendyslexic');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Warm Minimalism palette — mirrors src/theme/darkColors.ts lightColors */
+    --background: 30 29% 95%; /* #F5F1ED warm parchment */
+    --foreground: 30 10% 16%; /* #2D2A26 */
+
+    --card: 38 18% 91%; /* #EDEAE5 warm surface (L1) */
+    --card-foreground: 30 10% 16%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 10% 16%;
+
+    --primary: 161 94% 30%; /* #059669 forest green — buttons/CTA */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 38 18% 91%; /* #EDEAE5 */
+    --secondary-foreground: 30 10% 16%;
+
+    --muted: 30 8% 74%; /* #C4BFB7 neutral */
+    --muted-foreground: 30 10% 16%;
+
+    --accent: 149 80% 90%; /* #D1FAE5 emerald-100 tint */
+    --accent-foreground: 30 10% 16%;
+
+    --destructive: 4 82% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 33 14% 85%; /* #DDD8D2 warm border */
+    --input: 33 14% 85%;
+    --ring: 160 84% 39%; /* #10B981 focus ring */
+
+    --radius: 0.75rem; /* 12px */
+  }
+
+  /* Dark mode — mirrors src/theme/darkColors.ts darkColors exactly */
+  .dark {
+    --background: 221 39% 11%; /* #111827 */
+    --foreground: 210 20% 98%; /* #F9FAFB */
+
+    --card: 215 28% 17%; /* #1F2937 */
+    --card-foreground: 210 20% 98%;
+
+    --popover: 215 28% 17%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 158 64% 52%; /* #34D399 brighter primary for dark */
+    --primary-foreground: 221 39% 11%;
+
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 217 19% 27%; /* #374151 */
+    --muted-foreground: 220 9% 65%; /* #9CA3AF */
+
+    --accent: 221 39% 11%; /* dark tint surface */
+    --accent-foreground: 158 64% 52%;
+
+    --destructive: 0 84% 71%; /* #F87171 */
+    --destructive-foreground: 221 39% 11%;
+
+    --border: 217 19% 27%; /* #374151 */
+    --input: 217 19% 27%;
+    --ring: 158 64% 52%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  /* Native type pairing: Literata display/H1, DM Sans everything else */
+  h1 {
+    font-family: 'Literata', Georgia, serif;
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 600;
+  }
+
+  body.dyslexic-font,
+  body.dyslexic-font * {
+    font-family: 'OpenDyslexic', 'DM Sans', system-ui, sans-serif !important;
+  }
+}

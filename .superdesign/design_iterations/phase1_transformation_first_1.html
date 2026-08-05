@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phase 1 — Transformation-First Habit Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --surface-2: #fbf8f3;
+      --text-1: #2d2a26;
+      --text-2: #6f655a;
+      --text-3: #9b8f82;
+      --primary: #059669;
+      --primary-600: #047857;
+      --primary-700: #065f46;
+      --primary-50: #ecfdf5;
+      --primary-200: #a7f3d0;
+      --gold-50: #fef3c7;
+      --gold-100: #fde68a;
+      --gold-300: #fcd34d;
+      --gold-700: #b45309;
+      --gold-800: #78350f;
+      --purple-50: #f5f0ff;
+      --purple-100: #ede9fe;
+      --purple-200: #e0d4f5;
+      --purple-600: #7c3aed;
+      --purple-900: #581c87;
+      --blue-50: #eef4fb;
+      --blue-100: #dbeafe;
+      --blue-200: #d0dfef;
+      --blue-700: #1d4ed8;
+      --blue-900: #1e3a5f;
+      --rose-50: #fff1f2;
+      --rose-700: #be123c;
+      --rose-900: #881337;
+      --emerald-100: #d1fae5;
+      --emerald-900: #14532d;
+      --amber-50: #fffbeb;
+      --premium: #7c3aed;
+      --premium-text: #5b21b6;
+      --border: rgba(45, 42, 38, 0.1);
+      --border-soft: rgba(45, 42, 38, 0.06);
+      --shadow-sm: 0 1px 2px rgba(45, 42, 38, 0.05);
+      --shadow-md: 0 4px 14px rgba(45, 42, 38, 0.08);
+      --shadow-lg: 0 10px 30px rgba(45, 42, 38, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(5, 150, 105, 0.12), transparent 38%),
+        radial-gradient(circle at top right, rgba(245, 158, 11, 0.10), transparent 42%),
+        linear-gradient(180deg, #f7f4ef 0%, #efe9e0 100%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-1);
+      padding: 40px 20px 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page { max-width: 520px; margin: 0 auto; }
+    .caption { text-align: center; margin-bottom: 24px; color: var(--text-2); }
+    .caption h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      margin: 0 0 6px;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+    }
+    .caption p { margin: 0; font-size: 14px; }
+    .caption .meta {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-2);
+    }
+
+    .phone {
+      background: var(--surface-2);
+      border-radius: 36px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      width: 390px;
+      margin: 0 auto;
+    }
+    .screen { padding: 18px 0 80px; }
+
+    /* Nav header */
+    .nav {
+      padding: 14px 20px 10px;
+    }
+    .nav .title {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .nav .sub { color: var(--text-2); font-size: 13px; margin-top: 2px; }
+
+    /* Search */
+    .search-wrap { padding: 8px 20px 14px; }
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-3);
+      font-size: 14px;
+    }
+
+    /* HERO transformation card */
+    .hero-wrap { padding: 4px 16px 0; }
+    .hero {
+      border-radius: 18px;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--gold-50), rgba(120, 53, 15, 0.12));
+      border: 1px solid rgba(120, 53, 15, 0.10);
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--gold-800);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .hero-body {
+      display: flex;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .hero-emoji {
+      font-size: 60px;
+      line-height: 64px;
+      flex-shrink: 0;
+    }
+    .hero-text { flex: 1; padding-top: 4px; min-width: 0; }
+    .hero-label {
+      font-family: 'Literata', serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--gold-800);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0;
+    }
+    .hero-promise {
+      color: var(--gold-800);
+      opacity: 0.92;
+      font-size: 14px;
+      line-height: 19px;
+      margin-top: 4px;
+    }
+    .hero-starters {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .starter {
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 12px;
+      border: 1px solid rgba(120, 53, 15, 0.18);
+      padding: 8px;
+      min-height: 76px;
+      display: flex;
+      flex-direction: column;
+    }
+    .starter .ico { font-size: 22px; line-height: 26px; }
+    .starter .nm {
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 14px;
+      margin-top: 4px;
+      color: var(--gold-800);
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 18px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: var(--gold-800);
+      color: white;
+    }
+    .hero-cta .primary {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+    .hero-cta .count {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    /* Section header */
+    .section-head {
+      padding: 6px 20px 10px;
+      margin-top: 22px;
+    }
+    .section-head .title {
+      font-family: 'Literata', serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .section-head .subtitle {
+      color: var(--text-2);
+      font-size: 12.5px;
+      margin-top: 2px;
+    }
+    .section-head-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .section-head .right {
+      color: var(--primary-600);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Premium packs (Guided Journeys) — vertical stack */
+    .premium-badge-pill {
+      color: var(--premium-text);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .premium-stack { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+    .pack {
+      border-radius: 16px;
+      padding: 16px;
+      color: white;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .pack.huberman { background: linear-gradient(135deg, #064e3b, #047857); }
+    .pack.morning { background: linear-gradient(135deg, #92400e, #d97706); }
+    .pack.mindful { background: linear-gradient(135deg, #4c1d95, #7c3aed); }
+    .pack .pill {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255,255,255,0.18);
+      padding: 3px 9px;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .pack .name {
+      font-family: 'Literata', serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .pack .desc { font-size: 12.5px; line-height: 17px; opacity: 0.88; margin-top: 3px; }
+    .pack .emojis { margin-top: 10px; font-size: 18px; letter-spacing: 6px; }
+    .pack .meta { margin-top: 8px; font-size: 11px; opacity: 0.85; font-weight: 600; }
+
+    /* Other transformations rail */
+    .rail-wrap { padding: 6px 0 0 16px; margin-top: 10px; }
+    .rail {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-right: 16px;
+      padding-top: 6px;
+      padding-bottom: 4px;
+    }
+    .rail::-webkit-scrollbar { display: none; }
+    .rail .gcard {
+      flex-shrink: 0;
+      width: 168px;
+      min-height: 138px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.04);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+    .rail .gcard.sleep { background: var(--blue-50); color: var(--blue-900); }
+    .rail .gcard.stress { background: var(--emerald-100); color: var(--emerald-900); }
+    .rail .gcard.focus { background: var(--purple-100); color: var(--purple-900); }
+    .rail .gcard.health { background: var(--rose-50); color: var(--rose-900); }
+    .rail .gcard .em { font-size: 30px; line-height: 32px; }
+    .rail .gcard .lbl {
+      font-family: 'Literata', serif;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-top: 6px;
+    }
+    .rail .gcard .pr {
+      font-size: 12px;
+      line-height: 16px;
+      margin-top: 4px;
+      opacity: 0.85;
+    }
+    .rail .gcard .bot {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .rail .gcard .ct { font-size: 11px; font-weight: 600; opacity: 0.75; }
+    .rail .gcard .arr {
+      width: 22px; height: 22px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.08);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+    }
+
+    /* Quick wins (was Popular) — horizontal cards */
+    .h-list-wrap { padding: 0 0 0 16px; margin-top: 6px; }
+    .h-list {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-right: 16px;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+    .h-list::-webkit-scrollbar { display: none; }
+    .tcard {
+      flex-shrink: 0;
+      width: 168px;
+      min-height: 192px;
+      background: var(--surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+    }
+    .tcard .ibox {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(220, 220, 220, 0.4);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    .tcard .nm {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 10px;
+      line-height: 18px;
+    }
+    .tcard .ds {
+      font-size: 11.5px;
+      color: var(--text-2);
+      margin-top: 3px;
+      line-height: 15px;
+    }
+    .tcard .meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 9px;
+      flex-wrap: wrap;
+    }
+    .tcard .freq { font-size: 10px; color: var(--text-3); font-weight: 600; }
+    .tcard .sci-pill {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: var(--gold-50);
+      color: var(--gold-800);
+    }
+    .tcard .bot {
+      margin-top: auto;
+      padding-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tcard .pop {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-600);
+    }
+    .tcard .add {
+      width: 26px; height: 26px;
+      border-radius: 999px;
+      background: var(--primary);
+      color: white;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .tcard.imported .add { background: var(--primary-50); color: var(--primary-700); }
+
+    /* Category rows (Browse by area) */
+    .area-section { margin-top: 18px; }
+    .cat-row { margin-top: 16px; }
+    .cat-row .head {
+      padding: 0 20px 8px;
+    }
+    .cat-row .head .ttl {
+      font-family: 'Literata', serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .cat-row .head .sub {
+      color: var(--text-2);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .cat-row .head-row {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    }
+    .cat-row .right {
+      color: var(--primary-600);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+    .browse-all {
+      margin: 18px 20px 0;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 14px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .browse-all .l { font-weight: 700; font-size: 13.5px; }
+    .browse-all .a { color: var(--primary-600); font-weight: 700; font-size: 14px; }
+
+    /* annotation chips */
+    .annotation {
+      position: relative;
+      margin-bottom: 6px;
+    }
+    .annotation::before {
+      content: "";
+      position: absolute;
+      inset: -8px -10px;
+      border: 1.5px dashed rgba(120, 53, 15, 0.45);
+      border-radius: 22px;
+      pointer-events: none;
+    }
+    .anno-tag {
+      position: absolute;
+      top: -10px;
+      left: 14px;
+      background: var(--gold-800);
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Bottom annotation legend */
+    .legend {
+      max-width: 390px;
+      margin: 28px auto 0;
+      background: var(--surface);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .legend h2 {
+      font-family: 'Literata', serif;
+      font-size: 16px;
+      margin: 0 0 12px;
+      color: var(--text-1);
+    }
+    .legend ul { margin: 0; padding: 0; list-style: none; }
+    .legend li {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text-2);
+      padding: 6px 0;
+      border-bottom: 1px dashed var(--border-soft);
+    }
+    .legend li:last-child { border-bottom: 0; }
+    .legend li strong { color: var(--text-1); font-weight: 700; }
+    .legend .key {
+      display: inline-block;
+      min-width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: var(--gold-800);
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 26px;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="caption">
+      <h1>Phase 1 — Transformation-First Habit Library</h1>
+      <p>Same data, new framing. Aspirational headers · Hero card with starter habits · Premium packs surfaced · Categories framed as paths.</p>
+      <div class="meta">⌗ branch: categories-page-revival · 11 mod, 2 new</div>
+    </div>
+
+    <div class="phone">
+      <div class="screen">
+
+        <!-- Nav header -->
+        <div class="nav">
+          <div class="title">What do you want to work on?</div>
+          <div class="sub">Pick a path — habits proven to work.</div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap">
+          <div class="search">
+            <span>🔍</span>
+            <span>Try: morning walk · journaling · cold shower</span>
+          </div>
+        </div>
+
+        <!-- HERO: Featured transformation -->
+        <div class="hero-wrap">
+          <div class="annotation" style="margin-top: 12px;">
+            <span class="anno-tag">A · Hero</span>
+            <div class="hero">
+              <span class="hero-badge">Today’s pick</span>
+              <div class="hero-body">
+                <div class="hero-emoji">⚡</div>
+                <div class="hero-text">
+                  <div class="hero-label">Wake up energized</div>
+                  <div class="hero-promise">Morning routines that keep you sharp all day</div>
+                </div>
+              </div>
+              <div class="hero-starters">
+                <div class="starter"><div class="ico">💧</div><div class="nm">Hydrate first thing</div></div>
+                <div class="starter"><div class="ico">🌅</div><div class="nm">Morning sunlight</div></div>
+                <div class="starter"><div class="ico">🚿</div><div class="nm">30‑sec cold finish</div></div>
+              </div>
+              <div class="hero-cta">
+                <span class="primary">Start your path →</span>
+                <span class="count">· 18 habits inside</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium / Guided journeys -->
+        <div class="section-head" style="margin-top: 26px;">
+          <div class="annotation">
+            <span class="anno-tag">B · Premium (was dead code)</span>
+            <div class="section-head-row">
+              <div>
+                <div class="title">Curated bundles</div>
+                <div class="subtitle">Multi-habit journeys, science-backed</div>
+              </div>
+              <span class="premium-badge-pill">Premium</span>
+            </div>
+          </div>
+        </div>
+        <div class="premium-stack">
+          <div class="pack huberman">
+            <span class="pill">Premium</span>
+            <div class="name">Huberman Essentials</div>
+            <div class="desc">Neuroscience-backed protocols for peak performance</div>
+            <div class="emojis">🧠 ☀️ 💧 ❄️</div>
+            <div class="meta">4 habits · 12 weeks</div>
+          </div>
+          <div class="pack morning">
+            <span class="pill">Premium</span>
+            <div class="name">Morning Mastery</div>
+            <div class="desc">Build an unshakeable morning foundation</div>
+            <div class="emojis">🌅 💪 📔 🍳</div>
+            <div class="meta">4 habits · 8 weeks</div>
+          </div>
+          <div class="pack mindful">
+            <span class="pill">Premium</span>
+            <div class="name">Mindful Peak</div>
+            <div class="desc">Find clarity and calm in 15 minutes a day</div>
+            <div class="emojis">🧘 🌬️ 📝 🌿</div>
+            <div class="meta">4 habits · 6 weeks</div>
+          </div>
+        </div>
+
+        <!-- Other transformations rail -->
+        <div class="section-head" style="margin-top: 22px;">
+          <div class="annotation">
+            <span class="anno-tag">C · Other paths (was 2×2 grid)</span>
+            <div class="title">Other paths</div>
+            <div class="subtitle">Something else for you?</div>
+          </div>
+        </div>
+        <div class="rail-wrap">
+          <div class="rail">
+            <div class="gcard sleep">
+              <div class="em">😴</div>
+              <div class="lbl">Sleep deeper</div>
+              <div class="pr">Wind down, rest fully, wake refreshed</div>
+              <div class="bot"><span class="ct">14 habits</span><span class="arr">›</span></div>
+            </div>
+            <div class="gcard stress">
+              <div class="em">🧘</div>
+              <div class="lbl">Stress less</div>
+              <div class="pr">Calm your mind and regulate your system</div>
+              <div class="bot"><span class="ct">22 habits</span><span class="arr">›</span></div>
+            </div>
+            <div class="gcard focus">
+              <div class="em">🎯</div>
+              <div class="lbl">Focus deeper</div>
+              <div class="pr">Beat distraction and do deeper work</div>
+              <div class="bot"><span class="ct">19 habits</span><span class="arr">›</span></div>
+            </div>
+            <div class="gcard health">
+              <div class="em">💪</div>
+              <div class="lbl">Get healthier</div>
+              <div class="pr">Lasting habits for a longer life</div>
+              <div class="bot"><span class="ct">28 habits</span><span class="arr">›</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick wins (was Popular) -->
+        <div class="section-head" style="margin-top: 26px;">
+          <div class="annotation">
+            <span class="anno-tag">D · Was “Popular” + 🔥 top 3</span>
+            <div class="section-head-row">
+              <div>
+                <div class="title">Quick wins to build momentum</div>
+                <div class="subtitle">What people are starting this week</div>
+              </div>
+              <span class="right">See all</span>
+            </div>
+          </div>
+        </div>
+        <div class="h-list-wrap">
+          <div class="h-list">
+            <div class="tcard">
+              <div class="ibox">💪</div>
+              <div class="nm">7-Minute Workout</div>
+              <div class="ds">Full-body strength in 7 min</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+                <span class="sci-pill">🔬 Science-backed</span>
+              </div>
+              <div class="bot">
+                <span class="pop">🔥 2.4K tracking</span>
+                <span class="add">+</span>
+              </div>
+            </div>
+            <div class="tcard">
+              <div class="ibox">🌬️</div>
+              <div class="nm">Box Breathing</div>
+              <div class="ds">4-4-4-4 for nervous system</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+                <span class="sci-pill">🔬 Science-backed</span>
+              </div>
+              <div class="bot">
+                <span class="pop">🔥 1.8K tracking</span>
+                <span class="add">+</span>
+              </div>
+            </div>
+            <div class="tcard">
+              <div class="ibox">📝</div>
+              <div class="nm">Gratitude Note</div>
+              <div class="ds">3 things, every evening</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+              </div>
+              <div class="bot">
+                <span class="pop">🔥 1.2K tracking</span>
+                <span class="add">+</span>
+              </div>
+            </div>
+            <div class="tcard">
+              <div class="ibox">🚿</div>
+              <div class="nm">Cold Shower Finish</div>
+              <div class="ds">30 seconds at the end</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+                <span class="sci-pill">🔬 Science-backed</span>
+              </div>
+              <div class="bot">
+                <span class="pop">980 tracking</span>
+                <span class="add">+</span>
+              </div>
+            </div>
+            <div class="tcard">
+              <div class="ibox">🚶</div>
+              <div class="nm">Sunlight Walk</div>
+              <div class="ds">10 min before screens</div>
+              <div class="meta">
+                <span class="freq">Daily</span>
+              </div>
+              <div class="bot">
+                <span class="pop">740 tracking</span>
+                <span class="add">+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Browse by area (CategoryRowsSection with subtitles) -->
+        <div class="area-section">
+          <div class="section-head">
+            <div class="annotation">
+              <span class="anno-tag">E · Section header + per-row subtitles</span>
+              <div class="title">Browse by area</div>
+              <div class="subtitle">Find the habits that shape who you become</div>
+            </div>
+          </div>
+
+          <div class="cat-row">
+            <div class="head">
+              <div class="head-row">
+                <div>
+                  <div class="ttl">🌅 Morning</div>
+                  <div class="sub">Build energy, clarity, and momentum before 9am</div>
+                </div>
+                <span class="right">See all →</span>
+              </div>
+            </div>
+            <div class="h-list-wrap">
+              <div class="h-list">
+                <div class="tcard">
+                  <div class="ibox">💧</div>
+                  <div class="nm">Hydrate First</div>
+                  <div class="ds">500ml water on waking</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">1.6K tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">📔</div>
+                  <div class="nm">Morning Pages</div>
+                  <div class="ds">3 pages of stream-of-thought</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">820 tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">🍳</div>
+                  <div class="nm">Protein at Breakfast</div>
+                  <div class="ds">30g within 60 min of waking</div>
+                  <div class="meta"><span class="freq">Daily</span><span class="sci-pill">🔬 Science-backed</span></div>
+                  <div class="bot"><span class="pop">580 tracking</span><span class="add">+</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cat-row">
+            <div class="head">
+              <div class="head-row">
+                <div>
+                  <div class="ttl">🧠 Mental Health</div>
+                  <div class="sub">Support emotional resilience and well-being</div>
+                </div>
+                <span class="right">See all →</span>
+              </div>
+            </div>
+            <div class="h-list-wrap">
+              <div class="h-list">
+                <div class="tcard">
+                  <div class="ibox">📝</div>
+                  <div class="nm">Worry Dump</div>
+                  <div class="ds">5-minute anxiety brain-dump</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">920 tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">📞</div>
+                  <div class="nm">Reach Out</div>
+                  <div class="ds">One real message to a friend</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">410 tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">🌿</div>
+                  <div class="nm">Nature Reset</div>
+                  <div class="ds">10 min outside without phone</div>
+                  <div class="meta"><span class="freq">Daily</span><span class="sci-pill">🔬 Science-backed</span></div>
+                  <div class="bot"><span class="pop">680 tracking</span><span class="add">+</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cat-row">
+            <div class="head">
+              <div class="head-row">
+                <div>
+                  <div class="ttl">💪 Health</div>
+                  <div class="sub">Strengthen your body with lasting physical habits</div>
+                </div>
+                <span class="right">See all →</span>
+              </div>
+            </div>
+            <div class="h-list-wrap">
+              <div class="h-list">
+                <div class="tcard">
+                  <div class="ibox">🚶</div>
+                  <div class="nm">10K Steps</div>
+                  <div class="ds">Movement target for the day</div>
+                  <div class="meta"><span class="freq">Daily</span><span class="sci-pill">🔬 Science-backed</span></div>
+                  <div class="bot"><span class="pop">3.1K tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">🥗</div>
+                  <div class="nm">Two Salads</div>
+                  <div class="ds">Lunch + dinner</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">540 tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">🏋️</div>
+                  <div class="nm">Push/Pull/Legs</div>
+                  <div class="ds">3-day split, 45 min</div>
+                  <div class="meta"><span class="freq">3×/week</span></div>
+                  <div class="bot"><span class="pop">770 tracking</span><span class="add">+</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cat-row">
+            <div class="head">
+              <div class="head-row">
+                <div>
+                  <div class="ttl">😴 Sleep</div>
+                  <div class="sub">Wind down and optimize rest for peak recovery</div>
+                </div>
+                <span class="right">See all →</span>
+              </div>
+            </div>
+            <div class="h-list-wrap">
+              <div class="h-list">
+                <div class="tcard">
+                  <div class="ibox">📵</div>
+                  <div class="nm">Phone Out by 10</div>
+                  <div class="ds">Charge it in the kitchen</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">1.4K tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">📖</div>
+                  <div class="nm">Wind-down Read</div>
+                  <div class="ds">15 pages of fiction</div>
+                  <div class="meta"><span class="freq">Daily</span></div>
+                  <div class="bot"><span class="pop">630 tracking</span><span class="add">+</span></div>
+                </div>
+                <div class="tcard">
+                  <div class="ibox">🌙</div>
+                  <div class="nm">Same Bedtime</div>
+                  <div class="ds">±15 min, every night</div>
+                  <div class="meta"><span class="freq">Daily</span><span class="sci-pill">🔬 Science-backed</span></div>
+                  <div class="bot"><span class="pop">510 tracking</span><span class="add">+</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="browse-all">
+            <span class="l">Browse all 247 habits</span>
+            <span class="a">→</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="legend">
+      <h2>What changed</h2>
+      <ul>
+        <li><span class="key">A</span><strong>Hero card.</strong> Time-aware featured transformation, big emoji + promise + 3 inline starter habits + primary CTA. Was a small horizontal tile.</li>
+        <li><span class="key">B</span><strong>Curated bundles.</strong> Premium packs were wired into the screen but never rendered (dead code in <code>MainBrowseView</code>). Now visible — direct monetization surface.</li>
+        <li><span class="key">C</span><strong>Other paths rail.</strong> Remaining 4 transformations move from a 2×2 grid into a horizontal-scrolling rail; promise visible on every card.</li>
+        <li><span class="key">D</span><strong>Quick wins.</strong> "Popular" → "Quick wins to build momentum" with subtitle "What people are starting this week". Top 3 by popularityScore prefixed with 🔥.</li>
+        <li><span class="key">E</span><strong>Browse by area.</strong> New section header "Find the habits that shape who you become". Each category row now shows the aspirational subtitle from <code>categoryMeta</code> (already in data, never surfaced).</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

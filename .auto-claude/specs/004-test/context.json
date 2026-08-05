@@ -1,0 +1,14 @@
+{
+  "task_description": "Execute the existing Jest test suite to verify all tests pass",
+  "scoped_services": [],
+  "files_to_modify": [],
+  "files_to_reference": [
+    "package.json",
+    "__tests__/",
+    "src/components/*/tests/",
+    "convex/*.test.ts"
+  ],
+  "patterns": {},
+  "service_contexts": {},
+  "created_at": "2025-01-05T00:00:00.000Z"
+}

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Unified Habit Form — Add &amp; Edit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ===== Real design tokens from src/theme (light "warm parchment" mode) ===== */
+  :root{
+    --bg:#F5F1ED; --surface:#EDEAE5; --card:#EDEAE5; --border:#DDD8D2; --card-border:#DDD8D2;
+    --text-primary:#2D2A26; --text-secondary:#6B6560; --text-tertiary:#6E6660; --text-inverse:#FFFFFF;
+    --primary-100:#D1FAE5; --primary-500:#10B981; --primary-600:#059669; --primary-700:#047857;
+    --error:#DC2626; --error-light:#FEE2E2;
+    --streak-light:#FEF3C7; --streak-text:#92400E;
+    --gray-50:#FAF8F5; --gray-200:#DDD8D2; --gray-300:#C4BFB7;
+    --white:#FFFFFF;
+    --r-xl:24px; --r-card:16px; --r-btn:12px; --r-chip:8px; --r-full:9999px; --r-xs:4px;
+    --font-text:'DM Sans',-apple-system,system-ui,sans-serif;
+    --font-display:'Literata',Georgia,serif;
+    --shadow-modal:0 8px 24px rgba(45,42,38,0.10);
+    --shadow-subtle:0 1px 3px rgba(45,42,38,0.04);
+    --shadow-card:0 2px 8px rgba(45,42,38,0.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:var(--font-text);
+    background:#26211C; /* dark canvas so the light sheets pop */
+    color:#fff; min-height:100vh; padding:40px 24px 64px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page-head{max-width:1080px;margin:0 auto 36px;text-align:center;}
+  .page-head h1{font-family:var(--font-display);font-weight:700;font-size:30px;letter-spacing:-0.5px;margin-bottom:8px;}
+  .page-head p{color:#B8B0A6;font-size:15px;line-height:1.5;max-width:620px;margin:0 auto;}
+  .frames{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;align-items:flex-start;max-width:1080px;margin:0 auto;}
+  .frame-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;}
+  .frame-label{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#9C948A;}
+  .frame-label b{color:#fff;}
+
+  /* ===== iPhone frame ===== */
+  .phone{
+    width:390px;height:800px;border-radius:46px;background:#000;padding:11px;
+    box-shadow:0 30px 80px rgba(0,0,0,0.55);position:relative;
+  }
+  .screen{
+    width:100%;height:100%;border-radius:36px;overflow:hidden;position:relative;
+    background:var(--bg);
+  }
+  /* dim content behind the sheet */
+  .behind{position:absolute;inset:0;background:var(--bg);}
+  .behind-dim{position:absolute;inset:0;background:rgba(0,0,0,0.32);}
+
+  /* ===== Bottom sheet (the unified shell) ===== */
+  .sheet{
+    position:absolute;left:0;right:0;bottom:0;top:48px;
+    background:var(--surface);
+    border-top-left-radius:var(--r-xl);border-top-right-radius:var(--r-xl);
+    box-shadow:var(--shadow-modal);
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .drag-row{display:flex;justify-content:center;padding:8px 0 4px;}
+  .drag-handle{width:36px;height:5px;border-radius:var(--r-xs);background:var(--gray-300);}
+
+  /* ===== Header (unified) ===== */
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 8px;}
+  .hdr-cancel{
+    display:flex;align-items:center;gap:4px;background:none;border:none;cursor:pointer;
+    font-family:var(--font-text);font-size:17px;font-weight:500;color:var(--text-secondary);
+    padding:6px 4px;
+  }
+  .save-btn{
+    display:flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 24px;
+    border:none;border-radius:var(--r-full);cursor:pointer;
+    background:var(--primary-600);color:var(--text-inverse);
+    font-family:var(--font-text);font-size:17px;font-weight:600;letter-spacing:0.08px;
+  }
+  .save-btn.disabled{background:var(--gray-300);color:#8A837B;}
+  .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,0.45);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ===== Scroll body ===== */
+  .body{flex:1;overflow-y:auto;padding-bottom:32px;}
+  .body::-webkit-scrollbar{width:0;}
+
+  /* Name section */
+  .name-sec{padding:32px 24px 40px;display:flex;flex-direction:column;align-items:center;}
+  .name-title{
+    font-family:var(--font-text);font-weight:600;font-size:22px;letter-spacing:-0.35px;line-height:28px;
+    color:var(--text-primary);text-align:center;margin-bottom:24px;
+  }
+  .name-input{
+    width:100%;border:2px solid var(--border);border-radius:var(--r-card);
+    padding:16px 20px;text-align:center;font-family:var(--font-text);font-size:24px;font-weight:600;
+    color:var(--text-primary);background:#FFFFFF;line-height:28px;
+  }
+  .name-input.focus{border-color:var(--primary-500);}
+  .name-input.error{border-color:var(--error);}
+  .name-input.placeholder{color:var(--text-tertiary);font-weight:500;}
+  .name-err{margin-top:12px;font-size:14px;font-weight:500;color:var(--error);}
+
+  /* Quick picks (create only) */
+  .quickpicks{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+  .qp{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-full);
+    background:var(--card);border:1px solid var(--border);font-size:14px;font-weight:500;color:var(--text-secondary);}
+  .qp-hint{margin-top:14px;font-size:12px;font-weight:500;letter-spacing:0.4px;color:var(--text-tertiary);}
+
+  /* Section label (unified — typography.caption uppercase) */
+  .sec-label{
+    text-align:center;text-transform:uppercase;font-family:var(--font-text);
+    font-size:13px;font-weight:600;letter-spacing:0.5px;color:var(--text-tertiary);
+    margin:0 24px 12px;
+  }
+  .sec-label.tight{margin-top:16px;}
+
+  /* Emoji grid */
+  .emoji-wrap{padding:0 24px;}
+  .emoji-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;}
+  .emoji{
+    aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:24px;
+    background:#FFFFFF;border:1.5px solid var(--border);border-radius:var(--r-card);cursor:pointer;
+  }
+  .emoji.more{font-size:13px;font-weight:600;color:var(--text-secondary);background:var(--card);}
+  .emoji.sel{border-color:transparent;box-shadow:0 0 0 2.5px var(--sel,#10B981);}
+
+  .ai-hint{display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 24px 0;
+    font-size:12px;font-weight:500;color:var(--text-tertiary);}
+  .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--primary-500);}
+
+  /* Color row */
+  .color-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding:0 24px;}
+  .sw{width:36px;height:36px;border-radius:var(--r-full);cursor:pointer;border:2px solid transparent;}
+  .sw.sel{box-shadow:0 0 0 2px #FFFFFF,0 0 0 4px var(--swc);}
+
+  /* Reminder */
+  .reminder{padding:24px 24px 0;}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;
+    background:#FFFFFF;border:1px solid var(--border);border-radius:var(--r-card);padding:14px 16px;}
+  .toggle-left{display:flex;align-items:center;gap:12px;}
+  .bell{width:36px;height:36px;border-radius:var(--r-chip);background:var(--primary-100);
+    display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .toggle-txt b{display:block;font-size:16px;font-weight:600;color:var(--text-primary);}
+  .toggle-txt span{font-size:13px;color:var(--text-secondary);}
+  .switch{width:51px;height:31px;border-radius:var(--r-full);position:relative;flex:none;}
+  .switch.on{background:var(--primary-600);}
+  .switch.off{background:var(--gray-300);}
+  .knob{position:absolute;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+  .switch.on .knob{right:2px;}
+  .switch.off .knob{left:2px;}
+  .presets{display:flex;gap:12px;margin-top:16px;}
+  .preset{flex:1;padding:14px 0;text-align:center;border-radius:var(--r-btn);
+    border:1.5px solid var(--border);background:#FFFFFF;cursor:pointer;}
+  .preset b{display:block;font-size:15px;font-weight:600;color:var(--text-primary);}
+  .preset span{font-size:12px;color:var(--text-secondary);}
+  .preset.sel{border-color:var(--primary-600);background:var(--primary-100);}
+  .custom-time{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px;border-radius:var(--r-btn);border:1.5px dashed var(--border);font-size:15px;
+    font-weight:500;color:var(--text-secondary);}
+  .next-badge{display:flex;justify-content:center;margin-top:14px;}
+  .next-badge span{font-size:12px;font-weight:500;color:var(--primary-700);background:var(--primary-100);
+    padding:5px 12px;border-radius:var(--r-full);}
+
+  /* Advanced options card */
+  .adv{margin:24px 24px 8px;background:var(--card);border:1px solid var(--card-border);
+    border-radius:var(--r-card);box-shadow:var(--shadow-subtle);padding:16px;}
+  .adv-title{text-align:center;text-transform:uppercase;font-size:12px;font-weight:600;
+    letter-spacing:0.5px;color:var(--text-secondary);}
+  .adv-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px;}
+  .chip{display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--r-full);font-size:11px;font-weight:600;}
+  .chip.algo{background:var(--primary-100);color:var(--primary-700);}
+  .chip.grow{background:var(--primary-100);color:var(--primary-700);}
+  .chip.streak{background:var(--streak-light);color:var(--streak-text);}
+  .adv-btn{margin-top:16px;display:flex;align-items:center;justify-content:center;gap:6px;
+    background:var(--primary-600);border-radius:var(--r-btn);padding:13px 0;
+    text-transform:uppercase;font-size:13px;font-weight:700;letter-spacing:0.5px;color:#fff;}
+
+  /* status notes column */
+  .notes{max-width:1080px;margin:44px auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+  .note{background:#312A24;border:1px solid #43392F;border-radius:14px;padding:18px 20px;}
+  .note h3{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#C9A06A;margin-bottom:12px;}
+  .note .row{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+  .note .row:last-child{margin-bottom:0;}
+  .note small{color:#B8B0A6;font-size:12px;line-height:1.4;}
+  .mini-save{height:36px;padding:0 18px;border-radius:var(--r-full);font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px;border:none;}
+  .mini-save.on{background:var(--primary-600);color:#fff;}
+  .mini-save.off{background:var(--gray-300);color:#8A837B;}
+  .mini-input{flex:1;border:2px solid var(--error);border-radius:10px;background:#fff;color:var(--text-primary);font-size:13px;padding:8px 10px;text-align:center;font-family:var(--font-text);}
+</style>
+</head>
+<body>
+
+  <div class="page-head">
+    <h1>One Habit Form — Add &amp; Edit unified</h1>
+    <p>Same bottom-sheet shell, header, name input, section labels, pickers and advanced card for both flows. The only differences are content-driven: the title copy, the create-only quick-picks &amp; AI-suggested emoji hint, and pre-filled vs. empty fields.</p>
+  </div>
+
+  <div class="frames">
+
+    <!-- ================= ADD / CREATE ================= -->
+    <div class="frame-wrap">
+      <div class="frame-label"><b>ADD</b> · create mode</div>
+      <div class="phone"><div class="screen">
+        <div class="behind"></div>
+        <div class="behind-dim"></div>
+        <div class="sheet">
+          <div class="drag-row"><div class="drag-handle"></div></div>
+          <div class="hdr">
+            <button class="hdr-cancel">Cancel</button>
+            <button class="save-btn disabled">Save</button>
+          </div>
+          <div class="body">
+            <div class="name-sec">
+              <div class="name-title">Name your new habit</div>
+              <div class="name-input placeholder">e.g. Morning run</div>
+              <div class="quickpicks">
+                <div class="qp">🏃 Run</div>
+                <div class="qp">📖 Read</div>
+                <div class="qp">💧 Hydrate</div>
+                <div class="qp">🧘 Meditate</div>
+              </div>
+              <div class="qp-hint">Tap a quick pick or type your own</div>
+            </div>
+
+            <div class="sec-label">Choose an icon</div>
+            <div class="emoji-wrap">
+              <div class="emoji-grid">
+                <div class="emoji">💪</div><div class="emoji">🧘</div><div class="emoji">📖</div>
+                <div class="emoji">💧</div><div class="emoji">🎨</div><div class="emoji">🏃</div>
+                <div class="emoji">🍎</div><div class="emoji">🥗</div><div class="emoji">☕</div>
+                <div class="emoji">💤</div><div class="emoji">🎯</div><div class="emoji more">More</div>
+              </div>
+              <div class="ai-hint"><span class="ai-dot"></span>Suggested from your habit name</div>
+            </div>
+
+            <div class="sec-label tight">Pick a color</div>
+            <div class="color-row">
+              <div class="sw" style="background:#EF4444"></div>
+              <div class="sw" style="background:#F97316"></div>
+              <div class="sw" style="background:#FBBF24"></div>
+              <div class="sw sel" style="background:#10B981;--swc:#10B981"></div>
+              <div class="sw" style="background:#14B8A6"></div>
+              <div class="sw" style="background:#06B6D4"></div>
+              <div class="sw" style="background:#3B82F6"></div>
+              <div class="sw" style="background:#8B5CF6"></div>
+              <div class="sw" style="background:#EC4899"></div>
+              <div class="sw" style="background:#78716C"></div>
+            </div>
+
+            <div class="reminder">
+              <div class="toggle-row">
+                <div class="toggle-left">
+                  <div class="bell">🔔</div>
+                  <div class="toggle-txt"><b>Daily reminders</b><span>Off</span></div>
+                </div>
+                <div class="switch off"><div class="knob"></div></div>
+              </div>
+            </div>
+
+            <div class="adv">
+              <div class="adv-title">More to customize</div>
+              <div class="adv-chips">
+                <div class="chip algo">⚖️ Balanced</div>
+                <div class="chip grow">🌱 Classic</div>
+                <div class="chip streak">🎯 No goal set</div>
+              </div>
+              <div class="adv-btn">Customize ⌄</div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ================= EDIT ================= -->
+    <div class="frame-wrap">
+      <div class="frame-label"><b>EDIT</b> · edit mode</div>
+      <div class="phone"><div class="screen">
+        <div class="behind"></div>
+        <div class="behind-dim"></div>
+        <div class="sheet">
+          <div class="drag-row"><div class="drag-handle"></div></div>
+          <div class="hdr">
+            <button class="hdr-cancel">Cancel</button>
+            <button class="save-btn">Save</button>
+          </div>
+          <div class="body">
+            <div class="name-sec">
+              <div class="name-title">Edit your habit</div>
+              <div class="name-input focus">Morning run</div>
+            </div>
+
+            <div class="sec-label">Choose an icon</div>
+            <div class="emoji-wrap">
+              <div class="emoji-grid">
+                <div class="emoji">💪</div><div class="emoji">🧘</div><div class="emoji">📖</div>
+                <div class="emoji">💧</div><div class="emoji">🎨</div><div class="emoji sel" style="--sel:#3B82F6">🏃</div>
+                <div class="emoji">🍎</div><div class="emoji">🥗</div><div class="emoji">☕</div>
+                <div class="emoji">💤</div><div class="emoji">🎯</div><div class="emoji more">More</div>
+              </div>
+              <div class="ai-hint"><span class="ai-dot"></span>Suggested from your habit name</div>
+            </div>
+
+            <div class="sec-label tight">Pick a color</div>
+            <div class="color-row">
+              <div class="sw" style="background:#EF4444"></div>
+              <div class="sw" style="background:#F97316"></div>
+              <div class="sw" style="background:#FBBF24"></div>
+              <div class="sw" style="background:#10B981"></div>
+              <div class="sw" style="background:#14B8A6"></div>
+              <div class="sw" style="background:#06B6D4"></div>
+              <div class="sw sel" style="background:#3B82F6;--swc:#3B82F6"></div>
+              <div class="sw" style="background:#8B5CF6"></div>
+              <div class="sw" style="background:#EC4899"></div>
+              <div class="sw" style="background:#78716C"></div>
+            </div>
+
+            <div class="reminder">
+              <div class="toggle-row">
+                <div class="toggle-left">
+                  <div class="bell">🔔</div>
+                  <div class="toggle-txt"><b>Daily reminders</b><span>On · 7:00 AM</span></div>
+                </div>
+                <div class="switch on"><div class="knob"></div></div>
+              </div>
+              <div class="presets">
+                <div class="preset sel"><b>Morning</b><span>7:00 AM</span></div>
+                <div class="preset"><b>Midday</b><span>12:00 PM</span></div>
+                <div class="preset"><b>Evening</b><span>5:00 PM</span></div>
+              </div>
+              <div class="custom-time">🕐 Custom time</div>
+              <div class="next-badge"><span>Next reminder · tomorrow 7:00 AM</span></div>
+            </div>
+
+            <div class="adv">
+              <div class="adv-title">More to customize</div>
+              <div class="adv-chips">
+                <div class="chip algo">⚖️ Balanced</div>
+                <div class="chip grow">🌱 Classic</div>
+                <div class="chip streak">🎯 30-day</div>
+              </div>
+              <div class="adv-btn">Customize ⌄</div>
+            </div>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+  </div>
+
+  <!-- ===== shared interaction states ===== -->
+  <div class="notes">
+    <div class="note">
+      <h3>Save button — shared states</h3>
+      <div class="row"><button class="mini-save on">Save</button><small>Valid &amp; idle</small></div>
+      <div class="row"><button class="mini-save off">Save</button><small>Empty name → disabled <b style="color:#C9A06A">+ shake</b> on tap</small></div>
+      <div class="row"><button class="mini-save on"><span class="spinner"></span>Saving…</button><small>In-flight (both modes)</small></div>
+    </div>
+    <div class="note">
+      <h3>Name field — shared states</h3>
+      <div class="row"><input class="mini-input" value="" placeholder="e.g. Morning run" style="border-color:#DDD8D2"/><small>Idle</small></div>
+      <div class="row"><input class="mini-input" value="Morning run" style="border-color:#10B981"/><small>Focused</small></div>
+      <div class="row"><input class="mini-input" value="" placeholder="Give your habit a name"/><small style="color:#FCA5A5">Error border + message + shake</small></div>
+    </div>
+    <div class="note">
+      <h3>What stays different (by design)</h3>
+      <div class="row"><small><b style="color:#fff">Title copy:</b> “Name your new habit” vs “Edit your habit”.</small></div>
+      <div class="row"><small><b style="color:#fff">Create-only:</b> quick-picks row + autofocus keyboard.</small></div>
+      <div class="row"><small><b style="color:#fff">Edit:</b> fields pre-filled; saves via <code>habits.update</code>.</small></div>
+      <div class="row"><small><b style="color:#fff">Shared everywhere:</b> sheet shell, drag handle, swipe-to-dismiss, header, labels, pickers, advanced card, emoji-suggestion lock behavior.</small></div>
+    </div>
+  </div>
+
+</body>
+</html>

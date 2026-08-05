@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar Heatmap Fix & Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #1c1917; }
+
+    /* Cell press animation */
+    @keyframes cellPress {
+      0% { transform: scale(1); }
+      50% { transform: scale(0.85); }
+      100% { transform: scale(1); }
+    }
+
+    /* Checkmark pop-in */
+    @keyframes checkPop {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.3); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Pulse for today */
+    @keyframes todayPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4); }
+      50% { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0); }
+    }
+
+    /* Loading spinner */
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Confetti burst */
+    @keyframes confettiBurst {
+      0% { transform: scale(0) rotate(0deg); opacity: 1; }
+      100% { transform: scale(2) rotate(180deg); opacity: 0; }
+    }
+
+    .cell-interactive {
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .cell-interactive:active {
+      animation: cellPress 0.2s ease;
+    }
+
+    .today-pulse {
+      animation: todayPulse 2s ease-in-out infinite;
+    }
+
+    .check-pop {
+      animation: checkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    .spinner {
+      animation: spin 0.8s linear infinite;
+    }
+
+    .confetti {
+      animation: confettiBurst 0.6s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+
+  <!-- Header -->
+  <div class="max-w-md mx-auto mb-8">
+    <h1 class="text-2xl font-bold text-white mb-2">Calendar Heatmap Fix</h1>
+    <p class="text-stone-400 text-sm">Tap-to-toggle + visual feedback + UX improvements</p>
+  </div>
+
+  <!-- Phone Frames -->
+  <div class="flex flex-col md:flex-row gap-8 justify-center items-start">
+
+    <!-- BEFORE -->
+    <div class="flex flex-col items-center">
+      <div class="text-stone-500 text-sm font-medium mb-3 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-stone-600"></span>
+        BEFORE (Broken)
+      </div>
+
+      <div class="w-[320px] bg-stone-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="bg-stone-100 rounded-[2rem] overflow-hidden">
+          <!-- Status Bar -->
+          <div class="h-11 bg-stone-50 flex items-center justify-center">
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+          </div>
+
+          <!-- Calendar Component -->
+          <div class="p-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm">
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="calendar" class="w-4 h-4 text-emerald-500"></i>
+                  </div>
+                  <span class="text-lg font-bold text-stone-800">Activity</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="p-1.5 rounded-lg hover:bg-stone-100">
+                    <i data-lucide="chevron-left" class="w-5 h-5 text-stone-400"></i>
+                  </button>
+                  <span class="text-sm font-medium text-stone-600 min-w-[80px] text-center">Dec 2025</span>
+                  <button class="p-1.5 rounded-lg opacity-50">
+                    <i data-lucide="chevron-right" class="w-5 h-5 text-stone-200"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Day labels -->
+              <div class="grid grid-cols-7 gap-1 mb-2">
+                <div class="text-center text-xs font-medium text-stone-400">S</div>
+                <div class="text-center text-xs font-medium text-stone-400">M</div>
+                <div class="text-center text-xs font-medium text-stone-400">T</div>
+                <div class="text-center text-xs font-medium text-stone-400">W</div>
+                <div class="text-center text-xs font-medium text-stone-400">T</div>
+                <div class="text-center text-xs font-medium text-stone-400">F</div>
+                <div class="text-center text-xs font-medium text-stone-400">S</div>
+              </div>
+
+              <!-- Calendar Grid - Static, no interaction -->
+              <div class="grid grid-cols-7 gap-1">
+                <!-- Week 1 -->
+                <div class="aspect-square"></div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">1</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">2</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">4</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">6</span>
+                  </div>
+                </div>
+
+                <!-- Week 2-3 abbreviated -->
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">7</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center">
+                    <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">10</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">11</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">12</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">13</span>
+                  </div>
+                </div>
+
+                <!-- More days... -->
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">14</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">15</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">16</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">17</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">18</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">19</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center">
+                    <span class="text-xs text-stone-400">20</span>
+                  </div>
+                </div>
+
+                <!-- Today row -->
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border-2 border-amber-400 bg-amber-50 flex items-center justify-center">
+                    <span class="text-xs font-medium text-amber-600">21</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center">
+                    <span class="text-xs text-stone-300">22</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center">
+                    <span class="text-xs text-stone-300">23</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center">
+                    <span class="text-xs text-stone-300">24</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center">
+                    <span class="text-xs text-stone-300">25</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center">
+                    <span class="text-xs text-stone-300">26</span>
+                  </div>
+                </div>
+                <div class="aspect-square flex items-center justify-center">
+                  <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center">
+                    <span class="text-xs text-stone-300">27</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats -->
+              <div class="mt-4 flex items-center justify-center gap-4 text-xs">
+                <div class="flex items-center gap-1.5">
+                  <div class="w-3 h-3 rounded-sm bg-emerald-500"></div>
+                  <span class="text-stone-600">4 days</span>
+                </div>
+                <span class="text-stone-300">•</span>
+                <span class="text-emerald-600 font-medium">19% this month</span>
+              </div>
+            </div>
+
+            <!-- Problem callout -->
+            <div class="mt-4 bg-red-50 border border-red-200 rounded-xl p-3">
+              <div class="flex items-center gap-2 text-red-600 text-sm font-medium">
+                <i data-lucide="x-circle" class="w-4 h-4"></i>
+                Tapping dates does nothing
+              </div>
+              <p class="text-red-500 text-xs mt-1">Handler is empty - can't backfill past days</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="flex flex-col items-center">
+      <div class="text-emerald-400 text-sm font-medium mb-3 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        AFTER (Fixed + Enhanced)
+      </div>
+
+      <div class="w-[320px] bg-stone-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="bg-stone-100 rounded-[2rem] overflow-hidden">
+          <!-- Status Bar -->
+          <div class="h-11 bg-stone-50 flex items-center justify-center">
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+          </div>
+
+          <!-- Calendar Component -->
+          <div class="p-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm relative overflow-hidden">
+              <!-- Subtle gradient background -->
+              <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/30 via-white to-teal-50/30"></div>
+
+              <div class="relative">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-4">
+                  <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                      <i data-lucide="calendar" class="w-4 h-4 text-emerald-500"></i>
+                    </div>
+                    <span class="text-lg font-bold text-stone-800">Activity</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button class="p-1.5 rounded-lg hover:bg-stone-100">
+                      <i data-lucide="chevron-left" class="w-5 h-5 text-stone-400"></i>
+                    </button>
+                    <span class="text-sm font-medium text-stone-600 min-w-[80px] text-center">Dec 2025</span>
+                    <button class="p-1.5 rounded-lg opacity-50">
+                      <i data-lucide="chevron-right" class="w-5 h-5 text-stone-200"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Tap hint tooltip -->
+                <div class="mb-3 flex items-center justify-center gap-1.5 text-xs text-stone-400">
+                  <i data-lucide="pointer" class="w-3 h-3"></i>
+                  <span>Tap any day to toggle</span>
+                </div>
+
+                <!-- Day labels -->
+                <div class="grid grid-cols-7 gap-1 mb-2">
+                  <div class="text-center text-xs font-medium text-stone-400">S</div>
+                  <div class="text-center text-xs font-medium text-stone-400">M</div>
+                  <div class="text-center text-xs font-medium text-stone-400">T</div>
+                  <div class="text-center text-xs font-medium text-stone-400">W</div>
+                  <div class="text-center text-xs font-medium text-stone-400">T</div>
+                  <div class="text-center text-xs font-medium text-stone-400">F</div>
+                  <div class="text-center text-xs font-medium text-stone-400">S</div>
+                </div>
+
+                <!-- Calendar Grid - Interactive -->
+                <div class="grid grid-cols-7 gap-1" id="calendarGrid">
+                  <!-- Week 1 -->
+                  <div class="aspect-square"></div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 1)">
+                      <span class="text-xs text-stone-400">1</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 2)">
+                      <span class="text-xs text-stone-400">2</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center cell-interactive" data-completed="true" onclick="toggleCell(this, 3)">
+                      <i data-lucide="check" class="w-4 h-4 text-white check-icon"></i>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 4)">
+                      <span class="text-xs text-stone-400">4</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center cell-interactive" data-completed="true" onclick="toggleCell(this, 5)">
+                      <i data-lucide="check" class="w-4 h-4 text-white check-icon"></i>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 6)">
+                      <span class="text-xs text-stone-400">6</span>
+                    </div>
+                  </div>
+
+                  <!-- Week 2 -->
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 7)">
+                      <span class="text-xs text-stone-400">7</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center cell-interactive" data-completed="true" onclick="toggleCell(this, 8)">
+                      <i data-lucide="check" class="w-4 h-4 text-white check-icon"></i>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center cell-interactive" data-completed="true" onclick="toggleCell(this, 9)">
+                      <i data-lucide="check" class="w-4 h-4 text-white check-icon"></i>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 10)">
+                      <span class="text-xs text-stone-400">10</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 11)">
+                      <span class="text-xs text-stone-400">11</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 12)">
+                      <span class="text-xs text-stone-400">12</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 13)">
+                      <span class="text-xs text-stone-400">13</span>
+                    </div>
+                  </div>
+
+                  <!-- Week 3 -->
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 14)">
+                      <span class="text-xs text-stone-400">14</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 15)">
+                      <span class="text-xs text-stone-400">15</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 16)">
+                      <span class="text-xs text-stone-400">16</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 17)">
+                      <span class="text-xs text-stone-400">17</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 18)">
+                      <span class="text-xs text-stone-400">18</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 19)">
+                      <span class="text-xs text-stone-400">19</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center cell-interactive" onclick="toggleCell(this, 20)">
+                      <span class="text-xs text-stone-400">20</span>
+                    </div>
+                  </div>
+
+                  <!-- Today row -->
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border-2 border-amber-400 bg-amber-50 flex items-center justify-center cell-interactive today-pulse" id="todayCell" onclick="toggleToday(this)">
+                      <span class="text-xs font-medium text-amber-600">21</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center opacity-50">
+                      <span class="text-xs text-stone-300">22</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center opacity-50">
+                      <span class="text-xs text-stone-300">23</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center opacity-50">
+                      <span class="text-xs text-stone-300">24</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center opacity-50">
+                      <span class="text-xs text-stone-300">25</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center opacity-50">
+                      <span class="text-xs text-stone-300">26</span>
+                    </div>
+                  </div>
+                  <div class="aspect-square flex items-center justify-center">
+                    <div class="w-9 h-9 rounded-lg border border-dashed border-stone-200 bg-stone-50 flex items-center justify-center opacity-50">
+                      <span class="text-xs text-stone-300">27</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-4 flex items-center justify-center gap-3 text-xs">
+                  <div class="flex items-center gap-1">
+                    <div class="w-3 h-3 rounded-sm bg-emerald-500"></div>
+                    <span class="text-stone-500">Done</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <div class="w-3 h-3 rounded-sm border-2 border-amber-400"></div>
+                    <span class="text-stone-500">Today</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <div class="w-3 h-3 rounded-sm bg-stone-100"></div>
+                    <span class="text-stone-500">Missed</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <div class="w-3 h-3 rounded-sm border border-dashed border-stone-300"></div>
+                    <span class="text-stone-500">Future</span>
+                  </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="mt-3 flex items-center justify-center gap-4 text-xs">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-3 h-3 rounded-sm bg-emerald-500"></div>
+                    <span class="text-stone-600" id="daysCount">4 days</span>
+                  </div>
+                  <span class="text-stone-300">•</span>
+                  <span class="text-emerald-600 font-medium" id="percentCount">19% this month</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Success callout -->
+            <div class="mt-4 bg-emerald-50 border border-emerald-200 rounded-xl p-3">
+              <div class="flex items-center gap-2 text-emerald-600 text-sm font-medium">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                Tap to toggle completion
+              </div>
+              <p class="text-emerald-500 text-xs mt-1">Try tapping any past date to backfill!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Improvements Summary -->
+  <div class="max-w-2xl mx-auto mt-12 bg-stone-800/50 rounded-2xl p-6 border border-stone-700">
+    <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+      <i data-lucide="zap" class="w-5 h-5 text-emerald-400"></i>
+      Improvements
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="pointer" class="w-4 h-4"></i>
+          Tap to Toggle
+        </div>
+        <div class="text-stone-400">Tap any past date to mark complete/incomplete. Streak auto-updates.</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          Visual Feedback
+        </div>
+        <div class="text-stone-400">Scale animation on press, checkmark pop-in, haptic feedback.</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="layout-list" class="w-4 h-4"></i>
+          Legend Added
+        </div>
+        <div class="text-stone-400">Clear legend showing Done, Today, Missed, and Future states.</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          Tap Hint
+        </div>
+        <div class="text-stone-400">"Tap any day to toggle" hint for discoverability.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let completedCount = 4;
+
+    function toggleCell(cell, day) {
+      const isCompleted = cell.dataset.completed === 'true';
+
+      if (isCompleted) {
+        // Uncomplete
+        cell.dataset.completed = 'false';
+        cell.classList.remove('bg-emerald-500');
+        cell.classList.add('bg-stone-100');
+        cell.innerHTML = `<span class="text-xs text-stone-400">${day}</span>`;
+        completedCount--;
+      } else {
+        // Complete with animation
+        cell.dataset.completed = 'true';
+        cell.classList.remove('bg-stone-100');
+        cell.classList.add('bg-emerald-500');
+        cell.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-white check-pop"></i>`;
+        lucide.createIcons();
+        completedCount++;
+      }
+
+      updateStats();
+    }
+
+    function toggleToday(cell) {
+      const isCompleted = cell.dataset.completed === 'true';
+
+      if (isCompleted) {
+        cell.dataset.completed = 'false';
+        cell.classList.remove('bg-emerald-500');
+        cell.classList.add('bg-amber-50', 'border-2', 'border-amber-400');
+        cell.innerHTML = `<span class="text-xs font-medium text-amber-600">21</span>`;
+        cell.classList.add('today-pulse');
+        completedCount--;
+      } else {
+        cell.dataset.completed = 'true';
+        cell.classList.remove('bg-amber-50', 'today-pulse');
+        cell.classList.add('bg-emerald-500');
+        cell.innerHTML = `<i data-lucide="check" class="w-4 h-4 text-white check-pop"></i>`;
+        lucide.createIcons();
+        completedCount++;
+      }
+
+      updateStats();
+    }
+
+    function updateStats() {
+      document.getElementById('daysCount').textContent = `${completedCount} days`;
+      const percent = Math.round((completedCount / 21) * 100);
+      document.getElementById('percentCount').textContent = `${percent}% this month`;
+    }
+  </script>
+
+</body>
+</html>

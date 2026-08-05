@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enhanced Progress Section - Habit Hard Mockup</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1c1917 0%, #0c0a09 100%) !important;
+      min-height: 100vh;
+    }
+
+    /* Stone palette (matching Habit Hard) */
+    :root {
+      --stone-50: #fafaf9;
+      --stone-100: #f5f5f4;
+      --stone-200: #e7e5e4;
+      --stone-300: #d6d3d0;
+      --stone-400: #a8a29e;
+      --stone-500: #78716c;
+      --stone-600: #57534e;
+      --stone-700: #44403c;
+      --stone-800: #292524;
+      --stone-900: #1c1917;
+      --stone-950: #0c0a09;
+    }
+
+    /* Heatmap cell colors */
+    .heat-0 { background-color: #292524; }
+    .heat-1 { background-color: #365314; }
+    .heat-2 { background-color: #4d7c0f; }
+    .heat-3 { background-color: #65a30d; }
+    .heat-4 { background-color: #84cc16; }
+
+    /* Tab styling */
+    .tab-active {
+      background: linear-gradient(135deg, #84cc16 0%, #65a30d 100%);
+      color: #0c0a09;
+      font-weight: 600;
+    }
+
+    .tab-inactive {
+      background: transparent;
+      color: #a8a29e;
+    }
+
+    .tab-inactive:hover {
+      background: #292524;
+      color: #f5f5f4;
+    }
+
+    /* Premium blur */
+    .premium-blur {
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    .premium-overlay {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .animate-fade-in { animation: fadeInUp 0.4s ease-out forwards; }
+    .animate-pulse-slow { animation: pulse 2s ease-in-out infinite; }
+
+    /* Phone frame */
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 8px solid #292524;
+    }
+
+    .phone-content::-webkit-scrollbar { width: 4px; }
+    .phone-content::-webkit-scrollbar-track { background: transparent; }
+    .phone-content::-webkit-scrollbar-thumb { background: #44403c; border-radius: 2px; }
+
+    /* Ring progress */
+    .ring-progress {
+      transform: rotate(-90deg);
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-8 gap-8">
+
+  <!-- Page Header -->
+  <div class="fixed top-6 left-6 z-10">
+    <h1 class="text-2xl font-bold text-stone-100">Enhanced Progress Section</h1>
+    <p class="text-stone-400 text-sm mt-1">7 New Features for Habit Hard</p>
+  </div>
+
+  <!-- Phone Mockup -->
+  <div class="phone-frame bg-stone-950 mt-12">
+    <div class="phone-content h-full overflow-y-auto bg-stone-50">
+
+      <!-- Status Bar (Light) -->
+      <div class="flex justify-between items-center px-6 py-3 bg-white">
+        <span class="text-stone-900 text-sm font-semibold">9:41</span>
+        <div class="flex gap-1">
+          <i data-lucide="signal" class="w-4 h-4 text-stone-900"></i>
+          <i data-lucide="wifi" class="w-4 h-4 text-stone-900"></i>
+          <i data-lucide="battery-full" class="w-4 h-4 text-stone-900"></i>
+        </div>
+      </div>
+
+      <!-- Navigation Header -->
+      <div class="flex items-center justify-between px-4 py-3 bg-white border-b border-stone-200">
+        <button class="p-2 -ml-2 rounded-full hover:bg-stone-100 transition-colors">
+          <i data-lucide="chevron-left" class="w-6 h-6 text-stone-600"></i>
+        </button>
+        <div class="flex items-center gap-2">
+          <span class="text-2xl">💪</span>
+          <h2 class="text-lg font-semibold text-stone-900">Exercise Daily</h2>
+        </div>
+        <button class="p-2 -mr-2 rounded-full hover:bg-stone-100 transition-colors">
+          <i data-lucide="more-horizontal" class="w-5 h-5 text-stone-600"></i>
+        </button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="flex gap-1 px-4 py-2 bg-white border-b border-stone-200">
+        <button class="flex-1 py-2 px-3 rounded-lg text-sm tab-active">Progress</button>
+        <button class="flex-1 py-2 px-3 rounded-lg text-sm tab-inactive">Motivation</button>
+        <button class="flex-1 py-2 px-3 rounded-lg text-sm tab-inactive">Manage</button>
+      </div>
+
+      <!-- Progress Content -->
+      <div class="px-4 py-4 space-y-4">
+
+        <!-- ============================================ -->
+        <!-- FEATURE 1: View Toggle (Week/Month/3M/Year) -->
+        <!-- ============================================ -->
+        <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm">
+          <!-- Calendar Header with View Toggle -->
+          <div class="p-4 pb-2">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center">
+                  <i data-lucide="calendar" class="w-4 h-4 text-emerald-600"></i>
+                </div>
+                <span class="font-semibold text-stone-800">Activity</span>
+              </div>
+              <div class="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-100 rounded-full">
+                <i data-lucide="trending-up" class="w-3 h-3 text-emerald-600"></i>
+                <span class="text-xs font-semibold text-emerald-700">+12%</span>
+              </div>
+            </div>
+
+            <!-- VIEW TOGGLE TABS -->
+            <div class="flex bg-stone-100 rounded-lg p-1 gap-1">
+              <button class="flex-1 py-1.5 px-2 text-xs rounded-md tab-inactive">Week</button>
+              <button class="flex-1 py-1.5 px-2 text-xs rounded-md tab-inactive">Month</button>
+              <button class="flex-1 py-1.5 px-2 text-xs rounded-md tab-active">3M</button>
+              <button class="flex-1 py-1.5 px-2 text-xs rounded-md tab-inactive relative">
+                Year
+                <span class="absolute -top-1 -right-1 w-4 h-4 bg-amber-400 rounded-full flex items-center justify-center">
+                  <i data-lucide="crown" class="w-2.5 h-2.5 text-amber-900"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 3-Month Heatmap Grid (Current View) -->
+          <div class="px-4 pb-2">
+            <div class="flex justify-between mb-2 px-6">
+              <span class="text-[10px] text-stone-400">Oct</span>
+              <span class="text-[10px] text-stone-400">Nov</span>
+              <span class="text-[10px] text-stone-400">Dec</span>
+            </div>
+            <div class="flex gap-[2px]" id="heatmap-3m"></div>
+          </div>
+
+          <!-- Stats Footer -->
+          <div class="flex items-center justify-center gap-4 px-4 py-3 border-t border-stone-100">
+            <div class="flex items-center gap-1.5">
+              <div class="w-3 h-3 rounded-sm bg-lime-500"></div>
+              <span class="text-xs text-stone-500">52 days</span>
+            </div>
+            <span class="text-stone-300">•</span>
+            <span class="text-xs font-medium text-emerald-600">68% success rate</span>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FEATURE 2: Yearly Heatmap (Premium Teaser) -->
+        <!-- ============================================ -->
+        <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm relative">
+          <div class="p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-amber-100 flex items-center justify-center">
+                  <i data-lucide="calendar-range" class="w-4 h-4 text-amber-600"></i>
+                </div>
+                <span class="font-semibold text-stone-800">2024 Year View</span>
+              </div>
+              <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full">PRO</span>
+            </div>
+
+            <!-- Blurred Yearly Grid -->
+            <div class="premium-blur">
+              <div class="flex gap-[1px]" id="heatmap-year-blur"></div>
+            </div>
+          </div>
+
+          <!-- Premium Overlay -->
+          <div class="absolute inset-0 premium-overlay flex items-center justify-center">
+            <div class="text-center">
+              <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-amber-100 flex items-center justify-center">
+                <i data-lucide="lock" class="w-6 h-6 text-amber-600"></i>
+              </div>
+              <p class="text-sm font-semibold text-stone-700">Unlock Year View</p>
+              <button class="mt-2 px-4 py-1.5 bg-amber-500 text-white text-xs font-semibold rounded-full hover:bg-amber-600 transition-colors">
+                Go Premium
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FEATURE 3: Consistency Index -->
+        <!-- ============================================ -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-violet-100 flex items-center justify-center">
+                <i data-lucide="activity" class="w-4 h-4 text-violet-600"></i>
+              </div>
+              <span class="font-semibold text-stone-800">Consistency Index</span>
+            </div>
+            <button class="p-1 rounded-full hover:bg-stone-100">
+              <i data-lucide="info" class="w-4 h-4 text-stone-400"></i>
+            </button>
+          </div>
+
+          <!-- Consistency Score Ring -->
+          <div class="flex items-center gap-4">
+            <div class="relative w-20 h-20">
+              <svg class="w-20 h-20 ring-progress" viewBox="0 0 36 36">
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none" stroke="#e7e5e4" stroke-width="3"/>
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                  fill="none" stroke="#8b5cf6" stroke-width="3" stroke-dasharray="78, 100" stroke-linecap="round"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-xl font-bold text-stone-800">78%</span>
+              </div>
+            </div>
+
+            <div class="flex-1 space-y-2">
+              <div class="flex justify-between text-sm">
+                <span class="text-stone-500">30-day avg</span>
+                <span class="font-medium text-stone-700">82%</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-stone-500">60-day avg</span>
+                <span class="font-medium text-stone-700">78%</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-stone-500">90-day avg</span>
+                <span class="font-medium text-stone-700">71%</span>
+              </div>
+            </div>
+          </div>
+
+          <p class="mt-3 text-xs text-stone-500 bg-stone-50 rounded-lg p-2">
+            💡 Unlike streaks, consistency index forgives occasional misses and shows your true long-term progress.
+          </p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FEATURE 4: Perfect Days Counter -->
+        <!-- ============================================ -->
+        <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl border border-emerald-200 p-4 shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center">
+              <span class="text-2xl">✨</span>
+            </div>
+            <div class="flex-1">
+              <div class="text-sm text-emerald-600 font-medium">Perfect Days This Month</div>
+              <div class="text-2xl font-bold text-stone-800">12 <span class="text-sm font-normal text-stone-500">of 27 days</span></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-stone-500">vs last month</div>
+              <div class="text-sm font-semibold text-emerald-600">+4 days</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FEATURE 5: Monthly Comparison -->
+        <!-- ============================================ -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-4 shadow-sm">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <i data-lucide="git-compare" class="w-4 h-4 text-blue-600"></i>
+            </div>
+            <span class="font-semibold text-stone-800">Monthly Comparison</span>
+          </div>
+
+          <div class="flex gap-3">
+            <!-- This Month -->
+            <div class="flex-1 bg-emerald-50 rounded-xl p-3 border border-emerald-100">
+              <div class="text-xs text-emerald-600 font-medium mb-1">December</div>
+              <div class="text-2xl font-bold text-stone-800">18<span class="text-sm font-normal text-stone-500">/27</span></div>
+              <div class="mt-2 h-2 bg-emerald-200 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full" style="width: 67%"></div>
+              </div>
+              <div class="text-xs text-stone-500 mt-1">67% complete</div>
+            </div>
+
+            <!-- Last Month -->
+            <div class="flex-1 bg-stone-50 rounded-xl p-3 border border-stone-200">
+              <div class="text-xs text-stone-500 font-medium mb-1">November</div>
+              <div class="text-2xl font-bold text-stone-800">15<span class="text-sm font-normal text-stone-500">/30</span></div>
+              <div class="mt-2 h-2 bg-stone-200 rounded-full overflow-hidden">
+                <div class="h-full bg-stone-400 rounded-full" style="width: 50%"></div>
+              </div>
+              <div class="text-xs text-stone-500 mt-1">50% complete</div>
+            </div>
+          </div>
+
+          <div class="mt-3 flex items-center justify-center gap-2 text-sm">
+            <i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i>
+            <span class="text-emerald-600 font-medium">+17% improvement</span>
+          </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FEATURE 6: Longest Gap Metric -->
+        <!-- ============================================ -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-4 shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+              <i data-lucide="calendar-x" class="w-5 h-5 text-amber-600"></i>
+            </div>
+            <div class="flex-1">
+              <div class="text-sm text-stone-500">Longest Gap</div>
+              <div class="text-lg font-bold text-stone-800">5 days <span class="text-sm font-normal text-stone-400">(Nov 15-19)</span></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-stone-400">Previous longest</div>
+              <div class="text-sm text-stone-600">8 days</div>
+            </div>
+          </div>
+          <p class="mt-2 text-xs text-amber-600 bg-amber-50 rounded-lg p-2">
+            🎯 Great job! Your gaps are getting shorter. Keep building momentum!
+          </p>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- FEATURE 7: Column Chart with Time Toggle -->
+        <!-- ============================================ -->
+        <div class="bg-white rounded-2xl border border-stone-200 p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-lg bg-indigo-100 flex items-center justify-center">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-indigo-600"></i>
+              </div>
+              <span class="font-semibold text-stone-800">Completion Trend</span>
+            </div>
+
+            <!-- Time Toggle -->
+            <div class="flex bg-stone-100 rounded-lg p-0.5 text-xs">
+              <button class="px-2 py-1 rounded-md tab-inactive">D</button>
+              <button class="px-2 py-1 rounded-md tab-active">W</button>
+              <button class="px-2 py-1 rounded-md tab-inactive">M</button>
+            </div>
+          </div>
+
+          <!-- Column Chart -->
+          <div class="flex items-end justify-between gap-1 h-32 px-2">
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-400 rounded-t" style="height: 45%"></div>
+              <span class="text-[9px] text-stone-400">W1</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500 rounded-t" style="height: 72%"></div>
+              <span class="text-[9px] text-stone-400">W2</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-400 rounded-t" style="height: 58%"></div>
+              <span class="text-[9px] text-stone-400">W3</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500 rounded-t" style="height: 85%"></div>
+              <span class="text-[9px] text-lime-600 font-medium">W4</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-400 rounded-t" style="height: 65%"></div>
+              <span class="text-[9px] text-stone-400">W5</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500 rounded-t" style="height: 78%"></div>
+              <span class="text-[9px] text-stone-400">W6</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-400 rounded-t" style="height: 52%"></div>
+              <span class="text-[9px] text-stone-400">W7</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full bg-lime-500 rounded-t animate-pulse-slow" style="height: 90%"></div>
+              <span class="text-[9px] text-lime-600 font-medium">Now</span>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-3 pt-3 border-t border-stone-100 text-xs">
+            <div>
+              <span class="text-stone-400">Avg/week:</span>
+              <span class="font-medium text-stone-700 ml-1">5.2 days</span>
+            </div>
+            <div>
+              <span class="text-stone-400">Best week:</span>
+              <span class="font-medium text-lime-600 ml-1">W4 (6 days)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom padding -->
+        <div class="h-8"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Legend -->
+  <div class="max-w-sm space-y-3 mt-12">
+    <h3 class="text-lg font-bold text-stone-100 mb-4">Features Shown</h3>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-sm">1</div>
+      <div>
+        <div class="font-medium text-stone-100">View Toggle</div>
+        <div class="text-xs text-stone-400">Week/Month/3M/Year tabs</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-sm">2</div>
+      <div>
+        <div class="font-medium text-stone-100">Yearly Heatmap <span class="text-amber-400 text-xs">PRO</span></div>
+        <div class="text-xs text-stone-400">52-week grid with premium gate</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-violet-500/20 flex items-center justify-center text-sm">3</div>
+      <div>
+        <div class="font-medium text-stone-100">Consistency Index</div>
+        <div class="text-xs text-stone-400">30/60/90-day rolling average</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-sm">4</div>
+      <div>
+        <div class="font-medium text-stone-100">Perfect Days Counter</div>
+        <div class="text-xs text-stone-400">Monthly perfect day tracking</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-sm">5</div>
+      <div>
+        <div class="font-medium text-stone-100">Monthly Comparison</div>
+        <div class="text-xs text-stone-400">This month vs last month</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-sm">6</div>
+      <div>
+        <div class="font-medium text-stone-100">Longest Gap Metric</div>
+        <div class="text-xs text-stone-400">Track missed streak patterns</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 p-3 bg-stone-800/50 rounded-xl">
+      <div class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-sm">7</div>
+      <div>
+        <div class="font-medium text-stone-100">Column Chart</div>
+        <div class="text-xs text-stone-400">Day/Week/Month trend bars</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Generate 3-month heatmap
+    const grid3m = document.getElementById('heatmap-3m');
+    for (let w = 0; w < 13; w++) {
+      const weekCol = document.createElement('div');
+      weekCol.className = 'flex flex-col gap-[2px]';
+      for (let d = 0; d < 7; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'w-[18px] h-[18px] rounded-sm';
+        const rand = Math.random();
+        let heat;
+        if (rand < 0.2) heat = 0;
+        else if (rand < 0.35) heat = 1;
+        else if (rand < 0.55) heat = 2;
+        else if (rand < 0.75) heat = 3;
+        else heat = 4;
+        cell.classList.add(`heat-${heat}`);
+        weekCol.appendChild(cell);
+      }
+      grid3m.appendChild(weekCol);
+    }
+
+    // Generate blurred yearly heatmap
+    const gridYear = document.getElementById('heatmap-year-blur');
+    for (let w = 0; w < 52; w++) {
+      const weekCol = document.createElement('div');
+      weekCol.className = 'flex flex-col gap-[1px]';
+      for (let d = 0; d < 7; d++) {
+        const cell = document.createElement('div');
+        cell.className = 'w-[4px] h-[4px] rounded-sm';
+        const heat = Math.floor(Math.random() * 5);
+        cell.classList.add(`heat-${heat}`);
+        weekCol.appendChild(cell);
+      }
+      gridYear.appendChild(weekCol);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library — Workflow V4 (full journey)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;0,7..72,700;1,7..72,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 860px;
+        line-height: 1.5;
+      }
+
+      .journey {
+        display: flex;
+        align-items: flex-start;
+        overflow-x: auto;
+        padding: 26px 0 16px;
+      }
+      .step {
+        flex: none;
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .arrow {
+        flex: none;
+        align-self: flex-start;
+        margin-top: 370px;
+        width: 86px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .arrow .line {
+        font-size: 26px;
+        color: var(--text-2);
+      }
+      .arrow .lbl {
+        font-size: 10.5px;
+        font-weight: 600;
+        color: var(--text-2);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px 8px;
+        text-align: center;
+        line-height: 1.35;
+      }
+
+      .phone {
+        width: 375px;
+        height: 812px;
+        background: var(--bg);
+        border-radius: 40px;
+        border: 9px solid #2d2a26;
+        box-shadow: 0 20px 48px rgba(45, 42, 38, 0.3);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .statusbar {
+        height: 34px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 22px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ───── shared ───── */
+      .overline {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 18px 16px 9px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 9px;
+        white-space: nowrap;
+      }
+      .sci {
+        font-size: 11px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+        border: none;
+        border-radius: 999px;
+        padding: 7px 13px;
+        cursor: pointer;
+      }
+      .btn-add.added {
+        background: transparent;
+      }
+      .tabbar {
+        flex: none;
+        display: flex;
+        border-top: 1px solid var(--border);
+        background: rgba(245, 241, 237, 0.97);
+        padding: 8px 0 16px;
+      }
+      .tab {
+        flex: 1;
+        text-align: center;
+        font-size: 9.5px;
+        font-weight: 500;
+        color: var(--text-3);
+      }
+      .tab .ticon {
+        font-size: 18px;
+        display: block;
+        margin-bottom: 2px;
+      }
+      .tab.active {
+        color: var(--primary-deep);
+        font-weight: 700;
+      }
+
+      /* ───── S1: hero (typography kept, NO trust line) ───── */
+      .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5) 0%,
+          rgba(254, 215, 170, 0.28) 48%,
+          #f5f1ed 100%
+        );
+        padding: 14px 16px 4px;
+        border-radius: 0 0 22px 22px;
+      }
+      .hero .sun {
+        text-align: right;
+        font-size: 17px;
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: 23px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+        margin-top: 2px;
+      }
+      .hero p {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 4px;
+        max-width: 290px;
+        line-height: 1.4;
+      }
+      .search {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 14px;
+        color: var(--text-3);
+        font-size: 14px;
+      }
+
+      /* ───── S1: Netflix carousel of HABIT cards ───── */
+      .hcar {
+        display: flex;
+        gap: 10px;
+        padding: 2px 16px 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .hcar::-webkit-scrollbar {
+        display: none;
+      }
+      .hcard {
+        flex: none;
+        width: 150px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.07);
+        display: flex;
+        flex-direction: column;
+      }
+      .hcard .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .hcard .emoji {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .hcard h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+        margin-top: 9px;
+        line-height: 1.25;
+      }
+      .hcard .desc {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 3px;
+        line-height: 1.35;
+        height: 31px;
+        overflow: hidden;
+      }
+      .hcard .meta {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 7px;
+      }
+      .hcard .meta .pill {
+        font-size: 10px;
+        padding: 2px 7px;
+      }
+      .hcard .btn-add {
+        margin-top: 9px;
+        width: 100%;
+        padding: 7px 0;
+        font-size: 12.5px;
+      }
+      .hcard.added {
+        background: var(--primary-tint);
+        border-color: #a7f3d0;
+      }
+
+      /* ───── S1: goal chips row (compact, not the old grid) ───── */
+      .gchips {
+        display: flex;
+        gap: 8px;
+        padding: 2px 16px 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .gchips::-webkit-scrollbar {
+        display: none;
+      }
+      .gchip {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        padding: 8px 14px 8px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .gchip .cnt {
+        font-size: 10.5px;
+        font-weight: 500;
+        opacity: 0.75;
+      }
+
+      /* ───── S1: minimal one-tap rows ───── */
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 11px 12px;
+        margin: 0 16px 8px;
+      }
+      .row.added {
+        background: var(--primary-tint);
+        border-color: #a7f3d0;
+      }
+      .row .emoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 14.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 4px;
+      }
+
+      /* ───── S2: goal browse (detailed rows, NOT a path) ───── */
+      .ghero {
+        padding: 12px 16px 14px;
+        border-radius: 0 0 22px 22px;
+      }
+      .ghero .back {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .ghero .hrow {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .ghero .gicon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+      }
+      .ghero h2 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 600;
+      }
+      .ghero .promise {
+        font-size: 12.5px;
+        margin-top: 2px;
+        opacity: 0.85;
+      }
+      .ghero .cnt {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        border: 1px solid rgba(0, 0, 0, 0.14);
+        border-radius: 999px;
+        padding: 3px 9px;
+        margin-top: 8px;
+      }
+      .fchips {
+        display: flex;
+        gap: 8px;
+        padding: 10px 16px;
+      }
+      .fchip {
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        border-radius: 999px;
+        padding: 6px 13px;
+        color: var(--text-2);
+      }
+      .fchip.on {
+        background: #f0fdf4;
+        border-color: #14532d;
+        color: #14532d;
+      }
+
+      .drow {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        margin: 0 16px 8px;
+      }
+      .drow .top {
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+      }
+      .drow .emoji {
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+      }
+      .drow .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .drow h4 {
+        font-size: 14.5px;
+        font-weight: 600;
+      }
+      .drow p {
+        font-size: 12px;
+        color: var(--text-2);
+        margin-top: 2px;
+        line-height: 1.4;
+      }
+      .drow .meta {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 7px;
+        flex-wrap: wrap;
+      }
+      .drow .actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 9px;
+        padding-top: 9px;
+        border-top: 1px solid #efece7;
+      }
+      .drow .details {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-2);
+      }
+
+      /* ───── S3: details page ───── */
+      .dhero {
+        padding: 12px 16px 18px;
+        background: linear-gradient(180deg, #ecfdf5 0%, #f5f1ed 100%);
+        border-radius: 0 0 22px 22px;
+      }
+      .dhero .nav {
+        display: flex;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .dhero .icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        background: rgba(5, 150, 105, 0.13);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        margin: 12px auto 0;
+      }
+      .dhero h2 {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 600;
+        text-align: center;
+        margin-top: 9px;
+      }
+      .dhero .meta {
+        display: flex;
+        justify-content: center;
+        gap: 7px;
+        margin-top: 8px;
+      }
+      .scard {
+        margin: 0 16px 8px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px;
+      }
+      .scard h5 {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .scard p {
+        font-size: 12px;
+        color: var(--text-2);
+        line-height: 1.45;
+        margin-top: 3px;
+      }
+      .scard .ref {
+        font-size: 11px;
+        color: var(--text-3);
+        margin-top: 5px;
+      }
+      .scard.science {
+        background: linear-gradient(135deg, #ecfdf5, #f0fdf4);
+        border-color: #a7f3d0;
+      }
+      .tip {
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+      }
+      .tip .chk {
+        flex: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: var(--primary-tint);
+        color: var(--primary-deep);
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+      }
+      .dfooter {
+        flex: none;
+        padding: 10px 16px 18px;
+        background: linear-gradient(
+          180deg,
+          rgba(245, 241, 237, 0),
+          #f5f1ed 38%
+        );
+      }
+      .dfooter .micro {
+        font-size: 11px;
+        color: var(--text-3);
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .cta {
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        background: var(--primary);
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 14.5px;
+        font-weight: 700;
+        padding: 14px 0;
+        cursor: pointer;
+      }
+      .ctas {
+        display: flex;
+        justify-content: center;
+        gap: 22px;
+        margin-top: 9px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-3);
+      }
+
+      /* ───── S4: make-it-stick (kept) ───── */
+      .mband {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5),
+          rgba(254, 215, 170, 0) 90%
+        );
+        padding: 26px 16px 14px;
+        text-align: center;
+      }
+      .mband .ring {
+        width: 50px;
+        height: 50px;
+        border-radius: 999px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 24px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+      }
+      .mband h2 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+        margin-top: 11px;
+      }
+      .mband p {
+        font-size: 13px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+      .recap {
+        margin: 10px 16px 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 13px;
+        font-size: 12px;
+        text-align: center;
+      }
+      .cues {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 0 16px;
+      }
+      .cue {
+        font-size: 12px;
+        font-weight: 600;
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        border-radius: 999px;
+        padding: 8px 13px;
+      }
+      .cue.on {
+        background: #d1fae5;
+        border-color: var(--primary-deep);
+        color: var(--primary-deep);
+      }
+      .chain {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .chain .d {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        border: 2px solid var(--border);
+        background: var(--bg);
+        color: var(--text-3);
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .chain .d.on {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+      }
+      .chain .l {
+        flex: 1;
+        height: 2px;
+        background: var(--border);
+      }
+      .skip {
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-3);
+        margin-top: 10px;
+      }
+
+      /* annotations */
+      .annot {
+        width: 375px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-size: 12.5px;
+        line-height: 1.55;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .annot .keep {
+        color: var(--primary-deep);
+        font-weight: 600;
+      }
+      .annot .new {
+        color: #9a3412;
+        font-weight: 600;
+      }
+      .annot ul {
+        margin: 4px 0 0 16px;
+      }
+      .annot li {
+        margin-bottom: 3px;
+      }
+
+      .rationale {
+        margin-top: 26px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .rationale .note {
+        flex: 1;
+        min-width: 220px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 12px;
+        line-height: 1.5;
+        color: var(--text-2);
+      }
+      .rationale .note b {
+        display: block;
+        color: var(--text);
+        margin-bottom: 3px;
+        font-size: 12.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">Habit Library — Workflow V4 proposal</p>
+    <h1 class="page-title">
+      Carousel-first home, detailed browse, real details page
+    </h1>
+    <p class="page-sub">
+      Changes vs what's shipped: trust line removed · Netflix-style carousel of
+      <b>habit</b> cards under the hero · goals compressed to a colored chip
+      rail · goal page reverts from "path" to a detailed browse (richer rows,
+      Details affordance) · habit details becomes a full page reached from any
+      row. Make-It-Stick post-add sheet stays as-is.
+    </p>
+
+    <div class="journey">
+      <!-- ════════ S1: LIBRARY HOME ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero">
+              <div class="sun">☀️</div>
+              <h1>Choose your next transformation</h1>
+              <p>
+                Pick an outcome, then start with one small habit that moves it
+                forward.
+              </p>
+              <div class="search">🔍&ensp;Find an outcome or habit</div>
+              <div style="height: 10px"></div>
+            </div>
+
+            <div class="overline">Popular right now <a>Browse all ›</a></div>
+            <div class="hcar">
+              <div class="hcard">
+                <div class="top">
+                  <div
+                    class="emoji"
+                    style="background: rgba(5, 150, 105, 0.13)"
+                  >
+                    🧘
+                  </div>
+                  <span class="sci">🔬 2014</span>
+                </div>
+                <h4>5-Minute Meditation</h4>
+                <div class="desc">
+                  Calm your nervous system before the day starts.
+                </div>
+                <div class="meta">
+                  <span class="pill">5 min</span><span class="pill">Daily</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="hcard added">
+                <div class="top">
+                  <div
+                    class="emoji"
+                    style="background: rgba(59, 130, 246, 0.13)"
+                  >
+                    💧
+                  </div>
+                  <span class="sci">🔬 2016</span>
+                </div>
+                <h4>Hydration First</h4>
+                <div class="desc">A full glass of water before coffee.</div>
+                <div class="meta">
+                  <span class="pill">1 min</span
+                  ><span class="pill">Morning</span>
+                </div>
+                <button class="btn-add added">✓ Added</button>
+              </div>
+              <div class="hcard">
+                <div class="top">
+                  <div
+                    class="emoji"
+                    style="background: rgba(245, 158, 11, 0.15)"
+                  >
+                    🙏
+                  </div>
+                  <span class="sci">🔬 2003</span>
+                </div>
+                <h4>Gratitude Journal</h4>
+                <div class="desc">Write three things you're grateful for.</div>
+                <div class="meta">
+                  <span class="pill">3 min</span
+                  ><span class="pill">Evening</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="hcard">
+                <div class="top">
+                  <div
+                    class="emoji"
+                    style="background: rgba(139, 92, 246, 0.13)"
+                  >
+                    📖
+                  </div>
+                  <span class="sci">🔬 2013</span>
+                </div>
+                <h4>Read 10 Pages</h4>
+                <div class="desc">A book habit that compounds fast.</div>
+                <div class="meta">
+                  <span class="pill">15 min</span
+                  ><span class="pill">Daily</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+
+            <div class="overline">Browse by goal</div>
+            <div class="gchips">
+              <div class="gchip" style="background: #f0fdf4; color: #14532d">
+                🧘 Stress less <span class="cnt">12</span>
+              </div>
+              <div class="gchip" style="background: #fef3c7; color: #78350f">
+                ⚡ Wake up energized <span class="cnt">9</span>
+              </div>
+              <div class="gchip" style="background: #eff6ff; color: #1e3a5f">
+                😴 Sleep deeper <span class="cnt">8</span>
+              </div>
+              <div class="gchip" style="background: #faf5ff; color: #581c87">
+                🎯 Focus deeper <span class="cnt">11</span>
+              </div>
+              <div class="gchip" style="background: #fff1f2; color: #881337">
+                💪 Get healthier <span class="cnt">14</span>
+              </div>
+            </div>
+
+            <div class="overline">Or just start — one tap</div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                🛏️
+              </div>
+              <div class="body">
+                <h4>Make Your Bed</h4>
+                <p>Start the day with one small win</p>
+                <div class="meta">
+                  <span class="pill">1 min</span
+                  ><span class="sci">🔬 Research-backed</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                🚶
+              </div>
+              <div class="body">
+                <h4>10-Minute Walk</h4>
+                <p>Movement that needs no equipment</p>
+                <div class="meta">
+                  <span class="pill">10 min</span
+                  ><span class="sci">🔬 Research-backed</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="row added">
+              <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+                🙏
+              </div>
+              <div class="body">
+                <h4>Gratitude</h4>
+                <p>3 things, every evening</p>
+                <div class="meta"><span class="pill">3 min</span></div>
+              </div>
+              <button class="btn-add added">✓ Added</button>
+            </div>
+            <div
+              style="
+                text-align: center;
+                font-size: 12.5px;
+                font-weight: 600;
+                color: var(--primary-deep);
+                padding: 8px 0 18px;
+              "
+            >
+              Browse all categories ›
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="tab"><span class="ticon">🏠</span>Today</div>
+            <div class="tab active"><span class="ticon">📚</span>Library</div>
+            <div class="tab"><span class="ticon">📊</span>Progress</div>
+            <div class="tab"><span class="ticon">⚙️</span>Settings</div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>S1 · Library Home — the important one</h3>
+          <ul>
+            <li>
+              <span class="keep">Kept:</span> hero typography + gradient,
+              search, one-tap rows.
+            </li>
+            <li>
+              <span class="new">Removed:</span> "research-backed" trust line.
+            </li>
+            <li>
+              <span class="new">New:</span> Netflix carousel of
+              <b>habit cards</b> (icon, name, desc, time + frequency pills,
+              science year, + Add). Tap card body → details page.
+            </li>
+            <li>
+              <span class="new">Changed:</span> goals compressed from big cards
+              to a colored <b>chip rail</b> — same palettes, one line, less
+              vertical space. Tap → goal browse.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">Taps "Stress less" chip</div>
+      </div>
+
+      <!-- ════════ S2: GOAL BROWSE ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="ghero" style="background: #f0fdf4; color: #14532d">
+              <div class="back">‹ Library</div>
+              <div class="hrow">
+                <div class="gicon">🧘</div>
+                <div>
+                  <h2>Stress less</h2>
+                  <div class="promise">
+                    Calm your mind and regulate your system
+                  </div>
+                  <span class="cnt">📋 12 habits</span>
+                </div>
+              </div>
+            </div>
+            <div class="fchips">
+              <div class="fchip on">Popular</div>
+              <div class="fchip">A–Z</div>
+              <div class="fchip">Not added · 10</div>
+            </div>
+
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+                  🧘
+                </div>
+                <div class="body">
+                  <h4>5-Minute Meditation</h4>
+                  <p>
+                    Five minutes of focused breathing lowers cortisol and
+                    activates your parasympathetic system.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">5 min</span
+                    ><span class="pill">Daily</span
+                    ><span class="sci">🔬 Goyal et al., 2014</span>
+                  </div>
+                </div>
+              </div>
+              <div class="actions">
+                <span class="details">Details ›</span>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                  🌬️
+                </div>
+                <div class="body">
+                  <h4>Box Breathing</h4>
+                  <p>
+                    4-4-4-4 breathing used by Navy SEALs to downregulate under
+                    pressure.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">2 min</span
+                    ><span class="pill">Anytime</span
+                    ><span class="sci">🔬 Research-backed</span>
+                  </div>
+                </div>
+              </div>
+              <div class="actions">
+                <span class="details">Details ›</span>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+
+            <div
+              class="drow"
+              style="background: var(--primary-tint); border-color: #a7f3d0"
+            >
+              <div class="top">
+                <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                  🙏
+                </div>
+                <div class="body">
+                  <h4>Gratitude Journal</h4>
+                  <p>
+                    Three written gratitudes measurably increase well-being over
+                    10 weeks.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">3 min</span
+                    ><span class="pill">Evening</span
+                    ><span class="sci">🔬 Emmons, 2003</span>
+                  </div>
+                </div>
+              </div>
+              <div class="actions">
+                <span class="details">Details ›</span>
+                <button class="btn-add added">✓ Added</button>
+              </div>
+            </div>
+
+            <div class="drow">
+              <div class="top">
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  ✍️
+                </div>
+                <div class="body">
+                  <h4>Evening Brain Dump</h4>
+                  <p>
+                    Empty your head onto paper so your mind stops rehearsing it
+                    at night.
+                  </p>
+                  <div class="meta">
+                    <span class="pill">5 min</span
+                    ><span class="pill">Evening</span>
+                  </div>
+                </div>
+              </div>
+              <div class="actions">
+                <span class="details">Details ›</span>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="tab"><span class="ticon">🏠</span>Today</div>
+            <div class="tab active"><span class="ticon">📚</span>Library</div>
+            <div class="tab"><span class="ticon">📊</span>Progress</div>
+            <div class="tab"><span class="ticon">⚙️</span>Settings</div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>S2 · Goal browse — back to the earlier direction</h3>
+          <ul>
+            <li>
+              <span class="new">Reverted:</span> no more "Start here / Then
+              build on it" path framing.
+            </li>
+            <li>
+              <span class="keep">Kept:</span> goal-tinted hero + filter chips
+              (Popular / A–Z / Not added).
+            </li>
+            <li>
+              <span class="new">Richer rows:</span> 2-line description, time +
+              frequency pills, real citation, explicit
+              <b>Details ›</b> affordance + quiet <b>+ Add</b> on every row.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">Taps "Details ›"</div>
+      </div>
+
+      <!-- ════════ S3: HABIT DETAILS PAGE ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="dhero">
+              <div class="nav">
+                <span>‹ Back</span
+                ><span style="color: var(--primary-deep)">+ Add</span>
+              </div>
+              <div class="icon">🧘</div>
+              <h2>5-Minute Meditation</h2>
+              <div class="meta">
+                <span class="pill">5 min</span><span class="pill">Daily</span
+                ><span class="pill">Mindfulness</span>
+              </div>
+            </div>
+
+            <div class="overline">Why it works</div>
+            <div class="scard science">
+              <h5>Backed by a JAMA meta-analysis</h5>
+              <p>
+                Mindfulness programs showed moderate evidence of reducing
+                anxiety, depression, and pain across 47 trials with 3,515
+                participants.
+              </p>
+              <div class="ref">
+                🔬 Goyal et al., JAMA Internal Medicine, 2014 ·
+                <b style="color: var(--primary-deep)">Read ›</b>
+              </div>
+            </div>
+
+            <div class="overline">Tips</div>
+            <div class="scard">
+              <div class="tip">
+                <div class="chk">✓</div>
+                <div>
+                  <h5>Anywhere quiet works</h5>
+                  <p>
+                    A parked car or bathroom counts. Don't wait for the perfect
+                    setup.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="scard">
+              <div class="tip">
+                <div class="chk">✓</div>
+                <div>
+                  <h5>A wandering mind isn't failure</h5>
+                  <p>
+                    Noticing you drifted and returning to the breath — that IS
+                    the rep.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="scard">
+              <div class="tip">
+                <div class="chk">✓</div>
+                <div>
+                  <h5>Same time, same place</h5>
+                  <p>
+                    Anchoring to an existing routine doubles week-one
+                    consistency.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="overline">Pairs well with</div>
+            <div class="scard">
+              <div class="tip">
+                <div style="font-size: 20px">🙏</div>
+                <div>
+                  <h5>Gratitude Journal</h5>
+                  <p>
+                    Meditation clears the mind; gratitude redirects it.
+                    Most-added combo.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="dfooter">
+              <div class="micro">
+                Too small to fail — you can always do more.
+              </div>
+              <button class="cta">
+                Start small — one slow, mindful breath
+              </button>
+              <div class="ctas">
+                <span>Start the full 5 minutes</span><span>Customize</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>S3 · Habit details — the missing page</h3>
+          <ul>
+            <li>
+              <span class="new">New surface:</span> full page (not a cramped
+              modal feel) reached from any row or carousel card.
+            </li>
+            <li>
+              Science card with the real citation + Read link, 3 practical tips,
+              pairs-well.
+            </li>
+            <li>
+              <span class="keep">Kept:</span> start-small primary CTA,
+              full-version + Customize as quiet links, "+ Add" in the top corner
+              for the fast path.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">"Start small" adds it (first add only)</div>
+      </div>
+
+      <!-- ════════ S4: MAKE IT STICK (kept) ════════ -->
+      <div class="step">
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="mband">
+              <div class="ring">✓</div>
+              <h2>Your first habit is set up.</h2>
+              <p>Let's build a streak.</p>
+            </div>
+            <div class="recap">
+              🧘 5-Minute Meditation · starting small: "one slow, mindful
+              breath"
+            </div>
+            <div class="overline">Anchor it to something you already do</div>
+            <div class="cues">
+              <div class="cue on">After I pour my morning coffee</div>
+              <div class="cue">After I brush my teeth</div>
+              <div class="cue">When I sit down at my desk</div>
+            </div>
+            <div class="scard" style="margin-top: 14px">
+              <p>
+                The average habit takes <b>~66 days</b> to feel automatic
+                (Lally, 2010). Missing a day doesn't break anything.
+              </p>
+              <div class="chain">
+                <div class="d on">1</div>
+                <div class="l"></div>
+                <div class="d">2</div>
+                <div class="l"></div>
+                <div class="d">3</div>
+                <div class="l"></div>
+                <div class="d">4</div>
+                <div class="l"></div>
+                <div class="d">5</div>
+                <div class="l"></div>
+                <div class="d">6</div>
+                <div class="l"></div>
+                <div class="d">7</div>
+              </div>
+            </div>
+            <p
+              style="
+                font-family: var(--serif);
+                font-style: italic;
+                font-size: 13.5px;
+                text-align: center;
+                padding: 14px 36px 0;
+              "
+            >
+              Every rep is a vote for: "I am someone who shows up calm."
+            </p>
+            <div style="padding: 14px 16px 0">
+              <button class="cta">Lock it in</button>
+            </div>
+            <div class="skip">Skip for now</div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>S4 · Make It Stick — unchanged</h3>
+          <ul>
+            <li>
+              <span class="keep">Kept exactly as shipped:</span> cue chips
+              persist to the habit, 66-day expectation, identity line,
+              skippable.
+            </li>
+            <li>
+              Appears once, after the first add, regardless of which surface the
+              add came from.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="rationale">
+      <div class="note">
+        <b>Habits before goals</b> The carousel sells specific, concrete habits
+        first — most users add from "Popular" without ever picking a goal. Goals
+        become a browse filter, not a gate.
+      </div>
+      <div class="note">
+        <b>One layout per altitude</b> Carousel = discovery (rich), detailed
+        rows = comparison inside a goal (scannable), details page = commitment
+        (deep). Each screen earns its density.
+      </div>
+      <div class="note">
+        <b>Details always one tap away</b> Every habit surface (card, row) has
+        both + Add and a path to Details — fast path and learn path never
+        compete.
+      </div>
+      <div class="note">
+        <b>Nothing prescriptive</b> No "first step / then build" sequencing.
+        Order by popularity, let the user choose; education lives on the details
+        page where it's wanted.
+      </div>
+    </div>
+  </body>
+</html>

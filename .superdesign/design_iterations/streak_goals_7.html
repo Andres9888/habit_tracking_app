@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal Tab — Compact Layout</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px !important; min-height: 100vh !important;
+  }
+  h1,h2,h3,.serif { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone {
+    width: 375px !important; height: 760px !important;
+    background: #F5F1ED !important; border-radius: 40px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    overflow-y: auto !important; padding: 56px 0 24px !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+  .app-card {
+    background: #EDEAE5 !important; border: 1px solid #DDD8D2 !important; border-radius: 16px !important;
+  }
+  .detail-header {
+    display: flex; align-items: center; gap: 12px; padding: 0 20px 16px;
+  }
+  .back-btn { font-size: 20px; color: #6B6560; }
+  .edit-btn {
+    margin-left: auto; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 20px; padding: 6px 12px; font-size: 12px; color: #6B6560; font-weight: 600;
+  }
+  .habit-emoji-lg {
+    width: 40px; height: 40px; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .habit-name-lg { font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #2D2A26; }
+  .habit-substat { font-size: 12px; color: #8B6208; font-weight: 600; }
+
+  .quick-stats { display: flex; gap: 8px; padding: 0 20px 20px; }
+  .quick-stat {
+    flex: 1; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 12px;
+    padding: 10px 8px; text-align: center;
+  }
+  .quick-stat-val { font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #2D2A26; }
+  .quick-stat-lbl { font-size: 10px; color: #6B6560; margin-top: 2px; }
+
+  .tab-bar {
+    display: flex; gap: 4px; background: #EDEAE5; border: 1px solid #DDD8D2;
+    border-radius: 12px; padding: 4px; margin: 0 20px 16px;
+  }
+  .tab {
+    flex: 1; padding: 10px 8px; text-align: center; border-radius: 8px;
+    font-size: 13px; font-weight: 500; color: #6B6560;
+    white-space: nowrap; display: flex; align-items: center; justify-content: center; gap: 4px;
+  }
+  .tab.active {
+    background: #FAF8F5; color: #2D2A26; font-weight: 700;
+    box-shadow: 0 1px 3px rgba(45, 42, 38, 0.08);
+  }
+  .tab-hint { font-size: 10px; color: #C4BFB7; font-weight: 400; }
+  .tab.active .tab-hint { color: #8B6208; }
+
+  .variation-wrapper { display: flex; flex-direction: column; align-items: center; }
+  .variation-number { font-size: 13px; font-weight: 600; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; }
+  .variation-title { font-family: 'Literata', serif; font-size: 22px; font-weight: 700; color: #FAF8F5; margin-top: 4px; }
+  .variation-note { font-size: 13px; color: #6B6560; margin-top: 12px; max-width: 340px; line-height: 1.5; text-align: center; }
+  .variation-label { text-align: center; margin-bottom: 16px; }
+
+  @keyframes ringDraw { from { stroke-dashoffset: 264; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .fade { animation: fadeUp 0.4s ease-out both; }
+  .fade-1 { animation-delay: 0.08s; }
+  .fade-2 { animation-delay: 0.16s; }
+  .fade-3 { animation-delay: 0.24s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align: center; margin-bottom: 40px;">
+  <p style="font-size: 13px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Chain Day</p>
+  <h1 style="font-family: 'Literata', serif; font-size: 32px; font-weight: 700; color: #FAF8F5; margin-top: 8px;">Goal tab — cramped vs. compact</h1>
+  <p style="font-size: 15px; color: #C4BFB7; margin-top: 8px;">Before → After #1 (hide stats) → After #1+#3 (compact card)</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 48px; max-width: 1400px; margin: 0 auto;">
+
+<!-- ============================================ -->
+<!-- BEFORE — Current cramped                     -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Before</div>
+    <div class="variation-title">Current — cramped</div>
+  </div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="detail-header fade">
+        <span class="back-btn">✕</span>
+        <div class="habit-emoji-lg">💪</div>
+        <div>
+          <div class="habit-name-lg">Hard Habit</div>
+          <div class="habit-substat">🔥 3 day streak</div>
+        </div>
+        <div class="edit-btn">✏️ Edit Habit</div>
+      </div>
+
+      <div class="quick-stats fade fade-1">
+        <div class="quick-stat">
+          <div class="quick-stat-val" style="color: #059669;">3</div>
+          <div class="quick-stat-lbl">streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val" style="color: #FBBF24;">3</div>
+          <div class="quick-stat-lbl">best streak</div>
+        </div>
+        <div class="quick-stat">
+          <div class="quick-stat-val">3</div>
+          <div class="quick-stat-lbl">completions</div>
+        </div>
+      </div>
+
+      <div class="tab-bar fade fade-2">
+        <div class="tab">📅 Calendar<span class="tab-hint">3d</span></div>
+        <div class="tab">∿ Strength<span class="tab-hint">4%</span></div>
+        <div class="tab active">🎯 Goal<span class="tab-hint">5%</span></div>
+      </div>
+
+      <!-- Full-size Goal dashboard -->
+      <div class="fade fade-3" style="padding: 0 20px;">
+        <div class="app-card" style="padding: 20px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="position: relative; width: 96px; height: 96px; flex-shrink: 0;">
+              <svg width="96" height="96" viewBox="0 0 96 96">
+                <circle cx="48" cy="48" r="42" fill="none" stroke="#DDD8D2" stroke-width="6"/>
+                <circle cx="48" cy="48" r="42" fill="none" stroke="#8B6208" stroke-width="6" stroke-linecap="round"
+                  transform="rotate(-90 48 48)" stroke-dasharray="264" stroke-dashoffset="251"
+                  style="animation: ringDraw 1.2s ease-out both;"/>
+              </svg>
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <span class="mono" style="font-size: 22px; font-weight: 700; color: #2D2A26;">5%</span>
+              </div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 0.04em;">Days Complete</div>
+              <div class="mono" style="font-size: 22px; font-weight: 700; color: #2D2A26; margin-top: 2px;">3 <span style="font-size: 14px; color: #C4BFB7;">/ 66</span></div>
+              <div style="font-size: 11px; color: #6B6560; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.04em;">Days Remaining</div>
+              <div class="mono" style="font-size: 22px; font-weight: 700; color: #8B6208; margin-top: 2px;">63</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div class="mono" style="font-size: 18px; font-weight: 700; color: #059669;">100%</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Completion<br>rate</div>
+          </div>
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div class="mono" style="font-size: 18px; font-weight: 700; color: #2D2A26;">3</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Current<br>streak</div>
+          </div>
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div class="mono" style="font-size: 18px; font-weight: 700; color: #2D2A26;">3</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Best<br>streak</div>
+          </div>
+        </div>
+        <div class="app-card" style="padding: 14px 16px; margin-bottom: 12px;">
+          <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #C4BFB7; margin-bottom: 10px;">Milestones</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 8px; height: 8px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #8B6208; font-weight: 600; flex: 1;">⚡ 7 days · Week Warrior</span>
+              <span class="mono" style="font-size: 11px; color: #8B6208;">4d</span>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: #C4BFB7; margin-top: 10px; font-style: italic; text-align: center;">↓ scroll for 5 more milestones ↓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note" style="color: #FCA5A5;">Everything stacks: big hero + redundant QuickStatsRow + 3 tabs + large ring + metrics grid + milestones. By the time you see the goal content, there's barely room for one milestone without scrolling.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- AFTER #1 — Hide QuickStatsRow                -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">After #1</div>
+    <div class="variation-title">Hide QuickStats on Goal</div>
+  </div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="detail-header fade">
+        <span class="back-btn">✕</span>
+        <div class="habit-emoji-lg">💪</div>
+        <div>
+          <div class="habit-name-lg">Hard Habit</div>
+          <div class="habit-substat">🔥 3 day streak</div>
+        </div>
+        <div class="edit-btn">✏️ Edit Habit</div>
+      </div>
+
+      <!-- QuickStatsRow REMOVED when Goal tab active -->
+
+      <div class="tab-bar fade fade-1" style="margin-top: 4px;">
+        <div class="tab">📅 Calendar<span class="tab-hint">3d</span></div>
+        <div class="tab">∿ Strength<span class="tab-hint">4%</span></div>
+        <div class="tab active">🎯 Goal<span class="tab-hint">5%</span></div>
+      </div>
+
+      <!-- Same goal dashboard — now it all fits -->
+      <div class="fade fade-2" style="padding: 0 20px;">
+        <div class="app-card" style="padding: 20px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 20px;">
+            <div style="position: relative; width: 96px; height: 96px; flex-shrink: 0;">
+              <svg width="96" height="96" viewBox="0 0 96 96">
+                <circle cx="48" cy="48" r="42" fill="none" stroke="#DDD8D2" stroke-width="6"/>
+                <circle cx="48" cy="48" r="42" fill="none" stroke="#8B6208" stroke-width="6" stroke-linecap="round"
+                  transform="rotate(-90 48 48)" stroke-dasharray="264" stroke-dashoffset="251"
+                  style="animation: ringDraw 1.2s ease-out both;"/>
+              </svg>
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <span class="mono" style="font-size: 22px; font-weight: 700; color: #2D2A26;">5%</span>
+              </div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 0.04em;">Days Complete</div>
+              <div class="mono" style="font-size: 22px; font-weight: 700; color: #2D2A26; margin-top: 2px;">3 <span style="font-size: 14px; color: #C4BFB7;">/ 66</span></div>
+              <div style="font-size: 11px; color: #6B6560; margin-top: 10px; text-transform: uppercase; letter-spacing: 0.04em;">Days Remaining</div>
+              <div class="mono" style="font-size: 22px; font-weight: 700; color: #8B6208; margin-top: 2px;">63</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div class="mono" style="font-size: 18px; font-weight: 700; color: #059669;">100%</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Completion<br>rate</div>
+          </div>
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div class="mono" style="font-size: 18px; font-weight: 700; color: #2D2A26;">3</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Current<br>streak</div>
+          </div>
+          <div class="app-card" style="padding: 12px 8px; text-align: center;">
+            <div class="mono" style="font-size: 18px; font-weight: 700; color: #2D2A26;">3</div>
+            <div style="font-size: 10px; color: #6B6560; margin-top: 3px;">Best<br>streak</div>
+          </div>
+        </div>
+        <div class="app-card" style="padding: 14px 16px; margin-bottom: 12px;">
+          <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #C4BFB7; margin-bottom: 10px;">Milestones</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="width: 8px; height: 8px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #8B6208; font-weight: 600; flex: 1;">⚡ 7 days · Week Warrior</span>
+              <span class="mono" style="font-size: 11px; color: #8B6208;">4d</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; opacity: 0.4;">
+              <div style="width: 6px; height: 6px; background: #DDD8D2; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #C4BFB7; flex: 1;">🔥 14 days</span>
+              <span class="mono" style="font-size: 11px; color: #DDD8D2;">11d</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; opacity: 0.4;">
+              <div style="width: 6px; height: 6px; background: #DDD8D2; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #C4BFB7; flex: 1;">🏅 21 days</span>
+              <span class="mono" style="font-size: 11px; color: #DDD8D2;">18d</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; opacity: 0.4;">
+              <div style="width: 6px; height: 6px; background: #DDD8D2; border-radius: 50%;"></div>
+              <span style="font-size: 12px; color: #C4BFB7; flex: 1;">🏆 30 days</span>
+              <span class="mono" style="font-size: 11px; color: #DDD8D2;">27d</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note" style="color: #6EE7B7;">Just remove the redundant QuickStatsRow when Goal is active (its data is already in the metrics grid). ~80px reclaimed, 4 milestones now visible without scrolling. Minimal code change.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- AFTER #1+#3 — Compact card too                -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">After #1 + #3</div>
+    <div class="variation-title">Compact card · everything visible</div>
+  </div>
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="detail-header fade">
+        <span class="back-btn">✕</span>
+        <div class="habit-emoji-lg">💪</div>
+        <div>
+          <div class="habit-name-lg">Hard Habit</div>
+          <div class="habit-substat">🔥 3 day streak</div>
+        </div>
+        <div class="edit-btn">✏️ Edit Habit</div>
+      </div>
+
+      <div class="tab-bar fade fade-1" style="margin-top: 4px;">
+        <div class="tab">📅 Calendar<span class="tab-hint">3d</span></div>
+        <div class="tab">∿ Strength<span class="tab-hint">4%</span></div>
+        <div class="tab active">🎯 Goal<span class="tab-hint">5%</span></div>
+      </div>
+
+      <!-- COMPACT HERO — ring + key stats + progress strip all-in-one -->
+      <div class="fade fade-2" style="padding: 0 20px;">
+        <div class="app-card" style="padding: 16px 18px; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <!-- Smaller ring -->
+            <div style="position: relative; width: 72px; height: 72px; flex-shrink: 0;">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" fill="none" stroke="#DDD8D2" stroke-width="5"/>
+                <circle cx="36" cy="36" r="30" fill="none" stroke="url(#g)" stroke-width="5" stroke-linecap="round"
+                  transform="rotate(-90 36 36)" stroke-dasharray="188.5" stroke-dashoffset="179.1"
+                  style="animation: ringDraw 1.2s ease-out both;"/>
+                <defs>
+                  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#059669"/>
+                    <stop offset="100%" stop-color="#8B6208"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <span class="mono" style="font-size: 16px; font-weight: 700; color: #2D2A26;">5%</span>
+              </div>
+            </div>
+            <!-- Inline metrics -->
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px;">
+                <span class="mono" style="font-size: 20px; font-weight: 700; color: #2D2A26;">3 <span style="font-size: 12px; color: #C4BFB7;">/ 66</span></span>
+                <span style="font-size: 11px; color: #8B6208; font-weight: 600;">63 to go</span>
+              </div>
+              <!-- Thin progress -->
+              <div style="height: 4px; background: #DDD8D2; border-radius: 2px; overflow: hidden; margin-top: 8px;">
+                <div style="width: 5%; height: 100%; background: linear-gradient(90deg, #059669, #8B6208); border-radius: 2px;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+                <span style="font-size: 10px; color: #6B6560;">100% rate</span>
+                <span style="font-size: 10px; color: #6B6560;">best: 3d</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next milestone pill — big & prominent (the single most useful fact) -->
+        <div class="app-card" style="padding: 14px 16px; margin-bottom: 10px; background: #FEF3CD; border-color: #E8B94D;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 24px;">⚡</div>
+            <div style="flex: 1;">
+              <div style="font-size: 11px; color: #8B6208; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;">Next milestone</div>
+              <div style="font-family: 'Literata', serif; font-size: 17px; font-weight: 700; color: #2D2A26; margin-top: 2px;">Week Warrior</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="mono" style="font-size: 20px; font-weight: 700; color: #8B6208;">4d</div>
+              <div style="font-size: 9px; color: #8B6208;">to go</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- All milestones collapsed into a single row — taps to expand -->
+        <div class="app-card" style="padding: 12px 16px; margin-bottom: 10px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span style="font-size: 11px; color: #C4BFB7; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600;">Milestones on path</span>
+            <span style="font-size: 11px; color: #6B6560;">▾</span>
+          </div>
+          <div style="display: flex; gap: 6px; overflow-x: auto;">
+            <div style="font-size: 16px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #FEF3CD; border: 1.5px solid #8B6208; border-radius: 8px; flex-shrink: 0;">⚡</div>
+            <div style="font-size: 16px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 8px; opacity: 0.5; flex-shrink: 0;">🔥</div>
+            <div style="font-size: 16px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 8px; opacity: 0.5; flex-shrink: 0;">🏅</div>
+            <div style="font-size: 16px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 8px; opacity: 0.5; flex-shrink: 0;">🏆</div>
+            <div style="font-size: 16px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #FAF8F5; border: 1px solid #DDD8D2; border-radius: 8px; opacity: 0.5; flex-shrink: 0;">💎</div>
+            <div style="font-size: 16px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: #FAF8F5; border: 1.5px solid #8B6208; border-radius: 8px; flex-shrink: 0;">🎯</div>
+          </div>
+        </div>
+
+        <!-- Projected completion -->
+        <div class="app-card" style="padding: 12px 16px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 14px;">📅</span>
+          <span style="font-size: 12px; color: #6B6560;">On track to hit goal</span>
+          <span class="mono" style="font-size: 12px; font-weight: 600; color: #059669; margin-left: auto;">Jun 21</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note" style="color: #6EE7B7;">Combine #1 (no QuickStatsRow) + #3 (compact card): smaller ring inline with metrics + progress bar, prominent "next milestone" card, milestones collapsed into a tap-to-expand row, projected date. Everything fits above the fold.</p>
+</div>
+
+</div>
+
+<!-- Comparison footer -->
+<div style="max-width: 900px; margin: 48px auto 0; padding: 24px; background: #2D2A26; border-radius: 16px;">
+  <h3 style="font-family: 'Literata', serif; font-size: 18px; color: #FAF8F5; margin-bottom: 12px;">What changes in #1 + #3</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px; color: #C4BFB7; line-height: 1.5;">
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">#1 — Hide QuickStatsRow on Goal</p>
+      <p>One-line conditional in <code style="color:#FEF3CD;">HabitDetailContent.tsx</code>: only render when <code style="color:#FEF3CD;">activeView !== 'goal'</code>. ~80px reclaimed.</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">#3 — Compact StreakGoalCard</p>
+      <p>Smaller ring + inline metrics, promote "next milestone" to its own card, collapse milestone list to a tappable badge row, keep projected date at bottom.</p>
+    </div>
+  </div>
+</div>
+
+<div style="text-align: center; padding: 32px 24px;">
+  <p style="font-size: 12px; color: #524D47;">💪 Hard Habit · Day 3 of 66 · Three states shown</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Habit - Centered Modal (Final)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .iphone-frame {
+      width: 390px;
+      height: 844px;
+      background: #f5f5f4;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 3px #1c1917,
+        0 0 0 6px #78716c,
+        0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 37px;
+      background: #1c1917;
+      border-radius: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: flex-end;
+      z-index: 50;
+    }
+
+    .modal-container {
+      width: 100%;
+      background: white;
+      border-radius: 24px 24px 0 0;
+      max-height: 90%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .emoji-chip {
+      width: 48px;
+      height: 48px;
+      background: #f5f5f4;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 2px solid transparent;
+    }
+
+    .emoji-chip:hover {
+      transform: scale(1.05);
+    }
+
+    .emoji-chip.selected {
+      background: #ECFDF5;
+      border-color: #10B981;
+    }
+
+    .emoji-chip.plus {
+      border: 2px dashed #a8a29e;
+      background: #f5f5f4;
+      color: #a8a29e;
+      font-size: 20px;
+    }
+
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 3px solid transparent;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.1);
+    }
+
+    .color-swatch.selected {
+      border-color: white;
+      transform: scale(1.15);
+    }
+
+    .color-swatch.custom {
+      border: 2px dashed #a8a29e;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toggle-track {
+      width: 51px;
+      height: 31px;
+      background: #d6d3d1;
+      border-radius: 16px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .toggle-track.active {
+      background: #10B981;
+    }
+
+    .toggle-thumb {
+      width: 27px;
+      height: 27px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .toggle-track.active .toggle-thumb {
+      transform: translateX(20px);
+    }
+
+    .habit-input:focus {
+      outline: none;
+      border-color: #a8a29e;
+    }
+
+    .keyboard {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      background: #d1d5db;
+      transition: height 0.3s ease;
+      z-index: 200;
+      border-radius: 0 0 40px 40px;
+      overflow: hidden;
+    }
+
+    .keyboard.visible {
+      height: 300px;
+    }
+
+    .keyboard-content {
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 6px;
+    }
+
+    .key {
+      background: white;
+      border-radius: 6px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .tap-hint {
+      font-size: 11px;
+      color: #a8a29e;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .emoji-small {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-stone-200 flex items-center justify-center p-8">
+
+  <div class="flex gap-8 items-start">
+    <!-- iPhone with keyboard hidden -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-sm font-semibold text-stone-600 mb-4">Keyboard Dismissed</h3>
+      <div class="iphone-frame">
+        <div class="screen">
+          <div class="dynamic-island"></div>
+
+          <div class="modal-backdrop">
+            <div class="modal-container">
+              <!-- Header -->
+              <div class="flex items-center justify-between px-5 py-4 border-b border-stone-100">
+                <span class="text-lg font-semibold text-stone-900">Create Habit</span>
+                <button class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <i data-lucide="x" class="w-4 h-4 text-stone-500"></i>
+                </button>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-1 overflow-y-auto px-6 py-6">
+                <div class="text-center mb-8" style="margin-top: 20px;">
+                  <h1 class="text-3xl font-bold text-stone-900 mb-3 leading-tight">
+                    What habit do you<br>want to build?
+                  </h1>
+
+                  <input
+                    type="text"
+                    class="habit-input w-full rounded-2xl border-2 border-stone-200 bg-white px-6 py-5 text-center text-xl text-stone-900"
+                    placeholder="e.g., Read for 20 minutes"
+                    value="Morning meditation"
+                  >
+
+                  <p class="mt-2 text-xs text-stone-400">18/50 characters</p>
+                </div>
+
+                <p class="text-center text-xs font-semibold text-stone-500 mb-4" style="letter-spacing: 0.5px;">
+                  CUSTOMIZE (OPTIONAL)
+                </p>
+
+                <!-- Emoji picker - centered, wrapped -->
+                <div class="mb-6">
+                  <div class="flex flex-wrap justify-center gap-2">
+                    <div class="emoji-chip selected">🧘</div>
+                    <div class="emoji-chip">🙏</div>
+                    <div class="emoji-chip">☮️</div>
+                    <div class="emoji-chip">🕉️</div>
+                    <div class="emoji-chip">✨</div>
+                    <div class="emoji-chip">🌅</div>
+                    <div class="emoji-chip plus">+</div>
+                  </div>
+                </div>
+
+                <!-- Color picker - centered, wrapped -->
+                <div class="mb-6">
+                  <div class="flex flex-wrap justify-center gap-2">
+                    <div class="color-swatch" style="background: #EF4444;"></div>
+                    <div class="color-swatch" style="background: #F97316;"></div>
+                    <div class="color-swatch" style="background: #F59E0B;"></div>
+                    <div class="color-swatch" style="background: #84CC16;"></div>
+                    <div class="color-swatch selected" style="background: #22C55E; box-shadow: 0 0 0 2px #22C55E;"></div>
+                    <div class="color-swatch" style="background: #14B8A6;"></div>
+                    <div class="color-swatch" style="background: #06B6D4;"></div>
+                    <div class="color-swatch" style="background: #3B82F6;"></div>
+                    <div class="color-swatch" style="background: #8B5CF6;"></div>
+                    <div class="color-swatch" style="background: #EC4899;"></div>
+                    <div class="color-swatch" style="background: #F43F5E;"></div>
+                    <div class="color-swatch" style="background: #78716c;"></div>
+                    <div class="color-swatch custom">
+                      <i data-lucide="plus" class="w-4 h-4 text-stone-400"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Reminder toggle -->
+                <div class="rounded-xl border border-stone-200 bg-white px-3.5 py-3.5 flex items-center justify-between" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                  <div class="flex items-center gap-3 flex-1">
+                    <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center">
+                      <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+                    </div>
+                    <div>
+                      <p class="text-sm font-medium text-stone-900">Remind me</p>
+                      <p class="text-xs font-medium text-emerald-500">9:00 AM</p>
+                    </div>
+                  </div>
+                  <div class="toggle-track active">
+                    <div class="toggle-thumb"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer button -->
+              <div class="px-6 pb-8 pt-4">
+                <button class="w-full bg-emerald-500 text-white font-semibold py-4 rounded-2xl text-lg">
+                  Create Habit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- iPhone with keyboard visible -->
+    <div class="flex flex-col items-center">
+      <h3 class="text-sm font-semibold text-stone-600 mb-4">Keyboard Open (tap emoji to dismiss)</h3>
+      <div class="iphone-frame">
+        <div class="screen">
+          <div class="dynamic-island"></div>
+
+          <!-- Keyboard (visible) -->
+          <div class="keyboard visible">
+            <div class="keyboard-content">
+              <div class="key">Q</div>
+              <div class="key">W</div>
+              <div class="key">E</div>
+              <div class="key">R</div>
+              <div class="key">T</div>
+              <div class="key">Y</div>
+              <div class="key">U</div>
+              <div class="key">I</div>
+              <div class="key">O</div>
+              <div class="key">P</div>
+              <div class="key">A</div>
+              <div class="key">S</div>
+              <div class="key">D</div>
+              <div class="key">F</div>
+              <div class="key">G</div>
+              <div class="key">H</div>
+              <div class="key">J</div>
+              <div class="key">K</div>
+              <div class="key">L</div>
+              <div class="key" style="font-size: 14px;">del</div>
+              <div class="key" style="grid-column: span 2; font-size: 14px;">shift</div>
+              <div class="key">Z</div>
+              <div class="key">X</div>
+              <div class="key">C</div>
+              <div class="key">V</div>
+              <div class="key">B</div>
+              <div class="key">N</div>
+              <div class="key">M</div>
+              <div class="key" style="font-size: 14px;">ret</div>
+            </div>
+          </div>
+
+          <!-- Modal (compact when keyboard up) -->
+          <div class="modal-backdrop" style="align-items: flex-start; padding-top: 60px;">
+            <div class="modal-container" style="max-height: calc(100% - 360px); border-radius: 24px;">
+              <!-- Header -->
+              <div class="flex items-center justify-between px-5 py-3 border-b border-stone-100">
+                <span class="text-base font-semibold text-stone-900">Create Habit</span>
+                <button class="w-7 h-7 rounded-full bg-stone-100 flex items-center justify-center">
+                  <i data-lucide="x" class="w-3.5 h-3.5 text-stone-500"></i>
+                </button>
+              </div>
+
+              <!-- Compact content when keyboard is up -->
+              <div class="flex-1 overflow-y-auto px-5 py-4">
+                <div class="text-center mb-4">
+                  <h1 class="text-xl font-bold text-stone-900 mb-2">
+                    What habit do you want to build?
+                  </h1>
+
+                  <input
+                    type="text"
+                    class="habit-input w-full rounded-xl border-2 border-stone-300 bg-white px-4 py-3 text-center text-base text-stone-900"
+                    placeholder="e.g., Read for 20 minutes"
+                    value="Morning med|"
+                  >
+                </div>
+
+                <p class="text-center text-[10px] font-semibold text-stone-500 mb-2" style="letter-spacing: 0.5px;">
+                  CUSTOMIZE (OPTIONAL)
+                </p>
+
+                <!-- Smaller emoji picker visible above keyboard -->
+                <div class="mb-2">
+                  <div class="flex flex-wrap justify-center gap-1.5">
+                    <div class="emoji-chip emoji-small">🧘</div>
+                    <div class="emoji-chip emoji-small">🙏</div>
+                    <div class="emoji-chip emoji-small">☮️</div>
+                    <div class="emoji-chip emoji-small">🕉️</div>
+                    <div class="emoji-chip emoji-small">✨</div>
+                    <div class="emoji-chip emoji-small">🌅</div>
+                    <div class="emoji-chip emoji-small plus">+</div>
+                  </div>
+                  <p class="tap-hint">Tap an emoji to dismiss keyboard</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+
+  <!-- Design Notes -->
+  <div class="fixed bottom-4 left-4 bg-white rounded-lg shadow-lg p-4 max-w-md text-sm">
+    <h4 class="font-bold text-stone-900 mb-2">Design Improvements</h4>
+    <ul class="space-y-1 text-stone-600">
+      <li>Centered title and input (progressive disclosure)</li>
+      <li>No "ICON" or "COLOR" labels (cleaner)</li>
+      <li>Centered, wrapped grids (no triangle shapes)</li>
+      <li>Keyboard dismisses on emoji/color tap</li>
+      <li>Minimal reminder toggle with amber bell</li>
+      <li>Smart emoji suggestions based on habit name</li>
+    </ul>
+  </div>
+
+</body>
+</html>

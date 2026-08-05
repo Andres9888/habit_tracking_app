@@ -1,0 +1,1765 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Day Cells — Size & Polish Explorations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #060606 !important;
+        color: #d4d0cc !important;
+        min-height: 100vh;
+        padding: 40px 16px 120px;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      span,
+      div,
+      td,
+      th {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+
+      .hero {
+        text-align: center;
+        margin-bottom: 48px;
+      }
+      .hero-title {
+        font-size: 30px;
+        font-weight: 700;
+        color: #f5f1ed;
+        letter-spacing: -1px;
+        line-height: 1.15;
+        margin-bottom: 8px;
+      }
+      .hero-sub {
+        font-size: 13px;
+        color: #78716c;
+        max-width: 520px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .section-label {
+        text-align: center;
+        margin: 52px 0 22px;
+      }
+      .section-label-text {
+        font-size: 10px;
+        font-weight: 700;
+        color: #57534e;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        position: relative;
+        padding: 0 20px;
+      }
+      .section-label-text::before,
+      .section-label-text::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .section-label-text::before {
+        right: 100%;
+      }
+      .section-label-text::after {
+        left: 100%;
+      }
+
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 300px);
+        gap: 28px;
+        justify-content: center;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 280px);
+        gap: 24px;
+        justify-content: center;
+      }
+      .grid-1 {
+        display: flex;
+        justify-content: center;
+      }
+      @media (max-width: 660px) {
+        .grid-2 {
+          grid-template-columns: 300px;
+        }
+        .grid-3 {
+          grid-template-columns: 280px;
+        }
+      }
+
+      .variant-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .variant-label {
+        margin-top: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #a8a29e;
+        text-align: center;
+        letter-spacing: 0.2px;
+      }
+      .variant-desc {
+        font-size: 11px;
+        color: #57534e;
+        text-align: center;
+        max-width: 280px;
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+
+      .badge {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 6px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .badge.current {
+        background: rgba(255, 255, 255, 0.06);
+        color: #78716c;
+      }
+      .badge.new {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+      .badge.alt {
+        background: rgba(232, 185, 77, 0.12);
+        color: #e8b94d;
+      }
+      .badge.pick {
+        background: rgba(139, 92, 246, 0.12);
+        color: #a78bfa;
+      }
+
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --shelf: #f0ede8;
+        --text-pri: #2d2a26;
+        --text-sec: #6b6560;
+        --text-ter: #6e6660;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --gold-100: #fef3cd;
+        --gold-300: #e8b94d;
+        --gold-500: #8b6208;
+        --gold-700: #7d5907;
+        --dark-bg: #111827;
+        --dark-card: #1f2937;
+        --dark-surface: #1f2937;
+        --dark-text-pri: #f9fafb;
+        --dark-text-sec: #9ca3af;
+        --dark-border: #374151;
+        --dark-emerald: #34d399;
+      }
+
+      /* ── Phone ── */
+      .phone {
+        width: 300px;
+        height: 520px;
+        background: var(--bg);
+        border-radius: 32px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.03),
+          0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+      .phone.dark {
+        background: var(--dark-bg);
+      }
+      .phone-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 34px;
+      }
+
+      /* ── Shelf ── */
+      .shelf {
+        background: var(--shelf);
+        padding: 10px 16px 12px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        flex-shrink: 0;
+      }
+      .shelf.dark-s {
+        background: var(--dark-card);
+      }
+
+      /* ── Greeting ── */
+      .g-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .g-text {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-pri);
+        letter-spacing: -0.2px;
+      }
+      .g-text.dark-t {
+        color: var(--dark-text-pri);
+      }
+      .g-progress {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-ter);
+      }
+      .g-progress .c {
+        font-weight: 700;
+        color: var(--emerald-700);
+      }
+      .g-progress.dark-t {
+        color: var(--dark-text-sec);
+      }
+      .g-progress.dark-t .c {
+        color: var(--dark-emerald);
+      }
+      .g-streak {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .g-streak-text {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--gold-700);
+        letter-spacing: -0.2px;
+      }
+      .g-streak-text.dark-t {
+        color: var(--gold-300);
+      }
+      .g-sub {
+        font-size: 10.5px;
+        color: var(--text-ter);
+        margin-top: 2px;
+      }
+      .g-sub.dark-t {
+        color: var(--dark-text-sec);
+      }
+
+      /* ── Chip ── */
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-sec);
+        margin-top: 5px;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.04);
+      }
+      .chip.dark-c {
+        border-color: rgba(55, 65, 81, 0.35);
+        background: rgba(31, 41, 55, 0.6);
+        color: var(--dark-text-sec);
+      }
+      .chip .icon {
+        width: 12px;
+        height: 12px;
+        opacity: 0.5;
+      }
+      .chip .chev {
+        width: 10px;
+        height: 10px;
+        opacity: 0.3;
+      }
+
+      /* ── Day strip ── */
+      .strip {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding: 0 2px;
+      }
+      .day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+      }
+      .day-label {
+        font-size: 10px;
+        font-weight: 400;
+        color: var(--text-ter);
+        line-height: 14px;
+      }
+      .day-label.dark-t {
+        color: var(--dark-text-sec);
+      }
+      .day-label.bold {
+        font-weight: 700;
+      }
+
+      /* ── Cell sizes ── */
+      .cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: var(--text-sec);
+        background: var(--card);
+        position: relative;
+      }
+      .cell.dark-cl {
+        background: var(--dark-surface);
+        color: var(--dark-text-sec);
+      }
+
+      /* 40px (current) */
+      .cell.s40 {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+      /* 44px (proposed) */
+      .cell.s44 {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        font-size: 13px;
+      }
+      /* 48px (big) */
+      .cell.s48 {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        font-size: 14px;
+      }
+
+      /* states */
+      .cell.complete {
+        background: var(--emerald-500);
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+      }
+      .cell.complete.dark-cl {
+        background: var(--dark-emerald);
+        color: var(--dark-bg);
+        box-shadow: 0 2px 12px rgba(52, 211, 153, 0.4);
+      }
+      .cell.today {
+        background: var(--gold-100);
+        border: 2px solid var(--gold-300);
+        color: var(--gold-700);
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .cell.today.dark-cl {
+        background: #3d2f0a;
+        border-color: #b8860b;
+        color: #e8b94d;
+      }
+      .cell.future {
+        color: var(--gray-300);
+      }
+      .cell.future.dark-cl {
+        color: #4b5563;
+      }
+
+      /* check badge */
+      .check {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: var(--card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+      }
+      .check.dark-ck {
+        background: var(--dark-card);
+      }
+      .check svg {
+        width: 8px;
+        height: 8px;
+      }
+      .check.lg {
+        width: 15px;
+        height: 15px;
+      }
+      .check.lg svg {
+        width: 9px;
+        height: 9px;
+      }
+
+      /* dot row */
+      .dot-row {
+        height: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2px;
+      }
+      .dot {
+        border-radius: 50%;
+      }
+      .dot.none {
+        width: 5px;
+        height: 5px;
+        background: var(--gray-200);
+      }
+      .dot.none.dark-d {
+        background: #4b5563;
+      }
+      .dot.partial {
+        width: 6px;
+        height: 6px;
+        background: var(--gold-300);
+      }
+      .dot.complete-d {
+        width: 8px;
+        height: 8px;
+        background: var(--emerald-500);
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+      .dot.future-d {
+        width: 5px;
+        height: 5px;
+        background: var(--card);
+      }
+      .dot.future-d.dark-d {
+        background: var(--dark-card);
+      }
+
+      /* connector bar */
+      .connector {
+        position: absolute;
+        height: 3px;
+        border-radius: 1.5px;
+        z-index: 0;
+      }
+      .connector.light {
+        background: rgba(16, 185, 129, 0.25);
+      }
+      .connector.dark {
+        background: rgba(52, 211, 153, 0.2);
+      }
+
+      /* ── Habit cards ── */
+      .habit-list {
+        padding: 6px 12px;
+        flex: 1;
+        overflow: hidden;
+      }
+      .habit-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .habit-card.dark-hc {
+        background: var(--dark-surface);
+        border: 1px solid var(--dark-border);
+      }
+      .habit-emoji {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .habit-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-pri);
+      }
+      .habit-name.dark-t {
+        color: var(--dark-text-pri);
+      }
+      .habit-meta {
+        font-size: 9px;
+        color: var(--text-ter);
+        margin-top: 1px;
+      }
+      .habit-meta.dark-t {
+        color: var(--dark-text-sec);
+      }
+      .chain {
+        display: flex;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+      .link {
+        width: 8px;
+        height: 16px;
+        border-radius: 4px;
+      }
+      .link.on {
+        background: var(--emerald-500);
+      }
+      .link.on.dark-l {
+        background: var(--dark-emerald);
+      }
+      .link.off {
+        background: var(--gray-200);
+      }
+      .link.off.dark-l {
+        background: #374151;
+      }
+
+      /* ── Bottom bar ── */
+      .bar {
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        background: rgba(237, 234, 229, 0.85);
+        backdrop-filter: blur(20px);
+        border-radius: 999px;
+        padding: 5px 14px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 16px rgba(45, 42, 38, 0.08);
+      }
+      .bar.dark-b {
+        background: rgba(31, 41, 55, 0.85);
+        border-color: rgba(55, 65, 81, 0.35);
+      }
+      .bar-i {
+        width: 20px;
+        height: 20px;
+        color: var(--text-sec);
+        margin: 0 12px;
+      }
+      .bar-i.dark-bi {
+        color: var(--dark-text-sec);
+      }
+      .bar-fab {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--emerald-600);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        margin: 0 6px;
+      }
+      .bar-fab svg {
+        color: #fff;
+      }
+
+      /* ── Spec table ── */
+      .spec-table {
+        max-width: 720px;
+        margin: 24px auto 0;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .spec-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .spec-table th {
+        font-size: 10px;
+        font-weight: 700;
+        color: #78716c;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .spec-table td {
+        font-size: 12px;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        color: #a8a29e;
+      }
+      .spec-table tr:last-child td {
+        border-bottom: none;
+      }
+      .tag {
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 5px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+      .tag.yes {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+      }
+      .tag.no {
+        background: rgba(255, 255, 255, 0.04);
+        color: #57534e;
+      }
+
+      /* ── Isolated strip comparison ── */
+      .strip-compare {
+        background: var(--shelf);
+        border-radius: 16px;
+        padding: 14px 12px;
+        width: 280px;
+      }
+      .strip-compare.dark-sc {
+        background: var(--dark-card);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="hero-title">Calendar Day Cell Explorations</div>
+      <div class="hero-sub">
+        Bigger cells, visual hierarchy, and polish — comparing sizes and extras
+        across light and dark mode.
+      </div>
+    </div>
+
+    <!-- ════════ SIZE COMPARISON (isolated strips) ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">1 · Cell Size Comparison</span>
+    </div>
+
+    <div class="grid-3">
+      <!-- 36px (current) -->
+      <div class="variant-wrap">
+        <div class="badge current">Current</div>
+        <div class="strip-compare">
+          <div class="strip">
+            <div class="day">
+              <span class="day-label">Mo</span>
+              <div class="cell s40 complete">
+                24
+                <div class="check">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Tu</span>
+              <div class="cell s40 complete">
+                25
+                <div class="check">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label">We</span>
+              <div class="cell s40 complete">
+                26
+                <div class="check">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label bold">Th</span>
+              <div class="cell s40 today">27</div>
+              <div class="dot-row"><div class="dot partial"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Fr</span>
+              <div class="cell s40 future">28</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Sa</span>
+              <div class="cell s40 future">1</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Su</span>
+              <div class="cell s40 future">2</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="variant-label">36 × 36px · r10</div>
+        <div class="variant-desc">
+          Current size. Compact, leaves breathing room but cells feel small.
+        </div>
+      </div>
+
+      <!-- 40px (proposed) -->
+      <div class="variant-wrap">
+        <div class="badge new">Proposed</div>
+        <div class="strip-compare">
+          <div class="strip">
+            <div class="day">
+              <span class="day-label">Mo</span>
+              <div class="cell s44 complete">
+                24
+                <div class="check lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Tu</span>
+              <div class="cell s44 complete">
+                25
+                <div class="check lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label">We</span>
+              <div class="cell s44 complete">
+                26
+                <div class="check lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label bold">Th</span>
+              <div class="cell s44 today">27</div>
+              <div class="dot-row"><div class="dot partial"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Fr</span>
+              <div class="cell s44 future">28</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Sa</span>
+              <div class="cell s44 future">1</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Su</span>
+              <div class="cell s44 future">2</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="variant-label">40 × 40px · r12</div>
+        <div class="variant-desc">
+          +11% larger. Better tap target, numbers are more readable. Still fits
+          7 cells.
+        </div>
+      </div>
+
+      <!-- 44px (big) -->
+      <div class="variant-wrap">
+        <div class="badge alt">Large</div>
+        <div class="strip-compare">
+          <div class="strip">
+            <div class="day">
+              <span class="day-label">Mo</span>
+              <div class="cell s48 complete">
+                24
+                <div class="check lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Tu</span>
+              <div class="cell s48 complete">
+                25
+                <div class="check lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label">We</span>
+              <div class="cell s48 complete">
+                26
+                <div class="check lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#10B981"
+                    stroke-width="3"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-row"></div>
+            </div>
+            <div class="day">
+              <span class="day-label bold">Th</span>
+              <div class="cell s48 today">27</div>
+              <div class="dot-row"><div class="dot partial"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Fr</span>
+              <div class="cell s48 future">28</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Sa</span>
+              <div class="cell s48 future">1</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+            <div class="day">
+              <span class="day-label">Su</span>
+              <div class="cell s48 future">2</div>
+              <div class="dot-row"><div class="dot future-d"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="variant-label">44 × 44px · r14</div>
+        <div class="variant-desc">
+          +22% larger. Bold presence but gaps between cells shrink. Tighter
+          layout.
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark mode comparison -->
+    <div style="margin-top: 28px">
+      <div class="grid-3">
+        <div class="variant-wrap">
+          <div class="strip-compare dark-sc">
+            <div class="strip">
+              <div class="day">
+                <span class="day-label dark-t">Mo</span>
+                <div class="cell s40 complete dark-cl">
+                  24
+                  <div class="check dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Tu</span>
+                <div class="cell s40 complete dark-cl">
+                  25
+                  <div class="check dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">We</span>
+                <div class="cell s40 complete dark-cl">
+                  26
+                  <div class="check dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label bold dark-t">Th</span>
+                <div class="cell s40 today dark-cl">27</div>
+                <div class="dot-row"><div class="dot partial"></div></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Fr</span>
+                <div class="cell s40 future dark-cl">28</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Sa</span>
+                <div class="cell s40 future dark-cl">1</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Su</span>
+                <div class="cell s40 future dark-cl">2</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="variant-desc">36px · Dark mode</div>
+        </div>
+        <div class="variant-wrap">
+          <div class="strip-compare dark-sc">
+            <div class="strip">
+              <div class="day">
+                <span class="day-label dark-t">Mo</span>
+                <div class="cell s44 complete dark-cl">
+                  24
+                  <div class="check lg dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Tu</span>
+                <div class="cell s44 complete dark-cl">
+                  25
+                  <div class="check lg dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">We</span>
+                <div class="cell s44 complete dark-cl">
+                  26
+                  <div class="check lg dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label bold dark-t">Th</span>
+                <div class="cell s44 today dark-cl">27</div>
+                <div class="dot-row"><div class="dot partial"></div></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Fr</span>
+                <div class="cell s44 future dark-cl">28</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Sa</span>
+                <div class="cell s44 future dark-cl">1</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Su</span>
+                <div class="cell s44 future dark-cl">2</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="variant-desc">40px · Dark mode</div>
+        </div>
+        <div class="variant-wrap">
+          <div class="strip-compare dark-sc">
+            <div class="strip">
+              <div class="day">
+                <span class="day-label dark-t">Mo</span>
+                <div class="cell s48 complete dark-cl">
+                  24
+                  <div class="check lg dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Tu</span>
+                <div class="cell s48 complete dark-cl">
+                  25
+                  <div class="check lg dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">We</span>
+                <div class="cell s48 complete dark-cl">
+                  26
+                  <div class="check lg dark-ck">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#34D399"
+                      stroke-width="3"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="dot-row"></div>
+              </div>
+              <div class="day">
+                <span class="day-label bold dark-t">Th</span>
+                <div class="cell s48 today dark-cl">27</div>
+                <div class="dot-row"><div class="dot partial"></div></div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Fr</span>
+                <div class="cell s48 future dark-cl">28</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Sa</span>
+                <div class="cell s48 future dark-cl">1</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+              <div class="day">
+                <span class="day-label dark-t">Su</span>
+                <div class="cell s48 future dark-cl">2</div>
+                <div class="dot-row">
+                  <div class="dot future-d dark-d"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="variant-desc">44px · Dark mode</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ FULL SCREEN: Current vs 44px + Streak Greeting ════════ -->
+    <div class="section-label">
+      <span class="section-label-text"
+        >2 · Full Screen — Current vs Combined Upgrade</span
+      >
+    </div>
+
+    <div class="grid-2">
+      <!-- CURRENT -->
+      <div class="variant-wrap">
+        <div class="badge current">Current</div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text">Good morning</div>
+                <div class="g-progress"><span class="c">3</span> of 5</div>
+              </div>
+              <div class="chip">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Thu, March 4</span>
+                <svg
+                  class="chev"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+              <div class="strip">
+                <div class="day">
+                  <span class="day-label">Mo</span>
+                  <div class="cell s40 complete">
+                    24
+                    <div class="check">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#10B981"
+                        stroke-width="3"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="dot-row"></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Tu</span>
+                  <div class="cell s40 complete">
+                    25
+                    <div class="check">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#10B981"
+                        stroke-width="3"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="dot-row"></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">We</span>
+                  <div class="cell s40 complete">
+                    26
+                    <div class="check">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#10B981"
+                        stroke-width="3"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="dot-row"></div>
+                </div>
+                <div class="day">
+                  <span class="day-label bold">Th</span>
+                  <div class="cell s40 today">27</div>
+                  <div class="dot-row"><div class="dot partial"></div></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Fr</span>
+                  <div class="cell s40 future">28</div>
+                  <div class="dot-row"><div class="dot future-d"></div></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Sa</span>
+                  <div class="cell s40 future">1</div>
+                  <div class="dot-row"><div class="dot future-d"></div></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Su</span>
+                  <div class="cell s40 future">2</div>
+                  <div class="dot-row"><div class="dot future-d"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="habit-list">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div>
+                  <div class="habit-name">Meditate</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Read</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Drink water</div>
+                  <div class="habit-meta">8 glasses</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">🛏️</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Sleep by 11pm</div>
+                  <div class="habit-meta">Nightly</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bar">
+              <svg
+                class="bar-i"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
+              </svg>
+              <div class="bar-fab">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+              <svg
+                class="bar-i"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D5907"
+                stroke-width="2"
+              >
+                <path
+                  d="M12 3l1.5 4.5H18l-3.5 2.5 1 4.5L12 12l-3.5 2.5 1-4.5L6 7.5h4.5z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="variant-label">Current — 36px cells, generic greeting</div>
+      </div>
+
+      <!-- PROPOSED: 44px + streak greeting -->
+      <div class="variant-wrap">
+        <div class="badge new">Proposed</div>
+        <div
+          class="phone"
+          style="
+            box-shadow:
+              0 0 0 1px rgba(16, 185, 129, 0.08),
+              0 20px 50px rgba(0, 0, 0, 0.5);
+          "
+        >
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-streak">
+                  <span class="g-streak-text">3-day streak</span>
+                  <span style="font-size: 13px">🔥</span>
+                </div>
+                <div class="g-progress"><span class="c">3</span> of 5</div>
+              </div>
+              <div class="g-sub">Keep it going — you're building momentum</div>
+              <div class="chip">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Thu, March 4</span>
+                <svg
+                  class="chev"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+              <div class="strip">
+                <div class="day">
+                  <span class="day-label">Mo</span>
+                  <div class="cell s48 complete">
+                    24
+                    <div class="check lg">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#10B981"
+                        stroke-width="3"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="dot-row"></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Tu</span>
+                  <div class="cell s48 complete">
+                    25
+                    <div class="check lg">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#10B981"
+                        stroke-width="3"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="dot-row"></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">We</span>
+                  <div class="cell s48 complete">
+                    26
+                    <div class="check lg">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#10B981"
+                        stroke-width="3"
+                      >
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="dot-row"></div>
+                </div>
+                <div class="day">
+                  <span class="day-label bold">Th</span>
+                  <div class="cell s48 today">27</div>
+                  <div class="dot-row"><div class="dot partial"></div></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Fr</span>
+                  <div class="cell s48 future">28</div>
+                  <div class="dot-row"><div class="dot future-d"></div></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Sa</span>
+                  <div class="cell s48 future">1</div>
+                  <div class="dot-row"><div class="dot future-d"></div></div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Su</span>
+                  <div class="cell s48 future">2</div>
+                  <div class="dot-row"><div class="dot future-d"></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="habit-list">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Meditate</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Read</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Drink water</div>
+                  <div class="habit-meta">8 glasses</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">🛏️</div>
+                <div style="flex: 1">
+                  <div class="habit-name">Sleep by 11pm</div>
+                  <div class="habit-meta">Nightly</div>
+                </div>
+                <div class="chain">
+                  <div class="link on"></div>
+                  <div class="link on"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                  <div class="link off"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bar">
+              <svg
+                class="bar-i"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+                />
+              </svg>
+              <div class="bar-fab">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+              <svg
+                class="bar-i"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D5907"
+                stroke-width="2"
+              >
+                <path
+                  d="M12 3l1.5 4.5H18l-3.5 2.5 1 4.5L12 12l-3.5 2.5 1-4.5L6 7.5h4.5z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="variant-label">Proposed — 44px cells + streak greeting</div>
+      </div>
+    </div>
+
+    <!-- ════════ SPEC TABLE ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">3 · Size Specifications</span>
+    </div>
+    <div class="spec-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Current (36px)</th>
+            <th>Proposed (40px)</th>
+            <th>Large (44px)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cell size</td>
+            <td>36 × 36px</td>
+            <td>40 × 40px</td>
+            <td style="color: #e8b94d; font-weight: 600">44 × 44px</td>
+          </tr>
+          <tr>
+            <td>Border radius</td>
+            <td>10px (rounded-xl)</td>
+            <td>12px</td>
+            <td>14px</td>
+          </tr>
+          <tr>
+            <td>Font size</td>
+            <td>12px</td>
+            <td>13px</td>
+            <td>14px</td>
+          </tr>
+          <tr>
+            <td>Check badge</td>
+            <td>13px</td>
+            <td>15px</td>
+            <td>15px</td>
+          </tr>
+          <tr>
+            <td>Connector offset</td>
+            <td>34.5px</td>
+            <td>36px</td>
+            <td>36.5px</td>
+          </tr>
+          <tr>
+            <td>7 cells + gaps</td>
+            <td>252px + 106px gaps</td>
+            <td>280px + 78px gaps</td>
+            <td>308px + 50px gaps</td>
+          </tr>
+          <tr>
+            <td>Tap target</td>
+            <td><span class="tag no">Below 44px</span></td>
+            <td><span class="tag no">Below 44px</span></td>
+            <td><span class="tag yes">44px ✓</span></td>
+          </tr>
+          <tr>
+            <td>Tailwind class</td>
+            <td>w-10 h-10</td>
+            <td>w-10 h-10 (custom)</td>
+            <td>w-11 h-11</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      style="
+        text-align: center;
+        margin-top: 32px;
+        padding: 20px;
+        border: 1px solid rgba(16, 185, 129, 0.12);
+        border-radius: 14px;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+        background: rgba(16, 185, 129, 0.02);
+      "
+    >
+      <div
+        style="
+          font-size: 13px;
+          font-weight: 700;
+          color: #10b981;
+          margin-bottom: 6px;
+        "
+      >
+        Recommendation
+      </div>
+      <div style="font-size: 12px; color: #a8a29e; line-height: 1.7">
+        Go with <strong style="color: #f5f1ed">44×44px</strong> — it hits
+        Apple's 44px minimum tap target, the numbers are more readable, and the
+        strip still fits on all screen sizes (308px of 358px available). Pair
+        with the <strong style="color: #e8b94d">streak greeting</strong> for
+        maximum impact.
+      </div>
+    </div>
+  </body>
+</html>

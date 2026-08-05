@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive v4.9 — Expandable Detail Cards</title>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background:#E8E4E0;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  .viewport {
+    width:390px;
+    min-height:100vh;
+    background:#F5F1ED;
+    position:relative;
+    overflow-y:auto;
+    overflow-x:hidden;
+  }
+  .sticky-header {
+    position:sticky; top:0; z-index:50;
+    background:#F5F1ED;
+    padding:16px 20px 14px;
+    border-bottom:1px solid transparent;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .sticky-header.scrolled {
+    border-bottom-color:#DDD8D2;
+    box-shadow:0 2px 8px rgba(45,42,38,0.04);
+  }
+  .header-icon-btn {
+    width:36px; height:36px; border-radius:10px;
+    background:rgba(0,0,0,0.04); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:#2D2A26; transition:background 0.15s;
+  }
+  .header-icon-btn:hover { background:rgba(0,0,0,0.08); }
+  .page-title {
+    font-family:'Literata',serif;
+    font-size:24px; font-weight:700; color:#2D2A26;
+    line-height:1.25; letter-spacing:-0.3px;
+    margin-top:8px;
+  }
+  .page-subtitle {
+    font-size:14px; color:#6E6660; font-weight:400;
+    margin-top:4px; letter-spacing:-0.1px;
+  }
+  .rationale {
+    background:#FFFBEE; border:1px solid #F0E5B8; border-radius:12px;
+    margin:12px 20px 16px; padding:10px 12px;
+    font-size:12px; color:#7A6B2E; line-height:1.45;
+  }
+  .rationale strong { color:#5C5120; font-weight:600; }
+
+  .habit-card {
+    background:#FFFFFF;
+    border-radius:20px;
+    margin:0 20px 12px;
+    box-shadow:0 2px 8px rgba(45,42,38,0.05);
+    position:relative; overflow:hidden;
+    animation:cardIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .habit-card.removing {
+    animation:cardOut 0.35s ease-out forwards;
+    pointer-events:none;
+  }
+  @keyframes cardIn {
+    from { opacity:0; transform:translateY(12px) scale(0.98); }
+    to { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @keyframes cardOut {
+    to { opacity:0; transform:translateX(40px); }
+  }
+  .habit-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0;
+    width:4px; border-radius:20px 0 0 20px;
+    background:var(--accent,#059669);
+    z-index:1;
+  }
+  .card-row {
+    display:flex; align-items:center; gap:12px;
+    padding:18px 16px 18px 22px;
+    cursor:pointer;
+    user-select:none;
+    min-height:76px;
+  }
+  .habit-emoji {
+    width:40px; height:40px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:22px; flex-shrink:0;
+  }
+  .habit-name {
+    flex:1; min-width:0;
+    font-size:16px; font-weight:600; color:#2D2A26;
+    line-height:1.25; letter-spacing:-0.1px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .strength-pill {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:5px 10px; border-radius:999px;
+    font-size:12px; font-weight:600;
+    flex-shrink:0;
+  }
+  .chevron {
+    display:flex; align-items:center; justify-content:center;
+    width:28px; height:28px;
+    color:#9CA3AF; flex-shrink:0;
+    transition:transform 0.35s ease;
+  }
+  .habit-card.expanded .chevron { transform:rotate(180deg); }
+
+  .card-detail {
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.35s ease;
+  }
+  .habit-card.expanded .card-detail { max-height:520px; }
+  .detail-inner {
+    padding:4px 20px 18px 22px;
+    border-top:1px solid #F0EBE5;
+    margin-top:0;
+  }
+  .spark-wrap {
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px;
+    padding:12px 0 10px;
+  }
+  .spark-label {
+    font-size:11px; font-weight:500; color:#9CA3AF;
+    text-transform:uppercase; letter-spacing:0.4px;
+  }
+  .spark-wrap svg { display:block; }
+
+  .stat-row {
+    display:flex; align-items:center; gap:6px;
+    padding:10px 10px; margin:2px 0 14px;
+    background:#FAF6F1; border-radius:10px;
+    font-size:11.5px; color:#6E6660;
+  }
+  .stat-cell { flex:1; text-align:center; line-height:1.3; }
+  .stat-cell strong { display:block; color:#2D2A26; font-weight:600; font-size:13px; margin-bottom:1px; }
+  .stat-sep { width:1px; height:22px; background:#E8E1D8; }
+
+  .reason {
+    font-family:'Literata',serif;
+    font-style:italic;
+    font-size:13px; color:#6E6660;
+    line-height:1.5;
+    padding:8px 12px 8px 14px;
+    margin:0 0 14px;
+    border-left:3px solid #E8E1D8;
+    background:rgba(232,225,216,0.25);
+    border-radius:0 8px 8px 0;
+  }
+  .reason .note { color:#9CA3AF; font-style:normal; font-family:'DM Sans',sans-serif; font-size:11.5px; margin-left:6px; }
+
+  .resume-primary {
+    width:100%; height:46px; border-radius:12px;
+    background:#059669; color:#fff;
+    font-family:'DM Sans',sans-serif;
+    font-size:15px; font-weight:600;
+    border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:7px;
+    position:relative; overflow:hidden;
+    transition:background 0.2s, transform 0.15s;
+    box-shadow:0 2px 6px rgba(5,150,105,0.25);
+  }
+  .resume-primary:hover { background:#047857; }
+  .resume-primary:active { transform:scale(0.985); }
+  .resume-primary .shimmer {
+    position:absolute; top:0; left:-100%; width:60%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);
+    animation:shimmer 2.6s infinite;
+  }
+  @keyframes shimmer { 0%{left:-60%;} 100%{left:160%;} }
+  .resume-primary.done { background:#047857; pointer-events:none; }
+
+  .delete-link {
+    display:block; width:100%; text-align:center;
+    background:none; border:none; cursor:pointer;
+    font-family:'DM Sans',sans-serif;
+    font-size:12.5px; color:#9CA3AF; font-weight:500;
+    padding:10px 8px 2px;
+    transition:color 0.15s;
+  }
+  .delete-link:hover { color:#B53030; }
+  .delete-link.confirming { color:#B53030; font-weight:600; }
+
+  .toast {
+    position:fixed; bottom:40px; left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:#059669; color:#fff;
+    font-size:14px; font-weight:600;
+    padding:10px 18px; border-radius:999px;
+    box-shadow:0 6px 20px rgba(5,150,105,0.35);
+    opacity:0; transition:opacity 0.3s, transform 0.3s;
+    z-index:100; display:flex; align-items:center; gap:6px;
+  }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="viewport" id="viewport">
+  <div class="sticky-header" id="stickyHeader">
+    <button class="header-icon-btn" aria-label="Back">
+      <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+    </button>
+    <h1 class="page-title">Archived Habits</h1>
+    <p class="page-subtitle" id="subtitle">5 habits archived · tap a card for full story</p>
+  </div>
+
+  <div class="rationale">
+    <strong>v4.9 — Expandable detail cards.</strong> "Should I restore this?" needs context users can't see today — strength trajectory, peak streak, archive reason. Collapsed-by-default keeps the list scannable; tap to see the full story before deciding.
+  </div>
+
+  <div id="list" style="padding-bottom:40px;">
+
+    <!-- Card 1: Morning Meditation (pre-expanded) -->
+    <div class="habit-card expanded" data-id="1" style="--accent:#7C3AED;">
+      <div class="card-row" onclick="toggleCard(this)">
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">🧘</div>
+        <div class="habit-name">Morning Meditation</div>
+        <div class="strength-pill" style="background:rgba(124,58,237,0.10);color:#7C3AED;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>72%
+        </div>
+        <div class="chevron"><i data-lucide="chevron-down" style="width:18px;height:18px;"></i></div>
+      </div>
+      <div class="card-detail">
+        <div class="detail-inner">
+          <div class="spark-wrap">
+            <span class="spark-label">14-day trajectory</span>
+            <svg viewBox="0 0 140 32" width="140" height="32">
+              <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7C3AED" stop-opacity="0.28"/><stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,10 L10,8 L20,12 L30,9 L40,7 L50,10 L60,8 L70,11 L80,13 L90,14 L100,18 L110,20 L120,23 L130,22 L140,24 L140,32 L0,32 Z" fill="url(#g1)"/>
+              <polyline points="0,10 10,8 20,12 30,9 40,7 50,10 60,8 70,11 80,13 90,14 100,18 110,20 120,23 130,22 140,24" fill="none" stroke="#7C3AED" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="reason">"Need a reset — coming back after travel."<span class="note">— your note</span></div>
+          <div class="stat-row">
+            <div class="stat-cell"><strong>14d</strong>Peak streak</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>156</strong>Total done</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>Apr 16</strong>Archived</div>
+          </div>
+          <button class="resume-primary" onclick="resumeHabit(event,this,'Morning Meditation')">
+            <span class="shimmer"></span>
+            <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+            Resume Habit
+          </button>
+          <button class="delete-link" onclick="deleteHabit(event,this)">or delete permanently</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: Read 30 Minutes -->
+    <div class="habit-card" data-id="2" style="--accent:#059669;">
+      <div class="card-row" onclick="toggleCard(this)">
+        <div class="habit-emoji" style="background:rgba(5,150,105,0.10);">📖</div>
+        <div class="habit-name">Read 30 Minutes</div>
+        <div class="strength-pill" style="background:rgba(5,150,105,0.10);color:#059669;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>58%
+        </div>
+        <div class="chevron"><i data-lucide="chevron-down" style="width:18px;height:18px;"></i></div>
+      </div>
+      <div class="card-detail">
+        <div class="detail-inner">
+          <div class="spark-wrap">
+            <span class="spark-label">14-day trajectory</span>
+            <svg viewBox="0 0 140 32" width="140" height="32">
+              <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#059669" stop-opacity="0.28"/><stop offset="100%" stop-color="#059669" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,12 L10,10 L20,11 L30,9 L40,10 L50,12 L60,13 L70,11 L80,14 L90,15 L100,16 L110,15 L120,17 L130,19 L140,18 L140,32 L0,32 Z" fill="url(#g2)"/>
+              <polyline points="0,12 10,10 20,11 30,9 40,10 50,12 60,13 70,11 80,14 90,15 100,16 110,15 120,17 130,19 140,18" fill="none" stroke="#059669" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="stat-row">
+            <div class="stat-cell"><strong>21d</strong>Peak streak</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>89</strong>Total done</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>Apr 11</strong>Archived</div>
+          </div>
+          <button class="resume-primary" onclick="resumeHabit(event,this,'Read 30 Minutes')">
+            <span class="shimmer"></span>
+            <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+            Resume Habit
+          </button>
+          <button class="delete-link" onclick="deleteHabit(event,this)">or delete permanently</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: Cold Shower -->
+    <div class="habit-card" data-id="3" style="--accent:#0D9488;">
+      <div class="card-row" onclick="toggleCard(this)">
+        <div class="habit-emoji" style="background:rgba(13,148,136,0.10);">🧊</div>
+        <div class="habit-name">Cold Shower</div>
+        <div class="strength-pill" style="background:rgba(13,148,136,0.10);color:#0D9488;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>35%
+        </div>
+        <div class="chevron"><i data-lucide="chevron-down" style="width:18px;height:18px;"></i></div>
+      </div>
+      <div class="card-detail">
+        <div class="detail-inner">
+          <div class="spark-wrap">
+            <span class="spark-label">14-day trajectory</span>
+            <svg viewBox="0 0 140 32" width="140" height="32">
+              <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0D9488" stop-opacity="0.28"/><stop offset="100%" stop-color="#0D9488" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,14 L10,13 L20,15 L30,17 L40,16 L50,18 L60,20 L70,19 L80,22 L90,24 L100,25 L110,26 L120,27 L130,28 L140,28 L140,32 L0,32 Z" fill="url(#g3)"/>
+              <polyline points="0,14 10,13 20,15 30,17 40,16 50,18 60,20 70,19 80,22 90,24 100,25 110,26 120,27 130,28 140,28" fill="none" stroke="#0D9488" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="reason">"Too cold in winter, trying again in spring."<span class="note">— your note</span></div>
+          <div class="stat-row">
+            <div class="stat-cell"><strong>8d</strong>Peak streak</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>24</strong>Total done</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>Mar 27</strong>Archived</div>
+          </div>
+          <button class="resume-primary" onclick="resumeHabit(event,this,'Cold Shower')">
+            <span class="shimmer"></span>
+            <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+            Resume Habit
+          </button>
+          <button class="delete-link" onclick="deleteHabit(event,this)">or delete permanently</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: Daily Journal -->
+    <div class="habit-card" data-id="4" style="--accent:#7C3AED;">
+      <div class="card-row" onclick="toggleCard(this)">
+        <div class="habit-emoji" style="background:rgba(124,58,237,0.10);">✍️</div>
+        <div class="habit-name">Daily Journal</div>
+        <div class="strength-pill" style="background:rgba(124,58,237,0.10);color:#7C3AED;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>85%
+        </div>
+        <div class="chevron"><i data-lucide="chevron-down" style="width:18px;height:18px;"></i></div>
+      </div>
+      <div class="card-detail">
+        <div class="detail-inner">
+          <div class="spark-wrap">
+            <span class="spark-label">14-day trajectory</span>
+            <svg viewBox="0 0 140 32" width="140" height="32">
+              <defs><linearGradient id="g4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7C3AED" stop-opacity="0.28"/><stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,8 L10,7 L20,9 L30,6 L40,8 L50,7 L60,9 L70,6 L80,8 L90,7 L100,9 L110,8 L120,7 L130,9 L140,8 L140,32 L0,32 Z" fill="url(#g4)"/>
+              <polyline points="0,8 10,7 20,9 30,6 40,8 50,7 60,9 70,6 80,8 90,7 100,9 110,8 120,7 130,9 140,8" fill="none" stroke="#7C3AED" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="stat-row">
+            <div class="stat-cell"><strong>42d</strong>Peak streak</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>312</strong>Total done</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>Mar 13</strong>Archived</div>
+          </div>
+          <button class="resume-primary" onclick="resumeHabit(event,this,'Daily Journal')">
+            <span class="shimmer"></span>
+            <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+            Resume Habit
+          </button>
+          <button class="delete-link" onclick="deleteHabit(event,this)">or delete permanently</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Push-ups -->
+    <div class="habit-card" data-id="5" style="--accent:#E11D48;">
+      <div class="card-row" onclick="toggleCard(this)">
+        <div class="habit-emoji" style="background:rgba(225,29,72,0.10);">💪</div>
+        <div class="habit-name">Push-ups</div>
+        <div class="strength-pill" style="background:rgba(225,29,72,0.10);color:#E11D48;">
+          <i data-lucide="zap" style="width:12px;height:12px;"></i>12%
+        </div>
+        <div class="chevron"><i data-lucide="chevron-down" style="width:18px;height:18px;"></i></div>
+      </div>
+      <div class="card-detail">
+        <div class="detail-inner">
+          <div class="spark-wrap">
+            <span class="spark-label">14-day trajectory</span>
+            <svg viewBox="0 0 140 32" width="140" height="32">
+              <defs><linearGradient id="g5" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E11D48" stop-opacity="0.28"/><stop offset="100%" stop-color="#E11D48" stop-opacity="0"/></linearGradient></defs>
+              <path d="M0,16 L10,18 L20,17 L30,20 L40,22 L50,24 L60,25 L70,26 L80,27 L90,28 L100,29 L110,29 L120,30 L130,30 L140,30 L140,32 L0,32 Z" fill="url(#g5)"/>
+              <polyline points="0,16 10,18 20,17 30,20 40,22 50,24 60,25 70,26 80,27 90,28 100,29 110,29 120,30 130,30 140,30" fill="none" stroke="#E11D48" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="reason">"Taking a break"<span class="note">— your note</span></div>
+          <div class="stat-row">
+            <div class="stat-cell"><strong>3d</strong>Peak streak</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>8</strong>Total done</div>
+            <div class="stat-sep"></div>
+            <div class="stat-cell"><strong>Feb 8</strong>Archived</div>
+          </div>
+          <button class="resume-primary" onclick="resumeHabit(event,this,'Push-ups')">
+            <span class="shimmer"></span>
+            <i data-lucide="rotate-ccw" style="width:17px;height:17px;"></i>
+            Resume Habit
+          </button>
+          <button class="delete-link" onclick="deleteHabit(event,this)">or delete permanently</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <i data-lucide="check-circle" style="width:16px;height:16px;"></i>
+  <span id="toastText">Restored!</span>
+</div>
+
+<script>
+  lucide.createIcons();
+  const viewport = document.getElementById('viewport');
+  const stickyHeader = document.getElementById('stickyHeader');
+  viewport.addEventListener('scroll', () => {
+    stickyHeader.classList.toggle('scrolled', viewport.scrollTop > 8);
+  });
+
+  function toggleCard(row) {
+    const card = row.closest('.habit-card');
+    const isOpen = card.classList.contains('expanded');
+    document.querySelectorAll('.habit-card.expanded').forEach(c => c.classList.remove('expanded'));
+    if (!isOpen) card.classList.add('expanded');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastText').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+  function updateSubtitle() {
+    const n = document.querySelectorAll('.habit-card:not(.removing)').length;
+    document.getElementById('subtitle').textContent = n === 0
+      ? 'No archived habits'
+      : n + ' habit' + (n===1?'':'s') + ' archived · tap a card for full story';
+  }
+  function resumeHabit(event, btn, name) {
+    event.stopPropagation();
+    btn.classList.add('done');
+    btn.innerHTML = '<i data-lucide="check" style="width:17px;height:17px;"></i> Restored!';
+    lucide.createIcons();
+    const card = btn.closest('.habit-card');
+    setTimeout(() => {
+      card.classList.add('removing');
+      showToast(name + ' restored!');
+      setTimeout(() => { card.remove(); updateSubtitle(); }, 350);
+    }, 500);
+  }
+  function deleteHabit(event, btn) {
+    event.stopPropagation();
+    if (!btn.classList.contains('confirming')) {
+      btn.classList.add('confirming');
+      btn.textContent = 'Tap again to confirm delete';
+      setTimeout(() => {
+        if (btn.classList.contains('confirming')) {
+          btn.classList.remove('confirming');
+          btn.textContent = 'or delete permanently';
+        }
+      }, 2500);
+      return;
+    }
+    const card = btn.closest('.habit-card');
+    card.classList.add('removing');
+    setTimeout(() => { card.remove(); updateSubtitle(); }, 350);
+  }
+</script>
+</body>
+</html>

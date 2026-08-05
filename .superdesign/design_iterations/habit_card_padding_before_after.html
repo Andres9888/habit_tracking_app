@@ -1,0 +1,1422 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Card Padding — Before / After</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1816 !important;
+        color: #f5f1ed;
+        padding: 32px 24px 64px;
+      }
+      h1 {
+        font-family: 'Literata', serif !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px !important;
+      }
+      .subtitle {
+        color: #6b6560;
+        font-size: 14px;
+        margin-bottom: 28px;
+        max-width: 820px;
+        line-height: 1.65;
+      }
+
+      .section-title {
+        font-size: 13px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #a8a29e;
+        margin: 36px 0 16px;
+      }
+
+      .compare-row {
+        display: flex;
+        gap: 28px;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+      .compare-col {
+        flex: 1;
+        min-width: 0;
+      }
+      .compare-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 14px;
+        padding: 5px 12px;
+        border-radius: 6px;
+        display: inline-block;
+      }
+      .label-before {
+        background: #b53030;
+        color: #fff;
+      }
+      .label-after {
+        background: #059669;
+        color: #fff;
+      }
+
+      .phone {
+        width: 100%;
+        max-width: 360px;
+        border-radius: 28px;
+        overflow: hidden;
+        border: 2px solid #3d3833;
+        background: #f5f1ed;
+      }
+      .phone-header {
+        background: #edeae5;
+        padding: 14px 16px 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b6560;
+        border-bottom: 1px solid #e0dbd4;
+      }
+
+      /* ── Overlay legend colors ── */
+      .zone-list {
+        background: rgba(239, 68, 68, 0.22);
+      } /* red */
+      .zone-border {
+        background: rgba(251, 191, 36, 0.35);
+      } /* amber */
+      .zone-accent {
+        background: rgba(59, 130, 246, 0.28);
+      } /* blue */
+      .zone-content {
+        background: rgba(34, 197, 94, 0.18);
+      } /* green */
+      .zone-chain-l {
+        background: rgba(168, 85, 247, 0.22);
+      } /* purple left */
+      .zone-chain-r {
+        background: rgba(236, 72, 153, 0.22);
+      } /* pink right */
+      .zone-vpad {
+        background: rgba(14, 165, 233, 0.15);
+      } /* cyan vertical */
+
+      .zone-label {
+        position: absolute;
+        font-size: 8px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+        color: #1c1917;
+        background: rgba(255, 255, 255, 0.88);
+        padding: 1px 4px;
+        border-radius: 3px;
+        white-space: nowrap;
+        z-index: 20;
+        pointer-events: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+      }
+
+      /* ── Screen scaffold ── */
+      .screen {
+        position: relative;
+        padding-bottom: 12px;
+      }
+      .screen-inner {
+        position: relative;
+      }
+
+      /* Calendar strip */
+      .week-section {
+        position: relative;
+        margin-bottom: 8px;
+      }
+      .week-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 40px 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #78716c;
+      }
+      .week-nav .title {
+        color: #2d2a26;
+        font-size: 13px;
+      }
+      .day-strip {
+        display: flex;
+        padding: 0 40px;
+        position: relative;
+        height: 58px;
+      }
+      .day-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+      }
+      .day-label {
+        font-size: 9px;
+        font-weight: 600;
+        color: #a8a29e;
+        text-transform: uppercase;
+      }
+      .date-ring {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid #d6d3d1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #2d2a26;
+        background: #fff;
+        z-index: 2;
+      }
+      .date-ring.today {
+        border-color: #10b981;
+        background: #ecfdf5;
+        color: #059669;
+      }
+      .date-ring.done {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+      }
+
+      /* 40px inset overlay on calendar */
+      .cal-inset-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .cal-inset-overlay .left-inset,
+      .cal-inset-overlay .right-inset {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 40px;
+      }
+      .cal-inset-overlay .left-inset {
+        left: 0;
+      }
+      .cal-inset-overlay .right-inset {
+        right: 0;
+      }
+
+      /* List + card */
+      .list-area {
+        position: relative;
+      }
+      .list-pad-overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .list-pad-overlay .lp-left,
+      .list-pad-overlay .lp-right {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 24px;
+      }
+      .list-pad-overlay .lp-left {
+        left: 0;
+      }
+      .list-pad-overlay .lp-right {
+        right: 0;
+      }
+
+      .list-wrap {
+        padding: 0 24px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .habit-card {
+        border-radius: 20px;
+        background: #fff;
+        position: relative;
+        display: flex;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .habit-card + .habit-card {
+        margin-top: 10px;
+      }
+
+      /* Card border overlay */
+      .card-border-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 15;
+        border: 1px solid rgba(251, 191, 36, 0.7);
+      }
+
+      .accent-wrap {
+        position: relative;
+        flex-shrink: 0;
+        width: 4px;
+      }
+      .accent {
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #34d399, #10b981);
+      }
+
+      .card-body {
+        flex: 1;
+        min-width: 0;
+        position: relative;
+      }
+
+      /* Content padding overlays */
+      .pad-overlays {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 8;
+      }
+      .pad-overlays .h-pad {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+      }
+      .pad-overlays .v-pad {
+        position: absolute;
+        left: 0;
+        right: 0;
+      }
+
+      /* Card UI */
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        z-index: 3;
+      }
+      .icon-box {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: #f0fdf4;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .title-text {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2d2a26;
+        flex: 1;
+        line-height: 1.25;
+      }
+      .bar-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+        position: relative;
+        z-index: 3;
+      }
+      .bar-track {
+        flex: 1;
+        height: 6px;
+        background: #e7e5e4;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .bar-fill {
+        height: 100%;
+        width: 68%;
+        background: #10b981;
+        border-radius: 3px;
+      }
+      .pct {
+        font-size: 12px;
+        font-weight: 700;
+        color: #10b981;
+        min-width: 32px;
+        text-align: right;
+      }
+
+      .divider {
+        height: 1px;
+        background: #ede9e4;
+        margin: 8px 0;
+        position: relative;
+        z-index: 3;
+      }
+      .divider.bad {
+        margin-left: 12px;
+        margin-right: 12px;
+      } /* mx-3 before */
+      .divider.good {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .chain-row {
+        display: flex;
+        position: relative;
+        z-index: 3;
+      }
+      .toggle-col {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+      }
+      .toggle {
+        width: 24px;
+        height: 24px;
+        border-radius: 7px;
+        border: 2px solid #d6d3d1;
+        background: #fff;
+      }
+      .toggle.on {
+        background: #10b981;
+        border-color: #10b981;
+      }
+
+      /* Column guides */
+      .guides {
+        position: absolute;
+        left: 40px;
+        right: 40px;
+        top: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 6;
+      }
+      .guide-v {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-50%);
+        border-left: 1px dashed rgba(5, 150, 105, 0.4);
+      }
+
+      /* BEFORE specific paddings */
+      .before-card .card-header {
+        padding: 16px 12px 0;
+      }
+      .before-card .bar-row {
+        padding: 0 12px;
+      }
+      .before-card .chain-wrap {
+        padding: 0 12px 16px 12px;
+        padding-right: 12px;
+      }
+      .before-card.compact .card-header {
+        padding-top: 12px;
+      }
+      .before-card.compact .chain-wrap {
+        padding-bottom: 12px;
+      }
+
+      /* AFTER specific paddings */
+      .after-card .content-wrap {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .after-card .card-header {
+        padding-top: 16px;
+        padding-bottom: 0;
+      }
+      .after-card .chain-wrap {
+        padding-left: 11px;
+        padding-right: 15px;
+        padding-bottom: 16px;
+      }
+      .after-card.compact .card-header {
+        padding-top: 12px;
+      }
+      .after-card.compact .chain-wrap {
+        padding-bottom: 12px;
+      }
+
+      .variant-tag {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #78716c;
+        background: #edeae5;
+        padding: 3px 8px;
+        border-radius: 4px;
+        margin-bottom: 8px;
+      }
+
+      .callout {
+        margin-top: 14px;
+        font-size: 12px;
+        color: #6b6560;
+        line-height: 1.65;
+        border-left: 2px solid #3d3833;
+        padding-left: 12px;
+      }
+      .callout code {
+        background: #2d2a26;
+        color: #e8b94d;
+        padding: 1px 5px;
+        border-radius: 3px;
+        font-size: 11px;
+      }
+      .callout li {
+        margin-left: 16px;
+        margin-bottom: 4px;
+      }
+
+      .legend-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 16px;
+        margin: 20px 0 8px;
+        padding: 14px 16px;
+        background: #2d2a26;
+        border-radius: 12px;
+        border: 1px solid #3d3833;
+        max-width: 900px;
+        font-size: 11px;
+        color: #d6d3d1;
+      }
+      .legend-bar span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sw {
+        width: 14px;
+        height: 14px;
+        border-radius: 3px;
+        flex-shrink: 0;
+      }
+
+      .math-box {
+        margin-top: 28px;
+        padding: 16px 18px;
+        background: #2d2a26;
+        border-radius: 12px;
+        border: 1px solid #3d3833;
+        max-width: 900px;
+      }
+      .math-box h2 {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #e8b94d !important;
+        margin-bottom: 10px !important;
+        font-family: 'DM Sans', sans-serif !important;
+      }
+      .math-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        font-size: 12px;
+        color: #d6d3d1;
+      }
+      .math-grid div {
+        line-height: 1.55;
+        padding: 10px;
+        background: #1a1816;
+        border-radius: 8px;
+      }
+      .math-grid strong {
+        color: #f5f1ed;
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .align-ruler {
+        position: relative;
+        height: 16px;
+        margin: 4px 24px 0;
+        font-size: 8px;
+        color: #78716c;
+      }
+      .align-ruler .tick {
+        position: absolute;
+        top: 0;
+        height: 8px;
+        border-left: 1px solid #a8a29e;
+      }
+      .align-ruler .tick span {
+        position: absolute;
+        top: 9px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-weight: 600;
+      }
+
+      @media (max-width: 960px) {
+        .compare-row {
+          flex-direction: column;
+        }
+        .phone {
+          max-width: 100%;
+        }
+        .math-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Habit Card Padding</h1>
+    <p class="subtitle">
+      Side-by-side padding anatomy: list inset (24px), card border (1px), accent
+      (4px), centralized header
+      <code
+        style="
+          background: #2d2a26;
+          color: #e8b94d;
+          padding: 1px 5px;
+          border-radius: 3px;
+        "
+        >px-3</code
+      >, and chain asymmetry (11px / 15px) to align toggles with the 40px
+      calendar strip. Colored overlays show each zone; labels are measurements
+      in px.
+    </p>
+
+    <div class="legend-bar">
+      <span><span class="sw zone-list"></span> List padding 24px</span>
+      <span><span class="sw zone-border"></span> Card border 1px</span>
+      <span><span class="sw zone-accent"></span> Accent strip 4px</span>
+      <span><span class="sw zone-content"></span> Content px-3 (12px)</span>
+      <span><span class="sw zone-chain-l"></span> Chain left 11px</span>
+      <span><span class="sw zone-chain-r"></span> Chain right 15px</span>
+      <span><span class="sw zone-vpad"></span> Vertical pt/pb (16 or 12)</span>
+    </div>
+
+    <div class="section-title">
+      Row 1 — Full-size cards + calendar alignment
+    </div>
+    <div class="compare-row">
+      <!-- BEFORE -->
+      <div class="compare-col">
+        <div class="compare-label label-before">Before — scattered padding</div>
+        <div class="phone">
+          <div class="phone-header">Jun 2 – 8 · Full card</div>
+          <div class="screen">
+            <div class="week-section">
+              <div class="week-nav">
+                <span>‹</span><span class="title">June 2 – 8</span
+                ><span>›</span>
+              </div>
+              <div class="day-strip">
+                <div class="cal-inset-overlay">
+                  <div class="left-inset zone-list">
+                    <span
+                      class="zone-label"
+                      style="top: 4px; left: 50%; transform: translateX(-50%)"
+                      >40px</span
+                    >
+                  </div>
+                  <div class="right-inset zone-list">
+                    <span
+                      class="zone-label"
+                      style="top: 4px; left: 50%; transform: translateX(-50%)"
+                      >40px</span
+                    >
+                  </div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">M</span>
+                  <div class="date-ring done">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">T</span>
+                  <div class="date-ring done">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">W</span>
+                  <div class="date-ring done">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">T</span>
+                  <div class="date-ring">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">F</span>
+                  <div class="date-ring today">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">S</span>
+                  <div class="date-ring">7</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">S</span>
+                  <div class="date-ring">8</div>
+                </div>
+                <div class="guides" id="before-guides-full"></div>
+              </div>
+            </div>
+
+            <div class="list-area">
+              <div class="list-pad-overlay">
+                <div class="lp-left zone-list">
+                  <span
+                    class="zone-label"
+                    style="
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%) rotate(-90deg);
+                    "
+                    >24</span
+                  >
+                </div>
+                <div class="lp-right zone-list">
+                  <span
+                    class="zone-label"
+                    style="
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%) rotate(-90deg);
+                    "
+                    >24</span
+                  >
+                </div>
+              </div>
+              <div class="list-wrap">
+                <div class="habit-card before-card">
+                  <div class="card-border-overlay"></div>
+                  <div class="accent-wrap zone-accent">
+                    <div class="accent"></div>
+                    <span
+                      class="zone-label"
+                      style="
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) rotate(-90deg);
+                      "
+                      >4</span
+                    >
+                  </div>
+                  <div class="card-body">
+                    <div class="pad-overlays">
+                      <div
+                        class="h-pad zone-content"
+                        style="left: 0; width: 12px"
+                      >
+                        <span
+                          class="zone-label"
+                          style="
+                            top: 20px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                          "
+                          >12</span
+                        >
+                      </div>
+                      <div
+                        class="h-pad zone-content"
+                        style="right: 0; width: 12px"
+                      >
+                        <span
+                          class="zone-label"
+                          style="
+                            top: 20px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                          "
+                          >12</span
+                        >
+                      </div>
+                      <div class="v-pad zone-vpad" style="top: 0; height: 16px">
+                        <span
+                          class="zone-label"
+                          style="
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                          "
+                          >pt-4 16</span
+                        >
+                      </div>
+                      <div
+                        class="v-pad zone-vpad"
+                        style="bottom: 0; height: 16px"
+                      >
+                        <span
+                          class="zone-label"
+                          style="
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                          "
+                          >pb-4 16</span
+                        >
+                      </div>
+                      <div
+                        class="h-pad zone-chain-l"
+                        style="
+                          left: 0;
+                          width: 12px;
+                          bottom: 16px;
+                          top: auto;
+                          height: 36px;
+                        "
+                      >
+                        <span
+                          class="zone-label"
+                          style="
+                            bottom: 2px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                          "
+                          >12</span
+                        >
+                      </div>
+                      <div
+                        class="h-pad zone-chain-r"
+                        style="
+                          right: 0;
+                          width: 12px;
+                          bottom: 16px;
+                          top: auto;
+                          height: 36px;
+                        "
+                      >
+                        <span
+                          class="zone-label"
+                          style="
+                            bottom: 2px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                          "
+                          >12 ✗</span
+                        >
+                      </div>
+                    </div>
+                    <div class="card-header">
+                      <div class="icon-box">🧘</div>
+                      <span class="title-text">Morning Meditation</span>
+                      <i
+                        data-lucide="chevron-right"
+                        style="width: 14px; height: 14px; color: #d6d3d1"
+                      ></i>
+                    </div>
+                    <div class="bar-row">
+                      <span style="font-size: 16px">🌿</span>
+                      <div class="bar-track"><div class="bar-fill"></div></div>
+                      <span class="pct">68%</span>
+                    </div>
+                    <div class="divider bad"></div>
+                    <div class="chain-wrap">
+                      <div class="chain-row">
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="align-ruler">
+                <div class="tick" style="left: 40px"><span>40 L</span></div>
+                <div class="tick" style="right: 36px">
+                  <span style="color: #b53030">36 R ✗</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong style="color: #f5a5a5">Inconsistent zones</strong>
+          <ul>
+            <li>
+              Per-child <code>px-3</code> / <code>mx-3</code> on dividers &
+              badges
+            </li>
+            <li>
+              Chain symmetric <code>12/12</code> — right tract 4px too wide
+            </li>
+            <li>Skeleton used <code>pl-3 pr-4</code> but live card did not</li>
+            <li>
+              Left: 24 + 4 + 12 = <strong>40px</strong> · Right: 24 + 12 =
+              <strong>36px</strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="compare-col">
+        <div class="compare-label label-after">After — unified + aligned</div>
+        <div class="phone">
+          <div class="phone-header">Jun 2 – 8 · Full card</div>
+          <div class="screen">
+            <div class="week-section">
+              <div class="week-nav">
+                <span>‹</span><span class="title">June 2 – 8</span
+                ><span>›</span>
+              </div>
+              <div class="day-strip">
+                <div class="cal-inset-overlay">
+                  <div class="left-inset zone-list">
+                    <span
+                      class="zone-label"
+                      style="top: 4px; left: 50%; transform: translateX(-50%)"
+                      >40px</span
+                    >
+                  </div>
+                  <div class="right-inset zone-list">
+                    <span
+                      class="zone-label"
+                      style="top: 4px; left: 50%; transform: translateX(-50%)"
+                      >40px</span
+                    >
+                  </div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">M</span>
+                  <div class="date-ring done">2</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">T</span>
+                  <div class="date-ring done">3</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">W</span>
+                  <div class="date-ring done">4</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">T</span>
+                  <div class="date-ring">5</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">F</span>
+                  <div class="date-ring today">6</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">S</span>
+                  <div class="date-ring">7</div>
+                </div>
+                <div class="day-col">
+                  <span class="day-label">S</span>
+                  <div class="date-ring">8</div>
+                </div>
+                <div class="guides" id="after-guides-full"></div>
+              </div>
+            </div>
+
+            <div class="list-area">
+              <div class="list-pad-overlay">
+                <div class="lp-left zone-list">
+                  <span
+                    class="zone-label"
+                    style="
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%) rotate(-90deg);
+                    "
+                    >24</span
+                  >
+                </div>
+                <div class="lp-right zone-list">
+                  <span
+                    class="zone-label"
+                    style="
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%) rotate(-90deg);
+                    "
+                    >24</span
+                  >
+                </div>
+              </div>
+              <div class="list-wrap">
+                <div class="habit-card after-card">
+                  <div class="card-border-overlay">
+                    <span class="zone-label" style="top: 2px; right: 4px"
+                      >border 1</span
+                    >
+                  </div>
+                  <div class="accent-wrap zone-accent">
+                    <div class="accent"></div>
+                    <span
+                      class="zone-label"
+                      style="
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) rotate(-90deg);
+                      "
+                      >4</span
+                    >
+                  </div>
+                  <div class="card-body">
+                    <div class="content-wrap">
+                      <div class="pad-overlays">
+                        <div
+                          class="h-pad zone-content"
+                          style="left: 0; width: 12px"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              top: 20px;
+                              left: 50%;
+                              transform: translateX(-50%);
+                            "
+                            >12 px-3</span
+                          >
+                        </div>
+                        <div
+                          class="h-pad zone-content"
+                          style="right: 0; width: 12px"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              top: 20px;
+                              left: 50%;
+                              transform: translateX(-50%);
+                            "
+                            >12 px-3</span
+                          >
+                        </div>
+                        <div
+                          class="v-pad zone-vpad"
+                          style="top: 0; height: 16px"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              left: 50%;
+                              top: 50%;
+                              transform: translate(-50%, -50%);
+                            "
+                            >pt-4</span
+                          >
+                        </div>
+                      </div>
+                      <div class="card-header">
+                        <div class="icon-box">🧘</div>
+                        <span class="title-text">Morning Meditation</span>
+                        <i
+                          data-lucide="chevron-right"
+                          style="width: 14px; height: 14px; color: #d6d3d1"
+                        ></i>
+                      </div>
+                      <div class="bar-row">
+                        <span style="font-size: 16px">🌿</span>
+                        <div class="bar-track">
+                          <div class="bar-fill"></div>
+                        </div>
+                        <span class="pct">68%</span>
+                      </div>
+                      <div class="divider good"></div>
+                    </div>
+                    <div class="chain-wrap">
+                      <div class="pad-overlays">
+                        <div
+                          class="h-pad zone-chain-l"
+                          style="left: 0; width: 11px; bottom: 0; top: 0"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              bottom: 4px;
+                              left: 50%;
+                              transform: translateX(-50%);
+                            "
+                            >11</span
+                          >
+                        </div>
+                        <div
+                          class="h-pad zone-chain-r"
+                          style="right: 0; width: 15px; bottom: 0; top: 0"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              bottom: 4px;
+                              left: 50%;
+                              transform: translateX(-50%);
+                            "
+                            >15</span
+                          >
+                        </div>
+                        <div
+                          class="v-pad zone-vpad"
+                          style="bottom: 0; height: 16px"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              left: 50%;
+                              top: 50%;
+                              transform: translate(-50%, -50%);
+                            "
+                            >pb-4</span
+                          >
+                        </div>
+                      </div>
+                      <div class="chain-row">
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="align-ruler">
+                <div class="tick" style="left: 40px">
+                  <span style="color: #059669">40 L ✓</span>
+                </div>
+                <div class="tick" style="right: 40px">
+                  <span style="color: #059669">40 R ✓</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong style="color: #86efac">Centralized + compensated</strong>
+          <ul>
+            <li>
+              Header padding in <code>CardContent</code> — single
+              <code>px-3</code>
+            </li>
+            <li>Dividers/badges: no <code>mx-3</code></li>
+            <li>
+              Chain: <code>paddingLeft: 11</code> ·
+              <code>paddingRight: 15</code> (+ border)
+            </li>
+            <li>
+              24 + 1 + 4 + 11 = <strong>40px</strong> left · 24 + 15 + 1 =
+              <strong>40px</strong> right
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">
+      Row 2 — Compact cards (pt-3 / pb-3 = 12px vertical)
+    </div>
+    <div class="compare-row">
+      <div class="compare-col">
+        <div class="compare-label label-before">Before — compact</div>
+        <div class="phone">
+          <div class="phone-header">Compact variant</div>
+          <div class="screen" style="padding-top: 8px">
+            <div class="list-area">
+              <div class="list-pad-overlay">
+                <div class="lp-left zone-list"></div>
+                <div class="lp-right zone-list"></div>
+              </div>
+              <div class="list-wrap">
+                <div class="habit-card before-card compact">
+                  <div class="card-border-overlay"></div>
+                  <div class="accent-wrap zone-accent">
+                    <div class="accent"></div>
+                  </div>
+                  <div class="card-body">
+                    <div class="pad-overlays">
+                      <div
+                        class="h-pad zone-content"
+                        style="left: 0; width: 12px"
+                      ></div>
+                      <div
+                        class="h-pad zone-content"
+                        style="right: 0; width: 12px"
+                      ></div>
+                      <div class="v-pad zone-vpad" style="top: 0; height: 12px">
+                        <span
+                          class="zone-label"
+                          style="
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                          "
+                          >pt-3 · 12</span
+                        >
+                      </div>
+                      <div
+                        class="v-pad zone-vpad"
+                        style="bottom: 0; height: 12px"
+                      >
+                        <span
+                          class="zone-label"
+                          style="
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                          "
+                          >pb-3 · 12</span
+                        >
+                      </div>
+                      <div
+                        class="h-pad zone-chain-l"
+                        style="
+                          left: 0;
+                          width: 12px;
+                          bottom: 12px;
+                          top: auto;
+                          height: 32px;
+                        "
+                      ></div>
+                      <div
+                        class="h-pad zone-chain-r"
+                        style="
+                          right: 0;
+                          width: 12px;
+                          bottom: 12px;
+                          top: auto;
+                          height: 32px;
+                        "
+                      ></div>
+                    </div>
+                    <div class="card-header">
+                      <div class="icon-box">📚</div>
+                      <span class="title-text">Read 30 Minutes</span>
+                      <i
+                        data-lucide="chevron-right"
+                        style="width: 14px; height: 14px; color: #d6d3d1"
+                      ></i>
+                    </div>
+                    <div class="chain-wrap" style="padding-top: 6px">
+                      <div class="chain-row">
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          Same horizontal grid as full; only vertical padding shrinks to 12px.
+          Chain still symmetric 12/12.
+        </div>
+      </div>
+
+      <div class="compare-col">
+        <div class="compare-label label-after">After — compact</div>
+        <div class="phone">
+          <div class="phone-header">Compact variant</div>
+          <div class="screen" style="padding-top: 8px">
+            <div class="list-area">
+              <div class="list-pad-overlay">
+                <div class="lp-left zone-list"></div>
+                <div class="lp-right zone-list"></div>
+              </div>
+              <div class="list-wrap">
+                <div class="habit-card after-card compact">
+                  <div class="card-border-overlay"></div>
+                  <div class="accent-wrap zone-accent">
+                    <div class="accent"></div>
+                  </div>
+                  <div class="card-body">
+                    <div class="content-wrap">
+                      <div class="pad-overlays">
+                        <div
+                          class="h-pad zone-content"
+                          style="left: 0; width: 12px"
+                        ></div>
+                        <div
+                          class="h-pad zone-content"
+                          style="right: 0; width: 12px"
+                        ></div>
+                        <div
+                          class="v-pad zone-vpad"
+                          style="top: 0; height: 12px"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              left: 50%;
+                              top: 50%;
+                              transform: translate(-50%, -50%);
+                            "
+                            >pt-3</span
+                          >
+                        </div>
+                      </div>
+                      <div class="card-header">
+                        <div class="icon-box">📚</div>
+                        <span class="title-text">Read 30 Minutes</span>
+                        <i
+                          data-lucide="chevron-right"
+                          style="width: 14px; height: 14px; color: #d6d3d1"
+                        ></i>
+                      </div>
+                    </div>
+                    <div class="chain-wrap" style="padding-top: 6px">
+                      <div class="pad-overlays">
+                        <div
+                          class="h-pad zone-chain-l"
+                          style="left: 0; width: 11px; bottom: 0; top: 0"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              bottom: 2px;
+                              left: 50%;
+                              transform: translateX(-50%);
+                            "
+                            >11</span
+                          >
+                        </div>
+                        <div
+                          class="h-pad zone-chain-r"
+                          style="right: 0; width: 15px; bottom: 0; top: 0"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              bottom: 2px;
+                              left: 50%;
+                              transform: translateX(-50%);
+                            "
+                            >15</span
+                          >
+                        </div>
+                        <div
+                          class="v-pad zone-vpad"
+                          style="bottom: 0; height: 12px"
+                        >
+                          <span
+                            class="zone-label"
+                            style="
+                              left: 50%;
+                              top: 50%;
+                              transform: translate(-50%, -50%);
+                            "
+                            >pb-3</span
+                          >
+                        </div>
+                      </div>
+                      <div class="chain-row">
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col">
+                          <div class="toggle on"></div>
+                        </div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                        <div class="toggle-col"><div class="toggle"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="callout">
+          Horizontal padding unchanged from full; compact only affects
+          <code>pt-3</code>/<code>pb-3</code>. Chain asymmetry 11/15 preserved.
+        </div>
+      </div>
+    </div>
+
+    <div class="math-box">
+      <h2>Padding math — 40px alignment contract</h2>
+      <div class="math-grid">
+        <div>
+          <strong>Calendar strip</strong>
+          <code>paddingHorizontal: 40</code><br />
+          7 × flex-1 columns<br />
+          44px date rings centered
+        </div>
+        <div>
+          <strong>Before (chain)</strong>
+          Left: 24 + 4 + 12 = 40 ✓<br />
+          Right: 24 + 12 = <span style="color: #f87171">36 ✗</span><br />
+          Symmetric px-3 ignores accent
+        </div>
+        <div>
+          <strong>After (final)</strong>
+          Left: 24 + 1 + 4 + 11 = 40 ✓<br />
+          Right: 24 + 15 + 1 = 40 ✓<br />
+          Border + accent compensated
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      function addGuides(id, n) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        for (let i = 0; i < n; i++) {
+          const g = document.createElement('div');
+          g.className = 'guide-v';
+          g.style.left = ((i + 0.5) / n) * 100 + '%';
+          el.appendChild(g);
+        }
+      }
+      addGuides('before-guides-full', 7);
+      addGuides('after-guides-full', 7);
+    </script>
+  </body>
+</html>

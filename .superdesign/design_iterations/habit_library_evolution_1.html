@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Library — what changed: before → shipped → now</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 920px;
+        line-height: 1.5;
+      }
+
+      .lane {
+        display: flex;
+        align-items: flex-start;
+        gap: 0;
+        overflow-x: auto;
+        padding: 26px 0 10px;
+      }
+      .stepcol {
+        flex: none;
+        width: 372px;
+        display: flex;
+        flex-direction: column;
+      }
+      .arrow {
+        flex: none;
+        align-self: flex-start;
+        margin-top: 330px;
+        width: 74px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .arrow .line {
+        font-size: 24px;
+        color: var(--text-2);
+      }
+      .arrow .lbl {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-2);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px 7px;
+        text-align: center;
+        line-height: 1.35;
+      }
+      .col-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        border-radius: 999px;
+        padding: 5px 13px;
+        align-self: flex-start;
+      }
+      .col-label.v1 {
+        color: #6b6560;
+        background: #fff;
+        border: 1px solid var(--border);
+      }
+      .col-label.v2 {
+        color: #9a3412;
+        background: #ffedd5;
+      }
+      .col-label.v3 {
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+      }
+
+      .phone {
+        width: 360px;
+        height: 780px;
+        background: var(--bg);
+        border-radius: 38px;
+        border: 8px solid #2d2a26;
+        box-shadow: 0 18px 44px rgba(45, 42, 38, 0.28);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .statusbar {
+        height: 36px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      .overline {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 16px 15px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 8px;
+        white-space: nowrap;
+      }
+      .sci {
+        font-size: 10.5px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .chev {
+        flex: none;
+        font-size: 15px;
+        font-weight: 600;
+        color: #c9c2ba;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+        border: none;
+        border-radius: 999px;
+        padding: 7px 12px;
+      }
+      .btn-add.solid {
+        color: #fff;
+        background: var(--primary);
+        border-radius: 11px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 10px 11px;
+        margin: 0 15px 7px;
+      }
+      .row .emoji {
+        width: 40px;
+        height: 40px;
+        flex: none;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+      }
+
+      /* V1 minimal */
+      .v1head {
+        padding: 14px 15px 10px;
+      }
+      .v1head h1 {
+        font-family: var(--sans);
+        font-size: 21px;
+        font-weight: 700;
+      }
+      .v1head p {
+        font-size: 12.5px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 8px 13px;
+        color: var(--text-3);
+        font-size: 12.5px;
+        margin-top: 10px;
+      }
+      .chips-v1 {
+        display: flex;
+        gap: 7px;
+        padding: 4px 15px 8px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .chips-v1::-webkit-scrollbar {
+        display: none;
+      }
+      .chip-v1 {
+        flex: none;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fff;
+        color: var(--text-2);
+      }
+      .chip-v1.on {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: #fff;
+        font-weight: 600;
+      }
+      .featured {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 13px;
+        margin: 4px 15px 0;
+        position: relative;
+        overflow: hidden;
+      }
+      .featured::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--primary);
+      }
+      .featured .flabel {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary-deep);
+        margin-bottom: 8px;
+      }
+
+      /* V2 hub */
+      .hero2 {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5),
+          rgba(254, 215, 170, 0.28) 48%,
+          #f5f1ed 100%
+        );
+        padding: 12px 15px 10px;
+        border-radius: 0 0 22px 22px;
+      }
+      .hero2 .sun {
+        text-align: right;
+        font-size: 15px;
+      }
+      .hero2 h1 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+      }
+      .hero2 .trust {
+        font-size: 11px;
+        color: var(--text-2);
+        margin-top: 8px;
+      }
+      .gfeat {
+        margin: 10px 15px 0;
+        border-radius: 16px;
+        padding: 13px;
+        background: linear-gradient(135deg, #f0fdf4, #fff);
+        border: 1px solid #bbf7d0;
+      }
+      .gfeat .glabel {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #14532d;
+      }
+      .gfeat h3 {
+        font-family: var(--serif);
+        font-size: 17px;
+        font-weight: 700;
+        color: #14532d;
+        margin-top: 3px;
+      }
+      .gfeat p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 2px;
+      }
+      .grail {
+        display: flex;
+        gap: 8px;
+        padding: 9px 15px 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .grail::-webkit-scrollbar {
+        display: none;
+      }
+      .gcard {
+        flex: none;
+        width: 118px;
+        border-radius: 14px;
+        padding: 10px;
+      }
+      .gcard .ge {
+        font-size: 17px;
+      }
+      .gcard h4 {
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 5px;
+      }
+      .gcard p {
+        font-size: 10px;
+        margin-top: 2px;
+        opacity: 0.8;
+      }
+
+      /* V3 guide */
+      .hero3 {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5),
+          rgba(254, 215, 170, 0.28) 52%,
+          #f5f1ed 100%
+        );
+        padding: 18px 15px 13px;
+        border-radius: 0 0 22px 22px;
+        position: relative;
+      }
+      .hero3 .close {
+        position: absolute;
+        top: 11px;
+        right: 13px;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--text-2);
+      }
+      .hero3 h1 {
+        font-family: var(--serif);
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        line-height: 1.22;
+      }
+      .hero3 .sub {
+        font-size: 12.5px;
+        color: var(--text-2);
+        margin-top: 4px;
+        padding-right: 36px;
+      }
+      .chips3 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .chip3 {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text);
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 13px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.07);
+      }
+      .catgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px;
+        padding: 0 15px;
+      }
+      .cat {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        padding: 9px 11px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .cat .n {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--text-3);
+        margin-left: auto;
+      }
+      .endcap {
+        text-align: center;
+        padding: 12px 0 16px;
+      }
+      .endcap span {
+        display: inline-block;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: var(--primary-tint);
+        border: 1px solid #a7f3d0;
+        border-radius: 999px;
+        padding: 10px 17px;
+      }
+
+      .annot {
+        width: 360px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px 15px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+      }
+      .annot ul {
+        margin: 3px 0 0 15px;
+      }
+      .annot li {
+        margin-bottom: 3px;
+      }
+      .keep {
+        color: var(--primary-deep);
+        font-weight: 600;
+      }
+      .cut {
+        color: #9a3412;
+        font-weight: 600;
+      }
+
+      .ledger {
+        margin-top: 26px;
+        max-width: 920px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 18px;
+        font-size: 13px;
+        line-height: 1.7;
+        color: var(--text-2);
+      }
+      .ledger h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .ledger code {
+        background: var(--lift);
+        border-radius: 5px;
+        padding: 1px 6px;
+        font-size: 11.5px;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">Habit Library — the whole arc</p>
+    <h1 class="page-title">Before → shipped → now: how the page evolved</h1>
+    <p class="page-sub">
+      Three real states of the same page across this effort. Each step kept what
+      worked and cut what didn't — the annotations track exactly what carried
+      forward.
+    </p>
+
+    <div class="lane">
+      <!-- ════ V1: MINIMAL & CLEAN ════ -->
+      <div class="stepcol">
+        <div class="col-label v1">1 · Before — Minimal &amp; Clean</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="v1head">
+              <h1>Habit Library</h1>
+              <p>Science-backed habits, one tap away.</p>
+              <div class="search">🔍&ensp;Search habits…</div>
+            </div>
+            <div class="chips-v1">
+              <span class="chip-v1 on">All</span>
+              <span class="chip-v1">🌅 Morning</span>
+              <span class="chip-v1">🧠 Mental</span>
+              <span class="chip-v1">💪 Fitness</span>
+              <span class="chip-v1">😴 Sleep</span>
+            </div>
+            <div class="featured">
+              <div class="flabel">Start here</div>
+              <div style="display: flex; align-items: center; gap: 11px">
+                <div
+                  class="row"
+                  style="
+                    all: unset;
+                    display: flex;
+                    align-items: center;
+                    gap: 11px;
+                    flex: 1;
+                  "
+                >
+                  <div
+                    class="emoji"
+                    style="
+                      width: 44px;
+                      height: 44px;
+                      border-radius: 12px;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 22px;
+                      background: rgba(5, 150, 105, 0.13);
+                    "
+                  >
+                    🧘
+                  </div>
+                  <div style="flex: 1">
+                    <h4 style="font-size: 14.5px; font-weight: 600">
+                      5-Minute Meditation
+                    </h4>
+                    <p style="font-size: 11.5px; color: var(--text-2)">
+                      Most added this week
+                    </p>
+                  </div>
+                </div>
+                <button class="btn-add solid">+ Add</button>
+              </div>
+            </div>
+            <div class="overline">Popular</div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                💧
+              </div>
+              <div class="body">
+                <h4>Hydration First</h4>
+                <p>Water before coffee</p>
+                <div class="meta"><span class="pill">1 min</span></div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                🙏
+              </div>
+              <div class="body">
+                <h4>Gratitude Journal</h4>
+                <p>3 things, every evening</p>
+                <div class="meta"><span class="pill">3 min</span></div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="overline">Mindfulness</div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                🌬️
+              </div>
+              <div class="body">
+                <h4>Box Breathing</h4>
+                <p>Instant calm, anywhere</p>
+                <div class="meta"><span class="pill">2 min</span></div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div
+              style="
+                text-align: center;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--primary-deep);
+                padding: 8px 0 16px;
+              "
+            >
+              Browse all categories ›
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Where we started (commit 851de7ca1)</h3>
+          <ul>
+            <li>Fast and clean — optimized open→first-add time.</li>
+            <li>
+              <span class="cut">But:</span> sans-serif header, no warmth, no
+              transformation framing — "felt like a spreadsheet of habits". You
+              liked the OLD design's look.
+            </li>
+            <li>No education, no reason to return after adding.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">"I liked how the old design looked"</div>
+      </div>
+
+      <!-- ════ V2: WORKFLOW V3 HUB ════ -->
+      <div class="stepcol">
+        <div class="col-label v2">
+          2 · Shipped, then superseded — Transformation Hub
+        </div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero2">
+              <div class="sun">☀️</div>
+              <h1>Choose your next transformation</h1>
+              <div class="trust">
+                🔬 Every habit in here is research-backed.
+              </div>
+              <div class="search" style="background: rgba(255, 255, 255, 0.85)">
+                🔍&ensp;Find an outcome or habit
+              </div>
+            </div>
+            <div class="gfeat">
+              <div class="glabel">Today's pick</div>
+              <h3>🧘 Stress less</h3>
+              <p>Calm your mind and regulate your system</p>
+            </div>
+            <div class="grail">
+              <div class="gcard" style="background: #fef3c7; color: #78350f">
+                <div class="ge">⚡</div>
+                <h4>Wake up energized</h4>
+                <p>9 habits</p>
+              </div>
+              <div class="gcard" style="background: #eff6ff; color: #1e3a5f">
+                <div class="ge">😴</div>
+                <h4>Sleep deeper</h4>
+                <p>8 habits</p>
+              </div>
+              <div class="gcard" style="background: #faf5ff; color: #581c87">
+                <div class="ge">🎯</div>
+                <h4>Focus deeper</h4>
+                <p>11 habits</p>
+              </div>
+            </div>
+            <div class="overline">
+              Or just start — one tap <a>Browse all</a>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                💧
+              </div>
+              <div class="body">
+                <h4>Hydration First</h4>
+                <p>Water before coffee</p>
+                <div class="meta">
+                  <span class="pill">1 min</span
+                  ><span class="sci">🔬 research-backed</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                🙏
+              </div>
+              <div class="body">
+                <h4>Gratitude Journal</h4>
+                <p>3 things, every evening</p>
+                <div class="meta">
+                  <span class="pill">3 min</span
+                  ><span class="sci">🔬 research-backed</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div
+              style="
+                text-align: center;
+                font-size: 12px;
+                font-weight: 600;
+                color: var(--primary-deep);
+                padding: 8px 0 16px;
+              "
+            >
+              Browse all categories ›
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>The V3 hub (commit 5088cb32f) — warmth returned</h3>
+          <ul>
+            <li>
+              <span class="keep">Brought back:</span> gradient hero, goal
+              colors, serif intent (font wasn't actually loading yet), one-tap
+              rows kept.
+            </li>
+            <li>
+              Also shipped downstream: start-small CTA, Make-It-Stick sheet
+              (both still live).
+            </li>
+            <li>
+              <span class="cut">Didn't survive:</span> the trust line (noise),
+              the big goal cards (vertical space), the goal "path" page (too
+              prescriptive), the page framing — it showed our catalog, not your
+              problem.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">
+          "Rethink from the beginning — help users solve their problem"
+        </div>
+      </div>
+
+      <!-- ════ V3: THE GUIDE (NOW) ════ -->
+      <div class="stepcol">
+        <div class="col-label v3">3 · Live now — The Guide</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero3">
+              <div class="close">✕</div>
+              <h1>What do you want to change?</h1>
+              <div class="sub">
+                Pick a struggle — we'll give you a proven way in.
+              </div>
+              <div class="chips3">
+                <span class="chip3">⚡ More energy</span>
+                <span class="chip3">😴 Sleep better</span>
+                <span class="chip3">🧘 Stress less</span>
+                <span class="chip3">🎯 Focus deeper</span>
+                <span class="chip3">💪 Get healthier</span>
+              </div>
+              <div class="search" style="background: rgba(255, 255, 255, 0.85)">
+                🔍&ensp;Or search any habit…
+              </div>
+            </div>
+            <div class="overline">Popular right now <a>See all</a></div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+                🧘
+              </div>
+              <div class="body">
+                <h4>13-Minute Focus Meditation</h4>
+                <p>Guided breath-anchor practice</p>
+                <div class="meta">
+                  <span class="pill">10 min · Daily</span
+                  ><span class="sci">🔬 Basso et al. (2019)</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(244, 63, 94, 0.12)">
+                🚫
+              </div>
+              <div class="body">
+                <h4>No Added Sugar</h4>
+                <p>Eliminate added sugars from diet</p>
+                <div class="meta">
+                  <span class="pill">25 min · Daily</span
+                  ><span class="sci">🔬 Yang et al. (2014)</span>
+                </div>
+              </div>
+              <button class="btn-add">+ Add</button>
+            </div>
+            <div class="overline">By category</div>
+            <div class="catgrid">
+              <div class="cat">🌅 Morning <span class="n">14</span></div>
+              <div class="cat">🧠 Mental Health <span class="n">12</span></div>
+              <div class="cat">💪 Health <span class="n">77</span></div>
+              <div class="cat">😴 Sleep <span class="n">17</span></div>
+            </div>
+            <div class="endcap">
+              <span>Open the full library · 347 habits ›</span>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>
+            The Guide (commits ee852d326 → c14204062) — live on your device
+          </h3>
+          <ul>
+            <li>
+              <span class="keep">The page became a question.</span> Goals
+              compressed from cards to struggle chips; the user's problem is the
+              headline.
+            </li>
+            <li>
+              <span class="keep">Real Literata serif</span> — the font was never
+              bundled in the app until now; fixed app-wide.
+            </li>
+            <li>
+              <span class="keep">Real citations</span> per row; calm white
+              chips; category index with counts; one endcap exit; safe-area fix.
+            </li>
+            <li>
+              Next (planned): chip tap → "Your way in" prescription, goal page
+              revert, › chevrons to details, unified catalog.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ledger">
+      <h3>Change ledger — everything shipped this arc</h3>
+      <code>851de7ca1</code> Minimal &amp; Clean baseline →
+      <code>5088cb32f</code> Workflow V3 (hub + start-small CTA + Make-It-Stick
+      + goal progress) → <code>ee852d326</code> The Guide landing (intake hero,
+      problem chips, category index, endcap) → <code>e6987f485</code>/<code
+        >5fb3351f5</code
+      >
+      chip rendering fixes (Pressable function-style bug found) →
+      <code>3ec04464e</code> premium polish (Literata actually bundled, calm
+      chips, real citations) → <code>c14204062</code> safe-area fix. Still live
+      from V3: start-small commitment CTA in the details footer and the
+      Make-It-Stick post-add sheet — both untouched by the landing redesigns.
+    </div>
+  </body>
+</html>

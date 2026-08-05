@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Homepage — Mid-Day (4/6 Done)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #111827;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      /* === iPhone Frame === */
+      .phone {
+        width: 393px;
+        height: 852px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #2d2a26,
+          0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Status bar */
+      .status-bar {
+        height: 54px;
+        padding: 16px 32px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        position: relative;
+        z-index: 10;
+      }
+      .sb-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .sb-icons svg {
+        width: 16px;
+        height: 12px;
+      }
+      .sb-dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #2d2a26;
+      }
+      .sb-bar {
+        width: 24px;
+        height: 12px;
+        border-radius: 3px;
+        border: 1.5px solid #2d2a26;
+        position: relative;
+      }
+      .sb-bar::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 3px;
+        width: 2px;
+        height: 5px;
+        background: #2d2a26;
+        border-radius: 0 1px 1px 0;
+      }
+      .sb-bar-fill {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        bottom: 1px;
+        right: 30%;
+        background: #2d2a26;
+        border-radius: 1px;
+      }
+
+      /* Scrollable content */
+      .content {
+        height: calc(100% - 54px);
+        overflow-y: auto;
+        padding-bottom: 90px;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ============================
+     HEADER: Progress Ring + Info
+     ============================ */
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 6px 20px 12px;
+      }
+
+      /* SVG Ring */
+      .ring-wrap {
+        width: 76px;
+        height: 76px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring-track {
+        fill: none;
+        stroke: #e5e2de;
+        stroke-width: 5.5;
+      }
+      .ring-fill {
+        fill: none;
+        stroke: #10b981;
+        stroke-width: 5.5;
+        stroke-linecap: round;
+        /* circumference = 2 * PI * 33 ≈ 207.3, 67% filled = 207.3 * 0.33 ≈ 68.4 offset */
+        stroke-dasharray: 207.3;
+        stroke-dashoffset: 68.4;
+        filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.25));
+        transition: stroke-dashoffset 0.8s ease;
+      }
+      .ring-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        line-height: 1;
+      }
+      .ring-pct {
+        font-size: 20px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.8px;
+      }
+      .ring-frac {
+        font-size: 10px;
+        font-weight: 600;
+        color: #6e6660;
+        margin-top: 1px;
+      }
+
+      .header-info {
+        flex: 1;
+      }
+      .header-day {
+        font-family: 'Literata', serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.6px;
+        line-height: 1.1;
+      }
+      .header-date {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6e6660;
+        margin-top: 2px;
+      }
+      .header-streak {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 6px;
+        background: #fef3cd;
+        border: 1px solid #e8b94d;
+        border-radius: 8px;
+        padding: 3px 9px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #8b6208;
+      }
+
+      /* ============================
+     TIMELINE: Compact 7-day strip
+     ============================ */
+      .timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 4px 20px 14px;
+        gap: 4px;
+      }
+      .t-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+      }
+      .t-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #c4bfb7;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .t-label.active {
+        color: #2d2a26;
+        font-weight: 700;
+      }
+      .t-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+      .t-circle.done {
+        background: rgba(16, 185, 129, 0.12);
+        color: #059669;
+      }
+      .t-circle.done::after {
+        content: '✓';
+        position: absolute;
+        font-size: 15px;
+        font-weight: 700;
+        color: #10b981;
+      }
+      .t-circle.done span {
+        visibility: hidden;
+      }
+      .t-circle.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.2);
+      }
+      .t-circle.partial {
+        background: #fef3cd;
+        color: #8b6208;
+        border: 1.5px solid #e8b94d;
+      }
+      .t-circle.future {
+        background: #edeae5;
+        color: #c4bfb7;
+      }
+
+      /* Streak connector dots */
+      .t-connector {
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 1px;
+      }
+      .t-micro-dot {
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+      }
+      .t-micro-dot.filled {
+        background: #10b981;
+      }
+      .t-micro-dot.empty {
+        background: #ddd8d2;
+      }
+
+      /* ============================
+     SECTION LABELS
+     ============================ */
+      .section {
+        padding: 10px 20px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .section-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #c4bfb7;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .section-meta {
+        font-size: 12px;
+        font-weight: 600;
+        color: #10b981;
+      }
+
+      /* ============================
+     HABIT CARDS
+     ============================ */
+      .habits {
+        padding: 0 16px;
+      }
+
+      .habit {
+        background: #edeae5;
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #ddd8d2;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.04);
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
+      }
+      .habit:active {
+        transform: scale(0.98);
+      }
+
+      /* Accent bar */
+      .habit-accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3.5px;
+        border-radius: 0 4px 4px 0;
+      }
+      .habit-accent.strong {
+        background: linear-gradient(180deg, #34d399, #10b981);
+      }
+      .habit-accent.growing {
+        background: linear-gradient(180deg, #fcd34d, #e8b94d);
+      }
+      .habit-accent.new {
+        background: linear-gradient(180deg, #93c5fd, #3b82f6);
+      }
+
+      /* Emoji container */
+      .habit-icon {
+        font-size: 24px;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(245, 241, 237, 0.6);
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+
+      /* Info */
+      .habit-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .habit-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.3px;
+        line-height: 1.25;
+      }
+      .habit-meta {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6e6660;
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .habit-streak {
+        font-weight: 700;
+        color: #8b6208;
+      }
+      .meta-dot {
+        color: #c4bfb7;
+      }
+
+      /* Strength bar */
+      .strength-bar {
+        height: 3px;
+        background: #ddd8d2;
+        border-radius: 2px;
+        margin-top: 6px;
+        width: 100%;
+        max-width: 120px;
+        overflow: hidden;
+      }
+      .strength-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+      .strength-fill.high {
+        background: #10b981;
+      }
+      .strength-fill.mid {
+        background: #e8b94d;
+      }
+      .strength-fill.low {
+        background: #ddd8d2;
+      }
+
+      /* Check circle */
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2.5px solid #c4bfb7;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+      .habit-check:hover {
+        border-color: #10b981;
+      }
+
+      /* Done state */
+      .habit.done {
+        opacity: 0.6;
+      }
+      .habit.done .habit-name {
+        color: #6e6660;
+        text-decoration: line-through;
+        text-decoration-color: #c4bfb7;
+      }
+      .habit.done .habit-check {
+        background: #10b981;
+        border-color: #10b981;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+      }
+      .habit.done .habit-check::after {
+        content: '✓';
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      /* ============================
+     NUDGE CARD (between sections)
+     ============================ */
+      .nudge {
+        margin: 4px 16px 8px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(16, 185, 129, 0.06),
+          rgba(16, 185, 129, 0.12)
+        );
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .nudge-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .nudge-text {
+        font-size: 13px;
+        font-weight: 500;
+        color: #047857;
+        line-height: 1.35;
+      }
+      .nudge-text strong {
+        font-weight: 700;
+        color: #065f46;
+      }
+
+      /* ============================
+     WEEKLY INSIGHT TEASER (premium)
+     ============================ */
+      .insight-teaser {
+        margin: 12px 16px 4px;
+        padding: 14px 16px;
+        border-radius: 14px;
+        background: #edeae5;
+        border: 1px solid #ddd8d2;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .insight-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #312e81, #4338ca);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .insight-info {
+        flex: 1;
+      }
+      .insight-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #2d2a26;
+      }
+      .insight-desc {
+        font-size: 11px;
+        color: #6e6660;
+        margin-top: 1px;
+      }
+      .insight-arrow {
+        font-size: 16px;
+        color: #c4bfb7;
+        flex-shrink: 0;
+      }
+
+      /* ============================
+     BOTTOM ACTION BAR
+     ============================ */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(245, 241, 237, 0.82);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-top: 1px solid rgba(221, 216, 210, 0.45);
+        padding: 8px 24px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+
+      .bar-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(221, 216, 210, 0.6);
+        transition: transform 0.1s ease;
+      }
+      .bar-btn:active {
+        transform: scale(0.92);
+      }
+      .bar-btn svg {
+        width: 19px;
+        height: 19px;
+        stroke: #524d47;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .add-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: #059669;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -18px;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+        transition: transform 0.1s ease;
+      }
+      .add-btn:active {
+        transform: scale(0.92);
+      }
+      .add-btn svg {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+
+      /* Badge on templates */
+      .badge-dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #ef4444;
+        border: 1.5px solid rgba(245, 241, 237, 0.9);
+      }
+
+      /* === Design label === */
+      .label {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: 'DM Sans', sans-serif;
+        z-index: 999;
+        letter-spacing: 0.3px;
+      }
+      .label span {
+        color: #10b981;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">Full Homepage — <span>Mid-Day (4/6)</span></div>
+
+    <div class="phone">
+      <!-- Status Bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="sb-icons">
+          <svg viewBox="0 0 16 12">
+            <path
+              d="M1 8.5L4 3l3 5.5"
+              stroke="#2D2A26"
+              fill="none"
+              stroke-width="1.5"
+            />
+            <path
+              d="M8 8.5l3-7 3 7"
+              stroke="#2D2A26"
+              fill="none"
+              stroke-width="1.5"
+            />
+          </svg>
+          <svg viewBox="0 0 16 12">
+            <path
+              d="M1 9h2V6h2v3h2V4h2v5h2V2h2v7"
+              stroke="#2D2A26"
+              fill="none"
+              stroke-width="1.2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- === HEADER: Ring + Info === -->
+        <div class="header">
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 76 76">
+              <circle class="ring-track" cx="38" cy="38" r="33" />
+              <circle class="ring-fill" cx="38" cy="38" r="33" />
+            </svg>
+            <div class="ring-center">
+              <div class="ring-pct">67%</div>
+              <div class="ring-frac">4 / 6</div>
+            </div>
+          </div>
+          <div class="header-info">
+            <div class="header-day">Tuesday</div>
+            <div class="header-date">February 25, 2026</div>
+            <div class="header-streak">🔥 12 day streak</div>
+          </div>
+        </div>
+
+        <!-- === TIMELINE: 7-day strip === -->
+        <div class="timeline">
+          <div class="t-col">
+            <span class="t-label">W</span>
+            <div class="t-circle done"><span>19</span></div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">T</span>
+            <div class="t-circle done"><span>20</span></div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">F</span>
+            <div class="t-circle done"><span>21</span></div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">S</span>
+            <div class="t-circle done"><span>22</span></div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">S</span>
+            <div class="t-circle done"><span>23</span></div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">M</span>
+            <div class="t-circle done"><span>24</span></div>
+          </div>
+          <div class="t-col">
+            <span class="t-label active">Today</span>
+            <div class="t-circle today">25</div>
+          </div>
+        </div>
+
+        <!-- === REMAINING HABITS (top priority) === -->
+        <div class="section">
+          <span class="section-label">Remaining</span>
+          <span class="section-meta">2 to go</span>
+        </div>
+
+        <div class="habits">
+          <div class="habit">
+            <div class="habit-accent growing"></div>
+            <div class="habit-icon">✍️</div>
+            <div class="habit-info">
+              <div class="habit-name">Journal</div>
+              <div class="habit-meta">
+                Evening<span class="meta-dot"> · </span>10 min
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill mid" style="width: 45%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit">
+            <div class="habit-accent new"></div>
+            <div class="habit-icon">🎸</div>
+            <div class="habit-info">
+              <div class="habit-name">Practice Guitar</div>
+              <div class="habit-meta">
+                Anytime<span class="meta-dot"> · </span>15 min
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill low" style="width: 30%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+        </div>
+
+        <!-- === NUDGE === -->
+        <div class="nudge">
+          <span class="nudge-icon">⚡</span>
+          <div class="nudge-text">
+            Complete <strong>2 more</strong> for a perfect day and streak day
+            <strong>13!</strong>
+          </div>
+        </div>
+
+        <!-- === COMPLETED HABITS === -->
+        <div class="section">
+          <span class="section-label">Done</span>
+          <span class="section-meta" style="color: #c4bfb7">4 completed</span>
+        </div>
+
+        <div class="habits">
+          <div class="habit done">
+            <div class="habit-accent strong"></div>
+            <div class="habit-icon">🏃</div>
+            <div class="habit-info">
+              <div class="habit-name">Morning Run</div>
+              <div class="habit-meta">
+                <span class="habit-streak">🔥 12</span>
+                <span class="meta-dot"> · </span>6:42 AM
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit done">
+            <div class="habit-accent strong"></div>
+            <div class="habit-icon">🧘</div>
+            <div class="habit-info">
+              <div class="habit-name">Meditate</div>
+              <div class="habit-meta">
+                <span class="habit-streak">🔥 8</span>
+                <span class="meta-dot"> · </span>7:15 AM
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit done">
+            <div class="habit-accent strong"></div>
+            <div class="habit-icon">💧</div>
+            <div class="habit-info">
+              <div class="habit-name">Drink 2L Water</div>
+              <div class="habit-meta">
+                62% strength<span class="meta-dot"> · </span>2:30 PM
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit done">
+            <div class="habit-accent strong"></div>
+            <div class="habit-icon">📖</div>
+            <div class="habit-info">
+              <div class="habit-name">Read 20 Pages</div>
+              <div class="habit-meta">
+                75% strength<span class="meta-dot"> · </span>3:45 PM
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+        </div>
+
+        <!-- === WEEKLY INSIGHT TEASER (premium hook) === -->
+        <div class="insight-teaser">
+          <div class="insight-icon">📊</div>
+          <div class="insight-info">
+            <div class="insight-title">Weekly Review Ready</div>
+            <div class="insight-desc">
+              Your completion rate is up 12% this week
+            </div>
+          </div>
+          <span class="insight-arrow">›</span>
+        </div>
+
+        <!-- bottom padding for scroll -->
+        <div style="height: 20px"></div>
+      </div>
+
+      <!-- === BOTTOM BAR === -->
+      <div class="bottom-bar">
+        <div class="bar-btn">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <div class="add-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+        </div>
+        <div class="bar-btn" style="position: relative">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+            />
+          </svg>
+          <div class="badge-dot"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

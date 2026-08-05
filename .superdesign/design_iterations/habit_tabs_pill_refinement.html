@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pill Tab Refinement</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  body { padding: 40px 20px 80px; }
+  .page { max-width: 1280px; margin: 0 auto; }
+  .page h1 {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    letter-spacing: -0.6px;
+  }
+  .page > p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin: 0 0 32px;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+
+  .note {
+    background: rgba(255,255,255,0.55);
+    border: 1px solid rgba(45,42,38,0.08);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .note b { color: var(--text-primary); }
+  .note code {
+    background: rgba(255,255,255,0.7);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 12px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(45,42,38,0.08);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: var(--shadow-card);
+  }
+  .card h2 {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 3px;
+    letter-spacing: -0.2px;
+  }
+  .card > p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .code {
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .recommend {
+    background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(209,250,229,0.25));
+    border: 2px solid var(--forest-600);
+  }
+
+  /* Shared mini phone stage */
+  .stage-mini {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .fake-hero {
+    padding: 14px 16px 10px;
+    border-bottom: 1px dashed var(--border);
+    background: linear-gradient(180deg, #F8F4EF 0%, var(--bg) 100%);
+  }
+  .fake-hero .title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .fake-hero .sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .fake-content {
+    padding: 14px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .fake-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+  }
+  .swatch {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border: 1px solid rgba(45,42,38,0.12);
+  }
+
+  /* ===== TAB VARIANTS ===== */
+  .tab-base {
+    margin: 10px 16px;
+    display: flex;
+    padding: 3px;
+    position: relative;
+    flex-direction: row;
+  }
+  .tab-base .t {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.1px;
+  }
+  .tab-base .t.on { font-weight: 600; }
+  .tab-base .pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    width: calc((100% - 6px) / 3);
+    transition: transform 280ms var(--ease-out-soft);
+  }
+  .tab-base[data-active="0"] .pill { transform: translateX(0); }
+  .tab-base[data-active="1"] .pill { transform: translateX(100%); }
+  .tab-base[data-active="2"] .pill { transform: translateX(200%); }
+
+  /* A · Current (baseline, what's shipping) */
+  .va {
+    background: #FAF8F5;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .va .pill {
+    background: var(--card);
+    border: 1px solid rgba(5,150,105,0.22);
+    border-radius: 9px;
+    box-shadow: 0 1px 3px rgba(5,150,105,0.08);
+  }
+  .va .t.on { color: var(--forest-700); }
+
+  /* B · Inverted planes (track darker, pill lighter) */
+  .vb {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .vb .pill {
+    background: var(--bg);
+    border: 1px solid rgba(5,150,105,0.22);
+    border-radius: 11px;
+    box-shadow: 0 1px 3px rgba(45,42,38,0.06), 0 2px 6px rgba(45,42,38,0.04);
+  }
+  .vb .t.on { color: var(--forest-700); }
+
+  /* C · Transparent track, hairline only */
+  .vc {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .vc .pill {
+    background: var(--card);
+    border: 1px solid rgba(5,150,105,0.22);
+    border-radius: 11px;
+    box-shadow: 0 1px 2px rgba(45,42,38,0.04), 0 3px 10px rgba(45,42,38,0.05);
+  }
+  .vc .t.on { color: var(--forest-700); }
+
+  /* D · Card-radius softened (16px track, 13px pill) */
+  .vd {
+    background: #FAF8F5;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .vd .pill {
+    background: var(--card);
+    border: 1px solid rgba(5,150,105,0.22);
+    border-radius: 13px;
+    box-shadow: 0 1px 3px rgba(5,150,105,0.08);
+  }
+  .vd .t.on { color: var(--forest-700); }
+
+  /* E · Fully capsule (matches BottomActionBar language) */
+  .ve {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: 0 1px 2px rgba(45,42,38,0.04), 0 6px 20px rgba(45,42,38,0.06);
+  }
+  .ve .pill {
+    top: 4px;
+    bottom: 4px;
+    width: calc((100% - 8px) / 3);
+    background: var(--bg);
+    border: 1px solid rgba(5,150,105,0.25);
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(5,150,105,0.10), 0 2px 6px rgba(45,42,38,0.04);
+  }
+  .ve .t { padding: 9px 0; }
+  .ve .t.on { color: var(--forest-700); }
+
+  /* F · Forest-filled active (solid green pill, matches FAB accent) */
+  .vf {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .vf .pill {
+    background: var(--forest-600);
+    border: 1px solid var(--forest-700);
+    border-radius: 11px;
+    box-shadow: 0 2px 8px rgba(5,150,105,0.24);
+  }
+  .vf .t.on { color: #fff; }
+
+  /* G · Glass capsule with blur (most FAB-like) */
+  .vg {
+    background: rgba(237,234,229,0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(221,216,210,0.7);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: 0 1px 2px rgba(45,42,38,0.04), 0 10px 24px rgba(45,42,38,0.08);
+  }
+  .vg .pill {
+    top: 4px;
+    bottom: 4px;
+    width: calc((100% - 8px) / 3);
+    background: var(--bg);
+    border: 1px solid rgba(5,150,105,0.22);
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(5,150,105,0.10);
+  }
+  .vg .t { padding: 9px 0; }
+  .vg .t.on { color: var(--forest-700); }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Pill Tab Refinement</h1>
+  <p>You like the chip/pill direction (F from earlier). Now we polish it so it aligns with the rest of the app. Each card shows the tab in actual context (hero above, content card below) so you can see how it relates to nearby surfaces.</p>
+
+  <div class="note">
+    <b>My hypothesis on what feels off:</b> The current version (A) has a <b>track that's lighter than the canvas</b> (<span class="swatch" style="background:#FAF8F5"></span><code>#FAF8F5</code> on <span class="swatch" style="background:#F5F1ED"></span><code>#F5F1ED</code>). Everywhere else in the app, surfaces go <em>darker</em> than canvas (<span class="swatch" style="background:#EDEAE5"></span><code>#EDEAE5</code> cards on <span class="swatch" style="background:#F5F1ED"></span><code>#F5F1ED</code> canvas). So the tabs' plane hierarchy is <em>inverted</em> from everything else — your brain reads it as "wrong." Variants B, C, E, F, G fix this by making the track match or be darker than the canvas.
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="code">A · CURRENT (reference)</div>
+      <h2>Track lighter than canvas</h2>
+      <p>What's shipping now. Track <span class="swatch" style="background:#FAF8F5"></span>#FAF8F5 is lighter than canvas <span class="swatch" style="background:#F5F1ED"></span>#F5F1ED. Pill = card color.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base va" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Your content card here — same color as the active pill</div></div>
+      </div>
+    </div>
+
+    <div class="card recommend">
+      <div class="code" style="color:var(--forest-700);">★ B · INVERTED PLANES (recommended)</div>
+      <h2>Track = card · Pill = canvas</h2>
+      <p>Track matches the cards in the rest of the app (darker than canvas). Active pill is CANVAS-colored, floating up out of the track like a lifted button. Matches surface hierarchy everywhere else.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base vb" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Tab container is the SAME surface as this card →</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">C · TRANSPARENT TRACK</div>
+      <h2>No track fill · hairline border</h2>
+      <p>Most restrained. Container has a border but no fill. Pill sits on canvas. Quietest treatment — feels like content hierarchy, not a widget.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base vc" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Sparest, most editorial treatment</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">D · SOFTER CORNERS</div>
+      <h2>16px track · 13px pill (card radius)</h2>
+      <p>Same as current but rounder. 16px matches the app's card radius. Still has the lighter-track issue, just softer-cornered.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base vd" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Just a radius change — doesn't fix the plane issue</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">E · CAPSULE (matches FAB)</div>
+      <h2>Fully rounded · card track · canvas pill</h2>
+      <p>B's plane hierarchy + fully capsule corners. Strongest rhyme with the BottomActionBar's floating capsule. Cohesive floating-surface language.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base ve" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Rhymes with the bottom action bar capsule ↓</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">F · FOREST-FILLED ACTIVE</div>
+      <h2>Solid green pill · card track</h2>
+      <p>Active pill is solid forest green (with white label). Strongest active affordance. Bold. But: might feel loud against the rest of the warm/quiet UI.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base vf" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Active state is unmissable — maybe too loud</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="code">G · GLASS CAPSULE</div>
+      <h2>Blurred capsule · most FAB-like</h2>
+      <p>Translucent card color with backdrop blur, fully capsule, canvas pill. This is the literal language of the BottomActionBar. Premium glassmorphic feel.</p>
+      <div class="stage-mini">
+        <div class="fake-hero"><div class="title">Morning Meditation</div><div class="sub">🔥 12 day streak · 72% strength</div></div>
+        <div class="tab-base vg" data-active="1" onclick="pick(this, event)">
+          <div class="pill"></div>
+          <div class="t">Calendar</div><div class="t on">Strength</div><div class="t">Goal</div>
+        </div>
+        <div class="fake-content"><div class="fake-card">Matches BottomActionBar glass exactly</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+  function pick(host, e) {
+    const tab = e.target.closest('.t');
+    if (!tab) return;
+    const tabs = [...host.querySelectorAll('.t')];
+    const idx = tabs.indexOf(tab);
+    host.dataset.active = idx;
+    tabs.forEach((t, i) => t.classList.toggle('on', i === idx));
+  }
+</script>
+</body>
+</html>

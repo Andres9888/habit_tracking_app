@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Picker Phase 1 - 24 Preset Colors (3 Rows)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1a1a2e; }
+    .phone-frame {
+      width: 375px;
+      height: 780px;
+      background: #f8fafc;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    .notch {
+      width: 150px;
+      height: 30px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+    .color-btn {
+      transition: all 0.15s ease;
+    }
+    .color-btn:hover {
+      transform: scale(1.15);
+    }
+    .color-btn:active {
+      transform: scale(0.95);
+    }
+    .color-btn.selected {
+      box-shadow: 0 0 0 3px #1e293b;
+    }
+    .color-btn.white-selected {
+      box-shadow: 0 0 0 3px #1e293b, inset 0 0 0 2px #e2e8f0;
+    }
+    .label {
+      font-size: 11px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-8">
+
+  <h1 class="text-3xl font-bold text-white mb-2">Color Picker Phase 1</h1>
+  <p class="text-gray-400 mb-8">24 Preset Colors in 3 Rows - No Modal, No Freezing</p>
+
+  <div class="flex gap-12 flex-wrap justify-center">
+
+    <!-- BEFORE -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="label text-red-400">BEFORE (Current - 8 colors)</div>
+
+      <div class="phone-frame">
+        <div class="notch"></div>
+
+        <div class="pt-14 px-4">
+          <!-- Style Section Card -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <h3 class="text-base font-bold text-slate-800 mb-4">🎨 Style it</h3>
+
+            <!-- Icon Section -->
+            <div class="mb-5">
+              <div class="text-sm font-semibold text-slate-600 mb-3">Icon</div>
+              <div class="flex gap-2">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">💪</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">🏃</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">📚</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">🧘</div>
+                <div class="text-sm text-slate-500 flex items-center ml-2">More</div>
+              </div>
+            </div>
+
+            <!-- Color Section - BEFORE -->
+            <div>
+              <div class="text-sm font-semibold text-slate-600 mb-3">Color</div>
+
+              <!-- Only 8 colors -->
+              <div class="flex gap-3 mb-4 flex-wrap">
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #EF4444;"></div>
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #F97316;"></div>
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #EAB308;"></div>
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #22C55E;"></div>
+                <div class="w-10 h-10 rounded-full cursor-pointer selected flex items-center justify-center" style="background: #3B82F6;">
+                  <span class="text-white text-xs font-bold">✓</span>
+                </div>
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #8B5CF6;"></div>
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #EC4899;"></div>
+                <div class="w-10 h-10 rounded-full cursor-pointer" style="background: #1E293B;"></div>
+              </div>
+
+              <!-- Custom Color Button - PROBLEM -->
+              <div class="relative">
+                <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full z-10">
+                  ⚠️ FREEZES
+                </div>
+                <div class="flex items-center justify-between bg-slate-50 rounded-xl px-4 py-3 cursor-pointer border-2 border-red-300">
+                  <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                    </svg>
+                    <span class="text-sm font-medium text-slate-700">Custom color</span>
+                  </div>
+                  <div class="w-6 h-6 rounded-full border-2 border-white shadow-sm" style="background: #3b82f6;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Problems list -->
+          <div class="mt-4 bg-red-50 border border-red-200 text-red-700 text-xs px-3 py-2 rounded-lg">
+            <div class="font-semibold mb-1">Problems:</div>
+            <ul class="list-disc pl-4 space-y-0.5">
+              <li>Only 8 preset colors - limited variety</li>
+              <li>Custom color picker freezes app</li>
+              <li>Opens heavy modal with sliders</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="label text-green-400">AFTER (Phase 1 - 24 colors, 3 rows)</div>
+
+      <div class="phone-frame">
+        <div class="notch"></div>
+
+        <div class="pt-14 px-4">
+          <!-- Style Section Card -->
+          <div class="bg-white rounded-2xl p-4 shadow-sm">
+            <h3 class="text-base font-bold text-slate-800 mb-4">🎨 Style it</h3>
+
+            <!-- Icon Section -->
+            <div class="mb-5">
+              <div class="text-sm font-semibold text-slate-600 mb-3">Icon</div>
+              <div class="flex gap-2">
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">💪</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">🏃</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">📚</div>
+                <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-2xl">🧘</div>
+                <div class="text-sm text-slate-500 flex items-center ml-2">More</div>
+              </div>
+            </div>
+
+            <!-- Color Section - AFTER (24 colors, 3 rows) -->
+            <div>
+              <div class="text-sm font-semibold text-slate-600 mb-3">Color</div>
+
+              <!-- Row 1: Core vibrant colors -->
+              <div class="flex gap-3 mb-3">
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #EF4444;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #F97316;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #EAB308;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #22C55E;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer selected flex items-center justify-center" style="background: #3B82F6;">
+                  <span class="text-white text-xs font-bold">✓</span>
+                </div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #8B5CF6;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #EC4899;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #1E293B;"></div>
+              </div>
+
+              <!-- Row 2: Alternative vibrant tones -->
+              <div class="flex gap-3 mb-3">
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #06B6D4;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #FB923C;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #4ADE80;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #A78BFA;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #F472B6;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #78716C;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #0F172A;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #0EA5E9;"></div>
+              </div>
+
+              <!-- Row 3: Soft/Pastel tones -->
+              <div class="flex gap-3">
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #FCA5A5;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #FDBA74;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #86EFAC;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #7DD3FC;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #C4B5FD;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #A8A29E;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer border border-slate-200" style="background: #FFFFFF;"></div>
+                <div class="color-btn w-10 h-10 rounded-full cursor-pointer" style="background: #FBBF24;"></div>
+              </div>
+
+              <!-- NO custom color button! -->
+            </div>
+          </div>
+
+          <!-- Benefits list -->
+          <div class="mt-4 bg-green-50 border border-green-200 text-green-700 text-xs px-3 py-2 rounded-lg">
+            <div class="font-semibold mb-1">Benefits:</div>
+            <ul class="list-disc pl-4 space-y-0.5">
+              <li>24 curated colors (3 rows of 8)</li>
+              <li>No modal, no freezing</li>
+              <li>Instant selection with haptics</li>
+              <li>Vibrant + alternative + pastel options</li>
+            </ul>
+          </div>
+
+          <!-- Color palette reference -->
+          <div class="mt-4 bg-slate-800 text-slate-300 text-xs px-3 py-2 rounded-lg">
+            <div class="font-semibold text-white mb-2">Color Palette:</div>
+            <div class="space-y-1 text-[10px]">
+              <div><span class="text-slate-400">Row 1:</span> Red, Orange, Yellow, Green, Blue, Purple, Pink, Slate</div>
+              <div><span class="text-slate-400">Row 2:</span> Cyan, Lt Orange, Lt Green, Lt Purple, Lt Pink, Stone, Navy, Sky</div>
+              <div><span class="text-slate-400">Row 3:</span> Soft Red, Peach, Mint, Soft Blue, Lavender, Gray, White, Amber</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Interactive Demo -->
+  <div class="mt-8 flex flex-col items-center gap-4">
+    <div class="label text-blue-400">INTERACTIVE DEMO - Click to select</div>
+
+    <div class="bg-white rounded-2xl p-6 shadow-xl" style="width: 400px;">
+      <div class="text-sm font-semibold text-slate-600 mb-3">Color</div>
+
+      <!-- Row 1: Core vibrant -->
+      <div class="flex gap-3 mb-3 justify-center">
+        <button onclick="selectColor(this, '#EF4444')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #EF4444;"></button>
+        <button onclick="selectColor(this, '#F97316')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #F97316;"></button>
+        <button onclick="selectColor(this, '#EAB308')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #EAB308;"></button>
+        <button onclick="selectColor(this, '#22C55E')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #22C55E;"></button>
+        <button onclick="selectColor(this, '#3B82F6')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none selected" style="background: #3B82F6;">
+          <span class="checkmark text-white text-sm font-bold">✓</span>
+        </button>
+        <button onclick="selectColor(this, '#8B5CF6')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #8B5CF6;"></button>
+        <button onclick="selectColor(this, '#EC4899')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #EC4899;"></button>
+        <button onclick="selectColor(this, '#1E293B')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #1E293B;"></button>
+      </div>
+
+      <!-- Row 2: Alternative vibrant -->
+      <div class="flex gap-3 mb-3 justify-center">
+        <button onclick="selectColor(this, '#06B6D4')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #06B6D4;"></button>
+        <button onclick="selectColor(this, '#FB923C')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #FB923C;"></button>
+        <button onclick="selectColor(this, '#4ADE80')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #4ADE80;"></button>
+        <button onclick="selectColor(this, '#A78BFA')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #A78BFA;"></button>
+        <button onclick="selectColor(this, '#F472B6')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #F472B6;"></button>
+        <button onclick="selectColor(this, '#78716C')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #78716C;"></button>
+        <button onclick="selectColor(this, '#0F172A')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #0F172A;"></button>
+        <button onclick="selectColor(this, '#0EA5E9')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #0EA5E9;"></button>
+      </div>
+
+      <!-- Row 3: Soft/Pastel -->
+      <div class="flex gap-3 justify-center">
+        <button onclick="selectColor(this, '#FCA5A5')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #FCA5A5;"></button>
+        <button onclick="selectColor(this, '#FDBA74')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #FDBA74;"></button>
+        <button onclick="selectColor(this, '#86EFAC')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #86EFAC;"></button>
+        <button onclick="selectColor(this, '#7DD3FC')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #7DD3FC;"></button>
+        <button onclick="selectColor(this, '#C4B5FD')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #C4B5FD;"></button>
+        <button onclick="selectColor(this, '#A8A29E')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #A8A29E;"></button>
+        <button onclick="selectColor(this, '#FFFFFF')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none border border-slate-300" style="background: #FFFFFF;"></button>
+        <button onclick="selectColor(this, '#FBBF24')" class="color-btn w-11 h-11 rounded-full cursor-pointer border-0 outline-none" style="background: #FBBF24;"></button>
+      </div>
+
+      <!-- Selected color display -->
+      <div class="mt-5 flex items-center justify-center gap-3">
+        <div id="selectedPreview" class="w-8 h-8 rounded-lg" style="background: #3B82F6;"></div>
+        <span id="selectedHex" class="text-sm font-mono text-slate-600">#3B82F6</span>
+        <span id="selectedName" class="text-sm text-slate-500">Blue</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const colorNames = {
+      // Row 1
+      '#EF4444': 'Red',
+      '#F97316': 'Orange',
+      '#EAB308': 'Yellow',
+      '#22C55E': 'Green',
+      '#3B82F6': 'Blue',
+      '#8B5CF6': 'Purple',
+      '#EC4899': 'Pink',
+      '#1E293B': 'Slate',
+      // Row 2
+      '#06B6D4': 'Cyan',
+      '#FB923C': 'Light Orange',
+      '#4ADE80': 'Light Green',
+      '#A78BFA': 'Light Purple',
+      '#F472B6': 'Light Pink',
+      '#78716C': 'Stone',
+      '#0F172A': 'Navy',
+      '#0EA5E9': 'Sky Blue',
+      // Row 3
+      '#FCA5A5': 'Soft Red',
+      '#FDBA74': 'Peach',
+      '#86EFAC': 'Mint',
+      '#7DD3FC': 'Soft Blue',
+      '#C4B5FD': 'Lavender',
+      '#A8A29E': 'Warm Gray',
+      '#FFFFFF': 'White',
+      '#FBBF24': 'Amber'
+    };
+
+    function selectColor(btn, hex) {
+      // Remove selected from all
+      document.querySelectorAll('.color-btn').forEach(b => {
+        b.classList.remove('selected');
+        b.classList.remove('white-selected');
+        b.innerHTML = '';
+      });
+
+      // Add selected to clicked
+      if (hex === '#FFFFFF') {
+        btn.classList.add('white-selected');
+        btn.innerHTML = '<span class="checkmark text-slate-800 text-sm font-bold">✓</span>';
+      } else {
+        btn.classList.add('selected');
+        btn.innerHTML = '<span class="checkmark text-white text-sm font-bold">✓</span>';
+      }
+
+      // Update preview
+      document.getElementById('selectedPreview').style.background = hex;
+      document.getElementById('selectedHex').textContent = hex;
+      document.getElementById('selectedName').textContent = colorNames[hex] || 'Custom';
+
+      // Animate (simulate haptic pop)
+      btn.style.transform = 'scale(1.2)';
+      setTimeout(() => {
+        btn.style.transform = 'scale(1)';
+      }, 150);
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Stats Strip - Before & After Animation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #1c1917; }
+
+    /* Smooth counting animation */
+    @keyframes countUp {
+      from { opacity: 0.5; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .count-animate {
+      animation: countUp 0.15s ease-out;
+    }
+
+    /* Stagger animation for cards */
+    @keyframes cardEnter {
+      from { opacity: 0; transform: scale(0.95) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .card-1 { animation: cardEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0ms forwards; }
+    .card-2 { animation: cardEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 100ms forwards; }
+    .card-3 { animation: cardEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 200ms forwards; }
+
+    .stat-card {
+      transition: transform 0.15s ease;
+    }
+    .stat-card:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+
+  <!-- Header -->
+  <div class="max-w-md mx-auto mb-8">
+    <h1 class="text-2xl font-bold text-white mb-2">Quick Stats Animation</h1>
+    <p class="text-stone-400 text-sm">Before & After comparison for Habit Details page</p>
+  </div>
+
+  <!-- Phone Frame Container -->
+  <div class="flex flex-col md:flex-row gap-8 justify-center items-start">
+
+    <!-- BEFORE: Static Numbers -->
+    <div class="flex flex-col items-center">
+      <div class="text-stone-500 text-sm font-medium mb-3 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-stone-600"></span>
+        BEFORE (Current)
+      </div>
+
+      <!-- Phone Frame -->
+      <div class="w-[320px] bg-stone-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100 rounded-[2rem] overflow-hidden">
+
+          <!-- Status Bar -->
+          <div class="h-11 bg-stone-50 flex items-center justify-center">
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-4 py-3 flex justify-between items-center">
+            <div class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
+              <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </div>
+            <div class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
+              <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Hero Section -->
+          <div class="px-4 py-4 flex flex-col items-center">
+            <div class="w-20 h-20 bg-amber-100 rounded-2xl flex items-center justify-center shadow-lg mb-3">
+              <span class="text-4xl">🏃</span>
+            </div>
+            <h2 class="text-xl font-bold text-stone-900">Morning Run</h2>
+            <p class="text-stone-500 text-sm mt-1">Build a healthier lifestyle</p>
+          </div>
+
+          <!-- Quick Complete Button -->
+          <div class="px-4 mb-4">
+            <button class="w-full bg-emerald-500 text-white font-semibold py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+              Mark Complete
+            </button>
+          </div>
+
+          <!-- Quick Stats Strip - STATIC -->
+          <div class="px-4 mb-4">
+            <div class="flex gap-2">
+              <!-- Streak -->
+              <div class="flex-1 bg-white rounded-xl p-3 shadow-sm text-center stat-card">
+                <div class="text-2xl font-bold text-orange-500">12</div>
+                <div class="flex items-center justify-center gap-1 text-xs text-stone-500">
+                  <span>🔥</span>
+                  <span>streak</span>
+                </div>
+              </div>
+              <!-- Strength -->
+              <div class="flex-1 bg-white rounded-xl p-3 shadow-sm text-center stat-card">
+                <div class="text-2xl font-bold text-violet-500">67%</div>
+                <div class="flex items-center justify-center gap-1 text-xs text-stone-500">
+                  <span>💪</span>
+                  <span>strength</span>
+                </div>
+              </div>
+              <!-- Success -->
+              <div class="flex-1 bg-white rounded-xl p-3 shadow-sm text-center stat-card">
+                <div class="text-2xl font-bold text-emerald-500">85%</div>
+                <div class="flex items-center justify-center gap-1 text-xs text-stone-500">
+                  <span>✓</span>
+                  <span>success</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="px-4 mb-4">
+            <div class="bg-stone-100 rounded-xl p-1 flex">
+              <div class="flex-1 bg-violet-500 text-white text-sm font-medium py-2 rounded-lg text-center">Progress</div>
+              <div class="flex-1 text-stone-500 text-sm font-medium py-2 text-center">Motivation</div>
+              <div class="flex-1 text-stone-500 text-sm font-medium py-2 text-center">Manage</div>
+            </div>
+          </div>
+
+          <!-- Bottom padding -->
+          <div class="h-20 bg-gradient-to-b from-stone-100 to-stone-200"></div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mt-4 text-center max-w-[280px]">
+        <p class="text-stone-400 text-xs">Numbers appear instantly with no animation. Feels static and less engaging.</p>
+      </div>
+    </div>
+
+    <!-- AFTER: Animated Numbers -->
+    <div class="flex flex-col items-center">
+      <div class="text-emerald-400 text-sm font-medium mb-3 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        AFTER (Animated)
+      </div>
+
+      <!-- Phone Frame -->
+      <div class="w-[320px] bg-stone-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100 rounded-[2rem] overflow-hidden">
+
+          <!-- Status Bar -->
+          <div class="h-11 bg-stone-50 flex items-center justify-center">
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-4 py-3 flex justify-between items-center">
+            <div class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
+              <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </div>
+            <div class="w-10 h-10 bg-white rounded-full shadow flex items-center justify-center">
+              <svg class="w-5 h-5 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Hero Section -->
+          <div class="px-4 py-4 flex flex-col items-center">
+            <div class="w-20 h-20 bg-amber-100 rounded-2xl flex items-center justify-center shadow-lg mb-3">
+              <span class="text-4xl">🏃</span>
+            </div>
+            <h2 class="text-xl font-bold text-stone-900">Morning Run</h2>
+            <p class="text-stone-500 text-sm mt-1">Build a healthier lifestyle</p>
+          </div>
+
+          <!-- Quick Complete Button -->
+          <div class="px-4 mb-4">
+            <button class="w-full bg-emerald-500 text-white font-semibold py-3.5 rounded-xl shadow-md flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+              Mark Complete
+            </button>
+          </div>
+
+          <!-- Quick Stats Strip - ANIMATED -->
+          <div class="px-4 mb-4">
+            <div class="flex gap-2">
+              <!-- Streak - Animated -->
+              <div class="flex-1 bg-white rounded-xl p-3 shadow-sm text-center stat-card card-1" style="opacity: 0;">
+                <div class="text-2xl font-bold text-orange-500" id="streak">0</div>
+                <div class="flex items-center justify-center gap-1 text-xs text-stone-500">
+                  <span>🔥</span>
+                  <span>streak</span>
+                </div>
+              </div>
+              <!-- Strength - Animated -->
+              <div class="flex-1 bg-white rounded-xl p-3 shadow-sm text-center stat-card card-2" style="opacity: 0;">
+                <div class="text-2xl font-bold text-violet-500"><span id="strength">0</span>%</div>
+                <div class="flex items-center justify-center gap-1 text-xs text-stone-500">
+                  <span>💪</span>
+                  <span>strength</span>
+                </div>
+              </div>
+              <!-- Success - Animated -->
+              <div class="flex-1 bg-white rounded-xl p-3 shadow-sm text-center stat-card card-3" style="opacity: 0;">
+                <div class="text-2xl font-bold text-emerald-500"><span id="success">0</span>%</div>
+                <div class="flex items-center justify-center gap-1 text-xs text-stone-500">
+                  <span>✓</span>
+                  <span>success</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="px-4 mb-4">
+            <div class="bg-stone-100 rounded-xl p-1 flex">
+              <div class="flex-1 bg-violet-500 text-white text-sm font-medium py-2 rounded-lg text-center">Progress</div>
+              <div class="flex-1 text-stone-500 text-sm font-medium py-2 text-center">Motivation</div>
+              <div class="flex-1 text-stone-500 text-sm font-medium py-2 text-center">Manage</div>
+            </div>
+          </div>
+
+          <!-- Bottom padding -->
+          <div class="h-20 bg-gradient-to-b from-stone-100 to-stone-200"></div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="mt-4 text-center max-w-[280px]">
+        <p class="text-stone-400 text-xs">Numbers count up with staggered timing (100ms between each). Feels alive and polished.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Animation Details -->
+  <div class="max-w-2xl mx-auto mt-12 bg-stone-800/50 rounded-2xl p-6 border border-stone-700">
+    <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+      <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+      Animation Specification
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-orange-400 font-medium mb-1">Duration</div>
+        <div class="text-stone-300">800ms per stat</div>
+        <div class="text-stone-500 text-xs mt-1">Easing: cubic-bezier out</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-violet-400 font-medium mb-1">Stagger</div>
+        <div class="text-stone-300">100ms between stats</div>
+        <div class="text-stone-500 text-xs mt-1">Streak → Strength → Success</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-1">Accessibility</div>
+        <div class="text-stone-300">Respects reduce motion</div>
+        <div class="text-stone-500 text-xs mt-1">Values set immediately if enabled</div>
+      </div>
+    </div>
+
+    <!-- Replay Button -->
+    <div class="mt-6 flex justify-center">
+      <button onclick="replayAnimation()" class="bg-violet-600 hover:bg-violet-500 text-white font-medium px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Replay Animation
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Animation configuration
+    const DURATION = 800;
+    const STAGGER = 100;
+    const TARGETS = {
+      streak: 12,
+      strength: 67,
+      success: 85
+    };
+
+    // Easing function (cubic ease-out)
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    // Animate a single counter
+    function animateCounter(elementId, target, delay) {
+      const element = document.getElementById(elementId);
+      const startTime = performance.now() + delay;
+
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+
+        if (elapsed < 0) {
+          requestAnimationFrame(update);
+          return;
+        }
+
+        const progress = Math.min(elapsed / DURATION, 1);
+        const easedProgress = easeOutCubic(progress);
+        const currentValue = Math.round(easedProgress * target);
+
+        element.textContent = currentValue;
+
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // Start all animations
+    function startAnimations() {
+      animateCounter('streak', TARGETS.streak, 0);
+      animateCounter('strength', TARGETS.strength, STAGGER);
+      animateCounter('success', TARGETS.success, STAGGER * 2);
+    }
+
+    // Replay animation
+    function replayAnimation() {
+      // Reset values
+      document.getElementById('streak').textContent = '0';
+      document.getElementById('strength').textContent = '0';
+      document.getElementById('success').textContent = '0';
+
+      // Reset card animations
+      const cards = document.querySelectorAll('.card-1, .card-2, .card-3');
+      cards.forEach(card => {
+        card.style.animation = 'none';
+        card.offsetHeight; // Trigger reflow
+        card.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        cards.forEach((card, i) => {
+          card.style.animation = `cardEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ${i * 100}ms forwards`;
+        });
+        startAnimations();
+      }, 50);
+    }
+
+    // Start on load
+    window.addEventListener('load', () => {
+      setTimeout(startAnimations, 500);
+    });
+  </script>
+
+</body>
+</html>

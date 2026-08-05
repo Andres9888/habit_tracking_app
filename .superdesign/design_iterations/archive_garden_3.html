@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greenhouse Recovery Ward — Habit Garden v3</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1a1a1a !important;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+  .phone-frame {
+    width: 390px;
+    min-height: 844px;
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 0 8px #1a1a1a, 0 0 0 10px #333, 0 25px 60px rgba(0,0,0,0.5);
+  }
+
+  /* Greenhouse background — parchment to green-tinted warmth */
+  .greenhouse-bg {
+    background: linear-gradient(180deg, #F5F1ED 0%, #F2F5EE 40%, #F0F7EE 70%, #F5FAF3 100%);
+    min-height: 844px;
+    position: relative;
+  }
+
+  /* Glass pane grid overlay */
+  .greenhouse-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(90deg, rgba(5,150,105,0.03) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(5,150,105,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Subtle light rays from top */
+  .greenhouse-bg::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 200px;
+    background: linear-gradient(180deg, rgba(255,248,220,0.15) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .content-layer {
+    position: relative;
+    z-index: 2;
+  }
+
+  .literata { font-family: 'Literata', serif !important; }
+
+  /* Greenhouse bench card */
+  .bench-card {
+    background: #FAFFF8;
+    border-radius: 16px;
+    border: 1px solid rgba(5,150,105,0.08);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(5,150,105,0.03);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+  .bench-card:hover {
+    box-shadow: 0 4px 16px rgba(5,150,105,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  }
+
+  /* Plant stem — curved */
+  .plant-stem {
+    position: relative;
+    width: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .stem-line {
+    width: 2px;
+    background: linear-gradient(180deg, #86EFAC 0%, #059669 100%);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+  }
+
+  /* Leaf node */
+  .leaf-node {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+  }
+  .leaf-left {
+    transform: translateX(calc(-50% - 8px));
+    background: #86EFAC;
+  }
+  .leaf-right {
+    transform: translateX(calc(-50% + 8px));
+    background: #6EE7B7;
+  }
+
+  /* Dew drop animation */
+  .dew-drop {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(147,197,253,0.8) 0%, rgba(147,197,253,0.2) 100%);
+    position: absolute;
+    animation: dewAppear 3s ease-in-out infinite;
+  }
+  .dew-1 { animation-delay: 0s; }
+  .dew-2 { animation-delay: 1.2s; }
+  .dew-3 { animation-delay: 2.4s; }
+
+  @keyframes dewAppear {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    30%, 70% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Pot */
+  .plant-pot {
+    width: 20px;
+    height: 12px;
+    background: linear-gradient(180deg, #A0826D 0%, #8B6F5E 100%);
+    border-radius: 0 0 6px 6px;
+    position: relative;
+  }
+  .plant-pot::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    height: 4px;
+    background: #A0826D;
+    border-radius: 2px;
+  }
+
+  /* Growth meter (vertical thermometer) */
+  .growth-meter {
+    width: 4px;
+    height: 48px;
+    background: #E5E7EB;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .growth-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-radius: 2px;
+    background: linear-gradient(0deg, #059669 0%, #34D399 100%);
+    transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Restore button */
+  .restore-btn {
+    background: #059669;
+    color: white;
+    height: 42px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .restore-btn:hover {
+    background: #047857;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(5,150,105,0.25);
+  }
+  .restore-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* Remove link */
+  .remove-link {
+    color: #9CA3AF;
+    font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    text-decoration: none;
+  }
+  .remove-link:hover { color: #EF4444; }
+
+  /* Restore animation */
+  @keyframes restoreGrow {
+    0% { transform: scale(1); }
+    30% { transform: scale(1.02); }
+    100% { transform: translateY(-120%) scale(0.9); opacity: 0; }
+  }
+  .restoring {
+    animation: restoreGrow 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .restoring .stem-line { background: #34D399 !important; }
+  .restoring .leaf-node { background: #34D399 !important; transform: scale(1.3); }
+
+  /* Remove confirmation */
+  .remove-confirm {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #6B7280;
+  }
+  .remove-confirm.show { display: flex; }
+  .remove-confirm button {
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #E5E7EB;
+    background: white;
+    color: #374151;
+    transition: all 0.15s;
+  }
+  .remove-confirm .yes-btn:hover {
+    background: #FEE2E2;
+    border-color: #EF4444;
+    color: #EF4444;
+  }
+  .remove-confirm .no-btn:hover {
+    background: #F3F4F6;
+  }
+
+  /* Sparkle for restore */
+  @keyframes sparkle {
+    0% { opacity: 0; transform: scale(0) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1) rotate(180deg); }
+    100% { opacity: 0; transform: scale(0) rotate(360deg); }
+  }
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #FCD34D;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 80px 40px;
+  }
+  .empty-state.show { display: block; }
+
+  /* Restore all button */
+  .restore-all-btn {
+    background: none;
+    border: none;
+    color: #059669;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+  }
+  .restore-all-btn:hover {
+    color: #047857;
+    transform: translateX(2px);
+  }
+
+  /* Card entrance animation */
+  @keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .bench-card {
+    animation: cardEntrance 0.4s ease-out backwards;
+  }
+  .bench-card:nth-child(1) { animation-delay: 0.05s; }
+  .bench-card:nth-child(2) { animation-delay: 0.12s; }
+  .bench-card:nth-child(3) { animation-delay: 0.19s; }
+
+  /* Nav icon buttons */
+  .nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.04);
+    border: none;
+    cursor: pointer;
+    color: #374151;
+    transition: all 0.15s;
+  }
+  .nav-btn:hover {
+    background: rgba(0,0,0,0.08);
+  }
+
+  /* Stagger restore all */
+  @keyframes restoreAllCard {
+    0% { filter: brightness(1); }
+    30% { filter: brightness(1.08); background: #F0FFF4; }
+    100% { transform: translateY(-120%) scale(0.9); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <div class="greenhouse-bg">
+    <div class="content-layer" style="padding: 56px 20px 40px;">
+
+      <!-- Header -->
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 4px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="nav-btn" onclick="history.back()">
+            <i data-lucide="arrow-left" style="width:18px;height:18px;"></i>
+          </button>
+        </div>
+        <button class="nav-btn" onclick="window.close()">
+          <i data-lucide="x" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+
+      <div style="margin-bottom: 20px; padding-left: 4px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span style="font-size: 22px;">&#127969;</span>
+          <h1 class="literata" style="font-size: 22px; font-weight: 700; color: #1F2937; letter-spacing: -0.3px;">Greenhouse</h1>
+        </div>
+        <p style="font-size: 14px; color: #6B7280; margin-left: 1px;">Keeping your dormant habits warm</p>
+      </div>
+
+      <!-- Batch action -->
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;" id="batchActions">
+        <button class="restore-all-btn" onclick="restoreAll()">
+          <span>&#9728;&#65039;</span> Restore all to garden
+        </button>
+      </div>
+
+      <!-- Cards container -->
+      <div id="cardsContainer" style="display: flex; flex-direction: column; gap: 16px;">
+
+        <!-- Card 1: Morning Meditation -->
+        <div class="bench-card" id="card-1" style="padding: 20px;">
+          <div style="display: flex; gap: 16px;">
+            <!-- Plant visualization -->
+            <div class="plant-stem" style="height: 110px; flex-shrink: 0;">
+              <!-- Stem -->
+              <div class="stem-line" style="top: 16px; height: 72px;"></div>
+              <!-- Emoji at top -->
+              <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 20px; z-index: 2;">&#129496;</div>
+              <!-- Leaves -->
+              <div class="leaf-node leaf-left" style="top: 32px;">
+                <div class="dew-drop dew-1" style="top: -3px; left: 10px;"></div>
+              </div>
+              <div class="leaf-node leaf-right" style="top: 48px;"></div>
+              <div class="leaf-node leaf-left" style="top: 64px;">
+                <div class="dew-drop dew-3" style="top: -3px; left: 10px;"></div>
+              </div>
+              <div class="leaf-node leaf-right" style="top: 78px;"></div>
+              <!-- Pot -->
+              <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);">
+                <div class="plant-pot"></div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+                <div>
+                  <h3 style="font-size: 16px; font-weight: 600; color: #1F2937; margin-bottom: 3px;">Morning Meditation</h3>
+                  <p style="font-size: 13px; color: #9CA3AF;">Resting for 34 days</p>
+                </div>
+                <!-- Growth meter -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-left: 8px;">
+                  <div class="growth-meter">
+                    <div class="growth-fill" style="height: 72%;"></div>
+                  </div>
+                  <span style="font-size: 10px; color: #6B7280; font-weight: 500;">72%</span>
+                </div>
+              </div>
+
+              <!-- Stats -->
+              <div style="display: flex; gap: 16px; margin-top: 12px;">
+                <span style="font-size: 12px; color: #6B7280;">&#128293; 45d peak</span>
+                <span style="font-size: 12px; color: #6B7280;">&#10003; 234 times</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="margin-top: 16px;">
+            <button class="restore-btn" onclick="restoreCard('card-1')">
+              Move Back to Garden &#127807;
+            </button>
+            <div style="text-align: center; margin-top: 8px;">
+              <button class="remove-link" id="remove-link-1" onclick="showRemoveConfirm('1')">Remove from greenhouse</button>
+              <div class="remove-confirm" id="remove-confirm-1">
+                <span>Remove from greenhouse?</span>
+                <button class="yes-btn" onclick="removeCard('card-1')">Yes</button>
+                <button class="no-btn" onclick="hideRemoveConfirm('1')">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Read 30 Minutes -->
+        <div class="bench-card" id="card-2" style="padding: 20px;">
+          <div style="display: flex; gap: 16px;">
+            <!-- Plant visualization -->
+            <div class="plant-stem" style="height: 100px; flex-shrink: 0;">
+              <div class="stem-line" style="top: 16px; height: 58px;"></div>
+              <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 20px; z-index: 2;">&#128214;</div>
+              <div class="leaf-node leaf-right" style="top: 34px;">
+                <div class="dew-drop dew-2" style="top: -3px; left: -8px;"></div>
+              </div>
+              <div class="leaf-node leaf-left" style="top: 50px;"></div>
+              <div class="leaf-node leaf-right" style="top: 66px;"></div>
+              <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);">
+                <div class="plant-pot"></div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+                <div>
+                  <h3 style="font-size: 16px; font-weight: 600; color: #1F2937; margin-bottom: 3px;">Read 30 Minutes</h3>
+                  <p style="font-size: 13px; color: #9CA3AF;">Resting for 20 days</p>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-left: 8px;">
+                  <div class="growth-meter">
+                    <div class="growth-fill" style="height: 58%;"></div>
+                  </div>
+                  <span style="font-size: 10px; color: #6B7280; font-weight: 500;">58%</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 16px; margin-top: 12px;">
+                <span style="font-size: 12px; color: #6B7280;">&#128293; 28d peak</span>
+                <span style="font-size: 12px; color: #6B7280;">&#10003; 156 times</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <button class="restore-btn" onclick="restoreCard('card-2')">
+              Move Back to Garden &#127807;
+            </button>
+            <div style="text-align: center; margin-top: 8px;">
+              <button class="remove-link" id="remove-link-2" onclick="showRemoveConfirm('2')">Remove from greenhouse</button>
+              <div class="remove-confirm" id="remove-confirm-2">
+                <span>Remove from greenhouse?</span>
+                <button class="yes-btn" onclick="removeCard('card-2')">Yes</button>
+                <button class="no-btn" onclick="hideRemoveConfirm('2')">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: Daily Journal -->
+        <div class="bench-card" id="card-3" style="padding: 20px;">
+          <div style="display: flex; gap: 16px;">
+            <!-- Plant visualization -->
+            <div class="plant-stem" style="height: 120px; flex-shrink: 0;">
+              <div class="stem-line" style="top: 16px; height: 82px;"></div>
+              <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 20px; z-index: 2;">&#9997;&#65039;</div>
+              <div class="leaf-node leaf-left" style="top: 30px;"></div>
+              <div class="leaf-node leaf-right" style="top: 42px;">
+                <div class="dew-drop dew-1" style="top: -3px; left: -8px;"></div>
+              </div>
+              <div class="leaf-node leaf-left" style="top: 56px;">
+                <div class="dew-drop dew-2" style="top: 6px; left: 10px;"></div>
+              </div>
+              <div class="leaf-node leaf-right" style="top: 70px;"></div>
+              <div class="leaf-node leaf-left" style="top: 84px;"></div>
+              <div style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);">
+                <div class="plant-pot"></div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div style="flex: 1; min-width: 0;">
+              <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+                <div>
+                  <h3 style="font-size: 16px; font-weight: 600; color: #1F2937; margin-bottom: 3px;">Daily Journal</h3>
+                  <p style="font-size: 13px; color: #9CA3AF;">Resting for 3 days</p>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; margin-left: 8px;">
+                  <div class="growth-meter">
+                    <div class="growth-fill" style="height: 85%;"></div>
+                  </div>
+                  <span style="font-size: 10px; color: #6B7280; font-weight: 500;">85%</span>
+                </div>
+              </div>
+
+              <div style="display: flex; gap: 16px; margin-top: 12px;">
+                <span style="font-size: 12px; color: #6B7280;">&#128293; 67d peak</span>
+                <span style="font-size: 12px; color: #6B7280;">&#10003; 312 times</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <button class="restore-btn" onclick="restoreCard('card-3')">
+              Move Back to Garden &#127807;
+            </button>
+            <div style="text-align: center; margin-top: 8px;">
+              <button class="remove-link" id="remove-link-3" onclick="showRemoveConfirm('3')">Remove from greenhouse</button>
+              <div class="remove-confirm" id="remove-confirm-3">
+                <span>Remove from greenhouse?</span>
+                <button class="yes-btn" onclick="removeCard('card-3')">Yes</button>
+                <button class="no-btn" onclick="hideRemoveConfirm('3')">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div style="font-size: 48px; margin-bottom: 16px;">&#9728;&#65039;</div>
+        <h2 class="literata" style="font-size: 20px; font-weight: 600; color: #1F2937; margin-bottom: 8px;">Greenhouse empty</h2>
+        <p style="font-size: 14px; color: #9CA3AF; line-height: 1.5;">All plants are in the garden!</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize Lucide icons
+  lucide.createIcons();
+
+  let cardCount = 3;
+
+  function createSparkles(element) {
+    const rect = element.getBoundingClientRect();
+    const colors = ['#FCD34D', '#34D399', '#A78BFA', '#FB923C'];
+    for (let i = 0; i < 8; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = (rect.left + Math.random() * rect.width) + 'px';
+      sparkle.style.top = (rect.top + Math.random() * rect.height) + 'px';
+      sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      sparkle.style.position = 'fixed';
+      sparkle.style.zIndex = '9999';
+      sparkle.style.animation = `sparkle ${0.4 + Math.random() * 0.4}s ease-out forwards`;
+      sparkle.style.animationDelay = `${Math.random() * 0.2}s`;
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 1000);
+    }
+  }
+
+  function restoreCard(cardId) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+
+    // Brighten the plant
+    const leaves = card.querySelectorAll('.leaf-node');
+    leaves.forEach(l => { l.style.background = '#34D399'; l.style.transition = 'all 0.3s'; l.style.transform += ' scale(1.4)'; });
+    const stem = card.querySelector('.stem-line');
+    if (stem) { stem.style.background = '#34D399'; stem.style.transition = 'all 0.3s'; }
+
+    // Sparkles
+    setTimeout(() => createSparkles(card), 200);
+
+    // Animate out
+    setTimeout(() => {
+      card.classList.add('restoring');
+    }, 350);
+
+    setTimeout(() => {
+      card.style.display = 'none';
+      cardCount--;
+      checkEmpty();
+    }, 1050);
+  }
+
+  function removeCard(cardId) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    card.style.transition = 'all 0.3s ease';
+    card.style.opacity = '0';
+    card.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      card.style.display = 'none';
+      cardCount--;
+      checkEmpty();
+    }, 300);
+  }
+
+  function showRemoveConfirm(id) {
+    document.getElementById('remove-link-' + id).style.display = 'none';
+    document.getElementById('remove-confirm-' + id).classList.add('show');
+  }
+
+  function hideRemoveConfirm(id) {
+    document.getElementById('remove-link-' + id).style.display = '';
+    document.getElementById('remove-confirm-' + id).classList.remove('show');
+  }
+
+  function checkEmpty() {
+    if (cardCount <= 0) {
+      document.getElementById('cardsContainer').style.display = 'none';
+      document.getElementById('batchActions').style.display = 'none';
+      document.getElementById('emptyState').classList.add('show');
+    }
+  }
+
+  function restoreAll() {
+    const cards = document.querySelectorAll('.bench-card');
+    cards.forEach((card, i) => {
+      if (card.style.display === 'none') return;
+      setTimeout(() => {
+        // Brighten
+        const leaves = card.querySelectorAll('.leaf-node');
+        leaves.forEach(l => { l.style.background = '#34D399'; l.style.transition = 'all 0.3s'; });
+        const stem = card.querySelector('.stem-line');
+        if (stem) { stem.style.background = '#34D399'; stem.style.transition = 'all 0.3s'; }
+
+        setTimeout(() => createSparkles(card), 150);
+
+        setTimeout(() => {
+          card.classList.add('restoring');
+        }, 250);
+
+        setTimeout(() => {
+          card.style.display = 'none';
+          cardCount--;
+          checkEmpty();
+        }, 950);
+      }, i * 100);
+    });
+  }
+</script>
+
+</body>
+</html>

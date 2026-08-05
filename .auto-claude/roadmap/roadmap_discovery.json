@@ -1,0 +1,142 @@
+{
+  "project_name": "Daily Habits Tracker",
+  "project_type": "mobile-app",
+  "tech_stack": {
+    "primary_language": "TypeScript",
+    "frameworks": ["React Native", "Expo", "Convex"],
+    "key_dependencies": [
+      "@clerk/clerk-expo",
+      "convex",
+      "@react-navigation/native",
+      "@react-navigation/bottom-tabs",
+      "react-native-reanimated",
+      "@notifee/react-native",
+      "react-native-calendars",
+      "@shopify/react-native-skia",
+      "victory-native",
+      "nativewind",
+      "tailwindcss",
+      "date-fns",
+      "expo-notifications",
+      "expo-haptics"
+    ]
+  },
+  "target_audience": {
+    "primary_persona": "Individual consumers seeking to build and maintain positive habits through gamification and visual tracking",
+    "secondary_personas": [
+      "Productivity enthusiasts who want cross-platform habit tracking",
+      "Users who respond well to playful/gamified interfaces (cat theme)",
+      "People who need gentle accountability and motivational support",
+      "Users who prefer mobile-first experiences with web fallback"
+    ],
+    "pain_points": [
+      "Difficulty maintaining consistency with habit formation",
+      "Boring or overly complex habit tracking apps",
+      "Lack of motivation after missing days",
+      "Need for visual progress tracking and streaks",
+      "Forgetting to complete habits without reminders",
+      "Wanting to track habits across multiple devices"
+    ],
+    "goals": [
+      "Build lasting positive habits",
+      "Track daily progress visually with streaks and calendars",
+      "Stay motivated through gamification and positive reinforcement",
+      "Get timely reminders for habit completion",
+      "Review analytics to understand habit patterns"
+    ],
+    "usage_context": "Daily use on mobile devices (iOS/Android) and web, primarily during morning routines, throughout the day for habit check-ins, and evening reviews. Users expect quick interactions with minimal friction."
+  },
+  "product_vision": {
+    "one_liner": "A playful, cat-themed mobile habit tracker that makes building good habits fun through gamification, time-aware suggestions, and visual streak tracking",
+    "problem_statement": "People struggle to form and maintain habits because most tracking apps are either too complex, boring, or don't provide adequate motivation after setbacks. Users need a delightful, low-friction way to build consistency.",
+    "value_proposition": "Unlike traditional habit trackers, Daily Habits Tracker combines a charming cat-themed personality with smart features like time-based habit suggestions, visual streak chains, and gentle gamification to make habit building enjoyable rather than a chore.",
+    "success_metrics": [
+      "Daily active users (DAU) and retention rates",
+      "Average streak length per user",
+      "Habit completion rate (habits checked vs habits tracked)",
+      "Time-based suggestion chip engagement (40-60% improvement claimed)",
+      "User session frequency and duration",
+      "App store ratings and reviews"
+    ]
+  },
+  "current_state": {
+    "maturity": "mvp",
+    "existing_features": [
+      "User authentication via Clerk",
+      "Habit creation with emoji and color customization",
+      "Habit streak tracking and chain visualization",
+      "Week view and calendar views for habit history",
+      "Notes attached to individual habit completions",
+      "Cat-themed motivational messages and character",
+      "Time-based habit suggestion chips (morning/afternoon/evening/night)",
+      "Analytics dashboard with heatmaps and visualizations",
+      "Habit templates for quick setup",
+      "Habit strength/momentum indicators",
+      "Category organization and archiving",
+      "Drag-and-drop habit reordering",
+      "Push notifications via Notifee/Expo",
+      "Cross-platform support (iOS, Android, Web)",
+      "Haptic feedback on interactions",
+      "Confetti celebrations for achievements",
+      "Draft recovery for habit creation"
+    ],
+    "known_gaps": [
+      "Habit reorder mutation not implemented (TODO in App.tsx)",
+      "Social/community features for accountability",
+      "Habit sharing functionality",
+      "Data export/backup capabilities",
+      "Widget support for iOS/Android home screens",
+      "Apple Watch / wearable integration",
+      "Offline mode resilience",
+      "Advanced recurring habit patterns (e.g., every 3rd day)"
+    ],
+    "technical_debt": [
+      "TODO: Implement reorderHabits mutation in convex/habits.ts",
+      "Large HabitDetailScreen.tsx (113KB) may need refactoring",
+      "Multiple API key integrations that need maintenance",
+      "Duplicate/legacy files (e.g., affirmations 2.ts, habits.ts.simple)"
+    ]
+  },
+  "competitive_context": {
+    "alternatives": [
+      "Habitica (gamified RPG-style habit tracker)",
+      "Streaks (Apple-focused minimalist tracker)",
+      "Done (simple checklist-style tracker)",
+      "Loop Habit Tracker (open source Android)",
+      "Fabulous (wellness/habit coaching app)",
+      "Way of Life (diary-style habit tracker)"
+    ],
+    "differentiators": [
+      "Cat-themed personality creates emotional connection",
+      "Time-aware habit suggestions adapt to daily rhythms",
+      "Cross-platform with web and mobile sync via Convex",
+      "Visual chain/streak visualization for motivation",
+      "Lightweight gamification without overwhelming RPG complexity",
+      "Modern tech stack (Expo 54, React 19, Convex realtime)"
+    ],
+    "market_position": "Positioned as a friendly, approachable habit tracker for users who want gamification without the complexity of Habitica, and personality without the austerity of minimalist trackers. Appeals to users who value delightful UX and cross-platform access.",
+    "competitor_pain_points": [],
+    "competitor_analysis_available": false
+  },
+  "constraints": {
+    "technical": [
+      "Dependency on Convex cloud backend for data persistence",
+      "Clerk authentication integration for user management",
+      "Expo managed workflow limits native module flexibility",
+      "Multiple LLM API keys suggest AI feature dependencies",
+      "Real-time sync requirements via Convex"
+    ],
+    "resources": [
+      "Small development team (primarily 1-2 contributors based on git history)",
+      "Mix of manual and automated development (Cursor Agent, Vibe Kanban in commits)"
+    ],
+    "dependencies": [
+      "Convex cloud service for backend/database",
+      "Clerk service for authentication",
+      "Expo EAS for builds and deployment",
+      "App Store / Play Store for distribution",
+      "Push notification services (Expo/Notifee)"
+    ]
+  },
+  "created_at": "2026-01-05T21:30:00Z"
+}

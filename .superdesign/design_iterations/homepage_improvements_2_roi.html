@@ -1,0 +1,1225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage Improvement A — ROI & Business Case</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #060606 !important;
+        color: #d4d0cc !important;
+        min-height: 100vh;
+        padding: 40px 16px 120px;
+        overflow-x: hidden;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      p,
+      span,
+      div,
+      td,
+      th,
+      li {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+
+      /* ── Hero ── */
+      .hero {
+        text-align: center;
+        margin-bottom: 56px;
+        max-width: 640px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero-eyebrow {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #10b981;
+        margin-bottom: 12px;
+        opacity: 0.8;
+      }
+      .hero-title {
+        font-family: 'Fraunces', serif !important;
+        font-size: 36px;
+        font-weight: 700;
+        color: #f5f1ed;
+        letter-spacing: -1px;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+      .hero-sub {
+        font-size: 14px;
+        color: #78716c;
+        line-height: 1.7;
+        max-width: 520px;
+        margin: 0 auto;
+      }
+
+      /* ── Section labels ── */
+      .section-label {
+        text-align: center;
+        margin: 56px 0 24px;
+      }
+      .section-label-text {
+        font-size: 10px;
+        font-weight: 700;
+        color: #57534e;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        position: relative;
+        padding: 0 20px;
+      }
+      .section-label-text::before,
+      .section-label-text::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 40px;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .section-label-text::before {
+        right: 100%;
+      }
+      .section-label-text::after {
+        left: 100%;
+      }
+
+      /* ── Layout ── */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 28px;
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        max-width: 780px;
+        margin: 0 auto;
+      }
+      @media (max-width: 700px) {
+        .grid-2,
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+        .grid-4 {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .center-wrap {
+        display: flex;
+        justify-content: center;
+      }
+
+      /* ── Phone frame ── */
+      .phone {
+        width: 280px;
+        height: 420px;
+        background: #f5f1ed;
+        border-radius: 30px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.03),
+          0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+      .phone-inner {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding-top: 32px;
+      }
+
+      /* ── Tokens ── */
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --shelf: #f0ede8;
+        --text-pri: #2d2a26;
+        --text-sec: #6b6560;
+        --text-ter: #6e6660;
+        --border: #ddd8d2;
+        --gray-200: #ddd8d2;
+        --gray-300: #c4bfb7;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --emerald-700: #047857;
+        --gold-100: #fef3cd;
+        --gold-300: #e8b94d;
+        --gold-500: #8b6208;
+        --gold-700: #7d5907;
+      }
+
+      /* ── Shelf ── */
+      .shelf {
+        background: var(--shelf);
+        padding: 10px 16px 12px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+        flex-shrink: 0;
+      }
+      .g-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .g-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-pri);
+        letter-spacing: -0.2px;
+      }
+      .g-progress {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-ter);
+        letter-spacing: -0.1px;
+      }
+      .g-progress .count {
+        font-weight: 700;
+        color: var(--emerald-700);
+      }
+      .g-streak {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .g-streak-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gold-700);
+        letter-spacing: -0.2px;
+      }
+      .g-sub {
+        font-size: 10.5px;
+        color: var(--text-ter);
+        margin-top: 2px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-sec);
+        margin-top: 5px;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.04);
+      }
+      .chip .icon {
+        width: 12px;
+        height: 12px;
+        opacity: 0.5;
+      }
+      .chip .chevron {
+        width: 10px;
+        height: 10px;
+        opacity: 0.3;
+      }
+
+      /* ── Day strip ── */
+      .strip {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-top: 8px;
+        padding: 0 2px;
+      }
+      .day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+      }
+      .day-label {
+        font-size: 9px;
+        font-weight: 400;
+        color: var(--text-ter);
+        line-height: 14px;
+      }
+      .day-label.bold {
+        font-weight: 700;
+      }
+      .day-cell {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-sec);
+        background: var(--card);
+      }
+      .day-cell.complete {
+        background: var(--emerald-500);
+        color: #fff;
+        font-weight: 700;
+        font-size: 10px;
+      }
+      .day-cell.today {
+        background: var(--gold-100);
+        border: 2px solid var(--gold-300);
+        color: var(--gold-700);
+        font-weight: 700;
+        font-size: 10px;
+      }
+      .day-cell.future {
+        color: var(--gray-300);
+        font-size: 10px;
+      }
+
+      /* ── Habit cards ── */
+      .habit-list {
+        padding: 6px 12px;
+        flex: 1;
+        overflow: hidden;
+      }
+      .habit-card {
+        background: var(--card);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .habit-emoji {
+        font-size: 18px;
+      }
+      .habit-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-pri);
+      }
+      .habit-meta {
+        font-size: 9px;
+        color: var(--text-ter);
+        margin-top: 1px;
+      }
+
+      /* ── ROI Cards ── */
+      .roi-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 24px;
+        text-align: center;
+      }
+      .roi-card.highlight {
+        border-color: rgba(16, 185, 129, 0.2);
+        background: rgba(16, 185, 129, 0.03);
+      }
+      .roi-number {
+        font-family: 'Fraunces', serif !important;
+        font-size: 36px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        margin-bottom: 4px;
+      }
+      .roi-number.green {
+        color: #10b981;
+      }
+      .roi-number.gold {
+        color: #e8b94d;
+      }
+      .roi-number.blue {
+        color: #60a5fa;
+      }
+      .roi-number.red {
+        color: #ef4444;
+      }
+      .roi-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #78716c;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .roi-desc {
+        font-size: 12px;
+        color: #a8a29e;
+        line-height: 1.6;
+      }
+
+      /* ── Psychology cards ── */
+      .psych-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 14px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .psych-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+      }
+      .psych-card.loss::before {
+        background: linear-gradient(90deg, #ef4444, transparent);
+      }
+      .psych-card.variable::before {
+        background: linear-gradient(90deg, #e8b94d, transparent);
+      }
+      .psych-card.endowed::before {
+        background: linear-gradient(90deg, #10b981, transparent);
+      }
+      .psych-card.social::before {
+        background: linear-gradient(90deg, #60a5fa, transparent);
+      }
+      .psych-icon {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      .psych-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #f5f1ed;
+        margin-bottom: 6px;
+        letter-spacing: -0.2px;
+      }
+      .psych-text {
+        font-size: 12px;
+        color: #a8a29e;
+        line-height: 1.6;
+      }
+      .psych-example {
+        font-size: 11px;
+        color: #78716c;
+        margin-top: 8px;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 8px;
+        border-left: 2px solid rgba(255, 255, 255, 0.06);
+        font-style: italic;
+      }
+
+      /* ── Funnel ── */
+      .funnel {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+      .funnel-step {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 4px;
+      }
+      .funnel-bar {
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: -0.1px;
+        position: relative;
+        transition: all 0.3s;
+      }
+      .funnel-pct {
+        font-size: 12px;
+        font-weight: 600;
+        color: #78716c;
+        min-width: 40px;
+        text-align: right;
+      }
+      .funnel-arrow {
+        text-align: center;
+        color: #374151;
+        font-size: 16px;
+        margin: 2px 0 2px 56px;
+      }
+      .funnel-label {
+        font-size: 10px;
+        color: #57534e;
+        margin: 2px 0 8px 56px;
+        font-style: italic;
+      }
+
+      /* ── Comparison table ── */
+      .compare-table {
+        max-width: 700px;
+        margin: 24px auto 0;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .compare-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .compare-table th {
+        font-size: 10px;
+        font-weight: 700;
+        color: #78716c;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.02);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .compare-table td {
+        font-size: 12px;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        color: #a8a29e;
+        vertical-align: top;
+      }
+      .compare-table tr:last-child td {
+        border-bottom: none;
+      }
+      .tag {
+        font-size: 9px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 5px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+      }
+      .tag.high {
+        background: rgba(16, 185, 129, 0.12);
+        color: #10b981;
+      }
+      .tag.med {
+        background: rgba(232, 185, 77, 0.12);
+        color: #e8b94d;
+      }
+      .tag.low {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+      }
+      .tag.none {
+        background: rgba(255, 255, 255, 0.04);
+        color: #57534e;
+      }
+
+      /* ── Greeting states ── */
+      .states-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      @media (max-width: 640px) {
+        .states-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .state-card {
+        background: var(--shelf);
+        border-radius: 12px;
+        padding: 12px 16px;
+        position: relative;
+      }
+      .state-card .when {
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        font-size: 8px;
+        font-weight: 700;
+        color: #78716c;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        background: rgba(0, 0, 0, 0.04);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .state-main {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .state-sub {
+        font-size: 10px;
+        color: var(--text-ter);
+        margin-top: 3px;
+      }
+
+      /* ── Premium upsell mockup ── */
+      .upsell-card {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        border: 1px solid rgba(139, 98, 8, 0.25);
+        border-radius: 16px;
+        padding: 20px 24px;
+        max-width: 320px;
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+      }
+      .upsell-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, var(--gold-300), var(--gold-700));
+      }
+      .upsell-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      .upsell-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #f5f1ed;
+        margin-bottom: 4px;
+        letter-spacing: -0.3px;
+      }
+      .upsell-text {
+        font-size: 12px;
+        color: #9ca3af;
+        line-height: 1.6;
+        margin-bottom: 14px;
+      }
+      .upsell-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--gold-300), var(--gold-500));
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 10px;
+        letter-spacing: 0.2px;
+      }
+      .upsell-price {
+        font-size: 10px;
+        color: #6b7280;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ════════ HERO ════════ -->
+    <div class="hero">
+      <div class="hero-eyebrow">Business Case</div>
+      <div class="hero-title">
+        Why Streak Greeting Is the Highest-ROI Change
+      </div>
+      <div class="hero-sub">
+        One component change that leverages 4 proven psychological principles to
+        increase daily return rate, extend user lifetime, and unlock a premium
+        upsell path.
+      </div>
+    </div>
+
+    <!-- ════════ BEFORE / AFTER ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">The Change</span>
+    </div>
+    <div class="grid-2" style="max-width: 620px">
+      <div style="text-align: center">
+        <div
+          style="
+            font-size: 10px;
+            font-weight: 700;
+            color: #ef4444;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+          "
+        >
+          Before
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-text">Good morning</div>
+                <div class="g-progress"><span class="count">3</span> of 5</div>
+              </div>
+              <div class="chip">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Thu, March 4</span>
+                <svg
+                  class="chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+              <div class="strip">
+                <div class="day">
+                  <span class="day-label">Mo</span>
+                  <div class="day-cell complete">24</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Tu</span>
+                  <div class="day-cell complete">25</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">We</span>
+                  <div class="day-cell complete">26</div>
+                </div>
+                <div class="day">
+                  <span class="day-label bold">Th</span>
+                  <div class="day-cell today">27</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Fr</span>
+                  <div class="day-cell future">28</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Sa</span>
+                  <div class="day-cell future">1</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Su</span>
+                  <div class="day-cell future">2</div>
+                </div>
+              </div>
+            </div>
+            <div class="habit-list">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div>
+                  <div class="habit-name">Meditate</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div>
+                  <div class="habit-name">Read</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div>
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div>
+                  <div class="habit-name">Drink water</div>
+                  <div class="habit-meta">8 glasses · All day</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size: 11px; color: #57534e; margin-top: 12px">
+          Generic. No urgency.<br />No reason to come back.
+        </div>
+      </div>
+
+      <div style="text-align: center">
+        <div
+          style="
+            font-size: 10px;
+            font-weight: 700;
+            color: #10b981;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+          "
+        >
+          After
+        </div>
+        <div
+          class="phone"
+          style="
+            box-shadow:
+              0 0 0 1px rgba(16, 185, 129, 0.1),
+              0 20px 50px rgba(0, 0, 0, 0.5);
+          "
+        >
+          <div class="phone-inner">
+            <div class="shelf">
+              <div class="g-row">
+                <div class="g-streak">
+                  <span class="g-streak-text">3-day streak</span>
+                  <span style="font-size: 13px">🔥</span>
+                </div>
+                <div class="g-progress"><span class="count">3</span> of 5</div>
+              </div>
+              <div class="g-sub">Keep it going — you're building momentum</div>
+              <div class="chip">
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Thu, March 4</span>
+                <svg
+                  class="chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </div>
+              <div class="strip">
+                <div class="day">
+                  <span class="day-label">Mo</span>
+                  <div class="day-cell complete">24</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Tu</span>
+                  <div class="day-cell complete">25</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">We</span>
+                  <div class="day-cell complete">26</div>
+                </div>
+                <div class="day">
+                  <span class="day-label bold">Th</span>
+                  <div class="day-cell today">27</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Fr</span>
+                  <div class="day-cell future">28</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Sa</span>
+                  <div class="day-cell future">1</div>
+                </div>
+                <div class="day">
+                  <span class="day-label">Su</span>
+                  <div class="day-cell future">2</div>
+                </div>
+              </div>
+            </div>
+            <div class="habit-list">
+              <div class="habit-card">
+                <div class="habit-emoji">🧘</div>
+                <div>
+                  <div class="habit-name">Meditate</div>
+                  <div class="habit-meta">10 min · Morning</div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">📖</div>
+                <div>
+                  <div class="habit-name">Read</div>
+                  <div class="habit-meta">20 pages · Evening</div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💪</div>
+                <div>
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-meta">30 min · Afternoon</div>
+                </div>
+              </div>
+              <div class="habit-card">
+                <div class="habit-emoji">💧</div>
+                <div>
+                  <div class="habit-name">Drink water</div>
+                  <div class="habit-meta">8 glasses · All day</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="font-size: 11px; color: #10b981; margin-top: 12px">
+          Creates urgency.<br />"Don't break the streak."
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ ROI METRICS ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">Projected Impact</span>
+    </div>
+    <div class="grid-4">
+      <div class="roi-card highlight">
+        <div class="roi-label">Daily Return Rate</div>
+        <div class="roi-number green">+15–25%</div>
+        <div class="roi-desc">
+          Users with visible streaks return more frequently to protect their
+          count
+        </div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-label">7-Day Retention</div>
+        <div class="roi-number gold">+10–18%</div>
+        <div class="roi-desc">
+          Loss aversion makes users open the app even on "off" days
+        </div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-label">Session Duration</div>
+        <div class="roi-number blue">+8–12%</div>
+        <div class="roi-desc">
+          Contextual sub-text ("Almost there!") drives habit completion within
+          session
+        </div>
+      </div>
+      <div class="roi-card">
+        <div class="roi-label">Dev Effort</div>
+        <div class="roi-number" style="color: #a8a29e">~2hrs</div>
+        <div class="roi-desc">
+          One hook + greeting text logic. Streak data already exists in the
+          chain links.
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ PSYCHOLOGY ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">4 Psychological Principles at Work</span>
+    </div>
+    <div class="grid-2" style="max-width: 700px">
+      <div class="psych-card loss">
+        <div class="psych-icon">😰</div>
+        <div class="psych-title">1. Loss Aversion</div>
+        <div class="psych-text">
+          Losing a 7-day streak feels 2× worse than gaining one. The streak
+          number creates something valuable to protect.
+        </div>
+        <div class="psych-example">
+          "I can't skip today — I'll lose my 7-day streak"
+        </div>
+      </div>
+      <div class="psych-card variable">
+        <div class="psych-icon">🎰</div>
+        <div class="psych-title">2. Variable Reward</div>
+        <div class="psych-text">
+          The greeting changes based on state (Fresh start → Streak → Almost
+          there → Perfect day). Unpredictable content triggers dopamine.
+        </div>
+        <div class="psych-example">
+          "What will the app say today? I want to see 'Perfect day'"
+        </div>
+      </div>
+      <div class="psych-card endowed">
+        <div class="psych-icon">📈</div>
+        <div class="psych-title">3. Endowed Progress</div>
+        <div class="psych-text">
+          Showing "3-day streak" tells users they already have progress. People
+          are more likely to continue a journey they've started than begin a new
+          one.
+        </div>
+        <div class="psych-example">
+          "I already have 3 days — might as well keep going"
+        </div>
+      </div>
+      <div class="psych-card social">
+        <div class="psych-icon">🏆</div>
+        <div class="psych-title">4. Goal Gradient Effect</div>
+        <div class="psych-text">
+          "Almost there!" when 4/5 habits are done accelerates completion.
+          People speed up as they approach a goal.
+        </div>
+        <div class="psych-example">
+          "Just one more habit and I get the green checkmark"
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ RETENTION FUNNEL ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">Retention Funnel Impact</span>
+    </div>
+    <div class="funnel">
+      <div class="funnel-step">
+        <div class="funnel-pct">100%</div>
+        <div
+          class="funnel-bar"
+          style="
+            width: 100%;
+            background: linear-gradient(90deg, #374151, #4b5563);
+          "
+        >
+          Install app
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-pct">60%</div>
+        <div
+          class="funnel-bar"
+          style="
+            width: 60%;
+            background: linear-gradient(90deg, #374151, #4b5563);
+          "
+        >
+          Create first habit
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-pct" style="color: #e8b94d">35%</div>
+        <div
+          class="funnel-bar"
+          style="
+            width: 35%;
+            background: linear-gradient(90deg, #92400e, #b45309);
+          "
+        >
+          Return Day 2
+        </div>
+      </div>
+      <div class="funnel-label">
+        ← Streak greeting creates urgency to return here
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-pct" style="color: #10b981">22%</div>
+        <div
+          class="funnel-bar"
+          style="
+            width: 22%;
+            background: linear-gradient(90deg, #065f46, #059669);
+          "
+        >
+          Day 7 retained
+        </div>
+      </div>
+      <div class="funnel-label">
+        ← "7-day streak 🔥" is the hook that locks users in
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-pct" style="color: #10b981">12%</div>
+        <div
+          class="funnel-bar"
+          style="
+            width: 12%;
+            background: linear-gradient(90deg, #047857, #10b981);
+          "
+        >
+          Convert to premium
+        </div>
+      </div>
+      <div class="funnel-label">
+        ← Streak recovery upsell captures churning users
+      </div>
+    </div>
+
+    <!-- ════════ GREETING STATES ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">Adaptive Greeting States</span>
+    </div>
+    <div class="states-grid">
+      <div class="state-card">
+        <div class="when">0 done · no streak</div>
+        <div class="state-main" style="color: var(--text-pri)">Fresh start</div>
+        <div class="state-sub">New day, new energy — pick your first habit</div>
+      </div>
+      <div class="state-card">
+        <div class="when">0 done · has streak</div>
+        <div class="state-main" style="color: var(--gold-700)">
+          3-day streak 🔥
+        </div>
+        <div class="state-sub">Keep it going — you're building momentum</div>
+      </div>
+      <div class="state-card">
+        <div class="when">>50% done</div>
+        <div class="state-main" style="color: var(--emerald-700)">
+          Almost there!
+        </div>
+        <div class="state-sub">2 more habits to go — you've got this</div>
+      </div>
+      <div class="state-card">
+        <div class="when">100% done</div>
+        <div class="state-main" style="color: var(--emerald-600)">
+          Perfect day ✓
+        </div>
+        <div class="state-sub">All 5 habits complete — incredible</div>
+      </div>
+      <div class="state-card">
+        <div class="when">streak = 7</div>
+        <div class="state-main" style="color: var(--gold-700)">
+          7-day streak 🔥🔥
+        </div>
+        <div class="state-sub">One full week — you're unstoppable</div>
+      </div>
+      <div class="state-card">
+        <div class="when">streak broken</div>
+        <div class="state-main" style="color: var(--text-pri)">
+          Welcome back
+        </div>
+        <div class="state-sub">Every day is a fresh start</div>
+      </div>
+    </div>
+
+    <!-- ════════ PREMIUM UPSELL ════════ -->
+    <div class="section-label">
+      <span class="section-label-text">Premium Upsell Opportunity</span>
+    </div>
+    <div style="text-align: center; margin-bottom: 20px">
+      <div
+        style="
+          font-size: 13px;
+          color: #78716c;
+          max-width: 480px;
+          margin: 0 auto;
+          line-height: 1.6;
+        "
+      >
+        When a user misses a day and breaks their streak, show a recovery
+        prompt.<br />This is Duolingo's #1 revenue driver — streak anxiety
+        converts.
+      </div>
+    </div>
+    <div class="center-wrap">
+      <div class="upsell-card">
+        <div class="upsell-icon">🔥</div>
+        <div class="upsell-title">Your 12-day streak broke</div>
+        <div class="upsell-text">
+          You missed yesterday, but premium members can restore streaks once per
+          month. Don't lose your progress.
+        </div>
+        <div class="upsell-btn">Restore Streak — Go Premium</div>
+        <div class="upsell-price">$4.99/mo · Cancel anytime</div>
+      </div>
+    </div>
+
+    <!-- ════════ COMPARISON TABLE ════════ -->
+    <div class="section-label">
+      <span class="section-label-text"
+        >All 4 Improvements — ROI Comparison</span
+      >
+    </div>
+    <div class="compare-table">
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 30px">#</th>
+            <th>Improvement</th>
+            <th>Retention</th>
+            <th>Revenue</th>
+            <th>Effort</th>
+            <th>ROI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color: #e8b94d; font-weight: 700">A</td>
+            <td>Contextual streak greeting</td>
+            <td><span class="tag high">High</span></td>
+            <td><span class="tag high">High</span></td>
+            <td>~2 hrs</td>
+            <td style="color: #10b981; font-weight: 700">★★★★★</td>
+          </tr>
+          <tr>
+            <td style="color: #10b981; font-weight: 700">B</td>
+            <td>Prominent today cell</td>
+            <td><span class="tag low">Low</span></td>
+            <td><span class="tag none">None</span></td>
+            <td>~1 hr</td>
+            <td style="color: #57534e">★☆☆☆☆</td>
+          </tr>
+          <tr>
+            <td style="color: #a78bfa; font-weight: 700">C</td>
+            <td>Week progress bar</td>
+            <td><span class="tag med">Med</span></td>
+            <td><span class="tag none">None</span></td>
+            <td>~1.5 hrs</td>
+            <td style="color: #78716c">★★☆☆☆</td>
+          </tr>
+          <tr>
+            <td style="color: #60a5fa; font-weight: 700">D</td>
+            <td>Shelf gradient bleed</td>
+            <td><span class="tag none">None</span></td>
+            <td><span class="tag none">None</span></td>
+            <td>~30 min</td>
+            <td style="color: #57534e">★☆☆☆☆</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      style="
+        text-align: center;
+        margin-top: 40px;
+        padding: 24px;
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        border-radius: 14px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        background: rgba(16, 185, 129, 0.02);
+      "
+    >
+      <div
+        style="
+          font-size: 14px;
+          font-weight: 700;
+          color: #10b981;
+          margin-bottom: 6px;
+        "
+      >
+        Recommendation
+      </div>
+      <div style="font-size: 13px; color: #a8a29e; line-height: 1.6">
+        Implement <strong style="color: #f5f1ed">Improvement A</strong> (streak
+        greeting) first. It's the only change that drives both retention and
+        revenue. The streak data already exists in your habit chain links — this
+        is purely a presentation layer change.
+      </div>
+    </div>
+  </body>
+</html>

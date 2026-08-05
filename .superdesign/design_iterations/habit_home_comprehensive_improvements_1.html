@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Home Page - Comprehensive UI/UX Improvements</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: 'Inter', sans-serif !important;
+      }
+      body {
+        background: linear-gradient(135deg, #fafaf9 0%, #f5f5f4 100%);
+      }
+
+      /* Breathing animation */
+      @keyframes breathe {
+        0%, 100% { opacity: 0.7; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.02); }
+      }
+      .breathe { animation: breathe 3s ease-in-out infinite; }
+
+      /* Pulse animation for urgency */
+      @keyframes pulse-urgent {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+        50% { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+      }
+      .pulse-urgent { animation: pulse-urgent 2s ease-in-out infinite; }
+
+      /* Streak fire animation */
+      @keyframes flicker {
+        0%, 100% { transform: scale(1) rotate(-2deg); }
+        50% { transform: scale(1.1) rotate(2deg); }
+      }
+      .fire-flicker { animation: flicker 0.5s ease-in-out infinite; }
+
+      /* Slide in from left */
+      @keyframes slideInLeft {
+        from { transform: translateX(-20px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      .slide-in { animation: slideInLeft 0.3s ease-out forwards; }
+
+      /* Gradient shimmer */
+      @keyframes shimmer {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+      }
+      .shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 2s ease-in-out infinite;
+      }
+
+      /* Progress ring animation */
+      @keyframes progress-fill {
+        from { stroke-dashoffset: 100; }
+        to { stroke-dashoffset: 25; }
+      }
+      .progress-ring { animation: progress-fill 1s ease-out forwards; }
+    </style>
+  </head>
+  <body class="min-h-screen p-4 md:p-8">
+    <!-- Header -->
+    <div class="mx-auto mb-8 max-w-5xl">
+      <div class="text-center">
+        <span class="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium uppercase tracking-[4px] text-violet-600">
+          Comprehensive Exploration
+        </span>
+        <h1 class="mt-4 text-3xl font-bold text-stone-800">
+          Habit Home Page Improvements
+        </h1>
+        <p class="mt-2 text-stone-500">
+          Beyond color accents: engagement, conversion, and delight
+        </p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="mx-auto mb-8 max-w-5xl">
+      <div class="flex flex-wrap justify-center gap-2">
+        <a href="#color-accents" class="rounded-full bg-violet-500 px-4 py-2 text-sm font-medium text-white">Color Accents</a>
+        <a href="#header-improvements" class="rounded-full bg-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-300">Header</a>
+        <a href="#streak-visuals" class="rounded-full bg-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-300">Streak Visuals</a>
+        <a href="#urgency-indicators" class="rounded-full bg-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-300">Urgency</a>
+        <a href="#premium-upsell" class="rounded-full bg-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-300">Premium Upsell</a>
+        <a href="#micro-interactions" class="rounded-full bg-stone-200 px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-300">Micro-interactions</a>
+      </div>
+    </div>
+
+    <!-- Section 1: Color Accents (Already Implemented) -->
+    <section id="color-accents" class="mx-auto mb-16 max-w-5xl">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+          <span class="text-xl">🎨</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-stone-800">Color Accents</h2>
+          <span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">✓ Implemented</span>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-6">
+        <p class="mb-4 text-sm text-emerald-800">
+          <strong>Current State:</strong> Left border accent is live in <code class="rounded bg-emerald-100 px-1">DraggableHabit.tsx</code>
+        </p>
+        <div class="grid gap-4 md:grid-cols-3">
+          <!-- Mini preview cards -->
+          <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm">
+            <div class="flex">
+              <div class="w-1 rounded-l-2xl bg-violet-500"></div>
+              <div class="flex items-center gap-2 p-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-lg">🧘</div>
+                <span class="text-sm font-medium text-stone-800">Meditation</span>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm">
+            <div class="flex">
+              <div class="w-1 rounded-l-2xl bg-emerald-500"></div>
+              <div class="flex items-center gap-2 p-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-lg">🏃</div>
+                <span class="text-sm font-medium text-stone-800">Exercise</span>
+              </div>
+            </div>
+          </div>
+          <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm">
+            <div class="flex">
+              <div class="w-1 rounded-l-2xl bg-amber-500"></div>
+              <div class="flex items-center gap-2 p-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-lg">📖</div>
+                <span class="text-sm font-medium text-stone-800">Reading</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Header Improvements -->
+    <section id="header-improvements" class="mx-auto mb-16 max-w-5xl">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100">
+          <span class="text-xl">📊</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-stone-800">Header Improvements</h2>
+          <span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">High Impact</span>
+        </div>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <!-- Option A: Habit Limit Counter -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">A: Habit Limit Counter</h3>
+          <p class="mb-4 text-sm text-stone-500">Show remaining free slots - pre-paywall warming</p>
+
+          <div class="rounded-xl bg-stone-50 p-4">
+            <!-- Header mockup -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="rounded-full bg-stone-900 px-4 py-2">
+                  <span class="text-sm font-medium text-white">+ Add Habit</span>
+                </div>
+                <!-- NEW: Limit counter -->
+                <div class="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5">
+                  <span class="text-xs font-semibold text-amber-700">2/3 free</span>
+                </div>
+              </div>
+              <div class="flex gap-1 rounded-full border border-stone-200 bg-white p-1">
+                <div class="flex h-8 w-8 items-center justify-center rounded-full">
+                  <i data-lucide="book-open" class="h-4 w-4 text-violet-500"></i>
+                </div>
+                <div class="flex h-8 w-8 items-center justify-center rounded-full">
+                  <i data-lucide="arrow-up-down" class="h-4 w-4 text-stone-500"></i>
+                </div>
+                <div class="flex h-8 w-8 items-center justify-center rounded-full">
+                  <i data-lucide="settings" class="h-4 w-4 text-stone-500"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-emerald-50 p-3">
+            <p class="text-xs text-emerald-700">
+              <strong>ROI:</strong> Pre-paywall warming increases conversion by ~23%
+            </p>
+          </div>
+        </div>
+
+        <!-- Option B: Time-Based Greeting -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">B: Time-Based Greeting</h3>
+          <p class="mb-4 text-sm text-stone-500">Contextual messaging based on time of day</p>
+
+          <div class="space-y-3">
+            <div class="rounded-xl bg-amber-50 p-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">🌅</span>
+                <div>
+                  <p class="text-xs text-amber-600">6:00 - 12:00</p>
+                  <p class="text-sm font-semibold text-amber-800">Good morning! Start strong</p>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-xl bg-blue-50 p-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">⚡</span>
+                <div>
+                  <p class="text-xs text-blue-600">12:00 - 17:00</p>
+                  <p class="text-sm font-semibold text-blue-800">Keep the momentum going</p>
+                </div>
+              </div>
+            </div>
+            <div class="rounded-xl bg-violet-50 p-3">
+              <div class="flex items-center gap-2">
+                <span class="text-lg">🌙</span>
+                <div>
+                  <p class="text-xs text-violet-600">17:00 - 21:00</p>
+                  <p class="text-sm font-semibold text-violet-800">Finish strong tonight</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option C: Weekly Power Meter -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6 lg:col-span-2">
+          <h3 class="mb-2 font-bold text-stone-700">C: Weekly Power Meter</h3>
+          <p class="mb-4 text-sm text-stone-500">Aggregate weekly progress with gamification</p>
+
+          <div class="rounded-xl bg-gradient-to-r from-orange-50 to-amber-50 p-4">
+            <div class="flex items-center gap-4">
+              <!-- Fire icon with animation -->
+              <div class="relative">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-red-500 shadow-lg shadow-orange-200">
+                  <span class="fire-flicker text-2xl">🔥</span>
+                </div>
+                <div class="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs font-bold text-orange-600 shadow">
+                  86%
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg font-bold text-stone-800">Power Week</span>
+                  <span class="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700">24/28 habits</span>
+                </div>
+                <p class="text-sm text-stone-500">Your best week since Dec 1!</p>
+                <!-- Progress bar -->
+                <div class="mt-2 h-2 overflow-hidden rounded-full bg-orange-100">
+                  <div class="h-full w-[86%] rounded-full bg-gradient-to-r from-orange-400 to-amber-500"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Streak Visuals -->
+    <section id="streak-visuals" class="mx-auto mb-16 max-w-5xl">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-100">
+          <span class="text-xl">🔥</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-stone-800">Enhanced Streak Visuals</h2>
+          <span class="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700">Retention Driver</span>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- Option A: Animated Fire Badge -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">A: Animated Fire Badge</h3>
+          <p class="mb-4 text-sm text-stone-500">Fire grows with streak length</p>
+
+          <div class="flex items-center justify-around">
+            <!-- Small streak -->
+            <div class="text-center">
+              <div class="mb-2 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100">
+                <span class="text-xl">🔥</span>
+              </div>
+              <span class="text-xs font-medium text-stone-500">3 days</span>
+            </div>
+            <!-- Medium streak -->
+            <div class="text-center">
+              <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-xl bg-orange-200">
+                <span class="fire-flicker text-2xl">🔥</span>
+              </div>
+              <span class="text-xs font-medium text-stone-500">7 days</span>
+            </div>
+            <!-- Large streak -->
+            <div class="text-center">
+              <div class="mb-2 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-orange-300 to-red-400 shadow-lg shadow-orange-200">
+                <span class="fire-flicker text-3xl">🔥</span>
+              </div>
+              <span class="text-xs font-medium text-stone-500">14+ days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option B: Streak Milestones -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">B: Streak Milestone Badges</h3>
+          <p class="mb-4 text-sm text-stone-500">Visual rewards at key milestones</p>
+
+          <div class="flex flex-wrap justify-center gap-3">
+            <div class="flex flex-col items-center gap-1 rounded-xl bg-stone-50 p-3">
+              <span class="text-2xl">🌱</span>
+              <span class="text-xs font-medium text-stone-600">3 days</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 rounded-xl bg-emerald-50 p-3">
+              <span class="text-2xl">🌿</span>
+              <span class="text-xs font-medium text-emerald-600">7 days</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 rounded-xl bg-amber-50 p-3">
+              <span class="text-2xl">🌳</span>
+              <span class="text-xs font-medium text-amber-600">14 days</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 rounded-xl bg-violet-50 p-3">
+              <span class="text-2xl">💎</span>
+              <span class="text-xs font-medium text-violet-600">30 days</span>
+            </div>
+            <div class="flex flex-col items-center gap-1 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 p-3 ring-2 ring-amber-300">
+              <span class="text-2xl">👑</span>
+              <span class="text-xs font-medium text-amber-700">100 days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option C: Personal Best Indicator -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6 md:col-span-2">
+          <h3 class="mb-2 font-bold text-stone-700">C: Personal Best Celebration</h3>
+          <p class="mb-4 text-sm text-stone-500">Special visual when user beats their best streak</p>
+
+          <div class="grid gap-4 md:grid-cols-2">
+            <!-- Normal card -->
+            <div class="rounded-xl border border-stone-100 bg-stone-50 p-4">
+              <p class="mb-2 text-xs font-medium text-stone-500">Normal Habit Card</p>
+              <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white shadow-sm">
+                <div class="flex">
+                  <div class="w-1 rounded-l-2xl bg-violet-500"></div>
+                  <div class="flex-1 p-3">
+                    <div class="flex items-center gap-3">
+                      <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100 text-xl">🧘</div>
+                      <div class="flex-1">
+                        <span class="text-sm font-semibold text-stone-800">Meditation</span>
+                        <div class="flex items-center gap-1 mt-0.5">
+                          <span class="text-xs text-stone-500">🔥 12 days</span>
+                          <span class="text-xs text-stone-400">• Best: 14</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Personal best card -->
+            <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+              <p class="mb-2 text-xs font-medium text-amber-600">🏆 New Personal Best!</p>
+              <div class="overflow-hidden rounded-2xl border-2 border-amber-300 bg-white shadow-lg shadow-amber-100">
+                <div class="flex">
+                  <div class="w-1.5 rounded-l-2xl bg-gradient-to-b from-amber-400 to-orange-500"></div>
+                  <div class="flex-1 p-3">
+                    <div class="flex items-center gap-3">
+                      <div class="relative">
+                        <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-100 text-xl">🧘</div>
+                        <div class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-white shadow">
+                          🏆
+                        </div>
+                      </div>
+                      <div class="flex-1">
+                        <span class="text-sm font-semibold text-stone-800">Meditation</span>
+                        <div class="flex items-center gap-1 mt-0.5">
+                          <span class="text-xs font-bold text-amber-600">🔥 15 days - NEW BEST!</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Urgency Indicators -->
+    <section id="urgency-indicators" class="mx-auto mb-16 max-w-5xl">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-100">
+          <span class="text-xl">⚠️</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-stone-800">Urgency Indicators</h2>
+          <span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">Retention Critical</span>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- Option A: Streak at Risk -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">A: Streak at Risk Warning</h3>
+          <p class="mb-4 text-sm text-stone-500">Visual alert when streak is in danger (after 8pm)</p>
+
+          <div class="space-y-3">
+            <!-- Normal state -->
+            <div class="rounded-xl bg-stone-50 p-3">
+              <p class="mb-2 text-xs text-stone-500">Normal State</p>
+              <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white">
+                <div class="flex">
+                  <div class="w-1 rounded-l-2xl bg-emerald-500"></div>
+                  <div class="flex items-center gap-3 p-3">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-lg">🏃</div>
+                    <div>
+                      <span class="text-sm font-semibold text-stone-800">Evening Run</span>
+                      <div class="text-xs text-stone-500">🔥 12 days</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- At risk state -->
+            <div class="rounded-xl bg-red-50 p-3">
+              <p class="mb-2 text-xs text-red-600">⚠️ After 8pm, not completed</p>
+              <div class="pulse-urgent overflow-hidden rounded-2xl border-2 border-red-300 bg-white">
+                <div class="flex">
+                  <div class="w-1.5 rounded-l-2xl bg-red-500"></div>
+                  <div class="flex items-center gap-3 p-3">
+                    <div class="relative">
+                      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-red-100 text-lg">🏃</div>
+                      <div class="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500">
+                        <span class="text-[8px] text-white">!</span>
+                      </div>
+                    </div>
+                    <div>
+                      <span class="text-sm font-semibold text-stone-800">Evening Run</span>
+                      <div class="text-xs font-medium text-red-600">⚠️ 12-day streak at risk!</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option B: Time-Based Progress -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">B: Daily Progress Header</h3>
+          <p class="mb-4 text-sm text-stone-500">Urgency messaging based on time + completion</p>
+
+          <div class="space-y-3">
+            <div class="rounded-xl bg-emerald-50 p-4">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100">
+                  <span class="text-lg">✅</span>
+                </div>
+                <div>
+                  <p class="text-xs text-emerald-600">Before noon</p>
+                  <p class="text-sm font-semibold text-emerald-800">Great start! 2 of 4 done</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-xl bg-amber-50 p-4">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
+                  <span class="text-lg">⏰</span>
+                </div>
+                <div>
+                  <p class="text-xs text-amber-600">Afternoon (3-6pm)</p>
+                  <p class="text-sm font-semibold text-amber-800">Time to catch up! 2 habits left</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="breathe rounded-xl bg-red-50 p-4">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100">
+                  <span class="text-lg">🚨</span>
+                </div>
+                <div>
+                  <p class="text-xs text-red-600">Evening (after 8pm)</p>
+                  <p class="text-sm font-semibold text-red-800">⚠️ 2 habits left today!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Premium Upsell Improvements -->
+    <section id="premium-upsell" class="mx-auto mb-16 max-w-5xl">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100">
+          <span class="text-xl">💎</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-stone-800">Premium Upsell Improvements</h2>
+          <span class="rounded-full bg-violet-100 px-2 py-0.5 text-xs font-medium text-violet-700">Revenue Impact</span>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2">
+        <!-- Ghost Habit Preview -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">A: Ghost Habit Preview</h3>
+          <p class="mb-4 text-sm text-stone-500">Show blurred 4th habit slot as teaser</p>
+
+          <div class="space-y-3 rounded-xl bg-stone-50 p-4">
+            <!-- Real habits -->
+            <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white">
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-violet-500"></div>
+                <div class="flex items-center gap-2 p-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-100 text-lg">🧘</div>
+                  <span class="text-sm font-medium text-stone-800">Meditation</span>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white">
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-emerald-500"></div>
+                <div class="flex items-center gap-2 p-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-lg">🏃</div>
+                  <span class="text-sm font-medium text-stone-800">Exercise</span>
+                </div>
+              </div>
+            </div>
+            <div class="overflow-hidden rounded-2xl border border-stone-100 bg-white">
+              <div class="flex">
+                <div class="w-1 rounded-l-2xl bg-amber-500"></div>
+                <div class="flex items-center gap-2 p-3">
+                  <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-lg">📖</div>
+                  <span class="text-sm font-medium text-stone-800">Reading</span>
+                </div>
+              </div>
+            </div>
+            <!-- Ghost habit -->
+            <div class="relative cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed border-violet-200 bg-gradient-to-r from-violet-50/50 to-white">
+              <div class="flex items-center gap-2 p-3 blur-[2px]">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-100 text-lg">🎸</div>
+                <span class="text-sm font-medium text-stone-400">Guitar Practice</span>
+              </div>
+              <div class="absolute inset-0 flex items-center justify-center bg-white/60">
+                <div class="rounded-full bg-violet-500 px-3 py-1.5 shadow-lg">
+                  <span class="text-xs font-semibold text-white">🔓 Unlock slot</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Streak Insurance Upsell -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">B: Streak Insurance Upsell</h3>
+          <p class="mb-4 text-sm text-stone-500">High-intent moment when streak is at risk</p>
+
+          <div class="rounded-xl bg-gradient-to-br from-red-50 to-orange-50 p-4">
+            <div class="mb-4 flex items-start gap-3">
+              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100">
+                <span class="text-2xl">🛡️</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-red-800">Your 12-day streak is at risk!</h4>
+                <p class="mt-1 text-sm text-red-700">Premium users can rescue streaks up to 2x per month</p>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <button class="shimmer w-full rounded-full bg-gradient-to-r from-violet-500 to-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-200">
+                🛡️ Protect My Streak - $6.99/mo
+              </button>
+              <button class="w-full rounded-full border border-stone-200 bg-white py-2.5 text-sm font-medium text-stone-600">
+                Maybe later
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-emerald-50 p-3">
+            <p class="text-xs text-emerald-700">
+              <strong>ROI:</strong> Highest-intent conversion moment - user has invested 12 days
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: Micro-interactions -->
+    <section id="micro-interactions" class="mx-auto mb-16 max-w-5xl">
+      <div class="mb-6 flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-100">
+          <span class="text-xl">✨</span>
+        </div>
+        <div>
+          <h2 class="text-xl font-bold text-stone-800">Micro-interactions</h2>
+          <span class="rounded-full bg-cyan-100 px-2 py-0.5 text-xs font-medium text-cyan-700">Polish & Delight</span>
+        </div>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <!-- Completion celebration -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">Completion Celebration</h3>
+          <p class="mb-4 text-sm text-stone-500">Checkmark animation + haptic rhythm</p>
+
+          <div class="flex flex-col items-center gap-4 rounded-xl bg-stone-50 p-6">
+            <div class="relative">
+              <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-500 shadow-lg shadow-emerald-200">
+                <i data-lucide="check" class="h-8 w-8 text-white"></i>
+              </div>
+              <!-- Particle effects -->
+              <div class="absolute -right-2 -top-2 text-lg">✨</div>
+              <div class="absolute -bottom-1 -left-2 text-sm">🎉</div>
+            </div>
+            <p class="text-xs text-stone-500">Tap → Scale → Check fly-in → Confetti</p>
+          </div>
+        </div>
+
+        <!-- Sound design -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">Sound Design</h3>
+          <p class="mb-4 text-sm text-stone-500">Completion sounds by streak length</p>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between rounded-lg bg-stone-50 p-3">
+              <span class="text-sm text-stone-600">1-6 days</span>
+              <span class="text-xs text-stone-400">Soft chime 🔔</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-amber-50 p-3">
+              <span class="text-sm text-amber-700">7-13 days</span>
+              <span class="text-xs text-amber-600">Melodic ding 🎵</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-orange-50 p-3">
+              <span class="text-sm text-orange-700">14-29 days</span>
+              <span class="text-xs text-orange-600">Triumphant chord 🎶</span>
+            </div>
+            <div class="flex items-center justify-between rounded-lg bg-gradient-to-r from-amber-50 to-orange-50 p-3 ring-1 ring-amber-200">
+              <span class="text-sm font-medium text-amber-800">30+ days</span>
+              <span class="text-xs text-amber-700">Epic achievement 🏆</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Haptic patterns -->
+        <div class="rounded-2xl border border-stone-200 bg-white p-6">
+          <h3 class="mb-2 font-bold text-stone-700">Haptic Patterns</h3>
+          <p class="mb-4 text-sm text-stone-500">Musical rhythm on completion</p>
+
+          <div class="space-y-3">
+            <div class="rounded-lg bg-stone-50 p-3">
+              <p class="mb-2 text-xs font-medium text-stone-600">Current (single tap)</p>
+              <div class="flex gap-1">
+                <div class="h-6 w-6 rounded bg-stone-400"></div>
+              </div>
+            </div>
+
+            <div class="rounded-lg bg-emerald-50 p-3">
+              <p class="mb-2 text-xs font-medium text-emerald-700">Proposed (rhythm)</p>
+              <div class="flex items-end gap-1">
+                <div class="h-3 w-3 rounded bg-emerald-300"></div>
+                <div class="h-4 w-3 rounded bg-emerald-400"></div>
+                <div class="h-6 w-3 rounded bg-emerald-500"></div>
+              </div>
+              <p class="mt-2 text-[10px] text-emerald-600">Light → Medium → Heavy</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Implementation Priority Matrix -->
+    <section class="mx-auto mb-16 max-w-5xl">
+      <h2 class="mb-6 text-xl font-bold text-stone-800">📋 Implementation Priority Matrix</h2>
+
+      <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-stone-50">
+            <tr>
+              <th class="px-4 py-3 text-left font-semibold text-stone-700">Improvement</th>
+              <th class="px-4 py-3 text-center font-semibold text-stone-700">Effort</th>
+              <th class="px-4 py-3 text-center font-semibold text-stone-700">Revenue</th>
+              <th class="px-4 py-3 text-center font-semibold text-stone-700">Retention</th>
+              <th class="px-4 py-3 text-center font-semibold text-stone-700">Priority</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-100">
+            <tr class="bg-emerald-50/50">
+              <td class="px-4 py-3 font-medium text-stone-800">✓ Color Accents (Left Border)</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Done</td>
+              <td class="px-4 py-3 text-center">🟢</td>
+              <td class="px-4 py-3 text-center">🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">Complete</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Habit Limit Counter</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Low</td>
+              <td class="px-4 py-3 text-center">🔴🔴🔴</td>
+              <td class="px-4 py-3 text-center">🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">P1</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Streak at Risk Warning</td>
+              <td class="px-4 py-3 text-center text-amber-600">Medium</td>
+              <td class="px-4 py-3 text-center">🔴🔴</td>
+              <td class="px-4 py-3 text-center">🟢🟢🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">P1</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Ghost Habit Preview</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Low</td>
+              <td class="px-4 py-3 text-center">🔴🔴🔴</td>
+              <td class="px-4 py-3 text-center">🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">P1</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Personal Best Celebration</td>
+              <td class="px-4 py-3 text-center text-amber-600">Medium</td>
+              <td class="px-4 py-3 text-center">🔴</td>
+              <td class="px-4 py-3 text-center">🟢🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">P2</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Time-Based Urgency</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Low</td>
+              <td class="px-4 py-3 text-center">🔴</td>
+              <td class="px-4 py-3 text-center">🟢🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">P2</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Weekly Power Meter</td>
+              <td class="px-4 py-3 text-center text-amber-600">Medium</td>
+              <td class="px-4 py-3 text-center">🔴</td>
+              <td class="px-4 py-3 text-center">🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">P3</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Streak Insurance Upsell</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Low</td>
+              <td class="px-4 py-3 text-center">🔴🔴🔴🔴</td>
+              <td class="px-4 py-3 text-center">🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">P1</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Sound Design</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Low</td>
+              <td class="px-4 py-3 text-center">🔴</td>
+              <td class="px-4 py-3 text-center">🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">P3</span></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3 font-medium text-stone-800">Haptic Rhythm</td>
+              <td class="px-4 py-3 text-center text-emerald-600">Low</td>
+              <td class="px-4 py-3 text-center">-</td>
+              <td class="px-4 py-3 text-center">🟢🟢</td>
+              <td class="px-4 py-3 text-center"><span class="rounded-full bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-700">P3</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Quick Wins Summary -->
+    <section class="mx-auto mb-16 max-w-3xl">
+      <div class="rounded-2xl bg-gradient-to-br from-stone-800 to-stone-900 p-6 text-white">
+        <h2 class="mb-4 text-lg font-bold">🚀 Recommended Quick Wins (< 1 day each)</h2>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">1</div>
+            <span>Habit limit counter in header: <code class="rounded bg-white/10 px-1 text-xs">"2/3 free"</code></span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">2</div>
+            <span>Ghost habit preview at list bottom (blurred 4th slot)</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">3</div>
+            <span>Streak-at-risk visual (red border + badge after 8pm)</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">4</div>
+            <span>Personal best celebration (gold border + trophy badge)</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">5</div>
+            <span>Haptic rhythm pattern (light → medium → heavy)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

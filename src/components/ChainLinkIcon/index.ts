@@ -1,0 +1,1 @@
+export { ChainLinkIcon } from './ChainLinkIcon';

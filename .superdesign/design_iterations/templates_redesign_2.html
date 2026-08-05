@@ -1,0 +1,3807 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Templates – Monetization Redesign v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html {
+        font-size: 16px !important;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #111827 !important;
+        color: #f9fafb !important;
+        overflow-x: hidden !important;
+        -webkit-font-smoothing: antialiased;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      p,
+      span,
+      a,
+      button,
+      input {
+        font-family: 'DM Sans', sans-serif !important;
+      }
+      button {
+        border: none;
+        background: none;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      input {
+        font-family: inherit;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      /* ═══ PHONE ═══ */
+      .phone {
+        width: 393px;
+        height: 852px;
+        margin: 30px auto;
+        background: #111827;
+        border-radius: 44px;
+        border: 3px solid #1f2937;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 30px 100px rgba(0, 0, 0, 0.7),
+          0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+      }
+      .notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 126px;
+        height: 34px;
+        background: #111827;
+        border-radius: 0 0 20px 20px;
+        z-index: 100;
+      }
+      .statusbar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 28px 6px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #f9fafb;
+      }
+      .statusbar-r {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      /* ═══ SCREEN ═══ */
+      .screen {
+        height: calc(100% - 54px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ═══ VIEWS — stacked, transform-based transitions ═══ */
+      .view {
+        position: absolute;
+        top: 54px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #111827;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        transform: translateX(100%);
+        transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 50;
+      }
+      .view.active {
+        transform: translateX(0);
+      }
+      .view::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ═══ HEADER ═══ */
+      .hdr {
+        padding: 8px 16px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .hdr-l {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .hdr-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(52, 211, 153, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .hdr-title {
+        font-family: 'Literata', serif !important;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        letter-spacing: -0.35px;
+        color: #f9fafb;
+        line-height: 28px;
+      }
+      .icon-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        transition: all 150ms;
+        flex-shrink: 0;
+      }
+      .icon-btn:active {
+        transform: scale(0.9);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      /* ═══ SEARCH ═══ */
+      .search-wrap {
+        padding: 12px 16px 4px;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 44px;
+        padding: 0 14px;
+        background: #1f2937;
+        border: 1.5px solid #374151;
+        border-radius: 12px;
+        transition: all 200ms;
+      }
+      .search:focus-within {
+        border-color: rgba(52, 211, 153, 0.3);
+        box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.06);
+      }
+      .search input {
+        flex: 1;
+        background: none;
+        border: none;
+        color: #f9fafb;
+        font-size: 17px;
+        outline: none;
+      }
+      .search input::placeholder {
+        color: #8e95a2;
+      }
+      .search-ic {
+        color: #8e95a2;
+        flex-shrink: 0;
+      }
+
+      /* ═══ USAGE BANNER ═══ */
+      .usage {
+        margin: 12px 16px 0;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: #1f2937;
+        border: 1px solid #374151;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+      }
+      .usage-dots {
+        display: flex;
+        gap: 6px;
+      }
+      .usage-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #34d399;
+        box-shadow: 0 0 6px rgba(52, 211, 153, 0.4);
+      }
+      .usage-dot.empty {
+        background: transparent;
+        box-shadow: none;
+        border: 1.5px dashed #374151;
+      }
+      .usage-txt {
+        flex: 1;
+      }
+      .usage-count {
+        font-size: 13px;
+        font-weight: 600;
+        color: #f9fafb;
+      }
+      .usage-sub {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 1px;
+      }
+      .usage-cta {
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        background: #34d399;
+        color: #111827;
+        white-space: nowrap;
+        transition: all 150ms;
+        height: 32px;
+        display: flex;
+        align-items: center;
+      }
+      .usage-cta:active {
+        transform: scale(0.95);
+      }
+
+      /* ═══ SECTION HEADERS ═══ */
+      .sec-hdr {
+        padding: 20px 16px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .sec-title {
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        color: #f9fafb;
+        letter-spacing: -0.2px;
+      }
+      .sec-action {
+        font-size: 13px;
+        color: #34d399;
+        font-weight: 600;
+      }
+      .sec-action:active {
+        opacity: 0.7;
+      }
+
+      /* ═══ FEATURED COLLECTION ═══ */
+      .feat {
+        margin: 14px 16px 0;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(52, 211, 153, 0.12);
+        background: linear-gradient(160deg, #0d2818 0%, #111827 60%);
+        position: relative;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+      }
+      .feat-shimmer {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(52, 211, 153, 0.04),
+          transparent
+        );
+        animation: shimSlide 4s ease-in-out infinite;
+      }
+      .feat-inner {
+        position: relative;
+        z-index: 1;
+        padding: 16px;
+      }
+      .feat-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.1);
+        padding: 4px 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      .feat-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #34d399;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      .feat-title {
+        font-family: 'Literata', serif !important;
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        color: #f9fafb;
+        margin-bottom: 4px;
+        letter-spacing: -0.2px;
+      }
+      .feat-desc {
+        font-size: 14px;
+        color: #9ca3af;
+        margin-bottom: 12px;
+        line-height: 1.4;
+      }
+      .feat-chips {
+        display: flex;
+        gap: 7px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .feat-chip {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 9px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid #374151;
+        font-size: 13px;
+        font-weight: 500;
+        color: #d1d5db;
+      }
+      .feat-chip-em {
+        font-size: 14px;
+      }
+      .feat-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .feat-users {
+        font-size: 13px;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .feat-cta {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 8px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        background: #34d399;
+        color: #111827;
+        transition: all 150ms;
+        height: 44px;
+      }
+      .feat-cta:active {
+        transform: scale(0.96);
+      }
+
+      /* ═══ POPULAR CARDS ═══ */
+      .pop-scroll {
+        display: flex;
+        gap: 12px;
+        padding: 0 16px 4px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+      .pop-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .pop-card {
+        flex-shrink: 0;
+        width: 200px;
+        padding: 14px;
+        padding-left: 18px;
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 16px;
+        scroll-snap-align: start;
+        position: relative;
+        overflow: hidden;
+        transition: transform 150ms;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+      }
+      .pop-card:active {
+        transform: scale(0.97);
+      }
+      .pop-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 16px 16px 0 0;
+      }
+      .pop-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+      .pop-badges {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-bottom: 5px;
+        flex-wrap: wrap;
+      }
+      .pop-sci {
+        font-size: 13px;
+        font-weight: 500;
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.08);
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+      .pop-name {
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        color: #f9fafb;
+        margin-bottom: 2px;
+        line-height: 1.3;
+      }
+      .pop-meta {
+        font-size: 12px;
+        font-weight: 500;
+        color: #8e95a2;
+        margin-bottom: 9px;
+      }
+      .pop-add {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        transition: all 150ms;
+      }
+      .pop-add:active {
+        transform: scale(0.95);
+      }
+      .pop-add.done {
+        pointer-events: none;
+      }
+
+      /* ═══ PREMIUM PACKS ═══ */
+      .prem-scroll {
+        display: flex;
+        gap: 12px;
+        padding: 0 16px 4px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .prem-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .prem-pack {
+        flex-shrink: 0;
+        width: 210px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(123, 82, 196, 0.12);
+        transition: transform 150ms;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+      }
+      .prem-pack:active {
+        transform: scale(0.97);
+      }
+      .prem-bg {
+        padding: 16px;
+        position: relative;
+      }
+      .prem-lock {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: rgba(123, 82, 196, 0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+      }
+      .prem-emojis {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 9px;
+      }
+      .prem-emoji {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .prem-name {
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        color: #f9fafb;
+        margin-bottom: 2px;
+      }
+      .prem-meta {
+        font-size: 13px;
+        color: #9ca3af;
+        margin-bottom: 9px;
+      }
+      .prem-cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+        padding: 7px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        background: rgba(123, 82, 196, 0.1);
+        color: #c4b5fd;
+        transition: all 150ms;
+        height: 44px;
+      }
+      .prem-cta:active {
+        transform: scale(0.95);
+      }
+
+      /* ═══ CATEGORY GRID ═══ */
+      .cat-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        padding: 0 16px 24px;
+      }
+      .cat-card {
+        padding: 16px;
+        border-radius: 16px;
+        border: 1px solid #374151;
+        position: relative;
+        overflow: hidden;
+        transition: transform 150ms;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+      }
+      .cat-card:active {
+        transform: scale(0.97);
+      }
+      .cat-ic {
+        font-size: 26px;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .cat-nm {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+        color: #f9fafb;
+        margin-bottom: 2px;
+      }
+      .cat-ct {
+        font-size: 13px;
+        color: #9ca3af;
+      }
+      .pro-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #c4b5fd;
+        background: rgba(123, 82, 196, 0.12);
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+
+      /* ═══ VIEW HEADERS ═══ */
+      .v-hdr {
+        padding: 16px 16px 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: sticky;
+        top: 0;
+        background: #111827;
+        z-index: 10;
+      }
+      .v-title {
+        font-size: 20px !important;
+        font-weight: 600 !important;
+        color: #f9fafb;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .v-sub {
+        font-size: 14px;
+        color: #9ca3af;
+        margin-top: 1px;
+      }
+      .v-info {
+        flex: 1;
+      }
+
+      /* ═══ TEMPLATE LIST CARDS ═══ */
+      .tl {
+        padding: 8px 16px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .tc {
+        background: #1f2937;
+        border: 1px solid #374151;
+        border-radius: 16px;
+        padding: 16px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 150ms;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.08);
+      }
+      .tc:active {
+        transform: scale(0.98);
+      }
+      .tc-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        border-radius: 0 4px 4px 0;
+      }
+      .tc.locked {
+        opacity: 0.85;
+      }
+      .tc.locked::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(123, 82, 196, 0.03),
+          transparent
+        );
+        pointer-events: none;
+      }
+      .tc-top {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .tc-em {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+        position: relative;
+      }
+      .tc-lock {
+        position: absolute;
+        bottom: -3px;
+        right: -3px;
+        width: 17px;
+        height: 17px;
+        border-radius: 5px;
+        background: linear-gradient(135deg, #7b52c4, #6366f1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 8px;
+        box-shadow: 0 2px 6px rgba(123, 82, 196, 0.4);
+      }
+      .tc-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .tc-nm {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #f9fafb;
+        margin-bottom: 2px;
+        letter-spacing: -0.2px;
+        line-height: 26px;
+      }
+      .tc-desc {
+        font-size: 14px;
+        color: #9ca3af;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .tc-bot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .tc-tags {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .tag {
+        font-size: 13px;
+        font-weight: 500;
+        padding: 3px 7px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        color: #9ca3af;
+      }
+      .tag.sci {
+        background: rgba(52, 211, 153, 0.07);
+        color: #34d399;
+      }
+      .tag.pro {
+        background: rgba(123, 82, 196, 0.08);
+        color: #c4b5fd;
+      }
+      .tc-acts {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .tc-prev {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #9ca3af;
+        background: rgba(255, 255, 255, 0.04);
+        transition: all 150ms;
+        display: flex;
+        align-items: center;
+      }
+      .tc-prev:active {
+        transform: scale(0.95);
+      }
+      .tc-add {
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        transition: all 150ms;
+        height: 32px;
+      }
+      .tc-add:active {
+        transform: scale(0.93);
+      }
+      .tc-add.done {
+        pointer-events: none;
+      }
+      .tc-add.lk {
+        background: rgba(123, 82, 196, 0.1) !important;
+        color: #c4b5fd !important;
+      }
+
+      /* ═══ PREVIEW MODAL ═══ */
+      .pv-ov {
+        position: absolute;
+        inset: 0;
+        z-index: 80;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 300ms;
+      }
+      .pv-ov.open {
+        pointer-events: all;
+        opacity: 1;
+      }
+      .pv-bg {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+      }
+      .pv-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 88%;
+        background: #fafaf9;
+        border-radius: 24px 24px 0 0;
+        transform: translateY(100%);
+        transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .pv-ov.open .pv-sheet {
+        transform: translateY(0);
+      }
+      .pv-handle {
+        width: 40px;
+        height: 4px;
+        background: #c4bfb7;
+        border-radius: 4px;
+        margin: 10px auto 0;
+        flex-shrink: 0;
+      }
+      .pv-x {
+        position: absolute;
+        top: 12px;
+        right: 16px;
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        background: rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6e6660;
+        z-index: 5;
+      }
+      .pv-x:active {
+        transform: scale(0.9);
+      }
+      .pv-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 20px 0;
+      }
+      .pv-scroll::-webkit-scrollbar {
+        display: none;
+      }
+      .pv-hero {
+        text-align: center;
+        padding: 16px 0 28px;
+      }
+      .pv-hero-ic {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      .pv-hero-glow {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        opacity: 0.3;
+        filter: blur(16px);
+      }
+      .pv-hero-nm {
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 28px !important;
+        font-weight: 800 !important;
+        color: #1c1917;
+        margin-bottom: 16px;
+        letter-spacing: -0.5px;
+        text-align: center;
+      }
+      .pv-pills {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 0 4px;
+      }
+      .pv-pill {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
+        background: transparent;
+        border: 1px solid #ddd8d2;
+        color: #6b6560;
+      }
+      .pv-sec {
+        margin-bottom: 16px;
+        padding: 0 20px;
+      }
+      .pv-sec-t {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #6e6660;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 6px;
+      }
+      .pv-sec-p {
+        font-size: 17px;
+        color: #4b5563;
+        line-height: 1.6;
+        text-align: center;
+      }
+      .sci-box {
+        background: #f0fdf4;
+        border: 2px solid #bbf7d0;
+        border-radius: 16px;
+        padding: 20px;
+      }
+      .sci-hdr {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #166534;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+      }
+      .sci-txt {
+        font-size: 13px;
+        color: #166534;
+        line-height: 1.85;
+        font-style: italic;
+      }
+      .tips-list {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .tip {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        font-size: 15px;
+        color: #713f12;
+        line-height: 1.5;
+      }
+      .tip-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #059669;
+        margin-top: 8px;
+        flex-shrink: 0;
+      }
+      .tips-box {
+        background: #fefce8;
+        border: 2px solid #fef08a;
+        border-radius: 16px;
+        padding: 20px;
+        margin-top: 16px;
+      }
+      .tips-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #854d0e;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pv-foot {
+        padding: 16px 20px 28px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: linear-gradient(
+          180deg,
+          rgba(250, 250, 249, 0) 0%,
+          rgba(250, 250, 249, 1) 30%,
+          rgba(250, 250, 249, 1) 100%
+        );
+        flex-shrink: 0;
+      }
+      .btn-cust {
+        text-align: center;
+        padding: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b7280;
+        transition: all 150ms;
+      }
+      .btn-cust:active {
+        transform: scale(0.97);
+      }
+      .btn-qa {
+        width: 100%;
+        padding: 13px;
+        border-radius: 16px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #ffffff;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 150ms;
+        height: 56px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      }
+      .btn-qa:active {
+        transform: scale(0.97);
+      }
+      .btn-qa.done {
+        pointer-events: none;
+      }
+
+      /* ═══ PAYWALL ═══ */
+      .pw-ov {
+        position: absolute;
+        inset: 0;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 300ms;
+      }
+      .pw-ov.open {
+        pointer-events: all;
+        opacity: 1;
+      }
+      .pw-bg {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+      }
+      .pw-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #1f2937;
+        border-radius: 24px 24px 0 0;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .pw-ov.open .pw-sheet {
+        transform: translateY(0);
+      }
+      .pw-handle {
+        width: 40px;
+        height: 4px;
+        background: #374151;
+        border-radius: 4px;
+        margin: 0 auto 16px;
+      }
+      .pw-emoji {
+        text-align: center;
+        font-size: 48px;
+        margin-bottom: 12px;
+      }
+      .pw-title {
+        text-align: center;
+        font-family: 'Literata', serif !important;
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #f9fafb;
+        margin-bottom: 6px;
+      }
+      .pw-desc {
+        text-align: center;
+        font-size: 14px;
+        color: #9ca3af;
+        margin-bottom: 16px;
+        line-height: 1.5;
+      }
+      .pw-perks {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      .pw-perk {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: #d1d5db;
+      }
+      .pw-perk-ic {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .pw-cta {
+        width: 100%;
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #111827;
+        text-align: center;
+        background: #34d399;
+        transition: all 150ms;
+        margin-bottom: 6px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .pw-cta:active {
+        transform: scale(0.97);
+      }
+      .pw-sub {
+        text-align: center;
+        font-size: 13px;
+        color: #9ca3af;
+      }
+
+      /* ═══ PACK CONFIRM ═══ */
+      .pc-ov {
+        position: absolute;
+        inset: 0;
+        z-index: 90;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 300ms;
+      }
+      .pc-ov.open {
+        pointer-events: all;
+        opacity: 1;
+      }
+      .pc-bg {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+      }
+      .pc-sheet {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #1f2937;
+        border-radius: 24px 24px 0 0;
+        padding: 20px;
+        transform: translateY(100%);
+        transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .pc-ov.open .pc-sheet {
+        transform: translateY(0);
+      }
+      .pc-handle {
+        width: 40px;
+        height: 4px;
+        background: #374151;
+        border-radius: 4px;
+        margin: 0 auto 16px;
+      }
+      .pc-title {
+        font-family: 'Literata', serif !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        color: #f9fafb;
+        margin-bottom: 4px;
+        text-align: center;
+      }
+      .pc-desc {
+        font-size: 13px;
+        color: #9ca3af;
+        margin-bottom: 14px;
+        text-align: center;
+      }
+      .pc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .pc-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid #374151;
+      }
+      .pc-item-em {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+        flex-shrink: 0;
+      }
+      .pc-item-nm {
+        font-size: 14px;
+        font-weight: 600;
+        color: #f9fafb;
+      }
+      .pc-item-freq {
+        font-size: 13px;
+        color: #9ca3af;
+      }
+      .pc-item-chk {
+        margin-left: auto;
+        color: #34d399;
+        font-size: 16px;
+        opacity: 0;
+        transition: opacity 300ms;
+      }
+      .pc-item-chk.on {
+        opacity: 1;
+      }
+      .pc-btns {
+        display: flex;
+        gap: 10px;
+      }
+      .pc-cancel {
+        flex: 1;
+        padding: 13px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        color: #f9fafb;
+        background: rgba(255, 255, 255, 0.06);
+        text-align: center;
+        transition: all 150ms;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 0.08px;
+      }
+      .pc-cancel:active {
+        transform: scale(0.97);
+      }
+      .pc-confirm {
+        flex: 1.2;
+        padding: 13px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        color: #111827;
+        text-align: center;
+        background: #34d399;
+        transition: all 150ms;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        height: 44px;
+      }
+      .pc-confirm:active {
+        transform: scale(0.97);
+      }
+
+      /* ═══ TOAST ═══ */
+      .toast {
+        position: absolute;
+        bottom: 40px;
+        left: 16px;
+        right: 16px;
+        background: #064e3b;
+        border: 1px solid rgba(52, 211, 153, 0.15);
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        z-index: 110;
+        transform: translateY(120%);
+        transition: transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .toast.show {
+        transform: translateY(0);
+      }
+      .toast-ic {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(52, 211, 153, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .toast-txt {
+        flex: 1;
+      }
+      .toast-nm {
+        font-size: 17px !important;
+        font-weight: 600 !important;
+        color: #34d399;
+      }
+      .toast-sub {
+        font-size: 14px;
+        color: #9ca3af;
+        margin-top: 1px;
+      }
+      .toast-chk {
+        color: #34d399;
+        font-size: 18px;
+      }
+
+      /* ═══ CONFETTI ═══ */
+      .confetti-box {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 105;
+        overflow: hidden;
+      }
+      .conf {
+        position: absolute;
+        opacity: 0;
+      }
+      .conf.go {
+        animation: confBurst 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      /* ═══ KEYFRAMES ═══ */
+      @keyframes shimSlide {
+        0%,
+        100% {
+          left: -100%;
+        }
+        50% {
+          left: 100%;
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      @keyframes confBurst {
+        0% {
+          opacity: 1;
+          transform: translate(0, 0) rotate(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translate(var(--tx), var(--ty)) rotate(var(--tr))
+            scale(0.4);
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="statusbar">
+        <span>9:41</span>
+        <div class="statusbar-r">
+          <i data-lucide="signal" style="width: 14px; height: 14px"></i
+          ><i data-lucide="wifi" style="width: 14px; height: 14px"></i
+          ><i data-lucide="battery-full" style="width: 18px; height: 14px"></i>
+        </div>
+      </div>
+
+      <!-- MAIN SCREEN -->
+      <div class="screen" id="mainScreen">
+        <div
+          class="hdr"
+          style="animation: fadeDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) both"
+        >
+          <div class="hdr-l">
+            <div class="hdr-icon">🌿</div>
+            <h1 class="hdr-title">Templates</h1>
+          </div>
+          <button class="icon-btn">
+            <i data-lucide="x" style="width: 20px; height: 20px"></i>
+          </button>
+        </div>
+        <div
+          class="search-wrap"
+          style="
+            animation: fadeDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+          "
+        >
+          <div class="search">
+            <i
+              data-lucide="search"
+              style="width: 18px; height: 18px"
+              class="search-ic"
+            ></i
+            ><input type="text" placeholder="Search templates..." />
+          </div>
+        </div>
+        <div
+          class="usage"
+          id="usageBanner"
+          style="
+            animation: fadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+          "
+        >
+          <div class="usage-dots" id="usageDots"></div>
+          <div class="usage-txt">
+            <div class="usage-count" id="usageCount"></div>
+            <div class="usage-sub" id="usageSub"></div>
+          </div>
+          <button class="usage-cta" onclick="showPaywall()">Unlock All</button>
+        </div>
+        <div
+          id="featSection"
+          style="
+            animation: fadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+          "
+        ></div>
+        <div
+          style="
+            animation: fadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+          "
+        >
+          <div class="sec-hdr">
+            <span class="sec-title">Popular</span
+            ><button class="sec-action" onclick="openSeeAll()">See all</button>
+          </div>
+          <div class="pop-scroll" id="popScroll"></div>
+        </div>
+        <div
+          style="
+            animation: fadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
+          "
+        >
+          <div class="sec-hdr">
+            <span
+              class="sec-title"
+              style="display: flex; align-items: center; gap: 6px"
+              >Premium Packs
+              <span
+                style="
+                  font-size: 13px;
+                  font-weight: 600;
+                  color: #c4b5fd;
+                  background: rgba(123, 82, 196, 0.1);
+                  padding: 2px 6px;
+                  border-radius: 8px;
+                "
+                >PRO</span
+              ></span
+            >
+          </div>
+          <div class="prem-scroll" id="premScroll"></div>
+        </div>
+        <div
+          style="
+            animation: fadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+          "
+        >
+          <div class="sec-hdr">
+            <span class="sec-title">Browse by Category</span>
+          </div>
+          <div class="cat-grid" id="catGrid"></div>
+        </div>
+      </div>
+
+      <!-- SEE ALL VIEW -->
+      <div class="view" id="seeAllView">
+        <div class="v-hdr">
+          <button class="icon-btn" onclick="closeSeeAll()">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px"></i>
+          </button>
+          <div class="v-info">
+            <div class="v-title">All Popular Templates</div>
+            <div class="v-sub" id="seeAllSub"></div>
+          </div>
+        </div>
+        <div class="tl" id="seeAllList"></div>
+      </div>
+
+      <!-- CATEGORY VIEW -->
+      <div class="view" id="catView">
+        <div class="v-hdr">
+          <button class="icon-btn" onclick="closeCat()">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px"></i>
+          </button>
+          <div class="v-info">
+            <div class="v-title">
+              <span id="catViewIcon"></span><span id="catViewName"></span>
+            </div>
+            <div class="v-sub" id="catViewSub"></div>
+          </div>
+        </div>
+        <div class="tl" id="catList"></div>
+      </div>
+
+      <!-- PREVIEW MODAL -->
+      <div class="pv-ov" id="pvOv">
+        <div class="pv-bg" onclick="closePv()"></div>
+        <div class="pv-sheet">
+          <div class="pv-handle"></div>
+          <button class="pv-x" onclick="closePv()">
+            <i data-lucide="x" style="width: 16px; height: 16px"></i>
+          </button>
+          <div class="pv-scroll" id="pvContent"></div>
+          <div class="pv-foot" id="pvFoot"></div>
+        </div>
+      </div>
+
+      <!-- PAYWALL -->
+      <div class="pw-ov" id="pwOv">
+        <div class="pw-bg" onclick="closePw()"></div>
+        <div class="pw-sheet">
+          <div class="pw-handle"></div>
+          <button
+            class="icon-btn"
+            style="position: absolute; top: 14px; right: 14px"
+            onclick="closePw()"
+          >
+            <i data-lucide="x" style="width: 16px; height: 16px"></i>
+          </button>
+          <div class="pw-emoji">🚀</div>
+          <div class="pw-title">Unlock Unlimited Habits</div>
+          <div class="pw-desc">
+            Build the life you want with unlimited habits, premium packs, and
+            all tools.
+          </div>
+          <div class="pw-perks" id="pwPerks"></div>
+          <button class="pw-cta" onclick="closePw()">Upgrade to Premium</button>
+          <div class="pw-sub">$6.99/month · Cancel anytime</div>
+        </div>
+      </div>
+
+      <!-- PACK CONFIRM -->
+      <div class="pc-ov" id="pcOv">
+        <div class="pc-bg" onclick="closePc()"></div>
+        <div class="pc-sheet">
+          <div class="pc-handle"></div>
+          <div class="pc-title" id="pcTitle"></div>
+          <div class="pc-desc" id="pcDesc"></div>
+          <div class="pc-list" id="pcList"></div>
+          <div class="pc-btns">
+            <button class="pc-cancel" onclick="closePc()">Cancel</button
+            ><button class="pc-confirm" id="pcConfirm">Add All</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOAST -->
+      <div class="toast" id="toast">
+        <div class="toast-ic" id="toastIc"></div>
+        <div class="toast-txt">
+          <div class="toast-nm" id="toastNm"></div>
+          <div class="toast-sub" id="toastSub"></div>
+        </div>
+        <span class="toast-chk">✓</span>
+      </div>
+
+      <!-- CONFETTI -->
+      <div class="confetti-box" id="confBox"></div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+
+      // ═══ REAL DATA FROM SEED ═══
+      var CATS = [
+        {
+          id: 'morning_routine',
+          icon: '🌅',
+          name: 'Morning Routine',
+          bg: '#3F1D0A',
+          text: '#FDE68A',
+          count: 15,
+        },
+        {
+          id: 'health_fitness',
+          icon: '💪',
+          name: 'Health & Fitness',
+          bg: '#043227',
+          text: '#6EE7B7',
+          count: 30,
+        },
+        {
+          id: 'productivity',
+          icon: '🎯',
+          name: 'Productivity',
+          bg: '#0C2B4D',
+          text: '#60A5FA',
+          count: 15,
+        },
+        {
+          id: 'mindfulness',
+          icon: '🧘',
+          name: 'Mindfulness',
+          bg: '#4C1D95',
+          text: '#DDD6FE',
+          count: 15,
+        },
+        {
+          id: 'andrew_huberman',
+          icon: '🔬',
+          name: 'Andrew Huberman',
+          bg: '#022C22',
+          text: '#34D399',
+          count: 15,
+          premium: true,
+        },
+        {
+          id: 'sleep',
+          icon: '😴',
+          name: 'Sleep',
+          bg: '#111827',
+          text: '#60A5FA',
+          count: 15,
+        },
+        {
+          id: 'learning',
+          icon: '📚',
+          name: 'Learning',
+          bg: '#2E1065',
+          text: '#C4B5FD',
+          count: 15,
+        },
+        {
+          id: 'social',
+          icon: '👥',
+          name: 'Social',
+          bg: '#4A1119',
+          text: '#FDA4AF',
+          count: 10,
+        },
+        {
+          id: 'financial',
+          icon: '💰',
+          name: 'Financial',
+          bg: '#052f2a',
+          text: '#10B981',
+          count: 10,
+        },
+        {
+          id: 'creativity',
+          icon: '🎨',
+          name: 'Creativity',
+          bg: '#3B0F26',
+          text: '#FDA4AF',
+          count: 10,
+        },
+        {
+          id: 'breathing',
+          icon: '🌬️',
+          name: 'Breathing',
+          bg: '#0B2A48',
+          text: '#60A5FA',
+          count: 8,
+        },
+        {
+          id: 'longevity',
+          icon: '🧬',
+          name: 'Longevity',
+          bg: '#451A03',
+          text: '#FED7AA',
+          count: 20,
+        },
+        {
+          id: 'mental_health',
+          icon: '🧠',
+          name: 'Mental Health',
+          bg: '#312E81',
+          text: '#A5B4FC',
+          count: 15,
+        },
+        {
+          id: 'recovery',
+          icon: '🔄',
+          name: 'Recovery',
+          bg: '#3D1039',
+          text: '#FDA4AF',
+          count: 10,
+        },
+      ];
+
+      // Real templates from convex/templatesDataSeed.ts
+      var TPL = {
+        morning_routine: [
+          {
+            icon: '🧘',
+            name: '5-Minute Meditation',
+            desc: 'Start your day with mindful meditation. Research shows just 5 minutes daily can reduce stress and improve focus.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Goyal et al. (2014) - Meditation programs for psychological stress',
+            tips: [
+              'Start with 2 minutes and gradually increase',
+              'Use a guided meditation app',
+              'Same time each morning builds habit',
+            ],
+          },
+          {
+            icon: '✍️',
+            name: 'Morning Pages',
+            desc: 'Write 3 pages of stream-of-consciousness thoughts first thing. Clears mental clutter and boosts creativity.',
+            color: '#3B82F6',
+            freq: 'daily',
+            sci: true,
+            ref: "Cameron (1992) - The Artist's Way creative recovery program",
+            tips: [
+              "Don't edit or censor yourself",
+              'Write longhand, not digital',
+              'Do it before coffee or checking phone',
+            ],
+          },
+          {
+            icon: '🌅',
+            name: 'Sunrise Viewing',
+            desc: 'View sunlight within 30 minutes of waking. Regulates circadian rhythm and improves sleep quality.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman (2021) - Light exposure and circadian biology',
+            tips: [
+              'Face toward the sun, no sunglasses',
+              '10 min on cloudy days, 5 min on clear',
+              'Window gaze counts but outdoor is better',
+            ],
+          },
+          {
+            icon: '🛏️',
+            name: 'Make Your Bed',
+            desc: 'Make your bed immediately after waking. Creates a sense of accomplishment and order to start the day.',
+            color: '#6366F1',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Do it the moment your feet hit the floor',
+              'Keep it simple — 2 minutes max',
+            ],
+          },
+          {
+            icon: '🍳',
+            name: 'Morning Protein Protocol',
+            desc: 'Consume 30g+ protein within 30 minutes of waking. Stabilizes blood sugar and reduces cravings throughout the day.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Leidy et al. (2015) - Higher-protein breakfast for appetite control',
+            tips: [
+              'Eggs, Greek yogurt, or protein shake',
+              'Prep the night before',
+              'Pair with fiber for sustained energy',
+            ],
+          },
+          {
+            icon: '📵',
+            name: 'Airplane Mode Morning',
+            desc: 'Keep phone on airplane mode for the first 60 minutes after waking. Protects your morning focus from reactive mode.',
+            color: '#EF4444',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Set airplane mode before sleep',
+              'Use a real alarm clock',
+              'Batch check messages later',
+            ],
+          },
+          {
+            icon: '📋',
+            name: 'Daily Top 3 Priorities',
+            desc: 'Choose your 3 most important tasks before starting work. Brings clarity and prevents busywork from taking over.',
+            color: '#3B82F6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Schwartz (2004) - The Paradox of Choice',
+            tips: [
+              'Do this the night before if possible',
+              'Start with the hardest one',
+              'Say no to everything else until done',
+            ],
+          },
+        ],
+        health_fitness: [
+          {
+            icon: '🏃',
+            name: '7-Minute Workout',
+            desc: 'High-intensity circuit training backed by science. 12 exercises, 30 seconds each, maximum results in minimum time.',
+            color: '#EF4444',
+            freq: 'daily',
+            sci: true,
+            ref: 'Jordan et al. (2013) - High-intensity circuit training using body weight',
+            tips: [
+              'No equipment needed',
+              'Do it first thing in the morning',
+              'Track your progress weekly',
+            ],
+          },
+          {
+            icon: '👟',
+            name: '10,000 Steps',
+            desc: 'Walk 10,000 steps daily. Proven to reduce cardiovascular disease risk and improve mental health.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Lee et al. (2019) - Association of step volume and intensity with all-cause mortality',
+            tips: [
+              'Take walking meetings',
+              'Park farther away',
+              'Use stairs instead of elevator',
+            ],
+          },
+          {
+            icon: '🏋️',
+            name: 'Strength Training',
+            desc: 'Progressive resistance training 3-4x weekly. Builds muscle, strengthens bones, and boosts metabolism.',
+            color: '#F59E0B',
+            freq: '3x/week',
+            sci: true,
+            ref: 'Schoenfeld et al. (2017) - Dose-response relationship for muscle hypertrophy',
+            tips: [
+              'Start with bodyweight exercises',
+              'Focus on compound movements',
+              'Rest 48 hours between same muscle groups',
+            ],
+          },
+          {
+            icon: '💧',
+            name: 'Hydration Tracking',
+            desc: 'Track water intake to ensure adequate hydration. Even mild dehydration impairs cognitive function.',
+            color: '#06B6D4',
+            freq: 'daily',
+            sci: true,
+            ref: 'Popkin et al. (2010) - Water, hydration, and health',
+            tips: [
+              'Drink a glass upon waking',
+              'Keep a bottle at your desk',
+              'Set hourly reminders',
+            ],
+          },
+          {
+            icon: '🚴',
+            name: 'Zone 2 Cardio Training',
+            desc: '45 minutes of low-intensity Zone 2 cardio. Builds aerobic base, burns fat, improves mitochondrial health.',
+            color: '#2563EB',
+            freq: '3x/week',
+            sci: true,
+            ref: 'San-Millán & Brooks (2018) - Assessment of metabolic flexibility',
+            tips: [
+              'You should be able to hold a conversation',
+              'Walking, cycling, or light jogging',
+              'Nasal breathing throughout',
+            ],
+          },
+          {
+            icon: '🥗',
+            name: 'Veggies First',
+            desc: 'Eat vegetables before other foods at each meal. Improves nutrient absorption and helps with portion control.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Shukla et al. (2015) - Food order has significant impact on glucose and insulin levels',
+            tips: [
+              'Start with salad or steamed veggies',
+              'Aim for half your plate',
+              'Color variety = nutrient variety',
+            ],
+          },
+          {
+            icon: '🚶',
+            name: 'Post-Meal Walk',
+            desc: 'Walk for 10 minutes after meals. Dramatically reduces blood sugar spikes and aids digestion.',
+            color: '#34D399',
+            freq: 'daily',
+            sci: true,
+            ref: 'Buffey et al. (2022) - Walking after meals reduces postprandial glucose',
+            tips: [
+              'Even 2-5 minutes helps',
+              'Light pace is sufficient',
+              'After dinner is most impactful',
+            ],
+          },
+          {
+            icon: '🧍',
+            name: 'Standing Every Hour',
+            desc: 'Stand and move for 5 minutes every hour of sitting. Counteracts the negative effects of prolonged sitting.',
+            color: '#F97316',
+            freq: 'daily',
+            sci: true,
+            ref: 'Buckley et al. (2015) - Sedentary behavior and mortality',
+            tips: [
+              'Set a timer',
+              'Do light stretching',
+              'Take a lap around the office',
+            ],
+          },
+        ],
+        productivity: [
+          {
+            icon: '🧠',
+            name: 'Deep Work Session',
+            desc: '90-minute focused work block with no distractions. Maximize cognitive output and creative problem-solving.',
+            color: '#7C3AED',
+            freq: 'daily',
+            sci: true,
+            ref: 'Newport (2016) - Deep Work: Rules for Focused Success in a Distracted World',
+            tips: [
+              'Block time on your calendar',
+              'Silence all notifications',
+              'Start with your hardest task',
+            ],
+          },
+          {
+            icon: '⏱️',
+            name: 'Pomodoro Technique',
+            desc: 'Work in 25-minute focused intervals with 5-minute breaks. Maintains high focus and prevents burnout.',
+            color: '#F97316',
+            freq: 'daily',
+            sci: true,
+            ref: 'Cirillo (2006) - The Pomodoro Technique',
+            tips: [
+              'Use a physical timer',
+              'Take real breaks — walk around',
+              'After 4 pomodoros, take a 15-min break',
+            ],
+          },
+          {
+            icon: '⏰',
+            name: 'Time Blocking',
+            desc: 'Schedule specific time blocks for different tasks. Gives structure to your day and reduces decision fatigue.',
+            color: '#3B82F6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Parkinson (1955) - Work expands to fill the time available',
+            tips: [
+              'Block deep work in the morning',
+              'Include buffer time',
+              'Review and adjust weekly',
+            ],
+          },
+          {
+            icon: '🔄',
+            name: 'Ultradian Work Cycles',
+            desc: "Work in 90-minute cycles aligned with your body's natural energy rhythms, followed by 20-minute renewal breaks.",
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Peretz et al. (1992) - Ultradian rhythms in cognitive performance',
+            tips: [
+              'Notice your energy peaks',
+              '90 min max then mandatory break',
+              'Break = walk, not phone',
+            ],
+          },
+          {
+            icon: '📱',
+            name: 'Single-Tasking',
+            desc: 'Focus on one task at a time without switching. Multitasking reduces productivity by up to 40%.',
+            color: '#EC4899',
+            freq: 'daily',
+            sci: true,
+            ref: 'Rubinstein et al. (2001) - Executive control of cognitive processes in task switching',
+            tips: [
+              'Close all unrelated tabs',
+              'Put phone in another room',
+              'Write down distracting thoughts for later',
+            ],
+          },
+          {
+            icon: '📋',
+            name: 'MIT - Most Important Task',
+            desc: 'Identify and complete your most important task first each day before other work.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Choose MIT the night before',
+              'Do it before email',
+              'Celebrate completion',
+            ],
+          },
+        ],
+        mindfulness: [
+          {
+            icon: '🙏',
+            name: 'Gratitude Journaling',
+            desc: "Write down 3 things you're grateful for. Increases happiness, optimism, and life satisfaction.",
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Emmons & McCullough (2003) - Counting blessings versus burdens',
+            tips: [
+              'Be specific, not generic',
+              'Include one person each day',
+              'Do it before bed for better sleep',
+            ],
+          },
+          {
+            icon: '🧘',
+            name: 'Body Scan Meditation',
+            desc: 'Progressive relaxation from head to toe. Reduces physical tension and emotional stress.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Ditto et al. (2006) - Comparison of body scan and breathing meditation',
+            tips: [
+              'Do lying down before sleep',
+              'Spend 10 seconds on each body part',
+              "Don't try to change anything, just notice",
+            ],
+          },
+          {
+            icon: '💗',
+            name: 'Loving-Kindness Meditation',
+            desc: 'Direct compassion toward yourself and others. Increases positive emotions and social connection.',
+            color: '#EC4899',
+            freq: 'daily',
+            sci: true,
+            ref: 'Fredrickson et al. (2008) - Loving-kindness meditation increases positive emotions',
+            tips: [
+              'Start with self-compassion',
+              'Expand to loved ones, then strangers',
+              'Even 5 minutes is effective',
+            ],
+          },
+          {
+            icon: '🍽️',
+            name: 'Mindful Eating',
+            desc: 'Eat one meal per day with full attention — no screens, no rushing. Improves digestion and satisfaction.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Kristeller & Wolever (2011) - Mindfulness-based eating awareness training',
+            tips: [
+              'Put fork down between bites',
+              'Notice textures and flavors',
+              'Eat at a table, not your desk',
+            ],
+          },
+          {
+            icon: '😌',
+            name: 'Physiological Sigh',
+            desc: 'Double inhale through nose, long exhale through mouth. The fastest known method to calm the nervous system in real-time.',
+            color: '#06B6D4',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman Lab (2023) - Cyclic sighing vs mindfulness meditation',
+            tips: [
+              'Two quick inhales through nose',
+              'One long slow exhale through mouth',
+              'Use during stressful moments',
+            ],
+          },
+        ],
+        andrew_huberman: [
+          {
+            icon: '☀️',
+            name: 'Morning Sunlight Viewing',
+            desc: 'View 2-10 minutes of morning sunlight within 30-60 minutes of waking. Critical for circadian rhythm regulation.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman Lab (2023) - Morning sunlight for optimal circadian biology',
+            tips: [
+              'No sunglasses',
+              'Cloudy days count — double time',
+              'Face toward the sunrise',
+            ],
+            premium: true,
+          },
+          {
+            icon: '🚴',
+            name: 'Zone 2 Cardio Training',
+            desc: 'Perform 45 minutes of Zone 2 cardio 3x weekly. Builds mitochondrial health and cardiovascular fitness.',
+            color: '#2563EB',
+            freq: '3x/week',
+            sci: true,
+            ref: 'Huberman Lab (2022) - Zone 2 training for longevity',
+            tips: [
+              'Conversation pace',
+              '150-180 min total per week',
+              'Walking, cycling, or swimming',
+            ],
+            premium: true,
+          },
+          {
+            icon: '🧊',
+            name: 'Deliberate Cold Exposure',
+            desc: '1-3 minutes of cold water (50-60°F). Increases dopamine by 250% and boosts metabolism.',
+            color: '#06B6D4',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman Lab (2022) - Cold exposure for dopamine and norepinephrine',
+            tips: [
+              'End shower with 30s cold first',
+              'Work up to 1-3 minutes',
+              'Uncomfortable but safe temperature',
+            ],
+            premium: true,
+          },
+          {
+            icon: '☕',
+            name: 'Delay Caffeine 90 Minutes',
+            desc: 'Wait 90-120 minutes after waking before caffeine. Avoids afternoon crash by letting adenosine clear naturally.',
+            color: '#92400E',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman Lab (2021) - Caffeine timing and adenosine',
+            tips: [
+              'Get sunlight first instead',
+              'Morning water before coffee',
+              'Gradually push back your first cup',
+            ],
+            premium: true,
+          },
+          {
+            icon: '🧘',
+            name: 'NSDR Practice',
+            desc: 'Non-Sleep Deep Rest — 10-20 minute guided relaxation that restores dopamine and mental energy.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman Lab (2022) - NSDR for mental and physical restoration',
+            tips: [
+              'Use a guided audio',
+              'Afternoon is ideal timing',
+              'Not a nap — stay semi-awake',
+            ],
+            premium: true,
+          },
+          {
+            icon: '🌅',
+            name: 'Evening Sunset Viewing',
+            desc: 'View the setting sun to signal your brain that the day is ending. Helps with melatonin release timing.',
+            color: '#F97316',
+            freq: 'daily',
+            sci: true,
+            ref: 'Huberman Lab (2021) - Light viewing for circadian regulation',
+            tips: [
+              '10-15 minutes before sunset',
+              'No sunglasses needed',
+              'Pairs with evening walk',
+            ],
+            premium: true,
+          },
+        ],
+        sleep: [
+          {
+            icon: '💤',
+            name: '7-9 Hours Sleep',
+            desc: 'Sleep 7-9 hours per night. Adequate sleep is essential for cognitive function, health, and longevity.',
+            color: '#4338CA',
+            freq: 'daily',
+            sci: true,
+            ref: 'Hirshkowitz et al. (2015) - National Sleep Foundation sleep duration recommendations',
+            tips: [
+              'Calculate wake time and count back 8 hours',
+              'Track patterns for a week',
+              'Prioritize like an important meeting',
+            ],
+          },
+          {
+            icon: '📵',
+            name: 'No Screens Before Bed',
+            desc: 'Put away all screens 60 minutes before sleep. Blue light suppresses melatonin and delays sleep onset.',
+            color: '#3B82F6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Chang et al. (2015) - Blue light and melatonin suppression',
+            tips: [
+              'Switch to a physical book',
+              'Use Night Shift if needed',
+              'Dim all lights in the house',
+            ],
+          },
+          {
+            icon: '🌡️',
+            name: 'Cool Sleep Temperature',
+            desc: 'Set bedroom to 65-68°F (18-20°C). Cool room temperature is critical for quality deep sleep.',
+            color: '#06B6D4',
+            freq: 'daily',
+            sci: true,
+            ref: 'Harding et al. (2019) - Thermoregulation and sleep',
+            tips: [
+              'Use a fan for white noise bonus',
+              'Try socks if feet get cold',
+              'Layer blankets so you can adjust',
+            ],
+          },
+          {
+            icon: '⏰',
+            name: 'Consistent Wake Time',
+            desc: 'Wake at the same time every day, including weekends. The single most important factor for circadian health.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Walker (2017) - Why We Sleep',
+            tips: [
+              'Even on weekends',
+              'Set one alarm, no snooze',
+              'Sunlight within 30 min of waking',
+            ],
+          },
+          {
+            icon: '🌙',
+            name: 'Darkness Before Sleep',
+            desc: 'Dim all lights 1-2 hours before bed. Darkness triggers natural melatonin production.',
+            color: '#1E3A8A',
+            freq: 'daily',
+            sci: true,
+            ref: 'Gooley et al. (2011) - Room light before bedtime suppresses melatonin',
+            tips: [
+              'Use warm/amber bulbs',
+              'Candles in the evening',
+              'Blackout curtains in bedroom',
+            ],
+          },
+          {
+            icon: '📝',
+            name: 'Evening Brain Dump',
+            desc: 'Write down everything on your mind before bed. Clears working memory so your brain can rest.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Scullin et al. (2018) - Bedtime writing and falling asleep',
+            tips: [
+              'Keep a pad by the bed',
+              'Include to-dos for tomorrow',
+              "Don't organize — just dump",
+            ],
+          },
+        ],
+        learning: [
+          {
+            icon: '🔄',
+            name: 'Spaced Repetition',
+            desc: 'Review material at increasing intervals for long-term retention. 20 minutes daily beats hours of cramming.',
+            color: '#7C3AED',
+            freq: 'daily',
+            sci: true,
+            ref: 'Cepeda et al. (2006) - Distributed practice in verbal recall tasks',
+            tips: [
+              'Use Anki or similar app',
+              'Review before bed',
+              'Create your own cards',
+            ],
+          },
+          {
+            icon: '📖',
+            name: 'Daily Reading',
+            desc: 'Read for 30 minutes daily. Regular reading improves vocabulary, comprehension, and cognitive function.',
+            color: '#B45309',
+            freq: 'daily',
+            sci: true,
+            ref: 'Krashen (2004) - The Power of Reading',
+            tips: [
+              'Physical books before bed',
+              'Alternate fiction and non-fiction',
+              'Take brief notes on insights',
+            ],
+          },
+          {
+            icon: '🧠',
+            name: 'Active Recall',
+            desc: 'Test yourself on material instead of re-reading. The most effective learning technique known to science.',
+            color: '#EF4444',
+            freq: 'daily',
+            sci: true,
+            ref: 'Roediger & Butler (2011) - The critical role of retrieval practice',
+            tips: [
+              'Close the book and recite',
+              'Use flashcards',
+              'Teach someone else',
+            ],
+          },
+          {
+            icon: '🎓',
+            name: 'Feynman Technique',
+            desc: 'Explain concepts in simple terms as if teaching a child. Reveals gaps in understanding instantly.',
+            color: '#3B82F6',
+            freq: 'daily',
+            sci: true,
+            ref: "Feynman (1985) - Surely You're Joking, Mr. Feynman",
+            tips: [
+              'Write it out simply',
+              'Identify where you get stuck',
+              'Simplify further',
+            ],
+          },
+          {
+            icon: '🗣️',
+            name: 'Language Word Learning',
+            desc: 'Learn 5 new words in a target language daily. Small consistent practice compounds rapidly.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Nation (2001) - Learning vocabulary in another language',
+            tips: [
+              'Use spaced repetition',
+              'Learn in context, not isolation',
+              'Speak them out loud',
+            ],
+          },
+        ],
+        social: [
+          {
+            icon: '📞',
+            name: 'Daily Social Call',
+            desc: 'Call a friend or family member daily. Voice calls create stronger bonds than texting.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Holt-Lunstad et al. (2010) - Social relationships and mortality risk',
+            tips: [
+              'Schedule a recurring time',
+              'Even 5 minutes counts',
+              'Rotate through your contacts',
+            ],
+          },
+          {
+            icon: '🤝',
+            name: 'Random Act of Kindness',
+            desc: 'Do one unexpected kind thing for someone each day. Increases happiness for both giver and receiver.',
+            color: '#EC4899',
+            freq: 'daily',
+            sci: true,
+            ref: 'Lyubomirsky et al. (2005) - Benefits of kindness and counting blessings',
+            tips: [
+              "Pay for someone's coffee",
+              'Leave a kind note',
+              'Help without being asked',
+            ],
+          },
+          {
+            icon: '💬',
+            name: 'Deep Questions',
+            desc: 'Ask one meaningful question in a conversation today instead of small talk.',
+            color: '#6366F1',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'What are you excited about right now?',
+              "What's been on your mind lately?",
+              'Listen more than you talk',
+            ],
+          },
+          {
+            icon: '🤗',
+            name: '6-Second Hug',
+            desc: 'Hug a loved one for at least 6 seconds. Triggers oxytocin release and strengthens bonds.',
+            color: '#F43F5E',
+            freq: 'daily',
+            sci: true,
+            ref: 'Light et al. (2005) - Oxytocin and social bonding',
+            tips: [
+              'Count to 6 slowly',
+              'Make it genuine',
+              'With partner, kids, or close friends',
+            ],
+          },
+        ],
+        financial: [
+          {
+            icon: '📊',
+            name: 'Expense Tracking',
+            desc: 'Log every expense daily. Awareness of spending is the first step to financial health.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Use an app or spreadsheet',
+              'Categorize expenses',
+              'Review weekly trends',
+            ],
+          },
+          {
+            icon: '📋',
+            name: 'Weekly Budget Review',
+            desc: 'Review your budget and spending every week. Keeps you aligned with financial goals.',
+            color: '#3B82F6',
+            freq: 'weekly',
+            sci: false,
+            tips: [
+              'Same day each week',
+              'Compare planned vs actual',
+              'Adjust categories as needed',
+            ],
+          },
+          {
+            icon: '🏦',
+            name: 'Automatic Savings',
+            desc: 'Set up automatic transfers to savings. Pay yourself first before spending.',
+            color: '#34D399',
+            freq: 'monthly',
+            sci: false,
+            tips: [
+              'Even $25/month builds habit',
+              'Increase by 1% each raise',
+              'Separate account for goals',
+            ],
+          },
+          {
+            icon: '📈',
+            name: 'Regular Investing',
+            desc: 'Invest a fixed amount on a schedule. Dollar-cost averaging removes emotion from investing.',
+            color: '#8B5CF6',
+            freq: 'monthly',
+            sci: true,
+            ref: 'Constantinides (1979) - A note on the suboptimality of dollar-cost averaging',
+            tips: [
+              'Automate the investment',
+              'Index funds for simplicity',
+              "Don't check daily",
+            ],
+          },
+          {
+            icon: '🏷️',
+            name: '24-Hour Purchase Rule',
+            desc: 'Wait 24 hours before any non-essential purchase over $50. Eliminates impulse buying.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Add to a wish list instead',
+              'If you still want it tomorrow, buy it',
+              'Track money saved',
+            ],
+          },
+        ],
+        creativity: [
+          {
+            icon: '✍️',
+            name: 'Creative Writing',
+            desc: "Write creatively for 15 minutes daily. Fiction, poetry, or journaling — the medium doesn't matter.",
+            color: '#EC4899',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Use writing prompts',
+              "Don't aim for perfection",
+              'Morning writing is most creative',
+            ],
+          },
+          {
+            icon: '📷',
+            name: 'Daily Photography',
+            desc: 'Take one intentional photograph each day. Trains your eye to see beauty and composition everywhere.',
+            color: '#F97316',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Phone camera is fine',
+              'Focus on light and shadow',
+              'Share one per week',
+            ],
+          },
+          {
+            icon: '🎨',
+            name: 'Daily Sketching',
+            desc: 'Sketch for 15 minutes daily. Drawing is a learnable skill that improves observation and creativity.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Start with simple objects',
+              "Don't erase — learn from lines",
+              'Carry a small sketchbook',
+            ],
+          },
+          {
+            icon: '💡',
+            name: 'Idea Generation',
+            desc: 'Write down 10 ideas every day on any topic. Exercises your creativity muscle.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: false,
+            tips: [
+              'Bad ideas count',
+              'Combine random concepts',
+              'Review old ideas monthly',
+            ],
+          },
+        ],
+        breathing: [
+          {
+            icon: '📦',
+            name: 'Box Breathing (4-4-4-4)',
+            desc: 'Inhale 4s, hold 4s, exhale 4s, hold 4s. Used by Navy SEALs to maintain calm under pressure.',
+            color: '#3B82F6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Ma et al. (2017) - Effect of diaphragmatic breathing on attention and stress',
+            tips: [
+              '4 cycles minimum',
+              'Use before stressful events',
+              'Practice with eyes closed',
+            ],
+          },
+          {
+            icon: '🌬️',
+            name: '4-7-8 Relaxing Breath',
+            desc: "Inhale 4s, hold 7s, exhale 8s. Dr. Weil's technique for falling asleep faster.",
+            color: '#06B6D4',
+            freq: 'daily',
+            sci: true,
+            ref: 'Weil (2015) - Natural stress reduction technique',
+            tips: [
+              'Do 4 breath cycles',
+              'Before bed is ideal',
+              'Tongue behind upper front teeth',
+            ],
+          },
+          {
+            icon: '❄️',
+            name: 'Wim Hof Breathing',
+            desc: '30 deep breaths followed by retention holds. Increases energy, reduces inflammation, and improves cold tolerance.',
+            color: '#2563EB',
+            freq: 'daily',
+            sci: true,
+            ref: 'Kox et al. (2014) - Voluntary activation of the sympathetic nervous system',
+            tips: [
+              'Never do in water',
+              'Start with 1 round',
+              'Sit or lie down safely',
+            ],
+          },
+          {
+            icon: '🔥',
+            name: 'Energizing Breath (Kapalabhati)',
+            desc: 'Rapid forceful exhales through the nose. Traditional yogic technique that increases alertness and clears the mind.',
+            color: '#F97316',
+            freq: 'daily',
+            sci: true,
+            ref: 'Telles et al. (2011) - Kapalabhati and autonomic nervous system',
+            tips: [
+              '30 pumps per round',
+              '3 rounds with rest between',
+              'Not before bed',
+            ],
+          },
+          {
+            icon: '🫁',
+            name: 'CO2 Tolerance Training',
+            desc: 'Progressive breath holds to increase CO2 tolerance. Improves breathing efficiency and reduces anxiety.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Zaccaro et al. (2018) - Breathing techniques and anxiety reduction',
+            tips: [
+              'Track your hold times',
+              'Practice after exhale',
+              'Progress gradually',
+            ],
+          },
+        ],
+        longevity: [
+          {
+            icon: '🥦',
+            name: '30 Plants Per Week',
+            desc: 'Eat 30 different plant species weekly. Maximizes gut microbiome diversity for long-term health.',
+            color: '#10B981',
+            freq: 'weekly',
+            sci: true,
+            ref: 'McDonald et al. (2018) - American Gut: diversity of the microbiome',
+            tips: [
+              'Herbs and spices count',
+              'Keep a running list',
+              'Variety matters more than quantity',
+            ],
+          },
+          {
+            icon: '🫒',
+            name: 'Mediterranean Plate',
+            desc: 'Follow Mediterranean diet principles — olive oil, fish, vegetables, whole grains at every meal.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Estruch et al. (2018) - Primary prevention with Mediterranean diet',
+            tips: [
+              'Olive oil as primary fat',
+              'Fish 2-3x per week',
+              'Colorful vegetables at every meal',
+            ],
+          },
+          {
+            icon: '⏰',
+            name: 'Time-Restricted Eating',
+            desc: 'Eat within an 8-10 hour window. Gives your body time to repair and clean up cellular waste.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Longo & Panda (2016) - Fasting, circadian rhythms, and time-restricted feeding',
+            tips: [
+              'Start with a 12-hour window',
+              'Push breakfast 1 hour later',
+              'Stop eating 3 hours before bed',
+            ],
+          },
+          {
+            icon: '🦷',
+            name: 'Daily Flossing',
+            desc: 'Floss once daily. Gum disease is linked to heart disease, diabetes, and cognitive decline.',
+            color: '#06B6D4',
+            freq: 'daily',
+            sci: true,
+            ref: 'Janket et al. (2003) - Periodontal disease and cardiovascular events',
+            tips: [
+              'Right before brushing at night',
+              'Water flosser counts',
+              'Consistency beats technique',
+            ],
+          },
+          {
+            icon: '☀️',
+            name: 'Vitamin D Supplementation',
+            desc: 'Ensure adequate vitamin D levels through sun or supplementation. Deficiency affects immunity, mood, and bone health.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Holick (2007) - Vitamin D deficiency: a worldwide problem',
+            tips: [
+              'Get levels tested first',
+              'Most adults need 2000-4000 IU',
+              'Take with fatty meal for absorption',
+            ],
+          },
+        ],
+        mental_health: [
+          {
+            icon: '📓',
+            name: 'Positive Journaling',
+            desc: 'Write about positive experiences in detail. Re-experiencing positive events extends their emotional benefits.',
+            color: '#F59E0B',
+            freq: 'daily',
+            sci: true,
+            ref: 'Burton & King (2004) - Benefits of writing about positive experiences',
+            tips: [
+              'Write about today, not just goals',
+              'Include sensory details',
+              '5-10 minutes is enough',
+            ],
+          },
+          {
+            icon: '🌿',
+            name: 'Walking in Nature',
+            desc: 'Walk in nature for 20+ minutes. Green spaces reduce cortisol, blood pressure, and rumination.',
+            color: '#10B981',
+            freq: 'daily',
+            sci: true,
+            ref: 'Bratman et al. (2015) - Nature experience reduces rumination',
+            tips: [
+              'Leave phone in pocket',
+              'Focus on what you see and hear',
+              'Any green space counts',
+            ],
+          },
+          {
+            icon: '💪',
+            name: 'Behavioral Activation',
+            desc: "Do one activity you've been avoiding. Action precedes motivation, not the other way around.",
+            color: '#EF4444',
+            freq: 'daily',
+            sci: true,
+            ref: 'Cuijpers et al. (2007) - Behavioral activation for depression',
+            tips: [
+              'Start tiny — 2 minutes',
+              "Schedule it, don't wait for motivation",
+              'Reward yourself after',
+            ],
+          },
+          {
+            icon: '🎭',
+            name: 'Emotion Granularity',
+            desc: 'Label your emotions with specific words. "I feel anxious" is more useful than "I feel bad."',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Barrett (2017) - How Emotions Are Made',
+            tips: [
+              'Go beyond happy/sad/angry',
+              'Use a feelings wheel',
+              'Journal the specific emotion',
+            ],
+          },
+          {
+            icon: '✍️',
+            name: 'Expressive Writing',
+            desc: 'Write about difficult experiences for 15-20 minutes. Processing emotions on paper reduces their intensity.',
+            color: '#3B82F6',
+            freq: '3x/week',
+            sci: true,
+            ref: 'Pennebaker (1997) - Writing about emotional experiences',
+            tips: [
+              'Be completely honest',
+              "Don't worry about grammar",
+              'You can destroy it after',
+            ],
+          },
+        ],
+        recovery: [
+          {
+            icon: '🧘',
+            name: 'Yoga Nidra/NSDR',
+            desc: 'Non-Sleep Deep Rest — lie down and follow a guided body relaxation. Restores dopamine and mental energy.',
+            color: '#8B5CF6',
+            freq: 'daily',
+            sci: true,
+            ref: 'Kamakhya (2004) - Yoga Nidra and autonomic parameters',
+            tips: [
+              '10-20 minutes is ideal',
+              'Use a guided audio',
+              'Afternoon energy dip is perfect timing',
+            ],
+          },
+          {
+            icon: '💆',
+            name: 'Self-Massage/Foam Rolling',
+            desc: '10 minutes of self-myofascial release. Reduces muscle tension, improves flexibility, and accelerates recovery.',
+            color: '#F97316',
+            freq: 'daily',
+            sci: true,
+            ref: 'Cheatham et al. (2015) - Effects of self-myofascial release',
+            tips: [
+              'Focus on tight areas',
+              'Roll slowly — 1 inch per second',
+              "Don't roll directly on joints",
+            ],
+          },
+          {
+            icon: '🧖',
+            name: 'Epsom Salt Bath',
+            desc: '20-minute bath with 2 cups Epsom salt. Magnesium absorption reduces muscle soreness and promotes relaxation.',
+            color: '#06B6D4',
+            freq: '3x/week',
+            sci: true,
+            ref: 'Gröber et al. (2017) - Magnesium in prevention and therapy',
+            tips: [
+              'Water temperature matters — warm, not hot',
+              'Add lavender oil for bonus relaxation',
+              'Before bed for better sleep',
+            ],
+          },
+          {
+            icon: '🔥',
+            name: 'Sauna Therapy',
+            desc: '15-20 minutes at 170-180°F. Associated with reduced all-cause mortality and cardiovascular disease.',
+            color: '#EF4444',
+            freq: '3x/week',
+            sci: true,
+            ref: 'Laukkanen et al. (2015) - Sauna bathing and mortality',
+            tips: [
+              'Hydrate before and after',
+              'Cool down gradually',
+              'Start with 10 minutes',
+            ],
+          },
+        ],
+      };
+
+      // Build a flat popular list (top popularity from seed data)
+      var POPULAR_FLAT = [
+        {
+          icon: '🏃',
+          name: '7-Minute Workout',
+          meta: 'Daily · Health & Fitness',
+          color: '#EF4444',
+          sci: true,
+          cat: 'health_fitness',
+          idx: 0,
+        },
+        {
+          icon: '🙏',
+          name: 'Gratitude Journaling',
+          meta: 'Daily · Mindfulness',
+          color: '#F59E0B',
+          sci: true,
+          cat: 'mindfulness',
+          idx: 0,
+        },
+        {
+          icon: '🧠',
+          name: 'Deep Work Session',
+          meta: 'Daily · Productivity',
+          color: '#7C3AED',
+          sci: true,
+          cat: 'productivity',
+          idx: 0,
+        },
+        {
+          icon: '💤',
+          name: '7-9 Hours Sleep',
+          meta: 'Daily · Sleep',
+          color: '#4338CA',
+          sci: true,
+          cat: 'sleep',
+          idx: 0,
+        },
+        {
+          icon: '🧘',
+          name: '5-Minute Meditation',
+          meta: 'Daily · Morning Routine',
+          color: '#10B981',
+          sci: true,
+          cat: 'morning_routine',
+          idx: 0,
+        },
+        {
+          icon: '👟',
+          name: '10,000 Steps',
+          meta: 'Daily · Health & Fitness',
+          color: '#8B5CF6',
+          sci: true,
+          cat: 'health_fitness',
+          idx: 1,
+        },
+        {
+          icon: '📖',
+          name: 'Daily Reading',
+          meta: 'Daily · Learning',
+          color: '#B45309',
+          sci: true,
+          cat: 'learning',
+          idx: 1,
+        },
+        {
+          icon: '⏱️',
+          name: 'Pomodoro Technique',
+          meta: 'Daily · Productivity',
+          color: '#F97316',
+          sci: true,
+          cat: 'productivity',
+          idx: 1,
+        },
+        {
+          icon: '🌅',
+          name: 'Sunrise Viewing',
+          meta: 'Daily · Morning',
+          color: '#F59E0B',
+          sci: true,
+          cat: 'morning_routine',
+          idx: 2,
+        },
+        {
+          icon: '📦',
+          name: 'Box Breathing',
+          meta: 'Daily · Breathing',
+          color: '#3B82F6',
+          sci: true,
+          cat: 'breathing',
+          idx: 0,
+        },
+        {
+          icon: '🔄',
+          name: 'Spaced Repetition',
+          meta: 'Daily · Learning',
+          color: '#7C3AED',
+          sci: true,
+          cat: 'learning',
+          idx: 0,
+        },
+        {
+          icon: '🚶',
+          name: 'Post-Meal Walk',
+          meta: 'Daily · Health',
+          color: '#34D399',
+          sci: true,
+          cat: 'health_fitness',
+          idx: 6,
+        },
+      ];
+
+      var FEATURED_PACK = {
+        title: 'The Science-Backed Starter Pack',
+        desc: '5 research-backed habits chosen by behavioral scientists for maximum impact.',
+        habits: [
+          { emoji: '🙏', name: 'Gratitude Journaling', freq: 'daily' },
+          { emoji: '🧘', name: '5-Minute Meditation', freq: 'daily' },
+          { emoji: '🚶', name: 'Post-Meal Walk', freq: 'daily' },
+          { emoji: '📖', name: 'Daily Reading', freq: 'daily' },
+          { emoji: '💤', name: '7-9 Hours Sleep', freq: 'daily' },
+        ],
+      };
+
+      var PREM_PACKS = [
+        {
+          name: 'Huberman Protocol',
+          desc: '6 science habits',
+          emojis: ['☀️', '🚴', '🧊', '☕', '🧘', '🌅'],
+          bg: 'linear-gradient(160deg,#022C22,#111827)',
+          color: '#34D399',
+        },
+        {
+          name: 'Deep Work Stack',
+          desc: '5 focus habits',
+          emojis: ['🧠', '⏱️', '📱', '⏰', '📋'],
+          bg: 'linear-gradient(160deg,#0C2B4D,#111827)',
+          color: '#60A5FA',
+        },
+        {
+          name: 'Sleep Master',
+          desc: '6 sleep habits',
+          emojis: ['💤', '📵', '🌡️', '⏰', '🌙', '📝'],
+          bg: 'linear-gradient(160deg,#0F172A,#111827)',
+          color: '#818CF8',
+        },
+        {
+          name: 'Recovery Pro',
+          desc: '4 recovery habits',
+          emojis: ['🧘', '💆', '🧖', '🔥'],
+          bg: 'linear-gradient(160deg,#3D1039,#111827)',
+          color: '#FDA4AF',
+        },
+      ];
+
+      var PW_PERKS = [
+        {
+          emoji: '♾️',
+          text: 'Unlimited habits & templates',
+          bg: 'rgba(52,211,153,.08)',
+        },
+        {
+          emoji: '📦',
+          text: 'Premium packs & Huberman collection',
+          bg: 'rgba(139,92,246,.08)',
+        },
+        {
+          emoji: '🎙️',
+          text: 'Voice notes & vision boards',
+          bg: 'rgba(245,158,11,.08)',
+        },
+        {
+          emoji: '🛡️',
+          text: 'Smart streak rescue alerts',
+          bg: 'rgba(59,130,246,.08)',
+        },
+      ];
+
+      // ═══ STATE ═══
+      var used = 1,
+        LIMIT = 3,
+        addedSet = new Set(),
+        addedPop = new Set();
+
+      // ═══ RENDER ═══
+      function renderUsage() {
+        var d = document.getElementById('usageDots');
+        d.textContent = '';
+        for (var i = 0; i < LIMIT; i++) {
+          var dot = document.createElement('div');
+          dot.className = 'usage-dot' + (i >= used ? ' empty' : '');
+          d.appendChild(dot);
+        }
+        document.getElementById('usageCount').textContent =
+          used + ' of ' + LIMIT + ' free habits used';
+        document.getElementById('usageSub').textContent =
+          used >= LIMIT
+            ? 'Upgrade for unlimited'
+            : 'Add ' + (LIMIT - used) + ' more free';
+      }
+
+      function renderFeatured() {
+        var sec = document.getElementById('featSection');
+        var card = document.createElement('div');
+        card.className = 'feat';
+        var shim = document.createElement('div');
+        shim.className = 'feat-shimmer';
+        card.appendChild(shim);
+        var inner = document.createElement('div');
+        inner.className = 'feat-inner';
+        var badge = document.createElement('div');
+        badge.className = 'feat-badge';
+        var bdot = document.createElement('div');
+        bdot.className = 'feat-badge-dot';
+        badge.appendChild(bdot);
+        badge.appendChild(document.createTextNode(' Featured Collection'));
+        inner.appendChild(badge);
+        var title = document.createElement('div');
+        title.className = 'feat-title';
+        title.textContent = FEATURED_PACK.title;
+        inner.appendChild(title);
+        var desc = document.createElement('div');
+        desc.className = 'feat-desc';
+        desc.textContent = FEATURED_PACK.desc;
+        inner.appendChild(desc);
+        var chips = document.createElement('div');
+        chips.className = 'feat-chips';
+        FEATURED_PACK.habits.forEach(function (h) {
+          var c = document.createElement('div');
+          c.className = 'feat-chip';
+          var e = document.createElement('span');
+          e.className = 'feat-chip-em';
+          e.textContent = h.emoji;
+          c.appendChild(e);
+          c.appendChild(document.createTextNode(h.name));
+          chips.appendChild(c);
+        });
+        inner.appendChild(chips);
+        var foot = document.createElement('div');
+        foot.className = 'feat-foot';
+        var users = document.createElement('div');
+        users.className = 'feat-users';
+        users.textContent = '🔬 5 research-backed habits';
+        foot.appendChild(users);
+        var cta = document.createElement('button');
+        cta.className = 'feat-cta';
+        cta.textContent = 'Add All 5';
+        cta.addEventListener('click', function () {
+          showPackConfirm(FEATURED_PACK);
+        });
+        foot.appendChild(cta);
+        inner.appendChild(foot);
+        card.appendChild(inner);
+        sec.appendChild(card);
+      }
+
+      function renderPopular() {
+        var c = document.getElementById('popScroll');
+        POPULAR_FLAT.slice(0, 8).forEach(function (p, i) {
+          var card = document.createElement('div');
+          card.className = 'pop-card';
+          card.style.animation =
+            'fadeUp .28s cubic-bezier(.16,1,.3,1) ' +
+            (120 + i * 60) +
+            'ms both';
+          var bar = document.createElement('div');
+          bar.className = 'pop-bar';
+          bar.style.background = p.color;
+          card.appendChild(bar);
+          var icon = document.createElement('div');
+          icon.className = 'pop-icon';
+          icon.style.background = p.color + '14';
+          icon.textContent = p.icon;
+          card.appendChild(icon);
+          var badges = document.createElement('div');
+          badges.className = 'pop-badges';
+          if (p.sci) {
+            var s = document.createElement('div');
+            s.className = 'pop-sci';
+            s.textContent = '🔬 Research';
+            badges.appendChild(s);
+          }
+          card.appendChild(badges);
+          var nm = document.createElement('div');
+          nm.className = 'pop-name';
+          nm.textContent = p.name;
+          card.appendChild(nm);
+          var meta = document.createElement('div');
+          meta.className = 'pop-meta';
+          meta.textContent = p.meta;
+          card.appendChild(meta);
+          var btn = document.createElement('button');
+          btn.className = 'pop-add';
+          btn.style.background = p.color + '14';
+          btn.style.color = p.color;
+          btn.textContent = '+ Add';
+          btn.addEventListener(
+            'click',
+            (function (idx, pop, b) {
+              return function (e) {
+                e.stopPropagation();
+                if (addedPop.has(idx)) return;
+                if (used >= LIMIT) {
+                  showPaywall();
+                  return;
+                }
+                addedPop.add(idx);
+                used++;
+                renderUsage();
+                b.classList.add('done');
+                b.style.background = 'rgba(52,211,153,.1)';
+                b.style.color = '#34D399';
+                b.textContent = '\u2713 Added';
+                showToast(pop.icon, pop.name);
+                burst(pop.color);
+              };
+            })(i, p, btn)
+          );
+          card.appendChild(btn);
+          c.appendChild(card);
+        });
+      }
+
+      function renderPremPacks() {
+        var c = document.getElementById('premScroll');
+        PREM_PACKS.forEach(function (pk) {
+          var card = document.createElement('div');
+          card.className = 'prem-pack';
+          card.addEventListener('click', function () {
+            showPaywall();
+          });
+          var bg = document.createElement('div');
+          bg.className = 'prem-bg';
+          bg.style.background = pk.bg;
+          var lock = document.createElement('div');
+          lock.className = 'prem-lock';
+          lock.textContent = '\uD83D\uDD12';
+          bg.appendChild(lock);
+          var emojis = document.createElement('div');
+          emojis.className = 'prem-emojis';
+          pk.emojis.forEach(function (em) {
+            var e = document.createElement('div');
+            e.className = 'prem-emoji';
+            e.textContent = em;
+            emojis.appendChild(e);
+          });
+          bg.appendChild(emojis);
+          var nm = document.createElement('div');
+          nm.className = 'prem-name';
+          nm.textContent = pk.name;
+          bg.appendChild(nm);
+          var meta = document.createElement('div');
+          meta.className = 'prem-meta';
+          meta.textContent = pk.desc;
+          bg.appendChild(meta);
+          var cta = document.createElement('button');
+          cta.className = 'prem-cta';
+          cta.textContent = '\uD83D\uDD13 Unlock Pack';
+          bg.appendChild(cta);
+          card.appendChild(bg);
+          c.appendChild(card);
+        });
+      }
+
+      function renderCats() {
+        var g = document.getElementById('catGrid');
+        CATS.forEach(function (cat, i) {
+          var card = document.createElement('div');
+          card.className = 'cat-card';
+          card.style.background = cat.bg;
+          card.style.animation =
+            'fadeUp .28s cubic-bezier(.16,1,.3,1) ' +
+            (180 + i * 60) +
+            'ms both';
+          card.addEventListener('click', function () {
+            openCat(cat.id, cat.icon, cat.name);
+          });
+          var ic = document.createElement('span');
+          ic.className = 'cat-ic';
+          ic.textContent = cat.icon;
+          card.appendChild(ic);
+          var nm = document.createElement('div');
+          nm.className = 'cat-nm';
+          nm.style.color = cat.text;
+          nm.textContent = cat.name;
+          card.appendChild(nm);
+          var ct = document.createElement('div');
+          ct.className = 'cat-ct';
+          ct.textContent =
+            (TPL[cat.id] ? TPL[cat.id].length : cat.count) + ' templates';
+          card.appendChild(ct);
+          if (cat.premium) {
+            var pro = document.createElement('span');
+            pro.className = 'pro-tag';
+            pro.textContent = 'PRO';
+            card.appendChild(pro);
+          }
+          g.appendChild(card);
+        });
+      }
+
+      function renderPwPerks() {
+        var c = document.getElementById('pwPerks');
+        PW_PERKS.forEach(function (pk) {
+          var r = document.createElement('div');
+          r.className = 'pw-perk';
+          var ic = document.createElement('div');
+          ic.className = 'pw-perk-ic';
+          ic.style.background = pk.bg;
+          ic.textContent = pk.emoji;
+          r.appendChild(ic);
+          var t = document.createElement('span');
+          t.textContent = pk.text;
+          r.appendChild(t);
+          c.appendChild(r);
+        });
+      }
+
+      // ═══ SEE ALL VIEW ═══
+      function openSeeAll() {
+        var list = document.getElementById('seeAllList');
+        list.textContent = '';
+        document.getElementById('seeAllSub').textContent =
+          POPULAR_FLAT.length + ' templates \u00B7 sorted by popularity';
+        POPULAR_FLAT.forEach(function (p, i) {
+          var t = TPL[p.cat] && TPL[p.cat][p.idx] ? TPL[p.cat][p.idx] : null;
+          var card = document.createElement('div');
+          card.className = 'tc';
+          card.style.animation =
+            'fadeUp .28s cubic-bezier(.16,1,.3,1) ' + (i * 60 + 60) + 'ms both';
+          var acc = document.createElement('div');
+          acc.className = 'tc-accent';
+          acc.style.background = p.color;
+          card.appendChild(acc);
+          if (t)
+            card.addEventListener('click', function () {
+              openPv(p.cat, p.idx);
+            });
+          var top = document.createElement('div');
+          top.className = 'tc-top';
+          var em = document.createElement('div');
+          em.className = 'tc-em';
+          em.style.background = p.color + '12';
+          em.textContent = p.icon;
+          top.appendChild(em);
+          var info = document.createElement('div');
+          info.className = 'tc-info';
+          var nm = document.createElement('div');
+          nm.className = 'tc-nm';
+          nm.textContent = p.name;
+          info.appendChild(nm);
+          var desc = document.createElement('div');
+          desc.className = 'tc-desc';
+          desc.textContent = t ? t.desc : p.meta;
+          info.appendChild(desc);
+          top.appendChild(info);
+          card.appendChild(top);
+          var bot = document.createElement('div');
+          bot.className = 'tc-bot';
+          var tags = document.createElement('div');
+          tags.className = 'tc-tags';
+          if (p.sci) {
+            var st = document.createElement('span');
+            st.className = 'tag sci';
+            st.textContent = '\uD83D\uDD2C Science';
+            tags.appendChild(st);
+          }
+          var ft = document.createElement('span');
+          ft.className = 'tag';
+          ft.textContent = t ? t.freq : 'daily';
+          tags.appendChild(ft);
+          bot.appendChild(tags);
+          var acts = document.createElement('div');
+          acts.className = 'tc-acts';
+          var key = 'pop-' + i;
+          var isAdded = addedPop.has(i);
+          var ab = document.createElement('button');
+          ab.className = 'tc-add' + (isAdded ? ' done' : '');
+          ab.id = 'sa-' + i;
+          ab.style.background = isAdded
+            ? 'rgba(52,211,153,.1)'
+            : p.color + '14';
+          ab.style.color = isAdded ? '#34D399' : p.color;
+          ab.textContent = isAdded ? '\u2713 Added' : '+ Add';
+          ab.addEventListener(
+            'click',
+            (function (idx, pop) {
+              return function (e) {
+                e.stopPropagation();
+                if (addedPop.has(idx)) return;
+                if (used >= LIMIT) {
+                  showPaywall();
+                  return;
+                }
+                addedPop.add(idx);
+                used++;
+                renderUsage();
+                var b = document.getElementById('sa-' + idx);
+                if (b) {
+                  b.style.background = 'rgba(52,211,153,.1)';
+                  b.style.color = '#34D399';
+                  b.textContent = '\u2713 Added';
+                  b.classList.add('done');
+                }
+                showToast(pop.icon, pop.name);
+                burst(pop.color);
+              };
+            })(i, p)
+          );
+          acts.appendChild(ab);
+          bot.appendChild(acts);
+          card.appendChild(bot);
+          list.appendChild(card);
+        });
+        document.getElementById('seeAllView').classList.add('active');
+      }
+      function closeSeeAll() {
+        document.getElementById('seeAllView').classList.remove('active');
+      }
+
+      // ═══ CATEGORY VIEW ═══
+      function openCat(catId, icon, name) {
+        var templates = TPL[catId] || [];
+        var sciCount = templates.filter(function (t) {
+          return t.sci;
+        }).length;
+        document.getElementById('catViewIcon').textContent = icon + ' ';
+        document.getElementById('catViewName').textContent = name;
+        document.getElementById('catViewSub').textContent =
+          templates.length +
+          ' templates \u00B7 ' +
+          sciCount +
+          ' research-backed';
+        var list = document.getElementById('catList');
+        list.textContent = '';
+        templates.forEach(function (t, i) {
+          var key = catId + '-' + i;
+          var isAdded = addedSet.has(key);
+          var isLocked = !!t.premium;
+          var card = document.createElement('div');
+          card.className = 'tc' + (isLocked ? ' locked' : '');
+          card.style.animation =
+            'fadeUp .28s cubic-bezier(.16,1,.3,1) ' + (i * 60 + 60) + 'ms both';
+          var acc2 = document.createElement('div');
+          acc2.className = 'tc-accent';
+          acc2.style.background = t.color;
+          card.appendChild(acc2);
+          card.addEventListener('click', function () {
+            openPv(catId, i);
+          });
+          var top = document.createElement('div');
+          top.className = 'tc-top';
+          var em = document.createElement('div');
+          em.className = 'tc-em';
+          em.style.background = t.color + '12';
+          em.textContent = t.icon;
+          if (isLocked) {
+            var lk = document.createElement('div');
+            lk.className = 'tc-lock';
+            lk.textContent = '\uD83D\uDD12';
+            em.appendChild(lk);
+          }
+          top.appendChild(em);
+          var info = document.createElement('div');
+          info.className = 'tc-info';
+          var nm = document.createElement('div');
+          nm.className = 'tc-nm';
+          nm.textContent = t.name;
+          info.appendChild(nm);
+          var desc = document.createElement('div');
+          desc.className = 'tc-desc';
+          desc.textContent = t.desc;
+          info.appendChild(desc);
+          top.appendChild(info);
+          card.appendChild(top);
+          var bot = document.createElement('div');
+          bot.className = 'tc-bot';
+          var tags = document.createElement('div');
+          tags.className = 'tc-tags';
+          if (t.sci) {
+            var st = document.createElement('span');
+            st.className = 'tag sci';
+            st.textContent = '\uD83D\uDD2C Science';
+            tags.appendChild(st);
+          }
+          if (isLocked) {
+            var pt = document.createElement('span');
+            pt.className = 'tag pro';
+            pt.textContent = '\u2728 Premium';
+            tags.appendChild(pt);
+          }
+          var ft = document.createElement('span');
+          ft.className = 'tag';
+          ft.textContent = t.freq;
+          tags.appendChild(ft);
+          bot.appendChild(tags);
+          var acts = document.createElement('div');
+          acts.className = 'tc-acts';
+          var pb = document.createElement('button');
+          pb.className = 'tc-prev';
+          pb.textContent = 'Preview';
+          pb.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openPv(catId, i);
+          });
+          acts.appendChild(pb);
+          var ab = document.createElement('button');
+          ab.className =
+            'tc-add' + (isAdded ? ' done' : '') + (isLocked ? ' lk' : '');
+          ab.id = 'ab-' + key;
+          ab.style.background = isAdded
+            ? 'rgba(52,211,153,.1)'
+            : isLocked
+              ? 'rgba(139,92,246,.1)'
+              : t.color + '14';
+          ab.style.color = isAdded ? '#34D399' : isLocked ? '#C4B5FD' : t.color;
+          ab.textContent = isAdded
+            ? '\u2713 Added'
+            : isLocked
+              ? '\uD83D\uDD13 Unlock'
+              : '+ Add';
+          ab.addEventListener(
+            'click',
+            (function (cid, idx, locked, tpl) {
+              return function (e) {
+                e.stopPropagation();
+                if (addedSet.has(cid + '-' + idx)) return;
+                if (locked) {
+                  showPaywall();
+                  return;
+                }
+                if (used >= LIMIT) {
+                  showPaywall();
+                  return;
+                }
+                addedSet.add(cid + '-' + idx);
+                used++;
+                renderUsage();
+                var b = document.getElementById('ab-' + cid + '-' + idx);
+                if (b) {
+                  b.style.background = 'rgba(52,211,153,.1)';
+                  b.style.color = '#34D399';
+                  b.textContent = '\u2713 Added';
+                  b.classList.add('done');
+                }
+                showToast(tpl.icon, tpl.name);
+                burst(tpl.color);
+              };
+            })(catId, i, isLocked, t)
+          );
+          acts.appendChild(ab);
+          bot.appendChild(acts);
+          card.appendChild(bot);
+          list.appendChild(card);
+        });
+        document.getElementById('catView').classList.add('active');
+      }
+      function closeCat() {
+        document.getElementById('catView').classList.remove('active');
+      }
+
+      // ═══ PREVIEW ═══
+      function openPv(catId, index) {
+        var t = TPL[catId][index];
+        var isAdded = addedSet.has(catId + '-' + index);
+        var isLocked = !!t.premium;
+        var content = document.getElementById('pvContent');
+        content.textContent = '';
+        var hero = document.createElement('div');
+        hero.className = 'pv-hero';
+        var hic = document.createElement('div');
+        hic.className = 'pv-hero-ic';
+        hic.style.background = t.color + '20';
+        hic.textContent = t.icon;
+        var glow = document.createElement('div');
+        glow.className = 'pv-hero-glow';
+        glow.style.background = t.color;
+        hic.appendChild(glow);
+        hero.appendChild(hic);
+        var hnm = document.createElement('div');
+        hnm.className = 'pv-hero-nm';
+        hnm.textContent = t.name;
+        hero.appendChild(hnm);
+        var pills = document.createElement('div');
+        pills.className = 'pv-pills';
+        ['\u23F0 ' + t.freq, '\u23F3 5-10 min'].forEach(function (txt) {
+          var p = document.createElement('span');
+          p.className = 'pv-pill';
+          p.textContent = txt;
+          pills.appendChild(p);
+        });
+        if (t.sci) {
+          var sp = document.createElement('span');
+          sp.className = 'pv-pill';
+          sp.style.color = '#059669';
+          sp.style.background = 'rgba(16,185,129,.06)';
+          sp.style.borderColor = '#6EE7B7';
+          sp.textContent = '\uD83D\uDD2C Research';
+          pills.appendChild(sp);
+        }
+        if (isLocked) {
+          var lp = document.createElement('span');
+          lp.className = 'pv-pill';
+          lp.style.color = '#C4B5FD';
+          lp.style.background = 'rgba(139,92,246,.06)';
+          lp.textContent = '\u2728 Premium';
+          pills.appendChild(lp);
+        }
+        hero.appendChild(pills);
+        content.appendChild(hero);
+        var asec = document.createElement('div');
+        asec.className = 'pv-sec';
+        var at = document.createElement('div');
+        at.className = 'pv-sec-t';
+        at.textContent = 'About';
+        asec.appendChild(at);
+        var ap = document.createElement('div');
+        ap.className = 'pv-sec-p';
+        ap.textContent = t.desc;
+        asec.appendChild(ap);
+        content.appendChild(asec);
+        if (t.sci && t.ref) {
+          var ssec = document.createElement('div');
+          ssec.className = 'pv-sec';
+          var st = document.createElement('div');
+          st.className = 'pv-sec-t';
+          st.textContent = 'Research';
+          ssec.appendChild(st);
+          var sb = document.createElement('div');
+          sb.className = 'sci-box';
+          var sh = document.createElement('div');
+          sh.className = 'sci-hdr';
+          sh.textContent = '\uD83D\uDD2C Science-Backed';
+          sb.appendChild(sh);
+          var stxt = document.createElement('div');
+          stxt.className = 'sci-txt';
+          stxt.textContent = t.ref;
+          sb.appendChild(stxt);
+          ssec.appendChild(sb);
+          content.appendChild(ssec);
+        }
+        if (t.tips && t.tips.length) {
+          var tsec = document.createElement('div');
+          tsec.className = 'pv-sec';
+          var tt = document.createElement('div');
+          tt.className = 'pv-sec-t';
+          tt.textContent = 'Tips for Success';
+          tsec.appendChild(tt);
+          var tl = document.createElement('div');
+          tl.className = 'tips-list';
+          t.tips.forEach(function (tip) {
+            var item = document.createElement('div');
+            item.className = 'tip';
+            var dot = document.createElement('div');
+            dot.className = 'tip-dot';
+            item.appendChild(dot);
+            var txt = document.createElement('span');
+            txt.textContent = tip;
+            item.appendChild(txt);
+            tl.appendChild(item);
+          });
+          tsec.appendChild(tl);
+          content.appendChild(tsec);
+        }
+        var foot = document.getElementById('pvFoot');
+        foot.textContent = '';
+        var qa = document.createElement('button');
+        qa.className = 'btn-qa' + (isAdded ? ' done' : '');
+        qa.id = 'pvAdd';
+        if (isLocked) {
+          qa.style.background = 'linear-gradient(135deg,#7B52C4,#6366F1)';
+          qa.style.color = '#fff';
+          qa.textContent = '\uD83D\uDD13 Unlock Premium';
+        } else if (isAdded) {
+          qa.style.background = 'rgba(52,211,153,.12)';
+          qa.style.color = '#34D399';
+          qa.textContent = '\u2713 Added';
+        } else {
+          qa.style.background = t.color;
+          qa.style.color = '#fff';
+          qa.textContent = '+ Quick Add';
+        }
+        qa.addEventListener(
+          'click',
+          (function (cid, idx, locked, tpl) {
+            return function () {
+              if (locked) {
+                showPaywall();
+                return;
+              }
+              if (addedSet.has(cid + '-' + idx)) return;
+              if (used >= LIMIT) {
+                showPaywall();
+                return;
+              }
+              addedSet.add(cid + '-' + idx);
+              used++;
+              renderUsage();
+              var b = document.getElementById('pvAdd');
+              if (b) {
+                b.style.background = 'rgba(52,211,153,.12)';
+                b.style.color = '#34D399';
+                b.textContent = '\u2713 Added';
+                b.classList.add('done');
+              }
+              var lb = document.getElementById('ab-' + cid + '-' + idx);
+              if (lb) {
+                lb.style.background = 'rgba(52,211,153,.1)';
+                lb.style.color = '#34D399';
+                lb.textContent = '\u2713 Added';
+                lb.classList.add('done');
+              }
+              showToast(tpl.icon, tpl.name);
+              burst(tpl.color);
+              setTimeout(closePv, 800);
+            };
+          })(catId, index, isLocked, t)
+        );
+        foot.appendChild(qa);
+        var custLink = document.createElement('button');
+        custLink.className = 'btn-cust';
+        custLink.textContent = isLocked ? 'Learn more' : 'Customize';
+        custLink.addEventListener('click', closePv);
+        foot.appendChild(custLink);
+        document.getElementById('pvOv').classList.add('open');
+      }
+      function closePv() {
+        document.getElementById('pvOv').classList.remove('open');
+      }
+
+      // ═══ PACK CONFIRM ═══
+      function showPackConfirm(pack) {
+        document.getElementById('pcTitle').textContent = pack.title;
+        document.getElementById('pcDesc').textContent =
+          'These ' + pack.habits.length + ' habits will be added to your list';
+        var list = document.getElementById('pcList');
+        list.textContent = '';
+        pack.habits.forEach(function (h) {
+          var item = document.createElement('div');
+          item.className = 'pc-item';
+          var em = document.createElement('div');
+          em.className = 'pc-item-em';
+          em.style.background = 'rgba(52,211,153,.08)';
+          em.textContent = h.emoji;
+          item.appendChild(em);
+          var info = document.createElement('div');
+          info.style.flex = '1';
+          var nm = document.createElement('div');
+          nm.className = 'pc-item-nm';
+          nm.textContent = h.name;
+          info.appendChild(nm);
+          var freq = document.createElement('div');
+          freq.className = 'pc-item-freq';
+          freq.textContent = h.freq;
+          info.appendChild(freq);
+          item.appendChild(info);
+          var chk = document.createElement('span');
+          chk.className = 'pc-item-chk';
+          chk.textContent = '✓';
+          item.appendChild(chk);
+          list.appendChild(item);
+        });
+        var btn = document.getElementById('pcConfirm');
+        btn.textContent = 'Add All ' + pack.habits.length;
+        btn.onclick = function () {
+          if (used + pack.habits.length > LIMIT) {
+            closePc();
+            setTimeout(showPaywall, 300);
+            return;
+          }
+          // Animate checkmarks one by one
+          var checks = list.querySelectorAll('.pc-item-chk');
+          checks.forEach(function (c, i) {
+            setTimeout(function () {
+              c.classList.add('on');
+            }, i * 200);
+          });
+          setTimeout(
+            function () {
+              used += pack.habits.length;
+              renderUsage();
+              closePc();
+              showToast('📦', pack.habits.length + ' habits added');
+              burst('#34D399');
+            },
+            checks.length * 200 + 300
+          );
+        };
+        document.getElementById('pcOv').classList.add('open');
+      }
+      function closePc() {
+        document.getElementById('pcOv').classList.remove('open');
+      }
+
+      // ═══ PAYWALL ═══
+      function showPaywall() {
+        document.getElementById('pwOv').classList.add('open');
+      }
+      function closePw() {
+        document.getElementById('pwOv').classList.remove('open');
+      }
+
+      // ═══ TOAST ═══
+      function showToast(icon, name) {
+        document.getElementById('toastIc').textContent = icon;
+        document.getElementById('toastNm').textContent = name;
+        var rem = LIMIT - used;
+        document.getElementById('toastSub').textContent =
+          rem > 0
+            ? 'Added \u00B7 ' +
+              rem +
+              ' free slot' +
+              (rem !== 1 ? 's' : '') +
+              ' left'
+            : 'Added to your habits';
+        var t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(function () {
+          t.classList.remove('show');
+        }, 5000);
+      }
+
+      // ═══ CONFETTI ═══
+      function burst(color) {
+        var box = document.getElementById('confBox');
+        var colors = [
+          color,
+          '#F59E0B',
+          '#7B52C4',
+          '#EC4899',
+          '#34D399',
+          '#3B82F6',
+        ];
+        for (var i = 0; i < 18; i++) {
+          var p = document.createElement('div');
+          p.className = 'conf';
+          p.style.left = '50%';
+          p.style.top = '55%';
+          p.style.background = colors[i % colors.length];
+          p.style.setProperty('--tx', (Math.random() - 0.5) * 260 + 'px');
+          p.style.setProperty('--ty', -(Math.random() * 320 + 80) + 'px');
+          p.style.setProperty('--tr', (Math.random() - 0.5) * 720 + 'deg');
+          p.style.animationDelay = Math.random() * 80 + 'ms';
+          p.style.width = 5 + Math.random() * 5 + 'px';
+          p.style.height = 5 + Math.random() * 5 + 'px';
+          p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+          p.classList.add('go');
+          box.appendChild(p);
+          (function (el) {
+            setTimeout(function () {
+              el.remove();
+            }, 1000);
+          })(p);
+        }
+      }
+
+      // ═══ INIT ═══
+      renderUsage();
+      renderFeatured();
+      renderPopular();
+      renderPremPacks();
+      renderCats();
+      renderPwPerks();
+    </script>
+  </body>
+</html>

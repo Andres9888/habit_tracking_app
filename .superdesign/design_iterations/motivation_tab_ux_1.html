@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motivation Tab UX Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #1c1917; }
+
+    /* Staggered entrance animations */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes checkPop {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .section-1 { animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0ms forwards; opacity: 0; }
+    .section-2 { animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 80ms forwards; opacity: 0; }
+    .section-3 { animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 160ms forwards; opacity: 0; }
+    .section-4 { animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 240ms forwards; opacity: 0; }
+    .section-5 { animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 320ms forwards; opacity: 0; }
+    .section-6 { animation: slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 400ms forwards; opacity: 0; }
+
+    .check-anim { animation: checkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards; opacity: 0; }
+
+    .empty-pulse { animation: pulse 2s ease-in-out infinite; }
+
+    .shimmer-bg {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+
+    .section-card {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .section-card:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+
+  <!-- Header -->
+  <div class="max-w-md mx-auto mb-8">
+    <h1 class="text-2xl font-bold text-white mb-2">Motivation Tab UX</h1>
+    <p class="text-stone-400 text-sm">Staggered animations + progress indicators + better empty states</p>
+  </div>
+
+  <!-- Phone Frames -->
+  <div class="flex flex-col md:flex-row gap-8 justify-center items-start">
+
+    <!-- BEFORE -->
+    <div class="flex flex-col items-center">
+      <div class="text-stone-500 text-sm font-medium mb-3 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-stone-600"></span>
+        BEFORE
+      </div>
+
+      <div class="w-[320px] bg-stone-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="bg-stone-100 rounded-[2rem] overflow-hidden h-[640px]">
+          <!-- Status Bar -->
+          <div class="h-11 bg-stone-50 flex items-center justify-center">
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+          </div>
+
+          <!-- Content -->
+          <div class="p-4 space-y-3 overflow-auto h-[580px]">
+            <!-- Your Why - Empty -->
+            <div class="bg-white rounded-xl p-4 border-l-4 border-rose-400 shadow-sm">
+              <div class="flex gap-3">
+                <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center">
+                  <i data-lucide="heart" class="w-5 h-5 text-rose-500"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-semibold text-stone-800 mb-1">Your Why</div>
+                  <div class="text-sm text-stone-400 italic">What's driving you to build this habit?</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Your Identity - Empty -->
+            <div class="bg-white rounded-xl p-4 border-l-4 border-violet-400 shadow-sm">
+              <div class="flex gap-3">
+                <div class="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-violet-500"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-semibold text-stone-800 mb-1">Your Identity</div>
+                  <div class="text-sm text-stone-400 italic">Who are you becoming?</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Your Cue - Empty -->
+            <div class="bg-white rounded-xl p-4 border-l-4 border-amber-400 shadow-sm">
+              <div class="flex gap-3">
+                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                  <i data-lucide="target" class="w-5 h-5 text-amber-500"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="font-semibold text-stone-800 mb-1">Your Cue</div>
+                  <div class="text-sm text-stone-400 italic">When and where will you do this?</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vision Board - Empty -->
+            <div class="bg-white rounded-xl p-4 shadow-sm">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="eye" class="w-4 h-4 text-stone-500"></i>
+                  <span class="font-semibold text-stone-800">Vision Board</span>
+                </div>
+                <button class="bg-violet-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full">+ Add</button>
+              </div>
+              <div class="bg-stone-50 rounded-xl py-6 flex flex-col items-center">
+                <i data-lucide="eye" class="w-7 h-7 text-stone-300 mb-2"></i>
+                <div class="text-sm text-stone-500">What are you building toward?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center max-w-[280px]">
+        <p class="text-stone-400 text-xs">Static, no animations. Empty states lack engagement.</p>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div class="flex flex-col items-center">
+      <div class="text-emerald-400 text-sm font-medium mb-3 flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+        AFTER
+      </div>
+
+      <div class="w-[320px] bg-stone-900 rounded-[2.5rem] p-3 shadow-2xl">
+        <div class="bg-stone-100 rounded-[2rem] overflow-hidden h-[640px]">
+          <!-- Status Bar -->
+          <div class="h-11 bg-stone-50 flex items-center justify-center">
+            <div class="w-24 h-6 bg-black rounded-full"></div>
+          </div>
+
+          <!-- Content with animations -->
+          <div class="p-4 space-y-3 overflow-auto h-[580px]">
+
+            <!-- Your Why - FILLED with checkmark -->
+            <div class="section-card bg-white rounded-xl p-4 border-l-4 border-rose-400 shadow-sm section-1 relative">
+              <div class="flex gap-3">
+                <div class="w-10 h-10 bg-rose-100 rounded-xl flex items-center justify-center relative">
+                  <i data-lucide="heart" class="w-5 h-5 text-rose-500"></i>
+                  <!-- Completion check -->
+                  <div class="check-anim absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-sm">
+                    <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="font-semibold text-stone-800 mb-1">Your Why</div>
+                  <div class="text-sm text-stone-600">"To feel more confident and energized"</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Your Identity - FILLED with checkmark + badge -->
+            <div class="section-card bg-white rounded-xl p-4 border-l-4 border-violet-400 shadow-sm section-2 relative">
+              <div class="flex gap-3">
+                <div class="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center relative">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-violet-500"></i>
+                  <div class="check-anim absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center shadow-sm" style="animation-delay: 0.7s">
+                    <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-semibold text-stone-800">Your Identity</span>
+                    <span class="bg-violet-100 text-violet-700 text-[10px] font-medium px-2 py-0.5 rounded-full">Most powerful</span>
+                  </div>
+                  <div class="text-sm text-stone-600">"I am a person who prioritizes health"</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Your Cue - EMPTY with improved empty state -->
+            <div class="section-card bg-white rounded-xl p-4 border-l-4 border-amber-400 shadow-sm section-3 relative overflow-hidden">
+              <!-- Subtle shimmer overlay for empty state -->
+              <div class="absolute inset-0 shimmer-bg pointer-events-none"></div>
+              <div class="flex gap-3 relative">
+                <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center empty-pulse">
+                  <i data-lucide="target" class="w-5 h-5 text-amber-500"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center justify-between mb-1">
+                    <span class="font-semibold text-stone-800">Your Cue</span>
+                    <span class="text-amber-600 text-xs font-medium flex items-center gap-1">
+                      <i data-lucide="plus" class="w-3 h-3"></i>
+                      Set up
+                    </span>
+                  </div>
+                  <div class="text-sm text-stone-500">Link this habit to an existing routine</div>
+                  <div class="mt-2 text-xs text-amber-600 bg-amber-50 rounded-lg px-2 py-1.5 inline-flex items-center gap-1">
+                    <i data-lucide="lightbulb" class="w-3 h-3"></i>
+                    Habits with cues are 2x more likely to stick
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vision Board - With items -->
+            <div class="section-card bg-white rounded-xl p-4 shadow-sm section-4">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="eye" class="w-4 h-4 text-stone-500"></i>
+                  <span class="font-semibold text-stone-800">Vision Board</span>
+                  <span class="bg-violet-100 text-violet-700 text-xs font-medium px-1.5 py-0.5 rounded">2</span>
+                </div>
+                <button class="bg-violet-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-violet-700 transition-colors">+ Add</button>
+              </div>
+              <div class="space-y-2">
+                <div class="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-3 border border-violet-100">
+                  <div class="text-sm font-semibold text-stone-800">Completed marathon</div>
+                  <div class="text-xs text-stone-500 mt-0.5">Crossing that finish line...</div>
+                </div>
+                <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl p-3 border border-rose-100">
+                  <div class="text-sm font-semibold text-stone-800">Morning energy</div>
+                  <div class="text-xs text-stone-500 mt-0.5">Waking up refreshed...</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Affirmations -->
+            <div class="section-card bg-white rounded-xl p-4 shadow-sm section-5">
+              <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center gap-2">
+                  <i data-lucide="message-circle" class="w-4 h-4 text-stone-500"></i>
+                  <span class="font-semibold text-stone-800">Affirmations</span>
+                </div>
+                <button class="flex items-center gap-1 text-violet-600 text-xs font-medium">
+                  <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
+                  Shuffle
+                </button>
+              </div>
+              <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-xl p-4 border border-emerald-100 text-center">
+                <div class="text-lg mb-1">💪</div>
+                <div class="text-sm font-medium text-stone-700">"Every step forward is progress"</div>
+              </div>
+            </div>
+
+            <!-- Mental Exercises -->
+            <div class="section-card bg-white rounded-xl p-4 shadow-sm section-6">
+              <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="brain" class="w-4 h-4 text-stone-500"></i>
+                <span class="font-semibold text-stone-800">Mental Exercises</span>
+              </div>
+              <div class="text-sm text-stone-500 mb-3">Science-backed techniques</div>
+              <div class="bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl p-3 flex items-center justify-between border border-cyan-100">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">🎯</span>
+                  <span class="text-sm font-medium text-stone-700">Mental Contrasting</span>
+                </div>
+                <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 text-center max-w-[280px]">
+        <p class="text-stone-400 text-xs">Staggered entrance (80ms), progress checkmarks, engaging empty states with tips.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Improvements Summary -->
+  <div class="max-w-2xl mx-auto mt-12 bg-stone-800/50 rounded-2xl p-6 border border-stone-700">
+    <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+      <i data-lucide="sparkles" class="w-5 h-5 text-violet-400"></i>
+      UX Improvements
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="move-up" class="w-4 h-4"></i>
+          Staggered Entrance
+        </div>
+        <div class="text-stone-400">80ms delay between sections. Spring animation with overshoot.</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-4 h-4"></i>
+          Progress Indicators
+        </div>
+        <div class="text-stone-400">Checkmarks pop in when sections are filled. Shows completion.</div>
+      </div>
+      <div class="bg-stone-900/50 rounded-xl p-4">
+        <div class="text-emerald-400 font-medium mb-2 flex items-center gap-2">
+          <i data-lucide="lightbulb" class="w-4 h-4"></i>
+          Better Empty States
+        </div>
+        <div class="text-stone-400">Pulsing icons, helpful tips, shimmer effect. Invites action.</div>
+      </div>
+    </div>
+
+    <!-- Replay Button -->
+    <div class="mt-6 flex justify-center">
+      <button onclick="replayAnimations()" class="bg-violet-600 hover:bg-violet-500 text-white font-medium px-6 py-2.5 rounded-xl transition-colors flex items-center gap-2">
+        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+        Replay Animations
+      </button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function replayAnimations() {
+      const sections = document.querySelectorAll('[class*="section-"]');
+      const checks = document.querySelectorAll('.check-anim');
+
+      // Reset sections
+      sections.forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight; // Trigger reflow
+      });
+
+      // Reset checks
+      checks.forEach(el => {
+        el.style.animation = 'none';
+        el.offsetHeight;
+      });
+
+      // Restart animations
+      setTimeout(() => {
+        sections.forEach(el => {
+          const classes = el.className.split(' ');
+          const sectionClass = classes.find(c => c.match(/section-\d/));
+          if (sectionClass) {
+            const num = parseInt(sectionClass.replace('section-', ''));
+            el.style.animation = `slideInUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) ${(num-1) * 80}ms forwards`;
+          }
+        });
+
+        checks.forEach((el, i) => {
+          el.style.animation = `checkPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) ${600 + i * 100}ms forwards`;
+        });
+      }, 50);
+    }
+  </script>
+
+</body>
+</html>

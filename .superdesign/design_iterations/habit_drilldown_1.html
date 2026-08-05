@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Library Drill-down — Current vs Proposed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --canvas:#F5F1ED;
+    --card:#F8F5F1;
+    --border:#DDD8D2;
+    --divider:#EFEAE4;
+    --raised:#FFFFFF;
+    --iconTile:#FAF7F0;
+    --chipBg:rgba(250,247,240,0.75);
+    --chipBorder:rgba(255,255,255,0.55);
+    --text1:#2D2A26;
+    --text2:#6B6560;
+    --text3:#6E6660;
+    --quiet:#9CA3AF;
+    --green:#15793C;
+    --greenTint:#DCF7E4;
+    --greenSoft:#EAF6EC;
+    --gold:#E8B94D;
+    --goldFill:#F2E3B8;
+    --addBg:#2FA36F;
+    --addFg:#FFFFFF;
+    --addedBg:#DDF2E4;
+    --addedFg:#157A4E;
+    --hero0:#F6DEC8;
+    --hero1:#F3E3D2;
+    --pageBg:#2A2723;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--pageBg)!important;
+    font-family:'DM Sans',sans-serif!important;
+    color:#EDE8E2;
+    padding:32px 20px 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page-head{max-width:1180px;margin:0 auto 28px;}
+  .page-head h1{font-family:'Literata',serif!important;font-size:26px;font-weight:700;letter-spacing:-0.4px;margin-bottom:6px}
+  .page-head p{color:#A9A29A;font-size:14.5px;line-height:22px;max-width:720px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-size:12.5px;color:#A9A29A}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .sw-cut{background:#E06B5A}.sw-add{background:#4FA97B}.sw-chg{background:#D7A93F}
+
+  .stage{display:flex;gap:44px;justify-content:center;flex-wrap:wrap;max-width:1180px;margin:0 auto}
+  .col{width:392px}
+  .col-label{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase}
+  .col-label.cur{color:#B9A28F}
+  .col-label.pro{color:#7FD0A3}
+  .col-note{font-size:12.5px;color:#8E8880;margin-bottom:14px;line-height:18px;min-height:36px}
+
+  /* phone */
+  .phone{
+    width:392px;height:820px;border-radius:44px;background:#0F0E0D;
+    padding:11px;box-shadow:0 26px 60px rgba(0,0,0,.55);position:relative
+  }
+  .screen{
+    width:100%;height:100%;border-radius:34px;overflow:hidden;background:var(--canvas);
+    position:relative;display:flex;flex-direction:column
+  }
+  .notch{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:26px;background:#0F0E0D;border-radius:0 0 16px 16px;z-index:40}
+  .scroll{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#CFC7BE transparent}
+  .scroll::-webkit-scrollbar{width:5px}
+  .scroll::-webkit-scrollbar-thumb{background:#CFC7BE;border-radius:3px}
+
+  /* header */
+  .modal-head{position:sticky;top:0;z-index:30;background:var(--hero0);display:flex;align-items:center;justify-content:space-between;padding:38px 16px 8px}
+  .circ-btn{width:34px;height:34px;border-radius:17px;background:rgba(250,247,240,.7);display:flex;align-items:center;justify-content:center;color:var(--text1)}
+
+  /* hero */
+  .hero{background:linear-gradient(180deg,var(--hero0) 0%,var(--hero1) 62%,var(--canvas) 100%);padding:4px 24px 26px;text-align:center}
+  .icon-tile{width:88px;height:88px;border-radius:24px;background:var(--iconTile);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 2px 10px rgba(122,86,50,.35)}
+  .h-title{font-family:'Literata',serif!important;font-size:30px;font-weight:700;letter-spacing:-0.4px;line-height:36px;color:var(--text1);margin-bottom:16px}
+  .h-tagline{font-size:15.5px;line-height:21px;color:var(--text2);max-width:300px;margin:-6px auto 16px}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;border:1px solid var(--chipBorder);background:var(--chipBg);padding:8px 14px;font-size:14px;font-weight:600;color:var(--text2)}
+  .desc{padding:20px 20px 24px;font-size:17px;line-height:26px;color:var(--text2);text-align:center}
+
+  /* science stack */
+  .stack{padding:0 18px 30px;display:flex;flex-direction:column;gap:26px}
+  .seclabel{display:flex;align-items:center;gap:8px;margin:0 2px 10px;font-size:13px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text1)}
+  .seclabel .ic{color:var(--green);display:flex}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px}
+  .card-flush{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+
+  /* why card */
+  .why{background:var(--card);border:1px solid var(--border);border-radius:22px;overflow:hidden;position:relative;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .why-bar{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green);z-index:2}
+  .why-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px 14px 18px;border-bottom:1px solid var(--border);background:linear-gradient(150deg,var(--greenTint) 0%,var(--greenSoft) 100%)}
+  .badge{display:inline-flex;align-items:center;gap:6px;background:var(--raised);border-radius:999px;padding:7px 13px;font-size:12px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--green);box-shadow:0 1px 2px rgba(0,0,0,.06)}
+  .readbtn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid rgba(21,121,60,.3);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:700;color:var(--green)}
+  .why-body{padding:16px 16px 16px 18px}
+  .overline{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+  .lead{font-family:'Literata',serif!important;font-size:17px;line-height:26px;letter-spacing:-0.2px;color:var(--text1)}
+  .evidence{font-size:14px;line-height:20px;color:var(--text2);margin-top:12px}
+
+  /* benefits */
+  .brow{display:flex;align-items:center;gap:12px;padding:13px 16px}
+  .brow + .brow{border-top:1px solid var(--divider)}
+  .bicon{width:38px;height:38px;border-radius:12px;background:var(--addedBg);display:flex;align-items:center;justify-content:center;color:var(--addedFg);flex:0 0 auto}
+  .btitle{font-size:15px;font-weight:600;line-height:20px;color:var(--text1)}
+  .bdesc{font-size:12px;line-height:16px;color:var(--text2);margin-top:1px}
+
+  /* timeline */
+  .tl{position:relative}
+  .spine{position:absolute;left:7px;top:8px;bottom:14px;width:2px;background:var(--border);border-radius:1px}
+  .tlrow{display:flex;gap:16px;position:relative;padding-bottom:16px}
+  .tlrow:last-child{padding-bottom:0}
+  .dot{width:16px;height:16px;border-radius:8px;border:2px solid var(--addBg);background:var(--card);margin-top:3px;z-index:1;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:9px}
+  .dot.peak{background:var(--goldFill);border-color:var(--gold)}
+  .tlwhen{font-family:'JetBrains Mono',monospace!important;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--green)}
+  .tlwhen.peak{color:#B98C1E}
+  .tltitle{font-size:15px;font-weight:600;line-height:20px;color:var(--text1);margin-top:2px}
+  .tldesc{font-size:12px;line-height:18px;color:var(--text2);margin-top:2px}
+
+  /* steps */
+  .step{display:flex;align-items:flex-start;gap:12px;padding-bottom:14px}
+  .step:last-of-type{padding-bottom:0}
+  .stepnum{width:26px;height:26px;border-radius:13px;background:var(--addedBg);color:var(--addedFg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-top:1px;flex:0 0 auto}
+  .steptext{font-size:15px;line-height:22px;color:var(--text1)}
+  .cadence{display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);margin-top:16px;padding-top:16px}
+  .cadence .lab{font-size:14px;font-weight:700;color:#B98C1E}
+  .cadence .val{font-size:14px;color:var(--text2);margin-left:auto;text-align:right}
+
+  /* strength track */
+  .strintro{font-size:14px;line-height:21px;color:var(--text2)}
+  .strtrack{display:flex;align-items:flex-start;margin-top:16px}
+  .strnode{display:flex;flex-direction:column;align-items:center;gap:6px;width:52px;flex:0 0 auto}
+  .strcirc{width:34px;height:34px;border-radius:17px;background:var(--raised);border:2px solid;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .strlab{font-size:10px;color:var(--text3);text-align:center}
+  .strconn{height:2px;flex:1;margin-top:16px}
+
+  /* sources */
+  .srow{display:flex;gap:12px;padding:14px 16px}
+  .srow + .srow{border-top:1px solid var(--divider)}
+  .snum{font-family:'JetBrains Mono',monospace!important;font-size:12px;font-weight:700;color:var(--quiet);flex:0 0 auto}
+  .stitle{font-size:14px;line-height:19px;color:var(--text1)}
+  .smeta{font-size:12px;line-height:17px;color:var(--text3);margin-top:3px}
+  .smeta i{font-style:italic}
+  .disclaim{font-size:12px;color:var(--quiet);margin:10px 4px 0;line-height:17px}
+
+  /* footer */
+  .footer{border-top:1px solid var(--border);background:var(--canvas);padding:14px 20px 22px;display:flex;flex-direction:column;align-items:center;gap:10px;z-index:20}
+  .cta{width:100%;background:var(--addBg);color:var(--addFg);border-radius:16px;padding:17px;text-align:center;font-size:17px;font-weight:700;box-shadow:0 6px 16px rgba(21,122,78,.28)}
+  .customize{font-size:15px;font-weight:600;color:var(--text2);padding:6px}
+  .social{font-size:12.5px;color:var(--text3);display:flex;align-items:center;gap:6px}
+
+  /* annotation chips */
+  .anno{position:relative}
+  .tag{
+    position:absolute;right:-13px;top:-11px;z-index:15;
+    font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;color:#191714;white-space:nowrap;
+    box-shadow:0 3px 10px rgba(0,0,0,.35)
+  }
+  .tag.cut{background:#E06B5A}
+  .tag.add{background:#4FA97B}
+  .tag.chg{background:#D7A93F}
+  .strike{position:relative;opacity:.55}
+  .strike::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(224,107,90,.13) 0 8px,transparent 8px 16px);border-radius:18px;pointer-events:none}
+  .badcopy{color:#B33F2C!important;text-decoration:underline wavy rgba(179,63,44,.5) 1.5px}
+
+  /* summary */
+  .summary{max-width:1180px;margin:44px auto 0;background:#211F1C;border:1px solid #3A3630;border-radius:20px;padding:26px 28px}
+  .summary h2{font-family:'Literata',serif!important;font-size:19px;font-weight:700;margin-bottom:16px;color:#F0EBE4}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;padding:9px 12px;color:#8E8880;font-weight:600;font-size:11.5px;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #3A3630}
+  td{padding:11px 12px;border-bottom:1px solid #2E2B27;color:#CFC8C0;line-height:19px;vertical-align:top}
+  td:first-child{white-space:nowrap;font-weight:700;color:#F0EBE4}
+  .k{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:700;text-transform:uppercase;color:#191714}
+  .k.cut{background:#E06B5A}.k.add{background:#4FA97B}.k.chg{background:#D7A93F}
+  @media (max-width:900px){.stage{gap:34px}}
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>Habit Library drill-down — current vs proposed</h1>
+  <p>Same template (Box Breathing), same real palette and type stack from the app. Left is what ships today. Right applies the four fixes plus the copy nits. Both frames scroll.</p>
+  <div class="legend">
+    <span><i class="swatch sw-cut"></i> Remove</span>
+    <span><i class="swatch sw-chg"></i> Change copy</span>
+    <span><i class="swatch sw-add"></i> Add</span>
+  </div>
+</div>
+
+<div class="stage">
+
+  <!-- ============ CURRENT ============ -->
+  <div class="col">
+    <div class="col-label cur"><span>Current</span></div>
+    <div class="col-note">Ships today. Three different automaticity numbers, cadence stated twice, reference echoed twice.</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="scroll">
+          <div class="modal-head">
+            <div class="circ-btn"><i data-lucide="chevron-left" style="width:19px;height:19px"></i></div>
+            <div class="circ-btn"><i data-lucide="x" style="width:19px;height:19px"></i></div>
+          </div>
+
+          <div class="hero">
+            <div class="icon-tile">🫁</div>
+            <div class="h-title">Box Breathing (4-4-4-4)</div>
+            <div class="h-tagline">A four-count breath cycle that turns down stress on demand.</div>
+            <div class="pills">
+              <span class="pill"><i data-lucide="clock" style="width:15px;height:15px"></i>Daily · 5 min</span>
+              <span class="pill"><i data-lucide="tag" style="width:15px;height:15px"></i>Breathing</span>
+              <span class="anno pill"><i data-lucide="sprout" style="width:15px;height:15px"></i>Simple · ~30d</span>
+            </div>
+          </div>
+
+          <div class="desc">Four equal counts — in, hold, out, hold — to steady your nervous system in under two minutes.</div>
+
+          <div class="stack">
+            <!-- why -->
+            <div class="why">
+              <div class="why-bar"></div>
+              <div class="why-head">
+                <span class="badge"><i data-lucide="shield-check" style="width:13px;height:13px"></i>Science-backed</span>
+                <span class="anno readbtn"><span class="tag cut">dupe link</span><i data-lucide="file-text" style="width:13px;height:13px"></i>Read paper</span>
+              </div>
+              <div class="why-body">
+                <div class="overline">Why it works</div>
+                <div class="lead">Slowing your breath to roughly six cycles a minute, with an extended exhale, increases vagal tone — the parasympathetic brake on your stress response. It is one of the few levers that shifts your physiology in under a minute, deliberately.</div>
+                <div class="evidence">A 2018 review in Frontiers in Human Neuroscience found slow-breathing practices increase parasympathetic activity and are associated with reduced anxiety and improved emotional control.</div>
+              </div>
+            </div>
+
+            <!-- benefits -->
+            <div>
+              <div class="seclabel"><span class="ic"><i data-lucide="sparkles" style="width:16px;height:16px"></i></span>What you&rsquo;ll feel</div>
+              <div class="card-flush">
+                <div class="brow"><div class="bicon"><i data-lucide="waves" style="width:19px;height:19px"></i></div><div><div class="btitle">Calmer within a minute</div><div class="bdesc">Heart rate and muscle tension drop while you breathe.</div></div></div>
+                <div class="brow"><div class="bicon"><i data-lucide="target" style="width:19px;height:19px"></i></div><div><div class="btitle">Clearer thinking under pressure</div><div class="bdesc">Less reactivity when something goes wrong.</div></div></div>
+                <div class="brow"><div class="bicon"><i data-lucide="leaf" style="width:19px;height:19px"></i></div><div><div class="btitle">A portable reset</div><div class="bdesc">Works anywhere, needs nothing, nobody can tell.</div></div></div>
+              </div>
+            </div>
+
+            <!-- timeline -->
+            <div>
+              <div class="seclabel"><span class="ic"><i data-lucide="clock" style="width:16px;height:16px"></i></span>What to expect</div>
+              <div class="card">
+                <div class="tl">
+                  <div class="spine"></div>
+                  <div class="tlrow"><div class="dot"></div><div><div class="tlwhen">First round</div><div class="tltitle">Body settles</div><div class="tldesc">The relaxation response begins within a few cycles.</div></div></div>
+                  <div class="tlrow"><div class="dot"></div><div><div class="tlwhen">Week 2</div><div class="tltitle">You reach for it</div><div class="tldesc">It starts showing up automatically in stressful moments.</div></div></div>
+                  <div class="tlrow anno"><div class="dot peak">💎</div><div><div class="tlwhen peak badcopy">~30 days</div><div class="tltitle">Automatic</div><div class="tldesc">Slower breathing becomes your default under load.</div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- how to start -->
+            <div>
+              <div class="seclabel"><span class="ic"><i data-lucide="check-circle-2" style="width:16px;height:16px"></i></span>How to start</div>
+              <div class="card">
+                <div class="step"><div class="stepnum">1</div><div class="steptext">Inhale 4, hold 4, exhale 4, hold 4. That is one round.</div></div>
+                <div class="step"><div class="stepnum">2</div><div class="steptext">Start with four rounds — under two minutes.</div></div>
+                <div class="step"><div class="stepnum">3</div><div class="steptext">Anchor it to a trigger: before meetings, or the moment you feel tension.</div></div>
+                <div class="cadence anno">
+                  <span class="tag cut">already in hero</span>
+                  <i data-lucide="repeat" style="width:15px;height:15px;color:#B98C1E"></i>
+                  <span class="lab">Suggested cadence</span>
+                  <span class="val badcopy">Daily · 5 min</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- strength -->
+            <div class="anno">
+              <span class="tag chg">same on every habit</span>
+              <div class="seclabel"><span class="ic"><i data-lucide="link-2" style="width:16px;height:16px"></i></span>How it becomes automatic</div>
+              <div class="card">
+                <div class="strintro">Every day you keep the chain, this habit gets stronger — climbing five stages from Starting to Automatic. Most daily habits cross into automatic around <span class="badcopy">66 days</span>.</div>
+                <div class="strtrack">
+                  <div class="strnode"><div class="strcirc" style="border-color:#9CA3AF">🥉</div><div class="strlab">Starting</div></div>
+                  <div class="strconn" style="background:#60A5FA"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#60A5FA">🥈</div><div class="strlab">Building</div></div>
+                  <div class="strconn" style="background:#34D399"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#34D399">🥇</div><div class="strlab">Developing</div></div>
+                  <div class="strconn" style="background:#FBBF24"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#FBBF24">🏆</div><div class="strlab">Strong</div></div>
+                  <div class="strconn" style="background:#A78BFA"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#A78BFA">💎</div><div class="strlab">Automatic</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- research -->
+            <div>
+              <div class="seclabel"><span class="ic"><i data-lucide="quote" style="width:17px;height:17px"></i></span>The research</div>
+              <div class="card-flush">
+                <div class="srow"><span class="snum">01</span><div><div class="stitle">How breath-control can change your life: a systematic review on psycho-physiological correlates of slow breathing</div><div class="smeta">Zaccaro A, et al. · <i>Frontiers in Human Neuroscience</i> · 2018</div></div></div>
+              </div>
+              <div class="disclaim">Summaries are educational, not medical advice.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="cta">Add this habit</div>
+          <div class="customize">Customize</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PROPOSED ============ -->
+  <div class="col">
+    <div class="col-label pro"><span>Proposed</span></div>
+    <div class="col-note">One automaticity number sourced from the template. Cadence and reference stated once. Strength block personalized.</div>
+    <div class="phone">
+      <div class="notch"></div>
+      <div class="screen">
+        <div class="scroll">
+          <div class="modal-head">
+            <div class="circ-btn"><i data-lucide="chevron-left" style="width:19px;height:19px"></i></div>
+            <div class="circ-btn"><i data-lucide="x" style="width:19px;height:19px"></i></div>
+          </div>
+
+          <div class="hero">
+            <div class="icon-tile">🫁</div>
+            <div class="h-title">Box Breathing (4-4-4-4)</div>
+            <div class="h-tagline">A four-count breath cycle that turns down stress on demand.</div>
+            <div class="pills">
+              <span class="pill"><i data-lucide="clock" style="width:15px;height:15px"></i>Daily · 5 min</span>
+              <span class="pill"><i data-lucide="tag" style="width:15px;height:15px"></i>Breathing</span>
+              <span class="pill"><i data-lucide="sprout" style="width:15px;height:15px"></i>Simple · ~30d</span>
+            </div>
+          </div>
+
+          <div class="desc">Four equal counts — in, hold, out, hold — to steady your nervous system in under two minutes.</div>
+
+          <div class="stack">
+            <!-- why: read paper pill removed, sources own the links -->
+            <div class="why">
+              <div class="why-bar"></div>
+              <div class="why-head">
+                <span class="badge"><i data-lucide="shield-check" style="width:13px;height:13px"></i>Science-backed</span>
+              </div>
+              <div class="why-body">
+                <div class="overline">Why it works</div>
+                <div class="lead">Slowing your breath to roughly six cycles a minute, with an extended exhale, increases vagal tone — the parasympathetic brake on your stress response. It is one of the few levers that shifts your physiology in under a minute, deliberately.</div>
+                <div class="evidence">A 2018 review in Frontiers in Human Neuroscience found slow-breathing practices increase parasympathetic activity and are associated with reduced anxiety and improved emotional control.</div>
+              </div>
+            </div>
+
+            <!-- benefits: header renamed -->
+            <div class="anno">
+              <span class="tag chg">&ldquo;What you&rsquo;ll feel&rdquo; → &ldquo;What changes&rdquo;</span>
+              <div class="seclabel"><span class="ic"><i data-lucide="sparkles" style="width:16px;height:16px"></i></span>What changes</div>
+              <div class="card-flush">
+                <div class="brow"><div class="bicon"><i data-lucide="waves" style="width:19px;height:19px"></i></div><div><div class="btitle">Calmer within a minute</div><div class="bdesc">Heart rate and muscle tension drop while you breathe.</div></div></div>
+                <div class="brow"><div class="bicon"><i data-lucide="target" style="width:19px;height:19px"></i></div><div><div class="btitle">Clearer thinking under pressure</div><div class="bdesc">Less reactivity when something goes wrong.</div></div></div>
+                <div class="brow"><div class="bicon"><i data-lucide="leaf" style="width:19px;height:19px"></i></div><div><div class="btitle">A portable reset</div><div class="bdesc">Works anywhere, needs nothing, nobody can tell.</div></div></div>
+              </div>
+            </div>
+
+            <!-- timeline unchanged: it is now the single source of the 30d claim -->
+            <div>
+              <div class="seclabel"><span class="ic"><i data-lucide="clock" style="width:16px;height:16px"></i></span>What to expect</div>
+              <div class="card">
+                <div class="tl">
+                  <div class="spine"></div>
+                  <div class="tlrow"><div class="dot"></div><div><div class="tlwhen">First round</div><div class="tltitle">Body settles</div><div class="tldesc">The relaxation response begins within a few cycles.</div></div></div>
+                  <div class="tlrow"><div class="dot"></div><div><div class="tlwhen">Week 2</div><div class="tltitle">You reach for it</div><div class="tldesc">It starts showing up automatically in stressful moments.</div></div></div>
+                  <div class="tlrow"><div class="dot peak">💎</div><div><div class="tlwhen peak">~30 days</div><div class="tltitle">Automatic</div><div class="tldesc">Slower breathing becomes your default under load.</div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- how to start: derived cadence row gone -->
+            <div class="anno">
+              <span class="tag cut">derived cadence row gone</span>
+              <div class="seclabel"><span class="ic"><i data-lucide="check-circle-2" style="width:16px;height:16px"></i></span>How to start</div>
+              <div class="card">
+                <div class="step"><div class="stepnum">1</div><div class="steptext">Inhale 4, hold 4, exhale 4, hold 4. That is one round.</div></div>
+                <div class="step"><div class="stepnum">2</div><div class="steptext">Start with four rounds — under two minutes.</div></div>
+                <div class="step"><div class="stepnum">3</div><div class="steptext">Anchor it to a trigger: before meetings, or the moment you feel tension.</div></div>
+                <div class="cadence">
+                  <i data-lucide="repeat" style="width:15px;height:15px;color:#B98C1E"></i>
+                  <span class="lab">Cadence</span>
+                  <span class="val">Daily · 5 min, or on demand</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- strength: personalized to this template's 30 days -->
+            <div class="anno">
+              <span class="tag chg">reads this habit&rsquo;s 30 days</span>
+              <div class="seclabel"><span class="ic"><i data-lucide="link-2" style="width:16px;height:16px"></i></span>How it becomes automatic</div>
+              <div class="card">
+                <div class="strintro">Every day you keep the chain, this habit gets stronger — climbing five stages from Starting to Automatic. Simple habits like this one usually cross into automatic around <strong style="color:#15793C">30 days</strong>.</div>
+                <div class="strtrack">
+                  <div class="strnode"><div class="strcirc" style="border-color:#9CA3AF">🥉</div><div class="strlab">Starting</div></div>
+                  <div class="strconn" style="background:#60A5FA"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#60A5FA">🥈</div><div class="strlab">Building</div></div>
+                  <div class="strconn" style="background:#34D399"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#34D399">🥇</div><div class="strlab">Developing</div></div>
+                  <div class="strconn" style="background:#FBBF24"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#FBBF24">🏆</div><div class="strlab">Strong</div></div>
+                  <div class="strconn" style="background:#A78BFA"></div>
+                  <div class="strnode"><div class="strcirc" style="border-color:#A78BFA">💎</div><div class="strlab">Automatic</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- research: now the only place the paper link lives -->
+            <div class="anno">
+              <span class="tag add">only link home</span>
+              <div class="seclabel"><span class="ic"><i data-lucide="quote" style="width:17px;height:17px"></i></span>The research</div>
+              <div class="card-flush">
+                <div class="srow"><span class="snum">01</span><div><div class="stitle">How breath-control can change your life: a systematic review on psycho-physiological correlates of slow breathing <i data-lucide="external-link" style="width:12px;height:12px;color:#15793C;vertical-align:-1px"></i></div><div class="smeta">Zaccaro A, et al. · <i>Frontiers in Human Neuroscience</i> · 2018</div></div></div>
+              </div>
+              <div class="disclaim">Summaries are educational, not medical advice.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="anno" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:10px">
+            <span class="tag add" style="right:-6px;top:-20px">optional</span>
+            <div class="social"><i data-lucide="users" style="width:13px;height:13px"></i>1,240 people run this habit</div>
+            <div class="cta">Add this habit</div>
+            <div class="customize">Customize first</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="summary">
+  <h2>What changed, and where</h2>
+  <table>
+    <thead><tr><th>Fix</th><th>Kind</th><th>Change</th><th>File</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>1</td><td><span class="k chg">change</span></td>
+        <td>Hardcoded &ldquo;around 66 days&rdquo; contradicted both the hero pill (~30d) and the timeline peak (~30 days). Block now takes the template&rsquo;s own growth days.</td>
+        <td>StrengthExplainerBlock.tsx:34</td>
+      </tr>
+      <tr>
+        <td>2</td><td><span class="k cut">remove</span></td>
+        <td>Cadence row derived from frequency + estimatedMinutes repeated the hero pill verbatim. Row now renders only for an authored cadenceLabel; label shortened to &ldquo;Cadence&rdquo;.</td>
+        <td>HowToStartBlock.tsx:15-24, 62-72</td>
+      </tr>
+      <tr>
+        <td>3</td><td><span class="k cut">remove</span></td>
+        <td>&ldquo;Read paper&rdquo; pill and the source row pointed at the same URL. Sources own citation links; the pill stays only when there are no structured sources.</td>
+        <td>WhyItWorksCard.tsx:63-87, SourcesBlock.tsx:19-31</td>
+      </tr>
+      <tr>
+        <td>4</td><td><span class="k chg">change</span></td>
+        <td>Identical strength block on every template read as boilerplate. Personalizing the sentence (fix 1) is the cheap version; removing it when a timeline exists is the aggressive one.</td>
+        <td>StrengthExplainerBlock.tsx</td>
+      </tr>
+      <tr>
+        <td>Nit</td><td><span class="k chg">change</span></td>
+        <td>&ldquo;What you&rsquo;ll feel&rdquo; → &ldquo;What changes&rdquo; — authored benefits like &ldquo;Peak HRV&rdquo; are not feelings.</td>
+        <td>BenefitsBlock.tsx:34</td>
+      </tr>
+      <tr>
+        <td>Nit</td><td><span class="k chg">change</span></td>
+        <td>&ldquo;Customize&rdquo; → &ldquo;Customize first&rdquo; — the a11y hint already says before adding; the visible label should too.</td>
+        <td>FooterSecondaryActions.tsx:53</td>
+      </tr>
+      <tr>
+        <td>Opt</td><td><span class="k add">add</span></td>
+        <td>Quiet social proof above the CTA. Popularity was deliberately pulled out of the hero pills, so this keeps it away from commitment info.</td>
+        <td>FooterSection.tsx</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

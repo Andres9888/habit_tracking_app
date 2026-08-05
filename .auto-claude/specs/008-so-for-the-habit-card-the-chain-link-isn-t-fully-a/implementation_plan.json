@@ -1,0 +1,92 @@
+{
+  "feature": "Fix Habit Card Chain Link Alignment & Overlap",
+  "description": "Fix two visual issues in the habit card: (1) chain link icons not horizontally aligned with header emoji/icon, and (2) chain link connectors overlapping into the habit card boundary.",
+  "created_at": "2026-01-06T03:35:09.977Z",
+  "updated_at": "2026-01-06T03:55:35.000Z",
+  "status": "human_review",
+  "planStatus": "review",
+  "spec_name": "fix-habit-card-chain-alignment",
+  "workflow_type": "simple",
+  "total_phases": 1,
+  "recommended_workers": 1,
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Fix Chain Link Alignment & Overlap",
+      "description": "Adjust HabitChainVisualizer layout to align with 5-column grid and fix connector overflow",
+      "depends_on": [],
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Fix horizontal alignment: Ensure HabitChainVisualizer circles align with the 5-column flex layout used in DraggableHabit title row. The first habit circle should align with the emoji icon in column 1.",
+          "service": "main",
+          "status": "completed",
+          "files_to_create": [],
+          "files_to_modify": [
+            "src/components/HabitChainVisualizer/HabitChainVisualizer.tsx"
+          ],
+          "patterns_from": [
+            "src/components/DraggableHabit/DraggableHabit.tsx"
+          ],
+          "verification": {
+            "type": "manual",
+            "run": "Visual inspection - chain link icons should align horizontally with habit card header emoji"
+          },
+          "notes": "Fixed horizontal alignment by adjusting flex distribution: first day gets flex 1.5 (20% width) while days 2-7 get flex 1 each (sharing remaining 80%). This aligns the first habit circle with the emoji icon in the 5-column title row.",
+          "updated_at": "2026-01-06T03:43:08.679513+00:00"
+        },
+        {
+          "id": "subtask-1-2",
+          "description": "Fix connector overlap: Adjust connector positioning (lines 579-598) to prevent extending beyond card boundaries. May need to reduce marginLeft/right values or add overflow hidden.",
+          "service": "main",
+          "status": "completed",
+          "files_to_create": [],
+          "files_to_modify": [
+            "src/components/HabitChainVisualizer/HabitChainVisualizer.tsx"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "run": "Visual inspection - connectors should not extend outside habit card boundary"
+          },
+          "notes": "Added overflow: 'hidden' to the main container View at line 515. This clips connectors at card boundaries, preventing: (1) previous week connector (left: -10) from extending past left edge, and (2) regular day connectors (right: -18) from extending past right edge.",
+          "updated_at": "2026-01-06T03:44:44.182728+00:00"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-01-06T03:35:00Z",
+    "complexity": "simple",
+    "estimated_sessions": 1
+  },
+  "last_updated": "2026-01-06T03:48:00.335914+00:00",
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 0,
+    "issues_found": [
+      {
+        "description": "None"
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-01-06T03:48:00.335896+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-06T03:48:08.166040+00:00",
+      "issues": [],
+      "duration_seconds": 193.05
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  },
+  "recoveryNote": "Task recovered from stuck state at 2026-01-06T03:55:35.000Z"
+}

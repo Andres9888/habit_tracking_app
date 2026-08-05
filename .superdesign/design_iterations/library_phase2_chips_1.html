@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Habit Library — Phase 2: Quick + High ROI chips + scroll affordance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #ffffff;
+        --card-muted: #faf8f5;
+        --border: #ddd8d2;
+        --text-primary: #3d3833;
+        --text-body: #524d47;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8a827b;
+        --primary-50: #d1fae5;
+        --primary-100: #a7f3d0;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --primary-800: #065f46;
+
+        /* Quick chip — amber */
+        --quick-bg: #fbbf24;
+        --quick-border: #f59e0b;
+        --quick-text: #78350f;
+        --quick-soft-bg: #fef3c7;
+        --quick-soft-border: #fde68a;
+        --quick-soft-text: #92400e;
+
+        /* High ROI chip — red */
+        --roi-bg: #fee2e2;
+        --roi-border: #ef4444;
+        --roi-text: #7f1d1d;
+
+        /* Category colors */
+        --morning-bg: #fef3cd;
+        --morning-border: #f5d76e;
+        --morning-text: #5c3d03;
+        --mental-bg: #ede9fe;
+        --mental-border: #c4b5fd;
+        --mental-text: #5b21b6;
+        --fitness-bg: #d1fae5;
+        --fitness-border: #6ee7b7;
+        --fitness-text: #047857;
+        --sleep-bg: #e0e7ff;
+        --sleep-border: #a5b4fc;
+        --sleep-text: #3730a3;
+        --mindful-bg: #fce7f3;
+        --mindful-border: #f9a8d4;
+        --mindful-text: #9d174d;
+        --learning-bg: #cffafe;
+        --learning-border: #67e8f9;
+        --learning-text: #155e75;
+        --finance-bg: #fef9c3;
+        --finance-border: #fde047;
+        --finance-text: #713f12;
+      }
+      html,
+      body {
+        background: #efe9e2;
+        font-family: 'Inter', system-ui, sans-serif !important;
+        color: var(--text-primary);
+      }
+
+      /* iPhone 16 Pro Max frame — 430 × 932 */
+      .phone {
+        width: 430px;
+        background: var(--bg);
+        border-radius: 52px;
+        box-shadow:
+          0 30px 80px -20px rgba(34, 26, 16, 0.45),
+          0 8px 16px rgba(34, 26, 16, 0.08);
+        overflow: hidden;
+        position: relative;
+      }
+      .dynamic-island {
+        position: absolute;
+        top: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 32px;
+        background: #1c1816;
+        border-radius: 20px;
+        z-index: 30;
+      }
+      .scroll-container {
+        height: 932px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+      .scroll-container::-webkit-scrollbar {
+        width: 0;
+      }
+
+      /* Chip row */
+      .chips-row {
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .chips-row::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        white-space: nowrap;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 9999px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-secondary);
+        flex-shrink: 0;
+        line-height: 16px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 160ms ease;
+      }
+      .chip:hover {
+        transform: translateY(-1px);
+      }
+      .chip-active-all {
+        background: var(--primary-600);
+        border-color: var(--primary-700);
+        color: #fff;
+      }
+      .chip-quick {
+        background: var(--quick-soft-bg);
+        border-color: var(--quick-soft-border);
+        color: var(--quick-soft-text);
+      }
+      .chip-quick.active {
+        background: var(--quick-bg);
+        border-color: var(--quick-border);
+        color: var(--quick-text);
+      }
+      .chip-roi {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #991b1b;
+      }
+      .chip-roi.active {
+        background: var(--roi-bg);
+        border-color: var(--roi-border);
+        color: var(--roi-text);
+      }
+
+      /* Existing right-edge fade — current narrow version */
+      .fade-old {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 32px;
+        background: linear-gradient(
+          to right,
+          rgba(245, 241, 237, 0),
+          rgba(245, 241, 237, 1)
+        );
+        pointer-events: none;
+      }
+
+      /* Proposed wider fade + chevron */
+      .fade-new {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 64px;
+        background: linear-gradient(
+          to right,
+          rgba(245, 241, 237, 0),
+          rgba(245, 241, 237, 0.8) 40%,
+          rgba(245, 241, 237, 1) 100%
+        );
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 12px;
+      }
+      .fade-chevron {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        line-height: 1;
+        margin-bottom: 2px;
+        animation: chevron-pulse 2.4s ease-in-out infinite;
+      }
+      @keyframes chevron-pulse {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: translateX(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translateX(2px);
+        }
+      }
+
+      /* Body content */
+      .header-title {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+        color: var(--text-primary);
+      }
+      .header-sub {
+        font-size: 14px;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+      .search-bar {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 14px;
+        font-size: 14px;
+        color: var(--text-tertiary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Filtered results card list (mini) */
+      .result-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .result-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--card-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .result-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .result-meta {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-top: 2px;
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 9999px;
+      }
+      .badge-quick {
+        background: var(--quick-soft-bg);
+        color: var(--quick-soft-text);
+      }
+      .badge-roi {
+        background: var(--roi-bg);
+        color: var(--roi-text);
+      }
+
+      /* Caption labels under each phone */
+      .caption {
+        font-size: 13px;
+        color: #6b6560;
+        text-align: center;
+        max-width: 430px;
+        margin-top: 16px;
+        line-height: 1.5;
+      }
+      .caption-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 4px;
+      }
+
+      /* Annotation arrows */
+      .anno {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--primary-700);
+        background: var(--primary-50);
+        padding: 4px 8px;
+        border-radius: 8px;
+        border: 1px solid #6ee7b7;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-6">
+      <h1 class="text-3xl font-bold text-center mb-2" style="color: var(--text-primary)">
+        Habit Library — Phase 2
+      </h1>
+      <p class="text-center mb-12" style="color: var(--text-body)">
+        Two new filter chips (⚡ Quick · 🔥 High ROI) + improved scroll affordance for iPhone 16 Pro Max
+      </p>
+
+      <div class="grid grid-cols-2 gap-12 justify-items-center">
+        <!-- BEFORE: Current state -->
+        <div>
+          <div class="phone">
+            <div class="dynamic-island"></div>
+            <div class="scroll-container">
+              <!-- Status bar spacer -->
+              <div style="height: 54px"></div>
+              <!-- Header -->
+              <div class="px-6 pt-2">
+                <div class="header-title">What do you want to work on?</div>
+                <div class="header-sub">Pick a path — habits proven to work.</div>
+              </div>
+              <!-- Search -->
+              <div class="px-5 pt-5">
+                <div class="search-bar">
+                  <span style="opacity: 0.5">🔍</span>
+                  <span>Try: morning walk · journaling · cold shower</span>
+                </div>
+              </div>
+              <!-- CHIP ROW — current 8 chips with narrow fade -->
+              <div class="relative pt-4">
+                <div class="chips-row flex gap-2 px-5" style="padding-right: 40px">
+                  <div class="chip chip-active-all">✨ All</div>
+                  <div class="chip">🌅 Morning</div>
+                  <div class="chip">🧠 Mental</div>
+                  <div class="chip">💪 Fitness</div>
+                  <div class="chip">😴 Sleep</div>
+                  <div class="chip">🧘 Mindful</div>
+                  <div class="chip">📚 Learning</div>
+                  <div class="chip">💰 Finance</div>
+                </div>
+                <div class="fade-old"></div>
+              </div>
+              <!-- Body skeleton -->
+              <div class="px-5 pt-6 space-y-3">
+                <div
+                  style="
+                    background: var(--card);
+                    border-radius: 20px;
+                    padding: 22px;
+                    border: 1px solid var(--border);
+                  "
+                >
+                  <div style="font-size: 14px; color: var(--primary-700); font-weight: 700">
+                    🌅 Today&#39;s pick
+                  </div>
+                  <div style="font-size: 22px; font-weight: 700; margin-top: 6px">
+                    Wake up energized
+                  </div>
+                  <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px">
+                    12 habits · ⚡ Sleep · 💪 Fitness · 🧘 Mindful
+                  </div>
+                </div>
+                <div
+                  style="
+                    height: 110px;
+                    background: var(--card-muted);
+                    border-radius: 16px;
+                    border: 1px solid var(--border);
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">
+            <div class="caption-title">BEFORE — current chip row</div>
+            7 category chips after &ldquo;All&rdquo;. The 32 px right-edge fade is too subtle on a
+            430 pt wide screen — easy to miss that &ldquo;Learning&rdquo; and &ldquo;Finance&rdquo;
+            exist off-screen. No way to filter for short or high-impact habits.
+          </div>
+        </div>
+
+        <!-- AFTER: Proposed state -->
+        <div>
+          <div class="phone">
+            <div class="dynamic-island"></div>
+            <div class="scroll-container">
+              <div style="height: 54px"></div>
+              <div class="px-6 pt-2">
+                <div class="header-title">What do you want to work on?</div>
+                <div class="header-sub">Pick a path — habits proven to work.</div>
+              </div>
+              <div class="px-5 pt-5">
+                <div class="search-bar">
+                  <span style="opacity: 0.5">🔍</span>
+                  <span>Try: morning walk · journaling · cold shower</span>
+                </div>
+              </div>
+              <!-- CHIP ROW — proposed: 10 chips with Quick + High ROI, wider fade + chevron -->
+              <div class="relative pt-4">
+                <div class="chips-row flex gap-2 px-5" style="padding-right: 72px">
+                  <div class="chip chip-active-all">✨ All</div>
+                  <div class="chip chip-quick">⚡ Quick</div>
+                  <div class="chip chip-roi">🔥 High ROI</div>
+                  <div class="chip">🌅 Morning</div>
+                  <div class="chip">🧠 Mental</div>
+                  <div class="chip">💪 Fitness</div>
+                  <div class="chip">😴 Sleep</div>
+                  <div class="chip">🧘 Mindful</div>
+                  <div class="chip">📚 Learning</div>
+                  <div class="chip">💰 Finance</div>
+                </div>
+                <div class="fade-new">
+                  <span class="fade-chevron">›</span>
+                </div>
+              </div>
+              <!-- Body skeleton -->
+              <div class="px-5 pt-6 space-y-3">
+                <div
+                  style="
+                    background: var(--card);
+                    border-radius: 20px;
+                    padding: 22px;
+                    border: 1px solid var(--border);
+                  "
+                >
+                  <div style="font-size: 14px; color: var(--primary-700); font-weight: 700">
+                    🌅 Today&#39;s pick
+                  </div>
+                  <div style="font-size: 22px; font-weight: 700; margin-top: 6px">
+                    Wake up energized
+                  </div>
+                  <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px">
+                    12 habits · ⚡ Sleep · 💪 Fitness · 🧘 Mindful
+                  </div>
+                </div>
+                <div
+                  style="
+                    height: 110px;
+                    background: var(--card-muted);
+                    border-radius: 16px;
+                    border: 1px solid var(--border);
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">
+            <div class="caption-title">AFTER — proposed chip row</div>
+            ⚡ Quick + 🔥 High ROI chips inserted right after &ldquo;All&rdquo;. 64 px right-edge
+            fade with a softly-pulsing &rsaquo; chevron makes off-screen content unmistakable.
+            More chips also = more clipping = more obviously scrollable.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tap states demo -->
+      <h2 class="text-2xl font-bold text-center mt-20 mb-2" style="color: var(--text-primary)">
+        Tap states — what filtering looks like
+      </h2>
+      <p class="text-center mb-10" style="color: var(--text-body)">
+        Both presets compose with existing search and category filtering through
+        <code style="background: #efe6da; padding: 2px 6px; border-radius: 4px; font-size: 13px"
+          >useFilteredTemplates</code
+        >.
+      </p>
+
+      <div class="grid grid-cols-2 gap-12 justify-items-center">
+        <!-- Quick active -->
+        <div>
+          <div class="phone">
+            <div class="dynamic-island"></div>
+            <div class="scroll-container">
+              <div style="height: 54px"></div>
+              <div class="px-6 pt-2">
+                <div class="header-title">What do you want to work on?</div>
+                <div class="header-sub">Pick a path — habits proven to work.</div>
+              </div>
+              <div class="px-5 pt-5">
+                <div class="search-bar">
+                  <span style="opacity: 0.5">🔍</span>
+                  <span>Try: morning walk · journaling · cold shower</span>
+                </div>
+              </div>
+              <div class="relative pt-4">
+                <div class="chips-row flex gap-2 px-5" style="padding-right: 72px">
+                  <div class="chip">✨ All</div>
+                  <div class="chip chip-quick active">⚡ Quick</div>
+                  <div class="chip chip-roi">🔥 High ROI</div>
+                  <div class="chip">🌅 Morning</div>
+                  <div class="chip">🧠 Mental</div>
+                  <div class="chip">💪 Fitness</div>
+                  <div class="chip">😴 Sleep</div>
+                  <div class="chip">🧘 Mindful</div>
+                  <div class="chip">📚 Learning</div>
+                  <div class="chip">💰 Finance</div>
+                </div>
+                <div class="fade-new"><span class="fade-chevron">›</span></div>
+              </div>
+              <div class="px-5 pt-6 space-y-3">
+                <div style="display: flex; justify-content: space-between; align-items: center">
+                  <div style="font-size: 13px; color: var(--text-secondary)">
+                    <strong style="color: var(--text-primary)">42 habits</strong> in Quick
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-secondary)">↓ Most popular</div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">🧘</div>
+                  <div class="flex-1">
+                    <div class="result-name">5-Minute Meditation</div>
+                    <div class="result-meta">Daily · 5 min · ⭐ 95</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-quick">⚡ Quick</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">🧹</div>
+                  <div class="flex-1">
+                    <div class="result-name">Two-Minute Tidy</div>
+                    <div class="result-meta">Daily · 2 min · ⭐ 82</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-quick">⚡ Quick</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">📝</div>
+                  <div class="flex-1">
+                    <div class="result-name">3-Minute Gratitude Journal</div>
+                    <div class="result-meta">Daily · 3 min · ⭐ 88</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-quick">⚡ Quick</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">💧</div>
+                  <div class="flex-1">
+                    <div class="result-name">Drink Water on Wake</div>
+                    <div class="result-meta">Daily · 30 sec · ⭐ 78</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-quick">⚡ Quick</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">
+            <div class="caption-title">⚡ Quick active</div>
+            Filters templates whose name/description matches a 1-5 minute regex (or contains
+            &ldquo;quick&rdquo;, &ldquo;brief&rdquo;, &ldquo;30 sec&rdquo;, &ldquo;micro&rdquo;).
+            Once <code>estimatedMinutes</code> is populated, prefers the structured field.
+          </div>
+        </div>
+
+        <!-- High ROI active -->
+        <div>
+          <div class="phone">
+            <div class="dynamic-island"></div>
+            <div class="scroll-container">
+              <div style="height: 54px"></div>
+              <div class="px-6 pt-2">
+                <div class="header-title">What do you want to work on?</div>
+                <div class="header-sub">Pick a path — habits proven to work.</div>
+              </div>
+              <div class="px-5 pt-5">
+                <div class="search-bar">
+                  <span style="opacity: 0.5">🔍</span>
+                  <span>Try: morning walk · journaling · cold shower</span>
+                </div>
+              </div>
+              <div class="relative pt-4">
+                <div class="chips-row flex gap-2 px-5" style="padding-right: 72px">
+                  <div class="chip">✨ All</div>
+                  <div class="chip chip-quick">⚡ Quick</div>
+                  <div class="chip chip-roi active">🔥 High ROI</div>
+                  <div class="chip">🌅 Morning</div>
+                  <div class="chip">🧠 Mental</div>
+                  <div class="chip">💪 Fitness</div>
+                  <div class="chip">😴 Sleep</div>
+                  <div class="chip">🧘 Mindful</div>
+                  <div class="chip">📚 Learning</div>
+                  <div class="chip">💰 Finance</div>
+                </div>
+                <div class="fade-new"><span class="fade-chevron">›</span></div>
+              </div>
+              <div class="px-5 pt-6 space-y-3">
+                <div style="display: flex; justify-content: space-between; align-items: center">
+                  <div style="font-size: 13px; color: var(--text-secondary)">
+                    <strong style="color: var(--text-primary)">38 habits</strong> in High ROI
+                  </div>
+                  <div style="font-size: 12px; color: var(--text-secondary)">↓ Most popular</div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">🏃</div>
+                  <div class="flex-1">
+                    <div class="result-name">7-Minute Workout</div>
+                    <div class="result-meta">Daily · 7 min · ⭐ 98</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-roi">🔥 High ROI</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">🧘</div>
+                  <div class="flex-1">
+                    <div class="result-name">5-Minute Meditation</div>
+                    <div class="result-meta">Daily · 5 min · ⭐ 95</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-roi">🔥 High ROI</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">🚶</div>
+                  <div class="flex-1">
+                    <div class="result-name">Daily Walk</div>
+                    <div class="result-meta">Daily · 10 min · ⭐ 94</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-roi">🔥 High ROI</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="result-card">
+                  <div class="result-icon">😴</div>
+                  <div class="flex-1">
+                    <div class="result-name">Consistent Sleep Schedule</div>
+                    <div class="result-meta">Daily · 8 hrs · ⭐ 93</div>
+                    <div style="margin-top: 6px">
+                      <span class="badge badge-roi">🔥 High ROI</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="caption">
+            <div class="caption-title">🔥 High ROI active</div>
+            Filters templates with <code>popularityScore ≥ 85</code>. Threshold tunable via
+            exported constant. Spot-check on seed data: yields the marquee, science-backed,
+            high-stick-rate templates.
+          </div>
+        </div>
+      </div>
+
+      <!-- Spec callouts -->
+      <h2 class="text-2xl font-bold text-center mt-20 mb-8" style="color: var(--text-primary)">
+        Implementation spec at a glance
+      </h2>
+      <div class="grid grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div
+          style="
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+          "
+        >
+          <div style="font-size: 13px; font-weight: 700; color: var(--quick-text)">⚡ QUICK CHIP</div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.55">
+            <strong>Active style:</strong> bg <code>#FBBF24</code>, border <code>#F59E0B</code>,
+            text <code>#78350F</code>.<br /><br />
+            <strong>Filter rule:</strong> <code>estimatedMinutes ≤ 5</code> if set, else regex on
+            name+description matches 1-5 min, &ldquo;quick&rdquo;, &ldquo;brief&rdquo;,
+            &ldquo;30 sec&rdquo;, &ldquo;micro&rdquo;, &ldquo;moment&rdquo;, &ldquo;tiny&rdquo;.
+          </div>
+        </div>
+        <div
+          style="
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+          "
+        >
+          <div style="font-size: 13px; font-weight: 700; color: var(--roi-text)">🔥 HIGH ROI CHIP</div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.55">
+            <strong>Active style:</strong> bg <code>#FEE2E2</code>, border <code>#EF4444</code>,
+            text <code>#7F1D1D</code>.<br /><br />
+            <strong>Filter rule:</strong> <code>popularityScore ≥ 85</code>. Tunable constant
+            (<code>HIGH_ROI_THRESHOLD</code>). Composes with search + other chips through the
+            existing <code>.filter()</code> pipeline.
+          </div>
+        </div>
+        <div
+          style="
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+          "
+        >
+          <div style="font-size: 13px; font-weight: 700; color: var(--text-primary)">
+            ›&nbsp;&nbsp;SCROLL AFFORDANCE
+          </div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; line-height: 1.55">
+            <strong>Fade:</strong> 32 px → 64 px wide, soft 3-stop gradient.<br /><br />
+            <strong>Chevron:</strong> faint <code>›</code> glyph at right edge, color
+            <code>--text-tertiary</code>, gentle 2.4 s pulse animation. Both
+            <code>pointerEvents=&quot;none&quot;</code> and hidden from VoiceOver. Row
+            <code>paddingRight</code> bumped 40 → 72.
+          </div>
+        </div>
+      </div>
+
+      <!-- File touch list -->
+      <div
+        style="
+          margin-top: 32px;
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          padding: 24px;
+          max-width: 880px;
+          margin-left: auto;
+          margin-right: auto;
+        "
+      >
+        <div style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px">
+          Files to touch (dependency order)
+        </div>
+        <ol style="font-size: 13px; color: var(--text-body); line-height: 1.85; padding-left: 20px">
+          <li>
+            <code>src/screens/templates/templates.types.ts</code> — extend <code>Category</code>
+            union with <code>| 'quick' | 'high-roi'</code>
+          </li>
+          <li>
+            <code>src/screens/TemplatesScreen/data/templateFilters.ts</code>
+            <span class="anno" style="margin-left: 6px">NEW · ~40 lines</span> —
+            <code>isQuickTemplate</code>, <code>isHighRoiTemplate</code>, regex, threshold
+          </li>
+          <li>
+            <code>src/screens/TemplatesScreen/useFilteredTemplates.ts</code> — branch on preset
+            values before the exact-category match
+          </li>
+          <li>
+            <code>src/screens/TemplatesScreen/components/QuickFilterChips/QuickFilterChips.tsx</code>
+            — render Quick + High ROI chips after All; widen fade; add chevron;
+            <code>paddingRight</code> 40 → 72
+          </li>
+          <li>
+            <code>src/screens/TemplatesScreen/hooks/useTemplatesScreenProps.ts</code> — 2-line
+            label guard for <code>'quick'</code> / <code>'high-roi'</code>
+          </li>
+          <li>
+            <code>src/screens/TemplatesScreen/__tests__/useFilteredTemplates.test.tsx</code> — add
+            preset-filter test cases
+          </li>
+        </ol>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,396 @@
+{
+  "metadata": {
+    "storyId": "habit-strength-rework-v2",
+    "epicId": "habit-tracking-core",
+    "title": "Habit Strength Rework v2.0 - Momentum-Based Formula & Ring Visual",
+    "priority": "high",
+    "status": "approved",
+    "created": "2025-12-07",
+    "author": "John (PM)",
+    "estimatedEffort": "6-9 hours",
+    "storyPath": "docs/stories/habit-strength-rework-v2.md"
+  },
+  "overview": {
+    "problem": "Current habit strength calculation is too punishing - missing a single day significantly drops the percentage, demotivating users.",
+    "solution": "Replace with forgiving momentum-based formula and ring/arc visual display (Apple Watch style).",
+    "keyChanges": [
+      "New momentum-based strength formula with streak shield protection",
+      "Ring/arc visual component replacing progress bar",
+      "Graceful decay on misses (streak-protected)",
+      "Same 90-day target to reach ~100% strength"
+    ]
+  },
+  "acceptanceCriteria": [
+    {
+      "id": "AC1",
+      "category": "formula",
+      "description": "Completing a habit increases strength",
+      "testCase": "50% → ~52.5% after completion",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC2",
+      "category": "formula",
+      "description": "Missing a habit decreases strength",
+      "testCase": "50% → ~48.75% after miss (with shield)",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC3",
+      "category": "formula",
+      "description": "Streak shield reduces decay",
+      "testCase": "7/7 week = 60% less decay than 0/7 week",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC4",
+      "category": "formula",
+      "description": "90 days perfect = ~100%",
+      "testCase": "Simulate 90 completions, verify ≥99%",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC5",
+      "category": "persistence",
+      "description": "Strength persists in database",
+      "testCase": "Reload app, strength unchanged",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC6",
+      "category": "reactivity",
+      "description": "Strength updates on toggle",
+      "testCase": "No page refresh needed",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC7",
+      "category": "visual",
+      "description": "Ring displays on HabitCard",
+      "testCase": "Visible in habit list",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC8",
+      "category": "visual",
+      "description": "Ring fills proportionally",
+      "testCase": "50% strength = half-filled ring",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC9",
+      "category": "visual",
+      "description": "Color changes by level",
+      "testCase": "<30% green-300, 30-59% green-400, 60-84% green-500, 85%+ green-700",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC10",
+      "category": "visual",
+      "description": "Animation on change",
+      "testCase": "Smooth spring animation when % changes (300ms)",
+      "priority": "must-have"
+    },
+    {
+      "id": "AC11",
+      "category": "accessibility",
+      "description": "Accessible",
+      "testCase": "Screen reader announces '45% strength, Building level'",
+      "priority": "must-have"
+    }
+  ],
+  "artifacts": {
+    "code": [
+      {
+        "path": "convex/habitStrength.ts",
+        "type": "backend-logic",
+        "action": "modify",
+        "description": "Replace formula with new momentum-based calculation",
+        "changes": [
+          "Implement calculateNewStrength function with GROWTH_RATE=0.05, BASE_DECAY=0.025, SHIELD_EFFECTIVENESS=0.6",
+          "Add completionsLast7Days parameter for streak shield calculation",
+          "Ensure growth fills 5% of gap to 100, decay protected by recent consistency"
+        ]
+      },
+      {
+        "path": "convex/tracking.ts",
+        "type": "backend-logic",
+        "action": "modify",
+        "description": "Add strength recalculation on toggleCompletion",
+        "changes": [
+          "Import calculateNewStrength from habitStrength.ts",
+          "Calculate completionsLast7Days for streak shield",
+          "Call calculateNewStrength on each toggle",
+          "Update habit.strength in database"
+        ]
+      },
+      {
+        "path": "src/components/StrengthRing/StrengthRing.tsx",
+        "type": "component",
+        "action": "create",
+        "description": "New ring/arc visual component",
+        "interface": {
+          "props": {
+            "strength": "number (0-100)",
+            "size": "'small' | 'medium' (small=40px, medium=64px)",
+            "showPercentage": "boolean (optional, show % in center)",
+            "showLevel": "boolean (optional, show level label below)"
+          }
+        },
+        "specifications": {
+          "strokeWidth": "4px (small), 6px (medium)",
+          "arcStart": "12 o'clock position",
+          "arcDirection": "clockwise",
+          "animation": "spring physics, 300ms",
+          "levels": [
+            {"range": "0-29%", "label": "Starting 🌱", "color": "#86efac"},
+            {"range": "30-59%", "label": "Building 🌿", "color": "#4ade80"},
+            {"range": "60-84%", "label": "Strong 💪", "color": "#22c55e"},
+            {"range": "85-100%", "label": "Automatic ⚡", "color": "#15803d"}
+          ],
+          "background": "#f3f4f6"
+        }
+      },
+      {
+        "path": "src/components/StrengthRing/index.ts",
+        "type": "export",
+        "action": "create",
+        "description": "Export StrengthRing component"
+      },
+      {
+        "path": "src/components/HabitCard/HabitCard.tsx",
+        "type": "component",
+        "action": "modify",
+        "description": "Replace progress bar with StrengthRing",
+        "changes": [
+          "Import StrengthRing",
+          "Replace existing strength progress bar with <StrengthRing strength={habit.strength} size='small' />",
+          "Remove old HabitStrengthIndicator or progress bar code"
+        ]
+      },
+      {
+        "path": "src/components/DraggableHabit/DraggableHabit.tsx",
+        "type": "component",
+        "action": "modify",
+        "description": "Replace strength display with StrengthRing",
+        "changes": [
+          "Import StrengthRing",
+          "Replace existing strength display with <StrengthRing strength={habit.strength} size='small' />",
+          "Ensure drag interaction doesn't conflict with ring"
+        ]
+      },
+      {
+        "path": "src/screens/HabitDetailScreen.tsx",
+        "type": "screen",
+        "action": "modify",
+        "description": "Replace HabitStrengthIndicator with larger StrengthRing",
+        "changes": [
+          "Import StrengthRing",
+          "Replace HabitStrengthIndicator with <StrengthRing strength={habit.strength} size='medium' showPercentage showLevel />",
+          "Remove old indicator component"
+        ]
+      }
+    ],
+    "tests": [
+      {
+        "path": "convex/habitStrength.test.ts",
+        "type": "unit-test",
+        "action": "create",
+        "description": "Unit tests for strength formula",
+        "coverage": [
+          "Test AC1: completion increases strength",
+          "Test AC2: miss decreases strength",
+          "Test AC3: streak shield effectiveness",
+          "Test AC4: 90-day perfect compliance reaches ~99-100%",
+          "Test edge cases: 0%, 100%, boundary conditions"
+        ]
+      },
+      {
+        "path": "src/components/StrengthRing/__tests__/StrengthRing.test.tsx",
+        "type": "component-test",
+        "action": "create",
+        "description": "Tests for StrengthRing component",
+        "coverage": [
+          "Test AC7: renders correctly",
+          "Test AC8: ring fills proportionally",
+          "Test AC9: color changes by level",
+          "Test AC10: animation on change",
+          "Test AC11: accessibility (ARIA labels)"
+        ]
+      },
+      {
+        "path": "convex/tracking.test.ts",
+        "type": "integration-test",
+        "action": "modify",
+        "description": "Add tests for strength updates on toggleCompletion",
+        "coverage": [
+          "Test AC5: strength persists after toggle",
+          "Test AC6: strength updates without refresh"
+        ]
+      }
+    ]
+  },
+  "interfaces": {
+    "StrengthRingProps": {
+      "strength": "number",
+      "size": "'small' | 'medium'",
+      "showPercentage": "boolean (optional)",
+      "showLevel": "boolean (optional)"
+    },
+    "calculateNewStrength": {
+      "params": {
+        "currentStrength": "number (0-100)",
+        "completed": "boolean",
+        "completionsLast7Days": "number (0-7)"
+      },
+      "returns": "number (0-100)"
+    }
+  },
+  "constraints": {
+    "technical": [
+      "Must use React Native Animated API or Reanimated for smooth ring animations",
+      "Must use SVG for ring rendering (react-native-svg)",
+      "Formula constants are fixed: GROWTH_RATE=0.05, BASE_DECAY=0.025, SHIELD_EFFECTIVENESS=0.6",
+      "Ring must render at 60fps for smooth animation",
+      "Convex mutations must be used for strength updates"
+    ],
+    "business": [
+      "No data migration required - existing strength values remain valid",
+      "New formula takes over from current values",
+      "90-day target to 100% must be maintained",
+      "Visual must work on iOS and Android"
+    ],
+    "accessibility": [
+      "Screen readers must announce strength percentage and level",
+      "Color must not be the only indicator (use labels)",
+      "Minimum touch target 44x44 if ring is interactive"
+    ],
+    "performance": [
+      "Strength calculation must complete in <10ms",
+      "Ring render must not block UI thread",
+      "Animation must maintain 60fps"
+    ]
+  },
+  "outOfScope": [
+    "Multiple rings (daily/weekly/monthly)",
+    "Custom frequency habits (3x per week)",
+    "Plateau prevention mechanics",
+    "Weekday vs weekend patterns",
+    "Recalculating existing user strengths from history"
+  ],
+  "dependencies": {
+    "external": [
+      "react-native-svg (for ring rendering)",
+      "react-native-reanimated (for animations, if not already present)"
+    ],
+    "internal": [
+      "Convex backend (habitStrength.ts, tracking.ts)",
+      "Existing habit data model"
+    ]
+  },
+  "testStrategy": {
+    "unit": [
+      "Test calculateNewStrength function with various inputs",
+      "Test growth curve over 90 days",
+      "Test decay with different streak shields",
+      "Test boundary conditions (0%, 100%)"
+    ],
+    "integration": [
+      "Test toggleCompletion updates strength correctly",
+      "Test strength persists across app reloads",
+      "Test Convex mutations update database"
+    ],
+    "visual": [
+      "Test StrengthRing renders at different strength levels",
+      "Test color transitions between levels",
+      "Test animation smoothness",
+      "Test size variants (small, medium)"
+    ],
+    "e2e": [
+      "Complete habit → verify strength increases in UI",
+      "Miss habit → verify strength decreases in UI",
+      "Reload app → verify strength persists"
+    ],
+    "accessibility": [
+      "Test screen reader announcements",
+      "Test with VoiceOver (iOS) and TalkBack (Android)"
+    ]
+  },
+  "implementationPhases": [
+    {
+      "phase": 1,
+      "title": "New formula in habitStrength.ts",
+      "tasks": [
+        "Create calculateNewStrength function",
+        "Add constants (GROWTH_RATE, BASE_DECAY, SHIELD_EFFECTIVENESS)",
+        "Implement growth logic (fill 5% of gap)",
+        "Implement decay logic with streak shield",
+        "Add JSDoc comments"
+      ],
+      "estimate": "1-2 hours"
+    },
+    {
+      "phase": 2,
+      "title": "Hook formula into tracking.toggleCompletion",
+      "tasks": [
+        "Import calculateNewStrength",
+        "Query completionsLast7Days for streak shield",
+        "Call calculateNewStrength on toggle",
+        "Update habit.strength in Convex mutation"
+      ],
+      "estimate": "30 min"
+    },
+    {
+      "phase": 3,
+      "title": "Create StrengthRing component",
+      "tasks": [
+        "Create component file and interface",
+        "Implement SVG ring with dynamic arc",
+        "Add level-based color logic",
+        "Implement spring animation on value change",
+        "Add percentage and level label displays",
+        "Add accessibility labels"
+      ],
+      "estimate": "2-3 hours"
+    },
+    {
+      "phase": 4,
+      "title": "Replace displays in HabitCard/DraggableHabit",
+      "tasks": [
+        "Update HabitCard.tsx to use StrengthRing",
+        "Update DraggableHabit.tsx to use StrengthRing",
+        "Remove old progress bar code",
+        "Test drag interactions"
+      ],
+      "estimate": "1 hour"
+    },
+    {
+      "phase": 5,
+      "title": "Update HabitDetailScreen",
+      "tasks": [
+        "Replace HabitStrengthIndicator with StrengthRing",
+        "Use medium size with percentage and level",
+        "Remove old indicator component"
+      ],
+      "estimate": "30 min"
+    },
+    {
+      "phase": 6,
+      "title": "Testing & polish",
+      "tasks": [
+        "Write unit tests for calculateNewStrength",
+        "Write component tests for StrengthRing",
+        "Test on iOS and Android devices",
+        "Test accessibility with screen readers",
+        "Verify all ACs are met",
+        "Performance testing (60fps animation)"
+      ],
+      "estimate": "1-2 hours"
+    }
+  ],
+  "references": {
+    "designInspiration": "Apple Watch activity rings",
+    "formulaRationale": "Momentum-based with streak protection to reduce punishment",
+    "visualSpec": "Ring/arc with level colors and smooth animations"
+  }
+}

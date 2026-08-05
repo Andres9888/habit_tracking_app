@@ -1,0 +1,1256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Today Button — Design Variations</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #2d2a26;
+        color: #f5f1ed;
+        padding: 40px 20px 80px;
+        min-height: 100vh;
+      }
+      .page-header {
+        max-width: 1100px;
+        margin: 0 auto 32px;
+        text-align: center;
+      }
+      .page-title {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 6px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: #9ca3af;
+        max-width: 580px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 1060px;
+        margin: 0 auto;
+      }
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: 1fr;
+          max-width: 480px;
+        }
+      }
+
+      .card {
+        background: #3d3833;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .card.current {
+        border-color: rgba(232, 185, 77, 0.3);
+      }
+      .card.pick {
+        border-color: rgba(5, 150, 105, 0.4);
+      }
+
+      .card-header {
+        padding: 14px 18px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.3px;
+      }
+      .badge.cur {
+        background: rgba(232, 185, 77, 0.15);
+        color: #e8b94d;
+      }
+      .badge.num {
+        background: rgba(255, 255, 255, 0.06);
+        color: #6b6560;
+      }
+      .badge.rec {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #f5f1ed;
+      }
+      .card-desc {
+        padding: 4px 18px 0;
+        font-size: 12px;
+        color: #6b6560;
+        line-height: 1.5;
+      }
+
+      /* Phone */
+      .phone {
+        margin: 12px;
+        background: #faf8f5;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .phone.dark-phone {
+        background: #1a1917;
+      }
+      .shelf {
+        padding: 14px 18px 18px;
+      }
+
+      /* Shared header */
+      .header-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .side-l {
+        flex: 1;
+      }
+      .side-r {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      /* Date pill (green — constant across all) */
+      .date-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(5, 150, 105, 0.06);
+        border: 1px solid rgba(5, 150, 105, 0.15);
+        padding: 4px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+      }
+      .dark-phone .date-pill {
+        background: rgba(5, 150, 105, 0.08);
+        border-color: rgba(5, 150, 105, 0.2);
+      }
+      .date-pill .month {
+        font-size: 15px;
+        font-weight: 700;
+        color: #047857;
+      }
+      .date-pill .day {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+      .date-pill .chev {
+        font-size: 10px;
+        color: #c4bfb7;
+      }
+      .date-pill .cal-icon {
+        width: 16px;
+        height: 16px;
+        color: #059669;
+      }
+      .dark-phone .date-pill .month {
+        color: #34d399;
+      }
+      .dark-phone .date-pill .day {
+        color: #9ca3af;
+      }
+
+      /* Day strip */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+      }
+      .day-lbl {
+        font-size: 9px;
+        font-weight: 500;
+        color: #6b6560;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .ring {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .ring.complete {
+        background: #059669;
+        color: white;
+        box-shadow: 0 0 8px rgba(5, 150, 105, 0.3);
+      }
+      .ring.none {
+        border: 3px solid #ddd8d2;
+        color: #2d2a26;
+      }
+      .ring.missed {
+        border: 3px solid #ddd8d2;
+        color: #2d2a26;
+        opacity: 0.55;
+      }
+      .dark-phone .ring.none {
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #d1d5db;
+      }
+      .dark-phone .ring.missed {
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #d1d5db;
+        opacity: 0.4;
+      }
+      .dark-phone .day-lbl {
+        color: #6b7280;
+      }
+
+      /* Reasoning */
+      .reasoning {
+        padding: 0 18px 14px;
+      }
+      .reason-text {
+        font-size: 12px;
+        color: #9ca3af;
+        line-height: 1.55;
+      }
+
+      /* ════════════════════════════════════════════ */
+      /* TODAY BUTTON VARIATIONS                     */
+      /* ════════════════════════════════════════════ */
+
+      /* T0: Current — amber pill */
+      .today-amber-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(232, 185, 77, 0.06);
+        border: 1px solid rgba(232, 185, 77, 0.15);
+        padding: 4px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 700;
+        color: #92710a;
+      }
+      .today-amber-pill .arrow {
+        width: 12px;
+        height: 12px;
+        color: #92710a;
+      }
+
+      /* T1: Ghost text — minimal, no container */
+      .today-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        color: #92710a;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      .today-ghost:hover {
+        opacity: 1;
+      }
+      .today-ghost .arrow {
+        font-size: 11px;
+      }
+
+      /* T2: Dot + text */
+      .today-dot-text {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        color: #92710a;
+      }
+      .today-dot-text .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #e8b94d;
+        animation: dot-pulse 2s ease-in-out infinite;
+      }
+      @keyframes dot-pulse {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.3);
+        }
+      }
+
+      /* T3: Underline link */
+      .today-underline {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        color: #047857;
+        border-bottom: 1.5px dashed rgba(4, 120, 87, 0.4);
+        padding-bottom: 1px;
+        transition: border-color 0.2s;
+      }
+      .today-underline:hover {
+        border-bottom-color: rgba(4, 120, 87, 0.7);
+      }
+
+      /* T4: Icon-only circle */
+      .today-icon-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(232, 185, 77, 0.08);
+        border: 1px solid rgba(232, 185, 77, 0.2);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .today-icon-circle:hover {
+        background: rgba(232, 185, 77, 0.15);
+      }
+      .today-icon-circle svg {
+        width: 14px;
+        height: 14px;
+        color: #92710a;
+      }
+
+      /* T5: Solid chip */
+      .today-solid-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #e8b94d;
+        color: #3d2e00;
+        padding: 4px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        transition: background 0.2s;
+      }
+      .today-solid-chip:hover {
+        background: #d4a843;
+      }
+      .today-solid-chip svg {
+        width: 11px;
+        height: 11px;
+        color: #3d2e00;
+      }
+
+      /* T6: Outlined chip with arrow */
+      .today-outline-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: 1.5px solid #c9a23b;
+        color: #92710a;
+        padding: 3px 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 700;
+        transition:
+          background 0.2s,
+          border-color 0.2s;
+      }
+      .today-outline-chip:hover {
+        background: rgba(232, 185, 77, 0.06);
+      }
+      .today-outline-chip svg {
+        width: 11px;
+        height: 11px;
+        color: #92710a;
+      }
+
+      /* T7: Green match (same style as date pill) */
+      .today-green-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(5, 150, 105, 0.06);
+        border: 1px solid rgba(5, 150, 105, 0.15);
+        padding: 4px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 700;
+        color: #047857;
+      }
+      .today-green-pill svg {
+        width: 12px;
+        height: 12px;
+        color: #047857;
+      }
+
+      /* T8: Minimal arrow only */
+      .today-arrow-only {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 600;
+        color: #92710a;
+        opacity: 0.65;
+        transition: opacity 0.2s;
+      }
+      .today-arrow-only:hover {
+        opacity: 1;
+      }
+      .today-arrow-only svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      /* SVG arrow helper */
+      .svg-arrow-right {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <div class="page-title">Today Button Redesign</div>
+      <div class="page-subtitle">
+        9 variations for the "jump to today" button that appears when viewing
+        past weeks. Shown in context with the green date pill.
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- T0: Current — Amber Pill -->
+      <div class="card current">
+        <div class="card-header">
+          <span class="badge cur">CURRENT</span>
+          <span class="card-title">T0 — Amber Pill</span>
+        </div>
+        <div class="card-desc">
+          Pill shape mirrors the date pill but in amber. Feels heavy — two pills
+          competing for attention.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-amber-pill">
+                  Today
+                  <svg
+                    class="arrow"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Two pill shapes create visual competition. The amber pill has
+            similar weight to the green date pill — the eye bounces between them
+            instead of settling on one.
+          </div>
+        </div>
+      </div>
+
+      <!-- T1: Ghost text -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">T1</span>
+          <span class="card-title">T1 — Ghost Text</span>
+        </div>
+        <div class="card-desc">
+          Plain text at 70% opacity with arrow. Lightest possible footprint —
+          the date pill stays dominant.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-ghost">Today →</div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Maximum hierarchy — the date pill is the clear primary element.
+            "Today →" reads as secondary navigation. Risk: might be too subtle
+            for some users.
+          </div>
+        </div>
+      </div>
+
+      <!-- T2: Pulsing dot + text -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">T2</span>
+          <span class="card-title">T2 — Pulsing Dot + Text</span>
+        </div>
+        <div class="card-desc">
+          A breathing amber dot signals "you have a live day waiting." Text is
+          clean, no container.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-dot-text">
+                  <div class="dot"></div>
+                  Today
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            The pulsing dot creates urgency — "there's something live happening
+            that you're not looking at." Dot mirrors the ring system's circular
+            language. Light footprint but attention-getting through motion
+            rather than size.
+          </div>
+        </div>
+      </div>
+
+      <!-- T3: Green underline link -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">T3</span>
+          <span class="card-title">T3 — Green Underline Link</span>
+        </div>
+        <div class="card-desc">
+          Uses the same green as the date pill. Dashed underline signals
+          "interactive." Single color system.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-underline">Today →</div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Using green for both elements creates a unified color system — the
+            header row is "all green." The underline is a well-understood "link"
+            affordance. No visual competition because there's no second
+            container shape.
+          </div>
+        </div>
+      </div>
+
+      <!-- T4: Icon-only circle -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">T4</span>
+          <span class="card-title">T4 — Icon Circle</span>
+        </div>
+        <div class="card-desc">
+          A small circle with a "skip forward" icon. Minimal, no text. Relies on
+          position and icon recognition.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-icon-circle">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="13 17 18 12 13 7" />
+                    <polyline points="6 17 11 12 6 7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Smallest footprint. The double-chevron "skip forward" icon is a
+            media-player convention — users intuitively understand "jump ahead."
+            The circle echoes the ring system. Risk: less discoverable without
+            text label.
+          </div>
+        </div>
+      </div>
+
+      <!-- T5: Solid chip -->
+      <div class="card pick">
+        <div class="card-header">
+          <span class="badge rec">T5 ★</span>
+          <span class="card-title">T5 — Solid Gold Chip</span>
+        </div>
+        <div class="card-desc">
+          Solid amber background, dark text. High contrast, unmissable. Clear
+          call-to-action.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-solid-chip">
+                  Today
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Highest contrast option. The solid fill makes it read as a CTA
+            button — "you should do this." The amber/gold stands out without
+            clashing with green. Small size (11px text) keeps it proportional.
+            Clear visual hierarchy: green pill = where you are, gold chip =
+            where you should go.
+          </div>
+        </div>
+      </div>
+
+      <!-- T6: Outlined chip -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">T6</span>
+          <span class="card-title">T6 — Outlined Chip</span>
+        </div>
+        <div class="card-desc">
+          Strong border, no fill. More assertive than ghost text, less heavy
+          than solid chip.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-outline-chip">
+                  Today
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            The strong 1.5px amber border signals "button" without the visual
+            weight of a solid fill. Sits between the ghost text (T1) and solid
+            chip (T5) in the assertiveness spectrum. The border creates a clear
+            boundary without competing with the green pill's fill.
+          </div>
+        </div>
+      </div>
+
+      <!-- T7: Green match -->
+      <div class="card pick">
+        <div class="card-header">
+          <span class="badge rec">T7 ★</span>
+          <span class="card-title">T7 — Green Match (Same Color System)</span>
+        </div>
+        <div class="card-desc">
+          Uses the exact same green tint as the date pill. One color family,
+          zero visual conflict.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-green-pill">
+                  Today
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            No color conflict at all. Both pills share the same green tint — the
+            header row reads as one unified "navigation bar" with two actions.
+            The date pill says "where you are" and the Today pill says "go
+            here." They feel like siblings, not competitors. Cleanest visual
+            rhythm.
+          </div>
+        </div>
+      </div>
+
+      <!-- T8: Minimal arrow -->
+      <div class="card">
+        <div class="card-header">
+          <span class="badge num">T8</span>
+          <span class="card-title">T8 — Minimal "Today" + Large Arrow</span>
+        </div>
+        <div class="card-desc">
+          Small text with a larger arrow icon. The arrow carries more weight
+          than the word.
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-row">
+              <div class="side-l"></div>
+              <div class="date-pill">
+                <svg
+                  class="cal-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span class="month">January</span>
+                <span class="day">13 – 19</span>
+                <span class="chev">&#9662;</span>
+              </div>
+              <div class="side-r">
+                <div class="today-arrow-only">
+                  Today
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">&#10003;</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            The larger 16px arrow makes direction more prominent than the label.
+            At 65% opacity it whispers rather than shouts. The arrow icon does
+            the heavy lifting — "Today" is just a tooltip in text form.
+            Ultra-lightweight but directional.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

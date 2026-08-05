@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UI Review Fixes — Before / After</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #111827 !important;
+    color: #F9FAFB !important;
+    min-height: 100vh;
+    padding: 48px 24px;
+  }
+  h1, h2, h3, h4 { font-family: 'Literata', serif !important; }
+
+  .page-title {
+    font-size: 34px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.85px;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .page-subtitle {
+    font-size: 17px !important;
+    color: #9CA3AF !important;
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(5,150,105,0.15);
+    color: #34D399;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 48px;
+  }
+
+  .fix-section {
+    max-width: 1100px;
+    margin: 0 auto 64px;
+  }
+  .fix-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .fix-number {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .fix-number.critical { background: #B53030; color: white; }
+  .fix-number.moderate { background: #9A5504; color: white; }
+  .fix-number.minor { background: #3872B8; color: white; }
+
+  .fix-title {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.35px;
+  }
+  .fix-desc {
+    font-size: 14px !important;
+    color: #9CA3AF !important;
+    margin-bottom: 24px;
+    margin-left: 44px;
+  }
+
+  .comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .comparison-col {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .comparison-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12px;
+    padding: 10px 16px;
+    text-transform: uppercase;
+  }
+  .label-before {
+    background: rgba(181,48,48,0.15);
+    color: #F87171;
+  }
+  .label-after {
+    background: rgba(5,150,105,0.15);
+    color: #34D399;
+  }
+
+  /* Phone frame */
+  .phone-frame {
+    background: #1F2937;
+    border: 1px solid #374151;
+    border-radius: 0 0 16px 16px;
+    padding: 16px;
+    min-height: 420px;
+  }
+
+  /* Fix 1: Color tokens - Dark mode card */
+  .mock-card {
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .mock-card.broken-dark {
+    background: #EDEAE5;
+    border: 1px solid #DDD8D2;
+  }
+  .mock-card.broken-dark .card-title {
+    color: #2D2A26;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .mock-card.broken-dark .card-subtitle {
+    color: #6B6560;
+    font-size: 14px;
+  }
+  .mock-card.fixed-dark {
+    background: #374151;
+    border: 1px solid #4B5563;
+  }
+  .mock-card.fixed-dark .card-title {
+    color: #F9FAFB;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .mock-card.fixed-dark .card-subtitle {
+    color: #9CA3AF;
+    font-size: 14px;
+  }
+
+  .dark-bg-broken {
+    background: #111827;
+  }
+  .dark-bg-fixed {
+    background: #111827;
+  }
+
+  .broken-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #F87171;
+    margin-top: 8px;
+    padding: 3px 8px;
+    background: rgba(248,113,113,0.1);
+    border-radius: 4px;
+  }
+  .fixed-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #34D399;
+    margin-top: 8px;
+    padding: 3px 8px;
+    background: rgba(52,211,153,0.1);
+    border-radius: 4px;
+  }
+
+  /* Habit row mock */
+  .habit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .habit-emoji {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .habit-info { flex: 1; }
+  .habit-name { font-size: 17px; font-weight: 600; }
+  .habit-meta { font-size: 13px; margin-top: 2px; }
+  .habit-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Fix 2: Typography */
+  .type-sample {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .type-size {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #6B7280;
+    width: 44px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .type-size.off-scale { color: #F87171; }
+  .type-size.on-scale { color: #34D399; }
+  .type-label {
+    font-size: 11px;
+    color: #6B7280;
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  /* Fix 3: Onboarding */
+  .onboarding-phone {
+    background: #F5F1ED;
+    border-radius: 0 0 16px 16px;
+    padding: 24px 16px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+  }
+  .onboarding-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 16px;
+  }
+  .onboarding-illustration {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+  }
+  .onboarding-title {
+    font-family: 'Literata', serif !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #2D2A26 !important;
+    margin-bottom: 8px;
+    letter-spacing: -0.35px;
+  }
+  .onboarding-body {
+    font-size: 17px !important;
+    color: #6B6560 !important;
+    line-height: 24px;
+    margin-bottom: 32px;
+  }
+  .onboarding-bottom {
+    padding-top: 16px;
+  }
+  .onboarding-btn {
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-primary {
+    background: #059669;
+    color: white;
+  }
+  .btn-generic {
+    background: #C4BFB7;
+    color: #3D3833;
+  }
+  .onboarding-skip {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #6B6560;
+  }
+  .onboarding-skip.improved {
+    color: #047857;
+    font-weight: 500;
+  }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #DDD8D2;
+  }
+  .dot.active {
+    background: #059669;
+    width: 24px;
+    border-radius: 9999px;
+  }
+
+  /* Code annotation */
+  .code-annotation {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .code-bad {
+    background: rgba(181,48,48,0.1);
+    color: #FCA5A5;
+    border: 1px solid rgba(181,48,48,0.2);
+  }
+  .code-good {
+    background: rgba(5,150,105,0.1);
+    color: #6EE7B7;
+    border: 1px solid rgba(5,150,105,0.2);
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .stat-chip {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* Accent bug */
+  .accent-broken-icon {
+    color: #000000;
+  }
+  .accent-fixed-icon {
+    color: #059669;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #374151, transparent);
+    margin: 0 auto 64px;
+    max-width: 1100px;
+  }
+
+  @media (max-width: 768px) {
+    .comparison { grid-template-columns: 1fr; }
+    body { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div style="text-align: center; margin-bottom: 64px;">
+  <h1 class="page-title">UI Review Fixes</h1>
+  <p class="page-subtitle">3 priority fixes from full-app 6-pillar audit</p>
+  <div class="score-badge">Score: 17/24</div>
+</div>
+
+<!-- FIX 1: COLOR TOKEN BYPASS -->
+<div class="fix-section">
+  <div class="fix-header">
+    <div class="fix-number critical">1</div>
+    <h2 class="fix-title">Color Token Bypass in Dark Mode</h2>
+  </div>
+  <p class="fix-desc">613 instances of hardcoded Tailwind classes (text-stone-*, bg-stone-*) bypass theme tokens. Cards render light-mode colors on dark backgrounds.</p>
+
+  <div class="comparison">
+    <!-- Before -->
+    <div class="comparison-col">
+      <div class="comparison-label label-before">Before — Dark Mode Broken</div>
+      <div class="phone-frame dark-bg-broken">
+        <div style="font-size: 13px; color: #6B7280; margin-bottom: 12px; font-weight: 500;">DARK MODE ACTIVE</div>
+
+        <!-- Broken card: light colors on dark bg -->
+        <div class="mock-card broken-dark">
+          <div class="card-title">🏃 Morning Run</div>
+          <div class="card-subtitle">5 day streak · Strong</div>
+          <div class="stats-row">
+            <div class="stat-chip" style="background: #D1FAE5; color: #059669;">85%</div>
+            <div class="stat-chip" style="background: #FEF3CD; color: #8B6208;">🔥 5</div>
+          </div>
+          <div class="broken-indicator">✗ text-stone-800 ignores dark mode</div>
+        </div>
+
+        <div class="mock-card broken-dark">
+          <div class="card-title">📖 Read 20 Pages</div>
+          <div class="card-subtitle">Building · 3 days</div>
+          <div class="broken-indicator">✗ bg-stone colors stay light</div>
+        </div>
+
+        <!-- Broken accent -->
+        <div style="background: #374151; border-radius: 12px; padding: 14px 16px; margin-top: 16px; display: flex; align-items: center; gap: 12px;">
+          <div style="color: #000000; font-size: 20px;">▲</div>
+          <div>
+            <div style="font-size: 14px; color: #F9FAFB; font-weight: 600;">Weekly Summary</div>
+            <div style="font-size: 13px; color: #9CA3AF;">5 of 7 habits completed</div>
+          </div>
+          <div class="broken-indicator" style="margin-top: 0;">✗ colors.accent = undefined</div>
+        </div>
+
+        <div class="code-annotation code-bad">
+          className="text-stone-800"<br>
+          → stays #2D2A26 on #111827 bg<br>
+          → contrast ratio: 1.7:1 ✗<br><br>
+          colors.accent → undefined<br>
+          → icon renders black
+        </div>
+      </div>
+    </div>
+
+    <!-- After -->
+    <div class="comparison-col">
+      <div class="comparison-label label-after">After — Theme-Aware Tokens</div>
+      <div class="phone-frame dark-bg-fixed">
+        <div style="font-size: 13px; color: #6B7280; margin-bottom: 12px; font-weight: 500;">DARK MODE ACTIVE</div>
+
+        <!-- Fixed card: dark-mode aware -->
+        <div class="mock-card fixed-dark">
+          <div class="card-title">🏃 Morning Run</div>
+          <div class="card-subtitle">5 day streak · Strong</div>
+          <div class="stats-row">
+            <div class="stat-chip" style="background: rgba(52,211,153,0.15); color: #34D399;">85%</div>
+            <div class="stat-chip" style="background: rgba(139,98,8,0.2); color: #E8B94D;">🔥 5</div>
+          </div>
+          <div class="fixed-indicator">✓ colors.text.primary adapts</div>
+        </div>
+
+        <div class="mock-card fixed-dark">
+          <div class="card-title">📖 Read 20 Pages</div>
+          <div class="card-subtitle">Building · 3 days</div>
+          <div class="fixed-indicator">✓ colors.card responds to theme</div>
+        </div>
+
+        <!-- Fixed accent -->
+        <div style="background: #374151; border-radius: 12px; padding: 14px 16px; margin-top: 16px; display: flex; align-items: center; gap: 12px;">
+          <div style="color: #34D399; font-size: 20px;">▲</div>
+          <div>
+            <div style="font-size: 14px; color: #F9FAFB; font-weight: 600;">Weekly Summary</div>
+            <div style="font-size: 13px; color: #9CA3AF;">5 of 7 habits completed</div>
+          </div>
+          <div class="fixed-indicator" style="margin-top: 0;">✓ accent defined both modes</div>
+        </div>
+
+        <div class="code-annotation code-good">
+          style={{ color: colors.text.primary }}<br>
+          → #F9FAFB on dark, #2D2A26 on light<br>
+          → always WCAG AA ✓<br><br>
+          colors.accent → #34D399 (dark)<br>
+          colors.accent → #059669 (light)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FIX 2: TYPOGRAPHY FRAGMENTATION -->
+<div class="fix-section">
+  <div class="fix-header">
+    <div class="fix-number moderate">2</div>
+    <h2 class="fix-title">Typography Scale Fragmentation</h2>
+  </div>
+  <p class="fix-desc">15+ distinct font sizes vs. 8-token design system. CharacterCard uses 12/14/16/18/30px — none from the token set.</p>
+
+  <div class="comparison">
+    <!-- Before -->
+    <div class="comparison-col">
+      <div class="comparison-label label-before">Before — Off-Scale Sizes</div>
+      <div class="phone-frame" style="background: #F5F1ED; border-color: #DDD8D2;">
+        <div style="font-size: 13px; color: #6B6560; margin-bottom: 16px; font-weight: 500;">CHARACTER CARD — CURRENT</div>
+
+        <!-- Mock CharacterCard with wrong sizes -->
+        <div style="background: #EDEAE5; border-radius: 16px; padding: 16px; border: 1px solid #DDD8D2;">
+          <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 30px; margin-bottom: 4px;">🧙</div>
+            <div style="font-family: 'Literata', serif; font-size: 18px; font-weight: 700; color: #2D2A26;">Level 5 Seeker</div>
+            <div style="font-size: 12px; color: #6B6560;">450 / 1000 XP</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 1; background: #F5F1ED; border-radius: 8px; padding: 8px; text-align: center;">
+              <div style="font-size: 16px; font-weight: 700; color: #2D2A26;">12</div>
+              <div style="font-size: 12px; color: #6B6560;">Strength</div>
+            </div>
+            <div style="flex: 1; background: #F5F1ED; border-radius: 8px; padding: 8px; text-align: center;">
+              <div style="font-size: 16px; font-weight: 700; color: #2D2A26;">8</div>
+              <div style="font-size: 12px; color: #6B6560;">Agility</div>
+            </div>
+            <div style="flex: 1; background: #F5F1ED; border-radius: 8px; padding: 8px; text-align: center;">
+              <div style="font-size: 16px; font-weight: 700; color: #2D2A26;">15</div>
+              <div style="font-size: 12px; color: #6B6560;">Wisdom</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <div class="type-sample">
+            <span class="type-size off-scale">30px</span>
+            <span class="type-label" style="color: #B53030;">off-scale</span>
+            <span style="font-size: 15px; color: #2D2A26;">Avatar emoji</span>
+          </div>
+          <div class="type-sample">
+            <span class="type-size off-scale">18px</span>
+            <span class="type-label" style="color: #B53030;">off-scale</span>
+            <span style="font-size: 15px; color: #2D2A26;">Level title</span>
+          </div>
+          <div class="type-sample">
+            <span class="type-size off-scale">16px</span>
+            <span class="type-label" style="color: #B53030;">off-scale</span>
+            <span style="font-size: 15px; color: #2D2A26;">Stat values</span>
+          </div>
+          <div class="type-sample">
+            <span class="type-size off-scale">12px</span>
+            <span class="type-label" style="color: #B53030;">off-scale</span>
+            <span style="font-size: 15px; color: #2D2A26;">XP + labels</span>
+          </div>
+        </div>
+
+        <div class="code-annotation code-bad" style="background: rgba(181,48,48,0.08); color: #B53030; border-color: rgba(181,48,48,0.15);">
+          fontSize: 30 → no token<br>
+          fontSize: 18 → no token<br>
+          fontSize: 16 → no token<br>
+          fontSize: 12 → no token<br>
+          4/4 sizes off-scale ✗
+        </div>
+      </div>
+    </div>
+
+    <!-- After -->
+    <div class="comparison-col">
+      <div class="comparison-label label-after">After — Token-Aligned Sizes</div>
+      <div class="phone-frame" style="background: #F5F1ED; border-color: #DDD8D2;">
+        <div style="font-size: 13px; color: #6B6560; margin-bottom: 16px; font-weight: 500;">CHARACTER CARD — FIXED</div>
+
+        <!-- Mock CharacterCard with correct sizes -->
+        <div style="background: #EDEAE5; border-radius: 16px; padding: 16px; border: 1px solid #DDD8D2;">
+          <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 34px; margin-bottom: 4px;">🧙</div>
+            <div style="font-family: 'Literata', serif; font-size: 17px; font-weight: 700; color: #2D2A26;">Level 5 Seeker</div>
+            <div style="font-size: 13px; color: #6B6560; font-weight: 500;">450 / 1000 XP</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <div style="flex: 1; background: #F5F1ED; border-radius: 8px; padding: 8px; text-align: center;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; color: #2D2A26;">12</div>
+              <div style="font-size: 13px; color: #6B6560; font-weight: 500;">Strength</div>
+            </div>
+            <div style="flex: 1; background: #F5F1ED; border-radius: 8px; padding: 8px; text-align: center;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; color: #2D2A26;">8</div>
+              <div style="font-size: 13px; color: #6B6560; font-weight: 500;">Agility</div>
+            </div>
+            <div style="flex: 1; background: #F5F1ED; border-radius: 8px; padding: 8px; text-align: center;">
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; color: #2D2A26;">15</div>
+              <div style="font-size: 13px; color: #6B6560; font-weight: 500;">Wisdom</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <div class="type-sample">
+            <span class="type-size on-scale" style="color: #15793C;">34px</span>
+            <span class="type-label" style="color: #15793C;">displayLg</span>
+            <span style="font-size: 15px; color: #2D2A26;">Avatar emoji</span>
+          </div>
+          <div class="type-sample">
+            <span class="type-size on-scale" style="color: #15793C;">17px</span>
+            <span class="type-label" style="color: #15793C;">body</span>
+            <span style="font-size: 15px; color: #2D2A26;">Level title</span>
+          </div>
+          <div class="type-sample">
+            <span class="type-size on-scale" style="color: #15793C;">17px</span>
+            <span class="type-label" style="color: #15793C;">mono</span>
+            <span style="font-size: 15px; color: #2D2A26;">Stat values</span>
+          </div>
+          <div class="type-sample">
+            <span class="type-size on-scale" style="color: #15793C;">13px</span>
+            <span class="type-label" style="color: #15793C;">caption</span>
+            <span style="font-size: 15px; color: #2D2A26;">XP + labels</span>
+          </div>
+        </div>
+
+        <div class="code-annotation code-good" style="background: rgba(5,150,105,0.08); color: #15793C; border-color: rgba(5,150,105,0.15);">
+          typography.displayLarge (34)<br>
+          typography.body (17)<br>
+          typography.monospace (17 mono)<br>
+          typography.caption (13)<br>
+          4/4 sizes on-scale ✓
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- FIX 3: ONBOARDING CTAs -->
+<div class="fix-section">
+  <div class="fix-header">
+    <div class="fix-number minor">3</div>
+    <h2 class="fix-title">Onboarding CTA Copy</h2>
+  </div>
+  <p class="fix-desc">Generic "Next" / "Skip" labels lack the contextual specificity of the final "Let's Build Your First Habit →" CTA.</p>
+
+  <div class="comparison">
+    <!-- Before -->
+    <div class="comparison-col">
+      <div class="comparison-label label-before">Before — Generic Labels</div>
+      <div class="onboarding-phone">
+        <div class="onboarding-content">
+          <div class="dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="onboarding-illustration" style="background: linear-gradient(135deg, #D1FAE5, #EDEAE5);">🔗</div>
+          <h3 class="onboarding-title">Build Unbreakable Chains</h3>
+          <p class="onboarding-body">Every day you complete a habit adds a link. Watch your chain grow stronger over time.</p>
+        </div>
+        <div class="onboarding-bottom">
+          <button class="onboarding-btn btn-generic">Next</button>
+          <div class="onboarding-skip">Skip</div>
+        </div>
+
+        <div class="code-annotation code-bad" style="background: rgba(181,48,48,0.08); color: #B53030; border-color: rgba(181,48,48,0.15); margin-top: 16px;">
+          "Next" → no action commitment<br>
+          "Skip" → avoidance framing<br>
+          Lower conversion through funnel ✗
+        </div>
+      </div>
+    </div>
+
+    <!-- After -->
+    <div class="comparison-col">
+      <div class="comparison-label label-after">After — Contextual CTAs</div>
+      <div class="onboarding-phone">
+        <div class="onboarding-content">
+          <div class="dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <div class="onboarding-illustration" style="background: linear-gradient(135deg, #D1FAE5, #EDEAE5);">🔗</div>
+          <h3 class="onboarding-title">Build Unbreakable Chains</h3>
+          <p class="onboarding-body">Every day you complete a habit adds a link. Watch your chain grow stronger over time.</p>
+        </div>
+        <div class="onboarding-bottom">
+          <button class="onboarding-btn btn-primary">See How It Works →</button>
+          <div class="onboarding-skip improved">I'll explore later</div>
+        </div>
+
+        <div class="code-annotation code-good" style="background: rgba(5,150,105,0.08); color: #15793C; border-color: rgba(5,150,105,0.15); margin-top: 16px;">
+          "See How It Works →" → forward momentum<br>
+          "I'll explore later" → low-pressure opt-out<br>
+          Each step gets unique CTA ✓
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional CTA examples -->
+  <div style="max-width: 600px; margin: 24px auto 0; background: #1F2937; border-radius: 12px; padding: 20px; border: 1px solid #374151;">
+    <div style="font-size: 13px; color: #9CA3AF; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.12px;">Per-Step CTA Mapping</div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(5,150,105,0.15); color: #34D399; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">1</div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; color: #F9FAFB; font-weight: 600;">Build Unbreakable Chains</div>
+          <div style="font-size: 13px; color: #9CA3AF;">→ "See How It Works →"</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(5,150,105,0.15); color: #34D399; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">2</div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; color: #F9FAFB; font-weight: 600;">Track Your Progress</div>
+          <div style="font-size: 13px; color: #9CA3AF;">→ "See Your Streak →"</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(5,150,105,0.15); color: #34D399; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0;">3</div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; color: #F9FAFB; font-weight: 600;">Meet Your Character</div>
+          <div style="font-size: 13px; color: #9CA3AF;">→ "Let's Build Your First Habit →"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+
+</body>
+</html>

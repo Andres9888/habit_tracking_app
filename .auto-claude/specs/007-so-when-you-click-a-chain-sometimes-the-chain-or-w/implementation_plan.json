@@ -1,0 +1,70 @@
+{
+  "feature": "fix-chain-icon-size-bug",
+  "workflow_type": "simple",
+  "total_phases": 1,
+  "recommended_workers": 1,
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Implementation",
+      "description": "Fix chain icon animation scale to prevent small icon glitch",
+      "depends_on": [],
+      "subtasks": [
+        {
+          "id": "subtask-1-1",
+          "description": "Update scale outputRange in HabitDayToggle from [0.5, 1] to [0.8, 1] to ensure chain icons remain visible at a reasonable size even during animation interruptions (line 385 in HabitChainVisualizer.tsx)",
+          "service": "main",
+          "status": "completed",
+          "files_to_create": [],
+          "files_to_modify": [
+            "src/components/HabitChainVisualizer/HabitChainVisualizer.tsx"
+          ],
+          "patterns_from": [],
+          "verification": {
+            "type": "manual",
+            "run": "Tap habit boxes rapidly and verify chain icons never appear small"
+          },
+          "notes": "Updated scale outputRange from [0.5, 1] to [0.8, 1] in HabitDayToggle component (line 385). This ensures chain icons remain at least 80% visible even during animation interruptions. Committed as 0f518f8.",
+          "updated_at": "2026-01-06T03:40:32.616354+00:00"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "created_at": "2026-01-05T22:35:00Z",
+    "complexity": "simple",
+    "estimated_sessions": 1
+  },
+  "last_updated": "2026-01-06T03:43:06.906967+00:00",
+  "qa_signoff": {
+    "status": "approved",
+    "qa_session": 1,
+    "issues_found": [
+      {
+        "description": "None"
+      }
+    ],
+    "tests_passed": {},
+    "timestamp": "2026-01-06T03:43:06.906957+00:00",
+    "ready_for_qa_revalidation": false
+  },
+  "status": "human_review",
+  "planStatus": "review",
+  "qa_iteration_history": [
+    {
+      "iteration": 1,
+      "status": "approved",
+      "timestamp": "2026-01-06T03:43:20.780295+00:00",
+      "issues": [],
+      "duration_seconds": 161.28
+    }
+  ],
+  "qa_stats": {
+    "total_iterations": 1,
+    "last_iteration": 1,
+    "last_status": "approved",
+    "issues_by_type": {}
+  },
+  "updated_at": "2026-01-06T03:52:11.485Z",
+  "recoveryNote": "Task recovered from stuck state at 2026-01-06T03:52:11.485Z"
+}

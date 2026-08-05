@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Templates Page — UX Improvements Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html { font-size: 16px !important; }
+    body { font-family: 'DM Sans', sans-serif !important; background: #0f172a !important; color: #f9fafb !important; overflow-x: hidden; -webkit-font-smoothing: antialiased; display: flex; justify-content: center; gap: 40px; padding: 30px; flex-wrap: wrap; }
+    h1,h2,h3,h4,h5,h6,p,span,a,button,input { font-family: 'DM Sans', sans-serif !important; }
+    button { border: none; background: none; cursor: pointer; font-family: inherit; }
+
+    /* ═══ PHONE FRAME ═══ */
+    .phone { width: 393px; height: 852px; background: #FAFAF9; border-radius: 44px; border: 3px solid #374151; overflow: hidden; position: relative; box-shadow: 0 30px 100px rgba(0,0,0,0.7); }
+    .notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 160px; height: 34px; background: #000; border-radius: 0 0 20px 20px; z-index: 100; }
+    .screen { position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow-y: auto; scrollbar-width: none; }
+    .screen::-webkit-scrollbar { display: none; }
+    .label { text-align: center; color: #94a3b8; font-size: 13px; font-weight: 600; margin-top: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .sublabel { text-align: center; color: #64748b; font-size: 11px; margin-top: 4px; }
+    .improvement-tag { display: inline-block; background: #059669; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.05em; }
+    .change-tag { display: inline-block; background: #d97706; color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; margin-left: 6px; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* ═══ HEADER ═══ */
+    .header { padding: 54px 20px 12px; }
+    .header-title { font-size: 26px; font-weight: 800; color: #111827; letter-spacing: -0.02em; }
+    .header-subtitle { font-size: 14px; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+
+    /* ═══ SEARCH ═══ */
+    .search-wrap { padding: 0 16px 12px; }
+    .search-bar { display: flex; align-items: center; gap: 10px; background: #f3f4f6; border-radius: 14px; padding: 12px 16px; }
+    .search-bar i { color: #9ca3af; width: 18px; height: 18px; }
+    .search-bar input { background: none; border: none; outline: none; flex: 1; font-size: 15px; color: #374151; }
+    .search-bar input::placeholder { color: #9ca3af; }
+
+    /* ═══ QUICK ACTIONS ROW — NEW ═══ */
+    .quick-actions { display: flex; gap: 8px; padding: 0 16px 16px; overflow-x: auto; scrollbar-width: none; }
+    .quick-actions::-webkit-scrollbar { display: none; }
+    .quick-action-chip { display: flex; align-items: center; gap: 6px; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 12px; padding: 8px 14px; white-space: nowrap; font-size: 13px; font-weight: 600; color: #374151; transition: all 0.2s; flex-shrink: 0; }
+    .quick-action-chip:hover { border-color: #059669; color: #059669; }
+    .quick-action-chip .chip-icon { font-size: 16px; }
+    .quick-action-chip.active { background: #059669; color: white; border-color: #059669; }
+
+    /* ═══ FEATURED HERO ═══ */
+    .featured-hero { margin: 0 16px 16px; border-radius: 20px; overflow: hidden; position: relative; background: linear-gradient(135deg, #059669, #047857, #065f46); padding: 24px; min-height: 160px; }
+    .featured-hero .deco-circle { position: absolute; border-radius: 50%; opacity: 0.08; background: white; }
+    .featured-hero .c1 { width: 200px; height: 200px; top: -60px; right: -40px; }
+    .featured-hero .c2 { width: 120px; height: 120px; bottom: -30px; left: -20px; }
+    .featured-badge { display: inline-flex; align-items: center; gap: 4px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border-radius: 8px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.04em; margin-bottom: 10px; }
+    .featured-title { font-size: 22px; font-weight: 800; color: white; margin-bottom: 6px; }
+    .featured-desc { font-size: 13px; color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 14px; }
+    .featured-chips { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+    .featured-chip { background: rgba(255,255,255,0.18); border-radius: 8px; padding: 4px 10px; font-size: 12px; color: white; font-weight: 500; }
+    .featured-footer { display: flex; justify-content: space-between; align-items: center; }
+    .featured-cta { background: white; color: #059669; font-weight: 700; font-size: 14px; padding: 10px 20px; border-radius: 12px; }
+    .featured-count { font-size: 12px; color: rgba(255,255,255,0.7); }
+    /* Rotating indicator */
+    .featured-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+    .featured-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+    .featured-dot.active { background: white; width: 18px; border-radius: 3px; }
+
+    /* ═══ SECTION HEADER ═══ */
+    .section-header { display: flex; justify-content: space-between; align-items: center; padding: 0 16px; margin-bottom: 12px; }
+    .section-title { font-size: 18px; font-weight: 700; color: #111827; }
+    .section-action { font-size: 13px; font-weight: 600; color: #059669; }
+
+    /* ═══ TRENDING CARDS ═══ */
+    .trending-scroll { display: flex; gap: 12px; padding: 0 16px 20px; overflow-x: auto; scrollbar-width: none; }
+    .trending-scroll::-webkit-scrollbar { display: none; }
+    .trending-card { flex-shrink: 0; width: 152px; background: white; border-radius: 16px; padding: 14px; border: 1px solid #f3f4f6; display: flex; flex-direction: column; gap: 8px; position: relative; }
+    .trending-icon-box { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+    .trending-name { font-size: 13px; font-weight: 600; color: #111827; line-height: 1.3; }
+    .trending-meta { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #6b7280; }
+    .trending-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+    .trending-pop { display: flex; align-items: center; gap: 3px; font-size: 11px; color: #059669; font-weight: 600; }
+    .trending-add { width: 30px; height: 30px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; border: 1.5px solid #bbf7d0; color: #059669; font-size: 18px; font-weight: 500; transition: all 0.2s; }
+    .trending-add:hover { background: #059669; color: white; border-color: #059669; }
+    .science-badge { display: inline-flex; align-items: center; gap: 3px; background: #eff6ff; padding: 2px 7px; border-radius: 6px; font-size: 10px; font-weight: 600; color: #2563eb; }
+
+    /* ═══ "FOR YOU" SECTION — NEW ═══ */
+    .for-you-section { margin-bottom: 20px; }
+    .for-you-scroll { display: flex; gap: 12px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+    .for-you-scroll::-webkit-scrollbar { display: none; }
+    .for-you-card { flex-shrink: 0; width: 260px; background: white; border-radius: 16px; padding: 16px; border: 1px solid #f3f4f6; display: flex; gap: 12px; align-items: center; }
+    .for-you-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .for-you-info { flex: 1; min-width: 0; }
+    .for-you-name { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+    .for-you-reason { font-size: 11px; color: #6b7280; line-height: 1.4; }
+    .for-you-add { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; border: 1.5px solid #bbf7d0; color: #059669; font-size: 20px; }
+
+    /* ═══ CATEGORY GRID ═══ */
+    .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 16px 20px; }
+    .cat-tile { border-radius: 14px; padding: 14px; min-height: 100px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    .cat-icon { font-size: 26px; margin-bottom: 6px; }
+    .cat-label { font-size: 14px; font-weight: 600; }
+    .cat-count { font-size: 11px; color: #6b7280; margin-top: 2px; }
+    .cat-emojis { display: flex; gap: 3px; margin-top: auto; padding-top: 8px; opacity: 0.6; font-size: 13px; }
+    /* Popular indicator on category tile */
+    .cat-popular { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.06); border-radius: 6px; padding: 2px 6px; font-size: 10px; font-weight: 600; color: #6b7280; }
+
+    /* ═══ CURATED PACKS ═══ */
+    .pack-section { padding: 0 16px 24px; }
+    .pack-card { border-radius: 16px; padding: 18px; margin-bottom: 12px; position: relative; overflow: hidden; }
+    .pack-card .deco { position: absolute; width: 100px; height: 100px; border-radius: 50%; opacity: 0.12; background: white; top: -30px; right: -20px; }
+    .pack-emojis { display: flex; gap: 4px; margin-bottom: 10px; }
+    .pack-emoji { width: 32px; height: 32px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .pack-name { font-size: 17px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .pack-desc { font-size: 12px; color: rgba(255,255,255,0.8); margin-bottom: 12px; }
+    .pack-habits { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pack-habit { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 4px 10px; font-size: 11px; color: white; font-weight: 500; }
+    .pack-add-all { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 700; color: white; }
+
+    /* ═══ COMPARISON OVERLAY ═══ */
+    .comparison { position: absolute; top: 0; left: 0; right: 0; background: rgba(17,24,39,0.95); backdrop-filter: blur(10px); padding: 8px 16px; z-index: 50; display: flex; align-items: center; gap: 8px; }
+    .comparison-label { font-size: 11px; font-weight: 700; color: #fbbf24; letter-spacing: 0.04em; }
+
+    /* ═══ ANNOTATIONS ═══ */
+    .annotation { position: absolute; z-index: 200; pointer-events: none; }
+    .annotation-box { background: #1e293b; border: 1.5px solid #059669; border-radius: 10px; padding: 8px 12px; max-width: 200px; }
+    .annotation-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; background: #059669; color: white; font-size: 11px; font-weight: 800; border-radius: 50%; margin-right: 6px; }
+    .annotation-text { font-size: 11px; color: #e2e8f0; line-height: 1.4; }
+    .annotation-line { position: absolute; border-left: 2px dashed #059669; }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- BEFORE: Current Templates Page          -->
+  <!-- ════════════════════════════════════════ -->
+  <div>
+    <div class="label">CURRENT <span class="change-tag">Before</span></div>
+    <div class="sublabel">Existing templates browse flow</div>
+    <div class="phone" style="margin-top: 16px;">
+      <div class="notch"></div>
+      <div class="screen">
+        <!-- Header -->
+        <div class="header">
+          <div class="header-title">Import Habits</div>
+          <div class="header-subtitle">Science-backed templates to build great habits</div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap">
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search templates..." disabled />
+          </div>
+        </div>
+
+        <!-- Featured - Static Morning Mastery -->
+        <div class="featured-hero">
+          <div class="deco-circle c1"></div>
+          <div class="deco-circle c2"></div>
+          <div class="featured-badge">&#11088; FEATURED</div>
+          <div class="featured-title">Morning Mastery</div>
+          <div class="featured-desc">Start your day with science-backed habits for energy and focus</div>
+          <div class="featured-chips">
+            <span class="featured-chip">&#127773; Energy</span>
+            <span class="featured-chip">&#129504; Focus</span>
+            <span class="featured-chip">&#127793; Growth</span>
+          </div>
+          <div class="featured-footer">
+            <button class="featured-cta">Explore Collection</button>
+            <span class="featured-count">6 habits</span>
+          </div>
+        </div>
+
+        <!-- Trending -->
+        <div class="section-header">
+          <span class="section-title">&#128293; Trending Now</span>
+          <button class="section-action">See all</button>
+        </div>
+        <div class="trending-scroll">
+          <div class="trending-card">
+            <div class="trending-icon-box" style="background: #FEF3C7;">&#127749;</div>
+            <div class="trending-name">Morning Sunlight</div>
+            <div class="trending-meta">Daily <span class="science-badge">&#128300; Science</span></div>
+            <div class="trending-bottom">
+              <span class="trending-pop"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 94%</span>
+              <button class="trending-add">+</button>
+            </div>
+          </div>
+          <div class="trending-card">
+            <div class="trending-icon-box" style="background: #E0F2FE;">&#129482;</div>
+            <div class="trending-name">Cold Exposure</div>
+            <div class="trending-meta">Daily <span class="science-badge">&#128300; Science</span></div>
+            <div class="trending-bottom">
+              <span class="trending-pop"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 88%</span>
+              <button class="trending-add">+</button>
+            </div>
+          </div>
+          <div class="trending-card">
+            <div class="trending-icon-box" style="background: #F3E8FF;">&#129504;</div>
+            <div class="trending-name">Gratitude Journal</div>
+            <div class="trending-meta">Daily</div>
+            <div class="trending-bottom">
+              <span class="trending-pop"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 82%</span>
+              <button class="trending-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Grid -->
+        <div class="section-header">
+          <span class="section-title">&#128452;&#65039; Browse by Category</span>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-tile" style="background: #FEF3C7;">
+            <span class="cat-icon">&#127749;</span>
+            <span class="cat-label" style="color: #9A5504;">Morning</span>
+            <span class="cat-count">18 templates</span>
+            <div class="cat-emojis"><span>&#9728;&#65039;</span><span>&#128167;</span><span>&#129504;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #E0E7FF;">
+            <span class="cat-icon">&#129504;</span>
+            <span class="cat-label" style="color: #4F46E5;">Mental Health</span>
+            <span class="cat-count">15 templates</span>
+            <div class="cat-emojis"><span>&#128522;</span><span>&#128218;</span><span>&#128588;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #D1FAE5;">
+            <span class="cat-icon">&#128170;</span>
+            <span class="cat-label" style="color: #047857;">Health</span>
+            <span class="cat-count">22 templates</span>
+            <div class="cat-emojis"><span>&#127939;</span><span>&#129382;</span><span>&#128166;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #DBEAFE;">
+            <span class="cat-icon">&#127919;</span>
+            <span class="cat-label" style="color: #2563EB;">Productivity</span>
+            <span class="cat-count">14 templates</span>
+            <div class="cat-emojis"><span>&#128221;</span><span>&#9201;&#65039;</span><span>&#129504;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #F5F3FF;">
+            <span class="cat-icon">&#129496;</span>
+            <span class="cat-label" style="color: #7C3AED;">Mindfulness</span>
+            <span class="cat-count">12 templates</span>
+            <div class="cat-emojis"><span>&#128524;</span><span>&#127800;</span><span>&#128172;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #ECFDF5;">
+            <span class="cat-icon">&#128176;</span>
+            <span class="cat-label" style="color: #059669;">Financial</span>
+            <span class="cat-count">10 templates</span>
+            <div class="cat-emojis"><span>&#128179;</span><span>&#128200;</span><span>&#128230;</span></div>
+          </div>
+        </div>
+
+        <!-- Premium Packs -->
+        <div class="section-header" style="margin-top: 4px;">
+          <span class="section-title">&#128230; Curated Packs</span>
+        </div>
+        <div class="pack-section">
+          <div class="pack-card" style="background: linear-gradient(135deg, #7C3AED, #4F46E5);">
+            <div class="deco"></div>
+            <div class="pack-emojis">
+              <span class="pack-emoji">&#128300;</span>
+              <span class="pack-emoji">&#129504;</span>
+              <span class="pack-emoji">&#128170;</span>
+              <span class="pack-emoji">&#129516;</span>
+            </div>
+            <div class="pack-name">Huberman Essentials</div>
+            <div class="pack-desc">Science-backed protocols for peak performance</div>
+            <div class="pack-habits">
+              <span class="pack-habit">&#127749; Morning Sunlight</span>
+              <span class="pack-habit">&#129482; Cold Exposure</span>
+              <span class="pack-habit">&#129496; NSDR</span>
+              <span class="pack-habit">+2 more</span>
+            </div>
+          </div>
+          <div class="pack-card" style="background: linear-gradient(135deg, #059669, #047857);">
+            <div class="deco"></div>
+            <div class="pack-emojis">
+              <span class="pack-emoji">&#127749;</span>
+              <span class="pack-emoji">&#128221;</span>
+              <span class="pack-emoji">&#129496;</span>
+              <span class="pack-emoji">&#128167;</span>
+            </div>
+            <div class="pack-name">Morning Mastery</div>
+            <div class="pack-desc">Build an unshakeable morning foundation</div>
+            <div class="pack-habits">
+              <span class="pack-habit">&#127749; Wake Time</span>
+              <span class="pack-habit">&#128167; Hydration</span>
+              <span class="pack-habit">&#128221; Morning Pages</span>
+              <span class="pack-habit">+1 more</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height: 40px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- AFTER: Improved Templates Page          -->
+  <!-- ════════════════════════════════════════ -->
+  <div>
+    <div class="label">IMPROVED <span class="improvement-tag">After</span></div>
+    <div class="sublabel">Proposed UX improvements</div>
+    <div class="phone" style="margin-top: 16px;">
+      <div class="notch"></div>
+      <div class="screen">
+        <!-- Header — IMPROVED: clearer value prop -->
+        <div class="header">
+          <div class="header-title">Habit Templates</div>
+          <div class="header-subtitle">200+ science-backed habits ready to import</div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-wrap">
+          <div class="search-bar">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder='Try "morning routine" or "sleep"' disabled />
+          </div>
+        </div>
+
+        <!-- NEW: Quick Action Chips -->
+        <div class="quick-actions">
+          <button class="quick-action-chip active"><span class="chip-icon">&#10024;</span> All</button>
+          <button class="quick-action-chip"><span class="chip-icon">&#128293;</span> Popular</button>
+          <button class="quick-action-chip"><span class="chip-icon">&#128300;</span> Science-Backed</button>
+          <button class="quick-action-chip"><span class="chip-icon">&#9889;</span> Quick Start</button>
+          <button class="quick-action-chip"><span class="chip-icon">&#128230;</span> Packs</button>
+        </div>
+
+        <!-- Featured - IMPROVED: Rotation indicator + different content -->
+        <div class="featured-hero" style="background: linear-gradient(135deg, #7C3AED, #4F46E5, #6366f1);">
+          <div class="deco-circle c1"></div>
+          <div class="deco-circle c2"></div>
+          <div class="featured-badge">&#128300; HUBERMAN PICK</div>
+          <div class="featured-title">Sunlight Protocol</div>
+          <div class="featured-desc">Andrew Huberman's #1 recommendation: get 10 min of morning sunlight for better sleep, mood & focus</div>
+          <div class="featured-chips">
+            <span class="featured-chip">&#128564; Better Sleep</span>
+            <span class="featured-chip">&#128170; Energy</span>
+            <span class="featured-chip">&#129504; Mood</span>
+          </div>
+          <div class="featured-footer">
+            <button class="featured-cta" style="color: #7C3AED;">Add This Habit</button>
+            <span class="featured-count">2.4k imports</span>
+          </div>
+          <!-- Rotation dots -->
+          <div class="featured-dots">
+            <span class="featured-dot"></span>
+            <span class="featured-dot active"></span>
+            <span class="featured-dot"></span>
+          </div>
+        </div>
+
+        <!-- NEW: "For You" Section - Personalized recommendations -->
+        <div class="for-you-section">
+          <div class="section-header">
+            <span class="section-title">&#127919; Recommended For You</span>
+          </div>
+          <div class="for-you-scroll">
+            <div class="for-you-card">
+              <div class="for-you-icon" style="background: #E0F2FE;">&#128167;</div>
+              <div class="for-you-info">
+                <div class="for-you-name">Hydration Tracking</div>
+                <div class="for-you-reason">Pairs well with your Morning Sunlight habit</div>
+              </div>
+              <button class="for-you-add">+</button>
+            </div>
+            <div class="for-you-card">
+              <div class="for-you-icon" style="background: #FEF3C7;">&#129496;</div>
+              <div class="for-you-info">
+                <div class="for-you-name">5-Min Meditation</div>
+                <div class="for-you-reason">Most popular next habit after journaling</div>
+              </div>
+              <button class="for-you-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending — IMPROVED: social proof numbers -->
+        <div class="section-header">
+          <span class="section-title">&#128293; Trending Now</span>
+          <button class="section-action">See all</button>
+        </div>
+        <div class="trending-scroll">
+          <div class="trending-card">
+            <div class="trending-icon-box" style="background: #FEF3C7;">&#127749;</div>
+            <div class="trending-name">Morning Sunlight</div>
+            <div class="trending-meta">Daily <span class="science-badge">&#128300; Science</span></div>
+            <div class="trending-bottom">
+              <span class="trending-pop"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 2.4k</span>
+              <button class="trending-add">+</button>
+            </div>
+          </div>
+          <div class="trending-card">
+            <div class="trending-icon-box" style="background: #E0F2FE;">&#129482;</div>
+            <div class="trending-name">Cold Exposure</div>
+            <div class="trending-meta">Daily <span class="science-badge">&#128300; Science</span></div>
+            <div class="trending-bottom">
+              <span class="trending-pop"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 1.8k</span>
+              <button class="trending-add">+</button>
+            </div>
+          </div>
+          <div class="trending-card">
+            <div class="trending-icon-box" style="background: #F3E8FF;">&#129504;</div>
+            <div class="trending-name">Gratitude Journal</div>
+            <div class="trending-meta">Daily</div>
+            <div class="trending-bottom">
+              <span class="trending-pop"><i data-lucide="trending-up" style="width:12px;height:12px"></i> 1.5k</span>
+              <button class="trending-add">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Grid — IMPROVED: popular badge, visual hierarchy -->
+        <div class="section-header">
+          <span class="section-title">&#128452;&#65039; Browse by Category</span>
+        </div>
+        <div class="cat-grid">
+          <div class="cat-tile" style="background: #FEF3C7;">
+            <span class="cat-popular">&#128293; Popular</span>
+            <span class="cat-icon">&#127749;</span>
+            <span class="cat-label" style="color: #9A5504;">Morning</span>
+            <span class="cat-count">18 templates</span>
+            <div class="cat-emojis"><span>&#9728;&#65039;</span><span>&#128167;</span><span>&#129504;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #E0E7FF;">
+            <span class="cat-icon">&#129504;</span>
+            <span class="cat-label" style="color: #4F46E5;">Mental Health</span>
+            <span class="cat-count">15 templates</span>
+            <div class="cat-emojis"><span>&#128522;</span><span>&#128218;</span><span>&#128588;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #D1FAE5;">
+            <span class="cat-popular">&#128293; Popular</span>
+            <span class="cat-icon">&#128170;</span>
+            <span class="cat-label" style="color: #047857;">Health</span>
+            <span class="cat-count">22 templates</span>
+            <div class="cat-emojis"><span>&#127939;</span><span>&#129382;</span><span>&#128166;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #DBEAFE;">
+            <span class="cat-icon">&#127919;</span>
+            <span class="cat-label" style="color: #2563EB;">Productivity</span>
+            <span class="cat-count">14 templates</span>
+            <div class="cat-emojis"><span>&#128221;</span><span>&#9201;&#65039;</span><span>&#129504;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #F5F3FF;">
+            <span class="cat-icon">&#129496;</span>
+            <span class="cat-label" style="color: #7C3AED;">Mindfulness</span>
+            <span class="cat-count">12 templates</span>
+            <div class="cat-emojis"><span>&#128524;</span><span>&#127800;</span><span>&#128172;</span></div>
+          </div>
+          <div class="cat-tile" style="background: #ECFDF5;">
+            <span class="cat-icon">&#128176;</span>
+            <span class="cat-label" style="color: #059669;">Financial</span>
+            <span class="cat-count">10 templates</span>
+            <div class="cat-emojis"><span>&#128179;</span><span>&#128200;</span><span>&#128230;</span></div>
+          </div>
+        </div>
+
+        <!-- Curated Packs — IMPROVED: "Add All" button -->
+        <div class="section-header" style="margin-top: 4px;">
+          <span class="section-title">&#128230; Curated Packs</span>
+        </div>
+        <div class="pack-section">
+          <div class="pack-card" style="background: linear-gradient(135deg, #7C3AED, #4F46E5);">
+            <div class="deco"></div>
+            <button class="pack-add-all">Add All (5)</button>
+            <div class="pack-emojis">
+              <span class="pack-emoji">&#128300;</span>
+              <span class="pack-emoji">&#129504;</span>
+              <span class="pack-emoji">&#128170;</span>
+              <span class="pack-emoji">&#129516;</span>
+            </div>
+            <div class="pack-name">Huberman Essentials</div>
+            <div class="pack-desc">Science-backed protocols for peak performance</div>
+            <div class="pack-habits">
+              <span class="pack-habit">&#127749; Morning Sunlight</span>
+              <span class="pack-habit">&#129482; Cold Exposure</span>
+              <span class="pack-habit">&#129496; NSDR</span>
+              <span class="pack-habit">+2 more</span>
+            </div>
+          </div>
+          <div class="pack-card" style="background: linear-gradient(135deg, #059669, #047857);">
+            <div class="deco"></div>
+            <button class="pack-add-all">Add All (4)</button>
+            <div class="pack-emojis">
+              <span class="pack-emoji">&#127749;</span>
+              <span class="pack-emoji">&#128221;</span>
+              <span class="pack-emoji">&#129496;</span>
+              <span class="pack-emoji">&#128167;</span>
+            </div>
+            <div class="pack-name">Morning Mastery</div>
+            <div class="pack-desc">Build an unshakeable morning foundation</div>
+            <div class="pack-habits">
+              <span class="pack-habit">&#127749; Wake Time</span>
+              <span class="pack-habit">&#128167; Hydration</span>
+              <span class="pack-habit">&#128221; Morning Pages</span>
+              <span class="pack-habit">+1 more</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height: 40px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

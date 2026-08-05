@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chain Day — Settings (Recommended Composite)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-font-smoothing: antialiased; }
+
+    :root {
+      /* === LIGHT THEME — warm stone parchment === */
+      --bg: #F5F1ED;
+      --card: #FAF8F5;          /* LIFTED card surface for real float/depth */
+      --border: #DDD8D2;
+      --text-primary: #2D2A26;
+      --text-secondary: #6B6560;
+      --text-tertiary: #6E6660;
+      --tile-bg: #E2F1EA;       /* the ONE cohesive green tile */
+      --tile-icon: #047857;
+      --accent: #059669;
+      --toggle-on: #10B981;
+      --toggle-off: #C4BFB7;
+      --radius-card: 16px;
+      --radius-tile: 12px;
+
+      /* derived hairlines + layered shadows (Variant A surface craft) */
+      --divider: rgba(45, 42, 38, 0.07);
+      --card-shadow: 0 1px 2px rgba(45,42,38,0.04), 0 6px 18px rgba(45,42,38,0.06);
+      --card-inner-highlight: inset 0 1px 0 rgba(255,255,255,0.7);
+      --hero-shadow: 0 1px 2px rgba(45,42,38,0.05), 0 10px 30px rgba(45,42,38,0.08);
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0b0b0d;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 44px 20px;
+      min-height: 100vh;
+    }
+
+    /* ───── Phone Frame ───── */
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      border-radius: 54px;
+      position: relative;
+      background: #1b1b1f;
+      padding: 11px;
+      box-shadow:
+        0 0 0 2px #2c2c30,
+        0 0 0 11px #131316,
+        0 40px 90px rgba(0,0,0,0.6),
+        0 8px 28px rgba(0,0,0,0.45);
+      flex-shrink: 0;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 44px;
+      overflow: hidden;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .scroll {
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* ───── iOS Status Bar ───── */
+    .status-bar {
+      height: 54px;
+      padding: 0 30px 0 34px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 30;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.2px;
+      color: var(--text-primary);
+      margin-top: 2px;
+    }
+    .status-right { display: flex; align-items: center; gap: 7px; margin-top: 2px; }
+    .status-right svg { width: 17px; height: 17px; color: var(--text-primary); }
+    .battery { width: 24px; height: 12px; border: 1.4px solid var(--text-primary);
+      border-radius: 3px; position: relative; opacity: 0.92; }
+    .battery::after { content:''; position:absolute; right:-3px; top:3px; width:2px; height:5px;
+      background: var(--text-primary); border-radius:0 1px 1px 0; }
+    .battery::before { content:''; position:absolute; left:1.4px; top:1.4px; bottom:1.4px;
+      width:62%; background: var(--text-primary); border-radius:1px; }
+
+    /* Dynamic Island */
+    .island {
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 122px;
+      height: 35px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 40;
+    }
+
+    /* ───── Sticky header (kicker + title + close) ───── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 25;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 4px 22px 14px;
+      background: linear-gradient(to bottom, var(--bg) 70%, rgba(245,241,237,0));
+    }
+    .topbar-titles { display: flex; flex-direction: column; gap: 2px; }
+    .kicker {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 10.5px;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      opacity: 0.85;
+      padding-left: 1px;
+    }
+    .screen-title {
+      font-family: 'Literata', serif;
+      font-weight: 600;
+      font-size: 30px;
+      letter-spacing: -0.4px;
+      color: var(--text-primary);
+      line-height: 1.05;
+    }
+    .close-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: rgba(4,120,87,0.10);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: background .18s ease;
+      margin-bottom: 4px;
+    }
+    .close-btn:hover { background: rgba(4,120,87,0.16); }
+    .close-btn svg { width: 17px; height: 17px; color: var(--accent); stroke-width: 2.4; }
+
+    .content { padding: 0 18px 60px; }
+
+    /* ───── Profile Hero ───── */
+    .hero {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 22px 20px 6px;
+      margin-bottom: 28px;
+      box-shadow: var(--hero-shadow), var(--card-inner-highlight);
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.15s ease;
+    }
+    .hero:active { transform: scale(0.994); }
+    .hero-chevron {
+      position: absolute; top: 20px; right: 18px;
+      color: var(--text-tertiary); opacity: 0.55;
+    }
+    .hero-chevron svg { width: 20px; height: 20px; }
+    .hero-top { display: flex; flex-direction: column; align-items: center; }
+
+    /* Avatar — soft MUTED-green FILLED treatment (director fix) */
+    .avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background:
+        radial-gradient(120% 120% at 30% 20%, #F4FBF7 0%, #E2F1EA 52%, #CFE7DB 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Literata', serif;
+      font-weight: 600;
+      font-size: 32px;
+      color: var(--tile-icon);
+      box-shadow:
+        inset 0 1px 2px rgba(255,255,255,0.9),
+        0 4px 12px rgba(4,120,87,0.14),
+        0 0 0 4px rgba(255,255,255,0.55);
+      margin-bottom: 12px;
+    }
+    .name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+    .hero-name {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 20px;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+    }
+    /* outlined PRO crown badge */
+    .pro-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px 3px 7px;
+      border-radius: 8px;
+      background: rgba(4,120,87,0.08);
+      border: 1px solid rgba(4,120,87,0.16);
+    }
+    .pro-badge svg { width: 11px; height: 11px; color: var(--tile-icon); }
+    .pro-badge span {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.7px;
+      color: var(--tile-icon); text-transform: uppercase;
+    }
+    .hero-sub {
+      font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;
+    }
+
+    /* stats strip */
+    .stats {
+      display: flex;
+      border-top: 1px solid var(--divider);
+      padding-top: 16px;
+      padding-bottom: 16px;
+    }
+    .stat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+    }
+    .stat + .stat::before {
+      content:''; position: absolute; left: 0; top: 4px; bottom: 4px;
+      width: 1px; background: var(--divider);
+    }
+    .stat-icon { color: var(--text-tertiary); opacity: 0.7; margin-bottom: 1px; }
+    .stat-icon svg { width: 15px; height: 15px; }
+    .stat-value {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 10.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.1px;
+      text-align: center;
+    }
+
+    /* ───── Section label (Literata, TITLECASE, OUTSIDE card, trailing green glyph) ───── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 8px 11px;
+      padding-top: 2px;
+    }
+    .section-label .sl-text {
+      font-family: 'Literata', serif;
+      font-weight: 600;
+      font-size: 15.5px;
+      letter-spacing: -0.1px;
+      color: var(--text-primary);
+    }
+    .section-label .sl-icon { display: inline-flex; align-items: center; }
+    .section-label .sl-icon svg {
+      width: 15px; height: 15px;
+      color: var(--tile-icon);
+      stroke-width: 2;
+      opacity: 0.9;
+    }
+
+    /* ───── Card (iOS grouped, always-open, flat) ───── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--card-shadow), var(--card-inner-highlight);
+      overflow: hidden;
+      margin-bottom: 28px;
+    }
+
+    /* ───── Row ───── */
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 13px 16px;
+      position: relative;
+      min-height: 58px;
+    }
+    /* hairline divider inset to align under the label, not the tile */
+    .row + .row::before {
+      content:''; position: absolute; top: 0; left: 69px; right: 0;
+      height: 1px; background: var(--divider);
+    }
+    .row.tappable { cursor: pointer; transition: background .15s ease; }
+    .row.tappable:active { background: rgba(110,102,96,0.05); }
+
+    .tile {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-tile);
+      background: var(--tile-bg);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.6);
+    }
+    .tile svg { width: 20px; height: 20px; color: var(--tile-icon); stroke-width: 2; }
+
+    .row-text { flex: 1; min-width: 0; }
+    .row-label {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--text-primary);
+      letter-spacing: -0.1px;
+      line-height: 1.25;
+    }
+    .row-sub {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+    .row-acc { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+    .value-text {
+      font-size: 15px; font-weight: 500; color: var(--text-secondary);
+    }
+    .chevron { color: var(--text-tertiary); opacity: 0.7; }
+    .chevron svg { width: 18px; height: 18px; }
+    .ext-link svg { width: 16px; height: 16px; color: var(--text-tertiary); opacity: 0.7; }
+    .badge {
+      min-width: 22px; height: 22px; padding: 0 7px;
+      border-radius: 11px;
+      background: rgba(4,120,87,0.12);
+      color: var(--tile-icon);
+      font-size: 12.5px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ───── iOS Toggle (50x30, spring thumb) ───── */
+    .toggle {
+      width: 50px; height: 30px;
+      border-radius: 15px;
+      background: var(--toggle-off);
+      position: relative;
+      cursor: pointer;
+      transition: background .25s ease;
+      flex-shrink: 0;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.03);
+    }
+    .toggle.on { background: var(--toggle-on); }
+    .toggle::after {
+      content:''; position: absolute; top: 2px; left: 2px;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.18), 0 1px 1px rgba(0,0,0,0.08);
+      transition: transform .25s cubic-bezier(.34,1.4,.5,1);
+    }
+    .toggle.on::after { transform: translateX(20px); }
+
+    /* ───── Segmented control ───── */
+    .segmented {
+      display: flex;
+      background: rgba(45,42,38,0.05);
+      border-radius: 9px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .seg {
+      font-size: 13px; font-weight: 600;
+      color: var(--text-secondary);
+      padding: 5px 11px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all .18s ease;
+    }
+    .seg.active {
+      background: var(--card);
+      color: var(--text-primary);
+      box-shadow: 0 1px 2px rgba(45,42,38,0.12);
+    }
+
+    /* shape value chip */
+    .shape-val { display: flex; align-items: center; gap: 7px; }
+    .shape {
+      width: 18px; height: 18px;
+      border: 1.8px solid var(--accent);
+      background: rgba(5,150,105,0.12);
+      border-radius: 4px;
+    }
+
+    .emoji-set { font-size: 17px; letter-spacing: 1px; }
+
+    /* nested reminder row (true child of the toggle above) */
+    .nested {
+      margin: 0 16px 0 69px;
+      border-top: 1px solid var(--divider);
+      background: rgba(226,241,234,0.30);
+      border-radius: 0 0 4px 4px;
+    }
+    .nested .row { padding: 12px 0 12px 12px; min-height: 0; }
+    .nested .row::before { display: none; }
+    .nested-tag {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .nested-corner { color: var(--tile-icon); opacity: 0.65; display: inline-flex; }
+    .nested-corner svg { width: 16px; height: 16px; }
+
+    /* ───── Live Calendar Preview (Appearance centerpiece) ───── */
+    .cal-preview {
+      margin: 4px 16px 6px;
+      background: var(--bg);
+      border: 1px solid var(--divider);
+      border-radius: 14px;
+      padding: 14px 14px 16px;
+      box-shadow: inset 0 1px 2px rgba(45,42,38,0.03);
+    }
+    .cal-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 11px;
+    }
+    .cal-title {
+      font-family: 'Literata', serif;
+      font-weight: 500;
+      font-size: 13px;
+      color: var(--text-secondary);
+      letter-spacing: 0.1px;
+    }
+    .cal-live {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+      color: var(--tile-icon); text-transform: uppercase;
+    }
+    .cal-live .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--toggle-on);
+      box-shadow: 0 0 0 3px rgba(16,185,129,0.18);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.45;} }
+
+    .dow {
+      display: grid; grid-template-columns: repeat(7,1fr); gap: 0;
+      margin-bottom: 7px;
+    }
+    .dow span {
+      text-align: center; font-size: 9.5px; font-weight: 600;
+      color: var(--text-tertiary); letter-spacing: 0.3px;
+    }
+    .weeks { position: relative; }
+    .week {
+      display: grid; grid-template-columns: repeat(7,1fr);
+      gap: 0; position: relative; margin-bottom: 8px;
+    }
+    .week:last-child { margin-bottom: 0; }
+    .cell {
+      margin: 0 auto;
+      width: 26px; height: 26px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 600;
+      color: var(--text-tertiary);
+      position: relative;
+      z-index: 2;
+    }
+    .cell.empty { background: rgba(45,42,38,0.04); }
+    .cell.done {
+      background: linear-gradient(155deg, #10B981 0%, #059669 100%);
+      color: #fff;
+      box-shadow: 0 2px 5px rgba(5,150,105,0.28), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .cell.today {
+      border: 1.6px solid var(--tile-icon);
+      color: var(--tile-icon);
+      background: var(--tile-bg);
+    }
+    /* green chain connector between consecutive completed cells */
+    .chain {
+      position: absolute;
+      height: 4px;
+      background: linear-gradient(90deg, #059669, #10B981);
+      border-radius: 2px;
+      z-index: 1;
+      opacity: 0.9;
+      transform: translateY(-2px);
+      top: 50%;
+    }
+
+    .legend {
+      display: flex; align-items: center; gap: 14px;
+      margin-top: 12px; padding-top: 11px;
+      border-top: 1px solid var(--divider);
+    }
+    .leg { display: flex; align-items: center; gap: 6px;
+      font-size: 10.5px; font-weight: 500; color: var(--text-secondary); }
+    .leg .sw { width: 11px; height: 11px; border-radius: 4px; }
+    .leg .sw.done { background: linear-gradient(155deg,#10B981,#059669); }
+    .leg .sw.miss { background: rgba(45,42,38,0.10); }
+
+    /* footer */
+    .footer-note {
+      text-align: center; font-size: 11.5px; color: var(--text-tertiary);
+      margin-top: 6px; opacity: 0.8;
+    }
+    .footer-note strong { font-family:'Literata',serif; font-weight:500; color: var(--text-secondary);}
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <div class="screen">
+      <div class="island"></div>
+      <div class="scroll">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <div class="status-time">9:41</div>
+          <div class="status-right">
+            <i data-lucide="signal"></i>
+            <i data-lucide="wifi"></i>
+            <div class="battery"></div>
+          </div>
+        </div>
+
+        <!-- Sticky Header: kicker + title + close -->
+        <div class="topbar">
+          <div class="topbar-titles">
+            <div class="kicker">Chain Day</div>
+            <div class="screen-title">Settings</div>
+          </div>
+          <div class="close-btn"><i data-lucide="x"></i></div>
+        </div>
+
+        <div class="content">
+
+          <!-- ───── PROFILE HERO ───── -->
+          <div class="hero">
+            <div class="hero-chevron"><i data-lucide="chevron-right"></i></div>
+            <div class="hero-top">
+              <div class="avatar">A</div>
+              <div class="name-row">
+                <span class="hero-name">Andres</span>
+                <span class="pro-badge"><i data-lucide="crown"></i><span>Pro</span></span>
+              </div>
+              <div class="hero-sub">Manage account &amp; subscription</div>
+            </div>
+            <div class="stats">
+              <div class="stat">
+                <span class="stat-icon"><i data-lucide="activity"></i></span>
+                <span class="stat-value">7</span>
+                <span class="stat-label">Active Habits</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon"><i data-lucide="star"></i></span>
+                <span class="stat-value">42</span>
+                <span class="stat-label">Flawless Days</span>
+              </div>
+              <div class="stat">
+                <span class="stat-icon"><i data-lucide="check-circle-2"></i></span>
+                <span class="stat-value">318</span>
+                <span class="stat-label">Lifetime Completions</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═════ APPEARANCE (always-open, flat grouped card) ═════ -->
+          <div class="section-label">
+            <span class="sl-text">Appearance</span>
+            <span class="sl-icon"><i data-lucide="palette"></i></span>
+          </div>
+          <div class="card">
+
+            <!-- LIVE CALENDAR PREVIEW (centerpiece) -->
+            <div class="cal-preview">
+              <div class="cal-head">
+                <span class="cal-title">Calendar preview</span>
+                <span class="cal-live"><span class="dot"></span>Live</span>
+              </div>
+              <div class="dow">
+                <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span>
+              </div>
+              <div class="weeks">
+                <!-- Week 1 -->
+                <div class="week">
+                  <div class="chain" style="left:14%; width:58%;"></div>
+                  <div class="cell done">1</div>
+                  <div class="cell done">2</div>
+                  <div class="cell done">3</div>
+                  <div class="cell done">4</div>
+                  <div class="cell done">5</div>
+                  <div class="cell empty">6</div>
+                  <div class="cell done">7</div>
+                </div>
+                <!-- Week 2 -->
+                <div class="week">
+                  <div class="chain" style="left:14%; width:29%;"></div>
+                  <div class="chain" style="left:71%; width:14%;"></div>
+                  <div class="cell done">8</div>
+                  <div class="cell done">9</div>
+                  <div class="cell done">10</div>
+                  <div class="cell empty">11</div>
+                  <div class="cell empty">12</div>
+                  <div class="cell done">13</div>
+                  <div class="cell done">14</div>
+                </div>
+                <!-- Week 3 -->
+                <div class="week">
+                  <div class="chain" style="left:0%; width:43%;"></div>
+                  <div class="cell done">15</div>
+                  <div class="cell done">16</div>
+                  <div class="cell done">17</div>
+                  <div class="cell today">18</div>
+                  <div class="cell empty">19</div>
+                  <div class="cell empty">20</div>
+                  <div class="cell empty">21</div>
+                </div>
+              </div>
+              <div class="legend">
+                <div class="leg"><span class="sw done"></span>Completed</div>
+                <div class="leg"><span class="sw miss"></span>Missed</div>
+                <div class="leg" style="margin-left:auto; color:var(--text-tertiary);">Updates with your settings</div>
+              </div>
+            </div>
+
+            <!-- Theme -->
+            <div class="row">
+              <div class="tile"><i data-lucide="moon"></i></div>
+              <div class="row-text"><div class="row-label">Theme</div></div>
+              <div class="row-acc">
+                <div class="segmented">
+                  <div class="seg">Light</div>
+                  <div class="seg">Dark</div>
+                  <div class="seg active">System</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day marker shape -->
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="shapes"></i></div>
+              <div class="row-text"><div class="row-label">Day marker shape</div></div>
+              <div class="row-acc">
+                <div class="shape-val">
+                  <div class="shape"></div>
+                  <span class="value-text">Square</span>
+                </div>
+                <span class="chevron"><i data-lucide="chevron-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Gradient streak fill -->
+            <div class="row">
+              <div class="tile"><i data-lucide="paintbrush"></i></div>
+              <div class="row-text">
+                <div class="row-label">Gradient streak fill</div>
+                <div class="row-sub">Color fills active streak cells</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"></div></div>
+            </div>
+
+            <!-- Streak connections -->
+            <div class="row">
+              <div class="tile"><i data-lucide="link"></i></div>
+              <div class="row-text">
+                <div class="row-label">Streak connections</div>
+                <div class="row-sub">Link completed days into a chain on the calendar</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"></div></div>
+            </div>
+
+            <!-- Completion icon -->
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="check"></i></div>
+              <div class="row-text"><div class="row-label">Completion icon</div></div>
+              <div class="row-acc">
+                <span class="value-text">Check</span>
+                <span class="chevron"><i data-lucide="chevron-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Default growth icons (canonical 5 emojis) -->
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="sprout"></i></div>
+              <div class="row-text">
+                <div class="row-label">Default growth icons</div>
+                <div class="row-sub">Pick the 5 emojis used for every habit by default</div>
+              </div>
+              <div class="row-acc">
+                <span class="emoji-set">🌱🌿🪴🌳🌲</span>
+                <span class="chevron"><i data-lucide="chevron-right"></i></span>
+              </div>
+            </div>
+
+            <!-- Compact habit cards -->
+            <div class="row">
+              <div class="tile"><i data-lucide="layout-grid"></i></div>
+              <div class="row-text">
+                <div class="row-label">Compact habit cards</div>
+                <div class="row-sub">Fit more on screen</div>
+              </div>
+              <div class="row-acc"><div class="toggle"></div></div>
+            </div>
+          </div>
+
+          <!-- ═════ BEHAVIOR (always-open, flat grouped card) ═════ -->
+          <div class="section-label">
+            <span class="sl-text">Behavior</span>
+            <span class="sl-icon"><i data-lucide="sliders-horizontal"></i></span>
+          </div>
+          <div class="card">
+
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="arrow-up-down"></i></div>
+              <div class="row-text">
+                <div class="row-label">Sort order</div>
+                <div class="row-sub">How habits are ordered</div>
+              </div>
+              <div class="row-acc">
+                <span class="value-text">Manual</span>
+                <span class="chevron"><i data-lucide="chevron-right"></i></span>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="tile"><i data-lucide="volume-2"></i></div>
+              <div class="row-text">
+                <div class="row-label">Completion sound</div>
+                <div class="row-sub">Play sound when checking off</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"></div></div>
+            </div>
+
+            <div class="row">
+              <div class="tile"><i data-lucide="pin"></i></div>
+              <div class="row-text">
+                <div class="row-label">Sticky month header</div>
+                <div class="row-sub">Month stays visible while scrolling</div>
+              </div>
+              <div class="row-acc"><div class="toggle"></div></div>
+            </div>
+
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="archive"></i></div>
+              <div class="row-text">
+                <div class="row-label">Archived habits</div>
+                <div class="row-sub">View and restore hidden habits</div>
+              </div>
+              <div class="row-acc">
+                <span class="badge">3</span>
+                <span class="chevron"><i data-lucide="chevron-right"></i></span>
+              </div>
+            </div>
+
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="download"></i></div>
+              <div class="row-text">
+                <div class="row-label">Export habits data</div>
+                <div class="row-sub">Download as CSV or JSON</div>
+              </div>
+              <div class="row-acc">
+                <span class="chevron"><i data-lucide="chevron-right"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═════ NOTIFICATIONS (always-open, flat grouped card) ═════ -->
+          <div class="section-label">
+            <span class="sl-text">Notifications</span>
+            <span class="sl-icon"><i data-lucide="bell-ring"></i></span>
+          </div>
+          <div class="card">
+
+            <div class="row">
+              <div class="tile"><i data-lucide="alarm-clock"></i></div>
+              <div class="row-text">
+                <div class="row-label">Streak Reminders</div>
+                <div class="row-sub">Get nudged before an active streak slips</div>
+              </div>
+              <div class="row-acc"><div class="toggle on"></div></div>
+            </div>
+
+            <!-- nested child of the toggle above -->
+            <div class="nested">
+              <div class="row tappable">
+                <div class="nested-tag">
+                  <span class="nested-corner"><i data-lucide="corner-down-right"></i></span>
+                  <div class="row-text"><div class="row-label" style="font-size:15px;">Reminder time</div></div>
+                </div>
+                <div class="row-acc" style="margin-left:auto;">
+                  <span class="value-text">8:00 PM</span>
+                  <span class="chevron"><i data-lucide="chevron-right"></i></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═════ SUPPORT ═════ -->
+          <div class="section-label">
+            <span class="sl-text">Support</span>
+            <span class="sl-icon"><i data-lucide="heart"></i></span>
+          </div>
+          <div class="card">
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="star"></i></div>
+              <div class="row-text"><div class="row-label">Rate Chain Day</div></div>
+              <div class="row-acc"><span class="chevron"><i data-lucide="chevron-right"></i></span></div>
+            </div>
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="share-2"></i></div>
+              <div class="row-text"><div class="row-label">Share with Friends</div></div>
+              <div class="row-acc"><span class="chevron"><i data-lucide="chevron-right"></i></span></div>
+            </div>
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="message-circle"></i></div>
+              <div class="row-text"><div class="row-label">Send Feedback</div></div>
+              <div class="row-acc"><span class="chevron"><i data-lucide="chevron-right"></i></span></div>
+            </div>
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="sparkles"></i></div>
+              <div class="row-text"><div class="row-label">What's New</div></div>
+              <div class="row-acc"><span class="chevron"><i data-lucide="chevron-right"></i></span></div>
+            </div>
+          </div>
+
+          <!-- ═════ ABOUT ═════ -->
+          <div class="section-label">
+            <span class="sl-text">About</span>
+            <span class="sl-icon"><i data-lucide="info"></i></span>
+          </div>
+          <div class="card">
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="shield-check"></i></div>
+              <div class="row-text"><div class="row-label">Privacy Policy</div></div>
+              <div class="row-acc"><span class="ext-link"><i data-lucide="external-link"></i></span></div>
+            </div>
+            <div class="row tappable">
+              <div class="tile"><i data-lucide="file-text"></i></div>
+              <div class="row-text"><div class="row-label">Terms of Service</div></div>
+              <div class="row-acc"><span class="ext-link"><i data-lucide="external-link"></i></span></div>
+            </div>
+            <div class="row">
+              <div class="tile"><i data-lucide="info"></i></div>
+              <div class="row-text"><div class="row-label">Version</div></div>
+              <div class="row-acc"><span class="value-text">1.0.0 (1)</span></div>
+            </div>
+          </div>
+
+          <div class="footer-note"><strong>Chain Day</strong> · Built for the long game</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

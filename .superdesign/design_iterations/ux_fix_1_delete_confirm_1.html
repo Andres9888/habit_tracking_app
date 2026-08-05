@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P0 Fix #1 — Delete Confirmation Modal</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: #fff;
+      }
+
+      .label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #ef4444;
+        margin-bottom: 8px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 40px;
+        max-width: 500px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .phone-pair {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding: 4px 12px;
+        border: 1px solid #374151;
+        border-radius: 20px;
+      }
+      .phone-label.bad {
+        color: #ef4444;
+        border-color: #7f1d1d;
+      }
+      .phone-label.good {
+        color: #10b981;
+        border-color: #064e3b;
+      }
+
+      .phone {
+        width: 375px;
+        height: 680px;
+        background: #faf8f5;
+        border-radius: 40px;
+        border: 6px solid #2d2a26;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      .status-bar {
+        height: 50px;
+        background: #faf8f5;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+      .notch {
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+      }
+
+      .screen-content {
+        padding: 16px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        position: relative;
+      }
+
+      /* Habit cards */
+      .habit-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+        transition: transform 0.2s;
+        cursor: pointer;
+        position: relative;
+      }
+      .habit-card:hover {
+        transform: scale(1.01);
+      }
+
+      .habit-emoji {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 17px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+      }
+      .habit-meta {
+        font-size: 13px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .habit-check.done {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+        font-size: 14px;
+      }
+
+      /* Swipe reveal - BEFORE (danger zone) */
+      .swipe-actions-bad {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        display: flex;
+        border-radius: 0 16px 16px 0;
+        overflow: hidden;
+      }
+      .swipe-btn {
+        width: 70px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 500;
+        gap: 4px;
+        color: #fff;
+      }
+      .swipe-btn.edit {
+        background: #3b82f6;
+      }
+      .swipe-btn.delete-bad {
+        background: #ef4444;
+      }
+
+      /* Delete action sheet - BEFORE */
+      .action-sheet-bad {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border-radius: 16px 16px 0 0;
+        padding: 16px;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 10;
+      }
+      .action-item {
+        padding: 14px 16px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 500;
+        text-align: center;
+        cursor: pointer;
+        margin-bottom: 8px;
+      }
+      .action-item.destructive {
+        color: #ef4444;
+        background: #fef2f2;
+      }
+      .action-item.cancel {
+        color: #78716c;
+        background: #f5f3f0;
+      }
+
+      /* ========== AFTER: Confirmation Modal ========== */
+      .modal-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.3s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .confirm-modal {
+        background: #fff;
+        border-radius: 20px;
+        width: 300px;
+        overflow: hidden;
+        animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      }
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.85);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .confirm-header {
+        padding: 24px 24px 8px;
+        text-align: center;
+      }
+      .confirm-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #fef2f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        margin: 0 auto 12px;
+      }
+      .confirm-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+      }
+      .confirm-body {
+        padding: 8px 24px 20px;
+        text-align: center;
+      }
+      .confirm-text {
+        font-size: 15px;
+        color: #78716c;
+        line-height: 1.5;
+      }
+      .confirm-habit-preview {
+        background: #faf8f5;
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 12px 0 4px;
+      }
+      .confirm-habit-preview .emoji {
+        font-size: 20px;
+      }
+      .confirm-habit-preview .name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .confirm-habit-preview .streak {
+        font-size: 13px;
+        color: #78716c;
+        margin-left: auto;
+      }
+
+      .confirm-stats {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin-top: 12px;
+      }
+      .confirm-stat {
+        text-align: center;
+        padding: 8px 12px;
+        background: #fef2f2;
+        border-radius: 10px;
+        flex: 1;
+      }
+      .confirm-stat-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ef4444;
+      }
+      .confirm-stat-label {
+        font-size: 11px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+
+      .confirm-actions {
+        border-top: 1px solid #e5e2de;
+        display: flex;
+        flex-direction: column;
+      }
+      .confirm-btn {
+        padding: 14px;
+        font-size: 17px;
+        font-weight: 600;
+        text-align: center;
+        cursor: pointer;
+        border: none;
+        background: none;
+        width: 100%;
+        transition: background 0.15s;
+      }
+      .confirm-btn:hover {
+        background: #faf8f5;
+      }
+      .confirm-btn.delete {
+        color: #ef4444;
+        border-bottom: 1px solid #e5e2de;
+      }
+      .confirm-btn.delete:hover {
+        background: #fef2f2;
+      }
+      .confirm-btn.keep {
+        color: #10b981;
+        font-weight: 700;
+      }
+      .confirm-btn.keep:hover {
+        background: #ecfdf5;
+      }
+
+      .vs-badge {
+        background: #374151;
+        color: #9ca3af;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 16px;
+        border-radius: 20px;
+        margin-top: 20px;
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px dashed #ef4444;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+      .annotation.good {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #10b981;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">P0 Fix #1</div>
+    <div class="title">Delete Confirmation Modal</div>
+    <div class="subtitle">
+      Currently, tapping "Delete" in the action sheet immediately destroys the
+      habit with no confirmation. The fix adds a modal showing what will be
+      lost.
+    </div>
+
+    <div class="phone-pair">
+      <!-- BEFORE -->
+      <div class="phone-col">
+        <div class="phone-label bad">Before — No Confirmation</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #d1fae5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">42% strength · 12-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+            <div class="habit-card" style="transform: translateX(-140px)">
+              <div class="habit-emoji" style="background: #dbeafe">💧</div>
+              <div class="habit-info">
+                <div class="habit-name">Drink Water</div>
+                <div class="habit-meta">67% strength · 24-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+              <div class="swipe-actions-bad">
+                <div class="swipe-btn edit">✏️<span>Edit</span></div>
+                <div class="swipe-btn delete-bad">🗑️<span>Delete</span></div>
+              </div>
+              <div class="annotation" style="top: -28px; right: 0">
+                ⚠️ Single tap = permanent delete
+              </div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fef3c7">📖</div>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">28% strength · 5-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <!-- Action sheet -->
+            <div class="action-sheet-bad">
+              <div
+                style="
+                  font-size: 13px;
+                  color: #78716c;
+                  text-align: center;
+                  margin-bottom: 12px;
+                "
+              >
+                Drink Water
+              </div>
+              <div
+                class="action-item"
+                style="color: #3b82f6; background: #eff6ff"
+              >
+                ✏️ Edit Habit
+              </div>
+              <div
+                class="action-item"
+                style="color: #f59e0b; background: #fffbeb"
+              >
+                ⏸️ Pause Habit
+              </div>
+              <div class="action-item destructive">
+                🗑️ Delete Habit
+                <div
+                  class="annotation"
+                  style="top: 6px; right: -10px; font-size: 10px"
+                >
+                  No undo!
+                </div>
+              </div>
+              <div class="action-item cancel">Cancel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="phone-col">
+        <div class="phone-label good">After — With Confirmation</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #d1fae5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">42% strength · 12-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #dbeafe">💧</div>
+              <div class="habit-info">
+                <div class="habit-name">Drink Water</div>
+                <div class="habit-meta">67% strength · 24-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fef3c7">📖</div>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">28% strength · 5-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <!-- Confirmation Modal -->
+            <div class="modal-overlay">
+              <div class="confirm-modal">
+                <div class="confirm-header">
+                  <div class="confirm-icon">🗑️</div>
+                  <div class="confirm-title">Delete Habit?</div>
+                </div>
+                <div class="confirm-body">
+                  <div class="confirm-text">
+                    This will permanently delete this habit and all its history.
+                  </div>
+                  <div class="confirm-habit-preview">
+                    <span class="emoji">💧</span>
+                    <span class="name">Drink Water</span>
+                    <span class="streak">🔥 24 days</span>
+                  </div>
+                  <div class="confirm-stats">
+                    <div class="confirm-stat">
+                      <div class="confirm-stat-value">24</div>
+                      <div class="confirm-stat-label">Day Streak</div>
+                    </div>
+                    <div class="confirm-stat">
+                      <div class="confirm-stat-value">67%</div>
+                      <div class="confirm-stat-label">Strength</div>
+                    </div>
+                    <div class="confirm-stat">
+                      <div class="confirm-stat-value">89</div>
+                      <div class="confirm-stat-label">Completions</div>
+                    </div>
+                  </div>
+                  <div
+                    class="annotation good"
+                    style="
+                      position: relative;
+                      display: inline-block;
+                      margin-top: 12px;
+                    "
+                  >
+                    Shows what you'll lose
+                  </div>
+                </div>
+                <div class="confirm-actions">
+                  <button class="confirm-btn delete">Delete Permanently</button>
+                  <button class="confirm-btn keep">Keep Habit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

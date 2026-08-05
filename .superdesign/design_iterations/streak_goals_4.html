@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Goals — Clean UI Variations</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important;
+    color: #FAF8F5 !important;
+    padding: 48px 24px !important;
+    min-height: 100vh !important;
+  }
+  h1,h2,h3,.serif { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone {
+    width: 375px !important; height: 720px !important;
+    background: #F5F1ED !important; border-radius: 40px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    overflow-y: auto !important; padding: 56px 20px 24px !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+  .app-card {
+    background: #EDEAE5 !important; border: 1px solid #DDD8D2 !important; border-radius: 16px !important;
+  }
+  .section-label {
+    font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.06em !important;
+    text-transform: uppercase !important; color: #C4BFB7 !important; margin-bottom: 12px !important;
+  }
+  .habit-header {
+    display: flex !important; align-items: center !important; gap: 12px !important; margin-bottom: 20px !important;
+  }
+  .habit-emoji {
+    width: 44px !important; height: 44px !important; background: #EDEAE5 !important;
+    border: 1px solid #DDD8D2 !important; border-radius: 12px !important;
+    display: flex !important; align-items: center !important; justify-content: center !important; font-size: 22px !important;
+  }
+  .habit-name { font-family: 'Literata', serif !important; font-size: 20px !important; font-weight: 700 !important; color: #2D2A26 !important; }
+  .habit-streak { font-size: 13px !important; color: #8B6208 !important; font-weight: 600 !important; }
+
+  .variation-wrapper { display: flex !important; flex-direction: column !important; align-items: center !important; }
+  .variation-number { font-size: 13px !important; font-weight: 600 !important; color: #6B6560 !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; }
+  .variation-title { font-family: 'Literata', serif !important; font-size: 24px !important; font-weight: 700 !important; color: #FAF8F5 !important; margin-top: 4px !important; }
+  .variation-principle { font-size: 14px !important; color: #C4BFB7 !important; margin-top: 6px !important; font-style: italic !important; }
+  .variation-note { font-size: 13px !important; color: #6B6560 !important; margin-top: 12px !important; max-width: 340px !important; line-height: 1.5 !important; text-align: center !important; }
+  .variation-label { text-align: center !important; margin-bottom: 16px !important; }
+
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes progressFill { from { width: 0%; } }
+  @keyframes ringDraw { from { stroke-dashoffset: 339.3; } }
+  @keyframes countIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+  .fade-up { animation: fadeSlideUp 0.5s ease-out both; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.3s; }
+  .fade-up-4 { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align: center; margin-bottom: 56px;">
+  <p style="font-size: 13px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Chain Day</p>
+  <h1 style="font-family: 'Literata', serif; font-size: 36px; font-weight: 700; color: #FAF8F5; margin-top: 8px;">Streak Goal — Clean UI</h1>
+  <p style="font-size: 17px; color: #C4BFB7; margin-top: 8px;">No metaphors. Just good product design.</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 64px; max-width: 1600px; margin: 0 auto;">
+
+<!-- ============================================ -->
+<!-- I: Segmented Bar                             -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation I</div>
+    <div class="variation-title">Segmented Bar</div>
+    <div class="variation-principle">Clear sub-goals within a single bar</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Goal card -->
+      <div class="app-card fade-up fade-up-1" style="padding: 24px 20px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px;">
+          <div class="section-label" style="margin-bottom: 0;">Streak Goal</div>
+          <span style="font-size: 13px; color: #6B6560;">66 day target</span>
+        </div>
+
+        <!-- Big number row -->
+        <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 20px;">
+          <span style="font-family: 'Literata', serif; font-size: 48px; font-weight: 700; color: #2D2A26; line-height: 1;">23</span>
+          <span style="font-size: 16px; color: #C4BFB7; font-weight: 500;">/ 66 days</span>
+        </div>
+
+        <!-- Segmented progress bar -->
+        <div style="display: flex; gap: 3px; margin-bottom: 8px;">
+          <!-- Segment 1: 0-7 (complete) -->
+          <div style="flex: 7; height: 8px; background: #059669; border-radius: 4px 0 0 4px;"></div>
+          <!-- Segment 2: 7-14 (complete) -->
+          <div style="flex: 7; height: 8px; background: #059669;"></div>
+          <!-- Segment 3: 14-21 (complete) -->
+          <div style="flex: 7; height: 8px; background: #059669;"></div>
+          <!-- Segment 4: 21-30 (partial — 2 of 9 done) -->
+          <div style="flex: 9; height: 8px; background: #DDD8D2; border-radius: 0; position: relative; overflow: hidden;">
+            <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 22%; background: linear-gradient(90deg, #059669, #10B981); animation: progressFill 0.8s ease-out both; animation-delay: 0.5s;"></div>
+          </div>
+          <!-- Segment 5: 30-60 (empty) -->
+          <div style="flex: 30; height: 8px; background: #DDD8D2;"></div>
+          <!-- Segment 6: 60-66 (empty, goal) -->
+          <div style="flex: 6; height: 8px; background: #E7E5E4; border-radius: 0 4px 4px 0; border: 1px dashed #E8B94D;"></div>
+        </div>
+
+        <!-- Segment labels -->
+        <div style="display: flex; gap: 3px; margin-bottom: 4px;">
+          <div style="flex: 7; text-align: center;"><span style="font-size: 9px; color: #059669; font-weight: 600;">7d ✓</span></div>
+          <div style="flex: 7; text-align: center;"><span style="font-size: 9px; color: #059669; font-weight: 600;">14d ✓</span></div>
+          <div style="flex: 7; text-align: center;"><span style="font-size: 9px; color: #059669; font-weight: 600;">21d ✓</span></div>
+          <div style="flex: 9; text-align: center;"><span style="font-size: 9px; color: #8B6208; font-weight: 600;">30d</span></div>
+          <div style="flex: 30; text-align: center;"><span style="font-size: 9px; color: #C4BFB7;">60d</span></div>
+          <div style="flex: 6; text-align: center;"><span style="font-size: 9px; color: #8B6208;">66d</span></div>
+        </div>
+      </div>
+
+      <!-- Current segment detail -->
+      <div class="app-card fade-up fade-up-2" style="padding: 16px 20px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 13px; color: #6B6560;">Current segment</div>
+            <div style="font-size: 17px; font-weight: 600; color: #2D2A26; margin-top: 2px;">Day 21 → 30</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700; color: #8B6208;">2 / 9</div>
+            <div style="font-size: 11px; color: #6B6560;">days in segment</div>
+          </div>
+        </div>
+
+        <!-- Mini segment bar -->
+        <div style="height: 4px; background: #DDD8D2; border-radius: 2px; margin-top: 12px; overflow: hidden;">
+          <div style="width: 22%; height: 100%; background: #8B6208; border-radius: 2px; animation: progressFill 0.6s ease-out both; animation-delay: 0.7s;"></div>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="fade-up fade-up-3" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <div class="app-card" style="padding: 14px 16px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #059669;">3</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">segments done</div>
+        </div>
+        <div class="app-card" style="padding: 14px 16px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #2D2A26;">43</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">days remaining</div>
+        </div>
+        <div class="app-card" style="padding: 14px 16px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #8B6208;">7</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">to next milestone</div>
+        </div>
+        <div class="app-card" style="padding: 14px 16px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #2D2A26;">35%</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">complete</div>
+        </div>
+      </div>
+
+      <!-- Milestone to beat -->
+      <div class="app-card fade-up fade-up-4" style="padding: 14px 20px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 18px;">🏅</span>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600; color: #2D2A26;">Month Master</div>
+          <div style="font-size: 12px; color: #6B6560;">Complete this segment to unlock</div>
+        </div>
+        <div style="background: #FEF3CD; padding: 4px 10px; border-radius: 8px;">
+          <span style="font-size: 12px; font-weight: 700; color: #8B6208;">7d</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">The bar is split into milestone segments. Each segment is a mini-goal. You always know exactly which segment you're in and how far through it you are.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- J: Stacked Cards                             -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation J</div>
+    <div class="variation-title">Stacked Cards</div>
+    <div class="variation-principle">Each milestone is a card to complete</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Header stat -->
+      <div class="fade-up" style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 16px;">
+        <span style="font-family: 'Literata', serif; font-size: 40px; font-weight: 700; color: #2D2A26; line-height: 1;">23</span>
+        <span style="font-size: 15px; color: #C4BFB7;">/ 66 days</span>
+        <span style="font-size: 13px; color: #8B6208; font-weight: 600; margin-left: auto;">35%</span>
+      </div>
+
+      <!-- Thin overall bar -->
+      <div class="fade-up fade-up-1" style="height: 3px; background: #DDD8D2; border-radius: 2px; margin-bottom: 20px; overflow: hidden;">
+        <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #059669, #8B6208); border-radius: 2px; animation: progressFill 1s ease-out both; animation-delay: 0.3s;"></div>
+      </div>
+
+      <div class="section-label fade-up fade-up-1">Milestones</div>
+
+      <!-- Completed milestone cards -->
+      <div class="fade-up fade-up-2" style="margin-bottom: 8px;">
+        <div style="background: #D1FAE5; border: 1px solid #059669; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; opacity: 0.7;">
+          <div style="width: 32px; height: 32px; background: #059669; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-size: 14px; font-weight: 700;">✓</span>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 600; color: #047857;">First Week</div>
+            <div style="font-size: 11px; color: #059669;">7 days &middot; Completed Apr 4</div>
+          </div>
+          <span style="font-size: 14px;">⚡</span>
+        </div>
+
+        <div style="background: #D1FAE5; border: 1px solid #059669; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; opacity: 0.7;">
+          <div style="width: 32px; height: 32px; background: #059669; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-size: 14px; font-weight: 700;">✓</span>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 600; color: #047857;">Two Weeks</div>
+            <div style="font-size: 11px; color: #059669;">14 days &middot; Completed Apr 11</div>
+          </div>
+          <span style="font-size: 14px;">🔥</span>
+        </div>
+
+        <div style="background: #D1FAE5; border: 1px solid #059669; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; opacity: 0.8;">
+          <div style="width: 32px; height: 32px; background: #059669; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: white; font-size: 14px; font-weight: 700;">✓</span>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 600; color: #047857;">Three Weeks</div>
+            <div style="font-size: 11px; color: #059669;">21 days &middot; Completed Apr 18</div>
+          </div>
+          <span style="font-size: 14px;">💪</span>
+        </div>
+      </div>
+
+      <!-- CURRENT milestone — prominent -->
+      <div class="fade-up fade-up-3" style="background: #EDEAE5; border: 2px solid #8B6208; border-radius: 14px; padding: 18px 16px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(139,98,8,0.1);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+          <div style="width: 36px; height: 36px; background: #FEF3CD; border: 1.5px solid #8B6208; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 16px;">🏅</span>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 16px; font-weight: 700; color: #2D2A26;">Month Master</div>
+            <div style="font-size: 12px; color: #8B6208;">30 days &middot; 7 days away</div>
+          </div>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: #8B6208;">2/9</span>
+        </div>
+        <!-- Progress in this milestone -->
+        <div style="height: 6px; background: #DDD8D2; border-radius: 3px; overflow: hidden;">
+          <div style="width: 22%; height: 100%; background: #8B6208; border-radius: 3px; animation: progressFill 0.8s ease-out both; animation-delay: 0.8s;"></div>
+        </div>
+      </div>
+
+      <!-- Future milestones -->
+      <div class="fade-up fade-up-4">
+        <div style="background: #FAF8F5; border: 1px solid #E7E5E4; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; opacity: 0.4;">
+          <div style="width: 32px; height: 32px; background: #E7E5E4; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+            <span style="color: #C4BFB7; font-size: 12px;">60</span>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 500; color: #C4BFB7;">Two Months</div>
+            <div style="font-size: 11px; color: #DDD8D2;">60 days</div>
+          </div>
+        </div>
+
+        <div style="background: #FAF8F5; border: 1px solid #E8B94D; border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; opacity: 0.5;">
+          <div style="width: 32px; height: 32px; background: #FEF3CD; border: 1px solid #E8B94D; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 14px;">🏆</span>
+          </div>
+          <div style="flex: 1;">
+            <div style="font-size: 14px; font-weight: 600; color: #8B6208;">Goal: 66 Days</div>
+            <div style="font-size: 11px; color: #C4BFB7;">Habit formation complete</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Milestones as a to-do list you check off. Current milestone is always front and center with its own progress bar. Familiar list pattern — zero learning curve.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- K: Dashboard                                 -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation K</div>
+    <div class="variation-title">Dashboard</div>
+    <div class="variation-principle">All the numbers, no decoration</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <div class="section-label fade-up">66-Day Goal</div>
+
+      <!-- Hero number + ring -->
+      <div class="app-card fade-up fade-up-1" style="padding: 24px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+          <!-- Ring -->
+          <div style="position: relative; width: 100px; height: 100px; flex-shrink: 0;">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="#DDD8D2" stroke-width="6"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="url(#dashGrad)" stroke-width="6" stroke-linecap="round"
+                transform="rotate(-90 50 50)" stroke-dasharray="264" stroke-dashoffset="171.6"
+                style="animation: ringDraw 1.2s ease-out both; animation-delay: 0.3s;"/>
+              <defs>
+                <linearGradient id="dashGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#059669"/>
+                  <stop offset="100%" stop-color="#8B6208"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 24px; font-weight: 700; color: #2D2A26;">35%</span>
+            </div>
+          </div>
+
+          <!-- Key metrics -->
+          <div style="flex: 1;">
+            <div style="margin-bottom: 10px;">
+              <div style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 0.04em;">Days Complete</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: #2D2A26; margin-top: 2px;">23 <span style="font-size: 14px; color: #C4BFB7; font-weight: 400;">/ 66</span></div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #6B6560; text-transform: uppercase; letter-spacing: 0.04em;">Days Remaining</div>
+              <div style="font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: #8B6208; margin-top: 2px;">43</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics grid -->
+      <div class="fade-up fade-up-2" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+        <div class="app-card" style="padding: 14px 10px; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #059669;">100%</div>
+          <div style="font-size: 10px; color: #6B6560; margin-top: 4px;">Completion<br>rate</div>
+        </div>
+        <div class="app-card" style="padding: 14px 10px; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #2D2A26;">23</div>
+          <div style="font-size: 10px; color: #6B6560; margin-top: 4px;">Current<br>streak</div>
+        </div>
+        <div class="app-card" style="padding: 14px 10px; text-align: center;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: #2D2A26;">23</div>
+          <div style="font-size: 10px; color: #6B6560; margin-top: 4px;">Best<br>streak</div>
+        </div>
+      </div>
+
+      <!-- Timeline milestones — compact list -->
+      <div class="app-card fade-up fade-up-3" style="padding: 16px 20px; margin-bottom: 12px;">
+        <div class="section-label">Milestones</div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></div>
+            <span style="font-size: 13px; color: #059669; flex: 1;">7 days</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #059669;">✓ Apr 4</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></div>
+            <span style="font-size: 13px; color: #059669; flex: 1;">14 days</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #059669;">✓ Apr 11</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%;"></div>
+            <span style="font-size: 13px; color: #059669; flex: 1;">21 days</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #059669;">✓ Apr 18</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="width: 8px; height: 8px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 50%;"></div>
+            <span style="font-size: 13px; color: #8B6208; font-weight: 600; flex: 1;">30 days</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8B6208;">7d away</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; opacity: 0.35;">
+            <div style="width: 6px; height: 6px; background: #DDD8D2; border-radius: 50%;"></div>
+            <span style="font-size: 13px; color: #C4BFB7; flex: 1;">60 days</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #DDD8D2;">37d away</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; opacity: 0.5;">
+            <div style="width: 8px; height: 8px; background: #FEF3CD; border: 1.5px solid #8B6208; border-radius: 50%;"></div>
+            <span style="font-size: 13px; color: #8B6208; font-weight: 600; flex: 1;">66 days — Goal</span>
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #C4BFB7;">43d away</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projected completion -->
+      <div class="app-card fade-up fade-up-4" style="padding: 14px 20px; display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 12px; color: #6B6560;">On track to hit goal</span>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #059669; margin-left: auto;">May 28</span>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Pure data. Ring + monospace numbers + compact milestone list. Every metric visible at a glance. For users who want information, not inspiration.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- L: Focus Card                                -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation L</div>
+    <div class="variation-title">Focus Card</div>
+    <div class="variation-principle">One thing at a time — next milestone only</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Primary focus: next milestone -->
+      <div class="fade-up fade-up-1" style="background: #EDEAE5; border: 2px solid #8B6208; border-radius: 20px; padding: 28px 24px; margin-bottom: 16px; text-align: center;">
+        <!-- Milestone emoji -->
+        <div style="width: 56px; height: 56px; background: #FEF3CD; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 28px;">🏅</div>
+
+        <div style="font-size: 13px; color: #6B6560; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Next milestone</div>
+        <div style="font-family: 'Literata', serif; font-size: 24px; font-weight: 700; color: #2D2A26; margin-top: 6px;">Month Master</div>
+
+        <!-- Big countdown -->
+        <div style="margin: 20px 0;">
+          <span style="font-family: 'Literata', serif; font-size: 64px; font-weight: 700; color: #8B6208; line-height: 1;">7</span>
+          <div style="font-size: 15px; color: #6B6560; margin-top: 4px;">days to go</div>
+        </div>
+
+        <!-- Progress ring for this segment -->
+        <div style="position: relative; width: 80px; height: 80px; margin: 0 auto;">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#DDD8D2" stroke-width="5"/>
+            <circle cx="40" cy="40" r="34" fill="none" stroke="#8B6208" stroke-width="5" stroke-linecap="round"
+              transform="rotate(-90 40 40)" stroke-dasharray="213.6" stroke-dashoffset="166.6"
+              style="animation: ringDraw 1s ease-out both; animation-delay: 0.5s;"/>
+          </svg>
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+            <span style="font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: #8B6208;">2/9</span>
+          </div>
+        </div>
+        <div style="font-size: 11px; color: #C4BFB7; margin-top: 8px;">Day 23 of segment 21→30</div>
+      </div>
+
+      <!-- Overall progress — secondary, understated -->
+      <div class="app-card fade-up fade-up-2" style="padding: 16px 20px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="font-size: 13px; color: #6B6560;">Overall goal</span>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #2D2A26; font-weight: 600;">23 / 66 days</span>
+        </div>
+        <div style="height: 4px; background: #DDD8D2; border-radius: 2px; overflow: hidden;">
+          <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #059669, #8B6208); border-radius: 2px; animation: progressFill 1s ease-out both; animation-delay: 0.6s;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+          <span style="font-size: 11px; color: #059669;">35% complete</span>
+          <span style="font-size: 11px; color: #6B6560;">43 days remaining</span>
+        </div>
+      </div>
+
+      <!-- Completed milestones — collapsed -->
+      <div class="app-card fade-up fade-up-3" style="padding: 14px 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 13px; color: #6B6560;">Milestones earned</span>
+          </div>
+          <div style="display: flex; gap: 6px;">
+            <div style="width: 24px; height: 24px; background: #D1FAE5; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">⚡</div>
+            <div style="width: 24px; height: 24px; background: #D1FAE5; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">🔥</div>
+            <div style="width: 24px; height: 24px; background: #D1FAE5; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px;">💪</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal end note -->
+      <div class="fade-up fade-up-4" style="text-align: center; padding: 20px 16px;">
+        <span style="font-size: 12px; color: #C4BFB7;">66-day goal &middot; On track for May 28</span>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Hides the overwhelming 66-day view. Zooms in on just the next milestone — "7 days to Month Master." The overall goal is secondary context below. Reduces anxiety on long goals.</p>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div style="text-align: center; padding: 48px 24px 32px;">
+  <p style="font-size: 13px; color: #524D47; margin-bottom: 4px;">All show: 🧘 Meditate &middot; Day 23 of 66 goal</p>
+  <p style="font-size: 12px; color: #3D3833;">I &mdash; Segmented bar &middot; J &mdash; Milestone cards &middot; K &mdash; Data dashboard &middot; L &mdash; Next milestone focus</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Habit Detail — Redesigned</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1816 !important;
+        overflow-x: hidden;
+      }
+
+      /* Warm stone palette (light mode) */
+      :root {
+        --bg: #f5f1ed;
+        --surface: #edeae5;
+        --card: #ffffff;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-tertiary: #9c958d;
+        --text-muted: #c4bfb7;
+        --accent: #059669;
+        --accent-light: #d1fae5;
+        --accent-dark: #047857;
+        --streak-gold: #8b6208;
+        --streak-gold-light: #fef3cd;
+        --premium-purple: #7b52c4;
+        --premium-purple-light: #ede9fe;
+      }
+
+      .phone-frame {
+        width: 393px;
+        height: 852px;
+        margin: 20px auto;
+        background: var(--bg);
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 25px 60px rgba(0, 0, 0, 0.3),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+
+      .screen-content {
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .screen-content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Header */
+      .detail-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        background: rgba(245, 241, 237, 0.85);
+        border-bottom: 1px solid var(--border);
+        padding: 56px 20px 12px;
+      }
+
+      /* Stats Row */
+      .stats-row {
+        display: flex;
+        gap: 6px;
+        padding: 16px 20px 8px;
+      }
+      .stat-chip {
+        flex: 1;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 12px 8px;
+        text-align: center;
+        transition: transform 0.15s ease;
+      }
+      .stat-chip:active {
+        transform: scale(0.97);
+      }
+      .stat-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.1;
+      }
+      .stat-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 4px;
+      }
+
+      /* Section Labels */
+      .section-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 20px 20px 12px;
+      }
+      .section-label-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .section-label-text {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: var(--text-tertiary);
+      }
+
+      /* Calendar Card */
+      .calendar-card {
+        margin: 0 16px;
+        background: var(--card);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 16px;
+        box-shadow: 0 1px 3px rgba(28, 25, 23, 0.05);
+      }
+
+      .calendar-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+      .month-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+      .nav-btns {
+        display: flex;
+        gap: 6px;
+      }
+      .nav-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .nav-btn:active {
+        transform: scale(0.93);
+        background: var(--surface);
+      }
+
+      /* Calendar Grid */
+      .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+      }
+      .cal-header {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        padding: 4px 0 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .cal-day {
+        aspect-ratio: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        gap: 2px;
+      }
+      .cal-day:active {
+        transform: scale(0.9);
+      }
+      .cal-day-num {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-primary);
+        line-height: 1;
+      }
+      .cal-day.other-month .cal-day-num {
+        color: var(--text-muted);
+      }
+      .cal-day.future .cal-day-num {
+        color: var(--text-tertiary);
+      }
+
+      /* Completed day */
+      .cal-day.completed {
+        background: rgba(5, 150, 105, 0.1);
+      }
+      .cal-day.completed .cal-day-num {
+        color: var(--accent-dark);
+        font-weight: 600;
+      }
+      .cal-day.completed .cal-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* Missed day */
+      .cal-day.missed .cal-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        border: 1.5px solid var(--accent);
+        background: transparent;
+      }
+
+      /* Today */
+      .cal-day.today {
+        background: var(--accent);
+        box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
+      }
+      .cal-day.today .cal-day-num {
+        color: white;
+        font-weight: 700;
+      }
+      .cal-day.today .cal-dot {
+        background: rgba(255, 255, 255, 0.7);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+      }
+      @keyframes todayPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.25);
+        }
+        50% {
+          box-shadow: 0 0 0 5px rgba(5, 150, 105, 0.1);
+        }
+      }
+      .cal-day.today {
+        animation: todayPulse 2.5s ease-in-out infinite;
+      }
+
+      /* Note indicator */
+      .note-dot {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: var(--streak-gold);
+      }
+
+      /* Calendar summary */
+      .cal-summary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 12px 0 4px;
+        border-top: 1px solid var(--border);
+        margin-top: 12px;
+      }
+      .cal-summary-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+      .cal-summary-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+      }
+      .cal-summary-dot.completed {
+        background: var(--accent);
+      }
+      .cal-summary-dot.missed {
+        border: 1.5px solid var(--accent);
+      }
+
+      /* Premium Section */
+      .premium-section {
+        margin: 0 16px;
+        background: var(--card);
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        padding: 20px 16px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(28, 25, 23, 0.05);
+      }
+      .premium-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: var(--premium-purple-light);
+        color: var(--premium-purple);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+      }
+
+      /* Day-of-Week Chart */
+      .dow-chart {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        height: 80px;
+        padding: 12px 0 0;
+        gap: 6px;
+      }
+      .dow-bar-group {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .dow-bar-track {
+        width: 100%;
+        max-width: 32px;
+        height: 60px;
+        background: var(--surface);
+        border-radius: 6px;
+        position: relative;
+        overflow: hidden;
+      }
+      .dow-bar-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--accent);
+        border-radius: 6px;
+        transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .dow-bar-fill.best {
+        background: var(--accent-dark);
+      }
+      .dow-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-tertiary);
+      }
+      .dow-pct {
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+
+      /* Persistence Score */
+      .persistence-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 0 0;
+        margin-top: 14px;
+        border-top: 1px solid rgba(221, 216, 210, 0.5);
+      }
+      .persistence-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .persistence-value {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--accent-dark);
+      }
+      .persistence-arrow {
+        color: var(--accent);
+        font-size: 14px;
+        margin-left: 4px;
+      }
+      .persistence-sublabel {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
+
+      /* Year View */
+      .year-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding-top: 14px;
+      }
+      .mini-month {
+        text-align: center;
+      }
+      .mini-month-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-secondary);
+        margin-bottom: 4px;
+        letter-spacing: 0.3px;
+      }
+      .mini-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 1.5px;
+      }
+      .mini-cell {
+        aspect-ratio: 1;
+        border-radius: 2px;
+        background: var(--surface);
+      }
+      .mini-cell.filled {
+        background: var(--accent);
+        opacity: 0.7;
+      }
+      .mini-cell.filled.strong {
+        opacity: 1;
+      }
+
+      /* Blurred premium overlay */
+      .premium-blur-overlay {
+        position: relative;
+      }
+      .premium-blur-overlay .blur-content {
+        filter: blur(4px);
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .premium-cta-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        z-index: 10;
+      }
+      .premium-cta-btn {
+        background: var(--premium-purple);
+        color: white;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 14px;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: 'DM Sans', sans-serif;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: 0 4px 12px rgba(123, 82, 196, 0.3);
+      }
+      .premium-cta-btn:active {
+        transform: scale(0.96);
+      }
+      .premium-trial-text {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        font-weight: 500;
+      }
+
+      /* Best Day callout */
+      .best-day-callout {
+        background: rgba(5, 150, 105, 0.06);
+        border: 1px solid rgba(5, 150, 105, 0.15);
+        border-radius: 12px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .best-day-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--accent-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .best-day-text {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+      .best-day-sub {
+        font-size: 11px;
+        color: var(--text-secondary);
+        margin-top: 1px;
+      }
+
+      /* Streak flame animation */
+      @keyframes flicker {
+        0%,
+        100% {
+          transform: scale(1) rotate(-2deg);
+        }
+        25% {
+          transform: scale(1.05) rotate(1deg);
+        }
+        50% {
+          transform: scale(0.98) rotate(-1deg);
+        }
+        75% {
+          transform: scale(1.03) rotate(2deg);
+        }
+      }
+      .streak-flame {
+        animation: flicker 1.5s ease-in-out infinite;
+        display: inline-block;
+      }
+
+      /* Entrance animations */
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-in {
+        animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        opacity: 0;
+      }
+      .delay-1 {
+        animation-delay: 0.05s;
+      }
+      .delay-2 {
+        animation-delay: 0.1s;
+      }
+      .delay-3 {
+        animation-delay: 0.18s;
+      }
+      .delay-4 {
+        animation-delay: 0.26s;
+      }
+      .delay-5 {
+        animation-delay: 0.34s;
+      }
+      .delay-6 {
+        animation-delay: 0.42s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="screen-content">
+        <!-- Header -->
+        <div class="detail-header">
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <div style="display: flex; align-items: center; gap: 12px">
+              <button
+                style="
+                  width: 32px;
+                  height: 32px;
+                  border-radius: 10px;
+                  border: 1px solid var(--border);
+                  background: transparent;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  cursor: pointer;
+                "
+              >
+                <i
+                  data-lucide="chevron-left"
+                  style="
+                    width: 18px;
+                    height: 18px;
+                    color: var(--text-secondary);
+                  "
+                ></i>
+              </button>
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="font-size: 24px">🧘</span>
+                  <span
+                    style="
+                      font-size: 18px;
+                      font-weight: 700;
+                      color: var(--text-primary);
+                    "
+                    >Meditation</span
+                  >
+                </div>
+              </div>
+            </div>
+            <button
+              style="
+                width: 32px;
+                height: 32px;
+                border-radius: 10px;
+                border: 1px solid var(--border);
+                background: transparent;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+              "
+            >
+              <i
+                data-lucide="x"
+                style="width: 18px; height: 18px; color: var(--text-secondary)"
+              ></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Stats Row (FREE - data already exists, just never rendered) -->
+        <div class="stats-row animate-in delay-1">
+          <div class="stat-chip">
+            <div class="stat-value">
+              <span class="streak-flame">🔥</span> 24
+            </div>
+            <div class="stat-label">Streak</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-value" style="color: var(--streak-gold)">47</div>
+            <div class="stat-label">Best Ever</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-value" style="color: var(--accent-dark)">78%</div>
+            <div class="stat-label">Rate</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-value">156</div>
+            <div class="stat-label">Total</div>
+          </div>
+        </div>
+
+        <!-- STRENGTH Section (existing - kept as-is, just shown as placeholder) -->
+        <div class="section-label animate-in delay-2">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">STRENGTH</span>
+          <div class="section-label-line"></div>
+        </div>
+        <div
+          class="animate-in delay-2"
+          style="
+            margin: 0 16px;
+            background: var(--card);
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(28, 25, 23, 0.05);
+          "
+        >
+          <div
+            style="
+              font-size: 12px;
+              color: var(--text-tertiary);
+              font-weight: 500;
+            "
+          >
+            Existing HabitStrengthSection
+          </div>
+          <div
+            style="font-size: 11px; color: var(--text-muted); margin-top: 4px"
+          >
+            (Ring + Chart + Stats — no changes needed)
+          </div>
+        </div>
+
+        <!-- HISTORY Section -->
+        <div class="section-label animate-in delay-3">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">HISTORY</span>
+          <div class="section-label-line"></div>
+        </div>
+
+        <!-- Improved Calendar -->
+        <div class="calendar-card animate-in delay-3">
+          <!-- Month nav -->
+          <div class="calendar-nav">
+            <div class="month-label">
+              <i
+                data-lucide="calendar"
+                style="width: 14px; height: 14px; color: var(--text-secondary)"
+              ></i>
+              <span>March 2026</span>
+            </div>
+            <div class="nav-btns">
+              <button class="nav-btn">
+                <i
+                  data-lucide="chevron-left"
+                  style="
+                    width: 16px;
+                    height: 16px;
+                    color: var(--text-secondary);
+                  "
+                ></i>
+              </button>
+              <button class="nav-btn">
+                <i
+                  data-lucide="chevron-right"
+                  style="
+                    width: 16px;
+                    height: 16px;
+                    color: var(--text-secondary);
+                  "
+                ></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Calendar grid -->
+          <div class="cal-grid">
+            <!-- Headers -->
+            <div class="cal-header">M</div>
+            <div class="cal-header">T</div>
+            <div class="cal-header">W</div>
+            <div class="cal-header">T</div>
+            <div class="cal-header">F</div>
+            <div class="cal-header">S</div>
+            <div class="cal-header">S</div>
+
+            <!-- Week 1 (Feb 23 - Mar 1) -->
+            <div class="cal-day other-month">
+              <span class="cal-day-num">23</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">24</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">25</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">26</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">27</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">28</span>
+            </div>
+            <div class="cal-day completed">
+              <span class="cal-day-num">1</span><span class="cal-dot"></span>
+            </div>
+
+            <!-- Week 2 -->
+            <div class="cal-day today">
+              <span class="cal-day-num">2</span><span class="cal-dot"></span>
+            </div>
+            <div class="cal-day future"><span class="cal-day-num">3</span></div>
+            <div class="cal-day future"><span class="cal-day-num">4</span></div>
+            <div class="cal-day future"><span class="cal-day-num">5</span></div>
+            <div class="cal-day future"><span class="cal-day-num">6</span></div>
+            <div class="cal-day future"><span class="cal-day-num">7</span></div>
+            <div class="cal-day future"><span class="cal-day-num">8</span></div>
+
+            <!-- Week 3 (future) -->
+            <div class="cal-day future"><span class="cal-day-num">9</span></div>
+            <div class="cal-day future">
+              <span class="cal-day-num">10</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">11</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">12</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">13</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">14</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">15</span>
+            </div>
+
+            <!-- Week 4 -->
+            <div class="cal-day future">
+              <span class="cal-day-num">16</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">17</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">18</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">19</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">20</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">21</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">22</span>
+            </div>
+
+            <!-- Week 5 -->
+            <div class="cal-day future">
+              <span class="cal-day-num">23</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">24</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">25</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">26</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">27</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">28</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">29</span>
+            </div>
+
+            <!-- Week 6 -->
+            <div class="cal-day future">
+              <span class="cal-day-num">30</span>
+            </div>
+            <div class="cal-day future">
+              <span class="cal-day-num">31</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">1</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">2</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">3</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">4</span>
+            </div>
+            <div class="cal-day other-month">
+              <span class="cal-day-num">5</span>
+            </div>
+          </div>
+
+          <!-- Calendar Summary -->
+          <div class="cal-summary">
+            <div class="cal-summary-item">
+              <span class="cal-summary-dot completed"></span>
+              <span>2 completed</span>
+            </div>
+            <span style="color: var(--text-muted)">·</span>
+            <div class="cal-summary-item">
+              <span class="cal-summary-dot missed"></span>
+              <span>0 missed</span>
+            </div>
+            <span style="color: var(--text-muted)">·</span>
+            <div
+              class="cal-summary-item"
+              style="font-weight: 700; color: var(--accent-dark)"
+            >
+              100%
+            </div>
+          </div>
+        </div>
+
+        <!-- Let's show Feb with more data to demonstrate the patterns -->
+        <!-- Switch to February to show a fuller month -->
+
+        <!-- YOUR PATTERNS Section (PREMIUM) -->
+        <div class="section-label animate-in delay-4">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">YOUR PATTERNS</span>
+          <span class="premium-badge"
+            ><i data-lucide="crown" style="width: 10px; height: 10px"></i>
+            PRO</span
+          >
+          <div class="section-label-line"></div>
+        </div>
+
+        <div class="premium-section animate-in delay-4">
+          <!-- Best Day Callout -->
+          <div class="best-day-callout">
+            <div class="best-day-icon">
+              <i
+                data-lucide="trophy"
+                style="width: 16px; height: 16px; color: var(--accent-dark)"
+              ></i>
+            </div>
+            <div>
+              <div class="best-day-text">Your best day is Tuesday</div>
+              <div class="best-day-sub">
+                You complete 94% of the time on Tuesdays
+              </div>
+            </div>
+          </div>
+
+          <!-- Day-of-Week Chart -->
+          <div class="dow-chart">
+            <div class="dow-bar-group">
+              <div class="dow-pct">62%</div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill" style="height: 62%"></div>
+              </div>
+              <div class="dow-label">M</div>
+            </div>
+            <div class="dow-bar-group">
+              <div
+                class="dow-pct"
+                style="font-weight: 800; color: var(--accent-dark)"
+              >
+                94%
+              </div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill best" style="height: 94%"></div>
+              </div>
+              <div
+                class="dow-label"
+                style="color: var(--accent-dark); font-weight: 700"
+              >
+                T
+              </div>
+            </div>
+            <div class="dow-bar-group">
+              <div class="dow-pct">88%</div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill" style="height: 88%"></div>
+              </div>
+              <div class="dow-label">W</div>
+            </div>
+            <div class="dow-bar-group">
+              <div class="dow-pct">58%</div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill" style="height: 58%"></div>
+              </div>
+              <div class="dow-label">T</div>
+            </div>
+            <div class="dow-bar-group">
+              <div class="dow-pct">45%</div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill" style="height: 45%"></div>
+              </div>
+              <div class="dow-label">F</div>
+            </div>
+            <div class="dow-bar-group">
+              <div class="dow-pct">32%</div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill" style="height: 32%"></div>
+              </div>
+              <div class="dow-label">S</div>
+            </div>
+            <div class="dow-bar-group">
+              <div class="dow-pct">28%</div>
+              <div class="dow-bar-track">
+                <div class="dow-bar-fill" style="height: 28%"></div>
+              </div>
+              <div class="dow-label">S</div>
+            </div>
+          </div>
+
+          <!-- Persistence Score -->
+          <div class="persistence-row">
+            <div>
+              <div class="persistence-label">Tomorrow's Probability</div>
+              <div class="persistence-sublabel">
+                Based on your recent patterns
+              </div>
+            </div>
+            <div style="text-align: right">
+              <div class="persistence-value">
+                87%<span class="persistence-arrow">↑</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YEAR VIEW Section (PREMIUM - blurred for non-premium) -->
+        <div class="section-label animate-in delay-5">
+          <div class="section-label-line"></div>
+          <span class="section-label-text">YEAR VIEW</span>
+          <span class="premium-badge"
+            ><i data-lucide="crown" style="width: 10px; height: 10px"></i>
+            PRO</span
+          >
+          <div class="section-label-line"></div>
+        </div>
+
+        <div
+          class="premium-section premium-blur-overlay animate-in delay-5"
+          style="min-height: 220px"
+        >
+          <div class="blur-content">
+            <div class="year-grid" id="yearGrid"></div>
+          </div>
+          <div class="premium-cta-overlay">
+            <div
+              style="
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--text-primary);
+              "
+            >
+              See Your Full Year
+            </div>
+            <div
+              style="
+                font-size: 12px;
+                color: var(--text-secondary);
+                text-align: center;
+                max-width: 240px;
+                line-height: 1.4;
+              "
+            >
+              Track your progress across all 12 months with the year-in-pixels
+              view
+            </div>
+            <button class="premium-cta-btn">
+              <i
+                data-lucide="crown"
+                style="
+                  width: 14px;
+                  height: 14px;
+                  display: inline;
+                  vertical-align: -2px;
+                  margin-right: 4px;
+                "
+              ></i>
+              Unlock Year View
+            </button>
+            <div class="premium-trial-text">
+              7-day free trial · Cancel anytime
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom padding -->
+        <div style="height: 40px"></div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize Lucide icons
+      lucide.createIcons();
+
+      // Generate year grid data
+      const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      const yearGrid = document.getElementById('yearGrid');
+
+      months.forEach((month, mi) => {
+        const miniMonth = document.createElement('div');
+        miniMonth.className = 'mini-month';
+
+        const label = document.createElement('div');
+        label.className = 'mini-month-label';
+        label.textContent = month;
+        miniMonth.appendChild(label);
+
+        const grid = document.createElement('div');
+        grid.className = 'mini-grid';
+
+        // Generate ~30 cells per month with random completion
+        const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][
+          mi
+        ];
+        // Pad to start on a random day
+        const startPad = Math.floor(Math.random() * 3);
+        for (let p = 0; p < startPad; p++) {
+          const cell = document.createElement('div');
+          cell.className = 'mini-cell';
+          cell.style.opacity = '0';
+          grid.appendChild(cell);
+        }
+
+        for (let d = 0; d < daysInMonth; d++) {
+          const cell = document.createElement('div');
+          const rand = Math.random();
+          const isFuture = mi > 1 || (mi === 1 && d > 28); // March onwards is future
+
+          if (isFuture) {
+            cell.className = 'mini-cell';
+          } else if (rand > 0.25) {
+            cell.className =
+              rand > 0.6 ? 'mini-cell filled strong' : 'mini-cell filled';
+          } else {
+            cell.className = 'mini-cell';
+          }
+          grid.appendChild(cell);
+        }
+
+        miniMonth.appendChild(grid);
+        yearGrid.appendChild(miniMonth);
+      });
+    </script>
+  </body>
+</html>

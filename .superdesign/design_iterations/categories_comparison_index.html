@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Category Patterns — Side-by-Side Comparison</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(5, 150, 105, 0.12), transparent 34%), linear-gradient(180deg, #f7f4ef 0%, #efe9e0 100%);
+      font-family: 'DM Sans', sans-serif;
+      color: #2d2a26;
+    }
+    .page {
+      max-width: 1680px;
+      margin: 0 auto;
+      padding: 40px 28px 56px;
+    }
+    .hero h1 {
+      font-family: 'Literata', serif;
+      font-size: 42px;
+      margin: 10px 0 8px;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      max-width: 780px;
+      margin: 0 0 28px;
+      color: #6f655a;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(5, 150, 105, 0.1);
+      color: #047857;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .col {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(45, 42, 38, 0.08);
+      border-radius: 28px;
+      padding: 24px 24px 30px;
+      box-shadow: 0 24px 60px rgba(45, 42, 38, 0.06);
+    }
+    .col h2 {
+      font-family: 'Literata', serif;
+      font-size: 24px;
+      letter-spacing: -0.02em;
+      margin: 2px 0 4px;
+    }
+    .col .subhead {
+      color: #6f655a;
+      font-size: 14px;
+      margin: 0 0 18px;
+    }
+    .frame-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 0 0 20px;
+    }
+    iframe {
+      width: 430px;
+      height: 860px;
+      border: 0;
+      border-radius: 20px;
+      background: transparent;
+      overflow: hidden;
+      transform-origin: top center;
+    }
+    .pros-cons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .pros, .cons {
+      padding: 14px 16px;
+      border-radius: 14px;
+    }
+    .pros {
+      background: rgba(16, 185, 129, 0.07);
+      border: 1px solid rgba(16, 185, 129, 0.18);
+    }
+    .cons {
+      background: rgba(244, 63, 94, 0.05);
+      border: 1px solid rgba(244, 63, 94, 0.16);
+    }
+    .pros h3, .cons h3 {
+      margin: 0 0 6px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+    .pros h3 { color: #047857; }
+    .cons h3 { color: #be123c; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin-bottom: 4px; color: #3d3832; }
+    .takeaway {
+      margin-top: 28px;
+      padding: 22px 26px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.12), rgba(5, 150, 105, 0.04));
+      border: 1px solid rgba(5, 150, 105, 0.2);
+    }
+    .takeaway h3 {
+      font-family: 'Literata', serif;
+      font-size: 20px;
+      margin: 0 0 8px;
+    }
+    .takeaway p {
+      margin: 0;
+      font-size: 14px;
+      color: #3d3832;
+      line-height: 1.6;
+    }
+    .direct-links {
+      margin: 10px 0 28px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .direct-links a {
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: white;
+      border: 1px solid rgba(45, 42, 38, 0.1);
+      font-size: 13px;
+      font-weight: 600;
+      color: #2d2a26;
+    }
+    .direct-links a:hover {
+      background: #ecfdf5;
+      border-color: rgba(5, 150, 105, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="hero">
+      <span class="eyebrow">Habit Library · Categories exploration</span>
+      <h1>Two ways to bring categories forward</h1>
+      <p>
+        Side-by-side comparison of the two patterns we discussed: the Nov 2025 chip rail
+        revival, and a Netflix-style row-per-category layout. Same design tokens in both.
+      </p>
+      <div class="direct-links">
+        <a href="categories_pattern_a_chip_rail_1.html" target="_blank">↗ Open Pattern A full-screen</a>
+        <a href="categories_pattern_b_netflix_rows_1.html" target="_blank">↗ Open Pattern B full-screen</a>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col">
+        <h2>Pattern A — Chip Rail</h2>
+        <p class="subhead">Revival of the Nov 2025 layout · one horizontal rail of all 14 categories with counts, one vertical filtered list.</p>
+        <div class="frame-wrap">
+          <iframe src="categories_pattern_a_chip_rail_1.html" loading="lazy"></iframe>
+        </div>
+        <div class="pros-cons">
+          <div class="pros">
+            <h3>Pros</h3>
+            <ul>
+              <li>All categories visible — no hidden taxonomy</li>
+              <li>Counts communicate library breadth</li>
+              <li>Familiar filter pattern; low cognitive load</li>
+              <li>Cheapest to implement (expand existing QuickFilterChips)</li>
+            </ul>
+          </div>
+          <div class="cons">
+            <h3>Cons</h3>
+            <ul>
+              <li>Habits only appear AFTER a tap — less shoppable</li>
+              <li>Discovery depth still = 1 category at a time</li>
+              <li>Chip rail with 14 items is wide & eye-taxing</li>
+              <li>Spotlight + single list feels like the current screen minus personalization</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <h2>Pattern B — Netflix Rows</h2>
+        <p class="subhead">5–6 horizontal rows, one per priority category · curated top list + "Browse all 14" CTA.</p>
+        <div class="frame-wrap">
+          <iframe src="categories_pattern_b_netflix_rows_1.html" loading="lazy"></iframe>
+        </div>
+        <div class="pros-cons">
+          <div class="pros">
+            <h3>Pros</h3>
+            <ul>
+              <li>Actual habits visible from 6 categories at once — "shoppable" feel</li>
+              <li>Matches App Store / Netflix / Spotify mental model</li>
+              <li>Reuses the existing PopularSection carousel pattern</li>
+              <li>"See all →" per row + "Browse all" footer keeps full taxonomy reachable</li>
+            </ul>
+          </div>
+          <div class="cons">
+            <h3>Cons</h3>
+            <ul>
+              <li>Long screen (~2800px when all rows render)</li>
+              <li>Only 2–3 cards visible per row on mobile — looks sparse</li>
+              <li>8 of 14 categories get buried behind "Browse all"</li>
+              <li>Replaces ExploreAllSection (recent polish work in #1319)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="takeaway">
+      <h3>How to choose</h3>
+      <p>
+        <strong>Pattern A</strong> if the goal is "give power users faster access to filter the whole library."
+        <strong>Pattern B</strong> if the goal is "turn the library into a browsable storefront where users discover habits by eye."
+        The two solve different problems — A optimizes for filtering; B optimizes for discovery. They can also be combined:
+        keep Pattern B's rows as the discovery surface, and expand QuickFilterChips to the full 14-category chip rail above them.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

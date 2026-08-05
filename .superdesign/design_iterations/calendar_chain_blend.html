@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calendar Chain — Blend (A + connectors + insight)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { font-family: 'Inter', sans-serif; }
+  body { background: #ece7e0; }
+  .phone { width: 390px; border-radius: 28px; padding: 20px; }
+  .card { border-radius: 20px; border-width: 1px; padding: 18px; }
+  .lab { font-size: 11px; letter-spacing: .4px; text-transform: uppercase; font-weight: 600; }
+  .grid7 { display:grid; grid-template-columns: repeat(7, 44px); }
+  .row { position: relative; height: 44px; }
+  .tile { position:absolute; top:3px; width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; }
+  .conn { position:absolute; top:19px; height:4px; border-radius:2px; }
+  .stat { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .stat .v { font-size:17px; font-weight:700; }
+  .stat .k { font-size:10px; letter-spacing:.3px; text-transform:uppercase; font-weight:600; }
+</style>
+</head>
+<body class="min-h-screen py-10 px-6">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-2xl font-bold text-stone-800 mb-1">Blend — A + Connectors + Insight Strip <span class="text-base font-semibold text-emerald-700">(recommended)</span></h1>
+    <p class="text-stone-500 mb-8 max-w-2xl">Clean filled cells (no dots) with always-on subtle connectors so the chain is visible without a toggle, plus the insight strip. Clarity, motivation and insight in one view.</p>
+    <div class="flex flex-wrap gap-8 justify-center">
+      <div id="light"></div>
+      <div id="dark"></div>
+    </div>
+  </div>
+<script>
+const COMPLETED=new Set([1,2,3,4,5,6,7,8,9,10,13,14,15,20,21,22,23,24,25,26]);
+const TODAY=26, Y=2026, M=4, COL=44;
+const WD=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+function buildCells(){
+  const first=new Date(Y,M,1), off=(first.getDay()+6)%7, start=new Date(Y,M,1-off), cells=[];
+  for(let i=0;i<42;i++){ const d=new Date(start); d.setDate(start.getDate()+i);
+    const cur=d.getMonth()===M, n=d.getDate();
+    const completed=cur&&COMPLETED.has(n), today=cur&&n===TODAY, future=cur&&n>TODAY, missed=cur&&!completed&&!future;
+    cells.push({n,cur,completed,today,future,missed,dow:(d.getDay()+6)%7}); }
+  return cells;
+}
+function stats(cells){
+  let cs=0; for(let n=TODAY;n>=1;n--){ if(COMPLETED.has(n)) cs++; else break; }
+  const arr=[...COMPLETED].sort((a,b)=>a-b); let best=0,run=0,prev=null;
+  arr.forEach(n=>{ run=(prev!==null&&n===prev+1)?run+1:1; best=Math.max(best,run); prev=n; });
+  const done=arr.filter(n=>n<=TODAY).length, rate=Math.round(done/TODAY*100);
+  const cnt=[0,0,0,0,0,0,0]; cells.forEach(c=>{ if(c.completed) cnt[c.dow]++; });
+  let bi=0; cnt.forEach((v,i)=>{ if(v>cnt[bi]) bi=i; });
+  return {cs,best,rate,strong:WD[bi]};
+}
+
+const T={
+  light:{ phone:'#F5F1ED', card:'#FFFFFF', border:'#DDD8D2', primary:'#2D2A26', sec:'#6B6560', ter:'#A8A29A', habit:'#059669', inv:'#FFFFFF', conn:'rgba(5,150,105,.55)', gold:'#936A08', goldbg:'#FBF3DF', divider:'#EDE8E1' },
+  dark:{ phone:'#0B1220', card:'#1F2937', border:'#374151', primary:'#F9FAFB', sec:'#9CA3AF', ter:'#6B7280', habit:'#34D399', inv:'#0B1220', conn:'rgba(52,211,153,.5)', gold:'#E8B94D', goldbg:'#2A2616', divider:'#2A3340' }
+};
+
+function render(mode){
+  const c=T[mode], cells=buildCells(), s=stats(cells);
+  const done=i=>cells[i] && cells[i].completed;
+  let html=`<div class="phone" style="background:${c.phone}">`;
+  html+=`<div class="text-center mb-3 lab" style="color:${c.ter}">${mode} mode</div>`;
+  html+=`<div class="card" style="background:${c.card};border-color:${c.border}">`;
+  html+=`<div class="flex items-center justify-between mb-4">
+    <span style="color:${c.primary};font-weight:700;font-size:16px">May 2026</span>
+    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-1 px-2.5 py-1 rounded-full" style="background:${c.goldbg}">
+        <span style="font-size:13px">🔥</span><span style="color:${c.gold};font-weight:700;font-size:13px">${s.cs}</span></div>
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="border:1px solid ${c.border};color:${c.sec}">‹</div>
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="border:1px solid ${c.border};color:${c.sec}">›</div>
+    </div></div>`;
+  html+=`<div class="grid7 mb-1" style="margin:0 auto;width:308px">`;
+  WD.forEach(d=>html+=`<div class="text-center lab" style="color:${c.ter}">${d[0]}</div>`);
+  html+=`</div>`;
+  html+=`<div style="width:308px;margin:0 auto">`;
+  for(let r=0;r<6;r++){
+    html+=`<div class="row">`;
+    // connectors between consecutive completed days in this row
+    for(let col=0;col<6;col++){
+      if(done(r*7+col) && done(r*7+col+1)){
+        html+=`<div class="conn" style="left:${col*COL+41}px;width:6px;background:${c.conn}"></div>`;
+      }
+    }
+    // tiles
+    for(let col=0;col<7;col++){
+      const cell=cells[r*7+col];
+      const x=col*COL+3;
+      if(!cell.cur){ html+=`<div class="tile" style="left:${x}px"><span style="color:${c.ter};opacity:.35;font-size:13px">${cell.n}</span></div>`; continue; }
+      let bg='',txt=c.primary,weight='500';
+      if(cell.completed){ bg=`background:${c.habit}`; txt=c.inv; weight='600'; }
+      else if(cell.future){ txt=c.ter; }
+      else if(cell.missed){ txt=c.sec; }
+      let ring = cell.today && !cell.completed ? `box-shadow:inset 0 0 0 2px ${c.habit}` : '';
+      if(cell.today && cell.completed) ring=`box-shadow:0 0 0 2px ${c.card},0 0 0 4px ${c.habit}`;
+      html+=`<div class="tile" style="left:${x}px;${bg};${ring}"><span style="color:${txt};font-weight:${weight};font-size:14px">${cell.n}</span></div>`;
+    }
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+  // insight strip
+  html+=`<div class="flex items-stretch mt-4 pt-4" style="border-top:1px solid ${c.divider}">`;
+  const items=[
+    {v:`🔥 ${s.cs}`, k:'Streak', col:c.gold},
+    {v:s.strong, k:'Strongest', col:c.primary},
+    {v:`${s.rate}%`, k:'This month', col:c.primary},
+    {v:s.best, k:'Best run', col:c.primary},
+  ];
+  items.forEach((it,i)=>{
+    html+=`<div class="stat"><span class="v" style="color:${it.col}">${it.v}</span><span class="k" style="color:${c.ter}">${it.k}</span></div>`;
+    if(i<items.length-1) html+=`<div style="width:1px;background:${c.divider};margin:2px 0"></div>`;
+  });
+  html+=`</div>`;
+  html+=`</div></div>`;
+  return html;
+}
+document.getElementById('light').innerHTML=render('light');
+document.getElementById('dark').innerHTML=render('dark');
+</script>
+</body>
+</html>

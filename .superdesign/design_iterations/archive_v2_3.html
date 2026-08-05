@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive — Spotify Playlist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box !important; margin: 0 !important; padding: 0 !important; }
+    html, body { font-family: 'DM Sans', sans-serif !important; }
+    body {
+      background: #E8E3DD !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      min-height: 100vh !important;
+      padding: 24px 0 !important;
+    }
+    h1, h2, h3 { font-family: 'Literata', serif !important; }
+
+    .phone-frame {
+      width: 390px !important;
+      min-height: 760px !important;
+      background: #F5F1ED !important;
+      border-radius: 44px !important;
+      overflow: hidden !important;
+      position: relative !important;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.15), 0 0 0 2px rgba(0,0,0,0.06), inset 0 0 0 1px rgba(255,255,255,0.3) !important;
+    }
+
+    /* Status bar */
+    .status-bar {
+      position: absolute !important;
+      top: 0 !important; left: 0 !important; right: 0 !important;
+      height: 50px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      z-index: 50 !important;
+      background: rgba(245, 241, 237, 0.85) !important;
+      backdrop-filter: blur(12px) !important;
+    }
+    .notch {
+      width: 126px !important; height: 34px !important;
+      background: #111 !important;
+      border-radius: 0 0 20px 20px !important;
+    }
+
+    .phone-inner {
+      padding: 56px 0 120px !important;
+      overflow-y: auto !important;
+      max-height: 760px !important;
+      scrollbar-width: none !important;
+    }
+    .phone-inner::-webkit-scrollbar { display: none !important; }
+
+    /* Track row */
+    .track-row {
+      display: flex !important;
+      align-items: center !important;
+      padding: 8px 20px !important;
+      gap: 12px !important;
+      position: relative !important;
+      cursor: default !important;
+      overflow: hidden !important;
+      height: 68px !important;
+      transition: background 0.2s ease, opacity 0.4s ease, max-height 0.4s ease !important;
+    }
+    .track-row:hover { background: rgba(0,0,0,0.02) !important; }
+
+    .content-layer {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      width: 100% !important;
+      position: relative !important;
+      z-index: 2 !important;
+      background: transparent !important;
+      transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    }
+
+    /* Swipe delete background */
+    .swipe-delete-bg {
+      position: absolute !important;
+      top: 0 !important; right: 0 !important; bottom: 0 !important;
+      width: 90px !important;
+      background: #B53030 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      opacity: 0 !important;
+      transition: opacity 0.2s ease !important;
+    }
+    .swipe-delete-bg.visible { opacity: 1 !important; }
+
+    /* Album art */
+    .album-art {
+      width: 48px !important; height: 48px !important; min-width: 48px !important;
+      border-radius: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 22px !important;
+      border: 1px solid rgba(0,0,0,0.05) !important;
+    }
+
+    /* Track number */
+    .track-num {
+      font-size: 13px !important;
+      color: #9B9084 !important;
+      width: 16px !important; min-width: 16px !important;
+      text-align: right !important;
+      font-weight: 500 !important;
+      font-variant-numeric: tabular-nums !important;
+    }
+
+    /* Strength bar */
+    .strength-bar-bg {
+      width: 100% !important; height: 4px !important;
+      background: #E8E3DD !important;
+      border-radius: 2px !important;
+      overflow: hidden !important;
+      margin-top: 5px !important;
+    }
+    .strength-bar-fill {
+      height: 100% !important;
+      border-radius: 2px !important;
+      transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    }
+
+    /* Play button */
+    .play-btn {
+      width: 36px !important; height: 36px !important; min-width: 36px !important;
+      border-radius: 50% !important;
+      background: #059669 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: none !important;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.25) !important;
+    }
+    .play-btn:hover { transform: scale(1.1) !important; background: #047857 !important; }
+    .play-btn:active { transform: scale(0.92) !important; }
+
+    /* Divider */
+    .track-divider {
+      height: 1px !important;
+      background: rgba(0,0,0,0.05) !important;
+      margin: 0 20px 0 96px !important;
+    }
+
+    /* Shuffle button */
+    .shuffle-btn {
+      position: absolute !important;
+      bottom: 32px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      background: #059669 !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 50px !important;
+      padding: 14px 28px !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      cursor: pointer !important;
+      box-shadow: 0 8px 24px rgba(5, 150, 105, 0.35), 0 0 0 4px rgba(5, 150, 105, 0.1) !important;
+      transition: all 0.25s ease !important;
+      z-index: 10 !important;
+      white-space: nowrap !important;
+      letter-spacing: 0.2px !important;
+    }
+    .shuffle-btn:hover {
+      transform: translateX(-50%) translateY(-2px) !important;
+      box-shadow: 0 12px 32px rgba(5, 150, 105, 0.45), 0 0 0 4px rgba(5, 150, 105, 0.15) !important;
+    }
+    .shuffle-btn:active { transform: translateX(-50%) scale(0.97) !important; }
+
+    /* Equalizer bars */
+    @keyframes barBounce1 { 0%, 100% { height: 4px; } 50% { height: 14px; } }
+    @keyframes barBounce2 { 0%, 100% { height: 8px; } 50% { height: 4px; } }
+    @keyframes barBounce3 { 0%, 100% { height: 6px; } 50% { height: 16px; } }
+    .eq-bar {
+      width: 3px !important; border-radius: 1px !important; background: #059669 !important;
+    }
+    .eq-bar:nth-child(1) { animation: barBounce1 0.8s ease-in-out infinite !important; }
+    .eq-bar:nth-child(2) { animation: barBounce2 0.6s ease-in-out infinite 0.1s !important; }
+    .eq-bar:nth-child(3) { animation: barBounce3 0.7s ease-in-out infinite 0.2s !important; }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .track-row { animation: fadeInUp 0.4s ease-out backwards !important; }
+    .track-row:nth-child(1) { animation-delay: 0.05s !important; }
+    .track-row:nth-child(2) { animation-delay: 0.1s !important; }
+    .track-row:nth-child(3) { animation-delay: 0.15s !important; }
+    .track-row:nth-child(4) { animation-delay: 0.2s !important; }
+    .track-row:nth-child(5) { animation-delay: 0.25s !important; }
+
+    @keyframes shuffleSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .shuffle-spinning { animation: shuffleSpin 0.5s ease-in-out !important; }
+
+    @keyframes restorePulse {
+      0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+      70% { box-shadow: 0 0 0 14px rgba(5, 150, 105, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
+    }
+
+    /* Toast */
+    .toast {
+      position: absolute !important;
+      bottom: 90px !important;
+      left: 50% !important;
+      transform: translateX(-50%) translateY(16px) !important;
+      background: #1F1B16 !important;
+      color: white !important;
+      padding: 10px 20px !important;
+      border-radius: 12px !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      opacity: 0 !important;
+      transition: all 0.3s ease !important;
+      z-index: 20 !important;
+      white-space: nowrap !important;
+      pointer-events: none !important;
+    }
+    .toast.show {
+      opacity: 1 !important;
+      transform: translateX(-50%) translateY(0) !important;
+    }
+
+    /* Empty state */
+    @keyframes emptyBounce {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .empty-state { animation: emptyBounce 0.6s cubic-bezier(0.22, 1, 0.36, 1) both !important; }
+  </style>
+</head>
+<body>
+
+<div class="phone-frame" id="phone">
+  <!-- Status bar -->
+  <div class="status-bar"><div class="notch"></div></div>
+
+  <div class="phone-inner" id="scrollArea">
+    <!-- Header -->
+    <div style="padding: 8px 20px 4px !important; display: flex !important; align-items: center !important; justify-content: space-between !important;">
+      <button style="width: 36px !important; height: 36px !important; border-radius: 10px !important; background: rgba(0,0,0,0.05) !important; border: none !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+        <i data-lucide="chevron-left" style="width: 20px !important; height: 20px !important; color: #4A453F !important;"></i>
+      </button>
+      <div style="text-align: center !important;">
+        <div style="display: flex !important; align-items: center !important; gap: 6px !important; justify-content: center !important;">
+          <i data-lucide="archive" style="width: 14px !important; height: 14px !important; color: #9B9084 !important;"></i>
+          <span style="font-size: 11px !important; color: #9B9084 !important; font-weight: 500 !important; text-transform: uppercase !important; letter-spacing: 1px !important;">Archived</span>
+        </div>
+        <h1 style="font-size: 20px !important; font-weight: 700 !important; color: #1F1B16 !important; line-height: 1.3 !important; margin-top: 2px !important;">Dormant Playlist</h1>
+      </div>
+      <button style="width: 36px !important; height: 36px !important; border-radius: 10px !important; background: rgba(0,0,0,0.05) !important; border: none !important; cursor: pointer !important; display: flex !important; align-items: center !important; justify-content: center !important;">
+        <i data-lucide="x" style="width: 18px !important; height: 18px !important; color: #4A453F !important;"></i>
+      </button>
+    </div>
+
+    <!-- Queue meta -->
+    <div style="padding: 16px 20px 6px !important; display: flex !important; align-items: center !important; justify-content: space-between !important;">
+      <span style="font-size: 12px !important; color: #9B9084 !important; font-weight: 600 !important; text-transform: uppercase !important; letter-spacing: 0.5px !important;" id="trackCount">5 tracks in queue</span>
+      <span style="font-size: 12px !important; color: #B8AFA6 !important; font-weight: 500 !important;">Strength</span>
+    </div>
+
+    <!-- Track list -->
+    <div id="trackList"></div>
+
+    <!-- Now playing hint bar -->
+    <div style="margin: 16px 20px 0 !important; padding: 14px 16px !important; background: #EDE8E2 !important; border-radius: 14px !important; display: flex !important; align-items: center !important; gap: 12px !important;">
+      <div style="display: flex !important; align-items: flex-end !important; gap: 2px !important; height: 18px !important;">
+        <div class="eq-bar" style="height: 6px !important;"></div>
+        <div class="eq-bar" style="height: 10px !important;"></div>
+        <div class="eq-bar" style="height: 4px !important;"></div>
+      </div>
+      <div style="flex: 1 !important;">
+        <div style="font-size: 12px !important; color: #6B6560 !important; font-weight: 500 !important;">Tap play to bring a habit back</div>
+        <div style="font-size: 11px !important; color: #B8AFA6 !important; margin-top: 2px !important;">Swipe left to permanently remove</div>
+      </div>
+      <i data-lucide="info" style="width: 16px !important; height: 16px !important; color: #B8AFA6 !important;"></i>
+    </div>
+
+    <!-- Empty state (hidden) -->
+    <div id="emptyState" style="display: none !important; text-align: center !important; padding: 60px 24px !important;">
+      <div class="empty-state">
+        <div style="font-size: 48px !important; margin-bottom: 12px !important;">&#127925;</div>
+        <h3 style="font-size: 20px !important; font-weight: 700 !important; color: #1F1B16 !important; margin-bottom: 6px !important;">Queue Empty</h3>
+        <p style="font-size: 14px !important; color: #9B9084 !important; line-height: 1.5 !important;">All habits have been restored or removed.<br/>Nothing left on the bench.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shuffle Restore Button -->
+  <button class="shuffle-btn" id="shuffleBtn" onclick="shuffleRestore()">
+    <i data-lucide="shuffle" style="width: 18px !important; height: 18px !important;" id="shuffleIcon"></i>
+    Shuffle Restore
+  </button>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+  const habits = [
+    { id: 1, emoji: "\uD83E\uDDD8", name: "Morning Meditation", dormant: 12, strength: 82, gradient: "linear-gradient(135deg, #FDEDC8, #F5D89A)" },
+    { id: 2, emoji: "\uD83D\uDCD6", name: "Read 30 Minutes",    dormant: 5,  strength: 61, gradient: "linear-gradient(135deg, #C8E6FD, #93C5FD)" },
+    { id: 3, emoji: "\uD83C\uDFC3", name: "Evening Run",        dormant: 23, strength: 35, gradient: "linear-gradient(135deg, #FDE2E2, #FCA5A5)" },
+    { id: 4, emoji: "\uD83D\uDCA7", name: "Drink 8 Glasses",    dormant: 3,  strength: 94, gradient: "linear-gradient(135deg, #D1FAE5, #6EE7B7)" },
+    { id: 5, emoji: "\u270D\uFE0F", name: "Journal Entry",      dormant: 41, strength: 18, gradient: "linear-gradient(135deg, #EDE9FE, #C4B5FD)" }
+  ];
+
+  function getBarColor(s) {
+    if (s >= 70) return "linear-gradient(90deg, #059669, #34D399)";
+    if (s >= 40) return "linear-gradient(90deg, #F59E0B, #FBBF24)";
+    return "linear-gradient(90deg, #EF4444, #F87171)";
+  }
+
+  function renderTracks() {
+    const list = document.getElementById("trackList");
+    list.innerHTML = habits.map((h, i) => `
+      <div class="track-row" data-id="${h.id}" style="animation-delay: ${i * 0.05 + 0.05}s !important;">
+        <div class="swipe-delete-bg" id="swipeBg-${h.id}">
+          <i data-lucide="trash-2" style="width: 20px !important; height: 20px !important; color: white !important;"></i>
+        </div>
+        <div class="content-layer" id="content-${h.id}">
+          <span class="track-num">${i + 1}</span>
+          <div class="album-art" style="background: ${h.gradient} !important;">
+            <span>${h.emoji}</span>
+          </div>
+          <div style="flex: 1 !important; min-width: 0 !important;">
+            <div style="font-size: 14px !important; font-weight: 600 !important; color: #1F1B16 !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important;">${h.name}</div>
+            <div style="font-size: 12px !important; color: #9B9084 !important; margin-top: 1px !important;">Dormant ${h.dormant} day${h.dormant !== 1 ? "s" : ""}</div>
+            <div class="strength-bar-bg">
+              <div class="strength-bar-fill" style="width: ${h.strength}% !important; background: ${getBarColor(h.strength)} !important;"></div>
+            </div>
+          </div>
+          <button class="play-btn" id="playBtn-${h.id}" onclick="restoreHabit(${h.id})" title="Restore habit">
+            <i data-lucide="play" style="width: 15px !important; height: 15px !important; color: white !important; margin-left: 2px !important;"></i>
+          </button>
+        </div>
+      </div>
+      ${i < habits.length - 1 ? '<div class="track-divider" id="divider-' + h.id + '"></div>' : ''}
+    `).join("");
+    lucide.createIcons();
+    updateCount();
+  }
+
+  function updateCount() {
+    const remaining = document.querySelectorAll(".track-row").length;
+    document.getElementById("trackCount").textContent = remaining + " track" + (remaining !== 1 ? "s" : "") + " in queue";
+  }
+
+  function renumber() {
+    document.querySelectorAll(".track-row").forEach((row, i) => {
+      const num = row.querySelector(".track-num");
+      if (num) num.textContent = i + 1;
+    });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  function removeRow(id, callback) {
+    const row = document.querySelector(`.track-row[data-id="${id}"]`);
+    const divider = document.getElementById("divider-" + id);
+    if (!row) return;
+
+    row.style.transition = "opacity 0.35s ease, max-height 0.4s ease 0.1s";
+    row.style.opacity = "0";
+    row.style.maxHeight = "0";
+    row.style.overflow = "hidden";
+
+    if (divider) {
+      divider.style.transition = "opacity 0.2s ease";
+      divider.style.opacity = "0";
+      setTimeout(() => divider.remove(), 200);
+    }
+
+    setTimeout(() => {
+      row.remove();
+      const idx = habits.findIndex(h => h.id === id);
+      if (idx > -1) habits.splice(idx, 1);
+      renumber();
+      updateCount();
+      checkEmpty();
+      if (callback) callback();
+    }, 420);
+  }
+
+  function restoreHabit(id) {
+    const btn = document.getElementById("playBtn-" + id);
+    if (!btn || btn.dataset.restoring) return;
+    btn.dataset.restoring = "true";
+
+    const habit = habits.find(h => h.id === id);
+    const name = habit ? habit.name : "Habit";
+
+    // Animate button: pulse + swap to eq bars
+    btn.style.animation = "restorePulse 0.6s ease-out";
+    btn.innerHTML = `<div style="display:flex !important;align-items:flex-end !important;gap:2px !important;height:14px !important;">
+      <div class="eq-bar" style="height:4px !important;"></div>
+      <div class="eq-bar" style="height:8px !important;"></div>
+      <div class="eq-bar" style="height:4px !important;"></div>
+    </div>`;
+    btn.style.background = "#047857";
+
+    showToast("\u267B\uFE0F " + name + " restored!");
+
+    // Slide content right, then remove
+    const content = document.getElementById("content-" + id);
+    setTimeout(() => {
+      content.style.transition = "transform 0.4s ease, opacity 0.4s ease";
+      content.style.transform = "translateX(110%)";
+      content.style.opacity = "0";
+      setTimeout(() => removeRow(id), 350);
+    }, 500);
+  }
+
+  function shuffleRestore() {
+    if (habits.length === 0) {
+      showToast("Queue is empty");
+      return;
+    }
+    const icon = document.getElementById("shuffleIcon");
+    icon.classList.add("shuffle-spinning");
+    setTimeout(() => icon.classList.remove("shuffle-spinning"), 500);
+
+    const random = habits[Math.floor(Math.random() * habits.length)];
+    const row = document.querySelector(`.track-row[data-id="${random.id}"]`);
+    if (row) {
+      row.style.background = "rgba(5, 150, 105, 0.06)";
+      setTimeout(() => {
+        row.style.background = "";
+        restoreHabit(random.id);
+      }, 350);
+    }
+  }
+
+  function checkEmpty() {
+    if (habits.length === 0) {
+      document.getElementById("shuffleBtn").style.display = "none";
+      const empty = document.getElementById("emptyState");
+      empty.style.display = "block";
+      empty.style.cssText = "display: block !important; text-align: center !important; padding: 60px 24px !important;";
+    }
+  }
+
+  // Swipe-to-delete
+  (function initSwipe() {
+    let startX = 0, currentX = 0, swiping = false, activeRow = null;
+    const THRESHOLD = 80;
+
+    document.getElementById("trackList").addEventListener("pointerdown", function(e) {
+      const row = e.target.closest(".track-row");
+      if (!row || e.target.closest(".play-btn")) return;
+      activeRow = row;
+      startX = e.clientX;
+      swiping = true;
+      const content = row.querySelector(".content-layer");
+      content.style.transition = "none";
+    });
+
+    document.addEventListener("pointermove", function(e) {
+      if (!swiping || !activeRow) return;
+      currentX = e.clientX - startX;
+      if (currentX > 0) currentX = 0; // only swipe left
+
+      const id = activeRow.dataset.id;
+      const content = document.getElementById("content-" + id);
+      const bg = document.getElementById("swipeBg-" + id);
+      content.style.transform = "translateX(" + currentX + "px)";
+
+      if (Math.abs(currentX) > 30) {
+        bg.classList.add("visible");
+      } else {
+        bg.classList.remove("visible");
+      }
+    });
+
+    document.addEventListener("pointerup", function() {
+      if (!swiping || !activeRow) return;
+      const id = activeRow.dataset.id;
+      const content = document.getElementById("content-" + id);
+      const bg = document.getElementById("swipeBg-" + id);
+      content.style.transition = "transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+
+      if (Math.abs(currentX) > THRESHOLD) {
+        const habit = habits.find(h => h.id === parseInt(id));
+        const name = habit ? habit.name : "Habit";
+        content.style.transform = "translateX(-120%)";
+        showToast("\uD83D\uDDD1\uFE0F " + name + " removed");
+        setTimeout(() => removeRow(parseInt(id)), 300);
+      } else {
+        content.style.transform = "translateX(0)";
+        bg.classList.remove("visible");
+      }
+
+      swiping = false;
+      activeRow = null;
+      currentX = 0;
+    });
+  })();
+
+  // Init
+  renderTracks();
+</script>
+
+</body>
+</html>

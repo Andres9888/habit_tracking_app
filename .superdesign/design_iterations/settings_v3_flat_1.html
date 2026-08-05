@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chain Day — Settings (Calm Flat List)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400..700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --card: #FAF8F5;           /* lifted card surface for more depth (called out in summary) */
+    --border: #DDD8D2;
+    --text-primary: #2D2A26;
+    --text-secondary: #6B6560;
+    --text-tertiary: #6E6660;
+    --tile-bg: #E2F1EA;
+    --tile-icon: #047857;
+    --accent: #059669;
+    --toggle-on: #10B981;
+    --toggle-off: #C4BFB7;
+    --danger-icon: #B53030;
+    --danger-bg: #FEE2E2;
+    --radius-card: 16px;
+    --radius-tile: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: radial-gradient(circle at 50% 0%, #EFE9E2 0%, #E7E0D8 60%, #DED7CE 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    color: var(--text-primary);
+  }
+
+  /* ===== PHONE FRAME ===== */
+  .phone {
+    width: 390px;
+    height: 844px;
+    background: var(--bg);
+    border-radius: 56px;
+    position: relative;
+    box-shadow:
+      0 0 0 11px #1c1b1a,
+      0 0 0 13px #2c2a28,
+      0 50px 90px -20px rgba(40, 34, 28, 0.55),
+      0 20px 40px -20px rgba(40, 34, 28, 0.4);
+    overflow: hidden;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    border-radius: 44px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg);
+    scrollbar-width: none;
+  }
+  .screen::-webkit-scrollbar { display: none; }
+
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: 54px;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg);
+  }
+  .status-time {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    color: var(--text-primary);
+    padding-top: 6px;
+  }
+  .status-icons {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-top: 6px;
+  }
+  .status-icons svg { width: 17px; height: 17px; stroke: var(--text-primary); }
+  .battery {
+    width: 25px; height: 13px;
+    border: 1.5px solid var(--text-primary);
+    border-radius: 4px;
+    position: relative;
+    display: flex; align-items: center;
+    padding: 1.5px;
+  }
+  .battery::after {
+    content: ''; position: absolute; right: -3px; top: 3.5px;
+    width: 2px; height: 5px; background: var(--text-primary);
+    border-radius: 0 2px 2px 0;
+  }
+  .battery-fill { height: 100%; width: 70%; background: var(--text-primary); border-radius: 1.5px; }
+
+  /* Dynamic Island */
+  .island {
+    position: absolute;
+    top: 12px; left: 50%; transform: translateX(-50%);
+    width: 122px; height: 35px;
+    background: #0a0908;
+    border-radius: 20px;
+    z-index: 60;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    padding: 8px 22px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-title {
+    font-family: 'Literata', serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+  }
+  .close-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: rgba(110, 102, 96, 0.12);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .close-btn:hover { background: rgba(110, 102, 96, 0.2); }
+  .close-btn svg { width: 18px; height: 18px; stroke: var(--text-secondary); stroke-width: 2.4; }
+
+  /* ===== CONTENT ===== */
+  .content {
+    padding: 0 18px 48px;
+  }
+
+  /* ===== PROFILE HERO (compact) ===== */
+  .profile {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    box-shadow: 0 1px 2px rgba(45, 42, 38, 0.05), 0 6px 18px -8px rgba(45, 42, 38, 0.12);
+    border: 1px solid rgba(221, 216, 210, 0.6);
+    margin-bottom: 26px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+  .profile:active { transform: scale(0.992); }
+  .profile-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px 16px;
+  }
+  .avatar {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #0a7d5a 0%, #047857 55%, #036647 100%);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Literata', serif;
+    font-size: 24px; font-weight: 600;
+    color: #F5F1ED;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.25), 0 2px 6px rgba(4, 120, 87, 0.3);
+    flex-shrink: 0;
+  }
+  .profile-info { flex: 1; min-width: 0; }
+  .profile-name-row { display: flex; align-items: center; gap: 7px; }
+  .profile-name {
+    font-size: 19px; font-weight: 700; color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+  .pro-badge {
+    display: inline-flex; align-items: center; gap: 3px;
+    background: linear-gradient(135deg, #047857, #0a7d5a);
+    color: #FAF8F5;
+    font-size: 10px; font-weight: 700;
+    padding: 2.5px 7px 2.5px 6px;
+    border-radius: 7px;
+    letter-spacing: 0.4px;
+    box-shadow: 0 1px 3px rgba(4, 120, 87, 0.35);
+  }
+  .pro-badge svg { width: 11px; height: 11px; stroke: #FAF8F5; fill: none; stroke-width: 2.2; }
+  .profile-sub {
+    font-size: 13px; color: var(--text-secondary); margin-top: 2px; font-weight: 500;
+  }
+  .profile-chevron svg { width: 20px; height: 20px; stroke: var(--text-tertiary); stroke-width: 2; opacity: 0.55; }
+
+  .stats-strip {
+    display: flex;
+    border-top: 1px solid var(--border);
+  }
+  .stat {
+    flex: 1;
+    padding: 12px 6px 14px;
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    position: relative;
+  }
+  .stat:not(:last-child)::after {
+    content: ''; position: absolute; right: 0; top: 22%; height: 56%;
+    width: 1px; background: var(--border);
+  }
+  .stat-value-row { display: flex; align-items: center; gap: 5px; }
+  .stat-value-row svg { width: 14px; height: 14px; stroke: var(--accent); stroke-width: 2.2; }
+  .stat-value { font-size: 19px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; }
+  .stat-label { font-size: 10.5px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.1px; }
+
+  /* ===== SECTION LABEL (Literata, outside card, iOS grouped pattern) ===== */
+  .section-label {
+    font-family: 'Literata', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin: 0 8px 9px;
+    padding-top: 4px;
+  }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius-card);
+    box-shadow: 0 1px 2px rgba(45, 42, 38, 0.05), 0 6px 18px -10px rgba(45, 42, 38, 0.12);
+    border: 1px solid rgba(221, 216, 210, 0.55);
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+
+  /* ===== ROW ===== */
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 16px;
+    position: relative;
+    min-height: 56px;
+  }
+  .row:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 69px; right: 0; bottom: 0;
+    height: 1px;
+    background: var(--border);
+  }
+  .row.tappable { cursor: pointer; transition: background 0.15s; }
+  .row.tappable:active { background: rgba(110, 102, 96, 0.05); }
+
+  .tile {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-tile);
+    background: var(--tile-bg);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.5);
+  }
+  .tile svg { width: 21px; height: 21px; stroke: var(--tile-icon); stroke-width: 2; }
+
+  .row-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .row-label { font-size: 16px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.1px; }
+  .row-sub { font-size: 12.5px; color: var(--text-secondary); font-weight: 400; line-height: 1.35; }
+
+  .row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .row-value { font-size: 15px; color: var(--text-secondary); font-weight: 500; }
+  .chevron svg { width: 19px; height: 19px; stroke: var(--text-tertiary); stroke-width: 2; opacity: 0.55; }
+  .ext-link svg { width: 17px; height: 17px; stroke: var(--text-tertiary); stroke-width: 2; opacity: 0.6; }
+
+  /* badge */
+  .badge {
+    min-width: 22px; height: 22px;
+    padding: 0 7px;
+    border-radius: 11px;
+    background: var(--tile-bg);
+    color: var(--tile-icon);
+    font-size: 12.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ===== TOGGLE ===== */
+  .toggle {
+    width: 50px; height: 30px;
+    border-radius: 15px;
+    background: var(--toggle-off);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.25s ease;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .toggle.on { background: var(--toggle-on); }
+  .toggle-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 1px 1px rgba(0,0,0,0.1);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .toggle.on .toggle-thumb { transform: translateX(20px); }
+
+  /* ===== SEGMENTED CONTROL ===== */
+  .segmented {
+    display: flex;
+    background: rgba(110, 102, 96, 0.1);
+    border-radius: 9px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .seg {
+    padding: 5px 11px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .seg.active {
+    background: var(--card);
+    color: var(--text-primary);
+    box-shadow: 0 1px 2px rgba(45,42,38,0.12);
+  }
+
+  /* ===== SHAPE PICKER ===== */
+  .shape-pick { display: flex; align-items: center; gap: 6px; }
+  .shape-swatch {
+    width: 18px; height: 18px;
+    border: 2px solid var(--toggle-off);
+    background: transparent;
+  }
+  .shape-swatch.sq { border-radius: 4px; }
+  .shape-swatch.active { border-color: var(--accent); background: rgba(5,150,105,0.12); }
+
+  /* ===== EMOJI PREVIEW ===== */
+  .emoji-set { display: flex; align-items: center; gap: 2px; font-size: 16px; }
+
+  /* ===== CALENDAR PREVIEW ===== */
+  .cal-preview {
+    padding: 16px 16px 15px;
+    background: linear-gradient(180deg, rgba(226, 241, 234, 0.35) 0%, rgba(250, 248, 245, 0) 100%);
+    position: relative;
+  }
+  .cal-preview::after {
+    content: '';
+    position: absolute;
+    left: 16px; right: 16px; bottom: 0;
+    height: 1px;
+    background: var(--border);
+  }
+  .cal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cal-title {
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .cal-live {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600; color: var(--accent);
+  }
+  .cal-live-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(5,150,105,0.5);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(5,150,105,0.45); }
+    70% { box-shadow: 0 0 0 6px rgba(5,150,105,0); }
+    100% { box-shadow: 0 0 0 0 rgba(5,150,105,0); }
+  }
+  .cal-weekdays {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 0; margin-bottom: 8px;
+  }
+  .cal-weekday {
+    text-align: center; font-size: 10px; font-weight: 600;
+    color: var(--text-tertiary); letter-spacing: 0.3px;
+  }
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 6px 4px;
+    position: relative;
+  }
+  .cal-cell {
+    aspect-ratio: 1;
+    border-radius: 7px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    position: relative;
+    z-index: 2;
+  }
+  .cal-cell.empty { background: rgba(196, 191, 183, 0.18); color: var(--text-tertiary); }
+  .cal-cell.done {
+    background: linear-gradient(145deg, #0a8a64 0%, #047857 100%);
+    color: #F5F1ED;
+    box-shadow: 0 1px 3px rgba(4,120,87,0.3), inset 0 1px 1px rgba(255,255,255,0.18);
+  }
+  .cal-cell.today {
+    background: rgba(226, 241, 234, 0.9);
+    color: var(--tile-icon);
+    border: 1.5px solid var(--accent);
+  }
+  /* chain connectors between consecutive completed days */
+  .chain {
+    position: absolute;
+    height: 3px;
+    background: linear-gradient(90deg, #047857, #0a8a64);
+    border-radius: 2px;
+    z-index: 1;
+    opacity: 0.85;
+  }
+
+  /* nested / inset child row (reminder time under toggle) */
+  .row.nested {
+    padding-left: 16px;
+    background: rgba(226, 241, 234, 0.22);
+  }
+  .row.nested .nest-indent {
+    width: 40px; display: flex; justify-content: center; flex-shrink: 0;
+  }
+  .row.nested .nest-indent svg {
+    width: 18px; height: 18px; stroke: var(--tile-icon); stroke-width: 2; opacity: 0.7;
+  }
+
+  .footer-note {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+    letter-spacing: 0.2px;
+  }
+  .footer-note .heart { color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="phone">
+    <div class="island"></div>
+    <div class="screen">
+      <!-- STATUS BAR -->
+      <div class="status-bar">
+        <div class="status-time">9:41</div>
+        <div class="status-icons">
+          <i data-lucide="signal"></i>
+          <i data-lucide="wifi"></i>
+          <div class="battery"><div class="battery-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- HEADER -->
+      <div class="header">
+        <div class="header-title">Settings</div>
+        <div class="close-btn"><i data-lucide="x"></i></div>
+      </div>
+
+      <div class="content">
+        <!-- PROFILE HERO -->
+        <div class="profile">
+          <div class="profile-top">
+            <div class="avatar">A</div>
+            <div class="profile-info">
+              <div class="profile-name-row">
+                <span class="profile-name">Andres</span>
+                <span class="pro-badge"><i data-lucide="crown"></i>PRO</span>
+              </div>
+              <div class="profile-sub">Account &amp; subscription</div>
+            </div>
+            <div class="profile-chevron"><i data-lucide="chevron-right"></i></div>
+          </div>
+          <div class="stats-strip">
+            <div class="stat">
+              <div class="stat-value-row"><i data-lucide="activity"></i><span class="stat-value">7</span></div>
+              <div class="stat-label">Active Habits</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value-row"><i data-lucide="star"></i><span class="stat-value">42</span></div>
+              <div class="stat-label">Flawless Days</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value-row"><i data-lucide="check-circle"></i><span class="stat-value">318</span></div>
+              <div class="stat-label">Lifetime</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== APPEARANCE ===== -->
+        <div class="section-label">Appearance</div>
+        <div class="card">
+          <!-- LIVE CALENDAR PREVIEW -->
+          <div class="cal-preview">
+            <div class="cal-header">
+              <div class="cal-title">This week</div>
+              <div class="cal-live"><span class="cal-live-dot"></span>Live preview</div>
+            </div>
+            <div class="cal-weekdays">
+              <div class="cal-weekday">M</div>
+              <div class="cal-weekday">T</div>
+              <div class="cal-weekday">W</div>
+              <div class="cal-weekday">T</div>
+              <div class="cal-weekday">F</div>
+              <div class="cal-weekday">S</div>
+              <div class="cal-weekday">S</div>
+            </div>
+            <div class="cal-grid" id="calGrid">
+              <!-- week 1 -->
+              <div class="cal-cell done">9</div>
+              <div class="cal-cell done">10</div>
+              <div class="cal-cell done">11</div>
+              <div class="cal-cell done">12</div>
+              <div class="cal-cell empty">13</div>
+              <div class="cal-cell done">14</div>
+              <div class="cal-cell done">15</div>
+              <!-- week 2 -->
+              <div class="cal-cell done">16</div>
+              <div class="cal-cell done">17</div>
+              <div class="cal-cell done">18</div>
+              <div class="cal-cell empty">19</div>
+              <div class="cal-cell done">20</div>
+              <div class="cal-cell today">21</div>
+              <div class="cal-cell empty">22</div>
+            </div>
+          </div>
+
+          <!-- Theme -->
+          <div class="row">
+            <div class="tile"><i data-lucide="moon"></i></div>
+            <div class="row-text"><span class="row-label">Theme</span></div>
+            <div class="row-right">
+              <div class="segmented">
+                <div class="seg">Light</div>
+                <div class="seg">Dark</div>
+                <div class="seg active">System</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Day marker shape -->
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="shapes"></i></div>
+            <div class="row-text"><span class="row-label">Day marker shape</span></div>
+            <div class="row-right">
+              <div class="shape-pick">
+                <div class="shape-swatch sq active"></div>
+                <span class="row-value">Square</span>
+              </div>
+              <div class="chevron"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+
+          <!-- Gradient streak fill -->
+          <div class="row">
+            <div class="tile"><i data-lucide="paint-bucket"></i></div>
+            <div class="row-text">
+              <span class="row-label">Gradient streak fill</span>
+              <span class="row-sub">Color fills active streak cells</span>
+            </div>
+            <div class="row-right"><div class="toggle on"><div class="toggle-thumb"></div></div></div>
+          </div>
+
+          <!-- Streak connections -->
+          <div class="row">
+            <div class="tile"><i data-lucide="link"></i></div>
+            <div class="row-text">
+              <span class="row-label">Streak connections</span>
+              <span class="row-sub">Link completed days into a chain on the calendar</span>
+            </div>
+            <div class="row-right"><div class="toggle on"><div class="toggle-thumb"></div></div></div>
+          </div>
+
+          <!-- Completion icon -->
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="check"></i></div>
+            <div class="row-text"><span class="row-label">Completion icon</span></div>
+            <div class="row-right">
+              <span class="row-value">Check</span>
+              <div class="chevron"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+
+          <!-- Default growth icons -->
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="sprout"></i></div>
+            <div class="row-text">
+              <span class="row-label">Default growth icons</span>
+              <span class="row-sub">Pick the 5 emojis used for every habit by default</span>
+            </div>
+            <div class="row-right">
+              <span class="emoji-set">🌱🌿🪴🌳🌲</span>
+              <div class="chevron"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+
+          <!-- Compact habit cards -->
+          <div class="row">
+            <div class="tile"><i data-lucide="rows-3"></i></div>
+            <div class="row-text">
+              <span class="row-label">Compact habit cards</span>
+              <span class="row-sub">Fit more on screen</span>
+            </div>
+            <div class="row-right"><div class="toggle"><div class="toggle-thumb"></div></div></div>
+          </div>
+        </div>
+
+        <!-- ===== BEHAVIOR ===== -->
+        <div class="section-label">Behavior</div>
+        <div class="card">
+          <!-- Sort order -->
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="arrow-up-down"></i></div>
+            <div class="row-text">
+              <span class="row-label">Sort order</span>
+              <span class="row-sub">How habits are ordered</span>
+            </div>
+            <div class="row-right">
+              <span class="row-value">Manual</span>
+              <div class="chevron"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+
+          <!-- Completion sound -->
+          <div class="row">
+            <div class="tile"><i data-lucide="volume-2"></i></div>
+            <div class="row-text">
+              <span class="row-label">Completion sound</span>
+              <span class="row-sub">Play sound when checking off</span>
+            </div>
+            <div class="row-right"><div class="toggle on"><div class="toggle-thumb"></div></div></div>
+          </div>
+
+          <!-- Sticky month header -->
+          <div class="row">
+            <div class="tile"><i data-lucide="calendar"></i></div>
+            <div class="row-text">
+              <span class="row-label">Sticky month header</span>
+              <span class="row-sub">Month stays visible while scrolling</span>
+            </div>
+            <div class="row-right"><div class="toggle"><div class="toggle-thumb"></div></div></div>
+          </div>
+
+          <!-- Archived habits -->
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="archive"></i></div>
+            <div class="row-text">
+              <span class="row-label">Archived habits</span>
+              <span class="row-sub">View and restore hidden habits</span>
+            </div>
+            <div class="row-right">
+              <span class="badge">3</span>
+              <div class="chevron"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+
+          <!-- Export -->
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="download"></i></div>
+            <div class="row-text">
+              <span class="row-label">Export habits data</span>
+              <span class="row-sub">Download as CSV or JSON</span>
+            </div>
+            <div class="row-right"><div class="chevron"><i data-lucide="chevron-right"></i></div></div>
+          </div>
+        </div>
+
+        <!-- ===== NOTIFICATIONS ===== -->
+        <div class="section-label">Notifications</div>
+        <div class="card">
+          <!-- Streak Reminders -->
+          <div class="row">
+            <div class="tile"><i data-lucide="bell-ring"></i></div>
+            <div class="row-text">
+              <span class="row-label">Streak Reminders</span>
+              <span class="row-sub">Get nudged before an active streak slips</span>
+            </div>
+            <div class="row-right"><div class="toggle on"><div class="toggle-thumb"></div></div></div>
+          </div>
+
+          <!-- Reminder time (nested child) -->
+          <div class="row nested tappable">
+            <div class="nest-indent"><i data-lucide="corner-down-right"></i></div>
+            <div class="row-text"><span class="row-label">Reminder time</span></div>
+            <div class="row-right">
+              <span class="row-value">8:00 PM</span>
+              <div class="chevron"><i data-lucide="chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SUPPORT ===== -->
+        <div class="section-label">Support</div>
+        <div class="card">
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="star"></i></div>
+            <div class="row-text"><span class="row-label">Rate Chain Day</span></div>
+            <div class="row-right"><div class="chevron"><i data-lucide="chevron-right"></i></div></div>
+          </div>
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="share-2"></i></div>
+            <div class="row-text"><span class="row-label">Share with Friends</span></div>
+            <div class="row-right"><div class="chevron"><i data-lucide="chevron-right"></i></div></div>
+          </div>
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="message-circle"></i></div>
+            <div class="row-text"><span class="row-label">Send Feedback</span></div>
+            <div class="row-right"><div class="chevron"><i data-lucide="chevron-right"></i></div></div>
+          </div>
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="sparkles"></i></div>
+            <div class="row-text"><span class="row-label">What's New</span></div>
+            <div class="row-right"><div class="chevron"><i data-lucide="chevron-right"></i></div></div>
+          </div>
+        </div>
+
+        <!-- ===== ABOUT ===== -->
+        <div class="section-label">About</div>
+        <div class="card">
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="shield-check"></i></div>
+            <div class="row-text"><span class="row-label">Privacy Policy</span></div>
+            <div class="row-right"><div class="ext-link"><i data-lucide="external-link"></i></div></div>
+          </div>
+          <div class="row tappable">
+            <div class="tile"><i data-lucide="file-text"></i></div>
+            <div class="row-text"><span class="row-label">Terms of Service</span></div>
+            <div class="row-right"><div class="ext-link"><i data-lucide="external-link"></i></div></div>
+          </div>
+          <div class="row">
+            <div class="tile"><i data-lucide="info"></i></div>
+            <div class="row-text"><span class="row-label">Version</span></div>
+            <div class="row-right"><span class="row-value">1.0.0 (1)</span></div>
+          </div>
+        </div>
+
+        <div class="footer-note">Made with <span class="heart">&hearts;</span> for people building chains</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Build chain connectors between horizontally-adjacent completed cells
+    function drawChains() {
+      const grid = document.getElementById('calGrid');
+      // remove any existing chains
+      grid.querySelectorAll('.chain').forEach(c => c.remove());
+      const cells = Array.from(grid.children).filter(c => c.classList.contains('cal-cell'));
+      const gridRect = grid.getBoundingClientRect();
+      for (let i = 0; i < cells.length; i++) {
+        const inRowPos = i % 7;
+        if (inRowPos === 6) continue; // no link across week wrap
+        const a = cells[i], b = cells[i + 1];
+        const aDone = a.classList.contains('done');
+        const bDone = b.classList.contains('done') || b.classList.contains('today');
+        if (aDone && bDone) {
+          const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+          const chain = document.createElement('div');
+          chain.className = 'chain';
+          const left = (ra.left + ra.width / 2) - gridRect.left;
+          const right = (rb.left + rb.width / 2) - gridRect.left;
+          chain.style.left = left + 'px';
+          chain.style.width = (right - left) + 'px';
+          chain.style.top = ((ra.top + ra.height / 2) - gridRect.top - 1.5) + 'px';
+          grid.appendChild(chain);
+        }
+      }
+    }
+
+    lucide.createIcons();
+    // draw after layout settles
+    requestAnimationFrame(() => requestAnimationFrame(drawChains));
+    window.addEventListener('resize', drawChains);
+  </script>
+</body>
+</html>

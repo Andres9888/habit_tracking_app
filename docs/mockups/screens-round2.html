@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day - Round 2 Before/After</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+        background: #0a0a0a;
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+      h1 {
+        color: #fff;
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 40px;
+      }
+      .screen-section {
+        margin-bottom: 60px;
+      }
+      .screen-title {
+        color: #10b981;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .comparison {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .phone {
+        width: 280px;
+        height: 600px;
+        border-radius: 36px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border: 3px solid #333;
+      }
+      .column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .label {
+        color: #fff;
+        font-size: 11px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      .score {
+        font-size: 18px;
+        font-weight: 700;
+        margin-left: 6px;
+      }
+      .score.low {
+        color: #f59e0b;
+      }
+      .score.high {
+        color: #10b981;
+      }
+      .notes {
+        margin-top: 12px;
+        color: #6b7280;
+        font-size: 10px;
+        max-width: 260px;
+        text-align: center;
+        line-height: 1.4;
+      }
+      .notes strong {
+        color: #f59e0b;
+      }
+      .notes.after strong {
+        color: #10b981;
+      }
+
+      /* HABIT DETAIL */
+      .detail-before,
+      .detail-after {
+        background: linear-gradient(
+          180deg,
+          #faf9f7 0%,
+          #fef3c7 30%,
+          #faf9f7 100%
+        );
+        height: 100%;
+        padding: 44px 16px 20px;
+      }
+      .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .detail-btn {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .detail-before .detail-btn {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .detail-after .detail-btn {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .detail-hero {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .detail-icon {
+        width: 44px;
+        height: 44px;
+        background: #fef3c7;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .detail-after .detail-icon {
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .detail-before .detail-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+      .detail-after .detail-name {
+        font-size: 17px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+      .detail-streak {
+        font-size: 12px;
+        margin-top: 2px;
+      }
+      .detail-before .detail-streak {
+        color: #ea580c;
+      }
+      .detail-after .detail-streak {
+        color: #059669;
+        font-weight: 600;
+      }
+      .detail-content {
+        margin-top: 16px;
+      }
+      .detail-before .detail-card {
+        background: transparent;
+        padding: 16px 0;
+      }
+      .detail-after .detail-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        animation: fadeUp 0.3s ease-out backwards;
+      }
+      .detail-after .detail-card:nth-child(2) {
+        animation-delay: 50ms;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .strength-bar {
+        height: 8px;
+        background: #e5e7eb;
+        border-radius: 4px;
+        margin-top: 8px;
+        overflow: hidden;
+      }
+      .strength-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #059669);
+        width: 65%;
+        border-radius: 4px;
+      }
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        margin-top: 12px;
+      }
+      .cal-day {
+        width: 100%;
+        aspect-ratio: 1;
+        background: #f5f5f4;
+        border-radius: 4px;
+      }
+      .cal-day.done {
+        background: #10b981;
+      }
+
+      /* CREATE HABIT */
+      .create-before,
+      .create-after {
+        background: #faf9f7;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      .create-header {
+        padding: 16px;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .create-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+      .create-content {
+        flex: 1;
+        padding: 20px 16px;
+      }
+      .create-input {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 14px 16px;
+        font-size: 17px;
+        color: #1c1917;
+        margin-bottom: 20px;
+      }
+      .create-section-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #78716c;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+      .emoji-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .emoji-btn {
+        width: 44px;
+        height: 44px;
+        background: #f5f5f4;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .emoji-btn.selected {
+        background: #d1fae5;
+        border: 2px solid #10b981;
+      }
+      .color-row {
+        display: flex;
+        gap: 8px;
+      }
+      .color-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+      }
+      .create-sticky {
+        padding: 16px;
+        background: linear-gradient(180deg, transparent, #faf9f7 30%);
+      }
+      .create-before .create-cta {
+        background: #10b981;
+        color: white;
+        padding: 14px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .create-after .create-cta-wrap {
+        background: #fff;
+        padding: 10px;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+      .create-after .create-cta {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        padding: 16px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 17px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      /* EDIT HABIT */
+      .edit-before {
+        background: #faf9f7;
+        height: 100%;
+      }
+      .edit-after {
+        background: linear-gradient(180deg, #faf9f7, #f5f3f0);
+        height: 100%;
+      }
+      .edit-header {
+        padding: 50px 16px 16px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .edit-cancel {
+        color: #78716c;
+        font-size: 17px;
+      }
+      .edit-save {
+        color: #10b981;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      .edit-content {
+        padding: 0 16px;
+      }
+      .edit-before .edit-section {
+        padding: 16px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .edit-after .edit-section {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        animation: fadeUp 0.3s ease-out backwards;
+      }
+      .edit-after .edit-section:nth-child(2) {
+        animation-delay: 50ms;
+      }
+      .edit-after .edit-section.danger {
+        background: #fef2f2;
+        animation-delay: 100ms;
+      }
+      .edit-label {
+        font-size: 13px;
+        color: #78716c;
+        margin-bottom: 8px;
+      }
+      .edit-value {
+        font-size: 17px;
+        color: #1c1917;
+        font-weight: 500;
+      }
+      .danger-btn {
+        color: #dc2626;
+        font-size: 15px;
+        font-weight: 500;
+        padding: 8px 0;
+      }
+
+      /* SETTINGS */
+      .settings-before {
+        background: #faf9f7;
+        height: 100%;
+        padding: 50px 16px 20px;
+      }
+      .settings-after {
+        background: #f5f5f4;
+        height: 100%;
+        padding: 50px 16px 20px;
+      }
+      .settings-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .settings-section {
+        margin-bottom: 20px;
+      }
+      .settings-section-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #78716c;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        padding-left: 4px;
+      }
+      .settings-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .settings-after .settings-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      .settings-row {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        border-bottom: 1px solid #f5f5f4;
+      }
+      .settings-row:last-child {
+        border-bottom: none;
+      }
+      .settings-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        font-size: 16px;
+      }
+      .settings-label {
+        flex: 1;
+        font-size: 17px;
+        color: #1c1917;
+      }
+      .settings-toggle {
+        width: 44px;
+        height: 26px;
+        background: #10b981;
+        border-radius: 13px;
+        position: relative;
+      }
+      .settings-toggle::after {
+        content: '';
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        width: 20px;
+        height: 20px;
+        background: #fff;
+        border-radius: 10px;
+      }
+      .settings-before .settings-section {
+        opacity: 1;
+      }
+      .settings-after .settings-section {
+        animation: fadeUp 0.3s ease-out backwards;
+      }
+      .settings-after .settings-section:nth-child(2) {
+        animation-delay: 50ms;
+      }
+      .settings-after .settings-section:nth-child(3) {
+        animation-delay: 100ms;
+      }
+      .settings-version {
+        text-align: center;
+        margin-top: 20px;
+      }
+      .settings-before .settings-version {
+        font-size: 13px;
+        color: #a8a29e;
+      }
+      .settings-after .settings-version {
+        font-size: 12px;
+        color: #9ca3af;
+      }
+
+      /* TEMPLATES */
+      .templates-before,
+      .templates-after {
+        background: #faf9f7;
+        height: 100%;
+        padding: 50px 16px 20px;
+      }
+      .templates-header {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+        margin-bottom: 16px;
+      }
+      .templates-search {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 16px;
+      }
+      .templates-before .templates-tabs {
+        background: #f5f5f4;
+        border-radius: 12px;
+        padding: 4px;
+        display: flex;
+        margin-bottom: 16px;
+      }
+      .templates-after .templates-tabs {
+        background: #f0eeeb;
+        border-radius: 14px;
+        padding: 5px;
+        display: flex;
+        margin-bottom: 16px;
+      }
+      .templates-tab {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 10px;
+      }
+      .templates-before .templates-tab.active {
+        background: #fff;
+        color: #1c1917;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      }
+      .templates-after .templates-tab.active {
+        background: #fff;
+        color: #047857;
+        box-shadow: 0 3px 8px rgba(5, 150, 105, 0.15);
+      }
+      .templates-tab.inactive {
+        color: #78716c;
+      }
+      .templates-tab .count {
+        font-size: 12px;
+        margin-left: 4px;
+      }
+      .templates-before .templates-tab.active .count {
+        color: #6366f1;
+      }
+      .templates-after .templates-tab.active .count {
+        color: #059669;
+      }
+      .template-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .template-icon {
+        width: 44px;
+        height: 44px;
+        background: #fef3c7;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .template-info {
+        flex: 1;
+      }
+      .template-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+      .template-meta {
+        font-size: 12px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .template-add {
+        width: 32px;
+        height: 32px;
+        background: #10b981;
+        border-radius: 16px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Chain Day — Round 2 Before/After</h1>
+
+    <!-- HABIT DETAIL -->
+    <div class="screen-section">
+      <div class="screen-title">1. Habit Detail</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.3</span></div>
+          <div class="phone">
+            <div class="detail-before">
+              <div class="detail-header">
+                <div class="detail-btn">✕</div>
+                <div class="detail-hero">
+                  <div class="detail-icon">🏃</div>
+                  <div>
+                    <div class="detail-name">Morning Run</div>
+                    <div class="detail-streak">12 day streak</div>
+                  </div>
+                </div>
+                <div class="detail-btn">✏️</div>
+              </div>
+              <div class="detail-content">
+                <div class="detail-card">
+                  <div
+                    style="font-size: 15px; font-weight: 600; color: #1c1917"
+                  >
+                    Habit Strength
+                  </div>
+                  <div style="font-size: 13px; color: #78716c">
+                    Building • 65%
+                  </div>
+                  <div class="strength-bar">
+                    <div class="strength-fill"></div>
+                  </div>
+                </div>
+                <div class="detail-card">
+                  <div
+                    style="
+                      font-size: 15px;
+                      font-weight: 600;
+                      color: #1c1917;
+                      margin-bottom: 8px;
+                    "
+                  >
+                    February 2026
+                  </div>
+                  <div class="calendar-grid">
+                    <div class="cal-day"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> 16px name, weak shadows, no card wrappers,
+            no animations
+          </div>
+        </div>
+        <div class="column">
+          <div class="label">After <span class="score high">9.1</span></div>
+          <div class="phone">
+            <div class="detail-after">
+              <div class="detail-header">
+                <div class="detail-btn">✕</div>
+                <div class="detail-hero">
+                  <div class="detail-icon">🏃</div>
+                  <div>
+                    <div class="detail-name">Morning Run</div>
+                    <div class="detail-streak">🔥 12 day streak</div>
+                  </div>
+                </div>
+                <div class="detail-btn">✏️</div>
+              </div>
+              <div class="detail-content">
+                <div class="detail-card">
+                  <div
+                    style="font-size: 15px; font-weight: 600; color: #1c1917"
+                  >
+                    Habit Strength
+                  </div>
+                  <div style="font-size: 13px; color: #78716c">
+                    Building • 65%
+                  </div>
+                  <div class="strength-bar">
+                    <div class="strength-fill"></div>
+                  </div>
+                </div>
+                <div class="detail-card">
+                  <div
+                    style="
+                      font-size: 15px;
+                      font-weight: 600;
+                      color: #1c1917;
+                      margin-bottom: 8px;
+                    "
+                  >
+                    February 2026
+                  </div>
+                  <div class="calendar-grid">
+                    <div class="cal-day"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day done"></div>
+                    <div class="cal-day"></div>
+                    <div class="cal-day done"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> 17px name, shadow-md, white card wrappers,
+            FadeInUp stagger
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE HABIT -->
+    <div class="screen-section">
+      <div class="screen-title">2. Create Habit Modal</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.8</span></div>
+          <div class="phone">
+            <div class="create-before">
+              <div class="create-header">
+                <span style="color: #78716c">Cancel</span>
+                <span class="create-title">New Habit</span>
+                <span style="color: #10b981; font-weight: 600">Save</span>
+              </div>
+              <div class="create-content">
+                <div class="create-input">Morning meditation</div>
+                <div class="create-section-title">Choose Icon</div>
+                <div class="emoji-row">
+                  <div class="emoji-btn">🧘</div>
+                  <div class="emoji-btn selected">🏃</div>
+                  <div class="emoji-btn">📚</div>
+                  <div class="emoji-btn">💧</div>
+                </div>
+                <div class="create-section-title">Color</div>
+                <div class="color-row">
+                  <div class="color-btn" style="background: #10b981"></div>
+                  <div class="color-btn" style="background: #3b82f6"></div>
+                  <div class="color-btn" style="background: #8b5cf6"></div>
+                  <div class="color-btn" style="background: #f59e0b"></div>
+                </div>
+              </div>
+              <div class="create-sticky">
+                <div class="create-cta">✓ Create Habit</div>
+              </div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> 15px CTA, basic shadow, py-3.5
+          </div>
+        </div>
+        <div class="column">
+          <div class="label">After <span class="score high">9.2</span></div>
+          <div class="phone">
+            <div class="create-after">
+              <div class="create-header">
+                <span style="color: #78716c">Cancel</span>
+                <span class="create-title">New Habit</span>
+                <span style="color: #10b981; font-weight: 600">Save</span>
+              </div>
+              <div class="create-content">
+                <div class="create-input">Morning meditation</div>
+                <div class="create-section-title">Choose Icon</div>
+                <div class="emoji-row">
+                  <div class="emoji-btn">🧘</div>
+                  <div class="emoji-btn selected">🏃</div>
+                  <div class="emoji-btn">📚</div>
+                  <div class="emoji-btn">💧</div>
+                </div>
+                <div class="create-section-title">Color</div>
+                <div class="color-row">
+                  <div class="color-btn" style="background: #10b981"></div>
+                  <div class="color-btn" style="background: #3b82f6"></div>
+                  <div class="color-btn" style="background: #8b5cf6"></div>
+                  <div class="color-btn" style="background: #f59e0b"></div>
+                </div>
+              </div>
+              <div class="create-sticky">
+                <div class="create-cta-wrap">
+                  <div class="create-cta">✓ Create Habit</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> 17px CTA, shadow-xl wrap, py-4, gradient
+            button
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDIT HABIT -->
+    <div class="screen-section">
+      <div class="screen-title">3. Habit Edit</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.5</span></div>
+          <div class="phone">
+            <div class="edit-before">
+              <div class="edit-header">
+                <span class="edit-cancel">Cancel</span>
+                <span class="edit-save">Save</span>
+              </div>
+              <div class="edit-content">
+                <div class="edit-section">
+                  <div class="edit-label">Habit Name</div>
+                  <div class="edit-value">Morning Run</div>
+                </div>
+                <div class="edit-section">
+                  <div class="edit-label">Icon & Color</div>
+                  <div class="edit-value">🏃 Emerald</div>
+                </div>
+                <div class="edit-section">
+                  <div class="edit-label">Reminder</div>
+                  <div class="edit-value">7:00 AM</div>
+                </div>
+                <div class="edit-section">
+                  <div class="danger-btn">Archive Habit</div>
+                  <div class="danger-btn">Delete Habit</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> Flat bg, no cards, no animations, weak
+            danger zone
+          </div>
+        </div>
+        <div class="column">
+          <div class="label">After <span class="score high">9.3</span></div>
+          <div class="phone">
+            <div class="edit-after">
+              <div class="edit-header">
+                <span class="edit-cancel">Cancel</span>
+                <span class="edit-save">Save</span>
+              </div>
+              <div class="edit-content">
+                <div class="edit-section">
+                  <div class="edit-label">Habit Name</div>
+                  <div class="edit-value">Morning Run</div>
+                </div>
+                <div class="edit-section">
+                  <div class="edit-label">Icon & Color</div>
+                  <div class="edit-value">🏃 Emerald</div>
+                </div>
+                <div class="edit-section danger">
+                  <div class="danger-btn">Archive Habit</div>
+                  <div class="danger-btn">Delete Habit</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> Gradient bg, white cards, FadeInDown, red-50
+            danger
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="screen-section">
+      <div class="screen-title">4. Settings</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.6</span></div>
+          <div class="phone">
+            <div class="settings-before">
+              <div class="settings-title">Settings</div>
+              <div class="settings-section">
+                <div class="settings-section-title">Visual Preferences</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <div class="settings-icon" style="background: #bbf7d0">
+                      📊
+                    </div>
+                    <div class="settings-label">Daily progress bar</div>
+                    <div class="settings-toggle"></div>
+                  </div>
+                  <div class="settings-row">
+                    <div class="settings-icon" style="background: #bae6fd">
+                      ✓
+                    </div>
+                    <div class="settings-label">Checkbox icon</div>
+                    <div class="settings-toggle"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-title">Account</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <div class="settings-icon" style="background: #e7e5e4">
+                      👤
+                    </div>
+                    <div class="settings-label">Sign Out</div>
+                    <span style="color: #9ca3af">→</span>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-version">Chain Day v1.0.0</div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> White bg, no stagger, 13px version
+          </div>
+        </div>
+        <div class="column">
+          <div class="label">After <span class="score high">9.2</span></div>
+          <div class="phone">
+            <div class="settings-after">
+              <div class="settings-title">Settings</div>
+              <div class="settings-section">
+                <div class="settings-section-title">Visual Preferences</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <div class="settings-icon" style="background: #bbf7d0">
+                      📊
+                    </div>
+                    <div class="settings-label">Daily progress bar</div>
+                    <div class="settings-toggle"></div>
+                  </div>
+                  <div class="settings-row">
+                    <div class="settings-icon" style="background: #bae6fd">
+                      ✓
+                    </div>
+                    <div class="settings-label">Checkbox icon</div>
+                    <div class="settings-toggle"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-section">
+                <div class="settings-section-title">Account</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <div class="settings-icon" style="background: #e7e5e4">
+                      👤
+                    </div>
+                    <div class="settings-label">Sign Out</div>
+                    <span style="color: #9ca3af">→</span>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-version">Chain Day v1.0.0</div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> Stone-100 bg, FadeInDown stagger, 12px
+            version
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMPLATES -->
+    <div class="screen-section">
+      <div class="screen-title">5. Templates</div>
+      <div class="comparison">
+        <div class="column">
+          <div class="label">Before <span class="score low">7.4</span></div>
+          <div class="phone">
+            <div class="templates-before">
+              <div class="templates-header">Templates</div>
+              <div class="templates-search">🔍 Search templates...</div>
+              <div class="templates-tabs">
+                <div class="templates-tab active">
+                  Categories<span class="count">8</span>
+                </div>
+                <div class="templates-tab inactive">
+                  All<span class="count">24</span>
+                </div>
+              </div>
+              <div class="template-card">
+                <div class="template-icon">🏃</div>
+                <div class="template-info">
+                  <div class="template-name">Morning Run</div>
+                  <div class="template-meta">Health • Research-backed</div>
+                </div>
+                <div class="template-add">+</div>
+              </div>
+              <div class="template-card">
+                <div class="template-icon">🧘</div>
+                <div class="template-info">
+                  <div class="template-name">Meditation</div>
+                  <div class="template-meta">Mindfulness • Popular</div>
+                </div>
+                <div class="template-add">+</div>
+              </div>
+            </div>
+          </div>
+          <div class="notes">
+            <strong>Issues:</strong> Indigo active tab, weak tab shadows
+          </div>
+        </div>
+        <div class="column">
+          <div class="label">After <span class="score high">9.1</span></div>
+          <div class="phone">
+            <div class="templates-after">
+              <div class="templates-header">Templates</div>
+              <div class="templates-search">🔍 Search templates...</div>
+              <div class="templates-tabs">
+                <div class="templates-tab active">
+                  Categories<span class="count">8</span>
+                </div>
+                <div class="templates-tab inactive">
+                  All<span class="count">24</span>
+                </div>
+              </div>
+              <div class="template-card">
+                <div class="template-icon">🏃</div>
+                <div class="template-info">
+                  <div class="template-name">Morning Run</div>
+                  <div class="template-meta">Health • Research-backed</div>
+                </div>
+                <div class="template-add">+</div>
+              </div>
+              <div class="template-card">
+                <div class="template-icon">🧘</div>
+                <div class="template-info">
+                  <div class="template-name">Meditation</div>
+                  <div class="template-meta">Mindfulness • Popular</div>
+                </div>
+                <div class="template-add">+</div>
+              </div>
+            </div>
+          </div>
+          <div class="notes after">
+            <strong>Fixes:</strong> Emerald active tab (#047857), stronger
+            shadows
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

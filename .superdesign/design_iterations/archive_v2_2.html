@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Archived Habits — Notification Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      -webkit-tap-highlight-color: transparent !important;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E4DF !important;
+      min-height: 100vh !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: flex-start !important;
+      padding: 20px 0 !important;
+    }
+
+    .phone-frame {
+      width: 390px !important;
+      min-height: 844px !important;
+      background: #F5F1ED !important;
+      border-radius: 44px !important;
+      overflow: hidden !important;
+      position: relative !important;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.06),
+        0 25px 50px -12px rgba(0,0,0,0.15),
+        0 12px 24px -8px rgba(0,0,0,0.08) !important;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 54px !important;
+      padding: 14px 24px 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+    }
+
+    /* Header area */
+    .notif-header {
+      padding: 8px 20px 4px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+
+    .notif-header-left {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+    }
+
+    .notif-header-title {
+      font-family: 'Literata', serif !important;
+      font-size: 28px !important;
+      font-weight: 700 !important;
+      color: #1F2937 !important;
+      letter-spacing: -0.5px !important;
+    }
+
+    .notif-count-badge {
+      background: #059669 !important;
+      color: #fff !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      min-width: 24px !important;
+      height: 24px !important;
+      border-radius: 12px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 7px !important;
+    }
+
+    .clear-all-btn {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      color: #059669 !important;
+      background: none !important;
+      border: none !important;
+      cursor: pointer !important;
+      transition: opacity 0.15s ease !important;
+      padding: 6px 0 !important;
+    }
+
+    .clear-all-btn:hover {
+      opacity: 0.7 !important;
+    }
+
+    .clear-all-btn:active {
+      opacity: 0.5 !important;
+    }
+
+    /* Date group */
+    .date-label {
+      padding: 16px 20px 8px !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: #9CA3AF !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+    }
+
+    /* Notification stack container */
+    .notif-stack {
+      padding: 0 14px !important;
+      position: relative !important;
+    }
+
+    /* Individual notification card */
+    .notif-card {
+      position: relative !important;
+      margin-bottom: 10px !important;
+      touch-action: pan-y !important;
+      user-select: none !important;
+      -webkit-user-select: none !important;
+    }
+
+    .notif-card-inner {
+      background: rgba(255, 255, 255, 0.80) !important;
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      border-radius: 16px !important;
+      padding: 14px 16px !important;
+      position: relative !important;
+      z-index: 2 !important;
+      cursor: pointer !important;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease !important;
+      box-shadow:
+        0 1px 3px rgba(0,0,0,0.04),
+        0 4px 12px rgba(0,0,0,0.03),
+        inset 0 0 0 1px rgba(255,255,255,0.5) !important;
+    }
+
+    .notif-card-inner:active {
+      transform: scale(0.985) !important;
+    }
+
+    /* Swipe action backgrounds */
+    .swipe-action-left,
+    .swipe-action-right {
+      position: absolute !important;
+      top: 0 !important;
+      bottom: 0 !important;
+      border-radius: 16px !important;
+      display: flex !important;
+      align-items: center !important;
+      padding: 0 24px !important;
+      z-index: 1 !important;
+    }
+
+    .swipe-action-right {
+      left: 0 !important;
+      right: 0 !important;
+      background: #059669 !important;
+      justify-content: flex-start !important;
+    }
+
+    .swipe-action-left {
+      left: 0 !important;
+      right: 0 !important;
+      background: #B53030 !important;
+      justify-content: flex-end !important;
+    }
+
+    .swipe-action-label {
+      color: #fff !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+
+    /* Card top row */
+    .notif-top-row {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      margin-bottom: 6px !important;
+    }
+
+    .notif-app-icon {
+      width: 36px !important;
+      height: 36px !important;
+      min-width: 36px !important;
+      border-radius: 10px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 20px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+    }
+
+    .notif-app-info {
+      flex: 1 !important;
+      min-width: 0 !important;
+    }
+
+    .notif-app-name {
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+      line-height: 1.3 !important;
+    }
+
+    .notif-timestamp {
+      font-size: 12px !important;
+      font-weight: 400 !important;
+      color: #9CA3AF !important;
+      white-space: nowrap !important;
+    }
+
+    /* Notification text */
+    .notif-body {
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      color: #4B5563 !important;
+      line-height: 1.45 !important;
+      padding-left: 46px !important;
+    }
+
+    .notif-dormant {
+      color: #6B7280 !important;
+    }
+
+    .notif-strength {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 4px !important;
+      margin-top: 4px !important;
+    }
+
+    .strength-bar-bg {
+      width: 60px !important;
+      height: 4px !important;
+      border-radius: 2px !important;
+      background: rgba(0,0,0,0.06) !important;
+      overflow: hidden !important;
+      display: inline-block !important;
+      vertical-align: middle !important;
+    }
+
+    .strength-bar-fill {
+      height: 100% !important;
+      border-radius: 2px !important;
+      transition: width 0.5s ease !important;
+    }
+
+    .strength-label {
+      font-size: 12px !important;
+      font-weight: 500 !important;
+      color: #9CA3AF !important;
+    }
+
+    /* Expanded card details */
+    .notif-expanded {
+      max-height: 0 !important;
+      overflow: hidden !important;
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, padding 0.35s ease !important;
+      opacity: 0 !important;
+      padding: 0 0 0 46px !important;
+    }
+
+    .notif-card.expanded .notif-expanded {
+      max-height: 120px !important;
+      opacity: 1 !important;
+      padding: 10px 0 4px 46px !important;
+    }
+
+    .notif-card.expanded .notif-card-inner {
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.06),
+        0 8px 24px rgba(0,0,0,0.06),
+        inset 0 0 0 1px rgba(255,255,255,0.6) !important;
+    }
+
+    .notif-actions {
+      display: flex !important;
+      gap: 8px !important;
+    }
+
+    .notif-action-btn {
+      height: 34px !important;
+      padding: 0 16px !important;
+      border-radius: 10px !important;
+      border: none !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+
+    .notif-action-btn:active {
+      transform: scale(0.95) !important;
+    }
+
+    .btn-resume {
+      background: #059669 !important;
+      color: #fff !important;
+    }
+
+    .btn-resume:hover {
+      background: #047857 !important;
+    }
+
+    .btn-delete {
+      background: rgba(181, 48, 48, 0.08) !important;
+      color: #B53030 !important;
+    }
+
+    .btn-delete:hover {
+      background: rgba(181, 48, 48, 0.14) !important;
+    }
+
+    .btn-dismiss {
+      background: rgba(0,0,0,0.04) !important;
+      color: #6B7280 !important;
+    }
+
+    .btn-dismiss:hover {
+      background: rgba(0,0,0,0.07) !important;
+    }
+
+    /* Stacked peek cards behind the last card in a group */
+    .notif-stack-peek {
+      position: relative !important;
+      margin-bottom: 12px !important;
+    }
+
+    .notif-stack-peek::before,
+    .notif-stack-peek::after {
+      content: '' !important;
+      position: absolute !important;
+      left: 6px !important;
+      right: 6px !important;
+      height: 16px !important;
+      border-radius: 0 0 14px 14px !important;
+      background: rgba(255,255,255,0.50) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      z-index: 0 !important;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03) !important;
+    }
+
+    .notif-stack-peek::before {
+      bottom: -5px !important;
+    }
+
+    .notif-stack-peek::after {
+      left: 12px !important;
+      right: 12px !important;
+      bottom: -10px !important;
+      background: rgba(255,255,255,0.35) !important;
+    }
+
+    /* Pull indicator */
+    .pull-indicator {
+      text-align: center !important;
+      padding: 12px 0 4px !important;
+      opacity: 0 !important;
+      transform: translateY(-8px) !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .pull-indicator.visible {
+      opacity: 1 !important;
+      transform: translateY(0) !important;
+    }
+
+    .pull-indicator-text {
+      font-size: 12px !important;
+      color: #9CA3AF !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 4px !important;
+    }
+
+    /* Entrance animation */
+    @keyframes notifSlideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .notif-card {
+      opacity: 0 !important;
+      animation: notifSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    }
+
+    /* Dismiss animation */
+    @keyframes dismissRight {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(120%); opacity: 0; }
+    }
+
+    @keyframes dismissLeft {
+      0% { transform: translateX(0); opacity: 1; }
+      100% { transform: translateX(-120%); opacity: 0; }
+    }
+
+    .notif-card.dismiss-right .notif-card-inner {
+      animation: dismissRight 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    }
+
+    .notif-card.dismiss-left .notif-card-inner {
+      animation: dismissLeft 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    }
+
+    @keyframes collapseCard {
+      0% { max-height: 130px; margin-bottom: 10px; opacity: 1; }
+      100% { max-height: 0; margin-bottom: 0; opacity: 0; overflow: hidden; }
+    }
+
+    .notif-card.collapsing {
+      animation: collapseCard 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards !important;
+    }
+
+    /* Empty state */
+    .empty-state {
+      display: none;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 80px 40px !important;
+      text-align: center !important;
+    }
+
+    .empty-state.visible {
+      display: flex !important;
+    }
+
+    .empty-icon {
+      width: 64px !important;
+      height: 64px !important;
+      border-radius: 20px !important;
+      background: rgba(5, 150, 105, 0.06) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      margin-bottom: 16px !important;
+      color: #059669 !important;
+    }
+
+    .empty-title {
+      font-family: 'Literata', serif !important;
+      font-size: 20px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+      margin-bottom: 6px !important;
+    }
+
+    .empty-desc {
+      font-size: 14px !important;
+      color: #9CA3AF !important;
+      line-height: 1.5 !important;
+    }
+
+    /* Confirm overlay */
+    .confirm-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: rgba(0,0,0,0.3) !important;
+      backdrop-filter: blur(6px) !important;
+      -webkit-backdrop-filter: blur(6px) !important;
+      display: flex !important;
+      align-items: flex-end !important;
+      justify-content: center !important;
+      z-index: 100 !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: opacity 0.2s ease !important;
+    }
+
+    .confirm-overlay.visible {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    }
+
+    .confirm-sheet {
+      background: rgba(255,255,255,0.92) !important;
+      backdrop-filter: blur(30px) !important;
+      -webkit-backdrop-filter: blur(30px) !important;
+      border-radius: 20px 20px 0 0 !important;
+      padding: 24px 20px 40px !important;
+      width: 390px !important;
+      transform: translateY(100%) !important;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    .confirm-overlay.visible .confirm-sheet {
+      transform: translateY(0) !important;
+    }
+
+    .confirm-handle {
+      width: 36px !important;
+      height: 4px !important;
+      background: #d6d3d1 !important;
+      border-radius: 100px !important;
+      margin: 0 auto 20px !important;
+    }
+
+    .confirm-title {
+      font-family: 'Literata', serif !important;
+      font-size: 18px !important;
+      font-weight: 600 !important;
+      color: #1F2937 !important;
+      margin-bottom: 8px !important;
+    }
+
+    .confirm-desc {
+      font-size: 14px !important;
+      color: #6B7280 !important;
+      line-height: 1.5 !important;
+      margin-bottom: 24px !important;
+    }
+
+    .confirm-actions {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 10px !important;
+    }
+
+    .confirm-delete-btn {
+      height: 48px !important;
+      border-radius: 14px !important;
+      border: none !important;
+      background: #B53030 !important;
+      color: #fff !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+      width: 100% !important;
+    }
+
+    .confirm-delete-btn:active {
+      transform: scale(0.98) !important;
+      opacity: 0.9 !important;
+    }
+
+    .confirm-cancel-btn {
+      height: 48px !important;
+      border-radius: 14px !important;
+      border: 1px solid rgba(0,0,0,0.06) !important;
+      background: rgba(255,255,255,0.6) !important;
+      color: #1F2937 !important;
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 15px !important;
+      font-weight: 500 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+      width: 100% !important;
+    }
+
+    .confirm-cancel-btn:active {
+      transform: scale(0.98) !important;
+      background: rgba(0,0,0,0.02) !important;
+    }
+
+    /* Home indicator */
+    .home-indicator {
+      position: absolute !important;
+      bottom: 8px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+      width: 134px !important;
+      height: 5px !important;
+      background: #1F2937 !important;
+      border-radius: 100px !important;
+      opacity: 0.18 !important;
+    }
+
+    /* Swipe hint shimmer */
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .swipe-hint {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
+      pointer-events: none !important;
+      z-index: 3 !important;
+    }
+
+    .swipe-hint::after {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: linear-gradient(90deg, transparent, rgba(5, 150, 105, 0.06), transparent) !important;
+      animation: shimmer 2.5s ease-in-out 1.5s 1 !important;
+    }
+
+    /* Scroll container */
+    .scroll-area {
+      overflow-y: auto !important;
+      max-height: calc(844px - 54px - 50px - 30px) !important;
+      padding-bottom: 40px !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .scroll-area::-webkit-scrollbar {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <i data-lucide="signal" style="width:15px;height:15px;"></i>
+        <i data-lucide="wifi" style="width:15px;height:15px;"></i>
+        <div style="width:25px;height:12px;border:1.5px solid #1F2937;border-radius:3px;position:relative;">
+          <div style="width:16px;height:7px;background:#1F2937;border-radius:1px;position:absolute;left:1.5px;top:1px;"></div>
+          <div style="width:2px;height:5px;background:#1F2937;border-radius:0 1px 1px 0;position:absolute;right:-3.5px;top:2.5px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="notif-header">
+      <div class="notif-header-left">
+        <span class="notif-header-title">Archived</span>
+        <span class="notif-count-badge" id="countBadge">5</span>
+      </div>
+      <button class="clear-all-btn" onclick="clearAll()">Clear All</button>
+    </div>
+
+    <!-- Scrollable area -->
+    <div class="scroll-area" id="scrollArea">
+
+      <!-- Pull down indicator -->
+      <div class="pull-indicator" id="pullIndicator">
+        <span class="pull-indicator-text">
+          <i data-lucide="chevron-down" style="width:12px;height:12px;"></i>
+          Pull to reveal more
+        </span>
+      </div>
+
+      <!-- Today group -->
+      <div class="date-label">Today</div>
+      <div class="notif-stack" id="todayStack">
+
+        <!-- Card 1: Daily Journal — most recent, stacked with peek -->
+        <div class="notif-card notif-stack-peek" data-id="journal" data-strength="85" data-days="1" style="animation-delay: 0ms;">
+          <div class="swipe-action-right">
+            <span class="swipe-action-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span>
+          </div>
+          <div class="swipe-action-left">
+            <span class="swipe-action-label">Delete <i data-lucide="trash-2" style="width:16px;height:16px;"></i></span>
+          </div>
+          <div class="notif-card-inner" onclick="toggleExpand(this.parentElement)">
+            <div class="swipe-hint"></div>
+            <div class="notif-top-row">
+              <div class="notif-app-icon" style="background: linear-gradient(135deg, #fef3c7, #fde68a);">&#x270D;&#xFE0F;</div>
+              <div class="notif-app-info">
+                <div class="notif-app-name">Daily Journal</div>
+              </div>
+              <span class="notif-timestamp">2h ago</span>
+            </div>
+            <div class="notif-body">
+              <span class="notif-dormant">Dormant for 1 day</span>
+              <div class="notif-strength">
+                <span class="strength-bar-bg"><span class="strength-bar-fill" style="width:85%;background:#059669;"></span></span>
+                <span class="strength-label">85% strength</span>
+              </div>
+            </div>
+            <div class="notif-expanded">
+              <div class="notif-actions">
+                <button class="notif-action-btn btn-resume" onclick="event.stopPropagation();resumeCard(this)">
+                  <span style="display:flex;align-items:center;gap:4px;"><i data-lucide="play" style="width:13px;height:13px;"></i> Resume</span>
+                </button>
+                <button class="notif-action-btn btn-delete" onclick="event.stopPropagation();confirmDelete(this)">Delete</button>
+                <button class="notif-action-btn btn-dismiss" onclick="event.stopPropagation();toggleExpand(this.closest('.notif-card'))">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Morning Meditation -->
+        <div class="notif-card" data-id="meditation" data-strength="72" data-days="3" style="animation-delay: 80ms;">
+          <div class="swipe-action-right">
+            <span class="swipe-action-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span>
+          </div>
+          <div class="swipe-action-left">
+            <span class="swipe-action-label">Delete <i data-lucide="trash-2" style="width:16px;height:16px;"></i></span>
+          </div>
+          <div class="notif-card-inner" onclick="toggleExpand(this.parentElement)">
+            <div class="notif-top-row">
+              <div class="notif-app-icon" style="background: linear-gradient(135deg, #ede9fe, #ddd6fe);">&#x1F9D8;</div>
+              <div class="notif-app-info">
+                <div class="notif-app-name">Morning Meditation</div>
+              </div>
+              <span class="notif-timestamp">3d ago</span>
+            </div>
+            <div class="notif-body">
+              <span class="notif-dormant">Dormant for 3 days</span>
+              <div class="notif-strength">
+                <span class="strength-bar-bg"><span class="strength-bar-fill" style="width:72%;background:#059669;"></span></span>
+                <span class="strength-label">72% strength</span>
+              </div>
+            </div>
+            <div class="notif-expanded">
+              <div class="notif-actions">
+                <button class="notif-action-btn btn-resume" onclick="event.stopPropagation();resumeCard(this)">
+                  <span style="display:flex;align-items:center;gap:4px;"><i data-lucide="play" style="width:13px;height:13px;"></i> Resume</span>
+                </button>
+                <button class="notif-action-btn btn-delete" onclick="event.stopPropagation();confirmDelete(this)">Delete</button>
+                <button class="notif-action-btn btn-dismiss" onclick="event.stopPropagation();toggleExpand(this.closest('.notif-card'))">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- This Week group -->
+      <div class="date-label">This Week</div>
+      <div class="notif-stack" id="weekStack">
+
+        <!-- Card 3: Read 30 Min -->
+        <div class="notif-card" data-id="reading" data-strength="58" data-days="5" style="animation-delay: 160ms;">
+          <div class="swipe-action-right">
+            <span class="swipe-action-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span>
+          </div>
+          <div class="swipe-action-left">
+            <span class="swipe-action-label">Delete <i data-lucide="trash-2" style="width:16px;height:16px;"></i></span>
+          </div>
+          <div class="notif-card-inner" onclick="toggleExpand(this.parentElement)">
+            <div class="notif-top-row">
+              <div class="notif-app-icon" style="background: linear-gradient(135deg, #fef9c3, #fde047);">&#x1F4D6;</div>
+              <div class="notif-app-info">
+                <div class="notif-app-name">Read 30 Min</div>
+              </div>
+              <span class="notif-timestamp">5d ago</span>
+            </div>
+            <div class="notif-body">
+              <span class="notif-dormant">Dormant for 5 days</span>
+              <div class="notif-strength">
+                <span class="strength-bar-bg"><span class="strength-bar-fill" style="width:58%;background:#d97706;"></span></span>
+                <span class="strength-label">58% strength</span>
+              </div>
+            </div>
+            <div class="notif-expanded">
+              <div class="notif-actions">
+                <button class="notif-action-btn btn-resume" onclick="event.stopPropagation();resumeCard(this)">
+                  <span style="display:flex;align-items:center;gap:4px;"><i data-lucide="play" style="width:13px;height:13px;"></i> Resume</span>
+                </button>
+                <button class="notif-action-btn btn-delete" onclick="event.stopPropagation();confirmDelete(this)">Delete</button>
+                <button class="notif-action-btn btn-dismiss" onclick="event.stopPropagation();toggleExpand(this.closest('.notif-card'))">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Earlier group -->
+      <div class="date-label">Earlier</div>
+      <div class="notif-stack" id="earlierStack">
+
+        <!-- Card 4: Cold Shower — stacked peek to show grouping -->
+        <div class="notif-card notif-stack-peek" data-id="coldshower" data-strength="35" data-days="14" style="animation-delay: 240ms;">
+          <div class="swipe-action-right">
+            <span class="swipe-action-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span>
+          </div>
+          <div class="swipe-action-left">
+            <span class="swipe-action-label">Delete <i data-lucide="trash-2" style="width:16px;height:16px;"></i></span>
+          </div>
+          <div class="notif-card-inner" onclick="toggleExpand(this.parentElement)">
+            <div class="notif-top-row">
+              <div class="notif-app-icon" style="background: linear-gradient(135deg, #dbeafe, #bfdbfe);">&#x1F976;</div>
+              <div class="notif-app-info">
+                <div class="notif-app-name">Cold Shower</div>
+              </div>
+              <span class="notif-timestamp">2w ago</span>
+            </div>
+            <div class="notif-body">
+              <span class="notif-dormant">Dormant for 14 days</span>
+              <div class="notif-strength">
+                <span class="strength-bar-bg"><span class="strength-bar-fill" style="width:35%;background:#ef4444;"></span></span>
+                <span class="strength-label">35% strength</span>
+              </div>
+            </div>
+            <div class="notif-expanded">
+              <div class="notif-actions">
+                <button class="notif-action-btn btn-resume" onclick="event.stopPropagation();resumeCard(this)">
+                  <span style="display:flex;align-items:center;gap:4px;"><i data-lucide="play" style="width:13px;height:13px;"></i> Resume</span>
+                </button>
+                <button class="notif-action-btn btn-delete" onclick="event.stopPropagation();confirmDelete(this)">Delete</button>
+                <button class="notif-action-btn btn-dismiss" onclick="event.stopPropagation();toggleExpand(this.closest('.notif-card'))">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5: Push-ups -->
+        <div class="notif-card" data-id="pushups" data-strength="42" data-days="30" style="animation-delay: 320ms;">
+          <div class="swipe-action-right">
+            <span class="swipe-action-label"><i data-lucide="rotate-ccw" style="width:16px;height:16px;"></i> Resume</span>
+          </div>
+          <div class="swipe-action-left">
+            <span class="swipe-action-label">Delete <i data-lucide="trash-2" style="width:16px;height:16px;"></i></span>
+          </div>
+          <div class="notif-card-inner" onclick="toggleExpand(this.parentElement)">
+            <div class="notif-top-row">
+              <div class="notif-app-icon" style="background: linear-gradient(135deg, #fee2e2, #fecaca);">&#x1F4AA;</div>
+              <div class="notif-app-info">
+                <div class="notif-app-name">Push-ups</div>
+              </div>
+              <span class="notif-timestamp">1mo ago</span>
+            </div>
+            <div class="notif-body">
+              <span class="notif-dormant">Dormant for 30 days</span>
+              <div class="notif-strength">
+                <span class="strength-bar-bg"><span class="strength-bar-fill" style="width:42%;background:#ef4444;"></span></span>
+                <span class="strength-label">42% strength</span>
+              </div>
+            </div>
+            <div class="notif-expanded">
+              <div class="notif-actions">
+                <button class="notif-action-btn btn-resume" onclick="event.stopPropagation();resumeCard(this)">
+                  <span style="display:flex;align-items:center;gap:4px;"><i data-lucide="play" style="width:13px;height:13px;"></i> Resume</span>
+                </button>
+                <button class="notif-action-btn btn-delete" onclick="event.stopPropagation();confirmDelete(this)">Delete</button>
+                <button class="notif-action-btn btn-dismiss" onclick="event.stopPropagation();toggleExpand(this.closest('.notif-card'))">Dismiss</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">
+          <i data-lucide="bell-off" style="width:28px;height:28px;"></i>
+        </div>
+        <div class="empty-title">All clear</div>
+        <div class="empty-desc">No dormant habits waiting.<br>Your active habits are thriving.</div>
+      </div>
+    </div>
+
+    <!-- Home Indicator -->
+    <div class="home-indicator"></div>
+  </div>
+
+  <!-- Confirm Delete Sheet -->
+  <div class="confirm-overlay" id="confirmOverlay" onclick="hideConfirm(event)">
+    <div class="confirm-sheet" onclick="event.stopPropagation()">
+      <div class="confirm-handle"></div>
+      <div class="confirm-title" id="confirmTitle">Delete permanently?</div>
+      <div class="confirm-desc" id="confirmDesc">This habit and all its data will be permanently deleted. This action cannot be undone.</div>
+      <div class="confirm-actions">
+        <button class="confirm-delete-btn" id="confirmDeleteBtn" onclick="executeDelete()">Delete permanently</button>
+        <button class="confirm-cancel-btn" onclick="hideConfirm()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    let pendingDeleteCard = null;
+    let deleteAllMode = false;
+
+    // ── Tap to expand / collapse ──
+    function toggleExpand(card) {
+      const wasExpanded = card.classList.contains('expanded');
+
+      // Collapse all other cards
+      document.querySelectorAll('.notif-card.expanded').forEach(c => {
+        if (c !== card) c.classList.remove('expanded');
+      });
+
+      if (wasExpanded) {
+        card.classList.remove('expanded');
+      } else {
+        card.classList.add('expanded');
+      }
+    }
+
+    // ── Swipe gesture handling ──
+    const SWIPE_THRESHOLD = 80;
+    let startX = 0;
+    let currentX = 0;
+    let swiping = false;
+    let activeCard = null;
+
+    document.addEventListener('touchstart', (e) => {
+      const cardInner = e.target.closest('.notif-card-inner');
+      if (!cardInner) return;
+
+      activeCard = cardInner;
+      startX = e.touches[0].clientX;
+      currentX = startX;
+      swiping = true;
+      cardInner.style.transition = 'none';
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!swiping || !activeCard) return;
+
+      currentX = e.touches[0].clientX;
+      const dx = currentX - startX;
+
+      // Apply resistance at edges
+      const resistedDx = dx > 0
+        ? Math.pow(dx, 0.85)
+        : -Math.pow(Math.abs(dx), 0.85);
+
+      activeCard.style.transform = `translateX(${resistedDx}px)`;
+
+      // Show appropriate action background
+      const card = activeCard.closest('.notif-card');
+      const rightAction = card.querySelector('.swipe-action-right');
+      const leftAction = card.querySelector('.swipe-action-left');
+
+      if (dx > 20) {
+        rightAction.style.opacity = Math.min(dx / SWIPE_THRESHOLD, 1);
+        leftAction.style.opacity = 0;
+      } else if (dx < -20) {
+        leftAction.style.opacity = Math.min(Math.abs(dx) / SWIPE_THRESHOLD, 1);
+        rightAction.style.opacity = 0;
+      } else {
+        rightAction.style.opacity = 0;
+        leftAction.style.opacity = 0;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      if (!swiping || !activeCard) return;
+
+      const dx = currentX - startX;
+      const card = activeCard.closest('.notif-card');
+
+      activeCard.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+
+      if (dx > SWIPE_THRESHOLD) {
+        // Swipe right → Resume
+        activeCard.style.transform = 'translateX(120%)';
+        setTimeout(() => dismissCard(card, 'resume'), 300);
+      } else if (dx < -SWIPE_THRESHOLD) {
+        // Swipe left → Delete
+        activeCard.style.transform = 'translateX(-120%)';
+        setTimeout(() => dismissCard(card, 'delete'), 300);
+      } else {
+        // Snap back
+        activeCard.style.transform = 'translateX(0)';
+        const rightAction = card.querySelector('.swipe-action-right');
+        const leftAction = card.querySelector('.swipe-action-left');
+        setTimeout(() => {
+          rightAction.style.opacity = 0;
+          leftAction.style.opacity = 0;
+        }, 100);
+      }
+
+      swiping = false;
+      activeCard = null;
+    });
+
+    // ── Dismiss a card ──
+    function dismissCard(card, action) {
+      card.style.overflow = 'hidden';
+      card.style.maxHeight = card.offsetHeight + 'px';
+      card.style.transition = 'max-height 0.3s ease, margin 0.3s ease, opacity 0.2s ease';
+
+      requestAnimationFrame(() => {
+        card.style.maxHeight = '0px';
+        card.style.marginBottom = '0px';
+        card.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        card.remove();
+        updateCount();
+        cleanupEmptyGroups();
+      }, 350);
+    }
+
+    // ── Button actions ──
+    function resumeCard(btn) {
+      const card = btn.closest('.notif-card');
+      card.classList.add('dismiss-right', 'collapsing');
+      setTimeout(() => {
+        card.remove();
+        updateCount();
+        cleanupEmptyGroups();
+      }, 500);
+    }
+
+    function confirmDelete(btn) {
+      const card = btn.closest('.notif-card');
+      pendingDeleteCard = card;
+      deleteAllMode = false;
+
+      const name = card.querySelector('.notif-app-name').textContent;
+      document.getElementById('confirmTitle').textContent = `Delete "${name}"?`;
+      document.getElementById('confirmDesc').textContent = 'This habit and all its data will be permanently deleted. This action cannot be undone.';
+      document.getElementById('confirmDeleteBtn').textContent = 'Delete permanently';
+      document.getElementById('confirmOverlay').classList.add('visible');
+    }
+
+    function clearAll() {
+      deleteAllMode = true;
+      pendingDeleteCard = null;
+      const count = document.querySelectorAll('.notif-card').length;
+      document.getElementById('confirmTitle').textContent = `Clear all ${count} habits?`;
+      document.getElementById('confirmDesc').textContent = 'All archived habits will be permanently deleted. This action cannot be undone.';
+      document.getElementById('confirmDeleteBtn').textContent = `Delete all ${count} habits`;
+      document.getElementById('confirmOverlay').classList.add('visible');
+    }
+
+    function executeDelete() {
+      if (deleteAllMode) {
+        const cards = document.querySelectorAll('.notif-card');
+        cards.forEach((card, i) => {
+          setTimeout(() => {
+            card.classList.add('dismiss-left', 'collapsing');
+            setTimeout(() => card.remove(), 500);
+          }, i * 80);
+        });
+        setTimeout(() => {
+          updateCount();
+          cleanupEmptyGroups();
+        }, cards.length * 80 + 550);
+      } else if (pendingDeleteCard) {
+        pendingDeleteCard.classList.add('dismiss-left', 'collapsing');
+        setTimeout(() => {
+          pendingDeleteCard.remove();
+          updateCount();
+          cleanupEmptyGroups();
+          pendingDeleteCard = null;
+        }, 500);
+      }
+      hideConfirm();
+    }
+
+    function hideConfirm(event) {
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById('confirmOverlay').classList.remove('visible');
+    }
+
+    // ── Update count badge ──
+    function updateCount() {
+      const count = document.querySelectorAll('.notif-card').length;
+      const badge = document.getElementById('countBadge');
+      badge.textContent = count;
+
+      if (count === 0) {
+        document.getElementById('emptyState').classList.add('visible');
+        document.querySelector('.clear-all-btn').style.display = 'none';
+        badge.style.display = 'none';
+        // Hide date labels
+        document.querySelectorAll('.date-label').forEach(l => l.style.display = 'none');
+      }
+    }
+
+    // ── Remove empty date groups ──
+    function cleanupEmptyGroups() {
+      document.querySelectorAll('.notif-stack').forEach(stack => {
+        if (stack.querySelectorAll('.notif-card').length === 0) {
+          // Hide the date label before this stack
+          const prev = stack.previousElementSibling;
+          if (prev && prev.classList.contains('date-label')) {
+            prev.style.display = 'none';
+          }
+          stack.style.display = 'none';
+        }
+      });
+    }
+
+    // ── Pull-down indicator on scroll ──
+    const scrollArea = document.getElementById('scrollArea');
+    scrollArea.addEventListener('scroll', () => {
+      const indicator = document.getElementById('pullIndicator');
+      if (scrollArea.scrollTop < -10) {
+        indicator.classList.add('visible');
+      } else {
+        indicator.classList.remove('visible');
+      }
+    });
+  </script>
+</body>
+</html>

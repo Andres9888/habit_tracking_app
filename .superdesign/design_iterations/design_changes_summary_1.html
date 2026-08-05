@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chain Day — Session Changes · 2026-04-24</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #f5f1ed;
+        --card: #edeae5;
+        --surface-muted: #faf8f5;
+        --border: #ddd8d2;
+        --foreground: #2d2a26;
+        --gray-400: #6e6660;
+        --gray-500: #6b6560;
+        --gray-600: #524d47;
+        --gray-700: #3d3833;
+        --primary-100: #d1fae5;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --streak-500: #8b6208;
+        --streak-700: #7d5907;
+        --warning: #9a5504;
+        --warning-old: #d97706;
+        --error: #b53030;
+        --stone-400-old: #a8a29e;
+
+        --font-display: 'Literata', Georgia, serif;
+        --font-text: 'DM Sans', -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      }
+
+      html,
+      body {
+        background: var(--background) !important;
+        color: var(--foreground) !important;
+        font-family: var(--font-text) !important;
+        font-size: 16px !important;
+        line-height: 24px !important;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        margin: 0 auto;
+        max-width: 1100px;
+        padding: 56px 32px;
+      }
+
+      .eyebrow {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-family: var(--font-display);
+        font-size: 44px;
+        font-weight: 700;
+        letter-spacing: -1.1px;
+        line-height: 52px;
+        margin: 6px 0 14px 0;
+      }
+      h2 {
+        font-family: var(--font-display);
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.7px;
+        line-height: 36px;
+        margin: 56px 0 12px 0;
+      }
+      h3 {
+        font-family: var(--font-text);
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        line-height: 26px;
+        margin: 32px 0 8px 0;
+      }
+
+      p {
+        color: var(--gray-600);
+        margin: 0 0 14px 0;
+        max-width: 780px;
+      }
+
+      code {
+        background: var(--card);
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        padding: 1px 6px;
+      }
+
+      /* Overview stat tiles */
+      .stats {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        margin: 28px 0 40px 0;
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+      }
+      .stat-label {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+      }
+      .stat-value {
+        color: var(--primary-700);
+        font-family: var(--font-display);
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: -0.85px;
+        margin-top: 4px;
+      }
+      .stat-hint {
+        color: var(--gray-500);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+
+      /* Legend */
+      .legend {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        margin: 0 0 32px 0;
+        padding: 16px 20px;
+      }
+      .legend-row {
+        align-items: center;
+        display: flex;
+        gap: 10px;
+      }
+      .badge {
+        align-items: center;
+        border-radius: 9999px;
+        display: inline-flex;
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 500;
+        height: 20px;
+        justify-content: center;
+        letter-spacing: 0.6px;
+        padding: 0 10px;
+        text-transform: uppercase;
+      }
+      .badge-invisible {
+        background: var(--primary-100);
+        color: var(--primary-700);
+      }
+      .badge-minor {
+        background: #fef3cd;
+        color: var(--streak-700);
+      }
+      .badge-visible {
+        background: #fee2e2;
+        color: var(--error);
+      }
+      .legend-label {
+        color: var(--gray-600);
+        font-size: 13px;
+      }
+
+      /* Change card */
+      .change {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .change-head {
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 20px;
+      }
+      .change-title {
+        color: var(--foreground);
+        font-family: var(--font-text);
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .change-body {
+        padding: 18px 20px 20px;
+      }
+      .change-meta {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.6px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      .where {
+        color: var(--gray-600);
+        font-size: 14px;
+        line-height: 22px;
+        margin-bottom: 14px;
+      }
+      .where strong {
+        color: var(--foreground);
+      }
+
+      /* Before/after diff */
+      .diff {
+        background: var(--surface-muted);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        line-height: 22px;
+        margin: 10px 0 0 0;
+        overflow-x: auto;
+        padding: 10px 14px;
+        white-space: pre-wrap;
+      }
+      .diff-row {
+        display: flex;
+        gap: 10px;
+      }
+      .diff-sign {
+        color: var(--gray-400);
+        user-select: none;
+        width: 16px;
+      }
+      .diff-minus {
+        background: rgba(181, 48, 48, 0.08);
+      }
+      .diff-minus .diff-sign {
+        color: var(--error);
+      }
+      .diff-plus {
+        background: rgba(5, 150, 105, 0.08);
+      }
+      .diff-plus .diff-sign {
+        color: var(--primary-700);
+      }
+
+      /* Color swatch pairs */
+      .swap {
+        align-items: center;
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr 32px 1fr;
+        margin-top: 10px;
+      }
+      .swatch {
+        align-items: stretch;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .swatch-chip {
+        height: 48px;
+      }
+      .swatch-meta {
+        background: #fff;
+        padding: 8px 12px;
+      }
+      .swatch-hex {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+      }
+      .swatch-name {
+        color: var(--foreground);
+        font-family: var(--font-text);
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .arrow {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        text-align: center;
+      }
+
+      /* Icon size visualizer */
+      .icon-swap {
+        align-items: flex-end;
+        background: var(--surface-muted);
+        border-radius: 10px;
+        display: flex;
+        gap: 24px;
+        margin-top: 10px;
+        padding: 18px 20px;
+      }
+      .icon-circle {
+        background: var(--primary-100);
+        border: 1px solid var(--primary-700);
+        border-radius: 9999px;
+      }
+      .icon-row-label {
+        color: var(--gray-500);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        margin-top: 6px;
+        text-align: center;
+      }
+
+      /* File index */
+      details {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-top: 12px;
+        padding: 12px 18px;
+      }
+      details summary {
+        cursor: pointer;
+        font-family: var(--font-text);
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+        list-style: none;
+      }
+      details summary::-webkit-details-marker {
+        display: none;
+      }
+      details[open] summary {
+        margin-bottom: 10px;
+      }
+      .file-list {
+        color: var(--gray-600);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 32px 20px;
+        }
+        h1 {
+          font-size: 32px;
+          line-height: 40px;
+        }
+        .swap {
+          grid-template-columns: 1fr;
+        }
+        .arrow {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="eyebrow">Chain Day · Design System · Session Review · 2026-04-24</div>
+      <h1>What I changed, and where to look.</h1>
+      <p>
+        92 files touched across 8 waves. This page groups every change by visual impact and points to exactly
+        where in the app you'll see it (if at all). For the canonical token reference, see
+        <code>design_system_showcase_1.html</code>.
+      </p>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Files modified</div>
+          <div class="stat-value">92</div>
+          <div class="stat-hint">0 new TS errors</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">borderRadius: 9999</div>
+          <div class="stat-value">0 <span style="color: var(--gray-400); font-size: 18px;">← 26</span></div>
+          <div class="stat-hint">token adoption +18%</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">fontWeight raw</div>
+          <div class="stat-value">0 <span style="color: var(--gray-400); font-size: 18px;">← 5</span></div>
+          <div class="stat-hint">production eliminated</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Icon size outliers</div>
+          <div class="stat-value">0 <span style="color: var(--gray-400); font-size: 18px;">← 60</span></div>
+          <div class="stat-hint">12/14/18/22/28 → tokens</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="legend-row">
+          <span class="badge badge-invisible">○ No change</span>
+          <span class="legend-label">Token reference, same rendered pixels</span>
+        </div>
+        <div class="legend-row">
+          <span class="badge badge-minor">◐ Minor shift</span>
+          <span class="legend-label">≤15% change, probably imperceptible</span>
+        </div>
+        <div class="legend-row">
+          <span class="badge badge-visible">● Visible</span>
+          <span class="legend-label">Noticeable — eyes on, please</span>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 1 — VISIBLE CHANGES (EYES HERE FIRST)                -->
+      <!-- ============================================================ -->
+      <h2>1 · Visible changes — look here first</h2>
+      <p>
+        Three small color shifts where I replaced Tailwind-palette hex values with the app's warm-stone theme
+        tokens. Dark mode is still force-locked, so these only affect light mode today.
+      </p>
+
+      <!-- Change: OfflineIndicator -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-visible">● Visible</span>
+          <span class="change-title">OfflineIndicator — wifi-off icon color</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            src/components/SyncStatus/OfflineIndicator/OfflineIndicator.tsx:21
+          </div>
+          <div class="where">
+            <strong>Where it lives:</strong> the thin pill at the top of any screen when you lose network.
+            Shows "Offline" with a crossed-out wifi icon. Triggered by <code>useOfflineIndicator</code>.
+          </div>
+          <div class="swap">
+            <div class="swatch">
+              <div class="swatch-chip" style="background: #a8a29e;"></div>
+              <div class="swatch-meta">
+                <div class="swatch-name">Before — hex literal</div>
+                <div class="swatch-hex">#a8a29e · Tailwind stone-400</div>
+              </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: #6e6660;"></div>
+              <div class="swatch-meta">
+                <div class="swatch-name">After — colors.gray[400]</div>
+                <div class="swatch-hex">#6E6660 · warm stone, theme token</div>
+              </div>
+            </div>
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>const ICON_COLOR = '#a8a29e'; // stone-400</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>const ICON_COLOR = colors.gray[400];</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change: SyncingIndicator -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-visible">● Visible</span>
+          <span class="change-title">SyncingIndicator — spinning refresh icon color</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            src/components/SyncStatus/SyncingIndicator/SyncingIndicator.tsx:21
+          </div>
+          <div class="where">
+            <strong>Where it lives:</strong> pill at the top when a sync is in progress. Shows "Syncing" with a
+            spinning RefreshCw icon and a pending-count badge.
+          </div>
+          <div class="swap">
+            <div class="swatch">
+              <div class="swatch-chip" style="background: #d97706;"></div>
+              <div class="swatch-meta">
+                <div class="swatch-name">Before — hex literal</div>
+                <div class="swatch-hex">#D97706 · Tailwind amber-600</div>
+              </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: #9a5504;"></div>
+              <div class="swatch-meta">
+                <div class="swatch-name">After — colors.warning</div>
+                <div class="swatch-hex">#9A5504 · WCAG AA on #F5F1ED</div>
+              </div>
+            </div>
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>const ICON_COLOR = '#d97706'; // amber-600</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>const ICON_COLOR = colors.warning;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change: CustomColorButton -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-visible">● Visible</span>
+          <span class="change-title">CustomColorButton — dashed border + plus-icon color</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            src/components/CreateHabitModal/components/ColorPickerSection/CustomColorButton.tsx:60,73
+          </div>
+          <div class="where">
+            <strong>Where it lives:</strong> the last circle in the color-swatch row inside Create/Edit Habit →
+            Customize → Color picker. The one with the dashed outline and a + sign that opens a custom color
+            dialog.
+          </div>
+          <div class="swap">
+            <div class="swatch">
+              <div class="swatch-chip" style="background: #a8a29e;"></div>
+              <div class="swatch-meta">
+                <div class="swatch-name">Before — #a8a29e</div>
+                <div class="swatch-hex">Tailwind stone-400</div>
+              </div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="swatch">
+              <div class="swatch-chip" style="background: #6e6660;"></div>
+              <div class="swatch-meta">
+                <div class="swatch-name">After — colors.gray[400]</div>
+                <div class="swatch-hex">Warm stone</div>
+              </div>
+            </div>
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>borderColor: '#a8a29e',</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>borderColor: colors.gray[400],</span></div>
+<div class="diff-row" style="height: 6px;"></div>
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>&lt;Plus color='#a8a29e' size={iconSizes.medium} /&gt;</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>&lt;Plus color={colors.gray[400]} size={iconSizes.medium} /&gt;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 2 — MINOR SHIFTS (ICON SIZES)                        -->
+      <!-- ============================================================ -->
+      <h2>2 · Minor shifts — icon sizes snapped to token scale</h2>
+      <p>
+        ~60 icon-size call sites were off-scale (12, 14, 18, 22, 28). I snapped them to the nearest
+        <code>iconSizes.*</code> token. Each individual change is ≤17% — imperceptible on small icons,
+        possibly noticeable on badges or empty-state illustrations.
+      </p>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-minor">◐ Minor</span>
+          <span class="change-title">size snap — visual comparison</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            touched files: ~40 · see file index at bottom
+          </div>
+
+          <!-- Size visualizer: before sizes -->
+          <div class="icon-swap">
+            <div>
+              <div class="icon-circle" style="height: 12px; width: 12px;"></div>
+              <div class="icon-row-label">12</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 14px; width: 14px;"></div>
+              <div class="icon-row-label">14</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 18px; width: 18px;"></div>
+              <div class="icon-row-label">18</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 22px; width: 22px;"></div>
+              <div class="icon-row-label">22</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 28px; width: 28px;"></div>
+              <div class="icon-row-label">28</div>
+            </div>
+            <div style="color: var(--gray-500); font-family: var(--font-mono); padding-bottom: 18px;">→</div>
+            <div>
+              <div class="icon-circle" style="height: 10px; width: 10px;"></div>
+              <div class="icon-row-label">micro · 10</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 16px; width: 16px;"></div>
+              <div class="icon-row-label">small · 16</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 20px; width: 20px;"></div>
+              <div class="icon-row-label">medium · 20</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 24px; width: 24px;"></div>
+              <div class="icon-row-label">large · 24</div>
+            </div>
+            <div>
+              <div class="icon-circle" style="height: 32px; width: 32px;"></div>
+              <div class="icon-row-label">xl · 32</div>
+            </div>
+          </div>
+
+          <div class="where" style="margin-top: 20px;">
+            <strong>Where you'll notice (if anywhere):</strong>
+            <ul style="margin: 8px 0 0 18px;">
+              <li><code>size={12}</code> → micro (10) — 17% smaller. Trend arrows in stat cards, chevrons in
+                ProgressDots, PremiumBadge crown icon.</li>
+              <li><code>size={14}</code> → small (16) — 14% larger. Template preview hero icons, rank-item
+                chevrons, various meta-row indicators.</li>
+              <li><code>size={18}</code> → medium (20) — 11% larger. Most chevrons and inline action icons.</li>
+              <li><code>size={22}</code> → large (24) — 9% larger. Template preview success checkmark,
+                science video play button.</li>
+              <li><code>size={28}</code> → xl (32) — 14% larger. UnsavedChangesAlert warning triangle,
+                QuickCompleteButton check, DayHabitsBottomSheet empty-state clipboard icon.</li>
+            </ul>
+          </div>
+
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>&lt;Check color={...} size={28} strokeWidth={3} /&gt;</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>&lt;Check color={...} size={iconSizes.xl} strokeWidth={3} /&gt;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 3 — INVISIBLE TOKEN REFERENCES                       -->
+      <!-- ============================================================ -->
+      <h2>3 · Invisible — token references only, zero pixel change</h2>
+      <p>
+        These were the bulk of the session. Raw literal values replaced with theme imports that resolve to the
+        <em>same number</em>. Nothing to review visually — this is about the codebase reading cleanly and
+        showing up in token-adoption metrics.
+      </p>
+
+      <!-- borderRadius:9999 → full -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-invisible">○ None</span>
+          <span class="change-title">borderRadius: 9999 → borderRadius.full · 26 sites</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">touched 18 files</div>
+          <div class="where">
+            <strong>Where they live:</strong> pill-shaped elements everywhere — social proof badges, success
+            overlays, hero animation dots, goal-collection cards, featured collection chips,
+            templates-loading shimmer, category chips, milestone celebration badges, RevenueCat paywall
+            premium badge, calendar legend dots, emoji-picker category chips. All render identically — the
+            token value <code>borderRadius.full</code> is defined as <code>9999</code>.
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>borderRadius: 9999,</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>borderRadius: borderRadius.full,</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- exact-value borderRadius -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-invisible">○ None</span>
+          <span class="change-title">borderRadius: N → borderRadius.* (exact-value snap) · 27 sites</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">touched 26 files</div>
+          <div class="where">
+            <strong>Mapping (values identical, so no pixel change):</strong>
+            <ul style="margin: 8px 0 0 18px;">
+              <li><code>4</code> → <code>borderRadius.xs</code></li>
+              <li><code>8</code> → <code>borderRadius.small</code></li>
+              <li><code>12</code> → <code>borderRadius.medium</code></li>
+              <li><code>16</code> → <code>borderRadius.large</code></li>
+              <li><code>24</code> → <code>borderRadius.xl</code></li>
+            </ul>
+            Only applied to files that already imported <code>borderRadius</code>; files without the import
+            were left alone to avoid adding touches.
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>borderRadius: 16,</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>borderRadius: borderRadius.large,</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- fontWeight -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-invisible">○ None</span>
+          <span class="change-title">fontWeight: '600' → fontWeights.semibold · 1 site</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            src/screens/HabitDetailScreen/HabitDetailScreen.tsx:101
+          </div>
+          <div class="where">
+            <strong>Where it lives:</strong> the habit name in the pinned header title of the Habit Detail
+            screen (the text that appears once you scroll past the hero and the header "sticks").
+            <code>fontWeights.semibold</code> is defined as <code>'600'</code>, so render is identical.
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>titleStyle={{ fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 22 }}</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>titleStyle={{ fontSize: 17, fontWeight: fontWeights.semibold, letterSpacing: -0.2, lineHeight: 22 }}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- borderRadius: 99 → full (ProgressDots) -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-invisible">○ None</span>
+          <span class="change-title">ProgressDots — borderRadius: 99 → borderRadius.full · 1 site</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            src/components/CalendarTimeline/components/ProgressDots.tsx:60
+          </div>
+          <div class="where">
+            <strong>Where it lives:</strong> the small dots under the week strip in the habit list — the ones
+            that fill in as you complete habits day by day. Was already a pill visually (99 ≫ dot radius);
+            now it's a token reference.
+          </div>
+        </div>
+      </div>
+
+      <!-- Spring migration -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-invisible">○ None</span>
+          <span class="change-title">Reanimated springs — use presets + overrides · 4 sites</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            HabitCard/entrance/animations/widthExpansion.ts · StrengthRing/useStrengthRingAnimation.ts ·
+            DraggableHabit/useCardStrengthFill.ts · DraggableHabit/useStrengthAnimation.ts
+          </div>
+          <div class="where">
+            <strong>Where they live:</strong> four different motion moments.
+            <ul style="margin: 8px 0 0 18px;">
+              <li>Width-expansion of the left accent bar when a habit card enters (HabitCard).</li>
+              <li>Strength-ring value animation on the Habit Detail hero (StrengthRing).</li>
+              <li>Watercolor fill-background width on Today's habit cards (DraggableHabit).</li>
+              <li>Progress-bar width increase animation on strength bump (DraggableHabit).</li>
+            </ul>
+            Each now reads as <code>{ ...springs.gentle, damping: N, mass: M, stiffness: S }</code> — the
+            specific damping/stiffness/mass values are preserved as explicit overrides, so the motion feel is
+            identical. Only the code reads as derived-from-preset instead of magic numbers.
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>withSpring(value, { damping: 12, mass: 0.8, stiffness: 80 })</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>withSpring(value, { ...springs.gentle, damping: 12, mass: 0.8, stiffness: 80 })</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HabitCard width expansion separately: this one DID shift -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-minor">◐ Minor</span>
+          <span class="change-title">HabitCard accent-bar spring — shifted to bouncy preset</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">
+            src/components/HabitCard/entrance/animations/widthExpansion.ts:49
+          </div>
+          <div class="where">
+            <strong>Where it lives:</strong> the thin colored vertical bar on the left edge of every habit
+            card — when a card first appears it slides in (sheet spring) and then the bar's width expands
+            with a slight bounce. This is the width bounce.
+          </div>
+          <div class="where">
+            <strong>What shifted:</strong> damping went from <code>12</code> → <code>10</code> (the
+            <code>springs.bouncy</code> preset value), stiffness 180 and mass 0.8 preserved. Feels slightly
+            bouncier. Watch when a new habit card mounts.
+          </div>
+          <div class="diff">
+<div class="diff-row diff-minus"><span class="diff-sign">−</span><span>withSpring(ACCENT_TARGET_WIDTH, { damping: 12, mass: 0.8, stiffness: 180 }, ...)</span></div>
+<div class="diff-row diff-plus"><span class="diff-sign">+</span><span>withSpring(ACCENT_TARGET_WIDTH, { ...springs.bouncy, mass: 0.8 }, ...)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @expo/vector-icons -->
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-invisible">○ None</span>
+          <span class="change-title">Dependency removed — @expo/vector-icons</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">package.json · package-lock.json</div>
+          <div class="where">
+            Zero imports in <code>src/</code> — the app already uses <code>lucide-react-native</code>
+            everywhere (291 files). The explicit <code>"@expo/vector-icons": "^15.0.2"</code> declaration is
+            gone. The package remains in <code>node_modules</code> as a transitive dependency of
+            <code>expo</code> itself, so no bundle-size win — just a cleaner declared-dependency list.
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 4 — AUDIT CORRECTIONS                                -->
+      <!-- ============================================================ -->
+      <h2>4 · Audit corrections</h2>
+      <p>
+        Two findings from yesterday's audit needed corrections on closer inspection:
+      </p>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-minor">◐ Correction</span>
+          <span class="change-title">Wave 0.3 — templates/styles/ folder is NOT dead</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            My absolute-path grep missed that <code>src/screens/templates/templatesScreenStyles.ts</code>
+            re-exports from <code>./styles</code> via a relative barrel, and <strong>12 files</strong> in the
+            new <code>src/screens/TemplatesScreen/</code> depend on that barrel (SearchResults, SearchBar,
+            TemplatesEmptyState, ScrollShadows, CategoryHeader, FilterControls, SortDropdown, TabBar,
+            TemplatesListEmpty, MainBrowseView, CategorySearchView, TemplatesList). Deleting the folder
+            broke all 12, so I restored it and updated the remediation plan to reclassify this as a
+            multi-file migration (Wave 3/4 scope), not a quick delete.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="badge badge-minor">◐ Correction</span>
+          <span class="change-title">Wave 4.3 — Onboarding CTAs already complete</span>
+        </div>
+        <div class="change-body">
+          <div class="change-meta">src/screens/onboarding/OnboardingScreen.tsx</div>
+          <div class="where">
+            The audit flagged this as "partial remediation." On re-reading:
+            <ul style="margin: 8px 0 0 18px;">
+              <li>Line 95 — Skip button's <em>visible text</em> is <code>"I'll explore later"</code> ✓</li>
+              <li>Line 26 — <code>STEP_CTA_LABELS</code> covers pages 0 ("See the Science →") and 1 ("Browse
+                Templates →")</li>
+              <li>Line 143 — last page uses <code>"Let's Build Your First Habit →"</code> via the
+                <code>isLastPage</code> branch</li>
+            </ul>
+            All 3 pages have step-specific CTAs. The <code>?? 'Next'</code> fallback at line 159 is never
+            reached. The Mar 19 recommendations are fully applied; no work needed.
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- SECTION 5 — WHAT'S STILL OPEN                                -->
+      <!-- ============================================================ -->
+      <h2>5 · Still open — needs your eyes / decisions</h2>
+      <p>
+        Everything below was out of safe mechanical scope this session. Each needs either per-file judgment or
+        a design conversation.
+      </p>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 1.2 · Shadow migration</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            427 files use inline <code>shadowColor/shadowOffset/shadowRadius</code>, only 83 use
+            <code>shadows.*</code> tokens. Each case needs me to look at the inline values and decide which
+            of <code>shadows.subtle / card / floatingActionButton / modal / alert</code> matches — or
+            whether the author intentionally diverged.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 2.1 · fontSize migration · 304 raw sites</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            Values <code>15, 16, 18, 32, 36</code> don't map cleanly to the typography scale
+            (<code>34/22/20/17/14/13/12/10</code>). Either snap-to-nearest (visible change) or extend the
+            scale with new tokens — a design-system decision.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 2.2 · 155 custom text-[Npx] Tailwind classes</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            Same mapping problem at the NativeWind layer.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 2.4 remainder · 53 non-canonical borderRadius</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            Values <code>2, 5, 10, 14, 18, 20, 32</code>. Snap-to-nearest would produce visible changes; each
+            site wants a per-case decision.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 2.5 · 757 raw hex values</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            Long tail — mostly one-off gradients, achievement colors, material tier constants. Case by case.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 3.1 · Unified Button primitive</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            Proposed API in the
+            <a href="design_system_showcase_1.html#buttons" style="color: var(--primary-700);">canonical
+            showcase</a> — 3 sizes × 4 variants. Needs your API sign-off before I build it.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 3.2 · EmptyState consolidation</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            17 distinct <code>EmptyState.tsx</code> files. Probably 10 can consolidate into the canonical
+            <code>src/components/EmptyState/EmptyState.tsx</code>; 7 are chart-specific and stay custom.
+            Each migration is a judgment call.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 3.3 · Animated.Value → Reanimated · 31 files</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            Motion QA per component. Overlaps with the 14 remaining legacy <code>Animated.spring</code>
+            friction/tension sites.
+          </div>
+        </div>
+      </div>
+
+      <div class="change">
+        <div class="change-head">
+          <span class="change-title" style="color: var(--gray-600);">Wave 3.4 · NativeWind vs StyleSheet — architectural</span>
+        </div>
+        <div class="change-body">
+          <div class="where">
+            300+ files mix both. Pick one, establish boundary rules, or migrate to a different system
+            (tamagui / unistyles). Not a mechanical change.
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================================ -->
+      <!-- FILE INDEX                                                    -->
+      <!-- ============================================================ -->
+      <h2>6 · File index — 92 modified files by area</h2>
+      <p>
+        Click to expand each group.
+      </p>
+
+      <details>
+        <summary>Auth flow (7 files)</summary>
+        <div class="file-list">
+          src/screens/auth/components/SocialProofBadge/SocialProofBadge.tsx<br/>
+          src/screens/auth/components/SuccessOverlay/styles.ts<br/>
+          src/screens/auth/components/HeroAnimation/HeroAnimation.styles.ts<br/>
+          src/screens/auth/components/HeroAnimation/AnimatedDot.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Habit Detail screen (1 file)</summary>
+        <div class="file-list">
+          src/screens/HabitDetailScreen/HabitDetailScreen.tsx<br/>
+          src/screens/HabitDetailScreen/components/DetailViewTabs.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Templates / Habit Library (~15 files)</summary>
+        <div class="file-list">
+          src/screens/TemplatesScreen/components/GoalCollectionGrid/GoalCollectionGrid.styles.ts<br/>
+          src/screens/TemplatesScreen/components/GoalCollectionGrid/FeaturedGoalCard.tsx<br/>
+          src/screens/TemplatesScreen/components/GoalCollectionGrid/GoalCard.tsx<br/>
+          src/screens/TemplatesScreen/components/FeaturedCollection/FeaturedCollection.styles.ts<br/>
+          src/screens/TemplatesScreen/components/TemplatesLoadingState.tsx<br/>
+          src/screens/TemplatesScreen/components/ExploreAllSection/ExploreHabitRow.tsx<br/>
+          src/screens/TemplatesScreen/components/ExploreAllSection/CategoryGroupHeader.tsx<br/>
+          src/screens/TemplatesScreen/components/ExploreAllSection/ExploreHabitRow.styles.ts<br/>
+          src/screens/TemplatesScreen/views/TemplateListCard/ListCardAddButton.tsx<br/>
+          src/screens/TemplatesScreen/views/TemplateListCard/CardFooterMeta.tsx<br/>
+          src/screens/templates/styles/categoryStyles.ts<br/>
+          src/screens/templates/styles/formStyles.ts<br/>
+          src/screens/templates/styles/scrollStyles.ts<br/>
+          src/screens/templates/styles/skeletonStyles.ts<br/>
+          src/screens/templates/styles/customizeStyles.ts<br/>
+          src/screens/templates/TemplatePreviewModal/styles.ts<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Create Habit Modal (1 file)</summary>
+        <div class="file-list">
+          src/components/CreateHabitModal/components/ColorPickerSection/CustomColorButton.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Full-size Template Preview (5 files)</summary>
+        <div class="file-list">
+          src/components/FullsizeTemplatePreview/styles/hero.styles.ts<br/>
+          src/components/FullsizeTemplatePreview/styles/layout.styles.ts<br/>
+          src/components/FullsizeTemplatePreview/components/HeroSection.tsx<br/>
+          src/components/FullsizeTemplatePreview/components/ScienceEvidenceTips.tsx<br/>
+          src/components/FullsizeTemplatePreview/components/FooterSection.tsx<br/>
+          src/components/FullsizeTemplatePreview/components/ScienceVideoEmbed.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>SyncStatus (2 files)</summary>
+        <div class="file-list">
+          src/components/SyncStatus/OfflineIndicator/OfflineIndicator.tsx<br/>
+          src/components/SyncStatus/SyncingIndicator/SyncingIndicator.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Motion / animations (5 files)</summary>
+        <div class="file-list">
+          src/components/HabitCard/entrance/animations/widthExpansion.ts<br/>
+          src/components/StrengthRing/useStrengthRingAnimation.ts<br/>
+          src/components/DraggableHabit/useCardStrengthFill.ts<br/>
+          src/components/DraggableHabit/useStrengthAnimation.ts<br/>
+          src/components/animations/CompletionCheckmark.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Celebrations / Milestones (2 files)</summary>
+        <div class="file-list">
+          src/components/StreakMilestoneCelebration/styles.ts<br/>
+          src/components/MilestoneCelebration/styles.ts<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>RevenueCat paywall (2 files)</summary>
+        <div class="file-list">
+          src/components/RevenueCatPaywall/PaywallHero.tsx<br/>
+          src/components/RevenueCatPaywall/PaywallHeader.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Progress / rankings / stats (7 files)</summary>
+        <div class="file-list">
+          src/components/ProgressSection/YourProgressCard/TrendIndicator.tsx<br/>
+          src/components/ProgressSection/ThisMonthCard/ThisMonthCard.tsx<br/>
+          src/components/ProgressSection/BestWorstDayCards.tsx<br/>
+          src/components/ProgressSectionConsolidated/ConsistencyIndexCard/ConsistencyIndexCard.tsx<br/>
+          src/components/StatsGrid/StatsGrid.tsx<br/>
+          src/components/HabitRankingsList/HabitRankingItem.tsx<br/>
+          src/components/HabitStrengthSection/StrengthHero/StatusDisplay.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Calendar / Timeline (3 files)</summary>
+        <div class="file-list">
+          src/components/CalendarTimeline/components/ProgressDots.tsx<br/>
+          src/components/HabitCalendarView/CalendarLegend/CalendarLegend.tsx<br/>
+          src/components/DayHabitsBottomSheet/HabitDayToggleRow/Checkbox.tsx<br/>
+          src/components/DayHabitsBottomSheet/components/EmptyState.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Emoji picker + category chips (1 file)</summary>
+        <div class="file-list">
+          src/components/EmojiPicker/components/CategoryChips.tsx<br/>
+        </div>
+      </details>
+
+      <details>
+        <summary>Misc (toasts, banners, alerts, buttons)</summary>
+        <div class="file-list">
+          src/components/UnsavedChangesAlert/UnsavedChangesAlert.tsx<br/>
+          src/components/QuickCompleteButton/QuickCompleteButton.tsx<br/>
+          src/components/DeleteUndoToast/components/ToastContent.tsx<br/>
+          src/components/ArchiveUndoToast/ArchiveUndoToast.tsx<br/>
+          src/components/DraftRecoveryBanner/DraftRecoveryBanner.tsx<br/>
+          src/components/OfflinePendingBanner/ExpandedStats.tsx<br/>
+          src/components/TrialCountdownBanner/TrialCountdownBanner.tsx<br/>
+          src/components/PremiumBadge.tsx<br/>
+          src/components/HabitCard/components/StatusIndicator.tsx<br/>
+          src/components/HabitChainVisualizer/HabitDayToggleContent.tsx<br/>
+          src/components/NotesSection/VisualizationGuide/GuideHeader.tsx<br/>
+          src/components/NotesSection/VisualizationGuide/VisualizationGuide.tsx<br/>
+          src/components/NotesSection/VisualizationGuide/TechniqueApproach.tsx<br/>
+          src/components/NotesSection/VisualizationGuide/visualizationTechniques.tsx<br/>
+          src/components/VisualizationExercise/components/SummaryStep.tsx<br/>
+          src/components/VisualizationExercise/components/VisualizationCards.tsx<br/>
+          src/components/VisualizationExercise/components/NavigationButtons.tsx<br/>
+          src/components/VisualizationExercise/components/PromptList.tsx<br/>
+          src/components/HeaderCompleteToggle/HeaderCompleteToggle.tsx<br/>
+          src/components/HabitStrengthHistory/EmptyStrengthState.tsx<br/>
+          src/components/AdvancedOptions/AdvancedOptionsSection.tsx<br/>
+          src/components/DailyQuote/DailyQuote.tsx<br/>
+          ...and ~20 more StyleSheet and component files with borderRadius migrations
+        </div>
+      </details>
+
+      <details>
+        <summary>Non-source files</summary>
+        <div class="file-list">
+          package.json<br/>
+          package-lock.json<br/>
+          DESIGN_CONSISTENCY_REVIEW.md (CCP-5 and CCP-7 corrections)<br/>
+          REMEDIATION_PLAN.md (Wave 0.3 reclassification)<br/>
+        </div>
+      </details>
+
+      <p style="margin-top: 40px; color: var(--gray-500); font-size: 13px;">
+        Generated 2026-04-24 · End of session review.
+      </p>
+    </div>
+  </body>
+</html>

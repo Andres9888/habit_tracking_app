@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sort Position Mocks - Habit Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1a1a2e !important; }
+    .phone-frame {
+      width: 375px;
+      height: 720px;
+      background: #fafaf9;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 28px;
+      background: #1a1a1a;
+      border-radius: 20px;
+      z-index: 10;
+    }
+    .status-bar {
+      padding-top: 48px;
+    }
+    .habit-card {
+      transition: all 0.2s ease;
+    }
+    .habit-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .sort-button {
+      transition: all 0.15s ease;
+    }
+    .sort-button:hover {
+      transform: scale(1.02);
+    }
+    .label-badge {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fbbf24;
+      color: #78350f;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .current-badge {
+      background: #ef4444;
+      color: white;
+    }
+    .recommended-badge {
+      background: #22c55e;
+      color: white;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-12">
+
+  <h1 class="text-3xl font-bold text-white text-center mb-4">Sort Button Position Options</h1>
+  <p class="text-stone-400 text-center max-w-2xl mb-8">Moving the sort control closer to the habit list it affects. Compare the current layout with proposed alternatives.</p>
+
+  <div class="flex flex-wrap justify-center gap-12">
+
+    <!-- CURRENT LAYOUT -->
+    <div class="relative">
+      <div class="label-badge current-badge">CURRENT</div>
+      <div class="phone-frame">
+        <div class="status-bar px-6 pb-4">
+          <!-- Header Row -->
+          <div class="flex items-center justify-between mt-4">
+            <!-- Add Habit Button -->
+            <div class="flex items-center gap-2 bg-gradient-to-br from-stone-800 to-stone-900 text-white px-5 py-3 rounded-full shadow-lg">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span class="text-[15px] font-medium">Add Habit</span>
+            </div>
+
+            <!-- Icon Buttons -->
+            <div class="flex items-center gap-3">
+              <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                <i data-lucide="lightbulb" class="w-[18px] h-[18px] text-amber-500"></i>
+              </button>
+              <!-- SORT BUTTON HERE (Current Position) -->
+              <button class="h-9 px-3 flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50/70 sort-button">
+                <i data-lucide="arrow-up-down" class="w-4 h-4 text-amber-800"></i>
+                <span class="text-[13px] font-semibold text-amber-800">A–Z</span>
+              </button>
+              <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                <i data-lucide="settings" class="w-5 h-5 text-stone-600"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Momentum Meter -->
+          <div class="mt-4 bg-white rounded-2xl p-4 shadow-sm border border-stone-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-stone-500">Today's Progress</span>
+              <span class="text-sm font-semibold text-stone-700">4 of 7</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full w-[57%] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"></div>
+            </div>
+          </div>
+
+          <!-- Habits List -->
+          <div class="mt-6 space-y-3">
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Morning meditation</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">5</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Read 30 minutes</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">12</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[15px] font-medium text-stone-800 line-through opacity-60">Exercise</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">8</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Drink 8 glasses water</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">3</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-stone-500 mt-4 text-sm max-w-[300px]">Sort button is far from the list it controls</p>
+    </div>
+
+    <!-- OPTION A: Section Header -->
+    <div class="relative">
+      <div class="label-badge recommended-badge">RECOMMENDED</div>
+      <div class="phone-frame">
+        <div class="status-bar px-6 pb-4">
+          <!-- Header Row (No Sort Button) -->
+          <div class="flex items-center justify-between mt-4">
+            <div class="flex items-center gap-2 bg-gradient-to-br from-stone-800 to-stone-900 text-white px-5 py-3 rounded-full shadow-lg">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span class="text-[15px] font-medium">Add Habit</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                <i data-lucide="lightbulb" class="w-[18px] h-[18px] text-amber-500"></i>
+              </button>
+              <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                <i data-lucide="settings" class="w-5 h-5 text-stone-600"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Momentum Meter -->
+          <div class="mt-4 bg-white rounded-2xl p-4 shadow-sm border border-stone-100">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-stone-500">Today's Progress</span>
+              <span class="text-sm font-semibold text-stone-700">4 of 7</span>
+            </div>
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+              <div class="h-full w-[57%] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"></div>
+            </div>
+          </div>
+
+          <!-- Section Header with Sort -->
+          <div class="mt-5 flex items-center justify-between px-1">
+            <span class="text-xs font-semibold uppercase tracking-wider text-stone-400">My Habits</span>
+            <!-- SORT BUTTON NEW POSITION -->
+            <button class="h-7 px-2.5 flex items-center gap-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 transition-colors sort-button">
+              <i data-lucide="arrow-up-down" class="w-3.5 h-3.5 text-stone-500"></i>
+              <span class="text-[12px] font-medium text-stone-600">A–Z</span>
+              <i data-lucide="chevron-down" class="w-3 h-3 text-stone-400"></i>
+            </button>
+          </div>
+
+          <!-- Habits List -->
+          <div class="mt-3 space-y-3">
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Morning meditation</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">5</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Read 30 minutes</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">12</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[15px] font-medium text-stone-800 line-through opacity-60">Exercise</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">8</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Drink 8 glasses water</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">3</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-stone-500 mt-4 text-sm max-w-[300px]">Sort as section header — directly above list</p>
+    </div>
+
+    <!-- OPTION B: Inline with Momentum -->
+    <div class="relative">
+      <div class="label-badge">OPTION B</div>
+      <div class="phone-frame">
+        <div class="status-bar px-6 pb-4">
+          <!-- Header Row -->
+          <div class="flex items-center justify-between mt-4">
+            <div class="flex items-center gap-2 bg-gradient-to-br from-stone-800 to-stone-900 text-white px-5 py-3 rounded-full shadow-lg">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span class="text-[15px] font-medium">Add Habit</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                <i data-lucide="lightbulb" class="w-[18px] h-[18px] text-amber-500"></i>
+              </button>
+              <button class="w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                <i data-lucide="settings" class="w-5 h-5 text-stone-600"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Momentum Meter with Sort Inline -->
+          <div class="mt-4 flex items-center gap-3">
+            <div class="flex-1 bg-white rounded-2xl p-4 shadow-sm border border-stone-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm text-stone-500">Today</span>
+                <span class="text-sm font-semibold text-stone-700">4/7</span>
+              </div>
+              <div class="h-2 bg-stone-100 rounded-full overflow-hidden">
+                <div class="h-full w-[57%] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"></div>
+              </div>
+            </div>
+            <!-- SORT BUTTON -->
+            <button class="h-14 px-3 flex flex-col items-center justify-center gap-0.5 rounded-2xl border border-amber-200 bg-amber-50 sort-button">
+              <i data-lucide="arrow-up-down" class="w-4 h-4 text-amber-700"></i>
+              <span class="text-[10px] font-semibold text-amber-700">A–Z</span>
+            </button>
+          </div>
+
+          <!-- Habits List -->
+          <div class="mt-5 space-y-3">
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Morning meditation</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">5</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Read 30 minutes</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">12</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="text-[15px] font-medium text-stone-800 line-through opacity-60">Exercise</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">8</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="habit-card bg-white rounded-2xl p-4 shadow-sm border border-stone-100 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-6 h-6 rounded-full border-2 border-stone-300"></div>
+                <span class="text-[15px] font-medium text-stone-800">Drink 8 glasses water</span>
+              </div>
+              <div class="flex items-center gap-1 text-orange-500">
+                <span class="text-sm font-semibold">3</span>
+                <i data-lucide="flame" class="w-4 h-4"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-stone-500 mt-4 text-sm max-w-[300px]">Sort button inline with momentum meter</p>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

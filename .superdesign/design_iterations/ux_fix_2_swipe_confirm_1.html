@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P0 Fix #2 — Swipe Archive Confirmation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: #fff;
+      }
+      .label {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #f59e0b;
+        margin-bottom: 8px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #9ca3af;
+        margin-bottom: 40px;
+        max-width: 600px;
+        text-align: center;
+        line-height: 1.5;
+      }
+
+      .phone-pair {
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-label {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        padding: 4px 12px;
+        border: 1px solid #374151;
+        border-radius: 20px;
+      }
+      .phone-label.bad {
+        color: #ef4444;
+        border-color: #7f1d1d;
+      }
+      .phone-label.good {
+        color: #10b981;
+        border-color: #064e3b;
+      }
+
+      .phone {
+        width: 375px;
+        height: 680px;
+        background: #faf8f5;
+        border-radius: 40px;
+        border: 6px solid #2d2a26;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+      }
+      .status-bar {
+        height: 50px;
+        background: #faf8f5;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 6px;
+      }
+      .notch {
+        width: 120px;
+        height: 28px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+      }
+      .screen-content {
+        padding: 16px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .habit-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 1px 4px rgba(28, 25, 23, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+      .habit-emoji {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 17px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.02em;
+      }
+      .habit-meta {
+        font-size: 13px;
+        color: #78716c;
+        margin-top: 2px;
+      }
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #d1d5db;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .habit-check.done {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+        font-size: 14px;
+      }
+
+      /* BEFORE: Full swipe auto-archives */
+      .swiped-card {
+        transform: translateX(-100%);
+        opacity: 0.3;
+        transition:
+          transform 0.4s ease,
+          opacity 0.4s ease;
+      }
+      .archive-bg {
+        position: absolute;
+        inset: 0;
+        background: #f59e0b;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 20px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 15px;
+        gap: 8px;
+      }
+      .gone-label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #f59e0b;
+        font-size: 15px;
+        font-weight: 600;
+        background: #fffbeb;
+        border-radius: 16px;
+      }
+
+      /* AFTER: Swipe reveals button, requires tap to confirm */
+      .swipe-partial {
+        transform: translateX(-80px);
+      }
+      .swipe-action-revealed {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 80px;
+        background: #f59e0b;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        border-radius: 0 16px 16px 0;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .swipe-action-revealed .icon {
+        font-size: 20px;
+      }
+
+      /* Confirmation toast */
+      .archive-toast {
+        position: absolute;
+        bottom: 20px;
+        left: 16px;
+        right: 16px;
+        background: #2d2a26;
+        border-radius: 14px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 10;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(80px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .toast-text {
+        flex: 1;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .toast-undo {
+        color: #f59e0b;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 8px;
+      }
+      .toast-undo:hover {
+        background: rgba(245, 158, 11, 0.15);
+      }
+      .toast-timer {
+        width: 4px;
+        height: 28px;
+        background: #374151;
+        border-radius: 2px;
+        overflow: hidden;
+        position: relative;
+      }
+      .toast-timer-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70%;
+        background: #f59e0b;
+        border-radius: 2px;
+        animation: timerDrain 5s linear forwards;
+      }
+      @keyframes timerDrain {
+        from {
+          height: 100%;
+        }
+        to {
+          height: 0%;
+        }
+      }
+
+      .annotation {
+        position: absolute;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px dashed;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+      .annotation.bad {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+        border-color: #ef4444;
+      }
+      .annotation.good {
+        color: #10b981;
+        background: rgba(16, 185, 129, 0.1);
+        border-color: #10b981;
+      }
+
+      .flow-arrow {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        margin: 16px 0;
+        color: #78716c;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .flow-arrow .arrow {
+        font-size: 18px;
+        color: #9ca3af;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">P0 Fix #2</div>
+    <div class="title">Swipe Archive Confirmation</div>
+    <div class="subtitle">
+      Currently, a full left-swipe immediately archives the habit with no
+      confirmation or undo. The fix requires a tap to confirm, plus shows an
+      undo toast.
+    </div>
+
+    <div class="phone-pair">
+      <!-- BEFORE -->
+      <div class="phone-col">
+        <div class="phone-label bad">Before — Auto-Archives on Swipe</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #d1fae5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">42% strength · 12-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <!-- Swiped habit - auto-archived -->
+            <div style="position: relative; margin-bottom: 12px">
+              <div class="gone-label">
+                <span>📦 Archived automatically</span>
+                <div class="annotation bad" style="top: -24px; right: 0">
+                  No undo available!
+                </div>
+              </div>
+            </div>
+
+            <div style="position: relative; margin-bottom: 12px; height: 76px">
+              <div class="archive-bg">📦 Archive</div>
+              <div class="habit-card swiped-card" style="margin: 0">
+                <div class="habit-emoji" style="background: #dbeafe">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">67% strength · 24-day streak</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="annotation bad" style="bottom: -22px; left: 0">
+                ⚠️ Full swipe = instant archive
+              </div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fef3c7">📖</div>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">28% strength · 5-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fce7f3">🏃</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Run</div>
+                <div class="habit-meta">55% strength · 8-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER -->
+      <div class="phone-col">
+        <div class="phone-label good">After — Requires Tap + Undo Toast</div>
+        <div class="phone">
+          <div class="status-bar"><div class="notch"></div></div>
+          <div class="screen-content">
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #d1fae5">🧘</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Meditation</div>
+                <div class="habit-meta">42% strength · 12-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <!-- Swiped habit - reveals button -->
+            <div
+              style="
+                position: relative;
+                margin-bottom: 12px;
+                overflow: hidden;
+                border-radius: 16px;
+              "
+            >
+              <div class="habit-card swipe-partial" style="margin: 0">
+                <div class="habit-emoji" style="background: #dbeafe">💧</div>
+                <div class="habit-info">
+                  <div class="habit-name">Drink Water</div>
+                  <div class="habit-meta">67% strength · 24-day streak</div>
+                </div>
+                <div class="habit-check"></div>
+              </div>
+              <div class="swipe-action-revealed">
+                <span class="icon">📦</span>
+                <span>Archive</span>
+              </div>
+              <div class="annotation good" style="top: -24px; right: 0">
+                Tap to confirm
+              </div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fef3c7">📖</div>
+              <div class="habit-info">
+                <div class="habit-name">Read 20 Pages</div>
+                <div class="habit-meta">28% strength · 5-day streak</div>
+              </div>
+              <div class="habit-check done">✓</div>
+            </div>
+
+            <div class="habit-card">
+              <div class="habit-emoji" style="background: #fce7f3">🏃</div>
+              <div class="habit-info">
+                <div class="habit-name">Morning Run</div>
+                <div class="habit-meta">55% strength · 8-day streak</div>
+              </div>
+              <div class="habit-check"></div>
+            </div>
+
+            <!-- Undo toast -->
+            <div class="archive-toast">
+              <span style="font-size: 18px">📦</span>
+              <div class="toast-text">Habit archived</div>
+              <div class="toast-timer">
+                <div class="toast-timer-fill"></div>
+              </div>
+              <div class="toast-undo">Undo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

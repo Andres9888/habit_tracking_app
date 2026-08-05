@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChainDay — Home Screen Balance Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#08080a;--surface:#111113;--border:#1e1e22;--border-2:#2a2a30;
+    --text:#e8e4df;--text-muted:#7a756e;--text-dim:#4a4640;
+    --emerald:#10b981;--emerald-soft:rgba(16,185,129,0.12);
+    --amber:#e8b94d;--amber-soft:rgba(232,185,77,0.12);
+    --red:#ef4444;--red-soft:rgba(239,68,68,0.12);
+    --card-bg:#EDEAE5;--card-border:#DDD8D2;
+    --gray-50:#FAF8F5;--gray-200:#DDD8D2;--gray-300:#C4BFB7;
+    --gray-400:#6E6660;--gray-600:#524D47;--gray-800:#2D2A26;
+    --today-bg:#FEF3CD;--today-border:#E8B94D;--today-text:#7D5907;
+    --screen-bg:#f7f5f0;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+  .page{max-width:1100px;margin:0 auto;padding:56px 40px 100px}
+  .page-header{text-align:center;margin-bottom:48px}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--emerald);margin-bottom:14px}
+  .page-header h1{font-family:'Instrument Serif',serif;font-size:42px;font-weight:400;line-height:1.12;color:var(--text);letter-spacing:-0.02em;margin-bottom:14px}
+  .page-header h1 em{font-style:italic;color:var(--amber)}
+  .page-header .subtitle{font-size:15px;color:var(--text-muted);max-width:540px;margin:0 auto;line-height:1.65}
+
+  .comparison{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-bottom:56px}
+  .comparison-col{display:flex;flex-direction:column;align-items:center}
+  .version-label{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 10px;border-radius:4px}
+  .tag-before{background:var(--red-soft);color:var(--red);border:1px solid rgba(239,68,68,0.2)}
+  .tag-after{background:var(--emerald-soft);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)}
+  .version-name{font-size:13px;font-weight:600;color:var(--text)}
+
+  .phone{width:310px;height:672px;background:#1a1a1a;border-radius:44px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,0.5);position:relative;overflow:hidden}
+  .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:32px;background:#1a1a1a;border-radius:0 0 20px 20px;z-index:20}
+  .phone-screen{width:100%;height:100%;background:var(--screen-bg);border-radius:36px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .phone-status{height:50px;flex-shrink:0}
+  .scroll-area{flex:1;overflow:hidden;position:relative}
+
+  .h-guide{position:absolute;height:100%;width:1px;top:0;z-index:25;opacity:0.35}
+  .h-guide.left{border-left:1px dashed}
+  .h-guide.right{border-right:1px dashed}
+
+  .ct{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;box-shadow:0 1px 8px rgba(107,101,96,0.04)}
+  .ct-inner{padding:8px 12px 12px}
+  .ct-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .ct-head-left{display:flex;align-items:center;gap:5px}
+  .nav-btn{width:24px;height:24px;border-radius:50%;background:var(--gray-50);border:1px solid var(--gray-200);display:flex;align-items:center;justify-content:center}
+  .nav-btn svg{width:11px;height:11px;stroke:var(--gray-600);stroke-width:2.5;fill:none}
+  .date-txt{font-size:13px;font-weight:800;color:var(--gray-800);letter-spacing:-0.3px;margin-left:3px}
+  .ring-w{width:32px;height:32px;position:relative;flex-shrink:0}
+  .ring-w svg{width:32px;height:32px;transform:rotate(-90deg)}
+  .ring-txt{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#44403c}
+  .days-row{display:flex;justify-content:space-between}
+  .day-col{display:flex;flex-direction:column;align-items:center;gap:1px;flex:1}
+  .day-lbl{font-size:8px;font-weight:400;color:var(--gray-400)}
+  .day-lbl.today{font-weight:700}
+  .day-box{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600}
+  .day-box.done{background:var(--emerald);color:#fff;font-weight:700;box-shadow:0 0 8px rgba(16,185,129,0.25)}
+  .day-box.today-cell{background:var(--today-bg);border:2px solid var(--today-border);color:var(--today-text);font-weight:700}
+  .day-box.future{background:var(--gray-50);color:var(--gray-300)}
+
+  .habit{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(45,42,38,0.06);position:relative;min-height:64px}
+  .habit-bar{position:absolute;left:0;top:8px;bottom:8px;width:4px;border-radius:0 3px 3px 0}
+  .habit-emoji{font-size:18px;margin-left:6px}
+  .habit-info{flex:1}
+  .habit-name{font-size:13px;font-weight:600;color:var(--gray-600);letter-spacing:-0.2px}
+  .habit-meta{font-size:9px;font-weight:500;color:var(--gray-400);margin-top:1px}
+  .habit-chain{display:flex;gap:2px}
+  .chain-dot{width:7px;height:7px;border-radius:2px}
+
+  .bottom-bar{position:absolute;bottom:0;left:0;right:0;z-index:20;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:rgba(247,245,240,0.85);border-top:1px solid var(--card-border)}
+  .bottom-bar-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 24px}
+  .pill{height:34px;min-width:96px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;display:flex;align-items:center;justify-content:center;gap:5px;padding:0 12px;font-size:11px;font-weight:600;color:var(--gray-600)}
+  .pill svg{width:14px;height:14px;stroke:var(--gray-600);stroke-width:2;fill:none}
+  .fab{width:48px;height:48px;border-radius:14px;background:var(--gray-800);border:3px solid var(--screen-bg);display:flex;align-items:center;justify-content:center;margin-top:-18px;box-shadow:0 4px 12px rgba(0,0,0,0.15)}
+  .fab svg{width:20px;height:20px;stroke:#fff;stroke-width:2.5;fill:none}
+
+  .callout{position:absolute;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:500;padding:2px 6px;border-radius:3px;white-space:nowrap;z-index:30;pointer-events:none}
+  .callout-issue{background:rgba(239,68,68,0.15);color:#fb923c;border:1px solid rgba(239,68,68,0.2)}
+  .callout-fix{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.2)}
+
+  .table-section{margin-top:8px}
+  .table-section h2{font-family:'Instrument Serif',serif;font-size:28px;font-weight:400;color:var(--text);margin-bottom:8px}
+  .table-section .table-sub{font-size:13px;color:var(--text-muted);margin-bottom:20px}
+  .diff-table{width:100%;border-collapse:collapse;font-size:13px}
+  .diff-table thead th{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border)}
+  .diff-table tbody td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.025);line-height:1.5}
+  .diff-table tbody tr:hover{background:rgba(255,255,255,0.012)}
+  .prop{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;color:var(--text)}
+  .val-b{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);background:var(--red-soft);padding:2px 6px;border-radius:3px}
+  .val-a{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--emerald);background:var(--emerald-soft);padding:2px 6px;border-radius:3px}
+  .rationale{font-size:12px;color:var(--text-muted);max-width:280px}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:48px 0}
+  .grain{position:fixed;inset:0;pointer-events:none;opacity:0.02;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;z-index:9999}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="page">
+  <header class="page-header">
+    <div class="eyebrow">ChainDay · Home Screen · Balance Audit</div>
+    <h1>Aligning the <em>three zones</em></h1>
+    <p class="subtitle">The habits home has three visual layers — calendar, list, and action bar. Currently they have inconsistent horizontal padding, tight card gaps, and a top-heavy header. Three targeted fixes bring them into alignment.</p>
+  </header>
+
+  <div class="comparison">
+    <!-- LEFT: CURRENT -->
+    <div class="comparison-col">
+      <div class="version-label">
+        <span class="tag tag-before">Current</span>
+        <span class="version-name">Misaligned edges, tight cards</span>
+      </div>
+      <div style="position:relative">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-status"></div>
+            <div class="scroll-area">
+              <div class="h-guide left" style="left:20px;border-color:rgba(239,68,68,0.3)"></div>
+              <div class="h-guide left" style="left:24px;border-color:rgba(232,185,77,0.3)"></div>
+              <div class="h-guide right" style="right:20px;border-color:rgba(239,68,68,0.3)"></div>
+              <div class="h-guide right" style="right:24px;border-color:rgba(232,185,77,0.3)"></div>
+              <div style="height:48px"></div>
+              <div style="padding:0 20px">
+                <div class="ct" style="margin-bottom:14px">
+                  <div class="ct-inner">
+                    <div class="ct-head">
+                      <div class="ct-head-left">
+                        <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                        <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                        <span class="date-txt">Feb 17 – 23</span>
+                      </div>
+                      <div class="ring-w"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg><span class="ring-txt">5/7</span></div>
+                    </div>
+                    <div class="days-row">
+                      <div class="day-col"><span class="day-lbl">Mon</span><div class="day-box done">17</div></div>
+                      <div class="day-col"><span class="day-lbl">Tue</span><div class="day-box done">18</div></div>
+                      <div class="day-col"><span class="day-lbl">Wed</span><div class="day-box done">19</div></div>
+                      <div class="day-col"><span class="day-lbl today">Thu</span><div class="day-box today-cell">20</div></div>
+                      <div class="day-col"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                      <div class="day-col"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                      <div class="day-col"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div class="habit"><div class="habit-bar" style="background:#10b981"></div><span class="habit-emoji">🧘</span><div class="habit-info"><div class="habit-name">Morning Meditation</div><div class="habit-meta">Strong · 42 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#f59e0b"></div><span class="habit-emoji">📖</span><div class="habit-info"><div class="habit-name">Read 20 Pages</div><div class="habit-meta">Growing · 12 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#f59e0b"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#10b981"></div><span class="habit-emoji">💪</span><div class="habit-info"><div class="habit-name">Workout</div><div class="habit-meta">Strong · 28 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#10b981"></div><span class="habit-emoji">💧</span><div class="habit-info"><div class="habit-name">Drink 2L Water</div><div class="habit-meta">Strong · 35 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#8b5cf6"></div><span class="habit-emoji">😴</span><div class="habit-info"><div class="habit-name">Sleep by 11pm</div><div class="habit-meta">Building · 7 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#8b5cf6"></div><div class="chain-dot" style="background:#8b5cf6"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-bar"><div class="bottom-bar-inner" style="padding-left:20px;padding-right:20px">
+              <div class="pill"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Settings</div>
+              <div class="fab"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="pill"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Templates</div>
+            </div></div>
+          </div>
+        </div>
+        <div class="callout callout-issue" style="top:60px;right:-16px;font-size:7px">56px top pad</div>
+        <div class="callout callout-issue" style="top:220px;left:-16px;font-size:7px">8px gap</div>
+        <div class="callout callout-issue" style="bottom:50px;right:-16px;font-size:7px">bar: pH 20</div>
+        <div class="callout callout-issue" style="bottom:50px;left:-16px;font-size:7px">list: pH 24</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: BALANCED -->
+    <div class="comparison-col">
+      <div class="version-label">
+        <span class="tag tag-after">Balanced</span>
+        <span class="version-name">Aligned edges, breathing room</span>
+      </div>
+      <div style="position:relative">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-status"></div>
+            <div class="scroll-area">
+              <div class="h-guide left" style="left:22px;border-color:rgba(16,185,129,0.3)"></div>
+              <div class="h-guide right" style="right:22px;border-color:rgba(16,185,129,0.3)"></div>
+              <div style="height:40px"></div>
+              <div style="padding:0 22px">
+                <div class="ct" style="margin-bottom:14px">
+                  <div class="ct-inner">
+                    <div class="ct-head">
+                      <div class="ct-head-left">
+                        <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></div>
+                        <div class="nav-btn"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></div>
+                        <span class="date-txt">Feb 17 – 23</span>
+                      </div>
+                      <div class="ring-w"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" fill="none" stroke="#f5f5f4" stroke-width="3"/><circle cx="18" cy="18" r="15" fill="none" stroke="#10b981" stroke-width="3" stroke-dasharray="94.25" stroke-dashoffset="27" stroke-linecap="round"/></svg><span class="ring-txt">5/7</span></div>
+                    </div>
+                    <div class="days-row">
+                      <div class="day-col"><span class="day-lbl">Mon</span><div class="day-box done">17</div></div>
+                      <div class="day-col"><span class="day-lbl">Tue</span><div class="day-box done">18</div></div>
+                      <div class="day-col"><span class="day-lbl">Wed</span><div class="day-box done">19</div></div>
+                      <div class="day-col"><span class="day-lbl today">Thu</span><div class="day-box today-cell">20</div></div>
+                      <div class="day-col"><span class="day-lbl">Fri</span><div class="day-box future">21</div></div>
+                      <div class="day-col"><span class="day-lbl">Sat</span><div class="day-box future">22</div></div>
+                      <div class="day-col"><span class="day-lbl">Sun</span><div class="day-box future">23</div></div>
+                    </div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:12px">
+                  <div class="habit"><div class="habit-bar" style="background:#10b981"></div><span class="habit-emoji">🧘</span><div class="habit-info"><div class="habit-name">Morning Meditation</div><div class="habit-meta">Strong · 42 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#f59e0b"></div><span class="habit-emoji">📖</span><div class="habit-info"><div class="habit-name">Read 20 Pages</div><div class="habit-meta">Growing · 12 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#f59e0b"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#10b981"></div><span class="habit-emoji">💪</span><div class="habit-info"><div class="habit-name">Workout</div><div class="habit-meta">Strong · 28 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#10b981"></div><span class="habit-emoji">💧</span><div class="habit-info"><div class="habit-name">Drink 2L Water</div><div class="habit-meta">Strong · 35 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#10b981"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                  <div class="habit"><div class="habit-bar" style="background:#8b5cf6"></div><span class="habit-emoji">😴</span><div class="habit-info"><div class="habit-name">Sleep by 11pm</div><div class="habit-meta">Building · 7 day streak</div></div><div class="habit-chain"><div class="chain-dot" style="background:#8b5cf6"></div><div class="chain-dot" style="background:#8b5cf6"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div><div class="chain-dot" style="background:#DDD8D2"></div></div></div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom-bar"><div class="bottom-bar-inner" style="padding-left:22px;padding-right:22px">
+              <div class="pill"><svg viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Settings</div>
+              <div class="fab"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+              <div class="pill"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Templates</div>
+            </div></div>
+          </div>
+        </div>
+        <div class="callout callout-fix" style="top:60px;right:-16px;font-size:7px">48px top pad ✓</div>
+        <div class="callout callout-fix" style="top:220px;left:-16px;font-size:7px">12px gap ✓</div>
+        <div class="callout callout-fix" style="bottom:50px;right:-16px;font-size:7px">bar: pH 22 ✓</div>
+        <div class="callout callout-fix" style="bottom:50px;left:-16px;font-size:7px">list: pH 22 ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="table-section">
+    <h2>Four alignment fixes</h2>
+    <p class="table-sub">Targeted spacing adjustments to align the three zones into one cohesive vertical rhythm.</p>
+    <table class="diff-table">
+      <thead><tr><th style="width:24%">Property</th><th style="width:16%">Before</th><th style="width:16%">After</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td class="prop">List paddingHorizontal</td><td><span class="val-b">24px</span></td><td><span class="val-a">22px</span></td><td class="rationale">Meets the bottom bar halfway. Both zones now share 22px, creating one vertical edge.</td></tr>
+        <tr><td class="prop">Bar paddingHorizontal</td><td><span class="val-b">20px</span></td><td><span class="val-a">22px</span></td><td class="rationale">Shifts pills 2px inward to align with the habit cards above.</td></tr>
+        <tr><td class="prop">Card marginVertical</td><td><span class="val-b">4px (8px gap)</span></td><td><span class="val-a">6px (12px gap)</span></td><td class="rationale">Gives each card breathing room. 12px matches the CalendarTimeline's internal padding rhythm.</td></tr>
+        <tr><td class="prop">Header paddingTop</td><td><span class="val-b">pt-14 (56px)</span></td><td><span class="val-a">pt-12 (48px)</span></td><td class="rationale">Saves 8px of dead space above the timeline. Keeps content from feeling pushed down.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

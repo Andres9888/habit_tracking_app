@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Detail - Science-Based Reorder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif !important; background: #111 !important; margin: 0; }
+    h1, h2, h3, p, span, div { font-family: 'Inter', sans-serif !important; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #fafaf9;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px -12px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 50;
+    }
+    .safe-area-top { height: 54px; }
+
+    .scroll-content {
+      height: calc(812px - 54px);
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 20px 0 12px 0;
+    }
+    .section-label::before, .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #DDD8D2;
+    }
+    .section-label span {
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      letter-spacing: 1.5px !important;
+      color: #9C958D !important;
+    }
+
+    .stat-chip {
+      flex: 1;
+      text-align: center;
+      background: white;
+      border: 1px solid #e7e5e4;
+      border-radius: 12px;
+      padding: 10px 4px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .stat-chip .val { font-size: 18px; font-weight: 700; color: #1c1917; }
+    .stat-chip .lbl { font-size: 10px; font-weight: 600; color: #a8a29e; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* Calendar styles */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+    .cal-header { font-size: 10px; color: #a8a29e; text-align: center; padding: 4px 0; font-weight: 600; }
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      color: #57534e;
+    }
+    .cal-day.completed { background: #f59e0b; color: white; font-weight: 600; }
+    .cal-day.missed { background: #fef3c7; color: #d97706; }
+    .cal-day.future { color: #d6d3d1; }
+    .cal-day.empty { visibility: hidden; }
+    .cal-day.today { box-shadow: inset 0 0 0 2px #f59e0b; font-weight: 700; }
+
+    /* Annotation callouts */
+    .callout {
+      position: absolute;
+      background: rgba(17,17,17,0.95);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 12px 14px;
+      max-width: 220px;
+      z-index: 10;
+    }
+    .callout::before {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 1px;
+    }
+    .callout .tag {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+    .callout p { font-size: 12px; color: #d6d3d1; line-height: 1.5; margin: 0; }
+
+    .tag-good { background: rgba(16,185,129,0.2); color: #34d399; }
+    .tag-problem { background: rgba(251,191,36,0.2); color: #fbbf24; }
+    .tag-science { background: rgba(139,92,246,0.2); color: #a78bfa; }
+
+    /* Connector lines */
+    .connector {
+      position: absolute;
+      border: 1px dashed rgba(255,255,255,0.15);
+      z-index: 5;
+    }
+
+    .badge-new {
+      background: linear-gradient(135deg, #34d399, #10b981);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .badge-moved {
+      background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .arrow-down {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #8b5cf6;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .section-highlight {
+      position: relative;
+    }
+    .section-highlight::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border: 2px dashed;
+      border-radius: 16px;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .highlight-green::after { border-color: #34d399; }
+    .highlight-purple::after { border-color: #a78bfa; }
+    .highlight-amber::after { border-color: #fbbf24; }
+  </style>
+</head>
+<body class="p-8">
+
+  <!-- Title -->
+  <div class="text-center mb-3">
+    <h1 class="text-white text-3xl font-extrabold mb-2" style="letter-spacing: -0.5px;">Habit Detail Page — Science-Based Reorder</h1>
+    <p class="text-stone-500 text-sm max-w-2xl mx-auto">Applying behavioral psychology to optimize section ordering for motivation and engagement</p>
+  </div>
+
+  <!-- Legend -->
+  <div class="flex items-center justify-center gap-6 mb-8">
+    <div class="flex items-center gap-2">
+      <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+      <span class="text-stone-400 text-xs font-medium">Already Good</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="w-3 h-3 rounded-full bg-amber-400"></div>
+      <span class="text-stone-400 text-xs font-medium">Problem</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <div class="w-3 h-3 rounded-full bg-violet-400"></div>
+      <span class="text-stone-400 text-xs font-medium">Science Principle</span>
+    </div>
+  </div>
+
+  <div class="flex gap-16 justify-center items-start flex-wrap">
+
+    <!-- ===================== CURRENT (BEFORE) ===================== -->
+    <div class="flex flex-col items-center relative">
+      <div class="flex items-center gap-3 mb-4">
+        <h2 class="text-stone-400 font-bold text-lg">Current Order</h2>
+        <span class="text-stone-600 text-xs border border-stone-700 rounded-full px-3 py-1">Before</span>
+      </div>
+
+      <div class="relative">
+        <div class="phone-frame">
+          <div class="notch"></div>
+          <div class="safe-area-top"></div>
+          <div class="scroll-content">
+            <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100 min-h-full px-4 pt-2 pb-8">
+
+              <!-- Header -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center">
+                  <span class="text-stone-400 text-sm">✕</span>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center">
+                  <span class="text-stone-400 text-sm">✎</span>
+                </div>
+              </div>
+
+              <!-- Hero -->
+              <div class="flex flex-col items-center mb-4">
+                <div class="w-20 h-20 rounded-2xl flex items-center justify-center mb-3" style="background: #fef3c7; box-shadow: 0 6px 16px rgba(245,158,11,0.15);">
+                  <span class="text-4xl">🧘</span>
+                </div>
+                <h2 class="text-2xl font-bold text-stone-900 mb-2" style="font-size: 30px; letter-spacing: -0.5px;">Meditate</h2>
+                <div class="flex items-center gap-1.5 rounded-full px-4 py-2" style="background: #ecfdf5; box-shadow: 0 2px 8px rgba(16,185,129,0.1);">
+                  <span style="font-size: 15px;">🔥</span>
+                  <span class="font-semibold" style="font-size: 15px; color: #15803d;">12 day streak</span>
+                </div>
+              </div>
+
+              <!-- Quick Stats (4 chips - includes duplicate streak) -->
+              <div class="flex gap-1.5 px-1 mb-1" id="current-stats">
+                <div class="stat-chip">
+                  <div class="val">🔥 12</div>
+                  <div class="lbl">Streak</div>
+                </div>
+                <div class="stat-chip">
+                  <div class="val">⭐ 28</div>
+                  <div class="lbl">Best</div>
+                </div>
+                <div class="stat-chip">
+                  <div class="val">78%</div>
+                  <div class="lbl">Rate</div>
+                </div>
+                <div class="stat-chip">
+                  <div class="val">156</div>
+                  <div class="lbl">Total</div>
+                </div>
+              </div>
+
+              <!-- STRENGTH section (currently first) -->
+              <div class="section-label">
+                <span>STRENGTH</span>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 shadow-sm section-highlight highlight-amber" id="current-strength">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-base font-bold text-stone-800">Habit Strength</h3>
+                  <div class="flex gap-0.5 p-0.5 bg-stone-100 rounded-lg">
+                    <button class="px-2.5 py-1 text-[10px] font-semibold text-stone-500 rounded">1M</button>
+                    <button class="px-2.5 py-1 text-[10px] font-semibold bg-white text-stone-800 rounded shadow-sm">1Y</button>
+                    <button class="px-2.5 py-1 text-[10px] font-semibold text-stone-500 rounded">All</button>
+                  </div>
+                </div>
+                <!-- Progress Ring + Status -->
+                <div class="flex items-center gap-4 mb-3">
+                  <div class="w-16 h-16 relative flex-shrink-0">
+                    <svg class="w-full h-full -rotate-90">
+                      <circle cx="32" cy="32" r="26" stroke="#f5f5f4" stroke-width="5" fill="none"/>
+                      <circle cx="32" cy="32" r="26" stroke="#f59e0b" stroke-width="5" fill="none" stroke-dasharray="163.4" stroke-dashoffset="36" stroke-linecap="round"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <span class="text-base font-bold text-stone-900">78%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-stone-800">Strong</div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="text-xs font-medium text-emerald-500">+12%</span>
+                      <span class="text-[10px] text-stone-400">vs last month</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Chart placeholder -->
+                <div class="relative h-24 mb-3 -mx-1">
+                  <svg width="100%" height="100%" viewBox="0 0 300 96" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,80 C30,75 60,70 90,55 C120,40 150,45 180,35 C210,25 240,20 270,22 L300,18 L300,96 L0,96Z" fill="url(#chartGrad)"/>
+                    <path d="M0,80 C30,75 60,70 90,55 C120,40 150,45 180,35 C210,25 240,20 270,22 L300,18" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="300" cy="18" r="5" fill="#f59e0b" opacity="0.4"/>
+                    <circle cx="300" cy="18" r="3" fill="#f59e0b"/>
+                  </svg>
+                  <div class="absolute bottom-0 left-0 right-0 flex justify-between text-[9px] text-stone-400 px-1">
+                    <span>Mar '25</span><span>Jun</span><span>Sep</span><span>Dec</span><span>Mar '26</span>
+                  </div>
+                </div>
+                <!-- Stats Row -->
+                <div class="flex items-center bg-stone-50 rounded-lg px-3 py-2">
+                  <div class="flex-1 text-center">
+                    <div class="text-[10px] text-stone-400">Since Start</div>
+                    <div class="text-sm font-semibold text-emerald-500">78%</div>
+                  </div>
+                  <div class="w-px h-5 bg-stone-200"></div>
+                  <div class="flex-1 text-center">
+                    <div class="text-[10px] text-stone-400">Last Month</div>
+                    <div class="text-sm font-semibold text-emerald-500">+12%</div>
+                  </div>
+                  <div class="w-px h-5 bg-stone-200"></div>
+                  <div class="flex-1 text-center">
+                    <div class="text-[10px] text-stone-400">Last Week</div>
+                    <div class="text-sm font-semibold text-emerald-500">+3%</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- HISTORY section (currently second / bottom) -->
+              <div class="section-label">
+                <span>HISTORY</span>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 shadow-sm section-highlight highlight-amber" id="current-calendar">
+                <div class="cal-grid mb-2">
+                  <div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div>
+                  <div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div><div class="cal-header">Sun</div>
+                  <!-- Week 1 -->
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day completed">1</div>
+                  <div class="cal-day completed">2</div>
+                  <!-- Week 2 -->
+                  <div class="cal-day completed">3</div>
+                  <div class="cal-day missed">4</div>
+                  <div class="cal-day completed">5</div>
+                  <div class="cal-day completed">6</div>
+                  <div class="cal-day completed">7</div>
+                  <div class="cal-day missed">8</div>
+                  <div class="cal-day completed">9</div>
+                  <!-- Week 3 -->
+                  <div class="cal-day completed">10</div>
+                  <div class="cal-day completed">11</div>
+                  <div class="cal-day completed">12</div>
+                  <div class="cal-day completed">13</div>
+                  <div class="cal-day completed">14</div>
+                  <div class="cal-day completed">15</div>
+                  <div class="cal-day completed">16</div>
+                  <!-- Week 4 -->
+                  <div class="cal-day completed">17</div>
+                  <div class="cal-day completed">18</div>
+                  <div class="cal-day completed">19</div>
+                  <div class="cal-day completed">20</div>
+                  <div class="cal-day missed">21</div>
+                  <div class="cal-day completed">22</div>
+                  <div class="cal-day completed">23</div>
+                  <!-- Week 5 -->
+                  <div class="cal-day completed">24</div>
+                  <div class="cal-day completed">25</div>
+                  <div class="cal-day completed">26</div>
+                  <div class="cal-day completed">27</div>
+                  <div class="cal-day completed">28</div>
+                  <div class="cal-day today">1</div>
+                  <div class="cal-day future">2</div>
+                  <!-- Week 6 -->
+                  <div class="cal-day future">3</div>
+                  <div class="cal-day future">4</div>
+                  <div class="cal-day future">5</div>
+                  <div class="cal-day future">6</div>
+                  <div class="cal-day future">7</div>
+                  <div class="cal-day future">8</div>
+                  <div class="cal-day future">9</div>
+                </div>
+                <!-- Summary -->
+                <div class="flex items-center justify-center gap-4 pt-3 border-t border-stone-100">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-sm" style="background: #f59e0b;"></div>
+                    <span class="text-xs text-stone-500">24 completed</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-sm" style="background: #fef3c7;"></div>
+                    <span class="text-xs text-stone-500">3 missed</span>
+                  </div>
+                </div>
+                <!-- Month Nav -->
+                <div class="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
+                  <span class="text-stone-400 text-lg">‹</span>
+                  <span class="text-sm font-semibold text-stone-700">February 2026</span>
+                  <span class="text-stone-400 text-lg">›</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Annotations for BEFORE -->
+        <!-- Duplicate callout -->
+        <div class="callout" style="top: 220px; right: -235px;">
+          <div class="tag tag-problem">Duplicate Data</div>
+          <p>"🔥 12" appears in <strong style="color: #fbbf24;">both</strong> the hero badge AND the first stat chip — wasting precious above-fold space for the same number.</p>
+        </div>
+
+        <!-- Cognitive overload callout -->
+        <div class="callout" style="top: 385px; right: -235px;">
+          <div class="tag tag-problem">Cognitive Overload</div>
+          <p>Strength section has <strong style="color: #fbbf24;">4 sub-components</strong> (ring + chart + stats + toggle). Users hit a "wall of data" right after quick stats.</p>
+        </div>
+
+        <!-- Calendar buried callout -->
+        <div class="callout" style="bottom: 50px; right: -235px;">
+          <div class="tag tag-problem">Buried Action</div>
+          <p>Calendar is the most <strong style="color: #fbbf24;">actionable</strong> element (tap to mark days) but requires scrolling past analytics to reach it.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ===================== CENTER ARROW ===================== -->
+    <div class="flex flex-col items-center justify-center gap-4 py-48">
+      <div class="text-4xl">→</div>
+      <div class="writing-vertical text-stone-600 text-xs font-semibold tracking-widest" style="writing-mode: vertical-lr;">SCIENCE-BASED REORDER</div>
+    </div>
+
+
+    <!-- ===================== PROPOSED (AFTER) ===================== -->
+    <div class="flex flex-col items-center relative">
+      <div class="flex items-center gap-3 mb-4">
+        <h2 class="text-white font-bold text-lg">Proposed Order</h2>
+        <span class="badge-new">Recommended</span>
+      </div>
+
+      <div class="relative">
+        <div class="phone-frame" style="box-shadow: 0 25px 80px -12px rgba(16,185,129,0.15), 0 25px 80px -12px rgba(0,0,0,0.5);">
+          <div class="notch"></div>
+          <div class="safe-area-top"></div>
+          <div class="scroll-content">
+            <div class="bg-gradient-to-b from-stone-50 via-amber-50/30 to-stone-100 min-h-full px-4 pt-2 pb-8">
+
+              <!-- Header (unchanged) -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center">
+                  <span class="text-stone-400 text-sm">✕</span>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-white shadow-sm flex items-center justify-center">
+                  <span class="text-stone-400 text-sm">✎</span>
+                </div>
+              </div>
+
+              <!-- Hero (unchanged) -->
+              <div class="flex flex-col items-center mb-4">
+                <div class="w-20 h-20 rounded-2xl flex items-center justify-center mb-3" style="background: #fef3c7; box-shadow: 0 6px 16px rgba(245,158,11,0.15);">
+                  <span class="text-4xl">🧘</span>
+                </div>
+                <h2 class="text-2xl font-bold text-stone-900 mb-2" style="font-size: 30px; letter-spacing: -0.5px;">Meditate</h2>
+                <div class="flex items-center gap-1.5 rounded-full px-4 py-2" style="background: #ecfdf5; box-shadow: 0 2px 8px rgba(16,185,129,0.1);">
+                  <span style="font-size: 15px;">🔥</span>
+                  <span class="font-semibold" style="font-size: 15px; color: #15803d;">12 day streak</span>
+                </div>
+              </div>
+
+              <!-- Quick Stats (3 chips - streak removed) -->
+              <div class="flex gap-1.5 px-1 mb-1 section-highlight highlight-green" id="proposed-stats">
+                <div class="stat-chip">
+                  <div class="val">⭐ 28</div>
+                  <div class="lbl">Best</div>
+                </div>
+                <div class="stat-chip">
+                  <div class="val">78%</div>
+                  <div class="lbl">Rate</div>
+                </div>
+                <div class="stat-chip">
+                  <div class="val">156</div>
+                  <div class="lbl">Total</div>
+                </div>
+              </div>
+
+              <!-- HISTORY section (MOVED UP) -->
+              <div class="section-label">
+                <span>HISTORY</span>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 shadow-sm section-highlight highlight-green" id="proposed-calendar">
+                <div class="cal-grid mb-2">
+                  <div class="cal-header">Mon</div><div class="cal-header">Tue</div><div class="cal-header">Wed</div>
+                  <div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div><div class="cal-header">Sun</div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day empty"></div>
+                  <div class="cal-day completed">1</div>
+                  <div class="cal-day completed">2</div>
+                  <div class="cal-day completed">3</div>
+                  <div class="cal-day missed">4</div>
+                  <div class="cal-day completed">5</div>
+                  <div class="cal-day completed">6</div>
+                  <div class="cal-day completed">7</div>
+                  <div class="cal-day missed">8</div>
+                  <div class="cal-day completed">9</div>
+                  <div class="cal-day completed">10</div>
+                  <div class="cal-day completed">11</div>
+                  <div class="cal-day completed">12</div>
+                  <div class="cal-day completed">13</div>
+                  <div class="cal-day completed">14</div>
+                  <div class="cal-day completed">15</div>
+                  <div class="cal-day completed">16</div>
+                  <div class="cal-day completed">17</div>
+                  <div class="cal-day completed">18</div>
+                  <div class="cal-day completed">19</div>
+                  <div class="cal-day completed">20</div>
+                  <div class="cal-day missed">21</div>
+                  <div class="cal-day completed">22</div>
+                  <div class="cal-day completed">23</div>
+                  <div class="cal-day completed">24</div>
+                  <div class="cal-day completed">25</div>
+                  <div class="cal-day completed">26</div>
+                  <div class="cal-day completed">27</div>
+                  <div class="cal-day completed">28</div>
+                  <div class="cal-day today">1</div>
+                  <div class="cal-day future">2</div>
+                  <div class="cal-day future">3</div>
+                  <div class="cal-day future">4</div>
+                  <div class="cal-day future">5</div>
+                  <div class="cal-day future">6</div>
+                  <div class="cal-day future">7</div>
+                  <div class="cal-day future">8</div>
+                  <div class="cal-day future">9</div>
+                </div>
+                <div class="flex items-center justify-center gap-4 pt-3 border-t border-stone-100">
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-sm" style="background: #f59e0b;"></div>
+                    <span class="text-xs text-stone-500">24 completed</span>
+                  </div>
+                  <div class="flex items-center gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-sm" style="background: #fef3c7;"></div>
+                    <span class="text-xs text-stone-500">3 missed</span>
+                  </div>
+                </div>
+                <div class="flex items-center justify-between mt-3 pt-3 border-t border-stone-100">
+                  <span class="text-stone-400 text-lg">‹</span>
+                  <span class="text-sm font-semibold text-stone-700">February 2026</span>
+                  <span class="text-stone-400 text-lg">›</span>
+                </div>
+              </div>
+
+              <!-- STRENGTH section (MOVED DOWN) -->
+              <div class="section-label">
+                <span>STRENGTH</span>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 shadow-sm section-highlight highlight-green" id="proposed-strength">
+                <div class="flex items-center justify-between mb-3">
+                  <h3 class="text-base font-bold text-stone-800">Habit Strength</h3>
+                  <div class="flex gap-0.5 p-0.5 bg-stone-100 rounded-lg">
+                    <button class="px-2.5 py-1 text-[10px] font-semibold text-stone-500 rounded">1M</button>
+                    <button class="px-2.5 py-1 text-[10px] font-semibold bg-white text-stone-800 rounded shadow-sm">1Y</button>
+                    <button class="px-2.5 py-1 text-[10px] font-semibold text-stone-500 rounded">All</button>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 mb-3">
+                  <div class="w-16 h-16 relative flex-shrink-0">
+                    <svg class="w-full h-full -rotate-90">
+                      <circle cx="32" cy="32" r="26" stroke="#f5f5f4" stroke-width="5" fill="none"/>
+                      <circle cx="32" cy="32" r="26" stroke="#f59e0b" stroke-width="5" fill="none" stroke-dasharray="163.4" stroke-dashoffset="36" stroke-linecap="round"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <span class="text-base font-bold text-stone-900">78%</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-stone-800">Strong</div>
+                    <div class="flex items-center gap-1 mt-1">
+                      <span class="text-xs font-medium text-emerald-500">+12%</span>
+                      <span class="text-[10px] text-stone-400">vs last month</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="relative h-24 mb-3 -mx-1">
+                  <svg width="100%" height="100%" viewBox="0 0 300 96" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="chartGrad2" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.2"/>
+                        <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <path d="M0,80 C30,75 60,70 90,55 C120,40 150,45 180,35 C210,25 240,20 270,22 L300,18 L300,96 L0,96Z" fill="url(#chartGrad2)"/>
+                    <path d="M0,80 C30,75 60,70 90,55 C120,40 150,45 180,35 C210,25 240,20 270,22 L300,18" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="300" cy="18" r="5" fill="#f59e0b" opacity="0.4"/>
+                    <circle cx="300" cy="18" r="3" fill="#f59e0b"/>
+                  </svg>
+                  <div class="absolute bottom-0 left-0 right-0 flex justify-between text-[9px] text-stone-400 px-1">
+                    <span>Mar '25</span><span>Jun</span><span>Sep</span><span>Dec</span><span>Mar '26</span>
+                  </div>
+                </div>
+                <div class="flex items-center bg-stone-50 rounded-lg px-3 py-2">
+                  <div class="flex-1 text-center">
+                    <div class="text-[10px] text-stone-400">Since Start</div>
+                    <div class="text-sm font-semibold text-emerald-500">78%</div>
+                  </div>
+                  <div class="w-px h-5 bg-stone-200"></div>
+                  <div class="flex-1 text-center">
+                    <div class="text-[10px] text-stone-400">Last Month</div>
+                    <div class="text-sm font-semibold text-emerald-500">+12%</div>
+                  </div>
+                  <div class="w-px h-5 bg-stone-200"></div>
+                  <div class="flex-1 text-center">
+                    <div class="text-[10px] text-stone-400">Last Week</div>
+                    <div class="text-sm font-semibold text-emerald-500">+3%</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Annotations for AFTER -->
+        <!-- Dedup callout -->
+        <div class="callout" style="top: 220px; left: -250px;">
+          <div class="tag tag-science">Serial Position Effect</div>
+          <p>Streak only in hero badge (primacy). 3 stat chips show <strong style="color: #a78bfa;">unique complementary data</strong> — no duplication.</p>
+        </div>
+
+        <!-- Calendar up callout -->
+        <div class="callout" style="top: 370px; left: -250px;">
+          <div class="tag tag-science">Zeigarnik Effect</div>
+          <p>Calendar <strong style="color: #a78bfa;">moved up</strong> — visible gaps (missed days) create psychological tension that drives users to act. Most <strong style="color: #a78bfa;">actionable</strong> element is now easy to reach.</p>
+        </div>
+
+        <!-- Cognitive load callout -->
+        <div class="callout" style="top: 510px; left: -250px;">
+          <div class="tag tag-science">Cognitive Load</div>
+          <p>Simple → Complex progression. Calendar (scannable grid) before Strength (dense analytics) prevents the <strong style="color: #a78bfa;">"data wall"</strong> feeling.</p>
+        </div>
+
+        <!-- Peak-end callout -->
+        <div class="callout" style="bottom: 60px; left: -250px;">
+          <div class="tag tag-science">Peak-End Rule</div>
+          <p>Strength chart shows <strong style="color: #a78bfa;">upward growth trajectory</strong> — users end the page on a positive, reflective note. They remember their improvement, not just data.</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===================== SCIENCE SUMMARY ===================== -->
+  <div class="max-w-4xl mx-auto mt-16 mb-8">
+    <h2 class="text-white text-xl font-bold mb-6 text-center">Why This Order — The Science</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+      <!-- Card 1 -->
+      <div class="rounded-2xl p-5" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(139,92,246,0.15);">
+            <span class="text-lg">🧠</span>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-sm">Serial Position Effect</h3>
+            <p class="text-stone-500 text-[11px]">Murdock, 1962</p>
+          </div>
+        </div>
+        <p class="text-stone-400 text-sm leading-relaxed">Users remember the <strong class="text-stone-300">first</strong> and <strong class="text-stone-300">last</strong> items best. Streak badge (first) and growth chart (last) are the two most motivating elements — placed at the two positions with highest recall.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="rounded-2xl p-5" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(251,191,36,0.15);">
+            <span class="text-lg">⚡</span>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-sm">Zeigarnik Effect</h3>
+            <p class="text-stone-500 text-[11px]">Zeigarnik, 1927</p>
+          </div>
+        </div>
+        <p class="text-stone-400 text-sm leading-relaxed">Incomplete tasks stay top-of-mind. The calendar's <strong class="text-stone-300">visible gaps</strong> (missed days) create productive tension. Moving it up means users encounter this "must complete" signal <strong class="text-stone-300">before</strong> deep analytics.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="rounded-2xl p-5" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(16,185,129,0.15);">
+            <span class="text-lg">📊</span>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-sm">Cognitive Load Theory</h3>
+            <p class="text-stone-500 text-[11px]">Sweller, 1988</p>
+          </div>
+        </div>
+        <p class="text-stone-400 text-sm leading-relaxed">Working memory handles ~4 chunks. Current order dumps <strong class="text-stone-300">4 stat chips → ring → chart → 3-column stats</strong> consecutively. New order: simple grid first, then progressively denser analytics — <strong class="text-stone-300">simple → complex</strong>.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="rounded-2xl p-5" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: rgba(244,114,182,0.15);">
+            <span class="text-lg">🎯</span>
+          </div>
+          <div>
+            <h3 class="text-white font-bold text-sm">Peak-End Rule</h3>
+            <p class="text-stone-500 text-[11px]">Kahneman, 1993</p>
+          </div>
+        </div>
+        <p class="text-stone-400 text-sm leading-relaxed">People judge experiences by the <strong class="text-stone-300">peak moment</strong> and <strong class="text-stone-300">how they end</strong>. The strength chart with its upward curve is a positive "you're growing" narrative — the perfect emotional ending that users carry with them.</p>
+      </div>
+
+    </div>
+
+    <!-- Summary diff -->
+    <div class="mt-8 rounded-2xl p-6" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+      <h3 class="text-white font-bold text-sm mb-4">Change Summary</h3>
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <p class="text-stone-500 text-xs font-semibold mb-2 uppercase tracking-wider">Before</p>
+          <div class="space-y-2 text-sm">
+            <div class="text-stone-400">1. Hero + Streak badge</div>
+            <div class="text-stone-400">2. Quick Stats <span class="text-amber-400 text-xs">(4 chips, streak duplicated)</span></div>
+            <div class="text-stone-400">3. Strength Section <span class="text-amber-400 text-xs">(dense analytics)</span></div>
+            <div class="text-stone-400">4. Calendar <span class="text-amber-400 text-xs">(buried below fold)</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="text-emerald-400 text-xs font-semibold mb-2 uppercase tracking-wider">After</p>
+          <div class="space-y-2 text-sm">
+            <div class="text-stone-300">1. Hero + Streak badge</div>
+            <div class="text-stone-300">2. Quick Stats <span class="text-emerald-400 text-xs">(3 chips, no dupe)</span></div>
+            <div class="text-stone-300">3. Calendar <span class="text-emerald-400 text-xs">(actionable, Zeigarnik)</span></div>
+            <div class="text-stone-300">4. Strength Section <span class="text-emerald-400 text-xs">(positive ending)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

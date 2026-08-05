@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Archived Habits — Swipe to Act</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    max-width: 390px;
+    margin: 0 auto !important;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Literata', serif !important; }
+
+  /* ── Sticky Header ─────────────────────── */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: #F5F1ED;
+    padding: 16px 20px 0 20px;
+  }
+
+  /* ── Swipe card wrappers ───────────────── */
+  .card-wrapper {
+    max-height: 200px;
+    overflow: visible;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.35s ease,
+                margin-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-wrapper.collapsing {
+    max-height: 0 !important;
+    opacity: 0;
+    margin-bottom: 0 !important;
+    overflow: hidden;
+  }
+
+  .card-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  /* ── Action backgrounds revealed on swipe ─ */
+  .swipe-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    padding: 0 28px;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+
+  .swipe-bg.resume-bg { background: #059669; justify-content: flex-start; }
+  .swipe-bg.delete-bg { background: #B53030; justify-content: flex-end; }
+  .swipe-bg.visible { opacity: 1; }
+
+  .action-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    transform: scale(0.8);
+    opacity: 0.45;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .action-label.past-threshold { transform: scale(1); opacity: 1; }
+
+  /* ── Habit card ────────────────────────── */
+  .habit-card {
+    position: relative;
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    cursor: grab;
+    touch-action: pan-y;
+    will-change: transform;
+    z-index: 2;
+  }
+
+  .habit-card.snapping {
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .habit-card.flying {
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+    width: 4px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .emoji-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #F5F1ED;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .stat-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #6E6660;
+    background: #F5F1ED;
+  }
+
+  /* ── Hint text ─────────────────────────── */
+  .hint-text {
+    text-align: center;
+    font-size: 13px;
+    color: #9CA3AF;
+    padding: 8px 0 4px;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
+    max-height: 40px;
+    overflow: hidden;
+  }
+
+  .hint-text.hidden { opacity: 0; max-height: 0; padding: 0; }
+
+  /* ── Delete confirm on red bg ──────────── */
+  .confirm-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .confirm-btn {
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.7);
+    background: transparent;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s ease;
+  }
+
+  .confirm-btn:hover, .confirm-btn:active { background: rgba(255,255,255,0.2); }
+  .confirm-btn.yes { background: rgba(255,255,255,0.25); }
+
+  /* ── Toast ─────────────────────────────── */
+  .toast-msg {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    padding: 12px 24px;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  }
+
+  .toast-msg.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast-msg.resume-t { background: #059669; }
+  .toast-msg.delete-t { background: #B53030; }
+
+  /* ── Selection mode ────────────────────── */
+  .sel-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #D1D5DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .sel-check.checked { background: #059669; border-color: #059669; }
+
+  .selection-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 390px;
+    background: #fff;
+    padding: 16px 20px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -4px 20px rgba(45,42,38,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 60;
+    border-radius: 20px 20px 0 0;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .selection-bar.visible { transform: translateX(-50%) translateY(0); }
+
+  .sel-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: transform 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sel-btn:active { transform: scale(0.95); }
+  .sel-btn.resume { background: #059669; color: #fff; }
+  .sel-btn.delete { background: #B53030; color: #fff; }
+
+  /* ── Entrance anim ─────────────────────── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Sticky Header ═══ -->
+<div class="sticky-header">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <button onclick="history.back()" style="background:none; border:none; cursor:pointer; padding:4px;">
+        <i data-lucide="arrow-left" style="width:22px; height:22px; color:#2D2A26;"></i>
+      </button>
+      <h1 style="font-size:22px; font-weight:700; color:#2D2A26; letter-spacing:-0.3px;">Archived</h1>
+    </div>
+    <button id="selectBtn" onclick="toggleSelectionMode()" style="background:none; border:none; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; color:#059669; padding:6px 12px;">
+      Select
+    </button>
+  </div>
+  <p style="font-size:13px; color:#6E6660; margin-left:38px;" id="subtitleCount">5 habits resting here</p>
+</div>
+
+<!-- Hint -->
+<div id="hintText" class="hint-text" style="margin:0 20px;">
+  Swipe right to resume &middot; left to delete
+</div>
+
+<!-- ═══ Cards List ═══ -->
+<div id="cardList" style="padding:12px 20px 100px; display:flex; flex-direction:column; gap:16px;"></div>
+
+<!-- Toast -->
+<div id="toast" class="toast-msg"></div>
+
+<!-- ═══ Selection Bar ═══ -->
+<div id="selectionBar" class="selection-bar">
+  <span id="selCount" style="font-size:14px; font-weight:600; color:#2D2A26;">0 selected</span>
+  <div style="display:flex; gap:10px;">
+    <button class="sel-btn resume" onclick="batchAction('resume')">
+      <i data-lucide="rotate-ccw" style="width:15px; height:15px;"></i> Resume
+    </button>
+    <button class="sel-btn delete" onclick="batchAction('delete')">
+      <i data-lucide="trash-2" style="width:15px; height:15px;"></i> Delete
+    </button>
+  </div>
+</div>
+
+<script>
+/* ═══ DATA ═══════════════════════════════ */
+const habits = [
+  { id: 1, name: 'Morning Meditation', emoji: '\u{1F9D8}', strength: 72, streak: 14, completions: 156, daysAgo: 2 },
+  { id: 2, name: 'Daily Journal',      emoji: '\u{270D}\u{FE0F}', strength: 85, streak: 42, completions: 312, daysAgo: 5 },
+  { id: 3, name: 'Read 30 Minutes',    emoji: '\u{1F4D6}', strength: 58, streak: 7,  completions: 89,  daysAgo: 20 },
+  { id: 4, name: 'Cold Shower',        emoji: '\u{1F9CA}', strength: 35, streak: 3,  completions: 24,  daysAgo: 34 },
+  { id: 5, name: 'Push-ups',           emoji: '\u{1F4AA}', strength: 12, streak: 1,  completions: 8,   daysAgo: 67 },
+];
+
+let selectionMode = false;
+const selectedIds = new Set();
+let hintDismissed = false;
+
+/* ── helpers ─────────────────────────── */
+function sColor(s) { return s >= 70 ? '#059669' : s >= 40 ? '#D97706' : '#B53030'; }
+function daysAgo(d) { return d === 0 ? 'Today' : d === 1 ? '1 day ago' : d + ' days ago'; }
+
+/* ═══ RENDER ═════════════════════════════ */
+function render() {
+  const list = document.getElementById('cardList');
+  list.innerHTML = '';
+
+  habits.forEach((h, i) => {
+    const w = document.createElement('div');
+    w.className = 'card-wrapper';
+    w.dataset.id = h.id;
+    w.style.animation = `fadeInUp 0.45s cubic-bezier(0.34,1.56,0.64,1) ${i * 60}ms both`;
+
+    const sc = sColor(h.strength);
+
+    w.innerHTML = `
+      <div class="card-container">
+        <div class="swipe-bg resume-bg" data-bg="resume">
+          <div class="action-label" data-al="resume">
+            <i data-lucide="rotate-ccw" style="width:22px;height:22px;"></i>
+            <span>Resume</span>
+          </div>
+        </div>
+        <div class="swipe-bg delete-bg" data-bg="delete">
+          <div class="action-label" data-al="delete">
+            <i data-lucide="trash-2" style="width:22px;height:22px;"></i>
+            <span>Delete</span>
+          </div>
+          <div class="confirm-strip" style="display:none; position:absolute; right:20px;" data-confirm>
+            <span>Are you sure?</span>
+            <button class="confirm-btn yes" data-cfm-yes>Yes</button>
+            <button class="confirm-btn" data-cfm-no>No</button>
+          </div>
+        </div>
+
+        <div class="habit-card" data-hid="${h.id}">
+          <div class="accent-bar" style="background:${sc};"></div>
+          <div style="padding-left:8px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+              <div style="display:flex; align-items:center; gap:10px; min-width:0;">
+                ${selectionMode ? `<div class="sel-check${selectedIds.has(h.id) ? ' checked' : ''}" data-sel="${h.id}">
+                  ${selectedIds.has(h.id) ? '<i data-lucide="check" style="width:14px;height:14px;color:#fff;"></i>' : ''}
+                </div>` : ''}
+                <div class="emoji-circle">${h.emoji}</div>
+                <span style="font-size:16px; font-weight:600; color:#2D2A26; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${h.name}</span>
+              </div>
+              <span style="font-size:13px; color:#9CA3AF; white-space:nowrap; margin-left:8px;">${daysAgo(h.daysAgo)}</span>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div class="stat-badge"><i data-lucide="zap" style="width:13px;height:13px;color:${sc};"></i>${h.strength}%</div>
+              <div class="stat-badge"><i data-lucide="flame" style="width:13px;height:13px;color:#D97706;"></i>${h.streak}d</div>
+              <div class="stat-badge"><i data-lucide="check-circle-2" style="width:13px;height:13px;color:#059669;"></i>${h.completions}</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+    list.appendChild(w);
+  });
+
+  lucide.createIcons();
+  bindSwipe();
+}
+
+/* ═══ SWIPE ENGINE ═══════════════════════ */
+function bindSwipe() {
+  document.querySelectorAll('.habit-card').forEach(card => {
+    let sx = 0, sy = 0, cx = 0, dragging = false, lock = null, waitingConfirm = false;
+    const ctr = card.closest('.card-container');
+    const rBg = ctr.querySelector('[data-bg="resume"]');
+    const dBg = ctr.querySelector('[data-bg="delete"]');
+    const rLab = ctr.querySelector('[data-al="resume"]');
+    const dLab = ctr.querySelector('[data-al="delete"]');
+    const cfm = ctr.querySelector('[data-confirm]');
+    const dLabContent = dBg.querySelector('.action-label');
+
+    function start(e) {
+      if (selectionMode || waitingConfirm) return;
+      const p = e.touches ? e.touches[0] : e;
+      sx = p.clientX; sy = p.clientY; cx = 0;
+      dragging = true; lock = null;
+      card.classList.remove('snapping', 'flying');
+      card.style.transition = 'none';
+    }
+
+    function move(e) {
+      if (!dragging) return;
+      const p = e.touches ? e.touches[0] : e;
+      const dx = p.clientX - sx, dy = p.clientY - sy;
+
+      if (!lock) {
+        if (Math.abs(dx) > 8 || Math.abs(dy) > 8) lock = Math.abs(dx) > Math.abs(dy) ? 'h' : 'v';
+        return;
+      }
+      if (lock === 'v') return;
+      e.preventDefault();
+
+      if (!hintDismissed) { hintDismissed = true; document.getElementById('hintText').classList.add('hidden'); }
+
+      // elastic beyond 200
+      cx = Math.abs(dx) > 200 ? (dx > 0 ? 200 : -200) + (dx - (dx > 0 ? 200 : -200)) * 0.55 : dx;
+      card.style.transform = `translateX(${cx}px)`;
+
+      if (cx > 0) {
+        rBg.classList.add('visible'); dBg.classList.remove('visible');
+        rLab.classList.toggle('past-threshold', cx > 80);
+        cfm.style.display = 'none'; dLabContent.style.display = '';
+      } else if (cx < 0) {
+        dBg.classList.add('visible'); rBg.classList.remove('visible');
+        const ax = Math.abs(cx);
+        dLab.classList.toggle('past-threshold', ax > 80);
+        if (ax > 80) { dLabContent.style.display = 'none'; cfm.style.display = 'flex'; }
+        else { dLabContent.style.display = ''; cfm.style.display = 'none'; }
+      } else { rBg.classList.remove('visible'); dBg.classList.remove('visible'); }
+    }
+
+    function end() {
+      if (!dragging) return;
+      dragging = false;
+
+      if (cx > 80) {
+        flyOff(card, 'right');
+        setTimeout(() => removeHabit(+card.dataset.hid, 'resume'), 350);
+      } else if (cx < -80) {
+        // hold card open for confirm
+        waitingConfirm = true;
+        card.classList.add('snapping');
+        card.style.transform = 'translateX(-140px)';
+        wireConfirm(card, ctr, () => { waitingConfirm = false; });
+      } else {
+        snapBack(card, ctr);
+      }
+    }
+
+    card.addEventListener('mousedown', start);
+    card.addEventListener('touchstart', start, { passive: true });
+    window.addEventListener('mousemove', move);
+    window.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('mouseup', end);
+    window.addEventListener('touchend', end);
+
+    // selection tap
+    card.addEventListener('click', () => {
+      if (!selectionMode) return;
+      toggleSel(+card.dataset.hid);
+    });
+  });
+}
+
+function wireConfirm(card, ctr, done) {
+  const yes = ctr.querySelector('[data-cfm-yes]');
+  const no  = ctr.querySelector('[data-cfm-no]');
+
+  function onYes(e) { e.stopPropagation(); flyOff(card, 'left'); setTimeout(() => removeHabit(+card.dataset.hid, 'delete'), 350); cleanup(); }
+  function onNo(e)  { e.stopPropagation(); snapBack(card, ctr); cleanup(); }
+
+  function cleanup() { yes.removeEventListener('click', onYes); no.removeEventListener('click', onNo); yes.removeEventListener('touchend', onYes); no.removeEventListener('touchend', onNo); done(); }
+
+  yes.addEventListener('click', onYes); no.addEventListener('click', onNo);
+  yes.addEventListener('touchend', onYes); no.addEventListener('touchend', onNo);
+}
+
+function flyOff(card, dir) {
+  card.classList.remove('snapping'); card.classList.add('flying');
+  const d = dir === 'right' ? 500 : -500, r = dir === 'right' ? 8 : -8;
+  card.style.transform = `translateX(${d}px) rotate(${r}deg)`;
+  card.style.opacity = '0';
+}
+
+function snapBack(card, ctr) {
+  card.classList.add('snapping');
+  card.style.transform = 'translateX(0)';
+  setTimeout(() => {
+    ctr.querySelector('[data-bg="resume"]').classList.remove('visible');
+    ctr.querySelector('[data-bg="delete"]').classList.remove('visible');
+    const c = ctr.querySelector('[data-confirm]'); if (c) c.style.display = 'none';
+    const d = ctr.querySelector('.action-label[data-al="delete"]'); if (d) d.style.display = '';
+  }, 200);
+}
+
+/* ═══ REMOVE / TOAST / COUNT ═════════════ */
+function removeHabit(id, action) {
+  const idx = habits.findIndex(h => h.id === id);
+  if (idx === -1) return;
+  habits.splice(idx, 1);
+  selectedIds.delete(id);
+
+  const w = document.querySelector(`.card-wrapper[data-id="${id}"]`);
+  if (w) { w.classList.add('collapsing'); setTimeout(() => w.remove(), 400); }
+
+  updateCount();
+  showToast(action === 'resume' ? 'Restored' : 'Deleted', action);
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast-msg ${type === 'resume' ? 'resume-t' : 'delete-t'}`;
+  requestAnimationFrame(() => { t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2000); });
+}
+
+function updateCount() {
+  const n = habits.length;
+  document.getElementById('subtitleCount').textContent = n === 0 ? 'All caught up!' : `${n} habit${n !== 1 ? 's' : ''} resting here`;
+  if (selectionMode) document.getElementById('selCount').textContent = `${selectedIds.size} selected`;
+}
+
+/* ═══ SELECTION MODE ═════════════════════ */
+function toggleSelectionMode() {
+  selectionMode = !selectionMode;
+  selectedIds.clear();
+  const btn = document.getElementById('selectBtn');
+  btn.textContent = selectionMode ? 'Cancel' : 'Select';
+  btn.style.color = selectionMode ? '#B53030' : '#059669';
+  document.getElementById('selectionBar').classList.toggle('visible', selectionMode);
+  render();
+  updateCount();
+}
+
+function toggleSel(id) {
+  if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+  render();
+  updateCount();
+}
+
+function batchAction(type) {
+  [...selectedIds].forEach(id => removeHabit(id, type));
+  if (habits.length === 0 || selectedIds.size === 0) toggleSelectionMode();
+}
+
+/* ═══ INIT ═══════════════════════════════ */
+render();
+</script>
+</body>
+</html>

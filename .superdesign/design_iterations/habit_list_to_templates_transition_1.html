@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit List → Templates Screen Transition</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+      overflow-x: auto;
+    }
+
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: #f8f7f5;
+      border-radius: 50px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+      flex-shrink: 0;
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 24px 24px;
+      z-index: 100;
+    }
+
+    .status-bar {
+      height: 54px;
+      padding: 14px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    /* Habit List Screen */
+    .habit-card {
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .habit-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .habit-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: #101727;
+    }
+
+    .habit-streak {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .clipboard-btn {
+      width: 44px;
+      height: 44px;
+      background: #f3f4f6;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .clipboard-btn:hover {
+      background: #e5e7eb;
+      transform: scale(1.05);
+    }
+
+    .clipboard-btn.pressed {
+      transform: scale(0.95);
+      background: #d1d5db;
+    }
+
+    /* Templates Screen */
+    .templates-modal {
+      position: absolute;
+      inset: 0;
+      background: #f8f7f5;
+      border-radius: 12px 12px 0 0;
+      z-index: 50;
+    }
+
+    .category-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 20px;
+      gap: 14px;
+    }
+
+    .category-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    /* Animation states */
+    .templates-modal.state-hidden {
+      transform: translateY(100%) scale(0.94);
+      opacity: 0;
+    }
+
+    .templates-modal.state-current {
+      transform: translateY(5%) scale(0.97);
+      opacity: 0.7;
+    }
+
+    .templates-modal.state-proposed {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    /* Backdrop */
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: black;
+      z-index: 40;
+    }
+
+    .backdrop.state-hidden {
+      opacity: 0;
+    }
+
+    .backdrop.state-current {
+      opacity: 0.3;
+    }
+
+    .backdrop.state-proposed {
+      opacity: 0.5;
+    }
+
+    /* Animation keyframes for demo */
+    /* Current: Fast/snappy ~250ms */
+    @keyframes currentAnimation {
+      from {
+        transform: translateY(100%) scale(0.96);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Proposed: Smooth iOS-style ~500ms */
+    /* Single smooth motion - no stepping */
+    @keyframes proposedAnimation {
+      from {
+        transform: translateY(100%) scale(0.96);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .demo-current .templates-modal {
+      /* Fast ease-out */
+      animation: currentAnimation 0.25s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
+
+    .demo-proposed .templates-modal {
+      /* Apple iOS sheet curve - smooth deceleration */
+      animation: proposedAnimation 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    /* Labels */
+    .comparison-label {
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      text-align: center;
+      letter-spacing: -0.5px;
+    }
+
+    .timing-label {
+      color: #9ca3af;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .badge.problem { background: #ef4444; color: white; }
+    .badge.solution { background: #10b981; color: white; }
+
+    /* Replay button */
+    .replay-btn {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #374151;
+      cursor: pointer;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .replay-btn:hover {
+      background: white;
+    }
+
+    /* Specs panel */
+    .specs-panel {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 30px;
+      max-width: 400px;
+    }
+
+    .specs-title {
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .spec-label {
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .spec-value {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .spec-value.bad { color: #ef4444; }
+    .spec-value.good { color: #10b981; }
+  </style>
+</head>
+<body>
+  <h1 style="color: white; text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 40px;">
+    Habit List → Templates Screen Transition
+  </h1>
+
+  <div style="display: flex; gap: 60px; justify-content: center; flex-wrap: wrap; align-items: flex-start;">
+
+    <!-- CURRENT: Fast Animation -->
+    <div>
+      <div class="comparison-label">
+        Current
+        <span class="badge problem">Too Fast</span>
+      </div>
+      <div class="timing-label">~250ms • stiffness: 380</div>
+
+      <div class="phone-frame demo-current" id="phone-current">
+        <div class="notch"></div>
+        <div class="status-bar">
+          <span style="font-size: 15px; font-weight: 600;">9:41</span>
+          <div style="display: flex; gap: 4px; align-items: center;">
+            <span style="font-size: 14px;">●●●●</span>
+          </div>
+        </div>
+
+        <!-- Habit List Content -->
+        <div style="padding: 0 16px;">
+          <!-- Header -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+            <div>
+              <h1 style="font-size: 28px; font-weight: 800; color: #101727;">Today</h1>
+              <p style="font-size: 14px; color: #6b7280;">3 of 5 habits completed</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <div class="clipboard-btn" id="clipboard-current">
+                <i data-lucide="clipboard-list" style="width: 22px; height: 22px; color: #374151;"></i>
+              </div>
+              <div class="clipboard-btn">
+                <i data-lucide="plus" style="width: 22px; height: 22px; color: #374151;"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Habit Cards -->
+          <div class="habit-card">
+            <div class="habit-icon" style="background: rgba(34, 197, 94, 0.15);">🧘</div>
+            <div style="flex: 1;">
+              <div class="habit-name">Morning Meditation</div>
+              <div class="habit-streak">🔥 12 day streak</div>
+            </div>
+            <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="check" style="width: 16px; height: 16px; color: white;"></i>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div class="habit-icon" style="background: rgba(59, 130, 246, 0.15);">💧</div>
+            <div style="flex: 1;">
+              <div class="habit-name">Drink Water</div>
+              <div class="habit-streak">🔥 8 day streak</div>
+            </div>
+            <div style="width: 28px; height: 28px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="check" style="width: 16px; height: 16px; color: white;"></i>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div class="habit-icon" style="background: rgba(249, 115, 22, 0.15);">📚</div>
+            <div style="flex: 1;">
+              <div class="habit-name">Read 20 Pages</div>
+              <div class="habit-streak">⏸️ Not done yet</div>
+            </div>
+            <div style="width: 28px; height: 28px; background: #e5e7eb; border-radius: 50%;"></div>
+          </div>
+        </div>
+
+        <!-- Backdrop -->
+        <div class="backdrop state-hidden" id="backdrop-current"></div>
+
+        <!-- Templates Modal -->
+        <div class="templates-modal state-hidden" id="modal-current">
+          <div style="padding: 16px 20px 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <h1 style="font-size: 26px; font-weight: 800; color: #101727;">Import Habits</h1>
+                <p style="font-size: 14px; color: #6b7280;">Science-backed habits</p>
+              </div>
+              <div class="clipboard-btn">
+                <i data-lucide="x" style="width: 20px; height: 20px; color: #6b7280;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 0 8px;">
+            <div class="category-row">
+              <div class="category-icon" style="background: rgba(139, 92, 246, 0.12);">🔬</div>
+              <div style="flex: 1;">
+                <div style="font-size: 17px; font-weight: 700; color: #101727;">Huberman</div>
+                <div style="font-size: 14px; color: #6b7280;">15 habits</div>
+              </div>
+            </div>
+            <div class="category-row">
+              <div class="category-icon" style="background: rgba(59, 130, 246, 0.12);">🌬️</div>
+              <div style="flex: 1;">
+                <div style="font-size: 17px; font-weight: 700; color: #101727;">Breathing</div>
+                <div style="font-size: 14px; color: #6b7280;">10 habits</div>
+              </div>
+            </div>
+            <div class="category-row">
+              <div class="category-icon" style="background: rgba(234, 179, 8, 0.12);">🎨</div>
+              <div style="flex: 1;">
+                <div style="font-size: 17px; font-weight: 700; color: #101727;">Creativity</div>
+                <div style="font-size: 14px; color: #6b7280;">17 habits</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Replay Button -->
+        <div class="replay-btn" onclick="replayAnimation('current')">
+          <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+          Replay
+        </div>
+
+        <div style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: #000; border-radius: 3px;"></div>
+      </div>
+
+      <!-- Specs -->
+      <div class="specs-panel">
+        <div class="specs-title">Spring Config (Current)</div>
+        <div class="spec-row">
+          <span class="spec-label">damping</span>
+          <span class="spec-value bad">24</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">stiffness</span>
+          <span class="spec-value bad">380 (very high)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">mass</span>
+          <span class="spec-value bad">1</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">duration</span>
+          <span class="spec-value bad">~250ms</span>
+        </div>
+        <div class="spec-row" style="border: none;">
+          <span class="spec-label">feel</span>
+          <span class="spec-value bad">Snappy, jarring</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPOSED: Organic Animation -->
+    <div>
+      <div class="comparison-label">
+        Proposed
+        <span class="badge solution">Organic</span>
+      </div>
+      <div class="timing-label">~450ms • stiffness: 180</div>
+
+      <div class="phone-frame demo-proposed" id="phone-proposed">
+        <div class="notch"></div>
+        <div class="status-bar">
+          <span style="font-size: 15px; font-weight: 600;">9:41</span>
+          <div style="display: flex; gap: 4px; align-items: center;">
+            <span style="font-size: 14px;">●●●●</span>
+          </div>
+        </div>
+
+        <!-- Habit List Content -->
+        <div style="padding: 0 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 0;">
+            <div>
+              <h1 style="font-size: 28px; font-weight: 800; color: #101727;">Today</h1>
+              <p style="font-size: 14px; color: #6b7280;">3 of 5 habits completed</p>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <div class="clipboard-btn" id="clipboard-proposed">
+                <i data-lucide="clipboard-list" style="width: 22px; height: 22px; color: #374151;"></i>
+              </div>
+              <div class="clipboard-btn">
+                <i data-lucide="plus" style="width: 22px; height: 22px; color: #374151;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div class="habit-icon" style="background: rgba(34, 197, 94, 0.15);">🧘</div>
+            <div style="flex: 1;">
+              <div class="habit-name">Morning Meditation</div>
+              <div class="habit-streak">🔥 12 day streak</div>
+            </div>
+            <div style="width: 28px; height: 28px; background: #22c55e; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="check" style="width: 16px; height: 16px; color: white;"></i>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div class="habit-icon" style="background: rgba(59, 130, 246, 0.15);">💧</div>
+            <div style="flex: 1;">
+              <div class="habit-name">Drink Water</div>
+              <div class="habit-streak">🔥 8 day streak</div>
+            </div>
+            <div style="width: 28px; height: 28px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <i data-lucide="check" style="width: 16px; height: 16px; color: white;"></i>
+            </div>
+          </div>
+
+          <div class="habit-card">
+            <div class="habit-icon" style="background: rgba(249, 115, 22, 0.15);">📚</div>
+            <div style="flex: 1;">
+              <div class="habit-name">Read 20 Pages</div>
+              <div class="habit-streak">⏸️ Not done yet</div>
+            </div>
+            <div style="width: 28px; height: 28px; background: #e5e7eb; border-radius: 50%;"></div>
+          </div>
+        </div>
+
+        <!-- Backdrop -->
+        <div class="backdrop state-hidden" id="backdrop-proposed"></div>
+
+        <!-- Templates Modal -->
+        <div class="templates-modal state-hidden" id="modal-proposed">
+          <div style="padding: 16px 20px 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <h1 style="font-size: 26px; font-weight: 800; color: #101727;">Import Habits</h1>
+                <p style="font-size: 14px; color: #6b7280;">Science-backed habits</p>
+              </div>
+              <div class="clipboard-btn">
+                <i data-lucide="x" style="width: 20px; height: 20px; color: #6b7280;"></i>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 0 8px;">
+            <div class="category-row">
+              <div class="category-icon" style="background: rgba(139, 92, 246, 0.12);">🔬</div>
+              <div style="flex: 1;">
+                <div style="font-size: 17px; font-weight: 700; color: #101727;">Huberman</div>
+                <div style="font-size: 14px; color: #6b7280;">15 habits</div>
+              </div>
+            </div>
+            <div class="category-row">
+              <div class="category-icon" style="background: rgba(59, 130, 246, 0.12);">🌬️</div>
+              <div style="flex: 1;">
+                <div style="font-size: 17px; font-weight: 700; color: #101727;">Breathing</div>
+                <div style="font-size: 14px; color: #6b7280;">10 habits</div>
+              </div>
+            </div>
+            <div class="category-row">
+              <div class="category-icon" style="background: rgba(234, 179, 8, 0.12);">🎨</div>
+              <div style="flex: 1;">
+                <div style="font-size: 17px; font-weight: 700; color: #101727;">Creativity</div>
+                <div style="font-size: 14px; color: #6b7280;">17 habits</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Replay Button -->
+        <div class="replay-btn" onclick="replayAnimation('proposed')">
+          <i data-lucide="rotate-ccw" style="width: 16px; height: 16px;"></i>
+          Replay
+        </div>
+
+        <div style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); width: 134px; height: 5px; background: #000; border-radius: 3px;"></div>
+      </div>
+
+      <!-- Specs -->
+      <div class="specs-panel">
+        <div class="specs-title">Spring Config (Proposed)</div>
+        <div class="spec-row">
+          <span class="spec-label">damping</span>
+          <span class="spec-value good">32</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">stiffness</span>
+          <span class="spec-value good">180 (organic)</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">mass</span>
+          <span class="spec-value good">1.3</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-label">duration</span>
+          <span class="spec-value good">~450ms</span>
+        </div>
+        <div class="spec-row" style="border: none;">
+          <span class="spec-label">feel</span>
+          <span class="spec-value good">Smooth, Apple-like</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Implementation note -->
+  <div style="max-width: 800px; margin: 50px auto 0; background: rgba(255,255,255,0.05); border-radius: 16px; padding: 24px;">
+    <h2 style="color: white; font-size: 18px; font-weight: 700; margin-bottom: 16px;">📋 Implementation</h2>
+    <p style="color: #d1d5db; font-size: 14px; line-height: 1.6; margin-bottom: 16px;">
+      Update <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">src/components/Modal.tsx</code> - change <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 4px;">APPLE_SPRING_CONFIG</code>:
+    </p>
+    <pre style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 16px; color: #10b981; font-size: 13px; overflow-x: auto;">
+const APPLE_SPRING_CONFIG = {
+  damping: 32,      // was 24
+  stiffness: 180,   // was 380
+  mass: 1.3,        // was 1
+};
+    </pre>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function replayAnimation(type) {
+      const modal = document.getElementById(`modal-${type}`);
+      const backdrop = document.getElementById(`backdrop-${type}`);
+
+      // Reset
+      modal.style.animation = 'none';
+      modal.classList.remove('state-hidden');
+      modal.classList.add('state-hidden');
+      backdrop.classList.remove('state-current', 'state-proposed');
+      backdrop.classList.add('state-hidden');
+
+      // Force reflow
+      modal.offsetHeight;
+
+      // Start animation
+      setTimeout(() => {
+        modal.classList.remove('state-hidden');
+        backdrop.classList.remove('state-hidden');
+        backdrop.classList.add(type === 'current' ? 'state-current' : 'state-proposed');
+
+        if (type === 'current') {
+          modal.style.animation = 'currentAnimation 0.25s cubic-bezier(0.2, 0, 0, 1) forwards';
+        } else {
+          modal.style.animation = 'proposedAnimation 0.5s cubic-bezier(0.32, 0.72, 0, 1) forwards';
+        }
+      }, 100);
+    }
+
+    // Auto-play on load
+    setTimeout(() => {
+      replayAnimation('current');
+      replayAnimation('proposed');
+    }, 500);
+  </script>
+</body>
+</html>

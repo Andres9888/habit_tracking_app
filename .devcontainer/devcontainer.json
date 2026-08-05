@@ -1,0 +1,30 @@
+{
+  "name": "Habit App – Cloud Dev",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {}
+  },
+  "postCreateCommand": "npm ci",
+  "remoteUser": "node",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "expo.vscode-expo-tools"
+      ]
+    }
+  },
+  "containerEnv": {
+    "FORCE_COLOR": "1"
+  },
+  "forwardPorts": [5173, 8081, 19000, 19001, 19002],
+  "portsAttributes": {
+    "5173": { "label": "Vite (Web)" },
+    "8081": { "label": "Metro" },
+    "19000": { "label": "Expo (main)" },
+    "19001": { "label": "Expo (LAN)" },
+    "19002": { "label": "Expo (web UI)" }
+  }
+}

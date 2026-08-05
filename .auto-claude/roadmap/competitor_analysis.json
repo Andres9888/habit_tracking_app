@@ -1,0 +1,479 @@
+{
+  "project_context": {
+    "project_name": "Daily Habits Tracker",
+    "project_type": "mobile-app",
+    "target_audience": "Individual consumers seeking to build and maintain positive habits through gamification and visual tracking"
+  },
+  "competitors": [
+    {
+      "id": "competitor-1",
+      "name": "Habitica",
+      "url": "https://habitica.com",
+      "description": "Gamified habit and task management app using RPG mechanics where users create characters, earn XP, and battle monsters by completing tasks",
+      "relevance": "high",
+      "pain_points": [
+        {
+          "id": "pain-1-1",
+          "description": "Confusing and hard to use interface - users struggle with understanding points and rewards even after tutorials",
+          "source": "Trustpilot reviews, CRM.org review",
+          "severity": "high",
+          "frequency": "Very common complaint",
+          "opportunity": "Daily Habits Tracker's cat-themed approach is simpler and more intuitive than RPG mechanics"
+        },
+        {
+          "id": "pain-1-2",
+          "description": "Requires constant internet connection to use at all - no offline mode",
+          "source": "Multiple review sites, Habitica alternatives articles",
+          "severity": "medium",
+          "frequency": "Common complaint",
+          "opportunity": "Implement robust offline mode with sync when connection restored"
+        },
+        {
+          "id": "pain-1-3",
+          "description": "Gem currency (premium currency) is frustrating - can't convert gold to gems, nearly impossible to earn without paying",
+          "source": "Trustpilot, app store reviews",
+          "severity": "high",
+          "frequency": "Very common complaint",
+          "opportunity": "Avoid aggressive monetization with premium currencies that gate content"
+        },
+        {
+          "id": "pain-1-4",
+          "description": "Poor customer support - accounts banned without warning, emails ignored",
+          "source": "Trustpilot reviews",
+          "severity": "high",
+          "frequency": "Multiple reports",
+          "opportunity": "Provide responsive customer support and clear communication"
+        },
+        {
+          "id": "pain-1-5",
+          "description": "Community forum shut down in 2023 - reduced social features and accountability",
+          "source": "Trustpilot, long-time user reviews",
+          "severity": "medium",
+          "frequency": "Noted by long-time users",
+          "opportunity": "Consider adding social/community features for accountability (identified in known_gaps)"
+        },
+        {
+          "id": "pain-1-6",
+          "description": "Bugs with quests not completing, tasks not registering, getting stuck in quests for weeks",
+          "source": "App store reviews, user forums",
+          "severity": "high",
+          "frequency": "Increasingly common",
+          "opportunity": "Ensure reliable core functionality with thorough testing"
+        },
+        {
+          "id": "pain-1-7",
+          "description": "Limited analytics - stats focus on game mechanics (health/mana) rather than habit completion rates",
+          "source": "Zapier review, comparison articles",
+          "severity": "medium",
+          "frequency": "Common among data-focused users",
+          "opportunity": "Daily Habits Tracker already has analytics with heatmaps - highlight this differentiator"
+        }
+      ],
+      "strengths": [
+        "Highly engaging RPG-style gamification with character progression",
+        "Social features with party quests and group accountability",
+        "Both habit and task tracking in one app",
+        "Large active community of RPG enthusiasts"
+      ],
+      "market_position": "Market leader in gamified habit tracking, especially popular with RPG enthusiasts and social habit trackers"
+    },
+    {
+      "id": "competitor-2",
+      "name": "Streaks",
+      "url": "https://streaksapp.com",
+      "description": "Minimalist iOS-focused habit tracker emphasizing beautiful design, Apple ecosystem integration, and intentional limitation to prevent overwhelm",
+      "relevance": "high",
+      "pain_points": [
+        {
+          "id": "pain-2-1",
+          "description": "Limited to 24 tasks maximum - users request doubling to 48 tasks",
+          "source": "App Store reviews, CRM.org review",
+          "severity": "medium",
+          "frequency": "Common feature request",
+          "opportunity": "Allow more habits while offering organization features to prevent overwhelm"
+        },
+        {
+          "id": "pain-2-2",
+          "description": "iOS/Apple only - no Android version available at all",
+          "source": "Multiple review sites",
+          "severity": "high",
+          "frequency": "Constant limitation mentioned",
+          "opportunity": "Daily Habits Tracker's cross-platform approach (iOS, Android, Web) is a major advantage"
+        },
+        {
+          "id": "pain-2-3",
+          "description": "Widget limitations - can view but can't complete tasks directly from widgets",
+          "source": "App reviews and comparisons",
+          "severity": "medium",
+          "frequency": "Common user wish",
+          "opportunity": "Implement interactive widgets for quick habit check-ins (identified in known_gaps)"
+        },
+        {
+          "id": "pain-2-4",
+          "description": "Smart notifications aren't very smart - reminders not adaptive enough",
+          "source": "App Store reviews",
+          "severity": "medium",
+          "frequency": "Multiple complaints",
+          "opportunity": "Time-based habit suggestions already differentiate Daily Habits Tracker"
+        },
+        {
+          "id": "pain-2-5",
+          "description": "Apple Watch complications behave flaky, particularly the up next feature",
+          "source": "User reviews, chudo-minimalism.com review",
+          "severity": "low",
+          "frequency": "Occasional issue",
+          "opportunity": "If adding wearable support, ensure reliable implementation"
+        },
+        {
+          "id": "pain-2-6",
+          "description": "Minimalist design lacks customization and visual flair for some users",
+          "source": "Review comparisons",
+          "severity": "low",
+          "frequency": "Some users want more personality",
+          "opportunity": "Cat-themed personality and emoji customization provides the visual flair some users want"
+        }
+      ],
+      "strengths": [
+        "Beautiful, minimalist design praised as best in class",
+        "Best widgets among habit trackers",
+        "Deep Apple ecosystem integration (Watch, Health, Siri)",
+        "Intentional simplicity prevents feature overwhelm"
+      ],
+      "market_position": "Premium minimalist option for Apple ecosystem users who value design and simplicity over features"
+    },
+    {
+      "id": "competitor-3",
+      "name": "Fabulous",
+      "url": "https://thefabulous.co",
+      "description": "Science-based wellness and habit coaching app focused on building holistic routines through guided journeys",
+      "relevance": "medium",
+      "pain_points": [
+        {
+          "id": "pain-3-1",
+          "description": "Aggressive and deceptive billing practices - charging during free trials, unauthorized subscriptions",
+          "source": "Trustpilot (1.0 stars), PissedConsumer, PayPal Community, Apple Community",
+          "severity": "high",
+          "frequency": "Extremely common - dozens of reports",
+          "opportunity": "Be transparent about pricing and respect trial periods fully"
+        },
+        {
+          "id": "pain-3-2",
+          "description": "Confusing pricing structure - weekly prices advertised but monthly billing, hidden fees",
+          "source": "App reviews, Trustpilot",
+          "severity": "high",
+          "frequency": "Very common complaint",
+          "opportunity": "Clear, simple pricing without confusion or hidden costs"
+        },
+        {
+          "id": "pain-3-3",
+          "description": "Poor customer service - no direct contact, chatbot-only with AI-generated responses, long waits",
+          "source": "Trustpilot, user complaints",
+          "severity": "high",
+          "frequency": "Consistent complaint",
+          "opportunity": "Provide responsive human support"
+        },
+        {
+          "id": "pain-3-4",
+          "description": "Difficult cancellation process - deliberately obscured how to cancel subscriptions",
+          "source": "Multiple consumer complaint sites",
+          "severity": "high",
+          "frequency": "Common complaint",
+          "opportunity": "Easy cancellation process builds trust"
+        },
+        {
+          "id": "pain-3-5",
+          "description": "Charges continue after cancellation for many users",
+          "source": "PissedConsumer, BBB complaints",
+          "severity": "high",
+          "frequency": "Multiple reports",
+          "opportunity": "Ensure billing system is reliable and respects cancellations"
+        }
+      ],
+      "strengths": [
+        "Science-based approach to habit building",
+        "Comprehensive wellness coaching beyond just tracking",
+        "Good for building morning routines and reducing phone usage",
+        "High app store ratings (4.6 iOS, 4.3 Android) despite billing issues"
+      ],
+      "market_position": "Premium wellness coaching app targeting users who want structured guidance, but reputation damaged by billing practices"
+    },
+    {
+      "id": "competitor-4",
+      "name": "Loop Habit Tracker",
+      "url": "https://loophabits.org",
+      "description": "Free, open-source Android habit tracker focused on privacy, simplicity, and comprehensive analytics",
+      "relevance": "medium",
+      "pain_points": [
+        {
+          "id": "pain-4-1",
+          "description": "Android only - no iOS, web, or desktop versions available",
+          "source": "Official FAQ, multiple reviews",
+          "severity": "high",
+          "frequency": "Most mentioned limitation",
+          "opportunity": "Cross-platform availability is a major differentiator"
+        },
+        {
+          "id": "pain-4-2",
+          "description": "No cloud backup - uninstalling deletes all data, only local storage",
+          "source": "GitHub discussions, FAQ",
+          "severity": "high",
+          "frequency": "Common concern for data safety",
+          "opportunity": "Convex cloud backend provides automatic sync and backup"
+        },
+        {
+          "id": "pain-4-3",
+          "description": "Only supports positive habits - no way to track habits to break",
+          "source": "GitHub discussions, reviews",
+          "severity": "medium",
+          "frequency": "Feature request",
+          "opportunity": "Consider supporting both building and breaking habits"
+        },
+        {
+          "id": "pain-4-4",
+          "description": "Widget issues after updates - counter widget adds extra steps, streak widget options removed",
+          "source": "GitHub discussions",
+          "severity": "low",
+          "frequency": "Occasional after updates",
+          "opportunity": "Maintain consistent widget experience across updates"
+        },
+        {
+          "id": "pain-4-5",
+          "description": "Austere/basic design - some users want more visual personality",
+          "source": "Comparison reviews",
+          "severity": "low",
+          "frequency": "Preference-based",
+          "opportunity": "Cat-themed personality provides the visual appeal some users seek"
+        }
+      ],
+      "strengths": [
+        "Completely free with no ads or premium tiers",
+        "Open source with active development community",
+        "Excellent analytics and habit strength system",
+        "Privacy-focused with all data stored locally",
+        "4.8 rating with 5M+ downloads"
+      ],
+      "market_position": "Best free option for privacy-conscious Android users who want comprehensive analytics without cost"
+    },
+    {
+      "id": "competitor-5",
+      "name": "Habitify",
+      "url": "https://habitify.me",
+      "description": "Cross-platform habit tracker with detailed analytics, multiple device sync, and time-based habit organization",
+      "relevance": "high",
+      "pain_points": [
+        {
+          "id": "pain-5-1",
+          "description": "Pricing wildly inconsistent across platforms and screens - different prices on Android, iOS, and web",
+          "source": "User reviews, Habitify alternatives articles",
+          "severity": "medium",
+          "frequency": "Confusing for users",
+          "opportunity": "Consistent transparent pricing across all platforms"
+        },
+        {
+          "id": "pain-5-2",
+          "description": "Subscription model replaced one-time lifetime purchase - users feel forced into recurring payments",
+          "source": "App store reviews, user complaints",
+          "severity": "high",
+          "frequency": "Common complaint from long-time users",
+          "opportunity": "Consider offering lifetime purchase option alongside subscription"
+        },
+        {
+          "id": "pain-5-3",
+          "description": "Can't do multiple check-ins for same habit - e.g., tracking 'brush teeth' 3x daily requires 3 separate habits",
+          "source": "App store reviews, feature requests",
+          "severity": "medium",
+          "frequency": "Common feature request",
+          "opportunity": "Support habits with multiple daily completions"
+        },
+        {
+          "id": "pain-5-4",
+          "description": "Android version lacks streak display on home page that iOS has",
+          "source": "User reviews, comparison feedback",
+          "severity": "medium",
+          "frequency": "Android users notice parity gap",
+          "opportunity": "Ensure feature parity across platforms"
+        },
+        {
+          "id": "pain-5-5",
+          "description": "Watch interface progress bar doesn't function correctly",
+          "source": "App store reviews",
+          "severity": "low",
+          "frequency": "Watch users affected",
+          "opportunity": "If adding wearable support, ensure proper functionality"
+        },
+        {
+          "id": "pain-5-6",
+          "description": "Free version limited to 15 habits per week check-ins - feels restrictive",
+          "source": "Reviews, comparison articles",
+          "severity": "medium",
+          "frequency": "Common friction point",
+          "opportunity": "More generous free tier builds user trust and word-of-mouth"
+        }
+      ],
+      "strengths": [
+        "Best-in-class cross-platform sync (iOS, Android, Mac, Web)",
+        "Detailed analytics with data export",
+        "Time-based habit organization (Morning/Afternoon/Evening)",
+        "Apple Health and Google Fit integration",
+        "Zapier integration for automation"
+      ],
+      "market_position": "Premium cross-platform option for data-driven users who need reliable sync across multiple devices"
+    },
+    {
+      "id": "competitor-6",
+      "name": "Done",
+      "url": "https://apps.apple.com/app/done-a-simple-habit-tracker/id1103961876",
+      "description": "Simple checklist-style habit tracker with color coding and clean interface",
+      "relevance": "medium",
+      "pain_points": [
+        {
+          "id": "pain-6-1",
+          "description": "Limited customization in free version",
+          "source": "General habit tracker app feedback patterns",
+          "severity": "medium",
+          "frequency": "Common freemium complaint",
+          "opportunity": "Offer meaningful features in free tier"
+        },
+        {
+          "id": "pain-6-2",
+          "description": "Syncing issues across devices reported",
+          "source": "Typical habit tracker complaints",
+          "severity": "medium",
+          "frequency": "Occasional",
+          "opportunity": "Convex real-time sync provides reliable cross-device experience"
+        },
+        {
+          "id": "pain-6-3",
+          "description": "Notification/reminder reliability issues",
+          "source": "Common habit tracker feedback",
+          "severity": "medium",
+          "frequency": "Moderate",
+          "opportunity": "Robust notification system with Notifee/Expo is already implemented"
+        }
+      ],
+      "strengths": [
+        "Clean, minimalist interface",
+        "Easy to set up and use daily",
+        "Good visualization of streaks and progress"
+      ],
+      "market_position": "Simple, no-frills option for users who want basic checklist-style tracking"
+    }
+  ],
+  "market_gaps": [
+    {
+      "id": "gap-1",
+      "description": "No major player offers delightful personality/theming without overwhelming RPG complexity - Habitica is too complex, others are too austere",
+      "affected_competitors": ["competitor-1", "competitor-2", "competitor-4"],
+      "opportunity_size": "high",
+      "suggested_feature": "Cat-themed personality with gentle gamification is the sweet spot between fun and usable"
+    },
+    {
+      "id": "gap-2",
+      "description": "Time-aware habit suggestions are rare - most apps use static reminders rather than contextual suggestions",
+      "affected_competitors": ["competitor-1", "competitor-2", "competitor-4", "competitor-6"],
+      "opportunity_size": "high",
+      "suggested_feature": "Time-based suggestion chips (already implemented) are a key differentiator"
+    },
+    {
+      "id": "gap-3",
+      "description": "True cross-platform with personality - Streaks has personality but iOS only, Loop is free but Android only",
+      "affected_competitors": ["competitor-2", "competitor-4"],
+      "opportunity_size": "high",
+      "suggested_feature": "Cross-platform availability with web fallback gives access to all users"
+    },
+    {
+      "id": "gap-4",
+      "description": "Trust issues with billing in the category - Fabulous's practices have made users wary",
+      "affected_competitors": ["competitor-3", "competitor-5"],
+      "opportunity_size": "medium",
+      "suggested_feature": "Transparent pricing, easy cancellation, and generous free tier builds trust"
+    },
+    {
+      "id": "gap-5",
+      "description": "Limited offline support across competitors - most require constant internet",
+      "affected_competitors": ["competitor-1", "competitor-5"],
+      "opportunity_size": "medium",
+      "suggested_feature": "Offline mode with sync (identified in known_gaps) would address this"
+    },
+    {
+      "id": "gap-6",
+      "description": "Widget limitations - users want to complete habits directly from widgets",
+      "affected_competitors": ["competitor-2", "competitor-4"],
+      "opportunity_size": "medium",
+      "suggested_feature": "Interactive home screen widgets (identified in known_gaps)"
+    },
+    {
+      "id": "gap-7",
+      "description": "Recovery from failure is poorly handled - apps penalize missed days rather than encouraging comeback",
+      "affected_competitors": ["competitor-1", "competitor-2"],
+      "opportunity_size": "high",
+      "suggested_feature": "Motivational cat messages and gentle gamification help users recover from setbacks"
+    }
+  ],
+  "insights_summary": {
+    "top_pain_points": [
+      "Aggressive/confusing monetization and billing practices (Fabulous, Habitify)",
+      "Platform limitations - iOS only (Streaks) or Android only (Loop)",
+      "Complexity vs simplicity tradeoff - Habitica too complex, minimalist apps too boring",
+      "Poor or unresponsive customer support (Habitica, Fabulous)",
+      "Unreliable sync and data backup concerns",
+      "Limited widget functionality and wearable support issues",
+      "Smart notifications that aren't actually smart/contextual"
+    ],
+    "differentiator_opportunities": [
+      "Cat-themed personality provides fun without RPG complexity - unique in market",
+      "Time-based habit suggestions adapt to user's daily rhythm - rare feature",
+      "Cross-platform with web fallback covers all user platforms",
+      "Modern tech stack (Convex real-time sync) ensures reliable data",
+      "Gentle gamification with confetti and streaks without punishment mechanics",
+      "Visual chain/streak visualization with calendar views",
+      "Habit strength/momentum indicators show progress meaningfully"
+    ],
+    "market_trends": [
+      "Users increasingly frustrated with subscription-only models - lifetime options valued",
+      "Demand for cross-platform sync is non-negotiable for multi-device users",
+      "Privacy concerns driving interest in transparent data practices",
+      "Gamification must be light - heavy RPG mechanics alienate mainstream users",
+      "Widgets and quick-access are increasingly important for habit check-in friction",
+      "Users want personality and delight in productivity apps, not just utility",
+      "Recovery from failure is underserved - apps punish rather than encourage"
+    ]
+  },
+  "research_metadata": {
+    "search_queries_used": [
+      "Habitica app complaints problems reddit 2024 2025",
+      "Streaks habit tracker app reviews complaints iOS",
+      "Fabulous app complaints reviews problems 2024",
+      "Loop Habit Tracker complaints issues users",
+      "Habitica vs other habit trackers user experience comparison",
+      "best habit tracker app cross platform sync issues",
+      "gamified habit tracker apps user feedback 2024",
+      "Habitify habit tracker app complaints pricing reviews",
+      "habit tracker app subscription pricing complaints expensive"
+    ],
+    "sources_consulted": [
+      "Trustpilot reviews",
+      "App Store reviews",
+      "Google Play Store reviews",
+      "CRM.org app reviews",
+      "JustUseApp reviews",
+      "GitHub discussions (Loop Habit Tracker)",
+      "PissedConsumer.com",
+      "Apple Community discussions",
+      "PayPal Community forums",
+      "Zapier blog comparisons",
+      "Habitify blog (competitor analysis)",
+      "ClickUp blog (Habitica alternatives)",
+      "Medium articles on habit tracking",
+      "Productivity.directory reviews",
+      "DailyHabits.xyz comparisons"
+    ],
+    "limitations": [
+      "Some WebSearch queries failed temporarily - relied on successful queries and aggregated sources",
+      "Reddit-specific searches returned limited direct results - used review aggregator sites instead",
+      "Done and Way of Life had limited specific complaint data - used general category feedback",
+      "User feedback skews negative on review sites - strengths derived from positive reviews and feature lists"
+    ]
+  },
+  "created_at": "2026-01-05T21:45:00Z"
+}

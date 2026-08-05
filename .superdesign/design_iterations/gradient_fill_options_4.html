@@ -1,0 +1,1328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hybrid Fills — Organic Body + Clear Progress</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'Inter',
+          -apple-system,
+          sans-serif !important;
+        background: #0d0d18 !important;
+        color: #f0f0f0 !important;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center !important;
+        font-size: 24px !important;
+        font-weight: 800 !important;
+        margin-bottom: 4px !important;
+        background: linear-gradient(
+          135deg,
+          #34d399,
+          #10b981,
+          #0891b2
+        ) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+      }
+      .sub {
+        text-align: center;
+        color: #556;
+        font-size: 12px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      /* ─── Sticky Controls ─── */
+      .ctrl {
+        background: rgba(14, 14, 26, 0.94);
+        backdrop-filter: blur(16px);
+        border-radius: 14px;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        max-width: 1400px;
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        border: 1px solid #1e1e38;
+        position: sticky;
+        top: 6px;
+        z-index: 100;
+      }
+      .ctrl label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #889;
+        white-space: nowrap;
+      }
+      .sld {
+        -webkit-appearance: none;
+        flex: 1;
+        min-width: 100px;
+        height: 5px;
+        border-radius: 3px;
+        background: linear-gradient(
+          to right,
+          #65a30d,
+          #16a34a,
+          #0d9488,
+          #0891b2,
+          #059669
+        );
+        outline: none;
+      }
+      .sld::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+      }
+      .ro {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        min-width: 90px;
+      }
+      .ro-pct {
+        font-size: 20px;
+        font-weight: 800;
+      }
+      .ro-ph {
+        font-size: 10px;
+        color: #667;
+      }
+      .tgl {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .tgl label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      /* ─── Section ─── */
+      .sec {
+        max-width: 1400px;
+        margin: 0 auto 24px;
+        background: #12121f;
+        border-radius: 18px;
+        padding: 18px;
+        border: 1px solid #1e1e38;
+      }
+      .sec.top {
+        border-color: #059669;
+        box-shadow: 0 0 40px rgba(5, 150, 105, 0.06);
+      }
+      .sec-h {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 3px;
+      }
+      .sec-n {
+        width: 24px;
+        height: 24px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 11px;
+        color: white;
+      }
+      .sec-t {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .bdg {
+        font-size: 8px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .bdg-top {
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.12);
+      }
+      .bdg-fav {
+        color: #f59e0b;
+        background: rgba(245, 158, 11, 0.12);
+      }
+      .sec-d {
+        font-size: 11px;
+        color: #556;
+        margin-bottom: 14px;
+        line-height: 1.4;
+      }
+
+      /* ─── Grid ─── */
+      .vg {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      @media (max-width: 960px) {
+        .vg {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .vl {
+        text-align: center;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 3px;
+        padding: 3px 0;
+        border-radius: 4px;
+      }
+      .vd {
+        font-size: 10px;
+        color: #556;
+        text-align: center;
+        margin-bottom: 6px;
+        min-height: 24px;
+      }
+
+      /* ─── Phone ─── */
+      .ph {
+        border-radius: 18px;
+        padding: 10px 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+      .ph.lt {
+        background: #faf8f5;
+      }
+      .ph.dk {
+        background: #1a1a2e;
+      }
+
+      /* ─── Habit Card ─── */
+      .hc {
+        position: relative;
+        border-radius: 14px;
+        min-height: 62px;
+        margin-bottom: 7px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+      }
+      .hc:last-child {
+        margin-bottom: 0;
+      }
+      .hc.lt {
+        background: #f0eeeb;
+        border: 1px solid #e5e2de;
+        box-shadow: 0 2px 8px rgba(28, 25, 23, 0.04);
+      }
+      .hc.dk {
+        background: #252540;
+        border: 1px solid #333355;
+      }
+
+      .ac {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: 14px 0 0 14px;
+      }
+
+      /* Fill — clipped to strength width for clear progress */
+      .sf {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 14px 0 0 14px;
+        overflow: hidden;
+        transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Full-width organic layer (not clipped) */
+      .of {
+        position: absolute;
+        inset: 0;
+        border-radius: 14px;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .fl {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* Edge treatments */
+      .ed-line {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        border-radius: 1px;
+      }
+      .ed-glow {
+        position: absolute;
+        right: -6px;
+        top: -4px;
+        bottom: -4px;
+        width: 24px;
+        filter: blur(8px);
+        border-radius: 50%;
+      }
+      .ed-dot {
+        position: absolute;
+        right: -3px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+      .ed-fade {
+        position: absolute;
+        right: -12px;
+        top: 0;
+        bottom: 0;
+        width: 24px;
+      }
+
+      .bd {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        padding: 10px 12px;
+        width: 100%;
+        gap: 9px;
+      }
+      .ic {
+        font-size: 22px;
+      }
+      .inf {
+        flex: 1;
+      }
+      .nm {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .nm.lt {
+        color: #1f2937;
+      }
+      .nm.dk {
+        color: #e4e4f0;
+      }
+      .mt {
+        font-size: 10px;
+        margin-top: 1px;
+      }
+      .mt.lt {
+        color: #78716c;
+      }
+      .mt.dk {
+        color: #8888aa;
+      }
+      .ck {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: white;
+      }
+      .ck.emp.lt {
+        border: 2px solid #d1d5db;
+      }
+      .ck.emp.dk {
+        border: 2px solid #444466;
+      }
+      .ck.dn {
+        border: none;
+      }
+
+      /* Animations */
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .breathe {
+        animation: breathe 3s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: translateY(-50%) scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translateY(-50%) scale(1.3);
+          opacity: 1;
+        }
+      }
+      .pulse {
+        animation: pulse 2.5s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.8;
+        }
+        100% {
+          opacity: 0.3;
+        }
+      }
+      .shimmer {
+        animation: shimmer 2s ease-in-out infinite;
+      }
+
+      /* ─── Before/After ─── */
+      .ba-section {
+        max-width: 1400px;
+        margin: 0 auto 24px;
+        background: #12121f;
+        border-radius: 18px;
+        padding: 18px;
+        border: 1px solid #1e1e38;
+      }
+      .ba-grid {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        gap: 16px;
+        align-items: start;
+      }
+      @media (max-width: 700px) {
+        .ba-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .ba-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: #334;
+        padding-top: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Hybrid Gradient Fills</h1>
+    <p class="sub">
+      Organic softness + clear progress landmarks<br />The body is soft and
+      natural. The edge tells you exactly how far you've come.
+    </p>
+
+    <div class="ctrl">
+      <label>Strength:</label>
+      <input type="range" class="sld" id="sld" min="0" max="100" value="55" />
+      <div class="ro">
+        <span class="ro-pct" id="pct">55%</span>
+        <span class="ro-ph" id="ph"></span>
+      </div>
+      <div class="tgl">
+        <label><input type="checkbox" id="dkTgl" /> Dark</label>
+      </div>
+    </div>
+
+    <!-- Before/After -->
+    <div class="ba-section">
+      <div class="sec-h">
+        <div class="sec-n" style="background: #78716c">vs</div>
+        <span class="sec-t">Before / After — Current vs Recommended</span>
+      </div>
+      <p class="sec-d" style="margin-bottom: 12px">
+        Left: what the card looks like today (barely visible 19% opacity).
+        Right: the recommended hybrid fill.
+      </p>
+      <div class="ba-grid">
+        <div>
+          <div
+            class="vl"
+            style="color: #78716c; background: rgba(120, 113, 108, 0.1)"
+          >
+            Current (Before)
+          </div>
+          <div class="ph lt" id="before"></div>
+        </div>
+        <div class="ba-arrow">\u2192</div>
+        <div>
+          <div
+            class="vl"
+            style="color: #059669; background: rgba(5, 150, 105, 0.12)"
+          >
+            Recommended (After)
+          </div>
+          <div class="ph lt" id="after"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="app"></div>
+
+    <script>
+      const HABITS = [
+        { name: 'Meditate', icon: '\u{1F9D8}', color: '#10B981' },
+        { name: 'Read', icon: '\u{1F4D6}', color: '#3B82F6' },
+        { name: 'Exercise', icon: '\u{1F3CB}\u{FE0F}', color: '#F59E0B' },
+        { name: 'Journal', icon: '\u{1F4DD}', color: '#8B5CF6' },
+      ];
+
+      const SC = {
+        starting: '#65a30d',
+        building: '#16a34a',
+        developing: '#0d9488',
+        strong: '#0891b2',
+        automatic: '#059669',
+      };
+      function lv(s) {
+        return s < 20
+          ? 'starting'
+          : s < 40
+            ? 'building'
+            : s < 60
+              ? 'developing'
+              : s < 80
+                ? 'strong'
+                : 'automatic';
+      }
+      function c(s) {
+        return SC[lv(s)];
+      }
+      function em(s) {
+        return {
+          starting: '\u{1F331}',
+          building: '\u{1F33F}',
+          developing: '\u{1F333}',
+          strong: '\u{1F4AA}',
+          automatic: '\u{26A1}',
+        }[lv(s)];
+      }
+      function lb(s) {
+        return {
+          starting: 'Starting',
+          building: 'Building',
+          developing: 'Developing',
+          strong: 'Strong',
+          automatic: 'Automatic',
+        }[lv(s)];
+      }
+
+      function mk(tag, cls, sty, txt) {
+        const e = document.createElement(tag);
+        if (cls) e.className = cls;
+        if (sty) Object.assign(e.style, sty);
+        if (txt !== undefined) e.textContent = txt;
+        return e;
+      }
+
+      function mkCard(h, fillFn, isDk) {
+        const m = isDk ? 'dk' : 'lt';
+        const card = mk('div', 'hc ' + m);
+        card.appendChild(mk('div', 'ac', { background: h.color }));
+        fillFn(card, h);
+
+        const bd = mk('div', 'bd');
+        bd.appendChild(mk('span', 'ic', {}, h.icon));
+        const inf = mk('div', 'inf');
+        inf.appendChild(mk('div', 'nm ' + m, {}, h.name));
+        inf.appendChild(
+          mk(
+            'div',
+            'mt ' + m,
+            {},
+            em(h.strength) +
+              ' ' +
+              Math.round(h.strength) +
+              '% \u00B7 ' +
+              lb(h.strength)
+          )
+        );
+        bd.appendChild(inf);
+        const ck = mk(
+          'div',
+          'ck ' + (h.strength > 50 ? 'dn' : 'emp ' + m),
+          h.strength > 50 ? { background: h.color } : {}
+        );
+        if (h.strength > 50) ck.textContent = '\u2713';
+        bd.appendChild(ck);
+        card.appendChild(bd);
+        return card;
+      }
+
+      // ─── BEFORE (current implementation) ───
+      function fillBefore(card, h) {
+        const col = c(h.strength);
+        const sf = mk('div', 'sf', { width: h.strength + '%' });
+        sf.appendChild(
+          mk('div', 'fl', {
+            background:
+              'linear-gradient(to right, ' +
+              col +
+              '30, ' +
+              col +
+              '18, ' +
+              col +
+              '00)',
+          })
+        );
+        card.appendChild(sf);
+      }
+
+      // ─── HYBRID OPTIONS ───
+
+      const OPTIONS = [
+        {
+          name: 'Soft Fill + Glowing Edge',
+          num: '1',
+          bg: '#059669',
+          top: true,
+          desc: 'Organic gradient body that fades gently + a breathing glow dot at the progress front. You feel the softness, but always know exactly where you stand.',
+          variants: [
+            {
+              label: 'Gentle',
+              color: '#34D399',
+              desc: 'Soft wash body + subtle pulsing dot',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                // Soft organic body
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '45, ' +
+                      col +
+                      '28, ' +
+                      col +
+                      '10)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(170deg, transparent 20%, ' +
+                      col +
+                      '12 50%, transparent 80%)',
+                  })
+                );
+                // Soft fade at edge (no hard line)
+                sf.appendChild(
+                  mk('div', 'ed-fade', {
+                    background:
+                      'linear-gradient(to right, ' + col + '15, transparent)',
+                  })
+                );
+                // Breathing dot
+                sf.appendChild(
+                  mk('div', 'ed-dot pulse', { background: col + '55' })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Balanced',
+              color: '#10B981',
+              desc: 'Rich wash + glow bloom + dot \u2014 the sweet spot',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + '%' });
+                // Rich organic body with depth
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '55, ' +
+                      col +
+                      '30, ' +
+                      col +
+                      '10)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, ' +
+                      col +
+                      '00, ' +
+                      col +
+                      '18)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(165deg, transparent 25%, ' +
+                      col +
+                      '10 45%, transparent 65%)',
+                  })
+                );
+                // Soft edge glow
+                sf.appendChild(
+                  mk('div', 'ed-glow breathe', { background: col + '35' })
+                );
+                // Dot
+                sf.appendChild(
+                  mk('div', 'ed-dot pulse', { background: col + '77' })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Vivid',
+              color: '#047857',
+              desc: 'Bold wash + prominent glow + bright dot',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '70, ' +
+                      col +
+                      '40, ' +
+                      col +
+                      '12)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, ' +
+                      col +
+                      '00, ' +
+                      col +
+                      '25)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(160deg, transparent 20%, ' +
+                      col +
+                      '15 40%, transparent 60%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-glow breathe', {
+                    background: col + '50',
+                    width: '30px',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-dot pulse', {
+                    background: col + '99',
+                    width: '7px',
+                    height: '7px',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+          ],
+        },
+        {
+          name: 'Watercolor Body + Soft Edge Line',
+          num: '2',
+          bg: '#0891b2',
+          fav: true,
+          desc: 'Layered watercolor wash that pools at the bottom + a thin translucent line marking progress. Feels hand-painted but measurable.',
+          variants: [
+            {
+              label: 'Light',
+              color: '#67E8F9',
+              desc: 'Delicate wash + whisper-thin edge line',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + '%' });
+                // Watercolor layers
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(95deg, ' +
+                      col +
+                      '38, ' +
+                      col +
+                      '18 70%, ' +
+                      col +
+                      '08 100%)',
+                  })
+                );
+                // Bottom pooling
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, transparent 40%, ' +
+                      col +
+                      '18)',
+                  })
+                );
+                // Thin edge
+                sf.appendChild(
+                  mk('div', 'ed-line shimmer', {
+                    background: col + '30',
+                    width: '1.5px',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Medium',
+              color: '#22D3EE',
+              desc: 'Rich watercolor + visible edge line + bottom pool',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(98deg, ' +
+                      col +
+                      '50, ' +
+                      col +
+                      '28 65%, ' +
+                      col +
+                      '08 100%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl breathe', {
+                    background:
+                      'linear-gradient(175deg, transparent 30%, ' +
+                      col +
+                      '12 55%, transparent 80%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, transparent 35%, ' +
+                      col +
+                      '25)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-line shimmer', {
+                    background: col + '44',
+                    width: '2px',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Deep',
+              color: '#0891b2',
+              desc: 'Saturated watercolor + strong edge line',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(100deg, ' +
+                      col +
+                      '65, ' +
+                      col +
+                      '35 60%, ' +
+                      col +
+                      '10 100%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(170deg, transparent 20%, ' +
+                      col +
+                      '18 45%, transparent 70%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, transparent 30%, ' +
+                      col +
+                      '30)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-line shimmer', {
+                    background: col + '55',
+                    width: '2px',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-glow breathe', { background: col + '20' })
+                );
+                card.appendChild(sf);
+              },
+            },
+          ],
+        },
+        {
+          name: 'Inner Glow + Progress Dot',
+          num: '3',
+          bg: '#8B5CF6',
+          desc: 'Warm bioluminescent glow emanating from the left + a clear pulsing dot at the strength level. The card feels alive from within.',
+          variants: [
+            {
+              label: 'Ember',
+              color: '#A78BFA',
+              desc: 'Warm inner glow + small progress dot',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                // Organic glow layer (full width, gradient-controlled)
+                const of = mk('div', 'of');
+                of.appendChild(
+                  mk('div', 'fl breathe', {
+                    background:
+                      'radial-gradient(ellipse 70% 140% at ' +
+                      p * 0.4 +
+                      '% 55%, ' +
+                      col +
+                      '25, transparent 100%)',
+                  })
+                );
+                card.appendChild(of);
+                // Clipped fill for progress
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '30, ' +
+                      col +
+                      '12, transparent)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-dot pulse', { background: col + '66' })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Flame',
+              color: '#8B5CF6',
+              desc: 'Strong glow + visible trail + pulsing dot',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const of = mk('div', 'of');
+                of.appendChild(
+                  mk('div', 'fl breathe', {
+                    background:
+                      'radial-gradient(ellipse 80% 160% at ' +
+                      p * 0.38 +
+                      '% 50%, ' +
+                      col +
+                      '38, transparent 100%)',
+                  })
+                );
+                of.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'radial-gradient(ellipse 50% 80% at ' +
+                      Math.min(p * 0.6, p) +
+                      '% 60%, ' +
+                      col +
+                      '12, transparent 100%)',
+                  })
+                );
+                card.appendChild(of);
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '40, ' +
+                      col +
+                      '18, ' +
+                      col +
+                      '05)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, transparent 40%, ' +
+                      col +
+                      '15)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-glow breathe', { background: col + '30' })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-dot pulse', {
+                    background: col + '88',
+                    width: '7px',
+                    height: '7px',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Radiant',
+              color: '#6D28D9',
+              desc: 'Intense inner light + bright edge beacon',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const of = mk('div', 'of');
+                of.appendChild(
+                  mk('div', 'fl breathe', {
+                    background:
+                      'radial-gradient(ellipse 90% 180% at ' +
+                      p * 0.35 +
+                      '% 50%, ' +
+                      col +
+                      '48, ' +
+                      col +
+                      '15 60%, transparent 100%)',
+                  })
+                );
+                of.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'radial-gradient(ellipse 60% 90% at ' +
+                      Math.min(p * 0.6, p) +
+                      '% 55%, ' +
+                      col +
+                      '18, transparent 100%)',
+                  })
+                );
+                card.appendChild(of);
+                const sf = mk('div', 'sf', { width: p + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '50, ' +
+                      col +
+                      '25, ' +
+                      col +
+                      '08)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, ' +
+                      col +
+                      '00, ' +
+                      col +
+                      '20)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-glow breathe', {
+                    background: col + '44',
+                    width: '30px',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'ed-dot pulse', {
+                    background: col + 'aa',
+                    width: '8px',
+                    height: '8px',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+          ],
+        },
+        {
+          name: 'Aurora Band + Feathered Edge',
+          num: '4',
+          bg: '#F59E0B',
+          desc: 'Diagonal aurora-like bands across the fill area + a feathered fade-out at the progress point. Ethereal but with a clear boundary.',
+          variants: [
+            {
+              label: 'Subtle',
+              color: '#FCD34D',
+              desc: 'Faint diagonal bands + soft feathered edge',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + 8 + '%' });
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '35 0%, ' +
+                      col +
+                      '20 60%, transparent 100%)',
+                    width: (p / (p + 8)) * 100 + '%',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(155deg, transparent 25%, ' +
+                      col +
+                      '10 40%, transparent 55%)',
+                    width: (p / (p + 8)) * 100 + '%',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Medium',
+              color: '#F59E0B',
+              desc: 'Visible aurora bands + shimmer edge',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + 10 + '%' });
+                const inner = (p / (p + 10)) * 100;
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '50 0%, ' +
+                      col +
+                      '30 50%, transparent 100%)',
+                    width: inner + '%',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(160deg, transparent 20%, ' +
+                      col +
+                      '15 38%, transparent 56%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(195deg, transparent 35%, ' +
+                      col +
+                      '10 50%, transparent 65%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl breathe', {
+                    background:
+                      'linear-gradient(to bottom, transparent 30%, ' +
+                      col +
+                      '15 70%, transparent)',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+            {
+              label: 'Bold',
+              color: '#D97706',
+              desc: 'Strong aurora + glowing feathered edge',
+              fn: (card, h) => {
+                const col = c(h.strength);
+                const p = h.strength;
+                const sf = mk('div', 'sf', { width: p + 12 + '%' });
+                const inner = (p / (p + 12)) * 100;
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to right, ' +
+                      col +
+                      '65 0%, ' +
+                      col +
+                      '38 45%, transparent 100%)',
+                    width: inner + '%',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(to bottom, ' +
+                      col +
+                      '00, ' +
+                      col +
+                      '22)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(155deg, transparent 18%, ' +
+                      col +
+                      '20 35%, transparent 52%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl', {
+                    background:
+                      'linear-gradient(200deg, transparent 40%, ' +
+                      col +
+                      '12 55%, transparent 70%)',
+                  })
+                );
+                sf.appendChild(
+                  mk('div', 'fl breathe', {
+                    background:
+                      'linear-gradient(to bottom, transparent 25%, ' +
+                      col +
+                      '20 65%, transparent)',
+                  })
+                );
+                card.appendChild(sf);
+              },
+            },
+          ],
+        },
+      ];
+
+      function render(base, isDk) {
+        const app = document.getElementById('app');
+        app.replaceChildren();
+
+        const strengths = [
+          Math.min(100, base + 25),
+          Math.min(100, base + 5),
+          Math.max(0, base - 15),
+          Math.max(0, base - 35),
+        ];
+
+        // Before/After
+        const bef = document.getElementById('before');
+        const aft = document.getElementById('after');
+        bef.replaceChildren();
+        aft.replaceChildren();
+        bef.className = 'ph ' + (isDk ? 'dk' : 'lt');
+        aft.className = 'ph ' + (isDk ? 'dk' : 'lt');
+
+        HABITS.forEach((h, i) => {
+          const hab = { ...h, strength: strengths[i] };
+          bef.appendChild(mkCard(hab, fillBefore, isDk));
+          // "After" uses Option 1 Balanced (recommended)
+          aft.appendChild(mkCard(hab, OPTIONS[0].variants[1].fn, isDk));
+        });
+
+        // Options
+        OPTIONS.forEach((opt) => {
+          const sec = mk('div', 'sec' + (opt.top ? ' top' : ''));
+          const hd = mk('div', 'sec-h');
+          hd.appendChild(mk('div', 'sec-n', { background: opt.bg }, opt.num));
+          hd.appendChild(mk('span', 'sec-t', {}, opt.name));
+          if (opt.top)
+            hd.appendChild(mk('span', 'bdg bdg-top', {}, 'Top Pick'));
+          if (opt.fav)
+            hd.appendChild(mk('span', 'bdg bdg-fav', {}, 'Fan Favorite'));
+          sec.appendChild(hd);
+          sec.appendChild(mk('p', 'sec-d', {}, opt.desc));
+
+          const grid = mk('div', 'vg');
+          opt.variants.forEach((v) => {
+            const col = mk('div');
+            col.appendChild(
+              mk(
+                'div',
+                'vl',
+                { color: v.color, background: v.color + '12' },
+                v.label
+              )
+            );
+            col.appendChild(mk('div', 'vd', {}, v.desc));
+            const ph = mk('div', 'ph ' + (isDk ? 'dk' : 'lt'));
+            HABITS.forEach((h, i) => {
+              ph.appendChild(
+                mkCard({ ...h, strength: strengths[i] }, v.fn, isDk)
+              );
+            });
+            col.appendChild(ph);
+            grid.appendChild(col);
+          });
+          sec.appendChild(grid);
+          app.appendChild(sec);
+        });
+      }
+
+      let base = 55,
+        isDk = false;
+      const sld = document.getElementById('sld');
+      const pctEl = document.getElementById('pct');
+      const phEl = document.getElementById('ph');
+      const dkTgl = document.getElementById('dkTgl');
+
+      function refresh() {
+        pctEl.textContent = base + '%';
+        pctEl.style.color = c(base);
+        phEl.textContent = em(base) + ' ' + lb(base);
+        render(base, isDk);
+      }
+
+      sld.addEventListener('input', function () {
+        base = parseInt(this.value);
+        refresh();
+      });
+      dkTgl.addEventListener('change', function () {
+        isDk = this.checked;
+        refresh();
+      });
+      refresh();
+    </script>
+  </body>
+</html>

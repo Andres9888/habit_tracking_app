@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Empty Habit Page — CTA Redesign</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif !important;
+        background: #1a1a2e;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 48px;
+        padding: 40px 20px 80px;
+        min-height: 100vh;
+      }
+
+      h1.section-title {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 2.5px !important;
+        text-transform: uppercase !important;
+        color: #6ee7b7 !important;
+        text-align: center;
+        margin-bottom: -20px;
+      }
+
+      /* ── iPhone Frame ── */
+      .phone-frame {
+        width: 375px;
+        height: 812px;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px rgba(255, 255, 255, 0.08),
+          0 25px 80px rgba(0, 0, 0, 0.5),
+          0 0 60px rgba(16, 185, 129, 0.08);
+      }
+
+      .phone-frame::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 32px;
+        background: #000;
+        border-radius: 0 0 18px 18px;
+        z-index: 100;
+      }
+
+      /* ── Status Bar ── */
+      .status-bar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 24px 8px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .status-bar .time {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .status-bar .icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+        font-size: 12px;
+      }
+
+      /* ── Nav Bar ── */
+      .nav-bar {
+        height: 32px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* ── Content ── */
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 24px 34px;
+        gap: 0;
+      }
+
+      /* ── Hero Icon ── */
+      .hero-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .hero-icon::after {
+        content: '';
+        position: absolute;
+        inset: -12px;
+        border-radius: 36px;
+        z-index: -1;
+      }
+
+      /* ── Headline ── */
+      .headline {
+        font-size: 24px !important;
+        font-weight: 800 !important;
+        line-height: 1.3 !important;
+        text-align: center !important;
+        letter-spacing: -0.5px !important;
+        margin-bottom: 20px;
+      }
+
+      /* ── Input ── */
+      .input-field {
+        width: 100%;
+        max-width: 343px;
+        height: 52px;
+        border-radius: 16px;
+        border: 1.5px solid;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        font-size: 15px;
+        margin-bottom: 16px;
+        position: relative;
+      }
+
+      .input-field .placeholder {
+        flex: 1;
+        opacity: 0.4;
+        font-size: 15px;
+        font-weight: 400;
+      }
+
+      .input-field .counter {
+        font-size: 12px;
+        opacity: 0.35;
+        font-weight: 500;
+      }
+
+      /* ── Chips ── */
+      .chips-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        max-width: 343px;
+        margin-bottom: 16px;
+      }
+
+      .chip {
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 9999px;
+        border: 1px solid;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+
+      .chip:hover {
+        transform: translateY(-1px);
+      }
+      .chip .emoji {
+        font-size: 15px;
+      }
+
+      /* ── CTA Button ── */
+      .cta-button {
+        width: 100%;
+        max-width: 343px;
+        height: 56px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-1px);
+      }
+
+      /* ── Divider ── */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 343px;
+        margin: 12px 0;
+      }
+
+      .divider-line {
+        flex: 1;
+        height: 0.5px;
+      }
+
+      .divider-text {
+        font-size: 13px;
+        font-weight: 400;
+        white-space: nowrap;
+      }
+
+      /* ── Browse Templates Button ── */
+      .templates-btn {
+        width: 100%;
+        max-width: 343px;
+        height: 56px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        padding: 0 18px;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+      }
+
+      .templates-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(4, 120, 87, 0.35);
+      }
+
+      .templates-btn .emoji {
+        font-size: 18px;
+      }
+
+      .templates-btn .label {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.2px;
+        text-align: left;
+      }
+
+      .templates-btn .badge {
+        padding: 3px 9px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      /* ── Build My Own Card ── */
+      .build-own-card {
+        width: 100%;
+        max-width: 343px;
+        height: 48px;
+        border-radius: 12px;
+        border: 1px solid;
+        display: flex;
+        align-items: center;
+        padding: 0 14px 0 16px;
+        gap: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .build-own-card:hover {
+        transform: translateY(-1px);
+      }
+
+      .build-own-card .accent-stripe {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3.5px;
+        border-radius: 0 2px 2px 0;
+      }
+
+      .build-own-card .emoji {
+        font-size: 18px;
+      }
+
+      .build-own-card .label {
+        flex: 1;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: -0.1px;
+      }
+
+      .build-own-card .arrow {
+        font-size: 13px;
+        opacity: 0.4;
+      }
+
+      /* ── Gap between secondary CTAs ── */
+      .secondary-ctas {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        max-width: 343px;
+      }
+
+      /* ── LIGHT MODE ── */
+      .light .phone-bg {
+        background: linear-gradient(
+          180deg,
+          #fafaf9 0%,
+          #f0fdf4 25%,
+          #ecfdf5 50%,
+          #f0fdf4 75%,
+          #fafaf9 100%
+        );
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .light .status-bar {
+        color: #1c1917;
+      }
+      .light .nav-bar {
+        color: #1c1917;
+      }
+      .light .hero-icon {
+        background: #d1fae5;
+      }
+      .light .hero-icon::after {
+        background: rgba(209, 250, 229, 0.4);
+      }
+      .light .headline {
+        color: #1c1917;
+      }
+      .light .input-field {
+        background: #ffffff;
+        border-color: #e7e5e4;
+        color: #1c1917;
+      }
+      .light .chip {
+        background: #ffffff;
+        border-color: #e7e5e4;
+        color: #44403c;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+      .light .chip:hover {
+        background: #f5f5f4;
+      }
+      .light .cta-button {
+        background: #047857;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(4, 120, 87, 0.3);
+      }
+      .light .cta-button.disabled {
+        background: #a8a29e;
+        box-shadow: none;
+        opacity: 0.4;
+      }
+      .light .divider-line {
+        background: #e7e5e4;
+      }
+      .light .divider-text {
+        color: #78716c;
+      }
+      .light .templates-btn {
+        background: linear-gradient(110deg, #047857, #059669, #10b981);
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(4, 120, 87, 0.3);
+      }
+      .light .templates-btn .badge {
+        background: rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+      }
+      .light .build-own-card {
+        background: #ffffff;
+        border-color: #e7e5e4;
+        color: #44403c;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .light .build-own-card .accent-stripe {
+        background: #6ee7b7;
+      }
+      .light .build-own-card .arrow {
+        color: #a8a29e;
+      }
+
+      /* ── DARK MODE ── */
+      .dark .phone-bg {
+        background: linear-gradient(
+          180deg,
+          #111827 0%,
+          #0c1f1a 25%,
+          #0d2418 50%,
+          #0c1f1a 75%,
+          #111827 100%
+        );
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dark .status-bar {
+        color: #f5f5f4;
+      }
+      .dark .nav-bar {
+        color: #f5f5f4;
+      }
+      .dark .hero-icon {
+        background: rgba(16, 185, 129, 0.15);
+      }
+      .dark .hero-icon::after {
+        background: rgba(16, 185, 129, 0.06);
+      }
+      .dark .headline {
+        color: #f5f5f4;
+      }
+      .dark .input-field {
+        background: #1f2937;
+        border-color: #374151;
+        color: #f5f5f4;
+      }
+      .dark .chip {
+        background: #1f2937;
+        border-color: #374151;
+        color: #e5e7eb;
+      }
+      .dark .chip:hover {
+        background: #283548;
+      }
+      .dark .cta-button {
+        background: #10b981;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+      }
+      .dark .cta-button.disabled {
+        background: #4b5563;
+        box-shadow: none;
+        opacity: 0.4;
+      }
+      .dark .divider-line {
+        background: #374151;
+      }
+      .dark .divider-text {
+        color: #9ca3af;
+      }
+      .dark .templates-btn {
+        background: linear-gradient(
+          110deg,
+          rgba(4, 120, 87, 0.85),
+          rgba(5, 150, 105, 0.85),
+          rgba(16, 185, 129, 0.85)
+        );
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(4, 120, 87, 0.2);
+      }
+      .dark .templates-btn .badge {
+        background: rgba(255, 255, 255, 0.18);
+        color: #ffffff;
+      }
+      .dark .build-own-card {
+        background: #1f2937;
+        border-color: #374151;
+        color: #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      }
+      .dark .build-own-card .accent-stripe {
+        background: #34d399;
+      }
+      .dark .build-own-card .arrow {
+        color: #6b7280;
+      }
+
+      /* ── Spec Panel ── */
+      .spec-panel {
+        max-width: 500px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 24px 28px;
+        color: #d1d5db;
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .spec-panel h3 {
+        font-size: 11px !important;
+        font-weight: 700 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        color: #6ee7b7 !important;
+        margin-bottom: 12px !important;
+      }
+
+      .spec-panel .label {
+        font-weight: 600;
+        color: #f5f5f4;
+      }
+
+      .spec-panel code {
+        background: rgba(16, 185, 129, 0.12);
+        color: #6ee7b7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: 'SF Mono', monospace;
+      }
+
+      /* ── Responsive ── */
+      @media (min-width: 850px) {
+        .phones-row {
+          display: flex;
+          gap: 40px;
+          align-items: flex-start;
+        }
+      }
+
+      @media (max-width: 849px) {
+        .phones-row {
+          display: flex;
+          flex-direction: column;
+          gap: 48px;
+          align-items: center;
+        }
+      }
+
+      .phone-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .mode-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="section-title">Empty Habit Page — CTA Redesign</h1>
+
+    <div class="phones-row">
+      <!-- ═══ LIGHT MODE ═══ -->
+      <div class="phone-wrapper">
+        <span class="mode-label">Light Mode</span>
+        <div class="phone-frame light">
+          <div class="phone-bg">
+            <div class="status-bar">
+              <span class="time">12:00</span>
+              <span class="icons">●●● ▸ 🔋</span>
+            </div>
+            <div class="nav-bar">◀ ChainDay</div>
+            <div class="content">
+              <!-- Hero -->
+              <div class="hero-icon">🌱</div>
+
+              <!-- Headline -->
+              <div class="headline">
+                What's one small thing<br />you want to do daily?
+              </div>
+
+              <!-- Input -->
+              <div class="input-field">
+                <span class="placeholder">Go for a morning run...</span>
+                <span class="counter">0/50</span>
+              </div>
+
+              <!-- Chips -->
+              <div class="chips-row">
+                <div class="chip"><span class="emoji">☕</span> Coffee</div>
+                <div class="chip"><span class="emoji">🏃</span> Run</div>
+                <div class="chip"><span class="emoji">🧘</span> Meditate</div>
+                <div class="chip"><span class="emoji">📝</span> Journal</div>
+                <div class="chip"><span class="emoji">💧</span> Water</div>
+                <div class="chip"><span class="emoji">📚</span> Read</div>
+              </div>
+
+              <!-- CTA -->
+              <div class="cta-button disabled">Start Building →</div>
+
+              <!-- Divider -->
+              <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">or explore</span>
+                <div class="divider-line"></div>
+              </div>
+
+              <!-- Secondary CTAs -->
+              <div class="secondary-ctas">
+                <div class="templates-btn">
+                  <span class="emoji">📚</span>
+                  <span class="label">browse templates</span>
+                  <span class="badge">200+</span>
+                </div>
+                <div class="build-own-card">
+                  <div class="accent-stripe"></div>
+                  <span class="emoji">✏️</span>
+                  <span class="label">Build my own</span>
+                  <span class="arrow">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ DARK MODE ═══ -->
+      <div class="phone-wrapper">
+        <span class="mode-label">Dark Mode</span>
+        <div class="phone-frame dark">
+          <div class="phone-bg">
+            <div class="status-bar">
+              <span class="time">12:00</span>
+              <span class="icons">●●● ▸ 🔋</span>
+            </div>
+            <div class="nav-bar">◀ ChainDay</div>
+            <div class="content">
+              <!-- Hero -->
+              <div class="hero-icon">🌱</div>
+
+              <!-- Headline -->
+              <div class="headline">
+                What's one small thing<br />you want to do daily?
+              </div>
+
+              <!-- Input -->
+              <div class="input-field">
+                <span class="placeholder">Go for a morning run...</span>
+                <span class="counter">0/50</span>
+              </div>
+
+              <!-- Chips -->
+              <div class="chips-row">
+                <div class="chip"><span class="emoji">☕</span> Coffee</div>
+                <div class="chip"><span class="emoji">🏃</span> Run</div>
+                <div class="chip"><span class="emoji">🧘</span> Meditate</div>
+                <div class="chip"><span class="emoji">📝</span> Journal</div>
+                <div class="chip"><span class="emoji">💧</span> Water</div>
+                <div class="chip"><span class="emoji">📚</span> Read</div>
+              </div>
+
+              <!-- CTA -->
+              <div class="cta-button disabled">Start Building →</div>
+
+              <!-- Divider -->
+              <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">or explore</span>
+                <div class="divider-line"></div>
+              </div>
+
+              <!-- Secondary CTAs -->
+              <div class="secondary-ctas">
+                <div class="templates-btn">
+                  <span class="emoji">📚</span>
+                  <span class="label">browse templates</span>
+                  <span class="badge">200+</span>
+                </div>
+                <div class="build-own-card">
+                  <div class="accent-stripe"></div>
+                  <span class="emoji">✏️</span>
+                  <span class="label">Build my own</span>
+                  <span class="arrow">→</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SPEC VALUES ═══ -->
+    <div class="spec-panel">
+      <h3>Spec Values</h3>
+      <span class="label">Container:</span> <code>paddingHorizontal: 24</code>,
+      <code>maxWidth: 343</code>, <code>justifyContent: center</code><br />
+      <span class="label">Hero icon:</span> 80×80,
+      <code>borderRadius: 24</code>, emerald glow<br />
+      <span class="label">Headline:</span> <code>fontSize: 24</code>,
+      <code>fontWeight: 800</code>, <code>marginTop/Bottom: 20</code><br />
+      <span class="label">Input:</span> <code>height: 52</code>,
+      <code>borderRadius: 16</code>, <code>marginBottom: 16</code><br />
+      <span class="label">Chips:</span> <code>height: 40</code>,
+      <code>borderRadius: 9999</code>, <code>marginBottom: 16</code><br />
+      <span class="label">CTA button:</span> <code>height: 56</code>,
+      <code>borderRadius: 16</code>, bg <code>#047857</code><br />
+      <span class="label">Divider:</span> 0.5px line + "or explore" text,
+      <code>margin: 12px 0</code><br />
+      <span class="label">Browse templates:</span> <code>height: 56</code>,
+      <code>borderRadius: 12</code><br />
+      &nbsp;&nbsp;Gradient:
+      <code>#047857 → #059669 → #10B981</code> (110deg)<br />
+      &nbsp;&nbsp;Shadow: <code>0 4px 16px rgba(4,120,87,0.3)</code><br />
+      &nbsp;&nbsp;Badge: <code>rgba(255,255,255,0.22)</code>,
+      <code>borderRadius: 8</code><br />
+      <span class="label">Build my own:</span> <code>height: 48</code>,
+      <code>borderRadius: 12</code>, <code>borderWidth: 1</code><br />
+      &nbsp;&nbsp;Card bg: <code>#FFFFFF</code> (light) /
+      <code>#1F2937</code> (dark)<br />
+      &nbsp;&nbsp;Accent stripe: <code>width: 3.5px</code>,
+      <code>#6EE7B7</code> (light) / <code>#34D399</code> (dark)<br />
+      &nbsp;&nbsp;Shadow: <code>0 1px 3px rgba(0,0,0,0.06)</code><br />
+      <span class="label">Gap:</span> <code>8px</code> between secondary CTAs<br />
+      <span class="label">All elements:</span> <code>width: 100%</code>,
+      <code>maxWidth: 343</code>, <code>flexDirection: row</code>
+    </div>
+  </body>
+</html>

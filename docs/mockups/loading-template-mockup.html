@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading States & Template Cards - Before/After</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+        background: #f5f5f4;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1c1917;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        margin-bottom: 48px;
+      }
+      .section {
+        background: #faf9f7;
+        border-radius: 24px;
+        padding: 24px;
+        border: 1px solid #e7e5e4;
+      }
+      .section-title {
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+      .before .section-title {
+        color: #dc2626;
+      }
+      .after .section-title {
+        color: #16a34a;
+      }
+
+      /* Phone Frame */
+      .phone {
+        background: #faf9f7;
+        border-radius: 24px;
+        padding: 16px;
+        border: 2px solid #e7e5e4;
+      }
+
+      /* Header */
+      .header {
+        padding: 12px 16px 16px;
+      }
+      .header-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+        letter-spacing: -0.5px;
+      }
+      .header-sub {
+        font-size: 15px;
+        color: #78716c;
+        margin-top: 4px;
+      }
+
+      /* Search Box */
+      .search-skeleton {
+        height: 48px;
+        border-radius: 24px;
+        margin: 0 16px 16px;
+      }
+      .before .search-skeleton {
+        background: #e5e7eb;
+      }
+      .after .search-skeleton {
+        background: linear-gradient(
+          90deg,
+          #e7e5e4 25%,
+          #d6d3d1 50%,
+          #e7e5e4 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      /* Skeleton Card */
+      .skeleton-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        margin: 8px 16px;
+      }
+      .before .skeleton-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .after .skeleton-card {
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+        animation: fadeInUp 0.3s ease-out;
+      }
+
+      .skeleton-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .skeleton-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 24px;
+      }
+      .before .skeleton-icon {
+        background: #e5e7eb;
+      }
+      .after .skeleton-icon {
+        background: linear-gradient(
+          90deg,
+          #e7e5e4 25%,
+          #d6d3d1 50%,
+          #e7e5e4 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      .skeleton-text {
+        flex: 1;
+      }
+      .skeleton-line {
+        height: 14px;
+        border-radius: 7px;
+        margin-bottom: 8px;
+      }
+      .skeleton-line.lg {
+        height: 18px;
+        width: 70%;
+      }
+      .skeleton-line.sm {
+        width: 50%;
+      }
+      .before .skeleton-line {
+        background: #e5e7eb;
+      }
+      .after .skeleton-line {
+        background: linear-gradient(
+          90deg,
+          #e7e5e4 25%,
+          #d6d3d1 50%,
+          #e7e5e4 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      .skeleton-badges {
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .skeleton-badge {
+        height: 24px;
+        border-radius: 12px;
+      }
+      .skeleton-badge:nth-child(1) {
+        width: 70px;
+      }
+      .skeleton-badge:nth-child(2) {
+        width: 60px;
+      }
+      .skeleton-badge:nth-child(3) {
+        width: 80px;
+      }
+      .before .skeleton-badge {
+        background: #e5e7eb;
+      }
+      .after .skeleton-badge {
+        background: linear-gradient(
+          90deg,
+          #e7e5e4 25%,
+          #d6d3d1 50%,
+          #e7e5e4 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+      }
+
+      /* Template Card */
+      .template-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 16px;
+        margin: 8px 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .before .template-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .after .template-card {
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+      .accent-bar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #8b5cf6;
+        border-radius: 4px 0 0 4px;
+      }
+      .card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding-left: 8px;
+      }
+      .card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+      }
+      .card-content {
+        flex: 1;
+      }
+      .card-title {
+        font-size: 17px;
+        font-weight: 600;
+        color: #1c1917;
+      }
+      .card-desc {
+        font-size: 14px;
+        color: #78716c;
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+      .card-badges {
+        display: flex;
+        gap: 6px;
+        margin-top: 12px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: #f5f5f4;
+        color: #57534e;
+      }
+      .badge.science {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .badge.popular {
+        background: #fef3c7;
+        color: #b45309;
+      }
+
+      /* Animations */
+      @keyframes shimmer {
+        0% {
+          background-position: 200% 0;
+        }
+        100% {
+          background-position: -200% 0;
+        }
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Stagger delays */
+      .after .skeleton-card:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .after .skeleton-card:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      .after .skeleton-line:nth-child(2) {
+        animation-delay: 0.05s;
+      }
+      .after .skeleton-badge:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+      .after .skeleton-badge:nth-child(3) {
+        animation-delay: 0.15s;
+      }
+
+      /* Annotations */
+      .annotation {
+        background: #fef3c7;
+        color: #92400e;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 4px;
+        position: absolute;
+        white-space: nowrap;
+      }
+      .phone {
+        position: relative;
+      }
+      .after .annotation-shimmer {
+        top: 85px;
+        right: 8px;
+      }
+      .after .annotation-shadow {
+        top: 180px;
+        right: 8px;
+      }
+      .after .annotation-stagger {
+        top: 350px;
+        right: 8px;
+      }
+
+      /* Summary */
+      .summary {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        margin-top: 24px;
+      }
+      .summary h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1c1917;
+        margin-bottom: 16px;
+      }
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+      .summary-item {
+        background: #f5f5f4;
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+      }
+      .summary-label {
+        font-size: 12px;
+        color: #78716c;
+        margin-bottom: 4px;
+      }
+      .summary-before {
+        font-size: 18px;
+        font-weight: 600;
+        color: #dc2626;
+      }
+      .summary-after {
+        font-size: 18px;
+        font-weight: 600;
+        color: #16a34a;
+      }
+      .summary-arrow {
+        color: #a1a1aa;
+        margin: 0 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔄 Loading States & Template Cards</h1>
+
+      <!-- Loading State Comparison -->
+      <div class="comparison">
+        <div class="section before">
+          <div class="section-title">❌ Before</div>
+          <div class="phone">
+            <div class="header">
+              <div class="header-title">Import Habits</div>
+              <div class="header-sub">
+                Science-backed habits to get you started
+              </div>
+            </div>
+            <div class="search-skeleton"></div>
+            <div class="skeleton-card">
+              <div class="skeleton-row">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-text">
+                  <div class="skeleton-line lg"></div>
+                  <div class="skeleton-line sm"></div>
+                </div>
+              </div>
+              <div class="skeleton-badges">
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-row">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-text">
+                  <div class="skeleton-line lg"></div>
+                  <div class="skeleton-line sm"></div>
+                </div>
+              </div>
+              <div class="skeleton-badges">
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section after">
+          <div class="section-title">✅ After</div>
+          <div class="phone">
+            <span class="annotation annotation-shimmer"
+              >✨ Shimmer animation</span
+            >
+            <span class="annotation annotation-shadow">📦 Deeper shadows</span>
+            <span class="annotation annotation-stagger">⏱️ Stagger delay</span>
+            <div class="header">
+              <div class="header-title">Import Habits</div>
+              <div class="header-sub">
+                Science-backed habits to get you started
+              </div>
+            </div>
+            <div class="search-skeleton"></div>
+            <div class="skeleton-card">
+              <div class="skeleton-row">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-text">
+                  <div class="skeleton-line lg"></div>
+                  <div class="skeleton-line sm"></div>
+                </div>
+              </div>
+              <div class="skeleton-badges">
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+              </div>
+            </div>
+            <div class="skeleton-card">
+              <div class="skeleton-row">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-text">
+                  <div class="skeleton-line lg"></div>
+                  <div class="skeleton-line sm"></div>
+                </div>
+              </div>
+              <div class="skeleton-badges">
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+                <div class="skeleton-badge"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Template Card Comparison -->
+      <h1>📦 Template Cards</h1>
+      <div class="comparison">
+        <div class="section before">
+          <div class="section-title">❌ Before</div>
+          <div class="phone">
+            <div class="template-card">
+              <div class="accent-bar"></div>
+              <div class="card-header">
+                <div class="card-icon" style="background: #ede9fe">🧘</div>
+                <div class="card-content">
+                  <div class="card-title">Morning Meditation</div>
+                  <div class="card-desc">
+                    Start your day with 10 minutes of mindfulness
+                  </div>
+                  <div class="card-badges">
+                    <span class="badge science">📚 Science</span>
+                    <span class="badge popular">🔥 Popular</span>
+                    <span class="badge">Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="template-card">
+              <div class="accent-bar" style="background: #fbbf24"></div>
+              <div class="card-header">
+                <div class="card-icon" style="background: #fef3c7">📖</div>
+                <div class="card-content">
+                  <div class="card-title">Read 20 Pages</div>
+                  <div class="card-desc">
+                    Build knowledge one chapter at a time
+                  </div>
+                  <div class="card-badges">
+                    <span class="badge science">📚 Science</span>
+                    <span class="badge">Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section after">
+          <div class="section-title">✅ After</div>
+          <div class="phone">
+            <div
+              class="template-card"
+              style="box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08)"
+            >
+              <div class="accent-bar"></div>
+              <div class="card-header">
+                <div class="card-icon" style="background: #ede9fe">🧘</div>
+                <div class="card-content">
+                  <div class="card-title">Morning Meditation</div>
+                  <div class="card-desc">
+                    Start your day with 10 minutes of mindfulness
+                  </div>
+                  <div class="card-badges">
+                    <span class="badge science">📚 Science</span>
+                    <span class="badge popular">🔥 Popular</span>
+                    <span class="badge">Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="template-card"
+              style="
+                box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+                animation: fadeInUp 0.3s ease-out 0.1s both;
+              "
+            >
+              <div class="accent-bar" style="background: #fbbf24"></div>
+              <div class="card-header">
+                <div class="card-icon" style="background: #fef3c7">📖</div>
+                <div class="card-content">
+                  <div class="card-title">Read 20 Pages</div>
+                  <div class="card-desc">
+                    Build knowledge one chapter at a time
+                  </div>
+                  <div class="card-badges">
+                    <span class="badge science">📚 Science</span>
+                    <span class="badge">Daily</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary -->
+      <div class="summary">
+        <h3>📊 Changes Summary</h3>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <div class="summary-label">Shadow</div>
+            <span class="summary-before">2px</span>
+            <span class="summary-arrow">→</span>
+            <span class="summary-after">4px</span>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Blur</div>
+            <span class="summary-before">8px</span>
+            <span class="summary-arrow">→</span>
+            <span class="summary-after">16px</span>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Opacity</div>
+            <span class="summary-before">0.05</span>
+            <span class="summary-arrow">→</span>
+            <span class="summary-after">0.08</span>
+          </div>
+          <div class="summary-item">
+            <div class="summary-label">Animation</div>
+            <span class="summary-before">Static</span>
+            <span class="summary-arrow">→</span>
+            <span class="summary-after">Shimmer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

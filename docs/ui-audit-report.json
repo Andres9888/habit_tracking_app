@@ -1,0 +1,596 @@
+{
+  "meta": {
+    "appName": "Chain Day",
+    "auditDate": "2026-02-14",
+    "auditor": "Opus (Claude)",
+    "version": "HEAD@4fd62ca6",
+    "framework": "React Native (Expo)",
+    "platforms": ["iOS", "Android (planned)"]
+  },
+  "overallScore": {
+    "weighted": 82,
+    "breakdown": {
+      "visualHierarchy": 85,
+      "visualStyle": 88,
+      "accessibility": 72,
+      "navigation": 80,
+      "usability": 83,
+      "onboarding": 78,
+      "forms": 75
+    },
+    "weights": {
+      "visualHierarchy": 0.15,
+      "visualStyle": 0.15,
+      "accessibility": 0.2,
+      "navigation": 0.15,
+      "usability": 0.15,
+      "onboarding": 0.1,
+      "forms": 0.1
+    }
+  },
+  "sections": {
+    "visualHierarchy": {
+      "score": 85,
+      "checks": [
+        {
+          "name": "Type scale defines clear hierarchy",
+          "status": "pass",
+          "notes": "34/28/22/17/15/13/10 pt scale well-defined in typography.ts with SF Pro Display for headings, SF Pro Text for body"
+        },
+        {
+          "name": "CTAs are visually prominent",
+          "status": "pass",
+          "notes": "Primary CTA uses #059669 green with elevation shadow, 12px border radius, 17pt semibold text"
+        },
+        {
+          "name": "Content grouping follows proximity law",
+          "status": "pass",
+          "notes": "8pt grid system with xs(4)/sm(8)/md(12)/base(16)/lg(24)/xl(32) spacing scale; cards use 16pt padding"
+        },
+        {
+          "name": "Reading flow is natural (F-pattern/Z-pattern)",
+          "status": "pass",
+          "notes": "Main habits list follows natural top-to-bottom scan; header → progress → habit cards → FAB"
+        },
+        {
+          "name": "Color hierarchy supports visual weight",
+          "status": "pass",
+          "notes": "Primary green (#047857 text, #059669 buttons), gray-800 for headings, gray-500 for secondary, gray-400 for tertiary"
+        },
+        {
+          "name": "Whitespace is consistent between sections",
+          "status": "warn",
+          "notes": "Onboarding screen uses hardcoded spacing (gap:24, paddingBottom:60) instead of theme spacing tokens. Some components use raw values."
+        },
+        {
+          "name": "Heading levels are semantically ordered",
+          "status": "warn",
+          "notes": "heading1(28pt) → heading2(22pt) → heading3(17pt) well-defined but some screens skip heading2 going directly from screen title to card titles"
+        }
+      ]
+    },
+    "visualStyle": {
+      "score": 88,
+      "checks": {
+        "spacing": [
+          {
+            "name": "Base unit defined",
+            "status": "pass",
+            "value": "4pt (with 8pt as practical base)",
+            "notes": "spacing.ts defines xs(4)/sm(8)/md(12)/base(16)/lg(24)/xl(32)/2xl(48)/3xl(64)"
+          },
+          {
+            "name": "Scale is consistent",
+            "status": "pass",
+            "notes": "4pt increments throughout; componentSpacing provides card/button/input/listItem/modal presets"
+          },
+          {
+            "name": "Consistent application",
+            "status": "warn",
+            "notes": "OnboardingScreen uses raw values (gap:12, paddingHorizontal:16,32) instead of importing spacing tokens"
+          },
+          {
+            "name": "Proximity law observed",
+            "status": "pass",
+            "notes": "Cards grouped with 8pt vertical margin, internal padding 16pt; related elements use 4-8pt gap"
+          }
+        ],
+        "colors": [
+          {
+            "name": "Primary palette defined",
+            "status": "pass",
+            "value": "Emerald: #D1FAE5 → #047857 (7 stops)"
+          },
+          {
+            "name": "Secondary palette defined",
+            "status": "pass",
+            "value": "Blue: #dbeafe → #2563EB (4 stops)"
+          },
+          {
+            "name": "Neutral palette defined",
+            "status": "pass",
+            "value": "Warm stone grays: #faf9f7 → #111827 (10 stops)"
+          },
+          {
+            "name": "Semantic colors defined",
+            "status": "pass",
+            "value": "success=#10B981, error=#EF4444, warning=#F59E0B, info=#3B82F6"
+          },
+          {
+            "name": "Contrast ratios WCAG AA",
+            "status": "warn",
+            "notes": "Gray-400 (#6B7280) on #faf9f7 background is ~4.1:1 — barely AA for normal text. stone-500 (#78716c) on warm background is ~3.9:1 — fails AA for body text."
+          },
+          {
+            "name": "Strength level colors distinct",
+            "status": "pass",
+            "value": "5 strength stages: lime→green→teal→cyan→emerald with matching light variants"
+          }
+        ],
+        "elevation": [
+          {
+            "name": "Shadow scale defined",
+            "status": "pass",
+            "value": "4 levels: subtle(1px/0.05), card(4px/0.08), FAB(6px/0.15), modal(8px/0.12)"
+          },
+          {
+            "name": "Consistent shadow color",
+            "status": "pass",
+            "value": "#1c1917 (warm stone-900) used across all elevation levels"
+          },
+          {
+            "name": "Proper z-index layering",
+            "status": "pass",
+            "notes": "Modals use elevation:6, FAB uses elevation:6, cards use elevation:3, subtle elements elevation:1"
+          }
+        ],
+        "typography": [
+          {
+            "name": "Type scale defined",
+            "status": "pass",
+            "value": "9 variants: displayLarge(34)/heading1(28)/heading2(22)/heading3(17)/body(17)/bodySmall(15)/caption(13)/tabBar(10)/monospace(17)"
+          },
+          {
+            "name": "Font hierarchy clear",
+            "status": "pass",
+            "notes": "SF Pro Display for display/h1, SF Pro Text for body/UI, SF Mono for data, Georgia for letters"
+          },
+          {
+            "name": "Line heights specified",
+            "status": "pass",
+            "notes": "Every variant has explicit lineHeight: 41/34/28/22/20/18/12/22"
+          },
+          {
+            "name": "Font weights defined",
+            "status": "pass",
+            "value": "regular(400)/medium(500)/semibold(600)/bold(700)"
+          },
+          {
+            "name": "Letter spacing tuned",
+            "status": "pass",
+            "notes": "Negative tracking for body (-0.41) and small text (-0.24/-0.08); positive for headings (0.35-0.37)"
+          },
+          {
+            "name": "Max line length controlled",
+            "status": "warn",
+            "notes": "No explicit maxWidth constraint for body text. Screens use paddingHorizontal for implicit constraint but no typographic measure (45-75 chars) is enforced."
+          }
+        ],
+        "motion": [
+          {
+            "name": "Purpose-driven animations",
+            "status": "pass",
+            "notes": "Entrance animations for card stagger, celebration confetti for milestones, spring physics for gestures"
+          },
+          {
+            "name": "Duration range appropriate",
+            "status": "pass",
+            "value": "instant(100ms) → quick(150ms) → standard(200ms) → moderate(300ms) → emphasis(400ms) → complex(600ms)"
+          },
+          {
+            "name": "Easing/spring configs defined",
+            "status": "pass",
+            "notes": "10 spring presets (bouncy, button, gentle, snappy, sheet, etc.) plus Motion.easing with cubic curves"
+          },
+          {
+            "name": "Reduce motion support",
+            "status": "pass",
+            "notes": "useReduceMotion hook reads system AccessibilityInfo.isReduceMotionEnabled; useReduceMotion.ts in components/Modal"
+          },
+          {
+            "name": "Stagger timing",
+            "status": "pass",
+            "value": "60ms stagger in HabitCard entrance, 120ms in onboarding chain links"
+          }
+        ],
+        "icons": [
+          {
+            "name": "Size scale defined",
+            "status": "pass",
+            "value": "micro(10)/small(16)/medium(20)/large(24)/xl(32)/xxl(48)"
+          },
+          {
+            "name": "Consistent icon library",
+            "status": "warn",
+            "notes": "Mix of emoji characters and icon components. Template grid uses raw emoji (🧘💧📖); other components use vector icons. No single icon library enforced."
+          },
+          {
+            "name": "Icon sizes align with typography",
+            "status": "pass",
+            "notes": "micro(10) pairs with tabBar(10pt), small(16) with caption, medium(20) with bodySmall, large(24) with body/heading3"
+          }
+        ]
+      }
+    },
+    "accessibility": {
+      "score": 72,
+      "checks": [
+        {
+          "name": "Focus ring styles defined",
+          "status": "pass",
+          "notes": "focusRing.ts provides 2px border (#047857) with glow shadow, plus compact variant (1.5px)"
+        },
+        {
+          "name": "useFocusRing hook exists",
+          "status": "pass",
+          "notes": "useFocusRing in utils/accessibility with disabled support; integrated into HabitCard"
+        },
+        {
+          "name": "accessibilityRole on interactive elements",
+          "status": "pass",
+          "notes": "HabitCard uses role='button', onboarding buttons use role='button', proper labels throughout"
+        },
+        {
+          "name": "accessibilityLabel descriptive",
+          "status": "pass",
+          "notes": "HabitCard: '{name} habit, {strength}% strength, completed/not. Swipe left for actions.' — thorough"
+        },
+        {
+          "name": "accessibilityState used",
+          "status": "pass",
+          "notes": "HabitCard sets checked and disabled states correctly"
+        },
+        {
+          "name": "Touch targets meet 44pt minimum",
+          "status": "pass",
+          "notes": "componentSpacing.button.height=44, componentSpacing.input.height=44; skip button uses hitSlop=24 + minHeight:44"
+        },
+        {
+          "name": "Contrast ratios pass WCAG AA",
+          "status": "fail",
+          "notes": "Secondary text stone-500 (#78716c) on #faf9f7 ≈ 3.9:1 — fails AA (4.5:1 required for normal text). Gray-400 (#6B7280) marked 'WCAG AA compliant' in comments but is marginal at 4.1:1."
+        },
+        {
+          "name": "Screen reader navigation order logical",
+          "status": "warn",
+          "notes": "HabitCard accessible prop set, but swipe actions are hidden behind gesture — screen reader users need accessibilityActions alternative. accessibilityHint mentions swipe but no VoiceOver custom actions defined."
+        },
+        {
+          "name": "Dynamic Type support",
+          "status": "warn",
+          "notes": "Typography file documents Dynamic Type intent and mentions scaledValue() helper, but no actual implementation found — fontSize values are static pt values"
+        },
+        {
+          "name": "Reduce motion fully respected",
+          "status": "warn",
+          "notes": "useReduceMotion hook exists but not consistently applied. OnboardingScreen always uses springify animations without checking reduce motion preference."
+        },
+        {
+          "name": "Color not sole information carrier",
+          "status": "pass",
+          "notes": "Strength levels use text labels ('Starting','Building',etc.) alongside color bars; streak badges include text + icon"
+        },
+        {
+          "name": "Error states announced to screen reader",
+          "status": "warn",
+          "notes": "ErrorBoundary and error fallbacks exist but no accessibilityLiveRegion='polite' found for dynamic error announcements"
+        }
+      ]
+    },
+    "navigation": {
+      "score": 80,
+      "checks": [
+        {
+          "name": "Clear wayfinding — user knows where they are",
+          "status": "pass",
+          "notes": "Screen headers (HabitsHeader, AnalyticsHeader, DetailHeader) provide clear titles; tab bar with labels"
+        },
+        {
+          "name": "Tab bar follows platform conventions",
+          "status": "pass",
+          "notes": "tabBar height 49pt (iOS standard); 10pt font weight 500; includes CharacterScreen and AnalyticsScreen"
+        },
+        {
+          "name": "Back navigation consistent",
+          "status": "pass",
+          "notes": "HeaderButton component for back/close; modals have dismiss indicators and swipe-to-dismiss gestures"
+        },
+        {
+          "name": "Information architecture logical",
+          "status": "warn",
+          "notes": "Feature-rich with many modal layers (HabitsModals has 8+ modal types). Risk of modal fatigue. MotivationSystem/Workshop has deep nesting (Activation/Rescue/Reward/Workshop sub-systems)."
+        },
+        {
+          "name": "Sort/filter discoverable",
+          "status": "pass",
+          "notes": "SortChip component with SortBottomSheet; QuickPickChips for common sort presets"
+        },
+        {
+          "name": "Deep linking to habit detail",
+          "status": "warn",
+          "notes": "HabitDetailScreen exists as standalone screen but navigation from card is via modal (HabitCalendarModal) — two paths to similar content may confuse users"
+        }
+      ]
+    },
+    "usability": {
+      "score": 83,
+      "checks": [
+        {
+          "name": "Primary action discoverable (complete habit)",
+          "status": "pass",
+          "notes": "Tap on HabitCard toggles completion; QuickCompleteButton as alternative; clear visual feedback with confetti + strength fill"
+        },
+        {
+          "name": "Feedback on actions",
+          "status": "pass",
+          "notes": "Haptic feedback via expo-haptics on tap/toggle; toast notifications (CompletionToast, RewardCelebrationToast); animated strength fill; confetti burst on completion"
+        },
+        {
+          "name": "Error handling graceful",
+          "status": "pass",
+          "notes": "ErrorBoundary with ErrorFallback, RetryButton, SuggestionsCard; OfflinePendingBanner with sync status; circuit breaker pattern for network failures"
+        },
+        {
+          "name": "Cognitive load manageable",
+          "status": "warn",
+          "notes": "MotivationSystem has 4 sub-systems (Activation, Rescue, Reward, Workshop) each with multiple screens. Workshop alone has: WOOP, CueTrigger, DualViz, Affirmations, VoiceNotes, Letters, VisionBoard, Identity sections. May overwhelm new users."
+        },
+        {
+          "name": "Undo available for destructive actions",
+          "status": "pass",
+          "notes": "UndoToasts on HabitDetailScreen; UnsavedChangesAlert guard on edit screens"
+        },
+        {
+          "name": "Loading states clear",
+          "status": "pass",
+          "notes": "Comprehensive skeleton loaders: AnalyticsScreenSkeleton, HabitCardSkeleton, HabitDetailSkeleton, HabitsPageSkeleton, SettingsModalSkeleton"
+        },
+        {
+          "name": "Offline experience graceful",
+          "status": "pass",
+          "notes": "Full offline queue system with OfflineProvider, circuit breaker, conflict resolution, sync orchestrator, and OfflinePendingBanner UI"
+        },
+        {
+          "name": "Swipe gestures have visual affordance",
+          "status": "warn",
+          "notes": "HabitCard swipe-to-reveal actions exist but no visual hint (edge peek or swipe indicator) guides first-time users"
+        }
+      ]
+    },
+    "onboarding": {
+      "score": 78,
+      "checks": [
+        {
+          "name": "First-run experience exists",
+          "status": "pass",
+          "notes": "3-screen OnboardingScreen carousel: Chain visualization → Strength meter → Template grid"
+        },
+        {
+          "name": "Skip option available",
+          "status": "pass",
+          "notes": "Skip button top-right with hitSlop=24, minHeight:44; persists via AsyncStorage"
+        },
+        {
+          "name": "Progressive disclosure of features",
+          "status": "warn",
+          "notes": "Onboarding covers chain/strength/templates but doesn't introduce MotivationSystem features (WOOP, Rescue Mode, etc.). Heavy feature set discovered all at once post-onboarding."
+        },
+        {
+          "name": "Empty state guides action",
+          "status": "pass",
+          "notes": "HabitsEmptyStateMinimal with HabitInput, SuggestionChips, CtaButton, InlineHint; templates accessible from empty state"
+        },
+        {
+          "name": "Visual illustrations engaging",
+          "status": "pass",
+          "notes": "Animated chain links, strength meter bars, template emoji grid with staggered spring entrance animations"
+        },
+        {
+          "name": "Onboarding respects reduce motion",
+          "status": "fail",
+          "notes": "OnboardingScreen uses FadeInDown.springify().damping(18) without checking useReduceMotion. No fallback for users with motion sensitivity."
+        }
+      ]
+    },
+    "forms": {
+      "score": 75,
+      "checks": [
+        {
+          "name": "Create habit flow intuitive",
+          "status": "pass",
+          "notes": "HabitsEmptyStateMinimal provides inline HabitInput with chip suggestions; CreateHabitModalSection for full form"
+        },
+        {
+          "name": "Edit screen comprehensive",
+          "status": "pass",
+          "notes": "HabitEditScreen with NameInputSection, CustomizeSection (emoji/color), DangerZone (archive/delete)"
+        },
+        {
+          "name": "Unsaved changes protected",
+          "status": "pass",
+          "notes": "useUnsavedChangesGuard hook with back handler and confirm dialog"
+        },
+        {
+          "name": "Input validation present",
+          "status": "pass",
+          "notes": "utils/validation/ with email, password, text, security validators; useFieldValidation hook"
+        },
+        {
+          "name": "Settings organized logically",
+          "status": "pass",
+          "notes": "SettingsModal with AccountSection, StreakRemindersSection, LegalLinks, AppActions sections"
+        },
+        {
+          "name": "Form inputs meet minimum size",
+          "status": "pass",
+          "notes": "componentSpacing.input.height=44pt matches Apple HIG"
+        },
+        {
+          "name": "Error messages near inputs",
+          "status": "warn",
+          "notes": "Auth forms have AuthError component but ErrorMessage in HabitsEmptyStateMinimal uses animated toast-style positioning that may not be proximate to the triggering input"
+        },
+        {
+          "name": "Template preview before import",
+          "status": "pass",
+          "notes": "FullsizeTemplatePreview and TemplatePreviewModal provide detailed preview with name customization before import"
+        },
+        {
+          "name": "EmojiPicker accessible",
+          "status": "warn",
+          "notes": "EmojiPickerV2 with EmojiPickerSheet exists but no evidence of accessibilityLabel on individual emoji buttons in the grid"
+        }
+      ]
+    }
+  },
+  "macroBetsAlignment": {
+    "velocity": {
+      "score": "strong",
+      "notes": "Quick habit completion via tap gesture, FAB for fast creation, QuickCompleteButton, chip-based suggestions in empty state reduce time-to-first-habit. Optimistic mutations provide instant UI feedback."
+    },
+    "efficiency": {
+      "score": "strong",
+      "notes": "Comprehensive skeleton loaders prevent layout shift. Offline queue with sync orchestrator ensures no lost data. Sort/filter system reduces scrolling for power users."
+    },
+    "accuracy": {
+      "score": "moderate",
+      "notes": "Contrast ratio issues may cause misreadings for low-vision users. Secondary text (#78716c) fails WCAG AA. Strength level colors are close in hue (lime/green/teal/cyan/emerald) — may be difficult for colorblind users to distinguish without labels."
+    },
+    "innovation": {
+      "score": "strong",
+      "notes": "Unique strength-based habit tracking model with scientific backing (Huberman phases). MotivationSystem with WOOP, dual visualization, rescue mode, and voice notes is differentiated. Share card generator for social proof."
+    }
+  },
+  "jtbdAnalysis": [
+    {
+      "userType": "New Habit Builder",
+      "job": "When I want to start a new habit, I want a simple way to track it daily so I can build consistency.",
+      "currentExperience": "Excellent — empty state with inline input + chip suggestions gets user to first habit in <10 seconds. Onboarding explains chain metaphor.",
+      "gaps": [
+        "Post-onboarding feature discovery is abrupt",
+        "No guided tour of MotivationSystem features"
+      ]
+    },
+    {
+      "userType": "Streak Maintainer",
+      "job": "When I have an active streak, I want to be reminded and motivated to not break it so I can maintain my progress.",
+      "currentExperience": "Strong — StreakReminders, RescueMode with failure visualization, StreakMilestoneCelebration, StreakChainSection visual.",
+      "gaps": [
+        "Swipe actions not discoverable without prior knowledge",
+        "At-risk visual indicator could be more prominent"
+      ]
+    },
+    {
+      "userType": "Data-Driven Tracker",
+      "job": "When I want to understand my habit patterns, I want detailed analytics so I can optimize my routine.",
+      "currentExperience": "Good — AnalyticsScreen with charts, InsightsSection, WeeklyInsightsCard, TrendLineChart, StrengthHistoryChart, PredictionInsights.",
+      "gaps": [
+        "Analytics screen may be overwhelming with many chart types",
+        "Export functionality exists but discoverability unclear"
+      ]
+    },
+    {
+      "userType": "Accessibility User",
+      "job": "When I use assistive technology, I want the app to work correctly so I can track habits independently.",
+      "currentExperience": "Moderate — focus rings, accessible labels, and reduce motion hook exist, but contrast failures and incomplete VoiceOver actions limit the experience.",
+      "gaps": [
+        "Secondary text contrast fails WCAG AA",
+        "No VoiceOver custom actions for swipe alternatives",
+        "Dynamic Type not implemented",
+        "Onboarding ignores reduce motion"
+      ]
+    }
+  ],
+  "priorityFixes": [
+    {
+      "rank": 1,
+      "title": "Fix secondary text contrast ratio",
+      "severity": "high",
+      "framework": "WCAG 2.1 AA §1.4.3",
+      "description": "Change stone-500 (#78716c) secondary text color to stone-600 (#57534e) which achieves ~5.2:1 on #faf9f7 background. Update colors.text.secondary and colors.gray[500].",
+      "effort": "small"
+    },
+    {
+      "rank": 2,
+      "title": "Add VoiceOver custom actions to HabitCard",
+      "severity": "high",
+      "framework": "WCAG 2.1 AA §2.1.1 (Keyboard), iOS HIG Accessibility",
+      "description": "Add accessibilityActions for 'edit' and 'delete' as alternatives to swipe gesture. Screen reader users cannot access swipe-revealed actions.",
+      "effort": "small"
+    },
+    {
+      "rank": 3,
+      "title": "Respect reduce motion in OnboardingScreen",
+      "severity": "high",
+      "framework": "WCAG 2.1 AA §2.3.3 (Animation from Interactions)",
+      "description": "Import useReduceMotion and conditionally disable spring/fade animations. Use instant opacity transitions when reduce motion is enabled.",
+      "effort": "small"
+    },
+    {
+      "rank": 4,
+      "title": "Implement Dynamic Type support",
+      "severity": "medium",
+      "framework": "Apple HIG - Dynamic Type, WCAG 2.1 AA §1.4.4",
+      "description": "Typography system documents intent but uses static pt values. Integrate react-native's fontScale or a scaledValue() helper to make text sizes respond to system font size settings.",
+      "effort": "medium"
+    },
+    {
+      "rank": 5,
+      "title": "Consolidate to theme spacing tokens",
+      "severity": "medium",
+      "framework": "Design System Consistency",
+      "description": "OnboardingScreen and other components use raw numeric values. Replace with spacing token imports (spacing.lg, spacing.base) for maintainability.",
+      "effort": "medium"
+    },
+    {
+      "rank": 6,
+      "title": "Add swipe hint affordance to HabitCard",
+      "severity": "medium",
+      "framework": "Nielsen Heuristic #6 (Recognition over Recall)",
+      "description": "Add subtle edge peek or first-time tooltip indicating swipe-to-reveal actions. Currently no visual affordance for new users.",
+      "effort": "small"
+    },
+    {
+      "rank": 7,
+      "title": "Progressive feature disclosure for MotivationSystem",
+      "severity": "medium",
+      "framework": "Nielsen Heuristic #8 (Aesthetic & Minimalist Design)",
+      "description": "Workshop has 8+ sections visible simultaneously. Implement progressive unlock or contextual introduction to reduce cognitive overload for new users.",
+      "effort": "large"
+    },
+    {
+      "rank": 8,
+      "title": "Enforce max line length for body text",
+      "severity": "low",
+      "framework": "Butterick's Typography §2.5, WCAG 2.1 §1.4.8",
+      "description": "Add maxWidth constraint (~600px / ~75 characters) for body text containers to maintain readable measure on larger screens.",
+      "effort": "small"
+    },
+    {
+      "rank": 9,
+      "title": "Standardize icon library",
+      "severity": "low",
+      "framework": "Design System Consistency",
+      "description": "Mix of emoji and vector icons. Define policy: emoji for user-chosen habit icons, single vector icon library (e.g., Lucide or SF Symbols) for all UI chrome icons.",
+      "effort": "medium"
+    },
+    {
+      "rank": 10,
+      "title": "Add accessibilityLiveRegion for dynamic errors",
+      "severity": "low",
+      "framework": "WCAG 2.1 AA §4.1.3 (Status Messages)",
+      "description": "Error states and sync status changes should use accessibilityLiveRegion='polite' to announce changes to screen reader users without focus shift.",
+      "effort": "small"
+    }
+  ]
+}

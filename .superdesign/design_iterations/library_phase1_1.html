@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Habit Library — Phase 1.1 + 1.2 mock</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #ffffff;
+        --card-muted: #faf8f5;
+        --border: #ddd8d2;
+        --text-primary: #3d3833;
+        --text-body: #524d47;
+        --text-secondary: #6b6560;
+        --text-tertiary: #6e6660;
+        --primary-50: #d1fae5;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --primary-800: #065f46;
+        --gold-bg: #fef3cd;
+        --gold-text: #5c3d03;
+        --gold-border: #e8b94d;
+        --purple-bg: #f5f0ff;
+        --purple-text: #6d3ac7;
+        --purple-border: #e0d4f5;
+        --blue-bg: #eef4fb;
+        --blue-text: #2563eb;
+        --blue-border: #d0dfef;
+        --new-highlight: #fef9c3;
+        --new-border: #f59e0b;
+      }
+      html,
+      body {
+        background: #efe9e2;
+        font-family: 'Inter', system-ui, sans-serif !important;
+        color: var(--text-primary);
+      }
+      .phone {
+        width: 390px;
+        background: var(--bg);
+        border-radius: 44px;
+        box-shadow:
+          0 30px 80px -20px rgba(34, 26, 16, 0.45),
+          0 8px 16px rgba(34, 26, 16, 0.08);
+        overflow: hidden;
+        position: relative;
+      }
+      .notch {
+        position: absolute;
+        top: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 28px;
+        background: #1c1816;
+        border-radius: 18px;
+        z-index: 30;
+      }
+      .scroll-container {
+        height: 844px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+      }
+      .scroll-container::-webkit-scrollbar {
+        width: 0;
+      }
+      .chips-row {
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .chips-row::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        white-space: nowrap;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 9999px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text-secondary);
+        flex-shrink: 0;
+        line-height: 16px;
+      }
+      .chip-active-all {
+        background: var(--primary-600);
+        border-color: var(--primary-700);
+        color: #fff;
+      }
+      .chip-fitness {
+        background: var(--primary-50);
+        border-color: #6ee7b7;
+        color: var(--primary-700);
+      }
+      .chip-morning {
+        background: var(--gold-bg);
+        border-color: var(--gold-border);
+        color: var(--gold-text);
+      }
+      .chip-mental,
+      .chip-mindful,
+      .chip-learning {
+        background: var(--purple-bg);
+        border-color: var(--purple-border);
+        color: var(--purple-text);
+      }
+      .chip-sleep {
+        background: var(--blue-bg);
+        border-color: var(--blue-border);
+        color: var(--blue-text);
+      }
+      .start-here {
+        background: linear-gradient(
+          135deg,
+          var(--primary-800) 0%,
+          var(--primary-600) 100%
+        );
+        color: #fff;
+        border-radius: 18px;
+        padding: 20px;
+      }
+      .start-chip {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 7px 10px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .goal-featured {
+        background: linear-gradient(135deg, #fde68a, #fef3c7);
+        color: #78350f;
+        border-radius: 20px;
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+      }
+      .goal-small {
+        border-radius: 18px;
+        padding: 14px;
+        position: relative;
+        overflow: hidden;
+      }
+      .goal-sleep {
+        background: #eff6ff;
+        color: #1e3a5f;
+      }
+      .goal-stress {
+        background: #f0fdf4;
+        color: #14532d;
+      }
+      .goal-focus {
+        background: #faf5ff;
+        color: #581c87;
+      }
+      .goal-health {
+        background: #fff1f2;
+        color: #881337;
+      }
+      .featured-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: rgba(0, 0, 0, 0.78);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        padding: 4px 8px;
+        border-radius: 999px;
+      }
+      .trending-card {
+        width: 165px;
+        flex-shrink: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 14px;
+      }
+      .trending-card .icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .add-button {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+        line-height: 32px;
+        text-align: center;
+      }
+      .new-tag {
+        position: absolute;
+        left: -2px;
+        top: 50%;
+        transform: translateY(-50%) rotate(-90deg);
+        transform-origin: left top;
+        background: var(--new-border);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.6px;
+        padding: 3px 10px;
+        border-radius: 4px;
+        z-index: 10;
+      }
+      .new-flag {
+        background: var(--new-highlight);
+        border: 2px dashed var(--new-border);
+        border-radius: 22px;
+        padding: 4px;
+      }
+      .legend {
+        max-width: 390px;
+        margin: 28px auto 60px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px;
+        font-size: 13px;
+        color: var(--text-body);
+        line-height: 1.55;
+      }
+      .legend h4 {
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+      .legend .new-dot {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--new-border);
+        margin-right: 6px;
+      }
+      .section-title {
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.3;
+      }
+      .section-subtitle {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
+      .modal-x {
+        position: absolute;
+        top: 64px;
+        right: 22px;
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        font-size: 16px;
+        color: var(--text-secondary);
+      }
+    </style>
+    <style>
+      .layout {
+        display: grid;
+        grid-template-columns: 390px minmax(360px, 460px);
+        gap: 36px;
+        align-items: start;
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 40px 20px 60px;
+      }
+      .rationale {
+        font-size: 13.5px;
+        line-height: 1.55;
+        color: var(--text-body);
+      }
+      .rationale h2 {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--text-primary);
+        margin: 0 0 4px;
+        letter-spacing: -0.01em;
+      }
+      .rationale .lede {
+        font-size: 13px;
+        color: var(--text-tertiary);
+        margin-bottom: 14px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 16px 18px;
+        margin-bottom: 14px;
+      }
+      .card h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0 0 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pill {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        padding: 3px 8px;
+        border-radius: 999px;
+      }
+      .pill-new {
+        background: var(--new-highlight);
+        color: #92400e;
+        border: 1px solid var(--new-border);
+      }
+      .pill-hyp {
+        background: #eef4fb;
+        color: var(--blue-text);
+        border: 1px solid var(--blue-border);
+      }
+      .pill-risk {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+      }
+      .pill-metric {
+        background: var(--primary-50);
+        color: var(--primary-700);
+        border: 1px solid #6ee7b7;
+      }
+      .rationale ul {
+        margin: 6px 0 0;
+        padding-left: 18px;
+      }
+      .rationale ul li {
+        margin-bottom: 6px;
+      }
+      .rationale .pain {
+        background: #fff7ed;
+        border-left: 3px solid #f59e0b;
+        padding: 10px 12px;
+        border-radius: 0 8px 8px 0;
+        font-size: 12.5px;
+        color: #7c2d12;
+        margin: 8px 0;
+        font-style: italic;
+      }
+      .rationale code {
+        background: #f5f1ed;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1px 5px;
+        font-size: 12px;
+        color: var(--text-body);
+      }
+      .funnel {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .funnel-step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12.5px;
+      }
+      .funnel-num {
+        flex-shrink: 0;
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--primary-600);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @media (max-width: 880px) {
+        .layout {
+          grid-template-columns: 1fr;
+          justify-items: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="layout">
+    <div class="phone">
+      <div class="notch"></div>
+      <button class="modal-x">×</button>
+
+      <div class="scroll-container">
+        <!-- Header -->
+        <div class="px-5 pt-20 pb-3">
+          <h1
+            class="section-title"
+            style="font-size: 30px; font-weight: 800; line-height: 1.15"
+          >
+            What do you want<br />to work on?
+          </h1>
+          <p
+            class="section-subtitle"
+            style="margin-top: 8px; font-size: 14.5px"
+          >
+            Pick a path — habits proven to work.
+          </p>
+        </div>
+
+        <!-- Search bar -->
+        <div class="px-5 pt-2 pb-3">
+          <div
+            class="flex items-center gap-2"
+            style="
+              background: var(--card);
+              border: 1px solid var(--border);
+              border-radius: 16px;
+              padding: 12px 14px;
+            "
+          >
+            <span style="color: var(--text-tertiary); font-size: 16px"
+              >🔍</span
+            >
+            <span style="color: var(--text-tertiary); font-size: 14px"
+              >Try: morning walk · journaling · cold shower</span
+            >
+          </div>
+        </div>
+
+        <!-- ▼▼▼ NEW: QuickFilterChips ▼▼▼ -->
+        <div style="position: relative" class="new-flag mx-3 my-1">
+          <span class="new-tag">PHASE 1.1</span>
+          <div
+            class="chips-row flex items-center gap-2 py-2 pl-6 pr-4"
+            style="min-height: 44px"
+          >
+            <span class="chip chip-active-all">✨ All</span>
+            <span class="chip chip-morning">🌅 Morning</span>
+            <span class="chip chip-mental">🧠 Mental</span>
+            <span class="chip chip-fitness">💪 Fitness</span>
+            <span class="chip chip-sleep">😴 Sleep</span>
+            <span class="chip chip-mindful">🧘 Mindful</span>
+            <span class="chip chip-learning">📚 Learning</span>
+            <span class="chip">💰 Finance</span>
+          </div>
+        </div>
+
+        <!-- ▼▼▼ NEW: StartHereCard (only when userHabitCount ≤ 1) ▼▼▼ -->
+        <div style="position: relative" class="new-flag mx-3 mt-3 mb-2">
+          <span class="new-tag" style="background: var(--new-border)"
+            >PHASE 1.2</span
+          >
+          <div class="start-here mx-1 my-1">
+            <h3 style="font-size: 19px; font-weight: 700; line-height: 1.25">
+              New here? Start with these
+            </h3>
+            <p
+              style="
+                font-size: 13px;
+                color: #bbf7d0;
+                margin-top: 4px;
+                line-height: 1.4;
+              "
+            >
+              5 habits that take under 5 min and have the highest stick rate
+            </p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="start-chip">💧 Drink Water</span>
+              <span class="start-chip">🧘 2-Min Meditate</span>
+              <span class="start-chip">📝 Gratitude</span>
+              <span class="start-chip">🚶 10-Min Walk</span>
+              <span class="start-chip">📖 Read 1 Page</span>
+            </div>
+            <p
+              style="
+                font-size: 13px;
+                font-weight: 700;
+                margin-top: 14px;
+                color: #fff;
+              "
+            >
+              Browse starter habits →
+            </p>
+          </div>
+        </div>
+
+        <!-- GoalCollectionGrid (existing) -->
+        <div class="px-4 pt-3 pb-2">
+          <p
+            class="section-subtitle"
+            style="font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 10px"
+          >
+            BROWSE BY GOAL
+          </p>
+          <!-- Featured -->
+          <div class="goal-featured mb-2">
+            <span class="featured-badge">⭐ TODAY'S PICK</span>
+            <div style="font-size: 32px; line-height: 1">⚡</div>
+            <h3
+              style="
+                font-weight: 700;
+                font-size: 20px;
+                margin-top: 8px;
+                line-height: 1.2;
+              "
+            >
+              Wake up energized
+            </h3>
+            <p style="font-size: 13px; margin-top: 4px; line-height: 1.4">
+              Morning routines that keep you sharp all day
+            </p>
+            <!-- 3 starter previews -->
+            <div class="flex flex-col gap-1.5 mt-3">
+              <div
+                class="flex items-center gap-2 py-1.5 px-2.5"
+                style="background: rgba(255, 255, 255, 0.6); border-radius: 10px"
+              >
+                <span style="font-size: 16px">💧</span>
+                <span style="font-size: 12.5px; font-weight: 600"
+                  >Drink water on waking</span
+                >
+              </div>
+              <div
+                class="flex items-center gap-2 py-1.5 px-2.5"
+                style="background: rgba(255, 255, 255, 0.6); border-radius: 10px"
+              >
+                <span style="font-size: 16px">☀️</span>
+                <span style="font-size: 12.5px; font-weight: 600"
+                  >Morning sunlight</span
+                >
+              </div>
+              <div
+                class="flex items-center gap-2 py-1.5 px-2.5"
+                style="background: rgba(255, 255, 255, 0.6); border-radius: 10px"
+              >
+                <span style="font-size: 16px">🧘</span>
+                <span style="font-size: 12.5px; font-weight: 600"
+                  >2-min meditation</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- 2x2 small grid -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="goal-small goal-sleep">
+              <div style="font-size: 24px">😴</div>
+              <h4 style="font-weight: 700; font-size: 14.5px; margin-top: 4px">
+                Sleep deeper
+              </h4>
+              <p style="font-size: 11.5px; margin-top: 2px; opacity: 0.8">
+                Wind down, rest fully
+              </p>
+            </div>
+            <div class="goal-small goal-stress">
+              <div style="font-size: 24px">🧘</div>
+              <h4 style="font-weight: 700; font-size: 14.5px; margin-top: 4px">
+                Stress less
+              </h4>
+              <p style="font-size: 11.5px; margin-top: 2px; opacity: 0.8">
+                Calm your mind
+              </p>
+            </div>
+            <div class="goal-small goal-focus">
+              <div style="font-size: 24px">🎯</div>
+              <h4 style="font-weight: 700; font-size: 14.5px; margin-top: 4px">
+                Focus deeper
+              </h4>
+              <p style="font-size: 11.5px; margin-top: 2px; opacity: 0.8">
+                Beat distraction
+              </p>
+            </div>
+            <div class="goal-small goal-health">
+              <div style="font-size: 24px">💪</div>
+              <h4 style="font-weight: 700; font-size: 14.5px; margin-top: 4px">
+                Get healthier
+              </h4>
+              <p style="font-size: 11.5px; margin-top: 2px; opacity: 0.8">
+                Habits for a longer life
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PopularSection (existing) -->
+        <div class="px-4 pt-5">
+          <div class="flex items-end justify-between mb-2">
+            <div>
+              <h3 class="section-title" style="font-size: 18px">
+                Quick wins to build momentum
+              </h3>
+              <p class="section-subtitle">
+                What people are starting this week
+              </p>
+            </div>
+            <a style="font-size: 13px; color: var(--primary-600); font-weight: 600"
+              >See all</a
+            >
+          </div>
+          <div class="chips-row flex gap-3 pb-1">
+            <div class="trending-card">
+              <div class="icon-box" style="background: rgba(245, 158, 11, 0.18)">
+                💧
+              </div>
+              <h4
+                style="font-weight: 700; font-size: 14.5px; margin-top: 10px; line-height: 1.2"
+              >
+                Drink water on waking
+              </h4>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px">
+                Hydrate within 30 min
+              </p>
+              <div
+                class="flex items-center gap-2 mt-2"
+                style="font-size: 11px"
+              >
+                <span style="color: var(--text-tertiary)">Daily</span>
+                <span
+                  style="background: var(--gold-bg); color: var(--gold-text); padding: 2px 6px; border-radius: 6px; font-weight: 600"
+                  >🔬 Science-backed</span
+                >
+              </div>
+              <div
+                class="flex items-center justify-between mt-3"
+                style="font-size: 11px; color: var(--primary-600); font-weight: 700"
+              >
+                <span>🔥 1,240 trying</span>
+                <span class="add-button">+</span>
+              </div>
+            </div>
+            <div class="trending-card">
+              <div class="icon-box" style="background: rgba(59, 130, 246, 0.18)">
+                😴
+              </div>
+              <h4
+                style="font-weight: 700; font-size: 14.5px; margin-top: 10px; line-height: 1.2"
+              >
+                10pm screens off
+              </h4>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px">
+                No phones after curfew
+              </p>
+              <div
+                class="flex items-center gap-2 mt-2"
+                style="font-size: 11px"
+              >
+                <span style="color: var(--text-tertiary)">Daily</span>
+                <span
+                  style="background: var(--gold-bg); color: var(--gold-text); padding: 2px 6px; border-radius: 6px; font-weight: 600"
+                  >🔬 Science-backed</span
+                >
+              </div>
+              <div
+                class="flex items-center justify-between mt-3"
+                style="font-size: 11px; color: var(--primary-600); font-weight: 700"
+              >
+                <span>🔥 980 trying</span>
+                <span class="add-button">+</span>
+              </div>
+            </div>
+            <div class="trending-card">
+              <div class="icon-box" style="background: rgba(139, 92, 246, 0.18)">
+                📝
+              </div>
+              <h4
+                style="font-weight: 700; font-size: 14.5px; margin-top: 10px; line-height: 1.2"
+              >
+                3 things gratitude
+              </h4>
+              <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px">
+                Write 3 daily wins
+              </p>
+              <div
+                class="flex items-center gap-2 mt-2"
+                style="font-size: 11px"
+              >
+                <span style="color: var(--text-tertiary)">Daily</span>
+              </div>
+              <div
+                class="flex items-center justify-between mt-3"
+                style="font-size: 11px; color: var(--primary-600); font-weight: 700"
+              >
+                <span>720 trying</span>
+                <span class="add-button">+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ExploreAll preview (existing) -->
+        <div class="px-4 pt-6 pb-12">
+          <h3 class="section-title" style="font-size: 18px">Explore all</h3>
+          <p class="section-subtitle">~328 templates across 17 categories</p>
+          <div class="mt-3 flex flex-col gap-2">
+            <div
+              class="flex items-center justify-between p-3"
+              style="background: var(--card); border: 1px solid var(--border); border-radius: 14px"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  style="width: 36px; height: 36px; border-radius: 10px; background: var(--gold-bg); display: flex; align-items: center; justify-content: center; font-size: 18px"
+                >
+                  🌅
+                </div>
+                <div>
+                  <h4 style="font-weight: 600; font-size: 14px">Morning</h4>
+                  <p style="font-size: 11.5px; color: var(--text-tertiary)">
+                    24 templates · 18 with science
+                  </p>
+                </div>
+              </div>
+              <span style="color: var(--text-tertiary); font-size: 16px">›</span>
+            </div>
+            <div
+              class="flex items-center justify-between p-3"
+              style="background: var(--card); border: 1px solid var(--border); border-radius: 14px"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  style="width: 36px; height: 36px; border-radius: 10px; background: var(--purple-bg); display: flex; align-items: center; justify-content: center; font-size: 18px"
+                >
+                  🧠
+                </div>
+                <div>
+                  <h4 style="font-weight: 600; font-size: 14px">Mental Health</h4>
+                  <p style="font-size: 11.5px; color: var(--text-tertiary)">
+                    19 templates · 14 with science
+                  </p>
+                </div>
+              </div>
+              <span style="color: var(--text-tertiary); font-size: 16px">›</span>
+            </div>
+            <div
+              class="flex items-center justify-between p-3"
+              style="background: var(--card); border: 1px solid var(--border); border-radius: 14px"
+            >
+              <div class="flex items-center gap-3">
+                <div
+                  style="width: 36px; height: 36px; border-radius: 10px; background: var(--primary-50); display: flex; align-items: center; justify-content: center; font-size: 18px"
+                >
+                  💪
+                </div>
+                <div>
+                  <h4 style="font-weight: 600; font-size: 14px">Health</h4>
+                  <p style="font-size: 11.5px; color: var(--text-tertiary)">
+                    32 templates · 26 with science
+                  </p>
+                </div>
+              </div>
+              <span style="color: var(--text-tertiary); font-size: 16px">›</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rationale">
+      <h2>Why this is better</h2>
+      <p class="lede">
+        Phase 1.1 + 1.2 — wiring up dormant components. Two surgical additions, real user-pain motivations, hypothesized monetization impact.
+      </p>
+
+      <div class="card">
+        <h3><span class="pill pill-new">PHASE 1.1</span> QuickFilterChips</h3>
+        <strong>Problem today:</strong> ~328 templates, 17 categories. Narrowing to "sleep templates" requires scrolling past goal grid → past popular → finding the Sleep row → tapping "See all". 3+ taps for a common task. Most users give up.
+        <p class="pain">"I can't tell which habits to focus on, so I try too many at once." — onboarding-v2 pain point #3</p>
+        <strong>Why it helps:</strong>
+        <ul>
+          <li><strong>Hick's Law:</strong> 7 visible chips beat scrolling 17 buried categories. Faster decisions.</li>
+          <li><strong>Recognition over recall</strong> — labels visible vs "what categories exist?"</li>
+          <li><strong>Always above the fold</strong> — chips persist whether browsing or filtering.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="pill pill-new">PHASE 1.2</span> StartHereCard</h3>
+        <strong>Problem today:</strong> A new user (0 habits) opens the library and sees the same overwhelming surface as a power user. We literally captured "I try too many at once" in onboarding — and then show them 328 options.
+        <strong>Why it helps:</strong>
+        <ul>
+          <li><strong>Prescribed path</strong> — kills the blank-page problem for new users.</li>
+          <li><strong>Easy wins</strong> — 5 short-duration habits → high completion → first streak hits day 3 → dopamine.</li>
+          <li><strong>Auto-hides at 2+ habits</strong> — engaged users aren't talked down to.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="pill pill-hyp">HYPOTHESIS</span> Monetization impact</h3>
+        <em style="font-size: 12px; color: var(--text-tertiary)">Theory of change — not measured. Phase 1 is the prerequisite for Phase 2 (personalization) where the real lift comes.</em>
+        <div class="funnel">
+          <div class="funnel-step"><span class="funnel-num">1</span><span><strong>D1 activation:</strong> clearer path + faster filter → more users add a first habit before bouncing. Each habit = a reason to come back tomorrow.</span></div>
+          <div class="funnel-step"><span class="funnel-num">2</span><span><strong>D3–D7 streak survival:</strong> StartHereCard biases new users toward 5-min habits with high stick rate. More streaks survive the friction valley.</span></div>
+          <div class="funnel-step"><span class="funnel-num">3</span><span><strong>Trial → Paid conversion:</strong> paywall converts best on engaged users. Pushing more users into "3+ habits, 7-day streak" lifts conversion at the existing paywall.</span></div>
+          <div class="funnel-step"><span class="funnel-num">4</span><span><strong>Churn reduction:</strong> users who never find a relevant template churn earliest. Chips compress time-to-relevant from minutes to seconds.</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3><span class="pill pill-risk">TRADEOFFS</span> Honest counter-arguments</h3>
+        <ul>
+          <li>Chips show only <strong>7 of 17 categories</strong> — productivity / longevity / breathing not surfaced. Mitigated: search + Explore-all rows still cover them.</li>
+          <li>StartHereCard's 5 habits are <strong>not personalized</strong> to the user's onboarding goal — a "Sleep" picker still sees "Drink Water". Phase 2 fixes this.</li>
+          <li>Phase 1 is dormant-code wiring. The bigger monetization lever is <strong>Phase 2</strong> where the page actually differs between users with different goals/pains.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3><span class="pill pill-metric">VALIDATE</span> What to measure</h3>
+        <p>Add events: <code>library_opened</code>, <code>chip_tapped</code> (per chip), <code>start_here_tapped</code>, <code>template_imported</code> with <code>source</code> = chip / goal-grid / popular / explore-all / start-here.</p>
+        <p style="margin-top: 8px"><strong>Single cleanest metric:</strong> % of new users who import a template within 60s of opening the library, before vs after.</p>
+      </div>
+    </aside>
+    </div>
+  </body>
+</html>

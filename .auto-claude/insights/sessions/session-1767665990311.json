@@ -1,0 +1,20 @@
+{
+  "id": "session-1767665990311",
+  "projectId": "a24a06ce-7084-470e-9431-54f05c835469",
+  "title": "What features could I add next?",
+  "messages": [
+    {
+      "id": "msg-1767666004714",
+      "role": "user",
+      "content": "What features could I add next?",
+      "timestamp": "2026-01-06T02:20:04.714Z"
+    }
+  ],
+  "createdAt": "2026-01-06T02:19:50.311Z",
+  "updatedAt": "2026-01-06T02:20:12.694Z",
+  "modelConfig": {
+    "profileId": "complex",
+    "model": "opus",
+    "thinkingLevel": "ultrathink"
+  }
+}

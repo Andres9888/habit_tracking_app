@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Homepage — Morning Start (0/6 Done)</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800&family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700;7..72,800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        background: #111827;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .phone {
+        width: 393px;
+        height: 852px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #2d2a26,
+          0 25px 80px rgba(0, 0, 0, 0.5);
+      }
+
+      .status-bar {
+        height: 54px;
+        padding: 16px 32px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+        position: relative;
+        z-index: 10;
+      }
+      .sb-icons {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+      }
+      .sb-bar {
+        width: 24px;
+        height: 12px;
+        border-radius: 3px;
+        border: 1.5px solid #2d2a26;
+        position: relative;
+      }
+      .sb-bar::after {
+        content: '';
+        position: absolute;
+        right: -3px;
+        top: 3px;
+        width: 2px;
+        height: 5px;
+        background: #2d2a26;
+        border-radius: 0 1px 1px 0;
+      }
+      .sb-bar-fill {
+        position: absolute;
+        left: 1px;
+        top: 1px;
+        bottom: 1px;
+        right: 10%;
+        background: #2d2a26;
+        border-radius: 1px;
+      }
+
+      .content {
+        height: calc(100% - 54px);
+        overflow-y: auto;
+        padding-bottom: 90px;
+      }
+      .content::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Header */
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 6px 20px 12px;
+      }
+      .ring-wrap {
+        width: 76px;
+        height: 76px;
+        position: relative;
+        flex-shrink: 0;
+      }
+      .ring-svg {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+      }
+      .ring-track {
+        fill: none;
+        stroke: #e5e2de;
+        stroke-width: 5.5;
+      }
+      .ring-fill {
+        fill: none;
+        stroke: #ddd8d2;
+        stroke-width: 5.5;
+        stroke-linecap: round;
+        stroke-dasharray: 207.3;
+        stroke-dashoffset: 207.3; /* 0% */
+      }
+      .ring-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        line-height: 1;
+      }
+      .ring-pct {
+        font-size: 20px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.8px;
+      }
+      .ring-frac {
+        font-size: 10px;
+        font-weight: 600;
+        color: #6e6660;
+        margin-top: 1px;
+      }
+
+      .header-info {
+        flex: 1;
+      }
+      .header-day {
+        font-family: 'Literata', serif;
+        font-size: 24px;
+        font-weight: 800;
+        color: #2d2a26;
+        letter-spacing: -0.6px;
+        line-height: 1.1;
+      }
+      .header-date {
+        font-size: 13px;
+        font-weight: 500;
+        color: #6e6660;
+        margin-top: 2px;
+      }
+      .header-streak {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 6px;
+        background: #fef3cd;
+        border: 1px solid #e8b94d;
+        border-radius: 8px;
+        padding: 3px 9px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #8b6208;
+      }
+
+      /* Timeline */
+      .timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 4px 20px 14px;
+        gap: 4px;
+      }
+      .t-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        flex: 1;
+      }
+      .t-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #c4bfb7;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+      .t-label.active {
+        color: #2d2a26;
+        font-weight: 700;
+      }
+      .t-circle {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .t-circle.done {
+        background: rgba(16, 185, 129, 0.12);
+        color: #059669;
+      }
+      .t-circle.done::after {
+        content: '✓';
+        position: absolute;
+        font-size: 15px;
+        font-weight: 700;
+        color: #10b981;
+      }
+      .t-circle.done span {
+        visibility: hidden;
+      }
+      .t-circle.today {
+        background: #2d2a26;
+        color: #f5f1ed;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.2);
+      }
+      .t-circle.future {
+        background: #edeae5;
+        color: #c4bfb7;
+      }
+
+      /* Morning motivation banner */
+      .morning-banner {
+        margin: 0 16px 12px;
+        padding: 16px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        text-align: center;
+      }
+      .morning-emoji {
+        font-size: 28px;
+        margin-bottom: 6px;
+      }
+      .morning-title {
+        font-family: 'Literata', serif;
+        font-size: 17px;
+        font-weight: 700;
+        color: #065f46;
+        letter-spacing: -0.3px;
+      }
+      .morning-sub {
+        font-size: 13px;
+        color: #047857;
+        margin-top: 3px;
+        font-weight: 500;
+      }
+
+      /* Section */
+      .section {
+        padding: 6px 20px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .section-label {
+        font-size: 12px;
+        font-weight: 700;
+        color: #c4bfb7;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .section-meta {
+        font-size: 12px;
+        font-weight: 600;
+        color: #6e6660;
+      }
+
+      /* Cards */
+      .habits {
+        padding: 0 16px;
+      }
+      .habit {
+        background: #edeae5;
+        border-radius: 16px;
+        padding: 14px 16px;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid #ddd8d2;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.04);
+      }
+      .habit-accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3.5px;
+        border-radius: 0 4px 4px 0;
+      }
+      .habit-accent.strong {
+        background: linear-gradient(180deg, #34d399, #10b981);
+      }
+      .habit-accent.growing {
+        background: linear-gradient(180deg, #fcd34d, #e8b94d);
+      }
+      .habit-accent.new {
+        background: linear-gradient(180deg, #93c5fd, #3b82f6);
+      }
+
+      .habit-icon {
+        font-size: 24px;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(245, 241, 237, 0.6);
+        border-radius: 12px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .habit-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.3px;
+      }
+      .habit-meta {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6e6660;
+        margin-top: 2px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .habit-streak {
+        font-weight: 700;
+        color: #8b6208;
+      }
+      .meta-dot {
+        color: #c4bfb7;
+      }
+
+      .strength-bar {
+        height: 3px;
+        background: #ddd8d2;
+        border-radius: 2px;
+        margin-top: 6px;
+        width: 100%;
+        max-width: 120px;
+      }
+      .strength-fill {
+        height: 100%;
+        border-radius: 2px;
+      }
+      .strength-fill.high {
+        background: #10b981;
+      }
+      .strength-fill.mid {
+        background: #e8b94d;
+      }
+      .strength-fill.low {
+        background: #ddd8d2;
+      }
+
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2.5px solid #c4bfb7;
+        flex-shrink: 0;
+      }
+
+      /* Suggested time chips */
+      .time-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        background: rgba(245, 241, 237, 0.8);
+        border-radius: 6px;
+        padding: 1px 6px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #6e6660;
+      }
+
+      /* Bottom bar */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(245, 241, 237, 0.82);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-top: 1px solid rgba(221, 216, 210, 0.45);
+        padding: 8px 24px 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+      .bar-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.55);
+        border: 1px solid rgba(221, 216, 210, 0.6);
+      }
+      .bar-btn svg {
+        width: 19px;
+        height: 19px;
+        stroke: #524d47;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .add-btn {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        background: #059669;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -18px;
+        border: 3px solid rgba(245, 241, 237, 0.9);
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.3);
+      }
+      .add-btn svg {
+        width: 24px;
+        height: 24px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+      }
+      .badge-dot {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #ef4444;
+        border: 1.5px solid rgba(245, 241, 237, 0.9);
+      }
+
+      .label {
+        position: fixed;
+        top: 16px;
+        left: 16px;
+        background: rgba(0, 0, 0, 0.75);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 999;
+      }
+      .label span {
+        color: #fbbf24;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">Full Homepage — <span>Morning Start (0/6)</span></div>
+
+    <div class="phone">
+      <div class="status-bar">
+        <span>6:30</span>
+        <div class="sb-icons">
+          <svg viewBox="0 0 16 12">
+            <path
+              d="M1 9h2V6h2v3h2V4h2v5h2V2h2v7"
+              stroke="#2D2A26"
+              fill="none"
+              stroke-width="1.2"
+              stroke-linecap="round"
+            />
+          </svg>
+          <div class="sb-bar"><div class="sb-bar-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- Header -->
+        <div class="header">
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 76 76">
+              <circle class="ring-track" cx="38" cy="38" r="33" />
+              <circle class="ring-fill" cx="38" cy="38" r="33" />
+            </svg>
+            <div class="ring-center">
+              <div class="ring-pct">0%</div>
+              <div class="ring-frac">0 / 6</div>
+            </div>
+          </div>
+          <div class="header-info">
+            <div class="header-day">Good Morning</div>
+            <div class="header-date">Tuesday, February 25</div>
+            <div class="header-streak">🔥 12 day streak — keep it alive!</div>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+          <div class="t-col">
+            <span class="t-label">W</span>
+            <div class="t-circle done" style="position: relative">
+              <span>19</span>
+            </div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">T</span>
+            <div class="t-circle done" style="position: relative">
+              <span>20</span>
+            </div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">F</span>
+            <div class="t-circle done" style="position: relative">
+              <span>21</span>
+            </div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">S</span>
+            <div class="t-circle done" style="position: relative">
+              <span>22</span>
+            </div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">S</span>
+            <div class="t-circle done" style="position: relative">
+              <span>23</span>
+            </div>
+          </div>
+          <div class="t-col">
+            <span class="t-label">M</span>
+            <div class="t-circle done" style="position: relative">
+              <span>24</span>
+            </div>
+          </div>
+          <div class="t-col">
+            <span class="t-label active">Today</span>
+            <div class="t-circle today">25</div>
+          </div>
+        </div>
+
+        <!-- Morning motivation -->
+        <div class="morning-banner">
+          <div class="morning-emoji">🌅</div>
+          <div class="morning-title">Day 13 starts now</div>
+          <div class="morning-sub">
+            Complete all 6 habits to extend your streak
+          </div>
+        </div>
+
+        <!-- All habits (none done yet) -->
+        <div class="section">
+          <span class="section-label">Today's Habits</span>
+          <span class="section-meta">6 scheduled</span>
+        </div>
+
+        <div class="habits">
+          <div class="habit">
+            <div class="habit-accent strong"></div>
+            <div class="habit-icon">🏃</div>
+            <div class="habit-info">
+              <div class="habit-name">Morning Run</div>
+              <div class="habit-meta">
+                <span class="habit-streak">🔥 12</span
+                ><span class="meta-dot"> · </span>
+                <span class="time-chip">☀️ Morning</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill high" style="width: 85%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit">
+            <div class="habit-accent strong"></div>
+            <div class="habit-icon">🧘</div>
+            <div class="habit-info">
+              <div class="habit-name">Meditate</div>
+              <div class="habit-meta">
+                <span class="habit-streak">🔥 8</span
+                ><span class="meta-dot"> · </span>
+                <span class="time-chip">☀️ Morning</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill high" style="width: 72%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit">
+            <div class="habit-accent growing"></div>
+            <div class="habit-icon">💧</div>
+            <div class="habit-info">
+              <div class="habit-name">Drink 2L Water</div>
+              <div class="habit-meta">
+                62% strength<span class="meta-dot"> · </span>
+                <span class="time-chip">🔄 All Day</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill mid" style="width: 62%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit">
+            <div class="habit-accent growing"></div>
+            <div class="habit-icon">📖</div>
+            <div class="habit-info">
+              <div class="habit-name">Read 20 Pages</div>
+              <div class="habit-meta">
+                75% strength<span class="meta-dot"> · </span>
+                <span class="time-chip">🌙 Evening</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill mid" style="width: 75%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit">
+            <div class="habit-accent growing"></div>
+            <div class="habit-icon">✍️</div>
+            <div class="habit-info">
+              <div class="habit-name">Journal</div>
+              <div class="habit-meta">
+                45% strength<span class="meta-dot"> · </span>
+                <span class="time-chip">🌙 Evening</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill mid" style="width: 45%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+
+          <div class="habit">
+            <div class="habit-accent new"></div>
+            <div class="habit-icon">🎸</div>
+            <div class="habit-info">
+              <div class="habit-name">Practice Guitar</div>
+              <div class="habit-meta">
+                30% strength<span class="meta-dot"> · </span>
+                <span class="time-chip">🎵 Anytime</span>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-fill low" style="width: 30%"></div>
+              </div>
+            </div>
+            <div class="habit-check"></div>
+          </div>
+        </div>
+
+        <div style="height: 20px"></div>
+      </div>
+
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <div class="bar-btn">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+            />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </div>
+        <div class="add-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></svg>
+        </div>
+        <div class="bar-btn" style="position: relative">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"
+            />
+          </svg>
+          <div class="badge-dot"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

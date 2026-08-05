@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Growth-icon preset row — scroll affordance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --stone-l1: #edeae5; /* themeColors.surface (settings panel) */
+        --stone-page: #f5f1ed; /* background behind cards */
+        --text-primary: #0f172a;
+        --text-secondary: #6b6560;
+        --text-tertiary: #8a847e;
+        --card-border: rgba(15, 23, 42, 0.08);
+        --primary-500: #10b981; /* matches light theme primary */
+        --primary-600: #059669;
+        --text-inverse: #ffffff;
+        --gradient-icon-bg: #ede9fe;
+        --gradient-icon: #7c3aed;
+      }
+      html,
+      body {
+        font-family:
+          'Inter',
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #e7e2db;
+        color: var(--text-primary);
+      }
+      .panel {
+        background: var(--stone-l1);
+        border-radius: 16px;
+      }
+      .chip {
+        background: var(--stone-l1);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 8px 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-primary);
+        white-space: nowrap;
+      }
+      .chip.active {
+        background: var(--primary-500);
+        border-color: var(--primary-500);
+        color: var(--text-inverse);
+      }
+      .chip .emojis {
+        font-size: 16px;
+      }
+      .scroll-row {
+        display: flex;
+        gap: 8px;
+        padding: 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .scroll-row::-webkit-scrollbar {
+        display: none;
+      }
+      .row-wrap {
+        position: relative;
+      }
+      .fade {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 28px;
+        pointer-events: none;
+      }
+      .fade.right {
+        right: 0;
+        background: linear-gradient(
+          to right,
+          rgba(237, 234, 229, 0),
+          rgba(237, 234, 229, 1)
+        );
+      }
+      .fade.left {
+        left: 0;
+        background: linear-gradient(
+          to left,
+          rgba(237, 234, 229, 0),
+          rgba(237, 234, 229, 1)
+        );
+      }
+      .settings-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 16px;
+      }
+      .settings-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: var(--gradient-icon-bg);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--gradient-icon);
+        font-size: 14px;
+      }
+      .phone-frame {
+        width: 390px;
+        border-radius: 28px;
+        background: var(--stone-page);
+        overflow: hidden;
+        box-shadow:
+          0 2px 8px rgba(0, 0, 0, 0.06),
+          0 12px 32px rgba(0, 0, 0, 0.12);
+      }
+      .label-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 4px 10px;
+        border-radius: 999px;
+        margin-bottom: 12px;
+      }
+      .badge-bad {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .badge-good {
+        background: #d1fae5;
+        color: #047857;
+      }
+      .headline {
+        font-size: 12px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      .subtext {
+        color: var(--text-secondary);
+        font-size: 13px;
+      }
+      .mini-caption {
+        color: var(--text-tertiary);
+        font-size: 12px;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen p-10">
+    <div class="mx-auto max-w-[900px]">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold text-slate-900">
+          Growth-icon preset row — scroll affordance fix
+        </h1>
+        <p class="mt-2 text-sm text-slate-600">
+          Settings → Appearance → Default growth icons → Customize. Preset
+          chips row currently gives no visual cue that the 3rd–5th chips
+          exist.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 gap-10 md:grid-cols-2">
+        <!-- BEFORE -->
+        <section>
+          <span class="label-badge badge-bad">
+            <span>●</span> Current
+          </span>
+          <h2 class="mb-1 text-base font-semibold">No scroll affordance</h2>
+          <p class="subtext mb-4">
+            Third chip peeks past the edge but blends into the panel —
+            easy to miss.
+          </p>
+
+          <div class="phone-frame">
+            <div class="settings-row">
+              <span class="settings-icon">✨</span>
+              <div class="flex-1">
+                <div class="text-[15px] font-semibold text-slate-900">
+                  Default growth icons
+                </div>
+                <div class="text-[13px] text-slate-500">
+                  Pick the 5 emojis used for every habit by default
+                </div>
+              </div>
+            </div>
+            <div class="px-4 pb-4 pt-1">
+              <!-- current emoji preview + Done -->
+              <div
+                class="flex items-center justify-between px-2 pb-3 pt-1"
+              >
+                <div class="text-[20px] tracking-wide">
+                  💧 🏃 🏋️ 💪 🏆
+                </div>
+                <span
+                  class="text-sm font-semibold"
+                  style="color: var(--primary-600)"
+                  >Done</span
+                >
+              </div>
+              <!-- preset chips (no fade) -->
+              <div class="scroll-row">
+                <div class="chip">
+                  <span class="emojis">🌱🌳⚡</span>
+                  <span>Plants</span>
+                </div>
+                <div class="chip active">
+                  <span class="emojis">💧🏋️🏆</span>
+                  <span>Fitness</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🌑🌕🌌</span>
+                  <span>Space</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">💭🎓✨</span>
+                  <span>Mind</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🪵🌋👑</span>
+                  <span>Fire</span>
+                </div>
+              </div>
+              <!-- strength rows -->
+              <div class="mt-4 space-y-3 px-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-lg">💧</span>
+                    <span class="text-[15px] font-medium">Starting</span>
+                  </div>
+                  <span class="text-[13px] text-slate-500">Change</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-lg">🏃</span>
+                    <span class="text-[15px] font-medium">Building</span>
+                  </div>
+                  <span class="text-[13px] text-slate-500">Change</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-lg">🏋️</span>
+                    <span class="text-[15px] font-medium">Developing</span>
+                  </div>
+                  <span class="text-[13px] text-slate-500">Change</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="mini-caption mt-3">
+            User feedback: "hard to tell you can scroll right for more"
+          </p>
+        </section>
+
+        <!-- AFTER -->
+        <section>
+          <span class="label-badge badge-good">
+            <span>●</span> Proposed
+          </span>
+          <h2 class="mb-1 text-base font-semibold">
+            Right-edge fade gradient
+          </h2>
+          <p class="subtext mb-4">
+            Reuses the existing <code>useHorizontalScrollFade</code> hook
+            and <code>LinearGradient</code> pattern from CategoryPills.
+          </p>
+
+          <div class="phone-frame">
+            <div class="settings-row">
+              <span class="settings-icon">✨</span>
+              <div class="flex-1">
+                <div class="text-[15px] font-semibold text-slate-900">
+                  Default growth icons
+                </div>
+                <div class="text-[13px] text-slate-500">
+                  Pick the 5 emojis used for every habit by default
+                </div>
+              </div>
+            </div>
+            <div class="px-4 pb-4 pt-1">
+              <div
+                class="flex items-center justify-between px-2 pb-3 pt-1"
+              >
+                <div class="text-[20px] tracking-wide">
+                  💧 🏃 🏋️ 💪 🏆
+                </div>
+                <span
+                  class="text-sm font-semibold"
+                  style="color: var(--primary-600)"
+                  >Done</span
+                >
+              </div>
+              <!-- preset chips with right fade -->
+              <div class="row-wrap">
+                <div class="scroll-row">
+                  <div class="chip">
+                    <span class="emojis">🌱🌳⚡</span>
+                    <span>Plants</span>
+                  </div>
+                  <div class="chip active">
+                    <span class="emojis">💧🏋️🏆</span>
+                    <span>Fitness</span>
+                  </div>
+                  <div class="chip">
+                    <span class="emojis">🌑🌕🌌</span>
+                    <span>Space</span>
+                  </div>
+                  <div class="chip">
+                    <span class="emojis">💭🎓✨</span>
+                    <span>Mind</span>
+                  </div>
+                  <div class="chip">
+                    <span class="emojis">🪵🌋👑</span>
+                    <span>Fire</span>
+                  </div>
+                </div>
+                <div class="fade right"></div>
+              </div>
+              <div class="mt-4 space-y-3 px-2">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-lg">💧</span>
+                    <span class="text-[15px] font-medium">Starting</span>
+                  </div>
+                  <span class="text-[13px] text-slate-500">Change</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-lg">🏃</span>
+                    <span class="text-[15px] font-medium">Building</span>
+                  </div>
+                  <span class="text-[13px] text-slate-500">Change</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <span class="text-lg">🏋️</span>
+                    <span class="text-[15px] font-medium">Developing</span>
+                  </div>
+                  <span class="text-[13px] text-slate-500">Change</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="mini-caption mt-3">
+            Peeking chip softly dissolves → clear "more to the right"
+            signal.
+          </p>
+        </section>
+      </div>
+
+      <!-- Scrolled mid-state -->
+      <section class="mt-12">
+        <div class="headline">Proposed — mid-scroll state</div>
+        <h2 class="mb-1 text-base font-semibold">
+          Left fade appears once scrolled, right fade dims at end
+        </h2>
+        <p class="subtext mb-4">
+          Symmetrical treatment — users always know which direction has
+          more content.
+        </p>
+
+        <div class="phone-frame mx-auto">
+          <div class="px-4 py-4">
+            <!-- scrolled partway -->
+            <div class="row-wrap">
+              <div
+                class="scroll-row"
+                id="scrolled-row"
+                style="scroll-behavior: auto"
+              >
+                <div class="chip">
+                  <span class="emojis">🌱🌳⚡</span>
+                  <span>Plants</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">💧🏋️🏆</span>
+                  <span>Fitness</span>
+                </div>
+                <div class="chip active">
+                  <span class="emojis">🌑🌕🌌</span>
+                  <span>Space</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">💭🎓✨</span>
+                  <span>Mind</span>
+                </div>
+                <div class="chip">
+                  <span class="emojis">🪵🌋👑</span>
+                  <span>Fire</span>
+                </div>
+              </div>
+              <div class="fade left"></div>
+              <div class="fade right"></div>
+            </div>
+          </div>
+        </div>
+        <script>
+          // pre-scroll the demo row so the left fade is obviously visible
+          window.addEventListener('load', () => {
+            const el = document.getElementById('scrolled-row');
+            if (el) el.scrollLeft = 160;
+          });
+        </script>
+      </section>
+
+      <footer class="mt-10 border-t border-slate-200 pt-6 text-xs text-slate-500">
+        <div class="mb-1 font-semibold text-slate-700">Implementation notes</div>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>
+            Only file touched: <code>src/components/ProgressEmojiPicker/ProgressEmojiPresetRow.tsx</code>
+          </li>
+          <li>
+            Reused hook: <code>src/components/EmojiPickerV2/useHorizontalScrollFade.ts</code>
+          </li>
+          <li>
+            Fade width: 28px (narrower than CategoryPills' 48px — matches
+            this row's tighter padding / smaller chips)
+          </li>
+          <li>
+            Fade colors: light <code>rgba(237,234,229, n)</code> • dark
+            <code>rgba(31,41,55, n)</code> — matches
+            <code>themeColors.surface</code>
+          </li>
+          <li>No new dependencies, no deletions, no refactor.</li>
+        </ul>
+      </footer>
+    </div>
+  </body>
+</html>

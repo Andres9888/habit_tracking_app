@@ -1,0 +1,33 @@
+appId: com.chainday.app
+name: Habit Swipe Gestures
+tags:
+  - smoke
+  - regression
+  - native
+onFlowComplete:
+  - takeScreenshot: e2e-07-gestures-complete
+---
+- runFlow: _shared/launch-signed-in.yaml
+- assertVisible:
+    id: habit-card
+- swipe:
+    on:
+      id: habit-card
+    direction: LEFT
+    duration: 400
+- extendedWaitUntil:
+    visible:
+      id: archive-habit-action
+    timeout: 5000
+- assertVisible:
+    id: delete-habit-action
+- tapOn:
+    id: archive-habit-action
+- extendedWaitUntil:
+    visible: Undo archive
+    timeout: 5000
+- tapOn: Undo archive
+- extendedWaitUntil:
+    visible:
+      id: habit-card
+    timeout: 8000

@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Recommended end-state — main page (chips B) + prescription + Netflix
+      catalog
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,600;7..72,700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --surface: #fff;
+        --lift: #edeae5;
+        --primary: #059669;
+        --primary-deep: #047857;
+        --primary-tint: #ecfdf5;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #6e6660;
+        --border: #ddd8d2;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'DM Sans', -apple-system, sans-serif;
+        --sleep-bg: #eff6ff;
+        --sleep-deep: #1e3a5f;
+        --sleep-border: #bfdbfe;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: var(--sans);
+        background: #e6e1da;
+        color: var(--text);
+        padding: 40px 32px 56px;
+      }
+      .page-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-2);
+      }
+      .page-title {
+        font-family: var(--serif);
+        font-size: 28px;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .page-sub {
+        font-size: 14px;
+        color: var(--text-2);
+        margin-top: 6px;
+        max-width: 920px;
+        line-height: 1.5;
+      }
+
+      .lane {
+        display: flex;
+        align-items: flex-start;
+        gap: 0;
+        overflow-x: auto;
+        padding: 26px 0 10px;
+      }
+      .stepcol {
+        flex: none;
+        width: 372px;
+        display: flex;
+        flex-direction: column;
+      }
+      .arrow {
+        flex: none;
+        align-self: flex-start;
+        margin-top: 340px;
+        width: 74px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 0 4px;
+      }
+      .arrow .line {
+        font-size: 24px;
+        color: var(--text-2);
+      }
+      .arrow .lbl {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-2);
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px 7px;
+        text-align: center;
+        line-height: 1.35;
+      }
+      .col-label {
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary-deep);
+        margin-bottom: 10px;
+        background: var(--primary-tint);
+        border-radius: 999px;
+        padding: 5px 13px;
+        align-self: flex-start;
+      }
+
+      .phone {
+        width: 360px;
+        height: 780px;
+        background: var(--bg);
+        border-radius: 38px;
+        border: 8px solid #2d2a26;
+        box-shadow: 0 18px 44px rgba(45, 42, 38, 0.28);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .statusbar {
+        height: 34px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .screen {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: none;
+        display: flex;
+        flex-direction: column;
+      }
+      .screen::-webkit-scrollbar {
+        display: none;
+      }
+      .fold {
+        position: absolute;
+        left: -8px;
+        right: -8px;
+        top: 642px;
+        border-top: 2px dashed #d97706;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .fold span {
+        position: absolute;
+        right: 0;
+        top: -22px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #d97706;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 6px;
+        padding: 2px 7px;
+      }
+
+      .overline {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-3);
+        padding: 15px 15px 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .overline a {
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0;
+        text-transform: none;
+        color: var(--primary-deep);
+        text-decoration: none;
+      }
+      .pill {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: var(--text-2);
+        background: var(--lift);
+        border-radius: 999px;
+        padding: 3px 8px;
+        white-space: nowrap;
+      }
+      .sci {
+        font-size: 10.5px;
+        color: var(--text-3);
+        white-space: nowrap;
+      }
+      .chev {
+        flex: none;
+        font-size: 15px;
+        font-weight: 600;
+        color: #c9c2ba;
+      }
+      .btn-add {
+        flex: none;
+        font-family: var(--sans);
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--primary-deep);
+        background: rgba(5, 150, 105, 0.1);
+        border: none;
+        border-radius: 999px;
+        padding: 7px 12px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 10px 11px;
+        margin: 0 15px 7px;
+      }
+      .row.elevated {
+        box-shadow: 0 4px 14px rgba(45, 42, 38, 0.1);
+        border-color: #e8e2da;
+      }
+      .row .emoji {
+        width: 40px;
+        height: 40px;
+        flex: none;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+      }
+      .row .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .row h4 {
+        font-size: 13.5px;
+        font-weight: 600;
+        line-height: 1.3;
+      }
+      .row p {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row .meta {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 4px;
+      }
+
+      .hero {
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.5),
+          rgba(254, 215, 170, 0.28) 52%,
+          #f5f1ed 100%
+        );
+        padding: 14px 15px 13px;
+        border-radius: 0 0 22px 22px;
+        position: relative;
+      }
+      .hero .close {
+        position: absolute;
+        top: 12px;
+        right: 13px;
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--text-2);
+      }
+      .hero h1 {
+        font-family: var(--serif);
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        line-height: 1.22;
+        padding-right: 30px;
+      }
+      .chipsB {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 13px;
+      }
+      .chipB {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 13px;
+        padding: 11px 12px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.07);
+      }
+      .chipB.wide {
+        grid-column: 1 / -1;
+        justify-content: center;
+      }
+      .chipB.on {
+        border-color: var(--sleep-deep);
+        background: var(--sleep-bg);
+        color: var(--sleep-deep);
+      }
+      .chipB .prog {
+        font-size: 10px;
+        font-weight: 700;
+        background: rgba(5, 150, 105, 0.12);
+        color: var(--primary-deep);
+        border-radius: 999px;
+        padding: 2px 6px;
+        margin-left: auto;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 9px 13px;
+        color: var(--text-3);
+        font-size: 12.5px;
+        margin-top: 11px;
+        box-shadow: 0 1px 2px rgba(45, 42, 38, 0.06);
+      }
+
+      .rx {
+        margin: 12px 15px 0;
+        border-radius: 17px;
+        overflow: hidden;
+        border: 1.5px solid var(--sleep-border);
+        background: linear-gradient(180deg, var(--sleep-bg), #fff 70%);
+        box-shadow: 0 6px 18px rgba(30, 58, 95, 0.1);
+      }
+      .rx .rxhead {
+        padding: 12px 13px 4px;
+      }
+      .rx .rxlabel {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--sleep-deep);
+      }
+      .rx h3 {
+        font-family: var(--serif);
+        font-size: 16.5px;
+        font-weight: 600;
+        margin-top: 3px;
+      }
+      .rx .why {
+        font-size: 11.5px;
+        color: var(--text-2);
+        margin-top: 3px;
+        line-height: 1.45;
+      }
+      .rxhabit {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        margin: 9px 11px 0;
+        padding: 9px 10px;
+      }
+      .rxhabit .emoji {
+        width: 38px;
+        height: 38px;
+        flex: none;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 19px;
+      }
+      .rxhabit .body {
+        flex: 1;
+        min-width: 0;
+      }
+      .rxhabit h4 {
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .rxhabit p {
+        font-size: 11px;
+        color: var(--text-2);
+        margin-top: 1px;
+      }
+      .rxhabit .step {
+        flex: none;
+        font-size: 9.5px;
+        font-weight: 700;
+        color: var(--sleep-deep);
+        background: var(--sleep-bg);
+        border-radius: 999px;
+        padding: 3px 7px;
+      }
+      .rx .rxfoot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 13px 12px;
+        gap: 10px;
+      }
+      .rx .conf {
+        font-size: 10.5px;
+        color: var(--text-3);
+        line-height: 1.4;
+      }
+      .rx .go {
+        flex: none;
+        border: none;
+        border-radius: 11px;
+        background: var(--primary);
+        color: #fff;
+        font-family: var(--sans);
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 10px 15px;
+      }
+
+      /* catalog shelves */
+      .cathero {
+        padding: 13px 15px 4px;
+      }
+      .cathero .back {
+        font-size: 12.5px;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .cathero h1 {
+        font-family: var(--serif);
+        font-size: 21px;
+        font-weight: 700;
+      }
+      .chiprail {
+        display: flex;
+        gap: 7px;
+        padding: 11px 15px 4px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .chiprail::-webkit-scrollbar {
+        display: none;
+      }
+      .crail {
+        flex: none;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-2);
+        border-radius: 999px;
+        padding: 7px 12px;
+      }
+      .crail.on {
+        background: #2d2a26;
+        border-color: #2d2a26;
+        color: #fff;
+      }
+      .shelf {
+        display: flex;
+        gap: 9px;
+        padding: 2px 15px 6px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .shelf::-webkit-scrollbar {
+        display: none;
+      }
+      .hcard {
+        flex: none;
+        width: 138px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 11px;
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.07);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .hcard .chevc {
+        position: absolute;
+        top: 11px;
+        right: 11px;
+        font-size: 14px;
+        color: #c9c2ba;
+        font-weight: 600;
+      }
+      .hcard .emoji {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+      .hcard h4 {
+        font-size: 12.5px;
+        font-weight: 600;
+        margin-top: 8px;
+        line-height: 1.3;
+        min-height: 32px;
+      }
+      .hcard .meta {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 5px;
+      }
+      .hcard .meta .pill {
+        font-size: 9.5px;
+        padding: 2px 6px;
+      }
+      .hcard .btn-add {
+        margin-top: 8px;
+        width: 100%;
+        padding: 7px 0;
+        font-size: 12px;
+      }
+      .hcard.added {
+        background: var(--primary-tint);
+        border-color: #a7f3d0;
+      }
+
+      .annot {
+        width: 360px;
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 13px 15px;
+        font-size: 12px;
+        line-height: 1.6;
+        color: var(--text-2);
+      }
+      .annot h3 {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 5px;
+      }
+      .annot ul {
+        margin: 3px 0 0 15px;
+      }
+      .annot li {
+        margin-bottom: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <p class="page-eyebrow">
+      Habit Library — recommended end-state, all decisions applied
+    </p>
+    <h1 class="page-title">Chips B · inline prescription · Netflix catalog</h1>
+    <p class="page-sub">
+      The full recommendation in one flow. Frame 1: main page with the
+      two-column intake cards and elevated first pick. Frame 2: a chip tapped —
+      prescription expands inline. Frame 3: any browse exit lands on the catalog
+      with horizontal shelves. Chevrons to details on every habit everywhere.
+    </p>
+
+    <div class="lane">
+      <!-- ════ 1. MAIN PAGE — CHIPS B ════ -->
+      <div class="stepcol">
+        <div class="col-label">1 · Main page — chips B + elevated pick</div>
+        <div class="phone">
+          <div class="fold"><span>FOLD — iPhone 13</span></div>
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero">
+              <div class="close">✕</div>
+              <h1>What do you want to change?</h1>
+              <div class="chipsB">
+                <div class="chipB">⚡ More energy</div>
+                <div class="chipB">😴 Sleep better</div>
+                <div class="chipB">🧘 Stress less</div>
+                <div class="chipB">🎯 Focus deeper</div>
+                <div class="chipB wide">💪 Get healthier</div>
+              </div>
+              <div class="search">🔍&ensp;Or search any habit…</div>
+            </div>
+            <div class="overline">Popular right now <a>See all</a></div>
+            <div class="row elevated">
+              <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+                🧘
+              </div>
+              <div class="body">
+                <h4>13-Minute Focus Meditation</h4>
+                <p>Guided breath-anchor practice</p>
+                <div class="meta">
+                  <span class="pill">10 min · Daily</span
+                  ><span class="sci">🔬 Basso et al. (2019)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(244, 63, 94, 0.12)">
+                🧠
+              </div>
+              <div class="body">
+                <h4>30-Minute Brain-Boosting Cardio</h4>
+                <p>Dr. Suzuki's focus prescription</p>
+                <div class="meta">
+                  <span class="pill">30 min · Weekly</span
+                  ><span class="sci">🔬 Suzuki (2021)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(244, 63, 94, 0.12)">
+                🚫
+              </div>
+              <div class="body">
+                <h4>No Added Sugar</h4>
+                <p>Eliminate added sugars from diet</p>
+                <div class="meta">
+                  <span class="pill">25 min · Daily</span
+                  ><span class="sci">🔬 Yang (2014)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="overline">By category</div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 7px;
+                padding: 0 15px;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 7px;
+                  background: #fff;
+                  border: 1px solid var(--border);
+                  border-radius: 11px;
+                  padding: 9px 11px;
+                  font-size: 12px;
+                  font-weight: 600;
+                "
+              >
+                🌅 Morning
+                <span
+                  style="
+                    font-size: 10.5px;
+                    color: var(--text-3);
+                    margin-left: auto;
+                  "
+                  >14</span
+                >
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 7px;
+                  background: #fff;
+                  border: 1px solid var(--border);
+                  border-radius: 11px;
+                  padding: 9px 11px;
+                  font-size: 12px;
+                  font-weight: 600;
+                "
+              >
+                😴 Sleep
+                <span
+                  style="
+                    font-size: 10.5px;
+                    color: var(--text-3);
+                    margin-left: auto;
+                  "
+                  >17</span
+                >
+              </div>
+            </div>
+            <div style="text-align: center; padding: 11px 0 16px">
+              <span
+                style="
+                  display: inline-block;
+                  font-size: 12.5px;
+                  font-weight: 700;
+                  color: var(--primary-deep);
+                  background: var(--primary-tint);
+                  border: 1px solid #a7f3d0;
+                  border-radius: 999px;
+                  padding: 10px 17px;
+                "
+                >Open the full library · 347 habits ›</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Why this layout won</h3>
+          <ul>
+            <li>
+              Five doors, full verb labels, no orphan — "Get healthier" anchors
+              full-width.
+            </li>
+            <li>
+              Subtitle dropped (title carries it) → elevated pick + 1.5 rows
+              above the fold.
+            </li>
+            <li>One focal point: only the top pick wears a shadow.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">Taps "Sleep better"</div>
+      </div>
+
+      <!-- ════ 2. PRESCRIPTION (CHIPS B) ════ -->
+      <div class="stepcol">
+        <div class="col-label">2 · Chip tapped — prescription inline</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="hero" style="padding-bottom: 11px">
+              <div class="close">✕</div>
+              <h1>What do you want to change?</h1>
+              <div class="chipsB" style="grid-template-columns: 1fr 1fr">
+                <div class="chipB on">😴 Sleep better</div>
+                <div class="chipB">🧘 Stress less</div>
+                <div
+                  class="chipB"
+                  style="
+                    grid-column: 1/-1;
+                    justify-content: center;
+                    opacity: 0.7;
+                  "
+                >
+                  Show all struggles
+                </div>
+              </div>
+            </div>
+            <div class="rx">
+              <div class="rxhead">
+                <div class="rxlabel">Your way in</div>
+                <h3>Start with a wind-down, not a wake-up</h3>
+                <div class="why">
+                  Most sleep problems are evening problems. These two habits fix
+                  the input.
+                </div>
+              </div>
+              <div class="rxhabit">
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                  📵
+                </div>
+                <div class="body">
+                  <h4>Screens Off by 10</h4>
+                  <p>Blue light delays melatonin ~90 min</p>
+                </div>
+                <div class="step">Step 1</div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rxhabit">
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  📖
+                </div>
+                <div class="body">
+                  <h4>Read Before Bed</h4>
+                  <p>Replaces scrolling, drops heart rate</p>
+                </div>
+                <div class="step">Step 2</div>
+                <span class="chev">›</span>
+              </div>
+              <div class="rxfoot">
+                <div class="conf">Works best together — one is fine.</div>
+                <button class="go">Start step 1 →</button>
+              </div>
+            </div>
+            <div class="overline">All sleep habits · 17 <a>See all ›</a></div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                🌡️
+              </div>
+              <div class="body">
+                <h4>Cool Room Setup</h4>
+                <p>65–68°F is the sleep sweet spot</p>
+                <div class="meta">
+                  <span class="pill">2 min · Evening</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+            <div class="row">
+              <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                ☕
+              </div>
+              <div class="body">
+                <h4>Caffeine Cutoff at 2pm</h4>
+                <p>Caffeine's half-life is ~6 hours</p>
+                <div class="meta">
+                  <span class="pill">0 min · Daily</span
+                  ><span class="sci">🔬 Drake (2013)</span>
+                </div>
+              </div>
+              <span class="chev">›</span><button class="btn-add">+ Add</button>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Chips B collapses gracefully</h3>
+          <ul>
+            <li>
+              Selected chip + nearest alternative stay; "Show all struggles"
+              restores the grid.
+            </li>
+            <li>
+              Step rows: badge + › chevron — read the science before committing.
+            </li>
+            <li>"See all ›" → the catalog, pre-filtered to Sleep (frame 3).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="arrow">
+        <div class="line">→</div>
+        <div class="lbl">"See all ›" or any browse exit</div>
+      </div>
+
+      <!-- ════ 3. CATALOG — NETFLIX SHELVES ════ -->
+      <div class="stepcol">
+        <div class="col-label">3 · Catalog — the carousels live here</div>
+        <div class="phone">
+          <div class="statusbar"><span>9:41</span><span>𝗅𝗍𝖾 ▮▮▮</span></div>
+          <div class="screen">
+            <div class="cathero">
+              <div class="back">‹ Library</div>
+              <h1>All habits · 347</h1>
+              <div class="search" style="margin-top: 9px">
+                🔍&ensp;Search habits…
+              </div>
+            </div>
+            <div class="chiprail">
+              <div class="crail on">All</div>
+              <div class="crail">😴 Sleep</div>
+              <div class="crail">🧘 Mindfulness</div>
+              <div class="crail">💪 Health</div>
+              <div class="crail">🌅 Morning</div>
+            </div>
+
+            <div class="overline">😴 Sleep · 17 <a>All 17 ›</a></div>
+            <div class="shelf">
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                  📵
+                </div>
+                <h4>Screens Off by 10</h4>
+                <div class="meta">
+                  <span class="pill">0 min</span
+                  ><span class="pill">Evening</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="hcard added">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  📖
+                </div>
+                <h4>Read Before Bed</h4>
+                <div class="meta">
+                  <span class="pill">10 min</span
+                  ><span class="pill">Evening</span>
+                </div>
+                <button class="btn-add" style="background: transparent">
+                  ✓ Added
+                </button>
+              </div>
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                  🌡️
+                </div>
+                <h4>Cool Room Setup</h4>
+                <div class="meta">
+                  <span class="pill">2 min</span
+                  ><span class="pill">Evening</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+
+            <div class="overline">🧘 Mindfulness · 39 <a>All 39 ›</a></div>
+            <div class="shelf">
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(5, 150, 105, 0.13)">
+                  🧘
+                </div>
+                <h4>13-Minute Focus Meditation</h4>
+                <div class="meta">
+                  <span class="pill">10 min</span
+                  ><span class="pill">Daily</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(14, 165, 233, 0.13)">
+                  🌬️
+                </div>
+                <h4>Box Breathing</h4>
+                <div class="meta">
+                  <span class="pill">2 min</span
+                  ><span class="pill">Anytime</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(245, 158, 11, 0.15)">
+                  🙏
+                </div>
+                <h4>Gratitude Journal</h4>
+                <div class="meta">
+                  <span class="pill">3 min</span
+                  ><span class="pill">Evening</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+
+            <div class="overline">🌅 Morning · 14 <a>All 14 ›</a></div>
+            <div class="shelf">
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(139, 92, 246, 0.13)">
+                  🛏️
+                </div>
+                <h4>Make Your Bed</h4>
+                <div class="meta">
+                  <span class="pill">1 min</span
+                  ><span class="pill">Morning</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+              <div class="hcard">
+                <span class="chevc">›</span>
+                <div class="emoji" style="background: rgba(59, 130, 246, 0.13)">
+                  💧
+                </div>
+                <h4>Hydration First</h4>
+                <div class="meta">
+                  <span class="pill">1 min</span
+                  ><span class="pill">Morning</span>
+                </div>
+                <button class="btn-add">+ Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annot">
+          <h3>Netflix where browsing actually happens</h3>
+          <ul>
+            <li>
+              Vertical through categories, horizontal through habits — the
+              genuine use case for shelves.
+            </li>
+            <li>
+              Cards: icon, 2-line name, pills, + Add, › to details. Added state
+              goes quiet green.
+            </li>
+            <li>
+              Endcap, "See all", and category tiles all land here; tiles arrive
+              pre-filtered.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

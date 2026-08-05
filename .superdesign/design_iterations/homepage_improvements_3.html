@@ -1,0 +1,1525 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Homepage Improvements — 5 Proposals</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #111;
+        color: #eee;
+        min-height: 100vh;
+      }
+
+      .page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 24px 80px;
+      }
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        color: #888;
+        font-size: 14px;
+        margin-bottom: 48px;
+      }
+
+      /* ── Side-by-side section ── */
+      .section {
+        margin-bottom: 64px;
+      }
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: #10b981;
+        margin-bottom: 6px;
+      }
+      .section-title {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        margin-bottom: 4px;
+      }
+      .section-desc {
+        color: #999;
+        font-size: 13px;
+        margin-bottom: 24px;
+        max-width: 600px;
+        line-height: 1.5;
+      }
+      .phones {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      /* ── Phone frame ── */
+      .phone-wrap {
+        text-align: center;
+      }
+      .phone-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+      }
+      .phone-label.before {
+        color: #666;
+      }
+      .phone-label.after {
+        color: #10b981;
+      }
+
+      .phone {
+        width: 320px;
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 3px #333,
+          0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .phone.light {
+        background: #f5f1ed;
+      }
+      .phone.dark {
+        background: #111827;
+      }
+
+      /* ── Shelf ── */
+      .shelf {
+        padding: 52px 16px 14px;
+        position: relative;
+      }
+      .shelf.light {
+        background: #f0ede8;
+        border-radius: 0 0 16px 16px;
+      }
+      .shelf.dark {
+        background: #1f2937;
+        border-radius: 0 0 16px 16px;
+      }
+
+      /* Gradient bleed at bottom */
+      .shelf.has-bleed::after {
+        content: '';
+        position: absolute;
+        bottom: -12px;
+        left: 0;
+        right: 0;
+        height: 12px;
+        pointer-events: none;
+      }
+      .shelf.light.has-bleed::after {
+        background: linear-gradient(to bottom, #f0ede8, transparent);
+      }
+      .shelf.dark.has-bleed::after {
+        background: linear-gradient(to bottom, #1f2937, transparent);
+      }
+
+      /* ── Greeting row ── */
+      .greeting-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 2px;
+      }
+      .greeting {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+      }
+      .greeting.light {
+        color: #2d2a26;
+      }
+      .greeting.dark {
+        color: #e5e7eb;
+      }
+      .greeting.streak {
+        color: #e8b94d;
+      }
+      .greeting.perfect {
+        color: #10b981;
+      }
+
+      .progress {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .progress.light {
+        color: #6e6660;
+      }
+      .progress.dark {
+        color: #9ca3af;
+      }
+      .progress .count {
+        font-weight: 700;
+      }
+      .progress .count.active {
+        color: #047857;
+      }
+      .progress .count.active-dark {
+        color: #34d399;
+      }
+      .progress .done {
+        color: #059669;
+        font-weight: 700;
+      }
+
+      /* Streak badge */
+      .streak-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-weight: 600;
+        margin-left: 6px;
+      }
+      .streak-badge.light {
+        background: #fef3cd;
+        color: #7d5907;
+      }
+      .streak-badge.dark {
+        background: rgba(232, 185, 77, 0.15);
+        color: #e8b94d;
+      }
+
+      /* ── Glass chip (centered) ── */
+      .chip-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 6px;
+        position: relative;
+      }
+      .chip-row.left {
+        justify-content: flex-start;
+      }
+      .glass-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 14px;
+        font-size: 12px;
+        font-weight: 500;
+        border-width: 1px;
+        border-style: solid;
+        backdrop-filter: blur(8px);
+      }
+      .glass-chip.light {
+        background: rgba(255, 255, 255, 0.5);
+        border-color: rgba(255, 255, 255, 0.6);
+        color: #6b6560;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      .glass-chip.dark {
+        background: rgba(31, 41, 55, 0.6);
+        border-color: rgba(55, 65, 81, 0.35);
+        color: #9ca3af;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .glass-chip .icon {
+        font-size: 13px;
+        opacity: 0.6;
+      }
+      .glass-chip .chevron {
+        font-size: 9px;
+        opacity: 0.4;
+      }
+
+      .today-link {
+        position: absolute;
+        right: 0;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .today-link.light {
+        color: #8b6208;
+      }
+      .today-link.dark {
+        color: #e8b94d;
+      }
+
+      /* ── Day strip ── */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding: 0 2px;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        flex: 1;
+      }
+      .day-label {
+        font-size: 10px;
+        line-height: 14px;
+      }
+      .day-label.light {
+        color: #6e6660;
+      }
+      .day-label.dark {
+        color: #9ca3af;
+      }
+      .day-label.today {
+        font-weight: 700;
+      }
+
+      .day-num {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        position: relative;
+      }
+      .day-num.small {
+        width: 40px;
+        height: 40px;
+        font-size: 13px;
+      }
+      .day-num.default.light {
+        background: transparent;
+        color: #2d2a26;
+      }
+      .day-num.default.dark {
+        background: transparent;
+        color: #d1d5db;
+      }
+      .day-num.complete.light {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+      }
+      .day-num.complete.dark {
+        background: #10b981;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 2px 12px rgba(16, 185, 129, 0.5);
+      }
+      .day-num.today.light {
+        background: #fef3cd;
+        border: 2px solid #e8b94d;
+        color: #7d5907;
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      }
+      .day-num.today.dark {
+        background: #3d2f0a;
+        border: 2px solid #b8860b;
+        color: #e8b94d;
+        font-weight: 700;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .day-num.future.light {
+        color: #c4bfb7;
+      }
+      .day-num.future.dark {
+        color: #4b5563;
+      }
+
+      /* Today breathing glow */
+      .day-num.today.glow {
+        animation: breatheGlow 2.5s ease-in-out infinite;
+      }
+      @keyframes breatheGlow {
+        0%,
+        100% {
+          box-shadow: 0 2px 4px rgba(232, 185, 77, 0.15);
+        }
+        50% {
+          box-shadow:
+            0 2px 12px rgba(232, 185, 77, 0.4),
+            0 0 20px rgba(232, 185, 77, 0.15);
+        }
+      }
+
+      /* Check badge */
+      .check-badge {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 9px;
+        z-index: 1;
+      }
+      .check-badge.light {
+        background: #edeae5;
+        color: #10b981;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .check-badge.dark {
+        background: #1f2937;
+        color: #10b981;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Completion dot */
+      .comp-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        margin-top: 4px;
+      }
+      .comp-dot.none.light {
+        background: #ddd8d2;
+      }
+      .comp-dot.none.dark {
+        background: #4b5563;
+      }
+      .comp-dot.partial.light {
+        background: #e8b94d;
+      }
+      .comp-dot.partial.dark {
+        background: #e8b94d;
+      }
+      .comp-dot-spacer {
+        height: 5px;
+        margin-top: 4px;
+      }
+
+      /* ── Week progress micro-bar ── */
+      .micro-bar-wrap {
+        margin-top: 10px;
+        height: 3px;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .micro-bar-wrap.light {
+        background: rgba(0, 0, 0, 0.06);
+      }
+      .micro-bar-wrap.dark {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .micro-bar-fill {
+        height: 100%;
+        border-radius: 2px;
+        transition: width 0.6s ease;
+      }
+      .micro-bar-fill.normal {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      .micro-bar-fill.done {
+        background: linear-gradient(90deg, #10b981, #6ee7b7);
+      }
+
+      /* ── Habit cards ── */
+      .habit-cards {
+        padding: 16px 16px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .habit-card {
+        display: flex;
+        align-items: center;
+        padding: 14px 16px;
+        border-radius: 14px;
+        gap: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+      .habit-card.light {
+        background: #edeae5;
+        border: 1px solid #ddd8d2;
+      }
+      .habit-card.dark {
+        background: #1f2937;
+        border: 1px solid #374151;
+      }
+      .habit-emoji {
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .habit-info {
+        flex: 1;
+      }
+      .habit-name {
+        font-size: 15px;
+        font-weight: 600;
+      }
+      .habit-name.light {
+        color: #2d2a26;
+      }
+      .habit-name.dark {
+        color: #e5e7eb;
+      }
+      .habit-streak {
+        font-size: 11px;
+        font-weight: 500;
+        margin-top: 2px;
+      }
+      .habit-streak.light {
+        color: #6e6660;
+      }
+      .habit-streak.dark {
+        color: #9ca3af;
+      }
+
+      .habit-check {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+      }
+      .habit-check.unchecked.light {
+        border: 2px solid #c4bfb7;
+      }
+      .habit-check.unchecked.dark {
+        border: 2px solid #4b5563;
+      }
+      .habit-check.checked {
+        background: #10b981;
+        color: #fff;
+        border: none;
+      }
+
+      /* Strength fill */
+      .strength-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 14px;
+      }
+      .strength-fill.light {
+        background: rgba(16, 185, 129, 0.06);
+      }
+      .strength-fill.dark {
+        background: rgba(16, 185, 129, 0.08);
+      }
+
+      /* Accent bar */
+      .accent-bar {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 14px 0 0 14px;
+      }
+
+      /* ── Progress animation (All done!) ── */
+      .progress .done-anim {
+        display: inline-block;
+        animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.8);
+          opacity: 0.5;
+        }
+        60% {
+          transform: scale(1.1);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* ── Streak connector ── */
+      .streak-connector {
+        position: absolute;
+        height: 3px;
+        top: 36.5px;
+        z-index: 0;
+      }
+      .streak-connector.left {
+        left: 0;
+        width: 50%;
+      }
+      .streak-connector.right {
+        left: 50%;
+        width: 50%;
+      }
+      .streak-connector.light {
+        background: rgba(16, 185, 129, 0.25);
+      }
+      .streak-connector.dark {
+        background: rgba(52, 211, 153, 0.2);
+      }
+
+      /* ── Summary table ── */
+      .summary {
+        margin-top: 64px;
+      }
+      .summary h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th {
+        text-align: left;
+        padding: 10px 12px;
+        font-weight: 600;
+        font-size: 11px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #888;
+        border-bottom: 1px solid #333;
+      }
+      td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #222;
+        color: #ccc;
+        vertical-align: top;
+      }
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .tag.high {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+      }
+      .tag.med {
+        background: rgba(232, 185, 77, 0.15);
+        color: #e8b94d;
+      }
+      .tag.low {
+        background: rgba(156, 163, 175, 0.15);
+        color: #9ca3af;
+      }
+      .tag.done {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+      }
+
+      /* ── Nav dots ── */
+      .nav {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 48px;
+      }
+      .nav-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #333;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .nav-dot.active {
+        background: #10b981;
+        width: 24px;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <h1>Homepage Improvement Proposals</h1>
+      <p class="subtitle">
+        5 enhancements for retention, engagement, and visual polish — Before vs.
+        After
+      </p>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- #1 — CONTEXTUAL STREAK GREETING -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="section">
+        <div class="section-label">Improvement #1</div>
+        <div class="section-title">Contextual Streak Greeting</div>
+        <div class="section-desc">
+          Replace the generic "Good morning" with streak-aware messaging that
+          triggers loss aversion. Users who see their streak count are 2.3× more
+          likely to complete a habit to protect it.
+        </div>
+        <div class="phones">
+          <!-- BEFORE -->
+          <div class="phone-wrap">
+            <div class="phone-label before">Before — Generic</div>
+            <div class="phone light">
+              <div class="shelf light">
+                <div class="greeting-row">
+                  <span class="greeting light">Good morning</span>
+                  <span class="progress light"
+                    ><span class="count active">2</span> of 5</span
+                  >
+                </div>
+                <div class="chip-row left">
+                  <div class="glass-chip light">
+                    <span class="icon">📅</span> Mon, March 2
+                    <span class="chevron">▾</span>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell">
+                    <span class="day-label light">Mon</span>
+                    <div class="day-num small complete light">
+                      24<span class="check-badge light">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Tue</span>
+                    <div class="day-num small complete light">
+                      25<span class="check-badge light">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Wed</span>
+                    <div class="day-num small complete light">
+                      26<span class="check-badge light">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light today">Thu</span>
+                    <div class="day-num small today light">27</div>
+                    <div class="comp-dot partial light"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Fri</span>
+                    <div class="day-num small future light">28</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Sat</span>
+                    <div class="day-num small future light">1</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Sun</span>
+                    <div class="day-num small future light">2</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="habit-cards">
+                <div class="habit-card light">
+                  <div class="strength-fill light" style="width: 72%"></div>
+                  <div class="accent-bar" style="background: #10b981"></div>
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name light">Meditate</div>
+                    <div class="habit-streak light">3 day streak · 72%</div>
+                  </div>
+                  <div class="habit-check checked">✓</div>
+                </div>
+                <div class="habit-card light">
+                  <div class="strength-fill light" style="width: 45%"></div>
+                  <div class="accent-bar" style="background: #e8b94d"></div>
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name light">Read 20 pages</div>
+                    <div class="habit-streak light">1 day streak · 45%</div>
+                  </div>
+                  <div class="habit-check checked">✓</div>
+                </div>
+                <div class="habit-card light">
+                  <div class="accent-bar" style="background: #c4bfb7"></div>
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name light">Exercise</div>
+                    <div class="habit-streak light">0 day streak · 30%</div>
+                  </div>
+                  <div class="habit-check unchecked light"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AFTER -->
+          <div class="phone-wrap">
+            <div class="phone-label after">After — Streak-Aware</div>
+            <div class="phone light">
+              <div class="shelf light has-bleed">
+                <div class="greeting-row">
+                  <span>
+                    <span class="greeting streak">3-day streak</span>
+                    <span class="streak-badge light">🔥 Keep it going!</span>
+                  </span>
+                  <span class="progress light"
+                    ><span class="count active">2</span> of 5</span
+                  >
+                </div>
+                <div class="chip-row">
+                  <div class="glass-chip light">
+                    <span class="icon">📅</span> Mon, March 2
+                    <span class="chevron">▾</span>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell" style="position: relative">
+                    <span class="day-label light">Mon</span>
+                    <div class="day-num complete light">
+                      24<span class="check-badge light">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                    <div class="streak-connector right light"></div>
+                  </div>
+                  <div class="day-cell" style="position: relative">
+                    <span class="day-label light">Tue</span>
+                    <div class="day-num complete light">
+                      25<span class="check-badge light">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                    <div class="streak-connector left light"></div>
+                    <div class="streak-connector right light"></div>
+                  </div>
+                  <div class="day-cell" style="position: relative">
+                    <span class="day-label light">Wed</span>
+                    <div class="day-num complete light">
+                      26<span class="check-badge light">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                    <div class="streak-connector left light"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light today">Thu</span>
+                    <div class="day-num today light glow">27</div>
+                    <div class="comp-dot partial light"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Fri</span>
+                    <div class="day-num future light">28</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Sat</span>
+                    <div class="day-num future light">1</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label light">Sun</span>
+                    <div class="day-num future light">2</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                </div>
+                <div class="micro-bar-wrap light">
+                  <div class="micro-bar-fill normal" style="width: 40%"></div>
+                </div>
+              </div>
+              <div class="habit-cards">
+                <div class="habit-card light">
+                  <div class="strength-fill light" style="width: 72%"></div>
+                  <div class="accent-bar" style="background: #10b981"></div>
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name light">Meditate</div>
+                    <div class="habit-streak light">3 day streak · 72%</div>
+                  </div>
+                  <div class="habit-check checked">✓</div>
+                </div>
+                <div class="habit-card light">
+                  <div class="strength-fill light" style="width: 45%"></div>
+                  <div class="accent-bar" style="background: #e8b94d"></div>
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name light">Read 20 pages</div>
+                    <div class="habit-streak light">1 day streak · 45%</div>
+                  </div>
+                  <div class="habit-check checked">✓</div>
+                </div>
+                <div class="habit-card light">
+                  <div class="accent-bar" style="background: #c4bfb7"></div>
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name light">Exercise</div>
+                    <div class="habit-streak light">0 day streak · 30%</div>
+                  </div>
+                  <div class="habit-check unchecked light"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DARK MODE AFTER -->
+          <div class="phone-wrap">
+            <div class="phone-label after">After — Dark Mode</div>
+            <div class="phone dark">
+              <div class="shelf has-bleed dark">
+                <div class="greeting-row">
+                  <span>
+                    <span class="greeting streak">3-day streak</span>
+                    <span class="streak-badge dark">🔥 Keep it going!</span>
+                  </span>
+                  <span class="progress dark"
+                    ><span class="count active-dark">2</span> of 5</span
+                  >
+                </div>
+                <div class="chip-row">
+                  <div class="glass-chip dark">
+                    <span class="icon">📅</span> Mon, March 2
+                    <span class="chevron">▾</span>
+                  </div>
+                </div>
+                <div class="day-strip">
+                  <div class="day-cell" style="position: relative">
+                    <span class="day-label dark">Mon</span>
+                    <div class="day-num complete dark">
+                      24<span class="check-badge dark">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                    <div class="streak-connector right dark"></div>
+                  </div>
+                  <div class="day-cell" style="position: relative">
+                    <span class="day-label dark">Tue</span>
+                    <div class="day-num complete dark">
+                      25<span class="check-badge dark">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                    <div class="streak-connector left dark"></div>
+                    <div class="streak-connector right dark"></div>
+                  </div>
+                  <div class="day-cell" style="position: relative">
+                    <span class="day-label dark">Wed</span>
+                    <div class="day-num complete dark">
+                      26<span class="check-badge dark">✓</span>
+                    </div>
+                    <div class="comp-dot-spacer"></div>
+                    <div class="streak-connector left dark"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label today dark">Thu</span>
+                    <div class="day-num today glow dark">27</div>
+                    <div class="comp-dot partial dark"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label dark">Fri</span>
+                    <div class="day-num future dark">28</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label dark">Sat</span>
+                    <div class="day-num future dark">1</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                  <div class="day-cell">
+                    <span class="day-label dark">Sun</span>
+                    <div class="day-num future dark">2</div>
+                    <div class="comp-dot-spacer"></div>
+                  </div>
+                </div>
+                <div class="micro-bar-wrap dark">
+                  <div class="micro-bar-fill normal" style="width: 40%"></div>
+                </div>
+              </div>
+              <div class="habit-cards">
+                <div class="habit-card dark">
+                  <div class="strength-fill dark" style="width: 72%"></div>
+                  <div class="accent-bar" style="background: #10b981"></div>
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name dark">Meditate</div>
+                    <div class="habit-streak dark">3 day streak · 72%</div>
+                  </div>
+                  <div class="habit-check checked">✓</div>
+                </div>
+                <div class="habit-card dark">
+                  <div class="strength-fill dark" style="width: 45%"></div>
+                  <div class="accent-bar" style="background: #e8b94d"></div>
+                  <span class="habit-emoji">📖</span>
+                  <div class="habit-info">
+                    <div class="habit-name dark">Read 20 pages</div>
+                    <div class="habit-streak dark">1 day streak · 45%</div>
+                  </div>
+                  <div class="habit-check checked">✓</div>
+                </div>
+                <div class="habit-card dark">
+                  <div class="accent-bar" style="background: #4b5563"></div>
+                  <span class="habit-emoji">💪</span>
+                  <div class="habit-info">
+                    <div class="habit-name dark">Exercise</div>
+                    <div class="habit-streak dark">0 day streak · 30%</div>
+                  </div>
+                  <div class="habit-check unchecked dark"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- #2 — ADAPTIVE GREETING STATES -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="section">
+        <div class="section-label">Improvement #1 — States</div>
+        <div class="section-title">Adaptive Greeting Examples</div>
+        <div class="section-desc">
+          The greeting adapts to 6 different states based on streak length, time
+          of day, and completion progress.
+        </div>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+          "
+        >
+          <!-- State cards -->
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 20px;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              No streak
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #e5e7eb">
+              Good morning
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px">
+              Default time-of-day fallback
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 20px;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              1-day streak
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #e8b94d">
+              Great start!
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px">
+              Encourages the fragile new streak
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 20px;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              2-6 day streak
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #e8b94d">
+              3-day streak
+              <span
+                style="
+                  font-size: 14px;
+                  background: rgba(232, 185, 77, 0.15);
+                  padding: 2px 8px;
+                  border-radius: 10px;
+                "
+                >🔥</span
+              >
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px">
+              Shows streak count + fire emoji
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 20px;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              7+ day streak
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #e8b94d">
+              7-day streak
+              <span
+                style="
+                  font-size: 14px;
+                  background: rgba(232, 185, 77, 0.15);
+                  padding: 2px 8px;
+                  border-radius: 10px;
+                "
+                >⚡</span
+              >
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px">
+              Lightning bolt for weekly milestone
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 20px;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              All done today
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #10b981">
+              Perfect day ✨
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px">
+              Already exists — keep as-is
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 20px;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+              "
+            >
+              Broken streak
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #9ca3af">
+              Fresh start
+            </div>
+            <div style="font-size: 12px; color: #666; margin-top: 4px">
+              No shame, gentle re-engagement
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- #3 — PROGRESS MICRO-BAR -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="section">
+        <div class="section-label">Improvement #2</div>
+        <div class="section-title">Week Progress Micro-Bar</div>
+        <div class="section-desc">
+          A 3px progress bar below the day strip showing daily completion at a
+          glance. Fills from left to right as habits are completed. Turns fully
+          green on a perfect day.
+        </div>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap">
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 24px;
+              flex: 1;
+              min-width: 260px;
+              border: 1px solid #333;
+            "
+          >
+            <div style="font-size: 12px; color: #888; margin-bottom: 12px">
+              0 of 5 completed
+            </div>
+            <div class="micro-bar-wrap dark">
+              <div class="micro-bar-fill normal" style="width: 0%"></div>
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 24px;
+              flex: 1;
+              min-width: 260px;
+              border: 1px solid #333;
+            "
+          >
+            <div style="font-size: 12px; color: #888; margin-bottom: 12px">
+              2 of 5 completed
+            </div>
+            <div class="micro-bar-wrap dark">
+              <div class="micro-bar-fill normal" style="width: 40%"></div>
+            </div>
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 24px;
+              flex: 1;
+              min-width: 260px;
+              border: 1px solid #333;
+            "
+          >
+            <div style="font-size: 12px; color: #888; margin-bottom: 12px">
+              5 of 5 — Perfect day!
+            </div>
+            <div class="micro-bar-wrap dark">
+              <div class="micro-bar-fill done" style="width: 100%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- #4 — SHELF GRADIENT BLEED -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="section">
+        <div class="section-label">Improvement #3</div>
+        <div class="section-title">Shelf Gradient Bleed</div>
+        <div class="section-desc">
+          A 12px gradient fade at the bottom of the shelf eliminates the hard
+          visual edge between the shelf and the habit card list. Subtle but
+          creates depth.
+        </div>
+        <div class="phones">
+          <div class="phone-wrap">
+            <div class="phone-label before">Before — Hard Edge</div>
+            <div class="phone dark" style="height: 200px">
+              <div
+                class="shelf dark"
+                style="padding-top: 20px; padding-bottom: 20px"
+              >
+                <div
+                  style="text-align: center; color: #9ca3af; font-size: 12px"
+                >
+                  Shelf content
+                </div>
+              </div>
+              <div style="padding: 20px 16px">
+                <div class="habit-card dark">
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name dark">Meditate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-wrap">
+            <div class="phone-label after">After — Gradient Bleed</div>
+            <div class="phone dark" style="height: 200px">
+              <div
+                class="shelf has-bleed dark"
+                style="padding-top: 20px; padding-bottom: 20px"
+              >
+                <div
+                  style="text-align: center; color: #9ca3af; font-size: 12px"
+                >
+                  Shelf content
+                </div>
+              </div>
+              <div style="padding: 20px 16px">
+                <div class="habit-card dark">
+                  <span class="habit-emoji">🧘</span>
+                  <div class="habit-info">
+                    <div class="habit-name dark">Meditate</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- #5 — TODAY BREATHING GLOW -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="section">
+        <div class="section-label">Improvement #4</div>
+        <div class="section-title">Today Cell Breathing Glow</div>
+        <div class="section-desc">
+          The today cell pulses with a subtle amber glow every 2.5 seconds.
+          Draws the eye to the current day without being distracting.
+        </div>
+        <div class="phones">
+          <div class="phone-wrap">
+            <div class="phone-label before">Before — Static</div>
+            <div
+              style="
+                background: #1f2937;
+                border-radius: 16px;
+                padding: 24px;
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+              "
+            >
+              <div class="day-cell">
+                <span class="day-label dark">Wed</span>
+                <div class="day-num complete dark">
+                  26<span class="check-badge dark">✓</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label today dark">Thu</span>
+                <div class="day-num today dark">27</div>
+                <div class="comp-dot partial dark"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label dark">Fri</span>
+                <div class="day-num future dark">28</div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-wrap">
+            <div class="phone-label after">After — Breathing Glow</div>
+            <div
+              style="
+                background: #1f2937;
+                border-radius: 16px;
+                padding: 24px;
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+              "
+            >
+              <div class="day-cell">
+                <span class="day-label dark">Wed</span>
+                <div class="day-num complete dark">
+                  26<span class="check-badge dark">✓</span>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label today dark">Thu</span>
+                <div class="day-num today glow dark">27</div>
+                <div class="comp-dot partial dark"></div>
+              </div>
+              <div class="day-cell">
+                <span class="day-label dark">Fri</span>
+                <div class="day-num future dark">28</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- #5 — COMPLETION CELEBRATION -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="section">
+        <div class="section-label">Improvement #5</div>
+        <div class="section-title">Completion Celebration Micro-Animation</div>
+        <div class="section-desc">
+          When the last habit is checked off, the progress text bounces from "4
+          of 5" to "All done!" with a scale animation. Pairs with the existing
+          PerfectDayConfetti.
+        </div>
+        <div
+          style="
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+          "
+        >
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 32px 48px;
+              text-align: center;
+              border: 1px solid #333;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #888;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 12px;
+              "
+            >
+              Before last check
+            </div>
+            <div style="font-size: 18px; font-weight: 600; color: #9ca3af">
+              <span style="color: #34d399; font-weight: 700">4</span> of 5
+            </div>
+          </div>
+          <div
+            style="
+              font-size: 32px;
+              color: #444;
+              display: flex;
+              align-items: center;
+            "
+          >
+            →
+          </div>
+          <div
+            style="
+              background: #1a1a2e;
+              border-radius: 16px;
+              padding: 32px 48px;
+              text-align: center;
+              border: 1px solid #10b981;
+            "
+          >
+            <div
+              style="
+                font-size: 11px;
+                color: #10b981;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-bottom: 12px;
+              "
+            >
+              After last check
+            </div>
+            <div style="font-size: 18px; font-weight: 700">
+              <span class="done-anim" style="color: #10b981">All done! ✨</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <!-- SUMMARY TABLE -->
+      <!-- ═══════════════════════════════════════════════════════ -->
+      <div class="summary">
+        <h2>Implementation Summary</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Improvement</th>
+              <th>Impact</th>
+              <th>Effort</th>
+              <th>Files</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Contextual Streak Greeting</td>
+              <td><span class="tag high">High</span></td>
+              <td>~30 min</td>
+              <td>ProgressGreeting.tsx, new useStreakGreeting hook</td>
+              <td><span class="tag med">Proposed</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Week Progress Micro-Bar</td>
+              <td><span class="tag med">Medium</span></td>
+              <td>~15 min</td>
+              <td>New MicroProgressBar.tsx, CalendarTimeline.tsx</td>
+              <td><span class="tag med">Proposed</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Shelf Gradient Bleed</td>
+              <td><span class="tag low">Low</span></td>
+              <td>~5 min</td>
+              <td>CalendarTimeline.styles.ts</td>
+              <td><span class="tag med">Proposed</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Today Breathing Glow</td>
+              <td><span class="tag low">Low</span></td>
+              <td>~10 min</td>
+              <td>DayCellContent.tsx or DayCell.tsx</td>
+              <td><span class="tag med">Proposed</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Completion Celebration</td>
+              <td><span class="tag med">Medium</span></td>
+              <td>~10 min</td>
+              <td>ProgressText.tsx</td>
+              <td><span class="tag med">Proposed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

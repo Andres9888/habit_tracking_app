@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Tabs 09 — Fusion (Scrollspy + Underline)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="habit_tabs_theme.css" />
+<style>
+  .phone-frame-scroll {
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+  .phone-frame-scroll::-webkit-scrollbar { display: none; }
+
+  .sticky-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--bg);
+    transition: box-shadow 240ms var(--ease-out-soft);
+  }
+  .sticky-wrap[data-pinned="true"] {
+    box-shadow: 0 1px 0 var(--border), 0 10px 20px -10px rgba(45,42,38,0.12);
+    background: rgba(245,241,237,0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px 4px;
+    position: relative;
+  }
+  .header-title {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 6px);
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    opacity: 0;
+    transition: all 260ms var(--ease-out-soft);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .sticky-wrap[data-pinned="true"] .header-title {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .hero-block {
+    overflow: hidden;
+    transition: max-height 320ms var(--ease-out-soft), opacity 240ms var(--ease-out-soft), padding 240ms var(--ease-out-soft);
+    max-height: 240px;
+    opacity: 1;
+    padding: 10px 20px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .sticky-wrap[data-pinned="true"] .hero-block {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  /* 02 Underline tabs */
+  .tabs-09 {
+    margin: 4px 24px 0;
+    position: relative;
+    display: flex;
+    gap: 28px;
+    justify-content: center;
+    padding: 0 0 12px;
+  }
+  .tabs-09 .tab {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px 2px 10px;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-tertiary);
+    position: relative;
+    transition: color 220ms var(--ease-out-soft);
+    letter-spacing: -0.1px;
+  }
+  .tabs-09 .tab[data-active="true"] { color: var(--text-primary); font-weight: 600; }
+  .tabs-09 .indicator {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    height: 2px;
+    background: var(--forest-600);
+    border-radius: 2px;
+    transition: transform 320ms var(--ease-out-soft), width 320ms var(--ease-out-soft);
+  }
+  .tabs-09 .divider {
+    position: absolute;
+    left: -24px; right: -24px;
+    bottom: 0;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Sections */
+  .section {
+    padding: 18px 16px 24px;
+    scroll-margin-top: 58px;
+  }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--forest-600);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .section h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+  }
+  .section-hairline { height: 1px; background: var(--border); margin: 0 16px; }
+
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .panel + .panel { margin-top: 10px; }
+
+  /* Calendar section */
+  .weeks {
+    display: grid;
+    grid-template-columns: auto repeat(7, 1fr);
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+    align-items: center;
+  }
+  .weeks .wk { text-align: right; padding-right: 4px; }
+  .cell {
+    aspect-ratio: 1 / 1;
+    border-radius: 4px;
+    background: var(--bg-muted);
+    border: 1px solid var(--border);
+  }
+  .cell.c1 { background: #DFF2E5; border-color: #C8E8D5; }
+  .cell.c2 { background: #9CDDB8; border-color: #75CE9A; }
+  .cell.c3 { background: #34D399; border-color: #10B981; }
+  .cell.c4 { background: #059669; border-color: #047857; }
+
+  .legend-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .legend-scale { display: flex; gap: 3px; align-items: center; }
+  .legend-scale .sw {
+    width: 10px; height: 10px; border-radius: 3px;
+    display: inline-block;
+  }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .kpi .n {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+  .kpi .l {
+    font-size: 10px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Strength section */
+  .strength-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .strength-val {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--forest-700);
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .strength-stage {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  .strength-stage b { color: var(--forest-700); }
+  .strength-bar {
+    height: 10px;
+    background: var(--bg-muted);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .strength-bar .fill {
+    width: 72%;
+    height: 100%;
+    background: linear-gradient(90deg, #6EE7B7, var(--forest-600));
+    border-radius: 999px;
+  }
+  .stage-markers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    font-size: 9px;
+    letter-spacing: 0.4px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .stage-markers span.on { color: var(--forest-700); }
+  .strength-note {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-top: 12px;
+  }
+  .strength-note b { color: var(--text-primary); }
+
+  /* Goal section */
+  .goal-hero {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+    background: linear-gradient(135deg, #F7FFFB 0%, var(--card) 70%);
+    border: 1px solid rgba(5,150,105,0.18);
+    border-radius: 16px;
+    box-shadow: var(--shadow-card);
+  }
+  .ring {
+    width: 72px; height: 72px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .ring svg { transform: rotate(-90deg); }
+  .ring-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--forest-700);
+  }
+  .goal-text .goal-big {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.2px;
+  }
+  .goal-text .goal-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+  .milestone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--bg-muted);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .milestone .icon {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--forest-100);
+    color: var(--forest-700);
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .milestone.done .icon { background: var(--forest-600); color: #fff; }
+  .milestone b { color: var(--text-primary); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="stage-title" style="color: var(--forest-700); font-weight: 700;">09 · ★ RECOMMENDED — Fusion</div>
+    <div class="phone-frame phone-frame-scroll" id="frame">
+      <div class="phone-notch"></div>
+      <div class="status-bar"><span>9:41</span><span>●●●● ▐▌</span></div>
+
+      <div class="sticky-wrap" id="sticky" data-pinned="false">
+        <div class="header-row">
+          <button class="icon-btn"><i data-lucide="chevron-left"></i></button>
+          <div class="header-title">Morning Meditation</div>
+          <button class="icon-btn"><i data-lucide="pencil"></i></button>
+        </div>
+        <div class="hero-block">
+          <div class="hero-emoji-ring">🌱</div>
+          <div class="hero-title">Morning Meditation</div>
+          <div class="hero-sub">
+            <span class="streak-pill">🔥 12 day streak</span>
+            <span>·</span>
+            <span>72% strength</span>
+          </div>
+        </div>
+        <div class="tabs-09" id="tabs">
+          <button class="tab" data-target="sec-calendar" data-active="true">Calendar</button>
+          <button class="tab" data-target="sec-strength">Strength</button>
+          <button class="tab" data-target="sec-goal">Goal</button>
+          <div class="indicator"></div>
+          <div class="divider"></div>
+        </div>
+      </div>
+
+      <!-- CALENDAR -->
+      <div class="section" id="sec-calendar">
+        <div class="section-label">Calendar</div>
+        <h2>89 completions this year</h2>
+        <div class="kpi-row">
+          <div class="kpi"><div class="n">12</div><div class="l">Current</div></div>
+          <div class="kpi"><div class="n">28</div><div class="l">Longest</div></div>
+          <div class="kpi"><div class="n">89%</div><div class="l">This month</div></div>
+        </div>
+        <div class="panel">
+          <div class="weeks">
+            <div class="wk">Mar</div>
+            <div class="cell c3"></div><div class="cell c4"></div><div class="cell c2"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell c1"></div><div class="cell"></div>
+            <div class="wk"></div>
+            <div class="cell c4"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell c4"></div><div class="cell c2"></div><div class="cell c3"></div><div class="cell c1"></div>
+            <div class="wk"></div>
+            <div class="cell c4"></div><div class="cell c4"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell c1"></div>
+            <div class="wk">Apr</div>
+            <div class="cell c4"></div><div class="cell c4"></div><div class="cell c4"></div><div class="cell c2"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell"></div>
+            <div class="wk"></div>
+            <div class="cell c4"></div><div class="cell c3"></div><div class="cell c4"></div><div class="cell c4"></div><div class="cell"></div><div class="cell"></div><div class="cell"></div>
+          </div>
+          <div class="legend-row">
+            <span>Less</span>
+            <div class="legend-scale">
+              <span class="sw" style="background:#FAF8F5;border:1px solid #DDD8D2"></span>
+              <span class="sw" style="background:#DFF2E5"></span>
+              <span class="sw" style="background:#9CDDB8"></span>
+              <span class="sw" style="background:#34D399"></span>
+              <span class="sw" style="background:#059669"></span>
+            </div>
+            <span>More</span>
+          </div>
+        </div>
+      </div>
+      <div class="section-hairline"></div>
+
+      <!-- STRENGTH -->
+      <div class="section" id="sec-strength">
+        <div class="section-label">Habit Strength</div>
+        <h2>You're nearly automatic</h2>
+        <div class="panel">
+          <div class="strength-head">
+            <div class="strength-val">72%</div>
+            <div class="strength-stage">Stage: <b>Strong</b></div>
+          </div>
+          <div class="strength-bar"><div class="fill"></div></div>
+          <div class="stage-markers">
+            <span>Start</span><span>Develop</span><span>Build</span><span class="on">Strong</span><span>Auto</span>
+          </div>
+          <p class="strength-note"><b>8% to go</b> until "Automatic" — the phase where this habit runs on autopilot. Keep showing up ~4 more days to cross the threshold.</p>
+        </div>
+        <div class="panel" style="margin-top:10px;">
+          <div class="section-title">Past 14 days</div>
+          <div style="display:flex;align-items:flex-end;gap:4px;height:60px;margin-top:8px;">
+            <div style="flex:1;height:40%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:55%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:45%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:60%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:70%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:65%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:30%;background:var(--forest-100);border-radius:3px;border:1px solid var(--forest-300);"></div>
+            <div style="flex:1;height:72%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:75%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:80%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:78%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:82%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:85%;background:var(--forest-600);border-radius:3px;"></div>
+            <div style="flex:1;height:90%;background:var(--forest-600);border-radius:3px;"></div>
+          </div>
+          <p style="margin:10px 0 0;font-size:12px;color:var(--text-muted);">Trend: ↗ <b style="color:var(--forest-700)">+14%</b> over prior 14 days</p>
+        </div>
+      </div>
+      <div class="section-hairline"></div>
+
+      <!-- GOAL -->
+      <div class="section" id="sec-goal">
+        <div class="section-label">Goal</div>
+        <h2>21 of 30 days complete</h2>
+        <div class="goal-hero">
+          <div class="ring">
+            <svg width="72" height="72" viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="30" stroke="#DDD8D2" stroke-width="6" fill="none" />
+              <circle cx="36" cy="36" r="30" stroke="#059669" stroke-width="6" fill="none"
+                stroke-dasharray="188.4" stroke-dashoffset="56.52" stroke-linecap="round" />
+            </svg>
+            <div class="ring-label">70%</div>
+          </div>
+          <div class="goal-text">
+            <div class="goal-big">On track to finish</div>
+            <div class="goal-sub">9 days remaining · by April 30, 2026</div>
+          </div>
+        </div>
+        <div class="milestone done">
+          <div class="icon"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+          <div><b>7-day streak</b> unlocked · 15 days ago</div>
+        </div>
+        <div class="milestone done">
+          <div class="icon"><i data-lucide="check" style="width:14px;height:14px;"></i></div>
+          <div><b>14-day streak</b> unlocked · 8 days ago</div>
+        </div>
+        <div class="milestone">
+          <div class="icon"><i data-lucide="target" style="width:14px;height:14px;"></i></div>
+          <div><b>21-day streak</b> · 2 days to go</div>
+        </div>
+        <div class="milestone">
+          <div class="icon"><i data-lucide="trophy" style="width:14px;height:14px;"></i></div>
+          <div><b>30-day goal</b> · 9 days to go</div>
+        </div>
+      </div>
+      <div style="height: 60px"></div>
+    </div>
+
+    <div class="caption" style="border-color: rgba(5,150,105,0.25); background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(209,250,229,0.3));">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-size:11px;font-weight:800;letter-spacing:1.4px;color:var(--forest-700);background:var(--forest-100);padding:3px 9px;border-radius:999px;">★ RECOMMENDED</span>
+        <span style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:0.6px;">MONETIZATION-OPTIMIZED</span>
+      </div>
+      <h3>Fusion — Scrollspy + Underline</h3>
+      <p>08's information architecture with 02's premium aesthetic. Everything the user cares about — streak calendar, strength curve, goal ring, milestone ladder — lives in one continuous scroll. Tabs are a shortcut, not a gatekeeper.</p>
+      <p style="margin-top:8px;"><b style="color:var(--forest-700);">Why this drives monetization:</b></p>
+      <p style="margin:2px 0 0;">
+        <b>Stickiness:</b> 3× progress surfaces per session vs. tabs-hiding-2-of-3. More dopamine = lower D30 churn (Strava/Duolingo playbook).<br>
+        <b>Premium quality:</b> The sparse underline + dense KPI panels read Things 3 / Linear / Readwise — apps that convert 3–5× at higher price points.<br>
+        <b>Shareability:</b> Long vertical screenshots showing calendar + strength + milestones = brag-worthy social posts = organic growth.<br>
+        <b>Upsell impressions:</b> Advanced strength analytics and longer history naturally appear in scroll — premium gates feel like content, not walls.
+      </p>
+      <p style="margin-top:10px;"><span class="tag">★ Highest leverage</span><span class="tag">All 3 monetization levers</span><span class="tag">Biggest build</span></p>
+      <p style="margin-top:6px;font-size:12px;color:var(--text-muted);">Try it — scroll inside the phone frame. Watch the hero collapse and the underline track your position.</p>
+    </div>
+  </div>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+    const frame = document.getElementById('frame');
+    const sticky = document.getElementById('sticky');
+    const tabs = document.querySelectorAll('#tabs .tab');
+    const indicator = document.querySelector('#tabs .indicator');
+    const container = document.getElementById('tabs');
+    const sections = [...tabs].map(t => document.getElementById(t.dataset.target));
+
+    function move(tab) {
+      const base = container.firstElementChild.offsetLeft;
+      indicator.style.width = tab.offsetWidth + 'px';
+      indicator.style.transform = `translateX(${tab.offsetLeft - base}px)`;
+    }
+    requestAnimationFrame(() => move(tabs[0]));
+
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.dataset.active = 'false');
+      t.dataset.active = 'true';
+      move(t);
+      document.getElementById(t.dataset.target).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
+
+    let ticking = false;
+    frame.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        sticky.dataset.pinned = frame.scrollTop > 120 ? 'true' : 'false';
+        const top = frame.scrollTop + 80;
+        let active = 0;
+        sections.forEach((s, i) => { if (s.offsetTop <= top) active = i; });
+        if (tabs[active].dataset.active !== 'true') {
+          tabs.forEach(x => x.dataset.active = 'false');
+          tabs[active].dataset.active = 'true';
+          move(tabs[active]);
+        }
+        ticking = false;
+      });
+    });
+  </script>
+</body>
+</html>

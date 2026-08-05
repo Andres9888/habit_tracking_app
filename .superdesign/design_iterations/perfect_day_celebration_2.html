@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Day Celebration v2 — Balanced</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 40px 20px 60px;
+        color: #e0e0e0;
+      }
+
+      h1 {
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-bottom: 8px !important;
+        letter-spacing: -0.5px;
+      }
+      .subtitle {
+        font-size: 15px;
+        color: #8b8b9e;
+        margin-bottom: 36px;
+        text-align: center;
+        max-width: 620px;
+        line-height: 1.6;
+      }
+
+      .comparison {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 48px;
+      }
+
+      .phone-frame {
+        width: 375px;
+        border-radius: 40px;
+        overflow: hidden;
+        background: #f5f1ed;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      .phone-frame.celebration {
+        box-shadow:
+          0 20px 60px rgba(16, 185, 129, 0.2),
+          0 0 80px rgba(16, 185, 129, 0.06);
+      }
+
+      .phone-label {
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #8b8b9e;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+      .phone-label.celebrate {
+        color: #10b981;
+      }
+
+      /* ─── Status bar ─── */
+      .status-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 24px 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+
+      /* ─── Shelf ─── */
+      .shelf {
+        background: #f0ede8;
+        padding: 12px 16px 14px;
+        border-bottom-left-radius: 16px;
+        border-bottom-right-radius: 16px;
+      }
+
+      /* ─── Header greeting ─── */
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .greeting {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.3px;
+      }
+      .greeting-celebrate {
+        font-size: 16px;
+        font-weight: 600;
+        color: #10b981;
+        letter-spacing: -0.3px;
+      }
+      .progress-text {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+      .progress-partial {
+        color: #10b981;
+      }
+      .progress-done {
+        color: #10b981;
+      }
+
+      /* ─── Nav row — left-aligned ─── */
+      .nav-row {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 3px;
+      }
+      .nav-arrow {
+        font-size: 10px;
+        color: #9c9890;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .nav-arrow.disabled {
+        opacity: 0.3;
+      }
+      .nav-date {
+        font-size: 12px;
+        font-weight: 500;
+        color: #9c9890;
+      }
+
+      /* ─── StripNav — chevrons centered on day-number circles ─── */
+      .strip-nav {
+        position: relative;
+        margin-top: 10px;
+      }
+      .strip-chevron {
+        position: absolute;
+        top: 35px; /* vertically centered on 32px day-number circle (4+14+6+16-5) */
+        opacity: 0.3;
+        z-index: 2;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+      }
+      .strip-chevron.left {
+        left: -2px;
+        animation: nudgeLeft 3s ease-in-out infinite;
+      }
+      .strip-chevron.right {
+        right: -2px;
+        animation: nudgeRight 3s ease-in-out infinite;
+      }
+      .strip-chevron svg {
+        width: 10px;
+        height: 10px;
+        stroke: #c5bfb5;
+        stroke-width: 2.5;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      @keyframes nudgeLeft {
+        0%,
+        70%,
+        100% {
+          transform: translateX(0);
+          opacity: 0.3;
+        }
+        80% {
+          transform: translateX(-3px);
+          opacity: 0.5;
+        }
+        90% {
+          transform: translateX(0);
+          opacity: 0.3;
+        }
+      }
+      @keyframes nudgeRight {
+        0%,
+        70%,
+        100% {
+          transform: translateX(0);
+          opacity: 0.3;
+        }
+        80% {
+          transform: translateX(3px);
+          opacity: 0.5;
+        }
+        90% {
+          transform: translateX(0);
+          opacity: 0.3;
+        }
+      }
+
+      /* ─── Day strip ─── */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+      }
+      .day-cell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 0 2px;
+      }
+      .day-label {
+        font-size: 10px;
+        font-weight: 500;
+        color: #9c9890;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .day-label.today {
+        color: #2d2a26;
+        font-weight: 700;
+      }
+      .day-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .day-number.today-circle {
+        background: #2d2a26;
+        color: #fff;
+      }
+      .day-number.today-celebrate {
+        background: #10b981;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+      }
+      .day-number.future {
+        color: #c5bfb5;
+      }
+      .day-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        margin-top: -2px;
+      }
+      .day-dot.complete {
+        background: #10b981;
+      }
+      .day-dot.complete-glow {
+        background: #10b981;
+        width: 8px;
+        height: 8px;
+        box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+      }
+      .day-dot.partial {
+        background: #fcd34d;
+      }
+      .day-dot.empty,
+      .day-dot.future-dot {
+        background: transparent;
+      }
+
+      /* ─── Streak connector ─── */
+      .streak-bar {
+        position: absolute;
+        height: 3px;
+        background: rgba(16, 185, 129, 0.25);
+        border-radius: 1.5px;
+        top: 36px;
+        z-index: 0;
+      }
+
+      /* ─── Habit cards ─── */
+      .habits-area {
+        padding: 12px 16px 120px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .habit-card {
+        background: #edeae5;
+        border: 1px solid #e5e2de;
+        border-radius: 16px;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .habit-card.checked {
+        border-color: #e5e2de;
+      }
+      .habit-card.celebrate-card {
+        border-color: #e5e2de;
+        /* No glow — only the toggle changes, keeping card hierarchy clean */
+      }
+      .habit-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .habit-emoji {
+        font-size: 22px;
+      }
+      .habit-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d2a26;
+        letter-spacing: -0.2px;
+      }
+      .habit-streak {
+        font-size: 11px;
+        color: #9c9890;
+        margin-top: 1px;
+      }
+      .habit-toggle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid #d5d0ca;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: transparent;
+      }
+      .habit-toggle.done {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+      }
+      .habit-toggle.done-celebrate {
+        background: #10b981;
+        border-color: #10b981;
+        color: #fff;
+        box-shadow: 0 0 6px rgba(16, 185, 129, 0.25);
+      }
+
+      /* ─── Bottom bar ─── */
+      .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 22px 34px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        background: linear-gradient(
+          to top,
+          rgba(245, 241, 237, 0.98) 60%,
+          rgba(245, 241, 237, 0) 100%
+        );
+        border-top: 1px solid rgba(221, 216, 210, 0.45);
+        backdrop-filter: blur(40px);
+      }
+      .pill-btn {
+        height: 38px;
+        border-radius: 12px;
+        border: 1px solid rgba(221, 216, 210, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 0 14px;
+        font-size: 13px;
+        font-weight: 600;
+        min-width: 112px;
+        backdrop-filter: blur(12px);
+      }
+      .pill-ghost {
+        background: rgba(245, 241, 237, 0.6);
+        color: #6b6560;
+      }
+      .pill-gold {
+        background: rgba(252, 211, 77, 0.12);
+        border-color: rgba(252, 211, 77, 0.25);
+        color: #92400e;
+      }
+      .pill-gold.celebrate-pulse {
+        animation: goldPulse 2.5s ease-in-out infinite;
+      }
+      @keyframes goldPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(252, 211, 77, 0);
+        }
+        50% {
+          box-shadow: 0 0 10px 1px rgba(252, 211, 77, 0.2);
+        }
+      }
+      .bar-left,
+      .bar-right {
+        flex: 1;
+        margin-top: -9px;
+      }
+      .bar-left {
+        display: flex;
+        justify-content: flex-start;
+      }
+      .bar-right {
+        display: flex;
+        justify-content: flex-end;
+      }
+      .bar-center {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        overflow: visible;
+      }
+
+      /* ─── FAB ─── */
+      .fab-container {
+        margin-top: -24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .fab-ring {
+        width: 68px;
+        height: 68px;
+        position: relative;
+      }
+      .fab-ring svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      .fab-button {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #10b981;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2.5px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+      .fab-button.celebrate-fab {
+        box-shadow:
+          0 4px 14px rgba(16, 185, 129, 0.4),
+          0 0 20px rgba(16, 185, 129, 0.1);
+      }
+      .fab-icon {
+        color: #fff;
+        font-size: 24px;
+        font-weight: 300;
+      }
+      .fab-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: #9c9890;
+        margin-top: 4px;
+        letter-spacing: -0.1px;
+      }
+      .fab-label.celebrate-label {
+        color: #10b981;
+      }
+
+      /* ─── Confetti — one-time burst only ─── */
+      .confetti-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        overflow: hidden;
+        border-radius: 40px;
+      }
+      .confetti-particle {
+        position: absolute;
+        border-radius: 50%;
+        animation: confettiFall 2.5s ease-out forwards;
+        opacity: 0;
+      }
+      @keyframes confettiFall {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px) rotate(0deg) scale(0);
+        }
+        10% {
+          opacity: 0.7;
+          transform: translateY(10px) rotate(45deg) scale(1);
+        }
+        70% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(420px) rotate(540deg) scale(0.6);
+        }
+      }
+
+      /* ─── Details ─── */
+      .details-section {
+        max-width: 800px;
+        width: 100%;
+        margin-top: 16px;
+      }
+      .detail-title {
+        font-size: 20px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin-bottom: 16px !important;
+      }
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+      @media (max-width: 700px) {
+        .detail-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .detail-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 16px;
+      }
+      .detail-card h3 {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #10b981 !important;
+        margin-bottom: 6px !important;
+      }
+      .detail-card p {
+        font-size: 13px !important;
+        color: #8b8b9e !important;
+        line-height: 1.5 !important;
+      }
+
+      .fix-note {
+        background: rgba(251, 191, 36, 0.06);
+        border: 1px solid rgba(251, 191, 36, 0.15);
+        border-radius: 12px;
+        padding: 18px;
+        font-size: 14px;
+        color: #8b8b9e;
+        line-height: 1.6;
+        margin-bottom: 32px;
+      }
+      .fix-note strong {
+        color: #fbbf24;
+      }
+      .fix-note .fixed {
+        color: #10b981;
+      }
+
+      .trigger-note {
+        background: rgba(16, 185, 129, 0.06);
+        border: 1px solid rgba(16, 185, 129, 0.15);
+        border-radius: 12px;
+        padding: 18px;
+        font-size: 14px;
+        color: #8b8b9e;
+        line-height: 1.6;
+        margin-bottom: 32px;
+      }
+      .trigger-note strong {
+        color: #10b981;
+      }
+      .trigger-note code {
+        background: rgba(255, 255, 255, 0.06);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        color: #d0ccc6;
+      }
+
+      .flow-diagram {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        padding: 20px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        color: #8b8b9e;
+        line-height: 2;
+        white-space: pre;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Perfect Day Celebration v2</h1>
+    <p class="subtitle">
+      Balanced revision — fewer simultaneous effects, correct StripNav behavior,
+      symmetric header weight, and clean card hierarchy.
+    </p>
+
+    <div class="comparison">
+      <!-- ═══ NORMAL STATE ═══ -->
+      <div>
+        <div class="phone-label">Normal — 3 of 5</div>
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span>2:47 PM</span>
+            <span>●●● 📶 🔋</span>
+          </div>
+
+          <div class="shelf">
+            <div class="header-row">
+              <span class="greeting">Good afternoon</span>
+              <span class="progress-text progress-partial">3 of 5</span>
+            </div>
+            <div class="nav-row">
+              <span class="nav-arrow">‹</span>
+              <span class="nav-date">Wed, February 26</span>
+              <span class="nav-arrow disabled">›</span>
+            </div>
+
+            <div class="strip-nav">
+              <!-- Left chevron — always visible (swipe hint) -->
+              <div class="strip-chevron left">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </div>
+              <!-- No right chevron — at current week, canNavigateForward=false -->
+              <div class="day-strip" style="position: relative">
+                <div class="day-cell">
+                  <span class="day-label">M</span>
+                  <div class="day-number">24</div>
+                  <div class="day-dot complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-number">25</div>
+                  <div class="day-dot partial"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label today">W</span>
+                  <div class="day-number today-circle">26</div>
+                  <div class="day-dot partial"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-number future">27</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">F</span>
+                  <div class="day-number future">28</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-number future">1</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-number future">2</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="habits-area">
+            <div class="habit-card checked">
+              <div class="habit-left">
+                <span class="habit-emoji">🧘</span>
+                <div>
+                  <div class="habit-name">Meditate</div>
+                  <div class="habit-streak">🔥 12 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done">✓</div>
+            </div>
+            <div class="habit-card checked">
+              <div class="habit-left">
+                <span class="habit-emoji">📖</span>
+                <div>
+                  <div class="habit-name">Read 20 pages</div>
+                  <div class="habit-streak">🔥 8 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done">✓</div>
+            </div>
+            <div class="habit-card checked">
+              <div class="habit-left">
+                <span class="habit-emoji">💪</span>
+                <div>
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-streak">🔥 5 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done">✓</div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-left">
+                <span class="habit-emoji">✍️</span>
+                <div>
+                  <div class="habit-name">Journal</div>
+                  <div class="habit-streak">🔥 3 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle"></div>
+            </div>
+            <div class="habit-card">
+              <div class="habit-left">
+                <span class="habit-emoji">💧</span>
+                <div>
+                  <div class="habit-name">Drink 8 glasses</div>
+                  <div class="habit-streak">🔥 1 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle"></div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="bar-left">
+              <div class="pill-btn pill-ghost">
+                <span style="font-size: 14px">⚙️</span> Settings
+              </div>
+            </div>
+            <div class="bar-center">
+              <div class="fab-container">
+                <div class="fab-ring">
+                  <svg width="68" height="68" viewBox="0 0 68 68">
+                    <circle
+                      cx="34"
+                      cy="34"
+                      r="30"
+                      fill="none"
+                      stroke="#EDEAE5"
+                      stroke-width="3.5"
+                    />
+                    <circle
+                      cx="34"
+                      cy="34"
+                      r="30"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="3.5"
+                      stroke-dasharray="188.5"
+                      stroke-dashoffset="75"
+                      stroke-linecap="round"
+                      transform="rotate(-90 34 34)"
+                    />
+                  </svg>
+                  <div class="fab-button"><span class="fab-icon">+</span></div>
+                </div>
+                <span class="fab-label"
+                  ><strong style="color: #10b981; font-size: 12px">3</strong> of
+                  5</span
+                >
+              </div>
+            </div>
+            <div class="bar-right">
+              <div class="pill-btn pill-gold">
+                <span style="font-size: 14px">✨</span> Inspire
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ CELEBRATION STATE — BALANCED ═══ -->
+      <div>
+        <div class="phone-label celebrate">Perfect Day — 5 of 5</div>
+        <div class="phone-frame celebration">
+          <!-- Confetti — plays once, NOT infinite -->
+          <div class="confetti-overlay">
+            <div
+              class="confetti-particle"
+              style="
+                left: 15%;
+                top: -8px;
+                background: #10b981;
+                width: 5px;
+                height: 5px;
+                animation-delay: 0s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 30%;
+                top: -8px;
+                background: #fcd34d;
+                width: 4px;
+                height: 7px;
+                border-radius: 2px;
+                animation-delay: 0.15s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 48%;
+                top: -8px;
+                background: #34d399;
+                width: 5px;
+                height: 5px;
+                animation-delay: 0.3s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 65%;
+                top: -8px;
+                background: #fbbf24;
+                width: 4px;
+                height: 6px;
+                border-radius: 2px;
+                animation-delay: 0.45s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 80%;
+                top: -8px;
+                background: #10b981;
+                width: 5px;
+                height: 5px;
+                animation-delay: 0.6s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 22%;
+                top: -8px;
+                background: #6ee7b7;
+                width: 4px;
+                height: 4px;
+                animation-delay: 0.75s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 55%;
+                top: -8px;
+                background: #fcd34d;
+                width: 5px;
+                height: 5px;
+                animation-delay: 0.1s;
+              "
+            ></div>
+            <div
+              class="confetti-particle"
+              style="
+                left: 72%;
+                top: -8px;
+                background: #34d399;
+                width: 4px;
+                height: 6px;
+                border-radius: 2px;
+                animation-delay: 0.5s;
+              "
+            ></div>
+          </div>
+
+          <!-- NO shimmer sweep — removed to reduce visual noise -->
+
+          <div class="status-bar">
+            <span>2:47 PM</span>
+            <span>●●● 📶 🔋</span>
+          </div>
+
+          <div class="shelf">
+            <div class="header-row">
+              <!-- No emoji — matches right-side weight -->
+              <span class="greeting-celebrate">Perfect day</span>
+              <span class="progress-text progress-done">All done!</span>
+            </div>
+            <div class="nav-row">
+              <span class="nav-arrow">‹</span>
+              <span class="nav-date">Wed, February 26</span>
+              <span class="nav-arrow disabled">›</span>
+            </div>
+
+            <div class="strip-nav">
+              <!-- Left chevron — always visible -->
+              <div class="strip-chevron left">
+                <svg viewBox="0 0 24 24">
+                  <polyline points="15 18 9 12 15 6" />
+                </svg>
+              </div>
+              <!-- No right chevron — at current week -->
+              <div class="day-strip" style="position: relative">
+                <!-- Streak connector bar behind Mon-Tue (both completed days) -->
+                <!-- Mon and today (Wed) are complete; Tue is partial -->
+                <div class="day-cell">
+                  <span class="day-label">M</span>
+                  <div class="day-number">24</div>
+                  <div class="day-dot complete"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-number">25</div>
+                  <div class="day-dot partial"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label today">W</span>
+                  <div class="day-number today-celebrate">26</div>
+                  <div class="day-dot complete-glow"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">T</span>
+                  <div class="day-number future">27</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">F</span>
+                  <div class="day-number future">28</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-number future">1</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+                <div class="day-cell">
+                  <span class="day-label">S</span>
+                  <div class="day-number future">2</div>
+                  <div class="day-dot future-dot"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="habits-area">
+            <!-- Cards keep normal borders — NO emerald glow wall.
+             The celebration shows through toggles + greeting + day cell only. -->
+            <div class="habit-card celebrate-card">
+              <div class="habit-left">
+                <span class="habit-emoji">🧘</span>
+                <div>
+                  <div class="habit-name">Meditate</div>
+                  <div class="habit-streak">🔥 12 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done-celebrate">✓</div>
+            </div>
+            <div class="habit-card celebrate-card">
+              <div class="habit-left">
+                <span class="habit-emoji">📖</span>
+                <div>
+                  <div class="habit-name">Read 20 pages</div>
+                  <div class="habit-streak">🔥 8 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done-celebrate">✓</div>
+            </div>
+            <div class="habit-card celebrate-card">
+              <div class="habit-left">
+                <span class="habit-emoji">💪</span>
+                <div>
+                  <div class="habit-name">Exercise</div>
+                  <div class="habit-streak">🔥 5 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done-celebrate">✓</div>
+            </div>
+            <div class="habit-card celebrate-card">
+              <div class="habit-left">
+                <span class="habit-emoji">✍️</span>
+                <div>
+                  <div class="habit-name">Journal</div>
+                  <div class="habit-streak">🔥 4 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done-celebrate">✓</div>
+            </div>
+            <div class="habit-card celebrate-card">
+              <div class="habit-left">
+                <span class="habit-emoji">💧</span>
+                <div>
+                  <div class="habit-name">Drink 8 glasses</div>
+                  <div class="habit-streak">🔥 2 day streak</div>
+                </div>
+              </div>
+              <div class="habit-toggle done-celebrate">✓</div>
+            </div>
+          </div>
+
+          <div class="bottom-bar">
+            <div class="bar-left">
+              <div class="pill-btn pill-ghost">
+                <span style="font-size: 14px">⚙️</span> Settings
+              </div>
+            </div>
+            <div class="bar-center">
+              <div class="fab-container">
+                <div class="fab-ring">
+                  <svg width="68" height="68" viewBox="0 0 68 68">
+                    <circle
+                      cx="34"
+                      cy="34"
+                      r="30"
+                      fill="none"
+                      stroke="#EDEAE5"
+                      stroke-width="3.5"
+                    />
+                    <circle
+                      cx="34"
+                      cy="34"
+                      r="30"
+                      fill="none"
+                      stroke="#10B981"
+                      stroke-width="3.5"
+                      stroke-dasharray="188.5"
+                      stroke-dashoffset="0"
+                      stroke-linecap="round"
+                      transform="rotate(-90 34 34)"
+                      style="
+                        filter: drop-shadow(0 0 3px rgba(16, 185, 129, 0.4));
+                      "
+                    />
+                  </svg>
+                  <div class="fab-button celebrate-fab">
+                    <span class="fab-icon" style="font-weight: bold">✓</span>
+                  </div>
+                </div>
+                <span class="fab-label celebrate-label">All done!</span>
+              </div>
+            </div>
+            <div class="bar-right">
+              <div class="pill-btn pill-gold celebrate-pulse">
+                <span style="font-size: 14px">✨</span> Inspire
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── What Changed v1 → v2 ─── -->
+    <div class="details-section">
+      <div class="detail-title">Balance Fixes (v1 → v2)</div>
+
+      <div class="fix-note">
+        <strong>5 issues fixed:</strong><br /><br />
+        1. <span class="fixed">StripNav</span> — Removed right chevron on
+        celebration (current week = no forward nav)<br />
+        2. <span class="fixed">Header weight</span> — Dropped the ✨ emoji from
+        "Perfect day" so left/right text weight matches<br />
+        3. <span class="fixed">Card glow removed</span> — Cards keep normal
+        borders. Celebration shows through toggles only (subtle glow on
+        checkmarks). No wall-of-green effect.<br />
+        4. <span class="fixed">Shimmer sweep removed</span> — Confetti plays
+        once on transition (2.5s, not infinite). No persistent overlay after the
+        burst.<br />
+        5. <span class="fixed">Inspire pulse softened</span> — Reduced glow
+        radius & opacity to avoid pulling asymmetric attention to bottom-right.
+      </div>
+
+      <div class="detail-title">Celebration Layers (Reduced from 4 → 3)</div>
+
+      <div class="detail-grid">
+        <div class="detail-card">
+          <h3>Layer 1: Text State</h3>
+          <p>
+            "Good afternoon" → "Perfect day" (emerald)<br />
+            "3 of 5" → "All done!" (emerald)<br />
+            FAB label: "3 of 5" → "All done!"<br />
+            <strong style="color: #fff">Persistent while all done.</strong>
+          </p>
+        </div>
+        <div class="detail-card">
+          <h3>Layer 2: Visual Accents</h3>
+          <p>
+            Today cell: dark → emerald with glow<br />
+            Today dot: 5px → 8px with glow<br />
+            Ring: fills 100%, + → ✓<br />
+            Toggles: subtle emerald glow<br />
+            <strong style="color: #fff">Persistent while all done.</strong>
+          </p>
+        </div>
+        <div class="detail-card">
+          <h3>Layer 3: One-Time Burst</h3>
+          <p>
+            Confetti: 8 particles, 2.5s, plays once<br />
+            Haptic: success pattern, fires once<br />
+            <strong style="color: #fff">Fires on transition only.</strong>
+          </p>
+        </div>
+        <div class="detail-card">
+          <h3>Removed Layers</h3>
+          <p>
+            <s style="color: #555">Shimmer sweep (continuous)</s><br />
+            <s style="color: #555">Card border glow (all cards)</s><br />
+            <s style="color: #555">Header emoji (✨)</s><br />
+            These caused visual noise and weight imbalance.
+          </p>
+        </div>
+      </div>
+
+      <div class="trigger-note">
+        <strong>Trigger:</strong>
+        <code>completedToday === totalHabits && totalHabits > 0</code><br />
+        <strong>Existing hook:</strong> <code>getProgressText()</code> in
+        ProgressGreeting already returns "All done!" for this state.<br />
+        <strong>Reversal:</strong> Unchecking any habit → all effects fade out
+        (200ms), text reverts to normal greeting + progress count.
+      </div>
+
+      <div class="detail-title">Animation Timeline</div>
+      <div class="flow-diagram">
+        Last habit checked │ ├─ 0ms ─── Haptic: success pattern (one-shot) ├─
+        0ms ─── FAB ring fills → 100%, + → ✓ (150ms spring) ├─ 50ms ── Greeting
+        fades: "Good afternoon" → "Perfect day" (200ms) ├─ 50ms ── Progress
+        fades: "4 of 5" → "All done!" (200ms) ├─ 100ms ─ Today cell: dark →
+        emerald (200ms, dot grows to 8px) ├─ 100ms ─ Toggle glows fade in
+        (200ms, stagger 50ms per card) └─ 150ms ─ Confetti burst: 8 particles,
+        2.5s, plays ONCE Inspire pill pulse starts at 500ms (subtle, continuous)
+        Habit unchecked → all persistent effects reverse (200ms fade)
+      </div>
+    </div>
+  </body>
+</html>

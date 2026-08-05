@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habits Header - Fresh Ideas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: linear-gradient(135deg, #fef3e2 0%, #fef9f3 50%, #f5f0ff 100%); }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+
+  <div class="max-w-md mx-auto space-y-16">
+
+    <!-- ============================================ -->
+    <!-- IDEA 1: Floating Action Button + Minimal Header -->
+    <!-- ============================================ -->
+    <div class="space-y-3">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="px-2 py-0.5 bg-violet-100 text-violet-700 text-xs font-semibold rounded-full">IDEA 1</span>
+        <span class="text-xs font-medium text-stone-600">FAB + Minimal Header</span>
+      </div>
+
+      <!-- Phone Frame -->
+      <div class="bg-stone-900 rounded-[3rem] p-3 shadow-2xl">
+        <div class="bg-white rounded-[2.25rem] overflow-hidden relative" style="height: 600px;">
+          <!-- Status Bar -->
+          <div class="h-12 bg-gradient-to-b from-amber-50/80 to-transparent flex items-center justify-between px-8 pt-2">
+            <span class="text-xs font-medium text-stone-800">9:41</span>
+            <div class="flex gap-1">
+              <div class="w-4 h-2 bg-stone-800 rounded-sm"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="px-5 pt-2" style="background: linear-gradient(180deg, #fffbf5 0%, #fef7ee 100%);">
+
+            <!-- Minimal Header - Just title + overflow -->
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h1 class="text-2xl font-bold text-stone-900">My Habits</h1>
+                <p class="text-sm text-stone-500">3 of 5 complete today</p>
+              </div>
+              <button class="h-10 w-10 flex items-center justify-center rounded-full bg-white border border-stone-200 shadow-sm">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#44403c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="1"></circle>
+                  <circle cx="12" cy="5" r="1"></circle>
+                  <circle cx="12" cy="19" r="1"></circle>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden mb-5">
+              <div class="h-full w-3/5 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"></div>
+            </div>
+
+            <!-- Week Calendar -->
+            <div class="flex justify-between mb-5 px-1">
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">M</div>
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">T</div>
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">W</div>
+                <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">T</div>
+                <div class="w-8 h-8 rounded-full bg-stone-800 flex items-center justify-center">
+                  <span class="text-[11px] font-semibold text-white">27</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">F</div>
+                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <span class="text-[11px] text-stone-400">28</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">S</div>
+                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <span class="text-[11px] text-stone-400">29</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">S</div>
+                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <span class="text-[11px] text-stone-400">30</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Cards -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <span class="text-lg">🧘</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Morning meditation</div>
+                      <div class="text-xs text-stone-400">12 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span class="text-lg">💧</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Drink water</div>
+                      <div class="text-xs text-stone-400">8 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full border-2 border-stone-200"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAB -->
+          <button class="absolute bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+                  style="background: linear-gradient(135deg, #101828 0%, #1a2332 100%);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="text-xs text-stone-600 pl-2 space-y-1">
+        <div>✓ Ultra-clean header with just title + menu</div>
+        <div>✓ FAB is thumb-friendly at bottom right</div>
+        <div>✓ Menu contains: Templates, Sort, Settings</div>
+        <div>✓ More vertical space for habits list</div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- IDEA 2: Segmented Sort Control -->
+    <!-- ============================================ -->
+    <div class="space-y-3">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-xs font-semibold rounded-full">IDEA 2</span>
+        <span class="text-xs font-medium text-stone-600">Inline Segmented Sort</span>
+      </div>
+
+      <!-- Phone Frame -->
+      <div class="bg-stone-900 rounded-[3rem] p-3 shadow-2xl">
+        <div class="bg-white rounded-[2.25rem] overflow-hidden relative" style="height: 580px;">
+          <!-- Status Bar -->
+          <div class="h-12 bg-gradient-to-b from-amber-50/80 to-transparent flex items-center justify-between px-8 pt-2">
+            <span class="text-xs font-medium text-stone-800">9:41</span>
+            <div class="flex gap-1">
+              <div class="w-4 h-2 bg-stone-800 rounded-sm"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="px-5 pt-2" style="background: linear-gradient(180deg, #fffbf5 0%, #fef7ee 100%);">
+
+            <!-- Header Row -->
+            <div class="flex items-center justify-between mb-3">
+              <button class="h-12 px-5 flex items-center gap-2 rounded-full text-white text-[15px] font-normal"
+                      style="background: linear-gradient(135deg, #101828 0%, #1a2332 100%); box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add Habit
+              </button>
+
+              <div class="flex gap-2">
+                <button class="h-10 w-10 flex items-center justify-center rounded-full border border-violet-200 bg-violet-50/70">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                </button>
+                <button class="h-10 w-10 flex items-center justify-center rounded-full border border-stone-200 bg-white/60">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#44403c" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden mb-4">
+              <div class="h-full w-3/5 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"></div>
+            </div>
+
+            <!-- Segmented Sort Control -->
+            <div class="flex bg-stone-100 rounded-xl p-1 mb-4">
+              <button class="flex-1 py-2 px-3 text-xs font-medium text-stone-400 rounded-lg">
+                Manual
+              </button>
+              <button class="flex-1 py-2 px-3 text-xs font-semibold text-stone-800 bg-white rounded-lg shadow-sm">
+                Strength
+              </button>
+              <button class="flex-1 py-2 px-3 text-xs font-medium text-stone-400 rounded-lg">
+                Streak
+              </button>
+              <button class="flex-1 py-2 px-3 text-xs font-medium text-stone-400 rounded-lg">
+                Time
+              </button>
+            </div>
+
+            <!-- Habit Cards -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <span class="text-lg">🧘</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Morning meditation</div>
+                      <div class="text-xs text-emerald-600 font-medium">92% strength</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span class="text-lg">💧</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Drink water</div>
+                      <div class="text-xs text-amber-600 font-medium">78% strength</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full border-2 border-stone-200"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-xs text-stone-600 pl-2 space-y-1">
+        <div>✓ One-tap sort switching (no bottom sheet)</div>
+        <div>✓ Always visible current sort mode</div>
+        <div>✓ Sort removed from icon buttons → cleaner</div>
+        <div>○ Takes vertical space</div>
+        <div>○ Only fits 4 sort options</div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- IDEA 3: Bottom Action Bar -->
+    <!-- ============================================ -->
+    <div class="space-y-3">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">IDEA 3</span>
+        <span class="text-xs font-medium text-stone-600">Bottom Action Bar</span>
+      </div>
+
+      <!-- Phone Frame -->
+      <div class="bg-stone-900 rounded-[3rem] p-3 shadow-2xl">
+        <div class="bg-white rounded-[2.25rem] overflow-hidden relative" style="height: 600px;">
+          <!-- Status Bar -->
+          <div class="h-12 bg-gradient-to-b from-amber-50/80 to-transparent flex items-center justify-between px-8 pt-2">
+            <span class="text-xs font-medium text-stone-800">9:41</span>
+            <div class="flex gap-1">
+              <div class="w-4 h-2 bg-stone-800 rounded-sm"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="px-5 pt-2" style="background: linear-gradient(180deg, #fffbf5 0%, #fef7ee 100%);">
+
+            <!-- Clean Header - Just progress -->
+            <div class="mb-2">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-stone-600">Today's progress</span>
+                <span class="text-sm font-bold text-stone-800">3/5</span>
+              </div>
+              <div class="h-2.5 bg-stone-100 rounded-full overflow-hidden">
+                <div class="h-full w-3/5 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- Week Calendar -->
+            <div class="flex justify-between mb-4 px-1">
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">M</div>
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">T</div>
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">W</div>
+                <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                  <div class="w-2 h-2 rounded-full bg-amber-500"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">T</div>
+                <div class="w-8 h-8 rounded-full bg-stone-800 flex items-center justify-center">
+                  <span class="text-[11px] font-semibold text-white">27</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">F</div>
+                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <span class="text-[11px] text-stone-400">28</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">S</div>
+                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <span class="text-[11px] text-stone-400">29</span>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-[10px] text-stone-400 mb-1">S</div>
+                <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center">
+                  <span class="text-[11px] text-stone-400">30</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Habit Cards -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <span class="text-lg">🧘</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Morning meditation</div>
+                      <div class="text-xs text-stone-400">12 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span class="text-lg">💧</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Drink water</div>
+                      <div class="text-xs text-stone-400">8 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full border-2 border-stone-200"></div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                      <span class="text-lg">📚</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Read 20 pages</div>
+                      <div class="text-xs text-stone-400">5 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Bar -->
+          <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-stone-100 px-6 py-3 pb-8 flex items-center justify-around">
+            <button class="flex flex-col items-center gap-1">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+              </svg>
+              <span class="text-[10px] font-medium text-violet-600">Templates</span>
+            </button>
+
+            <button class="flex flex-col items-center gap-1 -mt-6">
+              <div class="w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
+                   style="background: linear-gradient(135deg, #101828 0%, #1a2332 100%);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+              <span class="text-[10px] font-medium text-stone-800 mt-1">Add</span>
+            </button>
+
+            <button class="flex flex-col items-center gap-1">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#78716c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m3 16 4 4 4-4"></path>
+                <path d="M7 20V4"></path>
+                <path d="m21 8-4-4-4 4"></path>
+                <path d="M17 4v16"></path>
+              </svg>
+              <span class="text-[10px] font-medium text-stone-500">Sort</span>
+            </button>
+
+            <button class="flex flex-col items-center gap-1">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#78716c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <span class="text-[10px] font-medium text-stone-500">Settings</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-xs text-stone-600 pl-2 space-y-1">
+        <div>✓ iOS-native tab bar pattern</div>
+        <div>✓ Thumb-friendly (bottom of screen)</div>
+        <div>✓ Header is content-only (more space)</div>
+        <div>✓ Clear labels for each action</div>
+        <div>○ Takes bottom space permanently</div>
+        <div>○ More dramatic redesign</div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- IDEA 4: Smart Contextual Header -->
+    <!-- ============================================ -->
+    <div class="space-y-3">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-full">IDEA 4</span>
+        <span class="text-xs font-medium text-stone-600">Smart Greeting + Compact Icons</span>
+      </div>
+
+      <!-- Phone Frame -->
+      <div class="bg-stone-900 rounded-[3rem] p-3 shadow-2xl">
+        <div class="bg-white rounded-[2.25rem] overflow-hidden relative" style="height: 560px;">
+          <!-- Status Bar -->
+          <div class="h-12 bg-gradient-to-b from-amber-50/80 to-transparent flex items-center justify-between px-8 pt-2">
+            <span class="text-xs font-medium text-stone-800">9:41</span>
+            <div class="flex gap-1">
+              <div class="w-4 h-2 bg-stone-800 rounded-sm"></div>
+            </div>
+          </div>
+
+          <!-- Content -->
+          <div class="px-5 pt-2" style="background: linear-gradient(180deg, #fffbf5 0%, #fef7ee 100%);">
+
+            <!-- Smart Header -->
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <h1 class="text-xl font-bold text-stone-900">Good morning! ☀️</h1>
+                <p class="text-sm text-stone-500">3 of 5 habits complete</p>
+              </div>
+
+              <!-- Compact icon group -->
+              <div class="flex items-center bg-white/80 rounded-full border border-stone-200 p-1 gap-1">
+                <button class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                </button>
+                <div class="w-px h-4 bg-stone-200"></div>
+                <button class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#44403c" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m3 16 4 4 4-4"></path>
+                    <path d="M7 20V4"></path>
+                    <path d="m21 8-4-4-4 4"></path>
+                    <path d="M17 4v16"></path>
+                  </svg>
+                </button>
+                <div class="w-px h-4 bg-stone-200"></div>
+                <button class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-stone-100">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#44403c" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Add Habit - Full Width -->
+            <button class="w-full h-12 flex items-center justify-center gap-2 rounded-2xl text-white text-[15px] font-medium mb-4"
+                    style="background: linear-gradient(135deg, #101828 0%, #1a2332 100%); box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add New Habit
+            </button>
+
+            <!-- Progress Bar -->
+            <div class="h-2 bg-stone-100 rounded-full overflow-hidden mb-4">
+              <div class="h-full w-3/5 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"></div>
+            </div>
+
+            <!-- Habit Cards -->
+            <div class="space-y-3">
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                      <span class="text-lg">🧘</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Morning meditation</div>
+                      <div class="text-xs text-stone-400">12 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <div class="bg-white rounded-2xl p-4 border border-stone-100 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                      <span class="text-lg">💧</span>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-stone-800">Drink water</div>
+                      <div class="text-xs text-stone-400">8 day streak</div>
+                    </div>
+                  </div>
+                  <div class="w-7 h-7 rounded-full border-2 border-stone-200"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-xs text-stone-600 pl-2 space-y-1">
+        <div>✓ Personal greeting creates emotional connection</div>
+        <div>✓ Icons grouped in compact pill shape</div>
+        <div>✓ Full-width Add button is prominent</div>
+        <div>✓ Clear visual hierarchy</div>
+        <div>○ Add button takes a full row</div>
+      </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- RECOMMENDATION -->
+    <!-- ============================================ -->
+    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-5 space-y-4">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">🏆</span>
+        <span class="text-sm font-bold text-emerald-800">My Recommendation: IDEA 1 (FAB + Minimal Header)</span>
+      </div>
+      <div class="text-sm text-emerald-700 leading-relaxed space-y-2">
+        <p><strong>Why:</strong></p>
+        <ul class="list-disc pl-5 space-y-1">
+          <li>Cleanest header — just title + one menu button</li>
+          <li>FAB is universally understood & thumb-friendly</li>
+          <li>Maximum vertical space for habit list</li>
+          <li>Menu pattern scales for future features</li>
+          <li>Minimal change from current — easier to implement</li>
+        </ul>
+        <p class="pt-2"><strong>Second choice:</strong> Idea 4 (Smart Greeting) if you want more personality.</p>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

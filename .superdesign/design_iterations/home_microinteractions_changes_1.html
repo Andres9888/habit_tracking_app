@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home Screen Micro-Interactions — Before / After</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Geist+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --premium: #6d28d9;
+    --premium-light: #ede9fe;
+    --warn: #f59e0b;
+    --error: #ef4444;
+    --success: #10b981;
+    --good: #34d399;
+  }
+  * { font-family: 'Inter', system-ui, sans-serif; }
+  body { background: var(--bg); color: var(--ink); }
+  .mono { font-family: 'Geist Mono', monospace; }
+  .phone {
+    width: 320px; height: 560px;
+    background: var(--bg);
+    border-radius: 36px;
+    border: 8px solid #1a1a1a;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.2);
+  }
+  .phone-inner { position: absolute; inset: 0; overflow: hidden; }
+
+  /* Modal animations */
+  .modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.5); z-index: 20; opacity: 0; pointer-events: none; transition: opacity 200ms ease; }
+  .modal-card {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top-left-radius: 24px; border-top-right-radius: 24px;
+    padding: 24px 20px;
+    transform: translateY(100%);
+    z-index: 21;
+  }
+  .demo.show .modal-backdrop { opacity: 1; pointer-events: auto; }
+
+  /* AFTER: smooth slide both ways */
+  .demo.after .modal-card { transition: transform 280ms cubic-bezier(.2,.9,.3,1); }
+  .demo.after.show .modal-card { transform: translateY(0); }
+
+  /* BEFORE: enter only, snap exit */
+  .demo.before .modal-card { transition: transform 280ms cubic-bezier(.2,.9,.3,1); }
+  .demo.before.show .modal-card { transform: translateY(0); }
+  .demo.before.snap-exit .modal-card { transition: none; transform: translateY(100%); }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #6d28d9, #4f46e5);
+    color: white; padding: 14px 20px; border-radius: 999px;
+    font-weight: 600; text-align: center;
+    transition: transform 80ms ease, opacity 80ms ease;
+  }
+  .btn-secondary {
+    border: 2px solid var(--border); background: rgba(255,251,235,0.6);
+    color: var(--muted); padding: 12px 20px; border-radius: 999px;
+    font-weight: 500; text-align: center;
+    transition: transform 80ms ease, opacity 80ms ease;
+  }
+  /* AFTER: scale press feedback */
+  .demo.after .btn-primary:active, .demo.after .btn-secondary:active { transform: scale(0.96); opacity: 0.85; }
+  /* BEFORE: opacity only */
+  .demo.before .btn-primary:active, .demo.before .btn-secondary:active { opacity: 0.7; }
+
+  /* Selection bar */
+  .sel-bar {
+    position: absolute; left: 16px; right: 16px; bottom: 24px;
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+    border-radius: 32px; border: 1px solid var(--border);
+    padding: 10px 16px; display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    z-index: 10;
+    transform: translateY(120%); opacity: 0;
+  }
+  .demo.after .sel-bar { transition: transform 280ms cubic-bezier(.2,.9,.3,1), opacity 200ms ease; }
+  .demo.after.sel-show .sel-bar { transform: translateY(0); opacity: 1; }
+  .demo.before .sel-bar { transition: transform 280ms cubic-bezier(.2,.9,.3,1), opacity 200ms ease; }
+  .demo.before.sel-show .sel-bar { transform: translateY(0); opacity: 1; }
+  .demo.before.sel-snap .sel-bar { transition: none; transform: translateY(120%); opacity: 0; }
+
+  /* Habit card */
+  .habit-card {
+    background: white; border-radius: 16px; padding: 14px 16px;
+    margin: 0 16px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    display: flex; align-items: center; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .habit-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+  /* Swipe actions */
+  .swipe-row { position: relative; overflow: hidden; }
+  .swipe-card { transition: transform 220ms ease; position: relative; z-index: 2; background: var(--bg); }
+  .swipe-row.swiped .swipe-card { transform: translateX(-160px); }
+  .swipe-actions { position: absolute; top: 0; bottom: 0; right: 0; display: flex; }
+  .swipe-action { width: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 11px; gap: 4px; }
+  .swipe-archive { background: var(--warn); }
+  .swipe-delete { background: var(--error); }
+
+  /* Haptic ping indicator */
+  .haptic-ping {
+    position: absolute; top: 50%; left: 50%; width: 8px; height: 8px;
+    border-radius: 999px; background: var(--premium);
+    transform: translate(-50%, -50%) scale(0); opacity: 0;
+    pointer-events: none;
+  }
+  .haptic-ping.fire { animation: ping 600ms ease-out; }
+  @keyframes ping {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(8); opacity: 0; }
+  }
+
+  /* Trial bar collapse */
+  .trial-bar-wrap { overflow: hidden; }
+  .trial-bar {
+    margin: 0 16px 8px; padding: 8px 12px;
+    background: linear-gradient(90deg, #fef3c7, #fde68a);
+    border-radius: 12px; font-size: 12px; font-weight: 500; color: #78350f;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .demo.after .trial-bar-wrap { transition: max-height 380ms ease, opacity 220ms ease, margin 380ms ease; max-height: 56px; opacity: 1; }
+  .demo.after.trial-collapsed .trial-bar-wrap { max-height: 0; opacity: 0; margin: 0; }
+  .demo.before .trial-bar-wrap { max-height: 56px; opacity: 1; }
+  .demo.before.trial-collapsed .trial-bar-wrap { max-height: 0; opacity: 0; transition: none; }
+
+  .label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .pill-before { background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
+  .pill-after { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
+
+  .change-card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+  .file-ref { font-size: 11px; color: var(--muted); font-family: 'Geist Mono', monospace; }
+
+  .trigger-btn { background: var(--ink); color: white; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+  .trigger-btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body class="p-8">
+
+<header class="max-w-6xl mx-auto mb-10">
+  <p class="label mb-2">Home screen polish · branch: improve-home-screen</p>
+  <h1 class="text-3xl font-bold mb-2">Micro-interaction changes — before / after</h1>
+  <p class="text-gray-600">Six interaction-only fixes shipped. No layout, padding, or structural changes. Hover or click each phone to trigger the interaction.</p>
+</header>
+
+<div class="max-w-6xl mx-auto space-y-12">
+
+  <!-- Change 1: UpgradePrompt -->
+  <section class="change-card">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="text-xl font-semibold">1. UpgradePrompt — exit animation + button press feedback + dismiss haptic</h2>
+      <span class="pill-after">SHIPPED</span>
+    </div>
+    <p class="text-sm text-gray-600 mb-1">Modal had `FadeInDown` enter but vanished instantly on close. CTAs only changed opacity on press.</p>
+    <p class="file-ref mb-6">src/features/habits/components/HabitsList/UpgradePrompt.tsx · HabitsListModals.tsx</p>
+
+    <div class="grid grid-cols-2 gap-8 items-start">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-before">BEFORE</span>
+          <button class="trigger-btn" onclick="toggleModal('m1-before', false)">Open / Close</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="px-4 pt-12">
+              <div class="text-xl font-bold">Habits</div>
+              <div class="text-xs text-gray-500 mt-1">Apr 18 · Sat</div>
+            </div>
+            <div class="demo before" id="m1-before">
+              <div class="modal-backdrop" onclick="closeModalSnap('m1-before')"></div>
+              <div class="modal-card">
+                <div class="text-center text-2xl mb-2">🚀</div>
+                <div class="text-center text-lg font-bold">Ready to build more?</div>
+                <p class="text-center text-xs text-gray-500 my-3">Track unlimited habits.</p>
+                <div class="btn-primary mb-2">Start Free Trial →</div>
+                <div class="btn-secondary">Maybe later</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Card snaps away. Buttons only fade.</p>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-after">AFTER</span>
+          <button class="trigger-btn" onclick="toggleModal('m1-after', true)">Open / Close</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="px-4 pt-12">
+              <div class="text-xl font-bold">Habits</div>
+              <div class="text-xs text-gray-500 mt-1">Apr 18 · Sat</div>
+            </div>
+            <div class="demo after" id="m1-after">
+              <div class="modal-backdrop" onclick="closeModal('m1-after')">
+                <div class="haptic-ping" id="m1-ping"></div>
+              </div>
+              <div class="modal-card">
+                <div class="text-center text-2xl mb-2">🚀</div>
+                <div class="text-center text-lg font-bold">Ready to build more?</div>
+                <p class="text-center text-xs text-gray-500 my-3">Track unlimited habits.</p>
+                <div class="btn-primary mb-2">Start Free Trial →</div>
+                <div class="btn-secondary">Maybe later</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2"><strong>FadeOutDown(220ms)</strong> + light haptic + <code>scale(0.96)</code> on press.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Change 2: SelectionActionBar -->
+  <section class="change-card">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="text-xl font-semibold">2. SelectionActionBar — exit animation + cancel haptic</h2>
+      <span class="pill-after">SHIPPED</span>
+    </div>
+    <p class="text-sm text-gray-600 mb-1">Bar entered with FadeInUp but exited by snapping to null. Cancel button (X) had no haptic.</p>
+    <p class="file-ref mb-6">src/features/habits/components/SelectionActionBar/SelectionActionBar.tsx · HabitsApp.tsx</p>
+
+    <div class="grid grid-cols-2 gap-8 items-start">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-before">BEFORE</span>
+          <button class="trigger-btn" onclick="toggleSel('s2-before', false)">Toggle</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner demo before" id="s2-before">
+            <div class="px-4 pt-12">
+              <div class="text-xl font-bold">Habits</div>
+              <div class="text-xs text-gray-500 mt-1">Apr 18 · Sat</div>
+            </div>
+            <div class="mt-6"><div class="habit-card"><div class="habit-icon" style="background:#fef3c7">☀️</div><span class="font-medium text-sm">Morning sun</span></div></div>
+            <div class="sel-bar">
+              <span style="font-size:18px">✕</span>
+              <span class="text-sm font-semibold">2 selected</span>
+              <span class="flex gap-3"><span style="font-size:18px">📦</span><span style="font-size:18px;color:var(--error)">🗑</span></span>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Bar pops out instantly when you cancel.</p>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-after">AFTER</span>
+          <button class="trigger-btn" onclick="toggleSel('s2-after', true)">Toggle</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner demo after" id="s2-after">
+            <div class="px-4 pt-12">
+              <div class="text-xl font-bold">Habits</div>
+              <div class="text-xs text-gray-500 mt-1">Apr 18 · Sat</div>
+            </div>
+            <div class="mt-6"><div class="habit-card"><div class="habit-icon" style="background:#fef3c7">☀️</div><span class="font-medium text-sm">Morning sun</span></div></div>
+            <div class="sel-bar">
+              <span style="font-size:18px;position:relative">✕<span class="haptic-ping" id="s2-ping"></span></span>
+              <span class="text-sm font-semibold">2 selected</span>
+              <span class="flex gap-3"><span style="font-size:18px">📦</span><span style="font-size:18px;color:var(--error)">🗑</span></span>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2"><strong>FadeOutDown(150ms)</strong> + light haptic on cancel.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Change 3: SwipeActions -->
+  <section class="change-card">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="text-xl font-semibold">3. SwipeActions — warning haptic on archive + delete commit</h2>
+      <span class="pill-after">SHIPPED</span>
+    </div>
+    <p class="text-sm text-gray-600 mb-1">Destructive swipe actions fired silently. Now both archive and delete fire a warning haptic on commit.</p>
+    <p class="file-ref mb-6">src/components/DraggableHabit/SwipeActions.tsx</p>
+
+    <div class="grid grid-cols-2 gap-8 items-start">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-before">BEFORE</span>
+          <button class="trigger-btn" onclick="swipeRow('w3-before')">Swipe / Tap</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="px-4 pt-12 mb-3">
+              <div class="text-xl font-bold">Habits</div>
+            </div>
+            <div class="swipe-row mx-4 rounded-2xl mb-3" id="w3-before">
+              <div class="swipe-actions">
+                <div class="swipe-action swipe-delete" onclick="commitSwipe('w3-before', null)"><span style="font-size:20px">🗑</span>Delete</div>
+                <div class="swipe-action swipe-archive" onclick="commitSwipe('w3-before', null)"><span style="font-size:20px">📦</span>Archive</div>
+              </div>
+              <div class="habit-card swipe-card" style="margin:0">
+                <div class="habit-icon" style="background:#dbeafe">💧</div>
+                <span class="font-medium text-sm">Drink water</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Tap commits silently — no tactile feedback.</p>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-after">AFTER</span>
+          <button class="trigger-btn" onclick="swipeRow('w3-after')">Swipe / Tap</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner">
+            <div class="px-4 pt-12 mb-3">
+              <div class="text-xl font-bold">Habits</div>
+            </div>
+            <div class="swipe-row mx-4 rounded-2xl mb-3" id="w3-after">
+              <div class="swipe-actions">
+                <div class="swipe-action swipe-delete" onclick="commitSwipe('w3-after', 'w3-ping-d')"><span style="font-size:20px;position:relative">🗑<span class="haptic-ping" id="w3-ping-d" style="background:var(--error)"></span></span>Delete</div>
+                <div class="swipe-action swipe-archive" onclick="commitSwipe('w3-after', 'w3-ping-a')"><span style="font-size:20px;position:relative">📦<span class="haptic-ping" id="w3-ping-a" style="background:var(--warn)"></span></span>Archive</div>
+              </div>
+              <div class="habit-card swipe-card" style="margin:0">
+                <div class="habit-icon" style="background:#dbeafe">💧</div>
+                <span class="font-medium text-sm">Drink water</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2"><strong>triggerWarning()</strong> fires on commit (visualized as ring pulse).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Change 4: Already wired (no-op) -->
+  <section class="change-card">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="text-xl font-semibold">4. Progress ring 100% celebration haptic</h2>
+      <span class="pill-after" style="background:#fef3c7;color:#78350f">ALREADY WIRED</span>
+    </div>
+    <p class="text-sm text-gray-600 mb-1">Audit flagged this as missing — verification showed it's already wired via <code>HapticPatterns.celebration()</code> on the all-done transition.</p>
+    <p class="file-ref">src/features/habits/components/BottomActionBar/useCelebrationState.ts:28</p>
+  </section>
+
+  <!-- Change 5: InlineTrialBar collapse -->
+  <section class="change-card">
+    <div class="flex items-center justify-between mb-1">
+      <h2 class="text-xl font-semibold">5. InlineTrialBar — collapse transition (no more content jump)</h2>
+      <span class="pill-after">SHIPPED</span>
+    </div>
+    <p class="text-sm text-gray-600 mb-1">When trial expired, the bar unmounted and content snapped up ~50px. Now it collapses smoothly via Reanimated <code>LinearTransition</code>.</p>
+    <p class="file-ref mb-6">src/components/CalendarTimeline/CalendarTimeline.tsx</p>
+
+    <div class="grid grid-cols-2 gap-8 items-start">
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-before">BEFORE</span>
+          <button class="trigger-btn" onclick="toggleTrial('t5-before')">Expire trial</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner demo before" id="t5-before">
+            <div class="px-4 pt-12 mb-3">
+              <div class="text-xl font-bold">Habits</div>
+            </div>
+            <div class="trial-bar-wrap">
+              <div class="trial-bar"><span>✨ 5 days left in trial</span><span style="color:var(--premium);font-weight:600">Upgrade</span></div>
+            </div>
+            <div class="habit-card"><div class="habit-icon" style="background:#dbeafe">💧</div><span class="font-medium text-sm">Drink water</span></div>
+            <div class="habit-card"><div class="habit-icon" style="background:#fef3c7">☀️</div><span class="font-medium text-sm">Morning sun</span></div>
+            <div class="habit-card"><div class="habit-icon" style="background:#dcfce7">📚</div><span class="font-medium text-sm">Read 20 pages</span></div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2">Bar disappears instantly — habits jump up.</p>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-3">
+          <span class="pill-after">AFTER</span>
+          <button class="trigger-btn" onclick="toggleTrial('t5-after')">Expire trial</button>
+        </div>
+        <div class="phone">
+          <div class="phone-inner demo after" id="t5-after">
+            <div class="px-4 pt-12 mb-3">
+              <div class="text-xl font-bold">Habits</div>
+            </div>
+            <div class="trial-bar-wrap">
+              <div class="trial-bar"><span>✨ 5 days left in trial</span><span style="color:var(--premium);font-weight:600">Upgrade</span></div>
+            </div>
+            <div class="habit-card"><div class="habit-icon" style="background:#dbeafe">💧</div><span class="font-medium text-sm">Drink water</span></div>
+            <div class="habit-card"><div class="habit-icon" style="background:#fef3c7">☀️</div><span class="font-medium text-sm">Morning sun</span></div>
+            <div class="habit-card"><div class="habit-icon" style="background:#dcfce7">📚</div><span class="font-medium text-sm">Read 20 pages</span></div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-2"><strong>LinearTransition(220ms)</strong> + FadeOut — content slides smoothly.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="change-card bg-gradient-to-r from-purple-50 to-indigo-50">
+    <h2 class="text-lg font-semibold mb-3">Summary</h2>
+    <div class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+      <div>✅ UpgradePrompt exit + press scale + haptic</div>
+      <div>✅ SelectionActionBar exit animation</div>
+      <div>✅ Selection cancel haptic</div>
+      <div>✅ Swipe-to-archive / -delete haptic</div>
+      <div>✅ InlineTrialBar smooth collapse</div>
+      <div>⏭ Celebration haptic (already wired)</div>
+    </div>
+    <p class="text-xs text-gray-500 mt-4 mono">6 files touched · interaction-only · no layout changes · not yet validated in simulator</p>
+  </section>
+</div>
+
+<script>
+  function toggleModal(id, smoothExit) {
+    const el = document.getElementById(id);
+    const isShown = el.classList.contains('show');
+    if (isShown) {
+      if (smoothExit) {
+        el.classList.remove('show');
+        // ping for haptic
+        const ping = document.getElementById('m1-ping');
+        if (ping) { ping.classList.remove('fire'); void ping.offsetWidth; ping.classList.add('fire'); }
+      } else {
+        el.classList.add('snap-exit');
+        el.classList.remove('show');
+        setTimeout(() => el.classList.remove('snap-exit'), 30);
+      }
+    } else {
+      el.classList.add('show');
+    }
+  }
+  function closeModal(id) { toggleModal(id, true); }
+  function closeModalSnap(id) { toggleModal(id, false); }
+
+  function toggleSel(id, smoothExit) {
+    const el = document.getElementById(id);
+    const isShown = el.classList.contains('sel-show');
+    if (isShown) {
+      if (smoothExit) {
+        el.classList.remove('sel-show');
+        const ping = document.getElementById('s2-ping');
+        if (ping) { ping.classList.remove('fire'); void ping.offsetWidth; ping.classList.add('fire'); }
+      } else {
+        el.classList.add('sel-snap');
+        el.classList.remove('sel-show');
+        setTimeout(() => el.classList.remove('sel-snap'), 30);
+      }
+    } else {
+      el.classList.add('sel-show');
+    }
+  }
+
+  function swipeRow(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('swiped');
+  }
+  function commitSwipe(rowId, pingId) {
+    if (pingId) {
+      const ping = document.getElementById(pingId);
+      ping.classList.remove('fire'); void ping.offsetWidth; ping.classList.add('fire');
+    }
+    setTimeout(() => {
+      document.getElementById(rowId).classList.remove('swiped');
+    }, 200);
+  }
+
+  function toggleTrial(id) {
+    document.getElementById(id).classList.toggle('trial-collapsed');
+  }
+</script>
+</body>
+</html>

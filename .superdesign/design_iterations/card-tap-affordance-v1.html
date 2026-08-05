@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Card Tap Affordance — Design Options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        /* Warm stone palette */
+        --bg: #f5f1ed;
+        --card: #edeae5;
+        --border: #ddd8d2;
+        --text-1: #292524;
+        --text-2: #78716c;
+        --text-3: #a8a29e;
+
+        /* Semantic colors */
+        --c-action: #059669;
+        --c-action-bg: #f0fdf6;
+        --c-action-bdr: #a7f3d0;
+        --c-award: #d97706;
+        --c-award-bg: #fffbeb;
+        --c-award-bdr: #fde68a;
+        --c-science: #0369a1;
+        --c-science-bg: #e0f2fe;
+        --c-science-bdr: #bae6fd;
+        --c-trend-bg: #fff7ed;
+        --c-trend-bdr: #fed7aa;
+        --c-trend: #c2410c;
+
+        --ff: 'Inter', system-ui, sans-serif;
+        --r-sm: 8px;
+        --r-md: 12px;
+        --r-lg: 16px;
+        --r-full: 999px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #1c1917;
+        font-family: var(--ff);
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 48px 24px;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+
+      /* ══ PHONE FRAME ══ */
+      .phone-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .phone-label {
+        color: #78716c;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-align: center;
+      }
+      .phone {
+        width: 375px;
+        height: 720px;
+        background: var(--bg);
+        border-radius: 40px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 2px #3a3632,
+          0 32px 80px rgba(0, 0, 0, 0.55);
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ══ CATEGORY HERO ══ */
+      .hero {
+        background: #fef3c7;
+        border-bottom: 1px solid #fde68a;
+        padding: 20px 16px 14px;
+        flex-shrink: 0;
+      }
+      .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #92400e;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      .hero-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .hero-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #fde68a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        flex-shrink: 0;
+      }
+      .hero-text {
+        flex: 1;
+      }
+      .hero-title {
+        color: #78350f;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+      }
+      .hero-sub {
+        color: #92400e;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+      .hero-badges {
+        display: flex;
+        gap: 6px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+      }
+      .hero-badge {
+        border-radius: var(--r-full);
+        border: 1px solid #fde68a;
+        padding: 3px 10px;
+        background: #fef3c7;
+      }
+      .hero-badge span {
+        color: #78350f;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .science-badge {
+        background: var(--c-science-bg);
+        border-color: var(--c-science-bdr);
+      }
+      .science-badge span {
+        color: var(--c-science);
+      }
+
+      /* ══ SORT CHIPS ══ */
+      .sort-row {
+        display: flex;
+        gap: 8px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+        flex-shrink: 0;
+        overflow-x: auto;
+      }
+      .sort-row::-webkit-scrollbar {
+        display: none;
+      }
+      .sort-chip {
+        border-radius: var(--r-full);
+        border: 1px solid var(--border);
+        padding: 5px 14px;
+        background: var(--card);
+        white-space: nowrap;
+      }
+      .sort-chip span {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-2);
+      }
+      .sort-chip.active {
+        background: #fef3c7;
+        border-color: #fde68a;
+      }
+      .sort-chip.active span {
+        color: #92400e;
+      }
+
+      /* ══ CARDS LIST ══ */
+      .cards-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 0 24px;
+      }
+      .cards-list::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* ══ BASE CARD ══ */
+      .card {
+        margin: 0 14px 8px;
+        background: var(--card);
+        border: 1.5px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        transition:
+          opacity 0.12s,
+          transform 0.12s,
+          box-shadow 0.12s;
+        position: relative;
+      }
+      .card:active {
+        opacity: 0.88;
+        transform: scale(0.985);
+      }
+
+      .card.top-pick {
+        border-left: 3.5px solid #f59e0b;
+        background: var(--c-award-bg);
+        border-color: var(--c-award-bdr);
+      }
+      .card.imported {
+        background: var(--c-action-bg);
+        border-color: var(--c-action-bdr);
+      }
+
+      .top-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .icon-wrap {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--r-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .content-col {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .top-pick-badge {
+        display: inline-flex;
+        align-self: flex-start;
+        background: #fef9c3;
+        border: 1px solid #fde68a;
+        border-radius: 6px;
+        padding: 2px 8px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #b45309;
+        letter-spacing: 0.3px;
+      }
+      .title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-1);
+        flex: 1;
+        line-height: 1.35;
+      }
+      .add-btn {
+        flex-shrink: 0;
+        background: var(--c-action);
+        color: #fff;
+        border: none;
+        border-radius: var(--r-full);
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: var(--ff);
+        cursor: pointer;
+        transition: opacity 0.1s;
+      }
+      .add-btn:active {
+        opacity: 0.8;
+      }
+      .added-btn {
+        flex-shrink: 0;
+        background: var(--c-action-bg);
+        color: var(--c-action);
+        border: 1px solid var(--c-action-bdr);
+        border-radius: var(--r-full);
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 600;
+        font-family: var(--ff);
+        cursor: pointer;
+      }
+
+      .card-desc {
+        font-size: 12px;
+        color: var(--text-2);
+        line-height: 1.45;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .pill {
+        border-radius: var(--r-full);
+        border: 1px solid;
+        padding: 3px 9px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .pill-science {
+        background: var(--c-science-bg);
+        border-color: var(--c-science-bdr);
+        color: var(--c-science);
+      }
+      .pill-trend {
+        background: var(--c-trend-bg);
+        border-color: var(--c-trend-bdr);
+        color: var(--c-trend);
+      }
+      .pill-neutral {
+        background: var(--card);
+        border-color: var(--border);
+        color: var(--text-2);
+      }
+
+      /* ══════════════════════════════════
+     OPTION A — TRAILING CHEVRON COLUMN
+  ══════════════════════════════════ */
+      .top-row-with-chevron {
+        display: flex;
+        align-items: stretch; /* stretch so chevron col matches content height */
+        gap: 12px;
+      }
+      .chevron-col {
+        display: flex;
+        align-items: center; /* vertically center the chevron in the card */
+        flex-shrink: 0;
+        padding-left: 4px;
+      }
+      .chevron-icon {
+        color: var(--text-3);
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 1;
+      }
+
+      /* ══════════════════════════════════
+     OPTION B — "VIEW DETAILS" ROW
+  ══════════════════════════════════ */
+      .details-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px solid var(--border);
+      }
+      .details-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-3);
+      }
+      .details-chevron {
+        font-size: 12px;
+        color: var(--text-3);
+        line-height: 1;
+      }
+
+      /* ══════════════════════════════════
+     LEGEND PANEL
+  ══════════════════════════════════ */
+      .legend {
+        width: 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding-top: 54px; /* align with phone content */
+      }
+      .legend-card {
+        background: #292524;
+        border: 1px solid #3a3632;
+        border-radius: 16px;
+        padding: 16px 18px;
+      }
+      .legend-title {
+        font-size: 10px;
+        font-weight: 700;
+        color: #78716c;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+      .legend-option {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .legend-option:last-child {
+        margin-bottom: 0;
+      }
+      .opt-letter {
+        width: 22px;
+        height: 22px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .opt-a {
+        background: #059669;
+        color: #fff;
+      }
+      .opt-b {
+        background: #3a3632;
+        color: #a8a29e;
+        border: 1px solid #52443a;
+      }
+      .opt-c {
+        background: #3a3632;
+        color: #a8a29e;
+        border: 1px solid #52443a;
+      }
+      .opt-detail {
+        flex: 1;
+      }
+      .opt-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: #e7e5e4;
+        margin-bottom: 2px;
+      }
+      .opt-desc {
+        font-size: 11px;
+        color: #78716c;
+        line-height: 1.4;
+      }
+      .rec-badge {
+        display: inline-block;
+        background: #064e3b;
+        color: #6ee7b7;
+        font-size: 10px;
+        font-weight: 700;
+        border-radius: 4px;
+        padding: 1px 6px;
+        margin-left: 6px;
+      }
+
+      .legend-divider {
+        height: 1px;
+        background: #3a3632;
+        margin: 10px 0;
+      }
+
+      .legend-note {
+        font-size: 11px;
+        color: #57534e;
+        line-height: 1.5;
+      }
+
+      /* ══ SECTION LABEL ══ */
+      .section-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-3);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 10px 14px 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════ PHONE 1: CURRENT — NO AFFORDANCE ══════ -->
+    <div class="phone-col">
+      <p class="phone-label">Current — no affordance</p>
+      <div class="phone">
+        <!-- Hero -->
+        <div class="hero">
+          <div class="back-btn">‹ Library</div>
+          <div class="hero-row">
+            <div class="hero-icon">🌅</div>
+            <div class="hero-text">
+              <div class="hero-title">Morning Routine</div>
+              <div class="hero-sub">Start your day with intention</div>
+              <div class="hero-badges">
+                <div class="hero-badge"><span>📋 5 habits</span></div>
+                <div class="hero-badge science-badge">
+                  <span>🔬 4 science-backed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Sort chips -->
+        <div class="sort-row">
+          <div class="sort-chip active"><span>Most used</span></div>
+          <div class="sort-chip"><span>A–Z</span></div>
+          <div class="sort-chip"><span>🔬 Science</span></div>
+        </div>
+        <!-- Cards -->
+        <div class="cards-list">
+          <div class="section-label">⭐ Top Picks</div>
+
+          <!-- Card 1: top pick -->
+          <div class="card top-pick">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #fef9c3">☀️</div>
+              <div class="content-col">
+                <span class="top-pick-badge">⭐ TOP PICK</span>
+                <div class="title-row">
+                  <span class="card-title">Morning Sunlight</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  10 min outdoor light within 1 hour of waking helps regulate
+                  cortisol and anchor your circadian rhythm.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 4.2k added</span>
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: imported -->
+          <div class="card imported">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #d1fae5">📓</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Morning Journal</span>
+                  <button class="added-btn">✓ Added</button>
+                </div>
+                <div class="card-desc">
+                  5 min of stream-of-consciousness writing gets thoughts out of
+                  your head and sharpens daily priorities.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">All habits</div>
+
+          <!-- Card 3: normal -->
+          <div class="card">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #e0f2fe">🧊</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Cold Shower</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  End your shower with 2–3 minutes of cold water. Releases
+                  norepinephrine and builds stress tolerance.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 3.1k added</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: normal -->
+          <div class="card">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #f3f4f6">🏃</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Zone 2 Cardio</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  30–45 min at conversational pace. Builds mitochondrial density
+                  and metabolic efficiency without cortisol spike.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-neutral">📅 3× week</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="card">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #ede9fe">💧</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Hydrate on Wake</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  500ml water within 10 min of waking. Rehydrates after 7–8
+                  hours without fluids.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ PHONE 2: OPTION A — TRAILING CHEVRON ══════ -->
+    <div class="phone-col">
+      <p class="phone-label">
+        Option A — trailing chevron
+        <span
+          style="
+            background: #064e3b;
+            color: #6ee7b7;
+            font-size: 9px;
+            font-weight: 700;
+            border-radius: 4px;
+            padding: 1px 5px;
+            margin-left: 4px;
+          "
+          >REC</span
+        >
+      </p>
+      <div class="phone">
+        <div class="hero">
+          <div class="back-btn">‹ Library</div>
+          <div class="hero-row">
+            <div class="hero-icon">🌅</div>
+            <div class="hero-text">
+              <div class="hero-title">Morning Routine</div>
+              <div class="hero-sub">Start your day with intention</div>
+              <div class="hero-badges">
+                <div class="hero-badge"><span>📋 5 habits</span></div>
+                <div class="hero-badge science-badge">
+                  <span>🔬 4 science-backed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sort-row">
+          <div class="sort-chip active"><span>Most used</span></div>
+          <div class="sort-chip"><span>A–Z</span></div>
+          <div class="sort-chip"><span>🔬 Science</span></div>
+        </div>
+        <div class="cards-list">
+          <div class="section-label">⭐ Top Picks</div>
+
+          <!-- Card 1: top pick + chevron -->
+          <div class="card top-pick">
+            <div class="top-row-with-chevron">
+              <div class="icon-wrap" style="background: #fef9c3">☀️</div>
+              <div class="content-col">
+                <span class="top-pick-badge">⭐ TOP PICK</span>
+                <div class="title-row">
+                  <span class="card-title">Morning Sunlight</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  10 min outdoor light within 1 hour of waking helps regulate
+                  cortisol and anchor your circadian rhythm.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 4.2k added</span>
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+              <div class="chevron-col">
+                <span class="chevron-icon">›</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: imported + chevron -->
+          <div class="card imported">
+            <div class="top-row-with-chevron">
+              <div class="icon-wrap" style="background: #d1fae5">📓</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Morning Journal</span>
+                  <button class="added-btn">✓ Added</button>
+                </div>
+                <div class="card-desc">
+                  5 min of stream-of-consciousness writing gets thoughts out of
+                  your head and sharpens daily priorities.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+              <div class="chevron-col">
+                <span class="chevron-icon">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">All habits</div>
+
+          <div class="card">
+            <div class="top-row-with-chevron">
+              <div class="icon-wrap" style="background: #e0f2fe">🧊</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Cold Shower</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  End your shower with 2–3 minutes of cold water. Releases
+                  norepinephrine and builds stress tolerance.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 3.1k added</span>
+                </div>
+              </div>
+              <div class="chevron-col">
+                <span class="chevron-icon">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="top-row-with-chevron">
+              <div class="icon-wrap" style="background: #f3f4f6">🏃</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Zone 2 Cardio</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  30–45 min at conversational pace. Builds mitochondrial density
+                  and metabolic efficiency without cortisol spike.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-neutral">📅 3× week</span>
+                </div>
+              </div>
+              <div class="chevron-col">
+                <span class="chevron-icon">›</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="top-row-with-chevron">
+              <div class="icon-wrap" style="background: #ede9fe">💧</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Hydrate on Wake</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  500ml water within 10 min of waking. Rehydrates after 7–8
+                  hours without fluids.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+              </div>
+              <div class="chevron-col">
+                <span class="chevron-icon">›</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ PHONE 3: OPTION B — VIEW DETAILS ROW ══════ -->
+    <div class="phone-col">
+      <p class="phone-label">Option B — "View details" row</p>
+      <div class="phone">
+        <div class="hero">
+          <div class="back-btn">‹ Library</div>
+          <div class="hero-row">
+            <div class="hero-icon">🌅</div>
+            <div class="hero-text">
+              <div class="hero-title">Morning Routine</div>
+              <div class="hero-sub">Start your day with intention</div>
+              <div class="hero-badges">
+                <div class="hero-badge"><span>📋 5 habits</span></div>
+                <div class="hero-badge science-badge">
+                  <span>🔬 4 science-backed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sort-row">
+          <div class="sort-chip active"><span>Most used</span></div>
+          <div class="sort-chip"><span>A–Z</span></div>
+          <div class="sort-chip"><span>🔬 Science</span></div>
+        </div>
+        <div class="cards-list">
+          <div class="section-label">⭐ Top Picks</div>
+
+          <div class="card top-pick">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #fef9c3">☀️</div>
+              <div class="content-col">
+                <span class="top-pick-badge">⭐ TOP PICK</span>
+                <div class="title-row">
+                  <span class="card-title">Morning Sunlight</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  10 min outdoor light within 1 hour of waking helps regulate
+                  cortisol and anchor your circadian rhythm.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 4.2k added</span>
+                </div>
+                <div class="details-row">
+                  <span class="details-label">View details</span>
+                  <span class="details-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card imported">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #d1fae5">📓</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Morning Journal</span>
+                  <button class="added-btn">✓ Added</button>
+                </div>
+                <div class="card-desc">
+                  5 min of stream-of-consciousness writing gets thoughts out of
+                  your head and sharpens daily priorities.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+                <div class="details-row">
+                  <span class="details-label">View details</span>
+                  <span class="details-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">All habits</div>
+
+          <div class="card">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #e0f2fe">🧊</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Cold Shower</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  End your shower with 2–3 minutes of cold water. Releases
+                  norepinephrine and builds stress tolerance.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-trend">🔥 3.1k added</span>
+                </div>
+                <div class="details-row">
+                  <span class="details-label">View details</span>
+                  <span class="details-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #f3f4f6">🏃</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Zone 2 Cardio</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  30–45 min at conversational pace. Builds mitochondrial density
+                  without cortisol spike.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-science">🔬 Science-backed</span>
+                  <span class="pill pill-neutral">📅 3× week</span>
+                </div>
+                <div class="details-row">
+                  <span class="details-label">View details</span>
+                  <span class="details-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="top-row">
+              <div class="icon-wrap" style="background: #ede9fe">💧</div>
+              <div class="content-col">
+                <div class="title-row">
+                  <span class="card-title">Hydrate on Wake</span>
+                  <button class="add-btn">+ Add</button>
+                </div>
+                <div class="card-desc">
+                  500ml water within 10 min of waking. Rehydrates after 7–8
+                  hours without fluids.
+                </div>
+                <div class="meta-row">
+                  <span class="pill pill-neutral">📅 Daily</span>
+                </div>
+                <div class="details-row">
+                  <span class="details-label">View details</span>
+                  <span class="details-chevron">›</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ LEGEND ══════ -->
+    <div class="legend">
+      <div class="legend-card">
+        <div class="legend-title">Design options</div>
+
+        <div class="legend-option">
+          <div class="opt-letter opt-a">A</div>
+          <div class="opt-detail">
+            <div class="opt-name">
+              Trailing chevron <span class="rec-badge">REC</span>
+            </div>
+            <div class="opt-desc">
+              A single › icon at the card's right edge, vertically centered.
+              Universal iOS/Android disclosure pattern. Minimal footprint, zero
+              extra text.
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-option">
+          <div class="opt-letter opt-b">B</div>
+          <div class="opt-detail">
+            <div class="opt-name">View details row</div>
+            <div class="opt-desc">
+              Explicit "View details ›" text below the meta pills, separated by
+              a hairline. No ambiguity — tells the user exactly what happens.
+              Takes more vertical space.
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-option">
+          <div class="opt-letter opt-c">C</div>
+          <div class="opt-detail">
+            <div class="opt-name">Press animation only</div>
+            <div class="opt-desc">
+              Scale to 0.98 + opacity 0.9 on press. Gives tactile feedback but
+              no pre-tap signal. Best used as a complement to A or B, not
+              standalone.
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-divider"></div>
+        <div class="legend-note">
+          All three options can be combined. A + C is the recommended pairing —
+          the chevron signals tappability before any interaction; the press
+          animation makes the card feel alive on touch.
+        </div>
+      </div>
+
+      <div class="legend-card">
+        <div class="legend-title">What changes in code</div>
+        <div class="opt-detail">
+          <div class="opt-desc" style="color: #a8a29e">
+            <strong style="color: #e7e5e4">Option A</strong> — add ChevronRight
+            icon (lucide-react-native) as third column in topRow inside
+            <code style="color: #6ee7b7">TemplateListCard.tsx</code>. ~5
+            lines.<br /><br />
+            <strong style="color: #e7e5e4">Option B</strong> — add details-row
+            View below CardFooterMeta. ~8 lines across 2 files.<br /><br />
+            <strong style="color: #e7e5e4">Option C</strong> — change Pressable
+            style prop to function returning scale/opacity on pressed state. ~3
+            lines.
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

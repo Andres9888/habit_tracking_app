@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Habit Progress Section - UX Improvements</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+      min-height: 100vh;
+    }
+
+    /* iPhone frame */
+    .iphone-frame {
+      width: 390px;
+      height: 844px;
+      background: #000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
+      position: relative;
+    }
+
+    .iphone-screen {
+      width: 100%;
+      height: 100%;
+      background: #fafafa;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .iphone-notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 20px 20px;
+      z-index: 100;
+    }
+
+    /* Gradient backgrounds */
+    .gradient-starting {
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+    }
+
+    .gradient-building {
+      background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+    }
+
+    .gradient-completed {
+      background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+    }
+
+    /* Shimmer animation */
+    @keyframes shimmer {
+      0% { transform: translateX(-200px); opacity: 0; }
+      50% { opacity: 0.3; }
+      100% { transform: translateX(400px); opacity: 0; }
+    }
+
+    .shimmer-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .shimmer-overlay::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+
+    /* Streak health ring */
+    .streak-health-ring {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .streak-health-ring svg {
+      position: absolute;
+      transform: rotate(-90deg);
+    }
+
+    @keyframes pulse-urgent {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .pulse-urgent {
+      animation: pulse-urgent 1.5s ease-in-out infinite;
+    }
+
+    /* CTA button hover */
+    .cta-button {
+      transition: all 0.2s ease;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+    }
+
+    .cta-button:active {
+      transform: scale(0.98);
+    }
+
+    /* Momentum arrow animation */
+    @keyframes momentum-pulse {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(4px); }
+    }
+
+    .momentum-arrow {
+      animation: momentum-pulse 2s ease-in-out infinite;
+    }
+
+    /* Toast slide in */
+    @keyframes slideInUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .toast-animate {
+      animation: slideInUp 0.4s ease-out forwards;
+    }
+
+    /* Confetti */
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-10px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    .confetti-1 { left: 20%; background: #F59E0B; animation: confetti-fall 1s ease-out 0.1s forwards; }
+    .confetti-2 { left: 35%; background: #10B981; animation: confetti-fall 1s ease-out 0.2s forwards; }
+    .confetti-3 { left: 50%; background: #FBBF24; animation: confetti-fall 1s ease-out 0s forwards; }
+    .confetti-4 { left: 65%; background: #34D399; animation: confetti-fall 1s ease-out 0.15s forwards; }
+    .confetti-5 { left: 80%; background: #FCD34D; animation: confetti-fall 1s ease-out 0.25s forwards; }
+
+    /* Progress bar fill animation */
+    @keyframes fillProgress {
+      from { width: 0; }
+      to { width: 66.67%; }
+    }
+
+    .progress-fill {
+      animation: fillProgress 0.8s ease-out forwards;
+    }
+
+    /* Stat card hover */
+    .stat-card {
+      transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Labels */
+    .label-badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #6366f1;
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+      z-index: 50;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-8">
+
+  <div class="flex gap-8 items-start">
+
+    <!-- iPhone 1: Before Completion State -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="text-white text-sm font-semibold opacity-70">Before Completion</div>
+      <div class="iphone-frame">
+        <div class="iphone-screen">
+          <div class="iphone-notch"></div>
+
+          <!-- Status bar -->
+          <div class="h-12 flex items-end justify-between px-8 pb-1">
+            <span class="text-xs font-semibold">9:41</span>
+            <div class="flex gap-1">
+              <i data-lucide="signal" class="w-4 h-4"></i>
+              <i data-lucide="wifi" class="w-4 h-4"></i>
+              <i data-lucide="battery-full" class="w-4 h-4"></i>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-100">
+            <i data-lucide="arrow-left" class="w-6 h-6 text-gray-600"></i>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🧘</span>
+                <span class="font-semibold text-lg">Morning Meditation</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab navigation -->
+          <div class="flex border-b border-gray-200">
+            <div class="flex-1 py-3 text-center text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600">Progress</div>
+            <div class="flex-1 py-3 text-center text-sm font-medium text-gray-400">Motivation</div>
+            <div class="flex-1 py-3 text-center text-sm font-medium text-gray-400">Manage</div>
+          </div>
+
+          <!-- Scrollable content -->
+          <div class="overflow-y-auto" style="height: calc(100% - 160px);">
+            <div class="p-4 space-y-4">
+
+              <!-- NEW: Today's Focus Card with CTA -->
+              <div class="relative">
+                <div class="label-badge">✨ NEW: Embedded CTA</div>
+                <div class="gradient-starting rounded-2xl p-4 shadow-lg relative overflow-hidden">
+                  <div class="shimmer-overlay"></div>
+                  <div class="flex items-center gap-3 relative z-10">
+                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center">
+                      <i data-lucide="rocket" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-white font-semibold">3 days unlocks momentum!</div>
+                      <div class="text-white/80 text-sm">Goal: <span class="font-bold">3</span> days</div>
+                    </div>
+                  </div>
+                  <!-- NEW: Complete Now CTA -->
+                  <div class="mt-3 flex justify-end relative z-10">
+                    <button class="cta-button bg-white text-indigo-600 px-4 py-2 rounded-xl font-semibold text-sm flex items-center gap-2 shadow-md">
+                      <i data-lucide="check-circle" class="w-4 h-4"></i>
+                      Complete Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats Grid with Streak Health Ring -->
+              <div class="relative">
+                <div class="label-badge">✨ NEW: Health Ring</div>
+                <div class="flex gap-3">
+                  <!-- Strength Ring -->
+                  <div class="w-20 flex flex-col items-center justify-center">
+                    <div class="relative w-14 h-14">
+                      <svg class="w-14 h-14" viewBox="0 0 56 56">
+                        <circle cx="28" cy="28" r="24" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+                        <circle cx="28" cy="28" r="24" fill="none" stroke="#8b5cf6" stroke-width="4"
+                          stroke-dasharray="150.8" stroke-dashoffset="37.7" stroke-linecap="round"
+                          style="transform: rotate(-90deg); transform-origin: center;"/>
+                      </svg>
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-sm font-bold text-violet-600">75%</span>
+                      </div>
+                    </div>
+                    <span class="text-xs text-gray-500 mt-1">Strength</span>
+                  </div>
+
+                  <!-- 2x2 Stats Grid -->
+                  <div class="flex-1 grid grid-cols-2 gap-2">
+                    <!-- Streak with Health Ring -->
+                    <div class="stat-card bg-orange-50 rounded-xl p-2.5 relative">
+                      <div class="flex items-center gap-2">
+                        <div class="streak-health-ring w-8 h-8">
+                          <!-- Health ring SVG -->
+                          <svg class="w-8 h-8" viewBox="0 0 32 32">
+                            <circle cx="16" cy="16" r="13" fill="none" stroke="#fed7aa" stroke-width="3"/>
+                            <circle cx="16" cy="16" r="13" fill="none" stroke="#f97316" stroke-width="3"
+                              stroke-dasharray="81.68" stroke-dashoffset="27.23" stroke-linecap="round"
+                              class="pulse-urgent"/>
+                          </svg>
+                          <span class="absolute inset-0 flex items-center justify-center text-base">🔥</span>
+                        </div>
+                        <div>
+                          <div class="text-lg font-bold text-gray-800">2</div>
+                          <div class="text-xs text-gray-500">Day Streak</div>
+                        </div>
+                      </div>
+                      <!-- Urgency indicator -->
+                      <div class="mt-1 flex items-center gap-1 text-amber-600">
+                        <i data-lucide="clock" class="w-3 h-3"></i>
+                        <span class="text-xs font-medium">4hrs left</span>
+                      </div>
+                    </div>
+
+                    <!-- Monthly -->
+                    <div class="stat-card bg-blue-50 rounded-xl p-2.5">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xl">📅</span>
+                        <div>
+                          <div class="text-lg font-bold text-gray-800">18/21</div>
+                          <div class="text-xs text-gray-500">This Month</div>
+                        </div>
+                      </div>
+                      <div class="mt-1 flex items-center gap-1 text-emerald-600">
+                        <i data-lucide="trending-up" class="w-3 h-3"></i>
+                        <span class="text-xs font-medium">+12% vs avg</span>
+                      </div>
+                    </div>
+
+                    <!-- Best Day -->
+                    <div class="stat-card bg-emerald-50 rounded-xl p-2.5">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xl">🏆</span>
+                        <div>
+                          <div class="text-lg font-bold text-gray-800">Tue</div>
+                          <div class="text-xs text-gray-500">Best Day (92%)</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Focus Day -->
+                    <div class="stat-card bg-amber-50 rounded-xl p-2.5">
+                      <div class="flex items-center gap-2">
+                        <span class="text-xl">⚡</span>
+                        <div>
+                          <div class="text-lg font-bold text-gray-800">Sat</div>
+                          <div class="text-xs text-gray-500">Focus Day (45%)</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- NEW: Momentum Indicator -->
+                <div class="mt-3 bg-gray-50 rounded-xl p-3 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-gray-700">Momentum:</span>
+                      <div class="flex items-center gap-1">
+                        <div class="h-1.5 w-20 bg-gray-200 rounded-full overflow-hidden">
+                          <div class="h-full w-3/4 bg-emerald-500 rounded-full"></div>
+                        </div>
+                        <i data-lucide="chevron-right" class="w-4 h-4 text-emerald-500 momentum-arrow"></i>
+                      </div>
+                      <span class="text-sm font-semibold text-emerald-600">Growing</span>
+                    </div>
+                    <div class="text-xs text-gray-500">+12% vs last month</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Milestone Progress -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-lg">⭐</span>
+                  <span class="font-semibold text-gray-800">7-Day Streak</span>
+                  <span class="text-xs text-gray-400 ml-auto">5 days away</span>
+                </div>
+                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div class="h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" style="width: 28.5%"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-xs text-gray-500">
+                  <span>🔥 2 days</span>
+                  <span>7 days ⭐</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- iPhone 2: After Completion + Celebration -->
+    <div class="flex flex-col items-center gap-4">
+      <div class="text-white text-sm font-semibold opacity-70">After Completion + Week 2 Celebration</div>
+      <div class="iphone-frame">
+        <div class="iphone-screen">
+          <div class="iphone-notch"></div>
+
+          <!-- Status bar -->
+          <div class="h-12 flex items-end justify-between px-8 pb-1">
+            <span class="text-xs font-semibold">9:41</span>
+            <div class="flex gap-1">
+              <i data-lucide="signal" class="w-4 h-4"></i>
+              <i data-lucide="wifi" class="w-4 h-4"></i>
+              <i data-lucide="battery-full" class="w-4 h-4"></i>
+            </div>
+          </div>
+
+          <!-- Header -->
+          <div class="px-4 py-3 flex items-center gap-3 border-b border-gray-100">
+            <i data-lucide="arrow-left" class="w-6 h-6 text-gray-600"></i>
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🧘</span>
+                <span class="font-semibold text-lg">Morning Meditation</span>
+                <span class="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full font-medium">🔥 14</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab navigation -->
+          <div class="flex border-b border-gray-200">
+            <div class="flex-1 py-3 text-center text-sm font-semibold text-indigo-600 border-b-2 border-indigo-600">Progress</div>
+            <div class="flex-1 py-3 text-center text-sm font-medium text-gray-400">Motivation</div>
+            <div class="flex-1 py-3 text-center text-sm font-medium text-gray-400">Manage</div>
+          </div>
+
+          <!-- Scrollable content -->
+          <div class="overflow-y-auto relative" style="height: calc(100% - 160px);">
+
+            <!-- Confetti overlay -->
+            <div class="absolute inset-x-0 top-0 h-24 pointer-events-none overflow-hidden">
+              <div class="confetti confetti-1"></div>
+              <div class="confetti confetti-2"></div>
+              <div class="confetti confetti-3"></div>
+              <div class="confetti confetti-4"></div>
+              <div class="confetti confetti-5"></div>
+            </div>
+
+            <div class="p-4 space-y-4">
+
+              <!-- Celebrating State Card -->
+              <div class="relative">
+                <div class="label-badge bg-amber-500">🎉 Micro-Celebration</div>
+                <div class="rounded-2xl p-4 shadow-lg relative overflow-hidden" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
+                  <div class="shimmer-overlay"></div>
+                  <div class="flex items-center gap-3 relative z-10">
+                    <div class="w-14 h-14 rounded-full bg-white/25 flex items-center justify-center">
+                      <span class="text-3xl">🏆</span>
+                    </div>
+                    <div class="flex-1">
+                      <div class="text-white font-bold text-lg">🎉 You hit 14 days!</div>
+                      <div class="text-white/90 text-sm">Two weeks strong - incredible!</div>
+                      <div class="text-white/70 text-xs mt-1">Next: 21 days 🌟</div>
+                    </div>
+                    <button class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                      <i data-lucide="share" class="w-5 h-5 text-white"></i>
+                    </button>
+                  </div>
+                  <div class="text-center mt-3 relative z-10">
+                    <span class="text-white/70 text-xs">Tap to continue</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stats Grid - Completed state -->
+              <div class="flex gap-3">
+                <!-- Strength Ring -->
+                <div class="w-20 flex flex-col items-center justify-center">
+                  <div class="relative w-14 h-14">
+                    <svg class="w-14 h-14" viewBox="0 0 56 56">
+                      <circle cx="28" cy="28" r="24" fill="none" stroke="#e5e7eb" stroke-width="4"/>
+                      <circle cx="28" cy="28" r="24" fill="none" stroke="#8b5cf6" stroke-width="4"
+                        stroke-dasharray="150.8" stroke-dashoffset="22.6" stroke-linecap="round"
+                        style="transform: rotate(-90deg); transform-origin: center;"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                      <span class="text-sm font-bold text-violet-600">85%</span>
+                    </div>
+                  </div>
+                  <span class="text-xs text-gray-500 mt-1">Strength</span>
+                </div>
+
+                <!-- 2x2 Stats Grid -->
+                <div class="flex-1 grid grid-cols-2 gap-2">
+                  <!-- Streak - Healthy state -->
+                  <div class="stat-card bg-emerald-50 rounded-xl p-2.5 relative border-2 border-emerald-200">
+                    <div class="flex items-center gap-2">
+                      <div class="streak-health-ring w-8 h-8">
+                        <svg class="w-8 h-8" viewBox="0 0 32 32">
+                          <circle cx="16" cy="16" r="13" fill="none" stroke="#d1fae5" stroke-width="3"/>
+                          <circle cx="16" cy="16" r="13" fill="none" stroke="#10b981" stroke-width="3"
+                            stroke-dasharray="81.68" stroke-dashoffset="0" stroke-linecap="round"/>
+                        </svg>
+                        <span class="absolute inset-0 flex items-center justify-center text-base">🔥</span>
+                      </div>
+                      <div>
+                        <div class="text-lg font-bold text-gray-800">14</div>
+                        <div class="text-xs text-gray-500">Day Streak</div>
+                      </div>
+                    </div>
+                    <div class="mt-1 flex items-center gap-1 text-emerald-600">
+                      <i data-lucide="check-circle" class="w-3 h-3"></i>
+                      <span class="text-xs font-medium">Safe!</span>
+                    </div>
+                  </div>
+
+                  <!-- Monthly -->
+                  <div class="stat-card bg-blue-50 rounded-xl p-2.5">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xl">📅</span>
+                      <div>
+                        <div class="text-lg font-bold text-gray-800">19/21</div>
+                        <div class="text-xs text-gray-500">This Month</div>
+                      </div>
+                    </div>
+                    <div class="mt-1 flex items-center gap-1 text-emerald-600">
+                      <i data-lucide="trending-up" class="w-3 h-3"></i>
+                      <span class="text-xs font-medium">+15% vs avg</span>
+                    </div>
+                  </div>
+
+                  <!-- Best Day -->
+                  <div class="stat-card bg-emerald-50 rounded-xl p-2.5">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xl">🏆</span>
+                      <div>
+                        <div class="text-lg font-bold text-gray-800">Tue</div>
+                        <div class="text-xs text-gray-500">Best Day (92%)</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Focus Day -->
+                  <div class="stat-card bg-amber-50 rounded-xl p-2.5">
+                    <div class="flex items-center gap-2">
+                      <span class="text-xl">⚡</span>
+                      <div>
+                        <div class="text-lg font-bold text-gray-800">Sat</div>
+                        <div class="text-xs text-gray-500">Focus Day (52%)</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Momentum Indicator - Strong -->
+              <div class="bg-emerald-50 rounded-xl p-3 flex items-center gap-3 border border-emerald-100">
+                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                  <i data-lucide="rocket" class="w-4 h-4 text-emerald-600"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-gray-700">Momentum:</span>
+                    <div class="flex items-center gap-1">
+                      <div class="h-1.5 w-20 bg-emerald-200 rounded-full overflow-hidden">
+                        <div class="h-full w-full bg-emerald-500 rounded-full"></div>
+                      </div>
+                      <i data-lucide="chevrons-right" class="w-4 h-4 text-emerald-500 momentum-arrow"></i>
+                    </div>
+                    <span class="text-sm font-bold text-emerald-600">Thriving!</span>
+                  </div>
+                  <div class="text-xs text-emerald-600">+23% vs last month 🚀</div>
+                </div>
+              </div>
+
+              <!-- Milestone Progress - Further along -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-lg">🏆</span>
+                  <span class="font-semibold text-gray-800">21-Day Milestone</span>
+                  <span class="text-xs text-amber-600 font-medium ml-auto">7 days away</span>
+                </div>
+                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div class="progress-fill h-full bg-gradient-to-r from-amber-400 to-amber-500 rounded-full"></div>
+                </div>
+                <div class="flex justify-between mt-2 text-xs text-gray-500">
+                  <span>🔥 14 days</span>
+                  <span>21 days 🏆</span>
+                </div>
+              </div>
+
+              <!-- Weekly Pattern Chart placeholder -->
+              <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="font-semibold text-gray-800">Weekly Pattern</span>
+                  <button class="text-xs text-indigo-600 font-medium">Details</button>
+                </div>
+                <div class="flex justify-between items-end h-16 gap-1">
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-emerald-400 rounded-t" style="height: 48px;"></div>
+                    <span class="text-xs text-gray-500">M</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-emerald-500 rounded-t" style="height: 56px;"></div>
+                    <span class="text-xs text-emerald-600 font-semibold">T</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-emerald-400 rounded-t" style="height: 44px;"></div>
+                    <span class="text-xs text-gray-500">W</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-emerald-400 rounded-t" style="height: 40px;"></div>
+                    <span class="text-xs text-gray-500">T</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-emerald-300 rounded-t" style="height: 36px;"></div>
+                    <span class="text-xs text-gray-500">F</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-amber-400 rounded-t" style="height: 28px;"></div>
+                    <span class="text-xs text-amber-600 font-semibold">S</span>
+                  </div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div class="w-full bg-emerald-300 rounded-t" style="height: 32px;"></div>
+                    <span class="text-xs text-gray-500">S</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Micro-celebration Toast -->
+            <div class="absolute bottom-4 left-4 right-4 toast-animate">
+              <div class="bg-gray-900 rounded-2xl p-4 shadow-xl flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                  <span class="text-xl">🎉</span>
+                </div>
+                <div class="flex-1">
+                  <div class="text-white font-semibold">Week 2 Complete!</div>
+                  <div class="text-gray-400 text-sm">14 days straight - amazing!</div>
+                </div>
+                <button class="text-gray-400">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

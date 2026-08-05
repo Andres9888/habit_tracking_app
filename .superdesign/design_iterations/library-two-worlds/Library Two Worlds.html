@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Chain Day · Two Worlds — Library tab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+      }
+      body {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        background: #e9e4de;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 0;
+        box-sizing: border-box;
+      }
+      *::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      *::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 3px;
+      }
+      .tap {
+        transition:
+          opacity 0.12s,
+          transform 0.12s;
+      }
+      .tap:active {
+        opacity: 0.6;
+        transform: scale(0.97);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="tokens.js"></script>
+    <script type="text/babel" src="habit-card.jsx"></script>
+    <script type="text/babel" src="lib-data.jsx"></script>
+    <script type="text/babel" src="library-shared.jsx"></script>
+    <script type="text/babel" src="library-paths.jsx"></script>
+    <script type="text/babel" src="library-tab-final.jsx"></script>
+    <script type="text/babel" src="tweaks-panel.jsx"></script>
+
+    <script type="text/babel">
+      const TWEAK_DEFAULTS = {
+        showTabs: false,
+      };
+
+      function App() {
+        const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+        return (
+          <div>
+            <Phone height={844}>
+              <LibraryTwoWorlds tweaks={t} key={String(t.showTabs)} />
+            </Phone>
+            <TweaksPanel>
+              <TweakSection label='Tabs' />
+              <TweakToggle
+                label='Show Paths/Library tabs'
+                value={t.showTabs}
+                onChange={(v) => setTweak('showTabs', v)}
+              />
+            </TweaksPanel>
+          </div>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Consistency - Visual Diff</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #1a1816;
+      color: #F5F1ED;
+      padding: 32px;
+    }
+    h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #F5F1ED;
+    }
+    .subtitle {
+      color: #6B6560;
+      font-size: 14px;
+      margin-bottom: 48px;
+    }
+    .comparison-row {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 64px;
+      align-items: flex-start;
+    }
+    .panel {
+      flex: 1;
+      max-width: 420px;
+    }
+    .panel-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    .panel-label.before {
+      background: #3D3833;
+      color: #C4BFB7;
+    }
+    .panel-label.after {
+      background: #064E3B;
+      color: #6EE7B7;
+    }
+    .component-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #F5F1ED;
+    }
+    .component-desc {
+      font-size: 13px;
+      color: #6B6560;
+      margin-bottom: 24px;
+    }
+    .change-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .change-tag.spacing { background: #1e3a5f; color: #60A5FA; }
+    .change-tag.color { background: #5b1d1d; color: #FCA5A5; }
+    .annotation {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      color: #FBBF24;
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .arrow-line {
+      position: absolute;
+      border-left: 2px dashed rgba(251, 191, 36, 0.5);
+    }
+
+    /* ======================== */
+    /* MOCK COMPONENTS          */
+    /* ======================== */
+    .mock-phone {
+      background: #F5F1ED;
+      border-radius: 24px;
+      padding: 24px;
+      position: relative;
+      min-height: 180px;
+    }
+    .mock-phone.dark {
+      background: #1F2937;
+    }
+
+    /* -- ProfileCard -- */
+    .profile-card {
+      background: #EDEAE5;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+      overflow: hidden;
+    }
+    .profile-inner {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+    }
+    .profile-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, #047857, #059669);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .profile-info { flex: 1; }
+    .profile-name {
+      color: #2D2A26;
+      font-weight: 700;
+    }
+    .profile-email {
+      color: #6B6560;
+      margin-top: 2px;
+    }
+
+    /* -- SectionLabel -- */
+    .section-label-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 24px;
+      margin: 24px 0 12px;
+    }
+    .section-label-line {
+      flex: 1;
+      height: 1px;
+      background: #DDD8D2;
+    }
+    .section-label-text {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+    }
+
+    /* -- SwipeGripLines -- */
+    .grip-container {
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      justify-content: center;
+    }
+    .grip-line {
+      width: 2px;
+      height: 20px;
+      border-radius: 1px;
+      background: rgba(110, 102, 96, 0.3);
+    }
+
+    /* -- HabitCard mock -- */
+    .habit-card-mock {
+      background: #EDEAE5;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      gap: 12px;
+    }
+    .habit-emoji { font-size: 28px; }
+    .habit-info { flex: 1; }
+    .habit-name { font-size: 17px; color: #2D2A26; font-weight: 500; }
+    .habit-streak { font-size: 13px; color: #6B6560; }
+
+    /* -- NameInput -- */
+    .name-input-section {
+      text-align: center;
+      padding: 0 24px;
+    }
+    .name-input-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #2D2A26;
+      margin-bottom: 24px;
+    }
+    .name-input-field {
+      width: 100%;
+      border: 2px solid #DDD8D2;
+      border-radius: 16px;
+      padding: 16px 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 500;
+      color: #2D2A26;
+      background: #FFFFFF;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* -- DangerZone card -- */
+    .danger-card {
+      background: #EDEAE5;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+      padding: 16px;
+      margin: 0 24px;
+    }
+
+    /* Measurement overlay */
+    .measure {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .measure-v {
+      border-left: 1px solid rgba(251, 191, 36, 0.6);
+      border-right: 1px solid rgba(251, 191, 36, 0.6);
+      width: 20px;
+    }
+    .measure-v::before, .measure-v::after {
+      content: '';
+      position: absolute;
+      left: -1px;
+      right: -1px;
+      height: 1px;
+      background: rgba(251, 191, 36, 0.6);
+    }
+    .measure-v::before { top: 0; }
+    .measure-v::after { bottom: 0; }
+    .measure-label {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 700;
+      color: #FBBF24;
+      white-space: nowrap;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: #3D3833;
+      margin-bottom: 48px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .section-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #3D3833;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #C4BFB7;
+    }
+    .verdict {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .verdict.safe {
+      background: rgba(5, 150, 105, 0.08);
+      border: 1px solid rgba(5, 150, 105, 0.2);
+      color: #6EE7B7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Design Consistency Visual Diff</h1>
+  <p class="subtitle">4 components with actual pixel-level changes. All others are pure token swaps with zero visual difference.</p>
+
+  <!-- ===================== 1. ProfileCard gap ===================== -->
+  <div class="divider"></div>
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <div>
+      <div class="component-title">ProfileCard <span class="change-tag spacing">gap: 14 &rarr; 12</span></div>
+      <div class="component-desc">Settings screen &mdash; avatar-to-text gap snapped to spacing grid (spacing.md = 12px)</div>
+    </div>
+  </div>
+
+  <div class="comparison-row">
+    <div class="panel">
+      <div class="panel-label before">Before</div>
+      <div class="mock-phone" style="position: relative;">
+        <div class="profile-card">
+          <div class="profile-inner" style="gap: 14px;">
+            <div class="profile-avatar">A</div>
+            <div class="profile-info">
+              <div class="profile-name" style="font-size: 18px;">Andres</div>
+              <div class="profile-email" style="font-size: 13px; margin-top: 2px;">andres@email.com</div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation" style="top: 44px; left: 100px;">gap: 14px</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label after">After</div>
+      <div class="mock-phone" style="position: relative;">
+        <div class="profile-card">
+          <div class="profile-inner" style="gap: 12px;">
+            <div class="profile-avatar">A</div>
+            <div class="profile-info">
+              <div class="profile-name" style="font-size: 20px; font-weight: 600;">Andres</div>
+              <div class="profile-email" style="font-size: 13px; font-weight: 500; margin-top: 2px;">andres@email.com</div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation" style="top: 44px; left: 98px;">gap: 12px (spacing.md)</div>
+        <div class="annotation" style="top: 72px; left: 180px;">20px semibold (heading3)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== 2. NameInputSection spacing ===================== -->
+  <div class="divider"></div>
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <div>
+      <div class="component-title">NameInputSection <span class="change-tag spacing">marginBottom: 40 &rarr; 48</span></div>
+      <div class="component-desc">Edit Habit screen &mdash; hero section bottom margin snapped to spacing grid (spacing['2xl'] = 48px)</div>
+    </div>
+  </div>
+
+  <div class="comparison-row">
+    <div class="panel">
+      <div class="panel-label before">Before</div>
+      <div class="mock-phone" style="position: relative;">
+        <div class="name-input-section" style="margin-top: 32px; margin-bottom: 40px;">
+          <div class="name-input-title">Edit your habit</div>
+          <input class="name-input-field" value="Morning Run" readonly />
+          <div style="font-size: 13px; color: #6B6560; margin-top: 8px;">11/50 characters</div>
+        </div>
+        <div style="height: 1px; background: #DDD8D2; margin: 0 24px;"></div>
+        <div style="padding: 16px 24px; font-size: 13px; color: #6B6560; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Choose an icon</div>
+        <div class="annotation" style="right: 12px; bottom: 95px;">marginBottom: 40px</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label after">After</div>
+      <div class="mock-phone" style="position: relative;">
+        <div class="name-input-section" style="margin-top: 32px; margin-bottom: 48px;">
+          <div class="name-input-title">Edit your habit</div>
+          <input class="name-input-field" value="Morning Run" readonly />
+          <div style="font-size: 13px; color: #6B6560; margin-top: 8px; font-weight: 500;">11/50 characters</div>
+        </div>
+        <div style="height: 1px; background: #DDD8D2; margin: 0 24px;"></div>
+        <div style="padding: 16px 24px; font-size: 13px; color: #6B6560; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;">Choose an icon</div>
+        <div class="annotation" style="right: 12px; bottom: 95px;">marginBottom: 48px (spacing.2xl)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== 3. SectionLabel danger color ===================== -->
+  <div class="divider"></div>
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <div>
+      <div class="component-title">SectionLabel (danger) <span class="change-tag color">#F87171 &rarr; #DC2626</span></div>
+      <div class="component-desc">Edit Habit screen &mdash; danger label uses theme error color instead of hardcoded red-400</div>
+    </div>
+  </div>
+
+  <div class="comparison-row">
+    <div class="panel">
+      <div class="panel-label before">Before</div>
+      <div class="mock-phone">
+        <div class="section-label-row">
+          <div class="section-label-line"></div>
+          <div class="section-label-text" style="color: #F87171;">DANGER ZONE</div>
+          <div class="section-label-line"></div>
+        </div>
+        <div class="danger-card" style="margin-top: 12px;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEE2E2; display: flex; align-items: center; justify-content: center; font-size: 16px;">🗑</div>
+            <div style="flex: 1;">
+              <div style="font-size: 15px; color: #2D2A26; font-weight: 600;">Delete Habit</div>
+              <div style="font-size: 12px; color: #6B6560;">Permanently remove this habit</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 20px; padding: 0 24px;">
+          <div style="width: 24px; height: 24px; border-radius: 6px; background: #F87171;"></div>
+          <span style="font-size: 12px; color: #C4BFB7; font-family: monospace;">#F87171 (red-400)</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label after">After</div>
+      <div class="mock-phone">
+        <div class="section-label-row">
+          <div class="section-label-line"></div>
+          <div class="section-label-text" style="color: #DC2626;">DANGER ZONE</div>
+          <div class="section-label-line"></div>
+        </div>
+        <div class="danger-card" style="margin-top: 12px;">
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <div style="width: 36px; height: 36px; border-radius: 8px; background: #FEE2E2; display: flex; align-items: center; justify-content: center; font-size: 16px;">🗑</div>
+            <div style="flex: 1;">
+              <div style="font-size: 15px; color: #2D2A26; font-weight: 600;">Delete Habit</div>
+              <div style="font-size: 12px; color: #6B6560;">Permanently remove this habit</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 20px; padding: 0 24px;">
+          <div style="width: 24px; height: 24px; border-radius: 6px; background: #DC2626;"></div>
+          <span style="font-size: 12px; color: #C4BFB7; font-family: monospace;">#DC2626 (status.error)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== 4. SwipeGripLines padding ===================== -->
+  <div class="divider"></div>
+  <div class="section-header">
+    <div class="section-number">4</div>
+    <div>
+      <div class="component-title">SwipeGripLines <span class="change-tag spacing">paddingH: 6 &rarr; 8</span></div>
+      <div class="component-desc">Habit card trailing edge &mdash; grip padding snapped to spacing grid (spacing.sm = 8px)</div>
+    </div>
+  </div>
+
+  <div class="comparison-row">
+    <div class="panel">
+      <div class="panel-label before">Before</div>
+      <div class="mock-phone" style="position: relative;">
+        <div class="habit-card-mock">
+          <div class="habit-emoji">🏃</div>
+          <div class="habit-info">
+            <div class="habit-name">Morning Run</div>
+            <div class="habit-streak">5 day streak</div>
+          </div>
+          <div class="grip-container" style="padding: 16px 6px;">
+            <div class="grip-line"></div>
+            <div class="grip-line"></div>
+            <div class="grip-line"></div>
+          </div>
+        </div>
+        <div class="annotation" style="right: 8px; top: 72px;">padH: 6px</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label after">After</div>
+      <div class="mock-phone" style="position: relative;">
+        <div class="habit-card-mock">
+          <div class="habit-emoji">🏃</div>
+          <div class="habit-info">
+            <div class="habit-name">Morning Run</div>
+            <div class="habit-streak">5 day streak</div>
+          </div>
+          <div class="grip-container" style="padding: 16px 8px;">
+            <div class="grip-line"></div>
+            <div class="grip-line"></div>
+            <div class="grip-line"></div>
+          </div>
+        </div>
+        <div class="annotation" style="right: 8px; top: 72px;">padH: 8px (spacing.sm)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== Verdict ===================== -->
+  <div class="divider"></div>
+  <div class="verdict safe">
+    <strong>Verdict:</strong> All 4 changes are sub-pixel or minor grid-snap corrections. The largest visual change is the danger label color (#F87171 &rarr; #DC2626), which becomes slightly darker/richer. Spacing shifts are 2&ndash;8px. No layout-breaking changes.
+  </div>
+
+</body>
+</html>

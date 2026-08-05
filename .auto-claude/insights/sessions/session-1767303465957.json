@@ -1,0 +1,26 @@
+{
+  "id": "session-1767303465957",
+  "projectId": "a24a06ce-7084-470e-9431-54f05c835469",
+  "title": "Suggest improvements for code quality",
+  "messages": [
+    {
+      "id": "msg-1767665417081",
+      "role": "user",
+      "content": "Suggest improvements for code quality",
+      "timestamp": "2026-01-06T02:10:17.081Z"
+    },
+    {
+      "id": "msg-1767665429119",
+      "role": "user",
+      "content": "test",
+      "timestamp": "2026-01-06T02:10:29.119Z"
+    }
+  ],
+  "createdAt": "2026-01-01T21:37:45.957Z",
+  "updatedAt": "2026-01-06T02:10:29.119Z",
+  "modelConfig": {
+    "profileId": "complex",
+    "model": "opus",
+    "thinkingLevel": "ultrathink"
+  }
+}

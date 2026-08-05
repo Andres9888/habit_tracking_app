@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strength Curve — Strategic Variations</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #efece4;
+    --card: #fbfaf6;
+    --text: #14171a;
+    --text-2: #4a5057;
+    --text-3: #8a8f96;
+    --border: rgba(20,23,26,0.10);
+    --primary: #0f8a6a;
+    --primary-soft: #d6efe5;
+    --primary-tint: rgba(15,138,106,0.10);
+    --primary-strong: #086148;
+    --orange: #d97a3a;
+    --orange-soft: #f8e2cf;
+    --orange-tint: rgba(217,122,58,0.12);
+    --purple: #6b5ca8;
+    --purple-soft: #e1ddf3;
+    --purple-tint: rgba(107,92,168,0.12);
+    --miss: #c84a4a;
+    --warm-accent: #b04e1a;
+  }
+  html, body { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; background: #d8d5cd; padding-bottom: 40px; }
+  .col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .heading { text-align: center; max-width: 360px; }
+  .heading .bet { font-size: 11px; font-weight: 700; color: var(--primary-strong); text-transform: uppercase; letter-spacing: 0.10em; }
+  .heading h2 { font-size: 17px; font-weight: 800; color: var(--text); margin-top: 2px; }
+  .heading p { font-size: 12px; color: var(--text-2); margin-top: 6px; line-height: 1.45; }
+  .phone {
+    width: 360px; height: 780px;
+    border-radius: 44px;
+    background: var(--bg);
+    box-shadow: 0 18px 36px -16px rgba(0,0,0,0.30), 0 0 0 7px #111 inset, 0 0 0 9px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .notch { position: absolute; left: 50%; top: 9px; transform: translateX(-50%); width: 110px; height: 28px; background: #000; border-radius: 18px; z-index: 50; }
+  .status-bar { position: absolute; left: 0; right: 0; top: 0; height: 46px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 16px 26px 0 26px; font-size: 14px; font-weight: 600; color: #0a0a0a; }
+  .header-bar { background: rgba(239,236,228,0.95); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+  .card-selected { border: 1.5px solid var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(15,138,106,0.10); }
+  .pill { font-size: 9.5px; font-weight: 800; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 999px; text-transform: uppercase; }
+  .pill-recommended { background: var(--primary); color: #fff; }
+  .pill-ghost { background: rgba(20,23,26,0.06); color: var(--text-2); }
+  .miss-marker { fill: var(--miss); }
+  .grid-line { stroke: rgba(20,23,26,0.06); stroke-dasharray: 2 4; }
+  .check-circle { background: var(--primary); }
+  table.compare { width: 100%; border-collapse: collapse; }
+  table.compare th, table.compare td { padding: 6px 5px; text-align: center; font-size: 11px; }
+  table.compare thead th { font-size: 12px; font-weight: 800; color: var(--text); padding-top: 4px; padding-bottom: 8px; }
+  table.compare tbody tr { border-top: 1px solid rgba(20,23,26,0.06); }
+  table.compare tbody th { text-align: left; font-weight: 600; color: var(--text-3); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; width: 88px; padding-left: 8px; }
+  table.compare td.col-recommended { background: rgba(15,138,106,0.06); }
+</style>
+</head>
+<body class="flex items-start justify-center gap-8 flex-wrap pt-8">
+
+<!-- ============ STRATEGY A: SMART DEFAULT (zero-friction) ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">A · SMART DEFAULT</div>
+    <h2>"Done in one tap. Tap to change."</h2>
+    <p>Auto-picks based on habit type. Most users never touch it → highest conversion. The 5-10% who care can override.</p>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <!-- Hero -->
+      <div class="px-5 pt-4 pb-3 text-center">
+        <div class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 mb-3" style="background: var(--primary-tint);">
+          <i data-lucide="sparkles" class="w-3 h-3" style="color: var(--primary);"></i>
+          <span class="text-[10.5px] font-bold" style="color: var(--primary);">RECOMMENDED FOR YOU</span>
+        </div>
+        <h1 class="text-[24px] font-extrabold leading-tight" style="color: var(--text);">Textbook</h1>
+        <p class="text-[12.5px] mt-1" style="color: var(--text-2);">Steady gains, honest setbacks.<br/>Based on UCL's 66-day study.</p>
+      </div>
+
+      <!-- Big card preview -->
+      <div class="mx-4 mb-3 card card-selected p-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[11px] font-bold tracking-wider uppercase" style="color: var(--text-3);">Habit strength over time</span>
+          <span class="text-[11px] font-bold" style="color: var(--primary);">~66 days to automatic</span>
+        </div>
+        <svg viewBox="0 0 320 110" class="w-full" style="height: 90px;" preserveAspectRatio="none">
+          <rect x="0" y="0" width="320" height="20" fill="rgba(15,138,106,0.10)"/>
+          <text x="316" y="14" text-anchor="end" font-size="9" font-weight="700" fill="var(--primary)" letter-spacing="0.06em">AUTOMATIC</text>
+          <line class="grid-line" x1="0" y1="55" x2="320" y2="55"/>
+          <line class="grid-line" x1="0" y1="100" x2="320" y2="100"/>
+          <path d="M 4 100 C 60 95, 110 80, 160 60 C 195 46, 215 52, 240 65 C 260 73, 280 50, 305 25 C 316 16, 318 14, 319 12" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+          <path d="M 4 100 C 60 95, 110 80, 160 60 C 195 46, 215 52, 240 65 C 260 73, 280 50, 305 25 C 316 16, 318 14, 319 12 L 319 100 L 4 100 Z" fill="var(--primary)" opacity="0.12"/>
+          <circle class="miss-marker" cx="240" cy="65" r="3"/>
+          <circle cx="120" cy="73" r="3" fill="var(--primary)"/>
+        </svg>
+        <div class="flex justify-between text-[9px] font-bold tracking-wider mt-1" style="color: var(--text-3);">
+          <span>DAY 1</span><span>STRENGTH RISES ON CHECK-INS</span><span>DAY 66</span>
+        </div>
+      </div>
+
+      <!-- Override link -->
+      <div class="px-5 pt-2">
+        <p class="text-[11.5px] text-center mb-3" style="color: var(--text-3);">Building something different?</p>
+        <div class="flex gap-2">
+          <button class="card flex-1 py-2.5 flex items-center justify-center gap-1.5">
+            <i data-lucide="zap" class="w-3.5 h-3.5" style="color: var(--orange);"></i>
+            <span class="text-[12px] font-semibold" style="color: var(--text);">Quick Win</span>
+            <span class="text-[10px]" style="color: var(--text-3);">~18d</span>
+          </button>
+          <button class="card flex-1 py-2.5 flex items-center justify-center gap-1.5">
+            <i data-lucide="mountain" class="w-3.5 h-3.5" style="color: var(--purple);"></i>
+            <span class="text-[12px] font-semibold" style="color: var(--text);">Long Haul</span>
+            <span class="text-[10px]" style="color: var(--text-3);">~120d</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STRATEGY B: OUTCOME-FORWARD ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">B · OUTCOME-FORWARD</div>
+    <h2>"Sell the result, not the math."</h2>
+    <p>Leads with what the user gets ("Locked in by Day 18") not how curves work. Emotional preview drives perceived value → retention.</p>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-5 pt-2 pb-2">
+        <h1 class="text-[20px] font-extrabold leading-tight" style="color: var(--text);">How fast should this click?</h1>
+        <p class="text-[11.5px] mt-0.5" style="color: var(--text-2);">Pick what fits the shape of your habit.</p>
+      </div>
+
+      <!-- Quick Win — outcome card -->
+      <div class="mx-3 mb-2 card p-3.5">
+        <div class="flex items-center gap-3">
+          <div class="text-[28px] leading-none">🚀</div>
+          <div class="flex-1">
+            <div class="text-[15px] font-extrabold" style="color: var(--text);">Locked in by Day 18</div>
+            <div class="text-[11px] mt-0.5" style="color: var(--text-3);">Quick Win · tiny daily things like water, vitamins</div>
+          </div>
+          <span class="pill pill-ghost">~18d</span>
+        </div>
+      </div>
+
+      <!-- Textbook (default + selected) — outcome card -->
+      <div class="mx-3 mb-2 card card-selected p-3.5">
+        <div class="flex items-center gap-3">
+          <div class="text-[28px] leading-none">🌱</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2">
+              <div class="text-[15px] font-extrabold" style="color: var(--text);">Second nature by Day 66</div>
+              <span class="pill pill-recommended">DEFAULT</span>
+            </div>
+            <div class="text-[11px] mt-0.5" style="color: var(--text-3);">Textbook · everyday habits like reading, walking, meditating</div>
+          </div>
+          <div class="check-circle w-6 h-6 rounded-full flex items-center justify-center">
+            <i data-lucide="check" class="w-3.5 h-3.5 text-white"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Long Haul — outcome card -->
+      <div class="mx-3 mb-2 card p-3.5">
+        <div class="flex items-center gap-3">
+          <div class="text-[28px] leading-none">🏔️</div>
+          <div class="flex-1">
+            <div class="text-[15px] font-extrabold" style="color: var(--text);">Identity-level in 4 months</div>
+            <div class="text-[11px] mt-0.5" style="color: var(--text-3);">Long Haul · big commitments like running, writing daily</div>
+          </div>
+          <span class="pill pill-ghost">~120d</span>
+        </div>
+      </div>
+
+      <!-- Inline explainer at bottom -->
+      <div class="mx-4 mt-3 px-3 py-2.5 rounded-xl" style="background: rgba(20,23,26,0.04);">
+        <p class="text-[10.5px] leading-snug" style="color: var(--text-2);">
+          <i data-lucide="info" class="inline w-3 h-3" style="color: var(--text-3); vertical-align: -1px;"></i>
+          <strong style="color: var(--text);">Strength</strong> is the bar you'll see on each habit. Faster curves grow more on check-ins and forgive misses more. Slower ones take longer but stick deeper.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STRATEGY C: COMPARISON TABLE ============ -->
+<div class="col">
+  <div class="heading">
+    <div class="bet">C · COMPARISON TABLE</div>
+    <h2>"Looks like a pricing page."</h2>
+    <p>Familiar SaaS pattern → premium perception. Easy to scan tradeoffs side-by-side. "RECOMMENDED" column draws the eye like an upsell row.</p>
+  </div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-5 pt-2 pb-3">
+        <h1 class="text-[20px] font-extrabold leading-tight" style="color: var(--text);">Compare the three curves</h1>
+        <p class="text-[11.5px] mt-0.5" style="color: var(--text-2);"><strong style="color: var(--text);">Strength</strong> is the bar on each habit. Pick which rhythm fits.</p>
+      </div>
+
+      <!-- Comparison table -->
+      <div class="mx-3 card overflow-hidden">
+        <!-- Top icons row -->
+        <div class="grid grid-cols-[88px_1fr_1fr_1fr] items-end" style="background: rgba(20,23,26,0.025);">
+          <div></div>
+          <div class="text-center pb-2 pt-3">
+            <div class="text-[20px]">🚀</div>
+            <div class="text-[12px] font-extrabold mt-1" style="color: var(--text);">Quick Win</div>
+          </div>
+          <div class="text-center pb-2 pt-1.5 relative" style="background: rgba(15,138,106,0.06);">
+            <div class="absolute -top-0 left-0 right-0 py-0.5" style="background: var(--primary);">
+              <span class="text-[8.5px] font-extrabold tracking-wider text-white">RECOMMENDED</span>
+            </div>
+            <div class="text-[20px] mt-1.5">🌱</div>
+            <div class="text-[12px] font-extrabold mt-1" style="color: var(--text);">Textbook</div>
+          </div>
+          <div class="text-center pb-2 pt-3">
+            <div class="text-[20px]">🏔️</div>
+            <div class="text-[12px] font-extrabold mt-1" style="color: var(--text);">Long Haul</div>
+          </div>
+        </div>
+        <table class="compare">
+          <tbody>
+            <tr>
+              <th>Automatic in</th>
+              <td>~18 days</td>
+              <td class="col-recommended" style="font-weight: 700; color: var(--primary);">~66 days</td>
+              <td>~120 days</td>
+            </tr>
+            <tr>
+              <th>Forgives misses</th>
+              <td>Yes, gentle</td>
+              <td class="col-recommended">Honest</td>
+              <td>Drops hard</td>
+            </tr>
+            <tr>
+              <th>Best for</th>
+              <td style="font-size: 10.5px;">Tiny daily acts</td>
+              <td class="col-recommended" style="font-size: 10.5px;">Everyday habits</td>
+              <td style="font-size: 10.5px;">Big commitments</td>
+            </tr>
+            <tr>
+              <th>Examples</th>
+              <td style="font-size: 10.5px;">💧 water<br/>💊 vitamins</td>
+              <td class="col-recommended" style="font-size: 10.5px;">📖 read<br/>🚶 walk</td>
+              <td style="font-size: 10.5px;">🏃 run<br/>✍️ write</td>
+            </tr>
+            <tr style="border-top: 1px solid rgba(20,23,26,0.10);">
+              <th></th>
+              <td><button class="text-[11px] font-semibold underline" style="color: var(--text-2);">Pick</button></td>
+              <td class="col-recommended">
+                <div class="inline-flex items-center justify-center w-7 h-7 rounded-full" style="background: var(--primary);">
+                  <i data-lucide="check" class="w-4 h-4 text-white"></i>
+                </div>
+              </td>
+              <td><button class="text-[11px] font-semibold underline" style="color: var(--text-2);">Pick</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tiny inline curve preview -->
+      <div class="mx-4 mt-3 px-3 py-2 rounded-xl" style="background: rgba(20,23,26,0.04);">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="text-[10px] font-bold tracking-wider uppercase" style="color: var(--text-3);">Textbook over time</span>
+        </div>
+        <svg viewBox="0 0 320 50" class="w-full" style="height: 36px;" preserveAspectRatio="none">
+          <path d="M 4 46 C 60 42, 110 36, 160 25 C 200 16, 220 22, 240 28 C 260 32, 280 18, 316 6" fill="none" stroke="var(--primary)" stroke-width="2.4" stroke-linecap="round"/>
+          <circle class="miss-marker" cx="240" cy="28" r="2.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

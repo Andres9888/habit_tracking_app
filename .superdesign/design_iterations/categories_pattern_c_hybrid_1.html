@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pattern C — Hybrid (goals + spotlight + chip rail)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f5f1ed;
+      --surface: #edeae5;
+      --surface-2: #ffffff;
+      --text-1: #2d2a26;
+      --text-2: #6b6560;
+      --text-3: #6e6660;
+      --primary: #059669;
+      --primary-700: #047857;
+      --primary-50: #d1fae5;
+      --primary-200: #6ee7b7;
+      --gold-100: #fef3c7;
+      --gold-700: #b45309;
+      --purple-50: #f5f0ff;
+      --purple-700: #6d28d9;
+      --blue-50: #eef4fb;
+      --blue-700: #1d4ed8;
+      --border: #ddd8d2;
+      --shadow-sm: 0 1px 2px rgba(45, 42, 38, 0.05);
+      --shadow-md: 0 4px 14px rgba(45, 42, 38, 0.08);
+      --shadow-lg: 0 24px 60px rgba(45, 42, 38, 0.18);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(5, 150, 105, 0.12), transparent 38%), linear-gradient(180deg, #f7f4ef 0%, #efe9e0 100%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-1);
+      padding: 36px 20px;
+    }
+    .page { max-width: 520px; margin: 0 auto; }
+    .caption { text-align: center; margin-bottom: 18px; color: var(--text-2); }
+    .caption h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      margin: 0 0 6px;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+    }
+    .caption p { margin: 0; font-size: 14px; max-width: 460px; margin: 0 auto; line-height: 1.5; }
+    .phone {
+      background: var(--bg);
+      border-radius: 36px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      width: 390px;
+      margin: 0 auto;
+    }
+    .screen { padding: 18px 0 80px; }
+
+    /* Header */
+    .nav { padding: 14px 20px 8px; }
+    .nav .title {
+      font-family: 'Literata', serif;
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-1);
+    }
+    .nav .sub { color: var(--text-2); font-size: 13px; margin-top: 4px; }
+
+    /* Search */
+    .search-wrap { padding: 12px 20px 14px; }
+    .search {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 16px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-3); font-size: 14px;
+    }
+
+    /* Goal grid (existing GoalCollectionGrid pattern) */
+    .section-head {
+      padding: 6px 20px 10px;
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .section-title {
+      font-family: 'Literata', serif;
+      font-size: 18px; font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .section-sub { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+    .goal-grid {
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .goal-tile {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      min-height: 92px;
+    }
+    .goal-tile.featured {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-color: #fcd34d;
+    }
+    .goal-tile .badge {
+      position: absolute; top: 8px; right: 10px;
+      font-size: 9px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #b45309;
+      background: rgba(255, 255, 255, 0.6);
+      padding: 3px 7px; border-radius: 999px;
+    }
+    .goal-tile .emoji { font-size: 24px; }
+    .goal-tile .label { font-size: 14px; font-weight: 700; margin-top: 6px; color: var(--text-1); }
+    .goal-tile .promise { font-size: 11px; color: var(--text-2); margin-top: 2px; line-height: 1.35; }
+    .goal-tile .count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: var(--text-3); margin-top: 6px;
+    }
+
+    /* Spotlight hero */
+    .spotlight {
+      margin: 18px 20px 0;
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.96), rgba(4, 120, 87, 0.98));
+      color: white;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .spotlight::after {
+      content: '';
+      position: absolute; top: -50px; right: -50px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(255,255,255,0.22), transparent 70%);
+      border-radius: 50%;
+    }
+    .spot-eyebrow {
+      font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+      opacity: 0.9; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .spot-title {
+      font-family: 'Literata', serif;
+      font-size: 24px; font-weight: 800; margin: 8px 0 4px;
+      letter-spacing: -0.01em;
+    }
+    .spot-sub { font-size: 13px; opacity: 0.92; margin-bottom: 12px; line-height: 1.4; }
+    .spot-meta { display: flex; gap: 8px; font-size: 11px; opacity: 0.95; margin-bottom: 14px; flex-wrap: wrap; }
+    .spot-meta .pill {
+      padding: 5px 9px; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px); font-weight: 600;
+    }
+    .spot-actions { display: flex; gap: 8px; }
+    .spot-btn {
+      padding: 10px 16px; border-radius: 12px;
+      background: rgba(255, 255, 255, 0.96);
+      color: var(--primary-700);
+      font-size: 13px; font-weight: 800;
+      border: 0; cursor: pointer; flex: 1;
+    }
+    .spot-btn.ghost {
+      background: transparent; color: white;
+      border: 1px solid rgba(255, 255, 255, 0.5); flex: 0 0 auto;
+    }
+
+    /* Chip rail with ALL 14 categories */
+    .chip-rail-section {
+      padding: 18px 0 0;
+      position: relative;
+    }
+    .chip-rail-head {
+      padding: 0 20px 10px;
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .chip-rail {
+      display: flex; gap: 8px;
+      padding: 0 20px 8px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .chip-rail::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 13px; border-radius: 999px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      font-size: 13px; font-weight: 600; color: var(--text-1);
+    }
+    .chip.active {
+      background: var(--primary); border-color: var(--primary); color: white;
+    }
+    .chip .count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; opacity: 0.65;
+    }
+    .chip.active .count { opacity: 0.9; }
+    .fade-right {
+      position: absolute; right: 0; bottom: 8px; top: 36px;
+      width: 36px; pointer-events: none;
+      background: linear-gradient(to right, transparent, var(--bg) 80%);
+    }
+
+    /* Filtered vertical list */
+    .list-head {
+      padding: 14px 20px 8px;
+      display: flex; align-items: baseline; justify-content: space-between;
+    }
+    .list-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--text-3);
+    }
+    .list { padding: 0 20px; display: flex; flex-direction: column; gap: 8px; }
+    .tpl {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex; gap: 12px; align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .tpl .ico {
+      width: 40px; height: 40px; border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .tpl .body { flex: 1; min-width: 0; }
+    .tpl .name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+    .tpl .meta { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .tpl .add {
+      width: 32px; height: 32px; border-radius: 10px;
+      background: var(--primary-50); color: var(--primary-700);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 800; flex-shrink: 0;
+      border: 1px solid var(--primary-200);
+    }
+
+    /* Premium packs (existing) */
+    .pack-section { padding: 20px 20px 0; }
+    .pack {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(124, 58, 237, 0.04));
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex; gap: 12px; align-items: center;
+    }
+    .pack .ico {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .pack .body { flex: 1; }
+    .pack .name { font-size: 14px; font-weight: 700; }
+    .pack .desc { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+    .pack .price {
+      font-size: 11px; font-weight: 800; color: #6d28d9;
+      padding: 5px 9px; border-radius: 999px; background: rgba(124, 58, 237, 0.1);
+    }
+
+    .legend {
+      max-width: 460px; margin: 18px auto 0;
+      font-size: 13px; color: var(--text-2);
+      text-align: center; line-height: 1.55;
+    }
+    .legend strong { color: var(--text-1); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="caption">
+      <h1>Pattern C — Hybrid</h1>
+      <p>Existing goal-first top + spotlight hero (highest-converting element) + full chip rail with all 14 categories + scannable list below</p>
+    </div>
+
+    <div class="phone">
+      <div class="screen">
+
+        <!-- Header (existing ScreenHeader) -->
+        <div class="nav">
+          <div class="title">What do you want to work on?</div>
+          <div class="sub">Pick a goal — we'll match you with habits proven to work.</div>
+        </div>
+
+        <!-- Search (existing) -->
+        <div class="search-wrap">
+          <div class="search">
+            <span>🔍</span>
+            <span>Try: morning walk · journaling · cold shower</span>
+          </div>
+        </div>
+
+        <!-- Goal grid (existing GoalCollectionGrid) -->
+        <div class="section-head">
+          <div>
+            <div class="section-title">Choose your goal</div>
+          </div>
+        </div>
+        <div class="goal-grid">
+          <div class="goal-tile featured">
+            <div class="badge">Right now</div>
+            <div class="emoji">⚡</div>
+            <div class="label">More energy</div>
+            <div class="promise">Stop crashing at 3pm</div>
+            <div class="count">42 habits</div>
+          </div>
+          <div class="goal-tile">
+            <div class="emoji">😴</div>
+            <div class="label">Sleep better</div>
+            <div class="promise">Wake up restored</div>
+            <div class="count">12 habits</div>
+          </div>
+          <div class="goal-tile">
+            <div class="emoji">🧘</div>
+            <div class="label">Less stress</div>
+            <div class="promise">Calm your nervous system</div>
+            <div class="count">23 habits</div>
+          </div>
+          <div class="goal-tile">
+            <div class="emoji">🎯</div>
+            <div class="label">Be productive</div>
+            <div class="promise">Focus deeper, finish more</div>
+            <div class="count">17 habits</div>
+          </div>
+        </div>
+
+        <!-- SPOTLIGHT HERO — the highest-conversion element -->
+        <div class="spotlight">
+          <span class="spot-eyebrow">✨ Today's Pick</span>
+          <div class="spot-title">5-Minute Meditation</div>
+          <div class="spot-sub">Lower stress and sharpen focus in under 5 minutes a day. 824 people added this week.</div>
+          <div class="spot-meta">
+            <div class="pill">⏱ Daily</div>
+            <div class="pill">🔥 Trending</div>
+            <div class="pill">🧪 Research-backed</div>
+          </div>
+          <div class="spot-actions">
+            <button class="spot-btn">+ Add to my habits</button>
+            <button class="spot-btn ghost">Preview</button>
+          </div>
+        </div>
+
+        <!-- Chip rail with ALL 14 categories + counts -->
+        <div class="chip-rail-section">
+          <div class="chip-rail-head">
+            <div class="section-title">Browse by category</div>
+            <div class="list-count">147 habits</div>
+          </div>
+          <div class="chip-rail">
+            <div class="chip active">✨ All <span class="count">147</span></div>
+            <div class="chip">🌅 Morning <span class="count">8</span></div>
+            <div class="chip">💪 Health <span class="count">42</span></div>
+            <div class="chip">🎯 Productivity <span class="count">17</span></div>
+            <div class="chip">🧘 Mindfulness <span class="count">15</span></div>
+            <div class="chip">🧠 Mental Health <span class="count">10</span></div>
+            <div class="chip">😴 Sleep <span class="count">12</span></div>
+            <div class="chip">📚 Learning <span class="count">11</span></div>
+            <div class="chip">💰 Financial <span class="count">10</span></div>
+            <div class="chip">🎨 Creativity <span class="count">10</span></div>
+            <div class="chip">👥 Social <span class="count">11</span></div>
+            <div class="chip">🧬 Longevity <span class="count">10</span></div>
+            <div class="chip">🔄 Recovery <span class="count">7</span></div>
+            <div class="chip">🌬️ Breathing <span class="count">4</span></div>
+            <div class="chip">🔬 Huberman <span class="count">15</span></div>
+          </div>
+          <div class="fade-right"></div>
+        </div>
+
+        <!-- Filtered list (defaults to All, sorted by popularity) -->
+        <div class="list-head">
+          <div class="section-title">Popular picks</div>
+          <div class="list-count">All categories</div>
+        </div>
+        <div class="list">
+          <div class="tpl">
+            <div class="ico" style="background: var(--primary-50); color: var(--primary-700);">💪</div>
+            <div class="body"><div class="name">7-Minute Workout</div><div class="meta">Health · ⏱ Daily · 🔥 Popular</div></div>
+            <div class="add">+</div>
+          </div>
+          <div class="tpl">
+            <div class="ico" style="background: var(--gold-100); color: var(--gold-700);">🌅</div>
+            <div class="body"><div class="name">Hydration First</div><div class="meta">Morning · ⏱ Daily · 🧪 Research</div></div>
+            <div class="add">+</div>
+          </div>
+          <div class="tpl">
+            <div class="ico" style="background: var(--purple-50); color: var(--purple-700);">🧘</div>
+            <div class="body"><div class="name">Gratitude Journaling</div><div class="meta">Mindfulness · ⏱ Daily · 🧪 Research</div></div>
+            <div class="add">+</div>
+          </div>
+          <div class="tpl">
+            <div class="ico" style="background: var(--blue-50); color: var(--blue-700);">🎯</div>
+            <div class="body"><div class="name">Deep Work Session</div><div class="meta">Productivity · ⏱ Daily</div></div>
+            <div class="add">+</div>
+          </div>
+          <div class="tpl">
+            <div class="ico" style="background: var(--blue-50); color: var(--blue-700);">😴</div>
+            <div class="body"><div class="name">Consistent Bedtime</div><div class="meta">Sleep · ⏱ Daily · 🧪 Research</div></div>
+            <div class="add">+</div>
+          </div>
+          <div class="tpl">
+            <div class="ico" style="background: var(--gold-100); color: var(--gold-700);">🌅</div>
+            <div class="body"><div class="name">Morning Pages</div><div class="meta">Morning · ⏱ Daily · Creative</div></div>
+            <div class="add">+</div>
+          </div>
+        </div>
+
+        <!-- Premium packs (existing) -->
+        <div class="pack-section">
+          <div class="pack">
+            <div class="ico">🔬</div>
+            <div class="body">
+              <div class="name">Andrew Huberman Pack</div>
+              <div class="desc">15 neuroscience-backed protocols</div>
+            </div>
+            <div class="price">PRO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <strong>Why this combination:</strong> goal grid signals personalization · spotlight hero is the highest-converting CTA on screen · chip rail with all 14 categories preserves discovery breadth · filtered list keeps imports one tap away · premium pack stays visible at the bottom.
+    </div>
+  </div>
+</body>
+</html>

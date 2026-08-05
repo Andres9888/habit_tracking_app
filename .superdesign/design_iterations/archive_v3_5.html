@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=390, initial-scale=1.0">
+<title>Archived Habits — Compact List + Bottom Sheet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    color: #2D2A26 !important;
+    width: 390px !important;
+    max-width: 390px !important;
+    margin: 0 auto !important;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Literata', serif !important;
+    margin: 0 !important;
+  }
+
+  /* ── Sticky header ── */
+  .sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #F5F1ED;
+    padding: 16px 20px 12px;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: #2D2A26;
+  }
+  .back-btn:hover { background: #EDEAE5; }
+  .select-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #059669;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 2px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #6E6660;
+    margin-bottom: 12px;
+    padding-left: 46px;
+  }
+
+  /* ── Search bar ── */
+  .search-wrap { position: relative; }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9CA3AF;
+    pointer-events: none;
+  }
+  .search-input {
+    height: 44px;
+    width: 100%;
+    background: #EDEAE5;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    padding: 0 14px 0 42px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: #2D2A26;
+    transition: box-shadow 0.2s;
+  }
+  .search-input::placeholder { color: #9CA3AF; }
+  .search-input:focus { box-shadow: 0 0 0 2px #059669; }
+
+  /* ── Habits card ── */
+  .habits-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(45,42,38,0.06);
+    margin: 8px 20px 24px;
+    overflow: hidden;
+  }
+
+  /* ── Habit row ── */
+  .habit-row {
+    display: flex;
+    align-items: center;
+    height: 64px;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+  }
+  .habit-row:active { background: #FAF8F6; }
+  .habit-row + .habit-row { border-top: 1px solid #DDD8D2; }
+
+  /* Row animations */
+  .habit-row.slide-out {
+    animation: rowSlideOut 0.38s ease-in forwards;
+  }
+  .habit-row.fade-out {
+    animation: rowFadeOut 0.38s ease-in forwards;
+  }
+  @keyframes rowSlideOut {
+    0%   { transform: translateX(0); opacity: 1; max-height: 64px; }
+    60%  { transform: translateX(100%); opacity: 0; max-height: 64px; }
+    100% { transform: translateX(100%); opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; border: none; }
+  }
+  @keyframes rowFadeOut {
+    0%   { opacity: 1; max-height: 64px; }
+    60%  { opacity: 0; max-height: 64px; }
+    100% { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; border: none; }
+  }
+
+  /* Row stagger entrance */
+  .habit-row.entering {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .habit-row.entered {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+  }
+
+  /* ── Emoji circle ── */
+  .emoji-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  /* ── Strength badge ── */
+  .strength-badge {
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 12px;
+  }
+  .chevron-cell {
+    color: #9CA3AF;
+    flex-shrink: 0;
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* ── Selection checkbox ── */
+  .sel-check {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #DDD8D2;
+    border-radius: 6px;
+    flex-shrink: 0;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .sel-check.checked {
+    background: #059669;
+    border-color: #059669;
+  }
+
+  /* ── Backdrop ── */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── Bottom sheet ── */
+  .bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 390px;
+    max-height: 88vh;
+    background: #FFFFFF;
+    border-radius: 24px 24px 0 0;
+    box-shadow: 0 -8px 24px rgba(45,42,38,0.10);
+    z-index: 50;
+    padding: 12px 24px 36px;
+    overflow-y: auto;
+    will-change: transform;
+  }
+  .bottom-sheet.entering {
+    animation: sheetUp 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  .bottom-sheet.exiting {
+    animation: sheetDown 0.25s ease-in forwards;
+  }
+  .bottom-sheet.dragging {
+    animation: none !important;
+    transition: none !important;
+  }
+  @keyframes sheetUp {
+    from { transform: translateX(-50%) translateY(100%); }
+    to   { transform: translateX(-50%) translateY(0); }
+  }
+  @keyframes sheetDown {
+    from { transform: translateX(-50%) translateY(0); }
+    to   { transform: translateX(-50%) translateY(100%); }
+  }
+
+  /* Drag handle */
+  .drag-handle {
+    width: 36px;
+    height: 4px;
+    background: #DDD8D2;
+    border-radius: 2px;
+    margin: 0 auto 20px;
+    cursor: grab;
+  }
+  .drag-handle:active { cursor: grabbing; }
+
+  /* ── Stats grid ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0 24px;
+  }
+  .stat-cell {
+    background: #FAF8F6;
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.2;
+  }
+  .stat-unit {
+    font-size: 13px;
+    font-weight: 400;
+    color: #6E6660;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #6E6660;
+    margin-top: 4px;
+  }
+
+  /* Circular progress ring */
+  .ring-wrap {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 8px;
+  }
+  .ring-wrap svg { width: 56px; height: 56px; }
+  .ring-bg { fill: none; stroke: #EDEAE5; stroke-width: 4; }
+  .ring-fg { fill: none; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+
+  /* ── Sheet buttons ── */
+  .btn-resume {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    background: #059669;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-resume:hover { background: #047857; }
+  .btn-resume:active { transform: scale(0.98); }
+  .btn-resume.restored {
+    background: #10B981;
+    pointer-events: none;
+  }
+
+  .btn-delete-outline {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    background: transparent;
+    color: #B53030;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    border: 2px solid #B53030;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.15s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-delete-outline:hover { background: #FEF2F2; }
+  .btn-delete-outline:active { transform: scale(0.98); }
+
+  /* Confirm row */
+  .confirm-row {
+    display: none;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .confirm-row.visible { display: flex; }
+  .confirm-row button {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s;
+  }
+  .confirm-row button:active { transform: scale(0.97); }
+  .btn-confirm-delete { background: #B53030; color: #fff; }
+  .btn-confirm-cancel { background: #F3F0EC; color: #2D2A26; }
+
+  .btn-cancel-text {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-size: 14px;
+    color: #6E6660;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 2px;
+  }
+  .btn-cancel-text:hover { color: #2D2A26; }
+
+  /* ── Selection bar ── */
+  .selection-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 390px;
+    background: #FFFFFF;
+    box-shadow: 0 -4px 16px rgba(45,42,38,0.10);
+    padding: 14px 20px 30px;
+    z-index: 30;
+    display: flex;
+    gap: 10px;
+    transition: transform 0.3s ease;
+    border-radius: 16px 16px 0 0;
+  }
+  .selection-bar.visible {
+    transform: translateX(-50%) translateY(0);
+  }
+  .selection-bar button {
+    flex: 1;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s;
+  }
+  .selection-bar button:active { transform: scale(0.97); }
+  .sel-resume { background: #059669; color: #fff; }
+  .sel-delete { background: #B53030; color: #fff; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 56px 24px;
+    display: none;
+  }
+  .empty-state.visible { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ Sticky Header ══════════ -->
+<div class="sticky-header">
+  <div class="header-top">
+    <div class="header-left">
+      <button class="back-btn" aria-label="Go back">
+        <i data-lucide="arrow-left" style="width:20px;height:20px;"></i>
+      </button>
+      <h1 style="font-size:22px;font-weight:700;color:#2D2A26;">Archived</h1>
+    </div>
+    <button class="select-btn" id="selectBtn" onclick="toggleSelectionMode()">Select</button>
+  </div>
+  <p class="subtitle" id="subtitle">6 dormant habits</p>
+  <div class="search-wrap">
+    <div class="search-icon">
+      <i data-lucide="search" style="width:18px;height:18px;"></i>
+    </div>
+    <input class="search-input" type="text" placeholder="Search habits..." id="searchInput" oninput="filterHabits()">
+  </div>
+</div>
+
+<!-- ══════════ Habits Card ══════════ -->
+<div class="habits-card" id="habitsCard"></div>
+
+<!-- ══════════ Empty State ══════════ -->
+<div class="empty-state" id="emptyState">
+  <i data-lucide="search-x" style="width:40px;height:40px;color:#9CA3AF;display:inline-block;margin-bottom:10px;"></i>
+  <p style="font-weight:600;color:#6E6660;font-size:15px;margin-bottom:4px;">No habits found</p>
+  <p style="font-size:14px;color:#9CA3AF;">Try a different search term</p>
+</div>
+
+<!-- ══════════ Backdrop ══════════ -->
+<div class="backdrop" id="backdrop" onclick="closeSheet()"></div>
+
+<!-- ══════════ Bottom Sheet ══════════ -->
+<div class="bottom-sheet" id="bottomSheet">
+  <div class="drag-handle" id="dragHandle"></div>
+
+  <!-- Header -->
+  <div style="text-align:center;">
+    <div id="sheetEmoji" style="font-size:48px;line-height:1;margin-bottom:10px;"></div>
+    <h2 id="sheetName" style="font-size:20px;font-weight:700;color:#2D2A26;"></h2>
+    <p id="sheetDormant" style="font-size:14px;color:#6E6660;margin-top:4px;"></p>
+  </div>
+
+  <!-- Stats 2x2 -->
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="ring-wrap" id="ringWrap"></div>
+      <div class="stat-label">Strength</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value" id="streakVal" style="color:#D97706;"></div>
+      <div class="stat-label">Best Streak</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value" id="totalVal" style="color:#2563EB;"></div>
+      <div class="stat-label">Total Completions</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-value" id="createdVal" style="color:#9CA3AF;font-size:15px;"></div>
+      <div class="stat-label">Created</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <button class="btn-resume" id="resumeBtn" onclick="handleResume()">
+    <i data-lucide="play" style="width:16px;height:16px;"></i>
+    Resume Habit
+  </button>
+  <button class="btn-delete-outline" id="deleteBtn" onclick="handleDeleteAsk()">
+    <i data-lucide="trash-2" style="width:16px;height:16px;"></i>
+    Delete Permanently
+  </button>
+  <div class="confirm-row" id="confirmRow">
+    <button class="btn-confirm-delete" onclick="handleDeleteConfirm()">Delete Forever</button>
+    <button class="btn-confirm-cancel" onclick="cancelDeleteConfirm()">Cancel</button>
+  </div>
+  <button class="btn-cancel-text" onclick="closeSheet()">Cancel</button>
+</div>
+
+<!-- ══════════ Selection Bar ══════════ -->
+<div class="selection-bar" id="selectionBar">
+  <button class="sel-resume" onclick="batchResume()">Resume Selected</button>
+  <button class="sel-delete" id="selDeleteBtn" onclick="batchDelete()">Delete Selected</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════
+const habits = [
+  { id: 1, name: 'Morning Meditation', emoji: '🧘', strength: 72, streak: 14, total: 156, daysAgo: 2,  created: 'Jan 15, 2025', bg: '#ECFDF5' },
+  { id: 2, name: 'Daily Journal',      emoji: '✍️', strength: 85, streak: 42, total: 312, daysAgo: 5,  created: 'Nov 3, 2024',  bg: '#EEF2FF' },
+  { id: 3, name: 'Read 30 Minutes',    emoji: '📖', strength: 58, streak: 7,  total: 89,  daysAgo: 12, created: 'Mar 10, 2025', bg: '#FFF7ED' },
+  { id: 4, name: 'Cold Shower',        emoji: '🧊', strength: 35, streak: 3,  total: 24,  daysAgo: 20, created: 'Jun 22, 2025', bg: '#F0F9FF' },
+  { id: 5, name: 'Push-ups',           emoji: '💪', strength: 12, streak: 1,  total: 8,   daysAgo: 67, created: 'Sep 8, 2025',  bg: '#FEF2F2' },
+  { id: 6, name: 'Drink Water',        emoji: '💧', strength: 45, streak: 5,  total: 34,  daysAgo: 83, created: 'Dec 1, 2024',  bg: '#F0FDFA' },
+];
+
+let selectionMode = false;
+let selectedIds = new Set();
+let activeHabitId = null;
+let sheetOpen = false;
+
+// Drag state
+let isDragging = false;
+let dragStartY = 0;
+let dragDelta = 0;
+
+// ═══════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════
+function strengthColor(pct) {
+  if (pct >= 70) return '#059669';
+  if (pct >= 40) return '#D97706';
+  return '#B53030';
+}
+
+function daysAgoLabel(d) {
+  if (d === 0) return 'today';
+  if (d === 1) return '1 day ago';
+  return d + ' days ago';
+}
+
+// ═══════════════════════════════════════
+//  RENDER ROWS
+// ═══════════════════════════════════════
+function renderRows() {
+  const card = document.getElementById('habitsCard');
+  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  card.innerHTML = '';
+
+  const filtered = habits.filter(h => h.name.toLowerCase().includes(query));
+
+  document.getElementById('emptyState').classList.toggle('visible', filtered.length === 0);
+  document.getElementById('subtitle').textContent =
+    filtered.length + ' dormant habit' + (filtered.length !== 1 ? 's' : '');
+
+  filtered.forEach((h, idx) => {
+    const row = document.createElement('div');
+    row.className = 'habit-row entering';
+    row.id = 'row-' + h.id;
+    row.setAttribute('data-id', h.id);
+
+    row.onclick = () => {
+      if (selectionMode) { toggleSelect(h.id); return; }
+      openSheet(h.id);
+    };
+
+    // Checkbox (selection mode)
+    let checkHTML = '';
+    if (selectionMode) {
+      const isChecked = selectedIds.has(h.id);
+      checkHTML = '<div class="sel-check' + (isChecked ? ' checked' : '') + '" onclick="event.stopPropagation(); toggleSelect(' + h.id + ')">'
+        + (isChecked ? '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6L5 8.5L9.5 3.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '')
+        + '</div>';
+    }
+
+    const sColor = strengthColor(h.strength);
+
+    row.innerHTML = checkHTML
+      + '<div class="emoji-circle" style="background:' + h.bg + ';">' + h.emoji + '</div>'
+      + '<div style="flex:1;min-width:0;">'
+      +   '<div style="font-size:15px;font-weight:600;color:#2D2A26;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + h.name + '</div>'
+      +   '<div style="font-size:13px;color:#9CA3AF;">' + daysAgoLabel(h.daysAgo) + '</div>'
+      + '</div>'
+      + '<span class="strength-badge" style="color:' + sColor + ';">' + h.strength + '%</span>'
+      + (selectionMode ? '' : '<span class="chevron-cell"><i data-lucide="chevron-right" style="width:16px;height:16px;"></i></span>');
+
+    card.appendChild(row);
+
+    // Stagger entrance
+    setTimeout(() => { row.classList.remove('entering'); row.classList.add('entered'); }, 40 + idx * 45);
+  });
+
+  lucide.createIcons();
+}
+
+function filterHabits() { renderRows(); }
+
+// ═══════════════════════════════════════
+//  SELECTION MODE
+// ═══════════════════════════════════════
+function toggleSelectionMode() {
+  selectionMode = !selectionMode;
+  selectedIds.clear();
+  document.getElementById('selectBtn').textContent = selectionMode ? 'Done' : 'Select';
+  document.getElementById('selectionBar').classList.remove('visible');
+  // Reset batch delete button
+  const sdb = document.getElementById('selDeleteBtn');
+  sdb.textContent = 'Delete Selected';
+  sdb.style.background = '#B53030';
+  renderRows();
+}
+
+function toggleSelect(id) {
+  if (selectedIds.has(id)) selectedIds.delete(id);
+  else selectedIds.add(id);
+  document.getElementById('selectionBar').classList.toggle('visible', selectedIds.size > 0);
+  renderRows();
+}
+
+// ═══════════════════════════════════════
+//  BOTTOM SHEET
+// ═══════════════════════════════════════
+function openSheet(id) {
+  if (sheetOpen) return;
+  sheetOpen = true;
+  activeHabitId = id;
+  const h = habits.find(x => x.id === id);
+  if (!h) return;
+
+  document.getElementById('sheetEmoji').textContent = h.emoji;
+  document.getElementById('sheetName').textContent = h.name;
+  document.getElementById('sheetDormant').textContent = 'Dormant for ' + h.daysAgo + ' days';
+
+  // Streak
+  document.getElementById('streakVal').innerHTML =
+    h.streak + '<span class="stat-unit"> days</span>';
+  // Total
+  document.getElementById('totalVal').innerHTML =
+    h.total + '<span class="stat-unit"> times</span>';
+  // Created
+  document.getElementById('createdVal').textContent = h.created;
+
+  // Strength ring
+  const pct = h.strength;
+  const color = strengthColor(pct);
+  const r = 22;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (pct / 100) * circ;
+  document.getElementById('ringWrap').innerHTML =
+    '<svg viewBox="0 0 56 56">'
+    + '<circle class="ring-bg" cx="28" cy="28" r="' + r + '"/>'
+    + '<circle class="ring-fg" cx="28" cy="28" r="' + r + '" stroke="' + color + '" '
+    + 'stroke-dasharray="' + circ + '" stroke-dashoffset="' + circ + '" '
+    + 'transform="rotate(-90 28 28)"/>'
+    + '<text x="28" y="28" text-anchor="middle" dominant-baseline="central" '
+    + 'style="font-family:DM Sans;font-size:14px;font-weight:700;fill:' + color + ';">'
+    + pct + '%</text>'
+    + '</svg>';
+
+  // Animate the ring after a tick
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const fg = document.querySelector('.ring-fg');
+      if (fg) fg.setAttribute('stroke-dashoffset', offset);
+    });
+  });
+
+  // Reset button states
+  const resumeBtn = document.getElementById('resumeBtn');
+  resumeBtn.innerHTML = '<i data-lucide="play" style="width:16px;height:16px;"></i> Resume Habit';
+  resumeBtn.classList.remove('restored');
+  resumeBtn.disabled = false;
+
+  const deleteBtn = document.getElementById('deleteBtn');
+  deleteBtn.style.display = '';
+  document.getElementById('confirmRow').classList.remove('visible');
+
+  // Show
+  const sheet = document.getElementById('bottomSheet');
+  const backdrop = document.getElementById('backdrop');
+  sheet.classList.remove('exiting');
+  sheet.classList.add('entering');
+  backdrop.classList.add('active');
+
+  lucide.createIcons();
+}
+
+function closeSheet() {
+  const sheet = document.getElementById('bottomSheet');
+  const backdrop = document.getElementById('backdrop');
+  sheet.classList.remove('entering', 'dragging');
+  sheet.classList.add('exiting');
+  backdrop.classList.remove('active');
+  sheet.style.transform = '';
+  setTimeout(() => {
+    sheet.classList.remove('exiting');
+    sheetOpen = false;
+    activeHabitId = null;
+  }, 260);
+}
+
+// ── Drag to dismiss ──
+const sheetEl = document.getElementById('bottomSheet');
+const handleEl = document.getElementById('dragHandle');
+
+function onDragStart(clientY) {
+  if (!sheetOpen) return;
+  isDragging = true;
+  dragStartY = clientY;
+  dragDelta = 0;
+  sheetEl.classList.add('dragging');
+}
+function onDragMove(clientY) {
+  if (!isDragging) return;
+  dragDelta = Math.max(0, clientY - dragStartY);
+  sheetEl.style.transform = 'translateX(-50%) translateY(' + dragDelta + 'px)';
+}
+function onDragEnd() {
+  if (!isDragging) return;
+  isDragging = false;
+  sheetEl.classList.remove('dragging');
+  if (dragDelta > 120) {
+    closeSheet();
+  } else {
+    sheetEl.style.transform = '';
+    // Re-apply entering position
+    sheetEl.classList.add('entering');
+  }
+  dragDelta = 0;
+}
+
+// Touch
+handleEl.addEventListener('touchstart', e => onDragStart(e.touches[0].clientY), { passive: true });
+document.addEventListener('touchmove', e => { if (isDragging) onDragMove(e.touches[0].clientY); }, { passive: true });
+document.addEventListener('touchend', onDragEnd);
+// Mouse (desktop testing)
+handleEl.addEventListener('mousedown', e => { onDragStart(e.clientY); e.preventDefault(); });
+document.addEventListener('mousemove', e => onDragMove(e.clientY));
+document.addEventListener('mouseup', onDragEnd);
+
+// ═══════════════════════════════════════
+//  RESUME
+// ═══════════════════════════════════════
+function handleResume() {
+  const btn = document.getElementById('resumeBtn');
+  btn.innerHTML = '<i data-lucide="check" style="width:16px;height:16px;"></i> Restored!';
+  btn.classList.add('restored');
+  btn.disabled = true;
+  lucide.createIcons();
+
+  const id = activeHabitId;
+  setTimeout(() => {
+    closeSheet();
+    setTimeout(() => {
+      const row = document.getElementById('row-' + id);
+      if (row) {
+        row.classList.add('slide-out');
+        row.addEventListener('animationend', () => {
+          const idx = habits.findIndex(h => h.id === id);
+          if (idx > -1) habits.splice(idx, 1);
+          renderRows();
+        }, { once: true });
+      }
+    }, 300);
+  }, 700);
+}
+
+// ═══════════════════════════════════════
+//  DELETE
+// ═══════════════════════════════════════
+function handleDeleteAsk() {
+  document.getElementById('deleteBtn').style.display = 'none';
+  document.getElementById('confirmRow').classList.add('visible');
+}
+
+function cancelDeleteConfirm() {
+  document.getElementById('deleteBtn').style.display = '';
+  document.getElementById('confirmRow').classList.remove('visible');
+}
+
+function handleDeleteConfirm() {
+  const id = activeHabitId;
+  closeSheet();
+  setTimeout(() => {
+    const row = document.getElementById('row-' + id);
+    if (row) {
+      row.classList.add('fade-out');
+      row.addEventListener('animationend', () => {
+        const idx = habits.findIndex(h => h.id === id);
+        if (idx > -1) habits.splice(idx, 1);
+        renderRows();
+      }, { once: true });
+    }
+  }, 300);
+}
+
+// ═══════════════════════════════════════
+//  BATCH ACTIONS
+// ═══════════════════════════════════════
+function batchResume() {
+  const ids = [...selectedIds];
+  ids.forEach(id => {
+    const row = document.getElementById('row-' + id);
+    if (row) row.classList.add('slide-out');
+  });
+  setTimeout(() => {
+    ids.forEach(id => {
+      const idx = habits.findIndex(h => h.id === id);
+      if (idx > -1) habits.splice(idx, 1);
+    });
+    exitSelection();
+  }, 420);
+}
+
+function batchDelete() {
+  const btn = document.getElementById('selDeleteBtn');
+  if (btn.textContent === 'Delete Selected') {
+    btn.textContent = 'Confirm Delete';
+    btn.style.background = '#7F1D1D';
+    return;
+  }
+  const ids = [...selectedIds];
+  ids.forEach(id => {
+    const row = document.getElementById('row-' + id);
+    if (row) row.classList.add('fade-out');
+  });
+  setTimeout(() => {
+    ids.forEach(id => {
+      const idx = habits.findIndex(h => h.id === id);
+      if (idx > -1) habits.splice(idx, 1);
+    });
+    exitSelection();
+  }, 420);
+}
+
+function exitSelection() {
+  selectedIds.clear();
+  selectionMode = false;
+  document.getElementById('selectBtn').textContent = 'Select';
+  document.getElementById('selectionBar').classList.remove('visible');
+  const sdb = document.getElementById('selDeleteBtn');
+  sdb.textContent = 'Delete Selected';
+  sdb.style.background = '#B53030';
+  renderRows();
+}
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+renderRows();
+lucide.createIcons();
+</script>
+</body>
+</html>

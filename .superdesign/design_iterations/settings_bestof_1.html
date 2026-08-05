@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings — Best-of synthesis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #ede8e1;
+        --card: #faf8f5;
+        --line: #e7e1d8;
+        --ink: #2d2a26;
+        --ink2: #6b6560;
+        --ink3: #9a938b;
+        --green: #047857;
+        --green-btn: #059669;
+        --green-tile: #e2f1ea;
+        --red: #b53030;
+        --red-tile: #fbe7e5;
+        --serif: 'Literata', Georgia, serif;
+        --sans: 'Inter', system-ui, sans-serif;
+        --shadow:
+          0 8px 22px -12px rgba(45, 42, 38, 0.22),
+          0 2px 6px -3px rgba(45, 42, 38, 0.1);
+      }
+      * {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        margin: 0;
+        background: #cdc7bd;
+        font-family: var(--sans);
+        color: var(--ink);
+      }
+      .phone {
+        width: 430px;
+        margin: 24px auto;
+        background: var(--bg);
+        border-radius: 42px;
+        padding: 0 0 40px;
+        overflow: hidden;
+        box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.5);
+      }
+      .statusbar {
+        height: 54px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0 26px 6px;
+        font-weight: 600;
+        font-size: 15px;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 8px 0 18px;
+      }
+      .nav h1 {
+        font-family: var(--serif);
+        font-weight: 700;
+        font-size: 26px;
+        letter-spacing: -0.4px;
+        margin: 0;
+      }
+      .nav .x {
+        position: absolute;
+        right: 20px;
+        top: 4px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #e4ded5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ink2);
+      }
+      .wrap {
+        padding: 0 16px;
+      }
+      .group {
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: 15.5px;
+        color: var(--ink);
+        letter-spacing: -0.1px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 22px 6px 9px;
+      }
+      .group svg {
+        color: var(--green);
+      }
+      .card {
+        background: var(--card);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .foot {
+        text-align: center;
+        color: var(--ink3);
+        font-size: 12px;
+        margin: 11px 0 2px;
+        letter-spacing: 0.2px;
+      }
+
+      /* hero */
+      .hero {
+        background: var(--card);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .hero-top {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 16px 14px;
+      }
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #d7e9e0;
+        box-shadow:
+          0 0 0 2px #fff,
+          0 0 0 4px var(--green);
+        background-size: cover;
+        flex: none;
+        background-image: url('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=160&q=80');
+      }
+      .hero-id {
+        flex: 1;
+        min-width: 0;
+      }
+      .hero-name {
+        font-family: var(--serif);
+        font-weight: 600;
+        font-size: 19px;
+        letter-spacing: -0.3px;
+      }
+      .hero-sub {
+        color: var(--ink2);
+        font-size: 13.5px;
+        margin-top: 2px;
+      }
+      .chev {
+        color: var(--ink3);
+      }
+      .stats {
+        display: flex;
+        border-top: 1px solid var(--line);
+      }
+      .stat {
+        flex: 1;
+        text-align: center;
+        padding: 14px 6px 16px;
+      }
+      .stat + .stat {
+        border-left: 1px solid var(--line);
+      }
+      .stat .n {
+        font-family: var(--serif);
+        font-weight: 700;
+        font-size: 25px;
+        color: var(--green);
+        line-height: 1;
+        letter-spacing: -0.5px;
+      }
+      .stat .l {
+        font-size: 11px;
+        color: var(--ink2);
+        margin-top: 6px;
+        letter-spacing: 0.2px;
+      }
+
+      /* search */
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        background: #e4ded5;
+        border-radius: 13px;
+        padding: 11px 14px;
+        margin-top: 16px;
+        color: var(--ink3);
+        font-size: 15px;
+      }
+
+      /* preview */
+      .pv {
+        padding: 14px 14px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+      .pv-cap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 2px 11px;
+      }
+      .pv-cap .t {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 14px;
+        color: var(--ink2);
+      }
+      .pv-live {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--ink3);
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+      .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--green-btn);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.35;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .demo {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 13px 12px 11px;
+      }
+      .wk {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0;
+        align-items: center;
+      }
+      .wk .lab {
+        font-size: 9.5px;
+        color: var(--ink3);
+        text-align: center;
+        padding-bottom: 7px;
+        font-weight: 600;
+      }
+      .cellrow {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        align-items: center;
+        position: relative;
+        margin-bottom: 9px;
+      }
+      .cell {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+      }
+      .done {
+        background: var(--green-btn);
+        color: #fff;
+      }
+      .done svg {
+        width: 15px;
+        height: 15px;
+      }
+      .miss {
+        background: #f1ece4;
+        box-shadow: inset 0 0 0 1.5px #e0d9ce;
+      }
+      .today {
+        background: #fff;
+        box-shadow:
+          0 0 0 2px var(--green-btn),
+          0 0 0 5px rgba(5, 150, 105, 0.18);
+      }
+      .conn {
+        position: absolute;
+        top: 50%;
+        height: 4px;
+        background: var(--green-btn);
+        z-index: 1;
+        transform: translateY(-50%);
+        opacity: 0.85;
+      }
+      .legend {
+        display: flex;
+        gap: 18px;
+        justify-content: center;
+        margin-top: 9px;
+        font-size: 11px;
+        color: var(--ink2);
+      }
+      .legend i {
+        display: inline-block;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        margin-right: 5px;
+        vertical-align: -1px;
+      }
+
+      /* rows */
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 13px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .row:last-child {
+        border-bottom: 0;
+      }
+      .tile {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--green-tile);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--green);
+        flex: none;
+      }
+      .rtext {
+        flex: 1;
+        min-width: 0;
+      }
+      .rlabel {
+        font-weight: 600;
+        font-size: 15.5px;
+        color: var(--ink);
+      }
+      .rsub {
+        font-size: 12.5px;
+        color: var(--ink2);
+        margin-top: 2px;
+      }
+      .seg {
+        display: flex;
+        background: #ede7de;
+        border-radius: 10px;
+        padding: 3px;
+        gap: 2px;
+      }
+      .seg span {
+        padding: 6px 10px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        color: var(--ink2);
+        display: flex;
+        align-items: center;
+      }
+      .seg .on {
+        background: #fff;
+        color: var(--green);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        font-weight: 600;
+      }
+      .pick {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        color: var(--ink2);
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .toggle {
+        width: 50px;
+        height: 30px;
+        border-radius: 16px;
+        background: var(--green-btn);
+        position: relative;
+        flex: none;
+      }
+      .toggle.off {
+        background: #cfc8bd;
+      }
+      .toggle b {
+        position: absolute;
+        top: 3px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+      }
+      .toggle b {
+        right: 3px;
+      }
+      .toggle.off b {
+        left: 3px;
+        right: auto;
+      }
+      .badge {
+        background: #e4ded5;
+        color: var(--ink2);
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 9px;
+        padding: 1px 8px;
+      }
+
+      /* quarantined delete */
+      .danger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px;
+        margin-top: 10px;
+        color: var(--ink2);
+        font-size: 14.5px;
+        font-weight: 500;
+      }
+      .danger svg {
+        width: 16px;
+        height: 16px;
+        color: var(--ink3);
+      }
+      .note {
+        font-family: var(--serif);
+        font-style: italic;
+        font-size: 11px;
+        color: #b08a52;
+        text-align: right;
+        margin: 6px 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone">
+      <div class="statusbar">
+        <span>9:41</span><span>&#9679;&#9679;&#9679;&#9679;&#9679;</span>
+      </div>
+      <div class="nav">
+        <h1>Settings</h1>
+        <div class="x">&#10005;</div>
+      </div>
+
+      <div class="wrap">
+        <!-- HERO with one-green stat strip -->
+        <div class="hero">
+          <div class="hero-top">
+            <div class="avatar"></div>
+            <div class="hero-id">
+              <div class="hero-name">Andres Gutierrez</div>
+              <div class="hero-sub">Free plan</div>
+            </div>
+            <div class="chev">&#8250;</div>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <div class="n">7</div>
+              <div class="l">Active habits</div>
+            </div>
+            <div class="stat">
+              <div class="n">23</div>
+              <div class="l">Flawless days</div>
+            </div>
+            <div class="stat">
+              <div class="n">1,284</div>
+              <div class="l">Completions</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="search">&#128269; Search settings</div>
+
+        <!-- LOOK & FEEL -->
+        <div class="group">
+          Look &amp; Feel
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+            />
+          </svg>
+        </div>
+        <div class="card">
+          <!-- named live preview -->
+          <div class="pv">
+            <div class="pv-cap">
+              <div class="t">Your calendar</div>
+              <div class="pv-live"><span class="dot"></span>UPDATES LIVE</div>
+            </div>
+            <div class="demo">
+              <div class="wk">
+                <div class="lab">M</div>
+                <div class="lab">T</div>
+                <div class="lab">W</div>
+                <div class="lab">T</div>
+                <div class="lab">F</div>
+                <div class="lab">S</div>
+                <div class="lab">S</div>
+              </div>
+              <div class="cellrow">
+                <div class="conn" style="left: 14%; width: 29%"></div>
+                <div class="cell done">&#10003;</div>
+                <div class="cell done">&#10003;</div>
+                <div class="cell done">&#10003;</div>
+                <div class="cell miss"></div>
+                <div class="cell done">&#10003;</div>
+                <div class="cell miss"></div>
+                <div class="cell miss"></div>
+              </div>
+              <div class="cellrow">
+                <div class="conn" style="left: 14%; width: 14%"></div>
+                <div class="cell done">&#10003;</div>
+                <div class="cell done">&#10003;</div>
+                <div class="cell today"></div>
+                <div class="cell miss"></div>
+                <div class="cell miss"></div>
+                <div class="cell miss"></div>
+                <div class="cell miss"></div>
+              </div>
+              <div class="legend">
+                <span><i style="background: #059669"></i>Completed</span>
+                <span
+                  ><i
+                    style="
+                      background: #f1ece4;
+                      box-shadow: inset 0 0 0 1.5px #e0d9ce;
+                    "
+                  ></i
+                  >Missed</span
+                >
+                <span
+                  ><i
+                    style="background: #fff; box-shadow: 0 0 0 2px #059669"
+                  ></i
+                  >Today</span
+                >
+              </div>
+            </div>
+          </div>
+          <!-- theme -->
+          <div class="row">
+            <div class="tile">&#9788;</div>
+            <div class="rtext"><div class="rlabel">Theme</div></div>
+            <div class="seg">
+              <span class="on">&#9728;</span><span>&#9789;</span
+              ><span>&#128241;</span>
+            </div>
+          </div>
+          <!-- day marker + NEW subtitle -->
+          <div class="row">
+            <div class="tile">&#9711;</div>
+            <div class="rtext">
+              <div class="rlabel">Day marker shape</div>
+              <div class="rsub">Circles or squares on the calendar</div>
+            </div>
+            <div class="pick">&#9711; &#8250;</div>
+          </div>
+          <!-- completion icon + NEW subtitle -->
+          <div class="row">
+            <div class="tile">&#10003;</div>
+            <div class="rtext">
+              <div class="rlabel">Completion icon</div>
+              <div class="rsub">Checkmark or chain link when done</div>
+            </div>
+            <div class="pick">&#128279; &#10003;</div>
+          </div>
+          <div class="row">
+            <div class="tile">&#9737;</div>
+            <div class="rtext">
+              <div class="rlabel">Gradient streak fill</div>
+              <div class="rsub">Color fills active streak cells</div>
+            </div>
+            <div class="toggle"><b></b></div>
+          </div>
+        </div>
+
+        <!-- DATA & PRIVACY with quarantined delete -->
+        <div class="group">
+          Data &amp; Privacy
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <ellipse cx="12" cy="5" rx="9" ry="3" />
+            <path d="M3 5v14a9 3 0 0 0 18 0V5" />
+          </svg>
+        </div>
+        <div class="card">
+          <div class="row">
+            <div class="tile">&#128218;</div>
+            <div class="rtext">
+              <div class="rlabel">Archived habits</div>
+              <div class="rsub">View and restore hidden habits</div>
+            </div>
+            <span class="badge">4</span>
+          </div>
+          <div class="row">
+            <div class="tile">&#11015;</div>
+            <div class="rtext">
+              <div class="rlabel">Export habits data</div>
+              <div class="rsub">Download as CSV or JSON</div>
+            </div>
+            <div class="chev">&#8250;</div>
+          </div>
+        </div>
+        <!-- quarantined: out of card, recessed, neutral, no tile -->
+        <div class="danger">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+            />
+          </svg>
+          Delete account
+        </div>
+        <div class="note">best-of synthesis &middot; v1</div>
+      </div>
+    </div>
+  </body>
+</html>

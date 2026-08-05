@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Details - Tabbed Layout Redesign</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #1a1a1a !important; }
+
+    /* iPhone frame */
+    .phone-frame {
+      width: 390px;
+      height: 844px;
+      background: linear-gradient(180deg, #fafaf9 0%, #f5f5f4 100%);
+      border-radius: 44px;
+      box-shadow: 0 50px 100px -20px rgba(0,0,0,0.5), 0 0 0 12px #1a1a1a, 0 0 0 14px #333;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Notch */
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 160px;
+      height: 34px;
+      background: #1a1a1a;
+      border-radius: 0 0 20px 20px;
+      z-index: 100;
+    }
+
+    /* Tab animations */
+    .tab-btn {
+      transition: all 0.2s ease;
+    }
+    .tab-btn.active {
+      color: #7c3aed;
+      border-bottom: 2px solid #7c3aed;
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Complete button pulse */
+    .complete-btn {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+    }
+
+    /* Stat card hover */
+    .stat-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px -5px rgba(0,0,0,0.1);
+    }
+
+    /* Section cards */
+    .section-card {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    /* Progress ring */
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.5s ease;
+    }
+
+    /* Scrollbar hide */
+    .scroll-hide::-webkit-scrollbar { display: none; }
+    .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-8">
+
+  <div class="phone-frame relative">
+    <div class="notch"></div>
+
+    <!-- Status bar area -->
+    <div class="h-12"></div>
+
+    <!-- Header -->
+    <div class="px-4 py-2 flex items-center justify-between">
+      <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-200 transition">
+        <i data-lucide="x" class="w-6 h-6 text-stone-600"></i>
+      </button>
+      <button class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-stone-200 transition">
+        <i data-lucide="pencil" class="w-5 h-5 text-stone-600"></i>
+      </button>
+    </div>
+
+    <!-- Hero Section (Sticky) -->
+    <div class="px-4 pb-4">
+      <!-- Icon + Name -->
+      <div class="flex flex-col items-center mb-4">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center mb-3 shadow-lg">
+          <span class="text-4xl">🧘</span>
+        </div>
+        <h1 class="text-xl font-bold text-stone-800">Morning Meditation</h1>
+        <p class="text-sm text-stone-500">Daily mindfulness practice</p>
+      </div>
+
+      <!-- Complete Button -->
+      <button class="complete-btn w-full py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl flex items-center justify-center gap-3 mb-4 shadow-lg hover:shadow-xl transition">
+        <i data-lucide="check-circle-2" class="w-6 h-6 text-white"></i>
+        <span class="text-white font-semibold text-lg">Complete Today</span>
+      </button>
+
+      <!-- Quick Stats Strip -->
+      <div class="flex gap-2">
+        <div class="stat-card flex-1 bg-white rounded-xl p-3 text-center cursor-pointer">
+          <div class="text-2xl font-bold text-orange-500">12</div>
+          <div class="text-xs text-stone-500 flex items-center justify-center gap-1">
+            <span>🔥</span> streak
+          </div>
+        </div>
+        <div class="stat-card flex-1 bg-white rounded-xl p-3 text-center cursor-pointer">
+          <div class="text-2xl font-bold text-violet-500">68%</div>
+          <div class="text-xs text-stone-500 flex items-center justify-center gap-1">
+            <span>💪</span> strength
+          </div>
+        </div>
+        <div class="stat-card flex-1 bg-white rounded-xl p-3 text-center cursor-pointer">
+          <div class="text-2xl font-bold text-emerald-500">89%</div>
+          <div class="text-xs text-stone-500 flex items-center justify-center gap-1">
+            <span>✓</span> success
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="px-4 border-b border-stone-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <div class="flex">
+        <button class="tab-btn active flex-1 py-3 text-sm font-medium text-center" data-tab="progress">
+          Progress
+        </button>
+        <button class="tab-btn flex-1 py-3 text-sm font-medium text-center text-stone-500" data-tab="motivation">
+          Motivation
+        </button>
+        <button class="tab-btn flex-1 py-3 text-sm font-medium text-center text-stone-500" data-tab="manage">
+          Manage
+        </button>
+      </div>
+    </div>
+
+    <!-- Tab Content Area -->
+    <div class="flex-1 overflow-y-auto scroll-hide" style="height: 340px;">
+
+      <!-- Progress Tab -->
+      <div id="progress" class="tab-content active p-4">
+
+        <!-- Streak Chain -->
+        <div class="section-card">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-stone-800">Streak Chain</h3>
+            <span class="text-xs text-stone-500">Best: 24 days</span>
+          </div>
+          <div class="flex justify-between">
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+              </div>
+              <span class="text-xs text-stone-500">Mon</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+              </div>
+              <span class="text-xs text-stone-500">Tue</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+              </div>
+              <span class="text-xs text-stone-500">Wed</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+              </div>
+              <span class="text-xs text-stone-500">Thu</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center mb-1">
+                <i data-lucide="check" class="w-5 h-5 text-white"></i>
+              </div>
+              <span class="text-xs text-stone-500">Fri</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-stone-200 flex items-center justify-center mb-1">
+                <i data-lucide="x" class="w-5 h-5 text-stone-400"></i>
+              </div>
+              <span class="text-xs text-stone-500">Sat</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-violet-500 flex items-center justify-center mb-1 ring-2 ring-violet-300 ring-offset-2">
+                <span class="text-white text-sm font-bold">?</span>
+              </div>
+              <span class="text-xs font-medium text-violet-600">Today</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Heatmap -->
+        <div class="section-card">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-stone-800">December 2025</h3>
+            <div class="flex gap-1">
+              <button class="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center">
+                <i data-lucide="chevron-left" class="w-4 h-4 text-stone-500"></i>
+              </button>
+              <button class="w-8 h-8 rounded-full hover:bg-stone-100 flex items-center justify-center">
+                <i data-lucide="chevron-right" class="w-4 h-4 text-stone-500"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Mini calendar grid -->
+          <div class="grid grid-cols-7 gap-1 text-center text-xs">
+            <span class="text-stone-400">S</span>
+            <span class="text-stone-400">M</span>
+            <span class="text-stone-400">T</span>
+            <span class="text-stone-400">W</span>
+            <span class="text-stone-400">T</span>
+            <span class="text-stone-400">F</span>
+            <span class="text-stone-400">S</span>
+            <!-- Days -->
+            <span></span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">1</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">2</span>
+            <span class="w-6 h-6 rounded bg-emerald-400 text-white flex items-center justify-center mx-auto">3</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">4</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">5</span>
+            <span class="w-6 h-6 rounded bg-stone-200 text-stone-400 flex items-center justify-center mx-auto">6</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">7</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">8</span>
+            <span class="w-6 h-6 rounded bg-emerald-400 text-white flex items-center justify-center mx-auto">9</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">10</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">11</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">12</span>
+            <span class="w-6 h-6 rounded bg-stone-200 text-stone-400 flex items-center justify-center mx-auto">13</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">14</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">15</span>
+            <span class="w-6 h-6 rounded bg-emerald-400 text-white flex items-center justify-center mx-auto">16</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">17</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">18</span>
+            <span class="w-6 h-6 rounded bg-emerald-500 text-white flex items-center justify-center mx-auto">19</span>
+            <span class="w-6 h-6 rounded ring-2 ring-violet-500 bg-white text-violet-600 font-bold flex items-center justify-center mx-auto">20</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">21</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">22</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">23</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">24</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">25</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">26</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">27</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">28</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">29</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">30</span>
+            <span class="w-6 h-6 rounded bg-stone-100 text-stone-300 flex items-center justify-center mx-auto">31</span>
+          </div>
+        </div>
+
+        <!-- Habit Strength -->
+        <div class="section-card">
+          <div class="flex items-center gap-4">
+            <div class="relative">
+              <svg class="progress-ring w-16 h-16">
+                <circle cx="32" cy="32" r="28" stroke="#e5e5e5" stroke-width="6" fill="none"/>
+                <circle class="progress-ring-circle" cx="32" cy="32" r="28" stroke="url(#gradient)" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="176" stroke-dashoffset="56"/>
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#8b5cf6"/>
+                    <stop offset="100%" stop-color="#a78bfa"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-sm font-bold text-violet-600">68%</span>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-stone-800">Habit Strength</h3>
+              <p class="text-sm text-stone-500">Building momentum 🌿</p>
+              <div class="flex items-center gap-1 mt-1">
+                <i data-lucide="trending-up" class="w-4 h-4 text-emerald-500"></i>
+                <span class="text-xs text-emerald-600">+5% this week</span>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-stone-400"></i>
+          </div>
+        </div>
+
+        <!-- Insights -->
+        <div class="section-card">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-stone-800">Insights</h3>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-stone-400"></i>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-stone-50 rounded-xl p-3">
+              <div class="text-lg font-bold text-stone-800">156</div>
+              <div class="text-xs text-stone-500">Total completions</div>
+            </div>
+            <div class="bg-stone-50 rounded-xl p-3">
+              <div class="text-lg font-bold text-stone-800">89%</div>
+              <div class="text-xs text-stone-500">Success rate</div>
+            </div>
+          </div>
+          <div class="mt-3 p-3 bg-amber-50 rounded-xl flex items-start gap-2">
+            <span class="text-lg">💡</span>
+            <p class="text-xs text-amber-800">You're most consistent on <strong>weekday mornings</strong>. Keep it up!</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Motivation Tab -->
+      <div id="motivation" class="tab-content p-4">
+
+        <!-- Your Why -->
+        <div class="section-card border-l-4 border-rose-400">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="heart" class="w-5 h-5 text-rose-500"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-stone-800 mb-1">Your Why</h3>
+              <p class="text-sm text-stone-600">"I meditate because I want to feel calm and focused throughout my day."</p>
+            </div>
+            <button class="p-2 hover:bg-stone-100 rounded-lg">
+              <i data-lucide="pencil" class="w-4 h-4 text-stone-400"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Your Identity -->
+        <div class="section-card border-l-4 border-violet-400">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="sparkles" class="w-5 h-5 text-violet-500"></i>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="font-semibold text-stone-800">Your Identity</h3>
+                <span class="text-xs bg-violet-100 text-violet-700 px-2 py-0.5 rounded-full">Most powerful</span>
+              </div>
+              <p class="text-sm text-stone-600">"I am a calm, centered person who prioritizes mental clarity."</p>
+            </div>
+            <button class="p-2 hover:bg-stone-100 rounded-lg">
+              <i data-lucide="pencil" class="w-4 h-4 text-stone-400"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Your Cue -->
+        <div class="section-card border-l-4 border-amber-400">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="zap" class="w-5 h-5 text-amber-500"></i>
+            </div>
+            <div class="flex-1">
+              <h3 class="font-semibold text-stone-800 mb-1">Your Cue</h3>
+              <p class="text-sm text-stone-600">"After I wake up, I will meditate in my living room at 7:00 AM."</p>
+              <div class="flex gap-2 mt-2">
+                <span class="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-lg flex items-center gap-1">
+                  <i data-lucide="map-pin" class="w-3 h-3"></i> Living room
+                </span>
+                <span class="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-lg flex items-center gap-1">
+                  <i data-lucide="clock" class="w-3 h-3"></i> 7:00 AM
+                </span>
+              </div>
+            </div>
+            <button class="p-2 hover:bg-stone-100 rounded-lg">
+              <i data-lucide="pencil" class="w-4 h-4 text-stone-400"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Vision Board -->
+        <div class="section-card">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <i data-lucide="image" class="w-5 h-5 text-stone-500"></i>
+              <h3 class="font-semibold text-stone-800">Vision Board</h3>
+            </div>
+            <button class="text-xs text-violet-600 font-medium">+ Add</button>
+          </div>
+          <div class="flex gap-2">
+            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+              <span class="text-2xl">🧘‍♂️</span>
+            </div>
+            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+              <span class="text-2xl">🏔️</span>
+            </div>
+            <div class="w-16 h-16 rounded-xl bg-stone-100 border-2 border-dashed border-stone-300 flex items-center justify-center">
+              <i data-lucide="plus" class="w-5 h-5 text-stone-400"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Affirmations -->
+        <div class="section-card">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <i data-lucide="message-circle-heart" class="w-5 h-5 text-stone-500"></i>
+              <h3 class="font-semibold text-stone-800">Affirmations</h3>
+            </div>
+            <button class="text-xs text-violet-600 font-medium">+ Add</button>
+          </div>
+          <div class="space-y-2">
+            <div class="p-3 bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl">
+              <p class="text-sm text-stone-700">"Every breath brings me peace and clarity."</p>
+              <span class="text-xs text-violet-600 mt-1 inline-block">identity</span>
+            </div>
+            <div class="p-3 bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl">
+              <p class="text-sm text-stone-700">"I deserve this time for myself."</p>
+              <span class="text-xs text-rose-600 mt-1 inline-block">motivational</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mental Exercises -->
+        <div class="section-card">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="brain" class="w-5 h-5 text-stone-500"></i>
+            <h3 class="font-semibold text-stone-800">Mental Exercises</h3>
+          </div>
+          <div class="space-y-2">
+            <button class="w-full p-3 bg-gradient-to-r from-cyan-50 to-teal-50 rounded-xl flex items-center justify-between hover:shadow-md transition">
+              <div class="flex items-center gap-3">
+                <span class="text-xl">🎯</span>
+                <span class="text-sm font-medium text-stone-700">Mental Contrasting</span>
+              </div>
+              <i data-lucide="play" class="w-4 h-4 text-teal-600"></i>
+            </button>
+            <button class="w-full p-3 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl flex items-center justify-between hover:shadow-md transition">
+              <div class="flex items-center gap-3">
+                <span class="text-xl">✨</span>
+                <span class="text-sm font-medium text-stone-700">Visualization Guide</span>
+              </div>
+              <i data-lucide="play" class="w-4 h-4 text-indigo-600"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Manage Tab -->
+      <div id="manage" class="tab-content p-4">
+
+        <!-- Reminders -->
+        <div class="section-card">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                <i data-lucide="bell" class="w-5 h-5 text-blue-500"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-stone-800">Reminders</h3>
+                <p class="text-sm text-stone-500">Daily at 7:00 AM</p>
+              </div>
+            </div>
+            <div class="w-12 h-7 bg-emerald-500 rounded-full relative cursor-pointer">
+              <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Frequency -->
+        <div class="section-card">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                <i data-lucide="calendar-days" class="w-5 h-5 text-purple-500"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-stone-800">Frequency</h3>
+                <p class="text-sm text-stone-500">Every day</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-stone-400"></i>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="section-card">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                <i data-lucide="sticky-note" class="w-5 h-5 text-amber-500"></i>
+              </div>
+              <div>
+                <h3 class="font-semibold text-stone-800">Notes</h3>
+                <p class="text-sm text-stone-500">3 journal entries</p>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-stone-400"></i>
+          </div>
+        </div>
+
+        <div class="h-px bg-stone-200 my-4"></div>
+
+        <!-- Pause -->
+        <button class="section-card w-full flex items-center gap-3 hover:bg-stone-50 transition">
+          <div class="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center">
+            <i data-lucide="pause" class="w-5 h-5 text-stone-500"></i>
+          </div>
+          <div class="flex-1 text-left">
+            <h3 class="font-semibold text-stone-800">Pause Habit</h3>
+            <p class="text-sm text-stone-500">Take a break without losing progress</p>
+          </div>
+        </button>
+
+        <!-- Archive -->
+        <button class="section-card w-full flex items-center gap-3 hover:bg-stone-50 transition">
+          <div class="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center">
+            <i data-lucide="archive" class="w-5 h-5 text-stone-500"></i>
+          </div>
+          <div class="flex-1 text-left">
+            <h3 class="font-semibold text-stone-800">Archive</h3>
+            <p class="text-sm text-stone-500">Hide from active habits</p>
+          </div>
+        </button>
+
+        <!-- Delete -->
+        <button class="section-card w-full flex items-center gap-3 hover:bg-red-50 transition group">
+          <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+            <i data-lucide="trash-2" class="w-5 h-5 text-red-500"></i>
+          </div>
+          <div class="flex-1 text-left">
+            <h3 class="font-semibold text-red-600">Delete Habit</h3>
+            <p class="text-sm text-stone-500">Permanently remove this habit</p>
+          </div>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- Home indicator -->
+    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-stone-300 rounded-full"></div>
+
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active from all tabs
+        document.querySelectorAll('.tab-btn').forEach(t => {
+          t.classList.remove('active');
+          t.classList.add('text-stone-500');
+        });
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        // Add active to clicked tab
+        btn.classList.add('active');
+        btn.classList.remove('text-stone-500');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

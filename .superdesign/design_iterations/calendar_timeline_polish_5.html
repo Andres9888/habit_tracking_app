@@ -1,0 +1,1544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Timeline Polish — Before / After</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Literata:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #1a1816 !important;
+        color: #faf8f5 !important;
+        min-height: 100vh;
+        padding: 32px 16px;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: 'Literata', serif !important;
+      }
+
+      .label-tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 999px;
+        margin-bottom: 16px;
+      }
+      .label-before {
+        background: #374151;
+        color: #9ca3af;
+      }
+      .label-after {
+        background: #064e3b;
+        color: #34d399;
+      }
+
+      .shelf {
+        border-radius: 0 0 16px 16px;
+        padding: 8px 16px 16px;
+        margin-bottom: 8px;
+      }
+      .shelf-before {
+        background: #f0ede8;
+      }
+      .shelf-after {
+        background: #faf8f5;
+      }
+      .shelf-before-dark {
+        background: #1f2937;
+      }
+      .shelf-after-dark {
+        background: #1f2937;
+      }
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 4px;
+      }
+      .greeting {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: -0.3px;
+      }
+      .progress {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.2px;
+      }
+
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .chip-before {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        color: #6b6560;
+      }
+      .chip-after {
+        background: rgba(255, 255, 255, 0.65);
+        border: 1px solid rgba(45, 42, 38, 0.12);
+        color: #6b6560;
+      }
+      .chip-before-dark {
+        background: rgba(31, 41, 55, 0.6);
+        border: 1px solid rgba(55, 65, 81, 0.35);
+        color: #9ca3af;
+      }
+      .chip-after-dark {
+        background: rgba(31, 41, 55, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #9ca3af;
+      }
+      .nav-row {
+        display: flex;
+        justify-content: center;
+        margin-top: 6px;
+      }
+
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-top: 10px;
+        position: relative;
+      }
+      .day-cell {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        position: relative;
+      }
+      .weekday {
+        font-size: 10px;
+        line-height: 14px;
+        text-align: center;
+      }
+      .day-circle {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      .dot-spacer {
+        height: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 4px;
+      }
+      .completion-dot {
+        border-radius: 50%;
+      }
+
+      .connector {
+        position: absolute;
+        top: 36.5px;
+      }
+
+      .check-badge {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        z-index: 1;
+      }
+      .check-before {
+        width: 16px;
+        height: 16px;
+        bottom: -2px;
+        right: -2px;
+        background: #edeae5;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.04);
+      }
+      .check-after {
+        width: 18px;
+        height: 18px;
+        bottom: -3px;
+        right: -3px;
+        background: #d1fae5;
+        border: 1.5px solid #edeae5;
+        box-shadow: 0 1px 3px rgba(45, 42, 38, 0.06);
+      }
+      .check-svg {
+        stroke: #059669;
+        stroke-width: 2.5;
+        fill: none;
+      }
+
+      .chevron-hint {
+        position: absolute;
+        top: 44px;
+        z-index: 2;
+      }
+      .chevron-left {
+        left: -10px;
+      }
+      .chevron-right {
+        right: -10px;
+      }
+      @keyframes breathe {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+      .breathe-anim {
+        animation: breathe 3s ease-in-out infinite;
+      }
+      .static-chevron {
+        opacity: 0.35;
+      }
+
+      @keyframes todayGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 8px rgba(232, 185, 77, 0.15);
+        }
+        50% {
+          box-shadow: 0 0 8px rgba(232, 185, 77, 0.4);
+        }
+      }
+      .today-glow {
+        animation: todayGlow 2.5s ease-in-out infinite;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .section {
+        background: #2d2a26;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #3d3833;
+      }
+      .page-title {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #faf8f5;
+        letter-spacing: -0.5px;
+      }
+      .page-sub {
+        text-align: center;
+        font-size: 14px;
+        color: #6b6560;
+        margin-bottom: 32px;
+      }
+
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 32px;
+        padding: 16px;
+        background: #2d2a26;
+        border-radius: 12px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #9ca3af;
+      }
+      .legend-swatch {
+        width: 12px;
+        height: 12px;
+        border-radius: 4px;
+      }
+
+      .dark-label {
+        text-align: center;
+        font-size: 12px;
+        color: #6b6560;
+        margin-top: 40px;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .callout-grid {
+        max-width: 900px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Calendar Timeline Polish</h1>
+    <p class="page-sub">
+      Side-by-side: current vs. proposed improvements (light + dark)
+    </p>
+
+    <!-- ══════ LIGHT MODE ══════ -->
+
+    <div class="comparison">
+      <!-- BEFORE Light -->
+      <div class="section">
+        <span class="label-tag label-before">Before — Light</span>
+        <div class="shelf shelf-before">
+          <div class="header-row">
+            <span class="greeting" style="color: #7d5907">5-day streak</span>
+            <span class="progress" style="color: #6e6660">
+              <span
+                style="color: #047857; font-weight: 700; font-family: 'DM Sans'"
+                >3</span
+              >
+              of 5
+            </span>
+          </div>
+          <div class="nav-row">
+            <div class="chip chip-before">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#6B6560"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Wed, March 4</span>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#C4BFB7"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="day-strip" style="margin-top: 12px">
+            <!-- Breathing chevrons -->
+            <div class="chevron-hint chevron-left breathe-anim">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#C4BFB7"
+                stroke-width="2.5"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </div>
+            <!-- Connectors -->
+            <div
+              class="connector"
+              style="
+                height: 3px;
+                left: calc(100% / 7 * 3.5 - 50% / 7);
+                width: calc(100% / 7);
+                background: rgba(16, 185, 129, 0.25);
+              "
+            ></div>
+            <div
+              class="connector"
+              style="
+                height: 3px;
+                left: calc(100% / 7 * 4.5 - 50% / 7);
+                width: calc(100% / 7);
+                background: rgba(16, 185, 129, 0.25);
+                opacity: 0.5;
+              "
+            ></div>
+
+            <!-- Mon (empty) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Mon</span>
+              <div
+                class="day-circle"
+                style="background: #edeae5; color: #524d47"
+              >
+                24
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #ddd8d2"
+                ></div>
+              </div>
+            </div>
+            <!-- Tue (partial) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Tue</span>
+              <div
+                class="day-circle"
+                style="background: #edeae5; color: #524d47"
+              >
+                25
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 6px; height: 6px; background: #e8b94d"
+                ></div>
+              </div>
+            </div>
+            <!-- Wed (empty) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Wed</span>
+              <div
+                class="day-circle"
+                style="background: #edeae5; color: #524d47"
+              >
+                26
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #ddd8d2"
+                ></div>
+              </div>
+            </div>
+            <!-- Thu (complete) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Thu</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #10b981;
+                  color: #fff;
+                  font-weight: 700;
+                  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+                "
+              >
+                27
+                <div class="check-badge check-before">
+                  <svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <!-- Fri (complete) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Fri</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #10b981;
+                  color: #fff;
+                  font-weight: 700;
+                  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+                "
+              >
+                28
+                <div class="check-badge check-before">
+                  <svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <!-- Sat (today) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7; font-weight: 700"
+                >Sat</span
+              >
+              <div
+                class="day-circle today-glow"
+                style="
+                  background: #fef3cd;
+                  color: #e8b94d;
+                  font-weight: 700;
+                  border: 2px solid #e8b94d;
+                "
+              >
+                1
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 6px; height: 6px; background: #e8b94d"
+                ></div>
+              </div>
+            </div>
+            <!-- Sun (future) -->
+            <div class="day-cell" style="opacity: 0.5">
+              <span class="weekday" style="color: #c4bfb7">Sun</span>
+              <div
+                class="day-circle"
+                style="background: #edeae5; color: #c4bfb7"
+              >
+                2
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #edeae5"
+                ></div>
+              </div>
+            </div>
+            <div class="chevron-hint chevron-right breathe-anim">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#C4BFB7"
+                stroke-width="2.5"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER Light -->
+      <div class="section" style="border-color: #064e3b">
+        <span class="label-tag label-after">After — Light</span>
+        <div class="shelf shelf-after">
+          <div class="header-row">
+            <span class="greeting" style="color: #7d5907">5-day streak</span>
+            <span class="progress" style="color: #6e6660">
+              <span
+                style="
+                  color: #047857;
+                  font-weight: 700;
+                  font-family: 'JetBrains Mono';
+                "
+                >3</span
+              >
+              <span> of </span>
+              <span style="font-family: 'JetBrains Mono'">5</span>
+            </span>
+          </div>
+          <div class="nav-row" style="margin-top: 10px">
+            <div class="chip chip-after">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#6B6560"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Wed, March 4</span>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#C4BFB7"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="day-strip" style="margin-top: 12px">
+            <!-- Static chevrons -->
+            <div class="chevron-hint chevron-left static-chevron">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#C4BFB7"
+                stroke-width="2.5"
+              >
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </div>
+            <!-- Thicker connectors -->
+            <div
+              class="connector"
+              style="
+                height: 3.5px;
+                left: calc(100% / 7 * 3.5 - 50% / 7);
+                width: calc(100% / 7);
+                background: rgba(16, 185, 129, 0.35);
+              "
+            ></div>
+            <div
+              class="connector"
+              style="
+                height: 3.5px;
+                left: calc(100% / 7 * 4.5 - 50% / 7);
+                width: calc(100% / 7);
+                background: rgba(16, 185, 129, 0.35);
+                opacity: 0.5;
+              "
+            ></div>
+
+            <!-- Mon (empty — subtle border) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Mon</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #edeae5;
+                  color: #524d47;
+                  border: 1px solid #ddd8d2;
+                "
+              >
+                24
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #ddd8d2"
+                ></div>
+              </div>
+            </div>
+            <!-- Tue (partial — amber border) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Tue</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #edeae5;
+                  color: #524d47;
+                  border: 1.5px solid #e8b94d;
+                "
+              >
+                25
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 7px; height: 7px; background: #8b6208"
+                ></div>
+              </div>
+            </div>
+            <!-- Wed (empty — subtle border) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Wed</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #edeae5;
+                  color: #524d47;
+                  border: 1px solid #ddd8d2;
+                "
+              >
+                26
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #ddd8d2"
+                ></div>
+              </div>
+            </div>
+            <!-- Thu (complete — deeper green) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Thu</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #059669;
+                  color: #fff;
+                  font-weight: 700;
+                  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                "
+              >
+                27
+                <div class="check-badge check-after">
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <!-- Fri (complete — deeper green) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7">Fri</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #059669;
+                  color: #fff;
+                  font-weight: 700;
+                  box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                "
+              >
+                28
+                <div class="check-badge check-after">
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <!-- Sat (today) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #c4bfb7; font-weight: 700"
+                >Sat</span
+              >
+              <div
+                class="day-circle today-glow"
+                style="
+                  background: #fef3cd;
+                  color: #e8b94d;
+                  font-weight: 700;
+                  border: 2px solid #e8b94d;
+                "
+              >
+                1
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 6px; height: 6px; background: #e8b94d"
+                ></div>
+              </div>
+            </div>
+            <!-- Sun (future — more ghosted) -->
+            <div class="day-cell" style="opacity: 0.4">
+              <span class="weekday" style="color: #c4bfb7">Sun</span>
+              <div
+                class="day-circle"
+                style="background: #edeae5; color: #c4bfb7"
+              >
+                2
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #edeae5"
+                ></div>
+              </div>
+            </div>
+            <div class="chevron-hint chevron-right static-chevron">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#C4BFB7"
+                stroke-width="2.5"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ DARK MODE ══════ -->
+
+    <p class="dark-label" style="margin-top: 48px">Dark Mode</p>
+
+    <div class="comparison">
+      <!-- BEFORE Dark -->
+      <div class="section">
+        <span class="label-tag label-before">Before — Dark</span>
+        <div class="shelf shelf-before-dark">
+          <div class="header-row">
+            <span class="greeting" style="color: #e8b94d">5-day streak</span>
+            <span class="progress" style="color: #8e95a2">
+              <span
+                style="color: #34d399; font-weight: 700; font-family: 'DM Sans'"
+                >3</span
+              >
+              of 5
+            </span>
+          </div>
+          <div class="nav-row">
+            <div class="chip chip-before-dark">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#6B7280"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Wed, March 4</span>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#4B5563"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+          </div>
+          <div class="day-strip" style="margin-top: 12px">
+            <div
+              class="connector"
+              style="
+                height: 3px;
+                left: calc(100% / 7 * 3.5 - 50% / 7);
+                width: calc(100% / 7);
+                background: rgba(52, 211, 153, 0.2);
+              "
+            ></div>
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Mon</span>
+              <div
+                class="day-circle"
+                style="background: #1f2937; color: #e5e7eb"
+              >
+                24
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #4b5563"
+                ></div>
+              </div>
+            </div>
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Tue</span>
+              <div
+                class="day-circle"
+                style="background: #1f2937; color: #e5e7eb"
+              >
+                25
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 6px; height: 6px; background: #e8b94d"
+                ></div>
+              </div>
+            </div>
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Wed</span>
+              <div
+                class="day-circle"
+                style="background: #1f2937; color: #e5e7eb"
+              >
+                26
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #4b5563"
+                ></div>
+              </div>
+            </div>
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Thu</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #34d399;
+                  color: #111827;
+                  font-weight: 700;
+                  box-shadow: 0 2px 12px rgba(52, 211, 153, 0.5);
+                "
+              >
+                27
+                <div
+                  class="check-badge check-before"
+                  style="background: #1f2937"
+                >
+                  <svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                    style="stroke: #34d399"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Fri</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #34d399;
+                  color: #111827;
+                  font-weight: 700;
+                  box-shadow: 0 2px 12px rgba(52, 211, 153, 0.5);
+                "
+              >
+                28
+                <div
+                  class="check-badge check-before"
+                  style="background: #1f2937"
+                >
+                  <svg
+                    width="9"
+                    height="9"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                    style="stroke: #34d399"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563; font-weight: 700"
+                >Sat</span
+              >
+              <div
+                class="day-circle"
+                style="
+                  background: #3d2f0a;
+                  color: #e8b94d;
+                  font-weight: 700;
+                  border: 2px solid #b8860b;
+                "
+              >
+                1
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 6px; height: 6px; background: #e8b94d"
+                ></div>
+              </div>
+            </div>
+            <div class="day-cell" style="opacity: 0.5">
+              <span class="weekday" style="color: #4b5563">Sun</span>
+              <div
+                class="day-circle"
+                style="background: #1f2937; color: #6b7280"
+              >
+                2
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #1f2937"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER Dark -->
+      <div class="section" style="border-color: #064e3b">
+        <span class="label-tag label-after">After — Dark</span>
+        <div class="shelf shelf-after-dark">
+          <div class="header-row">
+            <span class="greeting" style="color: #e8b94d">5-day streak</span>
+            <span class="progress" style="color: #8e95a2">
+              <span
+                style="
+                  color: #34d399;
+                  font-weight: 700;
+                  font-family: 'JetBrains Mono';
+                "
+                >3</span
+              >
+              <span> of </span>
+              <span style="font-family: 'JetBrains Mono'">5</span>
+            </span>
+          </div>
+          <div class="nav-row" style="margin-top: 10px">
+            <div class="chip chip-after-dark">
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#6B7280"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+              <span>Wed, March 4</span>
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#4B5563"
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </div>
+          </div>
+          <div class="day-strip" style="margin-top: 12px">
+            <div
+              class="connector"
+              style="
+                height: 3.5px;
+                left: calc(100% / 7 * 3.5 - 50% / 7);
+                width: calc(100% / 7);
+                background: rgba(52, 211, 153, 0.3);
+              "
+            ></div>
+            <!-- Mon (border) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Mon</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #1f2937;
+                  color: #e5e7eb;
+                  border: 1px solid #374151;
+                "
+              >
+                24
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #4b5563"
+                ></div>
+              </div>
+            </div>
+            <!-- Tue (partial amber border) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Tue</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #1f2937;
+                  color: #e5e7eb;
+                  border: 1.5px solid #e8b94d;
+                "
+              >
+                25
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 7px; height: 7px; background: #8b6208"
+                ></div>
+              </div>
+            </div>
+            <!-- Wed (border) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Wed</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #1f2937;
+                  color: #e5e7eb;
+                  border: 1px solid #374151;
+                "
+              >
+                26
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #4b5563"
+                ></div>
+              </div>
+            </div>
+            <!-- Thu (complete — stronger glow) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Thu</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #34d399;
+                  color: #111827;
+                  font-weight: 700;
+                  box-shadow: 0 2px 14px rgba(52, 211, 153, 0.55);
+                "
+              >
+                27
+                <div
+                  class="check-badge check-after"
+                  style="background: #064e3b; border-color: #1f2937"
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                    style="stroke: #34d399"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <!-- Fri (complete) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563">Fri</span>
+              <div
+                class="day-circle"
+                style="
+                  background: #34d399;
+                  color: #111827;
+                  font-weight: 700;
+                  box-shadow: 0 2px 14px rgba(52, 211, 153, 0.55);
+                "
+              >
+                28
+                <div
+                  class="check-badge check-after"
+                  style="background: #064e3b; border-color: #1f2937"
+                >
+                  <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 24 24"
+                    class="check-svg"
+                    style="stroke: #34d399"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+              </div>
+              <div class="dot-spacer"></div>
+            </div>
+            <!-- Sat (today — translucent amber) -->
+            <div class="day-cell">
+              <span class="weekday" style="color: #4b5563; font-weight: 700"
+                >Sat</span
+              >
+              <div
+                class="day-circle"
+                style="
+                  background: rgba(232, 185, 77, 0.12);
+                  color: #e8b94d;
+                  font-weight: 700;
+                  border: 2px solid #e8b94d;
+                "
+              >
+                1
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 6px; height: 6px; background: #e8b94d"
+                ></div>
+              </div>
+            </div>
+            <!-- Sun (future — more ghosted) -->
+            <div class="day-cell" style="opacity: 0.4">
+              <span class="weekday" style="color: #4b5563">Sun</span>
+              <div
+                class="day-circle"
+                style="background: #1f2937; color: #6b7280"
+              >
+                2
+              </div>
+              <div class="dot-spacer">
+                <div
+                  class="completion-dot"
+                  style="width: 5px; height: 5px; background: #1f2937"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ DETAIL CALLOUTS ══════ -->
+
+    <p class="dark-label" style="margin-top: 48px">Key Differences</p>
+
+    <div class="callout-grid">
+      <div class="section" style="text-align: center">
+        <p
+          style="
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+          "
+        >
+          Day Cell States
+        </p>
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+          "
+        >
+          <div style="text-align: center">
+            <div
+              class="day-circle"
+              style="
+                background: #059669;
+                color: #fff;
+                font-weight: 700;
+                box-shadow: 0 2px 10px rgba(5, 150, 105, 0.4);
+                width: 44px;
+                height: 44px;
+                margin: 0 auto;
+              "
+            >
+              5
+              <div class="check-badge check-after">
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  class="check-svg"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+            </div>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >Complete</span
+            >
+          </div>
+          <div style="text-align: center">
+            <div
+              class="day-circle"
+              style="
+                background: #edeae5;
+                color: #524d47;
+                border: 1.5px solid #e8b94d;
+                width: 44px;
+                height: 44px;
+                margin: 0 auto;
+              "
+            >
+              12
+            </div>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >Partial</span
+            >
+          </div>
+          <div style="text-align: center">
+            <div
+              class="day-circle"
+              style="
+                background: #edeae5;
+                color: #524d47;
+                border: 1px solid #ddd8d2;
+                width: 44px;
+                height: 44px;
+                margin: 0 auto;
+              "
+            >
+              8
+            </div>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >Empty</span
+            >
+          </div>
+          <div style="text-align: center">
+            <div
+              class="day-circle"
+              style="
+                background: #edeae5;
+                color: #c4bfb7;
+                width: 44px;
+                height: 44px;
+                margin: 0 auto;
+                opacity: 0.4;
+              "
+            >
+              9
+            </div>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >Future</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="text-align: center">
+        <p
+          style="
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+          "
+        >
+          Glass Chip Border
+        </p>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+          "
+        >
+          <div>
+            <div class="chip chip-before" style="background: #f0ede8">
+              Before
+            </div>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >White border (invisible)</span
+            >
+          </div>
+          <div>
+            <div class="chip chip-after" style="background: #faf8f5">After</div>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >Warm-toned border</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="section" style="text-align: center">
+        <p
+          style="
+            font-size: 11px;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+          "
+        >
+          Progress Typography
+        </p>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+          "
+        >
+          <div>
+            <span class="progress" style="color: #6e6660; font-size: 18px">
+              <span
+                style="color: #047857; font-weight: 700; font-family: 'DM Sans'"
+                >3</span
+              >
+              of 5
+            </span>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >Before: DM Sans</span
+            >
+          </div>
+          <div>
+            <span class="progress" style="color: #6e6660; font-size: 18px">
+              <span
+                style="
+                  color: #047857;
+                  font-weight: 700;
+                  font-family: 'JetBrains Mono';
+                "
+                >3</span
+              >
+              <span style="font-family: 'DM Sans'"> of </span>
+              <span style="font-family: 'JetBrains Mono'">5</span>
+            </span>
+            <span
+              style="
+                font-size: 10px;
+                color: #6b6560;
+                margin-top: 4px;
+                display: block;
+              "
+              >After: JetBrains Mono nums</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ LEGEND ══════ -->
+
+    <div class="legend" style="margin-top: 32px">
+      <div class="legend-item">
+        <div class="legend-swatch" style="background: #059669"></div>
+        <span>Complete: deeper #059669</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="border: 1.5px solid #e8b94d; background: #edeae5"
+        ></div>
+        <span>Partial: amber cell border</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="border: 1px solid #ddd8d2; background: #edeae5"
+        ></div>
+        <span>Empty: subtle warm border</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="background: #edeae5; opacity: 0.4"
+        ></div>
+        <span>Future: 0.4 opacity ghost</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="background: #d1fae5; border: 1.5px solid #edeae5"
+        ></div>
+        <span>Badge: green tint + border</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="
+            background: rgba(16, 185, 129, 0.35);
+            height: 4px;
+            border-radius: 2px;
+          "
+        ></div>
+        <span>Connectors: thicker + bolder</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="background: #faf8f5; border: 1px solid #ddd8d2"
+        ></div>
+        <span>Shelf: warmer white</span>
+      </div>
+      <div class="legend-item">
+        <div
+          class="legend-swatch"
+          style="
+            background: rgba(232, 185, 77, 0.12);
+            border: 1px solid #e8b94d;
+          "
+        ></div>
+        <span>Dark today: translucent amber</span>
+      </div>
+    </div>
+  </body>
+</html>

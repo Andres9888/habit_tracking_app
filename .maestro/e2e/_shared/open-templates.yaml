@@ -1,0 +1,14 @@
+appId: com.chainday.app
+name: Shared - Open Templates
+tags:
+  - helper
+onFlowComplete:
+  - takeScreenshot: shared-open-templates-complete
+---
+- runFlow: launch-signed-in.yaml
+- tapOn:
+    id: home-templates-button
+- extendedWaitUntil:
+    visible: Templates
+    timeout: 8000
+- waitForAnimationToEnd

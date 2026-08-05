@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contextual Onboarding - Habit Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif !important;
+    }
+    body {
+      background: #1a1a2e !important;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #0f0f1a;
+      border-radius: 40px;
+      border: 8px solid #2a2a4a;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .app-screen {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: #0f0f1a;
+    }
+
+    /* Tooltip System */
+    .tooltip-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .tooltip-overlay.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .tooltip-spotlight {
+      position: absolute;
+      border-radius: 16px;
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.8), 0 0 0 9999px rgba(0, 0, 0, 0.85);
+      z-index: 101;
+      pointer-events: none;
+      animation: pulse 2s infinite;
+    }
+
+    .tooltip-card {
+      position: absolute;
+      background: linear-gradient(135deg, #1e1e2e, #2a2a3e);
+      border: 2px solid #6366f1;
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 280px;
+      z-index: 102;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .tooltip-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+    .tooltip-arrow.top {
+      border-width: 0 12px 12px 12px;
+      border-color: transparent transparent #6366f1 transparent;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .tooltip-arrow.bottom {
+      border-width: 12px 12px 0 12px;
+      border-color: #6366f1 transparent transparent transparent;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .pointer-hand {
+      position: absolute;
+      font-size: 40px;
+      animation: bounce 1.5s infinite;
+      z-index: 103;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+    }
+
+    .progress-dots {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 12px;
+    }
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+    .progress-dot.active {
+      width: 24px;
+      border-radius: 4px;
+      background: #6366f1;
+    }
+
+    .skip-btn {
+      position: absolute;
+      top: 50px;
+      right: 24px;
+      z-index: 104;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    /* App UI Styles */
+    .gradient-text {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
+      transition: all 0.3s ease;
+    }
+    .empty-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .habit-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 16px;
+      margin: 0 24px 12px;
+    }
+    .complete-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      border: 2px solid rgba(99, 102, 241, 0.5);
+      background: rgba(99, 102, 241, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .complete-btn:hover {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: #6366f1;
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Main App Screen -->
+    <div class="app-screen">
+      <!-- Header -->
+      <div class="px-6 pt-16 pb-6 border-b border-white/5">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h1 class="text-2xl font-bold text-white">Today</h1>
+            <p class="text-gray-400 text-sm">Sunday, Dec 22</p>
+          </div>
+          <button id="settingsBtn" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+            <i data-lucide="settings" class="w-5 h-5 text-gray-400"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState">
+        <div class="w-24 h-24 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
+          <i data-lucide="target" class="w-12 h-12 text-gray-500"></i>
+        </div>
+        <h2 class="text-xl font-bold text-white mb-2">No Habits Yet</h2>
+        <p class="text-gray-400 mb-8">Start building better habits today</p>
+      </div>
+
+      <!-- Habit List (hidden initially) -->
+      <div class="pt-6 pb-24" id="habitList" style="display: none;">
+        <div class="habit-card">
+          <div class="flex items-center gap-4">
+            <button id="completeBtn" class="complete-btn">
+              <i data-lucide="circle" class="w-6 h-6 text-indigo-400"></i>
+            </button>
+            <div class="flex-1">
+              <h3 class="text-white font-semibold">Morning Meditation</h3>
+              <p class="text-gray-400 text-sm">Daily • 0 day streak</p>
+            </div>
+            <div class="text-right">
+              <div class="text-indigo-400 font-bold text-lg">0%</div>
+              <div class="text-gray-500 text-xs">Strength</div>
+            </div>
+          </div>
+
+          <div id="strengthMeter" class="mt-4 pt-4 border-t border-white/5">
+            <div class="flex justify-between text-xs mb-2">
+              <span class="text-gray-400">Habit Strength</span>
+              <span class="text-indigo-400">Getting Started</span>
+            </div>
+            <div class="h-2 bg-white/5 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style="width: 5%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Button -->
+      <div class="absolute bottom-8 left-0 right-0 px-6">
+        <button id="addBtn" class="btn-primary w-full py-4 rounded-2xl text-white font-semibold text-lg flex items-center justify-center gap-2">
+          <i data-lucide="plus" class="w-5 h-5"></i>
+          Add Your First Habit
+        </button>
+      </div>
+    </div>
+
+    <!-- Tooltip Overlays -->
+    <!-- Step 1: Add Button -->
+    <div class="tooltip-overlay active" id="tooltip1">
+      <div class="skip-btn" onclick="skipOnboarding()">Skip Tutorial</div>
+
+      <div class="tooltip-spotlight" style="bottom: 32px; left: 24px; right: 24px; height: 68px;"></div>
+
+      <div class="pointer-hand" style="bottom: 50px; left: 50%; transform: translateX(-50%);">
+        👆
+      </div>
+
+      <div class="tooltip-card" style="bottom: 120px; left: 50%; transform: translateX(-50%);">
+        <div class="tooltip-arrow bottom"></div>
+        <h3 class="text-white font-bold text-lg mb-2">Let's Get Started!</h3>
+        <p class="text-gray-300 text-sm leading-relaxed mb-3">
+          Tap here to create your first habit. Keep it simple — small habits lead to big changes.
+        </p>
+        <div class="flex items-center justify-between">
+          <div class="progress-dots">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+          </div>
+          <button onclick="nextStep(2)" class="px-4 py-2 bg-indigo-600 rounded-lg text-white text-sm font-medium">
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Complete Button -->
+    <div class="tooltip-overlay" id="tooltip2">
+      <div class="skip-btn" onclick="skipOnboarding()">Skip Tutorial</div>
+
+      <div class="tooltip-spotlight" style="top: 148px; left: 24px; width: 64px; height: 64px;"></div>
+
+      <div class="pointer-hand" style="top: 160px; left: 50px;">
+        👆
+      </div>
+
+      <div class="tooltip-card" style="top: 240px; left: 24px; right: 24px;">
+        <div class="tooltip-arrow top"></div>
+        <h3 class="text-white font-bold text-lg mb-2">Complete Your Habit</h3>
+        <p class="text-gray-300 text-sm leading-relaxed mb-3">
+          Tap this button when you've done your habit today. Each completion builds your streak!
+        </p>
+        <div class="flex items-center justify-between">
+          <button onclick="nextStep(1)" class="text-gray-400 text-sm">← Back</button>
+          <div class="progress-dots">
+            <div class="progress-dot"></div>
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+          </div>
+          <button onclick="nextStep(3)" class="px-4 py-2 bg-indigo-600 rounded-lg text-white text-sm font-medium">
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Habit Strength -->
+    <div class="tooltip-overlay" id="tooltip3">
+      <div class="skip-btn" onclick="skipOnboarding()">Skip Tutorial</div>
+
+      <div class="tooltip-spotlight" style="top: 240px; left: 24px; right: 24px; height: 80px;"></div>
+
+      <div class="pointer-hand" style="top: 260px; left: 50%; transform: translateX(-50%);">
+        👆
+      </div>
+
+      <div class="tooltip-card" style="top: 340px; left: 24px; right: 24px;">
+        <div class="tooltip-arrow top"></div>
+        <h3 class="text-white font-bold text-lg mb-2">Habit Strength Meter</h3>
+        <p class="text-gray-300 text-sm leading-relaxed mb-3">
+          This shows how strong your habit is becoming. The more consistent you are, the stronger it gets!
+        </p>
+        <div class="flex items-center justify-between">
+          <button onclick="nextStep(2)" class="text-gray-400 text-sm">← Back</button>
+          <div class="progress-dots">
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot active"></div>
+            <div class="progress-dot"></div>
+          </div>
+          <button onclick="nextStep(4)" class="px-4 py-2 bg-indigo-600 rounded-lg text-white text-sm font-medium">
+            Next →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Settings -->
+    <div class="tooltip-overlay" id="tooltip4">
+      <div class="skip-btn" onclick="skipOnboarding()">Skip Tutorial</div>
+
+      <div class="tooltip-spotlight" style="top: 64px; right: 24px; width: 48px; height: 48px; border-radius: 12px;"></div>
+
+      <div class="pointer-hand" style="top: 70px; right: 40px;">
+        👆
+      </div>
+
+      <div class="tooltip-card" style="top: 140px; left: 24px; right: 24px;">
+        <div class="tooltip-arrow top"></div>
+        <h3 class="text-white font-bold text-lg mb-2">Settings & Help</h3>
+        <p class="text-gray-300 text-sm leading-relaxed mb-3">
+          Find help, replay this tutorial, or customize your experience anytime from here.
+        </p>
+        <div class="flex items-center justify-between">
+          <button onclick="nextStep(3)" class="text-gray-400 text-sm">← Back</button>
+          <div class="progress-dots">
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot"></div>
+            <div class="progress-dot active"></div>
+          </div>
+          <button onclick="finishOnboarding()" class="px-4 py-2 bg-green-600 rounded-lg text-white text-sm font-medium">
+            Got It! ✓
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div class="tooltip-overlay" id="tooltipComplete" style="align-items: center; justify-content: center; display: none;">
+      <div class="text-center p-8">
+        <div class="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mb-6">
+          <i data-lucide="check" class="w-12 h-12 text-white"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-white mb-3">You're All Set!</h2>
+        <p class="text-gray-300 mb-8">Ready to build stronger habits?</p>
+        <button onclick="closeOnboarding()" class="btn-primary px-8 py-4 rounded-2xl text-white font-semibold">
+          Start Building Habits
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let currentStep = 1;
+
+    function nextStep(step) {
+      // Hide current
+      document.querySelectorAll('.tooltip-overlay').forEach(el => el.classList.remove('active'));
+
+      // Show next
+      if (step === 2) {
+        // Show habit list for steps 2+
+        document.getElementById('emptyState').style.display = 'none';
+        document.getElementById('habitList').style.display = 'block';
+        document.getElementById('addBtn').innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i> Add Another Habit';
+      }
+
+      document.getElementById('tooltip' + step).classList.add('active');
+      currentStep = step;
+      lucide.createIcons();
+    }
+
+    function finishOnboarding() {
+      document.querySelectorAll('.tooltip-overlay').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+      });
+      document.getElementById('tooltipComplete').style.display = 'flex';
+      document.getElementById('tooltipComplete').classList.add('active');
+      lucide.createIcons();
+    }
+
+    function closeOnboarding() {
+      document.getElementById('tooltipComplete').classList.remove('active');
+      setTimeout(() => {
+        document.getElementById('tooltipComplete').style.display = 'none';
+      }, 300);
+    }
+
+    function skipOnboarding() {
+      document.querySelectorAll('.tooltip-overlay').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('habitList').style.display = 'block';
+      document.getElementById('addBtn').innerHTML = '<i data-lucide="plus" class="w-5 h-5"></i> Add Another Habit';
+      lucide.createIcons();
+    }
+
+    // Add button click simulation
+    document.getElementById('addBtn').addEventListener('click', () => {
+      if (currentStep === 1) {
+        nextStep(2);
+      }
+    });
+  </script>
+</body>
+</html>

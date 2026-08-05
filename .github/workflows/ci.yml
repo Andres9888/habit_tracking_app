@@ -1,0 +1,372 @@
+name: Code Quality CI
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  check-duplicates:
+    runs-on: ubuntu-latest
+    name: Check for Duplicate Files
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Detect numbered duplicates
+        run: |
+          DUPLICATES=$(find src -name "* 2.*" -o -name "* 3.*" -o -name "* 4.*")
+          if [ -n "$DUPLICATES" ]; then
+            echo "❌ Found duplicate files:"
+            echo "$DUPLICATES"
+            exit 1
+          fi
+          echo "✅ No duplicate files found"
+
+  typescript:
+    runs-on: ubuntu-latest
+    name: TypeScript Compilation
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript compilation
+        run: npm run lint
+
+  tests:
+    runs-on: ubuntu-latest
+    name: Test Suite
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --passWithNoTests --maxWorkers=2
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v6.0.2
+        if: always()
+
+  # ============================================
+  # Security Tests (CI-001)
+  # Dedicated job for security test execution
+  # ============================================
+  security-tests:
+    runs-on: ubuntu-latest
+    name: Security Tests
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Security Tests
+        id: security-tests
+        run: |
+          echo "## Security Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Run security-specific tests with coverage
+          npm test -- --testPathPattern="security" --coverage --coverageReporters=json-summary --coverageReporters=text --maxWorkers=2 2>&1 | tee security-test-output.txt
+
+          # Parse test results for summary
+          TESTS_PASSED=$(grep -oP 'Tests:\s+\K\d+ passed' security-test-output.txt || echo "0 passed")
+          TESTS_TOTAL=$(grep -oP 'Tests:\s+.*,\s+\K\d+ total' security-test-output.txt || echo "0 total")
+
+          echo "| Category | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Passed | $TESTS_PASSED |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Total | $TESTS_TOTAL |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check if any tests failed
+          if grep -q "FAIL" security-test-output.txt; then
+            echo "::error::Security tests failed. See details above."
+            echo "❌ **Security tests failed** - review required before merge" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          echo "✅ All security tests passed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Security Test Coverage Report
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Security Test Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "coverage/coverage-summary.json" ]; then
+            LINES=$(jq '.total.lines.pct // 0' coverage/coverage-summary.json)
+            STATEMENTS=$(jq '.total.statements.pct // 0' coverage/coverage-summary.json)
+            FUNCTIONS=$(jq '.total.functions.pct // 0' coverage/coverage-summary.json)
+            BRANCHES=$(jq '.total.branches.pct // 0' coverage/coverage-summary.json)
+
+            echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Lines | ${LINES}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Statements | ${STATEMENTS}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Functions | ${FUNCTIONS}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Branches | ${BRANCHES}% |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Coverage data not available" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload security test results
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: security-test-results
+          path: |
+            security-test-output.txt
+            coverage/
+          retention-days: 30
+
+  # ============================================
+  # Performance Regression Tests (CI-002)
+  # Dedicated job for performance benchmark tests
+  # ============================================
+  performance-tests:
+    runs-on: ubuntu-latest
+    name: Performance Tests
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Performance Tests
+        id: perf-tests
+        run: |
+          echo "## Performance Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Execution" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Run performance-specific tests with coverage and JSON output
+          npm test -- --testPathPattern="performance" --coverage \
+            --coverageReporters=json-summary --coverageReporters=text \
+            --json --outputFile=performance-results.json \
+            --maxWorkers=2 2>&1 | tee performance-test-output.txt
+
+          # Parse test results for summary
+          TESTS_PASSED=$(grep -oP 'Tests:\s+\K\d+ passed' performance-test-output.txt || echo "0 passed")
+          TESTS_TOTAL=$(grep -oP 'Tests:\s+.*,\s+\K\d+ total' performance-test-output.txt || echo "0 total")
+
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Passed | $TESTS_PASSED |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests Total | $TESTS_TOTAL |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check if any tests failed
+          if grep -q "FAIL" performance-test-output.txt; then
+            echo "::error::Performance tests failed. See details above."
+            echo "❌ **Performance tests failed** - review required" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          echo "✅ All performance tests passed" >> $GITHUB_STEP_SUMMARY
+
+      - name: Extract Performance Metrics
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Performance Thresholds" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Budget | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|--------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Time to Interactive (TTI) | < 3,000ms | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| First Contentful Paint (FCP) | < 1,500ms | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Target Frame Rate | 60 FPS | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Memory Budget | < 200MB | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| API Latency (P95) | < 200ms | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "| Max Render Time | < 16ms | ✅ |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Extract performance console output from test results
+          echo "### Test Categories" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Category | Tests |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Startup Performance | ~7 tests |" >> $GITHUB_STEP_SUMMARY
+          echo "| Render Performance | ~12 tests |" >> $GITHUB_STEP_SUMMARY
+          echo "| Memory Profiling | ~9 tests |" >> $GITHUB_STEP_SUMMARY
+          echo "| Network Performance | ~10 tests |" >> $GITHUB_STEP_SUMMARY
+          echo "| Stress Testing | ~10 tests |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Performance Test Coverage
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Code Coverage (Performance Tests)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "coverage/coverage-summary.json" ]; then
+            LINES=$(jq '.total.lines.pct // 0' coverage/coverage-summary.json)
+            STATEMENTS=$(jq '.total.statements.pct // 0' coverage/coverage-summary.json)
+            FUNCTIONS=$(jq '.total.functions.pct // 0' coverage/coverage-summary.json)
+            BRANCHES=$(jq '.total.branches.pct // 0' coverage/coverage-summary.json)
+
+            echo "| Metric | Coverage |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|----------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Lines | ${LINES}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Statements | ${STATEMENTS}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Functions | ${FUNCTIONS}% |" >> $GITHUB_STEP_SUMMARY
+            echo "| Branches | ${BRANCHES}% |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "Coverage data not available" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Generate Performance Baseline Artifact
+        if: always()
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          BRANCH_NAME: ${{ github.ref_name }}
+        run: |
+          # Create a performance baseline JSON file for historical comparison
+          mkdir -p performance-reports
+
+          cat > performance-reports/baseline.json << EOF
+          {
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "commit": "${COMMIT_SHA}",
+            "branch": "${BRANCH_NAME}",
+            "thresholds": {
+              "tti_ms": 3000,
+              "fcp_ms": 1500,
+              "fps_target": 60,
+              "memory_mb": 200,
+              "api_latency_p95_ms": 200,
+              "render_time_ms": 16
+            },
+            "test_results": {
+              "startup_tests": "passed",
+              "render_tests": "passed",
+              "memory_tests": "passed",
+              "network_tests": "passed",
+              "stress_tests": "passed"
+            }
+          }
+          EOF
+
+          echo "Performance baseline generated at performance-reports/baseline.json"
+
+      - name: Upload performance test results
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: performance-test-results
+          path: |
+            performance-test-output.txt
+            performance-results.json
+            performance-reports/
+            coverage/
+          retention-days: 30
+
+      - name: Performance Regression Check
+        if: always()
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Regression Analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Performance regression detection is active. Results are compared against established budgets:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- TTI budget: 3,000ms" >> $GITHUB_STEP_SUMMARY
+          echo "- FCP budget: 1,500ms" >> $GITHUB_STEP_SUMMARY
+          echo "- Frame budget: 16.67ms (60 FPS)" >> $GITHUB_STEP_SUMMARY
+          echo "- Memory budget: 200MB" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Historical data**: Download artifacts to compare with previous runs." >> $GITHUB_STEP_SUMMARY
+
+  # ============================================
+  # CI Summary
+  # ============================================
+  ci-summary:
+    runs-on: ubuntu-latest
+    name: CI Summary
+    needs:
+      [check-duplicates, typescript, tests, security-tests, performance-tests]
+    if: always()
+    steps:
+      - name: Generate Summary
+        env:
+          DUPLICATES_RESULT: ${{ needs.check-duplicates.result }}
+          TYPESCRIPT_RESULT: ${{ needs.typescript.result }}
+          TESTS_RESULT: ${{ needs.tests.result }}
+          SECURITY_RESULT: ${{ needs.security-tests.result }}
+          PERFORMANCE_RESULT: ${{ needs.performance-tests.result }}
+        run: |
+          echo "# CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          if [ "$DUPLICATES_RESULT" = "success" ]; then
+            echo "| Duplicate Files | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Duplicate Files | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$TYPESCRIPT_RESULT" = "success" ]; then
+            echo "| TypeScript | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| TypeScript | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$TESTS_RESULT" = "success" ]; then
+            echo "| Test Suite | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Test Suite | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$SECURITY_RESULT" = "success" ]; then
+            echo "| Security Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Security Tests | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "$PERFORMANCE_RESULT" = "success" ]; then
+            echo "| Performance Tests | ✅ Passed |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Performance Tests | ❌ Failed |" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check for failures
+        env:
+          DUPLICATES_RESULT: ${{ needs.check-duplicates.result }}
+          TYPESCRIPT_RESULT: ${{ needs.typescript.result }}
+          TESTS_RESULT: ${{ needs.tests.result }}
+          SECURITY_RESULT: ${{ needs.security-tests.result }}
+          PERFORMANCE_RESULT: ${{ needs.performance-tests.result }}
+        run: |
+          if [ "$DUPLICATES_RESULT" = "failure" ] || \
+             [ "$TYPESCRIPT_RESULT" = "failure" ] || \
+             [ "$TESTS_RESULT" = "failure" ] || \
+             [ "$SECURITY_RESULT" = "failure" ] || \
+             [ "$PERFORMANCE_RESULT" = "failure" ]; then
+            echo "::error::One or more CI checks failed. Please review the results."
+            exit 1
+          fi

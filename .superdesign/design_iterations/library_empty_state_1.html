@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Habit Library — Empty State Options</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED;
+    --paper: #F8F5F1;
+    --card: #EDEAE5;
+    --border: #DDD8D2;
+    --chip-idle: #FAF8F5;
+    --chip-active: #1A1816;
+    --ink: #2D2A26;
+    --ink-2: #6B6560;
+    --ink-3: #6E6660;
+    --add-bg: #C4EBD9;
+    --add-fg: #04724D;
+    --tile: #F8E9CE;
+  }
+  body {
+    background: #E7E2DC !important;
+    font-family: 'DM Sans', sans-serif !important;
+    color: var(--ink) !important;
+  }
+  .serif { font-family: 'Literata', serif !important; }
+  .phone {
+    width: 330px !important;
+    height: 620px !important;
+    background: var(--bg) !important;
+    border-radius: 26px !important;
+    border: 1px solid var(--border) !important;
+    box-shadow: 0 12px 30px -8px rgba(0,0,0,.18) !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .chip {
+    font-size: 13px !important;
+    padding: 7px 13px !important;
+    border-radius: 999px !important;
+    white-space: nowrap !important;
+    background: var(--chip-idle) !important;
+    color: var(--ink-2) !important;
+    border: 1px solid var(--border) !important;
+  }
+  .chip-on {
+    background: var(--chip-active) !important;
+    color: #fff !important;
+    border-color: var(--chip-active) !important;
+  }
+  .chip-zero { opacity: .42 !important; }
+  .rail::-webkit-scrollbar { display: none !important; }
+  .rail { scrollbar-width: none !important; }
+  .tag {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .12em !important;
+    text-transform: uppercase !important;
+    padding: 4px 9px !important;
+    border-radius: 999px !important;
+  }
+  .btn-primary {
+    background: var(--add-bg) !important;
+    color: var(--add-fg) !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    padding: 12px 22px !important;
+    border-radius: 999px !important;
+  }
+  .btn-ghost {
+    background: transparent !important;
+    color: var(--ink-2) !important;
+    font-weight: 500 !important;
+    font-size: 13.5px !important;
+    padding: 10px 18px !important;
+    border-radius: 999px !important;
+    border: 1px solid var(--border) !important;
+  }
+  .void-hatch {
+    background-image: repeating-linear-gradient(
+      45deg, rgba(190,60,60,.07) 0 10px, transparent 10px 20px
+    ) !important;
+  }
+</style>
+</head>
+<body class="py-12 px-6">
+
+<header class="max-w-[1180px] mx-auto mb-10">
+  <p class="text-[11px] font-bold tracking-[.22em] uppercase" style="color:#96908A">Habit Library · Catalog</p>
+  <h1 class="serif text-[34px] font-bold mt-1" style="color:var(--ink)">Zero-result search states</h1>
+  <p class="text-[15px] mt-2 max-w-[720px]" style="color:var(--ink-2)">
+    Blank body is a regression from <span class="font-mono text-[13px]">6945a2528</span>, which swapped
+    <span class="font-mono text-[13px]">TemplatesList</span> (had a <span class="font-mono text-[13px]">ListEmptyComponent</span>)
+    for <span class="font-mono text-[13px]">CatalogSectionList</span> (doesn't).
+  </p>
+</header>
+
+<!-- ============ ROW 1 ============ -->
+<section class="max-w-[1180px] mx-auto mb-14">
+  <div class="flex items-baseline gap-3 mb-5">
+    <h2 class="serif text-[22px] font-bold">Case 1 — query matches nothing at all</h2>
+    <span class="text-[13px]" style="color:var(--ink-3)">search “kettlebell”, All selected</span>
+  </div>
+
+  <div class="flex gap-8 flex-wrap">
+
+    <!-- NOW -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag" style="background:#FBE3E3;color:#B91C1C">Now · broken</span>
+      </div>
+      <div class="phone">
+        <div class="px-4 pt-5 pb-2 flex items-center justify-between">
+          <div class="w-11"></div>
+          <span class="serif text-[21px] font-bold">Habit library</span>
+          <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:var(--card)">
+            <i data-lucide="x" style="width:22px;height:22px;color:var(--ink-2)"></i>
+          </div>
+        </div>
+        <div class="px-4 pt-1 pb-3">
+          <div class="flex items-center gap-2 px-3.5 py-3 rounded-2xl" style="background:var(--paper);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:17px;height:17px;color:var(--ink-3)"></i>
+            <span class="text-[15px]">kettlebell</span>
+            <i data-lucide="x" class="ml-auto" style="width:16px;height:16px;color:var(--ink-3)"></i>
+          </div>
+        </div>
+        <div class="px-4 pb-3 flex gap-2" style="border-bottom:1px solid var(--border)">
+          <span class="chip chip-on">All</span>
+        </div>
+        <div class="flex-1 void-hatch flex items-center justify-center">
+          <p class="text-[13px] text-center px-8 leading-relaxed" style="color:#B91C1C">
+            every category chip vanished<br />body renders nothing
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION A -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag" style="background:var(--tile);color:#92400E">Option A · restore parity</span>
+      </div>
+      <div class="phone">
+        <div class="px-4 pt-5 pb-2 flex items-center justify-between">
+          <div class="w-11"></div>
+          <span class="serif text-[21px] font-bold">Habit library</span>
+          <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:var(--card)">
+            <i data-lucide="x" style="width:22px;height:22px;color:var(--ink-2)"></i>
+          </div>
+        </div>
+        <div class="px-4 pt-1 pb-3">
+          <div class="flex items-center gap-2 px-3.5 py-3 rounded-2xl" style="background:var(--paper);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:17px;height:17px;color:var(--ink-3)"></i>
+            <span class="text-[15px]">kettlebell</span>
+            <i data-lucide="x" class="ml-auto" style="width:16px;height:16px;color:var(--ink-3)"></i>
+          </div>
+        </div>
+        <div class="px-4 pb-3 flex gap-2 rail overflow-x-auto" style="border-bottom:1px solid var(--border)">
+          <span class="chip chip-on">All</span>
+          <span class="chip">🏃 Fitness</span>
+          <span class="chip">😴 Sleep</span>
+          <span class="chip">🧠 Focus</span>
+        </div>
+        <div class="px-4 py-3">
+          <span class="text-[13px]" style="color:var(--ink-2)">0 habits for “kettlebell”</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center px-9 text-center">
+          <div class="w-[62px] h-[62px] rounded-full flex items-center justify-center mb-4" style="background:var(--card)">
+            <span class="text-[26px]">🔍</span>
+          </div>
+          <p class="serif text-[19px] font-bold mb-2">No habits match</p>
+          <p class="text-[14px] leading-relaxed mb-6" style="color:var(--ink-2)">
+            Try a shorter word, or browse by category above.
+          </p>
+          <button class="btn-primary">Clear search</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OPTION B -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag" style="background:#DDEBFB;color:#1D4ED8">Option B · category-aware</span>
+      </div>
+      <div class="phone">
+        <div class="px-4 pt-5 pb-2 flex items-center justify-between">
+          <div class="w-11"></div>
+          <span class="serif text-[21px] font-bold">Habit library</span>
+          <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:var(--card)">
+            <i data-lucide="x" style="width:22px;height:22px;color:var(--ink-2)"></i>
+          </div>
+        </div>
+        <div class="px-4 pt-1 pb-3">
+          <div class="flex items-center gap-2 px-3.5 py-3 rounded-2xl" style="background:var(--paper);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:17px;height:17px;color:var(--ink-3)"></i>
+            <span class="text-[15px]">kettlebell</span>
+            <i data-lucide="x" class="ml-auto" style="width:16px;height:16px;color:var(--ink-3)"></i>
+          </div>
+        </div>
+        <div class="px-4 pb-3 flex gap-2 rail overflow-x-auto" style="border-bottom:1px solid var(--border)">
+          <span class="chip chip-on">All</span>
+          <span class="chip chip-zero">🏃 Fitness 0</span>
+          <span class="chip chip-zero">😴 Sleep 0</span>
+          <span class="chip chip-zero">🧠 Focus 0</span>
+        </div>
+        <div class="px-4 py-3">
+          <span class="text-[13px]" style="color:var(--ink-2)">0 habits for “kettlebell”</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center px-9 text-center">
+          <div class="w-[62px] h-[62px] rounded-full flex items-center justify-center mb-4" style="background:var(--card)">
+            <span class="text-[26px]">🔍</span>
+          </div>
+          <p class="serif text-[19px] font-bold mb-2">No habits match “kettlebell”</p>
+          <p class="text-[14px] leading-relaxed mb-6" style="color:var(--ink-2)">
+            Try a shorter word, or browse by category above.
+          </p>
+          <button class="btn-primary">Clear search</button>
+        </div>
+      </div>
+      <p class="text-[12.5px] mt-3 w-[330px] leading-relaxed" style="color:var(--ink-3)">
+        Same as A here — B only diverges in Case 2. Adds live chip counts.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ ROW 2 ============ -->
+<section class="max-w-[1180px] mx-auto">
+  <div class="flex items-baseline gap-3 mb-5">
+    <h2 class="serif text-[22px] font-bold">Case 2 — matches exist, but not in the selected category</h2>
+    <span class="text-[13px]" style="color:var(--ink-3)">Fitness chip selected, search “sleep”</span>
+  </div>
+
+  <div class="flex gap-8 flex-wrap">
+
+    <!-- NOW -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag" style="background:#FBE3E3;color:#B91C1C">Now · broken</span>
+      </div>
+      <div class="phone">
+        <div class="px-4 pt-5 pb-2 flex items-center justify-between">
+          <div class="w-11"></div>
+          <span class="serif text-[21px] font-bold">Habit library</span>
+          <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:var(--card)">
+            <i data-lucide="x" style="width:22px;height:22px;color:var(--ink-2)"></i>
+          </div>
+        </div>
+        <div class="px-4 pt-1 pb-3">
+          <div class="flex items-center gap-2 px-3.5 py-3 rounded-2xl" style="background:var(--paper);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:17px;height:17px;color:var(--ink-3)"></i>
+            <span class="text-[15px]">sleep</span>
+            <i data-lucide="x" class="ml-auto" style="width:16px;height:16px;color:var(--ink-3)"></i>
+          </div>
+        </div>
+        <div class="px-4 pb-3 flex gap-2" style="border-bottom:1px solid var(--border)">
+          <span class="chip">All</span>
+        </div>
+        <div class="flex-1 void-hatch flex items-center justify-center">
+          <p class="text-[13px] text-center px-8 leading-relaxed" style="color:#B91C1C">
+            selected “Fitness” chip deleted itself<br />nothing is selected<br />body renders nothing
+          </p>
+        </div>
+      </div>
+      <p class="text-[12.5px] mt-3 w-[330px] leading-relaxed" style="color:#B91C1C">
+        Worst case — 3 real matches exist and the user sees none of them.
+      </p>
+    </div>
+
+    <!-- OPTION A -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag" style="background:var(--tile);color:#92400E">Option A · restore parity</span>
+      </div>
+      <div class="phone">
+        <div class="px-4 pt-5 pb-2 flex items-center justify-between">
+          <div class="w-11"></div>
+          <span class="serif text-[21px] font-bold">Habit library</span>
+          <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:var(--card)">
+            <i data-lucide="x" style="width:22px;height:22px;color:var(--ink-2)"></i>
+          </div>
+        </div>
+        <div class="px-4 pt-1 pb-3">
+          <div class="flex items-center gap-2 px-3.5 py-3 rounded-2xl" style="background:var(--paper);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:17px;height:17px;color:var(--ink-3)"></i>
+            <span class="text-[15px]">sleep</span>
+            <i data-lucide="x" class="ml-auto" style="width:16px;height:16px;color:var(--ink-3)"></i>
+          </div>
+        </div>
+        <div class="px-4 pb-3 flex gap-2 rail overflow-x-auto" style="border-bottom:1px solid var(--border)">
+          <span class="chip">All</span>
+          <span class="chip chip-on">🏃 Fitness</span>
+          <span class="chip">😴 Sleep</span>
+          <span class="chip">🧠 Focus</span>
+        </div>
+        <div class="px-4 py-3">
+          <span class="text-[13px]" style="color:var(--ink-2)">0 habits for “sleep”</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center px-9 text-center">
+          <div class="w-[62px] h-[62px] rounded-full flex items-center justify-center mb-4" style="background:var(--card)">
+            <span class="text-[26px]">🔍</span>
+          </div>
+          <p class="serif text-[19px] font-bold mb-2">No habits match</p>
+          <p class="text-[14px] leading-relaxed mb-6" style="color:var(--ink-2)">
+            Try a shorter word, or browse by category above.
+          </p>
+          <button class="btn-primary">Clear search</button>
+        </div>
+      </div>
+      <p class="text-[12.5px] mt-3 w-[330px] leading-relaxed" style="color:var(--ink-3)">
+        Chip rail survives, so the user can self-rescue by tapping All — but nothing
+        tells them the 3 matches exist one tap away.
+      </p>
+    </div>
+
+    <!-- OPTION B -->
+    <div>
+      <div class="flex items-center gap-2 mb-3">
+        <span class="tag" style="background:#DDEBFB;color:#1D4ED8">Option B · category-aware</span>
+      </div>
+      <div class="phone">
+        <div class="px-4 pt-5 pb-2 flex items-center justify-between">
+          <div class="w-11"></div>
+          <span class="serif text-[21px] font-bold">Habit library</span>
+          <div class="w-11 h-11 rounded-full flex items-center justify-center" style="background:var(--card)">
+            <i data-lucide="x" style="width:22px;height:22px;color:var(--ink-2)"></i>
+          </div>
+        </div>
+        <div class="px-4 pt-1 pb-3">
+          <div class="flex items-center gap-2 px-3.5 py-3 rounded-2xl" style="background:var(--paper);border:1px solid var(--border)">
+            <i data-lucide="search" style="width:17px;height:17px;color:var(--ink-3)"></i>
+            <span class="text-[15px]">sleep</span>
+            <i data-lucide="x" class="ml-auto" style="width:16px;height:16px;color:var(--ink-3)"></i>
+          </div>
+        </div>
+        <div class="px-4 pb-3 flex gap-2 rail overflow-x-auto" style="border-bottom:1px solid var(--border)">
+          <span class="chip">All <b>3</b></span>
+          <span class="chip chip-on">🏃 Fitness 0</span>
+          <span class="chip">😴 Sleep <b>3</b></span>
+          <span class="chip chip-zero">🧠 Focus 0</span>
+        </div>
+        <div class="px-4 py-3">
+          <span class="text-[13px]" style="color:var(--ink-2)">0 in Fitness · 3 elsewhere</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center px-8 text-center">
+          <div class="w-[62px] h-[62px] rounded-full flex items-center justify-center mb-4" style="background:var(--card)">
+            <span class="text-[26px]">🔍</span>
+          </div>
+          <p class="serif text-[19px] font-bold mb-2">No Fitness habits match “sleep”</p>
+          <p class="text-[14px] leading-relaxed mb-6" style="color:var(--ink-2)">
+            But there are <b style="color:var(--ink)">3 matches</b> in other categories.
+          </p>
+          <button class="btn-primary mb-3">Search all categories</button>
+          <button class="btn-ghost">Clear search</button>
+        </div>
+      </div>
+      <p class="text-[12.5px] mt-3 w-[330px] leading-relaxed" style="color:var(--ink-3)">
+        Dead end becomes a signpost. Counts on the rail make “Sleep 3” tappable
+        directly, so the CTA is a fallback, not the only exit.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<footer class="max-w-[1180px] mx-auto mt-14 pt-7" style="border-top:1px solid var(--border)">
+  <h3 class="serif text-[18px] font-bold mb-3">Cost difference</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-[14px] leading-relaxed" style="color:var(--ink-2)">
+    <div>
+      <p class="font-bold mb-1" style="color:var(--ink)">Option A</p>
+      <p>Rewire <span class="font-mono text-[12.5px]">TemplatesListEmpty</span> as <span class="font-mono text-[12.5px]">ListEmptyComponent</span> on both branches, swap “Reset filters” copy for “Clear search”, split chip groups from filtered groups in <span class="font-mono text-[12.5px]">useCatalogViewData</span>. Restores what <span class="font-mono text-[12.5px]">6945a2528</span> dropped.</p>
+    </div>
+    <div>
+      <p class="font-bold mb-1" style="color:var(--ink)">Option B</p>
+      <p>Everything in A, plus per-category match counts threaded to the chip rail and a branch in the empty state that compares in-category vs global match count. The counts are the only genuinely new data — both numbers already exist in the two group arrays A creates.</p>
+    </div>
+  </div>
+</footer>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

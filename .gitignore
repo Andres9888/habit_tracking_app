@@ -1,0 +1,99 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production builds
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.mcp
+.figma-token
+figma-token.txt
+
+# Convex
+.convex/
+
+# Expo
+.expo/
+expo-env.d.ts
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Temporary folders
+tmp/
+temp/
+.claude/coderabbit-review.json
+
+# Claude Flow
+.claude-flow/
+
+dev-debug.log
+# Dependency directories
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 
+
+# Auto Claude data directory
+.auto-claude/
+node_modules
+
+Plans/
+
+# Debug artifacts (audit phase 5)
+har.json
+tmp-*
+${HOME}/
+
+# deepsec scan workspace
+.deepsec/
+
+# Generated API docs (TypeDoc)
+docs/api/
+
+# Generated lint report (regenerate with npm run lint:max-lines-report)
+.eslint-max-lines-report.json

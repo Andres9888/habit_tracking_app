@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Merge — Before / After Mock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,600;0,700;1,500&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #edeaea;
+        --border: #ddd8d2;
+        --surface-muted: #faf8f5;
+        --forest: #047857;
+        --forest-dark: #065f46;
+        --text: #1c1917;
+        --text-muted: #6b6259;
+        --font-serif: 'Literata', serif;
+        --font-sans: 'DM Sans', sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font-sans) !important;
+        background: #0f0e0d;
+        color: var(--text);
+        padding: 40px 24px 80px;
+      }
+      h1.page-title {
+        font-family: var(--font-sans) !important;
+        color: #fff;
+        text-align: center;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        margin: 0 0 6px !important;
+      }
+      p.page-sub {
+        text-align: center;
+        color: #a8a29e;
+        font-size: 13px !important;
+        margin: 0 0 36px !important;
+      }
+      .row {
+        display: flex;
+        gap: 28px;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+      .col {
+        width: 100%;
+        max-width: 380px;
+      }
+      .col-label {
+        color: #e7e5e4;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 10px 4px !important;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .col-label .tag {
+        background: #292524;
+        color: #a8a29e;
+        font-size: 10px !important;
+        font-weight: 700 !important;
+        padding: 2px 8px;
+        border-radius: 999px;
+        text-transform: none;
+        letter-spacing: 0;
+      }
+      .phone {
+        background: var(--bg);
+        border-radius: 28px;
+        overflow: hidden;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.45),
+          0 0 0 6px #1c1917;
+        height: 720px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      .scroll {
+        flex: 1;
+        overflow-y: auto;
+      }
+      .scroll::-webkit-scrollbar {
+        width: 0;
+      }
+
+      /* ---------- BEFORE: Landing ---------- */
+      .before-header {
+        padding: 22px 20px 16px;
+      }
+      .before-title {
+        font-family: var(--font-serif) !important;
+        font-weight: 700 !important;
+        font-style: italic;
+        font-size: 26px !important;
+        margin: 0 0 14px !important;
+        color: var(--text);
+      }
+      .search-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 10px 14px;
+        margin-bottom: 14px;
+      }
+      .search-bar input {
+        border: none;
+        background: transparent;
+        outline: none;
+        font-family: var(--font-sans) !important;
+        font-size: 14px !important;
+        color: var(--text-muted);
+        width: 100%;
+      }
+      .chip-rail {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+      .chip-rail::-webkit-scrollbar {
+        display: none;
+      }
+      .chip {
+        flex-shrink: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 7px 14px;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        color: var(--text-muted);
+        white-space: nowrap;
+      }
+      .chip.selected {
+        background: var(--forest);
+        border-color: var(--forest);
+        color: #fff;
+      }
+
+      .list-label {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        padding: 4px 20px 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .row-card {
+        margin: 0 16px 10px;
+        background: var(--surface-muted);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 14px 16px;
+      }
+      .row-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .row-title {
+        font-family: var(--font-sans) !important;
+        font-weight: 700 !important;
+        font-size: 14.5px !important;
+        margin: 0 0 3px !important;
+      }
+      .row-meta {
+        font-size: 12px !important;
+        color: var(--text-muted);
+        margin: 0 !important;
+      }
+      .row-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: #e7f5ee;
+        color: var(--forest);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .why-footer {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--border);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        color: var(--forest);
+      }
+
+      /* ---------- BEFORE: Catalog panel ---------- */
+      .catalog-header {
+        padding: 18px 20px 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .back-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: var(--card);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+      }
+      .catalog-title {
+        font-family: var(--font-sans) !important;
+        font-weight: 700 !important;
+        font-size: 17px !important;
+        margin: 0 !important;
+      }
+
+      .split-arrow {
+        align-self: center;
+        color: #78716c;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px !important;
+        padding-top: 320px;
+      }
+
+      /* ---------- AFTER: merged hero ---------- */
+      .hero-wrap {
+        position: relative;
+        padding: 22px 20px 18px;
+        background: linear-gradient(
+          180deg,
+          rgba(251, 191, 116, 0.55) 0%,
+          rgba(254, 215, 170, 0.3) 55%,
+          #f5f1ed 100%
+        );
+        overflow: hidden;
+      }
+      .hero-wrap.compressed {
+        padding-bottom: 14px;
+      }
+      .hero-sheen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 140px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.35),
+          rgba(255, 255, 255, 0)
+        );
+        pointer-events: none;
+      }
+      .hero-question {
+        position: relative;
+        font-family: var(--font-serif) !important;
+        font-weight: 700 !important;
+        font-style: italic;
+        font-size: 24px !important;
+        line-height: 1.15;
+        margin: 4px 0 4px !important;
+        color: #292524;
+      }
+      .hero-sub {
+        position: relative;
+        font-size: 12.5px !important;
+        color: #57534e;
+        margin: 0 0 14px !important;
+        transition: all 0.2s;
+      }
+      .hero-wrap.compressed .hero-sub {
+        max-height: 0;
+        opacity: 0;
+        margin: 0 !important;
+        overflow: hidden;
+      }
+      .hero-search {
+        position: relative;
+        margin-bottom: 12px;
+      }
+
+      .goal-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+      .goal-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 14px;
+        padding: 9px 12px;
+        font-size: 12.5px !important;
+        font-weight: 600 !important;
+        color: #44403c;
+      }
+      .goal-chip.wide {
+        grid-column: span 2;
+        justify-content: center;
+      }
+      .goal-chip.active {
+        background: var(--forest);
+        border-color: var(--forest);
+        color: #fff;
+      }
+
+      .cat-rail-wrap {
+        padding: 12px 0 0;
+      }
+      .after-list-label {
+        font-size: 11.5px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        padding: 12px 20px 8px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .badge-new {
+        display: inline-block;
+        background: #fef3c7;
+        color: #78350f;
+        font-size: 9.5px !important;
+        font-weight: 700 !important;
+        padding: 2px 6px;
+        border-radius: 6px;
+        margin-left: 6px;
+      }
+
+      .callout {
+        max-width: 800px;
+        margin: 40px auto 0;
+        background: #1c1917;
+        border: 1px solid #292524;
+        border-radius: 14px;
+        padding: 16px 20px;
+        color: #d6d3d1;
+        font-size: 13px !important;
+        line-height: 1.6;
+      }
+      .callout b {
+        color: #fff;
+      }
+      .callout code {
+        background: #292524;
+        padding: 1px 5px;
+        border-radius: 4px;
+        color: #86efac;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="page-title">Library — merge landing + catalog</h1>
+    <p class="page-sub">
+      Before (two screens) → After (one guided screen). Scroll each phone.
+    </p>
+
+    <div class="row">
+      <!-- BEFORE: current landing -->
+      <div class="col">
+        <div class="col-label">
+          Before · Landing <span class="tag">screen 1 of 2</span>
+        </div>
+        <div class="phone">
+          <div class="scroll">
+            <div class="before-header">
+              <div class="before-title">Habit Library</div>
+              <div class="search-bar">
+                <i data-lucide="search" width="16" height="16"></i>
+                <input placeholder="Search habits..." />
+              </div>
+              <div class="chip-rail">
+                <div class="chip selected">All</div>
+                <div class="chip">Mind</div>
+                <div class="chip">Body</div>
+                <div class="chip">Sleep</div>
+                <div class="chip">Focus</div>
+              </div>
+            </div>
+            <div class="list-label">
+              <span>Popular</span><span>24 shown</span>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Morning sunlight</p>
+                  <p class="row-meta">5 min · Body clock</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="sun" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Box breathing</p>
+                  <p class="row-meta">3 min · Stress</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="wind" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Cold shower finish</p>
+                  <p class="row-meta">2 min · Energy</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="droplets" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BEFORE: catalog -->
+      <div class="col">
+        <div class="col-label">
+          Before · Catalog
+          <span class="tag">screen 2 of 2 · via "See all"</span>
+        </div>
+        <div class="phone">
+          <div class="scroll">
+            <div class="catalog-header">
+              <div class="back-btn">
+                <i data-lucide="arrow-left" width="16" height="16"></i>
+              </div>
+              <p class="catalog-title">All habits · 84</p>
+            </div>
+            <div style="padding: 0 20px 10px">
+              <div class="search-bar">
+                <i data-lucide="search" width="16" height="16"></i
+                ><input placeholder="Search..." />
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Gratitude journal</p>
+                  <p class="row-meta">4 min · Mind</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="pen-line" width="18" height="18"></i>
+                </div>
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">10k steps</p>
+                  <p class="row-meta">Ongoing · Body</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="footprints" width="18" height="18"></i>
+                </div>
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">No screens in bed</p>
+                  <p class="row-meta">Ongoing · Sleep</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="moon" width="18" height="18"></i>
+                </div>
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Single-tasking block</p>
+                  <p class="row-meta">25 min · Focus</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="crosshair" width="18" height="18"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER: default state -->
+      <div class="col">
+        <div class="col-label">
+          After · Merged <span class="tag">default</span>
+        </div>
+        <div class="phone">
+          <div class="scroll">
+            <div class="hero-wrap">
+              <div class="hero-sheen"></div>
+              <div class="hero-question">What do you want<br />to change?</div>
+              <p class="hero-sub">
+                Pick a goal, or just browse everything below.
+              </p>
+              <div class="hero-search">
+                <div
+                  class="search-bar"
+                  style="
+                    background: rgba(255, 255, 255, 0.7);
+                    border-color: rgba(255, 255, 255, 0.8);
+                  "
+                >
+                  <i data-lucide="search" width="16" height="16"></i>
+                  <input placeholder="Search habits..." />
+                </div>
+              </div>
+              <div class="goal-grid">
+                <div class="goal-chip">⚡ More energy</div>
+                <div class="goal-chip">😴 Sleep better</div>
+                <div class="goal-chip">🧘 Stress less</div>
+                <div class="goal-chip">💪 Get healthier</div>
+                <div class="goal-chip wide">🎯 Focus deeper</div>
+              </div>
+            </div>
+            <div class="cat-rail-wrap">
+              <div class="chip-rail" style="padding: 0 20px">
+                <div class="chip selected">All</div>
+                <div class="chip">Mind</div>
+                <div class="chip">Body</div>
+                <div class="chip">Sleep</div>
+                <div class="chip">Focus</div>
+              </div>
+            </div>
+            <div class="after-list-label">
+              <span>Popular right now</span><span>84 shown</span>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Morning sunlight</p>
+                  <p class="row-meta">5 min · Body clock</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="sun" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Box breathing</p>
+                  <p class="row-meta">3 min · Stress</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="wind" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Gratitude journal</p>
+                  <p class="row-meta">4 min · Mind</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="pen-line" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AFTER: compressed (goal selected) -->
+      <div class="col">
+        <div class="col-label">
+          After · Merged <span class="tag">goal selected → compressed</span>
+        </div>
+        <div class="phone">
+          <div class="scroll">
+            <div class="hero-wrap compressed">
+              <div class="hero-sheen"></div>
+              <div class="hero-question" style="font-size: 20px !important">
+                What do you want<br />to change?
+              </div>
+              <div class="hero-search">
+                <div
+                  class="search-bar"
+                  style="
+                    background: rgba(255, 255, 255, 0.7);
+                    border-color: rgba(255, 255, 255, 0.8);
+                  "
+                >
+                  <i data-lucide="search" width="16" height="16"></i>
+                  <input placeholder="Search habits..." />
+                </div>
+              </div>
+              <div class="goal-grid">
+                <div class="goal-chip">⚡ More energy</div>
+                <div class="goal-chip">😴 Sleep better</div>
+                <div class="goal-chip">🧘 Stress less</div>
+                <div class="goal-chip">💪 Get healthier</div>
+                <div class="goal-chip wide active">🎯 Focus deeper</div>
+              </div>
+            </div>
+            <div class="cat-rail-wrap">
+              <div class="chip-rail" style="padding: 0 20px">
+                <div class="chip">All</div>
+                <div class="chip">Mind</div>
+                <div class="chip">Body</div>
+                <div class="chip">Sleep</div>
+                <div class="chip">Focus</div>
+              </div>
+            </div>
+            <div class="after-list-label">
+              <span>Focus deeper · by popularity</span><span>9 shown</span>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Single-tasking block</p>
+                  <p class="row-meta">25 min · Focus</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="crosshair" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">Phone-free mornings</p>
+                  <p class="row-meta">30 min · Focus</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="smartphone" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+            <div class="row-card">
+              <div class="row-top">
+                <div>
+                  <p class="row-title">
+                    Deep work block<span class="badge-new">NEW</span>
+                  </p>
+                  <p class="row-meta">50 min · Focus</p>
+                </div>
+                <div class="row-icon">
+                  <i data-lucide="brain" width="18" height="18"></i>
+                </div>
+              </div>
+              <div class="why-footer">
+                <i data-lucide="book-open" width="12" height="12"></i> Why this
+                works · 1-min read
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <b>What changed:</b> gradient hero (peach→cream) replaces flat serif
+      title; search moved into hero, stays visible when compressed; 5 goal chips
+      (2-col + wide last) added above the existing category rail; label switches
+      to <code>"{goal} · by popularity"</code> when a goal is active; catalog
+      screen is gone — one endless popularity-sorted list, no "See all" hop.
+      Sign off this direction, or call out what to change, before I touch code.
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

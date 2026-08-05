@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Time Button Affordance Variations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { font-family: 'Inter', sans-serif !important; }
+    body { background: #292524; }
+    .phone-frame {
+      width: 390px;
+      background: #fafaf9;
+      border-radius: 40px;
+      padding: 20px;
+      margin: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .variation-label {
+      color: #a8a29e;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8">
+  <h1 class="text-2xl font-bold text-white mb-2 text-center">Custom Time Button - Affordance Variations</h1>
+  <p class="text-stone-400 text-center mb-8">Making it more obvious that you can tap to set a custom time</p>
+
+  <div class="flex flex-wrap justify-center gap-4">
+
+    <!-- Variation 1: Current (for reference) -->
+    <div class="phone-frame">
+      <div class="variation-label">1. Current Design (Reference)</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2 mb-3">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+      </div>
+
+      <!-- Current Custom Time Button -->
+      <button class="w-full flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="clock" class="w-4 h-4 text-stone-500"></i>
+          <span class="text-sm font-medium text-stone-900">Custom time...</span>
+        </div>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+      </button>
+
+      <p class="text-xs text-stone-400 mt-3 text-center italic">Problem: Blends in, not obviously tappable</p>
+    </div>
+
+    <!-- Variation 2: Emerald Outline (Match "Browse more emojis" style) -->
+    <div class="phone-frame">
+      <div class="variation-label">2. Emerald Text Link Style</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2 mb-3">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+      </div>
+
+      <!-- Emerald Text Link Style -->
+      <button class="w-full flex items-center justify-center gap-1 py-2">
+        <span class="text-sm font-medium text-emerald-600">Set a custom time</span>
+        <span class="text-emerald-600">→</span>
+      </button>
+
+      <p class="text-xs text-emerald-600 mt-3 text-center">✓ Matches "Browse more emojis" pattern</p>
+    </div>
+
+    <!-- Variation 3: Dashed Border (like custom color was) -->
+    <div class="phone-frame">
+      <div class="variation-label">3. Dashed Border + Icon</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2 mb-3">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+      </div>
+
+      <!-- Dashed Border Style -->
+      <button class="w-full flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-stone-300 bg-stone-50 px-3.5 py-3 hover:border-emerald-400 hover:bg-emerald-50 transition-colors">
+        <i data-lucide="plus" class="w-4 h-4 text-stone-400"></i>
+        <span class="text-sm font-medium text-stone-500">Custom time</span>
+      </button>
+
+      <p class="text-xs text-stone-500 mt-3 text-center">Dashed = "add something new"</p>
+    </div>
+
+    <!-- Variation 4: Inline with Presets -->
+    <div class="phone-frame">
+      <div class="variation-label">4. Fourth Preset Slot</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets + Custom as 4th item -->
+      <div class="flex gap-2 mb-3">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border-2 border-dashed border-stone-300">
+          <div class="text-base mb-0.5">⏰</div>
+          <div class="text-xs font-medium text-stone-500">Other</div>
+        </button>
+      </div>
+
+      <p class="text-xs text-stone-500 mt-3 text-center">Custom as equal peer to presets</p>
+    </div>
+
+    <!-- Variation 5: Prominent Button -->
+    <div class="phone-frame">
+      <div class="variation-label">5. Outlined Button Style</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2 mb-3">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+      </div>
+
+      <!-- Outlined Button -->
+      <button class="w-full flex items-center justify-center gap-2 rounded-xl border-2 border-emerald-500 bg-white px-3.5 py-3">
+        <i data-lucide="clock" class="w-4 h-4 text-emerald-600"></i>
+        <span class="text-sm font-semibold text-emerald-600">Choose different time</span>
+      </button>
+
+      <p class="text-xs text-emerald-600 mt-3 text-center">✓ Very prominent, clear CTA</p>
+    </div>
+
+    <!-- Variation 6: Subtle with Helper Text -->
+    <div class="phone-frame">
+      <div class="variation-label">6. Current + Helper Hint</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2 mb-3">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+      </div>
+
+      <!-- Current Style + Helper -->
+      <button class="w-full flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="clock" class="w-4 h-4 text-stone-500"></i>
+          <span class="text-sm font-medium text-stone-900">Custom time...</span>
+        </div>
+        <i data-lucide="chevron-right" class="w-4 h-4 text-stone-400"></i>
+      </button>
+      <p class="text-xs text-stone-400 mt-1.5 text-center">Tap to pick a specific time</p>
+
+      <p class="text-xs text-stone-500 mt-3 text-center">Minimal change, adds clarity</p>
+    </div>
+
+    <!-- Variation 7: Matching the preset styling with ⏰ -->
+    <div class="phone-frame">
+      <div class="variation-label">7. Text Link Below Presets</div>
+
+      <!-- Toggle Row -->
+      <div class="flex items-center justify-between rounded-xl border border-stone-200 bg-white px-3.5 py-3 mb-3" style="box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 flex items-center justify-center rounded-full bg-amber-100">
+            <i data-lucide="bell" class="w-4 h-4 text-amber-500"></i>
+          </div>
+          <span class="text-sm font-medium text-stone-900">Daily Reminder</span>
+        </div>
+        <div class="w-12 h-7 bg-emerald-500 rounded-full relative">
+          <div class="absolute right-1 top-1 w-5 h-5 bg-white rounded-full shadow"></div>
+        </div>
+      </div>
+
+      <!-- Presets -->
+      <div class="flex gap-2 mb-2">
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌅</div>
+          <div class="text-xs font-medium text-stone-600">7 AM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-emerald-50 border-2 border-emerald-500">
+          <div class="text-base mb-0.5">☀️</div>
+          <div class="text-xs font-medium text-emerald-600">12 PM</div>
+        </button>
+        <button class="flex-1 py-2.5 px-2 rounded-xl bg-stone-100 border border-transparent">
+          <div class="text-base mb-0.5">🌙</div>
+          <div class="text-xs font-medium text-stone-600">8 PM</div>
+        </button>
+      </div>
+
+      <!-- Text link like "Browse more emojis" -->
+      <button class="w-full flex items-center justify-center gap-1 py-2">
+        <span class="text-sm font-medium text-emerald-600">Pick a different time</span>
+        <span class="text-emerald-600">→</span>
+      </button>
+
+      <p class="text-xs text-emerald-600 mt-3 text-center">✓ Consistent with emoji picker pattern</p>
+    </div>
+
+  </div>
+
+  <div class="mt-8 text-center">
+    <h2 class="text-lg font-semibold text-white mb-2">Recommendation</h2>
+    <p class="text-stone-400 max-w-2xl mx-auto">
+      <strong class="text-emerald-400">Variation 2 or 7 (Text Link)</strong> - Matches the "Browse more emojis →" pattern already established in the app.
+      Consistent, minimal, and clearly interactive. Alternatively, <strong class="text-emerald-400">Variation 4</strong> is great if you want it
+      as an equal option alongside the presets.
+    </p>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

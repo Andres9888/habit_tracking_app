@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archived Habits — Resume CTA + Batch Select</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600;7..72,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif !important;
+      background: #E8E2DB;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .phone-frame {
+      width: 390px;
+      min-height: 780px;
+      background: #F5F1ED;
+      border-radius: 44px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(45,42,38,0.08),
+        0 24px 80px rgba(45,42,38,0.14),
+        0 8px 24px rgba(45,42,38,0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Status bar */
+    .status-bar {
+      height: 54px;
+      padding: 14px 28px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F5F1ED;
+      flex-shrink: 0;
+    }
+    .status-bar .time {
+      font-weight: 600;
+      font-size: 15px;
+      color: #1F2937;
+      letter-spacing: 0.02em;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+
+    /* Header — matches ModalHeader.tsx */
+    .page-header {
+      padding: 0 16px 8px;
+      background: #F5F1ED;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+      margin-bottom: 8px;
+    }
+    .header-btn {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f5f5f4;
+      border: none;
+      cursor: pointer;
+      color: #78716c;
+      transition: background 0.15s ease;
+      box-shadow: 0 1px 2px rgba(45,42,38,0.04);
+    }
+    .header-btn:hover { background: #e7e5e4; }
+    .header-title {
+      font-family: 'DM Sans', sans-serif !important;
+      font-size: 20px;
+      font-weight: 700;
+      color: #1F2937;
+      flex: 1;
+      text-align: center;
+    }
+
+    /* Summary bar — matches StatsSummaryBar.tsx */
+    .summary-bar {
+      margin: 0 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 12px;
+      padding: 12px 16px;
+      background: #fafaf9;
+      font-size: 14px;
+      font-weight: 500;
+      color: #57534e;
+    }
+    .summary-bar.selection-mode {
+      background: #ECFDF5;
+      color: #059669;
+      justify-content: space-between;
+    }
+    .select-all-btn {
+      font-size: 13px;
+      font-weight: 600;
+      color: #059669;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.15s;
+    }
+    .select-all-btn:hover { background: rgba(5,150,105,0.08); }
+
+    /* Scrollable content */
+    .scroll-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 16px;
+    }
+
+    /* Cards container */
+    .cards-container {
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Habit card — matches AnimatedHabitCard.tsx */
+    .habit-card {
+      background: #FFFFFF;
+      border-radius: 16px;
+      border: 1px solid #e7e5e4;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(45,42,38,0.05);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.28s ease, transform 0.28s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .habit-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .habit-card.selected {
+      border-color: #D1FAE5;
+      box-shadow: 0 0 0 1px #D1FAE5, 0 1px 3px rgba(5,150,105,0.08);
+    }
+    .habit-card.removing {
+      transform: translateY(-16px) scale(0.96);
+      opacity: 0;
+      max-height: 0 !important;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      margin-bottom: -12px !important;
+      border-width: 0 !important;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    /* Strength background gradient — matches StrengthBackground.tsx */
+    .strength-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    /* Selection checkbox */
+    .select-checkbox {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #d6d3d1;
+      background: #fff;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      z-index: 5;
+    }
+    .selection-active .select-checkbox { display: flex; }
+    .select-checkbox.checked {
+      border-color: #059669;
+      background: #059669;
+    }
+    .select-checkbox svg { opacity: 0; transition: opacity 0.15s; }
+    .select-checkbox.checked svg { opacity: 1; }
+
+    /* Card header — matches HabitCardHeader.tsx */
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .accent-bar {
+      width: 4px;
+      height: 40px;
+      border-radius: 9999px;
+      flex-shrink: 0;
+    }
+    .card-icon {
+      font-size: 24px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .card-info { flex: 1; min-width: 0; }
+    .card-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1F2937;
+      margin-bottom: 2px;
+    }
+    .card-date {
+      font-size: 12px;
+      color: #78716c;
+    }
+    .card-date .dot-sep {
+      color: #d6d3d1;
+      margin: 0 4px;
+    }
+
+    /* Stats badges — matches HabitStatsBadges.tsx */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .stat-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    /* Strength badge colors by level */
+    .stat-badge.strength-starting { background: #ECFDF5; color: #059669; }
+    .stat-badge.strength-developing { background: #F0FDFA; color: #0D9488; }
+    .stat-badge.strength-building { background: #ECFDF5; color: #059669; }
+    .stat-badge.strength-strong { background: #ECFEFF; color: #0891B2; }
+    .stat-badge.strength-automatic { background: #ECFDF5; color: #047857; }
+    /* Streak badge */
+    .stat-badge.streak { background: #fef3c7; color: #b45309; }
+    .stat-badge.streak.inactive { background: #f5f5f4; color: #78716c; }
+    /* Completions badge */
+    .stat-badge.completions { background: #dbeafe; color: #2563eb; }
+
+    /* Resume button — primary CTA */
+    .resume-btn {
+      width: 100%;
+      height: 40px;
+      background: rgba(5,150,105,0.12);
+      border: 1px solid #D1FAE5;
+      color: #059669;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .resume-btn:hover {
+      background: rgba(5,150,105,0.18);
+      border-color: #A7F3D0;
+    }
+    .resume-btn:active { transform: scale(0.97); }
+    .resume-btn .btn-icon { width: 15px; height: 15px; }
+    .resume-btn.success {
+      background: #ECFDF5;
+      border-color: #10b981;
+      color: #059669;
+    }
+
+    /* Delete button — matches ActionButtons.tsx */
+    .delete-btn {
+      width: 100%;
+      height: 40px;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #DC2626;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .delete-btn:hover { background: #FEE2E2; }
+    .delete-btn:active { transform: scale(0.97); }
+
+    /* Action row (restore + delete side by side) */
+    .action-row {
+      display: flex;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .action-row .resume-btn { flex: 1; }
+    .action-row .delete-btn { flex: 1; }
+
+    /* Delete confirmation overlay */
+    .delete-confirm {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(4px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border-radius: 16px;
+      z-index: 8;
+    }
+    .delete-confirm.show { display: flex; }
+    .delete-confirm-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1F2937;
+    }
+    .delete-confirm-sub {
+      font-size: 13px;
+      color: #78716c;
+      margin-top: -8px;
+    }
+    .delete-confirm-actions { display: flex; gap: 10px; }
+    .confirm-btn {
+      padding: 10px 24px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: transform 0.15s ease;
+    }
+    .confirm-btn:active { transform: scale(0.96); }
+    .confirm-btn.yes { background: #DC2626; color: #fff; }
+    .confirm-btn.yes:hover { background: #B91C1C; }
+    .confirm-btn.no { background: #f5f5f4; color: #78716c; }
+    .confirm-btn.no:hover { background: #e7e5e4; }
+
+    /* Danger zone footer — matches DangerZoneFooter.tsx */
+    .danger-zone {
+      margin: 12px 16px 0;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px dashed #FECACA;
+      background: #FEF2F2;
+      display: none;
+    }
+    .danger-zone.show { display: block; }
+    .danger-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: #DC2626;
+      opacity: 0.6;
+      margin-bottom: 10px;
+    }
+    .danger-btn {
+      width: 100%;
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(220,38,38,0.08);
+      border: 1px solid rgba(220,38,38,0.15);
+      color: #DC2626;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.15s;
+    }
+    .danger-btn:hover { background: rgba(220,38,38,0.14); }
+    .danger-desc {
+      font-size: 13px;
+      color: #78716c;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    /* Selection action bar — matches SelectionActionBar.tsx glassmorphism */
+    .selection-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 0 20px;
+      padding-bottom: max(env(safe-area-inset-bottom), 16px);
+      transform: translateY(100%);
+      opacity: 0;
+      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s ease;
+    }
+    .selection-bar.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .selection-bar-inner {
+      border-radius: 32px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(231,229,228,0.6);
+      box-shadow: 0 8px 32px rgba(45,42,38,0.12), 0 2px 8px rgba(45,42,38,0.06);
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      gap: 8px;
+    }
+    .bar-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 22px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .bar-btn:hover { background: rgba(0,0,0,0.04); }
+    .bar-btn.cancel { color: #78716c; }
+    .bar-btn.restore { color: #059669; }
+    .bar-btn.delete { color: #DC2626; }
+    .bar-btn:disabled { opacity: 0.35; cursor: default; }
+    .bar-count {
+      flex: 1;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1F2937;
+    }
+
+    /* Empty state — matches EmptyState.tsx */
+    .empty-state {
+      padding: 24px 16px 64px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .empty-state.show { display: flex; }
+    .empty-illustration {
+      width: 128px;
+      height: 112px;
+      border-radius: 16px;
+      background: #ECFDF5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 34px;
+    }
+    .empty-heading {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1F2937;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    .empty-desc {
+      font-size: 14px;
+      color: #78716c;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .empty-desc-2 {
+      font-size: 14px;
+      color: #78716c;
+      text-align: center;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+    .empty-tip {
+      border-radius: 16px;
+      border: 1px solid #D1FAE5;
+      background: #ECFDF5;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      max-width: 320px;
+    }
+    .empty-tip-emoji { font-size: 22px; flex-shrink: 0; }
+    .empty-tip-title { font-size: 14px; font-weight: 500; color: #065F46; margin-bottom: 4px; }
+    .empty-tip-desc { font-size: 13px; line-height: 18px; color: #047857; }
+
+    /* Home indicator */
+    .home-indicator {
+      height: 34px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 8px;
+      background: #F5F1ED;
+      flex-shrink: 0;
+    }
+    .home-indicator-bar {
+      width: 134px;
+      height: 5px;
+      background: #1F2937;
+      border-radius: 100px;
+      opacity: 0.2;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-frame">
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="status-icons">
+        <svg width="17" height="12" viewBox="0 0 17 12" fill="none"><rect x="0" y="3" width="3" height="9" rx="1" fill="#1F2937"/><rect x="4.5" y="2" width="3" height="10" rx="1" fill="#1F2937"/><rect x="9" y="0.5" width="3" height="11.5" rx="1" fill="#1F2937"/><rect x="13.5" y="0" width="3" height="12" rx="1" fill="#1F2937"/></svg>
+        <svg width="15" height="12" viewBox="0 0 15 12" fill="none"><path d="M7.5 3.5C9.3 3.5 10.9 4.2 12.1 5.3L13.5 3.9C11.9 2.4 9.8 1.5 7.5 1.5C5.2 1.5 3.1 2.4 1.5 3.9L2.9 5.3C4.1 4.2 5.7 3.5 7.5 3.5ZM7.5 7.5C8.3 7.5 9.1 7.8 9.7 8.3L7.5 10.5L5.3 8.3C5.9 7.8 6.7 7.5 7.5 7.5Z" fill="#1F2937"/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0" y="1" width="21" height="10" rx="2" stroke="#1F2937" stroke-opacity="0.35"/><rect x="1.5" y="2.5" width="16" height="7" rx="1" fill="#1F2937"/><rect x="22" y="4" width="2" height="4" rx="1" fill="#1F2937" fill-opacity="0.4"/></svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-row">
+        <button class="header-btn" aria-label="Go back">
+          <i data-lucide="chevron-left" style="width:24px;height:24px;stroke-width:2;"></i>
+        </button>
+        <span class="header-title">Archived Habits</span>
+        <button class="header-btn" aria-label="Close" id="closeBtn">
+          <i data-lucide="x" style="width:20px;height:20px;stroke-width:2;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Summary bar -->
+    <div class="summary-bar" id="summaryBar">
+      <span>📦</span>
+      <span id="summaryText">4 archived habits</span>
+      <button class="select-all-btn" id="selectToggle" onclick="toggleSelectionMode()">Select</button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="scroll-content" id="scrollContent">
+      <div class="cards-container" id="cardsContainer">
+
+        <!-- Card 1: Morning Meditation -->
+        <div class="habit-card" data-id="1" data-name="Morning Meditation" data-strength="72" data-color="#0D9488">
+          <div class="strength-bg" style="width:72%; background: linear-gradient(to right, rgba(13,148,136,0.125), rgba(13,148,136,0.03), rgba(13,148,136,0));"></div>
+          <div class="select-checkbox" onclick="toggleSelect(event, this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="delete-confirm">
+            <span class="delete-confirm-text">Permanently delete?</span>
+            <span class="delete-confirm-sub">This cannot be undone</span>
+            <div class="delete-confirm-actions">
+              <button class="confirm-btn no" onclick="cancelDelete(this)">Cancel</button>
+              <button class="confirm-btn yes" onclick="confirmDelete(this)">Delete</button>
+            </div>
+          </div>
+          <div class="card-header">
+            <div class="accent-bar" style="background: #0D9488;"></div>
+            <span class="card-icon">🧘</span>
+            <div class="card-info">
+              <div class="card-name">Morning Meditation</div>
+              <div class="card-date">Archived Feb 15<span class="dot-sep">·</span>34 days ago</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span class="stat-badge strength-developing">🌿 72% Building</span>
+            <span class="stat-badge streak">🔥 45 day streak</span>
+            <span class="stat-badge completions">✓ 234 total</span>
+          </div>
+          <div class="action-row">
+            <button class="resume-btn" onclick="resumeHabit(this)">
+              <i data-lucide="rotate-ccw" class="btn-icon" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Restore
+            </button>
+            <button class="delete-btn" onclick="showDeleteConfirm(this)">
+              <i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 2: Read 30 Minutes -->
+        <div class="habit-card" data-id="2" data-name="Read 30 Minutes" data-strength="58" data-color="#059669">
+          <div class="strength-bg" style="width:58%; background: linear-gradient(to right, rgba(5,150,105,0.125), rgba(5,150,105,0.03), rgba(5,150,105,0));"></div>
+          <div class="select-checkbox" onclick="toggleSelect(event, this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="delete-confirm">
+            <span class="delete-confirm-text">Permanently delete?</span>
+            <span class="delete-confirm-sub">This cannot be undone</span>
+            <div class="delete-confirm-actions">
+              <button class="confirm-btn no" onclick="cancelDelete(this)">Cancel</button>
+              <button class="confirm-btn yes" onclick="confirmDelete(this)">Delete</button>
+            </div>
+          </div>
+          <div class="card-header">
+            <div class="accent-bar" style="background: #059669;"></div>
+            <span class="card-icon">📖</span>
+            <div class="card-info">
+              <div class="card-name">Read 30 Minutes</div>
+              <div class="card-date">Archived Mar 1<span class="dot-sep">·</span>20 days ago</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span class="stat-badge strength-building">🌱 58% Developing</span>
+            <span class="stat-badge streak">🔥 28 day streak</span>
+            <span class="stat-badge completions">✓ 156 total</span>
+          </div>
+          <div class="action-row">
+            <button class="resume-btn" onclick="resumeHabit(this)">
+              <i data-lucide="rotate-ccw" class="btn-icon" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Restore
+            </button>
+            <button class="delete-btn" onclick="showDeleteConfirm(this)">
+              <i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: Cold Shower -->
+        <div class="habit-card" data-id="3" data-name="Cold Shower" data-strength="35" data-color="#84CC16">
+          <div class="strength-bg" style="width:35%; background: linear-gradient(to right, rgba(132,204,22,0.125), rgba(132,204,22,0.03), rgba(132,204,22,0));"></div>
+          <div class="select-checkbox" onclick="toggleSelect(event, this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="delete-confirm">
+            <span class="delete-confirm-text">Permanently delete?</span>
+            <span class="delete-confirm-sub">This cannot be undone</span>
+            <div class="delete-confirm-actions">
+              <button class="confirm-btn no" onclick="cancelDelete(this)">Cancel</button>
+              <button class="confirm-btn yes" onclick="confirmDelete(this)">Delete</button>
+            </div>
+          </div>
+          <div class="card-header">
+            <div class="accent-bar" style="background: #84CC16;"></div>
+            <span class="card-icon">🥶</span>
+            <div class="card-info">
+              <div class="card-name">Cold Shower</div>
+              <div class="card-date">Archived Mar 10<span class="dot-sep">·</span>11 days ago</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span class="stat-badge strength-starting">🌱 35% Starting</span>
+            <span class="stat-badge streak">🔥 12 day streak</span>
+            <span class="stat-badge completions">✓ 89 total</span>
+          </div>
+          <div class="action-row">
+            <button class="resume-btn" onclick="resumeHabit(this)">
+              <i data-lucide="rotate-ccw" class="btn-icon" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Restore
+            </button>
+            <button class="delete-btn" onclick="showDeleteConfirm(this)">
+              <i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 4: Daily Journal -->
+        <div class="habit-card" data-id="4" data-name="Daily Journal" data-strength="85" data-color="#047857">
+          <div class="strength-bg" style="width:85%; background: linear-gradient(to right, rgba(4,120,87,0.125), rgba(4,120,87,0.03), rgba(4,120,87,0));"></div>
+          <div class="select-checkbox" onclick="toggleSelect(event, this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="delete-confirm">
+            <span class="delete-confirm-text">Permanently delete?</span>
+            <span class="delete-confirm-sub">This cannot be undone</span>
+            <div class="delete-confirm-actions">
+              <button class="confirm-btn no" onclick="cancelDelete(this)">Cancel</button>
+              <button class="confirm-btn yes" onclick="confirmDelete(this)">Delete</button>
+            </div>
+          </div>
+          <div class="card-header">
+            <div class="accent-bar" style="background: #047857;"></div>
+            <span class="card-icon">✍️</span>
+            <div class="card-info">
+              <div class="card-name">Daily Journal</div>
+              <div class="card-date">Archived Mar 18<span class="dot-sep">·</span>3 days ago</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span class="stat-badge strength-automatic">💪 85% Automatic</span>
+            <span class="stat-badge streak">🔥 67 day streak</span>
+            <span class="stat-badge completions">✓ 312 total</span>
+          </div>
+          <div class="action-row">
+            <button class="resume-btn" onclick="resumeHabit(this)">
+              <i data-lucide="rotate-ccw" class="btn-icon" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Restore
+            </button>
+            <button class="delete-btn" onclick="showDeleteConfirm(this)">
+              <i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 5: Push-ups -->
+        <div class="habit-card" data-id="5" data-name="Push-ups" data-strength="42" data-color="#0D9488">
+          <div class="strength-bg" style="width:42%; background: linear-gradient(to right, rgba(13,148,136,0.125), rgba(13,148,136,0.03), rgba(13,148,136,0));"></div>
+          <div class="select-checkbox" onclick="toggleSelect(event, this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="delete-confirm">
+            <span class="delete-confirm-text">Permanently delete?</span>
+            <span class="delete-confirm-sub">This cannot be undone</span>
+            <div class="delete-confirm-actions">
+              <button class="confirm-btn no" onclick="cancelDelete(this)">Cancel</button>
+              <button class="confirm-btn yes" onclick="confirmDelete(this)">Delete</button>
+            </div>
+          </div>
+          <div class="card-header">
+            <div class="accent-bar" style="background: #0D9488;"></div>
+            <span class="card-icon">💪</span>
+            <div class="card-info">
+              <div class="card-name">Push-ups</div>
+              <div class="card-date">Archived Jan 20<span class="dot-sep">·</span>60 days ago</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span class="stat-badge strength-developing">🌿 42% Developing</span>
+            <span class="stat-badge streak">🔥 15 day streak</span>
+            <span class="stat-badge completions">✓ 98 total</span>
+          </div>
+          <div class="action-row">
+            <button class="resume-btn" onclick="resumeHabit(this)">
+              <i data-lucide="rotate-ccw" class="btn-icon" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Restore
+            </button>
+            <button class="delete-btn" onclick="showDeleteConfirm(this)">
+              <i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 6: Practice Guitar -->
+        <div class="habit-card" data-id="6" data-name="Practice Guitar" data-strength="61" data-color="#059669">
+          <div class="strength-bg" style="width:61%; background: linear-gradient(to right, rgba(5,150,105,0.125), rgba(5,150,105,0.03), rgba(5,150,105,0));"></div>
+          <div class="select-checkbox" onclick="toggleSelect(event, this)">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="delete-confirm">
+            <span class="delete-confirm-text">Permanently delete?</span>
+            <span class="delete-confirm-sub">This cannot be undone</span>
+            <div class="delete-confirm-actions">
+              <button class="confirm-btn no" onclick="cancelDelete(this)">Cancel</button>
+              <button class="confirm-btn yes" onclick="confirmDelete(this)">Delete</button>
+            </div>
+          </div>
+          <div class="card-header">
+            <div class="accent-bar" style="background: #059669;"></div>
+            <span class="card-icon">🎵</span>
+            <div class="card-info">
+              <div class="card-name">Practice Guitar</div>
+              <div class="card-date">Archived Feb 28<span class="dot-sep">·</span>21 days ago</div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <span class="stat-badge strength-building">🌿 61% Building</span>
+            <span class="stat-badge streak">🔥 22 day streak</span>
+            <span class="stat-badge completions">✓ 143 total</span>
+          </div>
+          <div class="action-row">
+            <button class="resume-btn" onclick="resumeHabit(this)">
+              <i data-lucide="rotate-ccw" class="btn-icon" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Restore
+            </button>
+            <button class="delete-btn" onclick="showDeleteConfirm(this)">
+              <i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5;"></i>
+              Delete
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Danger zone footer -->
+      <div class="danger-zone" id="dangerZone">
+        <div class="danger-label">DANGER ZONE</div>
+        <button class="danger-btn" onclick="showBulkDeleteConfirm()">
+          <i data-lucide="trash-2" style="width:16px;height:16px;stroke-width:2.5;"></i>
+          <span id="dangerBtnText">Delete All Archived Habits</span>
+        </button>
+        <div class="danger-desc">This action cannot be undone</div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-illustration">🌱</div>
+        <div class="empty-heading">All Habits Are Active!</div>
+        <div class="empty-desc">No archived habits here.</div>
+        <div class="empty-desc-2">When you archive a habit, it'll appear here so you can restore it anytime.</div>
+        <div class="empty-tip">
+          <span class="empty-tip-emoji">💚</span>
+          <div>
+            <div class="empty-tip-title">Good to Know</div>
+            <div class="empty-tip-desc">Archiving preserves your streak data and history. You can restore anytime without losing progress.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selection action bar (glassmorphism capsule) -->
+    <div class="selection-bar" id="selectionBar">
+      <div class="selection-bar-inner">
+        <button class="bar-btn cancel" onclick="exitSelectionMode()" aria-label="Cancel">
+          <i data-lucide="x" style="width:20px;height:20px;stroke-width:2;"></i>
+        </button>
+        <button class="bar-btn restore" id="barRestore" onclick="batchRestore()" disabled aria-label="Restore selected">
+          <i data-lucide="rotate-ccw" style="width:20px;height:20px;stroke-width:2;"></i>
+        </button>
+        <span class="bar-count" id="barCount">0 selected</span>
+        <button class="bar-btn delete" id="barDelete" onclick="batchDelete()" disabled aria-label="Delete selected">
+          <i data-lucide="trash-2" style="width:20px;height:20px;stroke-width:2;"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Home Indicator -->
+    <div class="home-indicator">
+      <div class="home-indicator-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    let selectionMode = false;
+    const selected = new Set();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      const cards = document.querySelectorAll('.habit-card');
+      cards.forEach((card, i) => {
+        setTimeout(() => card.classList.add('visible'), 60 + i * 60);
+      });
+      updateUI();
+    });
+
+    function getActiveCards() {
+      return document.querySelectorAll('.habit-card:not(.removing):not(.deleted)');
+    }
+
+    function updateUI() {
+      const cards = getActiveCards();
+      const count = cards.length;
+      // Summary
+      document.getElementById('summaryText').textContent =
+        count === 1 ? '1 archived habit' : `${count} archived habits`;
+      // Danger zone
+      const dz = document.getElementById('dangerZone');
+      if (count > 1 && !selectionMode) { dz.classList.add('show'); } else { dz.classList.remove('show'); }
+      // Empty state
+      if (count === 0) {
+        document.getElementById('emptyState').classList.add('show');
+        document.getElementById('dangerZone').classList.remove('show');
+        exitSelectionMode();
+      }
+      // Update selection bar count
+      updateSelectionBar();
+    }
+
+    // --- Selection Mode ---
+    function toggleSelectionMode() {
+      if (selectionMode) {
+        exitSelectionMode();
+      } else {
+        enterSelectionMode();
+      }
+    }
+
+    function enterSelectionMode() {
+      selectionMode = true;
+      selected.clear();
+      document.getElementById('cardsContainer').classList.add('selection-active');
+      document.getElementById('selectionBar').classList.add('show');
+      // Update summary bar
+      const bar = document.getElementById('summaryBar');
+      bar.classList.add('selection-mode');
+      document.getElementById('selectToggle').textContent = 'Select All';
+      document.getElementById('selectToggle').onclick = selectAll;
+      // Hide action buttons, show checkboxes
+      getActiveCards().forEach(c => {
+        c.querySelector('.action-row').style.display = 'none';
+      });
+      updateSelectionBar();
+    }
+
+    function exitSelectionMode() {
+      selectionMode = false;
+      selected.clear();
+      document.getElementById('cardsContainer').classList.remove('selection-active');
+      document.getElementById('selectionBar').classList.remove('show');
+      const bar = document.getElementById('summaryBar');
+      bar.classList.remove('selection-mode');
+      document.getElementById('selectToggle').textContent = 'Select';
+      document.getElementById('selectToggle').onclick = toggleSelectionMode;
+      // Restore action rows, uncheck all
+      getActiveCards().forEach(c => {
+        c.querySelector('.action-row').style.display = '';
+        c.querySelector('.select-checkbox').classList.remove('checked');
+        c.classList.remove('selected');
+      });
+    }
+
+    function selectAll() {
+      const cards = getActiveCards();
+      const allSelected = selected.size === cards.length;
+      if (allSelected) {
+        // Deselect all
+        selected.clear();
+        cards.forEach(c => {
+          c.querySelector('.select-checkbox').classList.remove('checked');
+          c.classList.remove('selected');
+        });
+        document.getElementById('selectToggle').textContent = 'Select All';
+      } else {
+        cards.forEach(c => {
+          const id = c.dataset.id;
+          selected.add(id);
+          c.querySelector('.select-checkbox').classList.add('checked');
+          c.classList.add('selected');
+        });
+        document.getElementById('selectToggle').textContent = 'Deselect All';
+      }
+      updateSelectionBar();
+    }
+
+    function toggleSelect(e, checkbox) {
+      e.stopPropagation();
+      const card = checkbox.closest('.habit-card');
+      const id = card.dataset.id;
+      if (selected.has(id)) {
+        selected.delete(id);
+        checkbox.classList.remove('checked');
+        card.classList.remove('selected');
+      } else {
+        selected.add(id);
+        checkbox.classList.add('checked');
+        card.classList.add('selected');
+      }
+      // Update select all text
+      const cards = getActiveCards();
+      document.getElementById('selectToggle').textContent =
+        selected.size === cards.length ? 'Deselect All' : 'Select All';
+      updateSelectionBar();
+    }
+
+    function updateSelectionBar() {
+      const n = selected.size;
+      document.getElementById('barCount').textContent =
+        n === 0 ? '0 selected' : n === 1 ? '1 selected' : `${n} selected`;
+      document.getElementById('barRestore').disabled = n === 0;
+      document.getElementById('barDelete').disabled = n === 0;
+    }
+
+    // --- Batch Actions ---
+    function batchRestore() {
+      const ids = [...selected];
+      ids.forEach((id, i) => {
+        const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+        if (card) {
+          setTimeout(() => removeCard(card), i * 80);
+        }
+      });
+      setTimeout(() => {
+        selected.clear();
+        exitSelectionMode();
+        updateUI();
+      }, ids.length * 80 + 450);
+    }
+
+    function batchDelete() {
+      const ids = [...selected];
+      ids.forEach((id, i) => {
+        const card = document.querySelector(`.habit-card[data-id="${id}"]`);
+        if (card) {
+          setTimeout(() => removeCard(card), i * 80);
+        }
+      });
+      setTimeout(() => {
+        selected.clear();
+        exitSelectionMode();
+        updateUI();
+      }, ids.length * 80 + 450);
+    }
+
+    // --- Single Card Actions ---
+    function resumeHabit(btn) {
+      const card = btn.closest('.habit-card');
+      const resumeBtn = card.querySelector('.resume-btn');
+      resumeBtn.classList.add('success');
+      resumeBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3 7.5L6 10.5L12 4.5" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Restored!';
+      setTimeout(() => removeCard(card), 500);
+    }
+
+    function showDeleteConfirm(btn) {
+      const card = btn.closest('.habit-card');
+      card.querySelector('.delete-confirm').classList.add('show');
+    }
+
+    function cancelDelete(btn) {
+      btn.closest('.delete-confirm').classList.remove('show');
+    }
+
+    function confirmDelete(btn) {
+      const card = btn.closest('.habit-card');
+      removeCard(card);
+    }
+
+    function removeCard(card) {
+      card.style.maxHeight = card.offsetHeight + 'px';
+      card.offsetHeight; // force reflow
+      card.classList.add('removing');
+      setTimeout(() => {
+        card.classList.add('deleted');
+        card.style.display = 'none';
+        selected.delete(card.dataset.id);
+        updateUI();
+      }, 450);
+    }
+
+    function showBulkDeleteConfirm() {
+      const count = getActiveCards().length;
+      const btn = document.querySelector('.danger-btn');
+      const text = document.getElementById('dangerBtnText');
+      if (btn.dataset.confirming) {
+        // Execute
+        getActiveCards().forEach((card, i) => {
+          setTimeout(() => removeCard(card), i * 60);
+        });
+        return;
+      }
+      btn.dataset.confirming = 'true';
+      text.textContent = `Confirm: Delete ${count} habits?`;
+      btn.style.background = 'rgba(220,38,38,0.18)';
+      setTimeout(() => {
+        delete btn.dataset.confirming;
+        text.textContent = 'Delete All Archived Habits';
+        btn.style.background = '';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

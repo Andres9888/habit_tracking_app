@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Month Placement — Centered vs Left</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif;
+        background: #2d2a26;
+        color: #f5f1ed;
+        padding: 40px 20px;
+        min-height: 100vh;
+      }
+
+      .page-header {
+        max-width: 960px;
+        margin: 0 auto 40px;
+        text-align: center;
+      }
+      .page-title {
+        font-family: 'Literata', serif;
+        font-size: 26px;
+        font-weight: 700;
+        color: #faf8f5;
+        margin-bottom: 6px;
+      }
+      .page-subtitle {
+        font-size: 14px;
+        color: #9ca3af;
+        max-width: 560px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        max-width: 960px;
+        margin: 0 auto 48px;
+      }
+      @media (max-width: 800px) {
+        .comparison-grid {
+          grid-template-columns: 1fr;
+          max-width: 420px;
+        }
+      }
+
+      .scenario-label {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 8px 0 4px;
+      }
+      .scenario-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 500;
+        color: #6b6560;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .scenario-line {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.06);
+        margin: 10px auto 0;
+        max-width: 180px;
+      }
+
+      .card {
+        background: #3d3833;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .card.recommended {
+        border-color: rgba(5, 150, 105, 0.4);
+      }
+
+      .card-label {
+        padding: 14px 18px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .badge {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 500;
+        padding: 2px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.3px;
+      }
+      .badge.left {
+        background: rgba(255, 255, 255, 0.06);
+        color: #6b6560;
+      }
+      .badge.center {
+        background: rgba(5, 150, 105, 0.15);
+        color: #34d399;
+      }
+      .card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #f5f1ed;
+      }
+
+      /* Phone mockup */
+      .phone {
+        margin: 14px;
+        background: #faf8f5;
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .shelf {
+        padding: 12px 20px 16px;
+      }
+
+      /* ─── Header: Left-aligned ─── */
+      .header-left {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .header-left .date-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* ─── Header: Centered ─── */
+      .header-center {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+      }
+      .header-center .side-col {
+        flex: 1;
+      }
+      .header-center .side-col-right {
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .header-center .date-group {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* Shared header elements */
+      .green-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #059669;
+        flex-shrink: 0;
+      }
+      .month-text {
+        font-size: 15px;
+        font-weight: 700;
+        color: #047857;
+      }
+      .day-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #6b6560;
+      }
+      .chevron {
+        font-size: 10px;
+        color: #c4bfb7;
+        margin-left: 1px;
+      }
+      .today-link {
+        font-size: 12px;
+        font-weight: 600;
+        color: #e8b94d;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      /* Day strip */
+      .day-strip {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 2px;
+      }
+      .day-cell {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        flex: 1;
+      }
+      .day-lbl {
+        font-size: 10px;
+        font-weight: 500;
+        color: #6b6560;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .day-lbl.today-lbl {
+        font-weight: 700;
+        color: #7d5907;
+      }
+      .ring {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .ring.complete {
+        background: #059669;
+        color: white;
+        box-shadow: 0 0 10px rgba(5, 150, 105, 0.35);
+      }
+      .ring.today {
+        background: rgba(232, 185, 77, 0.1);
+        color: #7d5907;
+        border: 3px solid #ddd8d2;
+        border-top-color: #e8b94d;
+        outline: 1px solid rgba(232, 185, 77, 0.3);
+      }
+      .ring.future {
+        border: 3px dashed #ddd8d2;
+        color: #c4bfb7;
+        opacity: 0.3;
+      }
+      .ring.none {
+        border: 3px solid #ddd8d2;
+        color: #2d2a26;
+      }
+      .ring.missed {
+        border: 3px solid #ddd8d2;
+        color: #2d2a26;
+        opacity: 0.55;
+      }
+
+      .ring-inner {
+        text-align: center;
+        line-height: 1;
+      }
+      .ring .month-prefix {
+        font-size: 7.5px;
+        font-weight: 600;
+        display: block;
+        line-height: 1;
+        letter-spacing: 0.5px;
+      }
+      .ring.complete .month-prefix {
+        color: rgba(255, 255, 255, 0.65);
+      }
+      .ring.none .month-prefix {
+        color: #059669;
+      }
+      .ring .day-num {
+        display: block;
+        line-height: 1;
+      }
+
+      /* Reasoning */
+      .reasoning {
+        padding: 0 18px 16px;
+      }
+      .reason-text {
+        font-size: 12px;
+        color: #9ca3af;
+        line-height: 1.55;
+      }
+
+      /* Verdict */
+      .verdict {
+        max-width: 960px;
+        margin: 0 auto;
+        background: #3d3833;
+        border-radius: 14px;
+        padding: 24px;
+        border: 1px solid rgba(5, 150, 105, 0.3);
+      }
+      .verdict-title {
+        font-family: 'Literata', serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: #34d399;
+        margin-bottom: 10px;
+      }
+      .verdict-text {
+        font-size: 13px;
+        color: #d1d5db;
+        line-height: 1.65;
+      }
+      .verdict-text strong {
+        color: #f5f1ed;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <div class="page-title">Month Placement: Centered vs Left</div>
+      <div class="page-subtitle">
+        Side-by-side comparison across three scenarios. Same V6+V4 design
+        system, only the header alignment changes.
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- SCENARIO 1: Current week, same month       -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div class="comparison-grid">
+      <div class="scenario-label">
+        <div class="scenario-text">Scenario 1 — Current Week (March 1–7)</div>
+        <div class="scenario-line"></div>
+      </div>
+
+      <!-- LEFT -->
+      <div class="card">
+        <div class="card-label">
+          <span class="badge left">LEFT</span>
+          <span class="card-title">Left-Aligned</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-left">
+              <div class="date-group">
+                <div class="green-dot"></div>
+                <span class="month-text">March</span>
+                <span class="day-text">5</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">
+                  <div class="ring-inner">
+                    <span class="month-prefix">MAR</span
+                    ><span class="day-num">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Header hugs the left edge. Eye starts at the month, then must travel
+            right to scan the full strip. Feels utilitarian.
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="card recommended">
+        <div class="card-label">
+          <span class="badge center">CENTER ★</span>
+          <span class="card-title">Centered</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-center">
+              <div class="side-col"></div>
+              <div class="date-group">
+                <div class="green-dot"></div>
+                <span class="month-text">March</span>
+                <span class="day-text">5</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="side-col-right"></div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">
+                  <div class="ring-inner">
+                    <span class="month-prefix">MAR</span
+                    ><span class="day-num">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">2</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">3</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">4</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl today-lbl">Today</span>
+                <div class="today ring">5</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="future ring">6</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="future ring">7</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Header floats above the strip's midpoint. Eye lands naturally on
+            "March" then scans symmetrically outward. Feels balanced,
+            intentional.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SCENARIO 2: Past week with "Today →"   -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="scenario-label">
+        <div class="scenario-text">
+          Scenario 2 — Past Week with "Today →" (Jan 13–19)
+        </div>
+        <div class="scenario-line"></div>
+      </div>
+
+      <!-- LEFT -->
+      <div class="card">
+        <div class="card-label">
+          <span class="badge left">LEFT</span>
+          <span class="card-title">Left-Aligned</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-left">
+              <div class="date-group">
+                <div class="green-dot"></div>
+                <span class="month-text">January</span>
+                <span class="day-text">13 – 19</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <span class="today-link">Today →</span>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">13</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">14</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">16</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">18</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Date and "Today →" pushed to opposite edges. Creates visual tension
+            — the header feels like a tug-of-war. On narrow screens, "January 13
+            – 19" + "Today →" could clip.
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="card recommended">
+        <div class="card-label">
+          <span class="badge center">CENTER ★</span>
+          <span class="card-title">Centered</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-center">
+              <div class="side-col"></div>
+              <div class="date-group">
+                <div class="green-dot"></div>
+                <span class="month-text">January</span>
+                <span class="day-text">13 – 19</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="side-col-right">
+                <span class="today-link">Today →</span>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">13</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">14</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="missed ring">15</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="complete ring">16</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="missed ring">17</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="complete ring">18</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="missed ring">19</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            "Today →" sits in its own flex column, naturally counterbalancing
+            the centered date. Neither element crowds the other. The month label
+            stays anchored at the visual center regardless of the right-side
+            content.
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- SCENARIO 3: Cross-month boundary       -->
+      <!-- ═══════════════════════════════════════ -->
+      <div class="scenario-label">
+        <div class="scenario-text">
+          Scenario 3 — Cross-Month (Feb 24 – Mar 2)
+        </div>
+        <div class="scenario-line"></div>
+      </div>
+
+      <!-- LEFT -->
+      <div class="card">
+        <div class="card-label">
+          <span class="badge left">LEFT</span>
+          <span class="card-title">Left-Aligned</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-left">
+              <div class="date-group">
+                <div class="green-dot"></div>
+                <span class="month-text">March</span>
+                <span class="day-text">24 – Mar 2</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <span class="today-link">Today →</span>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">24</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">25</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">26</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="missed ring">27</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="complete ring">28</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="none ring">
+                  <div class="ring-inner">
+                    <span class="month-prefix" style="color: #059669">MAR</span
+                    ><span class="day-num">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="none ring">2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            The long date string "24 – Mar 2" stretches the left group. Combined
+            with "Today →" on the right, the header feels heavy and text-dense.
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTER -->
+      <div class="card recommended">
+        <div class="card-label">
+          <span class="badge center">CENTER ★</span>
+          <span class="card-title">Centered</span>
+        </div>
+        <div class="phone">
+          <div class="shelf">
+            <div class="header-center">
+              <div class="side-col"></div>
+              <div class="date-group">
+                <div class="green-dot"></div>
+                <span class="month-text">March</span>
+                <span class="day-text">24 – Mar 2</span>
+                <span class="chevron">&#9662;</span>
+              </div>
+              <div class="side-col-right">
+                <span class="today-link">Today →</span>
+              </div>
+            </div>
+            <div class="day-strip">
+              <div class="day-cell">
+                <span class="day-lbl">Mon</span>
+                <div class="complete ring">24</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Tue</span>
+                <div class="complete ring">25</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Wed</span>
+                <div class="complete ring">26</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Thu</span>
+                <div class="missed ring">27</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Fri</span>
+                <div class="complete ring">28</div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sat</span>
+                <div class="none ring">
+                  <div class="ring-inner">
+                    <span class="month-prefix" style="color: #059669">MAR</span
+                    ><span class="day-num">1</span>
+                  </div>
+                </div>
+              </div>
+              <div class="day-cell">
+                <span class="day-lbl">Sun</span>
+                <div class="none ring">2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="reasoning">
+          <div class="reason-text">
+            Even with the longest possible date string, the centered layout
+            absorbs it gracefully. The flex columns compress evenly on both
+            sides. The "MAR" label inside the ring handles the boundary — the
+            header doesn't need to carry all the context alone.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict">
+      <div class="verdict-title">Recommendation: Keep Centered</div>
+      <div class="verdict-text">
+        <strong>Centering wins on three axes:</strong><br /><br />
+        <strong>1. Visual gravity.</strong> The 7-day strip is symmetric and
+        full-width. A centered header mirrors that symmetry — the eye tracks
+        straight down from "March" to the day rings. Left-aligning creates an
+        L-shaped reading pattern that fights the strip's symmetry.<br /><br />
+        <strong>2. Scalability with "Today →".</strong> When viewing past weeks,
+        the right-side "Today →" link needs a home. In the centered layout, it
+        gets its own flex column and naturally counterbalances. In left-aligned,
+        it's pushed to the far right, creating a tug-of-war across the full
+        width.<br /><br />
+        <strong>3. Month transitions while swiping.</strong> When rapidly
+        swiping through weeks, the month name ("January" → "February" → "March")
+        snaps in place at a consistent center point. Left-aligned, these
+        transitions happen at the left edge where they compete with the user's
+        swipe gesture origin — the center position is more visible during
+        navigation.
+      </div>
+    </div>
+  </body>
+</html>

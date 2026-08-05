@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pattern A — Chip Rail (Nov 2025 revival)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Literata:wght@700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --surface-2: #fbf8f3;
+      --text-1: #2d2a26;
+      --text-2: #6f655a;
+      --text-3: #9b8f82;
+      --primary: #059669;
+      --primary-700: #047857;
+      --primary-50: #ecfdf5;
+      --primary-200: #a7f3d0;
+      --gold-100: #fef3c7;
+      --gold-300: #fcd34d;
+      --gold-700: #b45309;
+      --purple-50: #f5f0ff;
+      --purple-200: #e0d4f5;
+      --purple-600: #7c3aed;
+      --blue-50: #eef4fb;
+      --blue-200: #d0dfef;
+      --blue-700: #1d4ed8;
+      --border: rgba(45, 42, 38, 0.1);
+      --shadow-sm: 0 1px 2px rgba(45, 42, 38, 0.05);
+      --shadow-md: 0 4px 14px rgba(45, 42, 38, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, rgba(5, 150, 105, 0.12), transparent 38%), linear-gradient(180deg, #f7f4ef 0%, #efe9e0 100%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-1);
+      padding: 40px 20px;
+    }
+    .page {
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .caption {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--text-2);
+    }
+    .caption h1 {
+      font-family: 'Literata', serif;
+      font-size: 28px;
+      margin: 0 0 6px;
+      color: var(--text-1);
+      letter-spacing: -0.02em;
+    }
+    .caption p { margin: 0; font-size: 14px; }
+    .phone {
+      background: #fbf8f3;
+      border-radius: 36px;
+      box-shadow: 0 24px 60px rgba(45, 42, 38, 0.18);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      width: 390px;
+      margin: 0 auto;
+    }
+    .screen { padding: 18px 0 80px; }
+    .nav {
+      padding: 14px 20px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav .title {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .nav .sub { color: var(--text-2); font-size: 13px; margin-top: 2px; }
+    .search-wrap { padding: 8px 20px 12px; }
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      color: var(--text-3);
+      font-size: 14px;
+    }
+    .controls {
+      padding: 0 20px 10px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-2);
+    }
+    .control-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-weight: 600;
+    }
+
+    /* THE key element — full horizontal chip rail with ALL 14 categories + counts */
+    .chip-rail-section {
+      padding: 4px 0 14px;
+      position: relative;
+    }
+    .chip-rail-label {
+      padding: 0 20px 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .chip-rail {
+      display: flex;
+      gap: 8px;
+      padding: 4px 20px 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .chip-rail::-webkit-scrollbar { display: none; }
+    .chip {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-1);
+      cursor: pointer;
+    }
+    .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .chip .count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      opacity: 0.7;
+    }
+    .chip.active .count { opacity: 0.9; }
+    .chip .ico { font-size: 14px; }
+    /* fade edges */
+    .fade-right {
+      position: absolute;
+      right: 0;
+      top: 30px;
+      bottom: 10px;
+      width: 40px;
+      pointer-events: none;
+      background: linear-gradient(to right, transparent, #fbf8f3 80%);
+    }
+
+    /* Spotlight hero */
+    .spotlight {
+      margin: 12px 20px 16px;
+      padding: 18px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(5, 150, 105, 0.95), rgba(4, 120, 87, 0.95));
+      color: white;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+    .spotlight::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 70%);
+      border-radius: 50%;
+    }
+    .spot-eyebrow {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .spot-title {
+      font-family: 'Literata', serif;
+      font-size: 22px;
+      font-weight: 800;
+      margin: 6px 0 4px;
+    }
+    .spot-sub {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-bottom: 12px;
+    }
+    .spot-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 11px;
+      opacity: 0.92;
+      margin-bottom: 14px;
+    }
+    .spot-meta .pill {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      font-weight: 600;
+    }
+    .spot-actions { display: flex; gap: 8px; }
+    .spot-btn {
+      padding: 9px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--primary-700);
+      font-size: 13px;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+    }
+    .spot-btn.ghost {
+      background: transparent;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    /* Filtered vertical list */
+    .section-head {
+      padding: 4px 20px 10px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .section-title {
+      font-family: 'Literata', serif;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .section-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-3);
+    }
+    .list { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+    .tpl-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .tpl-ico {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .tpl-body { flex: 1; min-width: 0; }
+    .tpl-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      color: var(--text-1);
+    }
+    .tpl-meta {
+      font-size: 12px;
+      color: var(--text-2);
+    }
+    .tpl-add {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      border: 1px solid var(--primary-200);
+      flex-shrink: 0;
+    }
+    .legend {
+      max-width: 420px;
+      margin: 18px auto 0;
+      font-size: 13px;
+      color: var(--text-2);
+      text-align: center;
+      line-height: 1.55;
+    }
+    .legend strong { color: var(--text-1); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="caption">
+      <h1>Pattern A — Chip Rail</h1>
+      <p>Nov 2025 revival · single horizontal rail of ALL 14 categories with counts · one filtered vertical list</p>
+    </div>
+
+    <div class="phone">
+      <div class="screen">
+        <div class="nav">
+          <div>
+            <div class="title">Habit Library</div>
+            <div class="sub">Science-backed habits to get you started</div>
+          </div>
+          <div style="font-size: 22px;">⚙️</div>
+        </div>
+
+        <div class="search-wrap">
+          <div class="search">
+            <span>🔍</span>
+            <span>Search habits or science keywords</span>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="control-pill">↕ Sort: Popular</div>
+          <div class="control-pill">🧪 Research only ○</div>
+        </div>
+
+        <div class="chip-rail-section">
+          <div class="chip-rail-label">Categories</div>
+          <div class="chip-rail">
+            <div class="chip active"><span class="ico">✨</span>All <span class="count">(147)</span></div>
+            <div class="chip"><span class="ico">🌅</span>Morning <span class="count">(8)</span></div>
+            <div class="chip"><span class="ico">💪</span>Health <span class="count">(42)</span></div>
+            <div class="chip"><span class="ico">🎯</span>Productivity <span class="count">(17)</span></div>
+            <div class="chip"><span class="ico">🧘</span>Mindfulness <span class="count">(15)</span></div>
+            <div class="chip"><span class="ico">🧠</span>Mental Health <span class="count">(10)</span></div>
+            <div class="chip"><span class="ico">😴</span>Sleep <span class="count">(12)</span></div>
+            <div class="chip"><span class="ico">📚</span>Learning <span class="count">(11)</span></div>
+            <div class="chip"><span class="ico">💰</span>Financial <span class="count">(10)</span></div>
+            <div class="chip"><span class="ico">🎨</span>Creativity <span class="count">(10)</span></div>
+            <div class="chip"><span class="ico">👥</span>Social <span class="count">(11)</span></div>
+            <div class="chip"><span class="ico">🧬</span>Longevity <span class="count">(10)</span></div>
+            <div class="chip"><span class="ico">🔄</span>Recovery <span class="count">(7)</span></div>
+            <div class="chip"><span class="ico">🌬️</span>Breathing <span class="count">(4)</span></div>
+            <div class="chip"><span class="ico">🔬</span>Huberman <span class="count">(15)</span></div>
+          </div>
+          <div class="fade-right"></div>
+        </div>
+
+        <div class="spotlight">
+          <span class="spot-eyebrow">✨ Spotlight pick</span>
+          <div class="spot-title">5-Minute Meditation</div>
+          <div class="spot-sub">Lower stress and sharpen focus in under five minutes a day</div>
+          <div class="spot-meta">
+            <div class="pill">⏱ Daily</div>
+            <div class="pill">🔥 Popular</div>
+            <div class="pill">🧪 Research-backed</div>
+          </div>
+          <div class="spot-actions">
+            <button class="spot-btn">Import</button>
+            <button class="spot-btn ghost">Preview</button>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div class="section-title">Templates</div>
+          <div class="section-count">147 habits</div>
+        </div>
+        <div class="list">
+          <div class="tpl-card">
+            <div class="tpl-ico" style="background: var(--gold-100);">🌅</div>
+            <div class="tpl-body">
+              <div class="tpl-name">Morning Pages</div>
+              <div class="tpl-meta">Morning · ⏱ Daily · 🧪 Research</div>
+            </div>
+            <div class="tpl-add">+</div>
+          </div>
+          <div class="tpl-card">
+            <div class="tpl-ico" style="background: var(--primary-50);">💪</div>
+            <div class="tpl-body">
+              <div class="tpl-name">7-Minute Workout</div>
+              <div class="tpl-meta">Health · ⏱ Daily · 🔥 Popular</div>
+            </div>
+            <div class="tpl-add">+</div>
+          </div>
+          <div class="tpl-card">
+            <div class="tpl-ico" style="background: var(--purple-50);">🧘</div>
+            <div class="tpl-body">
+              <div class="tpl-name">Gratitude Journaling</div>
+              <div class="tpl-meta">Mindfulness · ⏱ Daily · 🧪 Research</div>
+            </div>
+            <div class="tpl-add">+</div>
+          </div>
+          <div class="tpl-card">
+            <div class="tpl-ico" style="background: var(--blue-50);">🎯</div>
+            <div class="tpl-body">
+              <div class="tpl-name">Deep Work Session</div>
+              <div class="tpl-meta">Productivity · ⏱ Daily</div>
+            </div>
+            <div class="tpl-add">+</div>
+          </div>
+          <div class="tpl-card">
+            <div class="tpl-ico" style="background: var(--blue-50);">😴</div>
+            <div class="tpl-body">
+              <div class="tpl-name">Consistent Bedtime</div>
+              <div class="tpl-meta">Sleep · ⏱ Daily · 🧪 Research</div>
+            </div>
+            <div class="tpl-add">+</div>
+          </div>
+          <div class="tpl-card">
+            <div class="tpl-ico" style="background: var(--primary-50);">🔬</div>
+            <div class="tpl-body">
+              <div class="tpl-name">Morning Sunlight Viewing</div>
+              <div class="tpl-meta">Huberman · ⏱ Daily · 🧪 Research</div>
+            </div>
+            <div class="tpl-add">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <strong>One horizontal rail</strong> with all 14 categories + counts. Tapping a chip filters the single vertical list below. Spotlight card stays pinned above the list.
+    </div>
+  </div>
+</body>
+</html>

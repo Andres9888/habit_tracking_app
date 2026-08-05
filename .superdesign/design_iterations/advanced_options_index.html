@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced Options — Three Variations</title>
+<link rel="stylesheet" href="advanced_options_theme.css" />
+<style>
+  body { padding: 0; }
+  .index-header {
+    padding: 48px 40px 20px 40px;
+    max-width: 1500px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .index-header h1 {
+    font-size: 30px; margin: 0 0 10px 0; letter-spacing: -0.6px; font-weight: 700;
+  }
+  .index-header p {
+    color: var(--text-secondary); margin: 0; font-size: 14px; line-height: 1.65; max-width: 820px;
+  }
+  .index-header .context-row {
+    display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap;
+  }
+  .tag {
+    display: inline-block; padding: 4px 10px; border-radius: 999px;
+    background: var(--card); border: 1px solid var(--border);
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .variations {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(840px, 1fr));
+    gap: 40px;
+    padding: 32px 40px 80px 40px;
+    max-width: 1800px; margin: 0 auto;
+    align-items: start;
+  }
+  .variant-col {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+  }
+  .variant-col .head {
+    display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px;
+  }
+  .variant-col .letter {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .variant-col h2 { font-size: 20px; margin: 0; letter-spacing: -0.3px; font-weight: 700; }
+  .variant-col .why { color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; margin: 8px 0 6px 0; }
+  .variant-col .tradeoff { color: var(--text-tertiary); font-size: 12.5px; line-height: 1.55; margin: 0 0 18px 0; }
+  .variant-col .tradeoff strong { color: var(--text-secondary); font-weight: 600; }
+  iframe {
+    width: 100%;
+    height: 1200px;
+    border: 0;
+    background: #050506;
+    border-radius: 14px;
+  }
+  .open-full {
+    display: inline-block; margin-top: 14px;
+    font-size: 12.5px; color: var(--accent); text-decoration: none;
+    border: 1px solid rgba(52,211,153,0.3);
+    padding: 6px 12px; border-radius: 999px;
+  }
+  .open-full:hover { background: var(--accent-soft); }
+</style>
+</head>
+<body>
+
+<div class="index-header">
+  <h1>Advanced Options — Consolidated Redesign</h1>
+  <p>
+    Today, the <strong>Strength Algorithm picker</strong> and <strong>Growth Icons (custom progress emojis)</strong>
+    live in two separate places inside the Habit Edit screen — mixed in with visual styling and reminder settings.
+    The goal is to consolidate them into a single, cohesive <em>Advanced</em> area, positioned between behavioral
+    settings (reminders, streak goal) and the Danger Zone. Three directions below, each with both states shown.
+  </p>
+  <div class="context-row">
+    <span class="tag">Source of truth: <code>algorithmCopy.ts</code></span>
+    <span class="tag">Source of truth: <code>progressEmojis.ts</code></span>
+    <span class="tag">Phone frame: 390px (iPhone 15)</span>
+    <span class="tag">Theme: dark (app default)</span>
+  </div>
+</div>
+
+<div class="variations">
+
+  <div class="variant-col">
+    <div class="head">
+      <span class="letter">Variation A</span>
+      <h2>Accordion with Tabs</h2>
+    </div>
+    <p class="why">
+      Single collapsible card labeled <strong>Advanced</strong>. Collapsed shows preview chips with current values
+      (<em>Algorithm: Balanced</em>, <em>Growth: 🌱🌿🌳💪⚡</em>). Expanding reveals a 2-tab segmented control
+      (<em>Algorithm | Growth Icons</em>) with content swapping in place.
+    </p>
+    <p class="tradeoff">
+      <strong>Best for:</strong> minimizing vertical footprint and framing the two settings as equal siblings.
+      <strong>Tradeoff:</strong> tabs hide one control at a time — extra tap to reach the non-active tab.
+    </p>
+    <iframe src="advanced_options_A_accordion_tabs.html" title="Variation A"></iframe>
+    <a class="open-full" href="advanced_options_A_accordion_tabs.html" target="_blank">Open full screen →</a>
+  </div>
+
+  <div class="variant-col">
+    <div class="head">
+      <span class="letter">Variation B</span>
+      <h2>Stacked Settings Rows (iOS-style)</h2>
+    </div>
+    <p class="why">
+      Under an <strong>ADVANCED</strong> section label, two full-width tappable rows — each with icon, title,
+      and the <em>current value in the subtitle</em>. Tapping opens an inline sheet (algorithm cards or emoji picker).
+    </p>
+    <p class="tradeoff">
+      <strong>Best for:</strong> familiar iOS Settings pattern; scales to 3+ advanced options later without redesign.
+      Current values are always visible.
+      <strong>Tradeoff:</strong> two sheets to build; editing requires entering a sub-view.
+    </p>
+    <iframe src="advanced_options_B_stacked_rows.html" title="Variation B"></iframe>
+    <a class="open-full" href="advanced_options_B_stacked_rows.html" target="_blank">Open full screen →</a>
+  </div>
+
+  <div class="variant-col">
+    <div class="head">
+      <span class="letter">Variation C</span>
+      <h2>Inline Disclosures (Stacked)</h2>
+    </div>
+    <p class="why">
+      Under an <strong>ADVANCED</strong> section label, two independently collapsible disclosure cards stacked.
+      Each expands in place — either or both open at once. Smallest implementation delta from today's UI.
+    </p>
+    <p class="tradeoff">
+      <strong>Best for:</strong> keeping everything on one screen (no sub-sheets); users can tune both settings side-by-side.
+      <strong>Tradeoff:</strong> tall when both open; heavier visual weight on the edit screen.
+    </p>
+    <iframe src="advanced_options_C_inline_disclosures.html" title="Variation C"></iframe>
+    <a class="open-full" href="advanced_options_C_inline_disclosures.html" target="_blank">Open full screen →</a>
+  </div>
+
+</div>
+
+</body>
+</html>

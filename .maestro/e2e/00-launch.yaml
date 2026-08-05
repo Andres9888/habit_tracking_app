@@ -1,0 +1,22 @@
+appId: com.chainday.app
+name: Launch Signed-In Home
+tags:
+  - smoke
+  - regression
+onFlowComplete:
+  - takeScreenshot: e2e-00-launch-complete
+---
+- launchApp:
+    appId: com.chainday.app
+    clearState: false
+    clearKeychain: false
+- extendedWaitUntil:
+    visible: Today
+    timeout: 15000
+- waitForAnimationToEnd
+- assertVisible:
+    id: home-create-habit-fab
+- assertVisible:
+    id: settings-button
+- assertVisible:
+    id: home-templates-button

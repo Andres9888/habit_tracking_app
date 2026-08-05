@@ -1,0 +1,115 @@
+{
+  "expo": {
+    "name": "ChainDay",
+    "slug": "daily-habits-981f52",
+    "scheme": "habit-tracker",
+    "version": "1.0.0",
+    "description": "Chain Day makes consistency visible with chain-based habit tracking, streak progress, and offline-friendly routines.",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["assets/*", "assets/sounds/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chainday.app",
+      "buildNumber": "16",
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "ChainDay sends reminders you choose (habit check-ins, streak alerts, and scheduled motivation messages) to help you stay consistent.",
+        "BGTaskSchedulerPermittedIdentifiers": [
+          "com.expo.modules.backgroundtask.processing"
+        ],
+        "UIBackgroundModes": ["processing"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "package": "com.chainday.app"
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "privacyUrl": "https://chainday.app/privacy",
+      "supportUrl": "https://chainday.app/support",
+      "eas": {
+        "projectId": "32c36f06-6185-42ca-aee8-5a939ad68d75"
+      }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Literata",
+                "fontDefinitions": [
+                  {
+                    "path": "node_modules/@expo-google-fonts/literata/700Bold/Literata_700Bold.ttf",
+                    "weight": 700
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "node_modules/@expo-google-fonts/literata/700Bold/Literata_700Bold.ttf"
+            ]
+          }
+        }
+      ],
+      "expo-notifications",
+      "expo-web-browser",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone for voice note recordings."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos to create your Vision Board.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to capture images for your Vision Board."
+        }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "daily-habits",
+          "project": "react-native"
+        }
+      ],
+      "@sentry/react-native",
+      "./plugins/withPrivacyManifest.cjs",
+      "@react-native-community/datetimepicker",
+      "expo-background-task",
+      "expo-image",
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-status-bar",
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#059669",
+          "image": "./assets/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "owner": "andres9888"
+  }
+}

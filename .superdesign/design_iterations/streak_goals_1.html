@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Goal Variations — Chain Day</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #F5F1ED !important;
+    color: #2D2A26 !important;
+    padding: 32px 24px !important;
+  }
+
+  h1, h2, h3, .display {
+    font-family: 'Literata', serif !important;
+  }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace !important;
+  }
+
+  .card {
+    background: #EDEAE5 !important;
+    border: 1px solid #DDD8D2 !important;
+    border-radius: 16px !important;
+    padding: 24px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  }
+
+  .card:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(45, 42, 38, 0.08) !important;
+  }
+
+  .tag {
+    display: inline-block !important;
+    padding: 4px 10px !important;
+    border-radius: 8px !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    text-transform: uppercase !important;
+  }
+
+  .tag-gold { background: #FEF3CD !important; color: #8B6208 !important; }
+  .tag-green { background: #D1FAE5 !important; color: #047857 !important; }
+  .tag-stone { background: #E7E5E4 !important; color: #6B6560 !important; }
+
+  .pros { color: #047857 !important; }
+  .cons { color: #B53030 !important; }
+
+  .mock-area {
+    background: #FAF8F5 !important;
+    border: 1px solid #DDD8D2 !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+    min-height: 180px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 16px 0 !important;
+  }
+
+  /* SVG Ring animation */
+  @keyframes ringFill {
+    from { stroke-dashoffset: 283; }
+    to { stroke-dashoffset: 184; }
+  }
+  .ring-progress {
+    animation: ringFill 1.5s ease-out forwards;
+  }
+
+  /* Jar fill animation */
+  @keyframes jarFill {
+    from { height: 0%; }
+    to { height: 35%; }
+  }
+  .jar-liquid {
+    animation: jarFill 1.2s ease-out forwards;
+  }
+
+  /* XP bar animation */
+  @keyframes xpFill {
+    from { width: 0%; }
+    to { width: 35%; }
+  }
+  .xp-bar-fill {
+    animation: xpFill 1s ease-out forwards;
+  }
+
+  /* Countdown pulse */
+  @keyframes countPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+  .count-pulse {
+    animation: countPulse 2s ease-in-out infinite;
+  }
+
+  /* Heatmap cell appear */
+  @keyframes cellAppear {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Badge unlock */
+  @keyframes badgeUnlock {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* Chain link animation */
+  @keyframes chainGrow {
+    from { width: 0%; }
+    to { width: 35%; }
+  }
+
+  /* Percentage count up */
+  @keyframes percentFill {
+    from { width: 0%; }
+    to { width: 35%; }
+  }
+
+  /* Mountain avatar walk */
+  @keyframes walkPath {
+    from { left: 0%; }
+    to { left: 32%; }
+  }
+  .avatar-walk {
+    animation: walkPath 2s ease-out forwards;
+  }
+
+  /* Timeline fill */
+  @keyframes timelineFill {
+    from { width: 0%; }
+    to { width: 35%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="max-width: 1200px; margin: 0 auto 40px;">
+  <h1 style="font-size: 34px; font-weight: 700; color: #2D2A26; margin-bottom: 8px;">Streak Goal Variations</h1>
+  <p style="font-size: 17px; color: #6B6560; margin-bottom: 4px;">10 UI explorations for user-defined streak targets in Chain Day</p>
+  <p style="font-size: 14px; color: #C4BFB7;">All variations shown at Day 23 of 66 goal &middot; Warm Minimal design tokens</p>
+</div>
+
+<!-- Grid -->
+<div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+
+  <!-- VARIATION 1: Progress Ring -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">1. Progress Ring</span>
+    </div>
+    <span class="tag tag-gold">Goal Gradient Effect</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 8px;">
+      <svg width="140" height="140" viewBox="0 0 100 100">
+        <!-- Track -->
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#DDD8D2" stroke-width="6" stroke-linecap="round"
+          transform="rotate(-90 50 50)" stroke-dasharray="264" stroke-dashoffset="0" />
+        <!-- Progress -->
+        <circle cx="50" cy="50" r="42" fill="none" stroke="#8B6208" stroke-width="6" stroke-linecap="round"
+          transform="rotate(-90 50 50)" stroke-dasharray="264" stroke-dashoffset="172"
+          class="ring-progress" style="animation-delay: 0.3s;" />
+        <!-- Center text -->
+        <text x="50" y="44" text-anchor="middle" font-family="Literata, serif" font-weight="700" font-size="22" fill="#2D2A26">23</text>
+        <text x="50" y="58" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="500" font-size="10" fill="#6B6560">of 66 days</text>
+        <!-- Fire emoji -->
+        <text x="50" y="73" text-anchor="middle" font-size="14">🔥</text>
+      </svg>
+      <span class="mono" style="font-size: 12px; color: #8B6208;">35% complete</span>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Compact, universal, reuses existing ProgressRing SVG</p>
+      <p class="cons">- Slow fill on long goals, messy middle looks static</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 2: Mountain Path -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">2. Mountain Path</span>
+    </div>
+    <span class="tag tag-green">Narrative Transportation</span>
+
+    <div class="mock-area" style="flex-direction: column; position: relative; overflow: hidden; padding: 16px 24px;">
+      <!-- Mountain silhouette -->
+      <svg width="100%" height="120" viewBox="0 0 400 120" preserveAspectRatio="none" style="position: absolute; bottom: 0; left: 0;">
+        <defs>
+          <linearGradient id="mountainGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#C4BFB7" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="#DDD8D2" stop-opacity="0.6"/>
+          </linearGradient>
+        </defs>
+        <polygon points="0,120 40,90 80,100 140,60 200,75 260,40 320,55 370,15 400,120" fill="url(#mountainGrad)"/>
+        <polygon points="0,120 60,95 120,105 180,80 240,90 300,55 360,30 400,10 400,120" fill="none" stroke="#C4BFB7" stroke-width="1.5"/>
+      </svg>
+
+      <!-- Path line -->
+      <svg width="100%" height="100" viewBox="0 0 400 100" style="position: relative; z-index: 1;">
+        <!-- Trail (full) -->
+        <path d="M 20,85 C 60,82 80,78 120,70 C 160,62 180,65 220,55 C 260,45 300,35 340,22 L 380,12"
+          fill="none" stroke="#DDD8D2" stroke-width="2" stroke-dasharray="6,4"/>
+        <!-- Trail (completed) -->
+        <path d="M 20,85 C 60,82 80,78 120,70 C 140,65 145,64 155,61"
+          fill="none" stroke="#059669" stroke-width="2.5"/>
+
+        <!-- Milestone flags -->
+        <g transform="translate(70,76)">
+          <line x1="0" y1="0" x2="0" y2="-12" stroke="#059669" stroke-width="1.5"/>
+          <text x="4" y="-5" font-size="8" fill="#059669" font-family="DM Sans">7d</text>
+        </g>
+        <g transform="translate(130,66)">
+          <line x1="0" y1="0" x2="0" y2="-12" stroke="#059669" stroke-width="1.5"/>
+          <text x="4" y="-5" font-size="8" fill="#059669" font-family="DM Sans">21d</text>
+        </g>
+        <!-- Future milestones -->
+        <g transform="translate(230,50)" opacity="0.4">
+          <line x1="0" y1="0" x2="0" y2="-12" stroke="#6B6560" stroke-width="1"/>
+          <text x="4" y="-5" font-size="8" fill="#6B6560" font-family="DM Sans">30d</text>
+        </g>
+        <g transform="translate(310,28)" opacity="0.4">
+          <line x1="0" y1="0" x2="0" y2="-12" stroke="#6B6560" stroke-width="1"/>
+          <text x="4" y="-5" font-size="8" fill="#6B6560" font-family="DM Sans">60d</text>
+        </g>
+
+        <!-- Summit flag -->
+        <g transform="translate(375,8)">
+          <line x1="0" y1="0" x2="0" y2="-16" stroke="#8B6208" stroke-width="2"/>
+          <polygon points="0,-16 12,-12 0,-8" fill="#8B6208"/>
+          <text x="-4" y="12" font-size="9" fill="#8B6208" font-weight="600" font-family="DM Sans">66</text>
+        </g>
+
+        <!-- Hiker avatar -->
+        <g class="avatar-walk" style="position: relative;">
+          <circle cx="155" cy="58" r="8" fill="#059669"/>
+          <text x="155" y="62" text-anchor="middle" font-size="10">🏃</text>
+        </g>
+
+        <!-- Start -->
+        <circle cx="20" cy="85" r="4" fill="#059669"/>
+      </svg>
+
+      <div style="display: flex; justify-content: space-between; width: 100%; position: relative; z-index: 1;">
+        <span style="font-size: 11px; color: #6B6560;">Base Camp</span>
+        <span style="font-size: 12px; color: #2D2A26; font-weight: 600;">Day 23 — Ascending</span>
+        <span style="font-size: 11px; color: #8B6208; font-weight: 600;">Summit 🏔️</span>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Emotional journey, visual variety combats messy middle</p>
+      <p class="cons">- Space-heavy, overkill for short goals, complex to build</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 3: Milestone Timeline -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">3. Milestone Timeline</span>
+    </div>
+    <span class="tag tag-gold">Zeigarnik Effect</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 16px; padding: 20px 16px;">
+      <div style="width: 100%; position: relative; padding: 0 8px;">
+        <!-- Track -->
+        <div style="width: 100%; height: 4px; background: #DDD8D2; border-radius: 2px; position: relative;">
+          <!-- Fill -->
+          <div style="width: 35%; height: 4px; background: linear-gradient(90deg, #059669, #8B6208); border-radius: 2px; animation: timelineFill 1.2s ease-out forwards;"></div>
+
+          <!-- Current position dot -->
+          <div style="position: absolute; left: 35%; top: -6px; width: 16px; height: 16px; background: #8B6208; border: 3px solid #FAF8F5; border-radius: 50%; transform: translateX(-50%); z-index: 3; box-shadow: 0 0 0 2px #8B6208;"></div>
+        </div>
+
+        <!-- Milestone markers -->
+        <div style="position: relative; width: 100%; margin-top: 12px; height: 40px;">
+          <!-- Day 7 (10.6%) -->
+          <div style="position: absolute; left: 10.6%; transform: translateX(-50%); text-align: center;">
+            <div style="width: 8px; height: 8px; background: #059669; border-radius: 50%; margin: 0 auto 4px;"></div>
+            <span style="font-size: 10px; color: #059669; font-weight: 600;">7d</span>
+            <br><span style="font-size: 9px; color: #6B6560;">✓</span>
+          </div>
+          <!-- Day 14 (21.2%) -->
+          <div style="position: absolute; left: 21.2%; transform: translateX(-50%); text-align: center;">
+            <div style="width: 8px; height: 8px; background: #059669; border-radius: 50%; margin: 0 auto 4px;"></div>
+            <span style="font-size: 10px; color: #059669; font-weight: 600;">14d</span>
+            <br><span style="font-size: 9px; color: #6B6560;">✓</span>
+          </div>
+          <!-- Day 21 (31.8%) -->
+          <div style="position: absolute; left: 31.8%; transform: translateX(-50%); text-align: center;">
+            <div style="width: 8px; height: 8px; background: #059669; border-radius: 50%; margin: 0 auto 4px;"></div>
+            <span style="font-size: 10px; color: #059669; font-weight: 600;">21d</span>
+            <br><span style="font-size: 9px; color: #6B6560;">✓</span>
+          </div>
+          <!-- Day 30 (45.5%) - upcoming -->
+          <div style="position: absolute; left: 45.5%; transform: translateX(-50%); text-align: center;">
+            <div style="width: 8px; height: 8px; background: #DDD8D2; border: 2px solid #E8B94D; border-radius: 50%; margin: 0 auto 4px;"></div>
+            <span style="font-size: 10px; color: #6B6560; font-weight: 500;">30d</span>
+            <br><span style="font-size: 9px; color: #C4BFB7;">7 away</span>
+          </div>
+          <!-- Day 60 (90.9%) -->
+          <div style="position: absolute; left: 90.9%; transform: translateX(-50%); text-align: center;">
+            <div style="width: 8px; height: 8px; background: #DDD8D2; border-radius: 50%; margin: 0 auto 4px;"></div>
+            <span style="font-size: 10px; color: #C4BFB7;">60d</span>
+          </div>
+          <!-- Goal: Day 66 (100%) -->
+          <div style="position: absolute; right: 0; transform: translateX(50%); text-align: center;">
+            <div style="width: 12px; height: 12px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 50%; margin: 0 auto 4px;"></div>
+            <span style="font-size: 10px; color: #8B6208; font-weight: 700;">66d 🏆</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <span class="mono" style="font-size: 13px; color: #2D2A26;">Day 23</span>
+        <span style="font-size: 13px; color: #6B6560;"> &middot; Next: 30d in 7 days</span>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Multiple sub-goals create open loops, scales to any length</p>
+      <p class="cons">- Sparse middle on long goals, streak reset is visually dramatic</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 4: Filling Jar -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">4. Filling Jar</span>
+    </div>
+    <span class="tag tag-gold">Endowed Progress Effect</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 12px;">
+      <div style="position: relative; width: 80px; height: 140px;">
+        <!-- Jar outline -->
+        <svg width="80" height="140" viewBox="0 0 80 140">
+          <!-- Jar body -->
+          <rect x="10" y="25" width="60" height="100" rx="8" fill="none" stroke="#C4BFB7" stroke-width="2"/>
+          <!-- Jar neck -->
+          <rect x="20" y="12" width="40" height="16" rx="4" fill="none" stroke="#C4BFB7" stroke-width="2"/>
+          <!-- Jar rim -->
+          <rect x="16" y="8" width="48" height="6" rx="3" fill="#DDD8D2" stroke="#C4BFB7" stroke-width="1.5"/>
+          <!-- Fill level background -->
+          <rect x="12" y="90" width="56" height="33" rx="6" fill="#FEF3CD" opacity="0.6"/>
+          <!-- Fill level -->
+          <rect x="12" y="90" width="56" height="33" rx="6" fill="url(#honeyGrad)" class="jar-liquid"/>
+          <!-- Honey gradient -->
+          <defs>
+            <linearGradient id="honeyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#E8B94D"/>
+              <stop offset="100%" stop-color="#8B6208"/>
+            </linearGradient>
+          </defs>
+          <!-- Day markers (dots in liquid) -->
+          <circle cx="25" cy="115" r="2" fill="#FEF3CD" opacity="0.6"/>
+          <circle cx="40" cy="108" r="2" fill="#FEF3CD" opacity="0.5"/>
+          <circle cx="55" cy="118" r="2" fill="#FEF3CD" opacity="0.4"/>
+          <circle cx="35" cy="100" r="1.5" fill="#FEF3CD" opacity="0.3"/>
+          <!-- Goal line -->
+          <line x1="8" y1="27" x2="72" y2="27" stroke="#8B6208" stroke-width="1" stroke-dasharray="4,3" opacity="0.5"/>
+          <text x="76" y="30" font-size="8" fill="#8B6208" font-family="JetBrains Mono" opacity="0.7">66</text>
+        </svg>
+      </div>
+
+      <div style="text-align: center;">
+        <span style="font-size: 22px; font-weight: 700; font-family: 'Literata', serif; color: #8B6208;">23</span>
+        <span style="font-size: 14px; color: #6B6560;"> drops collected</span>
+      </div>
+      <span style="font-size: 11px; color: #C4BFB7;">+1 drop today 🍯</span>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Each day tangible as a "drop," satisfying collection mechanic</p>
+      <p class="cons">- Imperceptible on long goals, streak break semantics unclear</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 5: Level-Up XP Bar -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">5. Level-Up XP Bar</span>
+    </div>
+    <span class="tag tag-green">Self-Determination Theory</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 16px; padding: 20px;">
+      <!-- Level badge -->
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: linear-gradient(135deg, #059669, #047857); color: white; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em;">
+          LVL 4
+        </div>
+        <div>
+          <div style="font-size: 16px; font-weight: 600; color: #2D2A26;">Habit Builder</div>
+          <div style="font-size: 11px; color: #6B6560;">Next: Month Master at Day 30</div>
+        </div>
+      </div>
+
+      <!-- XP Bar -->
+      <div style="width: 100%;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span class="mono" style="font-size: 11px; color: #6B6560;">Day 21</span>
+          <span class="mono" style="font-size: 11px; color: #6B6560;">Day 30</span>
+        </div>
+        <div style="width: 100%; height: 12px; background: #DDD8D2; border-radius: 6px; overflow: hidden; position: relative;">
+          <div class="xp-bar-fill" style="height: 100%; background: linear-gradient(90deg, #059669, #10B981); border-radius: 6px; width: 22%;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+          <span style="font-size: 11px; color: #059669; font-weight: 600;">2/9 XP to next level</span>
+          <span style="font-size: 11px; color: #8B6208; font-weight: 500;">Goal: 66d 🎯</span>
+        </div>
+      </div>
+
+      <!-- +1 Day floating -->
+      <div style="background: #D1FAE5; color: #047857; padding: 4px 12px; border-radius: 9999px; font-size: 12px; font-weight: 600; opacity: 0.8;">
+        +1 DAY ✨
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Named identity tiers, variable reward schedule, "+1" micro-reward</p>
+      <p class="cons">- Clashes with warm minimal aesthetic, gamification fatigue risk</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 6: Countdown -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">6. Countdown</span>
+    </div>
+    <span class="tag tag-stone">Loss Aversion</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 8px;">
+      <div class="count-pulse" style="text-align: center;">
+        <span style="font-size: 64px; font-weight: 700; font-family: 'Literata', serif; color: #2D2A26; line-height: 1;">43</span>
+      </div>
+      <span style="font-size: 17px; color: #6B6560; font-weight: 500;">days to go</span>
+
+      <div style="width: 200px; height: 3px; background: #DDD8D2; border-radius: 2px; margin-top: 8px; position: relative;">
+        <div style="position: absolute; right: 0; width: 65%; height: 100%; background: linear-gradient(90deg, #E8B94D, #8B6208); border-radius: 2px;"></div>
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-top: 4px;">
+        <span style="font-size: 11px; color: #C4BFB7;">Day 23 of 66</span>
+        <span style="font-size: 11px; color: #8B6208;">🔥 35%</span>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Extreme minimalism, powerful urgency near goal end</p>
+      <p class="cons">- Demoralizing at start, no accumulated progress sense, anxiety risk</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 7: Calendar Heatmap -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">7. Calendar Heatmap</span>
+    </div>
+    <span class="tag tag-green">Implementation Intentions</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 12px; padding: 16px;">
+      <!-- Heatmap grid -->
+      <div style="display: flex; flex-wrap: wrap; gap: 3px; max-width: 280px;">
+        <!-- Generate 66 cells: 23 completed (green), 1 missed (light), 42 future (gray) -->
+        <!-- Week 1-3: all done -->
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #34D399;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <!-- Day 15: missed -->
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #FEE2E2; border: 1px solid #B53030; opacity: 0.6;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #059669;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #10B981;"></div>
+        <!-- Future days (43 remaining) -->
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <!-- Day 30 marker -->
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4; border: 1.5px solid #E8B94D;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #E7E5E4;"></div>
+        <!-- Goal day (66) -->
+        <div style="width: 14px; height: 14px; border-radius: 3px; background: #FEF3CD; border: 2px solid #8B6208;"></div>
+      </div>
+
+      <div style="display: flex; gap: 16px; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="width: 10px; height: 10px; border-radius: 2px; background: #059669;"></div>
+          <span style="font-size: 11px; color: #6B6560;">Done</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="width: 10px; height: 10px; border-radius: 2px; background: #FEE2E2; border: 1px solid #B53030;"></div>
+          <span style="font-size: 11px; color: #6B6560;">Missed</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <div style="width: 10px; height: 10px; border-radius: 2px; background: #FEF3CD; border: 1.5px solid #8B6208;"></div>
+          <span style="font-size: 11px; color: #6B6560;">Goal</span>
+        </div>
+        <span class="mono" style="font-size: 11px; color: #8B6208;">22/23 days (96%)</span>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Shows full history, streak breaks are gaps not resets, info-dense</p>
+      <p class="cons">- Tiny cells on long goals, shows misses prominently, feels clinical</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 8: Badge Collection -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">8. Badge Collection</span>
+    </div>
+    <span class="tag tag-gold">Collection Completion</span>
+
+    <div class="mock-area" style="flex-direction: row; gap: 10px; overflow-x: auto; justify-content: flex-start; padding: 16px;">
+      <!-- Badge: 3 days - earned -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0;">
+        <div style="width: 48px; height: 48px; background: #D1FAE5; border: 2px solid #059669; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px;">🌱</div>
+        <span style="font-size: 10px; color: #059669; font-weight: 600;">3d</span>
+        <br><span style="font-size: 9px; color: #6B6560;">Seedling</span>
+      </div>
+      <!-- Badge: 7 days - earned -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0;">
+        <div style="width: 48px; height: 48px; background: #D1FAE5; border: 2px solid #059669; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px;">⚡</div>
+        <span style="font-size: 10px; color: #059669; font-weight: 600;">7d</span>
+        <br><span style="font-size: 9px; color: #6B6560;">Week Warrior</span>
+      </div>
+      <!-- Badge: 14 days - earned -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0;">
+        <div style="width: 48px; height: 48px; background: #D1FAE5; border: 2px solid #059669; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px;">🔥</div>
+        <span style="font-size: 10px; color: #059669; font-weight: 600;">14d</span>
+        <br><span style="font-size: 9px; color: #6B6560;">Fortnight</span>
+      </div>
+      <!-- Badge: 21 days - earned -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0;">
+        <div style="width: 48px; height: 48px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px;">💪</div>
+        <span style="font-size: 10px; color: #8B6208; font-weight: 600;">21d</span>
+        <br><span style="font-size: 9px; color: #6B6560;">3 Weeks</span>
+      </div>
+      <!-- Badge: 30 days - NEXT (glowing) -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0;">
+        <div style="width: 48px; height: 48px; background: #FAF8F5; border: 2px dashed #E8B94D; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px; box-shadow: 0 0 8px rgba(232, 185, 77, 0.3);">🔒</div>
+        <span style="font-size: 10px; color: #E8B94D; font-weight: 600;">30d</span>
+        <br><span style="font-size: 9px; color: #C4BFB7;">7 away</span>
+      </div>
+      <!-- Badge: 60 days - locked -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0; opacity: 0.4;">
+        <div style="width: 48px; height: 48px; background: #E7E5E4; border: 2px solid #DDD8D2; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px;">?</div>
+        <span style="font-size: 10px; color: #C4BFB7;">60d</span>
+      </div>
+      <!-- Badge: 66 days - GOAL (crown) -->
+      <div style="min-width: 64px; text-align: center; flex-shrink: 0; opacity: 0.5;">
+        <div style="width: 48px; height: 48px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 4px; font-size: 20px; position: relative;">
+          👑
+          <span style="position: absolute; top: -6px; right: -6px; font-size: 12px;">🎯</span>
+        </div>
+        <span style="font-size: 10px; color: #8B6208; font-weight: 700;">66d</span>
+        <br><span style="font-size: 9px; color: #8B6208;">GOAL</span>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Badges persist after breaks, multiple reward touchpoints, shareable</p>
+      <p class="cons">- Sparse for short goals, doesn't show "how close" at a glance</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 9: Chain + Endpoint -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">9. Chain + Endpoint</span>
+    </div>
+    <span class="tag tag-stone">Sunk Cost / Commitment</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 12px; padding: 16px 12px;">
+      <!-- Chain visualization -->
+      <div style="display: flex; align-items: center; gap: 0; width: 100%; position: relative;">
+        <!-- Compressed completed section -->
+        <div style="display: flex; align-items: center; flex-shrink: 0;">
+          <!-- Solid bar for days 1-17 (compressed) -->
+          <div style="width: 60px; height: 6px; background: linear-gradient(90deg, #059669, #10B981); border-radius: 3px;"></div>
+          <span style="font-size: 9px; color: #059669; margin: 0 4px; font-weight: 600;">17d</span>
+        </div>
+
+        <!-- Detailed recent section (days 18-23) -->
+        <div style="display: flex; align-items: center; gap: 2px; flex-shrink: 0;">
+          <div style="width: 14px; height: 14px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 8px; color: white;">✓</span>
+          </div>
+          <div style="width: 8px; height: 3px; background: #059669; border-radius: 1px;"></div>
+          <div style="width: 14px; height: 14px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 8px; color: white;">✓</span>
+          </div>
+          <div style="width: 8px; height: 3px; background: #059669; border-radius: 1px;"></div>
+          <div style="width: 14px; height: 14px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 8px; color: white;">✓</span>
+          </div>
+          <div style="width: 8px; height: 3px; background: #059669; border-radius: 1px;"></div>
+          <div style="width: 14px; height: 14px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 8px; color: white;">✓</span>
+          </div>
+          <div style="width: 8px; height: 3px; background: #059669; border-radius: 1px;"></div>
+          <div style="width: 14px; height: 14px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 8px; color: white;">✓</span>
+          </div>
+          <div style="width: 8px; height: 3px; background: #059669; border-radius: 1px;"></div>
+          <!-- Today (day 23) - special -->
+          <div style="width: 18px; height: 18px; background: #FEF3CD; border: 2px solid #8B6208; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 9px;">🔥</span>
+          </div>
+        </div>
+
+        <!-- Planned future section -->
+        <div style="display: flex; align-items: center; gap: 2px; flex-shrink: 0; opacity: 0.35; margin-left: 2px;">
+          <div style="width: 8px; height: 3px; background: #C4BFB7; border-radius: 1px;"></div>
+          <div style="width: 12px; height: 12px; border: 1.5px dashed #C4BFB7; border-radius: 50%;"></div>
+          <div style="width: 8px; height: 3px; background: #C4BFB7; border-radius: 1px;"></div>
+          <div style="width: 12px; height: 12px; border: 1.5px dashed #C4BFB7; border-radius: 50%;"></div>
+          <div style="width: 8px; height: 3px; background: #C4BFB7; border-radius: 1px;"></div>
+          <div style="width: 12px; height: 12px; border: 1.5px dashed #C4BFB7; border-radius: 50%;"></div>
+        </div>
+
+        <!-- Compressed future -->
+        <div style="display: flex; align-items: center; flex-grow: 1; margin-left: 4px;">
+          <div style="flex-grow: 1; height: 3px; background: #E7E5E4; border-radius: 2px; border: 1px dashed #DDD8D2;"></div>
+        </div>
+
+        <!-- Goal endpoint -->
+        <div style="display: flex; align-items: center; flex-shrink: 0; margin-left: 4px;">
+          <div style="width: 24px; height: 24px; background: #FEF3CD; border: 2.5px solid #8B6208; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 12px;">🏆</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; width: 100%;">
+        <span style="font-size: 11px; color: #059669; font-weight: 600;">23 links forged</span>
+        <span class="mono" style="font-size: 12px; color: #2D2A26;">23 / 66</span>
+        <span style="font-size: 11px; color: #8B6208;">43 links to goal</span>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Brand-aligned ("Chain Day"), sunk cost visible, extends existing component</p>
+      <p class="cons">- Complex rendering for long goals, blemishes are permanent</p>
+    </div>
+  </div>
+
+  <!-- VARIATION 10: Minimalist % -->
+  <div class="card">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+      <span style="font-size: 20px; font-weight: 700; font-family: 'Literata', serif;">10. Minimalist %</span>
+    </div>
+    <span class="tag tag-stone">Fogg Simplicity</span>
+
+    <div class="mock-area" style="flex-direction: column; gap: 12px;">
+      <div style="text-align: center;">
+        <span style="font-size: 56px; font-weight: 700; font-family: 'Literata', serif; color: #2D2A26; line-height: 1;">35</span><span style="font-size: 28px; font-weight: 500; font-family: 'Literata', serif; color: #6B6560;">%</span>
+      </div>
+
+      <!-- Thin bar -->
+      <div style="width: 240px; height: 4px; background: #DDD8D2; border-radius: 2px; overflow: hidden;">
+        <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #059669, #8B6208); border-radius: 2px; animation: percentFill 1s ease-out forwards;"></div>
+      </div>
+
+      <span style="font-size: 14px; color: #6B6560;">Day 23 of 66</span>
+
+      <!-- 10% marker ticks -->
+      <div style="width: 240px; display: flex; justify-content: space-between; margin-top: -4px;">
+        <div style="width: 1px; height: 6px; background: #059669;"></div>
+        <div style="width: 1px; height: 6px; background: #059669;"></div>
+        <div style="width: 1px; height: 6px; background: #059669;"></div>
+        <div style="width: 1px; height: 6px; background: #8B6208;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+        <div style="width: 1px; height: 6px; background: #DDD8D2;"></div>
+      </div>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.5;">
+      <p class="pros" style="margin-bottom: 4px;">+ Zero cognitive load, smallest footprint, perfect warm-minimal fit</p>
+      <p class="cons">- May feel boring/sterile, no emotional narrative, messy middle static</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer comparison -->
+<div style="max-width: 1200px; margin: 40px auto 0; padding: 24px; background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 16px;">
+  <h2 style="font-size: 22px; font-weight: 700; font-family: 'Literata', serif; margin-bottom: 16px;">Quick Comparison</h2>
+  <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+    <thead>
+      <tr style="border-bottom: 2px solid #DDD8D2;">
+        <th style="text-align: left; padding: 8px 12px; font-weight: 600; color: #2D2A26;">Variation</th>
+        <th style="text-align: center; padding: 8px 6px; font-weight: 600; color: #2D2A26;">Short (7d)</th>
+        <th style="text-align: center; padding: 8px 6px; font-weight: 600; color: #2D2A26;">Long (100d)</th>
+        <th style="text-align: center; padding: 8px 6px; font-weight: 600; color: #2D2A26;">Messy Mid</th>
+        <th style="text-align: center; padding: 8px 6px; font-weight: 600; color: #2D2A26;">Recovery</th>
+        <th style="text-align: center; padding: 8px 6px; font-weight: 600; color: #2D2A26;">Compact</th>
+        <th style="text-align: center; padding: 8px 6px; font-weight: 600; color: #2D2A26;">Build Cost</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">1. Progress Ring</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">Low</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">2. Mountain Path</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">High</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">3. Timeline Markers</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">Med</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">4. Filling Jar</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">Med</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">5. Level-Up XP</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">Med</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">6. Countdown</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">Low</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">7. Calendar Heatmap</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">Med</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">8. Badge Collection</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">Med</td>
+      </tr>
+      <tr style="border-bottom: 1px solid #DDD8D2;">
+        <td style="padding: 8px 12px; font-weight: 500;">9. Chain + Endpoint</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #8B6208;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">High</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px 12px; font-weight: 500;">10. Minimalist %</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #B53030;">&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">&#9733;&#9733;&#9733;</td>
+        <td style="text-align: center; padding: 8px 6px; color: #059669;">Low</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="max-width: 1200px; margin: 24px auto; text-align: center; padding: 16px;">
+  <p style="font-size: 13px; color: #C4BFB7;">Chain Day &middot; Streak Goal Exploration &middot; All variations at Day 23 / 66 goal</p>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>
+</body>
+</html>

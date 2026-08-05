@@ -1,0 +1,1395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onboarding Flow — Habit App</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ─── Reset ─── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          'DM Sans',
+          -apple-system,
+          sans-serif !important;
+        background: #1a1a1a !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        color: #2d2a26;
+      }
+
+      /* ─── Phone Frame ─── */
+      .phone-frame {
+        width: 390px;
+        height: 844px;
+        background: #f5f1ed;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+        box-shadow:
+          0 0 0 3px #333,
+          0 0 0 6px #1a1a1a,
+          0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      .notch {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 126px;
+        height: 34px;
+        background: #1a1a1a;
+        border-radius: 0 0 20px 20px;
+        z-index: 100;
+      }
+
+      .status-bar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 54px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 30px 0;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 99;
+        color: #2d2a26;
+      }
+
+      .status-bar .time {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .status-bar .icons {
+        display: flex;
+        gap: 5px;
+        font-size: 12px;
+      }
+
+      /* ─── Screen Container ─── */
+      .screens-viewport {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .screens-track {
+        display: flex;
+        width: 500%;
+        height: 100%;
+        transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+      }
+
+      .screen {
+        width: 390px;
+        height: 100%;
+        flex-shrink: 0;
+        padding: 70px 24px 40px;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow-y: auto;
+      }
+
+      /* ─── Skip Button ─── */
+      .skip-btn {
+        position: absolute;
+        top: 60px;
+        right: 20px;
+        background: none;
+        border: none;
+        color: #6b6560;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        z-index: 10;
+      }
+      .skip-btn:hover {
+        background: rgba(0, 0, 0, 0.04);
+      }
+
+      /* ─── Typography ─── */
+      .screen-title {
+        font-family: 'Literata', serif !important;
+        font-size: 28px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+        color: #2d2a26 !important;
+        letter-spacing: -0.5px !important;
+        margin-bottom: 8px !important;
+      }
+
+      .screen-subtitle {
+        font-size: 16px !important;
+        color: #6b6560 !important;
+        line-height: 1.5 !important;
+        margin-bottom: 28px !important;
+      }
+
+      /* ─── Progress Dots ─── */
+      .progress-dots {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ddd8d2;
+        transition: all 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      }
+
+      .dot.active {
+        width: 24px;
+        border-radius: 4px;
+        background: #059669;
+      }
+
+      /* ─── Primary Button ─── */
+      .btn-primary {
+        width: 100%;
+        height: 52px;
+        background: #059669 !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 14px !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 600 !important;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: 0.02em;
+      }
+
+      .btn-primary:hover {
+        background: #047857 !important;
+        transform: translateY(-1px);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .btn-ghost {
+        width: 100%;
+        height: 44px;
+        background: none !important;
+        color: #6b6560 !important;
+        border: none !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+      .btn-ghost:hover {
+        color: #2d2a26 !important;
+      }
+
+      /* ─── Screen 1: Goal Selector ─── */
+      .goal-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .goal-card {
+        background: #edeae5;
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 20px 16px;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .goal-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(45, 42, 38, 0.08);
+      }
+      .goal-card.selected {
+        border-color: #059669;
+        background: #d1fae5;
+        box-shadow: 0 0 0 1px #059669;
+      }
+
+      .goal-card .emoji {
+        font-size: 32px;
+      }
+      .goal-card .label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+
+      .goal-card.selected .label {
+        color: #047857;
+      }
+
+      /* ─── Screen 2: First Habit ─── */
+      .seedling-anim {
+        font-size: 56px;
+        text-align: center;
+        margin-bottom: 16px;
+        animation: breathe 3s ease-in-out infinite;
+      }
+
+      @keyframes breathe {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+        }
+      }
+
+      .suggestion-card {
+        background: #edeae5;
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+        margin-bottom: 10px;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .suggestion-card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(45, 42, 38, 0.08);
+      }
+      .suggestion-card.selected {
+        border-color: #059669;
+        background: #d1fae5;
+      }
+
+      .suggestion-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 4px;
+      }
+
+      .suggestion-emoji {
+        font-size: 24px;
+      }
+      .suggestion-name {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .suggestion-desc {
+        font-size: 13px;
+        color: #6b6560;
+        margin-left: 36px;
+      }
+
+      .suggestion-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #059669;
+        background: rgba(5, 150, 105, 0.1);
+        padding: 2px 8px;
+        border-radius: 6px;
+        margin-left: 36px;
+        margin-top: 6px;
+      }
+
+      .custom-input-card {
+        background: #faf8f5;
+        border: 2px dashed #ddd8d2;
+        border-radius: 16px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #6b6560;
+        font-size: 15px;
+      }
+
+      .custom-input-card:hover {
+        border-color: #059669;
+        color: #059669;
+      }
+
+      /* ─── Screen 3: Chain Demo ─── */
+      .demo-habit-card {
+        background: #edeae5;
+        border-radius: 16px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 28px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .demo-habit-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .demo-habit-emoji {
+        font-size: 28px;
+      }
+      .demo-habit-name {
+        font-size: 17px;
+        font-weight: 600;
+      }
+
+      .demo-checkbox {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        border: 2.5px solid #ddd8d2;
+        background: #faf8f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        font-size: 16px;
+        color: transparent;
+      }
+
+      .demo-habit-card.completed {
+        background: #d1fae5;
+        box-shadow: 0 4px 16px rgba(5, 150, 105, 0.15);
+      }
+
+      .demo-habit-card.completed .demo-checkbox {
+        background: #059669;
+        border-color: #059669;
+        color: #fff;
+      }
+
+      .chain-visual {
+        text-align: center;
+        margin: 16px 0 24px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+      }
+
+      .chain-visual.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .chain-links {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 12px;
+      }
+
+      .chain-link {
+        width: 20px;
+        height: 28px;
+        background: #059669;
+        border-radius: 6px;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .chain-link.show {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .chain-link:nth-child(1).show {
+        transition-delay: 0s;
+      }
+      .chain-link:nth-child(2).show {
+        transition-delay: 0.1s;
+        opacity: 0.8;
+      }
+      .chain-link:nth-child(3).show {
+        transition-delay: 0.2s;
+        opacity: 0.6;
+      }
+      .chain-link:nth-child(4).show {
+        transition-delay: 0.3s;
+        opacity: 0.4;
+      }
+      .chain-link:nth-child(5).show {
+        transition-delay: 0.4s;
+        opacity: 0.3;
+      }
+
+      .chain-label {
+        font-family: 'Literata', serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: #059669;
+        margin-bottom: 6px;
+      }
+
+      .chain-caption {
+        font-size: 14px;
+        color: #6b6560;
+        line-height: 1.5;
+      }
+
+      .milestone-track {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 0 8px;
+        margin-top: 28px;
+        opacity: 0;
+        transition: opacity 0.6s 0.5s;
+      }
+
+      .milestone-track.visible {
+        opacity: 1;
+      }
+
+      .milestone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .milestone-bars {
+        display: flex;
+        gap: 2px;
+        align-items: flex-end;
+      }
+
+      .milestone-bar {
+        width: 6px;
+        background: #059669;
+        border-radius: 3px;
+        transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .milestone-day {
+        font-size: 12px;
+        font-weight: 700;
+        color: #2d2a26;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .milestone-label {
+        font-size: 11px;
+        color: #6b6560;
+      }
+
+      .tap-hint {
+        text-align: center;
+        font-size: 14px;
+        color: #059669;
+        font-weight: 500;
+        margin-bottom: 16px;
+        animation: pulse-hint 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-hint {
+        0%,
+        100% {
+          opacity: 0.6;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* ─── Screen 4: Feature Tour ─── */
+      .feature-card {
+        background: #edeae5;
+        border-radius: 16px;
+        padding: 16px 18px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        transition: all 0.3s;
+      }
+
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+
+      .feature-icon.free {
+        background: #d1fae5;
+      }
+      .feature-icon.premium {
+        background: rgba(123, 82, 196, 0.12);
+      }
+
+      .feature-info {
+        flex: 1;
+      }
+      .feature-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #2d2a26;
+      }
+      .feature-desc {
+        font-size: 13px;
+        color: #6b6560;
+        margin-top: 2px;
+      }
+
+      .feature-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.5px;
+        flex-shrink: 0;
+      }
+
+      .feature-badge.free {
+        color: #059669;
+        background: rgba(5, 150, 105, 0.1);
+      }
+      .feature-badge.premium {
+        color: #7b52c4;
+        background: rgba(123, 82, 196, 0.1);
+      }
+
+      .social-proof {
+        background: #faf8f5;
+        border-radius: 12px;
+        padding: 14px 16px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #6b6560;
+        line-height: 1.4;
+      }
+
+      .social-proof .number {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 24px;
+        font-weight: 700;
+        color: #059669;
+        flex-shrink: 0;
+      }
+
+      /* ─── Screen 5: Paywall ─── */
+      .paywall-hero {
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .paywall-hero .rocket {
+        font-size: 64px;
+        display: block;
+        margin-bottom: 16px;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .paywall-title {
+        font-family: 'Literata', serif !important;
+        font-size: 26px !important;
+        font-weight: 700 !important;
+        color: #2d2a26 !important;
+        line-height: 1.25 !important;
+        letter-spacing: -0.3px !important;
+      }
+
+      .benefit-list {
+        background: #edeae5;
+        border-radius: 16px;
+        padding: 4px 0;
+        margin-bottom: 24px;
+      }
+
+      .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 20px;
+      }
+
+      .benefit-item:not(:last-child) {
+        border-bottom: 1px solid #ddd8d2;
+      }
+
+      .benefit-check {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #059669;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        flex-shrink: 0;
+      }
+
+      .benefit-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: #2d2a26;
+      }
+
+      .price-card {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        color: #fff;
+        margin-bottom: 16px;
+      }
+
+      .price-main {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .price-sub {
+        font-size: 14px;
+        opacity: 0.85;
+      }
+
+      .btn-trial {
+        width: 100%;
+        height: 56px;
+        background: #2d2a26 !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 14px !important;
+        font-family: 'DM Sans', sans-serif !important;
+        font-size: 17px !important;
+        font-weight: 700 !important;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        letter-spacing: 0.02em;
+      }
+
+      .btn-trial:hover {
+        background: #1a1816 !important;
+        transform: translateY(-1px);
+      }
+
+      .fine-print {
+        text-align: center;
+        font-size: 12px;
+        color: #6b6560;
+        margin-top: 8px;
+      }
+
+      /* ─── Bottom CTA Area ─── */
+      .bottom-cta {
+        margin-top: auto;
+        padding-top: 16px;
+        padding-bottom: 20px;
+      }
+
+      /* ─── Confetti ─── */
+      .confetti-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 50;
+        overflow: hidden;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 2px;
+        top: -10px;
+        opacity: 0;
+      }
+
+      .confetti-piece.fall {
+        animation: confetti-fall 1.5s ease-in forwards;
+      }
+
+      @keyframes confetti-fall {
+        0% {
+          opacity: 1;
+          transform: translateY(0) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(600px) rotate(720deg);
+        }
+      }
+
+      /* ─── Counter badge ─── */
+      .goal-counter {
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b6560;
+        text-align: center;
+        margin-bottom: 12px;
+        transition: color 0.2s;
+      }
+
+      .goal-counter.active {
+        color: #059669;
+      }
+
+      /* ─── Responsive ─── */
+      @media (max-width: 430px) {
+        .phone-frame {
+          width: 100%;
+          height: 100vh;
+          border-radius: 0;
+          box-shadow: none;
+        }
+        .notch {
+          display: none;
+        }
+        body {
+          padding: 0;
+          background: #f5f1ed;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <span class="icons">
+          <svg width="16" height="12" viewBox="0 0 16 12">
+            <rect x="0" y="4" width="3" height="8" rx="1" fill="#2D2A26" />
+            <rect x="4.5" y="2" width="3" height="10" rx="1" fill="#2D2A26" />
+            <rect x="9" y="0" width="3" height="12" rx="1" fill="#2D2A26" />
+            <rect x="13.5" y="3" width="3" height="9" rx="1" fill="#DDD8D2" />
+          </svg>
+          &nbsp;
+          <svg width="22" height="12" viewBox="0 0 22 12">
+            <rect
+              x="0"
+              y="0"
+              width="19"
+              height="12"
+              rx="2"
+              stroke="#2D2A26"
+              stroke-width="1.5"
+              fill="none"
+            />
+            <rect x="20" y="3.5" width="2" height="5" rx="1" fill="#2D2A26" />
+            <rect x="1.5" y="1.5" width="14" height="9" rx="1" fill="#059669" />
+          </svg>
+        </span>
+      </div>
+
+      <div class="screens-viewport">
+        <div class="screens-track" id="track">
+          <!-- Screen 1: Goal Selector -->
+          <div class="screen" id="screen-1">
+            <button class="skip-btn" onclick="goTo(4)">Skip</button>
+            <div style="margin-top: 16px">
+              <div class="screen-title">What do you want<br />to focus on?</div>
+              <div class="screen-subtitle">
+                Pick up to 3 — we'll personalize your experience.
+              </div>
+            </div>
+            <div class="goal-counter" id="goal-counter">0 of 3 selected</div>
+            <div class="goal-grid" id="goal-grid">
+              <div
+                class="goal-card"
+                data-goal="health"
+                onclick="toggleGoal(this)"
+              >
+                <span class="emoji">🏃</span>
+                <span class="label">Health &amp;<br />Fitness</span>
+              </div>
+              <div
+                class="goal-card"
+                data-goal="work"
+                onclick="toggleGoal(this)"
+              >
+                <span class="emoji">💼</span>
+                <span class="label">Work &amp;<br />Focus</span>
+              </div>
+              <div
+                class="goal-card"
+                data-goal="mind"
+                onclick="toggleGoal(this)"
+              >
+                <span class="emoji">🧘</span>
+                <span class="label">Mind &amp;<br />Calm</span>
+              </div>
+              <div
+                class="goal-card"
+                data-goal="learn"
+                onclick="toggleGoal(this)"
+              >
+                <span class="emoji">📚</span>
+                <span class="label">Learn &amp;<br />Grow</span>
+              </div>
+              <div
+                class="goal-card"
+                data-goal="sleep"
+                onclick="toggleGoal(this)"
+              >
+                <span class="emoji">🌙</span>
+                <span class="label">Sleep &amp;<br />Rest</span>
+              </div>
+              <div
+                class="goal-card"
+                data-goal="care"
+                onclick="toggleGoal(this)"
+              >
+                <span class="emoji">💧</span>
+                <span class="label">Self<br />Care</span>
+              </div>
+            </div>
+            <div class="bottom-cta">
+              <button
+                class="btn-primary"
+                id="btn-goals"
+                disabled
+                onclick="goTo(1)"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+
+          <!-- Screen 2: First Habit -->
+          <div class="screen" id="screen-2">
+            <button class="skip-btn" onclick="goTo(2)">Skip</button>
+            <div class="seedling-anim">🌱</div>
+            <div class="screen-title" style="text-align: center">
+              Start with one<br />small thing.
+            </div>
+            <div class="screen-subtitle" style="text-align: center">
+              Based on your goals, we suggest:
+            </div>
+
+            <div id="suggestions-container">
+              <div class="suggestion-card" onclick="selectSuggestion(this)">
+                <div class="suggestion-header">
+                  <span class="suggestion-emoji">🧘</span>
+                  <span class="suggestion-name">5-min meditation</span>
+                </div>
+                <div class="suggestion-desc">Start your day with clarity</div>
+                <div class="suggestion-badge">
+                  Most popular · 89% stick with it
+                </div>
+              </div>
+              <div class="suggestion-card" onclick="selectSuggestion(this)">
+                <div class="suggestion-header">
+                  <span class="suggestion-emoji">💧</span>
+                  <span class="suggestion-name">Drink water first thing</span>
+                </div>
+                <div class="suggestion-desc">
+                  Simplest habit to build momentum
+                </div>
+                <div class="suggestion-badge">Easiest to start</div>
+              </div>
+              <div class="suggestion-card" onclick="selectSuggestion(this)">
+                <div class="suggestion-header">
+                  <span class="suggestion-emoji">📓</span>
+                  <span class="suggestion-name">Write 3 gratitudes</span>
+                </div>
+                <div class="suggestion-desc">Science-backed mood booster</div>
+                <div class="suggestion-badge">2-min commitment</div>
+              </div>
+              <div class="custom-input-card" onclick="selectSuggestion(this)">
+                <span>✏️</span> <span>Or type your own...</span>
+              </div>
+            </div>
+
+            <div class="bottom-cta">
+              <button
+                class="btn-primary"
+                id="btn-habit"
+                disabled
+                onclick="goTo(2)"
+              >
+                Add This Habit
+              </button>
+            </div>
+          </div>
+
+          <!-- Screen 3: Chain Demo -->
+          <div class="screen" id="screen-3">
+            <button class="skip-btn" onclick="goTo(3)">Skip</button>
+            <div style="margin-top: 16px">
+              <div class="screen-title">See how it works.</div>
+              <div class="screen-subtitle">
+                The chain is your secret weapon.
+              </div>
+            </div>
+
+            <div class="tap-hint" id="tap-hint">
+              Tap to complete today's habit
+            </div>
+
+            <div
+              class="demo-habit-card"
+              id="demo-habit"
+              onclick="completeDemo()"
+            >
+              <div class="demo-habit-left">
+                <span class="demo-habit-emoji" id="demo-emoji">🧘</span>
+                <span class="demo-habit-name" id="demo-name"
+                  >5-min meditation</span
+                >
+              </div>
+              <div class="demo-checkbox" id="demo-check"></div>
+            </div>
+
+            <div class="chain-visual" id="chain-visual">
+              <div class="chain-links" id="chain-links">
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+                <div class="chain-link"></div>
+              </div>
+              <div class="chain-label">Your chain starts now!</div>
+              <div class="chain-caption">
+                Every day you complete a habit adds a link.<br /><strong
+                  >Don't break the chain.</strong
+                >
+              </div>
+            </div>
+
+            <div class="milestone-track" id="milestones">
+              <div class="milestone">
+                <div class="milestone-bars">
+                  <div class="milestone-bar" style="height: 16px"></div>
+                </div>
+                <div class="milestone-day">Day 1</div>
+                <div class="milestone-label">Start</div>
+              </div>
+              <div class="milestone">
+                <div class="milestone-bars">
+                  <div class="milestone-bar" style="height: 16px"></div>
+                  <div class="milestone-bar" style="height: 24px"></div>
+                </div>
+                <div class="milestone-day">Day 7</div>
+                <div class="milestone-label">Routine</div>
+              </div>
+              <div class="milestone">
+                <div class="milestone-bars">
+                  <div class="milestone-bar" style="height: 16px"></div>
+                  <div class="milestone-bar" style="height: 24px"></div>
+                  <div class="milestone-bar" style="height: 32px"></div>
+                </div>
+                <div class="milestone-day">Day 21</div>
+                <div class="milestone-label">Habit</div>
+              </div>
+              <div class="milestone">
+                <div class="milestone-bars">
+                  <div class="milestone-bar" style="height: 16px"></div>
+                  <div class="milestone-bar" style="height: 24px"></div>
+                  <div class="milestone-bar" style="height: 32px"></div>
+                  <div class="milestone-bar" style="height: 40px"></div>
+                </div>
+                <div class="milestone-day">Day 66</div>
+                <div class="milestone-label">Automatic</div>
+              </div>
+            </div>
+
+            <div class="confetti-container" id="confetti"></div>
+
+            <div class="bottom-cta">
+              <button
+                class="btn-primary"
+                id="btn-chain"
+                disabled
+                onclick="goTo(3)"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+
+          <!-- Screen 4: Feature Tour -->
+          <div class="screen" id="screen-4">
+            <button class="skip-btn" onclick="goTo(4)">Skip</button>
+            <div style="margin-top: 16px">
+              <div class="screen-title">
+                Tools that keep<br />you consistent.
+              </div>
+              <div class="screen-subtitle">
+                Here's what helps people stick with it:
+              </div>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon free">📊</div>
+              <div class="feature-info">
+                <div class="feature-name">Streak tracking</div>
+                <div class="feature-desc">Watch your chain grow daily</div>
+              </div>
+              <span class="feature-badge free">FREE</span>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon free">🎯</div>
+              <div class="feature-info">
+                <div class="feature-name">200+ templates</div>
+                <div class="feature-desc">Science-backed routines</div>
+              </div>
+              <span class="feature-badge free">FREE</span>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon premium">🔔</div>
+              <div class="feature-info">
+                <div class="feature-name">Smart reminders</div>
+                <div class="feature-desc">Custom time per habit</div>
+              </div>
+              <span class="feature-badge premium">PRO</span>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon premium">♾️</div>
+              <div class="feature-info">
+                <div class="feature-name">Unlimited habits</div>
+                <div class="feature-desc">Track every area of your life</div>
+              </div>
+              <span class="feature-badge premium">PRO</span>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon premium">🔊</div>
+              <div class="feature-info">
+                <div class="feature-name">Completion sounds</div>
+                <div class="feature-desc">Satisfying audio feedback</div>
+              </div>
+              <span class="feature-badge premium">PRO</span>
+            </div>
+
+            <div class="social-proof">
+              <span class="number">2x</span>
+              <span
+                >Premium members build habits <strong>twice as fast</strong> as
+                free users on average.</span
+              >
+            </div>
+
+            <div class="bottom-cta">
+              <button class="btn-primary" onclick="goTo(4)">Continue</button>
+            </div>
+          </div>
+
+          <!-- Screen 5: Soft Paywall -->
+          <div class="screen" id="screen-5">
+            <div class="paywall-hero">
+              <span class="rocket">🚀</span>
+              <div class="paywall-title">
+                You're ready to build<br />lasting habits.
+              </div>
+            </div>
+
+            <div class="benefit-list">
+              <div class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <span class="benefit-text">Unlimited habits</span>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <span class="benefit-text">Smart per-habit reminders</span>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <span class="benefit-text"
+                  >Completion sounds &amp; feedback</span
+                >
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <span class="benefit-text">Voice notes &amp; affirmations</span>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-check">✓</div>
+                <span class="benefit-text"
+                  >Vision board &amp; letters to self</span
+                >
+              </div>
+            </div>
+
+            <div class="price-card">
+              <div class="price-main">$0 for 7 days</div>
+              <div class="price-sub">Then $4.99/month · Cancel anytime</div>
+            </div>
+
+            <div class="bottom-cta" style="padding-top: 0">
+              <button class="btn-trial" onclick="startTrial()">
+                Start Free Trial
+              </button>
+              <button class="btn-ghost" onclick="skipPaywall()">
+                Continue with 3 free habits
+              </button>
+              <div class="fine-print">
+                No charge today. Cancel in Settings anytime.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Dots -->
+      <div class="progress-dots" id="progress-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <script>
+      // State
+      var currentScreen = 0;
+      var selectedGoals = {};
+      var selectedGoalCount = 0;
+      var selectedHabit = null;
+      var demoCompleted = false;
+      var screenWidth = 390;
+
+      // Navigation
+      function goTo(index) {
+        currentScreen = index;
+        var track = document.getElementById('track');
+        track.style.transform = 'translateX(-' + index * screenWidth + 'px)';
+        var dots = document.querySelectorAll('.dot');
+        for (var i = 0; i < dots.length; i++) {
+          if (i === index) {
+            dots[i].classList.add('active');
+          } else {
+            dots[i].classList.remove('active');
+          }
+        }
+      }
+
+      // Screen 1: Goals
+      function toggleGoal(card) {
+        var goal = card.getAttribute('data-goal');
+
+        if (card.classList.contains('selected')) {
+          card.classList.remove('selected');
+          delete selectedGoals[goal];
+          selectedGoalCount--;
+          card.style.transform = '';
+        } else {
+          if (selectedGoalCount >= 3) return;
+          card.classList.add('selected');
+          selectedGoals[goal] = true;
+          selectedGoalCount++;
+          card.style.transform = 'scale(0.95)';
+          setTimeout(function () {
+            card.style.transform = '';
+          }, 150);
+        }
+
+        var counter = document.getElementById('goal-counter');
+        counter.textContent = selectedGoalCount + ' of 3 selected';
+        if (selectedGoalCount > 0) {
+          counter.classList.add('active');
+        } else {
+          counter.classList.remove('active');
+        }
+
+        document.getElementById('btn-goals').disabled = selectedGoalCount === 0;
+      }
+
+      // Screen 2: Suggestions
+      function selectSuggestion(card) {
+        var all = document.querySelectorAll(
+          '.suggestion-card, .custom-input-card'
+        );
+        for (var i = 0; i < all.length; i++) {
+          all[i].classList.remove('selected');
+        }
+        card.classList.add('selected');
+        selectedHabit = card;
+        document.getElementById('btn-habit').disabled = false;
+
+        // Update demo screen
+        var emoji = card.querySelector('.suggestion-emoji');
+        var name = card.querySelector('.suggestion-name');
+        if (emoji && name) {
+          document.getElementById('demo-emoji').textContent = emoji.textContent;
+          document.getElementById('demo-name').textContent = name.textContent;
+        }
+      }
+
+      // Screen 3: Chain Demo
+      function completeDemo() {
+        if (demoCompleted) return;
+        demoCompleted = true;
+
+        var card = document.getElementById('demo-habit');
+        var check = document.getElementById('demo-check');
+        var hint = document.getElementById('tap-hint');
+
+        card.classList.add('completed');
+        check.textContent = '✓';
+        hint.style.display = 'none';
+
+        setTimeout(function () {
+          document.getElementById('chain-visual').classList.add('visible');
+          var links = document.querySelectorAll('.chain-link');
+          for (var i = 0; i < links.length; i++) {
+            links[i].classList.add('show');
+          }
+        }, 400);
+
+        setTimeout(function () {
+          document.getElementById('milestones').classList.add('visible');
+        }, 800);
+
+        setTimeout(function () {
+          document.getElementById('btn-chain').disabled = false;
+        }, 600);
+
+        launchConfetti();
+      }
+
+      function launchConfetti() {
+        var container = document.getElementById('confetti');
+        var colors = [
+          '#059669',
+          '#E8B94D',
+          '#7B52C4',
+          '#10B981',
+          '#34D399',
+          '#FEF3CD',
+        ];
+
+        for (var i = 0; i < 30; i++) {
+          var piece = document.createElement('div');
+          piece.className = 'confetti-piece';
+          piece.style.left = Math.random() * 100 + '%';
+          piece.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+          piece.style.width = 6 + Math.random() * 6 + 'px';
+          piece.style.height = 6 + Math.random() * 6 + 'px';
+          piece.style.animationDelay = Math.random() * 0.5 + 's';
+          piece.style.animationDuration = 1 + Math.random() * 1 + 's';
+          container.appendChild(piece);
+
+          (function (p) {
+            requestAnimationFrame(function () {
+              p.classList.add('fall');
+            });
+            setTimeout(function () {
+              p.remove();
+            }, 2500);
+          })(piece);
+        }
+      }
+
+      // Screen 5: Paywall
+      function startTrial() {
+        var btn = document.querySelector('.btn-trial');
+        btn.textContent = 'Trial Started!';
+        btn.style.background = '#059669';
+      }
+
+      function skipPaywall() {
+        // In real app: navigate to empty habit state
+      }
+
+      // Responsive
+      function adjustForMobile() {
+        if (window.innerWidth <= 430) {
+          screenWidth = window.innerWidth;
+          var screens = document.querySelectorAll('.screen');
+          for (var i = 0; i < screens.length; i++) {
+            screens[i].style.width = screenWidth + 'px';
+          }
+          var track = document.getElementById('track');
+          track.style.width = screenWidth * 5 + 'px';
+          goTo(currentScreen);
+        } else {
+          screenWidth = 390;
+        }
+      }
+
+      window.addEventListener('resize', adjustForMobile);
+      adjustForMobile();
+    </script>
+  </body>
+</html>

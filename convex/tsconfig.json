@@ -1,0 +1,29 @@
+{
+  /* This TypeScript project config describes the environment that
+   * Convex functions run in and is used to typecheck them.
+   * You can modify it, but some settings required to use Convex.
+   */
+  "compilerOptions": {
+    /* These settings are not required by Convex and can be modified. */
+    "allowJs": true,
+    "strict": true,
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    /* `process.env` is available in the Convex runtime and read by
+     * config/apiConstants.ts and webhooks/revenuecatSignature.ts. */
+    "types": ["node"],
+
+    /* These compiler options are required by Convex */
+    "target": "ESNext",
+    /* ES2022 for Array.prototype.at, used across the query helpers. */
+    "lib": ["ES2022", "dom"],
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["./_generated", "./**/*.test.ts"]
+}

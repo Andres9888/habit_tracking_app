@@ -1,0 +1,895 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Account screen — before / after</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,400;7..72,600;7..72,700&family=DM+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card: #faf8f5;
+        --border: #ddd8d2;
+        --text: #2d2a26;
+        --text-2: #6b6560;
+        --text-3: #8a8177;
+        --green-100: #d1fae5;
+        --green-600: #059669;
+        --green-700: #047857;
+        --gold-100: #fef3cd;
+        --gold-700: #7d5907;
+        --error: #b53030;
+        --error-light: #fee2e2;
+        --info: #3872b8;
+        --success: #15793c;
+        --ink-1: #211f1d;
+        --ink-2: #2a2724;
+        --ink-3: #1c1a18;
+        --gold-pill: #b4884a;
+        --gold-crown: #e8c88a;
+      }
+      body {
+        font-family: 'DM Sans', sans-serif !important;
+        background: #e8e3dc !important;
+        color: var(--text) !important;
+        -webkit-font-smoothing: antialiased;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: 'Literata', serif !important;
+      }
+      .serif {
+        font-family: 'Literata', serif !important;
+      }
+      .phone {
+        width: 380px;
+        background: var(--bg);
+        border-radius: 42px;
+        border: 10px solid #16140f;
+        box-shadow:
+          0 30px 60px -12px rgba(0, 0, 0, 0.32),
+          0 0 0 1px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        position: relative;
+      }
+      .notch {
+        width: 116px;
+        height: 30px;
+        background: #16140f;
+        border-radius: 0 0 18px 18px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+      }
+      .row-divider {
+        border-top: 1px solid var(--border);
+      }
+      .icon-tile {
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .premium-ink {
+        background: linear-gradient(135deg, var(--ink-1), var(--ink-2) 55%, var(--ink-3));
+        border: 1px solid rgba(180, 136, 74, 0.28);
+        border-radius: 18px;
+      }
+      .tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        padding: 4px 9px;
+        border-radius: 999px;
+      }
+      .tag-cut {
+        background: var(--error-light);
+        color: var(--error);
+      }
+      .tag-add {
+        background: var(--green-100);
+        color: var(--green-700);
+      }
+      .tag-keep {
+        background: #e9e5df;
+        color: var(--text-2);
+      }
+      /* annotation markers */
+      .mark {
+        position: relative;
+      }
+      .mark::after {
+        content: attr(data-mark);
+        position: absolute;
+        top: -9px;
+        right: -9px;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 6px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+        z-index: 30;
+      }
+      .mark-cut::after {
+        background: var(--error);
+      }
+      .mark-add::after {
+        background: var(--green-600);
+      }
+      .strike-wrap {
+        position: relative;
+      }
+      .strike-wrap::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+          -45deg,
+          rgba(181, 48, 48, 0.09) 0 8px,
+          transparent 8px 16px
+        );
+        border-radius: 18px;
+        z-index: 5;
+        pointer-events: none;
+      }
+      .scrollpane {
+        max-height: 760px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+      }
+      .scrollpane::-webkit-scrollbar {
+        width: 0;
+      }
+    </style>
+  </head>
+
+  <body class="px-5 py-10 md:px-10">
+    <!-- ================= HEADER ================= -->
+    <header class="mx-auto mb-10 max-w-[1500px]">
+      <p
+        class="mb-2 text-[11px] font-bold uppercase tracking-[0.16em]"
+        style="color: var(--gold-700)"
+      >
+        Chain Day · Settings › Account
+      </p>
+      <h1 class="serif text-4xl font-bold md:text-5xl" style="color: var(--text)">
+        Account screen — before &amp; after
+      </h1>
+      <p class="mt-3 max-w-3xl text-[15px] leading-relaxed" style="color: var(--text-2)">
+        Cutting the performance metrics from a settings screen, and replacing the generic
+        upsell with a plan-aware, honestly-priced one. Colours, type and spacing are pulled
+        from the live theme tokens.
+      </p>
+
+      <div class="mt-5 flex flex-wrap items-center gap-2">
+        <span class="tag tag-cut">removed</span>
+        <span class="tag tag-add">added / changed</span>
+        <span class="tag tag-keep">unchanged</span>
+      </div>
+    </header>
+
+    <!-- ================= PHONES ================= -->
+    <section
+      class="mx-auto flex max-w-[1500px] flex-col items-start justify-center gap-14 xl:flex-row"
+    >
+      <!-- ---------- BEFORE ---------- -->
+      <div class="mx-auto flex flex-col items-center xl:mx-0">
+        <div class="mb-4 flex items-center gap-3">
+          <span
+            class="flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-bold text-white"
+            style="background: var(--error)"
+            >A</span
+          >
+          <h2 class="serif text-2xl font-bold">Before</h2>
+        </div>
+        <p class="mb-5 max-w-[380px] text-center text-[13px]" style="color: var(--text-2)">
+          Four performance metrics stacked above the paywall. Real content starts ~40% down
+          the screen.
+        </p>
+
+        <div class="phone">
+          <div class="notch"></div>
+          <!-- status bar -->
+          <div
+            class="flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-semibold"
+            style="color: var(--text)"
+          >
+            <span>2:34</span>
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="wifi" class="h-3.5 w-3.5"></i>
+              <i data-lucide="battery-full" class="h-4 w-4"></i>
+            </span>
+          </div>
+          <!-- nav -->
+          <div class="flex items-center justify-between px-4 pb-3 pt-2">
+            <i data-lucide="chevron-left" class="h-6 w-6" style="color: var(--text)"></i>
+            <h3 class="serif text-[22px] font-bold">Account</h3>
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-full"
+              style="background: #e6e1da"
+            >
+              <i data-lucide="x" class="h-4 w-4" style="color: var(--text-2)"></i>
+            </span>
+          </div>
+
+          <div class="scrollpane px-4 pb-6">
+            <!-- profile card -->
+            <div class="card mark mark-cut strike-wrap" data-mark="1">
+              <div class="flex items-center gap-3 px-4 pb-3 pt-4">
+                <div class="relative">
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold text-white"
+                    style="
+                      background: linear-gradient(
+                        135deg,
+                        var(--green-700),
+                        var(--green-600)
+                      );
+                    "
+                  >
+                    A
+                  </div>
+                  <span
+                    class="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2"
+                    style="background: var(--green-700); border-color: var(--card)"
+                  >
+                    <i data-lucide="camera" class="h-3 w-3 text-white"></i>
+                  </span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="serif truncate text-[19px] font-bold">Andres Gutierrez</p>
+                  <p class="truncate text-[13px]" style="color: var(--text-2)">
+                    andres@gmail.com
+                  </p>
+                  <p
+                    class="mt-1.5 text-[13px] font-bold"
+                    style="color: var(--gold-700)"
+                  >
+                    🔥 15-day streak
+                  </p>
+                </div>
+              </div>
+              <!-- stats strip -->
+              <div class="row-divider flex px-2 py-4">
+                <div class="flex-1 text-center">
+                  <i
+                    data-lucide="activity"
+                    class="mx-auto mb-1 h-4 w-4"
+                    style="color: var(--gold-700)"
+                  ></i>
+                  <p class="serif text-[21px] font-bold">14</p>
+                  <p class="mt-0.5 text-[11px]" style="color: var(--text-2)">
+                    Active Habits
+                  </p>
+                </div>
+                <div class="w-px" style="background: var(--border)"></div>
+                <div class="flex-1 text-center">
+                  <i
+                    data-lucide="star"
+                    class="mx-auto mb-1 h-4 w-4"
+                    style="color: var(--success)"
+                  ></i>
+                  <p class="serif text-[21px] font-bold">0</p>
+                  <p class="mt-0.5 text-[11px]" style="color: var(--text-2)">
+                    Flawless Days
+                  </p>
+                </div>
+                <div class="w-px" style="background: var(--border)"></div>
+                <div class="flex-1 text-center">
+                  <i
+                    data-lucide="check-circle-2"
+                    class="mx-auto mb-1 h-4 w-4"
+                    style="color: var(--info)"
+                  ></i>
+                  <p class="serif text-[21px] font-bold">48</p>
+                  <p class="mt-0.5 text-[11px]" style="color: var(--text-2)">
+                    Lifetime Completions
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- premium banner -->
+            <div class="premium-ink mark mark-cut mt-4 px-4 py-3.5" data-mark="2">
+              <div class="flex items-center gap-3">
+                <div
+                  class="icon-tile"
+                  style="background: rgba(180, 136, 74, 0.22); border-radius: 12px"
+                >
+                  <i data-lucide="crown" class="h-4 w-4" style="color: var(--gold-crown)"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-[15px] font-semibold" style="color: #fbf7f2">
+                    Chain Day Premium
+                  </p>
+                  <p
+                    class="mt-0.5 truncate text-[12px]"
+                    style="color: rgba(249, 245, 240, 0.66)"
+                  >
+                    Unlimited habits &amp; reminders
+                  </p>
+                </div>
+                <span
+                  class="rounded-full px-4 py-2 text-[13px] font-semibold"
+                  style="background: var(--gold-pill); color: var(--ink-3)"
+                  >Upgrade</span
+                >
+              </div>
+            </div>
+
+            <!-- account group -->
+            <p
+              class="serif mb-2 mt-6 text-[19px] font-bold"
+              style="color: var(--text)"
+            >
+              Account
+            </p>
+            <div class="card overflow-hidden">
+              <div class="flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--green-100)">
+                  <i data-lucide="square-pen" class="h-4 w-4" style="color: var(--green-700)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-medium">Edit profile</p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+              <div class="row-divider flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--green-100)">
+                  <i data-lucide="mail" class="h-4 w-4" style="color: var(--green-700)"></i>
+                </span>
+                <div class="flex-1">
+                  <p class="text-[15px] font-medium">Email</p>
+                  <p class="text-[11.5px]" style="color: var(--text-2)">
+                    Managed by your sign-in provider
+                  </p>
+                </div>
+                <span
+                  class="max-w-[110px] truncate rounded-full px-2.5 py-1 text-[12px]"
+                  style="background: #eeeae4; color: var(--text-2)"
+                  >andres@gmai…</span
+                >
+              </div>
+              <div class="row-divider flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--gold-100)">
+                  <i data-lucide="rotate-ccw" class="h-4 w-4" style="color: var(--gold-700)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-medium">Restore purchases</p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+            </div>
+
+            <!-- sign out -->
+            <div class="card mt-5 overflow-hidden">
+              <div class="flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--error-light)">
+                  <i data-lucide="log-out" class="h-4 w-4" style="color: var(--error)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-semibold" style="color: var(--error)">
+                  Sign out
+                </p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+            </div>
+
+            <!-- danger -->
+            <p
+              class="mb-2 mt-6 text-[11px] font-bold uppercase tracking-[0.12em]"
+              style="color: var(--error)"
+            >
+              Danger Zone
+            </p>
+            <div class="card mark mark-cut overflow-hidden" data-mark="3">
+              <div class="flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--error-light)">
+                  <i data-lucide="trash-2" class="h-4 w-4" style="color: var(--error)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-semibold" style="color: var(--error)">
+                  Delete account
+                </p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+            </div>
+
+            <p class="mt-5 text-center text-[11px]" style="color: var(--text-3)">
+              Chain Day · Version 1.4.0 (112)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- AFTER ---------- -->
+      <div class="mx-auto flex flex-col items-center xl:mx-0">
+        <div class="mb-4 flex items-center gap-3">
+          <span
+            class="flex h-7 w-7 items-center justify-center rounded-full text-[13px] font-bold text-white"
+            style="background: var(--green-600)"
+            >B</span
+          >
+          <h2 class="serif text-2xl font-bold">After</h2>
+        </div>
+        <p class="mb-5 max-w-[380px] text-center text-[13px]" style="color: var(--text-2)">
+          Identity + tenure only. Paywall carries a real price and a trial. Cancel path gets
+          a softer exit.
+        </p>
+
+        <div class="phone">
+          <div class="notch"></div>
+          <div
+            class="flex items-center justify-between px-7 pb-1 pt-3 text-[13px] font-semibold"
+            style="color: var(--text)"
+          >
+            <span>2:34</span>
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="wifi" class="h-3.5 w-3.5"></i>
+              <i data-lucide="battery-full" class="h-4 w-4"></i>
+            </span>
+          </div>
+          <div class="flex items-center justify-between px-4 pb-3 pt-2">
+            <i data-lucide="chevron-left" class="h-6 w-6" style="color: var(--text)"></i>
+            <h3 class="serif text-[22px] font-bold">Account</h3>
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-full"
+              style="background: #e6e1da"
+            >
+              <i data-lucide="x" class="h-4 w-4" style="color: var(--text-2)"></i>
+            </span>
+          </div>
+
+          <div class="scrollpane px-4 pb-6">
+            <!-- profile card, slimmed -->
+            <div class="card mark mark-add" data-mark="1">
+              <div class="flex items-center gap-3 px-4 py-4">
+                <div class="relative">
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full text-xl font-bold text-white"
+                    style="
+                      background: linear-gradient(
+                        135deg,
+                        var(--green-700),
+                        var(--green-600)
+                      );
+                    "
+                  >
+                    A
+                  </div>
+                  <span
+                    class="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2"
+                    style="background: var(--green-700); border-color: var(--card)"
+                  >
+                    <i data-lucide="camera" class="h-3 w-3 text-white"></i>
+                  </span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="serif truncate text-[19px] font-bold">Andres Gutierrez</p>
+                  <p class="truncate text-[13px]" style="color: var(--text-2)">
+                    andres@gmail.com
+                  </p>
+                  <p class="mt-1.5 text-[12.5px]" style="color: var(--text-3)">
+                    Member since March 2025
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- premium, honest + priced -->
+            <div class="premium-ink mark mark-add mt-4 p-4" data-mark="2">
+              <div class="flex items-center gap-3">
+                <div
+                  class="icon-tile"
+                  style="background: rgba(180, 136, 74, 0.22); border-radius: 12px"
+                >
+                  <i data-lucide="crown" class="h-4 w-4" style="color: var(--gold-crown)"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-[15px] font-semibold" style="color: #fbf7f2">
+                    Chain Day Pro
+                  </p>
+                  <p
+                    class="mt-0.5 truncate text-[12px]"
+                    style="color: rgba(232, 200, 138, 0.85)"
+                  >
+                    7 days free, then $3.99/mo
+                  </p>
+                </div>
+              </div>
+              <div class="mt-3 space-y-1.5">
+                <p
+                  class="flex items-center gap-2 text-[12.5px]"
+                  style="color: rgba(249, 245, 240, 0.78)"
+                >
+                  <i data-lucide="check" class="h-3.5 w-3.5" style="color: var(--gold-crown)"></i>
+                  Unlimited habits — free plan keeps 3
+                </p>
+                <p
+                  class="flex items-center gap-2 text-[12.5px]"
+                  style="color: rgba(249, 245, 240, 0.78)"
+                >
+                  <i data-lucide="check" class="h-3.5 w-3.5" style="color: var(--gold-crown)"></i>
+                  Custom reminders on every habit
+                </p>
+                <p
+                  class="flex items-center gap-2 text-[12.5px]"
+                  style="color: rgba(249, 245, 240, 0.78)"
+                >
+                  <i data-lucide="check" class="h-3.5 w-3.5" style="color: var(--gold-crown)"></i>
+                  Every theme &amp; calendar look
+                </p>
+              </div>
+              <div
+                class="mt-4 rounded-xl py-3 text-center text-[14.5px] font-bold"
+                style="background: var(--gold-pill); color: var(--ink-3)"
+              >
+                Start 7-day free trial
+              </div>
+              <p
+                class="mt-2 text-center text-[10.5px]"
+                style="color: rgba(249, 245, 240, 0.45)"
+              >
+                Cancel anytime. No charge until day 8.
+              </p>
+            </div>
+
+            <!-- account group -->
+            <p class="serif mb-2 mt-6 text-[19px] font-bold" style="color: var(--text)">
+              Account
+            </p>
+            <div class="card overflow-hidden">
+              <div class="mark mark-add flex items-center gap-3 px-4 py-3.5" data-mark="3">
+                <span class="icon-tile" style="background: var(--green-100)">
+                  <i data-lucide="image" class="h-4 w-4" style="color: var(--green-700)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-medium">Change photo</p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+              <div class="row-divider flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--green-100)">
+                  <i data-lucide="mail" class="h-4 w-4" style="color: var(--green-700)"></i>
+                </span>
+                <div class="flex-1">
+                  <p class="text-[15px] font-medium">Email</p>
+                  <p class="text-[11.5px]" style="color: var(--text-2)">
+                    Managed by your sign-in provider
+                  </p>
+                </div>
+                <span
+                  class="max-w-[110px] truncate rounded-full px-2.5 py-1 text-[12px]"
+                  style="background: #eeeae4; color: var(--text-2)"
+                  >andres@gmai…</span
+                >
+              </div>
+              <div class="row-divider flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--gold-100)">
+                  <i data-lucide="rotate-ccw" class="h-4 w-4" style="color: var(--gold-700)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-medium">Restore purchases</p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+            </div>
+
+            <!-- sign out -->
+            <div class="card mt-5 overflow-hidden">
+              <div class="flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--error-light)">
+                  <i data-lucide="log-out" class="h-4 w-4" style="color: var(--error)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-semibold" style="color: var(--error)">
+                  Sign out
+                </p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+            </div>
+
+            <!-- danger + churn save -->
+            <p
+              class="mb-2 mt-6 text-[11px] font-bold uppercase tracking-[0.12em]"
+              style="color: var(--error)"
+            >
+              Danger Zone
+            </p>
+            <div class="card mark mark-add overflow-hidden" data-mark="4">
+              <div class="flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--gold-100)">
+                  <i data-lucide="pause" class="h-4 w-4" style="color: var(--gold-700)"></i>
+                </span>
+                <div class="flex-1">
+                  <p class="text-[15px] font-medium">Pause my habits instead</p>
+                  <p class="text-[11.5px]" style="color: var(--text-2)">
+                    Keeps your streaks and history safe
+                  </p>
+                </div>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+              <div class="row-divider flex items-center gap-3 px-4 py-3.5">
+                <span class="icon-tile" style="background: var(--error-light)">
+                  <i data-lucide="trash-2" class="h-4 w-4" style="color: var(--error)"></i>
+                </span>
+                <p class="flex-1 text-[15px] font-semibold" style="color: var(--error)">
+                  Delete account
+                </p>
+                <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+              </div>
+            </div>
+
+            <p class="mt-5 text-center text-[11px]" style="color: var(--text-3)">
+              Chain Day · Version 1.4.0 (112)
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---------- ANNOTATIONS ---------- -->
+      <aside class="mx-auto w-full max-w-[420px] xl:mx-0 xl:pt-16">
+        <h2 class="serif mb-5 text-2xl font-bold">What changed</h2>
+
+        <div class="space-y-4">
+          <div class="card p-4">
+            <div class="mb-2 flex items-center gap-2">
+              <span
+                class="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                style="background: var(--error)"
+                >1</span
+              >
+              <span class="tag tag-cut">removed</span>
+            </div>
+            <p class="text-[14px] font-semibold">Stats strip + streak line</p>
+            <p class="mt-1 text-[13px] leading-relaxed" style="color: var(--text-2)">
+              Four metrics on a settings screen. “Flawless Days 0” was the first thing read.
+              Replaced with <strong>Member since</strong> — tenure, not performance. Also
+              deletes a <code class="text-[12px]">habits.getTracking</code> query that ran on
+              every Account open.
+            </p>
+          </div>
+
+          <div class="card p-4">
+            <div class="mb-2 flex items-center gap-2">
+              <span
+                class="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                style="background: var(--green-600)"
+                >2</span
+              >
+              <span class="tag tag-add">changed</span>
+            </div>
+            <p class="text-[14px] font-semibold">Paywall gets a price and a trial</p>
+            <p class="mt-1 text-[13px] leading-relaxed" style="color: var(--text-2)">
+              Before: a feature list with no price, no trial, no ask. After: named price,
+              trial CTA, and the free tier stated out loud (“free plan keeps 3”) so the
+              value is legible instead of vague.
+            </p>
+          </div>
+
+          <div class="card p-4">
+            <div class="mb-2 flex items-center gap-2">
+              <span
+                class="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                style="background: var(--green-600)"
+                >3</span
+              >
+              <span class="tag tag-add">changed</span>
+            </div>
+            <p class="text-[14px] font-semibold">“Edit profile” → “Change photo”</p>
+            <p class="mt-1 text-[13px] leading-relaxed" style="color: var(--text-2)">
+              The row only opens the photo picker. Label now matches behaviour.
+            </p>
+          </div>
+
+          <div class="card p-4">
+            <div class="mb-2 flex items-center gap-2">
+              <span
+                class="flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold text-white"
+                style="background: var(--green-600)"
+                >4</span
+              >
+              <span class="tag tag-add">added</span>
+            </div>
+            <p class="text-[14px] font-semibold">Softer exit before delete</p>
+            <p class="mt-1 text-[13px] leading-relaxed" style="color: var(--text-2)">
+              Highest-intent cancel moment in the app, currently uninterrupted. A pause
+              option above delete catches people who want a break, not an ending.
+            </p>
+          </div>
+
+          <div
+            class="rounded-2xl p-4"
+            style="background: var(--gold-100); border: 1px solid rgba(125, 89, 7, 0.25)"
+          >
+            <div class="mb-2 flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="h-4 w-4" style="color: var(--gold-700)"></i>
+              <p class="text-[13px] font-bold" style="color: var(--gold-700)">
+                Not fixable in the mock
+              </p>
+            </div>
+            <p class="text-[13px] leading-relaxed" style="color: #5c4205">
+              The free habit cap (<code class="text-[12px]">FREE_HABIT_LIMIT = 3</code>) is
+              enforced only on <strong>unarchive</strong>, never on create. That’s why the
+              screenshot shows 14 active habits on a free account. Until
+              <code class="text-[12px]">convex/habits/create.ts</code> gates, the “after”
+              paywall is still selling something users already have.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ================= PLAN-STATE VARIANTS ================= -->
+    <section class="mx-auto mt-20 max-w-[1500px]">
+      <h2 class="serif mb-2 text-3xl font-bold">After — the other plan states</h2>
+      <p class="mb-8 max-w-3xl text-[15px]" style="color: var(--text-2)">
+        Today the Account page branches on <code class="text-[13px]">isPremium</code> only, so
+        a trialing user sees the same generic card as a free user. These are the three cards
+        that slot into position 2.
+      </p>
+
+      <div class="grid gap-6 md:grid-cols-3">
+        <!-- trialing -->
+        <div>
+          <p class="mb-3 text-[12px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-3)">
+            status: trialing
+          </p>
+          <div
+            class="rounded-2xl p-4"
+            style="background: var(--gold-100); border: 1px solid rgba(125, 89, 7, 0.2)"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="flex h-11 w-11 items-center justify-center rounded-xl"
+                style="background: var(--gold-700)"
+              >
+                <i data-lucide="crown" class="h-5 w-5 text-white"></i>
+              </div>
+              <div class="flex-1">
+                <p class="text-[15px] font-bold" style="color: #3d3833">Chain Day Pro</p>
+                <p class="mt-0.5 text-[12px] font-semibold" style="color: var(--gold-700)">
+                  4 days left in your free trial
+                </p>
+              </div>
+            </div>
+            <p class="mt-3 text-[13px] leading-relaxed" style="color: #524d47">
+              Keep unlimited habits, custom reminders, and every theme when your trial ends.
+            </p>
+            <div
+              class="mt-4 rounded-xl py-3 text-center text-[14.5px] font-bold text-white"
+              style="background: var(--green-600)"
+            >
+              Upgrade — $3.99/mo
+            </div>
+          </div>
+          <p class="mt-3 text-[12.5px]" style="color: var(--text-2)">
+            Already built as <code class="text-[12px]">TrialCard</code>, but only rendered on
+            the main settings page — never on Account.
+          </p>
+        </div>
+
+        <!-- active monthly -->
+        <div>
+          <p class="mb-3 text-[12px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-3)">
+            status: active · monthly
+          </p>
+          <div class="card overflow-hidden">
+            <div class="flex items-center gap-3 px-4 py-4">
+              <span class="icon-tile" style="background: var(--gold-100)">
+                <i data-lucide="crown" class="h-4 w-4" style="color: var(--gold-700)"></i>
+              </span>
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <p class="text-[15px] font-semibold">Premium</p>
+                  <span
+                    class="rounded-full px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider"
+                    style="background: var(--gold-100); color: var(--gold-700)"
+                    >Active</span
+                  >
+                </div>
+                <p class="mt-0.5 text-[12px]" style="color: var(--text-2)">
+                  All features unlocked
+                </p>
+              </div>
+            </div>
+            <div
+              class="row-divider mark mark-add flex items-center gap-3 px-4 py-3.5"
+              data-mark="＋"
+            >
+              <span class="icon-tile" style="background: var(--green-100)">
+                <i data-lucide="trending-up" class="h-4 w-4" style="color: var(--green-700)"></i>
+              </span>
+              <div class="flex-1">
+                <p class="text-[15px] font-medium">Switch to annual</p>
+                <p class="text-[11.5px]" style="color: var(--success)">
+                  Save $12 a year — 2 months free
+                </p>
+              </div>
+              <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+            </div>
+            <div class="row-divider flex items-center gap-3 px-4 py-3.5">
+              <span class="icon-tile" style="background: #eeeae4">
+                <i data-lucide="settings" class="h-4 w-4" style="color: var(--text-2)"></i>
+              </span>
+              <p class="flex-1 text-[15px] font-medium">Manage subscription</p>
+              <i data-lucide="chevron-right" class="h-4 w-4" style="color: var(--text-3)"></i>
+            </div>
+          </div>
+          <p class="mt-3 text-[12.5px]" style="color: var(--text-2)">
+            One new row. Monthly→annual is the cheapest ARPU lift available and needs no new
+            backend.
+          </p>
+        </div>
+
+        <!-- free at cap -->
+        <div>
+          <p class="mb-3 text-[12px] font-bold uppercase tracking-[0.1em]" style="color: var(--text-3)">
+            status: free · at cap
+          </p>
+          <div class="premium-ink p-4">
+            <div class="flex items-center gap-3">
+              <div
+                class="icon-tile"
+                style="background: rgba(180, 136, 74, 0.22); border-radius: 12px"
+              >
+                <i data-lucide="crown" class="h-4 w-4" style="color: var(--gold-crown)"></i>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-[15px] font-semibold" style="color: #fbf7f2">Chain Day Pro</p>
+                <p class="mt-0.5 text-[12px]" style="color: rgba(232, 200, 138, 0.85)">
+                  You’re using all 3 free habits
+                </p>
+              </div>
+            </div>
+            <div class="mt-3.5 flex gap-1.5">
+              <span class="h-1.5 flex-1 rounded-full" style="background: var(--gold-pill)"></span>
+              <span class="h-1.5 flex-1 rounded-full" style="background: var(--gold-pill)"></span>
+              <span class="h-1.5 flex-1 rounded-full" style="background: var(--gold-pill)"></span>
+            </div>
+            <p class="mt-3 text-[12.5px] leading-relaxed" style="color: rgba(249, 245, 240, 0.7)">
+              Add a 4th habit, keep custom reminders, and unlock every theme.
+            </p>
+            <div
+              class="mt-4 rounded-xl py-3 text-center text-[14.5px] font-bold"
+              style="background: var(--gold-pill); color: var(--ink-3)"
+            >
+              Start 7-day free trial
+            </div>
+          </div>
+          <p class="mt-3 text-[12.5px]" style="color: var(--text-2)">
+            The version that only becomes true once
+            <code class="text-[12px]">create.ts</code> actually enforces the cap.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer
+      class="mx-auto mt-16 max-w-[1500px] border-t pt-6 text-[12.5px]"
+      style="border-color: rgba(0, 0, 0, 0.1); color: var(--text-3)"
+    >
+      Mock only — colours, type scale and card geometry pulled from
+      <code>src/theme/colors/core.ts</code>, <code>src/theme/typography.ts</code> and
+      <code>src/components/SettingsModal/theme/premiumHero.ts</code>. Prices are placeholders.
+    </footer>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

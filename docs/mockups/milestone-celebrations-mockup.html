@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Milestone Celebrations - Before/After</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif;
+        background: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%);
+        min-height: 100vh;
+        padding: 40px 20px;
+      }
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1c1917;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #78716c;
+        font-size: 17px;
+        margin-bottom: 32px;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .panel {
+        background: #faf9f7;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid #e7e5e4;
+      }
+      .panel-label {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        text-align: center;
+        padding: 6px 12px;
+        border-radius: 16px;
+        margin-bottom: 16px;
+        display: block;
+      }
+      .before .panel-label {
+        background: #fecaca;
+        color: #dc2626;
+      }
+      .after .panel-label {
+        background: #bbf7d0;
+        color: #16a34a;
+      }
+
+      .phone {
+        background: #1c1917;
+        border-radius: 40px;
+        padding: 12px;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      .phone-screen {
+        background: #000;
+        border-radius: 32px;
+        overflow: hidden;
+        aspect-ratio: 9/19;
+        position: relative;
+      }
+
+      /* Before - boring completion */
+      .before .phone-screen {
+        background: #faf9f7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .before .checkmark {
+        font-size: 64px;
+      }
+      .before .done-text {
+        font-size: 22px;
+        font-weight: 600;
+        color: #1c1917;
+        margin-top: 16px;
+      }
+
+      /* After - celebration! */
+      .after .phone-screen {
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .confetti {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+        animation: fall 3s ease-out infinite;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-100%) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(500px) rotate(720deg);
+          opacity: 0;
+        }
+      }
+      .confetti-piece:nth-child(1) {
+        left: 10%;
+        background: #10b981;
+        animation-delay: 0s;
+      }
+      .confetti-piece:nth-child(2) {
+        left: 20%;
+        background: #f59e0b;
+        animation-delay: 0.2s;
+      }
+      .confetti-piece:nth-child(3) {
+        left: 30%;
+        background: #8b5cf6;
+        animation-delay: 0.4s;
+      }
+      .confetti-piece:nth-child(4) {
+        left: 40%;
+        background: #ef4444;
+        animation-delay: 0.1s;
+      }
+      .confetti-piece:nth-child(5) {
+        left: 50%;
+        background: #3b82f6;
+        animation-delay: 0.3s;
+      }
+      .confetti-piece:nth-child(6) {
+        left: 60%;
+        background: #10b981;
+        animation-delay: 0.5s;
+      }
+      .confetti-piece:nth-child(7) {
+        left: 70%;
+        background: #f59e0b;
+        animation-delay: 0.15s;
+      }
+      .confetti-piece:nth-child(8) {
+        left: 80%;
+        background: #8b5cf6;
+        animation-delay: 0.35s;
+      }
+      .confetti-piece:nth-child(9) {
+        left: 90%;
+        background: #ef4444;
+        animation-delay: 0.25s;
+      }
+
+      .celebration-badge {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      .celebration-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+      }
+      .celebration-subtitle {
+        font-size: 17px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 24px;
+      }
+
+      .share-btn {
+        background: #fff;
+        color: #1c1917;
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Milestones table */
+      .milestones {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+      .milestone {
+        background: #fff;
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+      .milestone-emoji {
+        font-size: 40px;
+        margin-bottom: 8px;
+      }
+      .milestone-days {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1c1917;
+      }
+      .milestone-title {
+        font-size: 13px;
+        color: #78716c;
+        margin-top: 4px;
+      }
+
+      .summary {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px;
+        margin-top: 24px;
+        box-shadow: 0 4px 16px rgba(28, 25, 23, 0.08);
+      }
+      .summary h3 {
+        font-size: 22px;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+      .summary table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .summary th,
+      .summary td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #f5f5f4;
+      }
+      .summary th {
+        font-size: 13px;
+        color: #78716c;
+      }
+      .summary td {
+        font-size: 17px;
+      }
+      .check {
+        color: #16a34a;
+      }
+
+      @media (max-width: 700px) {
+        .comparison,
+        .milestones {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🎊 Milestone Celebrations</h1>
+      <p class="subtitle">Dopamine hits at 7, 30, and 100 day streaks</p>
+
+      <div class="comparison">
+        <div class="panel before">
+          <span class="panel-label">❌ Before</span>
+          <div class="phone">
+            <div class="phone-screen">
+              <div style="text-align: center">
+                <div class="checkmark">✓</div>
+                <div class="done-text">Done!</div>
+              </div>
+            </div>
+          </div>
+          <p
+            style="
+              text-align: center;
+              margin-top: 16px;
+              font-size: 13px;
+              color: #78716c;
+            "
+          >
+            Just a checkmark. No celebration. No dopamine.
+          </p>
+        </div>
+
+        <div class="panel after">
+          <span class="panel-label">✅ After</span>
+          <div class="phone">
+            <div class="phone-screen">
+              <div class="confetti">
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+                <div class="confetti-piece"></div>
+              </div>
+              <div class="celebration-badge">🎊</div>
+              <div class="celebration-title">First Week!</div>
+              <div class="celebration-subtitle">7 day streak 🔥</div>
+              <div class="share-btn">📤 Share Achievement</div>
+            </div>
+          </div>
+          <p
+            style="
+              text-align: center;
+              margin-top: 16px;
+              font-size: 13px;
+              color: #78716c;
+            "
+          >
+            Confetti! Celebration! Shareable! Dopamine! 🎉
+          </p>
+        </div>
+      </div>
+
+      <h2 style="font-size: 22px; font-weight: 600; margin-bottom: 16px">
+        Milestone Tiers
+      </h2>
+      <div class="milestones">
+        <div class="milestone" style="border-top: 4px solid #10b981">
+          <div class="milestone-emoji">🎊</div>
+          <div class="milestone-days">7 Days</div>
+          <div class="milestone-title">First Week!</div>
+        </div>
+        <div class="milestone" style="border-top: 4px solid #f59e0b">
+          <div class="milestone-emoji">🏆</div>
+          <div class="milestone-days">30 Days</div>
+          <div class="milestone-title">One Month Strong!</div>
+        </div>
+        <div class="milestone" style="border-top: 4px solid #8b5cf6">
+          <div class="milestone-emoji">👑</div>
+          <div class="milestone-days">100 Days</div>
+          <div class="milestone-title">Century Club!</div>
+        </div>
+      </div>
+
+      <div class="summary">
+        <h3>📋 Feature Summary</h3>
+        <table>
+          <tr>
+            <th>Component</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>StreakMilestoneCelebration</td>
+            <td>
+              Full-screen modal with animated badge <span class="check">✓</span>
+            </td>
+          </tr>
+          <tr>
+            <td>ConfettiAnimation</td>
+            <td>
+              Particle burst using react-native-confetti-cannon
+              <span class="check">✓</span>
+            </td>
+          </tr>
+          <tr>
+            <td>AchievementCard</td>
+            <td>
+              Shareable gradient card for social <span class="check">✓</span>
+            </td>
+          </tr>
+          <tr>
+            <td>useMilestoneCheck</td>
+            <td>
+              Hook to detect milestone crossings <span class="check">✓</span>
+            </td>
+          </tr>
+          <tr>
+            <td>Haptic Feedback</td>
+            <td>
+              Success pattern on milestone hit <span class="check">✓</span>
+            </td>
+          </tr>
+          <tr>
+            <td>Persistence</td>
+            <td>
+              AsyncStorage for shown milestones <span class="check">✓</span>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

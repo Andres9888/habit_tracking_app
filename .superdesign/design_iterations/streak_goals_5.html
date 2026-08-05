@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Streak Goals — Motivation-Focused</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important;
+    color: #FAF8F5 !important;
+    padding: 48px 24px !important;
+    min-height: 100vh !important;
+  }
+  h1,h2,h3,.serif { font-family: 'Literata', serif !important; }
+  .mono { font-family: 'JetBrains Mono', monospace !important; }
+
+  .phone {
+    width: 375px !important; height: 720px !important;
+    background: #F5F1ED !important; border-radius: 40px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 25px 60px rgba(0,0,0,0.5) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-screen {
+    width: 100% !important; height: 100% !important;
+    overflow-y: auto !important; padding: 56px 20px 24px !important;
+    scrollbar-width: none !important;
+  }
+  .phone-screen::-webkit-scrollbar { display: none !important; }
+  .status-bar {
+    position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important;
+    height: 48px !important; background: #F5F1ED !important;
+    display: flex !important; align-items: center !important; justify-content: center !important;
+    z-index: 10 !important; font-size: 14px !important; font-weight: 600 !important; color: #2D2A26 !important;
+  }
+  .app-card {
+    background: #EDEAE5 !important; border: 1px solid #DDD8D2 !important; border-radius: 16px !important;
+  }
+  .section-label {
+    font-size: 11px !important; font-weight: 600 !important; letter-spacing: 0.06em !important;
+    text-transform: uppercase !important; color: #C4BFB7 !important; margin-bottom: 12px !important;
+  }
+  .habit-header {
+    display: flex !important; align-items: center !important; gap: 12px !important; margin-bottom: 20px !important;
+  }
+  .habit-emoji {
+    width: 44px !important; height: 44px !important; background: #EDEAE5 !important;
+    border: 1px solid #DDD8D2 !important; border-radius: 12px !important;
+    display: flex !important; align-items: center !important; justify-content: center !important; font-size: 22px !important;
+  }
+  .habit-name { font-family: 'Literata', serif !important; font-size: 20px !important; font-weight: 700 !important; color: #2D2A26 !important; }
+  .habit-streak { font-size: 13px !important; color: #8B6208 !important; font-weight: 600 !important; }
+
+  .variation-wrapper { display: flex !important; flex-direction: column !important; align-items: center !important; }
+  .variation-number { font-size: 13px !important; font-weight: 600 !important; color: #6B6560 !important; letter-spacing: 0.08em !important; text-transform: uppercase !important; }
+  .variation-title { font-family: 'Literata', serif !important; font-size: 24px !important; font-weight: 700 !important; color: #FAF8F5 !important; margin-top: 4px !important; }
+  .variation-principle { font-size: 14px !important; color: #C4BFB7 !important; margin-top: 6px !important; font-style: italic !important; }
+  .variation-note { font-size: 13px !important; color: #6B6560 !important; margin-top: 12px !important; max-width: 340px !important; line-height: 1.5 !important; text-align: center !important; }
+  .variation-label { text-align: center !important; margin-bottom: 16px !important; }
+
+  @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes progressFill { from { width: 0%; } }
+  @keyframes softPulse { 0%,100% { opacity: 0.9; } 50% { opacity: 1; } }
+  .fade-up { animation: fadeSlideUp 0.5s ease-out both; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.2s; }
+  .fade-up-3 { animation-delay: 0.3s; }
+  .fade-up-4 { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align: center; margin-bottom: 56px;">
+  <p style="font-size: 13px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;">Chain Day</p>
+  <h1 style="font-family: 'Literata', serif; font-size: 36px; font-weight: 700; color: #FAF8F5; margin-top: 8px;">Streak Goal — Motivation</h1>
+  <p style="font-size: 17px; color: #C4BFB7; margin-top: 8px;">Focused on why users want to get there</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 64px; max-width: 1600px; margin: 0 auto;">
+
+<!-- ============================================ -->
+<!-- M: Future Self                               -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation M</div>
+    <div class="variation-title">Future Self</div>
+    <div class="variation-principle">Shows who you'll become, not where you are</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Future Self card -->
+      <div class="fade-up fade-up-1" style="background: linear-gradient(135deg, #EDEAE5 0%, #FEF3CD 100%); border: 1px solid #DDD8D2; border-radius: 20px; padding: 24px; margin-bottom: 12px; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -20px; right: -20px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(139, 98, 8, 0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+
+        <div style="font-size: 11px; color: #8B6208; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;">In 43 days</div>
+        <h2 style="font-family: 'Literata', serif; font-size: 26px; font-weight: 700; color: #2D2A26; margin-top: 8px; line-height: 1.2;">You'll be someone<br><em style="font-style: italic; font-weight: 500;">who just meditates.</em></h2>
+        <p style="font-size: 14px; color: #524D47; margin-top: 12px; line-height: 1.5;">Not "tries to" — does. Automatically. Without deciding.</p>
+
+        <!-- Transformation markers -->
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 14px;">✨</span>
+            <span style="font-size: 13px; color: #2D2A26;">Mornings feel clearer</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 14px;">🌊</span>
+            <span style="font-size: 13px; color: #2D2A26;">Stress rolls off easier</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 14px;">🎯</span>
+            <span style="font-size: 13px; color: #2D2A26;">Focus lasts longer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress indicator -->
+      <div class="app-card fade-up fade-up-2" style="padding: 16px 20px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-size: 13px; color: #6B6560;">Distance to future self</span>
+          <span class="mono" style="font-size: 13px; color: #2D2A26; font-weight: 600;">23 / 66 days</span>
+        </div>
+        <div style="height: 6px; background: #DDD8D2; border-radius: 3px; overflow: hidden;">
+          <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #059669, #8B6208); border-radius: 3px; animation: progressFill 1s ease-out both; animation-delay: 0.4s;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+          <span style="font-size: 11px; color: #059669;">Current self</span>
+          <span style="font-size: 11px; color: #8B6208; font-weight: 600;">Future self →</span>
+        </div>
+      </div>
+
+      <!-- Today's contribution -->
+      <div class="fade-up fade-up-3" style="background: #D1FAE5; border: 1px solid #059669; border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+        <div style="width: 32px; height: 32px; background: #059669; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+          <span style="color: white; font-size: 14px;">✓</span>
+        </div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600; color: #047857;">Today brought you closer</div>
+          <div style="font-size: 12px; color: #059669;">One more day toward that version of you</div>
+        </div>
+      </div>
+
+      <div class="fade-up fade-up-4" style="text-align: center; padding: 20px 16px;">
+        <p style="font-size: 12px; color: #C4BFB7; font-style: italic;">Arriving around May 28</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Paints who you become, not where you are on a bar. Each day isn't progress toward 66 — it's a step into a new identity. Loss aversion + aspiration.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- N: The Why Anchor                            -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation N</div>
+    <div class="variation-title">Why Anchor</div>
+    <div class="variation-principle">Re-connects progress to original intent</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Why Anchor card -->
+      <div class="fade-up fade-up-1" style="background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 16px; padding: 24px; margin-bottom: 12px; position: relative;">
+        <!-- Quote mark -->
+        <div style="position: absolute; top: 12px; left: 16px; font-family: 'Literata', serif; font-size: 60px; color: #C4BFB7; line-height: 1; opacity: 0.4;">"</div>
+
+        <div style="font-size: 10px; color: #C4BFB7; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; padding-left: 28px;">You started for this</div>
+
+        <p style="font-family: 'Literata', serif; font-size: 18px; font-style: italic; color: #2D2A26; line-height: 1.5; padding-left: 28px;">I want to stop reacting to everything and learn to sit with my thoughts.</p>
+
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #DDD8D2; display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-size: 12px; color: #6B6560;">Set 23 days ago</span>
+          <span style="font-size: 11px; color: #8B6208; font-weight: 600;">📝 Edit</span>
+        </div>
+      </div>
+
+      <!-- Checkpoints tied to why -->
+      <div class="app-card fade-up fade-up-2" style="padding: 20px; margin-bottom: 12px;">
+        <div class="section-label">Evidence you're getting there</div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%; margin-top: 7px;"></div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; color: #2D2A26; line-height: 1.4;">"Noticed I paused before replying to that email."</div>
+              <div style="font-size: 11px; color: #C4BFB7; margin-top: 2px;">Day 12 · your note</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 6px; height: 6px; background: #059669; border-radius: 50%; margin-top: 7px;"></div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; color: #2D2A26; line-height: 1.4;">"Less tight in my chest after sessions."</div>
+              <div style="font-size: 11px; color: #C4BFB7; margin-top: 2px;">Day 18 · your note</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px; align-items: flex-start;">
+            <div style="width: 6px; height: 6px; background: #8B6208; border-radius: 50%; margin-top: 7px;"></div>
+            <div style="flex: 1;">
+              <div style="font-size: 13px; color: #8B6208; line-height: 1.4; font-style: italic;">Add a note when you notice a shift →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal progress -->
+      <div class="fade-up fade-up-3" style="display: flex; gap: 10px;">
+        <div class="app-card" style="flex: 1; padding: 14px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 24px; font-weight: 700; color: #2D2A26;">23</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">days practiced</div>
+        </div>
+        <div class="app-card" style="flex: 1; padding: 14px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 24px; font-weight: 700; color: #8B6208;">66</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">goal</div>
+        </div>
+        <div class="app-card" style="flex: 1; padding: 14px; text-align: center;">
+          <div style="font-family: 'Literata', serif; font-size: 24px; font-weight: 700; color: #059669;">2</div>
+          <div style="font-size: 11px; color: #6B6560; margin-top: 2px;">shifts noted</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Surfaces the user's original "why" and collects evidence that the habit is working. Each day becomes another data point proving the investment is paying off.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- O: Identity Meter                            -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation O</div>
+    <div class="variation-title">Identity Meter</div>
+    <div class="variation-principle">Every day is a vote for who you are</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Identity statement card -->
+      <div class="fade-up fade-up-1" style="background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 20px; padding: 28px 24px; margin-bottom: 12px; text-align: center;">
+        <div style="font-size: 11px; color: #C4BFB7; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;">You are becoming</div>
+
+        <h2 style="font-family: 'Literata', serif; font-size: 28px; font-weight: 700; color: #2D2A26; margin-bottom: 4px; line-height: 1.2;">a person who<br>meditates.</h2>
+
+        <!-- Identity strength scale -->
+        <div style="margin: 24px 0 8px;">
+          <div style="position: relative; height: 8px; background: #DDD8D2; border-radius: 4px; overflow: hidden;">
+            <div style="width: 35%; height: 100%; background: linear-gradient(90deg, #8B6208 0%, #059669 100%); border-radius: 4px; animation: progressFill 1.2s ease-out both; animation-delay: 0.4s;"></div>
+          </div>
+
+          <!-- Scale labels -->
+          <div style="display: flex; justify-content: space-between; margin-top: 10px; padding: 0 2px;">
+            <div style="text-align: left;">
+              <div style="font-size: 11px; color: #6B6560;">Trying</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 11px; color: #059669; font-weight: 600;">Becoming</div>
+              <div style="font-size: 9px; color: #059669;">▲ you</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 11px; color: #C4BFB7;">Automatic</div>
+            </div>
+          </div>
+        </div>
+
+        <p style="font-size: 13px; color: #524D47; margin-top: 16px; line-height: 1.4; font-style: italic;">Every day you show up is a vote cast.</p>
+      </div>
+
+      <!-- Daily vote card -->
+      <div class="fade-up fade-up-2" style="background: #D1FAE5; border: 1px solid #059669; border-radius: 14px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 14px;">
+        <div style="font-size: 32px;">🗳️</div>
+        <div style="flex: 1;">
+          <div style="font-family: 'Literata', serif; font-size: 16px; font-weight: 700; color: #047857;">23 votes cast</div>
+          <div style="font-size: 12px; color: #059669;">Each one makes the identity more true</div>
+        </div>
+      </div>
+
+      <!-- Goal -->
+      <div class="app-card fade-up fade-up-3" style="padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 13px; color: #6B6560;">Identity target</span>
+        <div style="text-align: right;">
+          <div class="mono" style="font-size: 14px; color: #2D2A26; font-weight: 600;">66 days</div>
+          <div style="font-size: 10px; color: #C4BFB7;">feels automatic here</div>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <div class="fade-up fade-up-4" style="text-align: center; padding: 16px;">
+        <p style="font-size: 13px; color: #6B6560; font-style: italic; font-family: 'Literata', serif;">"The goal is not to meditate — it's to become a meditator."</p>
+        <p style="font-size: 11px; color: #C4BFB7; margin-top: 6px;">— James Clear</p>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Reframes streak as identity-building, not task-completion. The goal isn't 66 days — it's becoming someone for whom this is automatic. Identity-based habit formation.</p>
+</div>
+
+<!-- ============================================ -->
+<!-- P: Compound Returns                          -->
+<!-- ============================================ -->
+<div class="variation-wrapper">
+  <div class="variation-label">
+    <div class="variation-number">Variation P</div>
+    <div class="variation-title">Compound Returns</div>
+    <div class="variation-principle">Shows accumulated value, not just count</div>
+  </div>
+
+  <div class="phone">
+    <div class="status-bar"><span>9:41</span></div>
+    <div class="phone-screen">
+      <div class="habit-header fade-up">
+        <div class="habit-emoji">🧘</div>
+        <div>
+          <div class="habit-name">Meditate</div>
+          <div class="habit-streak">🔥 23 day streak</div>
+        </div>
+      </div>
+
+      <!-- Compound value card -->
+      <div class="fade-up fade-up-1" style="background: #EDEAE5; border: 1px solid #DDD8D2; border-radius: 20px; padding: 24px; margin-bottom: 12px;">
+        <div class="section-label">What you've built</div>
+
+        <div style="display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px;">
+          <span style="font-family: 'Literata', serif; font-size: 48px; font-weight: 700; color: #059669; line-height: 1;">11.5</span>
+          <span style="font-family: 'Literata', serif; font-size: 20px; color: #6B6560; font-weight: 500;">hours</span>
+        </div>
+        <div style="font-size: 13px; color: #6B6560;">of mental training, so far</div>
+
+        <!-- Visual bars showing compounding -->
+        <div style="margin-top: 20px;">
+          <div style="display: flex; align-items: flex-end; gap: 4px; height: 80px;">
+            <div style="flex: 1; background: linear-gradient(180deg, #6EE7B7 0%, #059669 100%); height: 25%; border-radius: 4px 4px 0 0; animation: progressFill 0.8s ease-out both; animation-delay: 0.3s;"></div>
+            <div style="flex: 1; background: linear-gradient(180deg, #6EE7B7 0%, #059669 100%); height: 35%; border-radius: 4px 4px 0 0;"></div>
+            <div style="flex: 1; background: linear-gradient(180deg, #6EE7B7 0%, #059669 100%); height: 48%; border-radius: 4px 4px 0 0;"></div>
+            <div style="flex: 1; background: linear-gradient(180deg, #E8B94D 0%, #8B6208 100%); height: 62%; border-radius: 4px 4px 0 0; animation: softPulse 2.5s ease-in-out infinite;"></div>
+            <div style="flex: 1; background: #DDD8D2; height: 78%; border-radius: 4px 4px 0 0; opacity: 0.5;"></div>
+            <div style="flex: 1; background: #DDD8D2; height: 95%; border-radius: 4px 4px 0 0; opacity: 0.4;"></div>
+          </div>
+          <div style="display: flex; gap: 4px; margin-top: 6px;">
+            <span style="flex: 1; font-size: 9px; color: #C4BFB7; text-align: center;">W1</span>
+            <span style="flex: 1; font-size: 9px; color: #C4BFB7; text-align: center;">W2</span>
+            <span style="flex: 1; font-size: 9px; color: #C4BFB7; text-align: center;">W3</span>
+            <span style="flex: 1; font-size: 9px; color: #8B6208; text-align: center; font-weight: 600;">Now</span>
+            <span style="flex: 1; font-size: 9px; color: #C4BFB7; text-align: center;">W7</span>
+            <span style="flex: 1; font-size: 9px; color: #C4BFB7; text-align: center;">W9</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- What it equals -->
+      <div class="app-card fade-up fade-up-2" style="padding: 18px 20px; margin-bottom: 12px;">
+        <div class="section-label">So far, you've earned</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">🧠</span>
+            <span style="font-size: 14px; color: #2D2A26;">Measurable reduction in stress reactivity</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">😴</span>
+            <span style="font-size: 14px; color: #2D2A26;">~12% deeper sleep on practice nights</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 18px;">🎯</span>
+            <span style="font-size: 14px; color: #2D2A26;">~15 min longer focus sessions</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projected -->
+      <div class="fade-up fade-up-3" style="background: #FEF3CD; border: 1px solid #E8B94D; border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 24px;">📈</span>
+        <div style="flex: 1;">
+          <div style="font-size: 13px; font-weight: 600; color: #8B6208;">By Day 66 (+43 days)</div>
+          <div style="font-size: 12px; color: #7D5907;">33 hours total · Effect becomes automatic</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="variation-note">Instead of "days remaining," shows what you've *built* — hours invested, benefits compounding. Every day adds to a growing asset rather than subtracting from a countdown.</p>
+</div>
+
+</div>
+
+<!-- Footer -->
+<div style="text-align: center; padding: 48px 24px 32px;">
+  <p style="font-size: 13px; color: #524D47; margin-bottom: 4px;">All show: 🧘 Meditate · Day 23 of 66 goal</p>
+  <p style="font-size: 12px; color: #3D3833;">M — Future self · N — Why anchor · O — Identity votes · P — Compounding value</p>
+</div>
+
+</body>
+</html>

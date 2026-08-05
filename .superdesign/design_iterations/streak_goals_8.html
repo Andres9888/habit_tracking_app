@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detail Tabs — Decramped</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif !important;
+    background: #1A1816 !important; color: #FAF8F5 !important;
+    padding: 48px 24px !important; min-height: 100vh !important;
+  }
+  h1,h2,h3 { font-family: 'Literata', serif !important; }
+
+  .phone {
+    width: 375px !important; height: 220px !important;
+    background: #F5F1ED !important; border-radius: 32px !important;
+    overflow: hidden !important; position: relative !important;
+    box-shadow: 0 0 0 3px #2D2A26, 0 0 0 6px #3D3833, 0 15px 40px rgba(0,0,0,0.4) !important;
+    flex-shrink: 0 !important;
+  }
+  .phone-inner { padding: 24px 20px; }
+
+  .hint {
+    margin-left: 2px; padding: 1px 6px; border-radius: 9999px;
+    font-size: 11px; font-weight: 500;
+    background: rgba(0,0,0,0.06);
+  }
+  .hint-active { background: rgba(139, 98, 8, 0.12); color: #8B6208; }
+
+  .label { text-align: center; margin-bottom: 12px; }
+  .label-num { font-size: 12px; color: #6B6560; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+  .label-title { font-family: 'Literata', serif; font-size: 20px; font-weight: 700; color: #FAF8F5; margin-top: 4px; }
+  .note { font-size: 13px; color: #6B6560; margin-top: 12px; max-width: 340px; line-height: 1.5; text-align: center; }
+
+  .wrapper { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div style="text-align: center; margin-bottom: 40px;">
+  <h1 style="font-size: 32px; font-weight: 700; color: #FAF8F5;">Tab layout — decramped</h1>
+  <p style="font-size: 15px; color: #C4BFB7; margin-top: 8px;">Before · Option 1 (active hint only) · Option 2 (stacked)</p>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 32px; max-width: 1400px; margin: 0 auto;">
+
+<!-- BEFORE -->
+<div class="wrapper">
+  <div class="label"><div class="label-num">Before</div><div class="label-title" style="color:#FCA5A5;">Cramped — current</div></div>
+  <div class="phone"><div class="phone-inner">
+    <div style="display: flex; gap: 4px; background: #DDD8D2; border: 1px solid #DDD8D2; border-radius: 10px; padding: 4px;">
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px;">
+        <span style="color: #6B6560; font-size: 14px;">📅</span>
+        <span style="color: #6B6560; font-size: 12px; font-weight: 500;">Calendar</span>
+        <span class="hint" style="color: #6B6560;">3 days</span>
+      </div>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px;">
+        <span style="color: #6B6560; font-size: 14px;">∿</span>
+        <span style="color: #6B6560; font-size: 12px; font-weight: 500;">Strength</span>
+        <span class="hint" style="color: #6B6560;">9%</span>
+      </div>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; background: #FAF8F5; border-radius: 6px; box-shadow: 0 1px 3px rgba(45,42,38,0.1);">
+        <span style="color: #059669; font-size: 14px;">🎯</span>
+        <span style="color: #059669; font-size: 12px; font-weight: 700;">Goal</span>
+        <span class="hint hint-active">5%</span>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: #C4BFB7; margin-top: 12px; text-align: center;">Labels + hints fight for every pixel.</p>
+  </div></div>
+  <p class="note" style="color: #FCA5A5;">Icons + full labels + hint pills on all 3 tabs. On 375px screens, everything is squeezed.</p>
+</div>
+
+<!-- OPTION 1: Active hint only -->
+<div class="wrapper">
+  <div class="label"><div class="label-num">Option 1</div><div class="label-title" style="color:#6EE7B7;">Hint on active only</div></div>
+  <div class="phone"><div class="phone-inner">
+    <div style="display: flex; gap: 4px; background: #DDD8D2; border: 1px solid #DDD8D2; border-radius: 10px; padding: 4px;">
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px;">
+        <span style="color: #6B6560; font-size: 14px;">📅</span>
+        <span style="color: #6B6560; font-size: 13px; font-weight: 500;">Calendar</span>
+      </div>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px;">
+        <span style="color: #6B6560; font-size: 14px;">∿</span>
+        <span style="color: #6B6560; font-size: 13px; font-weight: 500;">Strength</span>
+      </div>
+      <div style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 4px; background: #FAF8F5; border-radius: 6px; box-shadow: 0 1px 3px rgba(45,42,38,0.1);">
+        <span style="color: #059669; font-size: 14px;">🎯</span>
+        <span style="color: #059669; font-size: 13px; font-weight: 700;">Goal</span>
+        <span class="hint hint-active">5%</span>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: #C4BFB7; margin-top: 12px; text-align: center;">Active tab keeps its hint — others breathe.</p>
+  </div></div>
+  <p class="note" style="color: #6EE7B7;">Inactive tabs: icon + label only. Active tab keeps its hint. ~1 line of code change. Labels read cleanly.</p>
+</div>
+
+<!-- OPTION 2: Stacked -->
+<div class="wrapper">
+  <div class="label"><div class="label-num">Option 2</div><div class="label-title" style="color:#6EE7B7;">Icon above label</div></div>
+  <div class="phone"><div class="phone-inner">
+    <div style="display: flex; gap: 4px; background: #DDD8D2; border: 1px solid #DDD8D2; border-radius: 10px; padding: 4px;">
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px;">
+        <span style="color: #6B6560; font-size: 16px;">📅</span>
+        <span style="color: #6B6560; font-size: 12px; font-weight: 500;">Calendar</span>
+        <span style="font-size: 10px; color: #C4BFB7; font-weight: 500;">3 days</span>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px;">
+        <span style="color: #6B6560; font-size: 16px;">∿</span>
+        <span style="color: #6B6560; font-size: 12px; font-weight: 500;">Strength</span>
+        <span style="font-size: 10px; color: #C4BFB7; font-weight: 500;">9%</span>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 8px 4px; background: #FAF8F5; border-radius: 6px; box-shadow: 0 1px 3px rgba(45,42,38,0.1);">
+        <span style="color: #059669; font-size: 16px;">🎯</span>
+        <span style="color: #059669; font-size: 12px; font-weight: 700;">Goal</span>
+        <span style="font-size: 10px; color: #8B6208; font-weight: 700;">5%</span>
+      </div>
+    </div>
+    <p style="font-size: 12px; color: #C4BFB7; margin-top: 12px; text-align: center;">All 3 hints visible — each tab gets its own column.</p>
+  </div></div>
+  <p class="note" style="color: #6EE7B7;">Icon stacks above label, hint below. All 3 hints stay visible (information scent). Slightly taller (~60px vs 40px) but way roomier.</p>
+</div>
+
+</div>
+
+<!-- Footer comparison -->
+<div style="max-width: 900px; margin: 48px auto 0; padding: 24px; background: #2D2A26; border-radius: 16px;">
+  <h3 style="font-size: 18px; color: #FAF8F5; margin-bottom: 12px;">Tradeoffs</h3>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 13px; color: #C4BFB7; line-height: 1.5;">
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">Option 1 · Active hint only</p>
+      <p><strong style="color:#FAF8F5;">Pro:</strong> Minimal change. Immediate. Same tab height.</p>
+      <p><strong style="color:#FAF8F5;">Con:</strong> You lose information scent on inactive tabs (no "9%" peek at Strength).</p>
+    </div>
+    <div>
+      <p style="color: #6EE7B7; font-weight: 600; margin-bottom: 4px;">Option 2 · Stacked</p>
+      <p><strong style="color:#FAF8F5;">Pro:</strong> All hints visible. Icons more prominent. Matches iOS TabBar pattern.</p>
+      <p><strong style="color:#FAF8F5;">Con:</strong> Tab bar is ~20px taller. Small redesign of DetailViewTabButton.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

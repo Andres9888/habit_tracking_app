@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Strength Curve — Variations on stacked-cards</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #efece4;
+    --card: #fbfaf6;
+    --text: #14171a;
+    --text-2: #4a5057;
+    --text-3: #8a8f96;
+    --border: rgba(20,23,26,0.10);
+    --primary: #0f8a6a;
+    --primary-soft: #d6efe5;
+    --primary-tint: rgba(15,138,106,0.10);
+    --orange: #d97a3a;
+    --orange-soft: #f8e2cf;
+    --orange-tint: rgba(217,122,58,0.12);
+    --purple: #6b5ca8;
+    --purple-soft: #e1ddf3;
+    --purple-tint: rgba(107,92,168,0.12);
+    --miss: #c84a4a;
+    --auto-band: rgba(15,138,106,0.16);
+  }
+  html, body { font-family: 'Inter', system-ui, -apple-system, sans-serif !important; background: #d8d5cd; }
+  .phone {
+    width: 360px; height: 780px;
+    border-radius: 44px;
+    background: var(--bg);
+    box-shadow: 0 18px 36px -16px rgba(0,0,0,0.30), 0 0 0 7px #111 inset, 0 0 0 9px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .notch { position: absolute; left: 50%; top: 9px; transform: translateX(-50%); width: 110px; height: 28px; background: #000; border-radius: 18px; z-index: 50; }
+  .status-bar { position: absolute; left: 0; right: 0; top: 0; height: 46px; z-index: 40; display: flex; align-items: center; justify-content: space-between; padding: 16px 26px 0 26px; font-size: 14px; font-weight: 600; color: #0a0a0a; }
+  .label { font-size: 13px; font-weight: 700; color: #2a2a2a; margin: 0 4px 10px; }
+  .header-bar { background: rgba(239,236,228,0.95); }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; }
+  .card-selected { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 3px rgba(15,138,106,0.10); }
+  .pill-default { background: var(--primary); color: #fff; font-size: 8.5px; font-weight: 800; letter-spacing: 0.04em; padding: 1px 5px; border-radius: 4px; }
+  .chip-time { background: var(--primary-tint); color: var(--primary); }
+  .chip-time-orange { background: var(--orange-tint); color: var(--orange); }
+  .chip-time-purple { background: var(--purple-tint); color: var(--purple); }
+  .icon-tile-green { background: var(--primary-soft); }
+  .icon-tile-orange { background: var(--orange-soft); }
+  .icon-tile-purple { background: var(--purple-soft); }
+  .check-circle { background: var(--primary); }
+  .miss-marker { fill: var(--miss); }
+  .grid-line { stroke: rgba(20,23,26,0.06); stroke-dasharray: 2 4; }
+  .day-label { font-size: 9px; color: var(--text-3); font-weight: 700; letter-spacing: 0.06em; }
+  .axis-tick { font-size: 8px; font-weight: 700; fill: var(--text-3); letter-spacing: 0.04em; }
+  .auto-band-text { font-size: 8px; font-weight: 700; fill: var(--primary); letter-spacing: 0.06em; text-transform: uppercase; }
+  .y-axis-text { font-size: 7.5px; font-weight: 700; fill: var(--text-3); letter-spacing: 0.10em; text-transform: uppercase; }
+</style>
+</head>
+<body class="flex items-start justify-center min-h-screen p-6 gap-6 flex-wrap">
+
+<!-- ============ Helper: card markup will repeat — keeping inline for clarity ============ -->
+
+<!-- ============ Variant A: BASELINE (current RN code) ============ -->
+<div>
+  <div class="label">A — Baseline (what's in code now)</div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-4 pt-2 pb-2">
+        <h1 class="text-[19px] font-extrabold leading-tight" style="color: var(--text);">Pick your strength curve</h1>
+        <p class="text-[11.5px] mt-0.5" style="color: var(--text-2);">Faster curves grow quickly and forgive misses. Slower ones take longer but stick.</p>
+      </div>
+
+      <!-- Quick Win -->
+      <div class="mx-3 mb-2 card p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-orange w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="zap" class="w-3.5 h-3.5" style="color: var(--orange);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5"><span class="text-[13px] font-bold">Quick Win</span><span class="text-[10px]" style="color: var(--text-3);">water · vitamins · floss</span></div>
+          </div>
+          <span class="chip-time-orange inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ~18d</span>
+        </div>
+        <div class="mt-1.5 rounded-md px-2 pt-1 pb-0.5" style="background: var(--orange-tint);">
+          <svg viewBox="0 0 320 70" class="w-full" style="height: 50px;" preserveAspectRatio="none">
+            <line class="grid-line" x1="0" y1="14" x2="320" y2="14"/><line class="grid-line" x1="0" y1="35" x2="320" y2="35"/><line class="grid-line" x1="0" y1="56" x2="320" y2="56"/>
+            <path d="M 4 64 C 30 56, 60 24, 110 14 C 150 8, 170 12, 195 25 C 210 31, 220 18, 260 12 C 290 8, 305 6, 316 5" fill="none" stroke="var(--orange)" stroke-width="2.8" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="195" cy="25" r="3"/>
+          </svg>
+          <div class="flex justify-between mt-0.5"><span class="day-label">DAY 1</span><span class="day-label">DAY 18</span></div>
+        </div>
+      </div>
+
+      <!-- Textbook (selected) -->
+      <div class="mx-3 mb-2 card card-selected p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-green w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="activity" class="w-3.5 h-3.5" style="color: var(--primary);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap"><span class="text-[13px] font-bold">Textbook</span><span class="pill-default">DEFAULT</span><span class="text-[10px]" style="color: var(--text-3);">read · walk · meditate</span></div>
+          </div>
+          <div class="check-circle w-5 h-5 rounded-full flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+        </div>
+        <div class="mt-1.5 rounded-md px-2 pt-1 pb-0.5" style="background: var(--primary-tint);">
+          <svg viewBox="0 0 320 70" class="w-full" style="height: 50px;" preserveAspectRatio="none">
+            <line class="grid-line" x1="0" y1="14" x2="320" y2="14"/><line class="grid-line" x1="0" y1="35" x2="320" y2="35"/><line class="grid-line" x1="0" y1="56" x2="320" y2="56"/>
+            <path d="M 4 64 C 60 60, 110 50, 150 40 C 180 32, 195 36, 215 44 C 235 50, 250 36, 280 23 C 300 13, 312 10, 316 9" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="215" cy="44" r="3"/>
+          </svg>
+          <div class="flex justify-between items-center mt-0.5"><span class="day-label">DAY 1</span><span class="text-[9px] font-semibold" style="color: var(--primary);">Based on UCL's 66-day study</span><span class="day-label">DAY 66</span></div>
+        </div>
+      </div>
+
+      <!-- Long Haul -->
+      <div class="mx-3 mb-2 card p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-purple w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="mountain" class="w-3.5 h-3.5" style="color: var(--purple);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5"><span class="text-[13px] font-bold">Long Haul</span><span class="text-[10px]" style="color: var(--text-3);">run · 30-min meditate · writing</span></div>
+          </div>
+          <span class="chip-time-purple inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ~120d</span>
+        </div>
+        <div class="mt-1.5 rounded-md px-2 pt-1 pb-0.5" style="background: var(--purple-tint);">
+          <svg viewBox="0 0 320 70" class="w-full" style="height: 50px;" preserveAspectRatio="none">
+            <line class="grid-line" x1="0" y1="14" x2="320" y2="14"/><line class="grid-line" x1="0" y1="35" x2="320" y2="35"/><line class="grid-line" x1="0" y1="56" x2="320" y2="56"/>
+            <path d="M 4 66 C 60 64, 110 60, 160 50 C 195 42, 210 57, 230 59 C 250 60, 270 38, 295 22 C 308 14, 314 12, 316 11" fill="none" stroke="var(--purple)" stroke-width="2.8" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="230" cy="59" r="3"/>
+          </svg>
+          <div class="flex justify-between mt-0.5"><span class="day-label">DAY 1</span><span class="day-label">DAY 120</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Variant B: + Y-axis label + auto zone band + tiny legend ============ -->
+<div>
+  <div class="label">B — + axis labels, AUTOMATIC band, mini legend</div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-4 pt-2 pb-1">
+        <h1 class="text-[19px] font-extrabold leading-tight">Pick your strength curve</h1>
+        <p class="text-[11.5px] mt-0.5" style="color: var(--text-2);"><span class="font-semibold" style="color: var(--text);">Strength</span> = the bar on each habit. It grows on check-ins, dips on misses.</p>
+      </div>
+      <!-- inline legend strip -->
+      <div class="px-4 mb-2 flex items-center gap-3 text-[10px]" style="color: var(--text-3);">
+        <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full" style="background: var(--primary);"></span> grow on check-in</span>
+        <span class="flex items-center gap-1"><span class="inline-block w-2 h-2 rounded-full" style="background: var(--miss);"></span> dip on miss</span>
+        <span class="flex items-center gap-1 ml-auto"><span class="inline-block w-2 h-2 rounded" style="background: var(--auto-band);"></span> automatic</span>
+      </div>
+
+      <!-- Helper: each card's chart now has Y-axis ticks + auto zone band -->
+      <!-- Quick Win -->
+      <div class="mx-3 mb-2 card p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-orange w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="zap" class="w-3.5 h-3.5" style="color: var(--orange);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5"><span class="text-[13px] font-bold">Quick Win</span><span class="text-[10px]" style="color: var(--text-3);">water · vitamins · floss</span></div>
+          </div>
+          <span class="chip-time-orange inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ~18d</span>
+        </div>
+        <div class="mt-1.5 rounded-md px-1 pt-1 pb-0.5" style="background: var(--orange-tint);">
+          <svg viewBox="0 0 340 76" class="w-full" style="height: 56px;" preserveAspectRatio="none">
+            <rect x="22" y="2" width="316" height="12" fill="var(--auto-band)"/>
+            <text x="338" y="11" text-anchor="end" class="auto-band-text">AUTOMATIC</text>
+            <line class="grid-line" x1="22" y1="2" x2="338" y2="2"/><line class="grid-line" x1="22" y1="14" x2="338" y2="14"/><line class="grid-line" x1="22" y1="38" x2="338" y2="38"/><line class="grid-line" x1="22" y1="62" x2="338" y2="62"/>
+            <text x="20" y="6" text-anchor="end" class="axis-tick">100</text>
+            <text x="20" y="42" text-anchor="end" class="axis-tick">50</text>
+            <text x="20" y="65" text-anchor="end" class="axis-tick">0</text>
+            <path d="M 24 64 C 50 56, 80 24, 130 14 C 170 8, 190 12, 215 25 C 230 31, 240 18, 280 12 C 305 9, 320 7, 336 6" fill="none" stroke="var(--orange)" stroke-width="2.6" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="215" cy="25" r="3"/>
+          </svg>
+          <div class="flex justify-between mt-0.5 pl-3"><span class="day-label">DAY 1</span><span class="day-label">DAY 18</span></div>
+        </div>
+      </div>
+
+      <!-- Textbook (selected) -->
+      <div class="mx-3 mb-2 card card-selected p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-green w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="activity" class="w-3.5 h-3.5" style="color: var(--primary);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap"><span class="text-[13px] font-bold">Textbook</span><span class="pill-default">DEFAULT</span><span class="text-[10px]" style="color: var(--text-3);">read · walk · meditate</span></div>
+          </div>
+          <div class="check-circle w-5 h-5 rounded-full flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+        </div>
+        <div class="mt-1.5 rounded-md px-1 pt-1 pb-0.5" style="background: var(--primary-tint);">
+          <svg viewBox="0 0 340 76" class="w-full" style="height: 56px;" preserveAspectRatio="none">
+            <rect x="22" y="2" width="316" height="12" fill="var(--auto-band)"/>
+            <text x="338" y="11" text-anchor="end" class="auto-band-text">AUTOMATIC</text>
+            <line class="grid-line" x1="22" y1="2" x2="338" y2="2"/><line class="grid-line" x1="22" y1="14" x2="338" y2="14"/><line class="grid-line" x1="22" y1="38" x2="338" y2="38"/><line class="grid-line" x1="22" y1="62" x2="338" y2="62"/>
+            <text x="20" y="6" text-anchor="end" class="axis-tick">100</text>
+            <text x="20" y="42" text-anchor="end" class="axis-tick">50</text>
+            <text x="20" y="65" text-anchor="end" class="axis-tick">0</text>
+            <path d="M 24 66 C 70 62, 130 52, 170 40 C 200 30, 215 36, 235 46 C 255 52, 275 36, 300 22 C 320 12, 332 9, 336 8" fill="none" stroke="var(--primary)" stroke-width="2.8" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="235" cy="46" r="3"/>
+          </svg>
+          <div class="flex justify-between items-center mt-0.5 pl-3"><span class="day-label">DAY 1</span><span class="text-[9px] font-semibold" style="color: var(--primary);">UCL 66-day study</span><span class="day-label">DAY 66</span></div>
+        </div>
+      </div>
+
+      <!-- Long Haul -->
+      <div class="mx-3 mb-2 card p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-purple w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="mountain" class="w-3.5 h-3.5" style="color: var(--purple);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5"><span class="text-[13px] font-bold">Long Haul</span><span class="text-[10px]" style="color: var(--text-3);">run · 30-min meditate · writing</span></div>
+          </div>
+          <span class="chip-time-purple inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ~120d</span>
+        </div>
+        <div class="mt-1.5 rounded-md px-1 pt-1 pb-0.5" style="background: var(--purple-tint);">
+          <svg viewBox="0 0 340 76" class="w-full" style="height: 56px;" preserveAspectRatio="none">
+            <rect x="22" y="2" width="316" height="12" fill="var(--auto-band)"/>
+            <text x="338" y="11" text-anchor="end" class="auto-band-text">AUTOMATIC</text>
+            <line class="grid-line" x1="22" y1="2" x2="338" y2="2"/><line class="grid-line" x1="22" y1="14" x2="338" y2="14"/><line class="grid-line" x1="22" y1="38" x2="338" y2="38"/><line class="grid-line" x1="22" y1="62" x2="338" y2="62"/>
+            <text x="20" y="6" text-anchor="end" class="axis-tick">100</text>
+            <text x="20" y="42" text-anchor="end" class="axis-tick">50</text>
+            <text x="20" y="65" text-anchor="end" class="axis-tick">0</text>
+            <path d="M 24 68 C 70 66, 130 62, 180 52 C 215 44, 230 58, 250 60 C 270 61, 290 38, 315 22 C 326 14, 332 11, 336 10" fill="none" stroke="var(--purple)" stroke-width="2.6" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="250" cy="60" r="3"/>
+          </svg>
+          <div class="flex justify-between mt-0.5 pl-3"><span class="day-label">DAY 1</span><span class="day-label">DAY 120</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ Variant C: Selected card gets annotated curve only ============ -->
+<div>
+  <div class="label">C — Only the selected curve gets annotations</div>
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="status-bar"><span>9:41</span><div class="flex items-center gap-1"><i data-lucide="signal" class="w-3.5 h-3.5"></i><i data-lucide="wifi" class="w-3.5 h-3.5"></i><i data-lucide="battery-full" class="w-4 h-4 text-green-700"></i></div></div>
+    <div class="absolute top-[46px] left-0 right-0 z-30 header-bar">
+      <div class="flex items-center justify-between px-4 py-2">
+        <button class="w-8 h-8 rounded-full bg-white/70 border flex items-center justify-center" style="border-color: var(--border);"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+        <div class="text-[14px] font-semibold">Strength curve</div>
+        <button class="rounded-full px-3.5 py-1 text-[12px] font-semibold text-white" style="background: var(--primary);">Done</button>
+      </div>
+    </div>
+    <div style="padding-top: 92px;">
+      <div class="px-4 pt-2 pb-2">
+        <h1 class="text-[19px] font-extrabold leading-tight">Pick your strength curve</h1>
+        <p class="text-[11.5px] mt-0.5" style="color: var(--text-2);"><span class="font-semibold" style="color: var(--text);">Strength</span> rises on check-ins, dips on misses. Tap one to preview.</p>
+      </div>
+
+      <!-- Quick Win (compact, no annotations) -->
+      <div class="mx-3 mb-2 card p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-orange w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="zap" class="w-3.5 h-3.5" style="color: var(--orange);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5"><span class="text-[13px] font-bold">Quick Win</span><span class="text-[10px]" style="color: var(--text-3);">water · vitamins · floss</span></div>
+          </div>
+          <span class="chip-time-orange inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ~18d</span>
+        </div>
+        <div class="mt-1.5 rounded-md px-2 pt-1 pb-0.5" style="background: var(--orange-tint);">
+          <svg viewBox="0 0 320 70" class="w-full" style="height: 42px;" preserveAspectRatio="none">
+            <line class="grid-line" x1="0" y1="14" x2="320" y2="14"/><line class="grid-line" x1="0" y1="35" x2="320" y2="35"/><line class="grid-line" x1="0" y1="56" x2="320" y2="56"/>
+            <path d="M 4 64 C 30 56, 60 24, 110 14 C 150 8, 170 12, 195 25 C 210 31, 220 18, 260 12 C 290 8, 305 6, 316 5" fill="none" stroke="var(--orange)" stroke-width="2.6" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="195" cy="25" r="3"/>
+          </svg>
+          <div class="flex justify-between mt-0.5"><span class="day-label">DAY 1</span><span class="day-label">DAY 18</span></div>
+        </div>
+      </div>
+
+      <!-- Textbook (selected) — BIGGER + annotated -->
+      <div class="mx-3 mb-2 card card-selected p-3">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-green w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="activity" class="w-3.5 h-3.5" style="color: var(--primary);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap"><span class="text-[13px] font-bold">Textbook</span><span class="pill-default">DEFAULT</span><span class="text-[10px]" style="color: var(--text-3);">read · walk · meditate</span></div>
+          </div>
+          <div class="check-circle w-5 h-5 rounded-full flex items-center justify-center"><i data-lucide="check" class="w-3 h-3 text-white"></i></div>
+        </div>
+        <div class="mt-2 rounded-md px-2 pt-2 pb-1" style="background: var(--primary-tint);">
+          <svg viewBox="0 0 340 110" class="w-full" style="height: 82px;">
+            <rect x="22" y="4" width="316" height="14" fill="var(--auto-band)"/>
+            <text x="338" y="15" text-anchor="end" class="auto-band-text">AUTOMATIC</text>
+            <line class="grid-line" x1="22" y1="4" x2="338" y2="4"/><line class="grid-line" x1="22" y1="18" x2="338" y2="18"/><line class="grid-line" x1="22" y1="56" x2="338" y2="56"/><line class="grid-line" x1="22" y1="94" x2="338" y2="94"/>
+            <text x="20" y="9" text-anchor="end" class="axis-tick">100</text>
+            <text x="20" y="60" text-anchor="end" class="axis-tick">50</text>
+            <text x="20" y="97" text-anchor="end" class="axis-tick">0</text>
+            <text transform="rotate(-90 10 56)" x="10" y="56" text-anchor="middle" class="y-axis-text">Strength</text>
+            <path d="M 24 96 C 80 90, 130 78, 170 60 C 200 46, 215 52, 240 66 C 260 76, 280 50, 305 30 C 322 18, 332 13, 336 11" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="105" cy="80" r="4" fill="var(--primary)" stroke="#fff" stroke-width="2"/>
+            <text x="105" y="73" text-anchor="middle" class="annotation" style="font-size: 9px; font-weight: 600; fill: var(--primary);">check-in</text>
+            <circle cx="240" cy="66" r="4" fill="var(--miss)" stroke="#fff" stroke-width="2"/>
+            <text x="240" y="59" text-anchor="middle" class="annotation" style="font-size: 9px; font-weight: 600; fill: var(--miss);">miss</text>
+          </svg>
+          <div class="flex justify-between items-center mt-1 pl-3"><span class="day-label">DAY 1</span><span class="text-[9px] font-semibold" style="color: var(--primary);">UCL 66-day study</span><span class="day-label">DAY 66</span></div>
+        </div>
+      </div>
+
+      <!-- Long Haul (compact) -->
+      <div class="mx-3 mb-2 card p-2.5">
+        <div class="flex items-center gap-2">
+          <div class="icon-tile-purple w-7 h-7 rounded-lg flex items-center justify-center"><i data-lucide="mountain" class="w-3.5 h-3.5" style="color: var(--purple);"></i></div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5"><span class="text-[13px] font-bold">Long Haul</span><span class="text-[10px]" style="color: var(--text-3);">run · 30-min meditate · writing</span></div>
+          </div>
+          <span class="chip-time-purple inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[10px] font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ~120d</span>
+        </div>
+        <div class="mt-1.5 rounded-md px-2 pt-1 pb-0.5" style="background: var(--purple-tint);">
+          <svg viewBox="0 0 320 70" class="w-full" style="height: 42px;" preserveAspectRatio="none">
+            <line class="grid-line" x1="0" y1="14" x2="320" y2="14"/><line class="grid-line" x1="0" y1="35" x2="320" y2="35"/><line class="grid-line" x1="0" y1="56" x2="320" y2="56"/>
+            <path d="M 4 66 C 60 64, 110 60, 160 50 C 195 42, 210 57, 230 59 C 250 60, 270 38, 295 22 C 308 14, 314 12, 316 11" fill="none" stroke="var(--purple)" stroke-width="2.6" stroke-linecap="round"/>
+            <circle class="miss-marker" cx="230" cy="59" r="3"/>
+          </svg>
+          <div class="flex justify-between mt-0.5"><span class="day-label">DAY 1</span><span class="day-label">DAY 120</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

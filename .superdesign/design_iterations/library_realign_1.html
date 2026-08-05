@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Library Landing — Before/After realign</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Literata:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f5f1ed;
+        --card-light: #edeae5;
+        --gray50: #faf8f5;
+        --border: #ddd8d2;
+        --text-primary: #2d2a26;
+        --text-secondary: #6b6560;
+        --text-heading: #3d3833;
+        --primary-100: #d1fae5;
+        --primary-300: #6ee7b7;
+        --primary-600: #059669;
+        --primary-700: #047857;
+        --bad-violet: #3b82f6;
+        --bad-red: #ef4444;
+        --bad-orange: #f59e0b;
+        --dark-bg: #111827;
+        --dark-card: #1f2937;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+      }
+      h1,
+      h2,
+      .serif {
+        font-family: 'Literata', serif;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', monospace;
+      }
+      .shadow-card {
+        box-shadow: 0 2px 8px rgba(45, 42, 38, 0.06);
+      }
+      .title-token {
+        font-family: 'Literata', serif;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.35px;
+        color: var(--text-heading);
+      }
+      .title-mock {
+        font-family: 'Literata', serif;
+        font-size: 25px;
+        font-weight: 600;
+        letter-spacing: -0.4px;
+        color: var(--text-heading);
+      }
+    </style>
+  </head>
+  <body class="p-8">
+    <div class="mx-auto max-w-5xl space-y-12">
+      <header class="space-y-1">
+        <h1 class="text-2xl font-bold">
+          Library Landing — design-language realign
+        </h1>
+        <p class="text-sm" style="color: var(--text-secondary)">
+          Mock-fidelity pass vs. app-token pass. Side by side, per change in
+          plan.md.
+        </p>
+      </header>
+
+      <!-- CHANGE 1: Science drawer accent -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-semibold">
+          1. Science drawer accent → forest green
+        </h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <p
+              class="mb-2 text-xs uppercase tracking-wide"
+              style="color: var(--bad-red)"
+            >
+              Before (mock-fidelity, off-brand)
+            </p>
+            <div
+              class="rounded-2xl p-4 shadow-card"
+              style="
+                background: var(--card-light);
+                border: 1px solid var(--border);
+              "
+            >
+              <div
+                class="flex items-center gap-2 text-sm font-medium"
+                style="color: var(--bad-violet)"
+              >
+                <span class="mono">⚗</span> Why this works
+                <span class="mono text-xs opacity-70">· 1-min read</span>
+              </div>
+              <div
+                class="mt-3 rounded-lg p-3 text-sm"
+                style="
+                  background: rgba(59, 130, 246, 0.08);
+                  color: var(--text-secondary);
+                "
+              >
+                Habit-stacking reduces activation energy by anchoring...
+                <div
+                  class="mt-2 h-1 w-10 rounded-full"
+                  style="background: var(--bad-orange)"
+                ></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <p
+              class="mb-2 text-xs uppercase tracking-wide"
+              style="color: var(--primary-700)"
+            >
+              After (restored, colors.primary[600])
+            </p>
+            <div
+              class="rounded-2xl p-4 shadow-card"
+              style="
+                background: var(--card-light);
+                border: 1px solid var(--border);
+              "
+            >
+              <div
+                class="flex items-center gap-2 text-sm font-medium"
+                style="color: var(--primary-600)"
+              >
+                <span class="mono">⚗</span> Why this works
+                <span class="mono text-xs opacity-70">· 1-min read</span>
+              </div>
+              <div
+                class="mt-3 rounded-lg p-3 text-sm"
+                style="
+                  background: rgba(5, 150, 105, 0.08);
+                  color: var(--text-secondary);
+                "
+              >
+                Habit-stacking reduces activation energy by anchoring...
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHANGE 2: Row card surface -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-semibold">
+          2. Row card surface → app card formula (light + dark)
+        </h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <p
+              class="text-xs uppercase tracking-wide"
+              style="color: var(--text-secondary)"
+            >
+              Light mode
+            </p>
+            <div
+              class="flex items-center gap-3 rounded-2xl p-4 shadow-card"
+              style="
+                background: var(--card-light);
+                border: 1px solid var(--border);
+              "
+            >
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-xl"
+                style="background: rgba(5, 150, 105, 0.19)"
+              >
+                🏃
+              </div>
+              <div>
+                <div class="text-sm font-semibold">Morning Run</div>
+                <div class="text-xs" style="color: var(--text-secondary)">
+                  colors.card #EDEAE5 · shadows.card
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <p
+              class="text-xs uppercase tracking-wide"
+              style="color: var(--text-secondary)"
+            >
+              Dark mode
+            </p>
+            <div
+              class="flex items-center gap-3 rounded-2xl p-4"
+              style="
+                background: var(--dark-card);
+                border: 1px solid #374151;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+              "
+            >
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-xl"
+                style="background: rgba(5, 150, 105, 0.19)"
+              >
+                🏃
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-white">Morning Run</div>
+                <div class="text-xs text-white opacity-70">
+                  colors.card #1F2937 (was wrongly gray[50] #111827)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHANGE 3: Title token -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-semibold">
+          3. Title → standard heading1 token
+        </h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div
+            class="rounded-2xl p-5"
+            style="
+              background: var(--card-light);
+              border: 1px solid var(--border);
+            "
+          >
+            <p
+              class="mb-2 text-xs uppercase tracking-wide"
+              style="color: var(--bad-red)"
+            >
+              Before (one-off 25/600/-0.4)
+            </p>
+            <div class="title-mock">Explore the Library</div>
+          </div>
+          <div
+            class="rounded-2xl p-5"
+            style="
+              background: var(--card-light);
+              border: 1px solid var(--border);
+            "
+          >
+            <p
+              class="mb-2 text-xs uppercase tracking-wide"
+              style="color: var(--primary-700)"
+            >
+              After (heading1: 22/700/-0.35)
+            </p>
+            <div class="title-token">Explore the Library</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHANGE 4: Endcap pill -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-semibold">
+          4. Endcap → restore green-tinted pill
+        </h2>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <p
+              class="mb-2 text-xs uppercase tracking-wide"
+              style="color: var(--bad-red)"
+            >
+              Before (mock-neutral gray)
+            </p>
+            <div
+              class="inline-block rounded-full px-4 py-2 text-sm font-medium"
+              style="
+                background: #f0ede8;
+                border: 1px solid var(--border);
+                color: var(--text-secondary);
+              "
+            >
+              See all 42 habits →
+            </div>
+          </div>
+          <div>
+            <p
+              class="mb-2 text-xs uppercase tracking-wide"
+              style="color: var(--primary-700)"
+            >
+              After (primary.100/300/700)
+            </p>
+            <div
+              class="inline-block rounded-full px-4 py-2 text-sm font-medium"
+              style="
+                background: var(--primary-100);
+                border: 1px solid var(--primary-300);
+                color: var(--primary-700);
+              "
+            >
+              See all 42 habits →
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CHANGE 5: Keep -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-semibold">
+          5. Keep as-is (already on-language)
+        </h2>
+        <div class="flex flex-wrap gap-3">
+          <div
+            class="rounded-full px-4 py-2 text-sm font-medium text-white"
+            style="background: #047857"
+          >
+            All Habits
+          </div>
+          <div
+            class="rounded-full px-4 py-2 text-sm font-medium"
+            style="
+              background: var(--card-light);
+              border: 1px solid var(--border);
+              color: var(--text-secondary);
+            "
+          >
+            Fitness
+          </div>
+          <div
+            class="rounded-full px-4 py-2 text-sm font-medium"
+            style="
+              background: var(--card-light);
+              border: 1px solid var(--border);
+              color: var(--text-secondary);
+            "
+          >
+            Mindfulness
+          </div>
+        </div>
+        <p class="text-xs" style="color: var(--text-secondary)">
+          Selected chip #047857, icon tiles tinted with iconColor, amber streak
+          nudge, serif/mono drawer type, adaptive overline, safe-area inset —
+          unchanged.
+        </p>
+      </section>
+    </div>
+  </body>
+</html>

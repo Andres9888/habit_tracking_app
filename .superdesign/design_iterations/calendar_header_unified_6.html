@@ -1,0 +1,2133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Header — Purpose-Driven Audit</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,400&family=Outfit:wght@300;400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #0f0d0a;
+        --card: #1a1714;
+        --border: rgba(245, 241, 237, 0.06);
+        --hi: #f5f1ed;
+        --mid: #a8a29e;
+        --lo: #6b6560;
+        --green: #059669;
+        --green-l: #34d399;
+        --amber: #b45309;
+        --red: #dc2626;
+        --red-l: #f87171;
+        --pbg: #f5f1ed;
+        --pcard: #ede9e4;
+        --ptx: #2d2a26;
+        --psec: #78716c;
+        --pmut: #a8a29e;
+        --pbdr: #e5e0db;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: var(--bg);
+        font-family: 'Outfit', sans-serif;
+        color: var(--hi);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Hero */
+      .hero {
+        padding: 56px 24px 40px;
+        text-align: center;
+        position: relative;
+      }
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: -150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(5, 150, 105, 0.04) 0%,
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .ey {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--green-l);
+        opacity: 0.7;
+        margin-bottom: 14px;
+      }
+      .hero h1 {
+        font-family: 'Fraunces', serif;
+        font-size: clamp(28px, 4.5vw, 44px);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.15;
+        margin-bottom: 10px;
+      }
+      .hero h1 em {
+        font-style: italic;
+        color: var(--green-l);
+      }
+      .hero p {
+        font-size: 15px;
+        color: var(--lo);
+        max-width: 440px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* Principle card */
+      .principle {
+        max-width: 640px;
+        margin: 32px auto 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 24px;
+        text-align: left;
+      }
+      .principle-title {
+        font-family: 'Fraunces', serif;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .principle-title .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        flex-shrink: 0;
+      }
+      .principle-body {
+        font-size: 14px;
+        color: var(--mid);
+        line-height: 1.6;
+      }
+      .principle-body strong {
+        color: var(--hi);
+      }
+
+      /* Nav */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(15, 13, 10, 0.88);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+        padding: 10px 20px;
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        flex-wrap: wrap;
+      }
+      .nav a {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--lo);
+        text-decoration: none;
+        padding: 5px 14px;
+        border-radius: 8px;
+        transition: all 0.15s;
+      }
+      .nav a:hover {
+        color: var(--hi);
+        background: var(--card);
+      }
+      .nav .nd {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-right: 6px;
+        vertical-align: middle;
+      }
+
+      /* Section */
+      .sec {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 56px 24px;
+        border-bottom: 1px solid var(--border);
+      }
+      .sec:last-of-type {
+        border-bottom: none;
+      }
+      .sh {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 32px;
+      }
+      .sn {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Fraunces', serif;
+        font-weight: 800;
+        font-size: 16px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .st {
+        font-family: 'Fraunces', serif;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+      }
+      .sd {
+        font-size: 13px;
+        color: var(--lo);
+        margin-top: 3px;
+      }
+
+      /* Grid */
+      .g {
+        display: grid;
+        grid-template-columns: auto 40px auto 1fr;
+        gap: 0 20px;
+        align-items: start;
+        justify-items: center;
+      }
+      @media (max-width: 1000px) {
+        .g {
+          grid-template-columns: 1fr;
+          gap: 20px 0;
+        }
+        .arr {
+          transform: rotate(90deg);
+        }
+        .note {
+          max-width: 480px;
+          justify-self: center;
+        }
+      }
+
+      .lb {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .lb.cu {
+        color: var(--lo);
+      }
+      .lb.pr {
+        color: var(--green-l);
+      }
+      .arr {
+        align-self: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .arr svg {
+        color: var(--green);
+        opacity: 0.4;
+      }
+
+      /* Phone */
+      .ph {
+        width: 310px;
+        background: var(--pbg);
+        border-radius: 34px;
+        overflow: hidden;
+        box-shadow:
+          0 0 0 1.5px rgba(45, 42, 38, 0.7),
+          0 16px 48px rgba(0, 0, 0, 0.4);
+        position: relative;
+      }
+      .ph::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 110px;
+        height: 26px;
+        background: #2d2a26;
+        border-radius: 0 0 16px 16px;
+        z-index: 10;
+      }
+      .sb {
+        height: 50px;
+        padding: 28px 22px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--ptx);
+        position: relative;
+        z-index: 5;
+      }
+      .sb .ic {
+        font-size: 11px;
+        color: var(--pmut);
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .pf {
+        height: 8px;
+        background: var(--pbg);
+      }
+
+      /* Current header */
+      .hc {
+        padding: 6px 16px 0;
+        font-family: 'DM Sans', sans-serif;
+      }
+      .hc-r1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .hc-g {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--ptx);
+        letter-spacing: -0.5px;
+      }
+      .hc-g.sk {
+        color: #b45309;
+      }
+      .hc-g.dn {
+        color: #059669;
+      }
+      .hc-g.rk {
+        color: #dc2626;
+      }
+      .hc-g.al {
+        color: #059669;
+      }
+      .hc-rt {
+        text-align: right;
+        padding-top: 2px;
+      }
+      .hc-ct {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--pmut);
+        letter-spacing: -0.2px;
+      }
+      .hc-ct .n {
+        font-weight: 700;
+      }
+      .hc-ct .ng {
+        color: #059669;
+      }
+      .hc-ct .nm {
+        color: var(--pmut);
+      }
+      .hc-ct .nr {
+        color: #ef4444;
+      }
+      .hc-ad {
+        font-size: 14px;
+        font-weight: 700;
+        color: #059669;
+      }
+      .hc-dots {
+        display: flex;
+        gap: 3px;
+        justify-content: flex-end;
+        margin-top: 3px;
+      }
+      .d {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--pbdr);
+      }
+      .d.f {
+        background: #10b981;
+      }
+      .d.go {
+        background: #e8b94d;
+      }
+      .d.ri {
+        background: #ef4444;
+      }
+      .hc-dr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2px;
+      }
+      .hc-tap {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .hc-dtx {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--psec);
+      }
+      .hc-ico {
+        color: var(--pmut);
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 10px 2px 6px;
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .pill.ps {
+        background: #fef3c7;
+        border: 1px solid rgba(232, 185, 77, 0.25);
+        color: #92400e;
+      }
+      .pill.pr {
+        background: #fef2f2;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #dc2626;
+      }
+      .pill.pa {
+        background: #ecfdf5;
+        border: 1px solid rgba(16, 185, 129, 0.25);
+        color: #059669;
+      }
+
+      /* Proposed header (purpose-driven) */
+      .hp {
+        padding: 6px 16px 0;
+        font-family: 'DM Sans', sans-serif;
+      }
+      /* 2-row version (has behavioral greeting) */
+      .hp-r1 {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .hp-g {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--ptx);
+        letter-spacing: -0.5px;
+      }
+      .hp-g.sk {
+        color: #b45309;
+      }
+      .hp-g.dn {
+        color: #059669;
+      }
+      .hp-g.rk {
+        color: #dc2626;
+      }
+      .hp-g.al {
+        color: #059669;
+      }
+      .hp-frac {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--pmut);
+        letter-spacing: -0.2px;
+        flex-shrink: 0;
+      }
+      .hp-frac .n {
+        font-weight: 700;
+      }
+      .hp-frac .ng {
+        color: #059669;
+      }
+      .hp-frac .nm {
+        color: var(--pmut);
+      }
+      .hp-frac .nr {
+        color: #ef4444;
+      }
+      .hp-ad {
+        font-size: 14px;
+        font-weight: 700;
+        color: #059669;
+        flex-shrink: 0;
+      }
+      .hp-dr {
+        display: flex;
+        align-items: center;
+        margin-top: 2px;
+      }
+      .hp-tap {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .hp-dtx {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--psec);
+      }
+      .hp-ico {
+        color: var(--pmut);
+      }
+      /* 1-row version (no behavioral greeting — collapses) */
+      .hp-single {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .hp-single .hp-frac {
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      /* Shelf + strip */
+      .shelf {
+        background: var(--pcard);
+        border-radius: 0 0 18px 18px;
+        margin-top: 10px;
+        padding: 10px 12px 14px;
+      }
+      .strip {
+        display: flex;
+        justify-content: space-between;
+        gap: 2px;
+      }
+      .dcol {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        flex: 1;
+      }
+      .dlbl {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--pmut);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .dlbl.td {
+        color: #059669;
+        font-weight: 700;
+      }
+      .dlbl.rk {
+        color: #ef4444;
+        font-weight: 700;
+      }
+      .dc {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        position: relative;
+      }
+      .dc.em {
+        background: var(--pbdr);
+        color: var(--pmut);
+      }
+      .dc.dn {
+        background: rgba(16, 185, 129, 0.12);
+        color: #059669;
+      }
+      .dc.dn::after {
+        content: '✓';
+        position: absolute;
+        font-size: 12px;
+        font-weight: 700;
+        color: #10b981;
+      }
+      .dc.dn span {
+        visibility: hidden;
+      }
+      .dc.ty {
+        background: #2d2a26;
+        color: #f5f1ed;
+        box-shadow: 0 2px 6px rgba(45, 42, 38, 0.12);
+      }
+      .dc.tdn {
+        background: #10b981;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+      }
+      .dc.tdn::after {
+        content: '✓';
+        position: absolute;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .dc.tdn span {
+        visibility: hidden;
+      }
+      .dc.trk {
+        background: #dc2626;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+      }
+      .dc.fu {
+        background: var(--pbg);
+        color: #d4cfc9;
+        border: 1.5px dashed #d4cfc9;
+      }
+
+      /* Purpose tag on phone */
+      .ptag {
+        position: absolute;
+        top: 56px;
+        right: 14px;
+        z-index: 20;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        padding: 3px 8px;
+        border-radius: 6px;
+      }
+      .ptag.yes {
+        background: rgba(5, 150, 105, 0.12);
+        color: var(--green-l);
+      }
+      .ptag.no {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--red-l);
+      }
+
+      /* Annotations */
+      .note {
+        padding: 0 8px;
+        align-self: center;
+      }
+      .nt {
+        font-family: 'Fraunces', serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--hi);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .nt .ic {
+        color: var(--green);
+      }
+      .nc {
+        border-radius: 10px;
+        padding: 11px 13px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.55;
+        border: 1px solid;
+      }
+      .nc strong {
+        font-weight: 700;
+      }
+      .nc.purpose {
+        background: rgba(5, 150, 105, 0.05);
+        border-color: rgba(5, 150, 105, 0.12);
+        color: #6ee7b7;
+      }
+      .nc.purpose strong {
+        color: #a7f3d0;
+      }
+      .nc.cut {
+        background: rgba(239, 68, 68, 0.05);
+        border-color: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+      }
+      .nc.cut strong {
+        color: #fecaca;
+      }
+      .nc.note-n {
+        background: rgba(234, 179, 8, 0.05);
+        border-color: rgba(234, 179, 8, 0.12);
+        color: #fde68a;
+      }
+      .nc.note-n strong {
+        color: #fef3c7;
+      }
+      .np {
+        font-size: 13px;
+        color: var(--mid);
+        line-height: 1.55;
+        margin-top: 6px;
+      }
+      .np strong {
+        color: var(--hi);
+      }
+
+      /* Summary */
+      .sum {
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 56px 24px 72px;
+      }
+      .sum h2 {
+        font-family: 'Fraunces', serif;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.8px;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+      .sum table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .sum th {
+        text-align: left;
+        padding: 10px 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--lo);
+        border-bottom: 1px solid rgba(245, 241, 237, 0.1);
+      }
+      .sum td {
+        padding: 12px 14px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .sum td:first-child {
+        color: var(--hi);
+        font-weight: 500;
+      }
+      .sum .rm {
+        color: var(--red-l);
+      }
+      .sum .kp {
+        color: var(--green-l);
+      }
+      .sum .ch {
+        color: #fde68a;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="ey">Purpose-Driven Audit</div>
+      <h1>Does it change <em>behavior?</em></h1>
+      <p>
+        Every element must solve a pain point or move the user closer to
+        completing their habits. If it doesn't — cut it.
+      </p>
+      <div class="principle" style="margin-top: 28px">
+        <div class="principle-title"><span class="dot"></span>The test</div>
+        <div class="principle-body">
+          <strong>Does this element solve a user pain point?</strong> ("How many
+          left?", "Am I losing progress?", "What day?")<br /><strong
+            >Does it change behavior?</strong
+          >
+          (Creates urgency, triggers loss aversion, answers a question)<br /><br />If
+          the answer to both is no — it's decoration. Cut it.
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#s1"
+        ><span class="nd" style="background: #10b981"></span>Mid-progress</a
+      >
+      <a href="#s2"
+        ><span class="nd" style="background: #059669"></span>Almost done</a
+      >
+      <a href="#s3"
+        ><span class="nd" style="background: #ef4444"></span>Streak at risk</a
+      >
+      <a href="#s4"
+        ><span class="nd" style="background: #eab308"></span>Perfect day</a
+      >
+      <a href="#s5"
+        ><span class="nd" style="background: #9ca3af"></span>No streak</a
+      >
+      <a href="#s6"
+        ><span class="nd" style="background: #6b7280"></span>New streak</a
+      >
+    </nav>
+
+    <!-- ═══ STATE 1: Mid-progress (3 of 6, 5-day streak) ═══ -->
+    <div class="sec" id="s1">
+      <div class="sh">
+        <div
+          class="sn"
+          style="background: linear-gradient(135deg, #059669, #10b981)"
+        >
+          1
+        </div>
+        <div>
+          <div class="st">Mid-progress — 3 of 6, 5-day streak</div>
+          <div class="sd">
+            Greeting creates loss aversion: "I can't break 5 days"
+          </div>
+        </div>
+      </div>
+      <div class="g">
+        <div>
+          <div class="lb cu">Current</div>
+          <div class="ph">
+            <div class="sb">
+              <span>8:24</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hc">
+              <div class="hc-r1">
+                <div class="hc-g sk">5-day streak</div>
+                <div class="hc-rt">
+                  <div class="hc-ct"><span class="n ng">3</span> of 6</div>
+                  <div class="hc-dots">
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d"></div>
+                    <div class="d"></div>
+                    <div class="d"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hc-dr">
+                <div class="hc-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hc-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hc-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hc-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="pill ps">🔥 Keep going!</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="arr">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </div>
+        <div>
+          <div class="lb pr">Purpose-driven</div>
+          <div class="ph">
+            <div class="sb">
+              <span>8:24</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hp">
+              <div class="hp-r1">
+                <div class="hp-g sk">5-day streak</div>
+                <div class="hp-frac"><span class="n ng">3</span> of 6</div>
+              </div>
+              <div class="hp-dr">
+                <div class="hp-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hp-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hp-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hp-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="note">
+          <div class="nt"><span class="ic">→</span> Purpose audit</div>
+          <div class="nc purpose">
+            <strong>"5-day streak"</strong> → Changes behavior. User thinks "I
+            can't break this." Loss aversion keeps them going.
+          </div>
+          <div class="nc purpose">
+            <strong>"3 of 6"</strong> → Solves pain point. Instantly answers
+            "how many left?"
+          </div>
+          <div class="nc cut">
+            <strong>Dots removed.</strong> "3 of 6" already answers the
+            question. Dots are a slower way to say the same thing.
+          </div>
+          <div class="nc cut">
+            <strong>"🔥 Keep going!" removed.</strong> Cheerleading. Doesn't
+            solve a pain point or change behavior. The streak number itself is
+            the motivator.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STATE 2: Almost done (5 of 6) ═══ -->
+    <div class="sec" id="s2">
+      <div class="sh">
+        <div
+          class="sn"
+          style="background: linear-gradient(135deg, #059669, #34d399)"
+        >
+          2
+        </div>
+        <div>
+          <div class="st">Almost Done — 5 of 6</div>
+          <div class="sd">
+            "Just 1 left!" creates urgency to finish · the words are the UX
+          </div>
+        </div>
+      </div>
+      <div class="g">
+        <div>
+          <div class="lb cu">Current</div>
+          <div class="ph">
+            <div class="sb">
+              <span>8:47</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hc">
+              <div class="hc-r1">
+                <div class="hc-g al">Just 1 left!</div>
+                <div class="hc-rt">
+                  <div class="hc-ct"><span class="n ng">5</span> of 6</div>
+                  <div class="hc-dots">
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hc-dr">
+                <div class="hc-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hc-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hc-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hc-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="pill pa">✨ Almost perfect!</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="arr">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </div>
+        <div>
+          <div class="lb pr">Purpose-driven</div>
+          <div class="ph">
+            <div class="sb">
+              <span>8:47</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hp">
+              <div class="hp-r1">
+                <div class="hp-g al">Just 1 left!</div>
+                <div class="hp-frac"><span class="n ng">5</span> of 6</div>
+              </div>
+              <div class="hp-dr">
+                <div class="hp-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hp-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hp-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hp-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="note">
+          <div class="nt"><span class="ic">→</span> Purpose audit</div>
+          <div class="nc purpose">
+            <strong>"Just 1 left!"</strong> → Changes behavior. Zeigarnik
+            effect: the incomplete task demands resolution. User scrolls down to
+            find and finish it.
+          </div>
+          <div class="nc cut">
+            <strong>"✨ Almost perfect!" removed.</strong> "Just 1 left!"
+            already says it. The badge restates what the greeting communicated.
+            Decoration.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STATE 3: Streak at risk ═══ -->
+    <div class="sec" id="s3">
+      <div class="sh">
+        <div
+          class="sn"
+          style="background: linear-gradient(135deg, #dc2626, #ef4444)"
+        >
+          3
+        </div>
+        <div>
+          <div class="st">Streak at Risk — 0 of 6 at 9 PM</div>
+          <div class="sd">
+            Greeting upgraded to include stake count · badge info merged in
+          </div>
+        </div>
+      </div>
+      <div class="g">
+        <div>
+          <div class="lb cu">Current</div>
+          <div class="ph">
+            <div class="sb">
+              <span>9:14</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hc">
+              <div class="hc-r1">
+                <div class="hc-g rk">Streak at risk</div>
+                <div class="hc-rt">
+                  <div class="hc-ct"><span class="n nm">0</span> of 6</div>
+                  <div class="hc-dots">
+                    <div class="d ri"></div>
+                    <div class="d ri"></div>
+                    <div class="d ri"></div>
+                    <div class="d ri"></div>
+                    <div class="d ri"></div>
+                    <div class="d ri"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hc-dr">
+                <div class="hc-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hc-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hc-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hc-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="pill pr">⚠️ 5 days at stake</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl rk">Today</span>
+                  <div class="dc trk">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="arr">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </div>
+        <div>
+          <div class="lb pr">Purpose-driven</div>
+          <div class="ph">
+            <div class="sb">
+              <span>9:14</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hp">
+              <div class="hp-r1">
+                <div class="hp-g rk">5-day streak at risk</div>
+                <div class="hp-frac"><span class="n nr">0</span> of 6</div>
+              </div>
+              <div class="hp-dr">
+                <div class="hp-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hp-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hp-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hp-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl rk">Today</span>
+                  <div class="dc trk">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="note">
+          <div class="nt"><span class="ic">→</span> Purpose audit</div>
+          <div class="nc note-n">
+            <strong>Badge info merged into greeting.</strong> "Streak at risk" →
+            "5-day streak at risk". One line now carries both the alarm AND the
+            stake. No badge needed.
+          </div>
+          <div class="nc purpose">
+            <strong>"5-day streak at risk"</strong> → Changes behavior. Tells
+            user exactly what they'll lose AND that it's in danger. Single line,
+            maximum urgency.
+          </div>
+          <div class="nc cut">
+            <strong>Pulsing dots + pill removed.</strong> The red greeting text
+            + red today circle already communicate emergency. The dots and pill
+            were amplifying a signal that was already loud enough.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STATE 4: Perfect day ═══ -->
+    <div class="sec" id="s4">
+      <div class="sh">
+        <div
+          class="sn"
+          style="background: linear-gradient(135deg, #d97706, #eab308)"
+        >
+          4
+        </div>
+        <div>
+          <div class="st">Perfect Day — All 6 complete</div>
+          <div class="sd">
+            Celebration reinforces the habit loop · user comes back tomorrow
+          </div>
+        </div>
+      </div>
+      <div class="g">
+        <div>
+          <div class="lb cu">Current</div>
+          <div class="ph">
+            <div class="sb">
+              <span>9:41</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hc">
+              <div class="hc-r1">
+                <div class="hc-g dn">Perfect day</div>
+                <div class="hc-rt">
+                  <div class="hc-ad">All done!</div>
+                  <div class="hc-dots">
+                    <div class="d go"></div>
+                    <div class="d go"></div>
+                    <div class="d go"></div>
+                    <div class="d go"></div>
+                    <div class="d go"></div>
+                    <div class="d go"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hc-dr">
+                <div class="hc-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hc-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hc-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hc-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+                <div class="pill ps">⚡ 13 days</div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc tdn"><span>2</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="arr">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </div>
+        <div>
+          <div class="lb pr">Purpose-driven</div>
+          <div class="ph">
+            <div class="sb">
+              <span>9:41</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hp">
+              <div class="hp-r1">
+                <div class="hp-g dn">Perfect day</div>
+                <div class="hp-ad">All done!</div>
+              </div>
+              <div class="hp-dr">
+                <div class="hp-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hp-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hp-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hp-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc tdn"><span>2</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="note">
+          <div class="nt"><span class="ic">→</span> Purpose audit</div>
+          <div class="nc purpose">
+            <strong>"Perfect day" + "All done!"</strong> → Reinforces the habit
+            loop. This moment is why users come back tomorrow. It earns its
+            space.
+          </div>
+          <div class="nc cut">
+            <strong>Golden dots + "⚡ 13 days" pill removed.</strong> The user
+            is done. They don't need to know their streak count right now — they
+            need to feel the win. The green today-circle in the strip already
+            shows completion.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STATE 5: No streak (0 of 4, morning) ═══ -->
+    <div class="sec" id="s5">
+      <div class="sh">
+        <div
+          class="sn"
+          style="background: linear-gradient(135deg, #6b7280, #9ca3af)"
+        >
+          5
+        </div>
+        <div>
+          <div class="st">No Streak — 0 of 4, morning</div>
+          <div class="sd">
+            The big question: does "Good morning" serve a purpose?
+          </div>
+        </div>
+      </div>
+      <div class="g">
+        <div>
+          <div class="lb cu">Current</div>
+          <div class="ph">
+            <div class="sb">
+              <span>7:30</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hc">
+              <div class="hc-r1">
+                <div class="hc-g">Good morning</div>
+                <div class="hc-rt">
+                  <div class="hc-ct"><span class="n nm">0</span> of 4</div>
+                  <div class="hc-dots">
+                    <div class="d"></div>
+                    <div class="d"></div>
+                    <div class="d"></div>
+                    <div class="d"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hc-dr">
+                <div class="hc-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hc-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hc-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hc-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc em">24</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="arr">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </div>
+        <div>
+          <div class="lb pr">Purpose-driven</div>
+          <div class="ph">
+            <div class="sb">
+              <span>7:30</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hp">
+              <div class="hp-single">
+                <div class="hp-frac" style="font-size: 16px">
+                  <span class="n nm" style="font-size: 16px">0</span> of 4
+                </div>
+                <div class="hp-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hp-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hp-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hp-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc em">24</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="note">
+          <div class="nt"><span class="ic">→</span> Purpose audit</div>
+          <div class="nc cut">
+            <strong>"Good morning" cut.</strong> Doesn't solve a pain point.
+            Doesn't change behavior. The user knows what time of day it is. 20px
+            of hero text for a pleasantry.
+          </div>
+          <div class="nc note-n">
+            <strong>Header collapses to 1 row.</strong> When there's nothing
+            behavioral to say, the header shrinks. "0 of 4" + date — that's
+            everything the user needs. The habit list below is what matters.
+          </div>
+          <p class="np">
+            <strong>~36px saved</strong> vs current. That's nearly a full habit
+            card more visible above the fold for the users who need it most —
+            new users with no streak.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ STATE 6: 1-day streak ═══ -->
+    <div class="sec" id="s6">
+      <div class="sh">
+        <div
+          class="sn"
+          style="background: linear-gradient(135deg, #6b7280, #9ca3af)"
+        >
+          6
+        </div>
+        <div>
+          <div class="st">New Streak — 1-day, 2 of 4 done</div>
+          <div class="sd">Does "Great start!" change behavior? Barely.</div>
+        </div>
+      </div>
+      <div class="g">
+        <div>
+          <div class="lb cu">Current</div>
+          <div class="ph">
+            <div class="sb">
+              <span>12:15</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hc">
+              <div class="hc-r1">
+                <div class="hc-g">Great start!</div>
+                <div class="hc-rt">
+                  <div class="hc-ct"><span class="n ng">2</span> of 4</div>
+                  <div class="hc-dots">
+                    <div class="d f"></div>
+                    <div class="d f"></div>
+                    <div class="d"></div>
+                    <div class="d"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="hc-dr">
+                <div class="hc-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hc-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hc-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hc-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="arr">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5 12h14" />
+            <path d="m12 5 7 7-7 7" />
+          </svg>
+        </div>
+        <div>
+          <div class="lb pr">Purpose-driven</div>
+          <div class="ph">
+            <div class="sb">
+              <span>12:15</span>
+              <div class="ic">
+                <i
+                  data-lucide="signal"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="wifi"
+                  style="width: 11px; height: 11px; stroke-width: 2.5"
+                ></i
+                ><i
+                  data-lucide="battery-full"
+                  style="width: 13px; height: 13px; stroke-width: 2"
+                ></i>
+              </div>
+            </div>
+            <div class="hp">
+              <div class="hp-single">
+                <div class="hp-frac" style="font-size: 16px">
+                  <span class="n ng" style="font-size: 16px">2</span> of 4
+                </div>
+                <div class="hp-tap">
+                  <i
+                    data-lucide="calendar-days"
+                    class="hp-ico"
+                    style="width: 14px; height: 14px; stroke-width: 2"
+                  ></i
+                  ><span class="hp-dtx">Tue, March 2</span
+                  ><i
+                    data-lucide="chevron-down"
+                    class="hp-ico"
+                    style="width: 11px; height: 11px; stroke-width: 2"
+                  ></i>
+                </div>
+              </div>
+            </div>
+            <div class="shelf">
+              <div class="strip">
+                <div class="dcol">
+                  <span class="dlbl">Mon</span>
+                  <div class="dc dn"><span>24</span></div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl td">Today</span>
+                  <div class="dc ty">2</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Wed</span>
+                  <div class="dc fu">3</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Thu</span>
+                  <div class="dc fu">4</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Fri</span>
+                  <div class="dc fu">5</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sat</span>
+                  <div class="dc fu">6</div>
+                </div>
+                <div class="dcol">
+                  <span class="dlbl">Sun</span>
+                  <div class="dc fu">7</div>
+                </div>
+              </div>
+            </div>
+            <div class="pf"></div>
+          </div>
+        </div>
+        <div class="note">
+          <div class="nt"><span class="ic">→</span> Purpose audit</div>
+          <div class="nc cut">
+            <strong>"Great start!" cut.</strong> A 1-day streak has near-zero
+            loss aversion value. Losing a 1-day streak isn't painful. This
+            greeting is encouragement, not behavior change.
+          </div>
+          <div class="nc note-n">
+            <strong>Same 1-row collapse.</strong> Until the user builds a 2+ day
+            streak, there's nothing behavioral to say. Just show the count +
+            date and let the habit list do the work.
+          </div>
+          <p class="np">
+            <strong>The greeting re-appears at 2-day streak</strong> — "2-day
+            streak" has actual loss aversion value. That's when the behavioral
+            signal earns its screen space.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Summary ═══ -->
+    <div class="sum">
+      <h2>Purpose Audit Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Element</th>
+            <th>Verdict</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"X-day streak" (≥2)</td>
+            <td class="kp">Keep</td>
+            <td>Loss aversion drives completion</td>
+          </tr>
+          <tr>
+            <td>"Just 1 left!"</td>
+            <td class="kp">Keep</td>
+            <td>Zeigarnik urgency</td>
+          </tr>
+          <tr>
+            <td>"X-day streak at risk"</td>
+            <td class="ch">Changed</td>
+            <td>Merged badge info into greeting</td>
+          </tr>
+          <tr>
+            <td>"Perfect day" + "All done!"</td>
+            <td class="kp">Keep</td>
+            <td>Reinforces habit loop</td>
+          </tr>
+          <tr>
+            <td>"X of Y" fraction</td>
+            <td class="kp">Keep</td>
+            <td>Answers #1 question: "how many left?"</td>
+          </tr>
+          <tr>
+            <td>📅 date navigation</td>
+            <td class="kp">Keep</td>
+            <td>Solves navigation pain point</td>
+          </tr>
+          <tr>
+            <td>"Good morning/afternoon/evening"</td>
+            <td class="rm">Cut</td>
+            <td>Pleasantry, doesn't change behavior</td>
+          </tr>
+          <tr>
+            <td>"Great start!" (1-day streak)</td>
+            <td class="rm">Cut</td>
+            <td>No loss aversion at 1 day</td>
+          </tr>
+          <tr>
+            <td>ProgressDots</td>
+            <td class="rm">Cut</td>
+            <td>Duplicates "X of Y"</td>
+          </tr>
+          <tr>
+            <td>All badge pills</td>
+            <td class="rm">Cut</td>
+            <td>Cheerleading or redundant with greeting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
+</html>

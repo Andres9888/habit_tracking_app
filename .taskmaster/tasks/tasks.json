@@ -1,0 +1,857 @@
+{
+  "mvp": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Implement User Authentication System",
+        "description": "Add secure user authentication with sign-up, login, and session management using Convex Auth",
+        "details": "Extend existing auth.config.ts to include proper OAuth providers (Apple Sign-In required for iOS, Google, email/password). Implement sign-up and login screens with proper form validation, password requirements, and error handling. Add protected routes and authentication state management. Integrate userId field that exists in schema into all database operations. Add biometric authentication support for iOS. Implement secure session management with proper token refresh.",
+        "testStrategy": "Create unit tests for auth functions, integration tests for login/signup flows, test session persistence across app restarts, validate security requirements",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Create Onboarding Flow",
+        "description": "Design and implement first-run onboarding experience with welcome screens and habit creation tutorial",
+        "details": "Create multi-screen onboarding flow with: welcome screen explaining app benefits, sample habit creation walkthrough using existing create habit functionality, tutorial overlay showing how to track habits using existing calendar interface, initial setup guidance for user preferences. Use react-native-paper components for consistent UI. Implement skip functionality and progress indicators. Store onboarding completion status in userSettings table.",
+        "testStrategy": "Test onboarding flow completion, verify skip functionality, test tutorial interactions, validate first-time user experience",
+        "priority": "high",
+        "dependencies": [1],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Add Privacy Policy and Terms of Service",
+        "description": "Create and integrate privacy policy and terms of service for App Store compliance",
+        "details": "Draft comprehensive privacy policy covering data collection, usage, and storage practices specific to habit tracking data. Create terms of service document outlining user responsibilities and app usage guidelines. Add legal screens accessible from settings. Implement mandatory acceptance flow during onboarding. Ensure GDPR and CCPA compliance. Host documents externally and link from app. Add data deletion and export capabilities.",
+        "testStrategy": "Verify legal documents are accessible, test acceptance flow, validate external hosting, ensure compliance requirements are met",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Error Handling and Loading States",
+        "description": "Add comprehensive error handling, loading states, and empty state designs throughout the app",
+        "details": "Extend existing ErrorBoundary to handle more error types. Add loading skeletons for habit lists, tracking data, and statistics. Create empty state designs for: no habits created, no tracking data, network connectivity issues. Implement retry mechanisms for failed network requests. Add toast notifications using sonner for user feedback. Handle offline scenarios with appropriate messaging. Add error logging for debugging.",
+        "testStrategy": "Test error scenarios, verify loading states appear correctly, validate empty state designs, test offline functionality, ensure error recovery works",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Enhance Habit Management Features",
+        "description": "Extend existing habit functionality with categories, editing, deletion, and reordering capabilities",
+        "details": "Add habit editing functionality using existing updateNotes mutation as template. Implement habit deletion with confirmation dialog. Add drag-and-drop reordering using order field in schema. Create habit categories/tags system using existing tags field. Add habit search and filtering. Implement bulk actions for multiple habits. Add habit templates for quick creation. Enhance the existing habit creation form with category selection.",
+        "testStrategy": "Test CRUD operations, verify reordering functionality, validate category system, test search and filtering, ensure data consistency",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Enhanced Statistics and Analytics",
+        "description": "Expand existing statistics with more detailed analytics, charts, and insights",
+        "details": "Extend existing getStats query to include monthly/yearly views, completion patterns, and trend analysis. Add chart components using react-native-chart-kit or similar. Implement habit insights like best performing days, streak analysis, and consistency trends. Add goal-setting functionality with progress tracking. Create summary dashboard with key metrics. Enhance existing streak calculation with more detailed breakdowns.",
+        "testStrategy": "Verify statistical accuracy, test chart rendering, validate analytics calculations, ensure performance with large datasets",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Build Settings and User Preferences",
+        "description": "Expand existing SettingsDialog into comprehensive settings system with user preferences and account management",
+        "details": "Extend existing userSettings schema and settings.ts functions with: timezone selection, week start day preference, theme/color customization options, accessibility settings (text size, high contrast), data retention preferences. Create comprehensive settings UI using existing SettingsDialog.tsx as base. Implement timezone-aware date calculations in existing habit queries. Add theme provider for consistent styling across the app.",
+        "testStrategy": "Test settings persistence, verify timezone calculations, validate accessibility features, ensure theme consistency",
+        "priority": "medium",
+        "dependencies": [1],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Add Help System and Tutorials",
+        "description": "Create in-app help system with contextual tutorials and FAQ section",
+        "details": "Create help screens explaining habit tracking concepts, app features, and best practices. Add contextual help tooltips and tutorial overlays that can be triggered from any screen. Implement FAQ section with common questions. Add feature discovery system for new functionality. Create interactive tutorials for complex features. Add help accessibility through settings menu and floating help button.",
+        "testStrategy": "Test help system navigation, verify tutorial completion, validate FAQ content, ensure help accessibility",
+        "priority": "low",
+        "dependencies": [2],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Optimize Performance and Accessibility",
+        "description": "Implement performance optimizations and accessibility features for App Store compliance",
+        "details": "Add React.memo to habit components, optimize database queries using existing indexes, implement lazy loading for large habit lists. Add comprehensive accessibility labels, support for screen readers, keyboard navigation, and voice control. Implement proper semantic markup and ARIA labels. Add support for dynamic text sizing and high contrast modes. Optimize bundle size and startup time for iOS devices.",
+        "testStrategy": "Performance testing with large datasets, accessibility testing with screen readers, validate compliance with iOS accessibility guidelines",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Prepare iOS App Store Submission",
+        "description": "Configure app metadata, icons, screenshots, and submission requirements for iOS App Store",
+        "details": "Update app.json with final app metadata, bundle identifier, and version info. Create app icons for all required iOS sizes using existing design. Generate App Store screenshots for all device sizes showcasing key features. Configure EAS Build for production iOS builds. Set up App Store Connect listing with descriptions, keywords, and categories. Prepare app review notes highlighting key features. Configure push notification capabilities if needed. Test final build on physical iOS devices.",
+        "testStrategy": "Validate app metadata, test production builds on multiple iOS devices, verify App Store requirements compliance, test submission process",
+        "priority": "high",
+        "dependencies": [1, 2, 3, 4],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Add habit circle color customization in settings",
+        "description": "Allow users to customize the color of their habit circles/tracking indicators in the app settings. Include a color picker UI component and persist the user's color choice across sessions.",
+        "details": "",
+        "testStrategy": "",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-30T20:11:59.800Z",
+      "updated": "2025-10-06T03:46:00.466Z",
+      "taskCount": 10,
+      "completedCount": 0,
+      "description": "Tasks for mvp-ios context"
+    }
+  },
+  "post-mvp": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Implement Social Authentication (Google & Apple Sign-in)",
+        "description": "Add social sign-on capabilities using Google and Apple authentication providers integrated with Convex Auth",
+        "details": "Install and configure @convex-dev/auth for social providers. Add Google OAuth configuration using expo-auth-session and @react-native-google-signin/google-signin. Implement Apple Sign-In using expo-apple-authentication. Update auth.config.ts to include Google and Apple providers. Create login/signup screens with social authentication buttons. Handle authentication state management and user profile creation. Ensure proper token handling and secure storage.",
+        "testStrategy": "Unit tests for authentication flows, integration tests for OAuth token exchange, manual testing on both iOS and Android devices, test error handling for failed authentications",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement Local Push Notifications System",
+        "description": "Create a comprehensive local notification system for habit reminders with customizable scheduling",
+        "details": "Install expo-notifications and expo-device for notification handling. Create notification service using Expo's local notification API. Implement notification scheduling per habit with custom times. Add notification permission requests and settings management. Create notification content templates with habit-specific messaging. Implement notification categories and actions (mark complete, snooze). Add timezone support for accurate scheduling. Store notification preferences in Convex userSettings table with new fields: notificationsEnabled, habitReminders array.",
+        "testStrategy": "Test notification scheduling accuracy, verify notifications work in background/foreground, test permission handling, validate timezone calculations, test notification actions",
+        "priority": "high",
+        "dependencies": [1],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Build Advanced Analytics Dashboard with Calendar View",
+        "description": "Create comprehensive analytics including calendar view, monthly/yearly statistics, and trend analysis",
+        "details": "Install react-calendar for calendar component integration. Create analytics queries in Convex for monthly/yearly statistics. Implement streak history tracking with new database schema. Build calendar view component showing habit completion heat map. Create trend analysis algorithms for consistency patterns. Add completion rate graphs using react-native-chart-kit or victory-native. Implement data export functionality (CSV/JSON) using expo-sharing and expo-file-system. Create statistics screen with multiple view modes (weekly, monthly, yearly).",
+        "testStrategy": "Test calendar performance with large datasets, verify statistics accuracy, test export functionality across platforms, validate chart rendering, test date range selections",
+        "priority": "medium",
+        "dependencies": [2],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Enhance Offline Support with Conflict Resolution",
+        "description": "Implement robust offline functionality with advanced sync mechanisms and conflict resolution",
+        "details": "Implement offline queue management using AsyncStorage or expo-sqlite. Create sync conflict resolution logic for concurrent habit updates. Add optimistic updates with rollback capability. Implement network state detection using @react-native-community/netinfo. Create offline indicator UI components. Add retry mechanisms for failed sync operations. Store offline actions with timestamps for conflict resolution. Update Convex mutations to handle conflict resolution with last-write-wins or user-choice strategies.",
+        "testStrategy": "Test offline functionality without network, verify sync after reconnection, test conflict resolution scenarios, validate data consistency, test edge cases with rapid online/offline switching",
+        "priority": "medium",
+        "dependencies": [1],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Develop Social Sharing and Collaborative Features",
+        "description": "Create social features for habit sharing, templates, and collaborative tracking",
+        "details": "Design public habit templates system with Convex schema for shared habits. Implement friend connections with user relationship management. Create shared habit groups functionality with group progress tracking. Add social encouragement features (likes, comments, progress sharing). Implement privacy controls for habit visibility. Create template marketplace with categories and ratings. Add export/import functionality for habit templates. Implement sharing capabilities using expo-sharing for progress screenshots.",
+        "testStrategy": "Test template creation and sharing, verify privacy controls, test group functionality with multiple users, validate social interactions, test sharing across platforms",
+        "priority": "medium",
+        "dependencies": [1, 3],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Create Advanced Theme Customization System",
+        "description": "Build comprehensive personalization options including themes, colors, and accessibility features",
+        "details": "Implement theme provider using react-native-paper theming. Create custom color scheme editor with color picker components. Add timezone support using expo-localization and date-fns-tz. Implement week start day preferences in user settings. Create advanced accessibility options (font sizes, contrast modes, screen reader support). Add theme presets (light, dark, custom themes). Store personalization settings in Convex userSettings with new fields: customTheme, timezone, weekStartDay, accessibilitySettings.",
+        "testStrategy": "Test theme switching in real-time, verify accessibility features with screen readers, test timezone calculations, validate color customization persistence, test across different device sizes",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Build Habit Templates Library and Advanced Management",
+        "description": "Create a comprehensive habit template system with drag-drop reordering and advanced settings",
+        "details": "Create habit templates schema in Convex with categories, descriptions, and default settings. Implement drag-drop reordering using react-native-draggable-flatlist. Add advanced reminder settings with multiple daily notifications. Create habit goals and milestones tracking system. Implement habit difficulty levels with progress calculations. Add template categories (health, productivity, learning, etc.). Create habit template preview and customization interface. Add bulk habit creation from templates.",
+        "testStrategy": "Test drag-drop functionality across devices, verify template creation and application, test advanced reminder scheduling, validate milestone tracking, test bulk operations",
+        "priority": "medium",
+        "dependencies": [5],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement Profile Management and Data Export",
+        "description": "Create comprehensive user profile management with picture upload and data export capabilities",
+        "details": "Implement profile picture upload using expo-image-picker and Convex file storage. Create profile management interface with editable user information. Implement account data export functionality (habits, tracking data, settings) in multiple formats (JSON, CSV). Add profile statistics dashboard. Create account deletion with data cleanup. Implement profile backup and restore functionality. Add profile sharing capabilities for social features.",
+        "testStrategy": "Test image upload and storage, verify data export completeness and accuracy, test profile updates, validate account deletion cleanup, test backup/restore functionality",
+        "priority": "medium",
+        "dependencies": [1],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Create Community Features with Challenges and Leaderboards",
+        "description": "Build community engagement features including public challenges, leaderboards, and friend connections",
+        "details": "Create community challenges schema with participant tracking. Implement leaderboard system with various ranking criteria (streaks, consistency, participation). Build challenge creation and joining interface. Add friend invitation and connection system. Create community feed for shared progress and achievements. Implement challenge categories and difficulty levels. Add community moderation tools. Create achievement badges and rewards system.",
+        "testStrategy": "Test challenge participation with multiple users, verify leaderboard accuracy, test friend connection flow, validate community feed updates, test moderation features",
+        "priority": "low",
+        "dependencies": [5, 8],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Optimize Performance and Add Advanced Analytics",
+        "description": "Implement performance optimizations, caching strategies, and advanced user behavior analytics",
+        "details": "Implement data caching strategies with React Query integration. Add performance monitoring using expo-analytics or similar. Create advanced user behavior tracking for app usage patterns. Implement lazy loading for large datasets. Add database query optimizations in Convex. Create performance monitoring dashboard. Implement automated testing for performance regression. Add crash reporting and error tracking using expo-dev-client or Sentry.",
+        "testStrategy": "Performance testing with large datasets, memory usage monitoring, crash testing scenarios, analytics accuracy validation, cache effectiveness testing",
+        "priority": "medium",
+        "dependencies": [3, 4],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "iOS Widget Support",
+        "description": "Create iOS home screen widgets for quick habit tracking and progress viewing",
+        "details": "Implement iOS widgets using react-native-widget-extension or expo-widget. Create small, medium, and large widget sizes. Design widgets showing today's habits, current streaks, and quick completion actions. Implement deep linking from widgets to app. Add widget configuration for user customization. Ensure widget updates reflect real-time habit completion. Support iOS 14+ widget features including smart stacks and widget suggestions.",
+        "testStrategy": "Test widget installation and updates, verify deep linking functionality, validate widget performance on various iOS devices, test widget interactions",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "iCloud Sync and Multi-Device Support",
+        "description": "Implement iCloud synchronization for seamless cross-device habit tracking",
+        "details": "Configure iCloud entitlements in app configuration. Implement CloudKit integration for habit and tracking data sync. Create conflict resolution strategy for concurrent updates across devices. Add sync status indicators and manual sync option. Handle offline scenarios with queued sync operations. Ensure data privacy with encrypted iCloud storage. Test sync reliability across iPhone, iPad, and Mac devices.",
+        "testStrategy": "Test sync across multiple devices, verify conflict resolution, validate data consistency, test offline sync queuing, ensure privacy compliance",
+        "priority": "high",
+        "dependencies": [1],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Siri Shortcuts and Voice Integration",
+        "description": "Add Siri Shortcuts support for voice-based habit tracking and queries",
+        "details": "Implement Siri Shortcuts using expo-intent or react-native-siri-shortcut. Create shortcuts for marking habits complete, viewing streaks, and checking daily progress. Add custom intent definitions for natural language commands. Implement Shortcuts app integration with suggested shortcuts. Add voice feedback responses for completed actions. Support iOS Shortcuts automation triggers. Create shortcut donation system based on user behavior patterns.",
+        "testStrategy": "Test Siri command recognition, verify shortcut actions, validate automation triggers, test voice feedback, ensure iOS Shortcuts app integration",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Apple Watch Companion App",
+        "description": "Build Apple Watch app for quick habit tracking from wrist",
+        "details": "Create watchOS companion app using React Native or native Swift. Design watch face complications showing habit completion status. Implement glanceable habit list with tap-to-complete functionality. Add haptic feedback for completed habits. Create watch notification actions for habit reminders. Sync watch data with iPhone app in real-time. Support standalone watch usage when iPhone is not nearby. Optimize for watch battery life and performance.",
+        "testStrategy": "Test watch app functionality, verify iPhone sync, validate complications, test standalone mode, ensure battery efficiency",
+        "priority": "medium",
+        "dependencies": [12],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Habit Streaks Gamification System",
+        "description": "Implement comprehensive gamification with badges, achievements, and milestone rewards",
+        "details": "Create achievement system with badges for various milestones (7-day streak, 30-day streak, 100 completions, etc.). Design visually appealing badge collection interface. Implement streak freeze power-ups for missed days. Add level progression system based on total completions. Create challenge modes for extra motivation. Implement achievement notifications with celebratory animations. Add social sharing for unlocked achievements. Store achievement data in Convex with new schema tables.",
+        "testStrategy": "Test achievement unlocking logic, verify badge display, validate streak calculations, test power-up mechanics, ensure progression accuracy",
+        "priority": "medium",
+        "dependencies": [3],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "AI-Powered Habit Insights and Recommendations",
+        "description": "Implement AI-driven analytics for personalized habit insights and smart suggestions",
+        "details": "Integrate AI service (OpenAI, Anthropic Claude) for habit pattern analysis. Create intelligent insights detecting completion patterns, best performing times, and correlation between habits. Implement smart recommendations for new habits based on user behavior. Add predictive analytics for streak risk and success probability. Create personalized motivational messages based on user progress. Implement habit difficulty adjustment suggestions. Add weekly/monthly AI-generated progress summaries.",
+        "testStrategy": "Test AI insight accuracy, validate recommendations relevance, verify privacy of data sent to AI services, test prediction algorithms, ensure performance",
+        "priority": "medium",
+        "dependencies": [3],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Apple Health Integration",
+        "description": "Integrate with Apple Health to export habit tracking data and import health metrics",
+        "details": "Implement Apple HealthKit integration using expo-health or react-native-health. Export completed habits as mindful minutes or custom activity types. Import health data (steps, sleep, workouts) to correlate with habit success. Create health-related habit templates (exercise, meditation, sleep tracking). Add Apple Health permission management. Implement bidirectional sync for health-related habits. Visualize health correlations in analytics dashboard.",
+        "testStrategy": "Test HealthKit data export and import, verify permission handling, validate data accuracy, test correlation calculations, ensure privacy compliance",
+        "priority": "medium",
+        "dependencies": [3],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Habit Journaling and Reflection Notes",
+        "description": "Add journaling capability for habits with notes, reflections, and mood tracking",
+        "details": "Create journal entry interface for each habit completion. Add mood tracking with emoji or scale ratings. Implement rich text notes with markdown support. Add photo attachments to journal entries using expo-image-picker. Create journal history view showing past reflections. Implement search and filtering for journal entries. Add journaling prompts and reflection questions. Export journal entries to PDF or markdown files.",
+        "testStrategy": "Test journal entry creation and editing, verify photo uploads, validate search functionality, test export formats, ensure data persistence",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Custom Reminder Sounds and Notifications",
+        "description": "Add personalized notification sounds and advanced reminder customization",
+        "details": "Implement custom sound selection for habit reminders using expo-av. Create sound library with various notification tones. Add per-habit reminder customization (sound, vibration pattern, notification style). Implement smart reminder timing based on user patterns. Add location-based reminders using geofencing. Create reminder snooze and repeat options. Support iOS notification categories with custom actions. Add quiet hours and do-not-disturb integration.",
+        "testStrategy": "Test custom sound playback, verify reminder scheduling, validate location triggers, test notification actions, ensure iOS integration",
+        "priority": "low",
+        "dependencies": [2],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Habit Sharing and Social Proof Features",
+        "description": "Enable users to share habit progress and achievements on social media",
+        "details": "Create shareable progress cards with beautiful designs and statistics. Implement share functionality for Instagram Stories, Twitter, Facebook. Add customizable share templates with branding. Create achievement announcement features. Implement privacy controls for sharing. Add hashtag suggestions for social posts. Create referral system with share-to-invite functionality. Generate dynamic Open Graph images for link sharing.",
+        "testStrategy": "Test social media sharing flows, verify share card rendering, validate privacy controls, test referral tracking, ensure cross-platform compatibility",
+        "priority": "low",
+        "dependencies": [15],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Fix Habit Name Edit Alignment Issue",
+        "description": "Resolve layout shift when switching between view and edit modes for habit names in HabitCard component",
+        "details": "The habit name text and edit TextInput need to be perfectly aligned to prevent layout shift. Currently when switching from view to edit mode, there's a visible vertical alignment mismatch. Need to ensure both the Text component and TextInput have identical positioning, padding, margins, and line heights. Files to modify: src/components/HabitCard.tsx. Consider using identical styles for both elements or using a wrapper with consistent dimensions.",
+        "testStrategy": "Visual testing on iOS simulator and device, verify no layout shift occurs when entering/exiting edit mode, test with various habit name lengths, ensure alignment is pixel-perfect",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Fix Auto Theme Mode Detection",
+        "description": "Fix the automatic theme mode setting to properly detect and respond to system light/dark mode changes",
+        "details": "The auto theme mode setting is currently not working properly. Need to implement proper system theme detection using React Native's Appearance API or useColorScheme hook. Ensure the app responds in real-time when the system theme changes. Files to check: src/theme/index.tsx or theme context provider. Implement proper listeners for system theme changes and update the theme context accordingly. Verify theme persistence works correctly when auto mode is selected.",
+        "testStrategy": "Test auto mode by changing system theme settings, verify app updates in real-time, test theme persistence after app restart with auto mode enabled, validate on both iOS simulator and physical device",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Add Chain Connection to Previous Week Streak",
+        "description": "Add visual chain link connecting the first habit circle to previous week's completed habit",
+        "details": "When a habit is completed on the last day of the previous week AND the first day of the current week, add a visual chain line on the LEFT side of the first circle connecting to the habit card border. This indicates the streak continues from the previous week. Check tracking data for previous week's last day completion before rendering the chain. Use similar styling to existing streak chains between days. Files to modify: src/components/HabitCard.tsx. Add check for previous week's last day completion in App.tsx habit rendering logic.",
+        "testStrategy": "Test with habit completed on previous Sunday and current Monday, verify chain appears on left side of first circle, test with incomplete previous week, validate styling matches existing chains",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Add Undo Last Action Feature",
+        "description": "Implement undo functionality with toast notifications for habit toggle and archive actions",
+        "details": "Add toast/snackbar notification after toggling habit completion or archiving. Include 'Undo' button in toast with 3-5 second timeout. Store last action state (toggle completion, archive) to enable rollback. Use expo-toast or similar for native-looking notifications. Implement queue for multiple rapid actions. Add haptic feedback for undo actions.",
+        "testStrategy": "Test undo for habit completion toggle, test undo for archive action, verify timeout behavior, test rapid multiple actions",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Basic Habit Reminders",
+        "description": "Add simple daily reminder notifications for individual habits",
+        "details": "Add time picker when creating/editing habits for reminder time. Implement local notifications using expo-notifications. Store reminder preferences per habit in database schema. Request notification permissions on first reminder setup. Support basic actions: mark as complete from notification. Add toggle to enable/disable reminders per habit. Default reminder time suggestions (morning, afternoon, evening).",
+        "testStrategy": "Test notification scheduling, verify notifications appear at correct time, test notification actions, validate permission flow",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Bug Fix: Streak Records Calculation Inconsistency",
+        "description": "Fix incorrect streak record values in habit details screen (e.g., showing '104 days' and '5 days' incorrectly)",
+        "details": "ROOT CAUSE: The frontend calculateStreakRecords() function in InsightsSection.tsx uses Math.round() without time normalization, while the backend streakUtils.ts uses Math.floor() with proper midnight normalization. This causes off-by-one errors and timezone-dependent miscalculations.\n\nSOLUTION:\n1. Refactor calculateStreakRecords() in src/components/InsightsSection/InsightsSection.tsx (lines 116-200)\n2. Replace Math.round() with Math.floor() for date difference calculation (lines 137-139)\n3. Normalize dates to midnight using setHours(0, 0, 0, 0) before comparison\n4. Append 'T00:00:00' to date strings when creating Date objects for consistent timezone handling\n5. Match the backend differenceInDays() function pattern from convex/streakUtils.ts (lines 12-22)\n\nSPEC: docs/specs/habit-details-screen/streak-records-calculation-bug-fix.md",
+        "testStrategy": "Test single continuous streak displays correctly, verify separate streaks show as distinct records, test timezone edge cases (completion at 11:59 PM), verify current streak matches record when applicable, test backfill scenarios, compare frontend and backend calculations for consistency",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "26.1",
+            "title": "Add differenceInDays utility function to InsightsSection",
+            "description": "Create a local differenceInDays function matching the backend logic in streakUtils.ts",
+            "details": "Add function that normalizes dates to midnight using setHours(0, 0, 0, 0), calculates millisecond difference, and uses Math.floor() instead of Math.round(). This ensures consistent date calculations.",
+            "status": "pending"
+          },
+          {
+            "id": "26.2",
+            "title": "Refactor calculateStreakRecords date parsing",
+            "description": "Update date string parsing to use 'T00:00:00' suffix for consistent timezone handling",
+            "details": "Change 'new Date(completedDates[i])' to 'new Date(completedDates[i] + 'T00:00:00')' to ensure consistent date creation across timezones.",
+            "status": "pending"
+          },
+          {
+            "id": "26.3",
+            "title": "Replace inline date diff calculation with utility function",
+            "description": "Replace Math.round() calculation on lines 137-139 with call to differenceInDays utility",
+            "details": "Replace 'const diffDays = Math.round((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24))' with 'const diffDays = differenceInDays(currDate, prevDate)'",
+            "status": "pending"
+          },
+          {
+            "id": "26.4",
+            "title": "Test streak records with various data patterns",
+            "description": "Verify fix works correctly with single streaks, multiple streaks, and edge cases",
+            "details": "Manual testing: verify 10-day continuous streak shows '10 days', verify separate streaks (5 days gap 3 days) show correctly, test completion at day boundaries, verify current streak indicator works.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "title": "Bug Fix: Disable Dark Mode Temporarily",
+        "description": "Remove dark mode toggle and force light mode until dark mode is properly implemented",
+        "details": "Dark mode is partially implemented but not working correctly. When users toggle it, the setting saves but the app doesn't switch themes, causing confusion.\n\nSOLUTION:\n1. Remove dark mode toggle from SettingsModal.tsx\n2. Remove dark mode toggle from SettingsDialog.tsx\n3. Remove document.classList.toggle('dark') logic from SettingsDialog.hooks.ts\n4. Change default darkMode from 'system' to 'light' in SettingsDialog.config.ts\n5. Change default darkMode from 'system' to 'light' in convex/settings.ts\n\nSPEC: docs/specs/settings/disable-dark-mode-temporarily.md",
+        "testStrategy": "Verify dark mode toggle is not visible in settings, app always shows light mode, no 'dark' class on document.documentElement, new users default to light mode",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "27.1",
+            "title": "Remove dark mode toggle from SettingsModal",
+            "description": "Remove the dark mode toggle UI section from SettingsModal.tsx",
+            "details": "Find and remove the dark mode toggle switch/button from the native settings modal component.",
+            "status": "pending"
+          },
+          {
+            "id": "27.2",
+            "title": "Remove dark mode toggle from SettingsDialog",
+            "description": "Remove the dark mode toggle UI section from SettingsDialog.tsx",
+            "details": "Find and remove the dark mode toggle switch/button from the web settings dialog component.",
+            "status": "pending"
+          },
+          {
+            "id": "27.3",
+            "title": "Remove dark mode CSS class toggling",
+            "description": "Remove document.classList.toggle('dark') logic from SettingsDialog.hooks.ts",
+            "details": "Remove the useEffect that toggles the 'dark' class on document.documentElement based on darkMode setting.",
+            "status": "pending"
+          },
+          {
+            "id": "27.4",
+            "title": "Update default settings to light mode",
+            "description": "Change default darkMode from 'system' to 'light' in config files",
+            "details": "Update DEFAULT_SETTINGS in SettingsDialog.config.ts and convex/settings.ts to use 'light' instead of 'system'.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "title": "Bug Fix: Personal Bests Calculation Shows Wrong Streak Values",
+        "description": "Fix incorrect streak values in Personal Bests card (e.g., showing '104 days' when actual best is 5 days)",
+        "details": "ROOT CAUSE: The ProgressSection/utils.ts has a DUPLICATE calculateStreakRecords() function that still uses the buggy Math.round() and toISOString() logic, separate from the fixed version in InsightsSection.tsx.\n\nThe bugs:\n1. toISOString() converts to UTC, shifting dates incorrectly\n2. Math.round() instead of Math.floor() causes off-by-one errors\n3. Date parsing without 'T00:00:00' suffix causes timezone issues\n4. This makes separate streaks merge into one giant phantom streak\n\nSOLUTION:\n1. Import {differenceInDays, getTodayString, formatDateString} from '../../utils/dateUtils'\n2. Replace all toISOString().split('T')[0] calls with formatDateString() or getTodayString()\n3. Replace Math.round() date diff with differenceInDays() utility\n\nSPEC: docs/specs/habit-details-screen/personal-bests-calculation-bug-fix.md",
+        "testStrategy": "Verify 5-day streak shows '5' not '104', verify multiple separate streaks counted correctly, test timezone edge cases, compare values between InsightsSection and ProgressSection",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "28.1",
+            "title": "Import dateUtils in ProgressSection/utils.ts",
+            "description": "Add import for differenceInDays, getTodayString, formatDateString from ../../utils/dateUtils",
+            "details": "Add the import statement at the top of the file.",
+            "status": "pending"
+          },
+          {
+            "id": "28.2",
+            "title": "Fix calculateCurrentStreak function",
+            "description": "Replace toISOString().split('T')[0] with formatDateString() and getTodayString()",
+            "details": "Lines 80-108: Replace timezone-buggy date string generation with UTC-normalized utilities.",
+            "status": "pending"
+          },
+          {
+            "id": "28.3",
+            "title": "Fix calculateStreakRecords function",
+            "description": "Replace Math.round date diff with differenceInDays() and fix date string generation",
+            "details": "Lines 117-203: Replace Math.round() calculation with differenceInDays(), replace all toISOString calls with proper utilities.",
+            "status": "pending"
+          },
+          {
+            "id": "28.4",
+            "title": "Fix calculateDayOfWeekStats and calculateTrendComparison",
+            "description": "Replace toISOString().split('T')[0] with formatDateString() in remaining functions",
+            "details": "These functions also use the buggy date string pattern and need updating for consistency.",
+            "status": "pending"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-30T20:13:31.582Z",
+      "updated": "2025-12-22T07:35:00.000Z",
+      "taskCount": 28,
+      "completedCount": 0,
+      "description": "Tasks for post-mvp context"
+    }
+  },
+  "needs-testing": {},
+  "mvp-ios": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Extract Component Logic to Custom Hooks",
+        "description": "Refactor all React components to extract business logic into co-located custom hooks following useComponentNameLogic naming pattern",
+        "details": "Extract state management, event handlers, side effects, and utility functions from ~16 React Native components into co-located ComponentName.hooks.ts files. Each hook should be named useComponentNameLogic (e.g., useSettingsModalLogic, useDraggableHabitLogic). Components should remain purely presentational with only JSX and hook consumption. Maintain 100% backward compatibility - no changes to component props or external API. Priority components: SettingsModal, DraggableHabit, HabitCalendarView, ArchivedHabitsModal. Simple presentational components (Button, Card, Checkbox) should be evaluated but may not require extraction. Full story details in docs/stories/extract-component-logic.md",
+        "testStrategy": "Test each component after extraction to ensure no behavioral changes. Verify TypeScript compilation passes. Validate all existing functionality works identically. Test components with various prop combinations. Ensure no visual regressions in UI.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Story 1.2.1: Edge Cases & Error Handling for Check-Off",
+        "description": "Implement comprehensive edge case handling and error recovery for habit check-off feature including debounce, retry queue, conflict resolution, and offline support",
+        "details": "Add robust error handling to prevent data loss and provide graceful degradation under adverse conditions. Implement: debounce (300ms cooldown) for rapid taps, retry queue with exponential backoff for network failures, multi-device conflict resolution using last-write-wins, offline-to-online sync with progress indicators, animation interruption handling, date boundary validation, corrupted data detection and repair, background app kill recovery. Full specifications in docs/stories/epic-1-home-screen/habit-card/bugs/story-1.2.1-edge-cases.md",
+        "testStrategy": "Unit tests for debounce logic, error handling, and retry queue. Integration tests for multi-device conflicts and offline sync. Manual testing on physical device for rapid taps, airplane mode, app kills, and timezone changes. Verify 99.9% sync success rate and zero data loss.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "2.1",
+            "title": "Implement Debounce and Race Condition Prevention",
+            "description": "Add 300ms cooldown to prevent duplicate mutations from rapid taps",
+            "details": "Add isToggling state flag to HabitCard, implement 300ms cooldown period, ignore taps within window, ensure haptic feedback fires only once per window. Modify src/components/HabitCard.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.2",
+            "title": "Add Error Handling with Try-Catch",
+            "description": "Handle network failures and mutation errors gracefully with toast notifications",
+            "details": "Wrap toggleCompletionMutation in try/catch, add error state management, display toast notifications for errors, log to Sentry, ensure UI consistency on errors. Create src/utils/toastMessages.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.3",
+            "title": "Implement Retry Queue with Exponential Backoff",
+            "description": "Automatically retry failed mutations with 1s, 2s, 4s delays",
+            "details": "Create retry queue manager, implement exponential backoff, persist queue to AsyncStorage, show sync status indicator during retries, maximum 3 attempts. Create src/utils/retryQueue.ts and src/hooks/useRetryQueue.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.4",
+            "title": "Add Sync Status Indicator",
+            "description": "Visual feedback for pending sync operations",
+            "details": "Create SyncStatusIndicator component showing spinning icon during sync, display count of pending operations, auto-hide when complete, integrate with retry queue. Create src/components/SyncStatusIndicator.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.5",
+            "title": "Implement Multi-Device Conflict Resolution",
+            "description": "Handle concurrent updates from multiple devices using last-write-wins",
+            "details": "Add timestamp comparison logic in toggleCompletion mutation, detect concurrent updates via Convex reactivity, show toast for changes from other devices, handle deleted habits. Modify convex/tracking.ts and src/components/HabitCard.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.6",
+            "title": "Handle Animation Interruptions",
+            "description": "Allow tap during animation without visual artifacts",
+            "details": "Cancel in-progress animation on new tap using Reanimated cancelAnimation(), ensure atomic state transitions, respect debounce during cancellation. Modify src/components/HabitCard.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.7",
+            "title": "Offline-to-Online Sync Flow",
+            "description": "Batch sync queued completions when network reconnects",
+            "details": "Detect online/offline events with NetInfo, queue mutations to AsyncStorage when offline, batch sync on reconnection, show progress indicator. Create src/hooks/useNetworkStatus.ts and src/utils/offlineQueue.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.8",
+            "title": "Strength Calculation Failure Handling",
+            "description": "Persist completion even if strength calculation fails",
+            "details": "Separate completion tracking from strength calculation, make calculation async and non-blocking, add fallback UI state, implement background retry. Modify convex/tracking.ts and src/components/HabitStrengthIndicator.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.9",
+            "title": "Date Boundary Validation",
+            "description": "Prevent timezone-related date errors",
+            "details": "Calculate date on client in local timezone, send YYYY-MM-DD string to server, server validates format only, handle DST transitions. Create src/utils/dateHelpers.ts and modify convex/tracking.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.10",
+            "title": "Corrupted Data Detection and Repair",
+            "description": "Handle missing or invalid habit data gracefully",
+            "details": "Add Zod validation schema for habit documents, detect schema violations on query, show error state UI with restore option, provide repair mutation. Create convex/schemas/habitSchema.ts and convex/mutations/repairHabit.ts",
+            "status": "pending"
+          },
+          {
+            "id": "2.11",
+            "title": "Background App Kill Recovery",
+            "description": "Persist mutations across app kills",
+            "details": "Persist mutation queue to AsyncStorage before kill, check for queued mutations on app launch, auto-sync on relaunch, show sync progress. Modify src/utils/retryQueue.ts, create src/hooks/useAppState.ts, modify App.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "2.12",
+            "title": "Comprehensive Testing Suite",
+            "description": "Ensure all edge cases covered by tests",
+            "details": "Write 20+ unit tests for debounce, error handling, and retry logic. Integration tests for conflicts and offline sync. Manual testing checklist for physical device. Create test files and manual checklist.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Fix StrengthProgressBar Empty Animation Bug",
+        "description": "Remove the fill/bounce animation that occurs when the strength value drops to 0%. The spring animation causes visual overshoot making the bar appear to fill before emptying.",
+        "details": "In StrengthProgressBar.tsx, the progressWidth animation uses withSpring() with damping:15 and stiffness:100. When transitioning to 0%, this causes the bar to visually 'bounce' and appear to fill before emptying. Replace spring with timing animation when transitioning to low values (<=5%). See spec: docs/specs/habit-card-screen/strength-progress-bar-empty-animation-fix.md",
+        "testStrategy": "Build strength to 20%+, then skip days to decay to 0%. Verify bar animates smoothly down without bouncing or filling. Test normal animations still work when strength increases. Verify reduce motion accessibility setting is respected.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Enhance Template Card Animations in Import Habits Screen",
+        "description": "Add polished, delightful animations to template cards including staggered entrances, improved press feedback, and success celebrations",
+        "details": "Implement comprehensive animation improvements for the Import Habits screen: 1) Add staggered SlideInRight entrance for MiniTemplateCards when category expands (50ms delay per card), 2) Add icon bounce animation on category header expansion, 3) Enhance press feedback with rotation + shadow lift effect, 4) Add subtle idle pulse animation to Import button, 5) Add success checkmark animation after import with glow effect, 6) Add shimmer effect to Research badge, 7) Ensure all animations respect useReducedMotion accessibility settings. Files to modify: src/components/CollapsibleCategorySection.tsx, src/components/MiniTemplateCard.tsx, src/components/TemplateCard.tsx. Reference spec: docs/specs/import-habits-screen/template-card-animations.md",
+        "testStrategy": "Test staggered animations with 10+ templates per category. Verify press feedback feels tactile and responsive. Test import success animation completes smoothly. Validate all animations disabled when useReducedMotion returns true. Test performance on low-end devices. Verify no layout shifts during animations.",
+        "priority": "medium",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "4.1",
+            "title": "Add Staggered SlideInRight Entrance to MiniTemplateCards",
+            "description": "Animate cards sliding in from right with 50ms stagger delay when category expands",
+            "details": "Wrap each MiniTemplateCard in Animated.View with entering={SlideInRight.delay(index * 50).springify().damping(18)}. Modify CollapsibleCategorySection.tsx to pass index to each card and add the entrance animation.",
+            "status": "pending"
+          },
+          {
+            "id": "4.2",
+            "title": "Add Icon Bounce on Category Header Expansion",
+            "description": "Make category icon bounce when section expands",
+            "details": "Add useAnimatedStyle for icon with translateY and scale animations. When isExpanded changes to true, animate icon with translateY: -3 and scale: 1.1 using spring animation.",
+            "status": "pending"
+          },
+          {
+            "id": "4.3",
+            "title": "Enhance Press Feedback with Rotation and Shadow",
+            "description": "Add subtle rotation and shadow lift to card press feedback",
+            "details": "Update handlePressIn/Out in MiniTemplateCard to include rotation (-0.5deg) and shadow elevation changes. Use withSpring for natural feel.",
+            "status": "pending"
+          },
+          {
+            "id": "4.4",
+            "title": "Add Subtle Idle Pulse to Import Button",
+            "description": "Import button breathes with subtle scale animation",
+            "details": "Add withRepeat withSequence animation cycling scale between 1 and 1.02 over 3 seconds. Ensure animation cancels properly on unmount.",
+            "status": "pending"
+          },
+          {
+            "id": "4.5",
+            "title": "Add Success Animation After Import",
+            "description": "Show checkmark and glow effect when template is imported",
+            "details": "After successful import, animate checkmark appearing with scale spring, add brief glow effect to card border using opacity animation. Consider transitioning button text from 'Add' to checkmark icon.",
+            "status": "pending"
+          },
+          {
+            "id": "4.6",
+            "title": "Add Shimmer Effect to Research Badge",
+            "description": "Subtle shimmer animation on research badge to draw attention",
+            "details": "Create shimmer overlay using LinearGradient with translateX animation. Cycle every 2 seconds with linear easing.",
+            "status": "pending"
+          },
+          {
+            "id": "4.7",
+            "title": "Add useReducedMotion Accessibility Support",
+            "description": "Disable or simplify animations when reduced motion is enabled",
+            "details": "Import useReducedMotion from react-native-reanimated. Conditionally use simpler/no animations when reducedMotion is true. Apply to all new animations in this task.",
+            "status": "done"
+          },
+          {
+            "id": "4.8",
+            "title": "Add Screen Transition Animation from Home to Templates",
+            "description": "Improve the navigation transition from Home/Habit List to Templates screen",
+            "details": "Configure React Navigation native stack with custom animation (slide_from_right or fade_from_bottom). Optionally add choreographed entrance with header slide-down and content fade-up with stagger. Consider shared element transition if navigating from specific button. Files: src/navigation/, src/screens/TemplatesScreen.tsx",
+            "status": "pending"
+          },
+          {
+            "id": "4.9",
+            "title": "Fix Animation Lag and Performance Issues",
+            "description": "Optimize animations to reduce lag and jank during category expansion",
+            "details": "Profile with Flipper/React DevTools. Reduce spring stiffness (from 120-300 to ~100). Increase stagger delay from 50ms to 80ms. Defer shimmer start by 500ms. Use InteractionManager for animation batching. Slower shimmer (3000ms vs 2000ms). Test on low-end Android device. Files: CollapsibleCategorySection.tsx, MiniTemplateCard.tsx, TemplateCard.tsx",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Remove Three Dots Menu Button from Habit Card",
+        "description": "Temporarily remove the incomplete three-dots menu button (⋯) from habit cards until the full quick actions feature is implemented.",
+        "details": "In DraggableHabit.tsx, remove the Pressable button (lines 501-513) that displays the horizontal ellipsis. Remove the onMorePress prop from the component interface. Clean up any parent components passing onMorePress. Users can still access actions via long press and swipe left. See spec: docs/specs/habit-card-screen/remove-three-dots-menu-button.md",
+        "testStrategy": "Verify three-dots button no longer visible on habit cards. Test long press still opens quick actions menu. Test swipe left still reveals edit/delete buttons. Verify no layout shifts after removal. Check TypeScript compilation passes.",
+        "priority": "low",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Fix Template Preview Modal Sizing - Content Not Fully Visible",
+        "description": "The TemplatePreviewModal appears too small when clicking a template card, preventing users from seeing all content (preview, customization options, import button) without excessive scrolling.",
+        "details": "The modal has conflicting maxHeight constraints (container: 90%, bottomSheet: 0.9 * SCREEN_HEIGHT) that limit the visible area. Fix by: 1) Remove maxHeight: '90%' from container style, 2) Add flexGrow: 1 to content style, 3) Add contentContainerStyle with flexGrow: 1 to ScrollView, 4) Apply safe area insets to footer, 5) Consider fullScreen variant fallback for small devices (< 700pt). See spec: docs/specs/import-habits-screen/template-preview-modal-sizing.md",
+        "testStrategy": "Test on iPhone SE (small), iPhone 14 (standard), iPhone 15 Pro Max (large). Verify all content visible without excessive scrolling. Verify import button not cut off. Test keyboard avoidance when name input focused. Verify safe area handling for home indicator.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "6.1",
+            "title": "Remove container maxHeight constraint",
+            "description": "Remove maxHeight: '90%' from container style in TemplatePreviewModal.tsx",
+            "details": "The container style at line 337-339 has maxHeight: '90%' which conflicts with the Modal's bottomSheet maxHeight. Remove it or replace with flex: 1.",
+            "status": "pending"
+          },
+          {
+            "id": "6.2",
+            "title": "Fix ScrollView expansion",
+            "description": "Add flexGrow: 1 to content style and contentContainerStyle to ScrollView",
+            "details": "Ensure the ScrollView properly expands to fill available space. Add contentContainerStyle={{ flexGrow: 1 }} to the ScrollView component.",
+            "status": "pending"
+          },
+          {
+            "id": "6.3",
+            "title": "Add safe area handling to footer",
+            "description": "Import useSafeAreaInsets and apply bottom inset to footer padding",
+            "details": "Use useSafeAreaInsets from react-native-safe-area-context. Apply Math.max(insets.bottom, 16) as paddingBottom to the footer style.",
+            "status": "pending"
+          },
+          {
+            "id": "6.4",
+            "title": "Test on multiple device sizes",
+            "description": "Verify modal sizing on small, medium, and large screens",
+            "details": "Test on iPhone SE (667pt), iPhone 14 (844pt), iPhone 15 Pro Max (932pt). All content should be visible with minimal scrolling on standard devices.",
+            "status": "pending"
+          },
+          {
+            "id": "6.5",
+            "title": "Implement fullScreen fallback for small devices",
+            "description": "Use fullScreen variant instead of bottomSheet on screens < 700pt height",
+            "details": "Check Dimensions.get('window').height and conditionally use variant='fullScreen' for small devices to ensure all content is accessible.",
+            "status": "pending"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Why Editor Keyboard UX Improvements",
+        "description": "Fix keyboard blocking issues in the Why Editor Modal and improve the editing experience to match CreateHabitModalV2 patterns",
+        "details": "The Why Editor Modal in HabitDetailScreen.tsx has UX issues: keyboard blocks input, no Done button, character counter overlays text, intro text wastes space when keyboard is visible. Refactor to use useKeyboardState hook, add keyboard-aware Done button, relocate counter outside input, collapse intro on keyboard show, add auto-scroll and footer adaptation. See spec: docs/specs/habit-details-screen/why-editor-keyboard-ux-improvements.md and mockup: .superdesign/design_iterations/why_editor_improved_1.html",
+        "testStrategy": "Test on iOS simulator and Android emulator for keyboard behavior. Verify input remains visible when keyboard opens. Test Done button appearance/dismissal. Verify character counter is visible and changes color at limits. Test animations are smooth. Verify accessibility labels on new elements.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": "7.1",
+            "title": "Add Keyboard State Management",
+            "description": "Import and use useKeyboardState hook from CreateHabitModal in HabitDetailScreen.tsx",
+            "details": "Import useKeyboardState from '../components/CreateHabitModal/hooks/useKeyboardState'. Call hook inside component to get isKeyboardVisible and keyboardHeight. These will be used by other subtasks.",
+            "status": "pending"
+          },
+          {
+            "id": "7.2",
+            "title": "Add Done Button to Header (Keyboard-Aware)",
+            "description": "Add a Done button next to close button that appears only when keyboard is visible",
+            "details": "Add Pressable with 'Done' text styled as rose-500 button. Show/hide based on isKeyboardVisible using opacity/scale animation. onPress should call Keyboard.dismiss(). Position between title and X button in header row (lines ~2303-2318).",
+            "status": "pending"
+          },
+          {
+            "id": "7.3",
+            "title": "Move Character Counter Outside Input",
+            "description": "Relocate the 0/200 counter from inside TextInput overlay to below it",
+            "details": "Remove the absolute positioned View inside TextInput (lines ~2343-2347). Add new View after TextInput with flex-row justify-end mt-2. Counter should change color: stone-400 (normal), amber-500 (160-179), rose-500 (180+).",
+            "status": "pending"
+          },
+          {
+            "id": "7.4",
+            "title": "Collapse Intro Text When Keyboard Visible",
+            "description": "Animate the intro paragraph to hide when keyboard opens",
+            "details": "Wrap intro Text (line ~2325-2327) in Animated.View. Create introOpacity and introHeight animated values. Use useEffect to animate them based on isKeyboardVisible. Duration 200ms, easing ease-out. Note: height animation can't use native driver.",
+            "status": "pending"
+          },
+          {
+            "id": "7.5",
+            "title": "Add Auto-Scroll on Input Focus",
+            "description": "Scroll content to keep TextInput visible when focused",
+            "details": "Add ref to ScrollView in Why Editor modal. On TextInput focus or when keyboard becomes visible, call scrollViewRef.current.scrollTo({ y: 50, animated: true }) to ensure input stays visible above keyboard.",
+            "status": "pending"
+          },
+          {
+            "id": "7.6",
+            "title": "Adjust Footer Position with Keyboard",
+            "description": "Move the Save My Why button up when keyboard appears",
+            "details": "Use Animated.View for footer (lines ~2377-2389). Animate transform translateY based on keyboardHeight. When keyboard visible, translateY should be -keyboardHeight. Smooth animation with spring or timing (200ms).",
+            "status": "pending"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-10-10T00:00:00.000Z",
+      "updated": "2025-12-22T00:00:00.000Z",
+      "taskCount": 7,
+      "completedCount": 0,
+      "description": "Tasks for mvp-ios context"
+    }
+  }
+}

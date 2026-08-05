@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Heatmap — Final (HabitKit-inspired monochrome)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:opsz,wght@7..72,600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F5F1ED; --card:#FFFFFF; --border:#DDD8D2; --fg:#2D2A26;
+    --t2:#6B6560; --t3:#6E6660; --tooltip-bg:#1C1917; --tooltip-fg:#FAF8F5;
+    --shadow:0 1px 3px rgba(45,42,38,.06),0 1px 2px rgba(45,42,38,.04);
+    --missed-alpha:.15; --before:rgba(0,0,0,.05);
+  }
+  [data-theme="dark"]{
+    --bg:#111827; --card:#1F2937; --border:#374151; --fg:#F9FAFB;
+    --t2:#9CA3AF; --t3:#8E95A2; --tooltip-bg:#F5F1ED; --tooltip-fg:#111827;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
+    --missed-alpha:.25; --before:rgba(255,255,255,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);font-family:'DM Sans',system-ui,sans-serif;color:var(--fg);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:32px 16px 80px;transition:background .3s}
+  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:24px}
+  .toolbar h1{font-family:'Literata',serif;font-size:17px;font-weight:600}
+  .toolbar select,.toggle{border:1px solid var(--border);background:var(--card);color:var(--fg);border-radius:9999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+  .phone{width:390px;max-width:100%;background:var(--bg);border:1px solid var(--border);border-radius:28px;padding:18px 14px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+  .head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+  .title{font-size:14px;font-weight:600}
+  .stat{text-align:right}
+  .stat .pct{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;line-height:20px}
+  .stat .count{font-size:10px;color:var(--t3);margin-top:1px}
+  .grid-area{display:flex;gap:6px}
+  .day-col{display:flex;flex-direction:column;gap:3px;padding-top:19px}
+  .day-col .lbl{height:13px;font-size:9px;color:var(--t3);display:flex;align-items:center}
+  .scroller{overflow-x:auto;flex:1}
+  .scroller::-webkit-scrollbar{height:0}
+  .months{display:flex;height:16px;position:relative;margin-bottom:3px}
+  .months span{position:absolute;font-size:10px;color:var(--t3)}
+  .rows{display:flex;flex-direction:column;gap:3px}
+  .row{display:flex;gap:3px}
+  .cell{width:13px;height:13px;border-radius:4px;flex:0 0 auto}
+  .cell.today{box-shadow:0 0 0 2px var(--habit)}
+  .legend{display:flex;align-items:center;gap:14px;margin-top:14px;padding:0 2px}
+  .legend .item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--t2)}
+  .legend .sq{width:9px;height:9px;border-radius:2px}
+  .tooltip{position:absolute;transform:translateX(-50%);background:var(--tooltip-bg);color:var(--tooltip-fg);font-size:11px;padding:5px 9px;border-radius:6px;white-space:nowrap;box-shadow:var(--shadow)}
+  .tooltip::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%) rotate(45deg);width:8px;height:8px;background:var(--tooltip-bg)}
+  .caption{margin-top:18px;font-size:12px;color:var(--t2);max-width:390px;text-align:center;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <h1>Final — monochrome</h1>
+    <select id="habit">
+      <option value="#059669">Green</option>
+      <option value="#3B82F6">Blue</option>
+      <option value="#8B5CF6">Purple</option>
+      <option value="#EF4444">Red</option>
+      <option value="#D97706">Amber</option>
+    </select>
+    <button class="toggle" id="toggle">◐ Dark</button>
+  </div>
+
+  <div class="phone">
+    <div class="card">
+      <div class="head">
+        <div class="title">Year overview</div>
+        <div class="stat"><div class="pct" id="pct">—</div><div class="count" id="count"></div></div>
+      </div>
+      <div class="grid-area">
+        <div class="day-col" id="dayCol"></div>
+        <div class="scroller"><div style="display:inline-block;position:relative">
+          <div class="months" id="months"></div>
+          <div class="rows" id="rows"></div>
+        </div></div>
+      </div>
+      <div class="legend">
+        <div class="item"><span class="sq" id="sqMiss"></span>Missed</div>
+        <div class="item"><span class="sq" id="sqDone"></span>Done</div>
+      </div>
+    </div>
+  </div>
+  <p class="caption">Empty days are a faint tint of the habit color (not gray); days before you started the habit are faint neutral boxes on the left, so the grid is always a complete rectangle. White card + border now matches the monthly calendar card. Switch habit color / theme above.</p>
+
+<script>
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const DAY=['', 'M','','W','','F',''];
+  const WEEKS=53; const today=new Date();
+  const dayCol=document.getElementById('dayCol');
+  DAY.forEach(l=>{const d=document.createElement('div');d.className='lbl';d.textContent=l;dayCol.appendChild(d);});
+  let cellData=[];
+  function hexA(hex,a){const m=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);const r=parseInt(m[1],16),g=parseInt(m[2],16),b=parseInt(m[3],16);return`rgba(${r},${g},${b},${a})`;}
+  function build(){
+    const habit=document.getElementById('habit').value;
+    document.documentElement.style.setProperty('--habit',habit);
+    const isDark=document.documentElement.dataset.theme==='dark';
+    const alpha=isDark?0.25:0.15;
+    document.getElementById('sqMiss').style.background=hexA(habit,alpha);
+    document.getElementById('sqDone').style.background=habit;
+    const rowsEl=document.getElementById('rows'); rowsEl.innerHTML='';
+    const rows=[]; for(let r=0;r<7;r++){const row=document.createElement('div');row.className='row';rowsEl.appendChild(row);rows.push(row);}
+    const todayIndex=(WEEKS-1)*7+today.getDay();
+    const CREATED_AGO=160; // habit started ~160 days ago
+    let done=0,elig=0;
+    for(let w=0;w<WEEKS;w++)for(let dy=0;dy<7;dy++){
+      const i=w*7+dy,diff=todayIndex-i;const date=new Date(today);date.setDate(today.getDate()-diff);
+      const cell=document.createElement('div');cell.className='cell';
+      if(diff<0){cell.style.background=hexA(habit,alpha);cell.style.opacity=.4;}
+      else if(diff>CREATED_AGO){cell.style.background='var(--before)';} // before you started
+      else{const c=diff<12?true:Math.random()<0.66;elig++;if(c)done++;cell.style.background=c?habit:hexA(habit,alpha);if(diff===0)cell.classList.add('today');cell.dataset.d=MONTHS[date.getMonth()]+' '+date.getDate();cell.dataset.c=c;}
+      rows[dy].appendChild(cell);
+    }
+    document.getElementById('pct').textContent=Math.round(done/elig*100)+'%';
+    document.getElementById('pct').style.color=habit;
+    document.getElementById('count').textContent=done+'/'+elig+' days';
+    const monthsEl=document.getElementById('months');monthsEl.innerHTML='';let lm=-1;
+    for(let w=0;w<WEEKS;w++){const diff=todayIndex-w*7;const date=new Date(today);date.setDate(today.getDate()-diff);if(date.getMonth()!==lm){lm=date.getMonth();const s=document.createElement('span');s.textContent=MONTHS[lm];s.style.left=(w*16)+'px';monthsEl.appendChild(s);}}
+    monthsEl.style.width=(WEEKS*16)+'px';
+    const sample=rows[2].children[42];if(sample){const t=document.createElement('div');t.className='tooltip';t.textContent=sample.dataset.d+' · '+(sample.dataset.c==='true'?'Done ✓':'Missed');t.style.left=(42*16+6)+'px';t.style.top='-14px';document.querySelector('.rows').parentElement.appendChild(t);}
+    document.querySelector('.scroller').scrollLeft=9999;
+  }
+  document.getElementById('toggle').onclick=()=>{const el=document.documentElement;el.dataset.theme=el.dataset.theme==='dark'?'':'dark';build();};
+  document.getElementById('habit').onchange=build;
+  build();
+</script>
+</body>
+</html>

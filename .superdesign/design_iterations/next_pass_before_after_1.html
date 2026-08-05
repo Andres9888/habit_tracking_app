@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Next pass — before / after</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Literata:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* Real app tokens — darkColors.ts / airyScale.ts / spacing.ts */
+  :root {
+    --canvas: #F5F1ED;
+    --paper: #F8F5F1;
+    --white: #FFFFFF;
+    --border: #DDD8D2;
+    --divider: #EFEAE4;
+    --ink: #1A1816;
+    --ink-2: #55504A;
+    --ink-3: #8B857D;
+    --green: #047857;
+    --green-bg: #E2F1EA;
+    --green-600: #059669;
+    --amber-ic: #8A6A33;
+    --amber-bg: #F4E7D2;
+    --tile-r: 13px;
+    --card-r: 24px;
+    /* shadows.card (old) vs shadows.cardLifted (new) */
+    --sh-flat: 0 2px 8px rgba(45,42,38,.06);
+    --sh-lift: 0 4px 16px rgba(45,42,38,.10);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0 !important;
+    background: #2E2B28 !important;
+    font-family: 'DM Sans', system-ui, sans-serif !important;
+    color: #F3EFEA !important;
+    -webkit-font-smoothing: antialiased;
+    padding: 40px 20px 80px;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; }
+  h1 { font-family: 'Literata', serif; font-size: 30px; margin: 0 0 6px !important; letter-spacing: -.5px; }
+  .lede { color: #B5AEA6; font-size: 15px; line-height: 1.55; margin: 0 0 44px; max-width: 760px; }
+  .scenario { margin-bottom: 64px; }
+  h2 { font-family: 'Literata', serif; font-size: 21px; margin: 0 0 6px !important; letter-spacing: -.3px; }
+  .note { color: #B5AEA6; font-size: 14px; line-height: 1.6; margin: 0 0 22px; max-width: 820px; }
+  .note b { color: #F3EFEA; font-weight: 600; }
+  .pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 26px; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .tag { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 5px 12px; border-radius: 999px; margin-bottom: 12px; }
+  .tag.b { background: #453F39; color: #B5AEA6; }
+  .tag.a { background: #17452F; color: #7FE0B0; }
+  .phone {
+    width: 360px; max-width: 100%; background: var(--canvas); color: var(--ink);
+    border-radius: 34px; padding: 16px 0 22px; overflow: hidden;
+    box-shadow: 0 20px 50px -18px rgba(0,0,0,.6);
+  }
+  .notch { width: 100px; height: 5px; border-radius: 999px; background: #D6D0C8; margin: 0 auto 14px; }
+  .pad { padding: 0 16px; }
+
+  /* ── shared bits ── */
+  .tile { width: 42px; height: 42px; border-radius: var(--tile-r); display:flex; align-items:center; justify-content:center; flex:none; font-size:17px; }
+  .tile.state { background: var(--green-bg); color: var(--green); }
+  .row { display: flex; align-items: center; gap: 12px; padding: 15px 16px; border-top: 1px solid var(--divider); }
+  .row:first-child { border-top: none; }
+  .lbl b { display:block; font-size: 15.5px; font-weight: 600; letter-spacing: -.1px; }
+  .lbl small { display:block; font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+  .toggle { width: 44px; height: 26px; border-radius: 999px; background: #DDD8D2; position: relative; flex:none; margin-left:auto; }
+  .toggle.on { background: var(--green-600); }
+  .toggle i { position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:999px; background:#fff; }
+  .toggle.on i { left:auto; right:3px; }
+
+  /* OLD card vs NEW card */
+  .card-old { background: var(--white); border-radius: var(--card-r); box-shadow: var(--sh-flat); overflow: hidden; margin-bottom: 14px; }
+  .card-new { background: var(--paper); border: 1px solid var(--border); border-radius: var(--card-r); box-shadow: var(--sh-lift); overflow: hidden; margin-bottom: 14px; }
+
+  /* OLD label vs NEW heading */
+  .label-old { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); text-align:center; margin: 22px 0 14px; }
+  .head-new { font-family:'Literata', serif; font-size: 19px; font-weight: 700; letter-spacing: -.3px; margin: 22px 0 10px; padding-left: 8px; }
+
+  /* detail screen */
+  .detail-hdr { display:flex; align-items:center; justify-content:space-between; padding: 4px 16px 14px; }
+  .detail-hdr .t { font-family:'Literata', serif; font-size: 20px; font-weight: 700; }
+  .circ { width:32px; height:32px; border-radius:999px; background:#E9E4DD; display:flex; align-items:center; justify-content:center; color:var(--ink-3); font-size:14px; }
+  .month { display:flex; align-items:baseline; justify-content:space-between; padding: 16px 16px 10px; }
+  .month b { font-family:'Literata', serif; font-size: 19px; font-weight:700; }
+  .month span { color: var(--green); font-weight:600; font-size:13px; }
+  .grid { display:grid; grid-template-columns: repeat(7, 1fr); gap:7px; padding: 0 16px 16px; }
+  .grid i { display:block; padding-top:100%; border-radius:9px; background:#EFEAE4; }
+  .card-new .grid i { background: var(--canvas); }
+  .strip { display:flex; align-items:center; justify-content:space-between; padding: 14px 16px; font-size:14.5px; font-weight:500; }
+  .strip a { color: var(--green); font-weight:600; text-decoration:none; }
+  .note-old { border: 1.5px dashed #C9C2B9; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .note-new { background: var(--canvas); border-radius: 16px; padding: 14px; margin: 4px 16px 16px; }
+  .note-k { font-size: 11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color: var(--ink-3); }
+  .note-new .note-k { color: var(--green); }
+  .note-t { font-size: 14px; line-height: 20px; color: var(--ink-2); margin-top: 5px; }
+
+  /* edit modal */
+  .edit-top { display:flex; align-items:center; justify-content:space-between; padding: 2px 16px 6px; }
+  .save { background: var(--green-600); color:#fff; font-weight:700; font-size:14.5px; padding:9px 20px; border-radius:999px; }
+  .save.ink { background: var(--ink); color: #FBF7F2; }
+  .x { font-size:19px; color: var(--ink); }
+  .edit-title-old { text-align:center; font-size:22px; font-weight:700; letter-spacing:-.4px; margin: 14px 0 18px; }
+  .edit-title-new { padding: 0 8px; margin: 10px 0 16px; }
+  .edit-title-new .k { font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color: var(--green); }
+  .edit-title-new .t { font-family:'Literata', serif; font-size:28px; font-weight:700; letter-spacing:-.5px; line-height:32px; margin-top:5px; }
+  .input-old { background:#fff; border-radius:999px; padding: 17px; text-align:center; font-size:19px; font-weight:600; margin-bottom: 6px; box-shadow: var(--sh-flat); }
+  .input-new { display:flex; align-items:center; gap:13px; padding: 14px 16px; }
+  .input-new .txt { font-family:'Literata', serif; font-size:19px; font-weight:700; letter-spacing:-.2px; }
+  .input-new .caret { width:2px; height:20px; background: var(--green-600); display:inline-block; margin-left:2px; vertical-align:-3px; }
+  .emoji-old { display:flex; flex-wrap:wrap; gap:11px; justify-content:center; margin-bottom: 4px; }
+  .emoji-old i { width:52px; height:52px; border-radius:999px; background:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow: var(--sh-flat); }
+  .emoji-old i.sel { border: 2.5px solid var(--green-600); }
+  .emoji-new { display:flex; flex-wrap:wrap; gap:9px; padding: 14px 16px; }
+  .emoji-new i { width:48px; height:48px; border-radius: var(--tile-r); background: var(--canvas); display:flex; align-items:center; justify-content:center; font-size:21px; }
+  .emoji-new i.sel { background: var(--ink); }
+  .browse-old { text-align:center; color: var(--green); font-weight:600; font-size:14.5px; margin: 14px 0 4px; }
+  .browse-new { border-top:1px solid var(--divider); padding: 13px 16px; color: var(--green); font-weight:600; font-size:14.5px; }
+  .dots { display:flex; flex-wrap:wrap; gap:13px; justify-content:center; }
+  .dots i { width:44px; height:44px; border-radius:999px; }
+  .dots-new { display:flex; flex-wrap:wrap; gap:11px; padding: 14px 16px; }
+  .dots-new i { width:40px; height:40px; border-radius:12px; }
+  .dots-new i.sel { box-shadow: 0 0 0 2.5px var(--paper), 0 0 0 5px var(--ink); }
+  .chips-old { display:flex; gap:9px; justify-content:center; flex-wrap:wrap; padding: 4px 0 0; }
+  .chips-old span { font-size:13px; font-weight:600; padding:9px 13px; border-radius:12px; }
+  .chips-new { display:flex; gap:8px; flex-wrap:wrap; padding: 14px 16px; }
+  .chips-new span { font-size:13.5px; font-weight:500; padding:8px 14px; border-radius:999px; background: var(--canvas); color: var(--ink-2); }
+
+  /* home cards */
+  .hcard { background:#fff; border-radius: var(--card-r); box-shadow: var(--sh-flat); overflow:hidden; margin-bottom: 12px; display:flex; }
+  .hrail { width: 6px; flex:none; }
+  .hbody { flex:1; padding: 14px 14px 14px 12px; }
+  .htop { display:flex; align-items:center; gap:11px; }
+  .hemoji { width:38px; height:38px; border-radius:999px; background:#FDF6DF; display:flex; align-items:center; justify-content:center; font-size:19px; flex:none; }
+  .hname-old { font-size:17px; font-weight:600; letter-spacing:-.41px; flex:1; }
+  .hname-new { font-family:'Literata', serif; font-size:17.5px; font-weight:700; letter-spacing:-.25px; flex:1; }
+  .hchev { color:#C3BCB3; font-size:15px; }
+  .hboxes { display:flex; gap:8px; margin-top:12px; padding-top:11px; border-top:1px solid var(--divider); }
+  .hboxes i { flex:1; padding-top:16%; border-radius:10px; border:1.5px solid #D8D3CB; background:#F7F4F0; }
+  .hboxes i.done { background:#C9922F; border-color:#C9922F; }
+  .hboxes i.today { border-color:#F0B429; background:#FFFBF0; }
+  .verdict { margin-top: 16px; background: #24211E; border-left: 3px solid var(--green-600); border-radius: 0 12px 12px 0; padding: 13px 15px; font-size: 13.5px; line-height:1.55; color:#C7C0B8; }
+  .verdict b { color:#F3EFEA; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Next pass — before / after</h1>
+  <p class="lede">Three remaining changes, drawn with the app's real tokens (<code>#F5F1ED</code> canvas, <code>#F8F5F1</code> paper, Literata + DM Sans, <code>shadows.cardLifted</code>). Left is what ships today; right is the proposal.</p>
+
+  <!-- 1 · HABIT DETAIL -->
+  <div class="scenario">
+    <h2>1 · Habit Detail — white cards → paper</h2>
+    <p class="note">Detail already gets the typography right (serif title, serif month). But its cards are <b>pure white</b> while Settings, Analytics and the Habit Browser now sit on warm paper — so the screen reads colder than everything around it. One-line change now that <code>getPaperSurface</code> exists. The dashed NOTE box also becomes a recessed well, matching the danger-zone and START SMALL pattern.</p>
+    <div class="pair">
+      <div class="col">
+        <div class="tag b">Before</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="detail-hdr"><div class="circ">✕</div><div class="t">Wake-Up Movement</div><div class="circ">✎</div></div>
+          <div class="pad">
+            <div class="card-old">
+              <div class="month"><b>June</b><span>0%</span></div>
+              <div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="card-old"><div class="strip"><span>Calendar, strength and goal</span><a>Show</a></div></div>
+            <div class="note-old">
+              <div class="note-k">Note <span style="float:right;text-transform:none;letter-spacing:0;font-weight:400">optional</span></div>
+              <div class="note-t">Do 5 minutes of light movement immediately after waking.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="tag a">After</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="detail-hdr"><div class="circ">✕</div><div class="t">Wake-Up Movement</div><div class="circ">✎</div></div>
+          <div class="pad">
+            <div class="card-new">
+              <div class="month"><b>June</b><span>0%</span></div>
+              <div class="grid"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+            <div class="card-new"><div class="strip"><span>Calendar, strength and goal</span><a>Show</a></div></div>
+            <div class="card-new">
+              <div class="note-new">
+                <div class="note-k">Note</div>
+                <div class="note-t">Do 5 minutes of light movement immediately after waking.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 · EDIT HABIT -->
+  <div class="scenario">
+    <h2>2 · Edit Habit — the biggest outlier left</h2>
+    <p class="note">Centred sans title, three centred <b>uppercase grey micro-labels</b>, a stark white pill input, and free-floating controls with no card structure. It's the screen every user meets when creating their first habit, and it shares almost nothing with the rest of the app. The proposal: kicker + serif title like Settings, serif section headings, everything inside paper cards, emoji tiles as rounded squares with an ink selection, and cadence chips as pills. <b>Colour dots stay saturated</b> — that palette is the user's data, not chrome.</p>
+    <div class="pair">
+      <div class="col">
+        <div class="tag b">Before</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="edit-top"><span class="x">✕</span><span class="save">Save</span></div>
+          <div class="pad">
+            <div class="edit-title-old">Edit your habit</div>
+            <div class="input-old">Wake-Up Movement</div>
+            <div class="label-old">Choose an icon</div>
+            <div class="emoji-old">
+              <i>🎯</i><i>✨</i><i class="sel">🌅</i><i>📖</i><i>🧘</i>
+            </div>
+            <div class="browse-old">Browse more emojis →</div>
+            <div class="label-old">Pick a color</div>
+            <div class="dots">
+              <i style="background:#EF4444"></i><i style="background:#F97316"></i><i style="background:#FACC15"></i>
+              <i style="background:#10B981"></i><i style="background:#14B8A6"></i><i style="background:#06B6D4"></i>
+            </div>
+            <div class="label-old">More to customize</div>
+            <div class="chips-old">
+              <span style="background:#FEF3C7;color:#92400E">◎ No goal set</span>
+              <span style="background:#FEE2E2;color:#B91C1C">⚘ Simple</span>
+              <span style="background:#D1FAE5;color:#047857">🌑 Chain</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="tag a">After</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="edit-top"><span class="x">✕</span><span class="save ink">Save</span></div>
+          <div class="pad">
+            <div class="edit-title-new"><div class="k">Chain Day</div><div class="t">Edit habit</div></div>
+            <div class="card-new">
+              <div class="input-new">
+                <div class="tile state">🌅</div>
+                <div class="txt">Wake-Up Movement<span class="caret"></span></div>
+              </div>
+            </div>
+            <div class="head-new">Icon</div>
+            <div class="card-new">
+              <div class="emoji-new">
+                <i>🎯</i><i>✨</i><i class="sel">🌅</i><i>📖</i><i>🧘</i><i>💧</i>
+              </div>
+              <div class="browse-new">Browse more emojis →</div>
+            </div>
+            <div class="head-new">Colour</div>
+            <div class="card-new">
+              <div class="dots-new">
+                <i style="background:#EF4444"></i><i style="background:#F97316"></i><i style="background:#FACC15"></i>
+                <i class="sel" style="background:#10B981"></i><i style="background:#14B8A6"></i><i style="background:#06B6D4"></i>
+              </div>
+            </div>
+            <div class="head-new">Reminder</div>
+            <div class="card-new">
+              <div class="row">
+                <div class="tile state">🔔</div>
+                <div class="lbl"><b>Daily reminder</b><small>Off</small></div>
+                <div class="toggle"><i></i></div>
+              </div>
+              <div class="chips-new"><span>◎ No goal set</span><span>⚘ Simple</span><span>🌑 Chain</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 · HOME HABIT NAMES -->
+  <div class="scenario">
+    <h2>3 · Home habit names — sans → serif <span style="font-size:13px;color:#E0A94A;font-family:'DM Sans'">(the risky one)</span></h2>
+    <p class="note"><code>HabitCard.styles.ts</code> renders habit names in DM Sans; the Habit Browser renders the <b>same habit</b> in Literata. Same object, two typefaces, depending on which screen you're on. Serif closes that gap and makes the daily surface feel authored — but home is the surface you scan every morning, where density and legibility beat beauty. Density is unchanged here; only the typeface moves. <b>Judge this one on scan-ability, not on looks.</b></p>
+    <div class="pair">
+      <div class="col">
+        <div class="tag b">Before — DM Sans</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="pad">
+            <div class="hcard"><div class="hrail" style="background:#F97316"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🌅</div><div class="hname-old">Wake-Up Movement</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i class="done"></i><i></i><i class="today"></i></div>
+            </div></div>
+            <div class="hcard"><div class="hrail" style="background:#F97316"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🫀</div><div class="hname-old">30-Minute Brain-Boosting Cardio</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i></i><i></i><i class="today"></i></div>
+            </div></div>
+            <div class="hcard"><div class="hrail" style="background:#3B82F6"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🔲</div><div class="hname-old">Box Breathing (4-4-4-4)</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i></i><i></i><i class="today"></i></div>
+            </div></div>
+            <div class="hcard"><div class="hrail" style="background:#A855F7"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🙂</div><div class="hname-old">Emotion Granularity</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i></i><i></i><i class="today"></i></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="tag a">After — Literata</div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="pad">
+            <div class="hcard"><div class="hrail" style="background:#F97316"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🌅</div><div class="hname-new">Wake-Up Movement</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i class="done"></i><i></i><i class="today"></i></div>
+            </div></div>
+            <div class="hcard"><div class="hrail" style="background:#F97316"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🫀</div><div class="hname-new">30-Minute Brain-Boosting Cardio</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i></i><i></i><i class="today"></i></div>
+            </div></div>
+            <div class="hcard"><div class="hrail" style="background:#3B82F6"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🔲</div><div class="hname-new">Box Breathing (4-4-4-4)</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i></i><i></i><i class="today"></i></div>
+            </div></div>
+            <div class="hcard"><div class="hrail" style="background:#A855F7"></div><div class="hbody">
+              <div class="htop"><div class="hemoji">🙂</div><div class="hname-new">Emotion Granularity</div><div class="hchev">›</div></div>
+              <div class="hboxes"><i></i><i></i><i></i><i></i><i class="today"></i></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="verdict">
+      <b>My read:</b> ship 1 and 2. Number 3 is genuinely arguable — serif costs a little scanning speed on long habit names ("30-Minute Brain-Boosting Cardio" is where it hurts most), and home is the one screen where that cost is paid daily. If you want the consistency without the cost, the alternative is going the other way: make the <em>Browser</em> card titles sans, and keep serif for headings only.
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stats Section - Low Fidelity Wireframe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Architects Daughter', cursive !important; }
+    body { background: #1e293b; }
+
+    .phone-frame {
+      width: 320px;
+      min-height: 700px;
+      background: #fff;
+      border-radius: 32px;
+      border: 3px solid #000;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .sketch-box {
+      border: 2px dashed #64748b;
+      border-radius: 12px;
+      background: #f8fafc;
+    }
+
+    .sketch-circle {
+      border: 2px dashed #64748b;
+      border-radius: 50%;
+      background: #f1f5f9;
+    }
+
+    .annotation {
+      font-size: 11px;
+      color: #ef4444;
+      font-family: 'Inter', sans-serif !important;
+      font-weight: 500;
+    }
+
+    .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Inter', sans-serif !important;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-8 flex flex-col items-center gap-6">
+
+  <h1 class="text-2xl text-white mb-2">Low-Fidelity Wireframe</h1>
+  <p class="text-gray-400 text-sm mb-4" style="font-family: Inter, sans-serif !important;">Stats Section Unified Redesign - Structural Layout</p>
+
+  <div class="flex gap-12 flex-wrap justify-center">
+
+    <!-- BEFORE: Current Layout -->
+    <div class="flex flex-col items-center gap-3">
+      <div class="label text-red-400">BEFORE (4 Cards - Fragmented)</div>
+
+      <div class="phone-frame p-4">
+        <div class="space-y-3">
+
+          <!-- Card 1: Stats Grid -->
+          <div class="sketch-box p-3">
+            <div class="text-center text-sm mb-2">STATS GRID</div>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="sketch-box p-2 text-center text-xs">
+                Completed<br/>42
+              </div>
+              <div class="sketch-box p-2 text-center text-xs relative">
+                Success %<br/>78%
+                <span class="annotation absolute -top-2 -right-2">DUP!</span>
+              </div>
+              <div class="sketch-box p-2 text-center text-xs relative">
+                Streak<br/>12
+                <span class="annotation absolute -top-2 -right-2">DUP!</span>
+              </div>
+              <div class="sketch-box p-2 text-center text-xs relative">
+                Days<br/>54
+                <span class="annotation absolute -top-2 -right-2">DUP!</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Streak Chain -->
+          <div class="sketch-box p-3 relative">
+            <span class="annotation absolute -top-2 right-2">streak shown again!</span>
+            <div class="text-center text-sm mb-2">STREAK CHAIN</div>
+            <div class="text-center text-3xl mb-2">12</div>
+            <div class="flex justify-between px-2 mb-2">
+              <div class="sketch-circle w-6 h-6"></div>
+              <div class="sketch-circle w-6 h-6"></div>
+              <div class="sketch-circle w-6 h-6"></div>
+              <div class="sketch-circle w-6 h-6"></div>
+              <div class="sketch-circle w-6 h-6"></div>
+              <div class="sketch-circle w-6 h-6"></div>
+              <div class="sketch-circle w-6 h-6"></div>
+            </div>
+            <div class="sketch-box p-1.5 text-center text-xs">Best: 21</div>
+          </div>
+
+          <!-- Card 3: Habit Strength -->
+          <div class="sketch-box p-3 relative">
+            <span class="annotation absolute -top-2 right-2">3 duplicates!</span>
+            <div class="text-center text-sm mb-2">HABIT STRENGTH</div>
+            <div class="flex gap-3 mb-2">
+              <div class="sketch-circle w-16 h-16 flex items-center justify-center text-lg">65%</div>
+              <div class="flex-1">
+                <div class="sketch-box p-1 text-xs mb-1">Level: Developing</div>
+                <div class="sketch-box p-1 text-xs">+5% trend</div>
+              </div>
+            </div>
+            <div class="text-xs text-gray-500 mb-1">Breakdown:</div>
+            <div class="sketch-box p-1.5 text-xs mb-1 text-red-500">Streak: 12 (DUP)</div>
+            <div class="sketch-box p-1.5 text-xs mb-1 text-red-500">Success: 78% (DUP)</div>
+            <div class="sketch-box p-1.5 text-xs text-red-500">Days: 54 (DUP)</div>
+          </div>
+
+          <!-- Card 4: Insights -->
+          <div class="sketch-box p-3 relative">
+            <span class="annotation absolute -top-2 right-2">more overlap</span>
+            <div class="text-center text-sm mb-2">INSIGHTS</div>
+            <div class="flex justify-between h-12 px-2 items-end mb-2">
+              <div class="w-4 bg-gray-300 rounded-t" style="height: 50%"></div>
+              <div class="w-4 bg-gray-400 rounded-t" style="height: 80%"></div>
+              <div class="w-4 bg-gray-300 rounded-t" style="height: 60%"></div>
+              <div class="w-4 bg-gray-300 rounded-t" style="height: 70%"></div>
+              <div class="w-4 bg-gray-300 rounded-t" style="height: 55%"></div>
+              <div class="w-4 bg-gray-200 rounded-t" style="height: 40%"></div>
+              <div class="w-4 bg-gray-200 rounded-t" style="height: 45%"></div>
+            </div>
+            <div class="text-xs text-gray-500">(streak records also here...)</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-red-400 text-xs max-w-xs text-center" style="font-family: Inter, sans-serif !important;">
+        7+ duplicate data points across 4 separate cards
+      </div>
+    </div>
+
+    <!-- AFTER: Unified Layout -->
+    <div class="flex flex-col items-center gap-3">
+      <div class="label text-emerald-400">AFTER (3 Sections - Unified)</div>
+
+      <div class="phone-frame p-4">
+        <div class="space-y-3">
+
+          <!-- Section 1: Streak & Momentum -->
+          <div class="sketch-box p-3 border-orange-300 bg-orange-50/50">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="sketch-circle w-6 h-6 border-orange-400 bg-orange-100 flex items-center justify-center text-xs">F</div>
+              <span class="text-sm">Streak & Momentum</span>
+              <span class="text-orange-500 ml-auto text-xs">CONSISTENCY</span>
+            </div>
+
+            <div class="text-center text-4xl mb-2">12</div>
+            <div class="text-center text-xs text-gray-500 mb-2">day streak</div>
+
+            <!-- 7-day chain -->
+            <div class="flex justify-between px-1 mb-2">
+              <div class="sketch-circle w-7 h-7 bg-green-200 border-green-400"></div>
+              <div class="sketch-circle w-7 h-7 bg-green-200 border-green-400"></div>
+              <div class="sketch-circle w-7 h-7 bg-green-200 border-green-400"></div>
+              <div class="sketch-circle w-7 h-7 bg-green-200 border-green-400"></div>
+              <div class="sketch-circle w-7 h-7 bg-green-200 border-green-400"></div>
+              <div class="sketch-circle w-7 h-7"></div>
+              <div class="sketch-circle w-7 h-7 bg-amber-100 border-amber-400"></div>
+            </div>
+            <div class="flex justify-between px-2 text-[8px] text-gray-400 mb-2">
+              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>Now</span>
+            </div>
+
+            <!-- Tier progress -->
+            <div class="sketch-box p-2 mb-2 border-amber-200 bg-amber-50">
+              <div class="text-xs mb-1">Progress to star Day 14</div>
+              <div class="h-2 bg-gray-200 rounded-full">
+                <div class="h-full bg-orange-400 rounded-full" style="width: 86%"></div>
+              </div>
+            </div>
+
+            <!-- Best streak -->
+            <div class="sketch-box p-2 text-center text-xs border-amber-200">
+              Trophy Best: 21 days | 9 to beat!
+            </div>
+          </div>
+
+          <!-- Section 2: Habit Strength -->
+          <div class="sketch-box p-3 border-teal-300 bg-teal-50/50">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="sketch-circle w-6 h-6 border-teal-400 bg-teal-100 flex items-center justify-center text-xs">Z</div>
+              <span class="text-sm">Habit Strength</span>
+              <span class="text-teal-500 ml-auto text-xs">GROWTH</span>
+            </div>
+
+            <div class="flex gap-3 mb-2">
+              <div class="sketch-circle w-16 h-16 border-teal-400 flex flex-col items-center justify-center">
+                <span class="text-lg">65%</span>
+                <span class="text-[10px]">tree</span>
+              </div>
+              <div class="flex-1">
+                <div class="sketch-box p-1.5 text-xs mb-1 border-teal-200 bg-teal-50">Developing</div>
+                <div class="text-[10px] text-gray-500 mb-1">Getting stronger</div>
+                <div class="sketch-box p-1 text-[10px] border-green-200 bg-green-50">+5% this week</div>
+              </div>
+            </div>
+
+            <!-- Progress to next level -->
+            <div class="sketch-box p-2 border-teal-200 bg-teal-50">
+              <div class="text-xs mb-1">Progress to Strong (15% to go)</div>
+              <div class="h-2 bg-gray-200 rounded-full mb-1">
+                <div class="h-full bg-teal-400 rounded-full" style="width: 65%"></div>
+              </div>
+              <div class="flex justify-between text-[8px] text-gray-400">
+                <span>seed</span><span>sprout</span><span>tree</span><span>muscle</span><span>bolt</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: Insights & Patterns -->
+          <div class="sketch-box p-3 border-violet-300 bg-violet-50/50">
+            <div class="flex items-center gap-2 mb-2">
+              <div class="sketch-circle w-6 h-6 border-violet-400 bg-violet-100 flex items-center justify-center text-xs">B</div>
+              <span class="text-sm">Insights & Patterns</span>
+              <span class="text-violet-500 ml-auto text-xs">PATTERNS</span>
+            </div>
+
+            <!-- Journey stats (formerly in StatsGrid) -->
+            <div class="flex gap-2 mb-3">
+              <div class="sketch-box flex-1 p-2 text-center border-emerald-200">
+                <div class="text-lg">42</div>
+                <div class="text-[9px] text-gray-500">completed</div>
+              </div>
+              <div class="sketch-box flex-1 p-2 text-center border-blue-200">
+                <div class="text-lg">78%</div>
+                <div class="text-[9px] text-gray-500">success rate</div>
+              </div>
+            </div>
+
+            <!-- Best days chart -->
+            <div class="text-[9px] text-gray-500 mb-1">BEST DAYS</div>
+            <div class="flex justify-between h-10 px-1 items-end mb-2">
+              <div class="w-4 bg-gray-200 rounded-t" style="height: 55%"></div>
+              <div class="w-4 bg-green-400 rounded-t" style="height: 95%"></div>
+              <div class="w-4 bg-blue-300 rounded-t" style="height: 78%"></div>
+              <div class="w-4 bg-blue-300 rounded-t" style="height: 82%"></div>
+              <div class="w-4 bg-gray-300 rounded-t" style="height: 68%"></div>
+              <div class="w-4 bg-amber-300 rounded-t" style="height: 45%"></div>
+              <div class="w-4 bg-gray-200 rounded-t" style="height: 52%"></div>
+            </div>
+            <div class="flex justify-between px-1 text-[8px] text-gray-400 mb-2">
+              <span>S</span><span class="text-green-600 font-bold">M</span><span>T</span><span>W</span><span>T</span><span class="text-amber-600">F</span><span>S</span>
+            </div>
+
+            <!-- Monthly trend -->
+            <div class="text-[9px] text-gray-500 mb-1">MONTHLY TREND</div>
+            <div class="flex gap-2 mb-2">
+              <div class="sketch-box flex-1 p-1.5 text-center text-xs">This: 75%</div>
+              <div class="sketch-box flex-1 p-1.5 text-center text-xs">Last: 68%</div>
+            </div>
+            <div class="sketch-box p-1.5 text-center text-xs border-green-200 bg-green-50">
+              +7% improvement
+            </div>
+
+            <!-- Top streaks -->
+            <div class="text-[9px] text-gray-500 mt-2 mb-1">TOP STREAKS</div>
+            <div class="flex gap-2">
+              <div class="sketch-box flex-1 p-1.5 text-center text-xs border-amber-200">gold 21</div>
+              <div class="sketch-box flex-1 p-1.5 text-center text-xs">silver 14</div>
+              <div class="sketch-box flex-1 p-1.5 text-center text-xs border-orange-200">bronze 7</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="text-emerald-400 text-xs max-w-xs text-center" style="font-family: Inter, sans-serif !important;">
+        Zero duplication - each metric appears once in its best context
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Legend -->
+  <div class="mt-8 bg-slate-800/50 rounded-xl p-4 max-w-2xl">
+    <h3 class="text-white text-sm mb-3 text-center" style="font-family: Inter, sans-serif !important;">Section Color Coding</h3>
+    <div class="flex gap-6 justify-center text-xs" style="font-family: Inter, sans-serif !important;">
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 rounded bg-orange-200 border border-orange-400"></div>
+        <span class="text-orange-300">Streak (Orange)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 rounded bg-teal-200 border border-teal-400"></div>
+        <span class="text-teal-300">Strength (Teal)</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-4 h-4 rounded bg-violet-200 border border-violet-400"></div>
+        <span class="text-violet-300">Insights (Violet)</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

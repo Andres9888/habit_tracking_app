@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Detail Tab Switcher — Variant B: Position Rail (continuous)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Literata:ital,wght@0,400;0,500;0,600&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root {
+    --bg: #F5F1ED;            /* parchment canvas */
+    --bg-mid: #F0EDE8;
+    --card: #EDEAE5;          /* surface L1 */
+    --card-pure: #FFFFFF;
+    --border: #DDD8D2;
+    --forest-700: #047857;    /* high-contrast text/accent */
+    --forest-600: #059669;
+    --forest-100: #D1FAE5;
+    --gray-400: #6E6660;      /* tertiary */
+    --gray-500: #6B6560;
+    --gray-700: #3D3833;
+    --gray-800: #2D2A26;
+    --gold-600: #936A08;
+    --gold-100: #FEF3CD;
+    --track: #FAF8F5;         /* gray-50 */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #2A2622;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; padding: 32px 16px; gap: 18px;
+    color: var(--gray-800);
+  }
+  .caption { color: #C9BFB4; font-size: 13px; letter-spacing: 0.3px; text-align: center; max-width: 420px; }
+  .caption b { color: #fff; font-weight: 600; }
+
+  /* phone frame */
+  .phone {
+    width: 390px; height: 720px; border-radius: 38px;
+    background: var(--bg); overflow: hidden; position: relative;
+    box-shadow: 0 30px 70px rgba(0,0,0,.45), 0 0 0 10px #18130F, 0 0 0 12px #322B24;
+    display: flex; flex-direction: column;
+  }
+  .statusbar { height: 44px; flex: 0 0 auto; display:flex; align-items:flex-end; justify-content:space-between; padding: 0 26px 6px; font-size:13px; font-weight:600; color: var(--gray-700); }
+
+  /* nav header */
+  .nav { flex: 0 0 auto; display:flex; align-items:center; justify-content:space-between; padding: 6px 16px 10px; }
+  .nav .x { width:34px; height:34px; border-radius:50%; background: var(--card); display:flex;align-items:center;justify-content:center; color: var(--gray-700); }
+  .nav .edit { display:flex; align-items:center; gap:5px; color: var(--forest-700); font-weight:600; font-size:14px; padding:7px 13px; border-radius:20px; background: var(--forest-100); }
+
+  /* scroll area */
+  .scroll { flex: 1 1 auto; overflow-y: auto; overflow-x:hidden; scroll-behavior: smooth; position: relative; }
+  .scroll::-webkit-scrollbar { width: 0; }
+
+  /* hero */
+  .hero { padding: 4px 20px 18px; }
+  .hero .dot { width:52px;height:52px;border-radius:16px;background:var(--forest-600);display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:12px; box-shadow:0 6px 16px rgba(5,150,105,.28);}
+  .hero h1 { font-size: 26px; font-weight: 700; letter-spacing:-0.5px; color: var(--gray-800); }
+  .hero .sub { margin-top:6px; display:flex; gap:14px; color: var(--gray-500); font-size:14px; }
+  .hero .sub .pill { display:flex; align-items:center; gap:5px; }
+  .hero .sub .streak { color: var(--gold-600); font-weight:600; }
+
+  /* ===== STICKY POSITION RAIL ===== */
+  .railwrap { position: sticky; top: 0; z-index: 20; background: var(--bg); padding: 6px 16px 0; }
+  .rail {
+    position: relative; display:flex;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .rail .seg {
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    padding: 9px 0 11px; cursor:pointer; background:none; border:none;
+    font-family:inherit; transition: color .18s ease;
+    color: var(--gray-400);
+  }
+  .rail .seg .lbl { font-size: 13.5px; font-weight:600; letter-spacing:0.1px; }
+  .rail .seg svg { width:18px; height:18px; stroke-width:2.1; }
+  .rail .seg.active { color: var(--forest-700); }
+  /* the gliding marker */
+  .marker {
+    position:absolute; bottom:-1.5px; height:2.5px; border-radius:3px;
+    background: var(--forest-700);
+    box-shadow: 0 1px 4px rgba(4,120,87,.35);
+    transition: none; /* JS drives it each frame for continuous glide */
+  }
+
+  /* sections */
+  .section { padding: 18px 16px 8px; }
+  .section .stitle { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gray-400); margin-bottom:10px; display:flex; align-items:center; gap:6px;}
+  .panel { background: var(--card-pure); border:1px solid var(--border); border-radius:18px; padding:16px; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+
+  /* calendar grid */
+  .cal { display:grid; grid-template-columns: repeat(7, 1fr); gap:7px; }
+  .cal .d { aspect-ratio:1; border-radius:9px; background:var(--track); display:flex;align-items:center;justify-content:center; font-size:12px; color:var(--gray-400); }
+  .cal .d.on { background:var(--forest-600); color:#fff; font-weight:600; box-shadow:0 2px 6px rgba(5,150,105,.3); }
+  .cal .d.soft { background:var(--forest-100); color:var(--forest-700); }
+  .calhead { display:grid; grid-template-columns:repeat(7,1fr); gap:7px; margin-bottom:8px; }
+  .calhead span { text-align:center; font-size:10px; font-weight:700; color:var(--gray-400); letter-spacing:.5px;}
+
+  /* strength curve */
+  .bars { display:flex; align-items:flex-end; gap:8px; height:120px; padding-top:8px;}
+  .bars .b { flex:1; border-radius:7px 7px 3px 3px; background: linear-gradient(to top, var(--forest-600), #6EE7B7); opacity:.9;}
+  .strengthrow { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
+  .strengthrow .big { font-size:30px; font-weight:700; color:var(--gray-800);}
+  .strengthrow .tag { font-size:12px; font-weight:600; color:var(--forest-700); background:var(--forest-100); padding:4px 10px; border-radius:20px;}
+
+  /* goal ring */
+  .goalrow { display:flex; gap:18px; align-items:center;}
+  .ring { width:92px;height:92px;flex:0 0 auto; border-radius:50%;
+    background: conic-gradient(var(--forest-600) 0 68%, var(--track) 68% 100%);
+    display:flex;align-items:center;justify-content:center; position:relative;}
+  .ring::after{content:'';position:absolute;width:68px;height:68px;border-radius:50%;background:var(--card-pure);}
+  .ring span{position:relative;z-index:1;font-weight:700;font-size:19px;color:var(--gray-800);}
+  .goaltext h3{font-size:16px;font-weight:700;color:var(--gray-800);margin-bottom:4px;}
+  .goaltext p{font-size:13px;color:var(--gray-500);line-height:1.5;}
+  .spacer{height:60px;}
+</style>
+</head>
+<body>
+  <p class="caption"><b>Variant B — Position Rail (recommended).</b> Underline marker reads as "you-are-here" navigation, not a toggle. It <b>glides continuously</b> with scroll. Scroll the panel or tap a label.</p>
+
+  <div class="phone">
+    <div class="statusbar"><span>9:41</span><span>􀙇 􀛨 􀋊</span></div>
+    <div class="nav">
+      <div class="x"><i data-lucide="x"></i></div>
+      <div class="edit"><i data-lucide="pencil" style="width:14px;height:14px;"></i> Edit</div>
+    </div>
+
+    <div class="scroll" id="scroll">
+      <div class="hero">
+        <div class="dot"><i data-lucide="sunrise"></i></div>
+        <h1>Morning Meditation</h1>
+        <div class="sub">
+          <span class="pill streak"><i data-lucide="flame" style="width:15px;height:15px;"></i> 12 day streak</span>
+          <span class="pill"><i data-lucide="check-circle-2" style="width:15px;height:15px;"></i> 84 total</span>
+        </div>
+      </div>
+
+      <!-- STICKY RAIL -->
+      <div class="railwrap">
+        <div class="rail" id="rail">
+          <button class="seg active" data-target="sec-cal"><i data-lucide="calendar-days"></i><span class="lbl">Calendar</span></button>
+          <button class="seg" data-target="sec-str"><i data-lucide="activity"></i><span class="lbl">Strength</span></button>
+          <button class="seg" data-target="sec-goal"><i data-lucide="target"></i><span class="lbl">Goal</span></button>
+          <div class="marker" id="marker"></div>
+        </div>
+      </div>
+
+      <!-- SECTIONS -->
+      <div class="section" id="sec-cal">
+        <div class="stitle"><i data-lucide="calendar-days" style="width:13px;height:13px;"></i> This Month</div>
+        <div class="panel">
+          <div class="calhead"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+          <div class="cal" id="calgrid"></div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-str">
+        <div class="stitle"><i data-lucide="activity" style="width:13px;height:13px;"></i> Habit Strength</div>
+        <div class="panel">
+          <div class="strengthrow"><span class="big">78%</span><span class="tag">Strong</span></div>
+          <div class="bars" id="bars"></div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-goal">
+        <div class="stitle"><i data-lucide="target" style="width:13px;height:13px;"></i> Goal Progress</div>
+        <div class="panel">
+          <div class="goalrow">
+            <div class="ring"><span>68%</span></div>
+            <div class="goaltext">
+              <h3>17 of 25 sessions</h3>
+              <p>You're on track to hit your monthly goal. 8 to go — about 2 a week.</p>
+            </div>
+          </div>
+        </div>
+        <div class="spacer"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  lucide.createIcons();
+  // build calendar
+  const calgrid = document.getElementById('calgrid');
+  const done = new Set([1,2,4,5,6,8,9,11,12,13,15,16,18,19,20]);
+  const soft = new Set([3,10,17]);
+  for (let i=1;i<=30;i++){
+    const d=document.createElement('div'); d.className='d'+(done.has(i)?' on':soft.has(i)?' soft':''); d.textContent=i; calgrid.appendChild(d);
+  }
+  // build bars
+  const bars=document.getElementById('bars'); const hs=[30,42,38,55,60,72,68,80,76,88,84,92];
+  hs.forEach(h=>{const b=document.createElement('div');b.className='b';b.style.height=h+'%';bars.appendChild(b);});
+
+  // continuous position rail
+  const scroll=document.getElementById('scroll');
+  const rail=document.getElementById('rail');
+  const marker=document.getElementById('marker');
+  const segs=[...rail.querySelectorAll('.seg')];
+  const targets=segs.map(s=>document.getElementById(s.dataset.target));
+
+  function segCenter(i){ const s=segs[i]; return s.offsetLeft + s.offsetWidth/2; }
+  function segWidth(i){ return segs[i].querySelector('.lbl').offsetWidth + 24; }
+
+  function update(){
+    // section tops relative to scroll content
+    const railH = 52; // approx rail height offset used as the "read line"
+    const readLine = scroll.scrollTop + railH + 40;
+    const tops = targets.map(t=>t.offsetTop);
+    // fractional index across the 3 anchors
+    let frac=0;
+    if (readLine<=tops[0]) frac=0;
+    else if (readLine>=tops[2]) frac=2;
+    else if (readLine<tops[1]) frac = (readLine-tops[0])/(tops[1]-tops[0]);
+    else frac = 1 + (readLine-tops[1])/(tops[2]-tops[1]);
+    frac=Math.max(0,Math.min(2,frac));
+
+    const i0=Math.floor(frac), i1=Math.min(2,i0+1), t=frac-i0;
+    const cx = segCenter(i0)+(segCenter(i1)-segCenter(i0))*t;
+    const w  = segWidth(i0)+(segWidth(i1)-segWidth(i0))*t;
+    marker.style.width=w+'px';
+    marker.style.left=(cx-w/2)+'px';
+
+    // label emphasis by proximity
+    segs.forEach((s,idx)=> s.classList.toggle('active', Math.round(frac)===idx));
+  }
+  scroll.addEventListener('scroll',()=>requestAnimationFrame(update),{passive:true});
+  segs.forEach(s=>s.addEventListener('click',()=>{
+    document.getElementById(s.dataset.target).scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+  window.addEventListener('load',update); setTimeout(update,60);
+</script>
+</body>
+</html>

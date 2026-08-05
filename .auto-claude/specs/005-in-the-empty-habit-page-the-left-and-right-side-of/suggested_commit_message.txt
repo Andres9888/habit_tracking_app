@@ -1,0 +1,5 @@
+```
+fix(habits): fix button cutoff on empty state
+
+Adjust layout and styling in HabitsEmptyState component to prevent buttons from being cut off on the left and right sides of the screen.
+```
