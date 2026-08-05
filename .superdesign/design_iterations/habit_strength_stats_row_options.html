@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Habit Strength — Stats Row Options</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+      :root {
+        --bg: #efe7dc;
+        --card: #fbf6ee;
+        --card-stat-bg: #f3ede2;
+        --text-primary: #111111;
+        --text-secondary: #5d5950;
+        --text-tertiary: #8a857a;
+        --border: #e4dccb;
+        --accent: #e85d2f; /* coral / orange */
+        --accent-soft: rgba(232, 93, 47, 0.12);
+        --emerald: #16a34a;
+        --emerald-soft: #d6efdc;
+        --gold: #b58642;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
+      }
+      html,
+      body {
+        background: #e9e1d3;
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          "SF Pro Text",
+          "Inter",
+          system-ui,
+          sans-serif;
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+      }
+      .canvas {
+        background: var(--bg);
+        border-radius: 28px;
+        padding: 16px 14px 24px;
+      }
+      .strength-card {
+        background: var(--card);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+      }
+      .toggle {
+        background: #f0e8d9;
+        border-radius: 999px;
+        padding: 3px;
+        display: inline-flex;
+        gap: 0;
+        align-items: center;
+      }
+      .toggle button {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        padding: 4px 12px;
+        border-radius: 999px;
+      }
+      .toggle button.active {
+        background: #ffffff;
+        color: var(--text-primary);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+      }
+      .strong-pill {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+      .delta-row {
+        color: var(--text-secondary);
+        font-size: 13px;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        margin-top: 4px;
+      }
+      .stats-row {
+        background: var(--card-stat-bg);
+        border-radius: 12px;
+        padding: 10px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 14px;
+      }
+      .stat-col {
+        flex: 1;
+        text-align: center;
+      }
+      .stat-label {
+        font-size: 10.5px;
+        color: var(--text-tertiary);
+        letter-spacing: 0.2px;
+      }
+      .stat-value {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 2px;
+      }
+      .stat-value.pos {
+        color: var(--emerald);
+      }
+      .divider {
+        width: 1px;
+        height: 22px;
+        background: var(--border);
+      }
+      .axis-label {
+        font-size: 11px;
+        color: var(--text-tertiary);
+      }
+      .option-header {
+        max-width: 420px;
+        margin: 0 auto 12px;
+      }
+      .option-block {
+        max-width: 420px;
+        margin: 0 auto;
+      }
+      .badge {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+      }
+      .recommend {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        display: inline-block;
+      }
+      .caption {
+        font-size: 13px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+        max-width: 420px;
+        margin: 6px auto 16px;
+      }
+      .why-good {
+        color: #166534;
+      }
+      .why-bad {
+        color: #991b1b;
+      }
+      .lens-row {
+        max-width: 420px;
+        margin: 6px auto 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .lens-card {
+        border-radius: 12px;
+        padding: 11px 13px;
+        font-size: 12.5px;
+        line-height: 1.5;
+      }
+      .lens-card .lens-title {
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 5px;
+      }
+      .lens-conversion {
+        background: #fff3e6;
+        color: #6b3f10;
+        border: 1px solid #fbd9b0;
+      }
+      .lens-conversion .lens-title {
+        color: #b85a10;
+      }
+      .lens-ux {
+        background: #ecf3ff;
+        color: #1d3a78;
+        border: 1px solid #c9dafc;
+      }
+      .lens-ux .lens-title {
+        color: #2a51a9;
+      }
+      .verdict {
+        font-weight: 700;
+      }
+      .v-good {
+        color: #166534;
+      }
+      .v-warn {
+        color: #92400e;
+      }
+      .v-bad {
+        color: #991b1b;
+      }
+      .verdict-pill {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 999px;
+      }
+      .vp-good {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .vp-warn {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .vp-bad {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .label-top {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 2px;
+        font-weight: 500;
+      }
+      .gauge-num {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+      .h3 {
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: -0.3px;
+        color: var(--text-primary);
+      }
+    </style>
+  </head>
+  <body class="min-h-screen py-10">
+    <div class="mx-auto max-w-3xl px-4">
+      <!-- Page header -->
+      <header class="mb-8 text-center">
+        <h1 class="text-3xl font-bold tracking-tight">Habit Strength — Stats Row Options</h1>
+        <p class="mt-2 text-sm" style="color: var(--text-secondary)">
+          Current design at top, then 4 redesign options. Same card, only the bottom row changes. Each
+          option is scored on two axes — <span style="color: #b85a10; font-weight: 600">💰 Conversion</span>
+          (does this pull the user back?) and <span style="color: #2a51a9; font-weight: 600">🎨 UX</span>
+          (is it clear and is every control doing work?). Scorecard at the bottom.
+        </p>
+      </header>
+
+      <!-- ============== TEMPLATE FRAGMENTS ============== -->
+      <!-- Reusable hero + chart SVG markup is repeated inline below for simplicity. -->
+
+      <!-- ============== OPTION 0 — CURRENT ============== -->
+      <section class="option-block mb-12">
+        <div class="option-header flex items-center justify-between">
+          <div>
+            <div class="badge">Option 0 — Current</div>
+            <div class="h3 mt-1">As shipped today</div>
+          </div>
+        </div>
+        <div class="lens-row">
+          <div class="lens-card lens-conversion">
+            <div class="lens-title">💰 Conversion</div>
+            <div>
+              <span class="verdict-pill vp-bad">Hurts</span>
+              <p class="mt-1">
+                No streak number = no loss-aversion lever. "Last Week 0%" and "Last Month 0%" give the user
+                nothing to chase or defend, so this card doesn't pull them back tomorrow.
+              </p>
+            </div>
+          </div>
+          <div class="lens-card lens-ux">
+            <div class="lens-title">🎨 UX</div>
+            <div>
+              <span class="verdict-pill vp-bad">Poor</span>
+              <p class="mt-1">
+                "Since Start" duplicates the gauge. "Last Month" duplicates the hero's "+0% vs last month".
+                Toggle doesn't change these. Wasted real estate.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="canvas">
+          <div class="strength-card">
+            <!-- Header -->
+            <div class="flex items-center justify-between">
+              <span class="h3">Habit Strength</span>
+              <div class="toggle">
+                <button>1M</button>
+                <button>3M</button>
+                <button class="active">1Y</button>
+              </div>
+            </div>
+
+            <!-- Hero -->
+            <div class="mt-4 flex items-center gap-4">
+              <!-- Ring 100% -->
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" stroke="rgba(232,93,47,0.18)" stroke-width="6" fill="none" />
+                <circle
+                  cx="36"
+                  cy="36"
+                  r="30"
+                  stroke="var(--accent)"
+                  stroke-width="6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-dasharray="188.5 188.5"
+                  stroke-dashoffset="0"
+                  transform="rotate(-90 36 36)"
+                />
+                <text x="36" y="42" text-anchor="middle" class="gauge-num" fill="var(--text-primary)">
+                  100%
+                </text>
+              </svg>
+              <div class="flex-1">
+                <span class="strong-pill">Strong</span>
+                <div class="delta-row">
+                  <span>+0%</span><span>vs last month</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="mt-4 -mx-2">
+              <svg viewBox="0 0 360 110" width="100%" height="110">
+                <defs>
+                  <linearGradient id="g0" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10 L 352 100 L 8 100 Z"
+                  fill="url(#g0)"
+                />
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="352" cy="10" r="5" fill="var(--accent)" />
+                <circle cx="352" cy="10" r="9" fill="var(--accent)" fill-opacity="0.25" />
+              </svg>
+              <div class="mt-1 flex justify-between px-2">
+                <span class="axis-label">Dec 23</span>
+                <span class="axis-label">Feb 7</span>
+                <span class="axis-label">Mar 26</span>
+                <span class="axis-label">Now</span>
+              </div>
+            </div>
+
+            <!-- Stats row -->
+            <div class="stats-row">
+              <div class="stat-col">
+                <div class="stat-label">Since Start</div>
+                <div class="stat-value">100%</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Last Month</div>
+                <div class="stat-value">0%</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Last Week</div>
+                <div class="stat-value">0%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============== OPTION A — DELETE ============== -->
+      <section class="option-block mb-12">
+        <div class="option-header">
+          <div class="badge">Option A — Delete the row</div>
+          <div class="h3 mt-1">Hero + chart only</div>
+        </div>
+        <div class="lens-row">
+          <div class="lens-card lens-conversion">
+            <div class="lens-title">💰 Conversion</div>
+            <div>
+              <span class="verdict-pill vp-warn">Mixed</span>
+              <p class="mt-1">
+                Removes redundant clutter — but also removes any number for the user to chase. No streak to
+                defend, no peak to beat. Card becomes purely informational, not a re-engagement hook.
+              </p>
+            </div>
+          </div>
+          <div class="lens-card lens-ux">
+            <div class="lens-title">🎨 UX</div>
+            <div>
+              <span class="verdict-pill vp-good">Cleanest</span>
+              <p class="mt-1">
+                Hero + chart already tell the strength story. Lowest cognitive load, tightest card. Removes
+                visual weight from the orphaned-toggle area.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="strength-card">
+            <div class="flex items-center justify-between">
+              <span class="h3">Habit Strength</span>
+              <div class="toggle">
+                <button>1M</button>
+                <button>3M</button>
+                <button class="active">1Y</button>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-4">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" stroke="rgba(232,93,47,0.18)" stroke-width="6" fill="none" />
+                <circle
+                  cx="36"
+                  cy="36"
+                  r="30"
+                  stroke="var(--accent)"
+                  stroke-width="6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-dasharray="188.5 188.5"
+                  stroke-dashoffset="0"
+                  transform="rotate(-90 36 36)"
+                />
+                <text x="36" y="42" text-anchor="middle" class="gauge-num" fill="var(--text-primary)">
+                  100%
+                </text>
+              </svg>
+              <div class="flex-1">
+                <span class="strong-pill">Strong</span>
+                <div class="delta-row"><span>+0%</span><span>vs last month</span></div>
+              </div>
+            </div>
+            <div class="mt-4 -mx-2">
+              <svg viewBox="0 0 360 110" width="100%" height="110">
+                <defs>
+                  <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10 L 352 100 L 8 100 Z"
+                  fill="url(#gA)"
+                />
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="352" cy="10" r="5" fill="var(--accent)" />
+                <circle cx="352" cy="10" r="9" fill="var(--accent)" fill-opacity="0.25" />
+              </svg>
+              <div class="mt-1 flex justify-between px-2">
+                <span class="axis-label">Dec 23</span>
+                <span class="axis-label">Feb 7</span>
+                <span class="axis-label">Mar 26</span>
+                <span class="axis-label">Now</span>
+              </div>
+            </div>
+            <!-- no stats row -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ============== OPTION B — PEAK / AVG / STREAK ============== -->
+      <section class="option-block mb-12">
+        <div class="option-header">
+          <span class="recommend">★ Recommended</span>
+          <div class="badge mt-2">Option B — Peak · Avg · Streak (range-reactive)</div>
+          <div class="h3 mt-1">Make the toggle do real work</div>
+        </div>
+        <div class="lens-row">
+          <div class="lens-card lens-conversion">
+            <div class="lens-title">💰 Conversion</div>
+            <div>
+              <span class="verdict-pill vp-good">Strongest</span>
+              <p class="mt-1">
+                Streak is the canonical loss-aversion lever in habit apps (Duolingo, Strava). Range-reactive
+                Peak/Avg invites exploration — "how was 1M vs 1Y?" — turning a passive control into an
+                interactive moment that brings users back.
+              </p>
+            </div>
+          </div>
+          <div class="lens-card lens-ux">
+            <div class="lens-title">🎨 UX</div>
+            <div>
+              <span class="verdict-pill vp-good">Strong</span>
+              <p class="mt-1">
+                Every number is unique. Tapping 1M/3M/1Y now visibly changes the card, so the toggle finally
+                feels purposeful instead of orphaned.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="strength-card">
+            <div class="flex items-center justify-between">
+              <span class="h3">Habit Strength</span>
+              <div class="toggle">
+                <button>1M</button>
+                <button>3M</button>
+                <button class="active">1Y</button>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-4">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" stroke="rgba(232,93,47,0.18)" stroke-width="6" fill="none" />
+                <circle
+                  cx="36"
+                  cy="36"
+                  r="30"
+                  stroke="var(--accent)"
+                  stroke-width="6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-dasharray="188.5 188.5"
+                  stroke-dashoffset="0"
+                  transform="rotate(-90 36 36)"
+                />
+                <text x="36" y="42" text-anchor="middle" class="gauge-num" fill="var(--text-primary)">
+                  100%
+                </text>
+              </svg>
+              <div class="flex-1">
+                <span class="strong-pill">Strong</span>
+                <div class="delta-row"><span>+0%</span><span>vs last month</span></div>
+              </div>
+            </div>
+            <div class="mt-4 -mx-2">
+              <svg viewBox="0 0 360 110" width="100%" height="110">
+                <defs>
+                  <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10 L 352 100 L 8 100 Z"
+                  fill="url(#gB)"
+                />
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="352" cy="10" r="5" fill="var(--accent)" />
+                <circle cx="352" cy="10" r="9" fill="var(--accent)" fill-opacity="0.25" />
+              </svg>
+              <div class="mt-1 flex justify-between px-2">
+                <span class="axis-label">Dec 23</span>
+                <span class="axis-label">Feb 7</span>
+                <span class="axis-label">Mar 26</span>
+                <span class="axis-label">Now</span>
+              </div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-col">
+                <div class="stat-label">Peak (1Y)</div>
+                <div class="stat-value">100%</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Avg (1Y)</div>
+                <div class="stat-value">87%</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Streak</div>
+                <div class="stat-value pos">42d</div>
+              </div>
+            </div>
+            <!-- mini explainer of toggle behavior -->
+            <p class="mt-2 text-center text-[11px]" style="color: var(--text-tertiary)">
+              Tap 1M → Peak/Avg recompute over the last 30 days. Streak is always current.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============== OPTION C — LAST WEEK + STREAK ============== -->
+      <section class="option-block mb-12">
+        <div class="option-header">
+          <div class="badge">Option C — Compress: Last Week · Streak</div>
+          <div class="h3 mt-1">Drop the duplicates, add Streak</div>
+        </div>
+        <div class="lens-row">
+          <div class="lens-card lens-conversion">
+            <div class="lens-title">💰 Conversion</div>
+            <div>
+              <span class="verdict-pill vp-warn">Good-ish</span>
+              <p class="mt-1">
+                Streak does the heavy lifting (engagement). But "Last Week 0%" is a passive number that
+                rarely changes for mature habits — adds nothing to chase.
+              </p>
+            </div>
+          </div>
+          <div class="lens-card lens-ux">
+            <div class="lens-title">🎨 UX</div>
+            <div>
+              <span class="verdict-pill vp-warn">OK</span>
+              <p class="mt-1">
+                Two stats feel airy and balanced. Lower density than three. But the toggle still does
+                nothing to this row.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="strength-card">
+            <div class="flex items-center justify-between">
+              <span class="h3">Habit Strength</span>
+              <div class="toggle">
+                <button>1M</button>
+                <button>3M</button>
+                <button class="active">1Y</button>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-4">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" stroke="rgba(232,93,47,0.18)" stroke-width="6" fill="none" />
+                <circle
+                  cx="36"
+                  cy="36"
+                  r="30"
+                  stroke="var(--accent)"
+                  stroke-width="6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-dasharray="188.5 188.5"
+                  stroke-dashoffset="0"
+                  transform="rotate(-90 36 36)"
+                />
+                <text x="36" y="42" text-anchor="middle" class="gauge-num" fill="var(--text-primary)">
+                  100%
+                </text>
+              </svg>
+              <div class="flex-1">
+                <span class="strong-pill">Strong</span>
+                <div class="delta-row"><span>+0%</span><span>vs last month</span></div>
+              </div>
+            </div>
+            <div class="mt-4 -mx-2">
+              <svg viewBox="0 0 360 110" width="100%" height="110">
+                <defs>
+                  <linearGradient id="gC" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10 L 352 100 L 8 100 Z"
+                  fill="url(#gC)"
+                />
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="352" cy="10" r="5" fill="var(--accent)" />
+                <circle cx="352" cy="10" r="9" fill="var(--accent)" fill-opacity="0.25" />
+              </svg>
+              <div class="mt-1 flex justify-between px-2">
+                <span class="axis-label">Dec 23</span>
+                <span class="axis-label">Feb 7</span>
+                <span class="axis-label">Mar 26</span>
+                <span class="axis-label">Now</span>
+              </div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-col">
+                <div class="stat-label">Last Week</div>
+                <div class="stat-value">0%</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Current Streak</div>
+                <div class="stat-value pos">42d</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============== OPTION D — STREAK / BEST / PEAK ============== -->
+      <section class="option-block mb-12">
+        <div class="option-header">
+          <div class="badge">Option D — Streak · Best · Peak (static)</div>
+          <div class="h3 mt-1">Three motivating stats, toggle stays chart-only</div>
+        </div>
+        <div class="lens-row">
+          <div class="lens-card lens-conversion">
+            <div class="lens-title">💰 Conversion</div>
+            <div>
+              <span class="verdict-pill vp-good">Strong</span>
+              <p class="mt-1">
+                Three motivators that reinforce each other: Streak (defend), Best Streak (beat), Peak
+                Strength (ceiling). Classic completionist trio used across fitness/learning apps.
+              </p>
+            </div>
+          </div>
+          <div class="lens-card lens-ux">
+            <div class="lens-title">🎨 UX</div>
+            <div>
+              <span class="verdict-pill vp-warn">OK</span>
+              <p class="mt-1">
+                All three are global numbers, so the 1M/3M/1Y toggle remains orphaned. Visually balanced but
+                doesn't fix the dead control.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="canvas">
+          <div class="strength-card">
+            <div class="flex items-center justify-between">
+              <span class="h3">Habit Strength</span>
+              <div class="toggle">
+                <button>1M</button>
+                <button>3M</button>
+                <button class="active">1Y</button>
+              </div>
+            </div>
+            <div class="mt-4 flex items-center gap-4">
+              <svg width="72" height="72" viewBox="0 0 72 72">
+                <circle cx="36" cy="36" r="30" stroke="rgba(232,93,47,0.18)" stroke-width="6" fill="none" />
+                <circle
+                  cx="36"
+                  cy="36"
+                  r="30"
+                  stroke="var(--accent)"
+                  stroke-width="6"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-dasharray="188.5 188.5"
+                  stroke-dashoffset="0"
+                  transform="rotate(-90 36 36)"
+                />
+                <text x="36" y="42" text-anchor="middle" class="gauge-num" fill="var(--text-primary)">
+                  100%
+                </text>
+              </svg>
+              <div class="flex-1">
+                <span class="strong-pill">Strong</span>
+                <div class="delta-row"><span>+0%</span><span>vs last month</span></div>
+              </div>
+            </div>
+            <div class="mt-4 -mx-2">
+              <svg viewBox="0 0 360 110" width="100%" height="110">
+                <defs>
+                  <linearGradient id="gD" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.22" />
+                    <stop offset="100%" stop-color="var(--accent)" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10 L 352 100 L 8 100 Z"
+                  fill="url(#gD)"
+                />
+                <path
+                  d="M 8 88 C 50 72, 90 30, 140 18 S 250 10, 352 10"
+                  fill="none"
+                  stroke="var(--accent)"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+                <circle cx="352" cy="10" r="5" fill="var(--accent)" />
+                <circle cx="352" cy="10" r="9" fill="var(--accent)" fill-opacity="0.25" />
+              </svg>
+              <div class="mt-1 flex justify-between px-2">
+                <span class="axis-label">Dec 23</span>
+                <span class="axis-label">Feb 7</span>
+                <span class="axis-label">Mar 26</span>
+                <span class="axis-label">Now</span>
+              </div>
+            </div>
+            <div class="stats-row">
+              <div class="stat-col">
+                <div class="stat-label">Current Streak</div>
+                <div class="stat-value pos">42d</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Best Streak</div>
+                <div class="stat-value">87d</div>
+              </div>
+              <div class="divider"></div>
+              <div class="stat-col">
+                <div class="stat-label">Peak Strength</div>
+                <div class="stat-value">100%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer summary -->
+      <section class="mx-auto max-w-3xl rounded-2xl bg-white/60 p-6 text-sm" style="color: var(--text-secondary)">
+        <h2 class="mb-3 text-lg font-semibold" style="color: var(--text-primary)">Conversion vs UX scorecard</h2>
+        <p class="mb-4 text-xs" style="color: var(--text-tertiary)">
+          💰 Conversion = "does this number give the user a reason to come back?"  &nbsp;&nbsp;
+          🎨 UX = "is the layout clear, balanced, and is every control doing work?"
+        </p>
+        <table class="w-full text-left">
+          <thead class="text-xs uppercase tracking-wide" style="color: var(--text-tertiary)">
+            <tr>
+              <th class="pb-2">Option</th>
+              <th class="pb-2">Stats</th>
+              <th class="pb-2">💰 Conversion</th>
+              <th class="pb-2">🎨 UX</th>
+              <th class="pb-2">Toggle alive?</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm">
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-medium" style="color: var(--text-primary)">0 — Current</td>
+              <td>Since Start · Last Month · Last Week</td>
+              <td><span class="verdict-pill vp-bad">Hurts</span></td>
+              <td><span class="verdict-pill vp-bad">Poor</span></td>
+              <td>No</td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-medium" style="color: var(--text-primary)">A — Delete</td>
+              <td>—</td>
+              <td><span class="verdict-pill vp-warn">Mixed</span></td>
+              <td><span class="verdict-pill vp-good">Cleanest</span></td>
+              <td>No</td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-medium" style="color: var(--text-primary)">B — Peak · Avg · Streak ★</td>
+              <td>Peak (range) · Avg (range) · Streak</td>
+              <td><span class="verdict-pill vp-good">Strongest</span></td>
+              <td><span class="verdict-pill vp-good">Strong</span></td>
+              <td><span class="why-good font-semibold">Yes</span></td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-medium" style="color: var(--text-primary)">C — Last Week · Streak</td>
+              <td>Last Week · Streak</td>
+              <td><span class="verdict-pill vp-warn">Good-ish</span></td>
+              <td><span class="verdict-pill vp-warn">OK</span></td>
+              <td>No</td>
+            </tr>
+            <tr class="border-t" style="border-color: var(--border)">
+              <td class="py-2 font-medium" style="color: var(--text-primary)">D — Streak · Best · Peak</td>
+              <td>Current Streak · Best · Peak</td>
+              <td><span class="verdict-pill vp-good">Strong</span></td>
+              <td><span class="verdict-pill vp-warn">OK</span></td>
+              <td>No</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-5 rounded-xl p-4 text-sm" style="background: #fff7ed; color: #7c4a13; border: 1px solid #fbd9b0">
+          <strong>Recommendation:</strong> Option B is the only choice that wins on both axes — it's the
+          best for conversion (Streak + exploratory toggle) <em>and</em> the best for UX (every number is
+          unique, every control does visible work). If you want the absolute simplest card and don't care
+          about a stat-hook, Option A wins UX alone. If you can't add range-aware compute right now, Option
+          D is the safest fallback for conversion.
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
