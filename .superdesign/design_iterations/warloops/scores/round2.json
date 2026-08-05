@@ -1,0 +1,56 @@
+[
+  {
+    "a": "source-idle@desktop.png",
+    "b": "pencil-idle@desktop.png",
+    "ssim": 0.9776,
+    "mae": 1.03,
+    "band_ssim": [
+      1.0,
+      1.0,
+      1.0,
+      0.9356,
+      0.885,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "weakest_band": 4,
+    "weakest_band_ssim": 0.885
+  },
+  {
+    "a": "source-idle@desktop.png",
+    "b": "forge-idle@desktop.png",
+    "ssim": 0.9778,
+    "mae": 1.02,
+    "band_ssim": [
+      1.0,
+      1.0,
+      1.0,
+      0.9356,
+      0.8867,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "weakest_band": 4,
+    "weakest_band_ssim": 0.8867
+  },
+  {
+    "a": "source-done@desktop.png",
+    "b": "forge-done@desktop.png",
+    "ssim": 0.9078,
+    "mae": 4.89,
+    "band_ssim": [
+      1.0,
+      0.9903,
+      0.9971,
+      0.9281,
+      0.8291,
+      0.7778,
+      0.8336,
+      0.9059
+    ],
+    "weakest_band": 5,
+    "weakest_band_ssim": 0.7778
+  }
+]
