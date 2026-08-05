@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Strength — Stats Row Options</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif !important;
+      background: #18181b;
+      margin: 0;
+      padding: 40px 24px 80px;
+    }
+    h1, h2, h3, p, span, div { font-family: 'Inter', sans-serif !important; }
+
+    .stage-title { color: #fafaf9; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 8px; }
+    .stage-sub   { color: #a8a29e; font-size: 14px; text-align: center; margin: 0 0 40px; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 36px 28px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .col-label {
+      color: #fafaf9;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      text-align: center;
+    }
+    .col-tag {
+      color: #a8a29e;
+      font-size: 12px;
+      margin: 0 0 18px;
+      text-align: center;
+      max-width: 320px;
+      line-height: 1.45;
+    }
+    .col-tag .pro  { color: #6ee7b7; font-weight: 600; }
+    .col-tag .con  { color: #fda4af; font-weight: 600; }
+
+    /* Card replicating the in-app Habit Strength card */
+    .card {
+      width: 340px;
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 18px; font-weight: 700; color: #1c1917; }
+
+    .toggle {
+      display: flex; gap: 2px; background: #F5F1ED; padding: 3px;
+      border-radius: 999px;
+    }
+    .toggle .seg {
+      font-size: 12px; font-weight: 600; padding: 6px 12px;
+      color: #78716c; border-radius: 999px;
+    }
+    .toggle .seg.active {
+      background: white; color: #1c1917;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    /* Hero row */
+    .hero {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 14px;
+    }
+    .ring {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 5px solid #f97316;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 700; color: #1c1917;
+      flex-shrink: 0;
+    }
+    .ring.amber { border-color: #f59e0b; }
+    .hero-text { display: flex; flex-direction: column; gap: 4px; }
+    .pill {
+      display: inline-flex; align-items: center;
+      background: #d1fae5; color: #047857;
+      font-size: 12px; font-weight: 700;
+      padding: 3px 10px; border-radius: 999px;
+      width: fit-content;
+    }
+    .delta { font-size: 12px; color: #78716c; }
+    .delta .up { color: #047857; font-weight: 600; }
+
+    /* Chart placeholder (SVG below) */
+    .chart {
+      margin: 0 -20px 14px;
+      height: 96px;
+      position: relative;
+    }
+    .chart svg { width: 100%; height: 100%; display: block; }
+
+    /* === Stats row variants === */
+
+    /* Current */
+    .stats-current {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #F5F1ED; border-radius: 10px;
+      padding: 8px 14px;
+    }
+    .stat-col { flex: 1; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+    .stat-col .lbl { font-size: 10px; color: #a8a29e; }
+    .stat-col .val { font-size: 13px; font-weight: 600; color: #1c1917; }
+    .stat-col .val.pos { color: #047857; }
+    .stat-divider { width: 1px; height: 22px; background: #E7E2DA; }
+
+    /* Milestones (variant B) */
+    .stats-milestones {
+      display: flex; align-items: stretch; justify-content: space-between;
+      background: #FBF7F2; border-radius: 12px;
+      padding: 12px 6px;
+    }
+    .ms-col {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+      text-align: center;
+    }
+    .ms-col .ms-num { font-size: 18px; font-weight: 700; color: #1c1917; line-height: 1; }
+    .ms-col .ms-num small { font-size: 11px; font-weight: 600; color: #78716c; margin-left: 2px; }
+    .ms-col .ms-lbl { font-size: 10px; color: #78716c; font-weight: 500; letter-spacing: 0.2px; }
+    .ms-divider { width: 1px; background: #EDE6DC; margin: 4px 0; }
+
+    /* Single-stat (variant C) */
+    .single-stat {
+      display: flex; align-items: center; gap: 12px;
+      background: linear-gradient(180deg, #FFF7ED 0%, #FED7AA 140%);
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .single-stat .icon {
+      width: 38px; height: 38px;
+      background: white; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    .single-stat .ss-text { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+    .single-stat .ss-num { font-size: 17px; font-weight: 700; color: #7c2d12; line-height: 1; }
+    .single-stat .ss-lbl { font-size: 11px; color: #9a3412; font-weight: 500; }
+
+    /* Footnote */
+    .note {
+      color: #57534e; background: #fef3c7;
+      padding: 10px 12px; border-radius: 8px;
+      font-size: 12px; max-width: 1200px; margin: 0 auto 32px;
+      border: 1px solid #fde68a;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1 class="stage-title">Habit Strength — what replaces the stats row?</h1>
+  <p class="stage-sub">
+    Same card, four endings. The screenshot habit (100% / +0% / 0% / 0%) made the row feel hollow,
+    so these mocks show a more typical mature habit (73%, 4-week trend) so each option can be judged on a real day.
+  </p>
+
+  <p class="note">
+    <strong>What's redundant in the current row:</strong> &ldquo;Last Month +4%&rdquo; is the exact same value the hero already shows next to the ring.
+    The chart shows the same trajectory visually. So 2 of the 3 numbers are repeats.
+  </p>
+
+  <div class="grid">
+
+    <!-- ============ VARIANT 0: CURRENT ============ -->
+    <div class="col">
+      <p class="col-label">0 · Current</p>
+      <p class="col-tag">
+        <span class="con">Repeats hero delta.</span> &ldquo;Since Start 73%&rdquo; just restates the hero number.
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Habit Strength</span>
+          <div class="toggle">
+            <span class="seg">1M</span><span class="seg">3M</span><span class="seg active">1Y</span>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="ring">73%</div>
+          <div class="hero-text">
+            <span class="pill">Strong</span>
+            <span class="delta"><span class="up">+4%</span> vs last month</span>
+          </div>
+        </div>
+
+        <div class="chart">
+          <svg viewBox="0 0 320 96" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="g0" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#fb923c" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18 L320,96 L0,96 Z" fill="url(#g0)"/>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="320" cy="18" r="4" fill="#f97316"/>
+          </svg>
+        </div>
+
+        <div class="stats-current">
+          <div class="stat-col"><span class="lbl">Since Start</span><span class="val pos">73%</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-col"><span class="lbl">Last Month</span><span class="val pos">+4%</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat-col"><span class="lbl">Last Week</span><span class="val">0%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VARIANT A: REMOVED ============ -->
+    <div class="col">
+      <p class="col-label">A · Removed</p>
+      <p class="col-tag">
+        <span class="pro">Cleanest.</span> Hero owns the headline number. Chart owns the trend. Card breathes.
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Habit Strength</span>
+          <div class="toggle">
+            <span class="seg">1M</span><span class="seg">3M</span><span class="seg active">1Y</span>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="ring">73%</div>
+          <div class="hero-text">
+            <span class="pill">Strong</span>
+            <span class="delta"><span class="up">+4%</span> vs last month</span>
+          </div>
+        </div>
+
+        <div class="chart" style="margin-bottom: 0;">
+          <svg viewBox="0 0 320 96" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="ga" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#fb923c" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18 L320,96 L0,96 Z" fill="url(#ga)"/>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="320" cy="18" r="4" fill="#f97316"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VARIANT B: MILESTONES ============ -->
+    <div class="col">
+      <p class="col-label">B · Milestones (recommended)</p>
+      <p class="col-tag">
+        <span class="pro">Earned, sticky numbers</span> that go up over time. No overlap with the hero.
+        Streak + completions + days tracked tell a story the chart can&rsquo;t.
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Habit Strength</span>
+          <div class="toggle">
+            <span class="seg">1M</span><span class="seg">3M</span><span class="seg active">1Y</span>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="ring">73%</div>
+          <div class="hero-text">
+            <span class="pill">Strong</span>
+            <span class="delta"><span class="up">+4%</span> vs last month</span>
+          </div>
+        </div>
+
+        <div class="chart">
+          <svg viewBox="0 0 320 96" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="gb" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#fb923c" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18 L320,96 L0,96 Z" fill="url(#gb)"/>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="320" cy="18" r="4" fill="#f97316"/>
+          </svg>
+        </div>
+
+        <div class="stats-milestones">
+          <div class="ms-col">
+            <span class="ms-num">12<small>d</small></span>
+            <span class="ms-lbl">Longest streak</span>
+          </div>
+          <div class="ms-divider"></div>
+          <div class="ms-col">
+            <span class="ms-num">47</span>
+            <span class="ms-lbl">Completions</span>
+          </div>
+          <div class="ms-divider"></div>
+          <div class="ms-col">
+            <span class="ms-num">60<small>d</small></span>
+            <span class="ms-lbl">Days tracked</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VARIANT C: SINGLE BIG STAT ============ -->
+    <div class="col">
+      <p class="col-label">C · Single hero stat</p>
+      <p class="col-tag">
+        Lean alternative: one number that matters most.
+        <span class="con">Risk:</span> picking the &ldquo;right&rdquo; single stat is hard.
+      </p>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Habit Strength</span>
+          <div class="toggle">
+            <span class="seg">1M</span><span class="seg">3M</span><span class="seg active">1Y</span>
+          </div>
+        </div>
+
+        <div class="hero">
+          <div class="ring">73%</div>
+          <div class="hero-text">
+            <span class="pill">Strong</span>
+            <span class="delta"><span class="up">+4%</span> vs last month</span>
+          </div>
+        </div>
+
+        <div class="chart">
+          <svg viewBox="0 0 320 96" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="gc" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#fb923c" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#fb923c" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18 L320,96 L0,96 Z" fill="url(#gc)"/>
+            <path d="M0,80 C40,75 70,68 100,55 S180,30 220,28 280,22 320,18" stroke="#f97316" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <circle cx="320" cy="18" r="4" fill="#f97316"/>
+          </svg>
+        </div>
+
+        <div class="single-stat">
+          <div class="icon">
+            <i data-lucide="flame" style="color:#ea580c; width:20px; height:20px;"></i>
+          </div>
+          <div class="ss-text">
+            <span class="ss-num">12-day longest streak</span>
+            <span class="ss-lbl">47 completions over 60 days tracked</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

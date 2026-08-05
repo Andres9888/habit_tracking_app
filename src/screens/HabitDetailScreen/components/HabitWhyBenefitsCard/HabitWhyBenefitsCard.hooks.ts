@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../../convex/_generated/api';
+import type { Id } from '../../../../../convex/_generated/dataModel';
 import type { Habit } from '../../../../features/habits/types';
-import type { PersonalBlockData, PersonalSource } from './HabitWhyBenefitsCard.types';
+import type { PersonalBlockData, PersonalSource, TemplateProvenance } from './HabitWhyBenefitsCard.types';
 
 const LABELS: Record<PersonalSource, { label: string; icon: string }> = {
   identity: { icon: '🌱', label: "Who you're becoming" },
@@ -78,4 +81,11 @@ export function useCollapsibleState(defaultExpanded: boolean) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const toggle = () => setIsExpanded((v) => !v);
   return { isExpanded, toggle };
+}
+
+export function useTemplateProvenance(
+  habitId: Id<'habits'>
+): TemplateProvenance | null {
+  const result = useQuery(api.templates.queries.getProvenanceForHabit, { habitId });
+  return result ?? null;
 }

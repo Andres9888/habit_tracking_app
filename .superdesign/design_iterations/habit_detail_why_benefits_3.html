@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why & Benefits — Default Expanded</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif !important; background: #18181b !important; margin: 0; padding: 40px 24px; }
+    h1, h2, h3, p, span, div { font-family: 'Inter', sans-serif !important; }
+
+    .stage-title { color: #fafaf9; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 6px; }
+    .stage-sub   { color: #a8a29e; font-size: 14px; text-align: center; margin: 0 0 32px; }
+
+    .stage { display: flex; gap: 48px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+
+    .phone-frame {
+      width: 420px;
+      height: 910px;
+      background: #F5F1ED;
+      border-radius: 50px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px -12px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+    .notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 140px; height: 36px; background: #000;
+      border-radius: 0 0 22px 22px; z-index: 50;
+    }
+    .safe-area-top { height: 60px; }
+
+    .scroll-content {
+      height: calc(910px - 60px); overflow-y: auto; scrollbar-width: none;
+      padding: 0 18px 28px;
+    }
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    /* Hero */
+    .hero {
+      display: flex; align-items: center; gap: 14px; padding: 14px 4px 18px;
+    }
+    .hero .emoji { font-size: 36px; }
+    .hero .title { font-size: 24px; font-weight: 700; color: #1c1917; }
+    .hero .stats { display: flex; gap: 16px; margin-top: 4px; font-size: 13px; color: #78716c; }
+    .hero .stats span { font-weight: 600; }
+    .hero .stats .num { color: #1c1917; }
+
+    .tabs {
+      display: flex; gap: 4px; background: #EDEAE5; padding: 4px;
+      border-radius: 999px; margin-bottom: 18px;
+    }
+    .tab {
+      flex: 1; text-align: center; font-size: 14px; font-weight: 600;
+      padding: 9px 0; color: #78716c; border-radius: 999px;
+    }
+    .tab.active {
+      background: white; color: #1c1917;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .goal-card {
+      background: white; border-radius: 18px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .goal-card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .goal-card-header .title { font-size: 18px; font-weight: 700; color: #1c1917; }
+    .goal-card-header .adjust {
+      font-size: 13px; font-weight: 600; color: #78716c;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+
+    /* Why & Benefits — shipped cream treatment */
+    .wb-card {
+      background: #FAF8F5;
+      border-radius: 12px;
+      padding: 16px 18px 18px;
+      margin-bottom: 16px;
+    }
+
+    .wb-header { display: flex; align-items: center; gap: 8px; }
+    .wb-header .left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .wb-header .icon { font-size: 20px; }
+    .wb-header .label {
+      font-size: 12px; font-weight: 700; color: #B45309;
+      letter-spacing: 1.2px; text-transform: uppercase;
+    }
+    .wb-header .chev { color: #B45309; }
+    .wb-header .edit {
+      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; cursor: pointer; border: none; background: transparent;
+    }
+    .wb-header .edit:hover { background: rgba(180,83,9,0.08); }
+
+    /* Personal blocks */
+    .personal-row {
+      display: flex; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid #E7E5E4;
+    }
+    .personal-row:last-child { border-bottom: none; }
+    .personal-row .pemoji-wrap {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .personal-row .pemoji { font-size: 19px; line-height: 1; }
+    .personal-row .ptext { flex: 1; min-width: 0; }
+    .personal-row .plabel {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+      text-transform: uppercase; color: #B45309; margin-bottom: 2px;
+    }
+    .personal-row .pval {
+      font-family: 'Literata', Georgia, serif !important;
+      font-size: 16px; color: #44312A; font-style: italic; line-height: 23px;
+    }
+
+    /* Section dividers */
+    .wb-section-label {
+      display: flex; align-items: center; gap: 10px; margin: 14px 0 10px;
+    }
+    .wb-section-label .line { flex: 1; height: 1px; background: #E7E5E4; }
+    .wb-section-label span {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; color: #B45309;
+      text-transform: uppercase;
+    }
+
+    /* Benefits */
+    .benefits { list-style: none; padding: 0; margin: 0; }
+    .benefits li {
+      display: flex; gap: 10px; padding: 4px 0;
+      font-size: 14px; color: #44312A; line-height: 21px;
+    }
+    .benefits li::before {
+      content: '•'; color: #9A5504; font-weight: 700;
+      flex-shrink: 0; line-height: 21px;
+    }
+
+    /* Science note */
+    .science-note {
+      font-size: 14px; color: #44312A; line-height: 21px;
+      background: #FFFFFF; border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    /* Streak goal placeholder */
+    .streak-goal {
+      background: #FAF8F5; border-radius: 12px; padding: 16px;
+    }
+    .sg-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .sg-num { font-size: 32px; font-weight: 800; color: #1c1917; }
+    .sg-label { font-size: 12px; color: #78716c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+    .sg-bar { height: 8px; background: #e7e5e4; border-radius: 999px; margin-top: 12px; overflow: hidden; }
+    .sg-bar-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 999px; }
+
+    .coach {
+      margin-top: 14px; font-size: 13px; color: #78716c;
+      font-style: italic; padding: 0 2px;
+    }
+
+    /* Annotation column */
+    .annotations {
+      width: 320px;
+      color: #d4d4d8;
+      font-size: 13px;
+      line-height: 1.6;
+      padding-top: 80px;
+    }
+    .annotations h2 {
+      color: #fafaf9; font-size: 18px; font-weight: 700;
+      margin: 0 0 20px;
+    }
+    .annotations .note {
+      margin-bottom: 18px; padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border-left: 2px solid #B45309;
+      border-radius: 4px;
+    }
+    .annotations .note .num {
+      display: inline-block;
+      width: 22px; height: 22px;
+      border-radius: 999px;
+      background: #B45309;
+      color: white;
+      font-size: 11px; font-weight: 700;
+      text-align: center; line-height: 22px;
+      margin-right: 8px;
+    }
+    .annotations code {
+      background: rgba(245,158,11,0.15);
+      color: #fbbf24;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="stage-title">Default — Expanded with Content</h1>
+  <p class="stage-sub">Closer look at the shipped Why &amp; Benefits card on the Goal tab.</p>
+
+  <div class="stage">
+
+    <!-- THE PHONE -->
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="safe-area-top"></div>
+      <div class="scroll-content">
+
+        <div class="hero">
+          <span class="emoji">🏃</span>
+          <div>
+            <div class="title">Morning run</div>
+            <div class="stats">
+              <span>🔥 <span class="num">7</span> day</span>
+              <span>⭐ <span class="num">14</span> best</span>
+              <span>✓ <span class="num">42</span> total</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab">Calendar</div>
+          <div class="tab">Strength</div>
+          <div class="tab active">Goal</div>
+        </div>
+
+        <div class="goal-card">
+          <div class="goal-card-header">
+            <div class="title">Goal</div>
+            <div class="adjust">Adjust goal</div>
+          </div>
+
+          <!-- WHY & BENEFITS, EXPANDED -->
+          <div class="wb-card">
+            <div class="wb-header">
+              <div class="left">
+                <span class="icon">💭</span>
+                <span class="label">Why &amp; Benefits</span>
+              </div>
+              <i data-lucide="chevron-down" class="chev" style="width:20px;height:20px"></i>
+              <button class="edit" aria-label="Edit">
+                <i data-lucide="edit-3" style="width:17px;height:17px;color:#B45309"></i>
+              </button>
+            </div>
+
+            <div style="margin-top: 8px;">
+              <div class="personal-row">
+                <div class="pemoji-wrap"><span class="pemoji">💭</span></div>
+                <div class="ptext">
+                  <div class="plabel">Your why</div>
+                  <div class="pval">"More energy for my kids."</div>
+                </div>
+              </div>
+              <div class="personal-row">
+                <div class="pemoji-wrap"><span class="pemoji">🌱</span></div>
+                <div class="ptext">
+                  <div class="plabel">Who you're becoming</div>
+                  <div class="pval">"Someone who moves daily."</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wb-section-label">
+              <div class="line"></div><span>Benefits</span><div class="line"></div>
+            </div>
+            <ul class="benefits">
+              <li>Boosts mood within 30 minutes</li>
+              <li>Improves sleep quality and depth</li>
+              <li>Lowers resting heart rate over weeks</li>
+              <li>Sharpens focus for the rest of the day</li>
+            </ul>
+
+            <div class="wb-section-label">
+              <div class="line"></div><span>Science</span><div class="line"></div>
+            </div>
+            <div class="science-note">
+              A 2019 meta-analysis found that 30 min/day of moderate aerobic activity reduced depression risk by 26% across 49 studies. — Schuch et al., American Journal of Psychiatry.
+            </div>
+          </div>
+
+          <div class="streak-goal">
+            <div class="sg-row">
+              <div>
+                <div class="sg-num">7<span style="font-size:15px;color:#a8a29e;font-weight:600">/30</span></div>
+                <div class="sg-label">Day streak goal</div>
+              </div>
+              <div style="font-size:26px">🎯</div>
+            </div>
+            <div class="sg-bar"><div class="sg-bar-fill" style="width:23%"></div></div>
+          </div>
+
+          <p class="coach">"23 more days. You've got this."</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ANNOTATIONS -->
+    <div class="annotations">
+      <h2>What you're looking at</h2>
+
+      <div class="note">
+        <span class="num">1</span>
+        <strong style="color:#fafaf9">Header row</strong> — 💭 emoji + "WHY &amp; BENEFITS" caption + chevron-down (currently expanded) + pencil edit icon. Tap chevron to collapse, pencil to open the editor modal regardless of state.
+      </div>
+
+      <div class="note">
+        <span class="num">2</span>
+        <strong style="color:#fafaf9">Personal blocks</strong> — every non-empty source from <code>habit.why</code>, <code>habit.identity</code>, <code>habit.woopWish</code> renders as its own row with emoji backplate + caption label + italic Literata quote. Subtle <code>#E7E5E4</code> divider between rows.
+      </div>
+
+      <div class="note">
+        <span class="num">3</span>
+        <strong style="color:#fafaf9">Benefits</strong> — bulleted list from <code>habit.benefits[]</code>. Bullets in burnt-amber <code>#9A5504</code>. Section dividers use the line+label+line treatment from the mock (the bit you said you liked).
+      </div>
+
+      <div class="note">
+        <span class="num">4</span>
+        <strong style="color:#fafaf9">Science note</strong> — <code>habit.scienceNote</code> rendered in a white inset panel for contrast against the cream parent. Auto-populated from <code>template.scientificReference</code> on import.
+      </div>
+
+      <div class="note">
+        <span class="num">5</span>
+        <strong style="color:#fafaf9">Card surface</strong> — flat <code>#FAF8F5</code> cream, no border, 12px radius. Sits inside the white outer Goal card. No shadow — just the soft surface contrast.
+      </div>
+
+      <p style="margin-top:30px;padding:14px 16px;background:rgba(34,197,94,0.08);border-left:2px solid #22c55e;border-radius:4px;color:#bbf7d0;font-size:12px;line-height:1.6">
+        <strong>Caveat —</strong> this is a static HTML mockup of what the React Native code <em>should</em> render based on the styles we wrote. I have not screenshotted the simulator to verify pixel-for-pixel. If anything looks off when you reload, share a screenshot.
+      </p>
+    </div>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

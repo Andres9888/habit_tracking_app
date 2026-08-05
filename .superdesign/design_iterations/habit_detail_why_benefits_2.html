@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habit Detail — Why & Benefits (Shipped)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif !important; background: #18181b !important; margin: 0; padding: 40px 24px; }
+    h1, h2, h3, p, span, div { font-family: 'Inter', sans-serif !important; }
+
+    .stage-title { color: #fafaf9; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 6px; }
+    .stage-sub   { color: #a8a29e; font-size: 14px; text-align: center; margin: 0 0 8px; }
+    .branch-tag  { color: #fbbf24; font-size: 12px; text-align: center; margin: 0 0 32px; font-family: ui-monospace, monospace; }
+
+    .phones { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; }
+
+    .phone-frame {
+      width: 375px;
+      height: 812px;
+      background: #F5F1ED;
+      border-radius: 44px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px -12px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+    .notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 126px; height: 34px; background: #000;
+      border-radius: 0 0 20px 20px; z-index: 50;
+    }
+    .safe-area-top { height: 54px; }
+    .frame-label {
+      color: #fafaf9; font-size: 13px; font-weight: 600;
+      text-align: center; margin-top: 16px; letter-spacing: 0.3px;
+    }
+    .frame-label .pill {
+      display: inline-block; background: rgba(245,158,11,0.15); color: #fbbf24;
+      padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; margin-right: 8px;
+    }
+
+    .scroll-content {
+      height: calc(812px - 54px); overflow-y: auto; scrollbar-width: none;
+      padding: 0 16px 24px;
+    }
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    /* Hero */
+    .hero {
+      display: flex; align-items: center; gap: 12px; padding: 12px 4px 16px;
+    }
+    .hero .emoji { font-size: 32px; }
+    .hero .title { font-size: 22px; font-weight: 700; color: #1c1917; }
+    .hero .stats { display: flex; gap: 14px; margin-top: 4px; font-size: 12px; color: #78716c; }
+    .hero .stats span { font-weight: 600; }
+    .hero .stats .num { color: #1c1917; }
+
+    /* Tabs (segmented pill) */
+    .tabs {
+      display: flex; gap: 4px; background: #EDEAE5; padding: 4px;
+      border-radius: 999px; margin-bottom: 16px;
+    }
+    .tab {
+      flex: 1; text-align: center; font-size: 13px; font-weight: 600;
+      padding: 8px 0; color: #78716c; border-radius: 999px;
+    }
+    .tab.active {
+      background: white; color: #1c1917;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    /* Outer Goal card (the GoalTabContent wrapper) */
+    .goal-card {
+      background: white; border-radius: 16px; padding: 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .goal-card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px;
+    }
+    .goal-card-header .title { font-size: 17px; font-weight: 700; color: #1c1917; }
+    .goal-card-header .adjust {
+      font-size: 12px; font-weight: 600; color: #78716c;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+
+    /* The shipped Why & Benefits sub-card — cream, no border, 12px radius */
+    .wb-card {
+      background: #FAF8F5;
+      border-radius: 12px;
+      padding: 14px 16px 16px;
+      margin-bottom: 14px;
+    }
+    .wb-card.empty {
+      background: #FAF8F5;
+      border: 1px dashed #DDD8D2;
+    }
+
+    /* Card header row: [💭] Why & Benefits  ......  [chevron] [pencil] */
+    .wb-header {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .wb-header .left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .wb-header .icon { font-size: 18px; }
+    .wb-header .label {
+      font-size: 11px; font-weight: 700; color: #B45309;
+      letter-spacing: 1.2px; text-transform: uppercase;
+    }
+    .wb-summary {
+      font-size: 11px; color: #44312A; margin-top: 1px; line-height: 16px;
+    }
+    .wb-header .chev { color: #B45309; }
+    .wb-header .edit {
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+    }
+    .wb-header .edit:hover { background: rgba(180,83,9,0.06); }
+
+    /* Personal block: emoji backplate + label + italic value */
+    .personal-row {
+      display: flex; gap: 10px; padding: 10px 0;
+      border-bottom: 1px solid #E7E5E4;
+    }
+    .personal-row:last-child { border-bottom: none; }
+    .personal-row .pemoji-wrap {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .personal-row .pemoji { font-size: 18px; line-height: 1; }
+    .personal-row .ptext { flex: 1; min-width: 0; }
+    .personal-row .plabel {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+      text-transform: uppercase; color: #B45309; margin-bottom: 2px;
+    }
+    .personal-row .pval {
+      font-family: 'Literata', Georgia, serif !important;
+      font-size: 15px; color: #44312A; font-style: italic; line-height: 21px;
+    }
+
+    /* Section divider — line + label + line */
+    .wb-section-label {
+      display: flex; align-items: center; gap: 8px; margin: 12px 0 8px;
+    }
+    .wb-section-label .line { flex: 1; height: 1px; background: #E7E5E4; }
+    .wb-section-label span {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; color: #B45309;
+      text-transform: uppercase;
+    }
+
+    /* Benefits */
+    .benefits { list-style: none; padding: 0; margin: 0; }
+    .benefits li {
+      display: flex; gap: 8px; padding: 3px 0;
+      font-size: 13px; color: #44312A; line-height: 20px;
+    }
+    .benefits li::before {
+      content: '•'; color: #9A5504; font-weight: 700;
+      flex-shrink: 0; line-height: 20px;
+    }
+
+    /* Science note */
+    .science-note {
+      font-size: 13px; color: #44312A; line-height: 20px;
+      background: #FFFFFF; border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    /* Empty state */
+    .empty-cta {
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .empty-cta .plus {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #FFFFFF;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 600; color: #B45309; flex-shrink: 0;
+    }
+    .empty-cta .ctitle {
+      font-size: 14px; font-weight: 600; color: #44312A;
+    }
+    .empty-cta .cdesc {
+      font-size: 12px; color: #B45309; margin-top: 2px; line-height: 18px;
+    }
+
+    /* Streak goal placeholder (real one is much richer; this is a stand-in
+       for the screenshot context) */
+    .streak-goal {
+      background: #FAF8F5; border-radius: 12px; padding: 14px;
+    }
+    .sg-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .sg-num { font-size: 28px; font-weight: 800; color: #1c1917; }
+    .sg-label { font-size: 11px; color: #78716c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+    .sg-bar { height: 8px; background: #e7e5e4; border-radius: 999px; margin-top: 10px; overflow: hidden; }
+    .sg-bar-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 999px; }
+
+    .coach {
+      margin-top: 12px; font-size: 12px; color: #78716c;
+      font-style: italic; padding: 0 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="stage-title">Why &amp; Benefits — As Shipped</h1>
+  <p class="stage-sub">Cream-card treatment per "I like the similar goal card in the mock" feedback. Three states.</p>
+  <p class="branch-tag">branch: habit-why-benefits · 6 commits</p>
+
+  <div class="phones">
+
+    <!-- ====== STATE 1: EXPANDED, RICH CONTENT ====== -->
+    <div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="scroll-content">
+
+          <div class="hero">
+            <span class="emoji">🏃</span>
+            <div>
+              <div class="title">Morning run</div>
+              <div class="stats">
+                <span>🔥 <span class="num">7</span> day</span>
+                <span>⭐ <span class="num">14</span> best</span>
+                <span>✓ <span class="num">42</span> total</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+
+          <div class="goal-card">
+            <div class="goal-card-header">
+              <div class="title">Goal</div>
+              <div class="adjust">Adjust goal</div>
+            </div>
+
+            <!-- WHY & BENEFITS CARD (shipped, cream) -->
+            <div class="wb-card">
+              <div class="wb-header">
+                <div class="left">
+                  <span class="icon">💭</span>
+                  <span class="label">Why &amp; Benefits</span>
+                </div>
+                <i data-lucide="chevron-down" class="chev" style="width:18px;height:18px"></i>
+                <button class="edit" aria-label="Edit">
+                  <i data-lucide="edit-3" style="width:16px;height:16px;color:#B45309"></i>
+                </button>
+              </div>
+
+              <div style="margin-top: 8px;">
+                <div class="personal-row">
+                  <div class="pemoji-wrap"><span class="pemoji">💭</span></div>
+                  <div class="ptext">
+                    <div class="plabel">Your why</div>
+                    <div class="pval">"More energy for my kids."</div>
+                  </div>
+                </div>
+                <div class="personal-row">
+                  <div class="pemoji-wrap"><span class="pemoji">🌱</span></div>
+                  <div class="ptext">
+                    <div class="plabel">Who you're becoming</div>
+                    <div class="pval">"Someone who moves daily."</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wb-section-label">
+                <div class="line"></div><span>Benefits</span><div class="line"></div>
+              </div>
+              <ul class="benefits">
+                <li>Boosts mood within 30 minutes</li>
+                <li>Improves sleep quality and depth</li>
+                <li>Lowers resting heart rate over weeks</li>
+                <li>Sharpens focus for the rest of the day</li>
+              </ul>
+
+              <div class="wb-section-label">
+                <div class="line"></div><span>Science</span><div class="line"></div>
+              </div>
+              <div class="science-note">
+                A 2019 meta-analysis found that 30 min/day of moderate aerobic activity reduced depression risk by 26% across 49 studies. — Schuch et al., American Journal of Psychiatry.
+              </div>
+            </div>
+
+            <div class="streak-goal">
+              <div class="sg-row">
+                <div>
+                  <div class="sg-num">7<span style="font-size:14px;color:#a8a29e;font-weight:600">/30</span></div>
+                  <div class="sg-label">Day streak goal</div>
+                </div>
+                <div style="font-size:24px">🎯</div>
+              </div>
+              <div class="sg-bar"><div class="sg-bar-fill" style="width:23%"></div></div>
+            </div>
+
+            <p class="coach">"23 more days. You've got this."</p>
+          </div>
+
+        </div>
+      </div>
+      <div class="frame-label"><span class="pill">A</span>Default — expanded with content</div>
+    </div>
+
+    <!-- ====== STATE 2: COLLAPSED ====== -->
+    <div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="scroll-content">
+
+          <div class="hero">
+            <span class="emoji">🏃</span>
+            <div>
+              <div class="title">Morning run</div>
+              <div class="stats">
+                <span>🔥 <span class="num">7</span> day</span>
+                <span>⭐ <span class="num">14</span> best</span>
+                <span>✓ <span class="num">42</span> total</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+
+          <div class="goal-card">
+            <div class="goal-card-header">
+              <div class="title">Goal</div>
+              <div class="adjust">Adjust goal</div>
+            </div>
+
+            <div class="wb-card" style="padding: 14px 16px;">
+              <div class="wb-header">
+                <div class="left">
+                  <span class="icon">💭</span>
+                  <div>
+                    <div class="label">Why &amp; Benefits</div>
+                    <div class="wb-summary">your why · 4 benefits · science</div>
+                  </div>
+                </div>
+                <i data-lucide="chevron-right" class="chev" style="width:18px;height:18px"></i>
+                <button class="edit" aria-label="Edit">
+                  <i data-lucide="edit-3" style="width:16px;height:16px;color:#B45309"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="streak-goal">
+              <div class="sg-row">
+                <div>
+                  <div class="sg-num">7<span style="font-size:14px;color:#a8a29e;font-weight:600">/30</span></div>
+                  <div class="sg-label">Day streak goal</div>
+                </div>
+                <div style="font-size:24px">🎯</div>
+              </div>
+              <div class="sg-bar"><div class="sg-bar-fill" style="width:23%"></div></div>
+            </div>
+
+            <p class="coach">"23 more days. You've got this."</p>
+          </div>
+
+          <p style="margin-top:14px;font-size:11px;color:#a8a29e;text-align:center;font-style:italic">
+            Tap chevron to collapse. Pencil opens the editor regardless of state.
+          </p>
+
+        </div>
+      </div>
+      <div class="frame-label"><span class="pill">B</span>Collapsed — peek summary</div>
+    </div>
+
+    <!-- ====== STATE 3: EMPTY (CUSTOM HABIT, EDITOR OPEN) ====== -->
+    <div>
+      <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="safe-area-top"></div>
+        <div class="scroll-content" style="position: relative;">
+
+          <div class="hero">
+            <span class="emoji">📚</span>
+            <div>
+              <div class="title">Read 10 pages</div>
+              <div class="stats">
+                <span>🔥 <span class="num">2</span> day</span>
+                <span>⭐ <span class="num">5</span> best</span>
+                <span>✓ <span class="num">9</span> total</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tabs">
+            <div class="tab">Calendar</div>
+            <div class="tab">Strength</div>
+            <div class="tab active">Goal</div>
+          </div>
+
+          <div class="goal-card">
+            <div class="goal-card-header">
+              <div class="title">Goal</div>
+              <div class="adjust">Adjust goal</div>
+            </div>
+
+            <div class="wb-card empty">
+              <div class="empty-cta">
+                <div class="plus">+</div>
+                <div>
+                  <div class="ctitle">Add your why &amp; benefits</div>
+                  <div class="cdesc">Write down what this habit does for you and why it matters.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="streak-goal">
+              <div class="sg-row">
+                <div>
+                  <div class="sg-num">2<span style="font-size:14px;color:#a8a29e;font-weight:600">/14</span></div>
+                  <div class="sg-label">Day streak goal</div>
+                </div>
+                <div style="font-size:24px">🎯</div>
+              </div>
+              <div class="sg-bar"><div class="sg-bar-fill" style="width:14%"></div></div>
+            </div>
+
+            <p class="coach">"Brand new habits feel hardest. Day 3 is a turning point."</p>
+          </div>
+
+          <!-- Edit modal overlay (preview of WhyBenefitsEditModal) -->
+          <div style="position:absolute;left:0;right:0;bottom:0;top:0;background:rgba(0,0,0,0.4);"></div>
+          <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:12px 20px 36px;max-height:78%;overflow-y:auto">
+            <div style="width:40px;height:4px;background:#DDD8D2;border-radius:999px;margin:0 auto 12px"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+              <span style="font-size:13px;color:#78716c">Cancel</span>
+              <span style="font-size:18px;font-weight:600;font-family:'Literata',serif;color:#1c1917">Why &amp; Benefits</span>
+              <span style="font-size:13px;color:#059669;font-weight:600">Save</span>
+            </div>
+            <div style="margin-bottom:12px">
+              <div style="font-size:11px;color:#78716c;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:4px">Your why</div>
+              <div style="border:1px solid #E7E5E4;border-radius:12px;padding:10px;font-size:13px;color:#1c1917;background:#FAF8F5;min-height:44px">More energy for my kids.</div>
+            </div>
+            <div style="margin-bottom:12px">
+              <div style="font-size:11px;color:#78716c;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:4px">Who you're becoming</div>
+              <div style="border:1px solid #E7E5E4;border-radius:12px;padding:10px;font-size:13px;color:#a8a29e;background:#FAF8F5;min-height:44px">I am someone who…</div>
+            </div>
+            <div style="margin-bottom:12px">
+              <div style="font-size:11px;color:#78716c;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:4px">Benefits</div>
+              <div style="font-size:11px;color:#a8a29e;margin-bottom:6px">One per line. Up to 10.</div>
+              <div style="border:1px solid #E7E5E4;border-radius:12px;padding:10px;font-size:13px;color:#1c1917;background:#FAF8F5;min-height:88px;line-height:20px">Boosts mood<br>Improves sleep</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:#78716c;font-weight:600;letter-spacing:0.6px;text-transform:uppercase;margin-bottom:4px">Science note</div>
+              <div style="border:1px solid #E7E5E4;border-radius:12px;padding:10px;font-size:13px;color:#a8a29e;background:#FAF8F5;min-height:88px">What the research says, in 1–2 sentences.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="frame-label"><span class="pill">C</span>Empty + edit modal preview</div>
+    </div>
+
+  </div>
+
+  <p style="color:#71717a;font-size:12px;text-align:center;margin-top:48px;max-width:760px;margin-left:auto;margin-right:auto;line-height:1.7">
+    <strong style="color:#fafaf9">Where it lives:</strong>
+    <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">src/screens/HabitDetailScreen/components/HabitWhyBenefitsCard/</code>
+    on the Goal tab, between
+    <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">CardHeader</code> (replaces today's
+    <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">GoalWhyAnchor</code>) and
+    <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">StreakGoalCard</code>.<br>
+    <strong style="color:#fafaf9">Editor:</strong>
+    <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">WhyBenefitsEditModal</code> opens via the pencil icon (any state) or by tapping the empty CTA. Save calls
+    <code style="background:rgba(255,255,255,0.08);padding:2px 6px;border-radius:4px;color:#fbbf24">api.habits.update</code>.
+  </p>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

@@ -22,7 +22,7 @@ export { HabitStrengthSection, default } from './HabitStrengthSection';
 export { TimeRangeToggle } from './TimeRangeToggle';
 export { StrengthHero } from './StrengthHero';
 export { StrengthChart } from './StrengthChart';
-export { StrengthStatsRow } from './StrengthStatsRow';
+export { StrengthMilestoneStat } from './StrengthMilestoneStat';
 
 // Types
 export type {
@@ -30,7 +30,7 @@ export type {
   TimeRangeToggleProps,
   StrengthHeroProps,
   StrengthChartProps,
-  StrengthStatsRowProps,
+  StrengthMilestoneStatProps,
   TimeRange,
   ExtendedStrengthMetrics,
 } from './types';

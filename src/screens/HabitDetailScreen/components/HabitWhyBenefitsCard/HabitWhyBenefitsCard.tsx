@@ -16,12 +16,14 @@ import { CardHeader } from './CardHeader';
 import { EmptyStateCTA } from './EmptyStateCTA';
 import { PersonalBlock } from './PersonalBlock';
 import { ScienceNoteBlock } from './ScienceNoteBlock';
+import { SourcePill } from './SourcePill';
 import {
   useCardContentFlags,
   useCollapsibleState,
   useNonEmptyBenefits,
   useResolveAllPersonal,
   useScienceNote,
+  useTemplateProvenance,
 } from './HabitWhyBenefitsCard.hooks';
 import type { HabitWhyBenefitsCardProps } from './HabitWhyBenefitsCard.types';
 
@@ -29,6 +31,8 @@ export function HabitWhyBenefitsCard({ habit }: HabitWhyBenefitsCardProps) {
   const personal = useResolveAllPersonal(habit);
   const benefits = useNonEmptyBenefits(habit);
   const scienceNote = useScienceNote(habit);
+  const provenance = useTemplateProvenance(habit._id);
+  const isFromTemplate = provenance !== null;
   const flags = useCardContentFlags(personal, benefits, scienceNote);
   const { isExpanded, toggle } = useCollapsibleState(true);
   const [editing, setEditing] = useState(false);
@@ -60,6 +64,7 @@ export function HabitWhyBenefitsCard({ habit }: HabitWhyBenefitsCardProps) {
         />
         {isExpanded ? (
           <View className='mt-2'>
+            {isFromTemplate ? <SourcePill /> : null}
             {personal.map((data, index) => (
               <PersonalBlock
                 key={data.source}
@@ -67,9 +72,14 @@ export function HabitWhyBenefitsCard({ habit }: HabitWhyBenefitsCardProps) {
                 isLast={index === personal.length - 1 && !flags.hasBenefits && !flags.hasScience}
               />
             ))}
-            {flags.hasBenefits ? <BenefitsList benefits={benefits} /> : null}
+            {flags.hasBenefits ? (
+              <BenefitsList benefits={benefits} isFromTemplate={isFromTemplate} />
+            ) : null}
             {flags.hasScience && scienceNote !== null ? (
-              <ScienceNoteBlock note={scienceNote} />
+              <ScienceNoteBlock
+                note={scienceNote}
+                scientificLink={provenance?.scientificLink ?? null}
+              />
             ) : null}
           </View>
         ) : null}

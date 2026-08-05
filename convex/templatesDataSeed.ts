@@ -12,6 +12,7 @@ import type { Id } from './_generated/dataModel';
 const FREQUENCY_DAILY = 'daily';
 
 type TemplateInsert = {
+  benefits?: string[];
   category:
     | 'andrew_huberman'
     | 'breathing'
@@ -186,6 +187,12 @@ export const seedTemplates = internalMutation({
 
     // Morning Routine Templates
     await insertWithTracking({
+      benefits: [
+        'Reduces psychological stress and anxiety',
+        'Lowers symptoms of depression over 8 weeks',
+        'Improves attention and working memory',
+        'Supports emotion regulation under stress',
+      ],
       category: 'morning_routine',
       createdAt: now,
       description:
@@ -1686,6 +1693,56 @@ export const getUsageStats = query({
       ).length,
       totalImports: usage.length,
     };
+  },
+});
+
+/**
+ * Mutation: Backfill `benefits[]` on existing template docs by name.
+ * The seed function skips templates that already exist by name, so newly-added
+ * `benefits` arrays in seed data won't reach docs from earlier seed runs.
+ * Run this once via the Convex dashboard after editing seed data.
+ */
+const BENEFITS_BY_NAME: Record<string, string[]> = {
+  '5-Minute Meditation': [
+    'Reduces psychological stress and anxiety',
+    'Lowers symptoms of depression over 8 weeks',
+    'Improves attention and working memory',
+    'Supports emotion regulation under stress',
+  ],
+};
+
+export const backfillTemplateBenefits = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let templatesUpdated = 0;
+    let templatesSkipped = 0;
+    let habitsUpdated = 0;
+    for (const [name, benefits] of Object.entries(BENEFITS_BY_NAME)) {
+      const template = await ctx.db
+        .query('templates')
+        .filter((q) => q.eq(q.field('name'), name))
+        .first();
+      if (!template) {
+        templatesSkipped += 1;
+        continue;
+      }
+      await ctx.db.patch(template._id, { benefits });
+      templatesUpdated += 1;
+
+      const usages = await ctx.db
+        .query('templateUsage')
+        .withIndex('by_template', (q) => q.eq('templateId', template._id))
+        .collect();
+      for (const usage of usages) {
+        if (!usage.habitId) continue;
+        const habit = await ctx.db.get(usage.habitId);
+        if (!habit) continue;
+        if (habit.benefits && habit.benefits.length > 0) continue;
+        await ctx.db.patch(usage.habitId, { benefits });
+        habitsUpdated += 1;
+      }
+    }
+    return { habitsUpdated, templatesSkipped, templatesUpdated };
   },
 });
 

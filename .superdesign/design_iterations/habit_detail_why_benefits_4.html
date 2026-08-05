@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why & Benefits — Scientific Benefits from Template</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Literata:ital,wght@0,400;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif !important; background: #18181b !important; margin: 0; padding: 40px 24px; }
+    h1, h2, h3, p, span, div, li { font-family: 'Inter', sans-serif !important; }
+
+    .stage-title { color: #fafaf9; font-size: 28px; font-weight: 700; text-align: center; margin: 0 0 6px; }
+    .stage-sub   { color: #a8a29e; font-size: 14px; text-align: center; margin: 0 0 32px; max-width: 720px; margin-left: auto; margin-right: auto; }
+
+    .stage { display: flex; gap: 48px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+
+    .phone-frame {
+      width: 420px;
+      height: 910px;
+      background: #F5F1ED;
+      border-radius: 50px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 80px -12px rgba(0,0,0,0.6);
+      flex-shrink: 0;
+    }
+    .notch {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 140px; height: 36px; background: #000;
+      border-radius: 0 0 22px 22px; z-index: 50;
+    }
+    .safe-area-top { height: 60px; }
+
+    .scroll-content {
+      height: calc(910px - 60px); overflow-y: auto; scrollbar-width: none;
+      padding: 0 18px 28px;
+    }
+    .scroll-content::-webkit-scrollbar { display: none; }
+
+    /* Hero */
+    .hero { display: flex; align-items: center; gap: 14px; padding: 14px 4px 18px; }
+    .hero .emoji { font-size: 36px; }
+    .hero .title { font-size: 24px; font-weight: 700; color: #1c1917; }
+    .hero .stats { display: flex; gap: 16px; margin-top: 4px; font-size: 13px; color: #78716c; }
+    .hero .stats span { font-weight: 600; }
+    .hero .stats .num { color: #1c1917; }
+
+    /* Template-source pill (NEW) — sits under hero to signal provenance */
+    .source-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #FFF7ED; color: #9A5504;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+      padding: 4px 10px; border-radius: 999px;
+      margin: -10px 0 14px 4px;
+      text-transform: uppercase;
+    }
+
+    .tabs {
+      display: flex; gap: 4px; background: #EDEAE5; padding: 4px;
+      border-radius: 999px; margin-bottom: 18px;
+    }
+    .tab {
+      flex: 1; text-align: center; font-size: 14px; font-weight: 600;
+      padding: 9px 0; color: #78716c; border-radius: 999px;
+    }
+    .tab.active {
+      background: white; color: #1c1917;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .goal-card {
+      background: white; border-radius: 18px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .goal-card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .goal-card-header .title { font-size: 18px; font-weight: 700; color: #1c1917; }
+    .goal-card-header .adjust {
+      font-size: 13px; font-weight: 600; color: #78716c;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+
+    /* Why & Benefits — cream card (matches _3) */
+    .wb-card {
+      background: #FAF8F5;
+      border-radius: 12px;
+      padding: 16px 18px 18px;
+      margin-bottom: 16px;
+    }
+
+    .wb-header { display: flex; align-items: center; gap: 8px; }
+    .wb-header .left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+    .wb-header .icon { font-size: 20px; }
+    .wb-header .label {
+      font-size: 12px; font-weight: 700; color: #B45309;
+      letter-spacing: 1.2px; text-transform: uppercase;
+    }
+    .wb-header .chev { color: #B45309; }
+    .wb-header .edit {
+      width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+      border-radius: 8px; cursor: pointer; border: none; background: transparent;
+    }
+
+    /* Personal blocks — same as shipped */
+    .personal-row {
+      display: flex; gap: 12px; padding: 12px 0;
+      border-bottom: 1px solid #E7E5E4;
+    }
+    .personal-row .pemoji-wrap {
+      width: 38px; height: 38px; border-radius: 9px;
+      background: #FFFFFF; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .personal-row .pemoji { font-size: 19px; line-height: 1; }
+    .personal-row .ptext { flex: 1; min-width: 0; }
+    .personal-row .plabel {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+      text-transform: uppercase; color: #B45309; margin-bottom: 2px;
+    }
+    .personal-row .pval {
+      font-family: 'Literata', Georgia, serif !important;
+      font-size: 16px; color: #44312A; font-style: italic; line-height: 23px;
+    }
+
+    /* Section divider — line+label+line */
+    .wb-section-label {
+      display: flex; align-items: center; gap: 10px; margin: 16px 0 12px;
+    }
+    .wb-section-label .line { flex: 1; height: 1px; background: #E7E5E4; }
+    .wb-section-label span {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.5px; color: #B45309;
+      text-transform: uppercase;
+    }
+    .wb-section-label .leaf {
+      width: 14px; height: 14px; color: #B45309;
+    }
+
+    /* NEW: Scientific Benefits — bullets w/ research treatment */
+    .sci-benefits { list-style: none; padding: 0; margin: 0; }
+    .sci-benefits li {
+      display: flex; gap: 10px; padding: 7px 0;
+      align-items: flex-start;
+    }
+    .sci-benefits li .check-wrap {
+      width: 20px; height: 20px;
+      border-radius: 999px;
+      background: #FFFFFF;
+      border: 1.5px solid #FCD34D;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1.5px;
+    }
+    .sci-benefits li .check-wrap i { width: 11px; height: 11px; color: #B45309; }
+    .sci-benefits li .text {
+      font-size: 14.5px; color: #44312A; line-height: 21px; flex: 1;
+      font-weight: 500;
+    }
+
+    /* Source attribution panel — the differentiator vs old "Science" block */
+    .source-panel {
+      margin-top: 14px;
+      background: #FFFFFF;
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .source-panel .seal {
+      width: 28px; height: 28px;
+      border-radius: 999px;
+      background: #FEF3C7;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .source-panel .seal i { width: 14px; height: 14px; color: #B45309; }
+    .source-panel .body { flex: 1; min-width: 0; }
+    .source-panel .src-label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.8px; color: #9A5504;
+      text-transform: uppercase; margin-bottom: 2px;
+    }
+    .source-panel .citation {
+      font-size: 13px; color: #44312A; line-height: 19px;
+    }
+    .source-panel .study-link {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 6px;
+      font-size: 12px; font-weight: 600; color: #B45309;
+      text-decoration: underline; text-underline-offset: 2px;
+    }
+    .source-panel .study-link i { width: 11px; height: 11px; }
+
+    /* Streak goal placeholder */
+    .streak-goal { background: #FAF8F5; border-radius: 12px; padding: 16px; }
+    .sg-row { display: flex; justify-content: space-between; align-items: baseline; }
+    .sg-num { font-size: 32px; font-weight: 800; color: #1c1917; }
+    .sg-label { font-size: 12px; color: #78716c; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+    .sg-bar { height: 8px; background: #e7e5e4; border-radius: 999px; margin-top: 12px; overflow: hidden; }
+    .sg-bar-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); border-radius: 999px; }
+
+    .coach { margin-top: 14px; font-size: 13px; color: #78716c; font-style: italic; padding: 0 2px; }
+
+    /* Annotations */
+    .annotations { width: 340px; color: #d4d4d8; font-size: 13px; line-height: 1.6; padding-top: 80px; }
+    .annotations h2 { color: #fafaf9; font-size: 18px; font-weight: 700; margin: 0 0 20px; }
+    .annotations .note {
+      margin-bottom: 18px; padding: 12px 14px;
+      background: rgba(255,255,255,0.04);
+      border-left: 2px solid #B45309;
+      border-radius: 4px;
+    }
+    .annotations .note .num {
+      display: inline-block; width: 22px; height: 22px;
+      border-radius: 999px; background: #B45309; color: white;
+      font-size: 11px; font-weight: 700; text-align: center; line-height: 22px;
+      margin-right: 8px;
+    }
+    .annotations code {
+      background: rgba(245,158,11,0.15); color: #fbbf24;
+      padding: 1px 5px; border-radius: 3px; font-size: 11px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="stage-title">Scientific Benefits — From Template</h1>
+  <p class="stage-sub">When a habit is imported from the Habit Library, the template's research-backed benefits flow into the Why &amp; Benefits card with attribution to the underlying study.</p>
+
+  <div class="stage">
+
+    <div class="phone-frame">
+      <div class="notch"></div>
+      <div class="safe-area-top"></div>
+      <div class="scroll-content">
+
+        <div class="hero">
+          <span class="emoji">🧘</span>
+          <div>
+            <div class="title">5-Minute Meditation</div>
+            <div class="stats">
+              <span>🔥 <span class="num">12</span> day</span>
+              <span>⭐ <span class="num">21</span> best</span>
+              <span>✓ <span class="num">38</span> total</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="source-pill">
+          <i data-lucide="book-open" style="width:11px;height:11px"></i>
+          From Habit Library
+        </div>
+
+        <div class="tabs">
+          <div class="tab">Calendar</div>
+          <div class="tab">Strength</div>
+          <div class="tab active">Goal</div>
+        </div>
+
+        <div class="goal-card">
+          <div class="goal-card-header">
+            <div class="title">Goal</div>
+            <div class="adjust">Adjust goal</div>
+          </div>
+
+          <div class="wb-card">
+            <div class="wb-header">
+              <div class="left">
+                <span class="icon">💭</span>
+                <span class="label">Why &amp; Benefits</span>
+              </div>
+              <i data-lucide="chevron-down" class="chev" style="width:20px;height:20px"></i>
+              <button class="edit" aria-label="Edit">
+                <i data-lucide="edit-3" style="width:17px;height:17px;color:#B45309"></i>
+              </button>
+            </div>
+
+            <div style="margin-top: 8px;">
+              <div class="personal-row">
+                <div class="pemoji-wrap"><span class="pemoji">💭</span></div>
+                <div class="ptext">
+                  <div class="plabel">Your why</div>
+                  <div class="pval">"Calm down before the kids wake up."</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="wb-section-label">
+              <i data-lucide="leaf" class="leaf"></i>
+              <span>Scientific Benefits</span>
+              <div class="line"></div>
+            </div>
+
+            <ul class="sci-benefits">
+              <li>
+                <span class="check-wrap"><i data-lucide="check"></i></span>
+                <span class="text">Reduces psychological stress and anxiety</span>
+              </li>
+              <li>
+                <span class="check-wrap"><i data-lucide="check"></i></span>
+                <span class="text">Lowers symptoms of depression over 8 weeks</span>
+              </li>
+              <li>
+                <span class="check-wrap"><i data-lucide="check"></i></span>
+                <span class="text">Improves attention and working memory</span>
+              </li>
+              <li>
+                <span class="check-wrap"><i data-lucide="check"></i></span>
+                <span class="text">Supports emotion regulation under stress</span>
+              </li>
+            </ul>
+
+            <div class="source-panel">
+              <div class="seal">
+                <i data-lucide="microscope"></i>
+              </div>
+              <div class="body">
+                <div class="src-label">Backed by research</div>
+                <div class="citation">Goyal et al. (2014) — Meditation programs for psychological stress &amp; well-being. <em>JAMA Internal Medicine</em>.</div>
+                <a class="study-link" href="#">
+                  View study <i data-lucide="external-link"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="streak-goal">
+            <div class="sg-row">
+              <div>
+                <div class="sg-num">12<span style="font-size:15px;color:#a8a29e;font-weight:600">/66</span></div>
+                <div class="sg-label">Day streak goal</div>
+              </div>
+              <div style="font-size:26px">🎯</div>
+            </div>
+            <div class="sg-bar"><div class="sg-bar-fill" style="width:18%"></div></div>
+          </div>
+
+          <p class="coach">"54 more days. Each one rewires the response."</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="annotations">
+      <h2>What's new vs. shipped</h2>
+
+      <div class="note">
+        <span class="num">1</span>
+        <strong style="color:#fafaf9">"From Habit Library" pill</strong> — quiet provenance signal under the hero. Only renders if <code>habit.sourceTemplateId</code> is set. Tells the user "the science here came from the template you picked."
+      </div>
+
+      <div class="note">
+        <span class="num">2</span>
+        <strong style="color:#fafaf9">Section relabel: "Scientific Benefits"</strong> — when benefits originate from a template, the section header is "Scientific Benefits" with a leaf glyph. Manually-added benefits keep the plain "Benefits" label.
+      </div>
+
+      <div class="note">
+        <span class="num">3</span>
+        <strong style="color:#fafaf9">Bullet treatment</strong> — circular check chips on white instead of plain dots. Visually elevates the items so they read as evidence rather than a casual list.
+      </div>
+
+      <div class="note">
+        <span class="num">4</span>
+        <strong style="color:#fafaf9">"Backed by research" attribution panel</strong> — replaces the old "Science" prose block. Microscope seal + caption + citation + "View study" link to <code>template.scientificLink</code>. Source: <code>habit.scienceNote</code> (which the importer fills from <code>template.scientificReference</code>).
+      </div>
+
+      <div class="note">
+        <span class="num">5</span>
+        <strong style="color:#fafaf9">Data work needed</strong> — templates currently ship <code>scientificReference</code> + <code>scientificLink</code> but <strong>no <code>benefits[]</code> array</strong> in the seed data. Implementing this means populating <code>benefits</code> for each template (4 short bullets per habit, derived from the cited study).
+      </div>
+
+      <p style="margin-top:30px;padding:14px 16px;background:rgba(34,197,94,0.08);border-left:2px solid #22c55e;border-radius:4px;color:#bbf7d0;font-size:12px;line-height:1.6">
+        <strong>This is a static HTML mockup</strong> — not a screenshot of the running app. Confirm the visual direction here, then I'll wire it into <code>HabitWhyBenefitsCard</code> + populate the seed data.
+      </p>
+    </div>
+
+  </div>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

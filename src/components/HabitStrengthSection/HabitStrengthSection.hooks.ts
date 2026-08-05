@@ -7,6 +7,10 @@
 
 import { useMemo, useState } from 'react';
 import { useHabitStrength } from '../../hooks/useHabitStrength';
+import {
+  calculateBestStreakFromDates,
+  differenceInDays,
+} from '../../lib/offline/calculations';
 import { getStrengthLabel } from '../HabitStrengthHistory/strengthUtils';
 import type { TimeRange } from './types';
 import {
@@ -48,7 +52,6 @@ export function useHabitStrengthData({
   const {
     currentStrength: calculatedStrength,
     strengthHistory,
-    metrics,
     isCalculating,
   } = useHabitStrength(safeCompletedDates, safeHabitCreatedAt);
 
@@ -64,7 +67,6 @@ export function useHabitStrengthData({
         safeCompletedDates,
         safeHabitCreatedAt,
         currentStrength,
-        metrics.deltaVsMonth,
         strengthHistory,
         timeRange
       ),
@@ -72,7 +74,6 @@ export function useHabitStrengthData({
       safeCompletedDates,
       safeHabitCreatedAt,
       currentStrength,
-      metrics.deltaVsMonth,
       strengthHistory,
       timeRange,
     ]
@@ -83,6 +84,14 @@ export function useHabitStrengthData({
     return sampleHistoryForChart(raw, 50);
   }, [safeCompletedDates, timeRange]);
 
+  const milestoneStats = useMemo(() => {
+    const longestStreak = calculateBestStreakFromDates([...safeCompletedDates]);
+    const totalCompletions = safeCompletedDates.size;
+    const elapsed = differenceInDays(new Date(), new Date(safeHabitCreatedAt));
+    const daysTracked = Math.max(1, elapsed + 1);
+    return { daysTracked, longestStreak, totalCompletions };
+  }, [safeCompletedDates, safeHabitCreatedAt]);
+
   const strengthLabel = getStrengthLabel(currentStrength);
 
   return {
@@ -91,6 +100,7 @@ export function useHabitStrengthData({
     extendedMetrics,
     isCalculating,
     isEmpty: safeCompletedDates.size === 0,
+    milestoneStats,
     setTimeRange,
     strengthLabel,
     timeRange,

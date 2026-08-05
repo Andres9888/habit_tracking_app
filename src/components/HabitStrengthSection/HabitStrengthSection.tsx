@@ -22,7 +22,7 @@ import { getThemeColors } from './constants';
 import { useHabitStrengthData } from './HabitStrengthSection.hooks';
 import { StrengthChart } from './StrengthChart';
 import { StrengthHero } from './StrengthHero';
-import { StrengthStatsRow } from './StrengthStatsRow';
+import { StrengthMilestoneStat } from './StrengthMilestoneStat';
 import { TimeRangeToggle } from './TimeRangeToggle';
 import type { HabitStrengthSectionProps } from './types';
 
@@ -41,6 +41,7 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
     extendedMetrics,
     isCalculating,
     isEmpty,
+    milestoneStats,
     setTimeRange,
     strengthLabel,
     timeRange,
@@ -64,10 +65,8 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           <SkeletonLoader borderRadius={6} height={14} reduceMotion={reduceMotion} width={80} />
         </View>
         <SkeletonLoader borderRadius={12} height={120} reduceMotion={reduceMotion} />
-        <View className='mt-4 flex-row gap-3'>
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
-          <SkeletonLoader borderRadius={6} height={40} reduceMotion={reduceMotion} width='30%' />
+        <View className='mt-4'>
+          <SkeletonLoader borderRadius={14} height={66} reduceMotion={reduceMotion} width='100%' />
         </View>
       </View>
     );
@@ -146,10 +145,11 @@ export const HabitStrengthSection = React.memo(function HabitStrengthSection({
           />
         </View>
 
-        <StrengthStatsRow
-          lastMonth={extendedMetrics.deltaVsMonth}
-          lastWeek={extendedMetrics.deltaVsWeek}
-          sinceStart={extendedMetrics.sinceStart}
+        <StrengthMilestoneStat
+          color={habitColor}
+          daysTracked={milestoneStats.daysTracked}
+          longestStreak={milestoneStats.longestStreak}
+          totalCompletions={milestoneStats.totalCompletions}
         />
       </View>
     </Animated.View>

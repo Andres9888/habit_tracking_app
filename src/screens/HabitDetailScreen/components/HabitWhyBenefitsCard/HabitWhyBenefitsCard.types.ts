@@ -12,3 +12,9 @@ export interface PersonalBlockData {
 export interface HabitWhyBenefitsCardProps {
   habit: Habit;
 }
+
+export interface TemplateProvenance {
+  templateName: string;
+  scientificReference: string;
+  scientificLink: string | null;
+}

@@ -90,22 +90,24 @@ export interface StrengthChartProps {
 }
 
 /**
- * Props for the StrengthStatsRow component.
+ * Props for the StrengthMilestoneStat component.
  */
-export interface StrengthStatsRowProps {
-  /** Change since habit creation */
-  sinceStart: number;
+export interface StrengthMilestoneStatProps {
+  /** Best consecutive streak the user has ever achieved (in days) */
+  longestStreak: number;
 
-  /** Change in the last month */
-  lastMonth: number;
+  /** Total number of completions */
+  totalCompletions: number;
 
-  /** Change in the last week */
-  lastWeek: number;
+  /** Days elapsed since habit creation (minimum 1) */
+  daysTracked: number;
+
+  /** Optional habit color for theming */
+  color?: string;
 }
 
 /**
  * Extended metrics for the HabitStrengthSection.
- * Adds week-over-week delta and since-start metrics.
  */
 export interface ExtendedStrengthMetrics {
   /** Current strength percentage (0-100) */
@@ -116,12 +118,6 @@ export interface ExtendedStrengthMetrics {
 
   /** Change vs 30 days ago */
   deltaVsMonth: number;
-
-  /** Change vs 7 days ago */
-  deltaVsWeek: number;
-
-  /** Change since habit creation (always equals current for new habits) */
-  sinceStart: number;
 
   /** Filtered strength history for the selected time range */
   strengthHistory: StrengthSnapshot[];
