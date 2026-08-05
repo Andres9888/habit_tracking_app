@@ -1,12 +1,12 @@
 /* eslint-disable max-lines */
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { View, Pressable } from 'react-native';
-import { format } from 'date-fns';
 
 import type { DayCellProps } from '../CalendarTimeline.types';
 import { useHaptics } from '@/utils/haptics';
 import {
   buildAccessibilityLabel,
+  formatDayLabels,
   getAccessibilityHint,
   getStatusText,
 } from './DayCell.helpers';
@@ -37,11 +37,10 @@ const DayCellComponent: React.FC<DayCellProps> = ({
   strengthPercent,
   completionIcon,
 }) => {
-  const weekday = format(date, 'EEE');
-  const dayNumber = format(date, 'd');
-  const monthPrefix =
-    date.getDate() === 1 ? format(date, 'MMM').toUpperCase() : undefined;
-  const baseLabel = `${weekday}, ${format(date, 'MMM')} ${dayNumber}`;
+  const { weekday, dayNumber, monthPrefix, baseLabel } = useMemo(
+    () => formatDayLabels(date),
+    [date]
+  );
   const isDayDisabled = Boolean(isUpcoming && disableFutureDayPress);
   const canPressDay = Boolean(
     isDayPressEnabled && onDayPress && !isDayDisabled

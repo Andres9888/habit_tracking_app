@@ -193,6 +193,27 @@ describe('rehydrateOptimisticFromQueue', () => {
     unsubscribe();
   });
 
+  it('restores a pending reorder overlay from the queue', () => {
+    const operation: OfflineOperation<'reorderHabits'> = {
+      createdAt: Date.now(),
+      id: 'queue_reorder_1',
+      payload: {
+        habitIds: ['b', 'a', 'c'] as never,
+        previousOrder: ['a', 'b', 'c'] as never,
+      },
+      retryCount: 0,
+      status: 'pending',
+      type: 'reorderHabits',
+    };
+
+    rehydrateOptimisticFromQueue([operation]);
+
+    expect(optimisticStore.getPendingReorder()).toEqual(['b', 'a', 'c']);
+    optimisticStore.confirm('queue_reorder_1');
+    jest.runOnlyPendingTimers();
+    expect(optimisticStore.getPendingReorder()).toBeNull();
+  });
+
   it('cancels pending optimistic timers on reset', () => {
     const operationId = optimisticStore.addToggle({
       date: '2026-07-01',

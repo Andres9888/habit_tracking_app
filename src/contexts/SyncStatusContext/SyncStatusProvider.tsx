@@ -11,44 +11,19 @@ import React, {
   useState,
 } from 'react';
 import { useSyncOrchestrator } from '../../lib/offline/sync/useSyncOrchestrator';
+import { resetDefaultCircuitBreaker } from '../../lib/offline';
 import { SyncStatusContext } from './context';
-import type { SyncOrchestratorState } from '../../lib/offline/sync/types';
+import { buildSyncStatus } from './helpers';
+import {
+  discardFailedOperations,
+  resetFailedOperations,
+} from './failedOperations';
 import type { SyncOrchestratorResult } from '../../lib/offline/sync/types';
 import type { SyncStatusContextValue, SyncStatusProviderProps } from './types';
-import type { SyncStatusIndicator } from './types';
 
 type SyncStartCallback = () => void;
 type SyncCompleteCallback = (result: SyncOrchestratorResult) => void;
 type SyncErrorCallback = (error: Error) => void;
-
-function deriveIndicator(
-  isSyncing: boolean,
-  lastResult?: SyncOrchestratorResult,
-  lastError?: Error
-): SyncStatusIndicator {
-  if (isSyncing) return 'syncing';
-  if (lastError) return 'error';
-  if (lastResult && lastResult.succeeded > 0) return 'success';
-  return 'idle';
-}
-
-function buildSyncStatus(
-  state: SyncOrchestratorState,
-  pendingCount: number,
-  lastError?: Error
-) {
-  const hasPendingOperations = pendingCount > 0;
-  return {
-    hasPendingOperations,
-    indicator: deriveIndicator(state.isSyncing, state.lastResult, lastError),
-    isActive: state.isActive,
-    isSyncing: state.isSyncing,
-    lastError,
-    lastResult: state.lastResult,
-    lastSuccessfulSyncAt: state.lastSuccessfulSyncAt,
-    pendingCount,
-  };
-}
 
 /**
  * Provider component that manages sync orchestration state and provides
@@ -88,16 +63,27 @@ export function SyncStatusProvider({
     for (const cb of syncErrorCallbacksRef.current) cb(error);
   }, []);
 
-  const { state, pendingOperationCount, triggerSync, subscribe } =
-    useSyncOrchestrator({
-      autoStart,
-      onSyncComplete: handleSyncComplete,
-      onSyncError: handleSyncError,
-    });
+  const {
+    state,
+    pendingOperationCount,
+    failedOperationCount,
+    triggerSync,
+    subscribe,
+  } = useSyncOrchestrator({
+    autoStart,
+    onSyncComplete: handleSyncComplete,
+    onSyncError: handleSyncError,
+  });
 
   const status = useMemo(
-    () => buildSyncStatus(state, pendingOperationCount, lastError),
-    [state, lastError, pendingOperationCount]
+    () =>
+      buildSyncStatus(
+        state,
+        pendingOperationCount,
+        lastError,
+        failedOperationCount
+      ),
+    [state, lastError, pendingOperationCount, failedOperationCount]
   );
 
   useEffect(() => {
@@ -131,15 +117,37 @@ export function SyncStatusProvider({
     [triggerSync]
   );
 
+  const retryFailed = useCallback((): Promise<SyncOrchestratorResult> => {
+    const reset = resetFailedOperations();
+    if (reset === 0) return triggerSync();
+    // A tripped circuit breaker would let checkPreconditions skip the sync.
+    resetDefaultCircuitBreaker();
+    return triggerSync();
+  }, [triggerSync]);
+
+  const discardFailed = useCallback(() => {
+    discardFailedOperations();
+  }, []);
+
   const value: SyncStatusContextValue = useMemo(
     () => ({
+      discardFailed,
       onSyncComplete,
       onSyncError,
       onSyncStart,
+      retryFailed,
       status,
       triggerSync: wrappedTriggerSync,
     }),
-    [status, wrappedTriggerSync, onSyncStart, onSyncComplete, onSyncError]
+    [
+      status,
+      wrappedTriggerSync,
+      retryFailed,
+      discardFailed,
+      onSyncStart,
+      onSyncComplete,
+      onSyncError,
+    ]
   );
 
   if (!SyncStatusContext?.Provider) {

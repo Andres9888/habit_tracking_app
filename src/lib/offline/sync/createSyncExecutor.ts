@@ -4,6 +4,7 @@ import type {
   OfflineOperation,
   PauseHabitOperation,
   RemoveHabitOperation,
+  ReorderHabitsOperation,
   ToggleCompletionOperation,
   UpdateHabitOperation,
 } from '../queue';
@@ -12,6 +13,7 @@ import {
   createHabit,
   pauseHabit,
   removeHabit,
+  reorderHabits,
   toggleCompletion,
   updateHabit,
 } from './createSyncExecutorHandlers';
@@ -50,6 +52,10 @@ export function createSyncExecutor(mutations: ConvexMutations) {
       }
       case 'removeHabit': {
         await removeHabit(operation as RemoveHabitOperation, mutations);
+        break;
+      }
+      case 'reorderHabits': {
+        await reorderHabits(operation as ReorderHabitsOperation, mutations);
         break;
       }
       default: {

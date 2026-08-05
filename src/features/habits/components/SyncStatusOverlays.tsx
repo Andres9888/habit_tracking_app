@@ -8,6 +8,7 @@ import {
   SyncingIndicator,
   SyncedToast,
   useSyncedToast,
+  FailedSyncBanner,
 } from '../../../components/SyncStatus';
 import { useSyncStatus } from '../../../contexts/SyncStatusContext';
 
@@ -31,6 +32,10 @@ export function SyncStatusOverlays() {
           testID='global-synced-toast'
           visible={syncedToastVisible}
         />
+      </View>
+
+      <View className='absolute left-0 right-0 top-32 z-50 px-4'>
+        <FailedSyncBanner testID='global-failed-sync-banner' />
       </View>
     </>
   );

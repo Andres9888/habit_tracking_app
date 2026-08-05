@@ -70,6 +70,11 @@ export interface OfflineQueueManagerAPI {
   ): boolean;
   /** Reset an operation to pending for retry */
   markPending(operationId: string): boolean;
+  /**
+   * Reset a failed operation for a fresh retry: sets status to pending,
+   * clears retryCount and lastError so it isn't immediately re-exhausted.
+   */
+  resetForRetry(operationId: string): boolean;
 
   // Batch operations (optimized for 500+ operations - FR-011)
   /** Mark multiple operations as completed in a single update */
@@ -117,5 +122,6 @@ export type {
   QueueEventCallback,
   QueueOperationOptions,
   QueueOperationResult,
+  ReorderHabitsPayload,
   ToggleCompletionPayload,
 } from '../queue';

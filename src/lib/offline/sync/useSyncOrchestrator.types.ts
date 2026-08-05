@@ -30,6 +30,8 @@ export interface UseSyncOrchestratorReturn {
   hasPendingOperations: boolean;
   /** Number of pending operations */
   pendingOperationCount: number;
+  /** Number of operations that failed permanently (max retries exhausted) */
+  failedOperationCount: number;
   /** Manually trigger a sync */
   triggerSync: (
     onProgress?: SyncProgressCallback

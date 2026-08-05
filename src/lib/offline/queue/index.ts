@@ -22,6 +22,8 @@ export type {
   PauseHabitPayload,
   RemoveHabitOperation,
   RemoveHabitPayload,
+  ReorderHabitsOperation,
+  ReorderHabitsPayload,
 } from './types';
 
 // State types

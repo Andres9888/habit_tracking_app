@@ -34,11 +34,25 @@ const mockState = {
   lastSuccessfulSyncAt: undefined as number | undefined,
 };
 let mockHasPendingOperations = false;
+let mockFailedOperationCount = 0;
 let onSyncCompleteCallback:
   | ((result: SyncOrchestratorResult) => void)
   | undefined;
 let onSyncErrorCallback: ((error: Error) => void) | undefined;
 const eventListeners: Array<(event: { type: string }) => void> = [];
+
+const mockResetFailedOperations = jest.fn(() => 2);
+const mockDiscardFailedOperations = jest.fn(() => 2);
+const mockResetCircuitBreaker = jest.fn();
+
+jest.mock('../failedOperations', () => ({
+  resetFailedOperations: () => mockResetFailedOperations(),
+  discardFailedOperations: () => mockDiscardFailedOperations(),
+}));
+
+jest.mock('../../../lib/offline', () => ({
+  resetDefaultCircuitBreaker: () => mockResetCircuitBreaker(),
+}));
 
 jest.mock('../../../lib/offline/sync/useSyncOrchestrator', () => ({
   useSyncOrchestrator: (options?: {
@@ -51,6 +65,8 @@ jest.mock('../../../lib/offline/sync/useSyncOrchestrator', () => ({
     return {
       state: mockState,
       hasPendingOperations: mockHasPendingOperations,
+      pendingOperationCount: mockHasPendingOperations ? 1 : 0,
+      failedOperationCount: mockFailedOperationCount,
       isOnline: true,
       triggerSync: mockTriggerSync,
       subscribe: (listener: (event: { type: string }) => void) => {
@@ -92,6 +108,7 @@ describe('SyncStatusContext', () => {
     mockState.lastResult = undefined;
     mockState.lastSuccessfulSyncAt = undefined;
     mockHasPendingOperations = false;
+    mockFailedOperationCount = 0;
     eventListeners.length = 0;
     onSyncCompleteCallback = undefined;
     onSyncErrorCallback = undefined;
@@ -485,6 +502,26 @@ describe('SyncStatusContext', () => {
       });
     });
 
+    it('surfaces failed operations in status', () => {
+      mockFailedOperationCount = 3;
+
+      const { result } = renderHook(() => useSyncStatus(), {
+        wrapper: createWrapper(),
+      });
+
+      expect(result.current.status.failedCount).toBe(3);
+      expect(result.current.status.hasFailedOperations).toBe(true);
+    });
+
+    it('reports no failed operations when count is zero', () => {
+      const { result } = renderHook(() => useSyncStatus(), {
+        wrapper: createWrapper(),
+      });
+
+      expect(result.current.status.failedCount).toBe(0);
+      expect(result.current.status.hasFailedOperations).toBe(false);
+    });
+
     it('clears error after successful sync', async () => {
       const { result } = renderHook(() => useSyncStatus(), {
         wrapper: createWrapper(),
@@ -509,6 +546,64 @@ describe('SyncStatusContext', () => {
       await waitFor(() => {
         expect(result.current.status.lastError).toBeUndefined();
       });
+    });
+  });
+
+  describe('retryFailed / discardFailed', () => {
+    it('resets failed ops, resets the circuit breaker, then syncs', async () => {
+      mockTriggerSync.mockResolvedValue({
+        initiated: true,
+        processed: 2,
+        succeeded: 2,
+        failed: 0,
+        skipped: 0,
+      });
+
+      const { result } = renderHook(() => useSyncStatus(), {
+        wrapper: createWrapper(),
+      });
+
+      await act(async () => {
+        await result.current.retryFailed();
+      });
+
+      expect(mockResetFailedOperations).toHaveBeenCalled();
+      expect(mockResetCircuitBreaker).toHaveBeenCalled();
+      expect(mockTriggerSync).toHaveBeenCalled();
+    });
+
+    it('does not reset the circuit breaker when nothing was reset', async () => {
+      mockResetFailedOperations.mockReturnValueOnce(0);
+      mockTriggerSync.mockResolvedValue({
+        initiated: false,
+        processed: 0,
+        succeeded: 0,
+        failed: 0,
+        skipped: 0,
+      });
+
+      const { result } = renderHook(() => useSyncStatus(), {
+        wrapper: createWrapper(),
+      });
+
+      await act(async () => {
+        await result.current.retryFailed();
+      });
+
+      expect(mockResetCircuitBreaker).not.toHaveBeenCalled();
+      expect(mockTriggerSync).toHaveBeenCalled();
+    });
+
+    it('discardFailed delegates to discardFailedOperations', () => {
+      const { result } = renderHook(() => useSyncStatus(), {
+        wrapper: createWrapper(),
+      });
+
+      act(() => {
+        result.current.discardFailed();
+      });
+
+      expect(mockDiscardFailedOperations).toHaveBeenCalled();
     });
   });
 });

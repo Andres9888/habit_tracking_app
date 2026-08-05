@@ -74,6 +74,17 @@ function rehydrateOperation(operation: OfflineOperation): void {
       });
       break;
     }
+    case 'reorderHabits': {
+      const payload = operation.payload as {
+        habitIds: Id<'habits'>[];
+        previousOrder: Id<'habits'>[];
+      };
+      optimisticStore.addReorderWithId(operation.id, {
+        habitIds: payload.habitIds,
+        previousOrder: payload.previousOrder,
+      });
+      break;
+    }
   }
 }
 

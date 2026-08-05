@@ -129,6 +129,50 @@ describe('OfflineQueueManager', () => {
     });
   });
 
+  describe('reorderHabits coalescing', () => {
+    const order1 = {
+      habitIds: ['a', 'b', 'c'] as unknown,
+      previousOrder: ['c', 'b', 'a'] as unknown,
+    };
+    const order2 = {
+      habitIds: ['b', 'a', 'c'] as unknown,
+      previousOrder: ['a', 'b', 'c'] as unknown,
+    };
+
+    it('coalesces a pending reorder, keeping the original previousOrder', () => {
+      const r1 = manager.enqueue('reorderHabits', order1);
+      const r2 = manager.enqueue('reorderHabits', order2);
+
+      expect(r2.replaced).toBe(true);
+      expect(r2.operationId).toBe(r1.operationId);
+      const ops = manager.getState().operations;
+      expect(ops).toHaveLength(1);
+      expect(ops[0].payload.habitIds).toEqual(['b', 'a', 'c']);
+      // previousOrder preserved from the first enqueue so rollback is correct
+      expect(ops[0].payload.previousOrder).toEqual(['c', 'b', 'a']);
+    });
+
+    it('does not coalesce into a failed reorder (appends a fresh op)', () => {
+      const r1 = manager.enqueue('reorderHabits', order1);
+      manager.markFailed(r1.operationId!, 'Boom');
+
+      const r2 = manager.enqueue('reorderHabits', order2);
+      const ops = manager.getState().operations;
+      expect(ops).toHaveLength(2);
+      expect(r2.replaced).toBeUndefined();
+      // The failed op is left for the "Sync Failed" banner; the new op is pending.
+      expect(ops[0].status).toBe('failed');
+      expect(ops[1].status).toBe('pending');
+    });
+
+    it('appends a new reorder when allowDuplicate is set', () => {
+      manager.enqueue('reorderHabits', order1);
+      manager.enqueue('reorderHabits', order2, { allowDuplicate: true });
+
+      expect(manager.getState().operations).toHaveLength(2);
+    });
+  });
+
   describe('peek', () => {
     it('returns undefined for empty queue', () => {
       expect(manager.peek()).toBeUndefined();
@@ -296,11 +340,34 @@ describe('OfflineQueueManager', () => {
       expect(manager.getState().operations[0].status).toBe('pending');
     });
 
+    it('resetForRetry clears retryCount and lastError', () => {
+      const result = manager.enqueue('toggleCompletion', samplePayload);
+      manager.markFailed(result.operationId!, 'Network error', 'network');
+
+      expect(manager.resetForRetry(result.operationId!)).toBe(true);
+      const op = manager.getState().operations[0];
+      expect(op.status).toBe('pending');
+      expect(op.retryCount).toBe(0);
+      expect(op.lastError).toBeUndefined();
+      expect(op.lastErrorCategory).toBeUndefined();
+    });
+
+    it('resetForRetry emits operation:updated for rehydration', () => {
+      const result = manager.enqueue('toggleCompletion', samplePayload);
+      manager.markFailed(result.operationId!, 'Boom');
+      const events: string[] = [];
+      manager.subscribe((event) => events.push(event.type));
+
+      manager.resetForRetry(result.operationId!);
+      expect(events).toContain('operation:updated');
+    });
+
     it('returns false for non-existent operation', () => {
       expect(manager.markSyncing('non-existent')).toBe(false);
       expect(manager.markCompleted('non-existent')).toBe(false);
       expect(manager.markFailed('non-existent', 'error')).toBe(false);
       expect(manager.markPending('non-existent')).toBe(false);
+      expect(manager.resetForRetry('non-existent')).toBe(false);
     });
   });
 

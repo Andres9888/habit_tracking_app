@@ -29,6 +29,7 @@ export function useSyncOrchestrator(
   const archiveHabit = useMutation(api.habits.archive);
   const pauseHabit = useMutation(api.habits.pause);
   const removeHabit = useMutation(api.habits.remove);
+  const reorderHabits = useMutation(api.habits.reorderHabits);
 
   const orchestratorRef = useRef(getSyncOrchestrator(config));
   const orchestrator = orchestratorRef.current;
@@ -39,6 +40,7 @@ export function useSyncOrchestrator(
         createHabit,
         pauseHabit,
         removeHabit,
+        reorderHabits,
         toggleHabit: toggleMutation,
         updateHabit,
       }),
@@ -47,6 +49,7 @@ export function useSyncOrchestrator(
       createHabit,
       pauseHabit,
       removeHabit,
+      reorderHabits,
       toggleMutation,
       updateHabit,
     ]
@@ -57,6 +60,7 @@ export function useSyncOrchestrator(
   );
   const [hasPendingOperations, setHasPendingOperations] = useState(false);
   const [pendingOperationCount, setPendingOperationCount] = useState(0);
+  const [failedOperationCount, setFailedOperationCount] = useState(0);
 
   useEffect(() => {
     orchestrator.setExecutor(executor);
@@ -86,6 +90,7 @@ export function useSyncOrchestrator(
       const stats = queueManager.getStats();
       setHasPendingOperations(stats.pendingCount > 0);
       setPendingOperationCount(stats.pendingCount);
+      setFailedOperationCount(stats.failedCount);
     };
     checkPending();
     const unsubscribe = queueManager.subscribe(checkPending);
@@ -109,6 +114,7 @@ export function useSyncOrchestrator(
 
   return useMemo(
     () => ({
+      failedOperationCount,
       hasPendingOperations,
       pendingOperationCount,
       isOnline,
@@ -119,6 +125,7 @@ export function useSyncOrchestrator(
       triggerSync,
     }),
     [
+      failedOperationCount,
       hasPendingOperations,
       isOnline,
       pendingOperationCount,

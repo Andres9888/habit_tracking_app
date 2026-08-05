@@ -36,6 +36,7 @@ export async function runBackgroundQueueFlush(): Promise<boolean> {
     createHabit: (args) => client.mutation(api.habits.create, args),
     pauseHabit: (args) => client.mutation(api.habits.pause, args),
     removeHabit: (args) => client.mutation(api.habits.remove, args),
+    reorderHabits: (args) => client.mutation(api.habits.reorderHabits, args),
     toggleHabit: (args) => client.mutation(api.habits.toggleHabit, args),
     updateHabit: (args) => client.mutation(api.habits.update, args),
   });

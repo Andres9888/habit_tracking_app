@@ -9,11 +9,16 @@ import type {
   OfflineQueueState,
   QueueEvent,
   QueueOperationOptions,
+  ReorderHabitsPayload,
   ToggleCompletionPayload,
   QueueOperationResult,
 } from './types';
 import { getToggleDedupeKey } from './helpers';
-import { handleReplace, handleNewOperation } from './enqueueHandlers';
+import {
+  handleReplace,
+  handleReorderReplace,
+  handleNewOperation,
+} from './enqueueHandlers';
 
 type StateGetter = () => OfflineQueueState;
 type StateSetter = (state: OfflineQueueState) => void;
@@ -57,6 +62,25 @@ export function createEnqueue(
           state,
           existingIdx,
           togglePayload,
+          setState,
+          notify,
+          emit,
+          getState
+        );
+      }
+    }
+
+    // Reorder operations coalesce: a pending reorder is overwritten with the
+    // latest target order (preserving the original previousOrder for rollback).
+    if (type === 'reorderHabits') {
+      const existingIdx = state.operations.findIndex(
+        (op) => op.type === 'reorderHabits' && op.status === 'pending'
+      );
+      if (existingIdx !== -1 && !allowDuplicate) {
+        return handleReorderReplace(
+          state,
+          existingIdx,
+          payload as ReorderHabitsPayload,
           setState,
           notify,
           emit,

@@ -27,10 +27,13 @@ export function deriveIndicator(
 export function buildSyncStatus(
   state: SyncOrchestratorState,
   pendingCount: number,
-  lastError?: Error
+  lastError?: Error,
+  failedCount = 0
 ): SyncStatus {
   const hasPendingOperations = pendingCount > 0;
   return {
+    failedCount,
+    hasFailedOperations: failedCount > 0,
     hasPendingOperations,
     indicator: deriveIndicator(state.isSyncing, state.lastResult, lastError),
     isActive: state.isActive,

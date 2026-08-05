@@ -91,6 +91,26 @@ export function createStatusUpdaters(
       return true;
     },
 
+    resetForRetry(operationId: string): boolean {
+      const updated = updateOperation(operationId, (op) => ({
+        ...op,
+        lastError: undefined,
+        lastErrorCategory: undefined,
+        retryCount: 0,
+        status: 'pending',
+      }));
+      if (!updated) return false;
+
+      emit({
+        operation: updated,
+        operationId,
+        stats: calculateStats(getState()),
+        timestamp: Date.now(),
+        type: 'operation:updated',
+      });
+      return true;
+    },
+
     markSyncing(operationId: string): boolean {
       const updated = updateOperation(operationId, (op) => ({
         ...op,

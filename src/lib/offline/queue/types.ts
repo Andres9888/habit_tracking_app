@@ -26,7 +26,8 @@ export type OfflineOperationType =
   | 'updateHabit'
   | 'archiveHabit'
   | 'pauseHabit'
-  | 'removeHabit';
+  | 'removeHabit'
+  | 'reorderHabits';
 
 /**
  * Payload for toggle completion operation
@@ -123,6 +124,16 @@ export interface RemoveHabitPayload {
 }
 
 /**
+ * Payload for reorder habits operation
+ */
+export interface ReorderHabitsPayload {
+  /** Habit IDs in their new order */
+  habitIds: Id<'habits'>[];
+  /** Previous order captured at enqueue time (for optimistic rollback) */
+  previousOrder: Id<'habits'>[];
+}
+
+/**
  * Union of all offline operation payloads
  */
 export type OfflineOperationPayload =
@@ -131,7 +142,8 @@ export type OfflineOperationPayload =
   | UpdateHabitPayload
   | ArchiveHabitPayload
   | PauseHabitPayload
-  | RemoveHabitPayload;
+  | RemoveHabitPayload
+  | ReorderHabitsPayload;
 
 /**
  * A single offline operation in the queue
@@ -161,7 +173,9 @@ export interface OfflineOperation<
             ? PauseHabitPayload
             : T extends 'removeHabit'
               ? RemoveHabitPayload
-              : OfflineOperationPayload;
+              : T extends 'reorderHabits'
+                ? ReorderHabitsPayload
+                : OfflineOperationPayload;
 
   /** Current status of the operation */
   status: OfflineOperationStatus;
@@ -191,3 +205,4 @@ export type UpdateHabitOperation = OfflineOperation<'updateHabit'>;
 export type ArchiveHabitOperation = OfflineOperation<'archiveHabit'>;
 export type PauseHabitOperation = OfflineOperation<'pauseHabit'>;
 export type RemoveHabitOperation = OfflineOperation<'removeHabit'>;
+export type ReorderHabitsOperation = OfflineOperation<'reorderHabits'>;

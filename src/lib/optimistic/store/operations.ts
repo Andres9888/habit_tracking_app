@@ -79,6 +79,10 @@ export function createOperations(state: OptimisticStore, notify: () => void) {
       return addOperation(id, 'pause', payload);
     },
 
+    addReorderWithId(id: string, payload: ReorderOperationPayload): string {
+      return addOperation(id, 'reorder', payload);
+    },
+
     addToggleWithId(id: string, payload: ToggleOperationPayload): string {
       return addOperation(id, 'toggle', payload);
     },

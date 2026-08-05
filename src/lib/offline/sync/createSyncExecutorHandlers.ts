@@ -3,6 +3,7 @@ import type {
   CreateHabitOperation,
   PauseHabitOperation,
   RemoveHabitOperation,
+  ReorderHabitsOperation,
   ToggleCompletionOperation,
   UpdateHabitOperation,
 } from '../queue';
@@ -77,4 +78,11 @@ export async function removeHabit(
   mutations: ConvexMutations
 ) {
   await mutations.removeHabit({ habitId: operation.payload.habitId });
+}
+
+export async function reorderHabits(
+  operation: ReorderHabitsOperation,
+  mutations: ConvexMutations
+) {
+  await mutations.reorderHabits({ habitIds: operation.payload.habitIds });
 }

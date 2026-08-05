@@ -35,4 +35,5 @@ export interface ConvexMutations {
   archiveHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
   pauseHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
   removeHabit: (args: { habitId: Id<'habits'> }) => Promise<unknown>;
+  reorderHabits: (args: { habitIds: Id<'habits'>[] }) => Promise<unknown>;
 }

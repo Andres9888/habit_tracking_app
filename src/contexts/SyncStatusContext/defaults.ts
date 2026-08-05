@@ -8,6 +8,8 @@ import type { SyncStatus, SyncStatusContextValue } from './types';
  * Default sync status
  */
 export const defaultSyncStatus: SyncStatus = {
+  failedCount: 0,
+  hasFailedOperations: false,
   hasPendingOperations: false,
   indicator: 'idle',
   isActive: false,
@@ -27,9 +29,14 @@ const noop = (): void => {};
  * Default context value (throws on method calls if used without provider)
  */
 export const defaultContextValue: SyncStatusContextValue = {
+  discardFailed: noop,
   onSyncComplete: () => noop,
   onSyncError: () => noop,
   onSyncStart: () => noop,
+  retryFailed: () =>
+    Promise.reject(
+      new Error('SyncStatusContext: retryFailed called outside provider')
+    ),
   status: defaultSyncStatus,
   triggerSync: () =>
     Promise.reject(

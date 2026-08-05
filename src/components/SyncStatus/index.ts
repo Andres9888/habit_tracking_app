@@ -17,6 +17,12 @@ export type { PendingSyncBadgeProps } from './PendingSyncBadge';
 export { SyncedToast, useSyncedToast } from './SyncedToast';
 export type { SyncedToastProps, UseSyncedToastResult } from './SyncedToast';
 
+export { FailedSyncBanner, useFailedSyncBanner } from './FailedSyncBanner';
+export type {
+  FailedSyncBannerProps,
+  UseFailedSyncBannerResult,
+} from './FailedSyncBanner';
+
 export {
   ConflictNotification,
   useConflictNotification,

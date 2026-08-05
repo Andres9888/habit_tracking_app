@@ -25,6 +25,10 @@ export interface SyncStatus {
   pendingCount: number;
   /** Whether there are operations waiting to sync */
   hasPendingOperations: boolean;
+  /** Number of operations that failed permanently */
+  failedCount: number;
+  /** Whether there are permanently-failed operations needing attention */
+  hasFailedOperations: boolean;
   /** Current status indicator for UI */
   indicator: SyncStatusIndicator;
   /** Last sync result */
@@ -43,6 +47,10 @@ export interface SyncStatusContextValue {
   status: SyncStatus;
   /** Manually trigger a sync */
   triggerSync: () => Promise<SyncOrchestratorResult>;
+  /** Reset all failed operations to pending and re-trigger a sync */
+  retryFailed: () => Promise<SyncOrchestratorResult | void>;
+  /** Discard all failed operations, rolling back their optimistic state */
+  discardFailed: () => void;
   /** Register callback for sync start */
   onSyncStart: (callback: () => void) => () => void;
   /** Register callback for sync completion */
