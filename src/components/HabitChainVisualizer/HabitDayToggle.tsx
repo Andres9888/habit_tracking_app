@@ -35,7 +35,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   onPress,
   shape,
 }) => {
-  const { completion, buttonScale, combinedScale, forgeFlash } =
+  const { buttonScale, combinedScale, completion, flashActive, forgeFlash } =
     useHabitDayToggleAnimations({ completed, isToday, dateString });
   const { handlePressIn, handlePressOut, handlePress } =
     useHabitDayToggleHandlers({ buttonScale, completed, onPress });
@@ -48,7 +48,6 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
   const tierBorder = getBorderColor(completed, isToday, accentColor, tier);
   const staticBackground = missed ? MISSED_BG : tierBackground;
   const staticBorder = missed ? MISSED_BORDER : tierBorder;
-  const showCompletedShadow = completed && !missed;
 
   const { cellStyle, shadowStyle } = useHabitDayToggleTierStyles({
     tierAnim,
@@ -56,7 +55,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
     completed,
     missed,
     isToday,
-    showCompletedShadow,
+    showCompletedShadow: completed && !missed,
     staticBackground,
     staticBorder,
   });
@@ -98,6 +97,7 @@ export const HabitDayToggle: React.FC<HabitDayToggleProps> = ({
           <HabitDayToggleContent
             completed={completed}
             missed={missed}
+            flashActive={flashActive}
             forgeFlash={forgeFlash}
             completion={completion}
             completionIcon={completionIcon}

@@ -14,6 +14,10 @@ interface Props {
   missed: boolean;
   completed: boolean;
   forgeFlash: AnimatedType.Value;
+  /** Only true while a flash is running. The overlay is unmounted otherwise:
+   * its opacity is natively driven, and a dropped native update would leave
+   * the cell painted amber with no further value change to repaint it. */
+  flashActive: boolean;
   completion: AnimatedType.Value;
   completionIcon: CompletionIcon;
   iconColor: string;
@@ -23,25 +27,32 @@ export const HabitDayToggleContent: React.FC<Props> = ({
   missed,
   completed,
   forgeFlash,
+  flashActive,
   completion,
   completionIcon,
   iconColor,
 }) => (
   <>
-    <Animated.View
-      pointerEvents='none'
-      style={[
-        StyleSheet.absoluteFillObject,
-        { backgroundColor: FORGE_FLASH_COLOR, opacity: forgeFlash },
-      ]}
-    />
+    {flashActive ? (
+      <Animated.View
+        pointerEvents='none'
+        style={[
+          StyleSheet.absoluteFill,
+          { backgroundColor: FORGE_FLASH_COLOR, opacity: forgeFlash },
+        ]}
+      />
+    ) : null}
     {missed ? (
       <View
         pointerEvents='none'
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         className='items-center justify-center'
       >
-        <Unlink color={MISSED_BORDER} size={iconSizes.medium} strokeWidth={2.5} />
+        <Unlink
+          color={MISSED_BORDER}
+          size={iconSizes.medium}
+          strokeWidth={2.5}
+        />
       </View>
     ) : (
       <AnimatedCompletionIcon
