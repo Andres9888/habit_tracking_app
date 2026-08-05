@@ -1,0 +1,5 @@
+{"timestamp":"2026-05-24T15:29:43-07:00","rating":5,"session_id":"e0189a51-848f-4b0a-b87a-1f4ab6807a80","source":"implicit","sentiment_summary":"Inference failed: Failed to parse JSON response","confidence":0.3}
+{"timestamp":"2026-05-24T15:51:09-07:00","rating":5,"session_id":"e0189a51-848f-4b0a-b87a-1f4ab6807a80","source":"implicit","sentiment_summary":"Continuing work with new context, no frustration signal","confidence":0.85}
+{"timestamp":"2026-05-24T15:58:12-07:00","rating":6,"session_id":"e0189a51-848f-4b0a-b87a-1f4ab6807a80","source":"implicit","sentiment_summary":"Accepting previous work, moving to refinement task","confidence":0.85}
+{"timestamp":"2026-05-24T15:59:09-07:00","rating":3,"session_id":"e0189a51-848f-4b0a-b87a-1f4ab6807a80","source":"implicit","sentiment_summary":"Repeating exact same request—previous response didn't address issue","confidence":0.95}
+{"timestamp":"2026-05-24T16:21:07-07:00","rating":3,"session_id":"e0189a51-848f-4b0a-b87a-1f4ab6807a80","source":"implicit","sentiment_summary":"Repeated request—previous response missed the merge instruction entirely","confidence":0.85}

@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Repeated request—previous response missed the merge instruction entirely",
+  "detailed_context": "User first asked to 'merge to main' after PAI provided code implementation details. PAI did not execute or acknowledge the merge request. User is now repeating the same instruction, indicating clear dissatisfaction. The terse, repeated nature suggests frustration that PAI either cannot perform git operations or failed to recognize the directive as a direct action request rather than narrative. The lack of progress on the actual ask (merging code) drives the negative signal.",
+  "session_id": "e0189a51-848f-4b0a-b87a-1f4ab6807a80",
+  "captured_at": "2026-05-24T23:21:17.890Z",
+  "transcript_source": "e0189a51-848f-4b0a-b87a-1f4ab6807a80.jsonl"
+}

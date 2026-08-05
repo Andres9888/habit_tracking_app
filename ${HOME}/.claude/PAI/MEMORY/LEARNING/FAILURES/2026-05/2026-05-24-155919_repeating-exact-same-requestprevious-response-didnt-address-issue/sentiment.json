@@ -1,0 +1,8 @@
+{
+  "rating": 3,
+  "summary": "Repeating exact same request—previous response didn't address issue",
+  "detailed_context": "The user is repeating their exact message verbatim about daily reminder scroll behavior, indicating the previous response failed to address or fix this specific issue. This is a clear 'having to ask twice' pattern per your rules. The user is not angry, but clearly frustrated by lack of progress. The assistant should acknowledge this regression, diagnose why the fix didn't work, and provide a substantive correction this time.",
+  "session_id": "e0189a51-848f-4b0a-b87a-1f4ab6807a80",
+  "captured_at": "2026-05-24T22:59:19.906Z",
+  "transcript_source": "e0189a51-848f-4b0a-b87a-1f4ab6807a80.jsonl"
+}
